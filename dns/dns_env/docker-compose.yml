@@ -1,0 +1,33 @@
+version: "3"
+services:
+  clickhouse1:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse1
+    ports:
+    - 8123:8123
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.d/host_regexp.xml:/etc/clickhouse-server/users.d/host_regexp.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/tests/lookup/resolv.conf:/etc/resolv.conf"
+    networks:
+      ipv6_address: 2001:3984:3989::1:1111
+
+  clickhouse2:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse2
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/logs/:/var/log/clickhouse-server/"
+    networks:
+      ipv6_address: 2001:3984:3989::1:1112
+
+  coredns:
+    image: coredns/coredns:latest
+    volumes:
+    - "${CLICKHOUSE_TESTS_DIR}/tests/lookup/example.com:/etc/example.com"
+    - "${CLICKHOUSE_TESTS_DIR}/tests/lookup/Corefile:/Corefile"

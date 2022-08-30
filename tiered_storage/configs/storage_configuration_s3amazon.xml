@@ -1,0 +1,215 @@
+<yandex>
+
+<storage_configuration>
+    <disks>
+        <default>
+            <keep_free_space_bytes>1024</keep_free_space_bytes>
+        </default>
+        <jbod1>
+            <path>/jbod1/</path>
+        </jbod1>
+        <jbod2>
+            <path>/jbod2/</path>
+            <keep_free_space_bytes>10485760</keep_free_space_bytes>
+                                 <!-- 10MB -->
+        </jbod2>
+        <jbod3>
+            <path>/jbod3/</path>
+            <keep_free_space_ratio>0.5</keep_free_space_ratio>
+                                 <!-- 50% -->
+        </jbod3>
+	<external>
+	    <type>s3</type>
+	    <!-- Virtual Hosted Style Access: https://bucket-name.s3.Region.amazonaws.com/key name -->
+	    <!-- <endpoint>http://altinity-s3qa.s3.us-east-2.amazonaws.com/data/</endpoint> -->
+	    <!-- Path-Style Access: https://s3.Region.amazonaws.com/bucket-name/key name -->
+	    <endpoint from_env="S3_AMAZON_URI" />
+	    <access_key_id from_env="S3_AMAZON_KEY_ID" />
+	    <secret_access_key from_env="S3_AMAZON_ACCESS_KEY" />
+        </external>
+    </disks>
+
+    <policies>
+        <one_small_disk>
+            <volumes>
+                <main>
+                    <disk>jbod1</disk>
+                </main>
+            </volumes>
+        </one_small_disk>
+        <small_jbod_with_external>
+            <volumes>
+                <main>
+                    <disk>jbod1</disk>
+                </main>
+                <external>
+                    <disk>external</disk>
+                </external>
+            </volumes>
+        </small_jbod_with_external>
+
+        <jbods>
+            <volumes>
+                <main>
+                    <disk>jbod1</disk>
+                    <disk>jbod2</disk>
+                </main>
+            </volumes>
+        </jbods>
+
+        <!-- store on JBOD by default (round-robin), store big parts on external -->
+        <jbods_with_external>
+            <volumes>
+                <main>
+                    <disk>jbod1</disk>
+                    <disk>jbod2</disk>
+                    <max_data_part_size_bytes>10485760</max_data_part_size_bytes>
+                                            <!-- 10MB -->
+                </main>
+                <external>
+                    <disk>external</disk>
+                </external>
+            </volumes>
+        </jbods_with_external>
+
+        <jbods_with_external_ratio>
+            <volumes>
+                <main>
+                    <disk>jbod1</disk>
+                    <disk>jbod2</disk>
+                    <!-- max_data_part_size > (sum_size * max_data_part_size_ratio / number_of_disks) -->
+                    <max_data_part_size_ratio>0.25</max_data_part_size_ratio>
+                                         <!-- 9175040 -->
+                </main>
+                <external>
+                    <disk>external</disk>
+                </external>
+            </volumes>
+        </jbods_with_external_ratio>
+
+        <!-- Moving all parts from jbod1 if reached more than 70% -->
+        <moving_jbod_with_external>
+            <volumes>
+                <main>
+                    <disk>jbod1</disk>
+                </main>
+                <external>
+                    <disk>external</disk>
+                </external>
+            </volumes>
+            <move_factor>0.7</move_factor>
+        </moving_jbod_with_external>
+
+        <!-- Moving all parts from jbod1 if any data-->
+        <moving_max_jbod_with_external>
+            <volumes>
+                <main>
+                    <disk>jbod1</disk>
+                </main>
+                <external>
+                    <disk>external</disk>
+                </external>
+            </volumes>
+            <move_factor>1</move_factor>
+        </moving_max_jbod_with_external>
+
+        <!-- Moving no parts from jbod1 if any data -->
+        <moving_min_jbod_with_external>
+            <volumes>
+                <main>
+                    <disk>jbod1</disk>
+                </main>
+                <external>
+                    <disk>external</disk>
+                </external>
+            </volumes>
+            <move_factor>0</move_factor>
+        </moving_min_jbod_with_external>
+
+        <!-- store local by default, store big parts on external -->
+        <default_disk_with_external>
+            <volumes>
+                <small>
+                    <disk>default</disk>
+                    <max_data_part_size_bytes>2097152</max_data_part_size_bytes>
+                                            <!-- 2MB -->
+                </small>
+                <big>
+                    <disk>external</disk>
+                    <max_data_part_size_bytes>20971520</max_data_part_size_bytes>
+                                            <!-- 20MB -->
+                </big>
+            </volumes>
+        </default_disk_with_external>
+
+        <!-- jbod1 and jbod2 -->
+        <jbod1_with_jbod2>
+            <volumes>
+                <main>
+                    <disk>jbod1</disk>
+                </main>
+                <external>
+                    <disk>jbod2</disk>
+                </external>
+            </volumes>
+        </jbod1_with_jbod2>
+
+        <!-- three volumes -->
+        <fast_med_and_slow>
+            <volumes>
+                <fast>
+                    <disk>jbod1</disk>
+                </fast>
+                <medium>
+                    <disk>jbod2</disk>
+                </medium>
+                <slow>
+                    <disk>external</disk>
+                </slow>
+            </volumes>
+        </fast_med_and_slow>
+
+        <!-- only jbod2 -->
+        <only_jbod2>
+            <volumes>
+                <main>
+                    <disk>jbod2</disk>
+                </main>
+            </volumes>
+        </only_jbod2>
+
+        <!-- only jbod3 -->
+        <only_jbod3>
+            <volumes>
+                <main>
+                    <disk>jbod3</disk>
+                </main>
+            </volumes>
+        </only_jbod3>
+
+        <!-- special policy for checking validation of `max_data_part_size` -->
+        <special_warning_policy>
+            <volumes>
+                <special_warning_zero_volume>
+                    <disk>default</disk>
+                    <max_data_part_size_bytes>0</max_data_part_size_bytes>
+                </special_warning_zero_volume>
+                <special_warning_default_volume>
+                    <disk>external</disk>
+                </special_warning_default_volume>
+                <special_warning_small_volume>
+                    <disk>jbod1</disk>
+                    <max_data_part_size_bytes>1024</max_data_part_size_bytes>
+                </special_warning_small_volume>
+                <special_warning_big_volume>
+                    <disk>jbod2</disk>
+                    <max_data_part_size_bytes>1024000000</max_data_part_size_bytes>
+                </special_warning_big_volume>
+            </volumes>
+        </special_warning_policy>
+
+    </policies>
+
+</storage_configuration>
+
+</yandex>

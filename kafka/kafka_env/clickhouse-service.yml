@@ -1,0 +1,36 @@
+version: '2.3'
+
+services:
+  clickhouse:
+    image: registry.gitlab.com/altinity-public/container-images/test/clickhouse-integration-test:21.12
+    init: true
+    expose:
+      - "9000"
+      - "9009"
+      - "8123"
+    volumes:
+      - ${CLICKHOUSE_TESTS_DIR}/configs/remote_servers.xml:/etc/clickhouse-server/config.d/remote_servers.xml
+      - ${CLICKHOUSE_TESTS_DIR}/configs/zookeeper.xml:/etc/clickhouse-server/config.d/zookeeper.xml
+      - ${CLICKHOUSE_TESTS_DIR}/configs/common_instance_config.xml:/etc/clickhouse-server/config.d/common_instance_config.xml
+      - ${CLICKHOUSE_TESTS_DIR}/configs/user_with_long_name.xml:/etc/clickhouse-server/users.d/user_with_long_name.xml
+      - ${CLICKHOUSE_TESTS_DIR}/configs/ssl_conf.xml:/etc/clickhouse-server/config.d/ssl_conf.xml
+      - ${CLICKHOUSE_TESTS_DIR}/configs/listen_ports.xml:/etc/clickhouse-server/config.d/listen_ports.xml
+      - ${CLICKHOUSE_TESTS_DIR}/configs/ssl_conf.xml:/etc/clickhouse-client/config.xml
+      - ${CLICKHOUSE_TESTS_DIR}/configs/server.crt:/etc/clickhouse-server/server.crt
+      - ${CLICKHOUSE_TESTS_DIR}/configs/server.key:/etc/clickhouse-server/server.key
+      - ${CLICKHOUSE_TESTS_DIR}/configs/dhparam.pem:/etc/clickhouse-server/dhparam.pem
+      - ${CLICKHOUSE_TESTS_DIR}/configs/clickhouse-base/config.xml:/etc/clickhouse-server/config.xml
+      - ${CLICKHOUSE_TESTS_DIR}/configs/clickhouse-base/users.xml:/etc/clickhouse-server/users.xml
+      - ${CLICKHOUSE_TESTS_SERVER_BIN_PATH:-/usr/bin/clickhouse}:/usr/bin/clickhouse
+      - ${CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH:-/usr/bin/clickhouse-odbc-bridge}:/usr/bin/clickhouse-odbc-bridge
+    entrypoint: bash -c "tail -f /dev/null"
+    healthcheck:
+      test: echo 1
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 300s
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - label:disable

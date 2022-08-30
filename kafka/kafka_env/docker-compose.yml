@@ -1,0 +1,109 @@
+version: '2.3'
+
+services:
+  zookeeper:
+    extends:
+      file: zookeeper-service.yml
+      service: zookeeper
+
+  clickhouse1:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse1
+    volumes:
+        - ${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/
+        - ${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/
+        - ${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/macros.xml:/etc/clickhouse-server/config.d/macros.xml
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+
+  clickhouse2:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse2
+    volumes:
+        - ${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/database/:/var/lib/clickhouse/
+        - ${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/logs/:/var/log/clickhouse-server/
+        - ${CLICKHOUSE_TESTS_DIR}/configs/clickhouse2/macros.xml:/etc/clickhouse-server/config.d/macros.xml
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+
+  clickhouse3:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse3
+    volumes:
+        - ${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/database/:/var/lib/clickhouse/
+        - ${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/
+        - ${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/macros.xml:/etc/clickhouse-server/config.d/macros.xml
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+
+  kafka1:
+    extends:
+      file: kafka-service.yml
+      service: kafka
+    hostname: kafka1
+    environment:
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka1:9092
+      - KAFKA_BROKER_ID=1
+      - BOOTSTRAP_SERVERS=kafka1:9092,kafka2:9092,kafka3:9092
+    healthcheck:
+      test: echo dump | nc zookeeper 2181 | grep '/brokers/ids/1'
+    depends_on:
+        zookeeper:
+          condition: service_healthy
+
+  kafka2:
+    extends:
+      file: kafka-service.yml
+      service: kafka
+    hostname: kafka2
+    environment:
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka2:9092
+      - KAFKA_BROKER_ID=2
+      - BOOTSTRAP_SERVERS=kafka1:9092,kafka2:9092,kafka3:9092
+    healthcheck:
+      test: echo dump | nc zookeeper 2181 | grep '/brokers/ids/2'
+    depends_on:
+        zookeeper:
+          condition: service_healthy
+
+  kafka3:
+    extends:
+      file: kafka-service.yml
+      service: kafka
+    hostname: kafka3
+    environment:
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka3:9092
+      - KAFKA_BROKER_ID=3
+      - BOOTSTRAP_SERVERS=kafka1:9092,kafka2:9092,kafka3:9092
+    healthcheck:
+      test: echo dump | nc zookeeper 2181 | grep '/brokers/ids/3'
+    depends_on:
+        zookeeper:
+          condition: service_healthy
+
+  # dummy service which do nothing, but allows to postpone
+  # 'docker-compose up -d' till all dependecies will go healthy
+  all_services_ready:
+    image: hello-world
+    depends_on:
+      clickhouse1:
+        condition: service_healthy
+      clickhouse2:
+        condition: service_healthy
+      zookeeper:
+        condition: service_healthy
+      kafka1:
+        condition: service_healthy
+      kafka2:
+        condition: service_healthy
+      kafka3:
+        condition: service_healthy

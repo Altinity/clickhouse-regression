@@ -1,0 +1,16 @@
+<yandex>
+<storage_configuration>
+    <policies>
+        <one_small_disk>
+            <volumes>
+                <main>
+                    <disk>jbod1</disk>
+                </main>
+                <external>
+                    <disk>external</disk>
+                </external>
+            </volumes>
+        </one_small_disk>
+    </policies>
+</storage_configuration>
+</yandex>

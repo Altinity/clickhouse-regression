@@ -1,0 +1,25 @@
+<yandex>
+<storage_configuration>
+    <disks>
+        <default>
+            <keep_free_space_bytes>1024</keep_free_space_bytes>
+        </default>
+        <jbod1>
+            <path>/jbod1/</path>
+        </jbod1>
+        <jbod2>
+            <path>/jbod2/</path>
+            <keep_free_space_bytes>10485760</keep_free_space_bytes>
+                                 <!-- 10MB -->
+        </jbod2>
+        <external>
+            <path>/external/</path>
+            <!-- invalid as both keep_free_space_ratio and keep_free_space_bytes are
+                 specified for the same disk -->
+            <keep_free_space_ratio>0.25</keep_free_space_ratio>
+            <keep_free_space_bytes>31457280</keep_free_space_bytes>
+                                 <!-- 30MB -->
+        </external>
+    </disks>
+</storage_configuration>
+</yandex>

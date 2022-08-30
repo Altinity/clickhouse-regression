@@ -1,0 +1,18 @@
+version: '2.3'
+
+services:
+  minio:
+    image: ${IMAGE_DEPENDENCY_PROXY}minio/minio:RELEASE.2022-07-17T15-43-14Z
+    volumes:
+      - data1-1:/data1
+    ports:
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+    command: server --address :9001 /data1-1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9001/minio/health/live"]
+      interval: 2s
+      timeout: 5s
+      retries: 60

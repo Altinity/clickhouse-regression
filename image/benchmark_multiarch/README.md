@@ -1,0 +1,1 @@
+docker buildx build --push -t registry.gitlab.com/altinity-qa/clickhouse/cicd/regression/benchmark/multiarch:latest --platform=linux/amd64,linux/arm64 .

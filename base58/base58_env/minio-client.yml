@@ -1,0 +1,16 @@
+version: '2.3'
+
+services:
+  minio-client:
+    image: ${IMAGE_DEPENDENCY_PROXY}minio/mc:RELEASE.2022-06-11T21-10-36Z
+    entrypoint: >
+     /bin/sh -c "
+     /usr/bin/mc config host add minio http://minio:9001 minio minio123;
+     /usr/bin/mc mb minio/root;
+     touch /tmp/ready;
+     "
+    healthcheck:
+      test: ["CMD", "ls", "/tmp/ready"]
+      interval: 5s
+      timeout: 2s
+      retries: 60

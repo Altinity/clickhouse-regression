@@ -1,0 +1,2 @@
+snapshot = r"""[{'name': 'default', 'path': '/var/lib/clickhouse/', 'keep_free_space': '1024'}, {'name': 'external', 'path': '/var/lib/clickhouse/disks/external/', 'keep_free_space': '0'}, {'name': 'jbod1', 'path': '/jbod1/', 'keep_free_space': '0'}, {'name': 'jbod2', 'path': '/jbod2/', 'keep_free_space': '10485760'}, {'name': 'jbod3', 'path': '/jbod3/', 'keep_free_space': '20971520'}]"""
+

@@ -1,0 +1,11 @@
+testflows==1.9.20
+pytz==2020.1
+python-dateutil==2.8.1
+minio==7.1.3
+boto3==1.24.52
+numpy==1.21.4
+pyarrow==7.0.0
+pandas==1.4.1
+awscli==1.24.9
+python-gitlab==3.6.0
+docker-compose==1.29.2
