@@ -101,11 +101,6 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
                 executor=pool,
             )(**args)
             Feature(
-                test=load("tickets.regression", "regression"),
-                parallel=True,
-                executor=pool,
-            )(**args)
-            Feature(
                 test=load("tiered_storage.regression", "regression"),
                 parallel=True,
                 executor=pool,
