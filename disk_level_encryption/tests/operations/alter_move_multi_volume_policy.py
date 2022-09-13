@@ -62,9 +62,9 @@ def alter_move_multi_volume_policy(
         partition_part_table_row = "partition" if partition else "name"
 
         r = node.query(
-            f"SELECT disk_name FROM system.parts WHERE table = '{table_name}' AND {partition_part_table_row} = '{partition_part_name}'"
+            f"SELECT {partition_part_table_row} FROM system.parts WHERE table = '{table_name}' AND disk_name LIKE '%local0%' LIMIT 1"
         )
-        assert "local0" in r.output, error()
+        partition_part_name = r.output
 
         r = node.query(
             f"ALTER TABLE {table_name} MOVE {part_or_partition} '{partition_part_name}' TO VOLUME 'volume1'"
