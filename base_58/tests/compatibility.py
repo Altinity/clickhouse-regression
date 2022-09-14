@@ -4,7 +4,7 @@ from base_58.tests.steps import *
 
 def shift(s, i):
     """Return string shifted left on i symbols."""
-    return s[i % len(s):]+s[:i % len(s)]
+    return s[i % len(s) :] + s[: i % len(s)]
 
 
 @TestScenario
@@ -17,16 +17,20 @@ def compatibility(self, shift_on=0, node=None):
     with When(
         "I check base58Encode function and function from base58 library return the same string"
     ):
-        r = node.query(f"SELECT base58Encode('{shift(string_of_all_askii_symbols(), shift_on)*30}')")
+        r = node.query(
+            f"SELECT base58Encode('{shift(string_of_all_askii_symbols(), shift_on)*30}')"
+        )
         encoded_string = r.output
-        assert encoded_string == b58encode(shift(string_of_all_askii_symbols(), shift_on)*30).decode('ascii'), error()
+        assert encoded_string == b58encode(
+            shift(string_of_all_askii_symbols(), shift_on) * 30
+        ).decode("ascii"), error()
 
     with Then(
         "I check base58Encode function and function from base58 library return the same string"
     ):
         r = node.query(f"SELECT base58Decode('{encoded_string}')")
         decoded_string = r.output
-        assert decoded_string == b58decode(encoded_string).decode('ascii'), error()
+        assert decoded_string == b58decode(encoded_string).decode("ascii"), error()
 
 
 @TestModule

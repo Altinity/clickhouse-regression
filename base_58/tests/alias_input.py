@@ -8,9 +8,7 @@ def alias_instead_of_function(self, node=None):
     if node is None:
         node = self.context.node
 
-    with When(
-        "I check alias can be used as base58Encode function"
-    ):
+    with When("I check alias can be used as base58Encode function"):
         r = node.query(
             f"with base58Encode('{string_of_all_askii_symbols()*30}') as fun SELECT fun"
         )
@@ -20,7 +18,7 @@ def alias_instead_of_function(self, node=None):
         "I check base58Encode function and function from base58 library return the same string"
     ):
         r = node.query(f"with base58Decode('{encoded_string}') as fun SELECT fun")
-        assert string_of_all_askii_symbols()*30 == r.output, error()
+        assert string_of_all_askii_symbols() * 30 == r.output, error()
 
 
 @TestScenario
@@ -44,7 +42,9 @@ def alias_instead_of_table_and_column(self, node=None):
     with When("I create a table with MergeTree engine"):
         create_partitioned_table(table_name=table_name_e58, partition="")
 
-    with When("I insert data into the table with base58 encoding with alias expression"):
+    with When(
+        "I insert data into the table with base58 encoding with alias expression"
+    ):
         node.query(
             f"with Base58Encode('{string_of_all_askii_symbols() * 30}') as str insert into {table_name_e58} select id, str from {table_name_random};",
         )

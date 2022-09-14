@@ -1,4 +1,4 @@
-# ClickHouse Base58 Encoding and Decoding
+# SRS ClickHouse Base58 Encoding and Decoding
 # Software Requirements Specification
 
 ## Table of Contents
