@@ -77,7 +77,7 @@ def ontime_concurrent_insert_delete_execution_time(self, delete_query, node=None
 
     with Then("I check execution time does not change a lot"):
         assert (
-            100 * execution_time > execution_time_parallel
+            200 * execution_time > execution_time_parallel
         ), error()  # todo rewrite after implementation
 
 
@@ -143,7 +143,7 @@ def ontime_insert_execution_time_after_delete(self, delete_query, node=None):
 
     with Then("I check execution time does not change a lot"):
         assert (
-            execution_time * 2 > execution_time_after_delete
+            execution_time * 5 > execution_time_after_delete
         ), error()  # todo rewrite after implementation
 
 

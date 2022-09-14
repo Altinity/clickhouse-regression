@@ -80,7 +80,7 @@ def acceptance_concurrent_insert_delete_execution_time(self, delete_query, node=
     metric("execution_time_parallel", execution_time_parallel, "s")
 
     with Then("I check execution time does not change a lot"):
-        assert 100 * execution_time > execution_time_parallel, error()
+        assert 200 * execution_time > execution_time_parallel, error()
 
 
 @TestScenario
@@ -109,7 +109,7 @@ def acceptance_delete_execution_time(self, delete_query, node=None):
     metric("execution_time", execution_time, "s")
 
     with Then("I check delete execution time is less than 2 seconds"):
-        assert execution_time < 10, error()
+        assert execution_time < 20, error()
 
 
 @TestScenario
@@ -146,7 +146,7 @@ def acceptance_insert_execution_time_after_delete(self, delete_query, node=None)
     metric("execution_time_after_delete", execution_time_after_delete, "s")
 
     with Then("I check execution time does not change a lot"):
-        assert execution_time * 2 > execution_time_after_delete, error()
+        assert execution_time * 5 > execution_time_after_delete, error()
 
 
 @TestFeature

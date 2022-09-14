@@ -679,7 +679,7 @@ def delete(
     node=None,
     multiple=False,
 ):
-    """Delete rows from table that match the condition.'""?????????????????::"""
+    """Delete rows from table that match the condition."""
     if node is None:
         node = self.context.node
 

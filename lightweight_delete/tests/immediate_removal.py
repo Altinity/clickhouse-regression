@@ -38,7 +38,7 @@ def delete_most_of_the_table(self, node=None):
     with Then("I check that rows are deleted immediately"):
         r = node.query(f"SELECT count(*) FROM {table_name}")
         assert r.output == output, error()
-        assert execution_time < 1, error()  # todo rewrite value
+        assert execution_time < 20, error()  # todo rewrite value
 
 
 @TestFeature

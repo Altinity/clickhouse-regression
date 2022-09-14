@@ -3,6 +3,42 @@ from lightweight_delete.tests.steps import *
 
 
 @TestScenario
+@Requirements(RQ_SRS_023_ClickHouse_LightweightDelete_Performance_LargeNumberOfPartitions("1.0"))
+def performance_large_number_of_partitions(self, node=None):
+    """Check that lightweight deletes do not slow down when increasing partitions number."""
+    if node is None:
+        node = self.context.node
+
+    table_name_1_partition = f"table_{getuid()}_1_partition"
+    table_name_100_partitions = f"table_{getuid()}_100_partition"
+
+    with Given("I have a table with only 1 partition and with 100 partitions"):
+        create_partitioned_table(table_name=table_name_1_partition)
+        insert(table_name=table_name_1_partition,
+               partitions=1,
+               parts_per_partition=1,
+               block_size=1000000
+               )
+
+        create_partitioned_table(table_name=table_name_100_partitions)
+        insert(table_name=table_name_100_partitions,
+               partitions=100,
+               parts_per_partition=1,
+               block_size=10000
+               )
+    with When("I delete from both tables and time it"):
+        start_time_1_partition = time.time()
+        delete(table_name=table_name_1_partition, condition="x % 2 == 0")
+        time_1_partition = time.time() - start_time_1_partition
+        start_time_100_partition = time.time()
+        delete(table_name=table_name_100_partitions, condition="x % 2 == 0")
+        time_100_partitions = time.time() - start_time_100_partition
+
+    with Then("I check lightweight delete time does not greatly increase"):
+        assert time_100_partitions < 2 * time_1_partition, error()
+
+
+@TestScenario
 @Requirements(RQ_SRS_023_ClickHouse_LightweightDelete_Performance("1.0"))
 def performance_without_primary_key(self, node=None):
     """Check that clickhouse have similar performance between delete and select statements without primary key."""
@@ -38,7 +74,7 @@ def performance_without_primary_key(self, node=None):
 
     with Then("I check performance"):
         assert (
-            0.01 * execution_time1 < execution_time2 < 150 * execution_time1
+                0.01 * execution_time1 < execution_time2 < 150 * execution_time1
         ), error()  # todo rewrite value
 
 
@@ -81,7 +117,7 @@ def performance_with_primary_key_many_partitions(self, node=None):
 
     with Then("I check performance"):
         assert (
-            0.01 * execution_time1 < execution_time2 < 150 * execution_time1
+                0.01 * execution_time1 < execution_time2 < 150 * execution_time1
         ), error()  # todo rewrite value
 
 
@@ -126,7 +162,7 @@ def performance_with_primary_key_many_parts(self, node=None):
 
     with Then("I check performance"):
         assert (
-            0.01 * execution_time1 < execution_time2 < 150 * execution_time1
+                0.01 * execution_time1 < execution_time2 < 150 * execution_time1
         ), error()  # todo rewrite value
 
 
@@ -186,7 +222,7 @@ def performance_post_delete_select(self, node=None):
 
     with Then("I compare time spent for select statement with and without delete"):
         assert (
-            1.1 * execution_time1 > execution_time2
+                1.1 * execution_time1 > execution_time2
         ), error()  # todo rewrite values after implementation
 
 

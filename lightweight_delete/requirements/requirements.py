@@ -9,1147 +9,1160 @@ from testflows.core import Requirement
 Heading = Specification.Heading
 
 RQ_SRS_023_ClickHouse_LightweightDelete_DeleteStatement = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.DeleteStatement",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.DeleteStatement',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support standard `DELETE` statement to remove data that SHALL have the following syntax\n"
-        "\n"
-        "```sql\n"
-        "DELETE FROM <table> WHERE <condition>\n"
-        "```\n"
-        "\n"
-        "where the `WHERE` condition SHALL be any condition expressible in a `WHERE` clause used in the `SELECT` statements\n"
-        "and all the rows that match the `WHERE` condition SHALL be removed.\n"
-        "\n"
-        "Examples:\n"
-        "\n"
-        "* Delete a child organization and its data\n"
-        "  ```sql\n"
-        "  DELETE * FROM example_table WHERE mspOrganizationId = 123 and has(organizationIds,456)\n"
-        "  ```\n"
-        "* Delete all records for a specific Identity\n"
-        "  ```sql\n"
-        "  DELETE * FROM example_table WHERE has(origin_ids, 123)\n"
-        "  ```\n"
-        "* Delete all records for certain types of destinations\n"
-        "  ```sql\n"
-        "  DELETE * FROM example_table WHERE has(allCategories, 123)\n"
-        "  ```\n"
-        "\n"
+        '[ClickHouse] SHALL support standard `DELETE` statement to remove data that SHALL have the following syntax\n'
+        '\n'
+        '```sql\n'
+        'DELETE FROM <table> WHERE <condition>\n'
+        '```\n'
+        '\n'
+        'where the `WHERE` condition SHALL be any condition expressible in a `WHERE` clause used in the `SELECT` statements\n'
+        'and all the rows that match the `WHERE` condition SHALL be removed.\n'
+        '\n'
+        'Examples:\n'
+        '\n'
+        '* Delete a child organization and its data\n'
+        '  ```sql\n'
+        '  DELETE * FROM example_table WHERE mspOrganizationId = 123 and has(organizationIds,456)\n'
+        '  ```\n'
+        '* Delete all records for a specific Identity\n'
+        '  ```sql\n'
+        '  DELETE * FROM example_table WHERE has(origin_ids, 123)\n'
+        '  ```\n'
+        '* Delete all records for certain types of destinations\n'
+        '  ```sql\n'
+        '  DELETE * FROM example_table WHERE has(allCategories, 123)\n'
+        '  ```\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.1.1",
+    num='2.1.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_DeleteZeroRows = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.DeleteZeroRows",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.DeleteZeroRows',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
         "[ClickHouse]'s `DELETE` statement SHALL remove zero rows if `WHERE` condition does not match any row.\n"
-        "\n"
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.2.1",
+    num='2.2.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_DeleteOneRow = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.DeleteOneRow",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.DeleteOneRow',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
         "[ClickHouse]'s `DELETE` statement SHALL remove one row if `WHERE` condition matches one specific row.\n"
-        "\n"
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.3.1",
+    num='2.3.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_DeleteAllRows = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.DeleteAllRows",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.DeleteAllRows',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
         "[ClickHouse]'s `DELETE` statement SHALL all rows if `WHERE` condition matches every row.\n"
-        "\n"
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.4.1",
+    num='2.4.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_DeleteSmallSubsetOfRows = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.DeleteSmallSubsetOfRows",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.DeleteSmallSubsetOfRows',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
         "[ClickHouse]'s `DELETE` statement SHALL remove rows where the `WHERE` condition matches only matches small subset of rows.\n"
-        "\n"
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.5.1",
+    num='2.5.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_DeleteLargeSubsetOfRows = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.DeleteLargeSubsetOfRows",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.DeleteLargeSubsetOfRows',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
         "[ClickHouse]'s `DELETE` statement SHALL remove rows where the `WHERE` condition matches only matches large subset of rows.\n"
-        "\n"
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.6.1",
+    num='2.6.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_OnePartitionWithPart = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.OnePartitionWithPart",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.OnePartitionWithPart',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support `DELETE` removing data in a partition with one part.\n"
-        "\n"
+        '[ClickHouse] SHALL support `DELETE` removing data in a partition with one part.\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.7.1",
+    num='2.7.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_PartitionWithManyParts = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.PartitionWithManyParts",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.PartitionWithManyParts',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support `DELETE` removing data in a partition with many small parts.\n"
-        "\n"
+        '[ClickHouse] SHALL support `DELETE` removing data in a partition with many small parts.\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.8.1",
+    num='2.8.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_MultiplePartitionsAndOnePart = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.MultiplePartitionsAndOnePart",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.MultiplePartitionsAndOnePart',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support `DELETE` removing data from multiple partitions with one part each.\n"
-        "\n"
+        '[ClickHouse] SHALL support `DELETE` removing data from multiple partitions with one part each.\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.9.1",
+    num='2.9.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_MultiplePartsAndPartitions = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.MultiplePartsAndPartitions",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.MultiplePartsAndPartitions',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support `DELETE` removing data from multiple parts and partitions.\n"
-        "\n"
+        '[ClickHouse] SHALL support `DELETE` removing data from multiple parts and partitions.\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.10.1",
+    num='2.10.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_AllRowsFromHalfOfTheParts = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.AllRowsFromHalfOfTheParts",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.AllRowsFromHalfOfTheParts',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support `DELETE` removing all rows from half of the parts.\n"
-        "\n"
+        '[ClickHouse] SHALL support `DELETE` removing all rows from half of the parts.\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.11.1",
+    num='2.11.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_VeryLargePart = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.VeryLargePart",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.VeryLargePart',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support `DELETE` removing rows in a very large part.\n" "\n"
+        '[ClickHouse] SHALL support `DELETE` removing rows in a very large part.\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.12.1",
+    num='2.12.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_VerySmallPart = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.VerySmallPart",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.VerySmallPart',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support `DELETE` removing rows in a very small part.\n" "\n"
+        '[ClickHouse] SHALL support `DELETE` removing rows in a very small part.\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.13.1",
+    num='2.13.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_EncryptedDisk = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.EncryptedDisk",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.EncryptedDisk',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support `DELETE` removing rows from table which is stored on encrypted disk.\n"
-        "\n"
+        '[ClickHouse] SHALL support `DELETE` removing rows from table which is stored on encrypted disk.\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.14.1",
+    num='2.14.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_EventualConsistency = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.EventualConsistency",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.EventualConsistency',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] `DELETE` operations SHALL replicate in an eventually consistent manner between replicas.\n"
-        "\n"
+        '[ClickHouse] `DELETE` operations SHALL replicate in an eventually consistent manner between replicas.\n'
+        '\n'
     ),
     link=None,
     level=4,
-    num="2.15.1.1",
+    num='2.15.1.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_RowsRemovedFromReplica = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.RowsRemovedFromReplica",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.RowsRemovedFromReplica',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support `DELETE` removing rows from a part where the rows have already\n"
-        "been removed from another replica.\n"
-        "\n"
+        '[ClickHouse] SHALL support `DELETE` removing rows from a part where the rows have already\n'
+        'been removed from another replica.\n'
+        '\n'
     ),
     link=None,
     level=4,
-    num="2.15.2.1",
+    num='2.15.2.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_MultipleReplicas = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.MultipleReplicas",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.MultipleReplicas',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support `DELETE` removing data from multiple replicas.\n"
-        "\n"
+        '[ClickHouse] SHALL support `DELETE` removing data from multiple replicas.\n'
+        '\n'
     ),
     link=None,
     level=4,
-    num="2.15.3.1",
+    num='2.15.3.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_ReplicationQueue = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.ReplicationQueue",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.ReplicationQueue',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL push `DELETE` statements to the replication queue.\n" "\n"
+        '[ClickHouse] SHALL push `DELETE` statements to the replication queue.\n'
+        '\n'
     ),
     link=None,
     level=4,
-    num="2.15.4.1",
+    num='2.15.4.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_ReplicationStuck = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.ReplicationStuck",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.ReplicationStuck',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL reject new `DELETE` statements when the replication queue is full or connection to zookeeper is lost.\n"
-        "\n"
+        '[ClickHouse] SHALL reject new `DELETE` statements when the replication queue is full or connection to zookeeper is lost.\n'
+        '\n'
     ),
     link=None,
     level=4,
-    num="2.15.5.1",
+    num='2.15.5.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_MultipleShards = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.MultipleShards",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.MultipleShards',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support `DELETE` removing data from multiple shards.\n" "\n"
+        '[ClickHouse] SHALL support `DELETE` removing data from multiple shards.\n'
+        '\n'
     ),
     link=None,
     level=4,
-    num="2.16.1.1",
+    num='2.16.1.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_AlterTableWithParts_Partitions = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.AlterTableWithParts&Partitions",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.AlterTableWithParts&Partitions',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support using parts with deleted rows in all `ALTER TABLE` operations that target parts or partitions.\n"
-        "`ALTER TABLE` operations:\n"
-        "\n"
-        "* `DETACH PART|PARTITION`\n"
-        "* `DROP PART|PARTITION`\n"
-        "* `DROP DETACHED PART|PARTITION`\n"
-        "* `ATTACH PART|PARTITION`\n"
-        "* `REPLACE PARTITION`\n"
-        "* `FREEZE PARTITION`\n"
-        "* `UNFREEZE PARTITION`\n"
-        "* `FETCH PART|PARTITION`\n"
-        "* `MOVE PART|PARTITION`\n"
-        "* `UPDATE IN PARTITION`\n"
-        "* `DELETE IN PARTITION`\n"
-        "* `ADD|DROP|CLEAR|COMMENT|MODIFY COLUMN`\n"
-        "\n"
+        '[ClickHouse] SHALL support using parts with deleted rows in all `ALTER TABLE` operations that target parts or partitions.\n'
+        '`ALTER TABLE` operations:\n'
+        '\n'
+        '* `DETACH PART|PARTITION`\n'
+        '* `DROP PART|PARTITION`\n'
+        '* `DROP DETACHED PART|PARTITION`\n'
+        '* `ATTACH PART|PARTITION`\n'
+        '* `REPLACE PARTITION`\n'
+        '* `FREEZE PARTITION`\n'
+        '* `UNFREEZE PARTITION`\n'
+        '* `FETCH PART|PARTITION`\n'
+        '* `MOVE PART|PARTITION`\n'
+        '* `UPDATE IN PARTITION`\n'
+        '* `DELETE IN PARTITION`\n'
+        '* `ADD|DROP|CLEAR|COMMENT|MODIFY COLUMN`\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.17.1",
+    num='2.17.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_TTL = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.TTL",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.TTL',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support using parts with deleted rows in tiered storage TTL moves and deletes.\n"
-        "\n"
+        '[ClickHouse] SHALL support using parts with deleted rows in tiered storage TTL moves and deletes.\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.18.1",
+    num='2.18.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_ColumnTTL = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.ColumnTTL",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.ColumnTTL',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support using parts with deleted rows in column TTL operations.\n"
-        "\n"
+        '[ClickHouse] SHALL support using parts with deleted rows in column TTL operations.\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.19.1",
+    num='2.19.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_InvalidSyntax_NoWhere = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.InvalidSyntax.NoWhere",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.InvalidSyntax.NoWhere',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL return an error when using `DELETE` statement with no `WHERE` clause.\n"
-        "\n"
+        '[ClickHouse] SHALL return an error when using `DELETE` statement with no `WHERE` clause.\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.20.1",
+    num='2.20.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_InvalidSyntax_EmptyWhere = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.InvalidSyntax.EmptyWhere",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.InvalidSyntax.EmptyWhere',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL return an error when using `DELETE` statement with empty `WHERE` clause.\n"
-        "\n"
+        '[ClickHouse] SHALL return an error when using `DELETE` statement with empty `WHERE` clause.\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.20.2",
+    num='2.20.2'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_SupportedTableEngines = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.SupportedTableEngines",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.SupportedTableEngines',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support using the `DELETE` statement on all MergeTree table engines:\n"
-        "\n"
-        "* MergeTree\n"
-        "* ReplacingMergeTree\n"
-        "* SummingMergeTree\n"
-        "* AggregatingMergeTree\n"
-        "* CollapsingMergeTree\n"
-        "* VersionedCollapsingMergeTree\n"
-        "* GraphiteMergeTree\n"
-        "* ReplicatedMergeTree\n"
-        "* ReplicatedSummingMergeTree\n"
-        "* ReplicatedReplacingMergeTree\n"
-        "* ReplicatedAggregatingMergeTree\n"
-        "* ReplicatedCollapsingMergeTree\n"
-        "* ReplicatedVersionedCollapsingMergeTree\n"
-        "* ReplicatedGraphiteMergeTree\n"
-        "\n"
+        '[ClickHouse] SHALL support using the `DELETE` statement on all MergeTree table engines:\n'
+        '\n'
+        '* MergeTree\n'
+        '* ReplacingMergeTree\n'
+        '* SummingMergeTree\n'
+        '* AggregatingMergeTree\n'
+        '* CollapsingMergeTree\n'
+        '* VersionedCollapsingMergeTree\n'
+        '* GraphiteMergeTree\n'
+        '* ReplicatedMergeTree\n'
+        '* ReplicatedSummingMergeTree\n'
+        '* ReplicatedReplacingMergeTree\n'
+        '* ReplicatedAggregatingMergeTree\n'
+        '* ReplicatedCollapsingMergeTree\n'
+        '* ReplicatedVersionedCollapsingMergeTree\n'
+        '* ReplicatedGraphiteMergeTree\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.21.1",
+    num='2.21.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_ImmediateRemovalForSelects = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.ImmediateRemovalForSelects",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.ImmediateRemovalForSelects',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL immediately remove all rows for subsequent `SELECT`s after `DELETE` statement is executed\n"
-        "and the subsequent `SELECT` statements SHALL not apply the original `WHERE` conditions specified in the `DELETE`.\n"
-        "\n"
-        "For example,\n"
-        "\n"
-        "```sql\n"
-        "SELECT count() FROM table;\n"
-        "DELETE FROM table WHERE <conditions which may expensive to calculate>;\n"
-        "SELECT count() FROM table;  -- deleted rows are not returned\n"
-        "```\n"
-        "\n"
+        '[ClickHouse] SHALL immediately remove all rows for subsequent `SELECT`s after `DELETE` statement is executed\n'
+        'and the subsequent `SELECT` statements SHALL not apply the original `WHERE` conditions specified in the `DELETE`.\n'
+        '\n'
+        'For example,\n'
+        '\n'
+        '```sql\n'
+        'SELECT count() FROM table;\n'
+        'DELETE FROM table WHERE <conditions which may expensive to calculate>;\n'
+        'SELECT count() FROM table;  -- deleted rows are not returned\n'
+        '```\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.22.1",
+    num='2.22.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_MultipleDeletes = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.MultipleDeletes",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.MultipleDeletes',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support using multiple `DELETE` statements on the same table.\n"
-        "\n"
+        '[ClickHouse] SHALL support using multiple `DELETE` statements on the same table.\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.23.1",
+    num='2.23.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_MultipleDeletes_Limitations = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.MultipleDeletes.Limitations",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.MultipleDeletes.Limitations',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL have the same limitations on the number of `DELETE`s as for the number of `INSERT`s.\n"
-        "\n"
+        '[ClickHouse] SHALL have the same limitations on the number of `DELETE`s as for the number of `INSERT`s.\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.23.2",
+    num='2.23.2'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_MultipleDeletes_ConcurrentDelete = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.MultipleDeletes.ConcurrentDelete",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.MultipleDeletes.ConcurrentDelete',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] `DELETE` statement SHALL perform correctly when there are multiple concurrent `DELETE` statements.\n"
-        "\n"
+        '[ClickHouse] `DELETE` statement SHALL perform correctly when there are multiple concurrent `DELETE` statements.\n'
+        '\n'
     ),
     link=None,
     level=4,
-    num="2.23.3.1",
+    num='2.23.3.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_MultipleDeletes_ConcurrentDeleteOverlap = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.MultipleDeletes.ConcurrentDeleteOverlap",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.MultipleDeletes.ConcurrentDeleteOverlap',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] `DELETE` statement SHALL perform correctly when there are multiple concurrent `DELETE` statements targetting the same rows.\n"
-        "\n"
+        '[ClickHouse] `DELETE` statement SHALL perform correctly when there are multiple concurrent `DELETE` statements targetting the same rows.\n'
+        '\n'
     ),
     link=None,
     level=4,
-    num="2.23.3.2",
+    num='2.23.3.2'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_SynchronousOperationOnSingleNode = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.SynchronousOperationOnSingleNode",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.SynchronousOperationOnSingleNode',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support synchronous operation of the `DELETE` statement on a single node.\n"
-        "\n"
+        '[ClickHouse] SHALL support synchronous operation of the `DELETE` statement on a single node.\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.24.1",
+    num='2.24.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_EfficientPhysicalDataRemoval = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.EfficientPhysicalDataRemoval",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.EfficientPhysicalDataRemoval',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support efficient removal of physical data from the tables that had rows \n"
-        "deleted using the `DELETE` statement.\n"
-        "\n"
+        '[ClickHouse] SHALL support efficient removal of physical data from the tables that had rows \n'
+        'deleted using the `DELETE` statement.\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.25.1",
+    num='2.25.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_DiskSpace = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.DiskSpace",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.DiskSpace',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL not greatly increase size of the table on disk after lightweight delete.\n"
-        "\n"
+        '[ClickHouse] SHALL not greatly increase size of the table on disk after lightweight delete.\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.26.1",
+    num='2.26.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_Performance = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.Performance",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.Performance',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL have similar performance between `DELETE` and `SELECT` statements using the same condition\n"
-        "and SHALL use table primary key and secondary indexes if present.\n"
-        "\n"
+        '[ClickHouse] SHALL have similar performance between `DELETE` and `SELECT` statements using the same condition\n'
+        'and SHALL use table primary key and secondary indexes if present.\n'
+        '\n'
     ),
     link=None,
     level=4,
-    num="2.27.1.1",
+    num='2.27.1.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_Performance_ConcurrentQueries = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.Performance.ConcurrentQueries",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.Performance.ConcurrentQueries',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL not have major degradation in query response times during the deletion operation.\n"
-        "\n"
+        '[ClickHouse] SHALL not have major degradation in query response times during the deletion operation.\n'
+        '\n'
     ),
     link=None,
     level=4,
-    num="2.27.2.1",
+    num='2.27.2.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_Performance_PostDelete = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.Performance.PostDelete",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.Performance.PostDelete',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] `SELECT` statement performance SHALL not degrade or degrade insignificantly on tables that contain rows deleted\n"
-        "using the `DELETE` statement.\n"
-        "\n"
+        '[ClickHouse] `SELECT` statement performance SHALL not degrade or degrade insignificantly on tables that contain rows deleted\n'
+        'using the `DELETE` statement.\n'
+        '\n'
     ),
     link=None,
     level=4,
-    num="2.27.3.1",
+    num='2.27.3.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_Performance_LargeNumberOfPartitions = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.Performance.LargeNumberOfPartitions",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.Performance.LargeNumberOfPartitions',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] `DELETE` statement SHALL have acceptable performance when tables have a very large number of partitions.\n"
-        "\n"
+        '[ClickHouse] `DELETE` statement SHALL have acceptable performance when tables have a very large number of partitions.\n'
+        '\n'
     ),
     link=None,
     level=4,
-    num="2.27.4.1",
+    num='2.27.4.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_Performance_LargeNumberOfPartsInPartitions = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.Performance.LargeNumberOfPartsInPartitions",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.Performance.LargeNumberOfPartsInPartitions',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] `DELETE` statement SHALL have acceptable performance when tables have a very large number of parts in partitions.\n"
-        "\n"
+        '[ClickHouse] `DELETE` statement SHALL have acceptable performance when tables have a very large number of parts in partitions.\n'
+        '\n'
     ),
     link=None,
     level=4,
-    num="2.27.5.1",
+    num='2.27.5.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_Performance_Acceptance_OnTimeDataset_Inserts = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.Performance.Acceptance.OnTimeDataset.Inserts",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.Performance.Acceptance.OnTimeDataset.Inserts',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL have a similar ingestion performance when the reference dataset table \n"
-        "has deleted rows vs no deleted rows when using [insert reference queries].\n"
-        "\n"
+        '[ClickHouse] SHALL have a similar ingestion performance when the reference dataset table \n'
+        'has deleted rows vs no deleted rows when using [insert reference queries].\n'
+        '\n'
     ),
     link=None,
     level=4,
-    num="2.28.5.1",
+    num='2.28.5.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_Performance_Acceptance_OnTimeDataset_DeleteQueryExecutionTime = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.Performance.Acceptance.OnTimeDataset.DeleteQueryExecutionTime",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.Performance.Acceptance.OnTimeDataset.DeleteQueryExecutionTime',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL execute each query in the [delete reference queries] set against the reference dataset table within 2 sec.\n"
-        "\n"
+        '[ClickHouse] SHALL execute each query in the [delete reference queries] set against the reference dataset table within 2 sec.\n'
+        '\n'
     ),
     link=None,
     level=4,
-    num="2.28.5.2",
+    num='2.28.5.2'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_Performance_Acceptance_OnTimeDataset_ConcurrentSelectsAndDeletes = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.Performance.Acceptance.OnTimeDataset.ConcurrentSelectsAndDeletes",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.Performance.Acceptance.OnTimeDataset.ConcurrentSelectsAndDeletes',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL keep reference dataset table usable while the [delete reference queries]\n"
-        "are being executed concurrently with the [select reference queries]. \n"
-        "No major degradation in query response time SHALL be seen.\n"
-        "\n"
+        '[ClickHouse] SHALL keep reference dataset table usable while the [delete reference queries]\n'
+        'are being executed concurrently with the [select reference queries]. \n'
+        'No major degradation in query response time SHALL be seen.\n'
+        '\n'
     ),
     link=None,
     level=4,
-    num="2.28.5.3",
+    num='2.28.5.3'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_Performance_Acceptance_OnTimeDataset_ConcurrentInsertsAndDeletes = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.Performance.Acceptance.OnTimeDataset.ConcurrentInsertsAndDeletes",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.Performance.Acceptance.OnTimeDataset.ConcurrentInsertsAndDeletes',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL not slow down or lockup data ingestion into the reference dataset table\n"
-        "when [delete reference queries] are executed concurrently with the [insert reference queries].\n"
-        "\n"
+        '[ClickHouse] SHALL not slow down or lockup data ingestion into the reference dataset table\n'
+        'when [delete reference queries] are executed concurrently with the [insert reference queries].\n'
+        '\n'
     ),
     link=None,
     level=4,
-    num="2.28.5.4",
+    num='2.28.5.4'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_ImmutablePartsAndGarbageCollection = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.ImmutablePartsAndGarbageCollection",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.ImmutablePartsAndGarbageCollection',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] parts affected by the `DELETE` statement SHALL stay immutable and\n"
-        "the deleted rows SHALL be garbage collected in a scheduled merge.\n"
-        "\n"
+        '[ClickHouse] parts affected by the `DELETE` statement SHALL stay immutable and\n'
+        'the deleted rows SHALL be garbage collected in a scheduled merge.\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.29.1",
+    num='2.29.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_Compatibility_ConcurrentOperations = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.Compatibility.ConcurrentOperations",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.Compatibility.ConcurrentOperations',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] `DELETE` statement SHALL perform correctly with the other concurrent database operations.\n"
-        "The cluster SHALL remain usable and not slow down during the deletion operation.\n"
-        "Examples of operations,\n"
-        "\n"
-        "* `INSERT`\n"
-        "* `SELECT`\n"
-        "* `ALTER DELETE`\n"
-        "* `ALTER UPDATE`\n"
-        "* `ALTER ADD/REMOVE/MODIFY COLUMN`\n"
-        "* Background merge\n"
-        "* Replication\n"
-        "* TTL moves\n"
-        "* TTL deletes\n"
-        "* Column TTL\n"
-        "\n"
+        '[ClickHouse] `DELETE` statement SHALL perform correctly with the other concurrent database operations.\n'
+        'The cluster SHALL remain usable and not slow down during the deletion operation.\n'
+        'Examples of operations,\n'
+        '\n'
+        '* `INSERT`\n'
+        '* `SELECT`\n'
+        '* `ALTER DELETE`\n'
+        '* `ALTER UPDATE`\n'
+        '* `ALTER ADD/REMOVE/MODIFY COLUMN`\n'
+        '* Background merge\n'
+        '* Replication\n'
+        '* TTL moves\n'
+        '* TTL deletes\n'
+        '* Column TTL\n'
+        '\n'
     ),
     link=None,
     level=4,
-    num="2.30.1.1",
+    num='2.30.1.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_Compatibility_ConcurrentInserts_DeletesOnManyParts = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.Compatibility.ConcurrentInserts&DeletesOnManyParts",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.Compatibility.ConcurrentInserts&DeletesOnManyParts',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL execute `INSERT` and `DELETE` statements concurrently when `INSERT` creates many parts.\n"
-        "\n"
+        '[ClickHouse] SHALL execute `INSERT` and `DELETE` statements concurrently when `INSERT` creates many parts.\n'
+        '\n'
     ),
     link=None,
     level=5,
-    num="2.30.1.2.1",
+    num='2.30.1.2.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_Compatibility_ConcurrentInserts_DeletesOfTheSameData = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.Compatibility.ConcurrentInserts&DeletesOfTheSameData",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.Compatibility.ConcurrentInserts&DeletesOfTheSameData',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL execute `INSERT` and `DELETE` statements that use the same data in the order they were ran.\n"
-        "\n"
+        '[ClickHouse] SHALL execute `INSERT` and `DELETE` statements that use the same data in the order they were ran.\n'
+        '\n'
     ),
     link=None,
     level=5,
-    num="2.30.1.3.1",
+    num='2.30.1.3.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_Compatibility_ConcurrentDelete_AlterDelete = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.Compatibility.ConcurrentDelete&AlterDelete",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.Compatibility.ConcurrentDelete&AlterDelete',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support executing `DELETE` and `ALTER TABLE DELETE` statements concurrently.\n"
-        "\n"
+        '[ClickHouse] SHALL support executing `DELETE` and `ALTER TABLE DELETE` statements concurrently.\n'
+        '\n'
     ),
     link=None,
     level=5,
-    num="2.30.1.4.1",
+    num='2.30.1.4.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_Compatibility_Projections = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.Compatibility.Projections",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.Compatibility.Projections',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] `DELETE` statement SHALL be compatible with tables that have one or more projections.\n"
-        "\n"
+        '[ClickHouse] `DELETE` statement SHALL be compatible with tables that have one or more projections.\n'
+        '\n'
     ),
     link=None,
     level=4,
-    num="2.30.2.1",
+    num='2.30.2.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_Compatibility_Views = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.Compatibility.Views",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.Compatibility.Views',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] `DELETE` statement SHALL be compatible with tables that have one or more views. \n"
-        "Including \n"
-        "\n"
-        "* normal\n"
-        "* materialized\n"
-        "* live\n"
-        "* window\n"
-        "\n"
+        '[ClickHouse] `DELETE` statement SHALL be compatible with tables that have one or more views. \n'
+        'Including \n'
+        '\n'
+        '* normal\n'
+        '* materialized\n'
+        '* live\n'
+        '* window\n'
+        '\n'
     ),
     link=None,
     level=4,
-    num="2.30.3.1",
+    num='2.30.3.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_HardRestarts = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.HardRestarts",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.HardRestarts',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL either finish the `DELETE` or return the system to before the `DELETE` started after a hard restart.\n"
-        "\n"
+        '[ClickHouse] SHALL either finish the `DELETE` or return the system to before the `DELETE` started after a hard restart.\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.31.1",
+    num='2.31.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_NonCorruptedServerState = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.NonCorruptedServerState",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.NonCorruptedServerState',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL prevent server state from being corrupted if the server crashes during a `DELETE`.\n"
-        "\n"
+        '[ClickHouse] SHALL prevent server state from being corrupted if the server crashes during a `DELETE`.\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.32.1",
+    num='2.32.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_ServerRestart = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.ServerRestart",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.ServerRestart',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
-    description=("[ClickHouse] SHALL keep rows deleted after a server restart.\n" "\n"),
+    description=(
+        '[ClickHouse] SHALL keep rows deleted after a server restart.\n'
+        '\n'
+    ),
     link=None,
     level=3,
-    num="2.33.1",
+    num='2.33.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_NonDeterministicFunctions = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.NonDeterministicFunctions",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.NonDeterministicFunctions',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support delete statement with non deterministic functions in the `WHERE` condition.\n"
-        "\n"
+        '[ClickHouse] SHALL support delete statement with non deterministic functions in the `WHERE` condition.\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.34.1",
+    num='2.34.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_LackOfDiskSpace = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.LackOfDiskSpace",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.LackOfDiskSpace',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL reserve space to avoid breaking in the middle.\n" "\n"
+        '[ClickHouse] SHALL reserve space to avoid breaking in the middle.\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.35.1",
+    num='2.35.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_MultidiskConfigurations = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.MultidiskConfigurations",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.MultidiskConfigurations',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL store the masks used for `DELETE` on the same disks as the parts.\n"
-        "\n"
+        '[ClickHouse] SHALL store the masks used for `DELETE` on the same disks as the parts.\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.36.1",
+    num='2.36.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_S3Disks = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.S3Disks",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.S3Disks',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
-    description=("[ClickHouse] SHALL support using `DELETE` on S3 disks.\n" "\n"),
+    description=(
+        '[ClickHouse] SHALL support using `DELETE` on S3 disks.\n'
+        '\n'
+    ),
     link=None,
     level=3,
-    num="2.37.1",
+    num='2.37.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_Backups_Mask = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.Backups.Mask",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.Backups.Mask',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL keep masks during backups and finish executing any running `DELETE` queries.\n"
-        "\n"
+        '[ClickHouse] SHALL keep masks during backups and finish executing any running `DELETE` queries.\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.38.1",
+    num='2.38.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_Backups_BackupAfterLightweightDelete = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.Backups.BackupAfterLightweightDelete",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.Backups.BackupAfterLightweightDelete',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support backups for tables that have deleted rows.\n" "\n"
+        '[ClickHouse] SHALL support backups for tables that have deleted rows.\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.38.2",
+    num='2.38.2'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_DropEmptyPart = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.DropEmptyPart",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.DropEmptyPart',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL schedule dropping the part if all of the rows are deleted from the table.\n"
-        "\n"
+        '[ClickHouse] SHALL schedule dropping the part if all of the rows are deleted from the table.\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.39.1",
+    num='2.39.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_DeletesPerSecond = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.DeletesPerSecond",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.DeletesPerSecond',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL only run a few `DELETE` statements per second.\n" "\n"
+        '[ClickHouse] SHALL only run a few `DELETE` statements per second.\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.40.1",
+    num='2.40.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_UpgradeServer = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.UpgradeServer",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.UpgradeServer',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL require servers to upgrade when delete mask format changes.\n"
-        "\n"
+        '[ClickHouse] SHALL require servers to upgrade when delete mask format changes.\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.41.1",
+    num='2.41.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_Load_Merges = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.Load.Merges",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.Load.Merges',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL perform correctly with concurrent lightweight delete and a lot of merges.\n"
-        "\n"
+        '[ClickHouse] SHALL perform correctly with concurrent lightweight delete and a lot of merges.\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.42.1",
+    num='2.42.1'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_Load_Insert = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.Load.Insert",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.Load.Insert',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL perform correctly with high insert pressure and lightweight delete.\n"
-        "\n"
-        "\n"
+        '[ClickHouse] SHALL perform correctly with high insert pressure and lightweight delete.\n'
+        '\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.42.2",
+    num='2.42.2'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_Load_ExcessiveMutations = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.Load.ExcessiveMutations",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.Load.ExcessiveMutations',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL not create excessive mutations during lightweight delete operations.\n"
-        "\n"
-        "\n"
+        '[ClickHouse] SHALL not create excessive mutations during lightweight delete operations.\n'
+        '\n'
+        '\n'
     ),
     link=None,
     level=3,
-    num="2.42.3",
+    num='2.42.3'
 )
 
 RQ_SRS_023_ClickHouse_LightweightDelete_Load_Zookeeper = Requirement(
-    name="RQ.SRS-023.ClickHouse.LightweightDelete.Load.Zookeeper",
-    version="1.0",
+    name='RQ.SRS-023.ClickHouse.LightweightDelete.Load.Zookeeper',
+    version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL not create huge transactions in zookeeper during lightweight delete operations.\n"
-        "\n"
-        "\n"
-        "\n"
-        "[SRS]: #srs\n"
-        "[select reference queries]: #select-reference-queries\n"
-        "[delete reference queries]: #delete-reference-queries\n"
-        "[insert reference queries]: #insert-reference-queries\n"
-        "[ClickHouse]: https://clickhouse.tech\n"
+        '[ClickHouse] SHALL not create huge transactions in zookeeper during lightweight delete operations.\n'
+        '\n'
+        '\n'
+        '\n'
+        '[SRS]: #srs\n'
+        '[select reference queries]: #select-reference-queries\n'
+        '[delete reference queries]: #delete-reference-queries\n'
+        '[insert reference queries]: #insert-reference-queries\n'
+        '[ClickHouse]: https://clickhouse.tech\n'
     ),
     link=None,
     level=3,
-    num="2.42.4",
+    num='2.42.4'
 )
 
 SRS023_ClickHouse_Lightweight_Delete = Specification(
-    name="SRS023 ClickHouse Lightweight Delete",
+    name='SRS023 ClickHouse Lightweight Delete',
     description=None,
     author=None,
     date=None,
@@ -1165,481 +1178,155 @@ SRS023_ClickHouse_Lightweight_Delete = Specification(
     parent=None,
     children=None,
     headings=(
-        Heading(name="Introduction", level=1, num="1"),
-        Heading(name="Requirements", level=1, num="2"),
-        Heading(name="`DELETE` Statement", level=2, num="2.1"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.DeleteStatement",
-            level=3,
-            num="2.1.1",
+        Heading(name='Introduction', level=1, num='1'),
+        Heading(name='Requirements', level=1, num='2'),
+        Heading(name='`DELETE` Statement', level=2, num='2.1'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.DeleteStatement', level=3, num='2.1.1'),
+        Heading(name='Delete Zero Rows', level=2, num='2.2'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.DeleteZeroRows', level=3, num='2.2.1'),
+        Heading(name='Delete One Row', level=2, num='2.3'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.DeleteOneRow', level=3, num='2.3.1'),
+        Heading(name='Delete All Rows', level=2, num='2.4'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.DeleteAllRows', level=3, num='2.4.1'),
+        Heading(name='Delete Small Subset of Rows', level=2, num='2.5'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.DeleteSmallSubsetOfRows', level=3, num='2.5.1'),
+        Heading(name='Delete Large Subset of Rows', level=2, num='2.6'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.DeleteLargeSubsetOfRows', level=3, num='2.6.1'),
+        Heading(name='One Partition and Part', level=2, num='2.7'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.OnePartitionWithPart', level=3, num='2.7.1'),
+        Heading(name='Partition With Many Parts', level=2, num='2.8'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.PartitionWithManyParts', level=3, num='2.8.1'),
+        Heading(name='Multiple Partitions and One Part', level=2, num='2.9'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.MultiplePartitionsAndOnePart', level=3, num='2.9.1'),
+        Heading(name='Multiple Parts And Partitions', level=2, num='2.10'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.MultiplePartsAndPartitions', level=3, num='2.10.1'),
+        Heading(name='All Rows From Half of the Parts', level=2, num='2.11'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.AllRowsFromHalfOfTheParts', level=3, num='2.11.1'),
+        Heading(name='Very Large Part', level=2, num='2.12'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.VeryLargePart', level=3, num='2.12.1'),
+        Heading(name='Very Small Part', level=2, num='2.13'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.VerySmallPart', level=3, num='2.13.1'),
+        Heading(name='Encrypted Disk', level=2, num='2.14'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.EncryptedDisk', level=3, num='2.14.1'),
+        Heading(name='Replicated Tables', level=2, num='2.15'),
+        Heading(name='Eventual Consistency', level=3, num='2.15.1'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.EventualConsistency', level=4, num='2.15.1.1'),
+        Heading(name='Rows Removed From Replica', level=3, num='2.15.2'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.RowsRemovedFromReplica', level=4, num='2.15.2.1'),
+        Heading(name='Multiple Replicas', level=3, num='2.15.3'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.MultipleReplicas', level=4, num='2.15.3.1'),
+        Heading(name='Replication Queue', level=3, num='2.15.4'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.ReplicationQueue', level=4, num='2.15.4.1'),
+        Heading(name='Replication Stuck', level=3, num='2.15.5'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.ReplicationStuck', level=4, num='2.15.5.1'),
+        Heading(name='Sharded Tables', level=2, num='2.16'),
+        Heading(name='Multiple Shards', level=3, num='2.16.1'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.MultipleShards', level=4, num='2.16.1.1'),
+        Heading(name='Alter Table with Parts & Partitions', level=2, num='2.17'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.AlterTableWithParts&Partitions', level=3, num='2.17.1'),
+        Heading(name='TTL', level=2, num='2.18'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.TTL', level=3, num='2.18.1'),
+        Heading(name='Column TTL', level=2, num='2.19'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.ColumnTTL', level=3, num='2.19.1'),
+        Heading(name='Invalid Syntax', level=2, num='2.20'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.InvalidSyntax.NoWhere', level=3, num='2.20.1'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.InvalidSyntax.EmptyWhere', level=3, num='2.20.2'),
+        Heading(name='Supported Table Engines', level=2, num='2.21'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.SupportedTableEngines', level=3, num='2.21.1'),
+        Heading(name='Immediate Removal For Selects', level=2, num='2.22'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.ImmediateRemovalForSelects', level=3, num='2.22.1'),
+        Heading(name='Multiple Deletes', level=2, num='2.23'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.MultipleDeletes', level=3, num='2.23.1'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.MultipleDeletes.Limitations', level=3, num='2.23.2'),
+        Heading(name='Concurrent Deletes', level=3, num='2.23.3'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.MultipleDeletes.ConcurrentDelete', level=4, num='2.23.3.1'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.MultipleDeletes.ConcurrentDeleteOverlap', level=4, num='2.23.3.2'),
+        Heading(name='Synchronous Operation', level=2, num='2.24'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.SynchronousOperationOnSingleNode', level=3, num='2.24.1'),
+        Heading(name='Efficient Physical Data Removal', level=2, num='2.25'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.EfficientPhysicalDataRemoval', level=3, num='2.25.1'),
+        Heading(name='Disk Space', level=2, num='2.26'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.DiskSpace', level=3, num='2.26.1'),
+        Heading(name='Performance', level=2, num='2.27'),
+        Heading(name='`DELETE` vs `SELECT`', level=3, num='2.27.1'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.Performance', level=4, num='2.27.1.1'),
+        Heading(name='Concurrent Queries', level=3, num='2.27.2'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.Performance.ConcurrentQueries', level=4, num='2.27.2.1'),
+        Heading(name='Post Delete `SELECT`s', level=3, num='2.27.3'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.Performance.PostDelete', level=4, num='2.27.3.1'),
+        Heading(name='Large Number of Partitions', level=3, num='2.27.4'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.Performance.LargeNumberOfPartitions', level=4, num='2.27.4.1'),
+        Heading(name='Large Number of Parts in Partitions', level=3, num='2.27.5'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.Performance.LargeNumberOfPartsInPartitions', level=4, num='2.27.5.1'),
+        Heading(name='Acceptance Criteria Using Reference `OnTime` Dataset', level=2, num='2.28'),
+        Heading(name='`OnTime` Dataset', level=3, num='2.28.1'),
+        Heading(name='`INSERT` Reference Queries', level=3, num='2.28.2'),
+        Heading(name='`SELECT` Reference Queries', level=3, num='2.28.3'),
+        Heading(name='Query 1: Average number of flights per month', level=4, num='2.28.3.1'),
+        Heading(name='Query 2: The number of flights per day from the year 2000 to 2008', level=4, num='2.28.3.2'),
+        Heading(name='Query 3: The number of flights delayed by more than 10 minutes, grouped by the day of the week, for 2000-2008', level=4, num='2.28.3.3'),
+        Heading(name='Query 4: The number of delays by the airport for 2000-2008', level=4, num='2.28.3.4'),
+        Heading(name='Query 5: The number of delays by carrier for 2007', level=4, num='2.28.3.5'),
+        Heading(name='Query 6: The percentage of delays by carrier for 2007', level=4, num='2.28.3.6'),
+        Heading(name='Query 7: The previous request for a broader range of years, 2000-2008', level=4, num='2.28.3.7'),
+        Heading(name='Query 8: Percentage of flights delayed for more than 10 minutes, by year', level=4, num='2.28.3.8'),
+        Heading(name='Query 9: The most popular destinations by the number of directly connected cities for various year ranges', level=4, num='2.28.3.9'),
+        Heading(name='Query 10: Flights per year', level=4, num='2.28.3.10'),
+        Heading(name='`DELETE` Reference Queries', level=3, num='2.28.4'),
+        Heading(name='Query 1: Deleting All Rows In a Single Partition', level=4, num='2.28.4.1'),
+        Heading(name='Query 2: Delete All Rows In Various Partitions', level=4, num='2.28.4.2'),
+        Heading(name='Query 3: Delete Some Rows In All Partitions (Large Granularity)', level=4, num='2.28.4.3'),
+        Heading(name='Query 4: Delete Some Rows In All Partitions (Small Granularity)', level=4, num='2.28.4.4'),
+        Heading(name='Query 5: Delete Some Rows In One Partition (Very Small Granularity)', level=4, num='2.28.4.5'),
+        Heading(name='Acceptance performance', level=3, num='2.28.5'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.Performance.Acceptance.OnTimeDataset.Inserts', level=4, num='2.28.5.1'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.Performance.Acceptance.OnTimeDataset.DeleteQueryExecutionTime', level=4, num='2.28.5.2'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.Performance.Acceptance.OnTimeDataset.ConcurrentSelectsAndDeletes', level=4, num='2.28.5.3'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.Performance.Acceptance.OnTimeDataset.ConcurrentInsertsAndDeletes', level=4, num='2.28.5.4'),
+        Heading(name='Immutable Parts And Garbage Collection', level=2, num='2.29'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.ImmutablePartsAndGarbageCollection', level=3, num='2.29.1'),
+        Heading(name='Compatibility', level=2, num='2.30'),
+        Heading(name='Concurrent Operations', level=3, num='2.30.1'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.Compatibility.ConcurrentOperations', level=4, num='2.30.1.1'),
+        Heading(name='Concurrent Inserts & Deletes On Many Parts', level=4, num='2.30.1.2'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.Compatibility.ConcurrentInserts&DeletesOnManyParts', level=5, num='2.30.1.2.1'),
+        Heading(name='Concurrent Inserts & Deletes Of The Same Data', level=4, num='2.30.1.3'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.Compatibility.ConcurrentInserts&DeletesOfTheSameData', level=5, num='2.30.1.3.1'),
+        Heading(name='Concurrent Delete & Alter Delete', level=4, num='2.30.1.4'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.Compatibility.ConcurrentDelete&AlterDelete', level=5, num='2.30.1.4.1'),
+        Heading(name='Projections', level=3, num='2.30.2'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.Compatibility.Projections', level=4, num='2.30.2.1'),
+        Heading(name='Views', level=3, num='2.30.3'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.Compatibility.Views', level=4, num='2.30.3.1'),
+        Heading(name='Hard Restarts', level=2, num='2.31'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.HardRestarts', level=3, num='2.31.1'),
+        Heading(name='Non Corrupted Server State', level=2, num='2.32'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.NonCorruptedServerState', level=3, num='2.32.1'),
+        Heading(name='Server Restart', level=2, num='2.33'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.ServerRestart', level=3, num='2.33.1'),
+        Heading(name='Non Deterministic Functions', level=2, num='2.34'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.NonDeterministicFunctions', level=3, num='2.34.1'),
+        Heading(name='Lack of Disk Space', level=2, num='2.35'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.LackOfDiskSpace', level=3, num='2.35.1'),
+        Heading(name='Multidisk Configurations', level=2, num='2.36'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.MultidiskConfigurations', level=3, num='2.36.1'),
+        Heading(name='S3 Disks', level=2, num='2.37'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.S3Disks', level=3, num='2.37.1'),
+        Heading(name='Backups', level=2, num='2.38'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.Backups.Mask', level=3, num='2.38.1'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.Backups.BackupAfterLightweightDelete', level=3, num='2.38.2'),
+        Heading(name='Drop Empty Part', level=2, num='2.39'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.DropEmptyPart', level=3, num='2.39.1'),
+        Heading(name='Deletes per Second', level=2, num='2.40'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.DeletesPerSecond', level=3, num='2.40.1'),
+        Heading(name='Upgrade Server', level=2, num='2.41'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.UpgradeServer', level=3, num='2.41.1'),
+        Heading(name='Load', level=2, num='2.42'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.Load.Merges', level=3, num='2.42.1'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.Load.Insert', level=3, num='2.42.2'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.Load.ExcessiveMutations', level=3, num='2.42.3'),
+        Heading(name='RQ.SRS-023.ClickHouse.LightweightDelete.Load.Zookeeper', level=3, num='2.42.4'),
         ),
-        Heading(name="Delete Zero Rows", level=2, num="2.2"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.DeleteZeroRows",
-            level=3,
-            num="2.2.1",
-        ),
-        Heading(name="Delete One Row", level=2, num="2.3"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.DeleteOneRow",
-            level=3,
-            num="2.3.1",
-        ),
-        Heading(name="Delete All Rows", level=2, num="2.4"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.DeleteAllRows",
-            level=3,
-            num="2.4.1",
-        ),
-        Heading(name="Delete Small Subset of Rows", level=2, num="2.5"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.DeleteSmallSubsetOfRows",
-            level=3,
-            num="2.5.1",
-        ),
-        Heading(name="Delete Large Subset of Rows", level=2, num="2.6"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.DeleteLargeSubsetOfRows",
-            level=3,
-            num="2.6.1",
-        ),
-        Heading(name="One Partition and Part", level=2, num="2.7"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.OnePartitionWithPart",
-            level=3,
-            num="2.7.1",
-        ),
-        Heading(name="Partition With Many Parts", level=2, num="2.8"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.PartitionWithManyParts",
-            level=3,
-            num="2.8.1",
-        ),
-        Heading(name="Multiple Partitions and One Part", level=2, num="2.9"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.MultiplePartitionsAndOnePart",
-            level=3,
-            num="2.9.1",
-        ),
-        Heading(name="Multiple Parts And Partitions", level=2, num="2.10"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.MultiplePartsAndPartitions",
-            level=3,
-            num="2.10.1",
-        ),
-        Heading(name="All Rows From Half of the Parts", level=2, num="2.11"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.AllRowsFromHalfOfTheParts",
-            level=3,
-            num="2.11.1",
-        ),
-        Heading(name="Very Large Part", level=2, num="2.12"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.VeryLargePart",
-            level=3,
-            num="2.12.1",
-        ),
-        Heading(name="Very Small Part", level=2, num="2.13"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.VerySmallPart",
-            level=3,
-            num="2.13.1",
-        ),
-        Heading(name="Encrypted Disk", level=2, num="2.14"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.EncryptedDisk",
-            level=3,
-            num="2.14.1",
-        ),
-        Heading(name="Replicated Tables", level=2, num="2.15"),
-        Heading(name="Eventual Consistency", level=3, num="2.15.1"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.EventualConsistency",
-            level=4,
-            num="2.15.1.1",
-        ),
-        Heading(name="Rows Removed From Replica", level=3, num="2.15.2"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.RowsRemovedFromReplica",
-            level=4,
-            num="2.15.2.1",
-        ),
-        Heading(name="Multiple Replicas", level=3, num="2.15.3"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.MultipleReplicas",
-            level=4,
-            num="2.15.3.1",
-        ),
-        Heading(name="Replication Queue", level=3, num="2.15.4"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.ReplicationQueue",
-            level=4,
-            num="2.15.4.1",
-        ),
-        Heading(name="Replication Stuck", level=3, num="2.15.5"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.ReplicationStuck",
-            level=4,
-            num="2.15.5.1",
-        ),
-        Heading(name="Sharded Tables", level=2, num="2.16"),
-        Heading(name="Multiple Shards", level=3, num="2.16.1"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.MultipleShards",
-            level=4,
-            num="2.16.1.1",
-        ),
-        Heading(name="Alter Table with Parts & Partitions", level=2, num="2.17"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.AlterTableWithParts&Partitions",
-            level=3,
-            num="2.17.1",
-        ),
-        Heading(name="TTL", level=2, num="2.18"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.TTL", level=3, num="2.18.1"
-        ),
-        Heading(name="Column TTL", level=2, num="2.19"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.ColumnTTL",
-            level=3,
-            num="2.19.1",
-        ),
-        Heading(name="Invalid Syntax", level=2, num="2.20"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.InvalidSyntax.NoWhere",
-            level=3,
-            num="2.20.1",
-        ),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.InvalidSyntax.EmptyWhere",
-            level=3,
-            num="2.20.2",
-        ),
-        Heading(name="Supported Table Engines", level=2, num="2.21"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.SupportedTableEngines",
-            level=3,
-            num="2.21.1",
-        ),
-        Heading(name="Immediate Removal For Selects", level=2, num="2.22"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.ImmediateRemovalForSelects",
-            level=3,
-            num="2.22.1",
-        ),
-        Heading(name="Multiple Deletes", level=2, num="2.23"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.MultipleDeletes",
-            level=3,
-            num="2.23.1",
-        ),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.MultipleDeletes.Limitations",
-            level=3,
-            num="2.23.2",
-        ),
-        Heading(name="Concurrent Deletes", level=3, num="2.23.3"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.MultipleDeletes.ConcurrentDelete",
-            level=4,
-            num="2.23.3.1",
-        ),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.MultipleDeletes.ConcurrentDeleteOverlap",
-            level=4,
-            num="2.23.3.2",
-        ),
-        Heading(name="Synchronous Operation", level=2, num="2.24"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.SynchronousOperationOnSingleNode",
-            level=3,
-            num="2.24.1",
-        ),
-        Heading(name="Efficient Physical Data Removal", level=2, num="2.25"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.EfficientPhysicalDataRemoval",
-            level=3,
-            num="2.25.1",
-        ),
-        Heading(name="Disk Space", level=2, num="2.26"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.DiskSpace",
-            level=3,
-            num="2.26.1",
-        ),
-        Heading(name="Performance", level=2, num="2.27"),
-        Heading(name="`DELETE` vs `SELECT`", level=3, num="2.27.1"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.Performance",
-            level=4,
-            num="2.27.1.1",
-        ),
-        Heading(name="Concurrent Queries", level=3, num="2.27.2"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.Performance.ConcurrentQueries",
-            level=4,
-            num="2.27.2.1",
-        ),
-        Heading(name="Post Delete `SELECT`s", level=3, num="2.27.3"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.Performance.PostDelete",
-            level=4,
-            num="2.27.3.1",
-        ),
-        Heading(name="Large Number of Partitions", level=3, num="2.27.4"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.Performance.LargeNumberOfPartitions",
-            level=4,
-            num="2.27.4.1",
-        ),
-        Heading(name="Large Number of Parts in Partitions", level=3, num="2.27.5"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.Performance.LargeNumberOfPartsInPartitions",
-            level=4,
-            num="2.27.5.1",
-        ),
-        Heading(
-            name="Acceptance Criteria Using Reference `OnTime` Dataset",
-            level=2,
-            num="2.28",
-        ),
-        Heading(name="`OnTime` Dataset", level=3, num="2.28.1"),
-        Heading(name="`INSERT` Reference Queries", level=3, num="2.28.2"),
-        Heading(name="`SELECT` Reference Queries", level=3, num="2.28.3"),
-        Heading(
-            name="Query 1: Average number of flights per month", level=4, num="2.28.3.1"
-        ),
-        Heading(
-            name="Query 2: The number of flights per day from the year 2000 to 2008",
-            level=4,
-            num="2.28.3.2",
-        ),
-        Heading(
-            name="Query 3: The number of flights delayed by more than 10 minutes, grouped by the day of the week, for 2000-2008",
-            level=4,
-            num="2.28.3.3",
-        ),
-        Heading(
-            name="Query 4: The number of delays by the airport for 2000-2008",
-            level=4,
-            num="2.28.3.4",
-        ),
-        Heading(
-            name="Query 5: The number of delays by carrier for 2007",
-            level=4,
-            num="2.28.3.5",
-        ),
-        Heading(
-            name="Query 6: The percentage of delays by carrier for 2007",
-            level=4,
-            num="2.28.3.6",
-        ),
-        Heading(
-            name="Query 7: The previous request for a broader range of years, 2000-2008",
-            level=4,
-            num="2.28.3.7",
-        ),
-        Heading(
-            name="Query 8: Percentage of flights delayed for more than 10 minutes, by year",
-            level=4,
-            num="2.28.3.8",
-        ),
-        Heading(
-            name="Query 9: The most popular destinations by the number of directly connected cities for various year ranges",
-            level=4,
-            num="2.28.3.9",
-        ),
-        Heading(name="Query 10: Flights per year", level=4, num="2.28.3.10"),
-        Heading(name="`DELETE` Reference Queries", level=3, num="2.28.4"),
-        Heading(
-            name="Query 1: Deleting All Rows In a Single Partition",
-            level=4,
-            num="2.28.4.1",
-        ),
-        Heading(
-            name="Query 2: Delete All Rows In Various Partitions",
-            level=4,
-            num="2.28.4.2",
-        ),
-        Heading(
-            name="Query 3: Delete Some Rows In All Partitions (Large Granularity)",
-            level=4,
-            num="2.28.4.3",
-        ),
-        Heading(
-            name="Query 4: Delete Some Rows In All Partitions (Small Granularity)",
-            level=4,
-            num="2.28.4.4",
-        ),
-        Heading(
-            name="Query 5: Delete Some Rows In One Partition (Very Small Granularity)",
-            level=4,
-            num="2.28.4.5",
-        ),
-        Heading(name="Acceptance performance", level=3, num="2.28.5"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.Performance.Acceptance.OnTimeDataset.Inserts",
-            level=4,
-            num="2.28.5.1",
-        ),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.Performance.Acceptance.OnTimeDataset.DeleteQueryExecutionTime",
-            level=4,
-            num="2.28.5.2",
-        ),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.Performance.Acceptance.OnTimeDataset.ConcurrentSelectsAndDeletes",
-            level=4,
-            num="2.28.5.3",
-        ),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.Performance.Acceptance.OnTimeDataset.ConcurrentInsertsAndDeletes",
-            level=4,
-            num="2.28.5.4",
-        ),
-        Heading(name="Immutable Parts And Garbage Collection", level=2, num="2.29"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.ImmutablePartsAndGarbageCollection",
-            level=3,
-            num="2.29.1",
-        ),
-        Heading(name="Compatibility", level=2, num="2.30"),
-        Heading(name="Concurrent Operations", level=3, num="2.30.1"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.Compatibility.ConcurrentOperations",
-            level=4,
-            num="2.30.1.1",
-        ),
-        Heading(
-            name="Concurrent Inserts & Deletes On Many Parts", level=4, num="2.30.1.2"
-        ),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.Compatibility.ConcurrentInserts&DeletesOnManyParts",
-            level=5,
-            num="2.30.1.2.1",
-        ),
-        Heading(
-            name="Concurrent Inserts & Deletes Of The Same Data",
-            level=4,
-            num="2.30.1.3",
-        ),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.Compatibility.ConcurrentInserts&DeletesOfTheSameData",
-            level=5,
-            num="2.30.1.3.1",
-        ),
-        Heading(name="Concurrent Delete & Alter Delete", level=4, num="2.30.1.4"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.Compatibility.ConcurrentDelete&AlterDelete",
-            level=5,
-            num="2.30.1.4.1",
-        ),
-        Heading(name="Projections", level=3, num="2.30.2"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.Compatibility.Projections",
-            level=4,
-            num="2.30.2.1",
-        ),
-        Heading(name="Views", level=3, num="2.30.3"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.Compatibility.Views",
-            level=4,
-            num="2.30.3.1",
-        ),
-        Heading(name="Hard Restarts", level=2, num="2.31"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.HardRestarts",
-            level=3,
-            num="2.31.1",
-        ),
-        Heading(name="Non Corrupted Server State", level=2, num="2.32"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.NonCorruptedServerState",
-            level=3,
-            num="2.32.1",
-        ),
-        Heading(name="Server Restart", level=2, num="2.33"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.ServerRestart",
-            level=3,
-            num="2.33.1",
-        ),
-        Heading(name="Non Deterministic Functions", level=2, num="2.34"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.NonDeterministicFunctions",
-            level=3,
-            num="2.34.1",
-        ),
-        Heading(name="Lack of Disk Space", level=2, num="2.35"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.LackOfDiskSpace",
-            level=3,
-            num="2.35.1",
-        ),
-        Heading(name="Multidisk Configurations", level=2, num="2.36"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.MultidiskConfigurations",
-            level=3,
-            num="2.36.1",
-        ),
-        Heading(name="S3 Disks", level=2, num="2.37"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.S3Disks",
-            level=3,
-            num="2.37.1",
-        ),
-        Heading(name="Backups", level=2, num="2.38"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.Backups.Mask",
-            level=3,
-            num="2.38.1",
-        ),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.Backups.BackupAfterLightweightDelete",
-            level=3,
-            num="2.38.2",
-        ),
-        Heading(name="Drop Empty Part", level=2, num="2.39"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.DropEmptyPart",
-            level=3,
-            num="2.39.1",
-        ),
-        Heading(name="Deletes per Second", level=2, num="2.40"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.DeletesPerSecond",
-            level=3,
-            num="2.40.1",
-        ),
-        Heading(name="Upgrade Server", level=2, num="2.41"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.UpgradeServer",
-            level=3,
-            num="2.41.1",
-        ),
-        Heading(name="Load", level=2, num="2.42"),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.Load.Merges",
-            level=3,
-            num="2.42.1",
-        ),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.Load.Insert",
-            level=3,
-            num="2.42.2",
-        ),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.Load.ExcessiveMutations",
-            level=3,
-            num="2.42.3",
-        ),
-        Heading(
-            name="RQ.SRS-023.ClickHouse.LightweightDelete.Load.Zookeeper",
-            level=3,
-            num="2.42.4",
-        ),
-    ),
     requirements=(
         RQ_SRS_023_ClickHouse_LightweightDelete_DeleteStatement,
         RQ_SRS_023_ClickHouse_LightweightDelete_DeleteZeroRows,
@@ -1707,8 +1394,8 @@ SRS023_ClickHouse_Lightweight_Delete = Specification(
         RQ_SRS_023_ClickHouse_LightweightDelete_Load_Insert,
         RQ_SRS_023_ClickHouse_LightweightDelete_Load_ExcessiveMutations,
         RQ_SRS_023_ClickHouse_LightweightDelete_Load_Zookeeper,
-    ),
-    content="""
+        ),
+    content='''
 # SRS023 ClickHouse Lightweight Delete
 # Software Requirements Specification
 
@@ -2691,5 +2378,5 @@ version: 1.0
 [delete reference queries]: #delete-reference-queries
 [insert reference queries]: #insert-reference-queries
 [ClickHouse]: https://clickhouse.tech
-""",
+'''
 )

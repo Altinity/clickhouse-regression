@@ -7,14 +7,14 @@ lock = threading.Lock()
 
 
 @TestStep
-def delete_odd(self, num_partitions, table_name, use_alter_delete=False):
+def delete_odd(self, num_partitions, table_name, check=True, use_alter_delete=False):
     """Delete all odd `x` rows in all partitions."""
     for i in range(num_partitions):
         delete(
             table_name=table_name,
             condition=f"id == {i} AND x % 2 == 0",
             delay=random.random() / 2,
-            check=True,
+            check=check,
             use_alter_delete=use_alter_delete,
         )
 
@@ -145,7 +145,7 @@ def concurrent_delete_without_overlap_with_alter_delete(self, node=None):
                     num_partitions=10, table_name=table_name
                 )
                 Step(name="delete even rows", test=delete_even, parallel=True)(
-                    num_partitions=10, table_name=table_name, use_alter_delete=True
+                    num_partitions=10, table_name=table_name, use_alter_delete=True, check=False,
                 )
 
     with Then("I check that rows are deleted"):
@@ -228,7 +228,7 @@ def concurrent_delete_with_overlap_with_alter_delete(self, node=None):
             num_partitions=10, table_name=table_name
         )
         Step(name="delete odd second time", test=delete_odd, parallel=True)(
-            num_partitions=10, table_name=table_name, use_alter_delete=True
+            num_partitions=10, table_name=table_name, use_alter_delete=True, check=False,
         )
 
     with Then("I check that rows are deleted"):
