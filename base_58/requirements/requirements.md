@@ -22,6 +22,9 @@
     * 3.5.1 [RQ.ClickHouse.Base58.Performance.Base58vsBase64](#rqclickhousebase58performancebase58vsbase64)
   * 3.6 [Memory usage](#memory-usage)
     * 3.6.1 [RQ.ClickHouse.Base58.MemoryUsage.Base58vsBase64](#rqclickhousebase58memoryusagebase58vsbase64)
+  * 3.7 [Null](#null)
+    * 3.7.1 [RQ.ClickHouse.Base58.Null](#rqclickhousebase58null)
+
 
 ## Introduction
 
@@ -211,6 +214,12 @@ version: 1.0
 * `base58Encode` and `base64Encode`
 * `base58Decode` and `base64Decode`
 
+### Null
+
+#### RQ.ClickHouse.Base58.Null
+version: 1.0
+
+[ClickHouse] SHALL return NULL on `base58Encode(NULL)` and `base58Decode(NUll)`.
 
 
 [Base58]: https://en.bitcoinwiki.org/wiki/Base58

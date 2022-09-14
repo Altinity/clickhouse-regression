@@ -7,6 +7,7 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from helpers.cluster import Cluster
+from base_58.requirements.requirements import *
 from helpers.argparser import argparser as argparser
 from helpers.common import check_clickhouse_version
 
@@ -23,10 +24,9 @@ ffails = {}
 @XFlags(xflags)
 @FFails(ffails)
 @Name("base58")
-# @Specifications(SRS023_ClickHouse_Lightweight_Delete)
+# @Specifications(SRS029_ClickHouse_Base58)
 # @Requirements(
-#     RQ_SRS_023_ClickHouse_LightweightDelete_DeleteStatement("1.0"),
-#     RQ_SRS_023_ClickHouse_LightweightDelete_SupportedTableEngines("1.0"),
+#     RQ_SRS_029_ClickHouse_Base58_Statement("1.0"),
 # )
 def regression(
     self,
@@ -55,7 +55,15 @@ def regression(
         if parallel is not None:
             self.context.parallel = parallel
 
-        Feature(run=load("base58.tests.sanity", "feature"))
+        Feature(run=load("base_58.tests.alias_input", "feature"))
+        Feature(run=load("base_58.tests.function_input", "feature"))
+        Feature(run=load("base_58.tests.compatibility", "feature"))
+        Feature(run=load("base_58.tests.memory_usage", "feature"))
+        Feature(run=load("base_58.tests.performance", "feature"))
+        Feature(run=load("base_58.tests.supported_types_constant", "feature"))
+        Feature(run=load("base_58.tests.supported_types_column", "feature"))
+        Feature(run=load("base_58.tests.unsupported_types_constant", "feature"))
+        Feature(run=load("base_58.tests.unsupported_types_column", "feature"))
 
 
 if main():

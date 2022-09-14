@@ -1,9 +1,9 @@
-from base58.tests.steps import *
+from base_58.tests.steps import *
 
 
 @TestScenario
-def sanity(self, node=None):
-    """Check that clickhouse support using base58."""
+def performance(self, node=None):
+    """Check that clickhouse base58 functions have simular performance with base64 functions."""
 
     if node is None:
         node = self.context.node
@@ -12,9 +12,6 @@ def sanity(self, node=None):
     table_name = f"table_{getuid()}"
     table_name_e64 = f"table_{getuid()}_e64"
     table_name_e58 = f"table_{getuid()}_e58"
-
-    # with Given("I change max_partitions_per_insert_block clickhouse variable"):
-    #     node.query("set max_partitions_per_insert_block=10000")
 
     with When("I create a table with random engine"):
         create_partitioned_table(
@@ -29,7 +26,7 @@ def sanity(self, node=None):
 
     with When("I insert data into the MergeTree table"):
         node.query(
-            f"insert into {table_name} select id, x from {table_name_random} limit 100000000"
+            f"insert into {table_name} select id, x from {table_name_random} limit 10000"
         )
 
     with When("I create a table with MergeTree engine"):
@@ -49,33 +46,38 @@ def sanity(self, node=None):
         )
 
     with Then("I compare base58 select performance and base64 select performance"):
-        execution_times = []
+        execution_times_encode = []
+        execution_times_decode = []
         start_time = time.time()
-        node.query(f"select count(*) from (select base64Encode(x) from {table_name})")
-        execution_times.append(time.time() - start_time)
+        node.query(
+            f"select count(b64) from (select base64Encode(x) as b64 from {table_name})"
+        )
+        execution_times_encode.append(time.time() - start_time)
         start_time = time.time()
-        node.query(f"select count(*) from (select base58Encode(x) from {table_name})")
-        execution_times.append(time.time() - start_time)
+        node.query(
+            f"select count(b58) from (select base58Encode(x) as b58 from {table_name})"
+        )
+        execution_times_encode.append(time.time() - start_time)
         start_time = time.time()
         node.query(
             f"select count(*) from (select base64Decode(x) from {table_name_e64})"
         )
-        execution_times.append(time.time() - start_time)
+        execution_times_decode.append(time.time() - start_time)
         start_time = time.time()
         node.query(
             f"select count(*) from (select base58Decode(x) from {table_name_e58})"
         )
-        execution_times.append(time.time() - start_time)
-        note(execution_times)
-        assert 2 * min(execution_times) > max(execution_times), error()
+        execution_times_decode.append(time.time() - start_time)
+
+        assert 2 * min(execution_times_encode) > max(execution_times_encode), error()
+        assert 2 * min(execution_times_decode) > max(execution_times_decode), error()
 
 
 @TestFeature
-# @Requirements(RQ_SRS_023_ClickHouse_LightweightDelete_S3Disks("1.0"))
-@Name("sanity")  # todo performance
+@Name("performance")
 def feature(self, node="clickhouse1"):
-    """Check that clickhouse support using base58"""
+    """Check that clickhouse base58 functions have simular performance with base64 functions."""
+
     self.context.node = self.context.cluster.node(node)
-    self.context.table_engine = "MergeTree"
     for scenario in loads(current_module(), Scenario):
         scenario()
