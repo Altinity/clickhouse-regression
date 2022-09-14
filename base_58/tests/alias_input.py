@@ -46,7 +46,7 @@ def alias_instead_of_table_and_column(self, node=None):
 
     with When("I insert data into the table with base58 encoding with alias expression"):
         node.query(
-            f"with Base58Encode('{string_of_all_askii_symbols() * 30}') as str, insert into {table_name_e58} select id, str from {table_name_random};",
+            f"with Base58Encode('{string_of_all_askii_symbols() * 30}') as str insert into {table_name_e58} select id, str from {table_name_random};",
         )
 
     with Then("I check data in the table is correctly"):
