@@ -5,6 +5,46 @@ from helpers.common import *
 from xml.sax.saxutils import escape as xml_escape
 
 
+@TestStep
+def create_acceptance_table_with_tiered_storage_ttl(self, storage_policy, table_name="acceptance_table", node=None):
+    """Creating acceptance table with tiered storage ttl"""
+    if node is None:
+        node = self.context.node
+
+    try:
+        with Given(f"I have acceptance table with tiered storage ttl"):
+            node.query(
+                f"""CREATE TABLE {table_name} (
+              Date DateTime,
+              timestamp UInt32,
+              version LowCardinality(String),
+              remoteIP String,
+              clientIP String,
+              Id UInt64 DEFAULT CAST(0, 'UInt64'),
+              originIds Array(UInt64),
+              Ids Array(UInt64),
+              str String,
+              str_arr Array(String),
+              a UInt8,
+              b UInt16,
+              c UInt16,
+              int_arr Array(UInt32),
+            )"""+"""
+            ENGINE = MergeTree()
+            PARTITION BY (Date, timestamp)
+            ORDER BY (Id, Ids[1], originIds[1], timestamp)
+            TTL Date TO VOLUME 'volume0',
+            Date + INTERVAL 1 HOUR TO VOLUME 'volume1'""" + f"""
+            SETTINGS storage_policy = '{storage_policy}'"""
+            )
+
+        yield
+
+    finally:
+        with Finally("I remove the table", flags=TE):
+            node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
+
+
 @TestStep(Given)
 def create_directory(self, path, node=None):
     """Creating directory on node"""
@@ -219,15 +259,15 @@ def add_ontime_table(self, from_year=1990, to_year=1991, node=None):
 
 
 @TestStep(Given)
-def create_acceptance_table(self, node=None):
+def create_acceptance_table(self, storage_policy=None, table_name="acceptance_table", node=None):
     """Creating acceptance table."""
     if node is None:
         node = self.context.node
     try:
         with Given(f"I have acceptance table"):
             node.query(
-                """CREATE TABLE acceptance_table (
-              Date Date,
+                f"""CREATE TABLE {table_name} (
+              Date DateTime,
               timestamp UInt32,
               version LowCardinality(String),
               remoteIP String,
@@ -241,33 +281,34 @@ def create_acceptance_table(self, node=None):
               b UInt16,
               c UInt16,
               int_arr Array(UInt32),
-            )
-            ENGINE = ReplicatedMergeTree('/clickhouse/tables/acceptance_table/{shard}', '{replica}')
+            )"""+"""
+            ENGINE = MergeTree()
             PARTITION BY (Date, timestamp)
-            ORDER BY (Id, Ids[1], originIds[1], timestamp)"""
+            ORDER BY (Id, Ids[1], originIds[1], timestamp)""" + ("" if storage_policy is None else f"""
+            SETTINGS storage_policy = '{storage_policy}'""")
             )
 
         yield
 
     finally:
         with Finally("I remove the table", flags=TE):
-            node.query(f"DROP TABLE IF EXISTS acceptance_table SYNC")
+            node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
 
 
 @TestStep(Given)
-def insert_into_acceptance_table(self, rows_number=100, node=None):
+def insert_into_acceptance_table(self, table_name="acceptance_table", rows_number=100, node=None):
     """Insert into acceptance table rows_number random rows."""
     if node is None:
         node = self.context.node
 
     node.query(
-        f"""insert into acceptance_table select '2019-01-01', (timestamp % 100),
+        f"""insert into {table_name} select (now() - 30*60*(Date%10)), 1,
               version,remoteIP,clientIP,
               (Id % 10), [(originIds[1] % 10)],[(Ids[1] % 10)],
               str, str_arr,
               a, b,
               c,[(int_arr[1] % 10)]
-              from generateRandom('eventDate Date,
+              from generateRandom('Date Int16,
               timestamp UInt32,
               version String,
               remoteIP String,

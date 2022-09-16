@@ -107,6 +107,7 @@ def regression(
                 allow_experimental_lightweight_delete()
 
         Feature(run=load("lightweight_delete.tests.acceptance", "feature"))
+        Feature(run=load("lightweight_delete.tests.acceptance_tiered_storage_ttl", "feature"))
         Feature(
             run=load(
                 "lightweight_delete.tests.efficient_physical_data_removal", "feature"

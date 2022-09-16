@@ -61,6 +61,27 @@ def load_excessive_mutations(self, node=None):
         pass
 
 
+@TestScenario
+@Requirements(RQ_SRS_023_ClickHouse_LightweightDelete_Load_ExcessiveMutations("1.0"))
+def load_zookeeper(self, node=None):
+    """Check that clickhouse do not create huge transactions in zookeeper during lightweight delete operations."""
+
+    if node is None:
+        node = self.context.node
+
+    with When("I have replicated table"):
+        pass
+
+    with When("I insert data into the first node table and wait data is inserted on the second node"):
+        pass
+
+    with When("I perform a lot of deletes"):
+        pass
+
+    with Then("I check clickhouse do not create a lot of transactions in zookeeper"):
+        pass
+
+
 @TestFeature
 @Name("load")
 def feature(self, node="clickhouse1"):
