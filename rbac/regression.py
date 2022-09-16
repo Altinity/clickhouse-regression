@@ -204,12 +204,12 @@ xflags = {
 }
 
 ffails = {
-    "rbac/privileges/sources/HDFS*": (
+    "/rbac/privileges/sources/HDFS*": (
         Skip,
         "Not supportted in ARM builds",
         (lambda test: platform.machine() == "aarch64"),
     ),
-    "rbac/privileges/system drop cache/compiled expression cache*": (
+    "/rbac/privileges/system drop cache/compiled expression cache*": (
         Skip,
         "Not supportted in ARM builds",
         (lambda test: platform.machine() == "aarch64"),
