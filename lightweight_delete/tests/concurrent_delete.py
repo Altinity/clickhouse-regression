@@ -20,14 +20,14 @@ def delete_odd(self, num_partitions, table_name, check=True, use_alter_delete=Fa
 
 
 @TestStep
-def delete_even(self, num_partitions, table_name, use_alter_delete=False):
+def delete_even(self, num_partitions, table_name, check=True, use_alter_delete=False):
     """Delete all even `x` rows in all partitions."""
     for i in range(num_partitions):
         delete(
             table_name=table_name,
             condition=f"id == {i} AND x % 2 == 1",
             delay=random.random() / 2,
-            check=True,
+            check=check,
             use_alter_delete=use_alter_delete,
         )
 

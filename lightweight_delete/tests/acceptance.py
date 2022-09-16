@@ -146,7 +146,7 @@ def acceptance_insert_execution_time_after_delete(self, delete_query, node=None)
     metric("execution_time_after_delete", execution_time_after_delete, "s")
 
     with Then("I check execution time does not change a lot"):
-        assert execution_time * 5 > execution_time_after_delete, error()
+        assert execution_time * 20 > execution_time_after_delete, error()
 
 
 @TestFeature

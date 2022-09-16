@@ -66,7 +66,7 @@ def s3(self, node=None):
 @Requirements(RQ_SRS_023_ClickHouse_LightweightDelete_S3Disks("1.0"))
 @Name("s3")
 def feature(self, node="clickhouse1"):
-    """Check that clickhouse support using DELETE on S3 disks."""
+    """Check that clickhouse support using lightweight DELETE on S3 disks."""
     self.context.node = self.context.cluster.node(node)
     self.context.table_engine = "MergeTree"
     for scenario in loads(current_module(), Scenario):
