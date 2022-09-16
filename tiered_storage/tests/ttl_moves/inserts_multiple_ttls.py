@@ -89,14 +89,16 @@ def scenario(self, cluster, node="clickhouse1"):
                         with When("I wait until second TTL expression triggers"):
                             time.sleep(65)
 
-                            with When("I get used disks for the table"):
-                                used_disks = get_used_disks_for_table(node, name)
-                                with Then(
-                                    f"parts {'should' if positive else 'should not'} have been moved"
-                                ):
-                                    assert set(used_disks) == (
-                                        {"external"} if positive else {"jbod1", "jbod2"}
-                                    ), error()
+                            for retry in retries(timeout=20):
+                                with retry:
+                                    with When("I get used disks for the table"):
+                                        used_disks = get_used_disks_for_table(node, name)
+                                        with Then(
+                                            f"parts {'should' if positive else 'should not'} have been moved"
+                                        ):
+                                            assert set(used_disks) == (
+                                                {"external"} if positive else {"jbod1", "jbod2"}
+                                            ), error()
 
                             with Then("again number of rows should match"):
                                 r = node.query(

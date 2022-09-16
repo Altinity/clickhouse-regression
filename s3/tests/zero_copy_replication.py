@@ -617,7 +617,7 @@ def default_value(self):
     node = current().context.node
     default_value = "0"
 
-    if check_clickhouse_version(">21.8")(self):
+    if check_clickhouse_version(">21.8")(self) and check_clickhouse_version("<22.8")(self):
         default_value = "1"
 
     with Given("I restart the node to apply default configuration settings"):
