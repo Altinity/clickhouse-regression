@@ -1084,6 +1084,14 @@ def default_s3_disk_and_volume(
                 "endpoint": f"{self.context.uri}",
                 "access_key_id": f"{self.context.access_key_id}",
                 "secret_access_key": f"{self.context.secret_access_key}",
+            },
+            "s3_cache":{
+                "type": "cache",
+                "disk": "external",
+                "path": "external_caches/",
+                "max_size": "22548578304",
+                "cache_on_write_operations": "1",
+                "do_not_evict_index_and_mark_files": "1"
             }
         }
         if hasattr(self.context, "s3_options"):
@@ -1093,7 +1101,7 @@ def default_s3_disk_and_volume(
             disks["external"].update(settings)
 
     with And("I have a storage policy configured to use the S3 disk"):
-        policies = {policy_name: {"volumes": {"external": {"disk": disk_name}}}}
+        policies = {policy_name: {"volumes": {"external": {"disk": disk_name}}}, "s3_cache": {"volumes": {"external": {"disk": "s3_cache"}}}}
 
     with s3_storage(disks, policies, restart=restart):
         yield

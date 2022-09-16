@@ -260,6 +260,11 @@ ffails = {
         "Does not work on clickhouse 21.8",
         (lambda test: check_clickhouse_version("<21.9")(test)),
     ),
+    "/rbac/privileges/row policy/:": (
+        XFail,
+        "Does not work on clickhouse 22.8 https://github.com/ClickHouse/ClickHouse/issues/40956",
+        (lambda test: check_clickhouse_version(">=22.8")(test)),
+    ),
 }
 
 

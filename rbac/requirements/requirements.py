@@ -1,6 +1,6 @@
 # These requirements were auto generated
 # from software requirements specification (SRS)
-# document by TestFlows v1.9.220620.1143643.
+# document by TestFlows v1.9.220810.1192506.
 # Do not edit by hand but re-generate instead
 # using 'tfs requirements generate' command.
 from testflows.core import Specification
@@ -3628,6 +3628,86 @@ RQ_SRS_006_RBAC_RowPolicy_Nesting = Requirement(
     num="5.8.4",
 )
 
+RQ_SRS_006_RBAC_RowPolicy_Parts = Requirement(
+    name="RQ.SRS-006.RBAC.RowPolicy.Parts",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL correctly apply row policy filtering regardless of how many parts the data was inserted into.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="5.8.5",
+)
+
+RQ_SRS_006_RBAC_RowPolicy_Columns = Requirement(
+    name="RQ.SRS-006.RBAC.RowPolicy.Columns",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL correctly apply row policy filtering regardless of how many columns are in the SELECT query.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="5.8.6",
+)
+
+RQ_SRS_006_RBAC_RowPolicy_MultiIf = Requirement(
+    name="RQ.SRS-006.RBAC.RowPolicy.MultiIf",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL correctly apply row policy filtering regardless of whether the mulfiIf alias is unique.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="5.8.7",
+)
+
+RQ_SRS_006_RBAC_RowPolicy_MultiIfLength = Requirement(
+    name="RQ.SRS-006.RBAC.RowPolicy.MultiIfLength",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL correctly apply row policy filtering regardless of the length of multiIf arguments.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="5.8.8",
+)
+
+RQ_SRS_006_RBAC_RowPolicy_Rows = Requirement(
+    name="RQ.SRS-006.RBAC.RowPolicy.Rows",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL correctly apply row policy filtering regardless of how many rows are being filtered.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="5.8.9",
+)
+
 RQ_SRS_006_RBAC_RowPolicy_Create = Requirement(
     name="RQ.SRS-006.RBAC.RowPolicy.Create",
     version="1.0",
@@ -3641,7 +3721,7 @@ RQ_SRS_006_RBAC_RowPolicy_Create = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.5.1",
+    num="5.8.10.1",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Create_IfNotExists = Requirement(
@@ -3660,7 +3740,7 @@ RQ_SRS_006_RBAC_RowPolicy_Create_IfNotExists = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.5.2",
+    num="5.8.10.2",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Create_Replace = Requirement(
@@ -3677,7 +3757,7 @@ RQ_SRS_006_RBAC_RowPolicy_Create_Replace = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.5.3",
+    num="5.8.10.3",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Create_OnCluster = Requirement(
@@ -3694,7 +3774,7 @@ RQ_SRS_006_RBAC_RowPolicy_Create_OnCluster = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.5.4",
+    num="5.8.10.4",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Create_On = Requirement(
@@ -3711,7 +3791,7 @@ RQ_SRS_006_RBAC_RowPolicy_Create_On = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.5.5",
+    num="5.8.10.5",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Create_Access = Requirement(
@@ -3728,7 +3808,7 @@ RQ_SRS_006_RBAC_RowPolicy_Create_Access = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.5.6",
+    num="5.8.10.6",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Create_Access_Permissive = Requirement(
@@ -3745,7 +3825,7 @@ RQ_SRS_006_RBAC_RowPolicy_Create_Access_Permissive = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.5.7",
+    num="5.8.10.7",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Create_Access_Restrictive = Requirement(
@@ -3762,7 +3842,7 @@ RQ_SRS_006_RBAC_RowPolicy_Create_Access_Restrictive = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.5.8",
+    num="5.8.10.8",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Create_ForSelect = Requirement(
@@ -3780,7 +3860,7 @@ RQ_SRS_006_RBAC_RowPolicy_Create_ForSelect = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.5.9",
+    num="5.8.10.9",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Create_Condition = Requirement(
@@ -3798,7 +3878,7 @@ RQ_SRS_006_RBAC_RowPolicy_Create_Condition = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.5.10",
+    num="5.8.10.10",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Create_Assignment = Requirement(
@@ -3815,7 +3895,7 @@ RQ_SRS_006_RBAC_RowPolicy_Create_Assignment = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.5.11",
+    num="5.8.10.11",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Create_Assignment_None = Requirement(
@@ -3832,7 +3912,7 @@ RQ_SRS_006_RBAC_RowPolicy_Create_Assignment_None = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.5.12",
+    num="5.8.10.12",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Create_Assignment_All = Requirement(
@@ -3849,7 +3929,7 @@ RQ_SRS_006_RBAC_RowPolicy_Create_Assignment_All = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.5.13",
+    num="5.8.10.13",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Create_Assignment_AllExcept = Requirement(
@@ -3866,7 +3946,7 @@ RQ_SRS_006_RBAC_RowPolicy_Create_Assignment_AllExcept = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.5.14",
+    num="5.8.10.14",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Create_Syntax = Requirement(
@@ -3890,7 +3970,7 @@ RQ_SRS_006_RBAC_RowPolicy_Create_Syntax = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.5.15",
+    num="5.8.10.15",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Alter = Requirement(
@@ -3906,7 +3986,7 @@ RQ_SRS_006_RBAC_RowPolicy_Alter = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.6.1",
+    num="5.8.11.1",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Alter_IfExists = Requirement(
@@ -3925,7 +4005,7 @@ RQ_SRS_006_RBAC_RowPolicy_Alter_IfExists = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.6.2",
+    num="5.8.11.2",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Alter_ForSelect = Requirement(
@@ -3943,7 +4023,7 @@ RQ_SRS_006_RBAC_RowPolicy_Alter_ForSelect = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.6.3",
+    num="5.8.11.3",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Alter_OnCluster = Requirement(
@@ -3960,7 +4040,7 @@ RQ_SRS_006_RBAC_RowPolicy_Alter_OnCluster = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.6.4",
+    num="5.8.11.4",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Alter_On = Requirement(
@@ -3977,7 +4057,7 @@ RQ_SRS_006_RBAC_RowPolicy_Alter_On = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.6.5",
+    num="5.8.11.5",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Alter_Rename = Requirement(
@@ -3994,7 +4074,7 @@ RQ_SRS_006_RBAC_RowPolicy_Alter_Rename = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.6.6",
+    num="5.8.11.6",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Alter_Access = Requirement(
@@ -4011,7 +4091,7 @@ RQ_SRS_006_RBAC_RowPolicy_Alter_Access = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.6.7",
+    num="5.8.11.7",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Alter_Access_Permissive = Requirement(
@@ -4028,7 +4108,7 @@ RQ_SRS_006_RBAC_RowPolicy_Alter_Access_Permissive = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.6.8",
+    num="5.8.11.8",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Alter_Access_Restrictive = Requirement(
@@ -4045,7 +4125,7 @@ RQ_SRS_006_RBAC_RowPolicy_Alter_Access_Restrictive = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.6.9",
+    num="5.8.11.9",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Alter_Condition = Requirement(
@@ -4062,7 +4142,7 @@ RQ_SRS_006_RBAC_RowPolicy_Alter_Condition = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.6.10",
+    num="5.8.11.10",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Alter_Condition_None = Requirement(
@@ -4079,7 +4159,7 @@ RQ_SRS_006_RBAC_RowPolicy_Alter_Condition_None = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.6.11",
+    num="5.8.11.11",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Alter_Assignment = Requirement(
@@ -4096,7 +4176,7 @@ RQ_SRS_006_RBAC_RowPolicy_Alter_Assignment = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.6.12",
+    num="5.8.11.12",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Alter_Assignment_None = Requirement(
@@ -4113,7 +4193,7 @@ RQ_SRS_006_RBAC_RowPolicy_Alter_Assignment_None = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.6.13",
+    num="5.8.11.13",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Alter_Assignment_All = Requirement(
@@ -4130,7 +4210,7 @@ RQ_SRS_006_RBAC_RowPolicy_Alter_Assignment_All = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.6.14",
+    num="5.8.11.14",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Alter_Assignment_AllExcept = Requirement(
@@ -4147,7 +4227,7 @@ RQ_SRS_006_RBAC_RowPolicy_Alter_Assignment_AllExcept = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.6.15",
+    num="5.8.11.15",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Alter_Syntax = Requirement(
@@ -4172,7 +4252,7 @@ RQ_SRS_006_RBAC_RowPolicy_Alter_Syntax = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.6.16",
+    num="5.8.11.16",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Drop = Requirement(
@@ -4188,7 +4268,7 @@ RQ_SRS_006_RBAC_RowPolicy_Drop = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.7.1",
+    num="5.8.12.1",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Drop_IfExists = Requirement(
@@ -4207,7 +4287,7 @@ RQ_SRS_006_RBAC_RowPolicy_Drop_IfExists = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.7.2",
+    num="5.8.12.2",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Drop_On = Requirement(
@@ -4224,7 +4304,7 @@ RQ_SRS_006_RBAC_RowPolicy_Drop_On = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.7.3",
+    num="5.8.12.3",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Drop_OnCluster = Requirement(
@@ -4241,7 +4321,7 @@ RQ_SRS_006_RBAC_RowPolicy_Drop_OnCluster = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.7.4",
+    num="5.8.12.4",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_Drop_Syntax = Requirement(
@@ -4261,7 +4341,7 @@ RQ_SRS_006_RBAC_RowPolicy_Drop_Syntax = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.7.5",
+    num="5.8.12.5",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_ShowCreateRowPolicy = Requirement(
@@ -4278,7 +4358,7 @@ RQ_SRS_006_RBAC_RowPolicy_ShowCreateRowPolicy = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.8.1",
+    num="5.8.13.1",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_ShowCreateRowPolicy_On = Requirement(
@@ -4295,7 +4375,7 @@ RQ_SRS_006_RBAC_RowPolicy_ShowCreateRowPolicy_On = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.8.2",
+    num="5.8.13.2",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_ShowCreateRowPolicy_Syntax = Requirement(
@@ -4315,7 +4395,7 @@ RQ_SRS_006_RBAC_RowPolicy_ShowCreateRowPolicy_Syntax = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.8.3",
+    num="5.8.13.3",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_ShowRowPolicies = Requirement(
@@ -4331,7 +4411,7 @@ RQ_SRS_006_RBAC_RowPolicy_ShowRowPolicies = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.8.4",
+    num="5.8.13.4",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_ShowRowPolicies_On = Requirement(
@@ -4348,7 +4428,7 @@ RQ_SRS_006_RBAC_RowPolicy_ShowRowPolicies_On = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.8.5",
+    num="5.8.13.5",
 )
 
 RQ_SRS_006_RBAC_RowPolicy_ShowRowPolicies_Syntax = Requirement(
@@ -4368,7 +4448,7 @@ RQ_SRS_006_RBAC_RowPolicy_ShowRowPolicies_Syntax = Requirement(
     ),
     link=None,
     level=4,
-    num="5.8.8.6",
+    num="5.8.13.6",
 )
 
 RQ_SRS_006_RBAC_SetDefaultRole = Requirement(
@@ -10324,139 +10404,152 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
         Heading(name="RQ.SRS-006.RBAC.RowPolicy.Condition", level=3, num="5.8.2"),
         Heading(name="RQ.SRS-006.RBAC.RowPolicy.Restriction", level=3, num="5.8.3"),
         Heading(name="RQ.SRS-006.RBAC.RowPolicy.Nesting", level=3, num="5.8.4"),
-        Heading(name="Create Row Policy", level=3, num="5.8.5"),
-        Heading(name="RQ.SRS-006.RBAC.RowPolicy.Create", level=4, num="5.8.5.1"),
+        Heading(name="RQ.SRS-006.RBAC.RowPolicy.Parts", level=3, num="5.8.5"),
+        Heading(name="RQ.SRS-006.RBAC.RowPolicy.Columns", level=3, num="5.8.6"),
+        Heading(name="RQ.SRS-006.RBAC.RowPolicy.MultiIf", level=3, num="5.8.7"),
+        Heading(name="RQ.SRS-006.RBAC.RowPolicy.MultiIfLength", level=3, num="5.8.8"),
+        Heading(name="RQ.SRS-006.RBAC.RowPolicy.Rows", level=3, num="5.8.9"),
+        Heading(name="Create Row Policy", level=3, num="5.8.10"),
+        Heading(name="RQ.SRS-006.RBAC.RowPolicy.Create", level=4, num="5.8.10.1"),
         Heading(
-            name="RQ.SRS-006.RBAC.RowPolicy.Create.IfNotExists", level=4, num="5.8.5.2"
+            name="RQ.SRS-006.RBAC.RowPolicy.Create.IfNotExists", level=4, num="5.8.10.2"
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.RowPolicy.Create.Replace", level=4, num="5.8.5.3"
+            name="RQ.SRS-006.RBAC.RowPolicy.Create.Replace", level=4, num="5.8.10.3"
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.RowPolicy.Create.OnCluster", level=4, num="5.8.5.4"
+            name="RQ.SRS-006.RBAC.RowPolicy.Create.OnCluster", level=4, num="5.8.10.4"
         ),
-        Heading(name="RQ.SRS-006.RBAC.RowPolicy.Create.On", level=4, num="5.8.5.5"),
-        Heading(name="RQ.SRS-006.RBAC.RowPolicy.Create.Access", level=4, num="5.8.5.6"),
+        Heading(name="RQ.SRS-006.RBAC.RowPolicy.Create.On", level=4, num="5.8.10.5"),
+        Heading(
+            name="RQ.SRS-006.RBAC.RowPolicy.Create.Access", level=4, num="5.8.10.6"
+        ),
         Heading(
             name="RQ.SRS-006.RBAC.RowPolicy.Create.Access.Permissive",
             level=4,
-            num="5.8.5.7",
+            num="5.8.10.7",
         ),
         Heading(
             name="RQ.SRS-006.RBAC.RowPolicy.Create.Access.Restrictive",
             level=4,
-            num="5.8.5.8",
+            num="5.8.10.8",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.RowPolicy.Create.ForSelect", level=4, num="5.8.5.9"
+            name="RQ.SRS-006.RBAC.RowPolicy.Create.ForSelect", level=4, num="5.8.10.9"
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.RowPolicy.Create.Condition", level=4, num="5.8.5.10"
+            name="RQ.SRS-006.RBAC.RowPolicy.Create.Condition", level=4, num="5.8.10.10"
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.RowPolicy.Create.Assignment", level=4, num="5.8.5.11"
+            name="RQ.SRS-006.RBAC.RowPolicy.Create.Assignment", level=4, num="5.8.10.11"
         ),
         Heading(
             name="RQ.SRS-006.RBAC.RowPolicy.Create.Assignment.None",
             level=4,
-            num="5.8.5.12",
+            num="5.8.10.12",
         ),
         Heading(
             name="RQ.SRS-006.RBAC.RowPolicy.Create.Assignment.All",
             level=4,
-            num="5.8.5.13",
+            num="5.8.10.13",
         ),
         Heading(
             name="RQ.SRS-006.RBAC.RowPolicy.Create.Assignment.AllExcept",
             level=4,
-            num="5.8.5.14",
+            num="5.8.10.14",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.RowPolicy.Create.Syntax", level=4, num="5.8.5.15"
+            name="RQ.SRS-006.RBAC.RowPolicy.Create.Syntax", level=4, num="5.8.10.15"
         ),
-        Heading(name="Alter Row Policy", level=3, num="5.8.6"),
-        Heading(name="RQ.SRS-006.RBAC.RowPolicy.Alter", level=4, num="5.8.6.1"),
+        Heading(name="Alter Row Policy", level=3, num="5.8.11"),
+        Heading(name="RQ.SRS-006.RBAC.RowPolicy.Alter", level=4, num="5.8.11.1"),
         Heading(
-            name="RQ.SRS-006.RBAC.RowPolicy.Alter.IfExists", level=4, num="5.8.6.2"
-        ),
-        Heading(
-            name="RQ.SRS-006.RBAC.RowPolicy.Alter.ForSelect", level=4, num="5.8.6.3"
+            name="RQ.SRS-006.RBAC.RowPolicy.Alter.IfExists", level=4, num="5.8.11.2"
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.RowPolicy.Alter.OnCluster", level=4, num="5.8.6.4"
+            name="RQ.SRS-006.RBAC.RowPolicy.Alter.ForSelect", level=4, num="5.8.11.3"
         ),
-        Heading(name="RQ.SRS-006.RBAC.RowPolicy.Alter.On", level=4, num="5.8.6.5"),
-        Heading(name="RQ.SRS-006.RBAC.RowPolicy.Alter.Rename", level=4, num="5.8.6.6"),
-        Heading(name="RQ.SRS-006.RBAC.RowPolicy.Alter.Access", level=4, num="5.8.6.7"),
+        Heading(
+            name="RQ.SRS-006.RBAC.RowPolicy.Alter.OnCluster", level=4, num="5.8.11.4"
+        ),
+        Heading(name="RQ.SRS-006.RBAC.RowPolicy.Alter.On", level=4, num="5.8.11.5"),
+        Heading(name="RQ.SRS-006.RBAC.RowPolicy.Alter.Rename", level=4, num="5.8.11.6"),
+        Heading(name="RQ.SRS-006.RBAC.RowPolicy.Alter.Access", level=4, num="5.8.11.7"),
         Heading(
             name="RQ.SRS-006.RBAC.RowPolicy.Alter.Access.Permissive",
             level=4,
-            num="5.8.6.8",
+            num="5.8.11.8",
         ),
         Heading(
             name="RQ.SRS-006.RBAC.RowPolicy.Alter.Access.Restrictive",
             level=4,
-            num="5.8.6.9",
+            num="5.8.11.9",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.RowPolicy.Alter.Condition", level=4, num="5.8.6.10"
+            name="RQ.SRS-006.RBAC.RowPolicy.Alter.Condition", level=4, num="5.8.11.10"
         ),
         Heading(
             name="RQ.SRS-006.RBAC.RowPolicy.Alter.Condition.None",
             level=4,
-            num="5.8.6.11",
+            num="5.8.11.11",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.RowPolicy.Alter.Assignment", level=4, num="5.8.6.12"
+            name="RQ.SRS-006.RBAC.RowPolicy.Alter.Assignment", level=4, num="5.8.11.12"
         ),
         Heading(
             name="RQ.SRS-006.RBAC.RowPolicy.Alter.Assignment.None",
             level=4,
-            num="5.8.6.13",
+            num="5.8.11.13",
         ),
         Heading(
             name="RQ.SRS-006.RBAC.RowPolicy.Alter.Assignment.All",
             level=4,
-            num="5.8.6.14",
+            num="5.8.11.14",
         ),
         Heading(
             name="RQ.SRS-006.RBAC.RowPolicy.Alter.Assignment.AllExcept",
             level=4,
-            num="5.8.6.15",
+            num="5.8.11.15",
         ),
-        Heading(name="RQ.SRS-006.RBAC.RowPolicy.Alter.Syntax", level=4, num="5.8.6.16"),
-        Heading(name="Drop Row Policy", level=3, num="5.8.7"),
-        Heading(name="RQ.SRS-006.RBAC.RowPolicy.Drop", level=4, num="5.8.7.1"),
-        Heading(name="RQ.SRS-006.RBAC.RowPolicy.Drop.IfExists", level=4, num="5.8.7.2"),
-        Heading(name="RQ.SRS-006.RBAC.RowPolicy.Drop.On", level=4, num="5.8.7.3"),
         Heading(
-            name="RQ.SRS-006.RBAC.RowPolicy.Drop.OnCluster", level=4, num="5.8.7.4"
+            name="RQ.SRS-006.RBAC.RowPolicy.Alter.Syntax", level=4, num="5.8.11.16"
         ),
-        Heading(name="RQ.SRS-006.RBAC.RowPolicy.Drop.Syntax", level=4, num="5.8.7.5"),
-        Heading(name="Show Create Row Policy", level=3, num="5.8.8"),
+        Heading(name="Drop Row Policy", level=3, num="5.8.12"),
+        Heading(name="RQ.SRS-006.RBAC.RowPolicy.Drop", level=4, num="5.8.12.1"),
         Heading(
-            name="RQ.SRS-006.RBAC.RowPolicy.ShowCreateRowPolicy", level=4, num="5.8.8.1"
+            name="RQ.SRS-006.RBAC.RowPolicy.Drop.IfExists", level=4, num="5.8.12.2"
+        ),
+        Heading(name="RQ.SRS-006.RBAC.RowPolicy.Drop.On", level=4, num="5.8.12.3"),
+        Heading(
+            name="RQ.SRS-006.RBAC.RowPolicy.Drop.OnCluster", level=4, num="5.8.12.4"
+        ),
+        Heading(name="RQ.SRS-006.RBAC.RowPolicy.Drop.Syntax", level=4, num="5.8.12.5"),
+        Heading(name="Show Create Row Policy", level=3, num="5.8.13"),
+        Heading(
+            name="RQ.SRS-006.RBAC.RowPolicy.ShowCreateRowPolicy",
+            level=4,
+            num="5.8.13.1",
         ),
         Heading(
             name="RQ.SRS-006.RBAC.RowPolicy.ShowCreateRowPolicy.On",
             level=4,
-            num="5.8.8.2",
+            num="5.8.13.2",
         ),
         Heading(
             name="RQ.SRS-006.RBAC.RowPolicy.ShowCreateRowPolicy.Syntax",
             level=4,
-            num="5.8.8.3",
+            num="5.8.13.3",
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.RowPolicy.ShowRowPolicies", level=4, num="5.8.8.4"
+            name="RQ.SRS-006.RBAC.RowPolicy.ShowRowPolicies", level=4, num="5.8.13.4"
         ),
         Heading(
-            name="RQ.SRS-006.RBAC.RowPolicy.ShowRowPolicies.On", level=4, num="5.8.8.5"
+            name="RQ.SRS-006.RBAC.RowPolicy.ShowRowPolicies.On", level=4, num="5.8.13.5"
         ),
         Heading(
             name="RQ.SRS-006.RBAC.RowPolicy.ShowRowPolicies.Syntax",
             level=4,
-            num="5.8.8.6",
+            num="5.8.13.6",
         ),
         Heading(name="Set Default Role", level=2, num="5.9"),
         Heading(name="RQ.SRS-006.RBAC.SetDefaultRole", level=3, num="5.9.1"),
@@ -11498,6 +11591,11 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
         RQ_SRS_006_RBAC_RowPolicy_Condition,
         RQ_SRS_006_RBAC_RowPolicy_Restriction,
         RQ_SRS_006_RBAC_RowPolicy_Nesting,
+        RQ_SRS_006_RBAC_RowPolicy_Parts,
+        RQ_SRS_006_RBAC_RowPolicy_Columns,
+        RQ_SRS_006_RBAC_RowPolicy_MultiIf,
+        RQ_SRS_006_RBAC_RowPolicy_MultiIfLength,
+        RQ_SRS_006_RBAC_RowPolicy_Rows,
         RQ_SRS_006_RBAC_RowPolicy_Create,
         RQ_SRS_006_RBAC_RowPolicy_Create_IfNotExists,
         RQ_SRS_006_RBAC_RowPolicy_Create_Replace,
@@ -12074,52 +12172,57 @@ SRS_006_ClickHouse_Role_Based_Access_Control = Specification(
     * 5.8.2 [RQ.SRS-006.RBAC.RowPolicy.Condition](#rqsrs-006rbacrowpolicycondition)
     * 5.8.3 [RQ.SRS-006.RBAC.RowPolicy.Restriction](#rqsrs-006rbacrowpolicyrestriction)
     * 5.8.4 [RQ.SRS-006.RBAC.RowPolicy.Nesting](#rqsrs-006rbacrowpolicynesting)
-    * 5.8.5 [Create Row Policy](#create-row-policy)
-      * 5.8.5.1 [RQ.SRS-006.RBAC.RowPolicy.Create](#rqsrs-006rbacrowpolicycreate)
-      * 5.8.5.2 [RQ.SRS-006.RBAC.RowPolicy.Create.IfNotExists](#rqsrs-006rbacrowpolicycreateifnotexists)
-      * 5.8.5.3 [RQ.SRS-006.RBAC.RowPolicy.Create.Replace](#rqsrs-006rbacrowpolicycreatereplace)
-      * 5.8.5.4 [RQ.SRS-006.RBAC.RowPolicy.Create.OnCluster](#rqsrs-006rbacrowpolicycreateoncluster)
-      * 5.8.5.5 [RQ.SRS-006.RBAC.RowPolicy.Create.On](#rqsrs-006rbacrowpolicycreateon)
-      * 5.8.5.6 [RQ.SRS-006.RBAC.RowPolicy.Create.Access](#rqsrs-006rbacrowpolicycreateaccess)
-      * 5.8.5.7 [RQ.SRS-006.RBAC.RowPolicy.Create.Access.Permissive](#rqsrs-006rbacrowpolicycreateaccesspermissive)
-      * 5.8.5.8 [RQ.SRS-006.RBAC.RowPolicy.Create.Access.Restrictive](#rqsrs-006rbacrowpolicycreateaccessrestrictive)
-      * 5.8.5.9 [RQ.SRS-006.RBAC.RowPolicy.Create.ForSelect](#rqsrs-006rbacrowpolicycreateforselect)
-      * 5.8.5.10 [RQ.SRS-006.RBAC.RowPolicy.Create.Condition](#rqsrs-006rbacrowpolicycreatecondition)
-      * 5.8.5.11 [RQ.SRS-006.RBAC.RowPolicy.Create.Assignment](#rqsrs-006rbacrowpolicycreateassignment)
-      * 5.8.5.12 [RQ.SRS-006.RBAC.RowPolicy.Create.Assignment.None](#rqsrs-006rbacrowpolicycreateassignmentnone)
-      * 5.8.5.13 [RQ.SRS-006.RBAC.RowPolicy.Create.Assignment.All](#rqsrs-006rbacrowpolicycreateassignmentall)
-      * 5.8.5.14 [RQ.SRS-006.RBAC.RowPolicy.Create.Assignment.AllExcept](#rqsrs-006rbacrowpolicycreateassignmentallexcept)
-      * 5.8.5.15 [RQ.SRS-006.RBAC.RowPolicy.Create.Syntax](#rqsrs-006rbacrowpolicycreatesyntax)
-    * 5.8.6 [Alter Row Policy](#alter-row-policy)
-      * 5.8.6.1 [RQ.SRS-006.RBAC.RowPolicy.Alter](#rqsrs-006rbacrowpolicyalter)
-      * 5.8.6.2 [RQ.SRS-006.RBAC.RowPolicy.Alter.IfExists](#rqsrs-006rbacrowpolicyalterifexists)
-      * 5.8.6.3 [RQ.SRS-006.RBAC.RowPolicy.Alter.ForSelect](#rqsrs-006rbacrowpolicyalterforselect)
-      * 5.8.6.4 [RQ.SRS-006.RBAC.RowPolicy.Alter.OnCluster](#rqsrs-006rbacrowpolicyalteroncluster)
-      * 5.8.6.5 [RQ.SRS-006.RBAC.RowPolicy.Alter.On](#rqsrs-006rbacrowpolicyalteron)
-      * 5.8.6.6 [RQ.SRS-006.RBAC.RowPolicy.Alter.Rename](#rqsrs-006rbacrowpolicyalterrename)
-      * 5.8.6.7 [RQ.SRS-006.RBAC.RowPolicy.Alter.Access](#rqsrs-006rbacrowpolicyalteraccess)
-      * 5.8.6.8 [RQ.SRS-006.RBAC.RowPolicy.Alter.Access.Permissive](#rqsrs-006rbacrowpolicyalteraccesspermissive)
-      * 5.8.6.9 [RQ.SRS-006.RBAC.RowPolicy.Alter.Access.Restrictive](#rqsrs-006rbacrowpolicyalteraccessrestrictive)
-      * 5.8.6.10 [RQ.SRS-006.RBAC.RowPolicy.Alter.Condition](#rqsrs-006rbacrowpolicyaltercondition)
-      * 5.8.6.11 [RQ.SRS-006.RBAC.RowPolicy.Alter.Condition.None](#rqsrs-006rbacrowpolicyalterconditionnone)
-      * 5.8.6.12 [RQ.SRS-006.RBAC.RowPolicy.Alter.Assignment](#rqsrs-006rbacrowpolicyalterassignment)
-      * 5.8.6.13 [RQ.SRS-006.RBAC.RowPolicy.Alter.Assignment.None](#rqsrs-006rbacrowpolicyalterassignmentnone)
-      * 5.8.6.14 [RQ.SRS-006.RBAC.RowPolicy.Alter.Assignment.All](#rqsrs-006rbacrowpolicyalterassignmentall)
-      * 5.8.6.15 [RQ.SRS-006.RBAC.RowPolicy.Alter.Assignment.AllExcept](#rqsrs-006rbacrowpolicyalterassignmentallexcept)
-      * 5.8.6.16 [RQ.SRS-006.RBAC.RowPolicy.Alter.Syntax](#rqsrs-006rbacrowpolicyaltersyntax)
-    * 5.8.7 [Drop Row Policy](#drop-row-policy)
-      * 5.8.7.1 [RQ.SRS-006.RBAC.RowPolicy.Drop](#rqsrs-006rbacrowpolicydrop)
-      * 5.8.7.2 [RQ.SRS-006.RBAC.RowPolicy.Drop.IfExists](#rqsrs-006rbacrowpolicydropifexists)
-      * 5.8.7.3 [RQ.SRS-006.RBAC.RowPolicy.Drop.On](#rqsrs-006rbacrowpolicydropon)
-      * 5.8.7.4 [RQ.SRS-006.RBAC.RowPolicy.Drop.OnCluster](#rqsrs-006rbacrowpolicydroponcluster)
-      * 5.8.7.5 [RQ.SRS-006.RBAC.RowPolicy.Drop.Syntax](#rqsrs-006rbacrowpolicydropsyntax)
-    * 5.8.8 [Show Create Row Policy](#show-create-row-policy)
-      * 5.8.8.1 [RQ.SRS-006.RBAC.RowPolicy.ShowCreateRowPolicy](#rqsrs-006rbacrowpolicyshowcreaterowpolicy)
-      * 5.8.8.2 [RQ.SRS-006.RBAC.RowPolicy.ShowCreateRowPolicy.On](#rqsrs-006rbacrowpolicyshowcreaterowpolicyon)
-      * 5.8.8.3 [RQ.SRS-006.RBAC.RowPolicy.ShowCreateRowPolicy.Syntax](#rqsrs-006rbacrowpolicyshowcreaterowpolicysyntax)
-      * 5.8.8.4 [RQ.SRS-006.RBAC.RowPolicy.ShowRowPolicies](#rqsrs-006rbacrowpolicyshowrowpolicies)
-      * 5.8.8.5 [RQ.SRS-006.RBAC.RowPolicy.ShowRowPolicies.On](#rqsrs-006rbacrowpolicyshowrowpolicieson)
-      * 5.8.8.6 [RQ.SRS-006.RBAC.RowPolicy.ShowRowPolicies.Syntax](#rqsrs-006rbacrowpolicyshowrowpoliciessyntax)
+    * 5.8.5 [RQ.SRS-006.RBAC.RowPolicy.Parts](#rqsrs-006rbacrowpolicyparts)
+    * 5.8.6 [RQ.SRS-006.RBAC.RowPolicy.Columns](#rqsrs-006rbacrowpolicycolumns)
+    * 5.8.7 [RQ.SRS-006.RBAC.RowPolicy.MultiIf](#rqsrs-006rbacrowpolicymultiif)
+    * 5.8.8 [RQ.SRS-006.RBAC.RowPolicy.MultiIfLength](#rqsrs-006rbacrowpolicymultiiflength)
+    * 5.8.9 [RQ.SRS-006.RBAC.RowPolicy.Rows](#rqsrs-006rbacrowpolicyrows)
+    * 5.8.10 [Create Row Policy](#create-row-policy)
+      * 5.8.10.1 [RQ.SRS-006.RBAC.RowPolicy.Create](#rqsrs-006rbacrowpolicycreate)
+      * 5.8.10.2 [RQ.SRS-006.RBAC.RowPolicy.Create.IfNotExists](#rqsrs-006rbacrowpolicycreateifnotexists)
+      * 5.8.10.3 [RQ.SRS-006.RBAC.RowPolicy.Create.Replace](#rqsrs-006rbacrowpolicycreatereplace)
+      * 5.8.10.4 [RQ.SRS-006.RBAC.RowPolicy.Create.OnCluster](#rqsrs-006rbacrowpolicycreateoncluster)
+      * 5.8.10.5 [RQ.SRS-006.RBAC.RowPolicy.Create.On](#rqsrs-006rbacrowpolicycreateon)
+      * 5.8.10.6 [RQ.SRS-006.RBAC.RowPolicy.Create.Access](#rqsrs-006rbacrowpolicycreateaccess)
+      * 5.8.10.7 [RQ.SRS-006.RBAC.RowPolicy.Create.Access.Permissive](#rqsrs-006rbacrowpolicycreateaccesspermissive)
+      * 5.8.10.8 [RQ.SRS-006.RBAC.RowPolicy.Create.Access.Restrictive](#rqsrs-006rbacrowpolicycreateaccessrestrictive)
+      * 5.8.10.9 [RQ.SRS-006.RBAC.RowPolicy.Create.ForSelect](#rqsrs-006rbacrowpolicycreateforselect)
+      * 5.8.10.10 [RQ.SRS-006.RBAC.RowPolicy.Create.Condition](#rqsrs-006rbacrowpolicycreatecondition)
+      * 5.8.10.11 [RQ.SRS-006.RBAC.RowPolicy.Create.Assignment](#rqsrs-006rbacrowpolicycreateassignment)
+      * 5.8.10.12 [RQ.SRS-006.RBAC.RowPolicy.Create.Assignment.None](#rqsrs-006rbacrowpolicycreateassignmentnone)
+      * 5.8.10.13 [RQ.SRS-006.RBAC.RowPolicy.Create.Assignment.All](#rqsrs-006rbacrowpolicycreateassignmentall)
+      * 5.8.10.14 [RQ.SRS-006.RBAC.RowPolicy.Create.Assignment.AllExcept](#rqsrs-006rbacrowpolicycreateassignmentallexcept)
+      * 5.8.10.15 [RQ.SRS-006.RBAC.RowPolicy.Create.Syntax](#rqsrs-006rbacrowpolicycreatesyntax)
+    * 5.8.11 [Alter Row Policy](#alter-row-policy)
+      * 5.8.11.1 [RQ.SRS-006.RBAC.RowPolicy.Alter](#rqsrs-006rbacrowpolicyalter)
+      * 5.8.11.2 [RQ.SRS-006.RBAC.RowPolicy.Alter.IfExists](#rqsrs-006rbacrowpolicyalterifexists)
+      * 5.8.11.3 [RQ.SRS-006.RBAC.RowPolicy.Alter.ForSelect](#rqsrs-006rbacrowpolicyalterforselect)
+      * 5.8.11.4 [RQ.SRS-006.RBAC.RowPolicy.Alter.OnCluster](#rqsrs-006rbacrowpolicyalteroncluster)
+      * 5.8.11.5 [RQ.SRS-006.RBAC.RowPolicy.Alter.On](#rqsrs-006rbacrowpolicyalteron)
+      * 5.8.11.6 [RQ.SRS-006.RBAC.RowPolicy.Alter.Rename](#rqsrs-006rbacrowpolicyalterrename)
+      * 5.8.11.7 [RQ.SRS-006.RBAC.RowPolicy.Alter.Access](#rqsrs-006rbacrowpolicyalteraccess)
+      * 5.8.11.8 [RQ.SRS-006.RBAC.RowPolicy.Alter.Access.Permissive](#rqsrs-006rbacrowpolicyalteraccesspermissive)
+      * 5.8.11.9 [RQ.SRS-006.RBAC.RowPolicy.Alter.Access.Restrictive](#rqsrs-006rbacrowpolicyalteraccessrestrictive)
+      * 5.8.11.10 [RQ.SRS-006.RBAC.RowPolicy.Alter.Condition](#rqsrs-006rbacrowpolicyaltercondition)
+      * 5.8.11.11 [RQ.SRS-006.RBAC.RowPolicy.Alter.Condition.None](#rqsrs-006rbacrowpolicyalterconditionnone)
+      * 5.8.11.12 [RQ.SRS-006.RBAC.RowPolicy.Alter.Assignment](#rqsrs-006rbacrowpolicyalterassignment)
+      * 5.8.11.13 [RQ.SRS-006.RBAC.RowPolicy.Alter.Assignment.None](#rqsrs-006rbacrowpolicyalterassignmentnone)
+      * 5.8.11.14 [RQ.SRS-006.RBAC.RowPolicy.Alter.Assignment.All](#rqsrs-006rbacrowpolicyalterassignmentall)
+      * 5.8.11.15 [RQ.SRS-006.RBAC.RowPolicy.Alter.Assignment.AllExcept](#rqsrs-006rbacrowpolicyalterassignmentallexcept)
+      * 5.8.11.16 [RQ.SRS-006.RBAC.RowPolicy.Alter.Syntax](#rqsrs-006rbacrowpolicyaltersyntax)
+    * 5.8.12 [Drop Row Policy](#drop-row-policy)
+      * 5.8.12.1 [RQ.SRS-006.RBAC.RowPolicy.Drop](#rqsrs-006rbacrowpolicydrop)
+      * 5.8.12.2 [RQ.SRS-006.RBAC.RowPolicy.Drop.IfExists](#rqsrs-006rbacrowpolicydropifexists)
+      * 5.8.12.3 [RQ.SRS-006.RBAC.RowPolicy.Drop.On](#rqsrs-006rbacrowpolicydropon)
+      * 5.8.12.4 [RQ.SRS-006.RBAC.RowPolicy.Drop.OnCluster](#rqsrs-006rbacrowpolicydroponcluster)
+      * 5.8.12.5 [RQ.SRS-006.RBAC.RowPolicy.Drop.Syntax](#rqsrs-006rbacrowpolicydropsyntax)
+    * 5.8.13 [Show Create Row Policy](#show-create-row-policy)
+      * 5.8.13.1 [RQ.SRS-006.RBAC.RowPolicy.ShowCreateRowPolicy](#rqsrs-006rbacrowpolicyshowcreaterowpolicy)
+      * 5.8.13.2 [RQ.SRS-006.RBAC.RowPolicy.ShowCreateRowPolicy.On](#rqsrs-006rbacrowpolicyshowcreaterowpolicyon)
+      * 5.8.13.3 [RQ.SRS-006.RBAC.RowPolicy.ShowCreateRowPolicy.Syntax](#rqsrs-006rbacrowpolicyshowcreaterowpolicysyntax)
+      * 5.8.13.4 [RQ.SRS-006.RBAC.RowPolicy.ShowRowPolicies](#rqsrs-006rbacrowpolicyshowrowpolicies)
+      * 5.8.13.5 [RQ.SRS-006.RBAC.RowPolicy.ShowRowPolicies.On](#rqsrs-006rbacrowpolicyshowrowpolicieson)
+      * 5.8.13.6 [RQ.SRS-006.RBAC.RowPolicy.ShowRowPolicies.Syntax](#rqsrs-006rbacrowpolicyshowrowpoliciessyntax)
   * 5.9 [Set Default Role](#set-default-role)
     * 5.9.1 [RQ.SRS-006.RBAC.SetDefaultRole](#rqsrs-006rbacsetdefaultrole)
     * 5.9.2 [RQ.SRS-006.RBAC.SetDefaultRole.CurrentUser](#rqsrs-006rbacsetdefaultrolecurrentuser)
@@ -13952,6 +14055,31 @@ All users require a permissive row policy in order to view the table.
 version: 1.0
 
 [ClickHouse] SHALL restrict rows of tables or views created on top of a table with row policies according to those policies.
+
+#### RQ.SRS-006.RBAC.RowPolicy.Parts
+version: 1.0
+
+[ClickHouse] SHALL correctly apply row policy filtering regardless of how many parts the data was inserted into.
+
+#### RQ.SRS-006.RBAC.RowPolicy.Columns
+version: 1.0
+
+[ClickHouse] SHALL correctly apply row policy filtering regardless of how many columns are in the SELECT query.
+
+#### RQ.SRS-006.RBAC.RowPolicy.MultiIf
+version: 1.0
+
+[ClickHouse] SHALL correctly apply row policy filtering regardless of whether the mulfiIf alias is unique.
+
+#### RQ.SRS-006.RBAC.RowPolicy.MultiIfLength
+version: 1.0
+
+[ClickHouse] SHALL correctly apply row policy filtering regardless of the length of multiIf arguments.
+
+#### RQ.SRS-006.RBAC.RowPolicy.Rows
+version: 1.0
+
+[ClickHouse] SHALL correctly apply row policy filtering regardless of how many rows are being filtered.
 
 #### Create Row Policy
 

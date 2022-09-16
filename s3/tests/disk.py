@@ -1001,10 +1001,10 @@ def cache(self, cache):
     node = current().context.node
 
     with Given("I have a disk configuration with a S3 storage disk, access id and key"):
-        default_s3_disk_and_volume(settings={"cache_enabled": cache})
+        default_s3_disk_and_volume(settings={"data_cache_enabled": cache}, restart=True)
 
     with Given(f"I create table using S3 storage policy external"):
-        simple_table(name=name)
+        simple_table(name=name, policy="s3_cache")
 
     with When("I add data to the table"):
         with By("first inserting 1MB of data"):
@@ -1017,9 +1017,17 @@ def cache(self, cache):
             insert_data(name=name, number_of_mb=10, start=1024 * 1024 * 2)
 
     with When("I get the path for the parts added in this table"):
-        disk_paths = node.query(
-            f"SELECT path FROM system.parts WHERE table = '{name}'"
-        ).output.splitlines()
+        if check_clickhouse_version(">=22.8")(self):
+            disk_paths = node.query(
+                f"SELECT cache_path FROM system.filesystem_cache"
+            ).output.splitlines()
+
+            with And("I select from the table to generate the cache"):
+                node.query(f"SELECT * FROM {name} FORMAT Null")
+        else:
+            disk_paths = node.query(
+                f"SELECT path FROM system.parts WHERE table = '{name}'"
+            ).output.splitlines()
 
     with Then(
         """I check that a cache directory exists for each of the
@@ -1027,8 +1035,10 @@ def cache(self, cache):
     ):
         for path in disk_paths:
             idx = path.index("/store")
-            if check_clickhouse_version(">=22.7")(self):
+            if check_clickhouse_version("=22.7")(self):
                 cache_path = path[:idx] + "/cache" + path[idx:-10] + "detached/"
+            elif check_clickhouse_version(">=22.8")(self):
+                cache_path = "/var/lib/clickhouse/cores/" + path
             else:
                 cache_path = path[:idx] + "/cache" + path[idx:]
             out = node.command(
@@ -1063,9 +1073,17 @@ def cache_default(self):
             insert_data(name=name, number_of_mb=10, start=1024 * 1024 * 2)
 
     with When("I get the path for the parts added in this table"):
-        disk_paths = node.query(
-            f"SELECT path FROM system.parts WHERE table = '{name}'"
-        ).output.splitlines()
+        if check_clickhouse_version(">=22.8")(self):
+            disk_paths = node.query(
+                f"SELECT cache_path FROM system.filesystem_cache"
+            ).output.splitlines()
+
+            with And("I select from the table to generate the cache"):
+                node.query(f"SELECT * FROM {name} FORMAT Null")
+        else:
+            disk_paths = node.query(
+                f"SELECT path FROM system.parts WHERE table = '{name}'"
+            ).output.splitlines()
 
     with Then(
         """I check that a cache directory exists for each of the
@@ -1073,8 +1091,10 @@ def cache_default(self):
     ):
         for path in disk_paths:
             idx = path.index("/store")
-            if check_clickhouse_version(">=22.7")(self):
+            if check_clickhouse_version("=22.7")(self):
                 cache_path = path[:idx] + "/cache" + path[idx:-10] + "detached/"
+            elif check_clickhouse_version(">=22.8")(self):
+                cache_path = "/var/lib/clickhouse/cores/" + path
             else:
                 cache_path = path[:idx] + "/cache" + path[idx:]
             out = node.command(
@@ -1113,9 +1133,17 @@ def cache_path(self):
             insert_data(name=name, number_of_mb=10, start=1024 * 1024 * 2)
 
     with When("I get the path for the parts added in this table"):
-        disk_paths = node.query(
-            f"SELECT path FROM system.parts WHERE table = '{name}'"
-        ).output.splitlines()
+        if check_clickhouse_version(">=22.8")(self):
+            disk_paths = node.query(
+                f"SELECT cache_path FROM system.filesystem_cache"
+            ).output.splitlines()
+
+            with And("I select from the table to generate the cache"):
+                node.query(f"SELECT * FROM {name} FORMAT Null")
+        else:
+            disk_paths = node.query(
+                f"SELECT path FROM system.parts WHERE table = '{name}'"
+            ).output.splitlines()
 
     with Then(
         """I check that a cache directory exists in the specified
@@ -1130,6 +1158,8 @@ def cache_path(self):
                     + path[idx:-10]
                     + "detached/"
                 )
+            elif check_clickhouse_version(">=22.8")(self):
+                cache_path = "/var/lib/clickhouse/cores/" + path
             else:
                 cache_path = path[:idx] + "/other_cache/subdirectory" + path[idx:]
             out = node.command(

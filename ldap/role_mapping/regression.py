@@ -19,6 +19,12 @@ xfails = {
     "cluster secret/external user directory/:/:/cluster with secret/ldap user/:mapped True/select using mapped role/with privilege on source and distributed": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/34130")
     ],
+    "user dn detection/mapping/add new role not present": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/41380")
+    ],
+    "mapping/add new role not present": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/41380")
+    ]
 }
 
 # Force results without running the test
