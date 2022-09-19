@@ -91,7 +91,7 @@ def multiIf_alias(self, node=None):
             SELECT
                 multiIf(y = 'Aaaaaaaaaaaa', 'Bbbbbbbbbbbb', y) AS y,
                 x
-            FROM table0
+            FROM {table_name}
             WHERE y IN ('A', 'C')
             ) SELECT DISTINCT (y, x)
             FROM Test""").output
@@ -102,7 +102,7 @@ def multiIf_alias(self, node=None):
             SELECT
                 multiIf(y = 'Aaaaaaaaaaaa', 'Bbbbbbbbbbbb', y) AS y1,
                 x
-            FROM table0
+            FROM {table_name}
             WHERE y IN ('A', 'C')
             ) SELECT DISTINCT (y1, x)
             FROM Test""").output
@@ -237,7 +237,7 @@ def multiIf_length(self, node=None):
         output_short = node.query(f"""
             WITH Test AS (
             SELECT
-                multiIf(y = 'A', 'B', y) AS y,
+                multiIf(y = 'X', 'B', y) AS y,
                 x
             FROM {table_name}
             WHERE y IN ('A', 'C')
@@ -248,7 +248,7 @@ def multiIf_length(self, node=None):
         output_long = node.query(f"""
             WITH Test AS (
             SELECT
-                multiIf(y = 'Aaaaaaaaaaaa', 'Bbbbbbbbbbbb', y) AS y,
+                multiIf(y = 'Xxxxxxxxxxxx', 'Bbbbbbbbbbbb', y) AS y,
                 x
             FROM {table_name}
             WHERE y IN ('A', 'C')
@@ -281,9 +281,9 @@ def parts(self, node=None):
         insert_data(table_name=table0_name)
 
     with And(f"I insert data into {table1_name} in multiple parts"):
-        node.query(f"INSERT INTO {table1_name} VALUES ('A',1)")
-        node.query(f"INSERT INTO {table1_name} VALUES ('B',2)")
-        node.query(f"INSERT INTO {table1_name} VALUES ('C',3)")
+        node.query(f"INSERT INTO {table1_name} VALUES (1,'A')")
+        node.query(f"INSERT INTO {table1_name} VALUES (2,'B')")
+        node.query(f"INSERT INTO {table1_name} VALUES (3,'C')")
 
     with And("I have a row policy that does not filter any rows."):
         create_row_policy(table_name=table0_name)
