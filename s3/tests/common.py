@@ -1078,22 +1078,34 @@ def default_s3_disk_and_volume(
         settings = {}
 
     with Given("I have a disk configuration with a S3 storage disk, access id and key"):
-        disks = {
-            disk_name: {
-                "type": "s3",
-                "endpoint": f"{self.context.uri}",
-                "access_key_id": f"{self.context.access_key_id}",
-                "secret_access_key": f"{self.context.secret_access_key}",
-            },
-            "s3_cache":{
-                "type": "cache",
-                "disk": "external",
-                "path": "external_caches/",
-                "max_size": "22548578304",
-                "cache_on_write_operations": "1",
-                "do_not_evict_index_and_mark_files": "1"
+
+        if check_clickhouse_version(">=22.8")(self):
+            disks = {
+                disk_name: {
+                    "type": "s3",
+                    "endpoint": f"{self.context.uri}",
+                    "access_key_id": f"{self.context.access_key_id}",
+                    "secret_access_key": f"{self.context.secret_access_key}",
+                },
+                "s3_cache":{
+                    "type": "cache",
+                    "disk": "external",
+                    "path": "external_caches/",
+                    "max_size": "22548578304",
+                    "cache_on_write_operations": "1",
+                    "do_not_evict_index_and_mark_files": "1"
+                }
             }
-        }
+        else:            
+            disks = {
+                disk_name: {
+                    "type": "s3",
+                    "endpoint": f"{self.context.uri}",
+                    "access_key_id": f"{self.context.access_key_id}",
+                    "secret_access_key": f"{self.context.secret_access_key}",
+                }
+            }
+
         if hasattr(self.context, "s3_options"):
             disks["external"].update(self.context.s3_options)
 

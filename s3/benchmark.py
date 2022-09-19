@@ -122,6 +122,9 @@ def regression(
                 self.context.cluster = cluster
                 self.context.node = self.context.cluster.node(node)
 
+                if check_clickhouse_version(">=22.8")(self):
+                    skip(reason="Test not implemented for 22.8")
+
                 with And("I set the nodes to use with replicated tables"):
                     nodes = cluster.nodes["clickhouse"][:2]
 

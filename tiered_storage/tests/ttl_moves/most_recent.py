@@ -87,16 +87,18 @@ def scenario(self, cluster, node="clickhouse1"):
                 with And("I sleep for 40 sec to allow moves to complete"):
                     time.sleep(40)
 
-                with And("I again get used disks for the table"):
-                    used_disks = get_used_disks_for_table(node, name)
-                    with Then(
-                        f"parts should have been moved according to the most recent TTL expression"
-                    ):
-                        assert set(used_disks) == {"external"}, error()
+                for retry in retries(count=5, delay=1):
+                    with retry:
+                        with And("I again get used disks for the table"):
+                            used_disks = get_used_disks_for_table(node, name)
+                            with Then(
+                                f"parts should have been moved according to the most recent TTL expression"
+                            ):
+                                assert set(used_disks) == {"external"}, error()
 
-                with Then("number of rows should match"):
-                    r = node.query(f"SELECT count() FROM {name}").output.strip()
-                    assert r == "6", error()
+                        with Then("number of rows should match"):
+                            r = node.query(f"SELECT count() FROM {name}").output.strip()
+                            assert r == "6", error()
 
             finally:
                 with Finally("I drop the table"):

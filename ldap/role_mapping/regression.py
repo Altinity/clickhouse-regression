@@ -20,10 +20,10 @@ xfails = {
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/34130")
     ],
     "user dn detection/mapping/add new role not present": [
-        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/41380")
+        (Error, "https://github.com/ClickHouse/ClickHouse/issues/41380")
     ],
     "mapping/add new role not present": [
-        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/41380")
+        (Error, "https://github.com/ClickHouse/ClickHouse/issues/41380")
     ]
 }
 

@@ -61,7 +61,7 @@ def create_row_policy(
 
     finally:
         with Finally("I clean up"):
-            node.query(f"DROP ROW POLICY IF EXISTS pol0")
+            node.query(f"DROP ROW POLICY IF EXISTS pol0 ON {table_name}")
 
 
 @TestScenario

@@ -277,5 +277,6 @@ def zero_copy_replication(self, format=None):
 @Name("queries")
 def feature(self, format=None):
     """Benchmarks for S3."""
-    for scenario in loads(current_module(), Scenario):
-        scenario(format=format)
+    Scenario(run=default)
+    # for scenario in loads(current_module(), Scenario):
+    #     scenario(format=format)
