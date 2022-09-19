@@ -31,7 +31,7 @@ xfails = {
     "distributed tables/:": [(Fail, "engine type not supported.")],
     "replication queue/:/replication queue": [(Fail, "engine type not supported.")],
     "replicated tables/:/:": [(Fail, "engine type not supported.")],
-    "performance": [(Fail, "Test may fail")],
+    "performance/performance large number of partitions": [(Fail, "https://github.com/ClickHouse/ClickHouse/issues/39870")],
 }
 
 xflags = {}

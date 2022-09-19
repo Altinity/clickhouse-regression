@@ -60,7 +60,7 @@ def performance_without_primary_key(self, node=None):
 
     start_time = time.time()
 
-    with When(f"I mark the time that spended on select query"):
+    with When(f"I mark the time that spent on select query"):
         r = node.query(f"SELECT count(*) FROM {table_name} WHERE x % 2 = 0")
 
     execution_time1 = time.time() - start_time
@@ -74,7 +74,7 @@ def performance_without_primary_key(self, node=None):
 
     with Then("I check performance"):
         assert (
-                0.01 * execution_time1 < execution_time2 < 150 * execution_time1
+                0.01 * execution_time1 < execution_time2 < 300 * execution_time1
         ), error()  # todo rewrite value
 
 
@@ -117,7 +117,7 @@ def performance_with_primary_key_many_partitions(self, node=None):
 
     with Then("I check performance"):
         assert (
-                0.01 * execution_time1 < execution_time2 < 150 * execution_time1
+                0.01 * execution_time1 < execution_time2 < 300 * execution_time1
         ), error()  # todo rewrite value
 
 
@@ -162,7 +162,7 @@ def performance_with_primary_key_many_parts(self, node=None):
 
     with Then("I check performance"):
         assert (
-                0.01 * execution_time1 < execution_time2 < 150 * execution_time1
+                0.01 * execution_time1 < execution_time2 < 300 * execution_time1
         ), error()  # todo rewrite value
 
 
@@ -222,7 +222,7 @@ def performance_post_delete_select(self, node=None):
 
     with Then("I compare time spent for select statement with and without delete"):
         assert (
-                1.1 * execution_time1 > execution_time2
+                2 * execution_time1 > execution_time2
         ), error()  # todo rewrite values after implementation
 
 

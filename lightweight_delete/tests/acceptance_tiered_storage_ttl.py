@@ -35,15 +35,6 @@ def delete_with_multi_volume_policy_using_ttl(
             number_of_volumes=number_of_volumes, numbers_of_disks=numbers_of_disks
         )
 
-    # with And("I add configuration file for the first table"):
-    #     add_config_multi_volume_policy(
-    #         policy_name="local_local",
-    #         number_of_volumes=number_of_volumes,
-    #         numbers_of_disks=numbers_of_disks,
-    #         disks_types=disks_types,
-    #         keys=[[None], [None]],
-    #     )
-
     add_disk_configuration(entries=entries)
 
     table_name_1 = "acceptance_1"
@@ -74,25 +65,6 @@ def delete_with_multi_volume_policy_using_ttl(
         delete(table_name=table_name_2, condition="Id == 0")
         time_with_ttl = time.time() - start
 
-    with When("I perform optimize table final"):
-        optimize_table(table_name=table_name_1)
-        optimize_table(table_name=table_name_2)
-
-    node.query(f"SELECT * from {table_name_1} LIMIT 100")
-    node.query(f"SELECT * from {table_name_2} LIMIT 100")
-
-    with Then("I check parts are on different disks"):
-        r = node.query(
-            f"SELECT COUNT(*) FROM (SELECT DISTINCT disk_name FROM system.parts WHERE table = '{table_name_1}')"
-        )
-        assert r.output == "2", error()
-
-    with Then("I check parts are on different disks"):
-        r = node.query(
-            f"SELECT COUNT(*) FROM (SELECT DISTINCT disk_name FROM system.parts WHERE table = '{table_name_2}')"
-        )
-        assert r.output == "2", error()
-
     with Then("I check tiered storage ttl do not greatly slow down lightweight delete"):
         assert time_without_ttl * 2 > time_with_ttl, error()
 
@@ -101,7 +73,7 @@ def delete_with_multi_volume_policy_using_ttl(
 @Requirements(RQ_SRS_023_ClickHouse_LightweightDelete_Performance_ConcurrentQueries("1.0"))
 @Name("acceptance concurrent tiered storage ttl and lightweight delete")
 def feature(self, node="clickhouse1"):
-    """todo."""
+    """Check clickhouse lightweight delete do not slow down during tiered storage ttl on acceptance table."""
     self.context.node = self.context.cluster.node(node)
     self.context.table_engine = "MergeTree"
     for scenario in loads(current_module(), Scenario):
