@@ -66,7 +66,7 @@ def delete_with_multi_volume_policy_using_ttl(
         time_with_ttl = time.time() - start
 
     with Then("I check tiered storage ttl do not greatly slow down lightweight delete"):
-        assert time_without_ttl * 2 > time_with_ttl, error()
+        assert time_without_ttl * 5 > time_with_ttl, error()
 
 
 @TestFeature

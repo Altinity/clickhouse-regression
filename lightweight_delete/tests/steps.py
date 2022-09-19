@@ -35,7 +35,8 @@ def create_acceptance_table_with_tiered_storage_ttl(self, storage_policy, table_
             ORDER BY (Id, Ids[1], originIds[1], timestamp)
             TTL Date TO VOLUME 'volume0',
             Date + INTERVAL 1 HOUR TO VOLUME 'volume1'""" + f"""
-            SETTINGS storage_policy = '{storage_policy}'"""
+            SETTINGS storage_policy = '{storage_policy}'
+            ,merge_with_ttl_timeout = 1"""
             )
 
         yield
