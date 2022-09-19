@@ -379,12 +379,12 @@ def create_directories_multi_volume_policy(self, number_of_volumes, numbers_of_d
 
 @TestStep
 def add_config_multi_volume_policy(
-    self, number_of_volumes, numbers_of_disks, disks_types, keys, move_factor=False
+    self, number_of_volumes, numbers_of_disks, disks_types, keys, policy_name="local_encrypted", move_factor=False
 ):
     entries = {
         "storage_configuration": {
             "disks": [],
-            "policies": {"local_encrypted": {"volumes": {}}},
+            "policies": {f"{policy_name}": {"volumes": {}}},
         }
     }
     with Given("I set up parameters"):
@@ -412,24 +412,24 @@ def add_config_multi_volume_policy(
 
         for j in range(number_of_volumes):
             entries_in_this_test["storage_configuration"]["policies"][
-                "local_encrypted"
+                f"{policy_name}"
             ]["volumes"][f"volume{j}"] = []
 
         for j in range(number_of_volumes):
             for i in range(numbers_of_disks[j]):
                 if disks_types[j][i] == "local":
                     entries_in_this_test["storage_configuration"]["policies"][
-                        "local_encrypted"
+                        f"{policy_name}"
                     ]["volumes"][f"volume{j}"].append({"disk": f"local{j}{i}"})
                 elif disks_types[j][i] == "encrypted":
                     entries_in_this_test["storage_configuration"]["policies"][
-                        "local_encrypted"
+                        f"{policy_name}"
                     ]["volumes"][f"volume{j}"].append(
                         {"disk": f"encrypted_local{j}{i}"}
                     )
         if move_factor:
             entries_in_this_test["storage_configuration"]["policies"][
-                "local_encrypted"
+                f"{policy_name}"
             ]["move_factor"] = "0.99"
 
     with And("I add storage configuration that uses encrypted disk"):
