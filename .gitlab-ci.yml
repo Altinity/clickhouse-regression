@@ -1,0 +1,728 @@
+image: registry.gitlab.com/altinity-qa/clickhouse/cicd/regression/multiarch:latest
+
+stages:
+  - test
+
+variables:
+  version: "22.3.9.19-alpine"
+  package: "docker://clickhouse/clickhouse-server"
+  package_postfix: "amd64"
+  only: ""
+  options: ""
+  parallel: "on"
+  output: "classic"
+  regression: "regression"
+  arch: "amd64"
+  ontime: 0
+
+.regression:
+  stage: test
+  only:
+    - api
+    - web
+    - triggers
+    - schedules
+  except:
+    - pushes
+  services:
+    - docker:dind
+  artifacts:
+    when: always
+    paths:
+      - ./report.html
+      - ./*.log.txt
+      - ./*.log
+      - ./*.html
+      - ./*/_instances/*/logs/*.log
+      - ./*/*/_instances/*/logs/*.log
+
+.regression_amd64:
+  extends: .regression
+  tags:
+    - altinity-docker-runner
+
+.regression_arm64:
+  extends: .regression
+  tags:
+    - aws-dev-arm-tester
+
+.move_ontime: &move_ontime |
+      if [[ $ontime == 1 ]]; then
+        echo "moving ontime"
+        mkdir -p clickhouse-regression/s3/_instances/clickhouse1/database/
+        mkdir -p clickhouse-regression/s3/_instances/clickhouse2/database/
+        mkdir -p clickhouse-regression/s3/_instances/clickhouse3/database/
+        cp -r /var/lib/clickhouse/data clickhouse-regression/s3/_instances/clickhouse1/database/data
+        cp -r /var/lib/clickhouse/metadata clickhouse-regression/s3/_instances/clickhouse1/database/metadata
+        cp -r /var/lib/clickhouse/data clickhouse-regression/s3/_instances/clickhouse2/database/data
+        cp -r /var/lib/clickhouse/metadata clickhouse-regression/s3/_instances/clickhouse2/database/metadata
+        cp -r /var/lib/clickhouse/data clickhouse-regression/s3/_instances/clickhouse3/database/data
+        cp -r /var/lib/clickhouse/metadata clickhouse-regression/s3/_instances/clickhouse3/database/metadata
+      fi
+
+.extract_package: &extract_package |
+      if [[ $package == "deb://"* ]]; then
+        clickhouse_bin_path=/usr/bin/clickhouse
+        deb_location=$(echo $package | cut -c7-)
+        echo "install ClickHouse $version from $deb_location"
+        wget --no-check-certificate https://${deb_location}/clickhouse-common-static_${version}_amd64.deb
+        wget --no-check-certificate https://${deb_location}/clickhouse-client_${version}_${package_postfix}.deb
+        wget --no-check-certificate https://${deb_location}/clickhouse-server_${version}_${package_postfix}.deb
+        DEBIAN_FRONTEND=noninteractive dpkg -i clickhouse-server_${version}_${package_postfix}.deb clickhouse-client_${version}_${package_postfix}.deb clickhouse-common-static_${version}_amd64.deb
+        chown clickhouse:clickhouse /usr/bin/clickhouse
+        rm -rf *.deb
+      elif [[ $package == "docker://"* ]]; then
+        echo "get specific ClickHouse version $version"
+        docker_image=$(echo $package | cut -c10-)
+        echo "getting image from $docker_image"
+        docker pull $docker_image:$version
+        clickhouse_bin_path=docker://$docker_image:$version
+      else
+        echo "Invalid package. Must be 'deb://' or 'docker://'."
+        exit 1
+      fi
+
+.regression_common: &regression_common  
+    - rm -rf
+        /var/lib/apt/lists/*
+        /var/cache/debconf
+        /tmp/*
+    - apt-get clean
+    - pip3 install testflows==1.9.20
+    - pip3 install awscli==1.24.9
+    - export PATH=~/local/bin:$PATH
+    - echo "start dockerd"
+    - dockerd-start.sh
+    - echo "check docker is working"
+    - docker info
+    - echo "List available local docker images"
+    - docker images
+    - echo "Login to docker"
+    - docker login -u "$docker_user" -p "$docker_password"
+    - export AWS_ACCESS_KEY_ID=$aws_key_id
+    - export AWS_SECRET_ACCESS_KEY=$aws_access_key
+    - export S3_AMAZON_BUCKET=$aws_bucket
+    - export AWS_DEFAULT_REGION=$aws_region
+    - export S3_AMAZON_URI=https://s3.$aws_region.amazonaws.com/$aws_bucket/data/
+    - export GCS_URI=$gcs_uri
+    - export GCS_KEY_ID=$gcs_key_id
+    - export GCS_KEY_SECRET=$gcs_key_secret
+    - *extract_package
+    - apt-get update
+    - echo "pause is $pause"
+    - if [[ $pause -ge 1 ]];
+        then
+           echo "...debugging mode...sleeping 6 hours...";
+           sleep 21600;
+           exit 1;
+        fi    
+    - echo "GitLab CI/CD | Print all environment variables"
+    - env
+    - uname -i
+    - python3 -c "import platform; print('Platform machine:', platform.machine())"
+    - export PYTHONIOENCODING=utf-8
+    - git clone --depth 1 https://github.com/Altinity/clickhouse-regression.git
+    - *move_ontime
+    - python3 -u clickhouse-regression/$FOLDER_PATH/$regression.py --test-to-end --local -o $output --clickhouse-binary-path $clickhouse_bin_path --parallel $parallel $SUITE_OPTIONS $options --attr project="$CI_PROJECT_PATH" project.id="$CI_PROJECT_ID" user.name="$GITLAB_USER_NAME" user.email="$GITLAB_USER_EMAIL" version="$version" repository="$package" commit.short.hash="$CI_COMMIT_SHORT_SHA" commit.hash="$CI_COMMIT_SHA" job.id="$CI_JOB_ID" job.url="$CI_JOB_URL" arch="$arch" --tag altinity-runner --log raw.log || exitcode=$?
+    - echo "$version" > version.log.txt
+    - tfs --debug --no-colors transform compact raw.log compact.log
+    - tfs --debug --no-colors transform nice raw.log nice.log.txt 
+    - tfs --debug --no-colors transform short raw.log short.log.txt
+    - tfs --debug --no-colors report coverage - raw.log - --confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > coverage.html
+    - tfs --debug --no-colors report results -a "$CI_JOB_URL/artifacts/browse" raw.log - --confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > report.html
+    - tfs --debug --no-colors report compare results --log compact.log --order-by version --confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > compare.html
+    - if [[ $upload_logs -ge 1 ]]; 
+        then
+           export AWS_ACCESS_KEY_ID=$aws_report_key_id;
+           export AWS_SECRET_ACCESS_KEY=$aws_report_secret_access_key;
+           export AWS_DEFAULT_REGION=$aws_report_region;
+           aws s3 cp version.log.txt s3://altinity-internal-test-reports/reports/$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/version.log.txt --content-type "text/plain; charset=utf-8";
+           aws s3 cp raw.log s3://altinity-internal-test-reports/reports/$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/raw.log;
+           aws s3 cp compact.log s3://altinity-internal-test-reports/reports/$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/compact.log;
+           aws s3 cp nice.log.txt s3://altinity-internal-test-reports/reports/$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/nice.log.txt --content-type "text/plain; charset=utf-8";
+           aws s3 cp short.log.txt s3://altinity-internal-test-reports/reports/$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/short.log.txt --content-type "text/plain; charset=utf-8";
+           aws s3 cp report.html s3://altinity-internal-test-reports/reports/$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/report.html;
+           aws s3 cp compare.html s3://altinity-internal-test-reports/reports/$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/compare.html;
+           aws s3 cp coverage.html s3://altinity-internal-test-reports/reports/$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/coverage.html;
+           rm --recursive --force $FOLDER_PATH/_instances/*/database/;
+           aws s3 cp . s3://altinity-internal-test-reports/reports/$version/$CI_PIPELINE_ID/testflows/ --recursive --exclude "*" --include "*/_instances/*/logs/*.log" --content-type "text/plain; charset=utf-8";
+        fi
+    - exit $exitcode
+
+aes-encryption-amd64:
+  extends: .regression_amd64
+  only:
+    variables:
+     - ( $only == "" || $only == "aes_encryption" ) && $arch == "amd64"
+  variables:
+     FOLDER_PATH: "aes_encryption"
+  script:
+    - *regression_common
+
+atomic-insert-amd64:
+  extends: .regression_amd64
+  only:
+    variables:
+     - ( $only == "" || $only == "atomic_insert" ) && $arch == "amd64"
+  variables:
+     FOLDER_PATH: "atomic_insert"
+  script:
+    - *regression_common
+
+clickhouse-keeper-amd64:
+  extends: .regression_amd64
+  only:
+    variables:
+      - ( $only == "" || $only == "clickhouse_keeper" ) && $arch == "amd64"
+  variables:
+     FOLDER_PATH: "clickhouse_keeper"
+  script:
+    - *regression_common
+
+datetime64-extended-range-amd64:
+  extends: .regression_amd64
+  only:
+    variables:
+      - ( $only == "" || $only == "datetime64_extended_range" ) && $arch == "amd64"
+  variables:
+     FOLDER_PATH: "datetime64_extended_range"
+  script:
+    - *regression_common
+
+disk-level-encryption-amd64:
+  extends: .regression_amd64
+  only:
+    variables:
+      - ( $only == "" || $only == "disk_level_encryption" ) && $arch == "amd64"
+  variables:
+     FOLDER_PATH: "disk_level_encryption"
+  script:
+    - *regression_common
+
+dns-amd64:
+  extends: .regression_amd64
+  only:
+    variables:
+      - ( $only == "" || $only == "dns" ) && $arch == "amd64"
+  variables:
+     FOLDER_PATH: "dns"
+  script:
+    - *regression_common
+
+example-amd64:
+  extends: .regression_amd64
+  only:
+    variables:
+      - ( $only == "" || $only == "example" ) && $arch == "amd64"
+  variables:
+     FOLDER_PATH: "example"
+  script:
+    - *regression_common
+
+extended-precision-data-types-amd64:
+  extends: .regression_amd64
+  only:
+    variables:
+      - ( $only == "" || $only == "extended_precision_data_types" ) && $arch == "amd64"
+  variables:
+     FOLDER_PATH: "extended_precision_data_types"
+  script:
+    - *regression_common
+
+kafka-amd64:
+  extends: .regression_amd64
+  only:
+    variables:
+    - ( $only == "" || $only == "kafka" ) && $arch == "amd64"
+  variables:
+     FOLDER_PATH: "kafka"
+  script:
+    - *regression_common
+
+kerberos-amd64:
+  extends: .regression_amd64
+  only:
+    variables:
+      - ( $only == "" || $only == "kerberos" ) && $arch == "amd64"
+  variables:
+     FOLDER_PATH: "kerberos"
+  script:
+    - export CLICKHOUSE_TESTS_DIR=$(pwd)/kerberos
+    - *regression_common
+
+ldap-authentication-amd64:
+  timeout: 90m
+  extends: .regression_amd64
+  only:
+    variables:
+      - ( $only == "" || $only == "ldap" ) && $arch == "amd64"
+  variables:
+     FOLDER_PATH: "ldap/authentication"
+  script:
+    - *regression_common
+
+ldap-external-user-directory-amd64:
+  timeout: 90m
+  extends: .regression_amd64
+  only:
+    variables:
+      - ( $only == "" || $only == "ldap" ) && $arch == "amd64"
+  variables:
+     FOLDER_PATH: "ldap/external_user_directory"
+  script:
+    - *regression_common
+
+ldap-role-mapping-amd64:
+  timeout: 90m
+  extends: .regression_amd64
+  only:
+    variables:
+      - ( $only == "" || $only == "ldap" ) && $arch == "amd64"
+  variables:
+     FOLDER_PATH: "ldap/role_mapping"
+  script:
+    - *regression_common
+
+lightweight-delete-amd64:
+  extends: .regression_amd64
+  image: registry.gitlab.com/altinity-qa/clickhouse/cicd/regression/benchmark/multiarch:latest
+  only:
+    variables:
+      - ( $only == "" || $only == "lightweight_delete" ) && $arch == "amd64"
+  variables:
+     FOLDER_PATH: "lightweight_delete"
+  script:
+    - *move_ontime
+    - *regression_common
+
+map-type-amd64:
+  extends: .regression_amd64
+  only:
+    variables:
+      - ( $only == "" || $only == "map_type" )  && $arch == "amd64"
+  variables:
+     FOLDER_PATH: "map_type"
+  script:
+    - *regression_common
+
+part-moves-between-shards-amd64:
+  extends: .regression_amd64
+  only:
+    variables:
+      - ( $only == "" || $only == "part_moves_between_shards" ) && $arch == "amd64"
+  variables:
+     FOLDER_PATH: "part_moves_between_shards"
+  script:
+    - *regression_common
+
+rbac-amd64:
+  extends: .regression_amd64
+  only:
+    variables:
+      - ( $only == "" || $only == "rbac" ) && $arch == "amd64"
+  variables:
+     FOLDER_PATH: "rbac"
+  script:
+    - *regression_common
+
+s3-minio-amd64:
+  extends: .regression_amd64
+  only:
+    variables:
+      - ( $only == "" || $only == "s3" ) && $arch == "amd64"
+  variables:
+    SUITE_OPTIONS: "--storage minio"
+    FOLDER_PATH: "s3"
+    SUBFOLDER_PATH: "/minio"
+  script:
+    - pip install minio==7.1.3
+    - *regression_common
+
+s3-aws-amd64:
+  extends: .regression_amd64
+  only:
+    variables:
+      - $s3_aws == "1" && ($only == "" || $only == "s3") && $arch == "amd64"
+  variables:
+    SUITE_OPTIONS: "--storage aws_s3"
+    FOLDER_PATH: "s3"
+    SUBFOLDER_PATH: "/aws"
+  script:
+    - pip install minio==7.1.3
+    - *regression_common
+
+s3-gcs-amd64:
+  extends: .regression_amd64
+  only:
+    variables:
+      - $s3_gcs == "1"  && ($only == "" || $only == "s3") && $arch == "amd64"
+  variables:
+    SUITE_OPTIONS: "--storage gcs"
+    FOLDER_PATH: "s3"
+    SUBFOLDER_PATH: "/gcs"
+  script:
+    - pip install minio==7.1.3
+    - *regression_common
+
+s3-benchmark-amd64:
+  extends: .regression_amd64
+  image: registry.gitlab.com/altinity-qa/clickhouse/cicd/regression/benchmark/multiarch:latest
+  only:
+    variables:
+      - ( $only == "" || $only == "benchmark" ) && $arch == "amd64"
+  variables: 
+    FOLDER_PATH: "s3"
+    SUBFOLDER_PATH: "/benchmark"
+    SUITE_OPTIONS: "--storage minio --storage aws_s3 --storage gcs"
+    regression: "benchmark"
+  script:
+    - ontime=1
+    - *regression_common
+
+ssl-server-amd64:
+  extends: .regression_amd64
+  only:
+    variables:
+      - ( $only == "" || $only == "ssl_server" ) && $arch == "amd64"
+  variables: 
+    FOLDER_PATH: "ssl_server"
+  script:
+    - *regression_common
+
+tiered-storage-original-amd64:
+  only:
+    variables:
+      - ( $only == "" || $only == "tiered_storage" ) && $arch == "amd64"
+  extends: .regression_amd64
+  variables: 
+    FOLDER_PATH: "tiered_storage"
+    SUBFOLDER_PATH: "/original"
+  script:
+    - *regression_common
+
+tiered-storage-minio-amd64:
+  extends: .regression_amd64
+  only:
+    variables:
+      - ( $only == "" || $only == "tiered_storage" ) && $arch == "amd64"
+  variables: 
+    FOLDER_PATH: "tiered_storage"
+    SUITE_OPTIONS: "--with-minio"
+    SUBFOLDER_PATH: "/minio"
+  script:
+    - pip install minio==7.1.3
+    - *regression_common
+
+tiered-storage-aws-amd64:
+  extends: .regression_amd64
+  only:
+    variables:
+      - $tiered_storage_aws  == "1" && ($only == "" || $only == "tiered_storage") && $arch == "amd64"
+  variables: 
+    FOLDER_PATH: "tiered_storage"
+    SUITE_OPTIONS: "--with-s3amazon"
+    SUBFOLDER_PATH: "/aws_s3"
+  script:
+    - pip install minio==7.1.3
+    - *regression_common
+
+tiered-storage-gcs-amd64:
+  extends: .regression_amd64
+  only:
+    variables:
+      - $tiered_storage_gcs  == "1" && ($only == "" || $only == "tiered_storage") && $arch == "amd64"
+  variables: 
+    FOLDER_PATH: "tiered_storage"
+    SUITE_OPTIONS: "--with-s3gcs"
+    SUBFOLDER_PATH: "/gcs_s3"
+  script:
+    - *regression_common
+
+window-functions-amd64:
+  extends: .regression_amd64
+  only:
+    variables:
+      - ( $only == "" || $only == "window_functions" ) && $arch == "amd64"
+  variables: 
+    FOLDER_PATH: "window_functions"
+  script:
+    - *regression_common
+
+aes-encryption-arm64:
+  extends: .regression_arm64
+  only:
+    variables:
+     - ( $only == "" || $only == "aes_encryption" ) && $arch == "arm64"
+  variables:
+     FOLDER_PATH: "aes_encryption"
+  script:
+    - *regression_common
+
+clickhouse-keeper-arm64:
+  extends: .regression_arm64
+  only:
+    variables:
+      - ( $only == "" || $only == "clickhouse_keeper" ) && $arch == "arm64"
+  variables:
+     FOLDER_PATH: "clickhouse_keeper"
+  script:
+    - *regression_common
+
+datetime64-extended-range-arm64:
+  extends: .regression_arm64
+  only:
+    variables:
+      - ( $only == "" || $only == "datetime64_extended_range" ) && $arch == "arm64"
+  variables:
+     FOLDER_PATH: "datetime64_extended_range"
+  script:
+    - *regression_common
+
+disk-level-encryption-arm64:
+  extends: .regression_arm64
+  only:
+    variables:
+      - ( $only == "" || $only == "disk_level_encryption" ) && $arch == "arm64"
+  variables:
+     FOLDER_PATH: "disk_level_encryption"
+  script:
+    - *regression_common
+
+example-arm64:
+  extends: .regression_arm64
+  only:
+    variables:
+      - ( $only == "" || $only == "example" ) && $arch == "arm64"
+  variables:
+     FOLDER_PATH: "example"
+  script:
+    - *regression_common
+
+extended-precision-data-types-arm64:
+  extends: .regression_arm64
+  only:
+    variables:
+      - ( $only == "" || $only == "extended_precision_data_types" ) && $arch == "arm64"
+  variables:
+     FOLDER_PATH: "extended_precision_data_types"
+  script:
+    - *regression_common
+
+kafka-arm64:
+  extends: .regression_arm64
+  only:
+    variables:
+    - ( $only == "" || $only == "kafka" ) && $arch == "arm64"
+  variables:
+     FOLDER_PATH: "kafka"
+  script:
+    - *regression_common
+
+kerberos-arm64:
+  extends: .regression_arm64
+  only:
+    variables:
+      - ( $only == "" || $only == "kerberos" ) && $arch == "arm64"
+  variables:
+     FOLDER_PATH: "kerberos"
+  script:
+    - export CLICKHOUSE_TESTS_DIR=$(pwd)/kerberos
+    - *regression_common
+
+ldap-authentication-arm64:
+  timeout: 90m
+  extends: .regression_arm64
+  only:
+    variables:
+      - ( $only == "" || $only == "ldap" ) && $arch == "arm64"
+  variables:
+     FOLDER_PATH: "ldap/authentication"
+  script:
+    - *regression_common
+
+ldap-external-user-directory-arm64:
+  timeout: 90m
+  extends: .regression_arm64
+  only:
+    variables:
+      - ( $only == "" || $only == "ldap" ) && $arch == "arm64"
+  variables:
+     FOLDER_PATH: "ldap/external_user_directory"
+  script:
+    - *regression_common
+
+ldap-role-mapping-arm64:
+  timeout: 90m
+  extends: .regression_arm64
+  only:
+    variables:
+      - ( $only == "" || $only == "ldap" ) && $arch == "arm64"
+  variables:
+     FOLDER_PATH: "ldap/role_mapping"
+  script:
+    - *regression_common
+
+lightweight-delete-arm64:
+  extends: .regression_arm64
+  image: registry.gitlab.com/altinity-qa/clickhouse/cicd/regression/benchmark/multiarch:latest
+  only:
+    variables:
+      - ( $only == "" || $only == "lightweight_delete" ) && $arch == "arm64"
+  variables:
+     FOLDER_PATH: "lightweight_delete"
+  script:
+    - *move_ontime
+    - *regression_common
+
+map-type-arm64:
+  extends: .regression_arm64
+  only:
+    variables:
+      - ($only == "" || $only == "map_type") && $arch == "arm64"
+  variables:
+     FOLDER_PATH: "map_type"
+  script:
+    - *regression_common
+
+part-moves-between-shards-arm64:
+  extends: .regression_arm64
+  only:
+    variables:
+      - ( $only == "" || $only == "part_moves_between_shards" ) && $arch == "arm64"
+  variables:
+     FOLDER_PATH: "part_moves_between_shards"
+  script:
+    - *regression_common
+
+rbac-arm64:
+  extends: .regression_arm64
+  only:
+    variables:
+      - ( $only == "" || $only == "rbac" ) && $arch == "arm64"
+  variables:
+     FOLDER_PATH: "rbac"
+  script:
+    - *regression_common
+
+s3-minio-arm64:
+  extends: .regression_arm64
+  only:
+    variables:
+      - ( $only == "" || $only == "s3" ) && $arch == "arm64"
+  variables:
+    SUITE_OPTIONS: "--storage minio"
+    FOLDER_PATH: "s3"
+    SUBFOLDER_PATH: "/minio"
+  script:
+    - pip install minio==7.1.3
+    - *regression_common
+
+s3-aws-arm64:
+  extends: .regression_arm64
+  only:
+    variables:
+      - $s3_aws == "1" && ($only == "" || $only == "s3") && $arch == "arm64"
+  variables:
+    SUITE_OPTIONS: "--storage aws_s3"
+    FOLDER_PATH: "s3"
+    SUBFOLDER_PATH: "/aws"
+  script:
+    - pip install minio==7.1.3
+    - *regression_common
+
+s3-gcs-arm64:
+  extends: .regression_arm64
+  only:
+    variables:
+      - $s3_gcs == "1"  && ($only == "" || $only == "s3") && $arch == "arm64"
+  variables:
+    SUITE_OPTIONS: "--storage gcs"
+    FOLDER_PATH: "s3"
+    SUBFOLDER_PATH: "/gcs"
+  script:
+    - pip install minio==7.1.3
+    - *regression_common
+
+s3-benchmark-arm64:
+  extends: .regression_arm64
+  image: registry.gitlab.com/altinity-qa/clickhouse/cicd/regression/benchmark/multiarch:latest
+  only:
+    variables:
+      - ( $only == "" || $only == "benchmark" ) && $arch == "arm64"
+  variables: 
+    FOLDER_PATH: "s3"
+    SUBFOLDER_PATH: "/benchmark"
+    SUITE_OPTIONS: "--storage minio --storage aws_s3 --storage gcs"
+    regression: "benchmark"
+  script:
+    - ontime=1
+    - *regression_common
+
+ssl-server-arm64:
+  extends: .regression_arm64
+  only:
+    variables:
+      - ( $only == "" || $only == "ssl_server" ) && $arch == "arm64"
+  variables: 
+    FOLDER_PATH: "ssl_server"
+  script:
+    - *regression_common
+
+tiered-storage-original-arm64:
+  only:
+    variables:
+      - ( $only == "" || $only == "tiered_storage" ) && $arch == "arm64"
+  extends: .regression_arm64
+  variables: 
+    FOLDER_PATH: "tiered_storage"
+    SUBFOLDER_PATH: "/original"
+  script:
+    - *regression_common
+
+tiered-storage-minio-arm64:
+  extends: .regression_arm64
+  only:
+    variables:
+      - ( $only == "" || $only == "tiered_storage" ) && $arch == "arm64"
+  variables: 
+    FOLDER_PATH: "tiered_storage"
+    SUITE_OPTIONS: "--with-minio"
+    SUBFOLDER_PATH: "/minio"
+  script:
+    - pip install minio==7.1.3
+    - *regression_common
+
+tiered-storage-aws-arm64:
+  extends: .regression_arm64
+  only:
+    variables:
+      - $tiered_storage_aws  == "1" && ($only == "" || $only == "tiered_storage") && $arch == "arm64"
+  variables: 
+    FOLDER_PATH: "tiered_storage"
+    SUITE_OPTIONS: "--with-s3amazon"
+    SUBFOLDER_PATH: "/aws_s3"
+  script:
+    - pip install minio==7.1.3
+    - *regression_common
+
+tiered-storage-gcs-arm64:
+  extends: .regression_arm64
+  only:
+    variables:
+      - $tiered_storage_gcs  == "1" && ($only == "" || $only == "tiered_storage") && $arch == "arm64"
+  variables: 
+    FOLDER_PATH: "tiered_storage"
+    SUITE_OPTIONS: "--with-s3gcs"
+    SUBFOLDER_PATH: "/gcs_s3"
+  script:
+    - *regression_common
+
+window-functions-arm64:
+  extends: .regression_arm64
+  only:
+    variables:
+      - ( $only == "" || $only == "window_functions" ) && $arch == "arm64"
+  variables: 
+    FOLDER_PATH: "window_functions"
+  script:
+    - *regression_common
