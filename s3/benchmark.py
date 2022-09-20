@@ -62,6 +62,8 @@ def regression(
     policies = None
     bucket_path = "data/benchmark"
 
+    self.context.clickhouse_version = clickhouse_version
+    
     for storage in storages:
         nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
         with Feature(f"{storage.lower()}"):
@@ -101,8 +103,6 @@ def regression(
             self.context.access_key_id = access_key_id
             self.context.secret_access_key = secret_access_key
             self.context.storage = storage
-
-            self.context.clickhouse_version = clickhouse_version
 
             from platform import processor as current_cpu
 
