@@ -298,6 +298,7 @@ def parts(self, node=None):
             FROM {table0_name}
             WHERE y IN ('A', 'C')
             ) SELECT DISTINCT (y,x)
+            ORDER BY x
             FROM Test""").output
     
     with And("I select with a query where the data was inserted in many parts."):
@@ -309,6 +310,7 @@ def parts(self, node=None):
             FROM {table1_name}
             WHERE y IN ('A', 'C')
             ) SELECT DISTINCT (y, x)
+            ORDER BY x
             FROM Test""").output
 
     with Then("The outputs should match"):
