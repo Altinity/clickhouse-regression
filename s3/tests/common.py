@@ -1113,7 +1113,10 @@ def default_s3_disk_and_volume(
             disks["external"].update(settings)
 
     with And("I have a storage policy configured to use the S3 disk"):
-        policies = {policy_name: {"volumes": {"external": {"disk": disk_name}}}, "s3_cache": {"volumes": {"external": {"disk": "s3_cache"}}}}
+        if check_clickhouse_version(">=22.8")(self):
+            policies = {policy_name: {"volumes": {"external": {"disk": disk_name}}}, "s3_cache": {"volumes": {"external": {"disk": "s3_cache"}}}}
+        else:
+            policies = {policy_name: {"volumes": {"external": {"disk": disk_name}}}}
 
     with s3_storage(disks, policies, restart=restart):
         yield
