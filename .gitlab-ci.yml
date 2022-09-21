@@ -1,4 +1,4 @@
-image: registry.gitlab.com/altinity-qa/clickhouse/cicd/regression/multiarch:latest
+image: registry.gitlab.com/altinity-public/container-images/multiarch:1.0
 
 stages:
   - test
@@ -366,7 +366,7 @@ s3-gcs-amd64:
 
 s3-benchmark-amd64:
   extends: .regression_amd64
-  image: registry.gitlab.com/altinity-qa/clickhouse/cicd/regression/benchmark/multiarch:latest
+  image: registry.gitlab.com/altinity-public/container-images/benchmark/multiarch:22.8
   only:
     variables:
       - ( $only == "" || $only == "benchmark" ) && $arch == "amd64"
@@ -645,7 +645,7 @@ s3-gcs-arm64:
 
 s3-benchmark-arm64:
   extends: .regression_arm64
-  image: registry.gitlab.com/altinity-qa/clickhouse/cicd/regression/benchmark/multiarch:latest
+  image: registry.gitlab.com/altinity-public/container-images/benchmark/multiarch:22.8
   only:
     variables:
       - ( $only == "" || $only == "benchmark" ) && $arch == "arm64"
