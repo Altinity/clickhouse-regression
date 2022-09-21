@@ -89,7 +89,7 @@ def scenario(self, cluster, node="clickhouse1"):
 
                 for retry in retries(count=5, delay=1):
                     with retry:
-                        with And("I again get used disks for the table"):
+                        with When("I again get used disks for the table"):
                             used_disks = get_used_disks_for_table(node, name)
                             with Then(
                                 f"parts should have been moved according to the most recent TTL expression"
