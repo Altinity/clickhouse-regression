@@ -1001,7 +1001,11 @@ def cache(self, cache):
     node = current().context.node
 
     with Given("I have a disk configuration with a S3 storage disk, access id and key"):
-        default_s3_disk_and_volume(settings={"data_cache_enabled": cache}, restart=True)
+        if check_clickhouse_version(">=22.8")(self):
+            default_s3_disk_and_volume(settings={"data_cache_enabled": cache})
+        else:
+            default_s3_disk_and_volume(settings={"cache_enabled": cache})
+
 
     with Given(f"I create table using S3 storage policy external"):
         simple_table(name=name, policy="s3_cache")
