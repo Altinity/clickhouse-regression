@@ -11,7 +11,7 @@ import contextlib
 
 from argparse import ArgumentParser, ArgumentTypeError, RawTextHelpFormatter
 
-PROJECT_ID = 28973416
+PROJECT_ID = 39540585
 DEBUG = False  # set True to debug this trigger program
 PROGRESS = "\u2591"
 
