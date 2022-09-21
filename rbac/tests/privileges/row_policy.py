@@ -293,7 +293,7 @@ def parts(self, node=None):
         output_one_part = node.query(f"""
             WITH Test AS(
             SELECT
-                multiIf(y = 'A', 'B', y) AS y,
+                multiIf(y = 'X', 'B', y) AS y,
                 x
             FROM {table0_name}
             WHERE y IN ('A', 'C')
