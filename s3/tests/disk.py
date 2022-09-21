@@ -1006,9 +1006,11 @@ def cache(self, cache):
         else:
             default_s3_disk_and_volume(settings={"cache_enabled": cache})
 
-
     with Given(f"I create table using S3 storage policy external"):
-        simple_table(name=name, policy="s3_cache")
+        if check_clickhouse_version(">=22.8")(self):
+            simple_table(name=name, policy="s3_cache")
+        else:
+            simple_table(name=name)
 
     with When("I add data to the table"):
         with By("first inserting 1MB of data"):
