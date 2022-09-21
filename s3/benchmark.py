@@ -121,6 +121,7 @@ def regression(
             ) as cluster:
                 self.context.cluster = cluster
                 self.context.node = self.context.cluster.node(node)
+                self.context.clickhouse_version = current().context.clickhouse_version
 
                 if check_clickhouse_version(">=22.8")(self):
                     skip(reason="Test not implemented for 22.8")
