@@ -298,8 +298,8 @@ def parts(self, node=None):
             FROM {table0_name}
             WHERE y IN ('A', 'C')
             ) SELECT DISTINCT (y,x)
-            ORDER BY x
-            FROM Test""").output
+            FROM Test
+            ORDER BY x""").output
     
     with And("I select with a query where the data was inserted in many parts."):
         output_multi_part = node.query(f"""
@@ -310,8 +310,8 @@ def parts(self, node=None):
             FROM {table1_name}
             WHERE y IN ('A', 'C')
             ) SELECT DISTINCT (y, x)
-            ORDER BY x
-            FROM Test""").output
+            FROM Test
+            ORDER BY x""").output
 
     with Then("The outputs should match"):
         assert output_one_part == output_multi_part, error()
