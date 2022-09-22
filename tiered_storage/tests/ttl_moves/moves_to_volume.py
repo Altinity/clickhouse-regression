@@ -93,18 +93,20 @@ def scenario(self, cluster, node="clickhouse1"):
                             wait_expire_1_thread.join()
                             time.sleep(wait_expire_2 / 2)
 
-                        with And("I then again get used disks for the table"):
-                            used_disks = get_used_disks_for_table(node, name)
-                            with Then(
-                                f"parts {'should' if positive else 'should not'} have been moved"
-                            ):
-                                assert set(used_disks) == (
-                                    {"external"} if positive else {"jbod1", "jbod2"}
-                                ), error()
+                        for retry in retries(timeout=60):
+                            with retry:
+                                with When("I then again get used disks for the table"):
+                                    used_disks = get_used_disks_for_table(node, name)
+                                    with Then(
+                                        f"parts {'should' if positive else 'should not'} have been moved"
+                                    ):
+                                        assert set(used_disks) == (
+                                            {"external"} if positive else {"jbod1", "jbod2"}
+                                        ), error()
 
-                        with Then("number of rows should match"):
-                            r = node.query(f"SELECT count() FROM {name}").output.strip()
-                            assert r == "10", error()
+                                with Then("number of rows should match"):
+                                    r = node.query(f"SELECT count() FROM {name}").output.strip()
+                                    assert r == "10", error()
 
                     finally:
                         with Finally("I drop the table"):
