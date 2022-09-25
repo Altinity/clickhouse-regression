@@ -117,6 +117,12 @@ variables:
            exit 1;
         fi    
     - echo "GitLab CI/CD | Print all environment variables"
+    - if [[ $version == 'latest' ]];
+        then
+          version=${docker run ${package}:${version} bash -c "clickhouse start && clickhouse-client -q \"SELECT version()\"};
+          echo "version";
+          echo ${version};
+        fi
     - env
     - uname -i
     - python3 -c "import platform; print('Platform machine:', platform.machine())"
