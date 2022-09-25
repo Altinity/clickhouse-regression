@@ -119,7 +119,7 @@ variables:
     - echo "GitLab CI/CD | Print all environment variables"
     - if [[ $version == 'latest' ]];
         then
-          version=${docker run ${package}:${version} bash -c "clickhouse start && clickhouse-client -q \"SELECT version()\"};
+          version=${docker run ${package}:${version} bash -c "clickhouse start && clickhouse-client -q \"SELECT version()\""};
           echo "version";
           echo ${version};
         fi
