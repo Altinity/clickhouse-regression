@@ -965,7 +965,7 @@ version: 1.0
 #### RQ.SRS-023.ClickHouse.LightweightDelete.Load.ExcessiveMutations
 version: 1.0
 
-[ClickHouse] SHALL not create excessive mutations during lightweight delete operations.
+[ClickHouse] SHALL not touch parts in which lightweight delete does not delete anything.
 
 
 #### RQ.SRS-023.ClickHouse.LightweightDelete.Load.Zookeeper

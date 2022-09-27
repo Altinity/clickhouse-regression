@@ -115,7 +115,11 @@ variables:
            echo "...debugging mode...sleeping 6 hours...";
            sleep 21600;
            exit 1;
-        fi    
+        fi 
+    - if [[ $version == 'latest' ]];
+        then
+          version=$(docker run $(echo $package | cut -c10-):$version bash -c "clickhouse start && clickhouse-client -q \"SELECT version()\"");
+        fi
     - echo "GitLab CI/CD | Print all environment variables"
     - env
     - uname -i
