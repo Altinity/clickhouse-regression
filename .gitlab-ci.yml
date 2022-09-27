@@ -115,7 +115,9 @@ variables:
            echo "...debugging mode...sleeping 6 hours...";
            sleep 21600;
            exit 1;
-        fi    
+        fi
+    - echo $package
+    - echo $version
     - docker run $package:$version bash -c "clickhouse start && clickhouse-client -q \"SELECT version()\""
     - version=${docker run $package:$version bash -c "clickhouse start && clickhouse-client -q \"SELECT version()\""};
     - if [[ $version == 'latest' ]];
