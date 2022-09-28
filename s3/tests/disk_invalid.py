@@ -203,9 +203,10 @@ def access_failed_skip_check(self):
                 """I store simple data in the table, expecting failure
                       because there is no access to the S3 bucket"""
             ):
+                message = """DB::Exception: Access Denied.""" if check_clickhouse_version("<22.9")(self) else """DB::Exception: Message: Access Denied"""
                 node.query(
                     f"INSERT INTO {name} VALUES (427)",
-                    message="""DB::Exception: Received from localhost:9000. DB::Exception: Access Denied.""",
+                    message=message,
                     exitcode=243,
                 )
 

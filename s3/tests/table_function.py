@@ -1060,7 +1060,7 @@ def ssec_encryption_check(self):
             )
             with And("I copy the encrypted file"):
                 s3_client.download_file(
-                    "altinity-qa-test", "data/encrypted.csv", "encrypted.csv"
+                    self.context.uri, "data/encrypted.csv", "encrypted.csv"
                 )
                 x = self.context.cluster.command(
                     None, "docker ps | grep clickhouse1 | cut -d ' ' -f 1 | head -n 1"
