@@ -125,7 +125,6 @@ variables:
     - uname -i
     - python3 -c "import platform; print('Platform machine:', platform.machine())"
     - export PYTHONIOENCODING=utf-8
-    - git clone --depth 1 https://github.com/Altinity/clickhouse-regression.git
     - *move_ontime
     - python3 -u clickhouse-regression/$FOLDER_PATH/$regression.py --test-to-end --local -o $output --clickhouse-binary-path $clickhouse_bin_path --parallel $parallel $SUITE_OPTIONS $options --attr project="$CI_PROJECT_PATH" project.id="$CI_PROJECT_ID" user.name="$GITLAB_USER_NAME" user.email="$GITLAB_USER_EMAIL" version="$version" repository="$package" commit.short.hash="$CI_COMMIT_SHORT_SHA" commit.hash="$CI_COMMIT_SHA" job.id="$CI_JOB_ID" job.url="$CI_JOB_URL" arch="$arch" --tag altinity-runner --log raw.log || exitcode=$?
     - echo "$version" > version.log.txt
