@@ -281,11 +281,23 @@ def invalid_credentials(self):
 
     with Given("I set the proper error message"):
         if self.context.storage == "minio":
-            expected = "DB::Exception: The Access Key Id you provided does not exist in our records"
+            
+            if check_clickhouse_version(">=22.9")(self):
+                expected = "DB::Exception: Message: The Access Key Id you provided does not exist in our records"
+            else:
+                expected = "DB::Exception: The Access Key Id you provided does not exist in our records"
+
         elif self.context.storage == "aws_s3":
-            expected = "DB::Exception: The AWS Access Key Id you provided does not exist in our records"
+            if check_clickhouse_version(">=22.9")(self):
+                expected = "DB::Exception: Message: The AWS Access Key Id you provided does not exist in our records."
+            else:
+                expected = "DB::Exception: The AWS Access Key Id you provided does not exist in our records"
+
         else:
-            expected = "DB::Exception: The request signature we calculated does not match the signature you provided"
+            if check_clickhouse_version(">=22.9")(self):
+                expected = "DB::Exception: Message: The request signature we calculated does not match the signature you provided"
+            else:
+                expected = "DB::Exception: The request signature we calculated does not match the signature you provided"
 
     with And("I create a table"):
         node.query(
