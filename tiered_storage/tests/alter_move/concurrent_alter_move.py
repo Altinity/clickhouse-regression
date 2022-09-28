@@ -85,7 +85,7 @@ def scenario(self, cluster, node="clickhouse1"):
                     with When(f"I optimize table {num} times"):
                         for i in range(num):
                             node.query(
-                                f"OPTIMIZE TABLE {name} FINAL", steps=False, timeout=60
+                                f"OPTIMIZE TABLE {name} FINAL", steps=False, timeout=100
                             )
 
                 with When(
