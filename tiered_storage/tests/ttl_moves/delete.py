@@ -73,9 +73,11 @@ def scenario(self, cluster, node="clickhouse1"):
                             values = ",".join(data)
                             node.query(f"INSERT INTO {name} (s1, d1) VALUES {values}")
 
-                        with And("I get used disks for the table"):
-                            used_disks = get_used_disks_for_table(node, name)
-                            assert set(used_disks) == {"jbod1"}, error()
+                        for retry in retries(count=5):
+                            with retry:
+                                with And("I get used disks for the table"):
+                                    used_disks = get_used_disks_for_table(node, name)
+                                    assert set(used_disks) == {"jbod1"}, error()
 
                         with And(
                             f"I wait until TTL expression {'triggers' if positive else 'is close to triggering'}"
