@@ -5,7 +5,7 @@ from testflows.asserts import error
 @TestScenario
 def select_1(self):
     """Check that SELECT 1 works on all nodes."""
-    # new branch
+    # new
     for name in self.context.cluster.nodes["clickhouse"]:
         node = self.context.cluster.node(name)
 
