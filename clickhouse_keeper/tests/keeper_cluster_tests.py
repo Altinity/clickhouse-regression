@@ -254,6 +254,7 @@ def mixed_keepers_1(self):
 
 @TestScenario
 def zookeepers_3(self):
+    xfail("problem investigation in progress")
     """Check that 3 nodes ZooKeeper Cluster work in write mode
     with 1 node down and in read mode only with 2 nodes down.
     """
