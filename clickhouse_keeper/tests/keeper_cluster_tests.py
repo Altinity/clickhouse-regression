@@ -8,7 +8,7 @@ def mixed_keepers_5(self):
     """Check that 5 nodes Clickhouse Keeper Cluster work in write mode
     with 2 nodes down and in read mode only with 3 nodes down.
     """
-    xfail("problem investigation in progress")
+    # xfail("problem investigation in progress")
     cluster = self.context.cluster
     try:
         start_mixed_keeper(
@@ -62,7 +62,7 @@ def mixed_keepers_4(self):
     """Check that 4 nodes Clickhouse Keeper Cluster work in write mode
     with 1 node down and in read mode only with 2 nodes down.
     """
-    xfail("problem investigation in progress")
+    # xfail("problem investigation in progress")
 
     cluster = self.context.cluster
     try:
