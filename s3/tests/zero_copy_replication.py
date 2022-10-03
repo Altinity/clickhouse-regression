@@ -2047,6 +2047,8 @@ def lost_data_during_mutation(self):
     table_name = "table_" + getuid()
     try:
         with Given("I have a table"):
+            node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
+
             node.query(
                 f"""
             create table {table_name} on cluster 'sharded_cluster' (key UInt32, value1 String, value2 String, value3 String) engine=ReplicatedMergeTree('/{table_name}', '{{replica}}')
