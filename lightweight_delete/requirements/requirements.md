@@ -928,6 +928,12 @@ version: 1.0
 
 [ClickHouse] SHALL support backups for tables that have deleted rows.
 
+
+#### RQ.SRS-023.ClickHouse.LightweightDelete.Backups.BackupPartition
+version: 1.0
+
+[ClickHouse] SHALL support partition backups for tables that have deleted rows.
+
 ### Drop Empty Part
 
 #### RQ.SRS-023.ClickHouse.LightweightDelete.DropEmptyPart
