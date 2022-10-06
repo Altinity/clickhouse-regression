@@ -683,8 +683,15 @@ def start_mixed_keeper(
                     wait_healthy=False
                 )
 
+        with And(f"I check that ruok returns imok"):
+            for name in control_nodes:
+                retry(cluster.node("bash-tools").cmd, timeout=100, delay=1)(
+                    f"echo ruok | nc {name} 2181",
+                    exitcode=0,
+                    message="imok",
+                )
+
         if rest_cluster_nodes != "no_rest_nodes":
-            time.sleep(15)
             with And("I start rest ClickHouse server nodes"):
                 for name in rest_cluster_nodes:
                     retry(cluster.node(name).start_clickhouse, timeout=100, delay=1)()
