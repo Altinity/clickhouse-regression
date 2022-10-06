@@ -4,13 +4,13 @@ from helpers.common import *
 
 
 @TestOutline
-def four_letter_word_commands(self, four_letter_word_command="ruok", output="imok"):
+def four_letter_word_commands(self, four_letter_word_command="ruok", output="imok", node_name="clickhouse1"):
     """Check 4lw command outline."""
     cluster = self.context.cluster
     try:
         with Given(f"I check that {four_letter_word_command} returns {output}"):
-            cluster.node("bash-tools").cmd(
-                f"echo {four_letter_word_command} | nc clickhouse1 2181",
+            retry(cluster.node("bash-tools").cmd, timeout=100, delay=1)(
+                f"echo {four_letter_word_command} | nc {node_name} 2181",
                 exitcode=0,
                 message=f"{output}",
             )
@@ -110,6 +110,7 @@ def wchc_command(
     self, four_letter_word_command="wchc", output="/clickhouse/task_queue/ddl"
 ):
     """Check 'wchc' has in output "/clickhouse/task_queue/ddl"."""
+    xfail("doesn't work from 22.8")
     four_letter_word_commands(
         four_letter_word_command=four_letter_word_command, output=output
     )

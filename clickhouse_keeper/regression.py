@@ -94,6 +94,7 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
             run=load("clickhouse_keeper.tests.four_letter_word_commands", "feature")
         )
         Feature(run=load("clickhouse_keeper.tests.coordination_settings", "feature"))
+        # Feature(run=load("clickhouse_keeper.tests.docs_example", "feature"))
 
 
 if main():
