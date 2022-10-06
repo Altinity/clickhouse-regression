@@ -8,22 +8,41 @@ from disk_level_encryption.tests.steps import (
 )
 
 entries = {
-        "storage_configuration": {
-            "disks": [{"local00":{"path":"/disk_local00/"}, "local01":{"path":"/disk_local01/"}, "local10":{"path":"/disk_local10/"}, "local11":{"path":"/disk_local11/"}}],
-            "policies": {"local_local0": {"volumes": {"volume0": [{"disk" : "local00"}], "volume1": [{"disk" : "local01"}]}},
-                         "local_local1": {"volumes": {"volume0": [{"disk" : "local10"}], "volume1": [{"disk" : "local11"}]}}},
-        }
+    "storage_configuration": {
+        "disks": [
+            {
+                "local00": {"path": "/disk_local00/"},
+                "local01": {"path": "/disk_local01/"},
+                "local10": {"path": "/disk_local10/"},
+                "local11": {"path": "/disk_local11/"},
+            }
+        ],
+        "policies": {
+            "local_local0": {
+                "volumes": {
+                    "volume0": [{"disk": "local00"}],
+                    "volume1": [{"disk": "local01"}],
+                }
+            },
+            "local_local1": {
+                "volumes": {
+                    "volume0": [{"disk": "local10"}],
+                    "volume1": [{"disk": "local11"}],
+                }
+            },
+        },
     }
+}
 
 
 @TestScenario
 @Requirements(RQ_SRS_023_ClickHouse_LightweightDelete_TTL("1.0"))
 def delete_with_multi_volume_policy_using_ttl(
-        self,
-        number_of_volumes=2,
-        numbers_of_disks=[2, 2],
-        disks_types=[["local"], ["local"]],
-        node=None,
+    self,
+    number_of_volumes=2,
+    numbers_of_disks=[2, 2],
+    disks_types=[["local"], ["local"]],
+    node=None,
 ):
     """Check clickhouse lightweight delete do not slow down during tiered storage ttl on acceptance table."""
 
@@ -41,14 +60,15 @@ def delete_with_multi_volume_policy_using_ttl(
     table_name_2 = "acceptance_2"
 
     with And(
-            "I create acceptance table that uses tiered storage ttl",
-            description="""
+        "I create acceptance table that uses tiered storage ttl",
+        description="""
       TTL Date TO VOLUME 'volume0',
-      Date + INTERVAL 1 HOUR TO VOLUME 'volume1'"""
+      Date + INTERVAL 1 HOUR TO VOLUME 'volume1'""",
     ):
-        create_acceptance_table_with_tiered_storage_ttl(table_name=table_name_2,
-                                                        storage_policy="local_local1",
-                                                        )
+        create_acceptance_table_with_tiered_storage_ttl(
+            table_name=table_name_2,
+            storage_policy="local_local1",
+        )
 
     with And("I create acceptance table without tiered storage ttl"):
         create_acceptance_table(table_name=table_name_1, storage_policy="local_local0")
@@ -70,7 +90,9 @@ def delete_with_multi_volume_policy_using_ttl(
 
 
 @TestFeature
-@Requirements(RQ_SRS_023_ClickHouse_LightweightDelete_Performance_ConcurrentQueries("1.0"))
+@Requirements(
+    RQ_SRS_023_ClickHouse_LightweightDelete_Performance_ConcurrentQueries("1.0")
+)
 @Name("acceptance concurrent tiered storage ttl and lightweight delete")
 def feature(self, node="clickhouse1"):
     """Check clickhouse lightweight delete do not slow down during tiered storage ttl on acceptance table."""

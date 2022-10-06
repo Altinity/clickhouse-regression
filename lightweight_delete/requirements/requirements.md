@@ -140,6 +140,7 @@
   * 2.38 [Backups](#backups)
     * 2.38.1 [RQ.SRS-023.ClickHouse.LightweightDelete.Backups.Mask](#rqsrs-023clickhouselightweightdeletebackupsmask)
     * 2.38.2 [RQ.SRS-023.ClickHouse.LightweightDelete.Backups.BackupAfterLightweightDelete](#rqsrs-023clickhouselightweightdeletebackupsbackupafterlightweightdelete)
+    * 2.38.3 [RQ.SRS-023.ClickHouse.LightweightDelete.Backups.BackupPartition](#rqsrs-023clickhouselightweightdeletebackupsbackuppartition)
   * 2.39 [Drop Empty Part](#drop-empty-part)
     * 2.39.1 [RQ.SRS-023.ClickHouse.LightweightDelete.DropEmptyPart](#rqsrs-023clickhouselightweightdeletedropemptypart)
   * 2.40 [Deletes per Second](#deletes-per-second)
@@ -927,6 +928,12 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL support backups for tables that have deleted rows.
+
+
+#### RQ.SRS-023.ClickHouse.LightweightDelete.Backups.BackupPartition
+version: 1.0
+
+[ClickHouse] SHALL support partition backups for tables that have deleted rows.
 
 ### Drop Empty Part
 
