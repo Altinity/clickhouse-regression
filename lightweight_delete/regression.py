@@ -31,7 +31,13 @@ xfails = {
     "distributed tables/:": [(Fail, "engine type not supported.")],
     "replication queue/:/replication queue": [(Fail, "engine type not supported.")],
     "replicated tables/:/:": [(Fail, "engine type not supported.")],
-    "performance/performance large number of partitions": [(Fail, "https://github.com/ClickHouse/ClickHouse/issues/39870")],
+    "performance/performance large number of partitions": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/39870")
+    ],
+    "zookeeper load/load zookeeper": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/39870")
+    ],
+    "load/:": [(Fail, "https://github.com/ClickHouse/ClickHouse/issues/39870")],
 }
 
 xflags = {}
@@ -106,8 +112,16 @@ def regression(
             with Given("I enable lightweight delete"):
                 allow_experimental_lightweight_delete()
 
+        Feature(run=load("lightweight_delete.tests.backup", "feature"))
+        Feature(run=load("lightweight_delete.tests.disk_space", "feature"))
+        Feature(run=load("lightweight_delete.tests.zookeeper_load", "feature"))
+        Feature(run=load("lightweight_delete.tests.load", "feature"))
         Feature(run=load("lightweight_delete.tests.acceptance", "feature"))
-        Feature(run=load("lightweight_delete.tests.acceptance_tiered_storage_ttl", "feature"))
+        Feature(
+            run=load(
+                "lightweight_delete.tests.acceptance_tiered_storage_ttl", "feature"
+            )
+        )
         Feature(
             run=load(
                 "lightweight_delete.tests.efficient_physical_data_removal", "feature"

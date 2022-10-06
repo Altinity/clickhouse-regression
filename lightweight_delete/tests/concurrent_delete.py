@@ -145,7 +145,10 @@ def concurrent_delete_without_overlap_with_alter_delete(self, node=None):
                     num_partitions=10, table_name=table_name
                 )
                 Step(name="delete even rows", test=delete_even, parallel=True)(
-                    num_partitions=10, table_name=table_name, use_alter_delete=True, check=False,
+                    num_partitions=10,
+                    table_name=table_name,
+                    use_alter_delete=True,
+                    check=False,
                 )
 
     with Then("I check that rows are deleted"):
@@ -228,7 +231,10 @@ def concurrent_delete_with_overlap_with_alter_delete(self, node=None):
             num_partitions=10, table_name=table_name
         )
         Step(name="delete odd second time", test=delete_odd, parallel=True)(
-            num_partitions=10, table_name=table_name, use_alter_delete=True, check=False,
+            num_partitions=10,
+            table_name=table_name,
+            use_alter_delete=True,
+            check=False,
         )
 
     with Then("I check that rows are deleted"):
