@@ -27,4 +27,7 @@ def select_1(self):
 @Name("sanity")
 def feature(self):
     """Sanity check suite."""
-    Scenario(run=select_1)
+    # Scenario(run=select_1)
+    for scenario in loads(current_module(), Scenario):
+        scenario()
+
