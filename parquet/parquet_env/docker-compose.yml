@@ -1,5 +1,8 @@
 version: '2.3'
 
+volumes:
+  data1-1:
+
 services:
   zookeeper:
     extends:
@@ -45,6 +48,58 @@ services:
       zookeeper:
         condition: service_healthy
 
+  proxy1:
+    image: registry.gitlab.com/altinity-public/container-images/test/clickhouse-s3-proxy:1.0
+    ports:
+      - "8080"
+      - "80"
+      - "443"
+
+  proxy2:
+    image: registry.gitlab.com/altinity-public/container-images/test/clickhouse-s3-proxy:1.0
+    ports:
+      - "8080"
+      - "80"
+      - "443"
+
+  resolver:
+    image: registry.gitlab.com/altinity-public/container-images/test/clickhouse-python-bottle:1.0
+    ports:
+      - "8080"
+    tty: true
+    depends_on:
+      - proxy1
+      - proxy2
+
+  minio1:
+    extends:
+      file: minio-service.yml
+      service: minio1
+    depends_on:
+      - proxy1
+      - proxy2
+
+  minio-client:
+    extends:
+      file: minio-client.yml
+      service: minio-client
+    depends_on:
+      minio1:
+        condition: service_healthy
+
+  aws:
+    extends:
+      file: aws-client.yml
+      service: aws
+
+  mysql1:
+    extends:
+      file: mysql-service.yml
+      service: mysql
+    hostname: mysql1
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/mysql1/database:/var/lib/mysql"
+
   # dummy service which does nothing, but allows to postpone
   # 'docker-compose up -d' till all dependecies will go healthy
   all_services_ready:
@@ -57,4 +112,10 @@ services:
       clickhouse3:
         condition: service_healthy
       zookeeper:
+        condition: service_healthy
+      mysql1:
+        condition: service_healthy
+      aws:
+        condition: service_healthy
+      minio-client:
         condition: service_healthy
