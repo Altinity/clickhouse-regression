@@ -2047,7 +2047,7 @@ def lost_data_during_mutation(self):
     table_name = "table_" + getuid()
     try:
         with Given("I have a table"):
-            node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
+            node.query(f"DROP TABLE IF EXISTS {table_name} ON CLUSTER 'sharded_cluster' SYNC")
 
             node.query(
                 f"""
