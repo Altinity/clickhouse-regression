@@ -2047,29 +2047,27 @@ def lost_data_during_mutation(self):
     table_name = "table_" + getuid()
     try:
         with Given("I have a table"):
-            node.query(f"DROP TABLE IF EXISTS {table_name} ON CLUSTER 'sharded_cluster' SYNC")
-
             node.query(
                 f"""
-            create table {table_name} on cluster 'sharded_cluster' (key UInt32, value1 String, value2 String, value3 String) engine=ReplicatedMergeTree('/{table_name}', '{{replica}}')
-            order by key
-            partition by (key % 4)
-            settings storage_policy='external'
+            CREATE TABLE IF NOT EXISTS {table_name} ON CLUSTER 'sharded_cluster' (key UInt32, value1 String, value2 String, value3 String) engine=ReplicatedMergeTree('/{table_name}', '{{replica}}')
+            ORDER BY key
+            PARTITION BY (key % 4)
+            SETTINGS storage_policy='external'
             """
             )
 
         with And("I insert some data"):
             node.query(
-                f"insert into {table_name} select * from generateRandom('key UInt32, value1 String, value2 String, value3 String') limit 1000000"
+                f"INSERT INTO {table_name} SELECT * FROM generateRandom('key UInt32, value1 String, value2 String, value3 String') LIMIR 1000000"
             )
 
         with When("I add a new column"):
             node.query(
-                f"alter table {table_name} add column valueX String materialized value1"
+                f"ALTER TABLE {table_name} ADD COLUMN valueX String materialized value1"
             )
 
         with And(f"I materialize the new column"):
-            node.query(f"alter table {table_name} materialize column valueX")
+            node.query(f"ALTER TABLE {table_name} MATERIALIZE COLUMN valueX")
 
         with Then("Check both replicas"):
             output = node.command(
