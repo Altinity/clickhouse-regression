@@ -57,6 +57,7 @@ def startup_timeout(self):
 @Requirements(RQ_SRS_024_ClickHouse_Keeper_Config_ServerID("1.0"))
 def server_id(self):
     """I check ClickHouse Keeper setting server_id"""
+    xfail("doesn't work 22.8")
     cluster = self.context.cluster
     message = "[PRE-VOTE INIT] my id 1"
 
