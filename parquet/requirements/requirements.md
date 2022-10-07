@@ -117,6 +117,7 @@ This software requirements specification covers requirements for `Parquet` data 
 
 ## Feature Diagram
 
+```mermaid
 flowchart LR;
     subgraph Overhead[Parquet]
         direction LR;
@@ -161,7 +162,7 @@ flowchart LR;
             subgraph Insert_types[INSERT]
                 UInt8_in[UInt8]
                 Bool_in[Bool]
-                Int8_in[Int8]`
+                Int8_in[Int8]
                 UInt16_in[UInt16]
                 Int16_in[Int16]
                 UInt32_in[UInt32]
@@ -276,8 +277,8 @@ flowchart LR;
             Nullable
             LowCardinality
         end
-
     end
+```
 
 ## Requirements
 
