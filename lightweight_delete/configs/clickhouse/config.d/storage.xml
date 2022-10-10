@@ -2,6 +2,10 @@
 
 <storage_configuration>
     <disks>
+        <backups>
+            <type>local</type>
+            <path>/backups/</path>
+        </backups>
         <default>
             <keep_free_space_bytes>1024</keep_free_space_bytes>
         </default>
@@ -16,5 +20,9 @@
         </default>
     </policies>
 </storage_configuration>
+<backups>
+    <allowed_disk>backups</allowed_disk>
+    <allowed_path>/backups/</allowed_path>
+</backups>
 
 </clickhouse>

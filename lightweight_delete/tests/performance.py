@@ -3,7 +3,9 @@ from lightweight_delete.tests.steps import *
 
 
 @TestScenario
-@Requirements(RQ_SRS_023_ClickHouse_LightweightDelete_Performance_LargeNumberOfPartitions("1.0"))
+@Requirements(
+    RQ_SRS_023_ClickHouse_LightweightDelete_Performance_LargeNumberOfPartitions("1.0")
+)
 def performance_large_number_of_partitions(self, node=None):
     """Check that lightweight deletes do not slow down when increasing partitions number."""
     if node is None:
@@ -14,18 +16,20 @@ def performance_large_number_of_partitions(self, node=None):
 
     with Given("I have a table with only 1 partition and with 100 partitions"):
         create_partitioned_table(table_name=table_name_1_partition)
-        insert(table_name=table_name_1_partition,
-               partitions=1,
-               parts_per_partition=1,
-               block_size=1000000
-               )
+        insert(
+            table_name=table_name_1_partition,
+            partitions=1,
+            parts_per_partition=1,
+            block_size=1000000,
+        )
 
         create_partitioned_table(table_name=table_name_100_partitions)
-        insert(table_name=table_name_100_partitions,
-               partitions=100,
-               parts_per_partition=1,
-               block_size=10000
-               )
+        insert(
+            table_name=table_name_100_partitions,
+            partitions=100,
+            parts_per_partition=1,
+            block_size=10000,
+        )
     with When("I delete from both tables and time it"):
         start_time_1_partition = time.time()
         delete(table_name=table_name_1_partition, condition="x % 2 == 0")
@@ -74,7 +78,7 @@ def performance_without_primary_key(self, node=None):
 
     with Then("I check performance"):
         assert (
-                0.01 * execution_time1 < execution_time2 < 300 * execution_time1
+            0.01 * execution_time1 < execution_time2 < 300 * execution_time1
         ), error()  # todo rewrite value
 
 
@@ -117,7 +121,7 @@ def performance_with_primary_key_many_partitions(self, node=None):
 
     with Then("I check performance"):
         assert (
-                0.01 * execution_time1 < execution_time2 < 300 * execution_time1
+            0.01 * execution_time1 < execution_time2 < 300 * execution_time1
         ), error()  # todo rewrite value
 
 
@@ -162,7 +166,7 @@ def performance_with_primary_key_many_parts(self, node=None):
 
     with Then("I check performance"):
         assert (
-                0.01 * execution_time1 < execution_time2 < 300 * execution_time1
+            0.01 * execution_time1 < execution_time2 < 300 * execution_time1
         ), error()  # todo rewrite value
 
 
@@ -222,7 +226,7 @@ def performance_post_delete_select(self, node=None):
 
     with Then("I compare time spent for select statement with and without delete"):
         assert (
-                2 * execution_time1 > execution_time2
+            2 * execution_time1 > execution_time2
         ), error()  # todo rewrite values after implementation
 
 

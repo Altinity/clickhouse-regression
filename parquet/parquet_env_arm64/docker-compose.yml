@@ -45,6 +45,27 @@ services:
       zookeeper:
         condition: service_healthy
 
+  minio-client:
+    extends:
+      file: minio-client.yml
+      service: minio-client
+    depends_on:
+      minio1:
+        condition: service_healthy
+
+  aws:
+    extends:
+      file: aws-client.yml
+      service: aws
+
+  mysql1:
+    extends:
+      file: mysql-service.yml
+      service: mysql
+    hostname: mysql1
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/mysql1/database:/var/lib/mysql"
+
   # dummy service which does nothing, but allows to postpone
   # 'docker-compose up -d' till all dependecies will go healthy
   all_services_ready:
@@ -57,4 +78,10 @@ services:
       clickhouse3:
         condition: service_healthy
       zookeeper:
+        condition: service_healthy
+      mysql1:
+        condition: service_healthy
+      aws:
+        condition: service_healthy
+      minio-client:
         condition: service_healthy

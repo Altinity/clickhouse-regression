@@ -8,7 +8,6 @@ def mixed_keepers_5(self):
     """Check that 5 nodes Clickhouse Keeper Cluster work in write mode
     with 2 nodes down and in read mode only with 3 nodes down.
     """
-    xfail("problem investigation in progress")
     cluster = self.context.cluster
     try:
         start_mixed_keeper(
@@ -29,7 +28,7 @@ def mixed_keepers_5(self):
                 cluster.node(name).stop_clickhouse()
 
         with And("I check that table in write mode"):
-            self.context.cluster.node("clickhouse1").query(
+            retry(cluster.node("clickhouse1").query, timeout=500, delay=1)(
                 f"insert into {table_name} values (1,1)", exitcode=0
             )
 
@@ -49,6 +48,14 @@ def mixed_keepers_5(self):
             for name in cluster.nodes["clickhouse"][2:5]:
                 cluster.node(name).start_clickhouse(wait_healthy=False)
 
+        with And(f"I check that ruok returns imok"):
+            for name in cluster.nodes["clickhouse"][0:5]:
+                retry(cluster.node("bash-tools").cmd, timeout=500, delay=1)(
+                    f"echo ruok | nc {name} 2181",
+                    exitcode=0,
+                    message="imok",
+                )
+
         with And("I check clean ability"):
             table_insert(table_name=table_name, node_name="clickhouse1")
 
@@ -62,7 +69,6 @@ def mixed_keepers_4(self):
     """Check that 4 nodes Clickhouse Keeper Cluster work in write mode
     with 1 node down and in read mode only with 2 nodes down.
     """
-    xfail("problem investigation in progress")
 
     cluster = self.context.cluster
     try:
@@ -83,7 +89,7 @@ def mixed_keepers_4(self):
             cluster.node("clickhouse4").stop_clickhouse()
 
         with And("I check that table in write mode"):
-            self.context.cluster.node("clickhouse1").query(
+            retry(cluster.node("clickhouse1").query, timeout=500, delay=1)(
                 f"insert into {table_name} values (1,1)", exitcode=0
             )
 
@@ -102,6 +108,14 @@ def mixed_keepers_4(self):
         with And("I start dropped nodes"):
             for name in cluster.nodes["clickhouse"][2:4]:
                 cluster.node(name).start_clickhouse(wait_healthy=False)
+
+        with And(f"I check that ruok returns imok"):
+            for name in cluster.nodes["clickhouse"][0:4]:
+                retry(cluster.node("bash-tools").cmd, timeout=100, delay=1)(
+                    f"echo ruok | nc {name} 2181",
+                    exitcode=0,
+                    message="imok",
+                )
 
         with And("I check clean ability"):
             table_insert(table_name=table_name, node_name="clickhouse1")
@@ -134,7 +148,7 @@ def mixed_keepers_3(self):
             cluster.node("clickhouse3").stop_clickhouse()
 
         with And("I check that table in write mode"):
-            self.context.cluster.node("clickhouse1").query(
+            retry(cluster.node("clickhouse1").query, timeout=500, delay=1)(
                 f"insert into {table_name} values (1,1)", exitcode=0
             )
 
@@ -151,6 +165,14 @@ def mixed_keepers_3(self):
         with And("I start dropped nodes"):
             for name in cluster.nodes["clickhouse"][1:3]:
                 cluster.node(name).start_clickhouse(wait_healthy=False)
+
+        with And(f"I check that ruok returns imok"):
+            for name in cluster.nodes["clickhouse"][0:3]:
+                retry(cluster.node("bash-tools").cmd, timeout=500, delay=1)(
+                    f"echo ruok | nc {name} 2181",
+                    exitcode=0,
+                    message="imok",
+                )
 
         with And("I check clean ability"):
             table_insert(table_name=table_name, node_name="clickhouse1")
@@ -181,7 +203,7 @@ def mixed_keepers_2(self):
             create_simple_table(table_name=table_name)
 
         with And("I check that table in write mode"):
-            self.context.cluster.node("clickhouse1").query(
+            retry(cluster.node("clickhouse1").query, timeout=500, delay=1)(
                 f"insert into {table_name} values (1,1)", exitcode=0
             )
 
@@ -198,14 +220,20 @@ def mixed_keepers_2(self):
         with And("I start dropped nodes"):
             cluster.node("clickhouse2").start_clickhouse(wait_healthy=False)
 
+        with And(f"I check that ruok returns imok"):
+            for name in cluster.nodes["clickhouse"][0:2]:
+                retry(cluster.node("bash-tools").cmd, timeout=500, delay=1)(
+                    f"echo ruok | nc {name} 2181",
+                    exitcode=0,
+                    message="imok",
+                )
+
         with And("I check clean ability"):
             table_insert(table_name=table_name, node_name="clickhouse1")
 
     finally:
         with Finally("I clean up"):
             clean_coordination_on_all_nodes()
-
-
 @TestScenario
 def mixed_keepers_1(self):
     """Check that 1 node Clickhouse Keeper Cluster work in write mode
@@ -227,7 +255,7 @@ def mixed_keepers_1(self):
             create_simple_table(table_name=table_name)
 
         with And("I check that table in write mode"):
-            self.context.cluster.node("clickhouse2").query(
+            retry(cluster.node("clickhouse2").query, timeout=250, delay=1)(
                 f"insert into {table_name} values (1,1)", exitcode=0
             )
 
@@ -243,6 +271,14 @@ def mixed_keepers_1(self):
 
         with And("I start dropped nodes"):
             cluster.node("clickhouse1").start_clickhouse(wait_healthy=False)
+
+        with And(f"I check that ruok returns imok"):
+            for name in cluster.nodes["clickhouse"][0:1]:
+                retry(cluster.node("bash-tools").cmd, timeout=100, delay=1)(
+                    f"echo ruok | nc {name} 2181",
+                    exitcode=0,
+                    message="imok",
+                )
 
         with And("I check clean ability"):
             table_insert(table_name=table_name, node_name="clickhouse1")
@@ -280,8 +316,8 @@ def zookeepers_3(self):
             self.context.cluster.node("zookeeper1").stop()
 
         with And("I check that table in write mode"):
-            self.context.cluster.node("clickhouse1").query(
-                f"insert into {table_name}(Id, partition) values (1,1)", exitcode=0
+            retry(cluster.node("clickhouse1").query, timeout=250, delay=1)(
+                f"insert into {table_name} values (1,1)", exitcode=0
             )
 
         with And("I stop one more ZooKeeper node"):
@@ -295,8 +331,9 @@ def zookeepers_3(self):
             )
 
         with And("I start dropped nodes"):
-            self.context.cluster.node("zookeeper1").restart()
-            self.context.cluster.node("zookeeper2").restart()
+            self.context.cluster.node("zookeeper1").start()
+            self.context.cluster.node("zookeeper2").start()
+
         with And("I check clean ability"):
             table_insert(table_name=table_name, node_name="clickhouse1")
 

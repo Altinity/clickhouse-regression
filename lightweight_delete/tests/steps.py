@@ -6,7 +6,9 @@ from xml.sax.saxutils import escape as xml_escape
 
 
 @TestStep
-def create_acceptance_table_with_tiered_storage_ttl(self, storage_policy, table_name="acceptance_table", node=None):
+def create_acceptance_table_with_tiered_storage_ttl(
+    self, storage_policy, table_name="acceptance_table", node=None
+):
     """Creating acceptance table with tiered storage ttl"""
     if node is None:
         node = self.context.node
@@ -29,12 +31,14 @@ def create_acceptance_table_with_tiered_storage_ttl(self, storage_policy, table_
               b UInt16,
               c UInt16,
               int_arr Array(UInt32),
-            )"""+"""
+            )"""
+                + """
             ENGINE = MergeTree()
             PARTITION BY (Date, timestamp)
             ORDER BY (Id, Ids[1], originIds[1], timestamp)
             TTL Date TO VOLUME 'volume0',
-            Date + INTERVAL 1 HOUR TO VOLUME 'volume1'""" + f"""
+            Date + INTERVAL 1 HOUR TO VOLUME 'volume1'"""
+                + f"""
             SETTINGS storage_policy = '{storage_policy}'
             ,merge_with_ttl_timeout = 1"""
             )
@@ -260,7 +264,9 @@ def add_ontime_table(self, from_year=1990, to_year=1991, node=None):
 
 
 @TestStep(Given)
-def create_acceptance_table(self, storage_policy=None, table_name="acceptance_table", node=None):
+def create_acceptance_table(
+    self, storage_policy=None, table_name="acceptance_table", node=None
+):
     """Creating acceptance table."""
     if node is None:
         node = self.context.node
@@ -282,11 +288,17 @@ def create_acceptance_table(self, storage_policy=None, table_name="acceptance_ta
               b UInt16,
               c UInt16,
               int_arr Array(UInt32),
-            )"""+"""
+            )"""
+                + """
             ENGINE = MergeTree()
             PARTITION BY (Date, timestamp)
-            ORDER BY (Id, Ids[1], originIds[1], timestamp)""" + ("" if storage_policy is None else f"""
-            SETTINGS storage_policy = '{storage_policy}'""")
+            ORDER BY (Id, Ids[1], originIds[1], timestamp)"""
+                + (
+                    ""
+                    if storage_policy is None
+                    else f"""
+            SETTINGS storage_policy = '{storage_policy}'"""
+                )
             )
 
         yield
@@ -297,7 +309,9 @@ def create_acceptance_table(self, storage_policy=None, table_name="acceptance_ta
 
 
 @TestStep(Given)
-def insert_into_acceptance_table(self, table_name="acceptance_table", rows_number=100, node=None):
+def insert_into_acceptance_table(
+    self, table_name="acceptance_table", rows_number=100, node=None
+):
     """Insert into acceptance table rows_number random rows."""
     if node is None:
         node = self.context.node
@@ -643,18 +657,6 @@ def insert(
         table_engine = self.context.table_engine
 
     if values is None:
-        if table_engine in (
-            "MergeTree",
-            "ReplacingMergeTree",
-            "SummingMergeTree",
-            "AggregatingMergeTree",
-        ):
-            values = ",".join(
-                f"({x},{y})"
-                for x in range(partitions)
-                for y in range(block_size * parts_per_partition)
-            )
-
         if table_engine in ("CollapsingMergeTree", "VersionedCollapsingMergeTree"):
             values = ",".join(
                 f"({x},{y},1)"
@@ -662,9 +664,15 @@ def insert(
                 for y in range(block_size * parts_per_partition)
             )
 
-        if table_engine == "GraphiteMergeTree":
+        elif table_engine == "GraphiteMergeTree":
             values = ",".join(
                 f"({x},{y}, '1', toDateTime(10), 10, 10)"
+                for x in range(partitions)
+                for y in range(block_size * parts_per_partition)
+            )
+        else:
+            values = ",".join(
+                f"({x},{y})"
                 for x in range(partitions)
                 for y in range(block_size * parts_per_partition)
             )
@@ -1781,3 +1789,29 @@ def allow_experimental_lightweight_delete(self):
                         )
                     except ValueError:
                         pass
+
+
+@TestStep
+def inserts(self, table_name, inserts_number, delay=0):
+    """A lot of inserts in cycle"""
+    for i in range(inserts_number):
+        insert(
+            table_name=table_name, partitions=2, parts_per_partition=1, block_size=1000
+        )
+        time.sleep(delay)
+
+
+@TestStep
+def merges(self, table_name, merges_number, delay=0):
+    """A lot of inserts in cycle"""
+    for i in range(merges_number):
+        optimize_table(table_name=table_name, final=True)
+        time.sleep(delay)
+
+
+@TestStep
+def deletes(self, table_name, deletes_number, condition="id < 2", delay=0):
+    """A lot of deletes in cycle"""
+    for i in range(deletes_number):
+        delete(table_name=table_name, condition=condition, settings=[])
+        time.sleep(delay)

@@ -7,10 +7,13 @@ def replicated_table_deleting_without_overlap(self):
     """Check that clickhouse support DELETE statement which is related to replicated table."""
     table_name = getuid()
 
-    create_table(table_name=table_name)
-    insert_replicated(
-        table_name=table_name, partitions=10, parts_per_partition=1, block_size=100
-    )
+    with Given("I have replicated table"):
+        create_table(table_name=table_name)
+
+    with When("I insert data into replicated table"):
+        insert_replicated(
+            table_name=table_name, partitions=10, parts_per_partition=1, block_size=100
+        )
 
     name = "clickhouse1"
     self.context.node = node = self.context.cluster.node(name)
