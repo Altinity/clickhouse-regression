@@ -9,119 +9,23 @@ from s3.tests.common import *
 from testflows.asserts import values, error, snapshot
 
 
-@TestStep(Given)
-def instrument_cluster_nodes(self, test, cluster_nodes, always_dump=True):
-    """Instrument logs on cluster nodes."""
-    for name in cluster_nodes:
-        instrument_clickhouse_server_log(
-            node=self.context.cluster.node(name), test=test, always_dump=always_dump
-        )
-
-
-@TestStep(When)
-def create_simple_table(
-    self,
-    node=None,
-    table_name="test",
-    cluster_name="'Cluster_3shards_with_3replicas'",
-    values="Id Int32, partition Int32",
-    manual_cleanup=False,
-):
-    """Create simple table with timeout option.
-
-    :param node: node for table
-    :param table_name: table name
-    :param cluster_name: name of cluster for replicated table
-    :param manual_cleanup: manual cleanup
-    """
-    if node is None:
-        node = self.context.cluster.node("clickhouse1")
-    try:
-        retry(node.query, timeout=100, delay=1)(
-            f"CREATE TABLE IF NOT EXISTS {table_name} on CLUSTER {cluster_name}"
-            f" ({values}) "
-            "ENGINE = ReplicatedMergeTree('/clickhouse/tables/replicated/{shard}"
-            f"/{table_name}'"
-            ", '{replica}') "
-            "ORDER BY Id PARTITION BY Id",
-            steps=False,
-        )
-        yield table_name
-    finally:
-        with Finally("I clean up"):
-            if manual_cleanup is False:
-                with By("dropping table if exists"):
-                    node.query(
-                        f"DROP TABLE IF EXISTS {table_name} ON CLUSTER {cluster_name} SYNC"
-                    )
-
-
 @TestStep(When)
 def insert_const(self, name, node=None):
     """Insert some data into table."""
     if node is None:
         node = self.context.node
 
-    with By("Inserting 0's"):
+    with By("Inserting some values"):
         node.query(
-            f"""
-            INSERT INTO {name} VALUES 
-                (0,0,0,0,0,0,0,0,0,0,0,'2022-01-01','2022-01-01 00:00:00','A','B',[0,0,0],(0,0,0,0,0,0,0,0,0,0,0,'2022-01-01','2022-01-01 00:00:00','A','B',[0,0,0],(0,0,0), {{'a':0, 'b':0}}), {{'a':0, 'b':0}}), (1,1,1,1,1,1,1,1,1,1,0.5,'2022-01-01','2022-01-01 00:00:00','A','B',[1,1,1],(1,1,1,1,1,1,1,1,1,1,0.5,'2022-01-01','2022-01-01 00:00:00','A','B',[1,1,1],(1,1,1), {{'a':1, 'b':1}}), {{'a':1, 'b':1}}), (0,-128,0,-32768,0,-2147483648,0,-9223372036854775808,-3.40282347e+38,-1.79769e+308,-0.9999999999999999999999999999999999999,'1970-01-01','1970-01-01 00:00:00','A','B',[0,0,0],(0,-128,0,-32768,0,-2147483648,0,-9223372036854775808,-3.40282347e+38,-1.79769e+308,-0.9999999999999999999999999999999999999,'1970-01-01','1970-01-01 00:00:00','A','B',[0,0,0],(0,0,0), {{'a':0, 'b':0}}) , {{'a':0, 'b':0}}), (255,127,65535,32767,4294967295,2147483647,18446744073709551615,9223372036854775807,3.40282347e+38,1.79769e+308,0.9999999999999999999999999999999999999,'2149-06-06','2106-02-07 06:28:15','A','B',[0,0,0],(255,127,65535,32767,4294967295,2147483647,18446744073709551615,9223372036854775807,3.40282347e+38,1.79769e+308,0.9999999999999999999999999999999999999,'2149-06-06','2106-02-07 06:28:15','A','B',[0,0,0],(0,0,0), {{'a':0, 'b':0}}), {{'a':0, 'b':0}})""",
-            #     (1,1,1,1,1,1,1,1,1,1,0.5,'2022-01-01','2022-01-01 00:00:00','A','B',[1,1,1],(1,1,1,1,1,1,1,1,1,1,0.5,'2022-01-01','2022-01-01 00:00:00','A','B',[1,1,1],(1,1,1), {{'a':1, 'b':1}}), {{'a':1, 'b':1}}),
-            #     (0,-128,0,-32768,0,-2147483648,0,-9223372036854775808,-3.40282347e+38,-1.797e+327,-0.9999999999999999999999999999999999999,'1970-01-01','1970-01-01 00:00:00','A','B',[0,0,0],(0,-128,0,-32768,0,-2147483648,0,-9223372036854775808,-3.40282347e+38,-1.797e+327,-0.9999999999999999999999999999999999999,'1970-01-01','1970-01-01 00:00:00','A','B',[0,0,0],(0,0,0), {{'a':0, 'b':0}}) , {{'a':0, 'b':0}}),
-            #     (255,127,65535,32767,4294967295,2147483647,18446744073709551615,9223372036854775807,3.40282347e+38,1.797e+327,0.9999999999999999999999999999999999999,'2149-06-06','2106-02-07 06:28:15','A','B',[0,0,0],(255,127,65535,32767,4294967295,2147483647,18446744073709551615,9223372036854775807,3.40282347e+38,1.797e+327,0.9999999999999999999999999999999999999,'2149-06-06','2106-02-07 06:28:15','A','B',[0,0,0],(0,0,0), {{'a':0, 'b':0}}), {{'a':0, 'b':0}})
-            #     (Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,[Null,Null,Null],(Null), {{Null:Null}})
-            # """,
+            f"INSERT INTO {name} VALUES"
+                "(0,0,0,0,0,0,0,0,0,0,0,'2022-01-01','2022-01-01 00:00:00','A','B',[0,0,0],(0,0,0,0,0,0,0,0,0,0,0,'2022-01-01','2022-01-01 00:00:00','A','B',[0,0,0],(0,0,0), {{'a':0, 'b':0}}), {{'a':0, 'b':0}}),"
+                "(1,1,1,1,1,1,1,1,1,1,0.5,'2022-01-01','2022-01-01 00:00:00','A','B',[1,1,1],(1,1,1,1,1,1,1,1,1,1,0.5,'2022-01-01','2022-01-01 00:00:00','A','B',[1,1,1],(1,1,1), {{'a':1, 'b':1}}), {{'a':1, 'b':1}}),"
+                "(0,-128,0,-32768,0,-2147483648,0,-9223372036854775808,-3.40282347e+38,-1.79769e+308,-0.9999999999999999999999999999999999999,'1970-01-01','1970-01-01 00:00:00','A','B',[0,0,0],(0,-128,0,-32768,0,-2147483648,0,-9223372036854775808,-3.40282347e+38,-1.79769e+308,-0.9999999999999999999999999999999999999,'1970-01-01','1970-01-01 00:00:00','A','B',[0,0,0],(0,0,0), {{'a':0, 'b':0}}) , {{'a':0, 'b':0}}),"
+                "(255,127,65535,32767,4294967295,2147483647,18446744073709551615,9223372036854775807,3.40282347e+38,1.79769e+308,0.9999999999999999999999999999999999999,'2149-06-06','2106-02-07 06:28:15','A','B',[0,0,0],(255,127,65535,32767,4294967295,2147483647,18446744073709551615,9223372036854775807,3.40282347e+38,1.79769e+308,0.9999999999999999999999999999999999999,'2149-06-06','2106-02-07 06:28:15','A','B',[0,0,0],(0,0,0), {{'a':0, 'b':0}}), {{'a':0, 'b':0}}),"
+                "(Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,[Null,Null,Null],(Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,[Null,Null,Null],(Null), {{Null:Null}}), {{Null:Null}})"
         )
 
     return
-
-
-@TestStep(When)
-def insert_null(self, name, node=None):
-    """Insert some null data into table."""
-    if node is None:
-        node = self.context.node
-
-    with By("Inserting Nulls"):
-        node.query(
-            f"INSERT INTO {name} VALUES (Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,[Null,Null,Null],(Null), {{Null:Null}}) FORMAT Parquet"
-        )
-
-    return
-
-
-@TestStep(When)
-def insert_array_const(self, name, node=None):
-    """Insert some array data into table."""
-    if node is None:
-        node = self.context.node
-
-    with By("Inserting 0's"):
-        node.query(
-            f"""
-            INSERT INTO {name} VALUES
-                ([0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],['2022-01-01'],['2022-01-01 00:00:00'],['A'],['B'],[[0,0,0]],[(0,0,0,0,0,0,0,0,0,0,0,'2022-01-01','2022-01-01 00:00:00','A','B',[0,0,0],(0,0,0), {{'a':0, 'b':0}})], [{{'a':0, 'b':0}}]) FORMAT Parquet"
-            """
-        )
-
-    with And("Inserting 1's"):
-        node.query(
-            f"INSERT INTO {name} VALUES ([1],[1],[1],[1],[1],[1],[1],[1],[1],[1],[0.5],['2022-01-01'],['2022-01-01 00:00:00'],['A'],['B'],[[1,1,1]],[(1,1,1,1,1,1,1,1,1,1,0.5,'2022-01-01','2022-01-01 00:00:00','A','B',[1,1,1],(1,1,1), {{'a':1, 'b':1}})], [{{'a':1, 'b':1}})] FORMAT Parquet"
-        )
-
-    with And("Inserting mins"):
-        node.query(
-            f"INSERT INTO {name} VALUES ([0],[-128],[0],[-32768],[0],[-2147483648],[0],[-9223372036854775808],[-3.40282347e+38],[-1.79769e+308],[-0.9999999999999999999999999999999999999],['1970-01-01'],['1970-01-01 00:00:00'],['A'],['B'],[[0,0,0]],[(0,-128,0,-32768,0,-2147483648,0,-9223372036854775808,-3.40282347e+38,-1.79769e+308,-0.9999999999999999999999999999999999999,'1970-01-01','1970-01-01 00:00:00','A','B',[0,0,0],(0,0,0), {{'a':0, 'b':0}})] , [{{'a':0, 'b':0}}]) FORMAT Parquet"
-        )
-
-    with And("Inserting maxes"):
-        node.query(
-            f"INSERT INTO {name} VALUES ([255],[127],[65535],[32767],[4294967295],[2147483647],[18446744073709551615],[9223372036854775807],[3.40282347e+38],[1.79769e+308],[0.9999999999999999999999999999999999999],['2149-06-06'],['2106-02-07 06:28:15'],['A'],['B'],[[0,0,0]],[(255,127,65535,32767,4294967295,2147483647,18446744073709551615,9223372036854775807,3.40282347e+38,1.79769e+308,0.9999999999999999999999999999999999999,'2149-06-06','2106-02-07 06:28:15','A','B',[0,0,0],(0,0,0), {{'a':0, 'b':0}})], [{{'a':0, 'b':0}}]) FORMAT Parquet"
-        )
-
-    return
-
 
 @TestStep(Given)
 def allow_experimental_map_type(self):
@@ -328,60 +232,6 @@ def table(self, engine, name="table0", create="CREATE"):
     finally:
         with Finally("drop the table"):
             node.query(f"DROP TABLE IF EXISTS {name}")
-
-
-@TestStep(When)
-def insert(
-    self,
-    table_name,
-    values=None,
-    partitions=1,
-    parts_per_partition=1,
-    block_size=1000,
-    no_checks=False,
-    settings=[],
-    node=None,
-    table_engine=None,
-):
-    """Insert data having specified number of partitions and parts."""
-    if node is None:
-        node = self.context.node
-
-    if table_engine is None:
-        table_engine = self.context.table_engine
-
-    if values is None:
-        if table_engine in (
-            "MergeTree",
-            "ReplacingMergeTree",
-            "SummingMergeTree",
-            "AggregatingMergeTree",
-        ):
-            values = ",".join(
-                f"({x},{y})"
-                for x in range(partitions)
-                for y in range(block_size * parts_per_partition)
-            )
-
-        if table_engine in ("CollapsingMergeTree", "VersionedCollapsingMergeTree"):
-            values = ",".join(
-                f"({x},{y},1)"
-                for x in range(partitions)
-                for y in range(block_size * parts_per_partition)
-            )
-
-        if table_engine == "GraphiteMergeTree":
-            values = ",".join(
-                f"({x},{y}, '1', toDateTime(10), 10, 10)"
-                for x in range(partitions)
-                for y in range(block_size * parts_per_partition)
-            )
-
-    return node.query(
-        f"INSERT INTO {table_name} VALUES {values}",
-        settings=[("max_block_size", block_size)] + settings,
-        no_checks=no_checks,
-    )
 
 
 @TestStep(Given)
