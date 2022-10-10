@@ -24,25 +24,6 @@
     * 4.3.3 [RQ.SRS-032.ClickHouse.Parquet.Settings.OutFormatParquet.StringAsString](#rqsrs-032clickhouseparquetsettingsoutformatparquetstringasstring)
     * 4.3.4 [SELECT Conversions](#select-conversions)
       * 4.3.4.1 [RQ.SRS-032.ClickHouse.Parquet.SelectConversions](#rqsrs-032clickhouseparquetselectconversions)
-      * 4.3.4.2 [RQ.SRS-032.ClickHouse.Parquet.SelectConversions.UInt8ToUInt8](#rqsrs-032clickhouseparquetselectconversionsuint8touint8)
-      * 4.3.4.3 [RQ.SRS-032.ClickHouse.Parquet.SelectConversions.BoolToUInt8](#rqsrs-032clickhouseparquetselectconversionsbooltouint8)
-      * 4.3.4.4 [RQ.SRS-032.ClickHouse.Parquet.SelectConversions.Int8ToInt8](#rqsrs-032clickhouseparquetselectconversionsint8toint8)
-      * 4.3.4.5 [RQ.SRS-032.ClickHouse.Parquet.SelectConversions.UInt16ToUInt16](#rqsrs-032clickhouseparquetselectconversionsuint16touint16)
-      * 4.3.4.6 [RQ.SRS-032.ClickHouse.Parquet.SelectConversions.Int16ToInt16](#rqsrs-032clickhouseparquetselectconversionsint16toint16)
-      * 4.3.4.7 [RQ.SRS-032.ClickHouse.Parquet.SelectConversions.UInt32ToUInt32](#rqsrs-032clickhouseparquetselectconversionsuint32touint32)
-      * 4.3.4.8 [RQ.SRS-032.ClickHouse.Parquet.SelectConversions.Int32ToInt32](#rqsrs-032clickhouseparquetselectconversionsint32toint32)
-      * 4.3.4.9 [RQ.SRS-032.ClickHouse.Parquet.SelectConversions.UInt64ToUInt64](#rqsrs-032clickhouseparquetselectconversionsuint64touint64)
-      * 4.3.4.10 [RQ.SRS-032.ClickHouse.Parquet.SelectConversions.Int64ToInt64](#rqsrs-032clickhouseparquetselectconversionsint64toint64)
-      * 4.3.4.11 [RQ.SRS-032.ClickHouse.Parquet.SelectConversions.Float32ToFloat](#rqsrs-032clickhouseparquetselectconversionsfloat32tofloat)
-      * 4.3.4.12 [RQ.SRS-032.ClickHouse.Parquet.SelectConversions.Float64ToDouble](#rqsrs-032clickhouseparquetselectconversionsfloat64todouble)
-      * 4.3.4.13 [RQ.SRS-032.ClickHouse.Parquet.SelectConversions.DateToUInt16](#rqsrs-032clickhouseparquetselectconversionsdatetouint16)
-      * 4.3.4.14 [RQ.SRS-032.ClickHouse.Parquet.SelectConversions.DateTimeToUInt32](#rqsrs-032clickhouseparquetselectconversionsdatetimetouint32)
-      * 4.3.4.15 [RQ.SRS-032.ClickHouse.Parquet.SelectConversions.StringToBinary](#rqsrs-032clickhouseparquetselectconversionsstringtobinary)
-      * 4.3.4.16 [RQ.SRS-032.ClickHouse.Parquet.SelectConversions.FixedStringToBinary](#rqsrs-032clickhouseparquetselectconversionsfixedstringtobinary)
-      * 4.3.4.17 [RQ.SRS-032.ClickHouse.Parquet.SelectConversions.DecimalToDecimal](#rqsrs-032clickhouseparquetselectconversionsdecimaltodecimal)
-      * 4.3.4.18 [RQ.SRS-032.ClickHouse.Parquet.SelectConversions.ArrayToList](#rqsrs-032clickhouseparquetselectconversionsarraytolist)
-      * 4.3.4.19 [RQ.SRS-032.ClickHouse.Parquet.SelectConversions.TupleToStruct](#rqsrs-032clickhouseparquetselectconversionstupletostruct)
-      * 4.3.4.20 [RQ.SRS-032.ClickHouse.Parquet.SelectConversions.MapToMap](#rqsrs-032clickhouseparquetselectconversionsmaptomap)
   * 4.4 [Null](#null)
     * 4.4.1 [RQ.SRS-032.ClickHouse.Parquet.Null](#rqsrs-032clickhouseparquetnull)
   * 4.5 [Nested Types](#nested-types)
@@ -379,101 +360,6 @@ Decimal128 | Decimal
 Array | List
 Tuple | Struct
 Map | Map
-
-##### RQ.SRS-032.ClickHouse.Parquet.SelectConversions.UInt8ToUInt8
-version:1.0
-
-[ClickHouse] SHALL convert ClickHouse `UInt8` to Parquet `UInt8` in Select queries.
-
-##### RQ.SRS-032.ClickHouse.Parquet.SelectConversions.BoolToUInt8
-version:1.0
-
-[ClickHouse] SHALL convert ClickHouse `Bool` to Parquet `UInt8` in Select queries.
-
-##### RQ.SRS-032.ClickHouse.Parquet.SelectConversions.Int8ToInt8
-version:1.0
-
-[ClickHouse] SHALL convert ClickHouse `Int8` to Parquet `Int8` in Select queries.
-
-##### RQ.SRS-032.ClickHouse.Parquet.SelectConversions.UInt16ToUInt16
-version:1.0
-
-[ClickHouse] SHALL convert ClickHouse `UInt16` to Parquet `UInt16` in Select queries.
-
-##### RQ.SRS-032.ClickHouse.Parquet.SelectConversions.Int16ToInt16
-version:1.0
-
-[ClickHouse] SHALL convert ClickHouse `Int16` to Parquet `Int16` in Select queries.
-
-##### RQ.SRS-032.ClickHouse.Parquet.SelectConversions.UInt32ToUInt32
-version:1.0
-
-[ClickHouse] SHALL convert ClickHouse `UInt32` to Parquet `UInt32` in Select queries.
-
-##### RQ.SRS-032.ClickHouse.Parquet.SelectConversions.Int32ToInt32
-version:1.0
-
-[ClickHouse] SHALL convert ClickHouse `Int32` to Parquet `Int32` in Select queries.
-
-##### RQ.SRS-032.ClickHouse.Parquet.SelectConversions.UInt64ToUInt64
-version:1.0
-
-[ClickHouse] SHALL convert ClickHouse `UInt64` to Parquet `UInt64` in Select queries.
-
-##### RQ.SRS-032.ClickHouse.Parquet.SelectConversions.Int64ToInt64
-version:1.0
-
-[ClickHouse] SHALL convert ClickHouse `Int64` to Parquet `Int64` in Select queries.
-
-##### RQ.SRS-032.ClickHouse.Parquet.SelectConversions.Float32ToFloat
-version:1.0
-
-[ClickHouse] SHALL convert ClickHouse `Float32` to Parquet `Float` in Select queries.
-
-##### RQ.SRS-032.ClickHouse.Parquet.SelectConversions.Float64ToDouble
-version:1.0
-
-[ClickHouse] SHALL convert ClickHouse `Float64` to Parquet `Double` in Select queries.
-
-##### RQ.SRS-032.ClickHouse.Parquet.SelectConversions.DateToUInt16
-version:1.0
-
-[ClickHouse] SHALL convert ClickHouse `Date` to Parquet `UInt16` in Select queries.
-
-##### RQ.SRS-032.ClickHouse.Parquet.SelectConversions.DateTimeToUInt32
-version:1.0
-
-[ClickHouse] SHALL convert ClickHouse `DateTime` to Parquet `UInt32` in Select queries.
-
-##### RQ.SRS-032.ClickHouse.Parquet.SelectConversions.StringToBinary
-version:1.0
-
-[ClickHouse] SHALL convert ClickHouse `String` to Parquet `Binary` in Select queries.
-
-##### RQ.SRS-032.ClickHouse.Parquet.SelectConversions.FixedStringToBinary
-version:1.0
-
-[ClickHouse] SHALL convert ClickHouse `FixedString` to Parquet `Binary` in Select queries.
-
-##### RQ.SRS-032.ClickHouse.Parquet.SelectConversions.DecimalToDecimal
-version:1.0
-
-[ClickHouse] SHALL convert ClickHouse `Decimal` to Parquet `Decimal` in Select queries.
-
-##### RQ.SRS-032.ClickHouse.Parquet.SelectConversions.ArrayToList
-version:1.0
-
-[ClickHouse] SHALL convert ClickHouse `Array` to Parquet `List` in Select queries.
-
-##### RQ.SRS-032.ClickHouse.Parquet.SelectConversions.TupleToStruct
-version:1.0
-
-[ClickHouse] SHALL convert ClickHouse `Tuple` to Parquet `Struct` in Select queries.
-
-##### RQ.SRS-032.ClickHouse.Parquet.SelectConversions.MapToMap
-version:1.0
-
-[ClickHouse] SHALL convert ClickHouse `Map` to Parquet `Map` in Select queries.
 
 ### Null
 
