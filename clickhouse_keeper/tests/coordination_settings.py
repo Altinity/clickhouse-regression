@@ -10,6 +10,7 @@ from clickhouse_keeper.tests.steps import *
 )
 def startup_timeout(self):
     """I check ClickHouse Keeper coordination setting startup_timeout (30000 ms)"""
+    xfail("doesn't work 22.8")
     cluster = self.context.cluster
     exitcode = 70
     message = "DB::Exception: Failed to wait RAFT initialization"

@@ -11,7 +11,6 @@ def select_2(self):
 @TestScenario
 def select_1(self):
     """Check that SELECT 1 works on all nodes."""
-    # new
     for name in self.context.cluster.nodes["clickhouse"]:
         node = self.context.cluster.node(name)
 
