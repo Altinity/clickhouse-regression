@@ -142,6 +142,7 @@ variables:
            export AWS_SECRET_ACCESS_KEY=$aws_report_secret_access_key;
            export AWS_DEFAULT_REGION=$aws_report_region;
            
+           aws s3 cp fake.txt s3://altinity-internal-test-reports/reports/$scheduled_path$version/$CI_PIPELINE_ID/testflows/fake.txt
            aws s3 cp pipeline_url.log.txt s3://altinity-internal-test-reports/reports/$scheduled_path$version/$CI_PIPELINE_ID/testflows/pipeline_url.log.txt --content-type "text/plain; charset=utf-8";
            aws s3 cp version.log.txt s3://altinity-internal-test-reports/reports/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/version.log.txt --content-type "text/plain; charset=utf-8";
            aws s3 cp raw.log s3://altinity-internal-test-reports/reports/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/raw.log;
