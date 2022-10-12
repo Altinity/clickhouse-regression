@@ -10,6 +10,7 @@
   * 4.1 [General](#general)
     * 4.1.1 [RQ.SRS-032.ClickHouse.Parquet](#rqsrs-032clickhouseparquet)
     * 4.1.2 [RQ.SRS-032.ClickHouse.Parquet.Null](#rqsrs-032clickhouseparquetnull)
+      * 4.1.2.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption](#rqsrs-032clickhouseparquetencryption)
   * 4.2 [INSERT](#insert)
     * 4.2.1 [RQ.SRS-032.ClickHouse.Parquet.Insert](#rqsrs-032clickhouseparquetinsert)
     * 4.2.2 [RQ.SRS-032.ClickHouse.Parquet.Insert.Projections](#rqsrs-032clickhouseparquetinsertprojections)
@@ -389,6 +390,11 @@ version: 1.0
 version:1.0
 
 [ClickHouse] SHALL support Null and Nullable(type) data when reading or writing Parquet format.
+
+##### RQ.SRS-032.ClickHouse.Parquet.Encryption
+version: 1.0
+
+[ClickHouse] MAY not support reading encrypted Parquet files.
 
 ### INSERT
 

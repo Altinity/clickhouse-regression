@@ -37,6 +37,21 @@ RQ_SRS_032_ClickHouse_Parquet_Null = Requirement(
     num="4.1.2",
 )
 
+RQ_SRS_032_ClickHouse_Parquet_Encryption = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Encryption",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] MAY not support reading encrypted Parquet files.\n" "\n"
+    ),
+    link=None,
+    level=4,
+    num="4.1.2.1",
+)
+
 RQ_SRS_032_ClickHouse_Parquet_Insert = Requirement(
     name="RQ.SRS-032.ClickHouse.Parquet.Insert",
     version="1.0",
@@ -982,6 +997,9 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         Heading(name="General", level=2, num="4.1"),
         Heading(name="RQ.SRS-032.ClickHouse.Parquet", level=3, num="4.1.1"),
         Heading(name="RQ.SRS-032.ClickHouse.Parquet.Null", level=3, num="4.1.2"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Encryption", level=4, num="4.1.2.1"
+        ),
         Heading(name="INSERT", level=2, num="4.2"),
         Heading(name="RQ.SRS-032.ClickHouse.Parquet.Insert", level=3, num="4.2.1"),
         Heading(
@@ -1251,6 +1269,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
     requirements=(
         RQ_SRS_032_ClickHouse_Parquet,
         RQ_SRS_032_ClickHouse_Parquet_Null,
+        RQ_SRS_032_ClickHouse_Parquet_Encryption,
         RQ_SRS_032_ClickHouse_Parquet_Insert,
         RQ_SRS_032_ClickHouse_Parquet_Insert_Projections,
         RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_None,
@@ -1320,6 +1339,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
   * 4.1 [General](#general)
     * 4.1.1 [RQ.SRS-032.ClickHouse.Parquet](#rqsrs-032clickhouseparquet)
     * 4.1.2 [RQ.SRS-032.ClickHouse.Parquet.Null](#rqsrs-032clickhouseparquetnull)
+      * 4.1.2.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption](#rqsrs-032clickhouseparquetencryption)
   * 4.2 [INSERT](#insert)
     * 4.2.1 [RQ.SRS-032.ClickHouse.Parquet.Insert](#rqsrs-032clickhouseparquetinsert)
     * 4.2.2 [RQ.SRS-032.ClickHouse.Parquet.Insert.Projections](#rqsrs-032clickhouseparquetinsertprojections)
@@ -1699,6 +1719,11 @@ version: 1.0
 version:1.0
 
 [ClickHouse] SHALL support Null and Nullable(type) data when reading or writing Parquet format.
+
+##### RQ.SRS-032.ClickHouse.Parquet.Encryption
+version: 1.0
+
+[ClickHouse] MAY not support reading encrypted Parquet files.
 
 ### INSERT
 
