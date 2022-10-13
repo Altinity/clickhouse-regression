@@ -1423,7 +1423,7 @@ This software requirements specification covers requirements for `Parquet` data 
 
 ## Feature Diagram
 
-![Flowchart](parquet_flowchart.svg)
+![Flowchart](parquet_flowchart.jpg)
 
 ## Requirements
 

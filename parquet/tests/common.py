@@ -255,7 +255,7 @@ all_test_data_types = """
     an Array(String),
     ao Array(FixedString(16)),
     ap Array(Array(UInt8)),
-    aq Tuple(
+    aq Array(Tuple(
         UInt8,
         Int8,
         UInt16, 
@@ -277,7 +277,7 @@ all_test_data_types = """
             UInt8,
             UInt8
             ), 
-        Map(String, UInt64)),
+        Map(String, UInt64))),
     ar Array(Map(String, UInt64)),
 
     na Nullable(UInt8),
@@ -318,7 +318,7 @@ all_test_data_types = """
             Nullable(UInt8),
             Nullable(UInt8)
             ),
-    nr Map(Nullable(String), Nullable(UInt64)))
+    nr Map(String, Nullable(UInt64)))
 
     ana Array(Nullable(UInt8))),
     anb Array(Nullable(Int8)),
@@ -336,7 +336,7 @@ all_test_data_types = """
     ann Array(Nullable(String)),
     ano Array(Nullable(FixedString(16))),
     anp Array(Nullable(Array(UInt8))),
-    anq Tuple(
+    anq Array(Tuple(
         Nullable(UInt8),
         Nullable(Int8),
         Nullable(UInt16), 
@@ -358,6 +358,6 @@ all_test_data_types = """
             Nullable(UInt8),
             Nullable(UInt8)
             ), 
-        Map(Nullable(String), Nullable(UInt64))),
-    anr Array(Map(Nullable(String), Nullable(UInt64)))
+        Map(Nullable(String), Nullable(UInt64)))),
+    anr Array(Map(String, Nullable(UInt64)))
     """
