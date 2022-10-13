@@ -11,6 +11,8 @@ from s3.tests.common import *
 def feature(self, node="clickhouse1"):
     """Run checks for clickhouse using Parquet format using s3 storage."""
 
+    xfail('Not implemented.')
+
     node = self.context.cluster.node(node)
 
     s3_client = boto3.client(
@@ -34,10 +36,10 @@ def feature(self, node="clickhouse1"):
             )
 
         with When("I insert some data."):
-            insert_const(name=table_name)
+            insert_test_data(name=table_name)
 
         with Then("I check the file."):
-            check_s3_file(s3_client=s3_client, file=table_name)
+            check_aws_s3_file(s3_client=s3_client, file=table_name)
 
     with TestScenario("Read from s3 table engine"):
 
@@ -49,7 +51,7 @@ def feature(self, node="clickhouse1"):
             default_s3_disk_and_volume()
 
         with And("There is parquet data on s3"):
-            upload_s3_parquet(s3_client=s3_client)
+            upload_parquet_to_aws_s3(s3_client=s3_client)
 
         with When("I attach table"):
             table(
@@ -79,7 +81,7 @@ def feature(self, node="clickhouse1"):
             )
 
         with Then("I check the file."):
-            check_s3_file(s3_client=s3_client, file=table_name)
+            check_aws_s3_file(s3_client=s3_client, file=table_name)
 
     with TestScenario("Read from s3 table function"):
 
@@ -91,7 +93,7 @@ def feature(self, node="clickhouse1"):
             default_s3_disk_and_volume()
 
         with And("There is parquet data on s3"):
-            upload_s3_parquet(s3_client=s3_client)
+            upload_parquet_to_aws_s3(s3_client=s3_client)
 
         with When("I attach table"):
             table(

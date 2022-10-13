@@ -30,7 +30,7 @@ def write_mysql_table_engine(self):
         table(name=table_name, engine=f"MySQL('mysql1', 'default', 'default', '')") #TODO
 
     with When("I insert some data."):
-        insert_const(name=table_name)
+        insert_test_data(name=table_name)
 
     with Then("I check the mysql table."):
         check_mysql(mysql_node=mysql_node, name=table_name)
@@ -60,5 +60,6 @@ def feature(self, node="clickhouse1"):
     """Run checks for clickhouse using Parquet format using mysql engines."""
 
     self.context.node = self.context.cluster.node(node)
+    xfail('Not implemented')
 
     Suite(run=mysql)

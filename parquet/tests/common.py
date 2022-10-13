@@ -10,7 +10,7 @@ from testflows.asserts import values, error, snapshot
 
 
 @TestStep(When)
-def insert_const(self, name, node=None):
+def insert_test_data(self, name, node=None):
     """Insert some data into table."""
     if node is None:
         node = self.context.node
@@ -60,170 +60,7 @@ def table(self, engine, name="table0", create="CREATE"):
         with By("creating table"):
             node.query(
                 f"""
-                {create} TABLE {name} (
-                    a UInt8,
-                    b Int8,
-                    c UInt16,
-                    d Int16,
-                    e UInt32,
-                    f Int32,
-                    g UInt64,
-                    h Int64,
-                    i Float32,
-                    j Float64,
-                    k Decimal128(38),
-                    l Date,
-                    m DateTime,
-                    n String,
-                    o FixedString(16),
-                    p Array(UInt8),
-                    q Tuple(
-                        UInt8,
-                        Int8,
-                        UInt16, 
-                        Int16, 
-                        UInt32, 
-                        Int32, 
-                        UInt64, 
-                        Int64, 
-                        Float32, 
-                        Float64, 
-                        Decimal128(38), 
-                        Date, 
-                        DateTime, 
-                        String, 
-                        FixedString(8), 
-                        Array(UInt8), 
-                        Tuple(
-                            UInt8,
-                            UInt8,
-                            UInt8
-                        ), 
-                        Map(String, UInt64)),
-                    r Map(String, UInt64),
-
-                    aa Array(UInt8),
-                    ab Array(Int8),
-                    ac Array(UInt16),
-                    ad Array(Int16),
-                    ae Array(UInt32),
-                    af Array(Int32),
-                    ag Array(UInt64),
-                    ah Array(Int64),
-                    ai Array(Float32),
-                    aj Array(Float64),
-                    ak Array(Decimal128(38)),
-                    al Array(Date),
-                    am Array(DateTime),
-                    an Array(String),
-                    ao Array(FixedString(16)),
-                    ap Array(Array(UInt8)),
-                    aq Tuple(
-                        UInt8,
-                        Int8,
-                        UInt16, 
-                        Int16, 
-                        UInt32, 
-                        Int32, 
-                        UInt64, 
-                        Int64, 
-                        Float32, 
-                        Float64, 
-                        Decimal128(38), 
-                        Date, 
-                        DateTime, 
-                        String, 
-                        FixedString(8), 
-                        Array(UInt8), 
-                        Tuple(
-                            UInt8,
-                            UInt8,
-                            UInt8
-                            ), 
-                        Map(String, UInt64)),
-                    ar Array(Map(String, UInt64)),
-
-                    na Nullable(UInt8),
-                    nb Nullable(Int8),
-                    nc Nullable(UInt16), 
-                    nd Nullable(Int16), 
-                    ne Nullable(UInt32), 
-                    nf Nullable(Int32), 
-                    ng Nullable(UInt64), 
-                    nh Nullable(Int64), 
-                    ni Nullable(Float32), 
-                    nj Nullable(Float64), 
-                    nk Nullable(Decimal128(38)), 
-                    nl Nullable(Date), 
-                    nm Nullable(DateTime), 
-                    nn Nullable(String), 
-                    no Nullable(FixedString(8)), 
-                    np Array(Nullable(UInt8)), 
-                    nq Tuple(
-                        Nullable(UInt8),
-                        Nullable(Int8),
-                        Nullable(UInt16), 
-                        Nullable(Int16), 
-                        Nullable(UInt32), 
-                        Nullable(Int32), 
-                        Nullable(UInt64), 
-                        Nullable(Int64), 
-                        Nullable(Float32), 
-                        Nullable(Float64), 
-                        Nullable(Decimal128(38)), 
-                        Nullable(Date), 
-                        Nullable(DateTime), 
-                        Nullable(String), 
-                        Nullable(FixedString(8)), 
-                        Array(Nullable(UInt8)), 
-                        Tuple(
-                            Nullable(UInt8),
-                            Nullable(UInt8),
-                            Nullable(UInt8)
-                            ),
-                    nr Map(Nullable(String), Nullable(UInt64)))
-
-                    ana Array(Nullable(UInt8))),
-                    anb Array(Nullable(Int8)),
-                    anc Array(Nullable(UInt16)),
-                    and Array(Nullable(Int16)),
-                    ane Array(Nullable(UInt32)),
-                    anf Array(Nullable(Int32)),
-                    ang Array(Nullable(UInt64)),
-                    anh Array(Nullable(Int64)),
-                    ani Array(Nullable(Float32)),
-                    anj Array(Nullable(Float64)),
-                    ank Array(Nullable(Decimal128(38))),
-                    anl Array(Nullable(Date)),
-                    anm Array(Nullable(DateTime)),
-                    ann Array(Nullable(String)),
-                    ano Array(Nullable(FixedString(16))),
-                    anp Array(Nullable(Array(UInt8))),
-                    anq Tuple(
-                        Nullable(UInt8),
-                        Nullable(Int8),
-                        Nullable(UInt16), 
-                        Nullable(Int16), 
-                        Nullable(UInt32), 
-                        Nullable(Int32), 
-                        Nullable(UInt64), 
-                        Nullable(Int64), 
-                        Nullable(Float32), 
-                        Nullable(Float64), 
-                        Nullable(Decimal128(38)), 
-                        Nullable(Date), 
-                        Nullable(DateTime), 
-                        Nullable(String), 
-                        Nullable(FixedString(8)), 
-                        Array(Nullable(UInt8)), 
-                        Tuple(
-                            Nullable(UInt8),
-                            Nullable(UInt8),
-                            Nullable(UInt8)
-                            ), 
-                        Map(Nullable(String), Nullable(UInt64))),
-                    anr Array(Map(Nullable(String), Nullable(UInt64)))
-                )
+                {create} TABLE {name} ({all_test_data_types})
                 Engine = {engine}
             """
             )
@@ -272,8 +109,8 @@ def getuid():
 
 
 @TestStep(Given)
-def upload_s3_parquet(self, s3_client):
-    """Upload Parquet data file to s3."""
+def upload_parquet_to_aws_s3(self, s3_client):
+    """Upload Parquet data file to aws s3."""
 
     with By("Uploading a file"):
         s3_client.upload_file(
@@ -284,15 +121,18 @@ def upload_s3_parquet(self, s3_client):
 
 
 @TestStep(Then)
-def check_query(self, query, expected=None):
+def check_query_output(self, query, expected=None):
+    """Check the output of a query against either snapshot or provided values.
+    """
+
     node = current().context.node
     name = basename(current().name)
 
-    with By(f"executing query", description=query):
+    with By("executing query", description=query):
         r = node.query(query).output.strip()
 
     if expected:
-        with Then(f"result should match the expected", description=expected):
+        with Then("result should match the expected", description=expected):
             assert r == expected, error()
 
     else:
@@ -309,15 +149,17 @@ def check_query(self, query, expected=None):
 
 
 @TestStep(Then)
-def check_file(self, path, expected=None):
+def check_source_file(self, path, expected=None):
+    """Check the contents of a Parquet file against either snapshot or provided values.
+    """
     node = current().context.node
     name = basename(current().name)
 
-    with By(f"Reading file"):
+    with By("reading the file"):
         r = node.command(f"python3 -c \"import pyarrow.parquet as pq;[print(i.columns) for i in pq.ParquetFile('{path}').iter_batches()];\"").output.strip()
 
     if expected:
-        with Then(f"result should match the expected", description=expected):
+        with Then(f"result should match the expected values", description=expected):
             assert r == expected, error()
 
     else:
@@ -335,19 +177,19 @@ def check_file(self, path, expected=None):
     return
 
 @TestStep(Then)
-def check_s3_file(self, s3_client, file, expected):
-    """Download file from s3 and read it."""
+def check_aws_s3_file(self, s3_client, file, expected):
+    """Download file from aws s3 and check the contents."""
 
     with By("Downloading the file"):
         s3_client.download_file(self.context.uri, file, file)
 
     with Then("I check the file"):
-        check_file(file=file, expected=expected)
+        check_source_file(file=file, expected=expected)
 
 
 @TestStep(Then)
 def check_mysql(self, name, mysql_node, expected):
-    """Check MYSQL table."""
+    """NOT IMPLEMENTED. NEEDS REDESIGN."""
 
     with By("I selecting from table using mysql"):
         msql_out = mysql_node.command(
@@ -355,3 +197,167 @@ def check_mysql(self, name, mysql_node, expected):
         ).output
         assert msql_out == expected, error()
 
+all_test_data_types = """
+    a UInt8,
+    b Int8,
+    c UInt16,
+    d Int16,
+    e UInt32,
+    f Int32,
+    g UInt64,
+    h Int64,
+    i Float32,
+    j Float64,
+    k Decimal128(38),
+    l Date,
+    m DateTime,
+    n String,
+    o FixedString(16),
+    p Array(UInt8),
+    q Tuple(
+        UInt8,
+        Int8,
+        UInt16, 
+        Int16, 
+        UInt32, 
+        Int32, 
+        UInt64, 
+        Int64, 
+        Float32, 
+        Float64, 
+        Decimal128(38), 
+        Date, 
+        DateTime, 
+        String, 
+        FixedString(8), 
+        Array(UInt8), 
+        Tuple(
+            UInt8,
+            UInt8,
+            UInt8
+        ), 
+        Map(String, UInt64)),
+    r Map(String, UInt64),
+
+    aa Array(UInt8),
+    ab Array(Int8),
+    ac Array(UInt16),
+    ad Array(Int16),
+    ae Array(UInt32),
+    af Array(Int32),
+    ag Array(UInt64),
+    ah Array(Int64),
+    ai Array(Float32),
+    aj Array(Float64),
+    ak Array(Decimal128(38)),
+    al Array(Date),
+    am Array(DateTime),
+    an Array(String),
+    ao Array(FixedString(16)),
+    ap Array(Array(UInt8)),
+    aq Tuple(
+        UInt8,
+        Int8,
+        UInt16, 
+        Int16, 
+        UInt32, 
+        Int32, 
+        UInt64, 
+        Int64, 
+        Float32, 
+        Float64, 
+        Decimal128(38), 
+        Date, 
+        DateTime, 
+        String, 
+        FixedString(8), 
+        Array(UInt8), 
+        Tuple(
+            UInt8,
+            UInt8,
+            UInt8
+            ), 
+        Map(String, UInt64)),
+    ar Array(Map(String, UInt64)),
+
+    na Nullable(UInt8),
+    nb Nullable(Int8),
+    nc Nullable(UInt16), 
+    nd Nullable(Int16), 
+    ne Nullable(UInt32), 
+    nf Nullable(Int32), 
+    ng Nullable(UInt64), 
+    nh Nullable(Int64), 
+    ni Nullable(Float32), 
+    nj Nullable(Float64), 
+    nk Nullable(Decimal128(38)), 
+    nl Nullable(Date), 
+    nm Nullable(DateTime), 
+    nn Nullable(String), 
+    no Nullable(FixedString(8)), 
+    np Array(Nullable(UInt8)), 
+    nq Tuple(
+        Nullable(UInt8),
+        Nullable(Int8),
+        Nullable(UInt16), 
+        Nullable(Int16), 
+        Nullable(UInt32), 
+        Nullable(Int32), 
+        Nullable(UInt64), 
+        Nullable(Int64), 
+        Nullable(Float32), 
+        Nullable(Float64), 
+        Nullable(Decimal128(38)), 
+        Nullable(Date), 
+        Nullable(DateTime), 
+        Nullable(String), 
+        Nullable(FixedString(8)), 
+        Array(Nullable(UInt8)), 
+        Tuple(
+            Nullable(UInt8),
+            Nullable(UInt8),
+            Nullable(UInt8)
+            ),
+    nr Map(Nullable(String), Nullable(UInt64)))
+
+    ana Array(Nullable(UInt8))),
+    anb Array(Nullable(Int8)),
+    anc Array(Nullable(UInt16)),
+    and Array(Nullable(Int16)),
+    ane Array(Nullable(UInt32)),
+    anf Array(Nullable(Int32)),
+    ang Array(Nullable(UInt64)),
+    anh Array(Nullable(Int64)),
+    ani Array(Nullable(Float32)),
+    anj Array(Nullable(Float64)),
+    ank Array(Nullable(Decimal128(38))),
+    anl Array(Nullable(Date)),
+    anm Array(Nullable(DateTime)),
+    ann Array(Nullable(String)),
+    ano Array(Nullable(FixedString(16))),
+    anp Array(Nullable(Array(UInt8))),
+    anq Tuple(
+        Nullable(UInt8),
+        Nullable(Int8),
+        Nullable(UInt16), 
+        Nullable(Int16), 
+        Nullable(UInt32), 
+        Nullable(Int32), 
+        Nullable(UInt64), 
+        Nullable(Int64), 
+        Nullable(Float32), 
+        Nullable(Float64), 
+        Nullable(Decimal128(38)), 
+        Nullable(Date), 
+        Nullable(DateTime), 
+        Nullable(String), 
+        Nullable(FixedString(8)), 
+        Array(Nullable(UInt8)), 
+        Tuple(
+            Nullable(UInt8),
+            Nullable(UInt8),
+            Nullable(UInt8)
+            ), 
+        Map(Nullable(String), Nullable(UInt64))),
+    anr Array(Map(Nullable(String), Nullable(UInt64)))
+    """
