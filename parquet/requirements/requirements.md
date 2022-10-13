@@ -96,6 +96,8 @@ This software requirements specification covers requirements for `Parquet` data 
 
 ![Generated using code in flowchart_code.md](parquet_flowchart.jpg)
 
+Generated using code in flowchart_code.md
+
 ## Requirements
 
 ### General
