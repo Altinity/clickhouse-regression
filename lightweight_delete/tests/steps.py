@@ -783,7 +783,7 @@ def delete(
             command = f"ALTER TABLE {table_name} DELETE WHERE {condition}"
         r = node.query(command, no_checks=no_checks, settings=settings)
         if check:
-            for attempt in retries(delay=0.1, timeout=30):
+            for attempt in retries(delay=0.1, timeout=600):
                 with attempt:
                     with Then("I check rows are deleted"):
                         check_result = node.query(
