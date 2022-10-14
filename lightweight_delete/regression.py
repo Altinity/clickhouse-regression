@@ -87,10 +87,6 @@ def regression(
     self.context.clickhouse_version = clickhouse_version
     self.context.use_alter_delete = use_alter_delete
 
-    if not force_run:
-        if not use_alter_delete:
-            xfail(reason="lightweight delete not yet implemented")
-
     with Cluster(
         local,
         clickhouse_binary_path,
@@ -105,14 +101,17 @@ def regression(
         if parallel is not None:
             self.context.parallel = parallel
 
-        if check_clickhouse_version("<22.2")(self):
-            skip(reason="only supported on ClickHouse version >= 22.2")
+        if not force_run:
+            if not use_alter_delete:
+                if check_clickhouse_version("<22.2")(self):
+                    skip(reason="only supported on ClickHouse version >= 22.2")
 
         if not use_alter_delete:
             with Given("I enable lightweight delete"):
                 allow_experimental_lightweight_delete()
 
         Feature(run=load("lightweight_delete.tests.acceptance_concurrent_alter_and_delete", "feature"))
+        Feature(run=load("lightweight_delete.tests.acceptance_column_ttl", "feature"))
         Feature(run=load("lightweight_delete.tests.backup", "feature"))
         Feature(run=load("lightweight_delete.tests.disk_space", "feature"))
         Feature(run=load("lightweight_delete.tests.zookeeper_load", "feature"))
