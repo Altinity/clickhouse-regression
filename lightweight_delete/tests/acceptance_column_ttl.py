@@ -35,6 +35,9 @@ def concurrent_deletes_and_ttl(
         insert_into_acceptance_table(table_name=table_name_1, rows_number=100000)
         insert_into_acceptance_table(table_name=table_name_2, rows_number=100000)
 
+    with When("I compute expected output"):
+        expected_output = node.query(f"SELECT count(*) from {table_name_2} where not (Id = 0)").output
+
     with When("I delete from acceptance tables and time it"):
         start = time.time()
         delete(table_name=table_name_1, condition="Id == 0")
@@ -44,7 +47,11 @@ def concurrent_deletes_and_ttl(
         time_with_ttl = time.time() - start
 
     with Then("I check tiered storage ttl do not greatly slow down lightweight delete"):
-        assert time_without_ttl * 5 > time_with_ttl, error()
+        assert time_without_ttl * 20 > time_with_ttl, error()
+
+    with Then("I check rows are deleted"):
+        r = node.query(f"SELECT count(*) from {table_name_2}").output
+        assert r == expected_output, error()
 
 
 @TestFeature
