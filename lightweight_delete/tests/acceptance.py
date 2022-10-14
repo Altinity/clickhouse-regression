@@ -18,7 +18,7 @@ def acceptance_concurrent_select_delete_execution_time(self, delete_query, node=
 
     with Given("I have acceptance table"):
         create_acceptance_table()
-        insert_into_acceptance_table(rows_number=100000)
+        insert_into_acceptance_table(rows_number=1000000)
 
     with When("I perform select query and time it"):
         start_time = time.time()
@@ -58,7 +58,7 @@ def acceptance_concurrent_insert_delete_execution_time(self, delete_query, node=
 
     with Given("I have acceptance table"):
         create_acceptance_table()
-        insert_into_acceptance_table(rows_number=100000)
+        insert_into_acceptance_table(rows_number=1000000)
 
     with When("I perform insert query and time it"):
         start_time = time.time()
@@ -99,7 +99,7 @@ def acceptance_delete_execution_time(self, delete_query, node=None):
 
     with Given("I have acceptance table"):
         create_acceptance_table()
-        insert_into_acceptance_table(rows_number=100000)
+        insert_into_acceptance_table(rows_number=1000000)
 
     with When("I perform delete operation"):
         start_time = time.time()
@@ -109,7 +109,7 @@ def acceptance_delete_execution_time(self, delete_query, node=None):
     metric("execution_time", execution_time, "s")
 
     with Then("I check delete execution time is less than 2 seconds"):
-        assert execution_time < 20, error()
+        assert execution_time < 2, error()
 
 
 @TestScenario
@@ -126,7 +126,7 @@ def acceptance_insert_execution_time_after_delete(self, delete_query, node=None)
 
     with Given("I have acceptance table"):
         create_acceptance_table()
-        insert_into_acceptance_table(rows_number=100000)
+        insert_into_acceptance_table(rows_number=1000000)
 
     with When("I perform insert query and time it"):
         start_time = time.time()
