@@ -4,7 +4,6 @@ from parquet.tests.common import *
 from helpers.common import *
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_File("1.0"))
 def insert_into_engine(self):
     """Check that when data is inserted into a table with File(Parquet) engine, it is written into the source file correctly."""
 
@@ -21,7 +20,6 @@ def insert_into_engine(self):
         check_source_file(path=f'/var/lib/clickhouse/data/default/{table_name}/data.Parquet')
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_File("1.0"))
 def select_from_engine(self):
     """Check that when a table with File(Parquet) engine is attached on top of a parquet file, it reads the data correctly."""
 
@@ -35,7 +33,6 @@ def select_from_engine(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_File("1.0"))
 def engine_to_file_to_engine(self):
     """Check that when data is inserted into a table with File(Parquet) engine, 
     the data can be read back correctly from the source file using a different table with File(Parquet) engine."""
@@ -64,7 +61,9 @@ def engine_to_file_to_engine(self):
     with Then("I check that the new table is able to read the data from the file correctly"):
         check_query_output(query=f"SELECT * FROM {table1_name}")
 
+ 
 @TestSuite
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_File("1.0"))
 def engine(self):
     """Check that File table engine correctly reads and writes Parquet format.
     """
@@ -72,8 +71,8 @@ def engine(self):
     Scenario(run=select_from_engine)
     Scenario(run=engine_to_file_to_engine)
 
+
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_Parquet_TableFunctions_File("1.0"))
 def insert_into_function(self):
     """Check that when data is inserted into a table with file(Parquet) table function, it is written into the source file correctly.
     """
@@ -89,9 +88,9 @@ def insert_into_function(self):
         check_source_file(path=f'/var/lib/clickhouse/user_files/{file_name}.Parquet')
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_Parquet_TableFunctions_File("1.0"))
 def select_from_function_manual(self):
-    """Check that when data is inserted into a table with file(Parquet) table function, it is written into the source file correctly.
+    """Check that when data is inserted into a table with file(Parquet) table function,
+    it is written into the source file correctly when type mapping are passed explicitly manually.
     """
 
     node = self.context.node
@@ -108,13 +107,25 @@ def select_from_function_manual(self):
     with Then("I check the file in the table function"):
         check_source_file(path=f'/var/lib/clickhouse/user_files/{file_name}.Parquet')
 
+
+@TestScenario
+def select_from_function_auto(self):
+    """Check that when data is inserted into a table with file(Parquet) table function,
+    it is written into the source file correctly when types are automatically mapped.
+    """
+    xfail("not implemented")
+
+    
 @TestSuite
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_TableFunctions_File("1.0"))
 def function(self, node=None):
     """Check that File table function correctly reads and writes Parquet format.
     """
 
     Scenario(run=insert_into_function)
     Scenario(run=select_from_function_manual)
+    Scenario(run=select_from_function_auto)
+
 
 @TestFeature
 @Name("file")
