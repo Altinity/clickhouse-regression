@@ -1711,78 +1711,78 @@ def create_table(self, table_name, table_engine=None, settings="", options=""):
 
 
 @TestStep
-def delete_query_1_ontime(self, node=None):
+def delete_query_1_ontime(self, settings=[], check=True, node=None):
     """Deleting All Rows In a Single Partition."""
     if node is None:
         node = self.context.node
 
-    delete(table_name="ontime", condition="Year = 1990", settings=[], check=True)
+    delete(table_name="ontime", condition="Year = 1990", settings=settings, check=check)
 
 
 @TestStep
-def delete_query_2_ontime(self, node=None):
+def delete_query_2_ontime(self, settings=[], check=True, node=None):
     """Delete All Rows In Various Partitions."""
     if node is None:
         node = self.context.node
 
-    delete(table_name="ontime", condition="Year % 2 = 0", settings=[], check=True)
+    delete(table_name="ontime", condition="Year % 2 = 0", settings=settings, check=check)
 
 
 @TestStep
-def delete_query_3_ontime(self, node=None):
+def delete_query_3_ontime(self, settings=[], check=True, node=None):
     """Delete Some Rows In All Partitions (Large Granularity)."""
     if node is None:
         node = self.context.node
 
-    delete(table_name="ontime", condition="Month = 2", settings=[], check=True)
+    delete(table_name="ontime", condition="Month = 2", settings=settings, check=check)
 
 
 @TestStep
-def delete_query_4_ontime(self, node=None):
+def delete_query_4_ontime(self, settings=[], check=True, node=None):
     """Delete Some Rows In All Partitions (Small Granularity)."""
     if node is None:
         node = self.context.node
 
-    delete(table_name="ontime", condition="DayofMonth = 2", settings=[], check=True)
+    delete(table_name="ontime", condition="DayofMonth = 2", settings=settings, check=check)
 
 
 @TestStep
-def delete_query_5_ontime(self, node=None):
+def delete_query_5_ontime(self, settings=[], check=True, node=None):
     """Delete Some Rows In One Partition (Very Small Granularity)."""
     if node is None:
         node = self.context.node
 
-    delete(table_name="ontime", condition="FlightDate = '2020-01-01'", settings=[], check=True)
+    delete(table_name="ontime", condition="FlightDate = '2020-01-01'", settings=settings, check=check)
 
 
 @TestStep
-def delete_query_1_acceptance(self, node=None):
+def delete_query_1_acceptance(self, settings=[], check=True, node=None):
     """Usable delete query 1."""
     if node is None:
         node = self.context.node
 
     delete(
         table_name="acceptance_table",
-        condition="Id = 1 and has(Ids, 2)", settings=[], check=True
+        condition="Id = 1 and has(Ids, 2)", settings=settings, check=check
     )
 
 
 @TestStep
-def delete_query_2_acceptance(self, node=None):
+def delete_query_2_acceptance(self, settings=[], check=True, node=None):
     """Usable delete query 2."""
     if node is None:
         node = self.context.node
 
-    delete(table_name="acceptance_table", condition="has(Ids, 1)", settings=[], check=True)
+    delete(table_name="acceptance_table", condition="has(Ids, 1)", settings=settings, check=check)
 
 
 @TestStep
-def delete_query_3_acceptance(self, node=None):
+def delete_query_3_acceptance(self, settings=[], check=True, node=None):
     """Usable delete query 1."""
     if node is None:
         node = self.context.node
 
-    delete(table_name="acceptance_table", condition="has(int_arr, 1)", settings=[], check=True)
+    delete(table_name="acceptance_table", condition="has(int_arr, 1)", settings=settings, check=check)
 
 
 @TestStep

@@ -70,7 +70,7 @@ def ontime_concurrent_insert_delete_execution_time(self, delete_query, node=None
         Step(
             name="I perform insert operation", test=insert_query_ontime, parallel=True
         )()
-        Step(name="I perform delete operation", test=delete_query, parallel=True)()
+        Step(name="I perform delete operation", test=delete_query, parallel=True)(settings=[("mutations_sync", 2)], check=False)
     execution_time_parallel = time.time() - start_time
 
     metric("execution_time_parallel", execution_time_parallel, "s")
