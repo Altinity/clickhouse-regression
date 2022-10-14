@@ -33,6 +33,7 @@ def select_from_engine(self):
     with Then("I check that the table reads the data correctly"):
         check_query_output(query=f"SELECT * FROM {table_name}")
 
+
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_File("1.0"))
 def engine_to_file_to_engine(self):
@@ -67,7 +68,6 @@ def engine_to_file_to_engine(self):
 def engine(self):
     """Check that File table engine correctly reads and writes Parquet format.
     """
-
     Scenario(run=insert_into_engine)
     Scenario(run=select_from_engine)
     Scenario(run=engine_to_file_to_engine)
@@ -112,13 +112,14 @@ def select_from_function_manual(self):
 def function(self, node=None):
     """Check that File table function correctly reads and writes Parquet format.
     """
+
     Scenario(run=insert_into_function)
     Scenario(run=select_from_function_manual)
 
 @TestFeature
 @Name("file")
 def feature(self, node="clickhouse1"):
-    """Run checks for File table engine and table function using Parquet format."""
+    """Run checks for File table engine and table function when used with Parquet format."""
 
     self.context.node = self.context.cluster.node(node)
 
