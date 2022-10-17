@@ -21,14 +21,15 @@ def insert_test_data(self, name, node=None):
     with By("Inserting some values"):
         node.query(
             f"INSERT INTO {name} VALUES"
-                "(0,0,0,0,0,0,0,0,0,0,0,'2022-01-01','2022-01-01 00:00:00','A','B',[0,0,0],(0,0,0,0,0,0,0,0,0,0,0,'2022-01-01','2022-01-01 00:00:00','A','B',[0,0,0],(0,0,0), {{'a':0, 'b':0}}), {{'a':0, 'b':0}}),"
-                "(1,1,1,1,1,1,1,1,1,1,0.5,'2022-01-01','2022-01-01 00:00:00','A','B',[1,1,1],(1,1,1,1,1,1,1,1,1,1,0.5,'2022-01-01','2022-01-01 00:00:00','A','B',[1,1,1],(1,1,1), {{'a':1, 'b':1}}), {{'a':1, 'b':1}}),"
-                "(0,-128,0,-32768,0,-2147483648,0,-9223372036854775808,-3.40282347e+38,-1.79769e+308,-0.9999999999999999999999999999999999999,'1970-01-01','1970-01-01 00:00:00','A','B',[0,0,0],(0,-128,0,-32768,0,-2147483648,0,-9223372036854775808,-3.40282347e+38,-1.79769e+308,-0.9999999999999999999999999999999999999,'1970-01-01','1970-01-01 00:00:00','A','B',[0,0,0],(0,0,0), {{'a':0, 'b':0}}) , {{'a':0, 'b':0}}),"
-                "(255,127,65535,32767,4294967295,2147483647,18446744073709551615,9223372036854775807,3.40282347e+38,1.79769e+308,0.9999999999999999999999999999999999999,'2149-06-06','2106-02-07 06:28:15','A','B',[0,0,0],(255,127,65535,32767,4294967295,2147483647,18446744073709551615,9223372036854775807,3.40282347e+38,1.79769e+308,0.9999999999999999999999999999999999999,'2149-06-06','2106-02-07 06:28:15','A','B',[0,0,0],(0,0,0), {{'a':0, 'b':0}}), {{'a':0, 'b':0}}),"
-                "(Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,[Null,Null,Null],(Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,[Null,Null,Null],(Null), {{Null:Null}}), {{Null:Null}})"
+            "(0,0,0,0,0,0,0,0,0,0,0,'2022-01-01','2022-01-01 00:00:00','A','B',[0,0,0],(0,0,0,0,0,0,0,0,0,0,0,'2022-01-01','2022-01-01 00:00:00','A','B',[0,0,0],(0,0,0), {{'a':0, 'b':0}}), {{'a':0, 'b':0}}),"
+            "(1,1,1,1,1,1,1,1,1,1,0.5,'2022-01-01','2022-01-01 00:00:00','A','B',[1,1,1],(1,1,1,1,1,1,1,1,1,1,0.5,'2022-01-01','2022-01-01 00:00:00','A','B',[1,1,1],(1,1,1), {{'a':1, 'b':1}}), {{'a':1, 'b':1}}),"
+            "(0,-128,0,-32768,0,-2147483648,0,-9223372036854775808,-3.40282347e+38,-1.79769e+308,-0.9999999999999999999999999999999999999,'1970-01-01','1970-01-01 00:00:00','A','B',[0,0,0],(0,-128,0,-32768,0,-2147483648,0,-9223372036854775808,-3.40282347e+38,-1.79769e+308,-0.9999999999999999999999999999999999999,'1970-01-01','1970-01-01 00:00:00','A','B',[0,0,0],(0,0,0), {{'a':0, 'b':0}}) , {{'a':0, 'b':0}}),"
+            "(255,127,65535,32767,4294967295,2147483647,18446744073709551615,9223372036854775807,3.40282347e+38,1.79769e+308,0.9999999999999999999999999999999999999,'2149-06-06','2106-02-07 06:28:15','A','B',[0,0,0],(255,127,65535,32767,4294967295,2147483647,18446744073709551615,9223372036854775807,3.40282347e+38,1.79769e+308,0.9999999999999999999999999999999999999,'2149-06-06','2106-02-07 06:28:15','A','B',[0,0,0],(0,0,0), {{'a':0, 'b':0}}), {{'a':0, 'b':0}}),"
+            "(Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,[Null,Null,Null],(Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,Null,[Null,Null,Null],(Null), {{Null:Null}}), {{Null:Null}})"
         )
 
     return
+
 
 @TestStep(Given)
 def allow_experimental_map_type(self):
@@ -125,8 +126,7 @@ def upload_parquet_to_aws_s3(self, s3_client):
 
 @TestStep(Then)
 def check_query_output(self, query, expected=None):
-    """Check the output of the provided query against either snapshot or provided values.
-    """
+    """Check the output of the provided query against either snapshot or provided values."""
 
     node = current().context.node
     name = basename(current().name)
@@ -143,8 +143,8 @@ def check_query_output(self, query, expected=None):
             with values() as that:
                 assert that(
                     snapshot(
-                        '\n' + r + '\n',
-                        'parquet_file',
+                        "\n" + r + "\n",
+                        "parquet_file",
                         name=name,
                         encoder=str,
                     )
@@ -153,13 +153,14 @@ def check_query_output(self, query, expected=None):
 
 @TestStep(Then)
 def check_source_file(self, path, expected=None):
-    """Check the contents of a Parquet file against either snapshot or provided values.
-    """
+    """Check the contents of a Parquet file against either snapshot or provided values."""
     node = current().context.node
     name = basename(current().name)
 
     with By("reading the file"):
-        r = node.command(f"python3 -c \"import pyarrow.parquet as pq; import pandas as pd;print(pq.ParquetFile('{path}').schema);print(pd.read_parquet('{path}', engine=pyarrow))\"").output.strip()
+        r = node.command(
+            f"python3 -c \"import pyarrow.parquet as pq; import pandas as pd;print(pq.ParquetFile('{path}').schema);print(pd.read_parquet('{path}', engine=pyarrow))\""
+        ).output.strip()
 
     if expected:
         with Then(f"result should match the expected values", description=expected):
@@ -170,14 +171,15 @@ def check_source_file(self, path, expected=None):
             with values() as that:
                 assert that(
                     snapshot(
-                        '\n' + r + '\n',
-                        'parquet_file',
+                        "\n" + r + "\n",
+                        "parquet_file",
                         name=name,
                         encoder=str,
                     )
                 ), error()
 
     return
+
 
 @TestStep(Then)
 def check_aws_s3_file(self, s3_client, file, expected):
@@ -202,6 +204,7 @@ def check_mysql(self, name, mysql_node, expected):
         ).output
         assert msql_out == expected, error()
 
+
 def generate_all_column_types():
     """Generate a list of every type of column necessary for Parquet tests."""
 
@@ -220,14 +223,14 @@ def generate_all_column_types():
         "date Date",
         "datetime DateTime",
         "string String",
-        "fixedstring FixedString(16)"
+        "fixedstring FixedString(16)",
     ]
 
     container_columns = [
         "array Array(UInt8)",
         "tuple Tuple(UInt8,Int8,UInt16,Int16,UInt32,Int32,UInt64,Int64,Float32,Float64,Decimal128(38),Date,DateTime,String,FixedString(8),"
-            "Array(UInt8),Tuple(UInt8,UInt8,UInt8),Map(String, UInt64))",
-        "map Map(String, UInt64)"
+        "Array(UInt8),Tuple(UInt8,UInt8,UInt8),Map(String, UInt64))",
+        "map Map(String, UInt64)",
     ]
 
     array_columns = []
@@ -236,33 +239,96 @@ def generate_all_column_types():
     low_cardinality_columns = []
 
     for type in basic_columns:
-        array_columns.append("array_" + type.split(" ",1)[0] + f" Array({type.split(' ',1)[1]})")
-        null_columns.append("nullable_" + type.split(" ",1)[0] + f" Nullable({type.split(' ',1)[1]})")
-        null_columns.append("array_nullable_" + type.split(" ",1)[0] + f" Array(Nullable({type.split(' ',1)[1]}))")
+        array_columns.append(
+            "array_" + type.split(" ", 1)[0] + f" Array({type.split(' ',1)[1]})"
+        )
+        null_columns.append(
+            "nullable_" + type.split(" ", 1)[0] + f" Nullable({type.split(' ',1)[1]})"
+        )
+        null_columns.append(
+            "array_nullable_"
+            + type.split(" ", 1)[0]
+            + f" Array(Nullable({type.split(' ',1)[1]}))"
+        )
 
-        if type != 'decimal Decimal128(38)':
-            low_cardinality_columns.append('low_card_' + type.split(" ",1)[0] + f" LowCardinality({type.split(' ',1)[1]})")
-            low_cardinality_columns.append('array_low_card_' + type.split(" ",1)[0] + f" Array(LowCardinality({type.split(' ',1)[1]}))")
-            low_cardinality_columns.append('array_low_card_nullable_' + type.split(" ",1)[0] + f" Array(LowCardinality(Nullable({type.split(' ',1)[1]})))")
+        if type != "decimal Decimal128(38)":
+            low_cardinality_columns.append(
+                "low_card_"
+                + type.split(" ", 1)[0]
+                + f" LowCardinality({type.split(' ',1)[1]})"
+            )
+            low_cardinality_columns.append(
+                "array_low_card_"
+                + type.split(" ", 1)[0]
+                + f" Array(LowCardinality({type.split(' ',1)[1]}))"
+            )
+            low_cardinality_columns.append(
+                "array_low_card_nullable_"
+                + type.split(" ", 1)[0]
+                + f" Array(LowCardinality(Nullable({type.split(' ',1)[1]})))"
+            )
 
-        if type not in ['float32 Float32', 'float64 Float64', 'decimal Decimal128(38)']:
+        if type not in ["float32 Float32", "float64 Float64", "decimal Decimal128(38)"]:
             for value_type in basic_columns:
-                map_columns.append("map_" + type.split(" ",1)[0] + "_" + value_type.split(" ",1)[0] + f" Map({type.split(' ',1)[1]}, {value_type.split(' ',1)[1]})")
-                null_columns.append("map_" + type.split(" ",1)[0] + "_nullable_" + value_type.split(" ",1)[0] + f" Map({type.split(' ',1)[1]}, Nullable({value_type.split(' ',1)[1]}))")
-                low_cardinality_columns.append("map_low_card_" + type.split(" ",1)[0] + value_type.split(" ",1)[0] + f" Map(LowCardinality({type.split(' ',1)[1]}), {value_type.split(' ',1)[1]})")
-                low_cardinality_columns.append("map_low_card_" + type.split(" ",1)[0] + "_nullable_" + value_type.split(" ",1)[0] + f" Map(LowCardinality({type.split(' ',1)[1]}), Nullable({value_type.split(' ',1)[1]}))")
+                map_columns.append(
+                    "map_"
+                    + type.split(" ", 1)[0]
+                    + "_"
+                    + value_type.split(" ", 1)[0]
+                    + f" Map({type.split(' ',1)[1]}, {value_type.split(' ',1)[1]})"
+                )
+                null_columns.append(
+                    "map_"
+                    + type.split(" ", 1)[0]
+                    + "_nullable_"
+                    + value_type.split(" ", 1)[0]
+                    + f" Map({type.split(' ',1)[1]}, Nullable({value_type.split(' ',1)[1]}))"
+                )
+                low_cardinality_columns.append(
+                    "map_low_card_"
+                    + type.split(" ", 1)[0]
+                    + value_type.split(" ", 1)[0]
+                    + f" Map(LowCardinality({type.split(' ',1)[1]}), {value_type.split(' ',1)[1]})"
+                )
+                low_cardinality_columns.append(
+                    "map_low_card_"
+                    + type.split(" ", 1)[0]
+                    + "_nullable_"
+                    + value_type.split(" ", 1)[0]
+                    + f" Map(LowCardinality({type.split(' ',1)[1]}), Nullable({value_type.split(' ',1)[1]}))"
+                )
 
-                if value_type != 'decimal Decimal128(38)':
-                    low_cardinality_columns.append("map_low_card_" + type.split(" ",1)[0] + "_low_card_" + value_type.split(" ",1)[0] + f" Map(LowCardinality({type.split(' ',1)[1]}), LowCardinality({value_type.split(' ',1)[1]}))")
-                    low_cardinality_columns.append("map_low_card_" + type.split(" ",1)[0] + "_low_card_nullable_" + value_type.split(" ",1)[0] + f" Map(LowCardinality({type.split(' ',1)[1]}), LowCardinality(Nullable({value_type.split(' ',1)[1]})))")
+                if value_type != "decimal Decimal128(38)":
+                    low_cardinality_columns.append(
+                        "map_low_card_"
+                        + type.split(" ", 1)[0]
+                        + "_low_card_"
+                        + value_type.split(" ", 1)[0]
+                        + f" Map(LowCardinality({type.split(' ',1)[1]}), LowCardinality({value_type.split(' ',1)[1]}))"
+                    )
+                    low_cardinality_columns.append(
+                        "map_low_card_"
+                        + type.split(" ", 1)[0]
+                        + "_low_card_nullable_"
+                        + value_type.split(" ", 1)[0]
+                        + f" Map(LowCardinality({type.split(' ',1)[1]}), LowCardinality(Nullable({value_type.split(' ',1)[1]})))"
+                    )
 
             for value_type in container_columns:
-                map_columns.append("map_" + type.split(" ",1)[0] + value_type.split(" ",1)[0] + f" Map({type.split(' ',1)[1]}, {value_type.split(' ',1)[1]})")
+                map_columns.append(
+                    "map_"
+                    + type.split(" ", 1)[0]
+                    + value_type.split(" ", 1)[0]
+                    + f" Map({type.split(' ',1)[1]}, {value_type.split(' ',1)[1]})"
+                )
 
     for type in container_columns:
-        array_columns.append("array_" + type.split(" ",1)[0] + f" Array({type.split(' ',1)[1]})")
+        array_columns.append(
+            "array_" + type.split(" ", 1)[0] + f" Array({type.split(' ',1)[1]})"
+        )
 
-    null_columns.append("tuple_nullable Tuple("
+    null_columns.append(
+        "tuple_nullable Tuple("
         "Nullable(UInt8),"
         "Nullable(Int8),"
         "Nullable(UInt16),"
@@ -280,12 +346,13 @@ def generate_all_column_types():
         "Nullable(FixedString(8)),"
         "Array(Nullable(UInt8)),"
         "Tuple(Nullable(UInt8),"
-            "Nullable(UInt8),"
-            "Nullable(UInt8)),"
+        "Nullable(UInt8),"
+        "Nullable(UInt8)),"
         "Map(String, Nullable(UInt64)))"
-        )
+    )
 
-    low_cardinality_columns.append("tuple_low_cardinality Tuple("
+    low_cardinality_columns.append(
+        "tuple_low_cardinality Tuple("
         "LowCardinality(UInt8),"
         "LowCardinality(Int8),"
         "LowCardinality(UInt16),"
@@ -303,12 +370,13 @@ def generate_all_column_types():
         "LowCardinality(FixedString(8)),"
         "Array(LowCardinality(UInt8)),"
         "Tuple(LowCardinality(UInt8),"
-            "LowCardinality(UInt8),"
-            "LowCardinality(UInt8)),"
+        "LowCardinality(UInt8),"
+        "LowCardinality(UInt8)),"
         "Map(String, LowCardinality(UInt64)))"
-        )
+    )
 
-    low_cardinality_columns.append("tuple_low_cardinality_nullable Tuple("
+    low_cardinality_columns.append(
+        "tuple_low_cardinality_nullable Tuple("
         "LowCardinality(Nullable(UInt8)),"
         "LowCardinality(Nullable(Int8)),"
         "LowCardinality(Nullable(UInt16)),"
@@ -326,178 +394,14 @@ def generate_all_column_types():
         "LowCardinality(Nullable(FixedString(8))),"
         "Array(LowCardinality(Nullable(UInt8))),"
         "Tuple(LowCardinality(Nullable(UInt8)),"
-            "LowCardinality(Nullable(UInt8)),"
-            "LowCardinality(Nullable(UInt8))),"
+        "LowCardinality(Nullable(UInt8)),"
+        "LowCardinality(Nullable(UInt8))),"
         "Map(String, LowCardinality(Nullable(UInt64))))"
-        )
+    )
 
-    all_test_columns = basic_columns + container_columns + map_columns + array_columns + null_columns # + low_cardinality_columns
+    all_test_columns = (
+        basic_columns + container_columns + map_columns + array_columns + null_columns
+    )  # + low_cardinality_columns
     all_test_columns = "(" + ",".join(all_test_columns) + ")"
 
     return all_test_columns
-
-
-all_test_data_types = """
-    a UInt8,
-    b Int8,
-    c UInt16,
-    d Int16,
-    e UInt32,
-    f Int32,
-    g UInt64,
-    h Int64,
-    i Float32,
-    j Float64,
-    k Decimal128(38),
-    l Date,
-    m DateTime,
-    n String,
-    o FixedString(16),
-    p Array(UInt8),
-    q Tuple(
-        UInt8,
-        Int8,
-        UInt16, 
-        Int16, 
-        UInt32, 
-        Int32, 
-        UInt64, 
-        Int64, 
-        Float32, 
-        Float64, 
-        Decimal128(38), 
-        Date, 
-        DateTime, 
-        String, 
-        FixedString(8), 
-        Array(UInt8), 
-        Tuple(
-            UInt8,
-            UInt8,
-            UInt8
-        ), 
-        Map(String, UInt64)),
-    r Map(String, UInt64),
-
-    aa Array(UInt8),
-    ab Array(Int8),
-    ac Array(UInt16),
-    ad Array(Int16),
-    ae Array(UInt32),
-    af Array(Int32),
-    ag Array(UInt64),
-    ah Array(Int64),
-    ai Array(Float32),
-    aj Array(Float64),
-    ak Array(Decimal128(38)),
-    al Array(Date),
-    am Array(DateTime),
-    an Array(String),
-    ao Array(FixedString(16)),
-    ap Array(Array(UInt8)),
-    aq Array(Tuple(
-        UInt8,
-        Int8,
-        UInt16, 
-        Int16, 
-        UInt32, 
-        Int32, 
-        UInt64, 
-        Int64, 
-        Float32, 
-        Float64, 
-        Decimal128(38), 
-        Date, 
-        DateTime, 
-        String, 
-        FixedString(8), 
-        Array(UInt8), 
-        Tuple(
-            UInt8,
-            UInt8,
-            UInt8
-            ), 
-        Map(String, UInt64))),
-    ar Array(Map(String, UInt64)),
-
-    na Nullable(UInt8),
-    nb Nullable(Int8),
-    nc Nullable(UInt16), 
-    nd Nullable(Int16), 
-    ne Nullable(UInt32), 
-    nf Nullable(Int32), 
-    ng Nullable(UInt64), 
-    nh Nullable(Int64), 
-    ni Nullable(Float32), 
-    nj Nullable(Float64), 
-    nk Nullable(Decimal128(38)), 
-    nl Nullable(Date), 
-    nm Nullable(DateTime), 
-    nn Nullable(String), 
-    no Nullable(FixedString(8)), 
-    np Array(Nullable(UInt8)), 
-    nq Tuple(
-        Nullable(UInt8),
-        Nullable(Int8),
-        Nullable(UInt16), 
-        Nullable(Int16), 
-        Nullable(UInt32), 
-        Nullable(Int32), 
-        Nullable(UInt64), 
-        Nullable(Int64), 
-        Nullable(Float32), 
-        Nullable(Float64), 
-        Nullable(Decimal128(38)), 
-        Nullable(Date), 
-        Nullable(DateTime), 
-        Nullable(String), 
-        Nullable(FixedString(8)), 
-        Array(Nullable(UInt8)), 
-        Tuple(
-            Nullable(UInt8),
-            Nullable(UInt8),
-            Nullable(UInt8)
-            ),
-    nr Map(String, Nullable(UInt64)))
-
-    ana Array(Nullable(UInt8))),
-    anb Array(Nullable(Int8)),
-    anc Array(Nullable(UInt16)),
-    and Array(Nullable(Int16)),
-    ane Array(Nullable(UInt32)),
-    anf Array(Nullable(Int32)),
-    ang Array(Nullable(UInt64)),
-    anh Array(Nullable(Int64)),
-    ani Array(Nullable(Float32)),
-    anj Array(Nullable(Float64)),
-    ank Array(Nullable(Decimal128(38))),
-    anl Array(Nullable(Date)),
-    anm Array(Nullable(DateTime)),
-    ann Array(Nullable(String)),
-    ano Array(Nullable(FixedString(16))),
-    anp Array(Nullable(Array(UInt8))),
-    anq Array(Tuple(
-        Nullable(UInt8),
-        Nullable(Int8),
-        Nullable(UInt16), 
-        Nullable(Int16), 
-        Nullable(UInt32), 
-        Nullable(Int32), 
-        Nullable(UInt64), 
-        Nullable(Int64), 
-        Nullable(Float32), 
-        Nullable(Float64), 
-        Nullable(Decimal128(38)), 
-        Nullable(Date), 
-        Nullable(DateTime), 
-        Nullable(String), 
-        Nullable(FixedString(8)), 
-        Array(Nullable(UInt8)), 
-        Tuple(
-            Nullable(UInt8),
-            Nullable(UInt8),
-            Nullable(UInt8)
-            ), 
-        Map(Nullable(String), Nullable(UInt64)))),
-    anr Array(Map(String, Nullable(UInt64)))
-    """
