@@ -103,8 +103,8 @@ def regression(
 
         if not force_run:
             if not use_alter_delete:
-                if check_clickhouse_version("<22.2")(self):
-                    skip(reason="only supported on ClickHouse version >= 22.2")
+                if check_clickhouse_version("<22.8")(self):
+                    skip(reason="only supported on ClickHouse version >= 22.8")
 
         if not use_alter_delete:
             with Given("I enable lightweight delete"):
