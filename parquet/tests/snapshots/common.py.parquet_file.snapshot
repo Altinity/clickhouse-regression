@@ -358,3 +358,18 @@ I_check_the_data_from_the_table_function = r"""
 255	127	65535	32767	4294967295	2147483647	18446744073709551615	9223372036854775807	3.4028235e38	inf	0.9999999999999999999999999999999999999	65535	4294956495	A	B\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0	[0,0,0]	(255,127,65535,32767,4294967295,2147483647,18446744073709551615,9223372036854775807,3.4028235e38,inf,0.9999999999999999999999999999999999999,65535,4294956495,'A','B\0\0\0\0\0\0\0',[0,0,0],(0,0,0),{'a':0,'b':0})	{'a':0,'b':0}
 """
 
+I_check_that_the_data_inserted_into_the_table_was_correctly_written_to_the_file = r"""
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/usr/local/lib/python3.8/dist-packages/pyarrow/parquet/__init__.py", line 286, in __init__
+    self.reader.open(
+  File "pyarrow/_parquet.pyx", line 1225, in pyarrow._parquet.ParquetReader.open
+  File "pyarrow/io.pxi", line 1674, in pyarrow.lib.get_reader
+  File "pyarrow/io.pxi", line 1665, in pyarrow.lib.get_native_file
+  File "pyarrow/io.pxi", line 943, in pyarrow.lib.OSFile.__cinit__
+  File "pyarrow/io.pxi", line 953, in pyarrow.lib.OSFile._open_readable
+  File "pyarrow/error.pxi", line 144, in pyarrow.lib.pyarrow_internal_check_status
+  File "pyarrow/error.pxi", line 113, in pyarrow.lib.check_status
+FileNotFoundError: [Errno 2] Failed to open local file '/var/lib/clickhouse/data/default/table_676e0310_4bdc_11ed_967a_b42e99c9aef6/data.Parquet'. Detail: [errno 2] No such file or directory
+"""
+

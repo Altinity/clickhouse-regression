@@ -11,7 +11,7 @@ from s3.tests.common import *
 def feature(self, node="clickhouse1"):
     """Run checks for clickhouse using Parquet format using s3 storage."""
 
-    xfail('Not implemented.')
+    xfail("Not implemented.")
 
     node = self.context.cluster.node(node)
 
