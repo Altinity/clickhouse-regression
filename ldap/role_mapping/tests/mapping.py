@@ -186,7 +186,13 @@ def with_fixed_roles(self, ldap_server, ldap_user):
 
 @TestOutline
 def map_role(
-    self, role_name, ldap_server, ldap_user, rbac_role_name=None, role_mappings=None
+    self,
+    role_name,
+    ldap_server,
+    ldap_user,
+    rbac_role_name=None,
+    role_mappings=None,
+    number_of_ldap_user_groups=1,
 ):
     """Check that we can map a role with a given name."""
     if role_mappings is None:
@@ -203,10 +209,17 @@ def map_role(
         rbac_role_name = role_name
 
     with Given("I add LDAP group"):
-        groups = add_ldap_groups(groups=({"cn": role_name},))
+        if number_of_ldap_user_groups > 1:
+            groups = add_ldap_groups(
+                groups=[{"cn": role_name}]
+                + [{"cn": f"role_name_{i}"} for i in range(number_of_ldap_user_groups)]
+            )
+        else:
+            groups = add_ldap_groups(groups=({"cn": role_name},))
 
     with And("I add LDAP user to the group"):
-        add_user_to_group_in_ldap(user=ldap_user, group=groups[0])
+        for group in groups:
+            add_user_to_group_in_ldap(user=ldap_user, group=group)
 
     with And("I add matching RBAC role"):
         roles = add_rbac_roles(roles=(f"'{rbac_role_name}'",))
@@ -285,6 +298,28 @@ def role_name_with_special_regex_characters(self, ldap_server, ldap_user):
         ldap_server=ldap_server,
         ldap_user=ldap_user,
         rbac_role_name=rbac_role_name,
+    )
+
+
+@TestScenario
+@Requirements(RQ_SRS_014_LDAP_RoleMapping_Search_UserWithLargeNumberOfGroups("1.0"))
+def map_role_when_ldap_user_belongs_to_large_number_of_groups(
+    self, ldap_server, ldap_user
+):
+    """Check that we can map a role of the LDAP user that
+    belongs to a large number of LDAP groups.
+    """
+    uid = getuid()
+    role_name = f"role_{uid}"
+    rbac_role_name = f"role_{uid}"
+    number_of_ldap_user_groups = 128
+
+    map_role(
+        role_name=role_name,
+        ldap_server=ldap_server,
+        ldap_user=ldap_user,
+        rbac_role_name=rbac_role_name,
+        number_of_ldap_user_groups=number_of_ldap_user_groups,
     )
 
 

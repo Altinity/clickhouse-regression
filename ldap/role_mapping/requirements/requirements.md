@@ -12,6 +12,7 @@
     * 4.1.1 [RQ.SRS-014.LDAP.RoleMapping](#rqsrs-014ldaprolemapping)
     * 4.1.2 [RQ.SRS-014.LDAP.RoleMapping.WithFixedRoles](#rqsrs-014ldaprolemappingwithfixedroles)
     * 4.1.3 [RQ.SRS-014.LDAP.RoleMapping.Search](#rqsrs-014ldaprolemappingsearch)
+    * 4.1.4 [RQ.SRS-014.LDAP.RoleMapping.Search.UserWithLargeNumberOfGroups](#rqsrs-014ldaprolemappingsearchuserwithlargenumberofgroups)
   * 4.2 [Mapped Role Names](#mapped-role-names)
     * 4.2.1 [RQ.SRS-014.LDAP.RoleMapping.Map.Role.Name.WithUTF8Characters](#rqsrs-014ldaprolemappingmaprolenamewithutf8characters)
     * 4.2.2 [RQ.SRS-014.LDAP.RoleMapping.Map.Role.Name.Long](#rqsrs-014ldaprolemappingmaprolenamelong)
@@ -130,6 +131,13 @@ version: 1.0
 [ClickHouse] SHALL perform search on the [LDAP] server and map the results to [RBAC] role names 
 when authenticating users using the [LDAP] external user directory if the `<role_mapping>` section is configured
 as part of the [LDAP] external user directory. The matched roles SHALL be assigned to the user.
+
+#### RQ.SRS-014.LDAP.RoleMapping.Search.UserWithLargeNumberOfGroups
+version: 1.0
+
+[ClickHouse] SHALL support authenticating and mapping LDAP groups to RBAC roles of
+LDAP users that belong to a large number of LDAP groups. The maximum number of LDAP groups
+SHALL be configurable using a configuration file setting.
 
 ### Mapped Role Names
 

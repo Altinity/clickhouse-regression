@@ -1,6 +1,6 @@
 # These requirements were auto generated
 # from software requirements specification (SRS)
-# document by TestFlows v1.7.220210.1155232.
+# document by TestFlows v1.9.221009.1165957.
 # Do not edit by hand but re-generate instead
 # using 'tfs requirements generate' command.
 from testflows.core import Specification
@@ -59,6 +59,24 @@ RQ_SRS_014_LDAP_RoleMapping_Search = Requirement(
     link=None,
     level=3,
     num="4.1.3",
+)
+
+RQ_SRS_014_LDAP_RoleMapping_Search_UserWithLargeNumberOfGroups = Requirement(
+    name="RQ.SRS-014.LDAP.RoleMapping.Search.UserWithLargeNumberOfGroups",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support authenticating and mapping LDAP groups to RBAC roles of\n"
+        "LDAP users that belong to a large number of LDAP groups. The maximum number of LDAP groups\n"
+        "SHALL be configurable using a configuration file setting.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.1.4",
 )
 
 RQ_SRS_014_LDAP_RoleMapping_Map_Role_Name_WithUTF8Characters = Requirement(
@@ -1061,6 +1079,11 @@ SRS_014_ClickHouse_LDAP_Role_Mapping = Specification(
             name="RQ.SRS-014.LDAP.RoleMapping.WithFixedRoles", level=3, num="4.1.2"
         ),
         Heading(name="RQ.SRS-014.LDAP.RoleMapping.Search", level=3, num="4.1.3"),
+        Heading(
+            name="RQ.SRS-014.LDAP.RoleMapping.Search.UserWithLargeNumberOfGroups",
+            level=3,
+            num="4.1.4",
+        ),
         Heading(name="Mapped Role Names", level=2, num="4.2"),
         Heading(
             name="RQ.SRS-014.LDAP.RoleMapping.Map.Role.Name.WithUTF8Characters",
@@ -1309,6 +1332,7 @@ SRS_014_ClickHouse_LDAP_Role_Mapping = Specification(
         RQ_SRS_014_LDAP_RoleMapping,
         RQ_SRS_014_LDAP_RoleMapping_WithFixedRoles,
         RQ_SRS_014_LDAP_RoleMapping_Search,
+        RQ_SRS_014_LDAP_RoleMapping_Search_UserWithLargeNumberOfGroups,
         RQ_SRS_014_LDAP_RoleMapping_Map_Role_Name_WithUTF8Characters,
         RQ_SRS_014_LDAP_RoleMapping_Map_Role_Name_Long,
         RQ_SRS_014_LDAP_RoleMapping_Map_Role_Name_WithSpecialXMLCharacters,
@@ -1373,6 +1397,7 @@ SRS_014_ClickHouse_LDAP_Role_Mapping = Specification(
     * 4.1.1 [RQ.SRS-014.LDAP.RoleMapping](#rqsrs-014ldaprolemapping)
     * 4.1.2 [RQ.SRS-014.LDAP.RoleMapping.WithFixedRoles](#rqsrs-014ldaprolemappingwithfixedroles)
     * 4.1.3 [RQ.SRS-014.LDAP.RoleMapping.Search](#rqsrs-014ldaprolemappingsearch)
+    * 4.1.4 [RQ.SRS-014.LDAP.RoleMapping.Search.UserWithLargeNumberOfGroups](#rqsrs-014ldaprolemappingsearchuserwithlargenumberofgroups)
   * 4.2 [Mapped Role Names](#mapped-role-names)
     * 4.2.1 [RQ.SRS-014.LDAP.RoleMapping.Map.Role.Name.WithUTF8Characters](#rqsrs-014ldaprolemappingmaprolenamewithutf8characters)
     * 4.2.2 [RQ.SRS-014.LDAP.RoleMapping.Map.Role.Name.Long](#rqsrs-014ldaprolemappingmaprolenamelong)
@@ -1491,6 +1516,13 @@ version: 1.0
 [ClickHouse] SHALL perform search on the [LDAP] server and map the results to [RBAC] role names 
 when authenticating users using the [LDAP] external user directory if the `<role_mapping>` section is configured
 as part of the [LDAP] external user directory. The matched roles SHALL be assigned to the user.
+
+#### RQ.SRS-014.LDAP.RoleMapping.Search.UserWithLargeNumberOfGroups
+version: 1.0
+
+[ClickHouse] SHALL support authenticating and mapping LDAP groups to RBAC roles of
+LDAP users that belong to a large number of LDAP groups. The maximum number of LDAP groups
+SHALL be configurable using a configuration file setting.
 
 ### Mapped Role Names
 

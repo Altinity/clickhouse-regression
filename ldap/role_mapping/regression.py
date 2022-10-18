@@ -25,6 +25,9 @@ xfails = {
     "mapping/add new role not present": [
         (Error, "https://github.com/ClickHouse/ClickHouse/issues/41380")
     ],
+    "mapping/map role when ldap user belongs to large number of groups": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/42276")
+    ],
 }
 
 # Force results without running the test
