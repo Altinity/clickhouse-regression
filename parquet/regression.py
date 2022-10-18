@@ -7,7 +7,7 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from helpers.cluster import Cluster
-from s3.regression import argparser as argparser_base
+from s3.regression import argparser
 from parquet.requirements import SRS032_ClickHouse_Parquet_Data_Format
 from helpers.common import check_clickhouse_version
 
@@ -16,20 +16,6 @@ xfails = {}
 xflags = {}
 
 ffails = {}
-
-
-def argparser(parser):
-    """Default argument for regressions."""
-    argparser_base(parser)
-
-    parser.add_argument(
-        "--format",
-        help="storage type",
-        dest="format",
-        type=str,
-        required=False,
-        default=None,
-    )
 
 
 @TestModule
@@ -56,7 +42,6 @@ def regression(
     aws_s3_key_id,
     gcs_key_secret,
     gcs_key_id,
-    format,
     node="clickhouse1",
 ):
     """Parquet regression."""
