@@ -101,11 +101,15 @@ def scenario(self, cluster, node="clickhouse1"):
                                         f"parts {'should' if positive else 'should not'} have been moved"
                                     ):
                                         assert set(used_disks) == (
-                                            {"external"} if positive else {"jbod1", "jbod2"}
+                                            {"external"}
+                                            if positive
+                                            else {"jbod1", "jbod2"}
                                         ), error()
 
                                 with Then("number of rows should match"):
-                                    r = node.query(f"SELECT count() FROM {name}").output.strip()
+                                    r = node.query(
+                                        f"SELECT count() FROM {name}"
+                                    ).output.strip()
                                     assert r == "10", error()
 
                     finally:

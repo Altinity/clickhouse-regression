@@ -54,5 +54,6 @@ def regression(
         Scenario(run=load("dns.tests.lookup.scenario", "scenario"))
         Feature(run=load("dns.tests.ipv6", "feature"))
 
+
 if main():
     regression()

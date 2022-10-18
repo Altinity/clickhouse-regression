@@ -281,7 +281,7 @@ def invalid_credentials(self):
 
     with Given("I set the proper error message"):
         if self.context.storage == "minio":
-            
+
             if check_clickhouse_version(">=22.9")(self):
                 expected = "DB::Exception: Message: The Access Key Id you provided does not exist in our records"
             else:

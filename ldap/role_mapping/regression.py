@@ -24,7 +24,7 @@ xfails = {
     ],
     "mapping/add new role not present": [
         (Error, "https://github.com/ClickHouse/ClickHouse/issues/41380")
-    ]
+    ],
 }
 
 # Force results without running the test

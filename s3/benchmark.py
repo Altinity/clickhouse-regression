@@ -63,7 +63,7 @@ def regression(
     bucket_path = "data/benchmark"
 
     self.context.clickhouse_version = clickhouse_version
-    
+
     for storage in storages:
         nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
         with Feature(f"{storage.lower()}"):

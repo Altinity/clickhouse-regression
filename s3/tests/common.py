@@ -1087,16 +1087,16 @@ def default_s3_disk_and_volume(
                     "access_key_id": f"{self.context.access_key_id}",
                     "secret_access_key": f"{self.context.secret_access_key}",
                 },
-                "s3_cache":{
+                "s3_cache": {
                     "type": "cache",
                     "disk": "external",
                     "path": "external_caches/",
                     "max_size": "22548578304",
                     "cache_on_write_operations": "1",
-                    "do_not_evict_index_and_mark_files": "1"
-                }
+                    "do_not_evict_index_and_mark_files": "1",
+                },
             }
-        else:            
+        else:
             disks = {
                 disk_name: {
                     "type": "s3",
@@ -1114,7 +1114,10 @@ def default_s3_disk_and_volume(
 
     with And("I have a storage policy configured to use the S3 disk"):
         if check_clickhouse_version(">=22.8")(self):
-            policies = {policy_name: {"volumes": {"external": {"disk": disk_name}}}, "s3_cache": {"volumes": {"external": {"disk": "s3_cache"}}}}
+            policies = {
+                policy_name: {"volumes": {"external": {"disk": disk_name}}},
+                "s3_cache": {"volumes": {"external": {"disk": "s3_cache"}}},
+            }
         else:
             policies = {policy_name: {"volumes": {"external": {"disk": disk_name}}}}
 
