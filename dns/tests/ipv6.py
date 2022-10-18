@@ -5,6 +5,7 @@ from testflows.core import *
 from dns.requirements import *
 from helpers.common import *
 
+
 @TestFeature
 @Name("ipv6")
 def feature(self):
@@ -32,13 +33,17 @@ def feature(self):
 
     def setup_dns_server(ip):
         domains_string = "test3.example.com test2.example.com test1.example.com"
-        example_file_path = f'regression/dns/tests/lookup/example.com'
+        example_file_path = f"regression/dns/tests/lookup/example.com"
         cluster.command(None, f"echo '{ip} {domains_string}' > {example_file_path}")
 
     def setup_ch_server(dns_server_ip):
-        cluster.node('clickhouse1').command(f"echo 'nameserver {dns_server_ip}' > /etc/resolv.conf")
-        cluster.node('clickhouse1').command("echo 'options ndots:0' >> /etc/resolv.conf")
-        cluster.node('clickhouse1').query("SYSTEM DROP DNS CACHE")
+        cluster.node("clickhouse1").command(
+            f"echo 'nameserver {dns_server_ip}' > /etc/resolv.conf"
+        )
+        cluster.node("clickhouse1").command(
+            "echo 'options ndots:0' >> /etc/resolv.conf"
+        )
+        cluster.node("clickhouse1").query("SYSTEM DROP DNS CACHE")
 
     def build_endpoint_v4(ip):
         return f"'http://{ip}:8123/?query=SELECT+1&user=test_dns'"
@@ -59,7 +64,7 @@ def feature(self):
 
         endpoint = build_endpoint_v4(server_ip)
 
-        assert "1\n" != cluster.node('clickhouse2').command(f"curl {endpoint}")
+        assert "1\n" != cluster.node("clickhouse2").command(f"curl {endpoint}")
 
     with Scenario("Test host regexp multiple ptr v4"):
         server_ip = get_instance_ip("clickhouse1")
@@ -71,12 +76,12 @@ def feature(self):
 
         endpoint = build_endpoint_v4(server_ip)
 
-        assert "1\n" != cluster.node('clickhouse2').command(f"curl {endpoint}")
+        assert "1\n" != cluster.node("clickhouse2").command(f"curl {endpoint}")
 
     with Scenario("Test host regexp multiple ptr v6"):
-        setup_dns_server('2001:3984:3989::1:1111')
+        setup_dns_server("2001:3984:3989::1:1111")
         setup_ch_server(get_instance_global_ipv6("coredns"))
 
-        endpoint = build_endpoint_v6('2001:3984:3989::1:1111')
+        endpoint = build_endpoint_v6("2001:3984:3989::1:1111")
 
-        assert "1\n" != cluster.node('clickhouse2').command(f"curl -6 {endpoint}")
+        assert "1\n" != cluster.node("clickhouse2").command(f"curl -6 {endpoint}")
