@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import sys
+import boto3
 
 from testflows.core import *
 
@@ -10,6 +11,7 @@ from helpers.cluster import Cluster
 from s3.regression import argparser
 from parquet.requirements import SRS032_ClickHouse_Parquet_Data_Format
 from helpers.common import check_clickhouse_version
+from parquet.tests.common import start_minio
 
 xfails = {}
 
@@ -70,14 +72,13 @@ def regression(
         nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
         Feature(run=load("parquet.tests.file", "feature"))
-        # Feature(run=load("parquet.tests.mysql", "feature"))
 
         if storages is None:
             pass
 
         else:
             for storage in storages:
-                if "s3_amazon" == storage.lower():
+                if "aws_s3" == storage.lower():
                     with Given("I make sure the S3 credentials are set"):
                         if aws_s3_access_key == None:
                             fail("AWS S3 access key needs to be set")
@@ -91,23 +92,28 @@ def regression(
                         if aws_s3_region == None:
                             fail("AWS S3 region needs to be set")
 
-                    uri = f"https://s3.{aws_s3_region.value}.amazonaws.com/{aws_s3_bucket.value}/data/benchmark/"
-                    access_key_id = aws_s3_key_id.value
-                    secret_access_key = aws_s3_access_key.value
+                    self.context.aws_s3_bucket = aws_s3_bucket.value
+                    self.context.uri = f"https://s3.{aws_s3_region.value}.amazonaws.com/{aws_s3_bucket.value}/data/parquet/"
+                    self.context.access_key_id = aws_s3_key_id.value
+                    self.context.secret_access_key = aws_s3_access_key.value
+                    self.context.client = boto3.client(
+                        "s3",
+                        aws_access_key_id=self.context.access_key_id,
+                        aws_secret_access_key=self.context.secret_access_key,
+                    )
 
                 elif "minio" == storage.lower():
-                    uri = "http://minio1:9001/root/data/"
-                    access_key_id = "minio"
-                    secret_access_key = "minio123"
+                    xfail("not fully implemented")
 
-                elif "s3_gcs" == storage.lower():
-                    uri = gcs_uri.value
-                    access_key_id = gcs_key_id.value
-                    secret_access_key = gcs_key_secret.value
+                    self.context.uri = "http://minio1:9001/root/data/"
+                    self.context.access_key_id = "minio"
+                    self.context.secret_access_key = "minio123"
 
-                self.context.uri = uri
-                self.context.access_key_id = access_key_id
-                self.context.secret_access_key = secret_access_key
+                    self.context.client = start_minio()
+
+                elif "gcs" == storage.lower():
+                    xfail("GCS not implemented")
+
                 self.context.storage = storage
 
             Feature(run=load("parquet.tests.s3", "feature"))

@@ -10,6 +10,49 @@ from testflows.asserts import values, error, snapshot
 
 
 @TestStep(Given)
+def start_minio(
+    self,
+    uri="localhost:9001",
+    access_key="minio",
+    secret_key="minio123",
+    timeout=30,
+    secure=False,
+):
+    minio_client = Minio(
+        uri, access_key=access_key, secret_key=secret_key, secure=secure
+    )
+    start = time.time()
+    while time.time() - start < timeout:
+        try:
+            buckets_to_delete = minio_client.list_buckets()
+
+            for bucket in buckets_to_delete:
+                objects = minio_client.list_objects(bucket.name, recursive=True)
+                object_names = [o.object_name for o in objects]
+                for name in object_names:
+                    minio_client.remove_object(bucket.name, name)
+
+            buckets = ["root", "root2"]
+            self.context.cluster.minio_bucket = "root"
+            self.context.cluster.minio_bucket_2 = "root2"
+
+            for bucket in buckets:
+                if minio_client.bucket_exists(bucket):
+                    objects = minio_client.list_objects(bucket, recursive=True)
+                    object_names = [o.object_name for o in objects]
+                    for name in object_names:
+                        minio_client.remove_object(bucket, name)
+                    minio_client.remove_bucket(bucket)
+                minio_client.make_bucket(bucket)
+
+            return minio_client
+        except Exception as ex:
+            time.sleep(1)
+
+    raise Exception("Can't wait Minio to start")
+
+
+@TestStep(Given)
 def allow_experimental_map_type(self):
     """Set allow_experimental_map_type = 1"""
     setting = ("allow_experimental_map_type", 1)
@@ -34,18 +77,27 @@ def allow_experimental_map_type(self):
 
 
 @TestStep(Given)
-def table(self, engine, name="table0", create="CREATE"):
+def table(self, engine, name="table0", create="CREATE", path=None):
     """Create or attach a table with specified name and engine."""
     node = current().context.node
 
     try:
         with By("creating table"):
-            node.query(
-                f"""
-                {create} TABLE {name} {"(" + ",".join(generate_all_column_types()) + ")"}
-                Engine = {engine}
-            """
-            )
+            if create == "CREATE":
+                node.query(
+                    f"""
+                    CREATE TABLE {name} {"(" + ",".join(generate_all_column_types()) + ")"}
+                    Engine = {engine}
+                """,
+                    settings=[("allow_suspicious_low_cardinality_types", 1)],
+                )
+            elif create == "ATTACH":
+                node.query(
+                    f"""
+                    ATTACH TABLE {name} FROM '{path}' {"(" + ",".join(generate_all_column_types()) + ")"}
+                    Engine = {engine}
+                    """
+                )
         yield
 
     finally:
@@ -64,15 +116,21 @@ def getuid():
 
 
 @TestStep(Given)
-def upload_parquet_to_aws_s3(self, s3_client):
-    """Upload Parquet file to aws s3 container."""
+def upload_file_to_s3(self, file_src, file_dest):
+    """Upload specified file to s3 bucket."""
 
-    with By("Uploading a file"):
-        s3_client.upload_file(
-            "/var/lib/clickhouse/user_files/data.Parquet",
-            self.context.uri,
-            "/s3_Table/data.Parquet",
-        )
+    if self.context.storage == "aws_s3":
+        with By("Uploading a file"):
+            self.context.client.upload_file(
+                file_src,
+                self.context.uri,
+                file_dest,
+            )
+
+    elif self.context.storage == "minio":
+        xfail("Not implemented for minio")
+
+    return
 
 
 @TestStep(Then)
@@ -80,7 +138,7 @@ def check_query_output(self, query, expected=None):
     """Check the output of the provided query against either snapshot or provided values."""
 
     node = current().context.node
-    name = basename(current().name)
+    name = basename(parentname(current().name))
 
     with By("executing query", description=query):
         r = node.query(query).output.strip()
@@ -103,15 +161,20 @@ def check_query_output(self, query, expected=None):
 
 
 @TestStep(Then)
-def check_source_file(self, path, expected=None):
+def check_source_file(self, path, compression=None, expected=None):
     """Check the contents of a Parquet file against either snapshot or provided values."""
     node = current().context.node
     name = basename(current().name)
+    table_name = "table_" + getuid()
+
+    with By("creating a table"):
+        table(name=table_name, engine="Memory")
+        node.query(
+            f"INSERT INTO {table_name} FROM INFILE '{path}' {'COMPRESSION '+ compression if compression and compression != 'NONE' else ''} FORMAT Parquet"
+        )
 
     with By("reading the file"):
-        r = node.command(
-            f"python3 -c \"import pyarrow.parquet as pq; import pandas as pd;print(pq.ParquetFile('{path}').schema);print(pd.read_parquet('{path}', engine='pyarrow'))\""
-        ).output.strip()
+        r = node.query(f"SELECT * FROM {table_name}").output.strip()
 
     if expected:
         with Then(f"result should match the expected values", description=expected):
@@ -133,14 +196,29 @@ def check_source_file(self, path, expected=None):
 
 
 @TestStep(Then)
-def check_aws_s3_file(self, s3_client, file, expected):
+def check_source_file_on_s3(self, file, expected=None, compression_type=None):
     """Download specified file from aws s3 and check the contents."""
 
-    with By("Downloading the file"):
-        s3_client.download_file(self.context.uri, file, file)
+    if self.context.storage == "aws_s3":
+        with By("Downloading the file"):
+            self.context.client.download_file(
+                self.context.aws_s3_bucket, f"data/parquet/{file}", "data.Parquet"
+            )
+            x = self.context.cluster.command(
+                None, "docker ps | grep clickhouse1 | cut -d ' ' -f 1 | head -n 1"
+            ).output
+            self.context.cluster.command(
+                None,
+                f"docker cp data.Parquet {x}:/data.Parquet",
+            )
+
+    elif self.context.storage == "minio":
+        xfail("not implemented yet")
 
     with Then("I check the file"):
-        check_source_file(file=file, expected=expected)
+        check_source_file(
+            path="/data.Parquet", expected=expected, compression=compression_type
+        )
 
 
 @TestStep(Then)
@@ -177,11 +255,30 @@ def generate_all_column_types(include=None, exclude=None):
         "fixedstring FixedString(85)",
     ]
 
+    if include:
+        basic_columns = [
+            column for column in basic_columns if column.split(" ")[1] in include
+        ]
+
+    elif exclude:
+        basic_columns = [
+            column for column in basic_columns if column.split(" ")[1] not in exclude
+        ]
+
+    map_key_types = [
+        column
+        for column in basic_columns
+        if column
+        not in ["float32 Float32", "float64 Float64", "decimal Decimal128(38)"]
+    ]
+
     container_columns = [
-        "array Array(UInt8)",
-        "tuple Tuple(UInt8,Int8,UInt16,Int16,UInt32,Int32,UInt64,Int64,Float32,Float64,Decimal128(38),Date,DateTime,String,FixedString(85),"
-        "Array(UInt8),Tuple(UInt8),Map(String, UInt64))",
-        "map Map(String, UInt64)",
+        f"array Array({basic_columns[0].split(' ')[1]})",
+        "tuple Tuple("
+        + ",".join([column.split(" ")[1] for column in basic_columns])
+        + ","
+        f"Array({basic_columns[0].split(' ')[1]}),Tuple({basic_columns[0].split(' ')[1]}),Map({map_key_types[0].split(' ')[1]}, {basic_columns[0].split(' ')[1]}))",
+        f"map Map({map_key_types[0].split(' ')[1]}, {basic_columns[0].split(' ')[1]})",
     ]
 
     array_columns = []
@@ -235,35 +332,37 @@ def generate_all_column_types(include=None, exclude=None):
                     + value_type.split(" ", 1)[0]
                     + f" Map({type.split(' ',1)[1]}, Nullable({value_type.split(' ',1)[1]}))"
                 )
-                low_cardinality_columns.append(
-                    "map_low_card_"
-                    + type.split(" ", 1)[0]
-                    + value_type.split(" ", 1)[0]
-                    + f" Map(LowCardinality({type.split(' ',1)[1]}), {value_type.split(' ',1)[1]})"
-                )
-                low_cardinality_columns.append(
-                    "map_low_card_"
-                    + type.split(" ", 1)[0]
-                    + "_nullable_"
-                    + value_type.split(" ", 1)[0]
-                    + f" Map(LowCardinality({type.split(' ',1)[1]}), Nullable({value_type.split(' ',1)[1]}))"
-                )
+                if type in ["string String", "fixedstring FixedString(85)"]:
+                    low_cardinality_columns.append(
+                        "map_low_card_"
+                        + type.split(" ", 1)[0]
+                        + "_"
+                        + value_type.split(" ", 1)[0]
+                        + f" Map(LowCardinality({type.split(' ',1)[1]}), {value_type.split(' ',1)[1]})"
+                    )
+                    low_cardinality_columns.append(
+                        "map_low_card_"
+                        + type.split(" ", 1)[0]
+                        + "_nullable_"
+                        + value_type.split(" ", 1)[0]
+                        + f" Map(LowCardinality({type.split(' ',1)[1]}), Nullable({value_type.split(' ',1)[1]}))"
+                    )
 
-                if value_type != "decimal Decimal128(38)":
-                    low_cardinality_columns.append(
-                        "map_low_card_"
-                        + type.split(" ", 1)[0]
-                        + "_low_card_"
-                        + value_type.split(" ", 1)[0]
-                        + f" Map(LowCardinality({type.split(' ',1)[1]}), LowCardinality({value_type.split(' ',1)[1]}))"
-                    )
-                    low_cardinality_columns.append(
-                        "map_low_card_"
-                        + type.split(" ", 1)[0]
-                        + "_low_card_nullable_"
-                        + value_type.split(" ", 1)[0]
-                        + f" Map(LowCardinality({type.split(' ',1)[1]}), LowCardinality(Nullable({value_type.split(' ',1)[1]})))"
-                    )
+                    if value_type != "decimal Decimal128(38)":
+                        low_cardinality_columns.append(
+                            "map_low_card_"
+                            + type.split(" ", 1)[0]
+                            + "_low_card_"
+                            + value_type.split(" ", 1)[0]
+                            + f" Map(LowCardinality({type.split(' ',1)[1]}), LowCardinality({value_type.split(' ',1)[1]}))"
+                        )
+                        low_cardinality_columns.append(
+                            "map_low_card_"
+                            + type.split(" ", 1)[0]
+                            + "_low_card_nullable_"
+                            + value_type.split(" ", 1)[0]
+                            + f" Map(LowCardinality({type.split(' ',1)[1]}), LowCardinality(Nullable({value_type.split(' ',1)[1]})))"
+                        )
 
             for value_type in container_columns:
                 map_columns.append(
@@ -281,73 +380,53 @@ def generate_all_column_types(include=None, exclude=None):
 
     null_columns.append(
         "tuple_nullable Tuple("
-        "Nullable(UInt8),"
-        "Nullable(Int8),"
-        "Nullable(UInt16),"
-        "Nullable(Int16),"
-        "Nullable(UInt32),"
-        "Nullable(Int32),"
-        "Nullable(UInt64),"
-        "Nullable(Int64),"
-        "Nullable(Float32),"
-        "Nullable(Float64),"
-        "Nullable(Decimal128(38)),"
-        "Nullable(Date),"
-        "Nullable(DateTime),"
-        "Nullable(String),"
-        "Nullable(FixedString(85)),"
-        "Array(Nullable(UInt8)),"
-        "Tuple(Nullable(UInt8)),"
-        "Map(String, Nullable(UInt64)))"
+        + ",".join(
+            ["Nullable(" + column.split(" ")[1] + ")" for column in basic_columns]
+        )
+        + ","
+        f"Array(Nullable({basic_columns[0].split(' ')[1]})),"
+        f"Tuple(Nullable({basic_columns[0].split(' ')[1]})),"
+        f"Map({map_key_types[0].split(' ')[1]}, Nullable({basic_columns[0].split(' ')[1]})))"
     )
 
     low_cardinality_columns.append(
         "tuple_low_cardinality Tuple("
-        "LowCardinality(UInt8),"
-        "LowCardinality(Int8),"
-        "LowCardinality(UInt16),"
-        "LowCardinality(Int16),"
-        "LowCardinality(UInt32),"
-        "LowCardinality(Int32),"
-        "LowCardinality(UInt64),"
-        "LowCardinality(Int64),"
-        "LowCardinality(Float32),"
-        "LowCardinality(Float64),"
-        "LowCardinality(Decimal128(38)),"
-        "LowCardinality(Date),"
-        "LowCardinality(DateTime),"
-        "LowCardinality(String),"
-        "LowCardinality(FixedString(85)),"
-        "Array(LowCardinality(UInt8)),"
-        "Tuple(LowCardinality(UInt8)),"
-        "Map(String, LowCardinality(UInt64)))"
+        + ",".join(
+            [
+                "LowCardinality(" + column.split(" ")[1] + ")"
+                for column in basic_columns
+                if column != "decimal Decimal128(38)"
+            ]
+        )
+        + ","
+        f"Array(LowCardinality({basic_columns[0].split(' ')[1]})),"
+        f"Tuple(LowCardinality({basic_columns[0].split(' ')[1]})),"
+        f"Map({map_key_types[0].split(' ')[1]}, LowCardinality({basic_columns[0].split(' ')[1]})))"
     )
 
     low_cardinality_columns.append(
         "tuple_low_cardinality_nullable Tuple("
-        "LowCardinality(Nullable(UInt8)),"
-        "LowCardinality(Nullable(Int8)),"
-        "LowCardinality(Nullable(UInt16)),"
-        "LowCardinality(Nullable(Int16)),"
-        "LowCardinality(Nullable(UInt32)),"
-        "LowCardinality(Nullable(Int32)),"
-        "LowCardinality(Nullable(UInt64)),"
-        "LowCardinality(Nullable(Int64)),"
-        "LowCardinality(Nullable(Float32)),"
-        "LowCardinality(Nullable(Float64)),"
-        "LowCardinality(Nullable(Decimal128(38))),"
-        "LowCardinality(Nullable(Date)),"
-        "LowCardinality(Nullable(DateTime)),"
-        "LowCardinality(Nullable(String)),"
-        "LowCardinality(Nullable(FixedString(85))),"
-        "Array(LowCardinality(Nullable(UInt8))),"
-        "Tuple(LowCardinality(Nullable(UInt8))),"
-        "Map(String, LowCardinality(Nullable(UInt64))))"
+        + ",".join(
+            [
+                "LowCardinality(Nullable(" + column.split(" ")[1] + "))"
+                for column in basic_columns
+                if column != "decimal Decimal128(38)"
+            ]
+        )
+        + ","
+        f"Array(LowCardinality(Nullable({basic_columns[0].split(' ')[1]}))),"
+        f"Tuple(LowCardinality(Nullable({basic_columns[0].split(' ')[1]}))),"
+        f"Map({map_key_types[0].split(' ')[1]}, LowCardinality(Nullable({basic_columns[0].split(' ')[1]}))))"
     )
 
     all_test_columns = (
-        basic_columns + container_columns + map_columns + null_columns + array_columns
-    )  # + low_cardinality_columns
+        basic_columns
+        + container_columns
+        + map_columns
+        + null_columns
+        + array_columns
+        # + low_cardinality_columns
+    )
 
     return all_test_columns
 
@@ -377,12 +456,12 @@ data_types_and_values = {
     "String": [
         "''",
         "'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\{\}\\|\/?<>,.:;~`'",
-        "':) :P :D :O'",
+        "'hello'",
     ],
     "FixedString(85)": [
         "''",
         "'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\{\}\\|\/?<>,.:;~`'",
-        "':) :P :D :O'",
+        "'hello'",
     ],
 }
 
@@ -400,6 +479,16 @@ def insert_test_data(self, name, node=None):
     zero_and_nulls = []
 
     for column in generate_all_column_types():
+
+        if "LowCardinality(" in column:
+            column = ",".join(
+                [
+                    i.replace("LowCardinality(", "", 1).replace(")", "", 1)
+                    if "LowCardinality(" in i
+                    else i
+                    for i in column.split(",")
+                ]
+            )
 
         type = column.split(" ", 1)[1]
 
@@ -428,9 +517,9 @@ def insert_test_data(self, name, node=None):
                     )
                     + f",[{data_types_and_values['UInt8'][0]}],({data_types_and_values['UInt8'][0]}),"
                     + "{"
-                    + data_types_and_values["String"][0]
+                    + data_types_and_values["UInt8"][0]
                     + ":"
-                    + data_types_and_values["UInt64"][0]
+                    + data_types_and_values["UInt8"][0]
                     + "})]"
                 )
                 max_values.append(
@@ -443,9 +532,9 @@ def insert_test_data(self, name, node=None):
                     )
                     + f",[{data_types_and_values['UInt8'][1]}],({data_types_and_values['UInt8'][1]}),"
                     + "{"
-                    + data_types_and_values["String"][1]
+                    + data_types_and_values["UInt8"][1]
                     + ":"
-                    + data_types_and_values["UInt64"][1]
+                    + data_types_and_values["UInt8"][1]
                     + "})]"
                 )
                 misc_values.append(
@@ -458,9 +547,9 @@ def insert_test_data(self, name, node=None):
                     )
                     + f",[{data_types_and_values['UInt8'][2]}],({data_types_and_values['UInt8'][2]}),"
                     + "{"
-                    + data_types_and_values["String"][2]
+                    + data_types_and_values["UInt8"][2]
                     + ":"
-                    + data_types_and_values["UInt64"][2]
+                    + data_types_and_values["UInt8"][2]
                     + "})]"
                 )
 
@@ -468,7 +557,7 @@ def insert_test_data(self, name, node=None):
                     zero_and_nulls.append(
                         "[("
                         + ",".join(["Null" for key in data_types_and_values.keys()])
-                        + ",[Null],(Null),{'':Null})]"
+                        + ",[Null],(Null),{0:Null})]"
                     )
                 else:
                     tuple_zeros = []
@@ -481,32 +570,32 @@ def insert_test_data(self, name, node=None):
                             tuple_zeros.append("0")
 
                     zero_and_nulls.append(
-                        "[(" + ",".join(tuple_zeros) + ",[0],(0),{'':0})]"
+                        "[(" + ",".join(tuple_zeros) + ",[0],(0),{0:0})]"
                     )
 
             elif type.startswith("Map"):
                 min_values.append(
                     "[{"
-                    + data_types_and_values["String"][0]
+                    + data_types_and_values["UInt8"][0]
                     + ":"
-                    + data_types_and_values["UInt64"][0]
+                    + data_types_and_values["UInt8"][0]
                     + "}]"
                 )
                 max_values.append(
                     "[{"
-                    + data_types_and_values["String"][1]
+                    + data_types_and_values["UInt8"][1]
                     + ":"
-                    + data_types_and_values["UInt64"][1]
+                    + data_types_and_values["UInt8"][1]
                     + "}]"
                 )
                 misc_values.append(
                     "[{"
-                    + data_types_and_values["String"][2]
+                    + data_types_and_values["UInt8"][2]
                     + ":"
-                    + data_types_and_values["UInt64"][2]
+                    + data_types_and_values["UInt8"][2]
                     + "}]"
                 )
-                zero_and_nulls.append("[{'':0}]")
+                zero_and_nulls.append("[{0:0}]")
 
             elif type.startswith("Nullable"):
                 type = type[9:-1]
@@ -572,9 +661,9 @@ def insert_test_data(self, name, node=None):
                     )
                     + f",[{data_types_and_values['UInt8'][0]}],({data_types_and_values['UInt8'][0]}),"
                     + "{"
-                    + data_types_and_values["String"][0]
+                    + data_types_and_values["UInt8"][0]
                     + ":"
-                    + data_types_and_values["UInt64"][0]
+                    + data_types_and_values["UInt8"][0]
                     + "})}"
                 )
                 max_values.append(
@@ -589,9 +678,9 @@ def insert_test_data(self, name, node=None):
                     )
                     + f",[{data_types_and_values['UInt8'][1]}],({data_types_and_values['UInt8'][1]}),"
                     + "{"
-                    + data_types_and_values["String"][1]
+                    + data_types_and_values["UInt8"][1]
                     + ":"
-                    + data_types_and_values["UInt64"][1]
+                    + data_types_and_values["UInt8"][1]
                     + "})}"
                 )
                 misc_values.append(
@@ -606,9 +695,9 @@ def insert_test_data(self, name, node=None):
                     )
                     + f",[{data_types_and_values['UInt8'][2]}],({data_types_and_values['UInt8'][2]}),"
                     + "{"
-                    + data_types_and_values["String"][2]
+                    + data_types_and_values["UInt8"][2]
                     + ":"
-                    + data_types_and_values["UInt64"][2]
+                    + data_types_and_values["UInt8"][2]
                     + "})}"
                 )
 
@@ -626,7 +715,7 @@ def insert_test_data(self, name, node=None):
                     + data_types_and_values[key][0]
                     + ":("
                     + ",".join(tuple_zeros)
-                    + ",[0],(0),{'':0})}"
+                    + ",[0],(0),{0:0})}"
                 )
 
             elif value.startswith("Map"):
@@ -634,30 +723,30 @@ def insert_test_data(self, name, node=None):
                     "{"
                     + data_types_and_values[key][0]
                     + ":{"
-                    + data_types_and_values["String"][0]
+                    + data_types_and_values["UInt8"][0]
                     + ":"
-                    + data_types_and_values["UInt64"][0]
+                    + data_types_and_values["UInt8"][0]
                     + "}}"
                 )
                 max_values.append(
                     "{"
                     + data_types_and_values[key][1]
                     + ":{"
-                    + data_types_and_values["String"][1]
+                    + data_types_and_values["UInt8"][1]
                     + ":"
-                    + data_types_and_values["UInt64"][1]
+                    + data_types_and_values["UInt8"][1]
                     + "}}"
                 )
                 misc_values.append(
                     "{"
                     + data_types_and_values[key][2]
                     + ":{"
-                    + data_types_and_values["String"][2]
+                    + data_types_and_values["UInt8"][2]
                     + ":"
-                    + data_types_and_values["UInt64"][2]
+                    + data_types_and_values["UInt8"][2]
                     + "}}"
                 )
-                zero_and_nulls.append("{" + data_types_and_values[key][0] + ":{'0':0}}")
+                zero_and_nulls.append("{" + data_types_and_values[key][0] + ":{0:0}}")
 
             else:
                 if value.startswith("Nullable"):
@@ -717,9 +806,9 @@ def insert_test_data(self, name, node=None):
                 )
                 + f",[{data_types_and_values['UInt8'][0]}],({data_types_and_values['UInt8'][0]}),"
                 + "{"
-                + data_types_and_values["String"][0]
+                + data_types_and_values["UInt8"][0]
                 + ":"
-                + data_types_and_values["UInt64"][0]
+                + data_types_and_values["UInt8"][0]
                 + "})"
             )
             max_values.append(
@@ -732,9 +821,9 @@ def insert_test_data(self, name, node=None):
                 )
                 + f",[{data_types_and_values['UInt8'][1]}],({data_types_and_values['UInt8'][1]}),"
                 + "{"
-                + data_types_and_values["String"][1]
+                + data_types_and_values["UInt8"][1]
                 + ":"
-                + data_types_and_values["UInt64"][1]
+                + data_types_and_values["UInt8"][1]
                 + "})"
             )
             misc_values.append(
@@ -747,9 +836,9 @@ def insert_test_data(self, name, node=None):
                 )
                 + f",[{data_types_and_values['UInt8'][2]}],({data_types_and_values['UInt8'][2]}),"
                 + "{"
-                + data_types_and_values["String"][2]
+                + data_types_and_values["UInt8"][2]
                 + ":"
-                + data_types_and_values["UInt64"][2]
+                + data_types_and_values["UInt8"][2]
                 + "})"
             )
 
@@ -757,7 +846,7 @@ def insert_test_data(self, name, node=None):
                 zero_and_nulls.append(
                     "("
                     + ",".join(["Null" for key in data_types_and_values.keys()])
-                    + ",[Null],(Null),{'':Null})"
+                    + ",[Null],(Null),{0:Null})"
                 )
             else:
                 tuple_zeros = []
@@ -769,7 +858,7 @@ def insert_test_data(self, name, node=None):
                     else:
                         tuple_zeros.append("0")
 
-                zero_and_nulls.append("(" + ",".join(tuple_zeros) + ",[0],(0),{'':0})")
+                zero_and_nulls.append("(" + ",".join(tuple_zeros) + ",[0],(0),{0:0})")
 
         else:
             if type.startswith("Nullable"):
