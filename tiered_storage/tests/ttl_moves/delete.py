@@ -75,7 +75,7 @@ def scenario(self, cluster, node="clickhouse1"):
 
                         for retry in retries(count=5):
                             with retry:
-                                with And("I get used disks for the table"):
+                                with When("I get used disks for the table"):
                                     used_disks = get_used_disks_for_table(node, name)
                                     assert set(used_disks) == {"jbod1"}, error()
 
