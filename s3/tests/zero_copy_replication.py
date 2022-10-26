@@ -2060,7 +2060,7 @@ def lost_data_during_mutation(self):
 
         with And("I insert some data"):
             node.query(
-                f"INSERT INTO {table_name} SELECT * FROM generateRandom('key UInt32, value1 String, value2 String, value3 String') LIMIR 1000000"
+                f"INSERT INTO {table_name} SELECT * FROM generateRandom('key UInt32, value1 String, value2 String, value3 String') LIMIT 1000000"
             )
 
         with When("I add a new column"):
