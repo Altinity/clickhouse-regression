@@ -10,6 +10,7 @@ from part_moves_between_shards.tests.steps import *
 )
 def source_replica_stopped(self):
     """Check one part moves between two shards correct when source replica stopped."""
+    xfail("doesn't work from 22.8.6.71-alpine")
     cluster = self.context.cluster
     node = self.context.cluster.node("clickhouse1")
     cluster_name = "'cluster_1replica_3shard'"
