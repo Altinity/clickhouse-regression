@@ -79,7 +79,7 @@ def scenario(self, cluster, node="clickhouse1"):
                                     used_disks = get_used_disks_for_table(node, name)
                                     assert set(used_disks) == {"jbod1"}, error()
 
-                        with And(
+                        with When(
                             f"I wait until TTL expression {'triggers' if positive else 'is close to triggering'}"
                         ):
                             wait_expire_1_thread.join()
