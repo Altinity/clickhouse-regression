@@ -100,6 +100,14 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/mysql1/database:/var/lib/mysql"
 
+  postgres1:
+    extends:
+      file: postgres-service.yml
+      service: postgres
+    hostname: postgres1
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/postgres1/database:/var/lib/postgres"
+
   # dummy service which does nothing, but allows to postpone
   # 'docker-compose up -d' till all dependecies will go healthy
   all_services_ready:

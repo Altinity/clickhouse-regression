@@ -72,6 +72,7 @@ def regression(
         nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
         Feature(run=load("parquet.tests.file", "feature"))
+        Feature(run=load("parquet.tests.query", "feature"))
 
         if storages is None:
             pass
