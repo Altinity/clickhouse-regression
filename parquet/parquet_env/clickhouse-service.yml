@@ -15,6 +15,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/ssl.xml:/etc/clickhouse-server/config.d/ssl.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/storage.xml:/etc/clickhouse-server/config.d/storage.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/zookeeper.xml:/etc/clickhouse-server/config.d/zookeeper.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/test_files/clickhouse_table_def.txt:/var/lib/clickhouse/user_files/clickhouse_table_def.txt"
       - "${CLICKHOUSE_TESTS_DIR}/test_files/data.Parquet:/var/lib/clickhouse/user_files/data.Parquet"
       - "${CLICKHOUSE_TESTS_DIR}/test_files/data_NONE.Parquet:/var/lib/clickhouse/user_files/data_NONE.Parquet"
       - "${CLICKHOUSE_TESTS_DIR}/test_files/data_BROTLI.Parquet:/var/lib/clickhouse/user_files/data_BROTLI.Parquet"

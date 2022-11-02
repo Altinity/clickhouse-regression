@@ -77,24 +77,28 @@ def allow_experimental_map_type(self):
 
 
 @TestStep(Given)
-def table(self, engine, name="table0", create="CREATE", path=None):
+def table(self, engine, name="table0", create="CREATE", path=None, table_def=None):
     """Create or attach a table with specified name and engine."""
     node = current().context.node
+
+    if table_def is None:
+        table_def = "(" + ",".join(generate_all_column_types()) + ")"  #
 
     try:
         with By("creating table"):
             if create == "CREATE":
                 node.query(
                     f"""
-                    CREATE TABLE {name} {"(" + ",".join(generate_all_column_types()) + ")"}
+                    CREATE TABLE {name} {table_def}
                     Engine = {engine}
                 """,
                     settings=[("allow_suspicious_low_cardinality_types", 1)],
                 )
             elif create == "ATTACH":
+
                 node.query(
                     f"""
-                    ATTACH TABLE {name} FROM '{path}' {"(" + ",".join(generate_all_column_types()) + ")"}
+                    ATTACH TABLE {name} FROM '{path}' {table_def}
                     Engine = {engine}
                     """
                 )
@@ -161,11 +165,13 @@ def check_query_output(self, query, expected=None):
 
 
 @TestStep(Then)
-def check_source_file(self, path, compression=None, expected=None):
+def check_source_file(self, path, compression=None, expected=None, snap_name=None):
     """Check the contents of a Parquet file against either snapshot or provided values."""
     node = current().context.node
-    name = basename(current().name)
     table_name = "table_" + getuid()
+
+    if snap_name is None:
+        snap_name = basename(current().name)
 
     with By("creating a table"):
         table(name=table_name, engine="Memory")
@@ -187,7 +193,7 @@ def check_source_file(self, path, compression=None, expected=None):
                     snapshot(
                         "\n" + r + "\n",
                         "parquet_file",
-                        name=name,
+                        name=snap_name,
                         encoder=str,
                     )
                 ), error()
@@ -389,35 +395,36 @@ def generate_all_column_types(include=None, exclude=None):
         f"Map({map_key_types[0].split(' ')[1]}, Nullable({basic_columns[0].split(' ')[1]})))"
     )
 
-    low_cardinality_columns.append(
-        "tuple_low_cardinality Tuple("
-        + ",".join(
-            [
-                "LowCardinality(" + column.split(" ")[1] + ")"
-                for column in basic_columns
-                if column != "decimal Decimal128(38)"
-            ]
-        )
-        + ","
-        f"Array(LowCardinality({basic_columns[0].split(' ')[1]})),"
-        f"Tuple(LowCardinality({basic_columns[0].split(' ')[1]})),"
-        f"Map({map_key_types[0].split(' ')[1]}, LowCardinality({basic_columns[0].split(' ')[1]})))"
-    )
+    # low_cardinality_columns.append(
+    #     "tuple_low_cardinality Tuple("
+    #     + ",".join(
+    #         [
+    #             "LowCardinality(" + column.split(" ")[1] + ")"
+    #             for column in basic_columns
+    #             if column != "decimal Decimal128(38)"
+    #         ]
+    #     )
+    #     + ")"
+    #     + ","
+    #     f"Array(LowCardinality({basic_columns[0].split(' ')[1]})),"
+    #     f"Tuple(LowCardinality({basic_columns[0].split(' ')[1]})),"
+    #     f"Map({map_key_types[0].split(' ')[1]}, LowCardinality({basic_columns[0].split(' ')[1]})))"
+    # )
 
-    low_cardinality_columns.append(
-        "tuple_low_cardinality_nullable Tuple("
-        + ",".join(
-            [
-                "LowCardinality(Nullable(" + column.split(" ")[1] + "))"
-                for column in basic_columns
-                if column != "decimal Decimal128(38)"
-            ]
-        )
-        + ","
-        f"Array(LowCardinality(Nullable({basic_columns[0].split(' ')[1]}))),"
-        f"Tuple(LowCardinality(Nullable({basic_columns[0].split(' ')[1]}))),"
-        f"Map({map_key_types[0].split(' ')[1]}, LowCardinality(Nullable({basic_columns[0].split(' ')[1]}))))"
-    )
+    # low_cardinality_columns.append(
+    #     "tuple_low_cardinality_nullable Tuple("
+    #     + ",".join(
+    #         [
+    #             "LowCardinality(Nullable(" + column.split(" ")[1] + "))"
+    #             for column in basic_columns
+    #             if column != "decimal Decimal128(38)"
+    #         ]
+    #     )
+    #     + ","
+    #     f"Array(LowCardinality(Nullable({basic_columns[0].split(' ')[1]}))),"
+    #     f"Tuple(LowCardinality(Nullable({basic_columns[0].split(' ')[1]}))),"
+    #     f"Map({map_key_types[0].split(' ')[1]}, LowCardinality(Nullable({basic_columns[0].split(' ')[1]}))))"
+    # )
 
     all_test_columns = (
         basic_columns
@@ -425,7 +432,7 @@ def generate_all_column_types(include=None, exclude=None):
         + map_columns
         + null_columns
         + array_columns
-        # + low_cardinality_columns
+        + low_cardinality_columns
     )
 
     return all_test_columns
@@ -456,29 +463,32 @@ data_types_and_values = {
     "String": [
         "''",
         "'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\{\}\\|\/?<>,.:;~`'",
-        "'hello'",
+        "'⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌'",
     ],
     "FixedString(85)": [
         "''",
         "'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\{\}\\|\/?<>,.:;~`'",
-        "'hello'",
+        "'⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌'",
     ],
 }
 
 
 @TestStep(When)
-def insert_test_data(self, name, node=None):
+def insert_test_data(self, name, columns=None, node=None):
     """Insert data necessarily for Parquet testing into the specified table."""
 
     if node is None:
         node = self.context.node
+
+    if columns is None:
+        columns = generate_all_column_types()
 
     min_values = []
     max_values = []
     misc_values = []
     zero_and_nulls = []
 
-    for column in generate_all_column_types():
+    for column in columns:
 
         if "LowCardinality(" in column:
             column = ",".join(
@@ -879,7 +889,8 @@ def insert_test_data(self, name, node=None):
 
     with By("Inserting values into the specified destination"):
         node.query(
-            f"INSERT INTO {name} VALUES {'('+','.join(min_values)+'),('+','.join(max_values)+'),('+','.join(misc_values)+'),('+','.join(zero_and_nulls) + ')'}"
+            f"INSERT INTO {name} VALUES {'('+','.join(min_values)+'),('+','.join(max_values)+'),('+','.join(misc_values)+'),('+','.join(zero_and_nulls) + ')'}",
+            settings=[("engine_file_allow_create_multiple_files", 1)],
         )
 
     return

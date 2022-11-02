@@ -12,10 +12,7 @@ def insert_into_engine(self):
     compression_type = self.context.compression_type
     table_name = "table_" + getuid()
 
-    with Given("I have a disk configuration with a S3 storage disk, access id and key"):
-        default_s3_disk_and_volume()
-
-    with And("I have a table with S3 engine"):
+    with Given("I have a table with S3 engine"):
         table(
             name=table_name,
             engine=f"S3('{self.context.uri}{table_name}.Parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'Parquet', '{compression_type.lower()}')",
@@ -39,17 +36,12 @@ def insert_into_engine(self):
 def select_from_engine(self):
     """Check that when a table with `S3` engine is attached on top of a Parquet file, it reads the data correctly."""
 
-    xfail("TODO: create Parquet files")
-
     compression_type = self.context.compression_type
     table_name = "table_" + getuid()
 
-    with Given("I have a disk configuration with a S3 storage disk, access id and key"):
-        default_s3_disk_and_volume()
-
-    with And("I upload parquet data to s3"):
+    with Given("I upload parquet data to s3"):
         upload_file_to_s3(
-            file_src="/var/lib/clickhouse/user_files/data.Parquet",
+            file_src=f"/var/lib/clickhouse/user_files/data_{compression_type}.Parquet",
             file_dest=f"/{table_name}/data.Parquet",
         )
 
@@ -75,10 +67,7 @@ def engine_to_file_to_engine(self):
     table0_name = "table0_" + getuid()
     table1_name = "table1_" + getuid()
 
-    with Given("I have a disk configuration with a S3 storage disk, access id and key"):
-        default_s3_disk_and_volume()
-
-    with And("I have a table with S3 engine"):
+    with Given("I have a table with S3 engine"):
         table(
             name=table0_name,
             engine=f"S3('{self.context.uri}{table0_name}.Parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'Parquet', '{compression_type.lower()}')",
@@ -114,24 +103,19 @@ def insert_into_engine_from_file(self):
     correctly written into a table with a `S3` engine.
     """
 
-    xfail("TODO: create parquet test files.")
-
     compression_type = self.context.compression_type
     node = self.context.node
     table_name = "table_" + getuid()
 
-    with Given("I have a disk configuration with a S3 storage disk, access id and key"):
-        default_s3_disk_and_volume()
-
-    with And("I have a table with S3 engine"):
+    with Given("I have a table with S3 engine"):
         table(
-            name=table0_name,
+            name=table_name,
             engine=f"S3('{self.context.uri}{table_name}.Parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'Parquet', '{compression_type.lower()}')",
         )
 
     with When("I insert data into the table from a Parquet file"):
         node.query(
-            f"INSERT INTO {table_name} FROM INFILE '/var/lib/clickhouse/user_files/data.Parquet' COMPRESSION '{compression_type}' FORMAT Parquet"
+            f"INSERT INTO {table_name} FROM INFILE '/var/lib/clickhouse/user_files/data_{compression_type}.Parquet' COMPRESSION '{compression_type.lower()}' FORMAT Parquet"
         )
 
     with Then("I check that the table contains correct data"):
@@ -147,10 +131,7 @@ def engine_select_output_to_file(self):
     client = self.context.client()
     table_name = "table_" + getuid()
 
-    with Given("I have a disk configuration with a S3 storage disk, access id and key"):
-        default_s3_disk_and_volume()
-
-    with And("I have a table with S3 engine"):
+    with Given("I have a table with S3 engine"):
         table(
             name=table_name,
             engine=f"S3('{self.context.uri}{table_name}.Parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'Parquet', '{compression_type.lower()}')",
@@ -183,9 +164,6 @@ def insert_into_function_manual_cast_types(self):
     file_name = "file_" + getuid()
     client = self.context.client()
 
-    with Given("I have a disk configuration with a S3 storage disk, access id and key"):
-        default_s3_disk_and_volume()
-
     with When("I insert test data into s3 table function in Parquet format"):
         insert_test_data(
             name=f"FUNCTION s3('{self.context.uri}{file_name}', '{self.context.secret_access_key}', '{self.context.access_key_id}', 'Parquet', '{','.join(generate_all_column_types())}', '{compression_type}')"
@@ -207,9 +185,6 @@ def insert_into_function_auto_cast_types(self):
     file_name = "file_" + getuid()
     client = self.context.client()
 
-    with Given("I have a disk configuration with a S3 storage disk, access id and key"):
-        default_s3_disk_and_volume()
-
     with When("I insert test data into s3 table function in Parquet format"):
         insert_test_data(
             name=f"FUNCTION s3('{self.context.uri}{file_name}', '{self.context.secret_access_key}', '{self.context.access_key_id}', 'Parquet', '{compression_type}')"
@@ -218,7 +193,7 @@ def insert_into_function_auto_cast_types(self):
     with Then(
         "I check that the data inserted into the table was correctly written to the file"
     ):
-        check_source_file_on_s3(file=f"{file_name}.Parquet")
+        check_source_file_on_s3(client=client, file=f"{file_name}.Parquet")
 
 
 @TestScenario
@@ -228,15 +203,12 @@ def select_from_function_manual_cast_types(self):
     """
 
     compression_type = self.context.compression_type
+    table_name = "table_" + getuid()
+    client = self.context.client()
 
-    xfail("TODO: add parquet files")
-
-    with Given("I have a disk configuration with a S3 storage disk, access id and key"):
-        default_s3_disk_and_volume()
-
-    with And("I upload parquet data to s3"):
+    with Given("I upload parquet data to s3"):
         upload_file_to_s3(
-            file_src="/var/lib/clickhouse/user_files/data.Parquet",
+            file_src=f"/var/lib/clickhouse/user_files/data_{compression_type}.Parquet",
             file_dest=f"/{table_name}/data.Parquet",
             client=client,
         )
@@ -254,15 +226,12 @@ def select_from_function_auto_cast_types(self):
     """
 
     compression_type = self.context.compression_type
+    table_name = "table_" + getuid()
+    client = self.context.client()
 
-    xfail("TODO: add parquet files")
-
-    with Given("I have a disk configuration with a S3 storage disk, access id and key"):
-        default_s3_disk_and_volume()
-
-    with And("I upload parquet data to s3"):
+    with Given("I upload parquet data to s3"):
         upload_file_to_s3(
-            file_src="/var/lib/clickhouse/user_files/data.Parquet",
+            file_src=f"/var/lib/clickhouse/user_files/data_{compression_type}.Parquet",
             file_dest=f"/{table_name}/data.Parquet",
             client=client,
         )

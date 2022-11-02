@@ -37,9 +37,13 @@ def select_from_engine(self):
     node = self.context.node
 
     table_name = "table_" + getuid()
+    table_def = node.command(
+        "cat /var/lib/clickhouse/user_files/clickhouse_table_def.txt"
+    ).output.strip()
 
-    xfail(
-        "Resolve attach exception - DB::Exception: Received from localhost:9000. DB::Exception: std::__1::__fs::filesystem::filesystem_error: filesystem error: in create_directory: File exists [/var/lib/clickhouse/user_files/data_NONE.Parquet/]. (STD_EXCEPTION)"
+    node.command(f"mkdir /var/lib/clickhouse/user_files/{table_name}")
+    node.command(
+        f"cp /var/lib/clickhouse/user_files/data_NONE.Parquet /var/lib/clickhouse/user_files/{table_name}/data.Parquet"
     )
 
     with Given(
@@ -49,7 +53,8 @@ def select_from_engine(self):
             name=table_name,
             engine="File(Parquet)",
             create="ATTACH",
-            path=f"/var/lib/clickhouse/user_files/",
+            path=table_name,
+            table_def=table_def,
         )
 
     with Then("I check that the table reads the data correctly"):
@@ -65,10 +70,6 @@ def engine_to_file_to_engine(self):
 
     table0_name = "table0_" + getuid()
     table1_name = "table1_" + getuid()
-
-    xfail(
-        "Resolve attach exception - DB::Exception: Received from localhost:9000. DB::Exception: std::__1::__fs::filesystem::filesystem_error: filesystem error: in create_directory: File exists [/var/lib/clickhouse/user_files/data_NONE.Parquet/]. (STD_EXCEPTION)"
-    )
 
     with Given("I have a table with `File(Parquet)` engine"):
         table(name=table0_name, engine="File(Parquet)")
@@ -88,6 +89,7 @@ def engine_to_file_to_engine(self):
         check_source_file(path=f"/var/lib/clickhouse/user_files/{table0_name}.Parquet")
 
     with When("I copy of the Parquet source file to a new directory"):
+        node.command(f"mkdir /var/lib/clickhouse/user_files/{table1_name}")
         node.command(
             f"cp /var/lib/clickhouse/data/default/{table0_name}/data.Parquet /var/lib/clickhouse/user_files/{table1_name}/data.Parquet"
         )
@@ -141,13 +143,18 @@ def insert_into_engine_from_file(self, compression_type):
     """
 
     node = self.context.node
-
     table_name = "table_" + getuid()
+    table_def = node.command(
+        "cat /var/lib/clickhouse/user_files/clickhouse_table_def.txt"
+    ).output.strip()
 
-    xfail("Match column names to those in Parqeut file.")
+    if compression_type != "NONE":
+        xfail(
+            "DB::Exception: inflateReset failed: data error: While executing ParquetBlockInputFormat: While executing File: data for INSERT was parsed from file. (ZLIB_INFLATE_FAILED)"
+        )
 
     with Given("I have a table with a `File(Parquet)` engine"):
-        table(name=table_name, engine="File(Parquet)")
+        table(name=table_name, engine="File(Parquet)", table_def=table_def)
 
     with When("I insert data into the table from a Parquet file"):
         node.query(
@@ -221,13 +228,20 @@ def insert_into_function_manual_cast_types(self):
     it is written into the source file correctly.
     """
 
-    xfail("TODO: match manual casting with parquet file structure.")
+    xfail("create empty parquet file with appropriate columns.")
 
+    node = self.context.node
     file_name = "file_" + getuid()
+    table_def = node.command(
+        "cat /var/lib/clickhouse/user_files/clickhouse_table_def.txt"
+    ).output.strip()
 
     with When("I insert test data into file table function in Parquet format"):
+        node.command(
+            f"cp /var/lib/clickhouse/user_files/data_NONE.Parquet /var/lib/clickhouse/user_files/{file_name}.Parquet"
+        )
         insert_test_data(
-            name=f"FUNCTION file('{file_name}.Parquet', 'Parquet', {'(' + ','.join(generate_all_column_types()) + ')'})"
+            name=f"FUNCTION file('{file_name}.Parquet', 'Parquet', '{table_def[1:-1]}')",
         )
 
     with Then("I check the file specified in the `file` function has correct data"):
@@ -240,11 +254,15 @@ def insert_into_function_auto_cast_types(self):
     it is written into the source file correctly.
     """
 
-    xfail("file function does not create files.")
+    xfail("create empty parquet file with appropriate columns.")
 
+    node = self.context.node
     file_name = "file_" + getuid()
 
     with When("I insert test data into `file` function in Parquet format"):
+        node.command(
+            f"cp /var/lib/clickhouse/user_files/data_NONE.Parquet /var/lib/clickhouse/user_files/{file_name}.Parquet"
+        )
         insert_test_data(name=f"FUNCTION file('{file_name}.Parquet', 'Parquet')")
 
     with Then("I check the file specified in the `file` function has correct data"):
@@ -257,13 +275,14 @@ def select_from_function_manual_cast_types(self):
     it is read correctly.
     """
 
-    xfail(
-        "TODO: get list of column names from parquet file generator to perform manual cast."
-    )
+    node = self.context.node
+    table_def = node.command(
+        "cat /var/lib/clickhouse/user_files/clickhouse_table_def.txt"
+    ).output.strip()
 
     with Then("I check that the `file` table function contains correct data"):
         check_query_output(
-            query=f"SELECT * FROM file('/var/lib/clickhouse/data.Parquet', 'Parquet', {'(' + ','.join(generate_all_column_types()) + ')'})"
+            query=f"SELECT * FROM file('data_NONE.Parquet', 'Parquet', '{table_def[1:-1]}')"
         )
 
 
