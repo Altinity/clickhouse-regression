@@ -57,8 +57,8 @@ def distributed_table_replicated(self, key_values, policies):
         with When(f"I insert into table on {name} node"):
             values = f"(1, '{name}'),(2, '{name}')"
             node.query(
-                f"INSERT INTO {table_name} VALUES {values}",
-                settings=[("insert_distributed_sync", "0")],
+                f"INSERT INTO {table_name}_distributed VALUES {values}",
+                settings=[("insert_distributed_sync", "1")],
             )
 
     with Then("I expect i can select from distributed table on any node"):
@@ -117,8 +117,8 @@ def distributed_table_sharded(self, key_values, policies):
         self.context.node = node = self.context.cluster.node(name)
         values = f"(1, '{name}'),(2, '{name}')"
         node.query(
-            f"INSERT INTO {table_name} VALUES {values}",
-            settings=[("insert_distributed_sync", "0")],
+            f"INSERT INTO {table_name}_distributed VALUES {values}",
+            settings=[("insert_distributed_sync", "1")],
         )
 
     with Then("I expect i can select from distributed table on any node"):
@@ -143,10 +143,10 @@ def distributed_table_sharded_and_replicated(self, key_values, policies):
         "I create sharded table on cluster",
         description="""
         Using the following cluster configuration without replication and containing only 3 shards:
-            shard0: 
+            shard0:
                 replica0: clickhouse1
                 replica1: clickhouse2
-            shard1: 
+            shard1:
                 replica0: clickhouse3
         """,
     ):
@@ -179,8 +179,8 @@ def distributed_table_sharded_and_replicated(self, key_values, policies):
         self.context.node = node = self.context.cluster.node(name)
         values = f"(1, '{name}'),(2, '{name}')"
         node.query(
-            f"INSERT INTO {table_name} VALUES {values}",
-            settings=[("insert_distributed_sync", "0")],
+            f"INSERT INTO {table_name}_distributed VALUES {values}",
+            settings=[("insert_distributed_sync", "1")],
         )
 
     with Then("I expect i can select from distributed table on any node"):
@@ -336,7 +336,7 @@ def distributed_table_sharded_one_encrypted_replica_insert_into_unencrypted(self
 def distributed_table_sharded_and_replicated_three_different_keys(self):
     """Check that ClickHouse supports distributed tables for encrypted disk,
     that refers to the sharded and replicated table with two encrypted shards
-    two replicas in one one replica in the other with three different keys.
+    two replicas in one replica in the other with three different keys.
     """
     distributed_table_sharded_and_replicated(
         key_values=["firstfirstfirstf", "secondsecondseco", "thirdthirdthirdt"],
@@ -351,7 +351,7 @@ def distributed_table_sharded_and_replicated_three_different_keys(self):
 def distributed_table_sharded_and_replicated_one_key(self):
     """Check that ClickHouse supports distributed tables for encrypted disk,
     that refers to the sharded and replicated table with two encrypted shards
-    two replicas in one one replica in the other with the same key.
+    two replicas in one replica in the other with the same key.
     """
     distributed_table_sharded_and_replicated(
         key_values=["firstfirstfirstf", "firstfirstfirstf", "firstfirstfirstf"],
@@ -366,7 +366,7 @@ def distributed_table_sharded_and_replicated_one_key(self):
 def distributed_table_sharded_and_replicated_two_encrypted_replica_two_keys(self):
     """Check that ClickHouse supports distributed tables for encrypted disk,
     that refers to the sharded and replicated table with two shards
-    two replicas in one one replica in the other the first shard is encrypted
+    two replicas in one replica in the other the first shard is encrypted
     with two keys.
     """
     distributed_table_sharded_and_replicated(
@@ -382,7 +382,7 @@ def distributed_table_sharded_and_replicated_two_encrypted_replica_two_keys(self
 def distributed_table_sharded_and_replicated_one_encrypted_replica(self):
     """Check that ClickHouse supports distributed tables for encrypted disk,
     that refers to the sharded and replicated table with two shards
-    two replicas in one one replica in the other the first replica is encrypted
+    two replicas in one replica in the other the first replica is encrypted
     insertion into encrypted replica.
     """
     distributed_table_sharded_and_replicated(
@@ -400,7 +400,7 @@ def distributed_table_sharded_and_replicated_one_encrypted_replica_insert_into_u
 ):
     """Check that ClickHouse supports distributed tables for encrypted disk,
     that refers to the sharded and replicated table with two shards
-    two replicas in one one replica in the other the first replica is encrypted
+    two replicas in one replica in the other the first replica is encrypted
     insertion into encrypted replica into first shard.
     """
     distributed_table_sharded_and_replicated(
