@@ -66,10 +66,12 @@ def distributed_table_replicated(self, key_values, policies):
             node = self.context.cluster.node(name)
             self.context.node = node
             with Then(f"I expect data is successfully inserted on {name} node"):
-                r = node.query(
-                    f"SELECT * FROM {table_name}_distributed ORDER BY Id FORMAT JSONEachRow"
-                )
-                assert r.output == expected_output, error()
+                for attempt in retries(timeout=100, delay=1):
+                    with attempt:
+                        r = node.query(
+                            f"SELECT * FROM {table_name}_distributed ORDER BY Id FORMAT JSONEachRow"
+                        )
+                        assert r.output == expected_output, error()
 
 
 @TestOutline
@@ -125,10 +127,12 @@ def distributed_table_sharded(self, key_values, policies):
         for name in self.context.cluster.nodes["clickhouse"]:
             self.context.node = node = self.context.cluster.node(name)
             with Then(f"I expect data is successfully inserted on {name} node"):
-                r = node.query(
-                    f"SELECT * FROM {table_name}_distributed ORDER BY Id FORMAT JSONEachRow"
-                )
-                assert r.output == expected_output, error()
+                for attempt in retries(timeout=100, delay=1):
+                    with attempt:
+                        r = node.query(
+                            f"SELECT * FROM {table_name}_distributed ORDER BY Id FORMAT JSONEachRow"
+                        )
+                        assert r.output == expected_output, error()
 
 
 @TestOutline
@@ -187,10 +191,12 @@ def distributed_table_sharded_and_replicated(self, key_values, policies):
         for name in self.context.cluster.nodes["clickhouse"]:
             self.context.node = node = self.context.cluster.node(name)
             with Then(f"I expect data is successfully inserted on {name} node"):
-                r = node.query(
-                    f"SELECT * FROM {table_name}_distributed ORDER BY Id FORMAT JSONEachRow"
-                )
-                assert r.output == expected_output, error()
+                for attempt in retries(timeout=100, delay=1):
+                    with attempt:
+                        r = node.query(
+                            f"SELECT * FROM {table_name}_distributed ORDER BY Id FORMAT JSONEachRow"
+                        )
+                        assert r.output == expected_output, error()
 
 
 @TestScenario
