@@ -185,7 +185,7 @@ SELECT uniqMerge(state) FROM (SELECT uniqState(UserID) AS state FROM table GROUP
 [SimpleAggregateFunction]: https://clickhouse.com/docs/en/sql-reference/data-types/simpleaggregatefunction
 [AggregateFunction]: https://clickhouse.com/docs/en/sql-reference/data-types/aggregatefunction
 [ClickHouse]: https://clickhouse.com
-[GitHub Repository]: https://github.com/Altinity/clickhouse-regression/blob/main/aggregate_function_type/requirements/requirements.md
-[Revision History]: https://github.com/Altinity/clickhouse-regression/commits/main/aggregate_function_type/requirements/requirements.md
+[GitHub Repository]: https://github.com/Altinity/clickhouse-regression/blob/main/aggregate_functions/requirements/requirements.md
+[Revision History]: https://github.com/Altinity/clickhouse-regression/commits/main/aggregate_functions/requirements/requirements.md
 [Git]: https://git-scm.com/
 [GitHub]: https://github.com
