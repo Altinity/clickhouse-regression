@@ -8,12 +8,14 @@
 * 3 [Requirements](#requirements)
   * 3.1 [Combinator Functions](#combinator-functions)
     * 3.1.1 [-State](#-state)
-      * 3.1.1.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.State](#rqsrs-031clickhouseaggregatefunctionscombinatorstate)
-      * 3.1.1.2 [RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.State.With.AggregatingMergeTree](#rqsrs-031clickhouseaggregatefunctionscombinatorstatewithaggregatingmergetree)
-      * 3.1.1.3 [RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.State.With.FinalizeAggregationFunction](#rqsrs-031clickhouseaggregatefunctionscombinatorstatewithfinalizeaggregationfunction)
-      * 3.1.1.4 [RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.State.With.RunningAccumulateFunction](#rqsrs-031clickhouseaggregatefunctionscombinatorstatewithrunningaccumulatefunction)
-      * 3.1.1.5 [RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.State.With.Merge](#rqsrs-031clickhouseaggregatefunctionscombinatorstatewithmerge)
-      * 3.1.1.6 [RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.State.With.MergeState](#rqsrs-031clickhouseaggregatefunctionscombinatorstatewithmergestate)
+      * 3.1.1.1 [Test Feature Diagram](#test-feature-diagram)
+      * 3.1.1.2 [RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.State](#rqsrs-031clickhouseaggregatefunctionscombinatorstate)
+      * 3.1.1.3 [RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.State.With.AggregatingMergeTree](#rqsrs-031clickhouseaggregatefunctionscombinatorstatewithaggregatingmergetree)
+      * 3.1.1.4 [RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.State.With.FinalizeAggregationFunction](#rqsrs-031clickhouseaggregatefunctionscombinatorstatewithfinalizeaggregationfunction)
+      * 3.1.1.5 [RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.State.With.RunningAccumulateFunction](#rqsrs-031clickhouseaggregatefunctionscombinatorstatewithrunningaccumulatefunction)
+      * 3.1.1.6 [RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.State.With.Merge](#rqsrs-031clickhouseaggregatefunctionscombinatorstatewithmerge)
+      * 3.1.1.7 [RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.State.With.MergeState](#rqsrs-031clickhouseaggregatefunctionscombinatorstatewithmergestate)
+      * 3.1.1.8 [RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.State.With.AggregateFunctionDataType](#rqsrs-031clickhouseaggregatefunctionscombinatorstatewithaggregatefunctiondatatype)
     * 3.1.2 [-SimpleState](#-simplestate)
       * 3.1.2.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.SimpleState](#rqsrs-031clickhouseaggregatefunctionscombinatorsimplestate)
       * 3.1.2.2 [RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.SimpleState.With.AggregatingMergeTree](#rqsrs-031clickhouseaggregatefunctionscombinatorsimplestatewithaggregatingmergetree)
@@ -42,6 +44,31 @@ This software requirements specification covers requirements for supporting [Agg
 ### Combinator Functions
 
 #### -State
+
+##### Test Feature Diagram
+
+```mermaid
+flowchart LR
+  subgraph "-State Aggregate Functions"
+    direction TB
+    subgraph A[Aggregate Functions]
+        direction LR
+    end
+    subgraph B[Works With]
+      direction LR
+      B1[AggregatingMergeTree engine]
+      B2[finalizeAggregation()]
+      B3[runningAccumulate()]
+      B4[-Merge()]
+      B5[-MergeState()]
+      B6[ArregateFunction data type]
+    end
+    subgraph C[Output Formats]
+    end
+    subgraph D[Input Formats]
+    end
+  end
+```
 
 ##### RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.State
 version: 1.0
@@ -79,6 +106,12 @@ version: 1.0
 
 [ClickHouse]'s SHALL support using all [aggregate function]s with [-State] combinator
 with the corresponding [-MergeState] combinator function.
+
+##### RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.State.With.AggregateFunctionDataType
+version: 1.0
+
+[ClickHouse]'s SHALL support using all [aggregate function]s with [-State] combinator
+with [AggregateFunction] data type columns.
 
 #### -SimpleState
 
