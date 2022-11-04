@@ -1,4 +1,4 @@
-# SRS031 ClickHouse AggregateFunction Data Type
+# SRS031 ClickHouse Aggregate Functions
 # Software Requirements Specification
 
 ## Table of Contents
