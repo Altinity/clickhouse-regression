@@ -81,6 +81,7 @@ version: 1.0
 * [VersionedCollapsingMergeTree]
 
 [SRS]: #srs
+[SELECT]: https://clickhouse.com/docs/en/sql-reference/statements/select/
 [MergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/mergetree/
 [ReplacingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/replacingmergetree
 [CollapsingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/collapsingmergetree
