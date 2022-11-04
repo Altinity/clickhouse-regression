@@ -49,23 +49,39 @@ This software requirements specification covers requirements for supporting [Agg
 
 ```mermaid
 flowchart LR
-  subgraph "-State Aggregate Functions"
+  subgraph -State
     direction TB
     subgraph A[Aggregate Functions]
         direction LR
+        A1["all aggregate functions"]
+        A2["all argument data types"]
     end
-    subgraph B[Works With]
+    subgraph B[Compatibility]
       direction LR
-      B1[AggregatingMergeTree engine]
-      B2[finalizeAggregation()]
-      B3[runningAccumulate()]
-      B4[-Merge()]
-      B5[-MergeState()]
-      B6[ArregateFunction data type]
+      B1["AggregatingMergeTree table engine"]
+      B2["finalizeAggregation() function"]
+      B3["runningAccumulate() function"]
+      B4["-Merge functions"]
+      B5["-MergeState functions"]
+      B6["ArregateFunction data type"]
+      B6["SimpleArregateFunction data type ?"]
+      B7["Materialized View"]
     end
-    subgraph C[Output Formats]
+    subgraph CM[Output/Input]
+      subgraph C[Output Formats]
+      end
+      subgraph D[Input Formats]
+      end
     end
-    subgraph D[Input Formats]
+    subgraph E[ClickHouse versions]
+      direction LR
+      E1[Upgrade]
+      E2[Downgrade]
+    end
+    subgraph F[Backups]
+      direction LR
+      F1[clickhouse-backup utility]
+      F2[BACKUP TABLE .. TO statement] 
     end
   end
 ```
