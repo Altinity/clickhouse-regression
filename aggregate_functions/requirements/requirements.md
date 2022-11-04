@@ -66,7 +66,8 @@ All the updates are tracked using the [Revision History].
 
 ## Introduction
 
-This software requirements specification covers requirements for supporting [AggregateFunction] data type in [ClickHouse].
+This software requirements specification covers requirements for [aggregate function]s and corresponding
+data types in [ClickHouse].
 
 ## Requirements
 
