@@ -20,11 +20,11 @@ ffails = {}
 @XFails(xfails)
 @XFlags(xflags)
 @FFails(ffails)
-@Name("aggregate function type")
+@Name("aggregate functions")
 @Specifications()
 @Requirements()
 def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=None):
-    """AggregateFunction data type regression suite."""
+    """Aggregate functions regression suite."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
     self.context.clickhouse_version = clickhouse_version
@@ -42,7 +42,7 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
     ) as cluster:
         self.context.cluster = cluster
 
-        Feature(run=load("aggregate_function.tests.feature", "feature"), flags=TE)
+        Feature(run=load("aggregate_functions.tests.state", "feature"), flags=TE)
 
 
 if main():
