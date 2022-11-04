@@ -684,7 +684,7 @@ GROUP BY
 [runningAccumulate]: https://clickhouse.com/docs/en/sql-reference/functions/other-functions#function-finalizeaggregation
 [finalizeAggregation]: https://clickhouse.com/docs/en/sql-reference/functions/other-functions#function-finalizeaggregation
 [AggregatingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/aggregatingmergetree
-[aggregate function]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/ 
+[aggregate function]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/ 
 [SimpleAggregateFunction]: https://clickhouse.com/docs/en/sql-reference/data-types/simpleaggregatefunction
 [AggregateFunction]: https://clickhouse.com/docs/en/sql-reference/data-types/aggregatefunction
 [ClickHouse]: https://clickhouse.com
