@@ -20,13 +20,13 @@
       * 3.1.2.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.SimpleState](#rqsrs-031clickhouseaggregatefunctionscombinatorsimplestate)
       * 3.1.2.2 [RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.SimpleState.With.AggregatingMergeTree](#rqsrs-031clickhouseaggregatefunctionscombinatorsimplestatewithaggregatingmergetree)
   * 3.2 [SimpleAggregateFunction Data Type](#simpleaggregatefunction-data-type)
-    * 3.2.1 [RQ.SRS-031.ClickHouse.SimpleAggregateFunction.DataType](#rqsrs-031clickhousesimpleaggregatefunctiondatatype)
+    * 3.2.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.SimpleAggregateFunctionDataType](#rqsrs-031clickhouseaggregatefunctionssimpleaggregatefunctiondatatype)
   * 3.3 [AggregateFunction Data Type](#aggregatefunction-data-type)
-    * 3.3.1 [RQ.SRS-031.ClickHouse.AggregateFunction.DataType](#rqsrs-031clickhouseaggregatefunctiondatatype)
+    * 3.3.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.AggregateFunctionDataType](#rqsrs-031clickhouseaggregatefunctionsaggregatefunctiondatatype)
     * 3.3.2 [Inserting Data](#inserting-data)
-      * 3.3.2.1 [RQ.SRS-031.ClickHouse.AggregateFunction.DataType.Insert](#rqsrs-031clickhouseaggregatefunctiondatatypeinsert)
+      * 3.3.2.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.AggregateFunctionDataType.Insert](#rqsrs-031clickhouseaggregatefunctionsaggregatefunctiondatatypeinsert)
     * 3.3.3 [Selecting Data](#selecting-data)
-      * 3.3.3.1 [RQ.SRS-031.ClickHouse.AggregateFunction.DataType.Select](#rqsrs-031clickhouseaggregatefunctiondatatypeselect)
+      * 3.3.3.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.AggregateFunctionDataType.Select](#rqsrs-031clickhouseaggregatefunctionsaggregatefunctiondatatypeselect)
 * 4 [References](#references)
 
 ## Revision History
@@ -145,7 +145,7 @@ with [AggregatingMergeTree] table engine to store data in a column with [SimpleA
 
 ### SimpleAggregateFunction Data Type
 
-#### RQ.SRS-031.ClickHouse.SimpleAggregateFunction.DataType
+#### RQ.SRS-031.ClickHouse.AggregateFunctions.SimpleAggregateFunctionDataType
 version: 1.0
 
 [ClickHouse] SHALL support [SimpleAggregateFunction] data type which SHALL allow to store a
@@ -161,7 +161,7 @@ This function SHALL be used as optimization to [AggregateFunction] when the foll
 
 ### AggregateFunction Data Type
 
-#### RQ.SRS-031.ClickHouse.AggregateFunction.DataType
+#### RQ.SRS-031.ClickHouse.AggregateFunctions.AggregateFunctionDataType
 version: 1.0
 
 [ClickHouse] SHALL support [AggregateFunction] data type which SHALL allow to store as a table column
@@ -191,7 +191,7 @@ CREATE TABLE t
 
 #### Inserting Data
 
-##### RQ.SRS-031.ClickHouse.AggregateFunction.DataType.Insert
+##### RQ.SRS-031.ClickHouse.AggregateFunctions.AggregateFunctionDataType.Insert
 
 [ClickHouse] SHALL support inserting data into [AggregateFunction] data type column 
 using a value returned by calling the [aggregate function] with the `-State` suffix in
@@ -205,7 +205,7 @@ INSERT INTO table SELECT uniqState(UserID), quantilesState(0.5, 0.9)(SendTiming)
 
 #### Selecting Data
 
-##### RQ.SRS-031.ClickHouse.AggregateFunction.DataType.Select
+##### RQ.SRS-031.ClickHouse.AggregateFunctions.AggregateFunctionDataType.Select
 
 [ClickHouse] SHALL support selecting final result of aggregation from [AggregateFunction] data type column
 by using the same [aggregate function] with the `-Merge` suffix.
