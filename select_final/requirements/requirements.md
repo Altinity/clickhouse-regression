@@ -16,8 +16,6 @@
     * 4.3.1 [Merge Tree](#merge-tree)
       * 4.3.1.1 [RQ.SRS-033.ClickHouse.SelectFinal.SupportedTableEngines.MergeTree](#rqsrs-033clickhouseselectfinalsupportedtableenginesmergetree)
 
-
-
 ## Introduction
 
 This software requirements specification covers requirements related to [ClickHouse] support for automatically
@@ -87,7 +85,6 @@ version: 1.0
 [ReplacingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/replacingmergetree
 [CollapsingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/collapsingmergetree
 [VersionedCollapsingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/versionedcollapsingmergetree
-
 [FINAL modifier]: https://clickhouse.com/docs/en/sql-reference/statements/select/from/#final-modifier
 [SELECT FINAL]: #select-final
 [ClickHouse]: https://clickhouse.com
