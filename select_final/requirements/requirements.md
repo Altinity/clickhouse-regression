@@ -1,4 +1,4 @@
-# SRS033 ClickHouse Select Final
+# SRS033 ClickHouse Automatic Final Modifier For Select Queries
 # Software Requirements Specification
 
 ## Table of Contents
@@ -20,10 +20,12 @@
 
 ## Introduction
 
-This software requirements specification covers requirements related to [ClickHouse] 
-auto "SELECT ... FINAL" query support.
+This software requirements specification covers requirements related to [ClickHouse] support for automatically
+adding [FINAL modifier] to all [SELECT] queries for a given table.
 
 ## Related Resources
+
+**Pull Requests**
 
 * https://github.com/ClickHouse/ClickHouse/pull/40945
 
@@ -33,51 +35,60 @@ auto "SELECT ... FINAL" query support.
 
 Software Requirements Specification
 
-### Auto Final Select
+### Select Final
 
-SELECT queries without adding FINAL to all the existing queries
+Automatic [FINAL Modifier] clause for [SELECT] queries.
 
 ## Requirements
 
 ### RQ.SRS-033.ClickHouse.SelectFinal
 version: 1.0
 
-[ClickHouse] SHALL support [auto FINAL ... SELECT]. Use case for this is 
-migration from other databases and updates/deletes are mimicked by Collapsing/Replacing.
-
-Example:
-```sql
-CREATE TABLE table (... )
-Engine=ReplacingMergeTree
-SETTTING apply_final_by_default=1
-
-SELECT * FROM table; -- actually does SELECT * FROM table FINAL
-
-SELECT * FROM table SETTINGS auto_final=0; -- 1 by default, 0 - means ignore apply_final_by_default from merge tree.
-```
+[ClickHouse] SHALL support adding [FINAL modifier] clause to all [SELECT] queries
+for all table engines that support it.
 
 ### Config Setting
 
 #### RQ.SRS-033.ClickHouse.SelectFinal.ConfigSetting
 version: 1.0 priority: 1.0
 
-[ClickHouse] SHALL support `apply_final_by_default` config setting to enable [auto FINAL ... SELECT].
+[ClickHouse] SHALL support `apply_final_by_default` table config setting to enable [SELECT FINAL]
+when the setting is set to `1`.
+
+For example:
+
+```sql
+CREATE TABLE table (...)
+Engine=ReplacingMergeTree
+SETTTING apply_final_by_default=1
+```
+
+```sql
+SELECT * FROM table; -- actually does SELECT * FROM table FINAL
+SELECT * FROM table SETTINGS auto_final=0; -- 1 by default, 0 - means ignore apply_final_by_default from merge tree.
+```
 
 ### Supported Table Engines
 
-#### Merge Tree
+#### MergeTree
 
-##### RQ.SRS-033.ClickHouse.SelectFinal.SupportedTableEngines.MergeTree
+##### RQ.SRS-033.ClickHouse.SelectFinal.SupportedTableEngines
 version: 1.0
 
-[ClickHouse] SHALL support [auto FINAL ... SELECT] for current MergeTree table engines variants:
+[ClickHouse] SHALL support automatic [SELECT FINAL] for the following [MergeTree] table engines variants:
 
-* MergeTree
-* ReplacingMergeTree
-* CollapsingMergeTree
-* VersionedCollapsingMergeTree
+* [MergeTree]
+* [ReplacingMergeTree]
+* [CollapsingMergeTree]
+* [VersionedCollapsingMergeTree]
 
 [SRS]: #srs
-[auto FINAL ... SELECT]: #auto-final-select
+[MergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/mergetree/
+[ReplacingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/replacingmergetree
+[CollapsingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/collapsingmergetree
+[VersionedCollapsingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/versionedcollapsingmergetree
+
+[FINAL modifier]: https://clickhouse.com/docs/en/sql-reference/statements/select/from/#final-modifier
+[SELECT FINAL]: #select-final
 [ClickHouse]: https://clickhouse.com
 
