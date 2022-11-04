@@ -16,6 +16,7 @@
       * 3.1.1.6 [RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.State.With.Merge](#rqsrs-031clickhouseaggregatefunctionscombinatorstatewithmerge)
       * 3.1.1.7 [RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.State.With.MergeState](#rqsrs-031clickhouseaggregatefunctionscombinatorstatewithmergestate)
       * 3.1.1.8 [RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.State.With.AggregateFunctionDataType](#rqsrs-031clickhouseaggregatefunctionscombinatorstatewithaggregatefunctiondatatype)
+      * 3.1.1.9 [RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.State.With.MaterializedView](#rqsrs-031clickhouseaggregatefunctionscombinatorstatewithmaterializedview)
     * 3.1.2 [-SimpleState](#-simplestate)
       * 3.1.2.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.SimpleState](#rqsrs-031clickhouseaggregatefunctionscombinatorsimplestate)
       * 3.1.2.2 [RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.SimpleState.With.AggregatingMergeTree](#rqsrs-031clickhouseaggregatefunctionscombinatorsimplestatewithaggregatingmergetree)
@@ -129,6 +130,12 @@ version: 1.0
 [ClickHouse]'s SHALL support using all [aggregate function]s with [-State] combinator
 with [AggregateFunction] data type columns.
 
+##### RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.State.With.MaterializedView
+version: 1.0
+
+[ClickHouse]'s SHALL support using all [aggregate function]s with [-State] combinator
+with [Materialized View] table engine.
+
 #### -SimpleState
 
 ##### RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.SimpleState
@@ -223,6 +230,7 @@ SELECT uniqMerge(state) FROM (SELECT uniqState(UserID) AS state FROM table GROUP
 * [Revision History]
 * [Git]
 
+[Materialized View]: https://clickhouse.com/docs/en/sql-reference/statements/create/view#materialized-view
 [-MergeState]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/combinators#-mergestate
 [-Merge]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/combinators#-merge
 [-SimpleState]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/combinators#-simplestate
