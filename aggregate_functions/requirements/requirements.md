@@ -40,14 +40,15 @@
       * 3.1.11.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.OrNull](#rqsrs-031clickhouseaggregatefunctionscombinatorornull)
     * 3.1.12 [-Resample Suffix](#-resample-suffix)
       * 3.1.12.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.Resample](#rqsrs-031clickhouseaggregatefunctionscombinatorresample)
-  * 3.2 [SimpleAggregateFunction Data Type](#simpleaggregatefunction-data-type)
-    * 3.2.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.SimpleAggregateFunctionDataType](#rqsrs-031clickhouseaggregatefunctionssimpleaggregatefunctiondatatype)
-  * 3.3 [AggregateFunction Data Type](#aggregatefunction-data-type)
-    * 3.3.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.AggregateFunctionDataType](#rqsrs-031clickhouseaggregatefunctionsaggregatefunctiondatatype)
-    * 3.3.2 [Inserting Data](#inserting-data)
-      * 3.3.2.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.AggregateFunctionDataType.Insert](#rqsrs-031clickhouseaggregatefunctionsaggregatefunctiondatatypeinsert)
-    * 3.3.3 [Selecting Data](#selecting-data)
-      * 3.3.3.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.AggregateFunctionDataType.Select](#rqsrs-031clickhouseaggregatefunctionsaggregatefunctiondatatypeselect)
+  * 3.2 [Data Types](#data-types)
+    * 3.2.1 [SimpleAggregateFunction](#simpleaggregatefunction)
+      * 3.2.1.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.DataType.SimpleAggregateFunction](#rqsrs-031clickhouseaggregatefunctionsdatatypesimpleaggregatefunction)
+    * 3.2.2 [AggregateFunction](#aggregatefunction)
+      * 3.2.2.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.DataType.AggregateFunction](#rqsrs-031clickhouseaggregatefunctionsdatatypeaggregatefunction)
+      * 3.2.2.2 [Inserting Data](#inserting-data)
+        * 3.2.2.2.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.DataType.AggregateFunction.Insert](#rqsrs-031clickhouseaggregatefunctionsdatatypeaggregatefunctioninsert)
+      * 3.2.2.3 [Selecting Data](#selecting-data)
+        * 3.2.2.3.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.DataType.AggregateFunction.Select](#rqsrs-031clickhouseaggregatefunctionsdatatypeaggregatefunctionselect)
 * 4 [References](#references)
 
 ## Revision History
@@ -472,9 +473,11 @@ SHALL produce
 └────────┴───────────────────────────┘
 ```
 
-### SimpleAggregateFunction Data Type
+### Data Types
 
-#### RQ.SRS-031.ClickHouse.AggregateFunctions.SimpleAggregateFunctionDataType
+#### SimpleAggregateFunction
+
+##### RQ.SRS-031.ClickHouse.AggregateFunctions.DataType.SimpleAggregateFunction
 version: 1.0
 
 [ClickHouse] SHALL support [SimpleAggregateFunction] data type which SHALL allow to store a
@@ -487,9 +490,9 @@ This function SHALL be used as optimization to [AggregateFunction] when the foll
 > This property guarantees that partial aggregation results are enough to compute the combined one,
 > so we do not have to store and process any extra data.
 
-### AggregateFunction Data Type
+#### AggregateFunction
 
-#### RQ.SRS-031.ClickHouse.AggregateFunctions.AggregateFunctionDataType
+##### RQ.SRS-031.ClickHouse.AggregateFunctions.DataType.AggregateFunction
 version: 1.0
 
 [ClickHouse] SHALL support [AggregateFunction] data type which SHALL allow to store as a table column
@@ -517,9 +520,9 @@ CREATE TABLE t
 ) ENGINE = ...
 ```
 
-#### Inserting Data
+##### Inserting Data
 
-##### RQ.SRS-031.ClickHouse.AggregateFunctions.AggregateFunctionDataType.Insert
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.DataType.AggregateFunction.Insert
 
 [ClickHouse] SHALL support inserting data into [AggregateFunction] data type column 
 using a value returned by calling the [aggregate function] with the `-State` suffix in
@@ -531,9 +534,9 @@ For example,
 INSERT INTO table SELECT uniqState(UserID), quantilesState(0.5, 0.9)(SendTiming)
 ```
 
-#### Selecting Data
+##### Selecting Data
 
-##### RQ.SRS-031.ClickHouse.AggregateFunctions.AggregateFunctionDataType.Select
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.DataType.AggregateFunction.Select
 
 [ClickHouse] SHALL support selecting final result of aggregation from [AggregateFunction] data type column
 by using the same [aggregate function] with the `-Merge` suffix.
