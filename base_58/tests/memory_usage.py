@@ -1,3 +1,5 @@
+import time
+
 from base_58.tests.steps import *
 
 
@@ -29,7 +31,7 @@ def memory_usage_for_column_input(self, node=None):
 
     with When("I insert data into the table with base64 encoding"):
         node.query(
-            f"insert into {table_name_e64} select id, base64Encode(x) from {table_name_random};",
+            f"insert into {table_name_e64} select id, base64Encode(x) from {table_name_random} limit 10000;",
             query_id=2000,
         )
 
@@ -38,14 +40,14 @@ def memory_usage_for_column_input(self, node=None):
 
     with When("I insert data into the table with base58 encoding"):
         node.query(
-            f"insert into {table_name_e58} select id, base58Encode(x) from {table_name_random};",
+            f"insert into {table_name_e58} select id, base58Encode(x) from {table_name_random} limit 10000;",
             query_id=2001,
         )
 
     with When("I decode data from table with base64 encoding"):
         r = node.query(
             f"select count(*) from (select base64Decode(x) as b64 from {table_name_e64})",
-            query_id=2003,
+            query_id=2002,
         )
         base64_decoded = r.output
 
@@ -58,23 +60,26 @@ def memory_usage_for_column_input(self, node=None):
     with Then("I check data is not changed"):
         assert expected_result == base64_decoded == base58_decoded, error()
 
-    with Then("I check memory usage is simular"):
+    with And("I wait system.query_log is created"):
+        time.sleep(5)
+
+    with And("I check memory usage is simular"):
         r = node.query(
-            f"SELECT memory_usage FROM system.query_log WHERE query_id = '2000'"
+            f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '2000'"
         )
-        b64_encode_memory_usage = r.output
+        b64_encode_memory_usage = int(r.output)
         r = node.query(
-            f"SELECT memory_usage FROM system.query_log WHERE query_id = '2001'"
+            f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '2001'"
         )
-        b58_encode_memory_usage = r.output
+        b58_encode_memory_usage = int(r.output)
         r = node.query(
-            f"SELECT memory_usage FROM system.query_log WHERE query_id = '2002'"
+            f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '2002'"
         )
-        b64_decode_memory_usage = r.output
+        b64_decode_memory_usage = int(r.output)
         r = node.query(
-            f"SELECT memory_usage FROM system.query_log WHERE query_id = '2003'"
+            f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '2003'"
         )
-        b58_decode_memory_usage = r.output
+        b58_decode_memory_usage = int(r.output)
         assert min(b58_encode_memory_usage, b64_encode_memory_usage) * 2 > max(
             b58_encode_memory_usage, b64_encode_memory_usage
         ), error()
@@ -92,55 +97,56 @@ def memory_usage_for_constant_input(self, node=None):
 
     with When("I check memory usage of base58 encode function"):
         r = node.query(
-            f"SELECT base58Encode('{string_of_all_askii_symbols()}')", query_id=100
+            f"SELECT base58Encode('{string_of_all_askii_symbols()*30}')", query_id=1000
         )
         b58_encoded_string = r.output
         r = node.query(
-            f"SELECT memory_usage FROM system.query_log WHERE query_id = '1000'"
+            f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '1000'"
         )
-        b58_encode_memory_usage = r.output
+        b58_encode_memory_usage = int(r.output)
 
     with When("I check memory usage of base64 encode function"):
         r = node.query(
-            f"SELECT base64Encode('{string_of_all_askii_symbols()}')", query_id=101
+            f"SELECT base64Encode('{string_of_all_askii_symbols()*30}')", query_id=1001
         )
         b64_encoded_string = r.output
         r = node.query(
-            f"SELECT memory_usage FROM system.query_log WHERE query_id = '1001'"
+            f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '1001'"
         )
-        b64_encode_memory_usage = r.output
+        b64_encode_memory_usage = int(r.output)
 
     with When("I check memory usage of base58 decode function"):
-        r = node.query(f"SELECT base58Decode({b58_encoded_string})", query_id=102)
+        r = node.query(f"SELECT base58Decode('{b58_encoded_string}')", query_id=1002)
         b58_decoded_string = r.output
         r = node.query(
-            f"SELECT memory_usage FROM system.query_log WHERE query_id = '1002'"
+            f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '1002'"
         )
-        b58_decode_memory_usage = r.output
+        b58_decode_memory_usage = int(r.output)
 
     with When("I check memory usage of base64 decode function"):
-        r = node.query(f"SELECT base64Decode({b64_encoded_string})", query_id=103)
+        r = node.query(f"SELECT base64Decode('{b64_encoded_string}')", query_id=1003)
         b64_decoded_string = r.output
         r = node.query(
-            f"SELECT memory_usage FROM system.query_log WHERE query_id = '1003'"
+            f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '1003'"
         )
-        b64_decode_memory_usage = r.output
+        b64_decode_memory_usage = int(r.output)
 
     with Then("I check strings are not changed after encode, decode"):
-        assert b58_decoded_string == string_of_all_askii_symbols(), error()
-        assert b64_decoded_string == string_of_all_askii_symbols(), error()
+        assert b58_decoded_string == string_of_all_askii_symbols()*30, error()
+        assert b64_decoded_string == string_of_all_askii_symbols()*30, error()
 
     with Then("I check memory usages are similar"):
-        assert min(b58_encode_memory_usage, b64_encode_memory_usage) * 2 > max(
+        assert min(b58_encode_memory_usage, b64_encode_memory_usage) * 2 >= max(
             b58_encode_memory_usage, b64_encode_memory_usage
         ), error()
-        assert min(b58_decode_memory_usage, b64_decode_memory_usage) * 2 > max(
-            b58_encode_memory_usage, b64_encode_memory_usage
+        assert min(b58_decode_memory_usage, b64_decode_memory_usage) * 2 >= max(
+            b58_decode_memory_usage, b64_decode_memory_usage
         ), error()
 
 
 @TestFeature
-@Requirements()
+@Requirements(RQ_ClickHouse_Base58_MemoryUsage_Base58vsBase64("1.0"),
+              RQ_ClickHouse_Base58_Consistency_EncodeDecode("1.0"))
 @Name("memory usage")
 def feature(self, node="clickhouse1"):
     """Check that clickhouse base58 and base64 functions has small difference in memory usage."""

@@ -8,6 +8,7 @@ def shift(s, i):
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_Base58_Compatibility("1.0"))
 def compatibility(self, shift_on=0, node=None):
     """Check that clickhouse base58 functions are compatible with functions from python base58 functions."""
 
@@ -34,7 +35,6 @@ def compatibility(self, shift_on=0, node=None):
 
 
 @TestModule
-@Requirements()
 @Name("compatibility")
 def feature(self, node="clickhouse1"):
     """Check that clickhouse base58 functions are compatible with functions from python base58 functions.
