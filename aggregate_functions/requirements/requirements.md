@@ -131,7 +131,39 @@
         * 3.1.2.48.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Stochasticlogisticregression](#rqsrs-031clickhouseaggregatefunctionsspecificstochasticlogisticregression)
       * 3.1.2.49 [categoricalInformationValue](#categoricalinformationvalue)
         * 3.1.2.49.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Categoricalinformationvalue](#rqsrs-031clickhouseaggregatefunctionsspecificcategoricalinformationvalue)
+      * 3.1.2.50 [studentTTest](#studentttest)
+        * 3.1.2.50.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Studentttest](#rqsrs-031clickhouseaggregatefunctionsspecificstudentttest)
+      * 3.1.2.51 [welchTTest](#welchttest)
+        * 3.1.2.51.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Welchttest](#rqsrs-031clickhouseaggregatefunctionsspecificwelchttest)
+      * 3.1.2.52 [mannWhitneyUTest](#mannwhitneyutest)
+        * 3.1.2.52.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Mannwhitneyutest](#rqsrs-031clickhouseaggregatefunctionsspecificmannwhitneyutest)
+      * 3.1.2.53 [median](#median)
+        * 3.1.2.53.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Median](#rqsrs-031clickhouseaggregatefunctionsspecificmedian)
+      * 3.1.2.54 [rankCorr](#rankcorr)
+        * 3.1.2.54.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Rankcorr](#rqsrs-031clickhouseaggregatefunctionsspecificrankcorr)
+      * 3.1.2.55 [entropy](#entropy)
+        * 3.1.2.55.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Entropy](#rqsrs-031clickhouseaggregatefunctionsspecificentropy)
+      * 3.1.2.56 [meanZTest](#meanztest)
+        * 3.1.2.56.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.MeanZTest](#rqsrs-031clickhouseaggregatefunctionsspecificmeanztest)
+      * 3.1.2.57 [sparkbar](#sparkbar)
+        * 3.1.2.57.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Sparkbar](#rqsrs-031clickhouseaggregatefunctionsspecificsparkbar)
     * 3.1.3 [Parametric Functions](#parametric-functions)
+      * 3.1.3.1 [histogram](#histogram)
+        * 3.1.3.1.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Histogram](#rqsrs-031clickhouseaggregatefunctionsparametrichistogram)
+      * 3.1.3.2 [sequenceMatch](#sequencematch)
+        * 3.1.3.2.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Sequencematch](#rqsrs-031clickhouseaggregatefunctionsparametricsequencematch)
+      * 3.1.3.3 [sequenceCount](#sequencecount)
+        * 3.1.3.3.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Sequencecount](#rqsrs-031clickhouseaggregatefunctionsparametricsequencecount)
+      * 3.1.3.4 [windowFunnel](#windowfunnel)
+        * 3.1.3.4.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Windowfunnel](#rqsrs-031clickhouseaggregatefunctionsparametricwindowfunnel)
+      * 3.1.3.5 [retention](#retention)
+        * 3.1.3.5.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Retention](#rqsrs-031clickhouseaggregatefunctionsparametricretention)
+      * 3.1.3.6 [uniqUpTo](#uniqupto)
+        * 3.1.3.6.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Uniqupto](#rqsrs-031clickhouseaggregatefunctionsparametricuniqupto)
+      * 3.1.3.7 [sumMapFiltered](#summapfiltered)
+        * 3.1.3.7.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Summapfiltered](#rqsrs-031clickhouseaggregatefunctionsparametricsummapfiltered)
+      * 3.1.3.8 [sequenceNextNode](#sequencenextnode)
+        * 3.1.3.8.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SequenceNextNode](#rqsrs-031clickhouseaggregatefunctionsparametricsequencenextnode)
   * 3.2 [Combinator Functions](#combinator-functions)
     * 3.2.1 [-If Suffix](#-if-suffix)
       * 3.2.1.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.If](#rqsrs-031clickhouseaggregatefunctionscombinatorif)
@@ -627,16 +659,119 @@ version: 1.0
 
 [ClickHouse] SHALL support [categoricalInformationValue] specific aggregate function.
 
+##### studentTTest
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Studentttest
+version: 1.0
+
+[ClickHouse] SHALL support [studentTTest] specific aggregate function.
+
+##### welchTTest
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Welchttest
+version: 1.0
+
+[ClickHouse] SHALL support [welchTTest] specific aggregate function.
+
+##### mannWhitneyUTest
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Mannwhitneyutest
+version: 1.0
+
+[ClickHouse] SHALL support [mannWhitneyUTest] specific aggregate function.
+
+##### median
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Median
+version: 1.0
+
+[ClickHouse] SHALL support [median] specific aggregate function.
+
+##### rankCorr
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Rankcorr
+version: 1.0
+
+[ClickHouse] SHALL support [rankCorr] specific aggregate function.
+
+##### entropy
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Entropy
+version: 1.0
+
+[ClickHouse] SHALL support [entropy] specific aggregate function.
+
+##### meanZTest
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.MeanZTest
+version: 1.0
+
+[ClickHouse] SHALL support [meanZTest] specific aggregate function.
+
+##### sparkbar
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Sparkbar
+version: 1.0
+
+[ClickHouse] SHALL support [sparkbar] specific aggregate function.
+
 #### Parametric Functions
 
-histogram
-sequenceMatch(pattern)(timestamp, cond1, cond2, …)
-sequenceCount(pattern)(time, cond1, cond2, …)
-windowFunnel
-retention
-uniqUpTo(N)(x)
-sumMapFiltered(keys_to_keep)(keys, values)
-sequenceNextNode
+##### histogram
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Histogram
+version: 1.0
+
+[ClickHouse] SHALL support [histogram] parameteric aggregate function.
+
+##### sequenceMatch
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Sequencematch
+version: 1.0
+
+[ClickHouse] SHALL support [sequenceMatch] parameteric aggregate function.
+
+##### sequenceCount
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Sequencecount
+version: 1.0
+
+[ClickHouse] SHALL support [sequenceCount] parameteric aggregate function.
+
+##### windowFunnel
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Windowfunnel
+version: 1.0
+
+[ClickHouse] SHALL support [windowFunnel] parameteric aggregate function.
+
+##### retention
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Retention
+version: 1.0
+
+[ClickHouse] SHALL support [retention] parameteric aggregate function.
+
+##### uniqUpTo
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Uniqupto
+version: 1.0
+
+[ClickHouse] SHALL support [uniqUpTo] parameteric aggregate function.
+
+##### sumMapFiltered
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Summapfiltered
+version: 1.0
+
+[ClickHouse] SHALL support [sumMapFiltered] parameteric aggregate function.
+
+##### sequenceNextNode
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SequenceNextNode
+version: 1.0
+
+[ClickHouse] SHALL support [sequenceNextNode] parameteric aggregate function.
 
 ### Combinator Functions
 
@@ -1238,6 +1373,8 @@ GROUP BY
 [quantileDeterministic]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/quantiledeterministic/
 [quantileTDigest]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/quantiletdigest/
 [quantileTDigestWeighted]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/quantiletdigestweighted/
+[quantileBFloat16]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/quantilebfloat16
+[quantileBFloat16Weighted]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/quantilebfloat16
 [simpleLinearRegression]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/simplelinearregression/
 [stochasticLinearRegression]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/stochasticlinearregression/
 [stochasticLogisticRegression]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/stochasticlogisticregression/
@@ -1247,3 +1384,14 @@ GROUP BY
 [mannWhitneyUTest]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/mannwhitneyutest/
 [median]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/median/
 [rankCorr]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/rankCorr/
+[histogram]:https://clickhouse.com/docs/en/sql-reference/aggregate-functions/parametric-functions/#histogram
+[sequenceMatch]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/parametric-functions/#function-sequencematch
+[sequenceCount]:https://clickhouse.com/docs/en/sql-reference/aggregate-functions/parametric-functions/#function-sequencecount
+[windowFunnel]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/parametric-functions/#windowfunnel
+[retention]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/parametric-functions/#retention
+[uniqUpTo]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/parametric-functions/#uniquptonx
+[sumMapFiltered]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/parametric-functions/#summapfilteredkeys-to-keepkeys-values
+[sequenceNextNode]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/parametric-functions#sequencenextnode
+[entropy]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/entropy
+[meanZTest]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/meanztest
+[sparkbar]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/sparkbar
