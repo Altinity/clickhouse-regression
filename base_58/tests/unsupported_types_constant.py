@@ -79,6 +79,33 @@ def unsupported_types(self, constant_type="Int64", nullable=False, node=None):
             )
             assert r.exitcode == 43, error()
 
+    elif constant_type == "Map":
+        with When(f"I check base58Encode support {constant_type}"):
+            r = node.query(
+                f"SELECT base58Encode({to_nullable_start}map('100', '100'){to_nullable_end})",
+                no_checks=True,
+            )
+            assert r.exitcode == 43, error()
+        with When(f"I check base58Decode support {constant_type}"):
+            r = node.query(
+                f"SELECT base58Decode({to_nullable_start}map('100', '100'){to_nullable_end})",
+                no_checks=True,
+            )
+            assert r.exitcode == 43, error()
+
+    elif constant_type == "Tuple":
+        with When(f"I check base58Encode support {constant_type}"):
+            r = node.query(
+                f"SELECT base58Encode({to_nullable_start}tuple('100', '100'){to_nullable_end})",
+                no_checks=True,
+            )
+            assert r.exitcode == 43, error()
+        with When(f"I check base58Decode support {constant_type}"):
+            r = node.query(
+                f"SELECT base58Decode({to_nullable_start}tuple('100', '100'){to_nullable_end})",
+                no_checks=True,
+            )
+            assert r.exitcode == 43, error()
     else:
         with When(f"I check base58Encode support {constant_type}"):
             r = node.query(
@@ -95,8 +122,9 @@ def unsupported_types(self, constant_type="Int64", nullable=False, node=None):
 
 
 @TestModule
-# @Requirements(RQ_SRS_029_ClickHouse_Base58_UnsupportedTypes("1.0"))
-@Name("unsupported types")
+@Requirements(RQ_ClickHouse_Base58_Encode_UnsupportedDataTypes("1.0"),
+              RQ_ClickHouse_Base58_Decode_UnsupportedDataTypes("1.0"))
+@Name("unsupported types constant")
 def feature(self, node="clickhouse1"):
     """Check that clickhouse base58 functions returns an error if constant data type is not supported."""
 
