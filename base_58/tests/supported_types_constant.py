@@ -36,7 +36,8 @@ def supported_types(self, constant_type="String", nullable=False, node=None):
 
 
 @TestModule
-@Requirements()
+@Requirements(RQ_ClickHouse_Base58_Encode_SupportedDataTypes("1.0"),
+              RQ_ClickHouse_Base58_Decode_SupportedDataTypes("1.0"))
 @Name("supported types constant")
 def feature(self, node="clickhouse1"):
     """Check that clickhouse base58 functions support constant String types."""

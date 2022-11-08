@@ -2,6 +2,7 @@ from base_58.tests.steps import *
 
 
 @TestScenario
+@Requirements(RQ_ClickHouse_Base58_Performance_Base58vsBase64("1.0"))
 def performance(self, node=None):
     """Check that clickhouse base58 functions have simular performance with base64 functions."""
 
