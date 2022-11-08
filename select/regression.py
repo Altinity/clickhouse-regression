@@ -9,9 +9,9 @@ append_path(sys.path, "..")
 from helpers.cluster import Cluster
 from helpers.argparser import argparser as base_argparser
 from helpers.common import check_clickhouse_version
-from select_final.requirements import *
 from platform import processor as current_cpu
 
+from select.requirements import *
 
 def argparser(parser):
     """Custom argperser that add --thread-fuzzer option."""
@@ -26,7 +26,6 @@ def argparser(parser):
 
 
 xfails = {}
-
 xflags = {}
 
 
@@ -34,9 +33,9 @@ xflags = {}
 @ArgumentParser(argparser)
 @XFails(xfails)
 @XFlags(xflags)
-@Name("select final")
+@Name("select")
 @Requirements(RQ_SRS_033_ClickHouse_SelectFinal("1.0"))
-@Specifications(SRS033_ClickHouse_Select_Final)
+@Specifications(SRS033_ClickHouse_Automatic_Final_Modifier_For_Select_Queries)
 def regression(
     self,
     local,
@@ -61,9 +60,9 @@ def regression(
         self.context.stress = stress
 
     if current_cpu() == "aarch64":
-        env = "select_final_env_arm64"
+        env = "select_env_arm64"
     else:
-        env = "select_final_env"
+        env = "select_env"
 
     with Cluster(
         local,
@@ -74,7 +73,7 @@ def regression(
     ) as cluster:
         self.context.cluster = cluster
 
-        Feature(run=load("select_final.tests.sanity", "feature"))
+        Feature(run=load("select.tests.final", "feature"))
 
 
 if main():
