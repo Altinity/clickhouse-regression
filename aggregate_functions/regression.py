@@ -8,21 +8,13 @@ append_path(sys.path, "..")
 
 from helpers.cluster import Cluster
 from helpers.argparser import argparser
-
-
-xfails = {}
-xflags = {}
-ffails = {}
+from aggregate_functions.requirements import SRS_031_ClickHouse_Aggregate_Functions
 
 
 @TestModule
 @ArgumentParser(argparser)
-@XFails(xfails)
-@XFlags(xflags)
-@FFails(ffails)
 @Name("aggregate functions")
-@Specifications()
-@Requirements()
+@Specifications(SRS_031_ClickHouse_Aggregate_Functions)
 def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=None):
     """Aggregate functions regression suite."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -42,7 +34,8 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
     ) as cluster:
         self.context.cluster = cluster
 
-        Feature(run=load("aggregate_functions.tests.state", "feature"), flags=TE)
+        Feature(run=load("aggregate_functions.tests.count", "feature"))
+        Feature(run=load("aggregate_functions.tests.state", "feature"))
 
 
 if main():

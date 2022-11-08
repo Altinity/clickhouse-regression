@@ -23,6 +23,61 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Count = Requirement(
     num="3.1.1.1.1",
 )
 
+RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Count_DistinctImplementationSetting = Requirement(
+    name="RQ.SRS-031.ClickHouse.AggregateFunctions.Standard.Count.DistinctImplementationSetting",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support [count_distinct_implementation](https://clickhouse.com/docs/en/operations/settings/settings#settings-count_distinct_implementation) setting that SHALL specify\n"
+        "which `uniq*` function SHALL be used to calculate `COUNT(DISTINCT expr)`. \n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="3.1.1.1.2",
+)
+
+RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Count_OptimizeTrivialCountQuerySetting = Requirement(
+    name="RQ.SRS-031.ClickHouse.AggregateFunctions.Standard.Count.OptimizeTrivialCountQuerySetting",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support [optimize_trivial_count_query]https://clickhouse.com/docs/en/operations/settings/settings#optimize-trivial-count-query setting that SHALL enable or disable\n"
+        "the optimization of trivial `SELECT count() FROM table` query using metadata from [MergeTree] tables.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="3.1.1.1.3",
+)
+
+RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Count_OptimizeFunctionsToSubcolumnsSetting = Requirement(
+    name="RQ.SRS-031.ClickHouse.AggregateFunctions.Standard.Count.OptimizeFunctionsToSubcolumnsSetting",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support optimizing `SELECT count(nullable_column) FROM table` query by enabling the\n"
+        "[optimize_functions_to_subcolumns](https://clickhouse.com/docs/en/operations/settings/settings#optimize-functions-to-subcolumns) setting. With `optimize_functions_to_subcolumns=1` the function SHALL\n"
+        "read only null sub-column instead of reading and processing the whole column data.\n"
+        "\n"
+        "The query `SELECT count(n) FROM table` SHALL be transformed to `SELECT sum(NOT n.null) FROM table`.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="3.1.1.1.4",
+)
+
 RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Min = Requirement(
     name="RQ.SRS-031.ClickHouse.AggregateFunctions.Standard.Min",
     version="1.0",
@@ -1845,6 +1900,21 @@ SRS_031_ClickHouse_Aggregate_Functions = Specification(
             level=5,
             num="3.1.1.1.1",
         ),
+        Heading(
+            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Standard.Count.DistinctImplementationSetting",
+            level=5,
+            num="3.1.1.1.2",
+        ),
+        Heading(
+            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Standard.Count.OptimizeTrivialCountQuerySetting",
+            level=5,
+            num="3.1.1.1.3",
+        ),
+        Heading(
+            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Standard.Count.OptimizeFunctionsToSubcolumnsSetting",
+            level=5,
+            num="3.1.1.1.4",
+        ),
         Heading(name="min", level=4, num="3.1.1.2"),
         Heading(
             name="RQ.SRS-031.ClickHouse.AggregateFunctions.Standard.Min",
@@ -2458,6 +2528,9 @@ SRS_031_ClickHouse_Aggregate_Functions = Specification(
     ),
     requirements=(
         RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Count,
+        RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Count_DistinctImplementationSetting,
+        RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Count_OptimizeTrivialCountQuerySetting,
+        RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Count_OptimizeFunctionsToSubcolumnsSetting,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Min,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Max,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Sum,
@@ -2570,6 +2643,9 @@ SRS_031_ClickHouse_Aggregate_Functions = Specification(
     * 3.1.1 [Standard Functions](#standard-functions)
       * 3.1.1.1 [count](#count)
         * 3.1.1.1.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Standard.Count](#rqsrs-031clickhouseaggregatefunctionsstandardcount)
+        * 3.1.1.1.2 [RQ.SRS-031.ClickHouse.AggregateFunctions.Standard.Count.DistinctImplementationSetting](#rqsrs-031clickhouseaggregatefunctionsstandardcountdistinctimplementationsetting)
+        * 3.1.1.1.3 [RQ.SRS-031.ClickHouse.AggregateFunctions.Standard.Count.OptimizeTrivialCountQuerySetting](#rqsrs-031clickhouseaggregatefunctionsstandardcountoptimizetrivialcountquerysetting)
+        * 3.1.1.1.4 [RQ.SRS-031.ClickHouse.AggregateFunctions.Standard.Count.OptimizeFunctionsToSubcolumnsSetting](#rqsrs-031clickhouseaggregatefunctionsstandardcountoptimizefunctionstosubcolumnssetting)
       * 3.1.1.2 [min](#min)
         * 3.1.1.2.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Standard.Min](#rqsrs-031clickhouseaggregatefunctionsstandardmin)
       * 3.1.1.3 [max](#max)
@@ -2796,6 +2872,28 @@ data types in [ClickHouse].
 version: 1.0
 
 [ClickHouse] SHALL support [count] standard aggregate function.
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Standard.Count.DistinctImplementationSetting
+version: 1.0
+
+[ClickHouse] SHALL support [count_distinct_implementation](https://clickhouse.com/docs/en/operations/settings/settings#settings-count_distinct_implementation) setting that SHALL specify
+which `uniq*` function SHALL be used to calculate `COUNT(DISTINCT expr)`. 
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Standard.Count.OptimizeTrivialCountQuerySetting
+version: 1.0
+
+[ClickHouse] SHALL support [optimize_trivial_count_query]https://clickhouse.com/docs/en/operations/settings/settings#optimize-trivial-count-query setting that SHALL enable or disable
+the optimization of trivial `SELECT count() FROM table` query using metadata from [MergeTree] tables.
+
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Standard.Count.OptimizeFunctionsToSubcolumnsSetting
+version: 1.0
+
+[ClickHouse] SHALL support optimizing `SELECT count(nullable_column) FROM table` query by enabling the
+[optimize_functions_to_subcolumns](https://clickhouse.com/docs/en/operations/settings/settings#optimize-functions-to-subcolumns) setting. With `optimize_functions_to_subcolumns=1` the function SHALL
+read only null sub-column instead of reading and processing the whole column data.
+
+The query `SELECT count(n) FROM table` SHALL be transformed to `SELECT sum(NOT n.null) FROM table`.
 
 ##### min
 
@@ -3860,6 +3958,7 @@ GROUP BY
 * [Revision History]
 * [Git]
 
+[MergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/mergetree/
 [Materialized View]: https://clickhouse.com/docs/en/sql-reference/statements/create/view#materialized-view
 [-MergeState]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/combinators#-mergestate
 [-Merge]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/combinators#-merge
