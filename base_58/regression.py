@@ -11,7 +11,9 @@ from base_58.requirements.requirements import *
 from helpers.argparser import argparser as argparser
 from helpers.common import check_clickhouse_version
 
-xfails = {}
+xfails = {
+    "alias input/alias instead of table and column": [(Fail, "not implemented")]
+}
 
 xflags = {}
 
@@ -24,10 +26,11 @@ ffails = {}
 @XFlags(xflags)
 @FFails(ffails)
 @Name("base58")
-# @Specifications(SRS029_ClickHouse_Base58)
-# @Requirements(
-#     RQ_SRS_029_ClickHouse_Base58_Statement("1.0"),
-# )
+@Specifications(SRS_ClickHouse_Base58_Encoding_and_Decoding)
+@Requirements(
+    RQ_ClickHouse_Base58_Encode("1.0"),
+    RQ_ClickHouse_Base58_Decode("1.0")
+)
 def regression(
     self,
     local,
@@ -55,6 +58,7 @@ def regression(
         if parallel is not None:
             self.context.parallel = parallel
 
+        Feature(run=load("base_58.tests.null", "feature"))
         Feature(run=load("base_58.tests.alias_input", "feature"))
         Feature(run=load("base_58.tests.function_input", "feature"))
         Feature(run=load("base_58.tests.compatibility", "feature"))

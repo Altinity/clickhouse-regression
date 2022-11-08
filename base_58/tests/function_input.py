@@ -15,12 +15,12 @@ def function_input_column(self, node=None):
         "I insert data into the table with base58 encoding with function result input"
     ):
         r = node.query(
-            f"insert into {table_name_e58} values (0, Base58Encode(reverse(reverse('{string_of_all_askii_symbols() * 30}'))))",
+            f"insert into {table_name_e58} values (0, base58Encode(reverse(reverse('{string_of_all_askii_symbols() * 30}'))))",
         )
 
     with Then("I check data is correctly inserted"):
         r = node.query(
-            f"select base58Decode(reversed(reversed(x))) from {table_name_e58}"
+            f"select base58Decode(reverse(reverse(x))) from {table_name_e58}"
         )
         assert r.output == string_of_all_askii_symbols() * 30
 
