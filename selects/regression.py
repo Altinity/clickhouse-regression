@@ -11,7 +11,7 @@ from helpers.argparser import argparser as base_argparser
 from helpers.common import check_clickhouse_version
 from platform import processor as current_cpu
 
-from select.requirements import *
+from selects.requirements import *
 
 def argparser(parser):
     """Custom argperser that add --thread-fuzzer option."""
@@ -33,8 +33,7 @@ xflags = {}
 @ArgumentParser(argparser)
 @XFails(xfails)
 @XFlags(xflags)
-@Name("select")
-@Requirements(RQ_SRS_033_ClickHouse_SelectFinal("1.0"))
+@Name("selects")
 @Specifications(SRS033_ClickHouse_Automatic_Final_Modifier_For_Select_Queries)
 def regression(
     self,
@@ -44,25 +43,20 @@ def regression(
     stress=None,
     thread_fuzzer=None,
 ):
-    """ClickHouse auto "SELECT ... FINAL" query regression."""
+    """ClickHouse SELECT query regression suite."""
     nodes = {
         "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")
     }
 
     self.context.clickhouse_version = clickhouse_version
 
-    self.context.transaction_atomic_insert = True
-
-    # if check_clickhouse_version("<22.10")(self) or clickhouse_version is None:
-    #     skip(reason="only supported on ClickHouse version >= 22.10")
-
     if stress is not None:
         self.context.stress = stress
 
     if current_cpu() == "aarch64":
-        env = "select_env_arm64"
+        env = "selects_env_arm64"
     else:
-        env = "select_env"
+        env = "selects_env"
 
     with Cluster(
         local,
@@ -73,7 +67,7 @@ def regression(
     ) as cluster:
         self.context.cluster = cluster
 
-        Feature(run=load("select.tests.final", "feature"))
+        Feature(run=load("selects.tests.final", "feature"))
 
 
 if main():
