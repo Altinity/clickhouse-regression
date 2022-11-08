@@ -15,8 +15,6 @@ def select_1(self):
             with Then("it should work"):
                 assert r.output == "1", error()
 
-            pause()
-
 
 @TestFeature
 @Name("sanity")
