@@ -47,7 +47,7 @@ def regression(
 ):
     """ClickHouse auto "SELECT ... FINAL" query regression."""
     nodes = {
-        "clickhouse": ("clickhouse",),
+        "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")
     }
 
     self.context.clickhouse_version = clickhouse_version
