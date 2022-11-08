@@ -79,17 +79,7 @@ flowchart TB;
         3E["ReplicatedCollapsingMergeTree"]:::blue
         4E["ReplicatedVersionedCollapsingMergeTree"]:::blue
     end
-    
-    subgraph B["Different INSERT cases"]
-        1B["one part one partition"]:::green
-        2B["multiple parts one partition"]:::green
-        3B["multiple partitions"]:::green
-        4B["very large data set"]:::green
-        5B["lots of small data sets"]:::green
-        6B["table with large number of partitions"]:::green
-        7B["table with large number of parts in partition"]:::green
-    end
-    
+      
     subgraph F["Some table"]
         1F["INNER"]:::green
         2F["LEFT"]:::green
@@ -121,36 +111,23 @@ flowchart TB;
 
 Software Requirements Specification
 
-### Select Final
-
-Automatic [FINAL Modifier] clause for [SELECT] queries.
-
-### Final Modifier
-
-#### RQ.SRS-033.ClickHouse.SelectFinal.FinalModifier
-version: 1.0
-
-[ClickHouse] SHALL fully merge the data before returning the result and thus performs all data
-transformations that happen during merges for the given table engine.
-(for example, to discard duplicates)
-
 ## Requirements
 
-### RQ.SRS-033.ClickHouse.SelectFinal
+### RQ.SRS-033.ClickHouse.AutomaticFinalModifier
 version: 1.0
 
 [ClickHouse] SHALL support adding [FINAL modifier] clause to all [SELECT] queries
 for all table engines that support it.
 
-### Config Setting
+### Table Engine Setting
 
-#### RQ.SRS-033.ClickHouse.SelectFinal.ConfigSetting
+#### RQ.SRS-033.ClickHouse.AutomaticFinalModifier.TableEngineSetting
 version: 1.0 priority: 1.0
 
-[ClickHouse] SHALL support `apply_final_by_default` table config setting to enable [SELECT FINAL]
+[ClickHouse] SHALL support `apply_final_by_default` table config setting to enable automatic [FINAL modifier]
 when the setting is set to `1`.
 
-For example:
+For example,
 
 ```sql
 CREATE TABLE table (...)
@@ -158,14 +135,17 @@ Engine=ReplacingMergeTree
 SETTTING apply_final_by_default=1
 ```
 
-#### RQ.SRS-033.ClickHouse.SelectFinal.SelectAutoFinalSetting
+### Select Query Setting
+
+#### RQ.SRS-033.ClickHouse.AutomaticFinalModifier.SelectQuerySetting
 version: 1.0 priority: 1.0
 
-[ClickHouse] SHALL support `auto_final` table config setting to disable [SELECT FINAL]
-when the setting is set to `0`.
+[ClickHouse] SHALL support `auto_final` SELECT query setting to either enable or disable automatic [FINAL modifier].
+
+For example,
 
 ```sql
-SELECT * FROM table; -- actually does SELECT * FROM table FINAL
+SELECT * FROM table; -- actually does SELECT * FROM table FINAL if SETTTING apply_final_by_default=1
 SELECT * FROM table SETTINGS auto_final=0; -- 1 by default, 0 - means ignore apply_final_by_default from merge tree.
 ```
 
@@ -173,16 +153,15 @@ SELECT * FROM table SETTINGS auto_final=0; -- 1 by default, 0 - means ignore app
 
 #### MergeTree
 
-##### RQ.SRS-033.ClickHouse.SelectFinal.SupportedTableEngines
+##### RQ.SRS-033.ClickHouse.AutomaticFinalModifier.SupportedTableEngines
 version: 1.0
 
-[ClickHouse] SHALL support automatic [SELECT FINAL] for the following [MergeTree] table engines variants:
+[ClickHouse] SHALL support automatic [FINAL modifier] for the following [MergeTree] table engines variants:
 
 * [MergeTree]
 * [ReplacingMergeTree]
 * [CollapsingMergeTree]
 * [VersionedCollapsingMergeTree]
-
 
 
 [SRS]: #srs
@@ -192,6 +171,5 @@ version: 1.0
 [CollapsingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/collapsingmergetree
 [VersionedCollapsingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/versionedcollapsingmergetree
 [FINAL modifier]: https://clickhouse.com/docs/en/sql-reference/statements/select/from/#final-modifier
-[SELECT FINAL]: #select-final
 [ClickHouse]: https://clickhouse.com
 
