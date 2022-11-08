@@ -1,0 +1,152 @@
+_aggregate_functions_count_distinct_expr_constant = r"""
+1
+"""
+
+_aggregate_functions_count_distinct_expr_NULL_for_some_rows = r"""
+1
+"""
+
+_aggregate_functions_count_distinct_expr_NULL_for_all_rows = r"""
+0
+"""
+
+_aggregate_functions_count_distinct_expr_Nullable_type = r"""
+1,"UInt64"
+"""
+
+_aggregate_functions_count_distinct_expr_returned_type_is_UInt64 = r"""
+"UInt64"
+"""
+
+_aggregate_functions_count_distinct_expr_default_function = r"""
+{"uniqExact(1)":"1"}
+"""
+
+_aggregate_functions_count_expr_constant = r"""
+1
+"""
+
+_aggregate_functions_count_expr_NULL_for_some_rows = r"""
+5
+"""
+
+_aggregate_functions_count_expr_NULL_for_all_rows = r"""
+0
+"""
+
+_aggregate_functions_count_expr_Nullable_type = r"""
+1,"UInt64"
+"""
+
+_aggregate_functions_count_expr_return_type = r"""
+"UInt64"
+"""
+
+_aggregate_functions_count_zero_parameters_count___zero_rows = r"""
+0
+"""
+
+_aggregate_functions_count_zero_parameters_count___one_row = r"""
+1
+"""
+
+_aggregate_functions_count_zero_parameters_count___more_than_one_row = r"""
+10
+"""
+
+_aggregate_functions_count_zero_parameters_count___rows_with_Nullable = r"""
+10
+"""
+
+_aggregate_functions_count_zero_parameters_count____zero_rows = r"""
+0
+"""
+
+_aggregate_functions_count_zero_parameters_count____one_row = r"""
+1
+"""
+
+_aggregate_functions_count_zero_parameters_count____more_than_one_row = r"""
+10
+"""
+
+_aggregate_functions_count_zero_parameters_count____rows_with_Nullable = r"""
+10
+"""
+
+_aggregate_functions_state_countState_distinct_expr_constant = r"""
+"01"
+"""
+
+_aggregate_functions_state_countState_distinct_expr_NULL_for_some_rows = r"""
+"01"
+"""
+
+_aggregate_functions_state_countState_distinct_expr_NULL_for_all_rows = r"""
+"00"
+"""
+
+_aggregate_functions_state_countState_distinct_expr_Nullable_type = r"""
+"01","String"
+"""
+
+_aggregate_functions_state_countState_distinct_expr_returned_type_is_UInt64 = r"""
+"String"
+"""
+
+_aggregate_functions_state_countState_distinct_expr_default_function = r"""
+{"hex(countStateDistinct(1))":"01"}
+"""
+
+_aggregate_functions_state_countState_expr_constant = r"""
+"01"
+"""
+
+_aggregate_functions_state_countState_expr_NULL_for_some_rows = r"""
+"05"
+"""
+
+_aggregate_functions_state_countState_expr_NULL_for_all_rows = r"""
+"00"
+"""
+
+_aggregate_functions_state_countState_expr_Nullable_type = r"""
+"01","String"
+"""
+
+_aggregate_functions_state_countState_expr_return_type = r"""
+"String"
+"""
+
+_aggregate_functions_state_countState_zero_parameters_hex_countState____zero_rows = r"""
+"00"
+"""
+
+_aggregate_functions_state_countState_zero_parameters_hex_countState____one_row = r"""
+"01"
+"""
+
+_aggregate_functions_state_countState_zero_parameters_hex_countState____more_than_one_row = r"""
+"0A"
+"""
+
+_aggregate_functions_state_countState_zero_parameters_hex_countState____rows_with_Nullable = r"""
+"0A"
+"""
+
+_aggregate_functions_state_countState_zero_parameters_hex_countState_____zero_rows = r"""
+"00"
+"""
+
+_aggregate_functions_state_countState_zero_parameters_hex_countState_____one_row = r"""
+"01"
+"""
+
+_aggregate_functions_state_countState_zero_parameters_hex_countState_____more_than_one_row = r"""
+"0A"
+"""
+
+_aggregate_functions_state_countState_zero_parameters_hex_countState_____rows_with_Nullable = r"""
+"0A"
+"""
+
