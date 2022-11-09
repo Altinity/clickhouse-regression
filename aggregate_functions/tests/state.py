@@ -8,6 +8,8 @@ import aggregate_functions.tests.min as min_tests
 import aggregate_functions.tests.max as max_tests
 import aggregate_functions.tests.sum as sum_tests
 import aggregate_functions.tests.avg as avg_tests
+import aggregate_functions.tests.any as any_tests
+
 
 @TestSuite
 def count(self):
@@ -37,6 +39,12 @@ def sum(self):
 def avg(self):
     """Check avgState combinator."""
     load(avg_tests, "feature")(func="hex(avgState({params}))")
+
+
+@TestSuite
+def any(self):
+    """Check anyState combinator."""
+    load(any_tests, "feature")(func="hex(anyState({params}))")
 
 
 @TestFeature
