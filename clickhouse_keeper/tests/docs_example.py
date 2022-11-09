@@ -54,11 +54,9 @@ def mixed_keepers_3(self):
             clean_coordination_on_all_nodes()
 
 
-
 @TestFeature
 @Name("docs example")
 def feature(self):
-    """https://clickhouse.com/docs/en/guides/sre/keeper/clickhouse-keeper/.
-    """
+    """https://clickhouse.com/docs/en/guides/sre/keeper/clickhouse-keeper/."""
     for scenario in loads(current_module(), Scenario):
         scenario()

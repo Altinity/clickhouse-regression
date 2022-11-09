@@ -29,4 +29,3 @@ def feature(self):
     # Scenario(run=select_1)
     for scenario in loads(current_module(), Scenario):
         scenario()
-

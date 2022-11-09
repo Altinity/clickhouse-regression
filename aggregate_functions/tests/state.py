@@ -4,6 +4,7 @@ from aggregate_functions.tests.steps import *
 from aggregate_functions.requirements import *
 
 import aggregate_functions.tests.count as count_tests
+import aggregate_functions.tests.min as min_tests
 
 
 @TestSuite
@@ -11,6 +12,13 @@ def count(self):
     """Check countState combinator."""
     for scenario in loads(count_tests, Scenario):
         scenario(func="hex(countState({params}))")
+
+
+@TestSuite
+def min(self):
+    """Check minState combinator."""
+    for scenario in loads(min_tests, Scenario):
+        scenario(func="hex(minState({params}))")
 
 
 @TestFeature

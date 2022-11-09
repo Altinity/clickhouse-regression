@@ -234,6 +234,8 @@ def mixed_keepers_2(self):
     finally:
         with Finally("I clean up"):
             clean_coordination_on_all_nodes()
+
+
 @TestScenario
 def mixed_keepers_1(self):
     """Check that 1 node Clickhouse Keeper Cluster work in write mode

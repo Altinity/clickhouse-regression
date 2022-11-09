@@ -61,8 +61,10 @@ def supported_types(self, column_type="String", nullable=False, node=None):
 
 
 @TestModule
-@Requirements(RQ_ClickHouse_Base58_Encode_SupportedDataTypes("1.0"),
-              RQ_ClickHouse_Base58_Decode_SupportedDataTypes("1.0"))
+@Requirements(
+    RQ_ClickHouse_Base58_Encode_SupportedDataTypes("1.0"),
+    RQ_ClickHouse_Base58_Decode_SupportedDataTypes("1.0"),
+)
 @Name("supported types column")
 def feature(self, node="clickhouse1"):
     """Check that clickhouse base58 functions support column String types."""

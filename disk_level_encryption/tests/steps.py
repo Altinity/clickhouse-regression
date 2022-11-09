@@ -379,7 +379,13 @@ def create_directories_multi_volume_policy(self, number_of_volumes, numbers_of_d
 
 @TestStep
 def add_config_multi_volume_policy(
-    self, number_of_volumes, numbers_of_disks, disks_types, keys, policy_name="local_encrypted", move_factor=False
+    self,
+    number_of_volumes,
+    numbers_of_disks,
+    disks_types,
+    keys,
+    policy_name="local_encrypted",
+    move_factor=False,
 ):
     entries = {
         "storage_configuration": {
@@ -411,9 +417,9 @@ def add_config_multi_volume_policy(
                     )
 
         for j in range(number_of_volumes):
-            entries_in_this_test["storage_configuration"]["policies"][
-                f"{policy_name}"
-            ]["volumes"][f"volume{j}"] = []
+            entries_in_this_test["storage_configuration"]["policies"][f"{policy_name}"][
+                "volumes"
+            ][f"volume{j}"] = []
 
         for j in range(number_of_volumes):
             for i in range(numbers_of_disks[j]):
@@ -428,9 +434,9 @@ def add_config_multi_volume_policy(
                         {"disk": f"encrypted_local{j}{i}"}
                     )
         if move_factor:
-            entries_in_this_test["storage_configuration"]["policies"][
-                f"{policy_name}"
-            ]["move_factor"] = "0.99"
+            entries_in_this_test["storage_configuration"]["policies"][f"{policy_name}"][
+                "move_factor"
+            ] = "0.99"
 
     with And("I add storage configuration that uses encrypted disk"):
         add_encrypted_disk_configuration(entries=entries_in_this_test, restart=True)

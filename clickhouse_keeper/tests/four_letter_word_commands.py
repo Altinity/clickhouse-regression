@@ -4,7 +4,9 @@ from helpers.common import *
 
 
 @TestOutline
-def four_letter_word_commands(self, four_letter_word_command="ruok", output="imok", node_name="clickhouse1"):
+def four_letter_word_commands(
+    self, four_letter_word_command="ruok", output="imok", node_name="clickhouse1"
+):
     """Check 4lw command outline."""
     cluster = self.context.cluster
     try:

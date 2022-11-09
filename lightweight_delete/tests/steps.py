@@ -37,9 +37,14 @@ def create_acceptance_table_with_tiered_storage_ttl(
             PARTITION BY (Date, timestamp)
             ORDER BY (Id, Ids[1], originIds[1], timestamp)
             TTL Date TO VOLUME 'volume0',
-            Date + INTERVAL 1 HOUR TO VOLUME 'volume1'""" + ("""
-            Date + INTERVAL 4 HOUR DELETE""" if ttl_delete else "") +
-            f"""
+            Date + INTERVAL 1 HOUR TO VOLUME 'volume1'"""
+                + (
+                    """
+            Date + INTERVAL 4 HOUR DELETE"""
+                    if ttl_delete
+                    else ""
+                )
+                + f"""
             SETTINGS storage_policy = '{storage_policy}'
             ,merge_with_ttl_timeout = 1"""
             )
@@ -857,7 +862,12 @@ def delete_odd(
 
 @TestStep
 def alter_detach_partition(
-    self, table_name, partition_expr="7", node=None, settings=[("mutations_sync", 2)], quote=True,
+    self,
+    table_name,
+    partition_expr="7",
+    node=None,
+    settings=[("mutations_sync", 2)],
+    quote=True,
 ):
     if node is None:
         node = self.context.node
@@ -873,25 +883,39 @@ def alter_detach_partition(
             settings=settings,
         )
 
+
 @TestStep
 def alter_drop_partition(
-    self, table_name, partition_expr="10", node=None, settings=[("mutations_sync", 2)], quote=True,
+    self,
+    table_name,
+    partition_expr="10",
+    node=None,
+    settings=[("mutations_sync", 2)],
+    quote=True,
 ):
     if node is None:
         node = self.context.node
 
     if quote:
         node.query(
-            f"ALTER TABLE {table_name} DROP PARTITION '{partition_expr}'", settings=settings
+            f"ALTER TABLE {table_name} DROP PARTITION '{partition_expr}'",
+            settings=settings,
         )
     else:
         node.query(
-            f"ALTER TABLE {table_name} DROP PARTITION {partition_expr}", settings=settings
+            f"ALTER TABLE {table_name} DROP PARTITION {partition_expr}",
+            settings=settings,
         )
+
 
 @TestStep
 def alter_drop_detached_partition(
-    self, table_name, partition_expr, node=None, settings=[("mutations_sync", 2)], quote=True,
+    self,
+    table_name,
+    partition_expr,
+    node=None,
+    settings=[("mutations_sync", 2)],
+    quote=True,
 ):
     if node is None:
         node = self.context.node
@@ -907,9 +931,15 @@ def alter_drop_detached_partition(
             settings=settings,
         )
 
+
 @TestStep
 def alter_attach_partition(
-    self, table_name, partition_expr="7", node=None, settings=[("mutations_sync", 2)], quote=True,
+    self,
+    table_name,
+    partition_expr="7",
+    node=None,
+    settings=[("mutations_sync", 2)],
+    quote=True,
 ):
     if node is None:
         node = self.context.node
@@ -925,6 +955,7 @@ def alter_attach_partition(
             settings=settings,
         )
 
+
 @TestStep
 def alter_replace_partition(
     self,
@@ -932,7 +963,8 @@ def alter_replace_partition(
     table_name_1,
     partition_expr,
     node=None,
-    settings=[("mutations_sync", 2)], quote=True,
+    settings=[("mutations_sync", 2)],
+    quote=True,
 ):
     if node is None:
         node = self.context.node
@@ -948,9 +980,16 @@ def alter_replace_partition(
             settings=settings,
         )
 
+
 @TestStep
 def alter_fetch_partition(
-    self, table_name, partition_expr, path, node=None, settings=[("mutations_sync", 2)], quote=True,
+    self,
+    table_name,
+    partition_expr,
+    path,
+    node=None,
+    settings=[("mutations_sync", 2)],
+    quote=True,
 ):
     if node is None:
         node = self.context.node
@@ -974,7 +1013,8 @@ def alter_move_partition(
     table_name_2,
     partition_expr,
     node=None,
-    settings=[("mutations_sync", 2)], quote=True,
+    settings=[("mutations_sync", 2)],
+    quote=True,
 ):
     if node is None:
         node = self.context.node
@@ -990,9 +1030,15 @@ def alter_move_partition(
             settings=settings,
         )
 
+
 @TestStep
 def alter_freeze_partition(
-    self, table_name, partition_expr="9", node=None, settings=[("mutations_sync", 2)], quote=True,
+    self,
+    table_name,
+    partition_expr="9",
+    node=None,
+    settings=[("mutations_sync", 2)],
+    quote=True,
 ):
     if node is None:
         node = self.context.node
@@ -1008,9 +1054,15 @@ def alter_freeze_partition(
             settings=settings,
         )
 
+
 @TestStep
 def alter_unfreeze_partition(
-    self, table_name, partition_expr="9", node=None, settings=[("mutations_sync", 2)], quote=True,
+    self,
+    table_name,
+    partition_expr="9",
+    node=None,
+    settings=[("mutations_sync", 2)],
+    quote=True,
 ):
     if node is None:
         node = self.context.node
@@ -1025,6 +1077,7 @@ def alter_unfreeze_partition(
             f"ALTER TABLE {table_name} UNFREEZE PARTITION {partition_expr} WITH NAME 'backup_name'",
             settings=settings,
         )
+
 
 @TestStep
 def alter_update_in_partition(
@@ -1051,7 +1104,8 @@ def alter_delete_in_partition(
     partition_expr="11",
     where_expr="WHERE x > -1",
     node=None,
-    settings=[("mutations_sync", 2)], quote=True,
+    settings=[("mutations_sync", 2)],
+    quote=True,
 ):
     if node is None:
         node = self.context.node
@@ -1066,6 +1120,7 @@ def alter_delete_in_partition(
             f"ALTER TABLE {table_name} DELETE IN PARTITION {partition_expr} {where_expr}",
             settings=settings,
         )
+
 
 @TestStep
 def alter_add_column(
@@ -1088,7 +1143,11 @@ def alter_add_column(
 
 @TestStep
 def alter_drop_column(
-    self, table_name, column_name="qkrq", node=None, settings=[("mutations_sync", 2)],
+    self,
+    table_name,
+    column_name="qkrq",
+    node=None,
+    settings=[("mutations_sync", 2)],
 ):
     if node is None:
         node = self.context.node
@@ -1143,7 +1202,7 @@ def alter_modify_column(
     column_type="Int32",
     default_expr="DEFAULT 48",
     node=None,
-    settings=[("mutations_sync", 2)]
+    settings=[("mutations_sync", 2)],
 ):
     if node is None:
         node = self.context.node
@@ -1725,7 +1784,9 @@ def delete_query_2_ontime(self, settings=[], check=True, node=None):
     if node is None:
         node = self.context.node
 
-    delete(table_name="ontime", condition="Year % 2 = 0", settings=settings, check=check)
+    delete(
+        table_name="ontime", condition="Year % 2 = 0", settings=settings, check=check
+    )
 
 
 @TestStep
@@ -1743,7 +1804,9 @@ def delete_query_4_ontime(self, settings=[], check=True, node=None):
     if node is None:
         node = self.context.node
 
-    delete(table_name="ontime", condition="DayofMonth = 2", settings=settings, check=check)
+    delete(
+        table_name="ontime", condition="DayofMonth = 2", settings=settings, check=check
+    )
 
 
 @TestStep
@@ -1752,7 +1815,12 @@ def delete_query_5_ontime(self, settings=[], check=True, node=None):
     if node is None:
         node = self.context.node
 
-    delete(table_name="ontime", condition="FlightDate = '2020-01-01'", settings=settings, check=check)
+    delete(
+        table_name="ontime",
+        condition="FlightDate = '2020-01-01'",
+        settings=settings,
+        check=check,
+    )
 
 
 @TestStep
@@ -1763,7 +1831,9 @@ def delete_query_1_acceptance(self, settings=[], check=True, node=None):
 
     delete(
         table_name="acceptance_table",
-        condition="Id = 1 and has(Ids, 2)", settings=settings, check=check
+        condition="Id = 1 and has(Ids, 2)",
+        settings=settings,
+        check=check,
     )
 
 
@@ -1773,7 +1843,12 @@ def delete_query_2_acceptance(self, settings=[], check=True, node=None):
     if node is None:
         node = self.context.node
 
-    delete(table_name="acceptance_table", condition="has(Ids, 1)", settings=settings, check=check)
+    delete(
+        table_name="acceptance_table",
+        condition="has(Ids, 1)",
+        settings=settings,
+        check=check,
+    )
 
 
 @TestStep
@@ -1782,7 +1857,12 @@ def delete_query_3_acceptance(self, settings=[], check=True, node=None):
     if node is None:
         node = self.context.node
 
-    delete(table_name="acceptance_table", condition="has(int_arr, 1)", settings=settings, check=check)
+    delete(
+        table_name="acceptance_table",
+        condition="has(int_arr, 1)",
+        settings=settings,
+        check=check,
+    )
 
 
 @TestStep
