@@ -70,6 +70,10 @@ def regression(
     ) as cluster:
         self.context.cluster = cluster
         nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
+        self.context.parquet_table_def = cluster.node("clickhouse1").command(
+            "cat /var/lib/clickhouse/user_files/clickhouse_table_def.txt"
+        ).output.strip()
+        pause()
 
         Feature(run=load("parquet.tests.file", "feature"))
         Feature(run=load("parquet.tests.query", "feature"))
@@ -104,7 +108,6 @@ def regression(
                     )
 
                 elif "minio" == storage.lower():
-                    xfail("not fully implemented")
 
                     self.context.uri = "http://minio1:9001/root/data/"
                     self.context.access_key_id = "minio"
