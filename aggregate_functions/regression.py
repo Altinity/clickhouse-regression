@@ -47,8 +47,11 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
     with And("I populate table with test data"):
         self.context.table.insert_test_data()
 
-    Feature(run=load("aggregate_functions.tests.count", "feature"))
-    Feature(run=load("aggregate_functions.tests.min", "feature"))
+    with Pool(3) as executor:
+        Feature(run=load("aggregate_functions.tests.count", "feature"), parallel=True, executor=executor)
+        Feature(run=load("aggregate_functions.tests.min", "feature"), parallel=True, executor=executor)
+        Feature(run=load("aggregate_functions.tests.max", "feature"), parallel=True, executor=executor)
+
     Feature(run=load("aggregate_functions.tests.state", "feature"))
 
 
