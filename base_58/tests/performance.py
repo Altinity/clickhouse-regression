@@ -2,9 +2,8 @@ from base_58.tests.steps import *
 
 
 @TestScenario
-@Requirements(RQ_ClickHouse_Base58_Performance_Base58vsBase64("1.0"))
 def performance(self, node=None):
-    """Check that clickhouse base58 functions have simular performance with base64 functions."""
+    """Check that clickhouse base58 functions have simular performance with base64 functions."""  # todo
 
     if node is None:
         node = self.context.node
@@ -75,6 +74,7 @@ def performance(self, node=None):
 
 
 @TestFeature
+@Requirements(RQ_ClickHouse_Base58_Performance_Base58vsBase64("1.0"))
 @Name("performance")
 def feature(self, node="clickhouse1"):
     """Check that clickhouse base58 functions have simular performance with base64 functions."""
