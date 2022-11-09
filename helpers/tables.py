@@ -38,6 +38,20 @@ data_types_and_values = {
 }
 
 
+def is_numeric(column):
+    name, datatype = column.split(" ", 1)
+
+    if datatype.startswith("UInt"):
+        return True
+    if datatype.startswith("Int"):
+        return True
+    if datatype.startswith("Float"):
+        return True
+    if datatype.startswith("Decimal"):
+        return True
+    return False
+
+
 def generate_all_column_types(include=None, exclude=None):
     """Generate a list of every type of column necessary for Parquet tests."""
 
