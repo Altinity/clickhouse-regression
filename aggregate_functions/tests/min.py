@@ -22,7 +22,7 @@ def feature(self, func="min({params})", table=None):
         execute_query(
             f"SELECT number % 2 AS even, {func.format(params='number')} FROM numbers(10) GROUP BY even"
         )
-    
+
     with Check("NULL value handling"):
         execute_query(
             f"SELECT {func.format(params='x')}  FROM values('x Nullable(Int8)', 0, 1, NULL, 3, 4, 5)"
