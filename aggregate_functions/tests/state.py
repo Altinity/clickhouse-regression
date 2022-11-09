@@ -9,6 +9,7 @@ import aggregate_functions.tests.max as max_tests
 import aggregate_functions.tests.sum as sum_tests
 import aggregate_functions.tests.avg as avg_tests
 import aggregate_functions.tests.any as any_tests
+import aggregate_functions.tests.argMin as argMin_tests
 
 
 @TestSuite
@@ -47,6 +48,12 @@ def any(self):
     load(any_tests, "feature")(func="hex(anyState({params}))")
 
 
+@TestSuite
+def argMin(self):
+    """Check anyState combinator."""
+    load(argMin_tests, "feature")(func="hex(argMinState({params}))")
+
+
 @TestFeature
 @Name("state")
 def feature(self, node="clickhouse1"):
@@ -62,3 +69,5 @@ def feature(self, node="clickhouse1"):
                     xfail(reason=f"{name}State() tests are not implemented")
             else:
                 Suite(name=f"{name}State", run=suite, parallel=True, executor=executor)
+
+        join()

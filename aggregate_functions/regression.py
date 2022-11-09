@@ -59,6 +59,8 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
 
             Feature(test=suite, parallel=True, executor=executor)()
 
+        join()
+
     Feature(run=load("aggregate_functions.tests.state", "feature"))
 
 
