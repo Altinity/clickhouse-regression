@@ -22,7 +22,7 @@ def feature(self, func="max({params})", table=None):
         execute_query(
             f"SELECT number % 2 AS even, {func.format(params='number')} FROM numbers(10) GROUP BY even"
         )
-    
+
     for column in table.columns:
         column_name, column_type = column.split(" ", 1)
 
