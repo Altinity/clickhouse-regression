@@ -132,17 +132,20 @@ def upload_file_to_s3(self, file_src, file_dest):
             )
 
     elif self.context.storage == "minio":
-        xfail("Not implemented for minio")
+        with By("Uploading a file"):
+            self.context.client.fput_object(self.context.cluster.minio_bucket, file_dest, file_src)
 
     return
 
 
 @TestStep(Then)
-def check_query_output(self, query, expected=None):
+def check_query_output(self, query, expected=None, snap_name=None):
     """Check the output of the provided query against either snapshot or provided values."""
 
     node = current().context.node
-    name = basename(parentname(current().name))
+
+    if snap_name is None:
+        snap_name = basename(current().name)
 
     with By("executing query", description=query):
         r = node.query(query).output.strip()
@@ -158,7 +161,7 @@ def check_query_output(self, query, expected=None):
                     snapshot(
                         "\n" + r + "\n",
                         "parquet_file",
-                        name=name,
+                        name=snap_name,
                         encoder=str,
                     )
                 ), error()
@@ -210,16 +213,19 @@ def check_source_file_on_s3(self, file, expected=None, compression_type=None):
             self.context.client.download_file(
                 self.context.aws_s3_bucket, f"data/parquet/{file}", "data.Parquet"
             )
-            x = self.context.cluster.command(
-                None, "docker ps | grep clickhouse1 | cut -d ' ' -f 1 | head -n 1"
-            ).output
-            self.context.cluster.command(
-                None,
-                f"docker cp data.Parquet {x}:/data.Parquet",
-            )
 
     elif self.context.storage == "minio":
-        xfail("not implemented yet")
+        with By("Downloading the file"):
+            self.context.client.fput_object(self.context.cluster.minio_bucket, file, "data.Parquet")
+
+    with By("copying the file to the docker node"):
+        x = self.context.cluster.command(
+            None, "docker ps | grep clickhouse1 | cut -d ' ' -f 1 | head -n 1"
+        ).output
+        self.context.cluster.command(
+            None,
+            f"docker cp data.Parquet {x}:/data.Parquet",
+        )
 
     with Then("I check the file"):
         check_source_file(

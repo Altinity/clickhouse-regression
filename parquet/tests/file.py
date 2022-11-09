@@ -58,7 +58,7 @@ def select_from_engine(self):
         )
 
     with Then("I check that the table reads the data correctly"):
-        check_query_output(query=f"SELECT * FROM {table_name}")
+        check_query_output(query=f"SELECT * FROM {table_name}", snap_name="Select from FILE engine into file")
 
 
 @TestScenario
@@ -144,9 +144,7 @@ def insert_into_engine_from_file(self, compression_type):
 
     node = self.context.node
     table_name = "table_" + getuid()
-    table_def = node.command(
-        "cat /var/lib/clickhouse/user_files/clickhouse_table_def.txt"
-    ).output.strip()
+    table_def = self.context.parquet_table_def
 
     if compression_type != "NONE":
         xfail(
@@ -158,11 +156,11 @@ def insert_into_engine_from_file(self, compression_type):
 
     with When("I insert data into the table from a Parquet file"):
         node.query(
-            f"INSERT INTO {table_name} FROM INFILE '/var/lib/clickhouse/user_files/data_{compression_type}.Parquet' COMPRESSION '{compression_type.lower()}' FORMAT Parquet"
+            f"INSERT INTO {table_name} FROM INFILE '/var/lib/clickhouse/user_files/data_{compression_type}.Parquet{'.' + compression_type if compression_type != 'NONE' else ''}' COMPRESSION '{compression_type.lower()}' FORMAT Parquet"
         )
 
     with Then("I check that the table contains correct data"):
-        check_query_output(query=f"SELECT * FROM {table_name}")
+        check_query_output(query=f"SELECT * FROM {table_name}", snap_name = "Insert into FILE engine from file")
 
 
 @TestOutline(Scenario)
@@ -198,7 +196,7 @@ def engine_select_output_to_file(self, compression_type):
     node = self.context.node
 
     table_name = "table_" + getuid()
-    path = f"'/var/lib/clickhouse/user_files/{table_name}_{compression_type}.Parquet{'.' + compression_type if compression_type != 'none' else ''}'"
+    path = f"'/var/lib/clickhouse/user_files/{table_name}_{compression_type}.Parquet{'.' + compression_type if compression_type != 'NONE' else ''}'"
 
     with Given("I have a table with a `File(Parquet)` engine"):
         table(name=table_name, engine="File(Parquet)")
@@ -293,7 +291,7 @@ def select_from_function_auto_cast_types(self):
     """
 
     with Then("I check that the `file` table function contains correct data"):
-        check_query_output(query=f"SELECT * FROM file('data_NONE.Parquet', 'Parquet')")
+        check_query_output(query=f"SELECT * FROM file('data_NONE.Parquet', 'Parquet')", snap_name="select from file function, auto cast types")
 
 
 @TestSuite
