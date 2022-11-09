@@ -57,7 +57,7 @@ def alias_instead_of_table_and_column(self, node=None):
 
 
 @TestFeature
-@Requirements()
+@Requirements(RQ_ClickHouse_Base58_Decode("1.0"), RQ_ClickHouse_Base58_Encode("1.0"))
 @Name("alias input")
 def feature(self, node="clickhouse1"):
     """Check that clickhouse base58 function support input as alias."""
