@@ -5,6 +5,7 @@ from aggregate_functions.requirements import *
 
 import aggregate_functions.tests.count as count_tests
 import aggregate_functions.tests.min as min_tests
+import aggregate_functions.tests.max as max_tests
 
 
 @TestSuite
@@ -21,6 +22,13 @@ def min(self):
         scenario(func="hex(minState({params}))")
 
 
+@TestSuite
+def max(self):
+    """Check maxState combinator."""
+    for scenario in loads(max_tests, Scenario):
+        scenario(func="hex(maxState({params}))")
+
+
 @TestFeature
 @Name("state")
 def feature(self, node="clickhouse1"):
@@ -28,9 +36,11 @@ def feature(self, node="clickhouse1"):
     the state of the function."""
     self.context.node = self.context.cluster.node(node)
 
-    for name in aggregate_functions:
-        suite = getattr(current_module(), name, None)
-        with Suite(f"{name}State"):
+    with Pool(3) as executor:
+        for name in aggregate_functions:
+            suite = getattr(current_module(), name, None)
             if not suite:
-                xfail(reason=f"{name}State() tests are not implemented")
-            suite()
+                with Suite(f"{name}State"):
+                    xfail(reason=f"{name}State() tests are not implemented")
+            else:
+                Suite(name=f"{name}State", run=suite, parallel=True, executor=executor)
