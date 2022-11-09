@@ -132,8 +132,8 @@ def memory_usage_for_constant_input(self, node=None):
         b64_decode_memory_usage = int(r.output)
 
     with Then("I check strings are not changed after encode, decode"):
-        assert b58_decoded_string == string_of_all_askii_symbols()*30, error()
-        assert b64_decoded_string == string_of_all_askii_symbols()*30, error()
+        assert b58_decoded_string == string_of_all_askii_symbols() * 30, error()
+        assert b64_decoded_string == string_of_all_askii_symbols() * 30, error()
 
     with Then("I check memory usages are similar"):
         assert min(b58_encode_memory_usage, b64_encode_memory_usage) * 2 >= max(
@@ -145,8 +145,10 @@ def memory_usage_for_constant_input(self, node=None):
 
 
 @TestFeature
-@Requirements(RQ_ClickHouse_Base58_MemoryUsage_Base58vsBase64("1.0"),
-              RQ_ClickHouse_Base58_Consistency_EncodeDecode("1.0"))
+@Requirements(
+    RQ_ClickHouse_Base58_MemoryUsage_Base58vsBase64("1.0"),
+    RQ_ClickHouse_Base58_Consistency_EncodeDecode("1.0"),
+)
 @Name("memory usage")
 def feature(self, node="clickhouse1"):
     """Check that clickhouse base58 and base64 functions has small difference in memory usage."""

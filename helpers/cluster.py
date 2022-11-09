@@ -1172,3 +1172,33 @@ class Cluster(object):
                 assert message in r.output, error(r.output)
 
         return r
+
+
+@TestStep(Given)
+def create_cluster(
+    self,
+    local=False,
+    clickhouse_binary_path=None,
+    clickhouse_odbc_bridge_binary_path=None,
+    configs_dir=None,
+    nodes=None,
+    docker_compose="docker-compose",
+    docker_compose_project_dir=None,
+    docker_compose_file="docker-compose.yml",
+    environ=None,
+    thread_fuzzer=False,
+):
+    """Create docker compose cluster."""
+    with Cluster(
+        local=local,
+        clickhouse_binary_path=clickhouse_binary_path,
+        clickhouse_odbc_bridge_binary_path=clickhouse_odbc_bridge_binary_path,
+        configs_dir=configs_dir,
+        nodes=nodes,
+        docker_compose=docker_compose,
+        docker_compose_project_dir=docker_compose_project_dir,
+        docker_compose_file=docker_compose_file,
+        environ=environ,
+        thread_fuzzer=thread_fuzzer,
+    ) as cluster:
+        yield cluster

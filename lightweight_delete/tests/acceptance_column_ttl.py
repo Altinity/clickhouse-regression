@@ -36,7 +36,9 @@ def concurrent_deletes_and_ttl(
         insert_into_acceptance_table(table_name=table_name_2, rows_number=100000)
 
     with When("I compute expected output"):
-        expected_output = node.query(f"SELECT count(*) from {table_name_2} where not (Id = 0)").output
+        expected_output = node.query(
+            f"SELECT count(*) from {table_name_2} where not (Id = 0)"
+        ).output
 
     with When("I delete from acceptance tables and time it"):
         start = time.time()
@@ -56,7 +58,9 @@ def concurrent_deletes_and_ttl(
 
 @TestFeature
 @Requirements(
-    RQ_SRS_023_ClickHouse_LightweightDelete_Performance_Acceptance_OnTimeDataset_DeleteQueryExecutionTime("1.0")
+    RQ_SRS_023_ClickHouse_LightweightDelete_Performance_Acceptance_OnTimeDataset_DeleteQueryExecutionTime(
+        "1.0"
+    )
 )
 @Name("acceptance column ttl")
 def feature(self, node="clickhouse1"):

@@ -91,8 +91,10 @@ def unsupported_types(self, column_type="Int64", nullable=False, node=None):
 
 
 @TestModule
-@Requirements(RQ_ClickHouse_Base58_Encode_UnsupportedDataTypes("1.0"),
-              RQ_ClickHouse_Base58_Decode_UnsupportedDataTypes("1.0"))
+@Requirements(
+    RQ_ClickHouse_Base58_Encode_UnsupportedDataTypes("1.0"),
+    RQ_ClickHouse_Base58_Decode_UnsupportedDataTypes("1.0"),
+)
 @Name("unsupported types column")
 def feature(self, node="clickhouse1"):
     """Check that clickhouse base58 functions returns an error if constant data type is not supported."""

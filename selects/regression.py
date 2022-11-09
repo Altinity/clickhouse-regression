@@ -13,6 +13,7 @@ from platform import processor as current_cpu
 
 from selects.requirements import *
 
+
 def argparser(parser):
     """Custom argperser that add --thread-fuzzer option."""
     base_argparser(parser)
@@ -44,9 +45,7 @@ def regression(
     thread_fuzzer=None,
 ):
     """ClickHouse SELECT query regression suite."""
-    nodes = {
-        "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")
-    }
+    nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
     self.context.clickhouse_version = clickhouse_version
 

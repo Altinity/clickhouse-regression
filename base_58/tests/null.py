@@ -10,15 +10,11 @@ def null(self, node=None):
         node = self.context.node
 
     with When("I check base58Encode(NULL) is NULL"):
-        r = node.query(
-            f"SELECT base58Encode(NULL)"
-        )
+        r = node.query(f"SELECT base58Encode(NULL)")
         encoded_string = r.output
         assert encoded_string == "\\N", error()
 
-    with Then(
-        "I check base58Decode(NULL) is NULL"
-    ):
+    with Then("I check base58Decode(NULL) is NULL"):
         r = node.query(f"SELECT base58Decode(NULL)")
         assert "\\N" == r.output, error()
 

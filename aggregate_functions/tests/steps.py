@@ -96,7 +96,7 @@ def execute_query(
     message=None,
     no_checks=False,
     snapshot_name=None,
-    format="CSV",
+    format="JSONEachRow",
 ):
     """Execute SQL query and compare the output to the snapshot."""
     if snapshot_name is None:

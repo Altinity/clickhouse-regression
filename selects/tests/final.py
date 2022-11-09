@@ -4,8 +4,7 @@ from testflows.asserts import error
 
 @TestFeature
 def auto_final(self):
-    """Check applying FINAL modifier automatically by using `auto_final` query setting.
-    """
+    """Check applying FINAL modifier automatically by using `auto_final` query setting."""
     pass
 
 
