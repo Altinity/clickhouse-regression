@@ -6,6 +6,7 @@ from aggregate_functions.requirements import *
 import aggregate_functions.tests.count as count_tests
 import aggregate_functions.tests.min as min_tests
 import aggregate_functions.tests.max as max_tests
+import aggregate_functions.tests.sum as sum_tests
 
 
 @TestSuite
@@ -24,6 +25,12 @@ def min(self):
 def max(self):
     """Check maxState combinator."""
     load(max_tests, "feature")(func="hex(maxState({params}))")
+
+
+@TestSuite
+def sum(self):
+    """Check sumState combinator."""
+    load(sum_tests, "feature")(func="hex(sumState({params}))")
 
 
 @TestFeature

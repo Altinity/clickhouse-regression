@@ -10,6 +10,7 @@ from helpers.cluster import create_cluster
 from helpers.argparser import argparser
 from helpers.tables import *
 
+from aggregate_functions.tests.steps import aggregate_functions
 from aggregate_functions.requirements import SRS_031_ClickHouse_Aggregate_Functions
 
 
@@ -48,9 +49,15 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
         self.context.table.insert_test_data()
 
     with Pool(3) as executor:
-        Feature(run=load("aggregate_functions.tests.count", "feature"), parallel=True, executor=executor)
-        Feature(run=load("aggregate_functions.tests.min", "feature"), parallel=True, executor=executor)
-        Feature(run=load("aggregate_functions.tests.max", "feature"), parallel=True, executor=executor)
+        for name in aggregate_functions:
+            try:
+                suite = load(f"aggregate_functions.tests.{name}", "feature")
+            except ModuleNotFoundError:
+                with Feature(f"{name}"):
+                    xfail(reason=f"{name} tests are not implemented")
+                continue
+
+            Feature(test=suite, parallel=True, executor=executor)()
 
     Feature(run=load("aggregate_functions.tests.state", "feature"))
 
