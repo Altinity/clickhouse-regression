@@ -50,54 +50,78 @@ def is_numeric(datatype):
         return True
     return False
 
+basic_columns = [
+    "uint8 UInt8",
+    "int8 Int8",
+    "uint16 UInt16",
+    "int16 Int16",
+    "uint32 UInt32",
+    "int32 Int32",
+    "uint64 UInt64",
+    "int64 Int64",
+    "float32 Float32",
+    "float64 Float64",
+    "decimal Decimal128(38)",
+    "date Date",
+    "datetime DateTime",
+    "string String",
+    "fixedstring FixedString(85)",
+]
 
-def generate_all_column_types(include=None, exclude=None):
+common_basic_columns = [
+    "string String",
+    "fixedstring FixedString(85)",
+    "date Date",
+    "datetime DateTime",
+    "uint64 UInt64",
+    "int64 Int64",
+    "float64 Float64",
+    "float32 Float32",
+    "decimal Decimal128(38)"
+]
+
+common_complex_columns = [
+    "array_string Array(String)",
+    "map_low_card_string_low_card_float64 Map(LowCardinality(String),LowCardinality(Float64))"
+]
+
+low_cardinality_common_basic_columns = []
+null_common_basic_columns = []
+
+for type in common_basic_columns:
+    if type.split(" ", 1)[1] not in ["Decimal128(38)"]:
+        low_cardinality_common_basic_columns.append(
+            "low_card_"
+            + type.split(" ", 1)[0]
+            + f" LowCardinality({type.split(' ',1)[1]})"
+        )
+
+for type in common_basic_columns:
+    null_common_basic_columns.append(
+        "nullable_" + type.split(" ", 1)[0] + f" Nullable({type.split(' ',1)[1]})"
+    )
+
+common_columns = common_basic_columns + low_cardinality_common_basic_columns + null_common_basic_columns + common_complex_columns
+
+map_key_types = [
+    column
+    for column in basic_columns
+    if column
+    not in ["float32 Float32", "float64 Float64", "decimal Decimal128(38)"]
+]
+
+container_columns = [
+    f"array Array({basic_columns[0].split(' ')[1]})",
+    "tuple Tuple("
+    + ",".join([column.split(" ")[1] for column in basic_columns])
+    + ","
+    f"Array({basic_columns[0].split(' ')[1]}),Tuple({basic_columns[0].split(' ')[1]}),Map({map_key_types[0].split(' ')[1]}, {basic_columns[0].split(' ')[1]}))",
+    f"map Map({map_key_types[0].split(' ')[1]}, {basic_columns[0].split(' ')[1]})",
+]
+
+
+def generate_all_column_types():
     """Generate a list of every type of column necessary for Parquet tests."""
-
-    basic_columns = [
-        "uint8 UInt8",
-        "int8 Int8",
-        "uint16 UInt16",
-        "int16 Int16",
-        "uint32 UInt32",
-        "int32 Int32",
-        "uint64 UInt64",
-        "int64 Int64",
-        "float32 Float32",
-        "float64 Float64",
-        "decimal Decimal128(38)",
-        "date Date",
-        "datetime DateTime",
-        "string String",
-        "fixedstring FixedString(85)",
-    ]
-
-    if include:
-        basic_columns = [
-            column for column in basic_columns if column.split(" ", 1)[1] in include
-        ]
-
-    elif exclude:
-        basic_columns = [
-            column for column in basic_columns if column.split(" ", 1)[1] not in exclude
-        ]
-
-    map_key_types = [
-        column
-        for column in basic_columns
-        if column
-        not in ["float32 Float32", "float64 Float64", "decimal Decimal128(38)"]
-    ]
-
-    container_columns = [
-        f"array Array({basic_columns[0].split(' ')[1]})",
-        "tuple Tuple("
-        + ",".join([column.split(" ")[1] for column in basic_columns])
-        + ","
-        f"Array({basic_columns[0].split(' ')[1]}),Tuple({basic_columns[0].split(' ')[1]}),Map({map_key_types[0].split(' ')[1]}, {basic_columns[0].split(' ')[1]}))",
-        f"map Map({map_key_types[0].split(' ')[1]}, {basic_columns[0].split(' ')[1]})",
-    ]
-
     array_columns = []
     map_columns = []
     null_columns = []

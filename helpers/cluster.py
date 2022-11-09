@@ -532,6 +532,8 @@ class ClickHouseNode(Node):
         secure=False,
         max_query_output_in_bytes="-0",
         query_id=None,
+        use_file=False,
+        hash_output=None,
         *args,
         **kwargs,
     ):
@@ -571,7 +573,7 @@ class ClickHouseNode(Node):
         if secure:
             client += " -s"
 
-        if len(sql) > 1024:
+        if len(sql) > 1024 or use_file:
             with tempfile.NamedTemporaryFile("w", encoding="utf-8") as query:
                 query.write(sql)
                 query.flush()
@@ -581,7 +583,13 @@ class ClickHouseNode(Node):
                     name, value = setting
                     client_options += f' --{name} "{value}"'
 
-                command = f'cat "{query.name}" | {self.cluster.docker_compose} exec -T {self.name} bash -c "(set -o pipefail && {client}{client_options} 2>&1 | head -c {max_query_output_in_bytes})"'
+                if max_query_output_in_bytes != "-0":
+                    command = f'cat "{query.name}" | {self.cluster.docker_compose} exec -T {self.name} bash -c "(set -o pipefail && {client}{client_options} 2>&1 | head -c {max_query_output_in_bytes})"'
+                else:
+                    if hash_output:
+                        command = f'cat "{query.name}" | {self.cluster.docker_compose} exec -T {self.name} bash -c "(set -o pipefail && {client}{client_options} 2>&1 | sha512sum)"'
+                    else:
+                        command = f'cat "{query.name}" | {self.cluster.docker_compose} exec -T {self.name} bash -c "{client}{client_options} 2>&1"'
 
                 description = f"""
                     echo -e \"{sql[:100]}...\" > {query.name}
@@ -603,7 +611,13 @@ class ClickHouseNode(Node):
                 name, value = setting
                 client_options += f' --{name} "{value}"'
 
-            command = f'(set -o pipefail && echo -e "{sql}" | {client}{client_options} 2>&1 | head -c {max_query_output_in_bytes})'
+            if max_query_output_in_bytes != "-0":
+                command = f'(set -o pipefail && echo -e "{sql}" | {client}{client_options} 2>&1 | head -c {max_query_output_in_bytes})'
+            else:
+                if hash_output:
+                    command = f'(set -o pipefail && echo -e "{sql}" | {client}{client_options} 2>&1 | sha512sum)'
+                else:
+                    command = f'echo -e "{sql}" | {client}{client_options} 2>&1'
 
             with step(
                 "executing command", description=command, format_description=False

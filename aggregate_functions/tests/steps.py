@@ -97,13 +97,15 @@ def execute_query(
     no_checks=False,
     snapshot_name=None,
     format="JSONEachRow",
+    use_file=False,
+    hash_output=False
 ):
     """Execute SQL query and compare the output to the snapshot."""
     if snapshot_name is None:
         snapshot_name = current().name
 
     with When("I execute query", description=sql):
-        if not "FORMAT" in sql:
+        if format and not "FORMAT" in sql:
             sql += " FORMAT " + format
 
         r = current().context.node.query(
@@ -111,6 +113,8 @@ def execute_query(
             exitcode=exitcode,
             message=message,
             no_checks=no_checks,
+            use_file=use_file,
+            hash_output=hash_output
         )
         if no_checks:
             return r
