@@ -16,9 +16,10 @@ DEBUG = False  # set True to debug this trigger program
 PROGRESS = "\u2591"
 
 suites = [
-    "rbac",
     "aes_encryption",
+    "aggregate_functions",
     "atomic_insert",
+    "base_58",
     "clickhouse_keeper",
     "datetime64_extended_range",
     "disk_level_encryption",
@@ -30,10 +31,13 @@ suites = [
     "ldap",
     "lightweight_delete",
     "map_type",
+    "parquet",
     "part_moves_between_shards",
+    "rbac",
     "s3",
     "s3_aws",
     "s3_gcs",
+    "selects",
     "ssl_server",
     "tiered_storage",
     "tiered_storage_aws",
