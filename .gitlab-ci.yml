@@ -166,6 +166,16 @@ aes-encryption-amd64:
   script:
     - *regression_common
 
+aggregate-functions-amd64:
+  extends: .regression_amd64
+  only:
+    variables:
+     - ( $only == "" || $only == "aggregate_functions" ) && $arch == "amd64"
+  variables:
+     FOLDER_PATH: "aggregate_functions"
+  script:
+    - *regression_common
+
 atomic-insert-amd64:
   extends: .regression_amd64
   only:
@@ -173,6 +183,16 @@ atomic-insert-amd64:
      - ( $only == "" || $only == "atomic_insert" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "atomic_insert"
+  script:
+    - *regression_common
+
+base-58-amd64:
+  extends: .regression_amd64
+  only:
+    variables:
+     - ( $only == "" || $only == "base_58" ) && $arch == "amd64"
+  variables:
+     FOLDER_PATH: "base_58"
   script:
     - *regression_common
 
@@ -312,6 +332,16 @@ map-type-amd64:
   script:
     - *regression_common
 
+parquet-amd64:
+  extends: .regression_amd64
+  only:
+    variables:
+     - ( $only == "" || $only == "parquet" ) && $arch == "amd64"
+  variables:
+     FOLDER_PATH: "parquet"
+  script:
+    - *regression_common
+
 part-moves-between-shards-amd64:
   extends: .regression_amd64
   only:
@@ -329,6 +359,16 @@ rbac-amd64:
       - ( $only == "" || $only == "rbac" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "rbac"
+  script:
+    - *regression_common
+
+selects-amd64:
+  extends: .regression_amd64
+  only:
+    variables:
+      - ( $only == "" || $only == "selects" ) && $arch == "amd64"
+  variables:
+     FOLDER_PATH: "selects"
   script:
     - *regression_common
 
@@ -465,6 +505,36 @@ aes-encryption-arm64:
   script:
     - *regression_common
 
+aggregate-functions-arm64:
+  extends: .regression_arm64
+  only:
+    variables:
+     - ( $only == "" || $only == "aggregate_functions" ) && $arch == "arm64"
+  variables:
+     FOLDER_PATH: "aggregate_functions"
+  script:
+    - *regression_common
+
+atomic-insert-arm64:
+  extends: .regression_arm64
+  only:
+    variables:
+     - ( $only == "" || $only == "atomic_insert" ) && $arch == "arm64"
+  variables:
+     FOLDER_PATH: "atomic_insert"
+  script:
+    - *regression_common
+
+base-58-arm64:
+  extends: .regression_arm64
+  only:
+    variables:
+     - ( $only == "" || $only == "base_58" ) && $arch == "arm64"
+  variables:
+     FOLDER_PATH: "base_58"
+  script:
+    - *regression_common
+  
 clickhouse-keeper-arm64:
   extends: .regression_arm64
   only:
@@ -591,6 +661,16 @@ map-type-arm64:
   script:
     - *regression_common
 
+parquet-arm64:
+  extends: .regression_arm64
+  only:
+    variables:
+     - ( $only == "" || $only == "parquet" ) && $arch == "arm64"
+  variables:
+     FOLDER_PATH: "parquet"
+  script:
+    - *regression_common
+
 part-moves-between-shards-arm64:
   extends: .regression_arm64
   only:
@@ -608,6 +688,16 @@ rbac-arm64:
       - ( $only == "" || $only == "rbac" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "rbac"
+  script:
+    - *regression_common
+
+selects-arm64:
+  extends: .regression_arm64
+  only:
+    variables:
+      - ( $only == "" || $only == "selects" ) && $arch == "arm64"
+  variables:
+     FOLDER_PATH: "selects"
   script:
     - *regression_common
 
