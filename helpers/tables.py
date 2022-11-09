@@ -38,9 +38,8 @@ data_types_and_values = {
 }
 
 
-def is_numeric(column):
-    name, datatype = column.split(" ", 1)
-
+def is_numeric(datatype):
+    """Return True if data type is numeric."""
     if datatype.startswith("UInt"):
         return True
     if datatype.startswith("Int"):
