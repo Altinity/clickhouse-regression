@@ -1,5 +1,3 @@
-import time
-
 from base_58.tests.steps import *
 
 
@@ -53,7 +51,7 @@ def memory_usage_for_column_input(self, node=None):
 
     with When("I decode data from table with base58 encoding"):
         r = node.query(
-            f"select count(*) from (select base64Decode(x) from {table_name_e58})",
+            f"select count(*) from (select base58Decode(x) from {table_name_e58})",
             query_id=2003,
         )
         base58_decoded = r.output
@@ -145,10 +143,7 @@ def memory_usage_for_constant_input(self, node=None):
 
 
 @TestFeature
-@Requirements(
-    RQ_ClickHouse_Base58_MemoryUsage_Base58vsBase64("1.0"),
-    RQ_ClickHouse_Base58_Consistency_EncodeDecode("1.0"),
-)
+@Requirements(RQ_ClickHouse_Base58_MemoryUsage_Base58vsBase64("1.0"))
 @Name("memory usage")
 def feature(self, node="clickhouse1"):
     """Check that clickhouse base58 and base64 functions has small difference in memory usage."""

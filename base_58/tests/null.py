@@ -2,7 +2,6 @@ from base_58.tests.steps import *
 
 
 @TestScenario
-@Requirements(RQ_ClickHouse_Base58_Null("1.0"))
 def null(self, node=None):
     """Check that clickhouse base58 functions return Null with Null input."""
 
@@ -20,7 +19,7 @@ def null(self, node=None):
 
 
 @TestFeature
-@Requirements()
+@Requirements(RQ_ClickHouse_Base58_Null("1.0"))
 @Name("null")
 def feature(self, node="clickhouse1"):
     """Check that clickhouse base58 function support null input."""

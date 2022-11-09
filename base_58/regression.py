@@ -53,6 +53,7 @@ def regression(
         if parallel is not None:
             self.context.parallel = parallel
 
+        Feature(run=load("base_58.tests.consistency", "feature"))
         Feature(run=load("base_58.tests.null", "feature"))
         Feature(run=load("base_58.tests.alias_input", "feature"))
         Feature(run=load("base_58.tests.function_input", "feature"))
