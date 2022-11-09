@@ -28,6 +28,11 @@ def feature(self, func="avg({params})", table=None):
     with Check("some negative values"):
         execute_query(f"SELECT {func.format(params='number-5')} FROM numbers(1, 10)")
     
+    with Check("NULL value handling"):
+        execute_query(
+            f"SELECT {func.format(params='x')}  FROM values('x Nullable(Int8)', 0, 1, NULL, 3, 4, 5)"
+        )
+
     with Check("return type"):
         execute_query(f"SELECT toTypeName({func.format(params='number')}) FROM numbers(1, 10)")
 
