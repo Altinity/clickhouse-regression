@@ -11,22 +11,19 @@ import aggregate_functions.tests.max as max_tests
 @TestSuite
 def count(self):
     """Check countState combinator."""
-    for scenario in loads(count_tests, Scenario):
-        scenario(func="hex(countState({params}))")
+    load(count_tests, "feature")(func="hex(countState({params}))")
 
 
 @TestSuite
 def min(self):
     """Check minState combinator."""
-    for scenario in loads(min_tests, Scenario):
-        scenario(func="hex(minState({params}))")
+    load(min_tests, "feature")(func="hex(minState({params}))")
 
 
 @TestSuite
 def max(self):
     """Check maxState combinator."""
-    for scenario in loads(max_tests, Scenario):
-        scenario(func="hex(maxState({params}))")
+    load(max_tests, "feature")(func="hex(maxState({params}))")
 
 
 @TestFeature
