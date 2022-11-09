@@ -86,9 +86,8 @@ def zero_parameters(self, func="count({params})"):
 @TestFeature
 @Name("count")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Count("1.0"))
-def feature(self, node="clickhouse1"):
+def feature(self, func="count({params})", table=None):
     """Check count aggregate function."""
-    self.context.node = self.context.cluster.node(node)
 
     for scenario in loads(current_module(), Scenario):
-        scenario()
+        scenario(func=func)
