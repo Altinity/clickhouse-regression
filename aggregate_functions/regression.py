@@ -48,7 +48,7 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
     with And("I populate table with test data"):
         self.context.table.insert_test_data()
 
-    with Pool(3) as executor:
+    with Pool(5) as executor:
         for name in aggregate_functions:
             try:
                 suite = load(f"aggregate_functions.tests.{name}", "feature")

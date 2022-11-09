@@ -46,7 +46,7 @@ def feature(self, node="clickhouse1"):
     the state of the function."""
     self.context.node = self.context.cluster.node(node)
 
-    with Pool(3) as executor:
+    with Pool(5) as executor:
         for name in aggregate_functions:
             suite = getattr(current_module(), name, None)
             if not suite:
