@@ -5,11 +5,8 @@ from aggregate_functions.requirements import (
 
 
 @TestScenario
-def min(self, func="min({params})", table=None):
+def checks(self, func="min({params})"):
     """Check that min() calculates the minimum across a group of values."""
-    if table is None:
-        table = self.context.table
-
     with Check("constant"):
         execute_query(f"SELECT {func.format(params='1')}")
 
@@ -20,6 +17,12 @@ def min(self, func="min({params})", table=None):
         execute_query(
             f"SELECT number % 2 AS even, {func.format(params='number')} FROM numbers(10) GROUP BY even"
         )
+
+@TestScenario
+def datatypes(self, func="min({params})", table=None):
+    """Check that min() calculates the minimum across different data types."""
+    if table is None:
+        table = self.context.table
 
     for column in table.columns:
         column_name, column_type = column.split(" ", 1)
