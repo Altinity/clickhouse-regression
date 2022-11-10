@@ -1121,6 +1121,47 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_Sparkbar = Requirement(
     num="3.1.2.57.1",
 )
 
+RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_FirstValue = Requirement(
+    name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.FirstValue",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=("[ClickHouse] SHALL support `first_value` aggregate function.\n" "\n"),
+    link=None,
+    level=5,
+    num="3.1.3.1.1",
+)
+
+RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_LastValue = Requirement(
+    name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.LastValue",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=("[ClickHouse] SHALL support `last_value` aggregate function.\n" "\n"),
+    link=None,
+    level=5,
+    num="3.1.3.2.1",
+)
+
+RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_SingleValueOrNull = Requirement(
+    name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SingleValueOrNull",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support `singleValueOrNull` aggregate function.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="3.1.3.3.1",
+)
+
 RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Histogram = Requirement(
     name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Histogram",
     version="1.0",
@@ -1133,7 +1174,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Histogram = Requirement(
     ),
     link=None,
     level=5,
-    num="3.1.3.1.1",
+    num="3.1.4.1.1",
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Sequencematch = Requirement(
@@ -1149,7 +1190,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Sequencematch = Requirement(
     ),
     link=None,
     level=5,
-    num="3.1.3.2.1",
+    num="3.1.4.2.1",
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Sequencecount = Requirement(
@@ -1165,7 +1206,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Sequencecount = Requirement(
     ),
     link=None,
     level=5,
-    num="3.1.3.3.1",
+    num="3.1.4.3.1",
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Windowfunnel = Requirement(
@@ -1181,7 +1222,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Windowfunnel = Requirement(
     ),
     link=None,
     level=5,
-    num="3.1.3.4.1",
+    num="3.1.4.4.1",
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Retention = Requirement(
@@ -1196,7 +1237,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Retention = Requirement(
     ),
     link=None,
     level=5,
-    num="3.1.3.5.1",
+    num="3.1.4.5.1",
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Uniqupto = Requirement(
@@ -1211,7 +1252,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Uniqupto = Requirement(
     ),
     link=None,
     level=5,
-    num="3.1.3.6.1",
+    num="3.1.4.6.1",
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Summapfiltered = Requirement(
@@ -1227,7 +1268,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Summapfiltered = Requirement
     ),
     link=None,
     level=5,
-    num="3.1.3.7.1",
+    num="3.1.4.7.1",
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_SequenceNextNode = Requirement(
@@ -1243,7 +1284,7 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_SequenceNextNode = Requireme
     ),
     link=None,
     level=5,
-    num="3.1.3.8.1",
+    num="3.1.4.8.1",
 )
 
 RQ_SRS_031_ClickHouse_AggregateFunctions_Combinator_If = Requirement(
@@ -2324,54 +2365,73 @@ SRS_031_ClickHouse_Aggregate_Functions = Specification(
             level=5,
             num="3.1.2.57.1",
         ),
-        Heading(name="Parametric Functions", level=3, num="3.1.3"),
-        Heading(name="histogram", level=4, num="3.1.3.1"),
+        Heading(name="Miscellaneous Functions", level=3, num="3.1.3"),
+        Heading(name="first_value", level=4, num="3.1.3.1"),
         Heading(
-            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Histogram",
+            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.FirstValue",
             level=5,
             num="3.1.3.1.1",
         ),
-        Heading(name="sequenceMatch", level=4, num="3.1.3.2"),
+        Heading(name="last_value", level=4, num="3.1.3.2"),
         Heading(
-            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Sequencematch",
+            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.LastValue",
             level=5,
             num="3.1.3.2.1",
         ),
-        Heading(name="sequenceCount", level=4, num="3.1.3.3"),
+        Heading(name="singleValueOrNull", level=4, num="3.1.3.3"),
         Heading(
-            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Sequencecount",
+            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SingleValueOrNull",
             level=5,
             num="3.1.3.3.1",
         ),
-        Heading(name="windowFunnel", level=4, num="3.1.3.4"),
+        Heading(name="Parametric Functions", level=3, num="3.1.4"),
+        Heading(name="histogram", level=4, num="3.1.4.1"),
+        Heading(
+            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Histogram",
+            level=5,
+            num="3.1.4.1.1",
+        ),
+        Heading(name="sequenceMatch", level=4, num="3.1.4.2"),
+        Heading(
+            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Sequencematch",
+            level=5,
+            num="3.1.4.2.1",
+        ),
+        Heading(name="sequenceCount", level=4, num="3.1.4.3"),
+        Heading(
+            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Sequencecount",
+            level=5,
+            num="3.1.4.3.1",
+        ),
+        Heading(name="windowFunnel", level=4, num="3.1.4.4"),
         Heading(
             name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Windowfunnel",
             level=5,
-            num="3.1.3.4.1",
+            num="3.1.4.4.1",
         ),
-        Heading(name="retention", level=4, num="3.1.3.5"),
+        Heading(name="retention", level=4, num="3.1.4.5"),
         Heading(
             name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Retention",
             level=5,
-            num="3.1.3.5.1",
+            num="3.1.4.5.1",
         ),
-        Heading(name="uniqUpTo", level=4, num="3.1.3.6"),
+        Heading(name="uniqUpTo", level=4, num="3.1.4.6"),
         Heading(
             name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Uniqupto",
             level=5,
-            num="3.1.3.6.1",
+            num="3.1.4.6.1",
         ),
-        Heading(name="sumMapFiltered", level=4, num="3.1.3.7"),
+        Heading(name="sumMapFiltered", level=4, num="3.1.4.7"),
         Heading(
             name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Summapfiltered",
             level=5,
-            num="3.1.3.7.1",
+            num="3.1.4.7.1",
         ),
-        Heading(name="sequenceNextNode", level=4, num="3.1.3.8"),
+        Heading(name="sequenceNextNode", level=4, num="3.1.4.8"),
         Heading(
             name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SequenceNextNode",
             level=5,
-            num="3.1.3.8.1",
+            num="3.1.4.8.1",
         ),
         Heading(name="Combinator Functions", level=2, num="3.2"),
         Heading(name="-If Suffix", level=3, num="3.2.1"),
@@ -2599,6 +2659,9 @@ SRS_031_ClickHouse_Aggregate_Functions = Specification(
         RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_Entropy,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_MeanZTest,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_Sparkbar,
+        RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_FirstValue,
+        RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_LastValue,
+        RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_SingleValueOrNull,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Histogram,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Sequencematch,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Sequencecount,
@@ -2783,23 +2846,30 @@ SRS_031_ClickHouse_Aggregate_Functions = Specification(
         * 3.1.2.56.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.MeanZTest](#rqsrs-031clickhouseaggregatefunctionsspecificmeanztest)
       * 3.1.2.57 [sparkbar](#sparkbar)
         * 3.1.2.57.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Sparkbar](#rqsrs-031clickhouseaggregatefunctionsspecificsparkbar)
-    * 3.1.3 [Parametric Functions](#parametric-functions)
-      * 3.1.3.1 [histogram](#histogram)
-        * 3.1.3.1.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Histogram](#rqsrs-031clickhouseaggregatefunctionsparametrichistogram)
-      * 3.1.3.2 [sequenceMatch](#sequencematch)
-        * 3.1.3.2.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Sequencematch](#rqsrs-031clickhouseaggregatefunctionsparametricsequencematch)
-      * 3.1.3.3 [sequenceCount](#sequencecount)
-        * 3.1.3.3.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Sequencecount](#rqsrs-031clickhouseaggregatefunctionsparametricsequencecount)
-      * 3.1.3.4 [windowFunnel](#windowfunnel)
-        * 3.1.3.4.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Windowfunnel](#rqsrs-031clickhouseaggregatefunctionsparametricwindowfunnel)
-      * 3.1.3.5 [retention](#retention)
-        * 3.1.3.5.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Retention](#rqsrs-031clickhouseaggregatefunctionsparametricretention)
-      * 3.1.3.6 [uniqUpTo](#uniqupto)
-        * 3.1.3.6.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Uniqupto](#rqsrs-031clickhouseaggregatefunctionsparametricuniqupto)
-      * 3.1.3.7 [sumMapFiltered](#summapfiltered)
-        * 3.1.3.7.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Summapfiltered](#rqsrs-031clickhouseaggregatefunctionsparametricsummapfiltered)
-      * 3.1.3.8 [sequenceNextNode](#sequencenextnode)
-        * 3.1.3.8.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SequenceNextNode](#rqsrs-031clickhouseaggregatefunctionsparametricsequencenextnode)
+    * 3.1.3 [Miscellaneous Functions](#miscellaneous-functions)
+      * 3.1.3.1 [first_value](#first_value)
+        * 3.1.3.1.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.FirstValue](#rqsrs-031clickhouseaggregatefunctionsparametricfirstvalue)
+      * 3.1.3.2 [last_value](#last_value)
+        * 3.1.3.2.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.LastValue](#rqsrs-031clickhouseaggregatefunctionsparametriclastvalue)
+      * 3.1.3.3 [singleValueOrNull](#singlevalueornull)
+        * 3.1.3.3.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SingleValueOrNull](#rqsrs-031clickhouseaggregatefunctionsparametricsinglevalueornull)
+    * 3.1.4 [Parametric Functions](#parametric-functions)
+      * 3.1.4.1 [histogram](#histogram)
+        * 3.1.4.1.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Histogram](#rqsrs-031clickhouseaggregatefunctionsparametrichistogram)
+      * 3.1.4.2 [sequenceMatch](#sequencematch)
+        * 3.1.4.2.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Sequencematch](#rqsrs-031clickhouseaggregatefunctionsparametricsequencematch)
+      * 3.1.4.3 [sequenceCount](#sequencecount)
+        * 3.1.4.3.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Sequencecount](#rqsrs-031clickhouseaggregatefunctionsparametricsequencecount)
+      * 3.1.4.4 [windowFunnel](#windowfunnel)
+        * 3.1.4.4.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Windowfunnel](#rqsrs-031clickhouseaggregatefunctionsparametricwindowfunnel)
+      * 3.1.4.5 [retention](#retention)
+        * 3.1.4.5.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Retention](#rqsrs-031clickhouseaggregatefunctionsparametricretention)
+      * 3.1.4.6 [uniqUpTo](#uniqupto)
+        * 3.1.4.6.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Uniqupto](#rqsrs-031clickhouseaggregatefunctionsparametricuniqupto)
+      * 3.1.4.7 [sumMapFiltered](#summapfiltered)
+        * 3.1.4.7.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Summapfiltered](#rqsrs-031clickhouseaggregatefunctionsparametricsummapfiltered)
+      * 3.1.4.8 [sequenceNextNode](#sequencenextnode)
+        * 3.1.4.8.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SequenceNextNode](#rqsrs-031clickhouseaggregatefunctionsparametricsequencenextnode)
   * 3.2 [Combinator Functions](#combinator-functions)
     * 3.2.1 [-If Suffix](#-if-suffix)
       * 3.2.1.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Combinator.If](#rqsrs-031clickhouseaggregatefunctionscombinatorif)
@@ -3372,6 +3442,29 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL support [sparkbar] specific aggregate function.
+
+#### Miscellaneous Functions
+
+##### first_value
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.FirstValue
+version: 1.0
+
+[ClickHouse] SHALL support `first_value` aggregate function.
+
+##### last_value
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.LastValue
+version: 1.0
+
+[ClickHouse] SHALL support `last_value` aggregate function.
+
+##### singleValueOrNull
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SingleValueOrNull
+version: 1.0
+
+[ClickHouse] SHALL support `singleValueOrNull` aggregate function.
 
 #### Parametric Functions
 
