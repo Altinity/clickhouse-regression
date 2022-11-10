@@ -157,6 +157,8 @@
         * 3.1.3.2.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.LastValue](#rqsrs-031clickhouseaggregatefunctionsmiscellaneouslastvalue)
       * 3.1.3.3 [singleValueOrNull](#singlevalueornull)
         * 3.1.3.3.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.SingleValueOrNull](#rqsrs-031clickhouseaggregatefunctionsmiscellaneoussinglevalueornull)
+      * 3.1.3.4 [maxIntersections](#maxintersections)
+        * 3.1.3.4.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.MaxIntersections](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousmaxintersections)
     * 3.1.4 [Parametric Functions](#parametric-functions)
       * 3.1.4.1 [histogram](#histogram)
         * 3.1.4.1.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Histogram](#rqsrs-031clickhouseaggregatefunctionsparametrichistogram)
@@ -769,6 +771,13 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL support `singleValueOrNull` aggregate function.
+
+##### maxIntersections
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.MaxIntersections
+version: 1.0
+
+[ClickHouse] SHALL support `maxIntersections` aggregate function.
 
 #### Parametric Functions
 
