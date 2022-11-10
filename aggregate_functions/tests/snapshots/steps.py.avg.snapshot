@@ -71,3 +71,11 @@ _aggregate_functions_avg_UInt16 = r"""
 {"avg(uint16)":24575.5}
 """
 
+_aggregate_functions_avg_single_row = r"""
+{"avg(number)":0}
+"""
+
+_aggregate_functions_avg_single_NULL_value = r"""
+{"avg(x)":null}
+"""
+

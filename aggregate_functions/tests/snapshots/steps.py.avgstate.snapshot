@@ -71,3 +71,11 @@ _aggregate_functions_state_avgState_Decimal128_38_ = r"""
 {"hex(avgState(decimal))":"00000080B86CCE251142A4463E62990704"}
 """
 
+_aggregate_functions_state_avgState_single_row = r"""
+{"hex(avgState(number))":"000000000000000001"}
+"""
+
+_aggregate_functions_state_avgState_single_NULL_value = r"""
+{"hex(avgState(x))":"00"}
+"""
+
