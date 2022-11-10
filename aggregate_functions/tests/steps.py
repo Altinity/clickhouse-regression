@@ -1,3 +1,5 @@
+import itertools
+
 from testflows.core import *
 from testflows.asserts import values, error, snapshot
 
@@ -95,7 +97,13 @@ aggregate_functions = [
     "first_value",
     "last_value",
     "singleValueOrNull",
+    "maxIntersections",
 ]
+
+
+def permutations_with_replacement(n, r):
+    """Return all possible permutations with replacement."""
+    return itertools.product(n, repeat=r)
 
 
 def execute_query(

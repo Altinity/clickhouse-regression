@@ -79,7 +79,7 @@ def feature(self, func="argMin({params})", table=None):
         ):
             with Pool(3) as executor:
                 columns = [col for col in table.columns if col in common_columns]
-                permutations = list(itertools.permutations(columns, 2))
+                permutations = list(permutations_with_replacement(columns, 2))
                 permutations.sort()
 
                 for col1, col2 in permutations:

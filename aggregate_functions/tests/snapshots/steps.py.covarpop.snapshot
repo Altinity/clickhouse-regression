@@ -1,0 +1,189 @@
+_aggregate_functions_covarPop_constant = r"""
+{"covarPop(1, 1)":0}
+"""
+
+_aggregate_functions_covarPop_zero_rows = r"""
+{"covarPop(number, number)":null}
+"""
+
+_aggregate_functions_covarPop_single_row = r"""
+{"covarPop(number, plus(number, 1))":0}
+"""
+
+_aggregate_functions_covarPop_with_group_by = r"""
+{"even":0,"covarPop(number, modulo(number, 2))":0}
+{"even":1,"covarPop(number, modulo(number, 2))":0}
+"""
+
+_aggregate_functions_covarPop_some_negative_values = r"""
+{"covarPop(minus(number, 5), plus(number, 10))":8.25}
+"""
+
+_aggregate_functions_covarPop_NULL_value_handling = r"""
+{"covarPop(x, y)":1}
+"""
+
+_aggregate_functions_covarPop_single_NULL_value = r"""
+{"covarPop(x, y)":null}
+"""
+
+_aggregate_functions_covarPop_return_type = r"""
+{"toTypeName(covarPop(number, plus(number, 1)))":"Float64"}
+"""
+
+_aggregate_functions_covarPop_example = r"""
+{"covarPop(y, x)":1.1224999999999998}
+"""
+
+_aggregate_functions_covarPop_datatypes_Float64_Int32 = r"""
+{"covarPop(float64, int32)":null}
+"""
+
+_aggregate_functions_covarPop_datatypes_Int32_Float64 = r"""
+{"covarPop(int32, float64)":null}
+"""
+
+_aggregate_functions_covarPop_datatypes_Float64_UInt8 = r"""
+{"covarPop(float64, uint8)":null}
+"""
+
+_aggregate_functions_covarPop_datatypes_Float64_Float64 = r"""
+{"covarPop(float64, float64)":null}
+"""
+
+_aggregate_functions_covarPop_datatypes_Float64_Float64 = r"""
+{"covarPop(float64, float64)":null}
+"""
+
+_aggregate_functions_covarPop_datatypes_UInt32_Float64 = r"""
+{"covarPop(uint32, float64)":null}
+"""
+
+_aggregate_functions_covarPop_datatypes_UInt8_Float64 = r"""
+{"covarPop(uint8, float64)":null}
+"""
+
+_aggregate_functions_covarPop_datatypes_Float64_UInt32 = r"""
+{"covarPop(float64, uint32)":null}
+"""
+
+_aggregate_functions_covarPop_datatypes_Float64_UInt16 = r"""
+{"covarPop(float64, uint16)":null}
+"""
+
+_aggregate_functions_covarPop_datatypes_Int8_Float64 = r"""
+{"covarPop(int8, float64)":null}
+"""
+
+_aggregate_functions_covarPop_datatypes_Float64_Int8 = r"""
+{"covarPop(float64, int8)":null}
+"""
+
+_aggregate_functions_covarPop_datatypes_UInt16_Float64 = r"""
+{"covarPop(uint16, float64)":null}
+"""
+
+_aggregate_functions_covarPop_datatypes_Float32_Float64 = r"""
+{"covarPop(float32, float64)":null}
+"""
+
+_aggregate_functions_covarPop_datatypes_Float64_Float32 = r"""
+{"covarPop(float64, float32)":null}
+"""
+
+_aggregate_functions_covarPop_datatypes_Int64_Float64 = r"""
+{"covarPop(int64, float64)":null}
+"""
+
+_aggregate_functions_covarPop_datatypes_Float64_Int64 = r"""
+{"covarPop(float64, int64)":null}
+"""
+
+_aggregate_functions_covarPop_datatypes_Float64_Int16 = r"""
+{"covarPop(float64, int16)":null}
+"""
+
+_aggregate_functions_covarPop_datatypes_Int16_Float64 = r"""
+{"covarPop(int16, float64)":null}
+"""
+
+_aggregate_functions_covarPop_datatypes_Float64_UInt64 = r"""
+{"covarPop(float64, uint64)":null}
+"""
+
+_aggregate_functions_covarPop_datatypes_UInt64_Float64 = r"""
+{"covarPop(uint64, float64)":null}
+"""
+
+_aggregate_functions_covarPop_datatypes_permutations_Float32_Int64 = r"""
+{"covarPop(float32, int64)":1.5692753403105654e57}
+"""
+
+_aggregate_functions_covarPop_datatypes_permutations_Float32_UInt64 = r"""
+{"covarPop(float32, uint64)":1.5692753403105654e57}
+"""
+
+_aggregate_functions_covarPop_datatypes_permutations_UInt64_Float32 = r"""
+{"covarPop(uint64, float32)":1.5692753403105654e57}
+"""
+
+_aggregate_functions_covarPop_datatypes_permutations_Int64_UInt64 = r"""
+{"covarPop(int64, uint64)":4.2534131489247943e37}
+"""
+
+_aggregate_functions_covarPop_datatypes_permutations_Int64_Float32 = r"""
+{"covarPop(int64, float32)":1.5692753403105654e57}
+"""
+
+_aggregate_functions_covarPop_datatypes_permutations_UInt64_Int64 = r"""
+{"covarPop(uint64, int64)":4.2534131489247943e37}
+"""
+
+_aggregate_functions_covarPop_inf___inf__nan_inf__inf = r"""
+{"covarPop(x, y)":null}
+"""
+
+_aggregate_functions_covarPop_inf___inf__nan_inf_nan = r"""
+{"covarPop(x, y)":null}
+"""
+
+_aggregate_functions_covarPop_inf___inf__nan__inf_inf = r"""
+{"covarPop(x, y)":null}
+"""
+
+_aggregate_functions_covarPop_inf___inf__nan__inf_nan = r"""
+{"covarPop(x, y)":null}
+"""
+
+_aggregate_functions_covarPop_inf___inf__nan_nan_inf = r"""
+{"covarPop(x, y)":null}
+"""
+
+_aggregate_functions_covarPop_inf___inf__nan_nan__inf = r"""
+{"covarPop(x, y)":null}
+"""
+
+_aggregate_functions_covarPop_inf___inf__nan_inf_inf = r"""
+{"covarPop(x, y)":null}
+"""
+
+_aggregate_functions_covarPop_inf___inf__nan__inf__inf = r"""
+{"covarPop(x, y)":null}
+"""
+
+_aggregate_functions_covarPop_inf___inf__nan_nan_nan = r"""
+{"covarPop(x, y)":null}
+"""
+
+_aggregate_functions_covarPop_datatypes_permutations_Float32_Float32 = r"""
+{"covarPop(float32, float32)":null}
+"""
+
+_aggregate_functions_covarPop_datatypes_permutations_Int64_Int64 = r"""
+{"covarPop(int64, int64)":4.253529605642431e37}
+"""
+
+_aggregate_functions_covarPop_datatypes_permutations_UInt64_UInt64 = r"""
+{"covarPop(uint64, uint64)":6.380061485463024e37}
+"""
+
