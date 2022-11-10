@@ -1,0 +1,77 @@
+_aggregate_functions_stddevSampStable_constant = r"""
+{"stddevSampStable(1)":null}
+"""
+
+_aggregate_functions_stddevSampStable_zero_rows = r"""
+{"stddevSampStable(number)":null}
+"""
+
+_aggregate_functions_stddevSampStable_single_row = r"""
+{"stddevSampStable(number)":null}
+"""
+
+_aggregate_functions_stddevSampStable_with_group_by = r"""
+{"even":0,"stddevSampStable(number)":3.1622776601683795}
+{"even":1,"stddevSampStable(number)":3.1622776601683795}
+"""
+
+_aggregate_functions_stddevSampStable_some_negative_values = r"""
+{"stddevSampStable(minus(number, 5))":3.0276503540974917}
+"""
+
+_aggregate_functions_stddevSampStable_NULL_value_handling = r"""
+{"stddevSampStable(x)":2.073644135332772}
+"""
+
+_aggregate_functions_stddevSampStable_single_NULL_value = r"""
+{"stddevSampStable(x)":null}
+"""
+
+_aggregate_functions_stddevSampStable_return_type = r"""
+{"toTypeName(stddevSampStable(number))":"Float64"}
+"""
+
+_aggregate_functions_stddevSampStable_doc_example = r"""
+{"stddevSampStable(x)":1.8708286933869707}
+"""
+
+_aggregate_functions_stddevSampStable_Float32 = r"""
+{"stddevSampStable(float32)":2.778393725804221e38}
+"""
+
+_aggregate_functions_stddevSampStable_UInt16 = r"""
+{"stddevSampStable(uint16)":31372.449234957734}
+"""
+
+_aggregate_functions_stddevSampStable_Float64 = r"""
+{"stddevSampStable(float64)":null}
+"""
+
+_aggregate_functions_stddevSampStable_Int8 = r"""
+{"stddevSampStable(int8)":115.77852420318142}
+"""
+
+_aggregate_functions_stddevSampStable_UInt64 = r"""
+{"stddevSampStable(uint64)":9223203698977937000}
+"""
+
+_aggregate_functions_stddevSampStable_Int16 = r"""
+{"stddevSampStable(int16)":27227.105452716296}
+"""
+
+_aggregate_functions_stddevSampStable_Int32 = r"""
+{"stddevSampStable(int32)":1753420329.4672506}
+"""
+
+_aggregate_functions_stddevSampStable_UInt8 = r"""
+{"stddevSampStable(uint8)":122.11572380328424}
+"""
+
+_aggregate_functions_stddevSampStable_Int64 = r"""
+{"stddevSampStable(int64)":7530851749651723000}
+"""
+
+_aggregate_functions_stddevSampStable_UInt32 = r"""
+{"stddevSampStable(uint32)":2131180642.2018688}
+"""
+

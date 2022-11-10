@@ -1,0 +1,77 @@
+_aggregate_functions_varPopStable_constant = r"""
+{"varPopStable(1)":0}
+"""
+
+_aggregate_functions_varPopStable_zero_rows = r"""
+{"varPopStable(number)":null}
+"""
+
+_aggregate_functions_varPopStable_single_row = r"""
+{"varPopStable(number)":0}
+"""
+
+_aggregate_functions_varPopStable_with_group_by = r"""
+{"even":0,"varPopStable(number)":8}
+{"even":1,"varPopStable(number)":8}
+"""
+
+_aggregate_functions_varPopStable_some_negative_values = r"""
+{"varPopStable(minus(number, 5))":8.25}
+"""
+
+_aggregate_functions_varPopStable_NULL_value_handling = r"""
+{"varPopStable(x)":3.44}
+"""
+
+_aggregate_functions_varPopStable_single_NULL_value = r"""
+{"varPopStable(x)":null}
+"""
+
+_aggregate_functions_varPopStable_return_type = r"""
+{"toTypeName(varPopStable(number))":"Float64"}
+"""
+
+_aggregate_functions_varPopStable_doc_example = r"""
+{"varPopStable(x)":2.9166666666666665}
+"""
+
+_aggregate_functions_varPopStable_UInt64 = r"""
+{"varPopStable(uint64)":6.380061485463023e37}
+"""
+
+_aggregate_functions_varPopStable_Int8 = r"""
+{"varPopStable(int8)":10053.5}
+"""
+
+_aggregate_functions_varPopStable_Int32 = r"""
+{"varPopStable(int32)":2305862138841781000}
+"""
+
+_aggregate_functions_varPopStable_Float64 = r"""
+{"varPopStable(float64)":null}
+"""
+
+_aggregate_functions_varPopStable_Int64 = r"""
+{"varPopStable(int64)":4.253529605642432e37}
+"""
+
+_aggregate_functions_varPopStable_Float32 = r"""
+{"varPopStable(float32)":5.7896037716911957e76}
+"""
+
+_aggregate_functions_varPopStable_UInt8 = r"""
+{"varPopStable(uint8)":11184.1875}
+"""
+
+_aggregate_functions_varPopStable_UInt16 = r"""
+{"varPopStable(uint16)":738172928.25}
+"""
+
+_aggregate_functions_varPopStable_Int16 = r"""
+{"varPopStable(int16)":555986453.5}
+"""
+
+_aggregate_functions_varPopStable_UInt32 = r"""
+{"varPopStable(uint32)":3406448197271977500}
+"""
+
