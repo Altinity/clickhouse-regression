@@ -1121,8 +1121,8 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_Sparkbar = Requirement(
     num="3.1.2.57.1",
 )
 
-RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_FirstValue = Requirement(
-    name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.FirstValue",
+RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_FirstValue = Requirement(
+    name="RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.FirstValue",
     version="1.0",
     priority=None,
     group=None,
@@ -1134,8 +1134,8 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_FirstValue = Requirement(
     num="3.1.3.1.1",
 )
 
-RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_LastValue = Requirement(
-    name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.LastValue",
+RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_LastValue = Requirement(
+    name="RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.LastValue",
     version="1.0",
     priority=None,
     group=None,
@@ -1147,8 +1147,8 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_LastValue = Requirement(
     num="3.1.3.2.1",
 )
 
-RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_SingleValueOrNull = Requirement(
-    name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SingleValueOrNull",
+RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_SingleValueOrNull = Requirement(
+    name="RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.SingleValueOrNull",
     version="1.0",
     priority=None,
     group=None,
@@ -2368,19 +2368,19 @@ SRS_031_ClickHouse_Aggregate_Functions = Specification(
         Heading(name="Miscellaneous Functions", level=3, num="3.1.3"),
         Heading(name="first_value", level=4, num="3.1.3.1"),
         Heading(
-            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.FirstValue",
+            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.FirstValue",
             level=5,
             num="3.1.3.1.1",
         ),
         Heading(name="last_value", level=4, num="3.1.3.2"),
         Heading(
-            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.LastValue",
+            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.LastValue",
             level=5,
             num="3.1.3.2.1",
         ),
         Heading(name="singleValueOrNull", level=4, num="3.1.3.3"),
         Heading(
-            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SingleValueOrNull",
+            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.SingleValueOrNull",
             level=5,
             num="3.1.3.3.1",
         ),
@@ -2659,9 +2659,9 @@ SRS_031_ClickHouse_Aggregate_Functions = Specification(
         RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_Entropy,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_MeanZTest,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_Sparkbar,
-        RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_FirstValue,
-        RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_LastValue,
-        RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_SingleValueOrNull,
+        RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_FirstValue,
+        RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_LastValue,
+        RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_SingleValueOrNull,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Histogram,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Sequencematch,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Sequencecount,
@@ -2848,11 +2848,11 @@ SRS_031_ClickHouse_Aggregate_Functions = Specification(
         * 3.1.2.57.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Sparkbar](#rqsrs-031clickhouseaggregatefunctionsspecificsparkbar)
     * 3.1.3 [Miscellaneous Functions](#miscellaneous-functions)
       * 3.1.3.1 [first_value](#first_value)
-        * 3.1.3.1.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.FirstValue](#rqsrs-031clickhouseaggregatefunctionsparametricfirstvalue)
+        * 3.1.3.1.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.FirstValue](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousfirstvalue)
       * 3.1.3.2 [last_value](#last_value)
-        * 3.1.3.2.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.LastValue](#rqsrs-031clickhouseaggregatefunctionsparametriclastvalue)
+        * 3.1.3.2.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.LastValue](#rqsrs-031clickhouseaggregatefunctionsmiscellaneouslastvalue)
       * 3.1.3.3 [singleValueOrNull](#singlevalueornull)
-        * 3.1.3.3.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SingleValueOrNull](#rqsrs-031clickhouseaggregatefunctionsparametricsinglevalueornull)
+        * 3.1.3.3.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.SingleValueOrNull](#rqsrs-031clickhouseaggregatefunctionsmiscellaneoussinglevalueornull)
     * 3.1.4 [Parametric Functions](#parametric-functions)
       * 3.1.4.1 [histogram](#histogram)
         * 3.1.4.1.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Histogram](#rqsrs-031clickhouseaggregatefunctionsparametrichistogram)
@@ -3447,21 +3447,21 @@ version: 1.0
 
 ##### first_value
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.FirstValue
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.FirstValue
 version: 1.0
 
 [ClickHouse] SHALL support `first_value` aggregate function.
 
 ##### last_value
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.LastValue
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.LastValue
 version: 1.0
 
 [ClickHouse] SHALL support `last_value` aggregate function.
 
 ##### singleValueOrNull
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SingleValueOrNull
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.SingleValueOrNull
 version: 1.0
 
 [ClickHouse] SHALL support `singleValueOrNull` aggregate function.

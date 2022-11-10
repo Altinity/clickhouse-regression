@@ -86,6 +86,9 @@ aggregate_functions = [
     "uniqUpTo",
     "sumMapFiltered",
     "sequenceNextNode",
+    "first_value",
+    "last_value",
+    "singleValueOrNull",
 ]
 
 
