@@ -10,6 +10,7 @@ import aggregate_functions.tests.sum as sum_tests
 import aggregate_functions.tests.avg as avg_tests
 import aggregate_functions.tests.any as any_tests
 import aggregate_functions.tests.argMin as argMin_tests
+import aggregate_functions.tests.argMax as argMax_tests
 
 
 @TestSuite
@@ -50,8 +51,14 @@ def any(self):
 
 @TestSuite
 def argMin(self):
-    """Check anyState combinator."""
+    """Check argMinState combinator."""
     load(argMin_tests, "feature")(func="hex(argMinState({params}))")
+
+
+@TestSuite
+def argMax(self):
+    """Check argMaxState combinator."""
+    load(argMax_tests, "feature")(func="hex(argMaxState({params}))")
 
 
 @TestFeature

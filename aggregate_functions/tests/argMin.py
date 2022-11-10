@@ -15,7 +15,7 @@ def execute_multi_query(self, query):
 
 @TestCheck
 def datatype(self, func, table, col1_name, col2_name):
-    """Check minArg with different column types."""
+    """Check different column types."""
     execute_query(f"SELECT {func.format(params=col1_name+','+col2_name)} FROM {table.name} FORMAT JSONEachRow")
 
 
@@ -23,7 +23,7 @@ def datatype(self, func, table, col1_name, col2_name):
 @Name("argMin")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_Argmin("1.0"))
 def feature(self, func="argMin({params})", table=None):
-    """Check argMin aggregate function."""
+    """Check argMin or argMax or one of their combinator aggregate functions. By default: argMin."""
     if table is None:
         table = self.context.table
 
