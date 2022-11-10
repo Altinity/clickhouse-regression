@@ -1,0 +1,77 @@
+_aggregate_functions_state_stddevSampState_constant = r"""
+{"hex(stddevSampState(1))":"000000000000F03F000000000000F03F000000000000F03F"}
+"""
+
+_aggregate_functions_state_stddevSampState_zero_rows = r"""
+{"hex(stddevSampState(number))":"000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stddevSampState_single_row = r"""
+{"hex(stddevSampState(number))":"000000000000F03F00000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stddevSampState_with_group_by = r"""
+{"even":0,"hex(stddevSampState(number))":"000000000000144000000000000034400000000000005E40"}
+{"even":1,"hex(stddevSampState(number))":"000000000000144000000000000039400000000000A06440"}
+"""
+
+_aggregate_functions_state_stddevSampState_some_negative_values = r"""
+{"hex(stddevSampState(minus(number, 5)))":"000000000000244000000000000014400000000000405540"}
+"""
+
+_aggregate_functions_state_stddevSampState_NULL_value_handling = r"""
+{"hex(stddevSampState(x))":"0100000000000014400000000000002A400000000000804940"}
+"""
+
+_aggregate_functions_state_stddevSampState_single_NULL_value = r"""
+{"hex(stddevSampState(x))":"00"}
+"""
+
+_aggregate_functions_state_stddevSampState_return_type = r"""
+{"toTypeName(hex(stddevSampState(number)))":"String"}
+"""
+
+_aggregate_functions_state_stddevSampState_doc_example = r"""
+{"hex(stddevSampState(x))":"00000000000018400000000000002E400000000000804B40"}
+"""
+
+_aggregate_functions_state_stddevSampState_Float32 = r"""
+{"hex(stddevSampState(float32))":"0000804012211A4B0000807F"}
+"""
+
+_aggregate_functions_state_stddevSampState_UInt8 = r"""
+{"hex(stddevSampState(uint8))":"00000000000010400000000000F077400000000010E0F340"}
+"""
+
+_aggregate_functions_state_stddevSampState_UInt16 = r"""
+{"hex(stddevSampState(uint16))":"000000000000104000000000E0FFF74000002000D0FFF341"}
+"""
+
+_aggregate_functions_state_stddevSampState_Int32 = r"""
+{"hex(stddevSampState(int32))":"00000000000010400000002022446341B5BD59990B00E043"}
+"""
+
+_aggregate_functions_state_stddevSampState_UInt64 = r"""
+{"hex(stddevSampState(uint64))":"00000000000010404F7EE76A3900F0437C0CCE000000F047"}
+"""
+
+_aggregate_functions_state_stddevSampState_Int8 = r"""
+{"hex(stddevSampState(int8))":"000000000000104000000000000059400000000040DBE440"}
+"""
+
+_aggregate_functions_state_stddevSampState_Int16 = r"""
+{"hex(stddevSampState(int16))":"00000000000010400000000000BAC3400000406F7BC2E041"}
+"""
+
+_aggregate_functions_state_stddevSampState_Float64 = r"""
+{"hex(stddevSampState(float64))":"000000000000104072ED3A2E065E5177000000000000F07F"}
+"""
+
+_aggregate_functions_state_stddevSampState_UInt32 = r"""
+{"hex(stddevSampState(uint32))":"0000000000001040000040AB5460F041F2CDA7F94302F043"}
+"""
+
+_aggregate_functions_state_stddevSampState_Int64 = r"""
+{"hex(stddevSampState(int64))":"0000000000001040909827BF73B50C43F7189C010000E047"}
+"""
+
