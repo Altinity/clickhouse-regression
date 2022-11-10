@@ -13,10 +13,12 @@ from helpers.tables import *
 from aggregate_functions.tests.steps import aggregate_functions
 from aggregate_functions.requirements import SRS_031_ClickHouse_Aggregate_Functions
 
+issue_43140 = "https://github.com/ClickHouse/ClickHouse/issues/43140"
+
 xfails = {
-    "/aggregate functions/singleValueOrNull/Map:": [(Fail, "not supported")],
-    "/aggregate functions/singleValueOrNull/Array:": [(Fail, "not supported")],
-    "/aggregate functions/singleValueOrNull/Tuple:": [(Fail, "not supported")],
+    "/aggregate functions/singleValueOrNull/Map:": [(Fail, issue_43140)],
+    "/aggregate functions/singleValueOrNull/Array:": [(Fail, issue_43140)],
+    "/aggregate functions/singleValueOrNull/Tuple:": [(Fail, issue_43140)],
 }
 
 
