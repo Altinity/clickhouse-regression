@@ -2487,3 +2487,11 @@ _aggregate_functions_first_value_Map_UInt32__Nullable_FixedString_85___ = r"""
 {"first_value(map_uint32_nullable_fixedstring)":{"0":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}}
 """
 
+_aggregate_functions_first_value_single_row = r"""
+{"first_value(number)":"0"}
+"""
+
+_aggregate_functions_first_value_single_NULL_value = r"""
+{"first_value(x)":null}
+"""
+

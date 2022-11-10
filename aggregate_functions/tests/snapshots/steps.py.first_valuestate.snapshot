@@ -2487,3 +2487,11 @@ _aggregate_functions_state_first_valueState_Map_UInt32__Nullable_FixedString_85_
 {"hex(first_valueState(map_uint32_nullable_fixedstring))":"0101000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"}
 """
 
+_aggregate_functions_state_first_valueState_single_row = r"""
+{"hex(first_valueState(number))":"010000000000000000"}
+"""
+
+_aggregate_functions_state_first_valueState_single_NULL_value = r"""
+{"hex(first_valueState(x))":"00"}
+"""
+

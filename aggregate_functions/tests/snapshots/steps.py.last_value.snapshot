@@ -2487,3 +2487,11 @@ _aggregate_functions_last_value_Map_UInt32__Nullable_FixedString_85___ = r"""
 {"last_value(map_uint32_nullable_fixedstring)":{"0":null}}
 """
 
+_aggregate_functions_last_value_single_row = r"""
+{"last_value(number)":"0"}
+"""
+
+_aggregate_functions_last_value_single_NULL_value = r"""
+{"last_value(x)":null}
+"""
+
