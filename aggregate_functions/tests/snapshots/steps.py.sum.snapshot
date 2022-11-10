@@ -11,47 +11,47 @@ _aggregate_functions_sum_with_group_by = r"""
 {"even":1,"sum(number)":"25"}
 """
 
-_aggregate_functions_sum_Int16 = r"""
-{"sum(int16)":"10100"}
-"""
-
-_aggregate_functions_sum_Int32 = r"""
-{"sum(int32)":"10101009"}
-"""
-
-_aggregate_functions_sum_Decimal128_38_ = r"""
-{"sum(decimal)":0.1010101}
-"""
-
-_aggregate_functions_sum_Float64 = r"""
-{"sum(float64)":5.6e266}
-"""
-
-_aggregate_functions_sum_Int8 = r"""
-{"sum(int8)":"100"}
-"""
-
-_aggregate_functions_sum_Int64 = r"""
-{"sum(int64)":"1010101010101009"}
+_aggregate_functions_sum_Float32 = r"""
+{"sum(float32)":10101010}
 """
 
 _aggregate_functions_sum_UInt16 = r"""
 {"sum(uint16)":"98302"}
 """
 
+_aggregate_functions_sum_Decimal128_38_ = r"""
+{"sum(decimal)":0.1010101}
+"""
+
+_aggregate_functions_sum_Int32 = r"""
+{"sum(int32)":"10101009"}
+"""
+
+_aggregate_functions_sum_Int64 = r"""
+{"sum(int64)":"1010101010101009"}
+"""
+
 _aggregate_functions_sum_UInt32 = r"""
 {"sum(uint32)":"4395977396"}
 """
 
-_aggregate_functions_sum_Float32 = r"""
-{"sum(float32)":10101010}
+_aggregate_functions_sum_UInt8 = r"""
+{"sum(uint8)":"383"}
 """
 
 _aggregate_functions_sum_UInt64 = r"""
 {"sum(uint64)":"1010101010101009"}
 """
 
-_aggregate_functions_sum_UInt8 = r"""
-{"sum(uint8)":"383"}
+_aggregate_functions_sum_Int8 = r"""
+{"sum(int8)":"100"}
+"""
+
+_aggregate_functions_sum_Int16 = r"""
+{"sum(int16)":"10100"}
+"""
+
+_aggregate_functions_sum_Float64 = r"""
+{"sum(float64)":5.6e266}
 """
 
