@@ -70,9 +70,11 @@ def regression(
     ) as cluster:
         self.context.cluster = cluster
         nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
-        self.context.parquet_table_def = cluster.node("clickhouse1").command(
-            "cat /var/lib/clickhouse/user_files/clickhouse_table_def.txt"
-        ).output.strip()
+        self.context.parquet_table_def = (
+            cluster.node("clickhouse1")
+            .command("cat /var/lib/clickhouse/user_files/clickhouse_table_def.txt")
+            .output.strip()
+        )
         pause()
 
         Feature(run=load("parquet.tests.file", "feature"))

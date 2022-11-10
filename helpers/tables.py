@@ -38,7 +38,7 @@ data_types_and_values = {
 }
 
 
-def is_numeric(datatype):
+def is_numeric(datatype, decimal=True):
     """Return True if data type is numeric."""
     if datatype.startswith("UInt"):
         return True
@@ -46,9 +46,11 @@ def is_numeric(datatype):
         return True
     if datatype.startswith("Float"):
         return True
-    if datatype.startswith("Decimal"):
-        return True
+    if decimal:
+        if datatype.startswith("Decimal"):
+            return True
     return False
+
 
 basic_columns = [
     "uint8 UInt8",
@@ -77,12 +79,12 @@ common_basic_columns = [
     "int64 Int64",
     "float64 Float64",
     "float32 Float32",
-    "decimal Decimal128(38)"
+    "decimal Decimal128(38)",
 ]
 
 common_complex_columns = [
     "array_string Array(String)",
-    "map_low_card_string_low_card_float64 Map(LowCardinality(String),LowCardinality(Float64))"
+    "map_low_card_string_low_card_float64 Map(LowCardinality(String),LowCardinality(Float64))",
 ]
 
 low_cardinality_common_basic_columns = []
@@ -101,20 +103,22 @@ for type in common_basic_columns:
         "nullable_" + type.split(" ", 1)[0] + f" Nullable({type.split(' ',1)[1]})"
     )
 
-common_columns = common_basic_columns + low_cardinality_common_basic_columns + null_common_basic_columns + common_complex_columns
+common_columns = (
+    common_basic_columns
+    + low_cardinality_common_basic_columns
+    + null_common_basic_columns
+    + common_complex_columns
+)
 
 map_key_types = [
     column
     for column in basic_columns
-    if column
-    not in ["float32 Float32", "float64 Float64", "decimal Decimal128(38)"]
+    if column not in ["float32 Float32", "float64 Float64", "decimal Decimal128(38)"]
 ]
 
 container_columns = [
     f"array Array({basic_columns[0].split(' ')[1]})",
-    "tuple Tuple("
-    + ",".join([column.split(" ")[1] for column in basic_columns])
-    + ","
+    "tuple Tuple(" + ",".join([column.split(" ")[1] for column in basic_columns]) + ","
     f"Array({basic_columns[0].split(' ')[1]}),Tuple({basic_columns[0].split(' ')[1]}),Map({map_key_types[0].split(' ')[1]}, {basic_columns[0].split(' ')[1]}))",
     f"map Map({map_key_types[0].split(' ')[1]}, {basic_columns[0].split(' ')[1]})",
 ]

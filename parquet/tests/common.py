@@ -133,7 +133,9 @@ def upload_file_to_s3(self, file_src, file_dest):
 
     elif self.context.storage == "minio":
         with By("Uploading a file"):
-            self.context.client.fput_object(self.context.cluster.minio_bucket, file_dest, file_src)
+            self.context.client.fput_object(
+                self.context.cluster.minio_bucket, file_dest, file_src
+            )
 
     return
 
@@ -216,7 +218,9 @@ def check_source_file_on_s3(self, file, expected=None, compression_type=None):
 
     elif self.context.storage == "minio":
         with By("Downloading the file"):
-            self.context.client.fput_object(self.context.cluster.minio_bucket, file, "data.Parquet")
+            self.context.client.fput_object(
+                self.context.cluster.minio_bucket, file, "data.Parquet"
+            )
 
     with By("copying the file to the docker node"):
         x = self.context.cluster.command(
