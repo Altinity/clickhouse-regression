@@ -1,0 +1,73 @@
+_aggregate_functions_avg_constant = r"""
+{"avg(1)":1}
+"""
+
+_aggregate_functions_avg_zero_rows = r"""
+{"avg(number)":null}
+"""
+
+_aggregate_functions_avg_with_group_by = r"""
+{"even":0,"avg(number)":4}
+{"even":1,"avg(number)":5}
+"""
+
+_aggregate_functions_avg_some_negative_values = r"""
+{"minus(avg(number), 5)":0.5}
+"""
+
+_aggregate_functions_avg_NULL_value_handling = r"""
+{"avg(x)":2.6}
+"""
+
+_aggregate_functions_avg_return_type = r"""
+{"toTypeName(avg(number))":"Float64"}
+"""
+
+_aggregate_functions_avg_doc_example = r"""
+{"avg(x)":2.5}
+"""
+
+_aggregate_functions_avg_Int16 = r"""
+{"avg(int16)":2525}
+"""
+
+_aggregate_functions_avg_Int32 = r"""
+{"avg(int32)":2525252.25}
+"""
+
+_aggregate_functions_avg_Decimal128_38_ = r"""
+{"avg(decimal)":0.025252525}
+"""
+
+_aggregate_functions_avg_Float64 = r"""
+{"avg(float64)":1.4e266}
+"""
+
+_aggregate_functions_avg_Int8 = r"""
+{"avg(int8)":25}
+"""
+
+_aggregate_functions_avg_Int64 = r"""
+{"avg(int64)":252525252525252.25}
+"""
+
+_aggregate_functions_avg_UInt16 = r"""
+{"avg(uint16)":24575.5}
+"""
+
+_aggregate_functions_avg_UInt32 = r"""
+{"avg(uint32)":1098994349}
+"""
+
+_aggregate_functions_avg_Float32 = r"""
+{"avg(float32)":2525252.5}
+"""
+
+_aggregate_functions_avg_UInt64 = r"""
+{"avg(uint64)":252525252525252.25}
+"""
+
+_aggregate_functions_avg_UInt8 = r"""
+{"avg(uint8)":95.75}
+"""
+

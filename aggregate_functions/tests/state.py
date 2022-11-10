@@ -13,49 +13,49 @@ import aggregate_functions.tests.argMin as argMin_tests
 import aggregate_functions.tests.argMax as argMax_tests
 
 
-@TestSuite
+@TestFeature
 def count(self):
     """Check countState combinator."""
     load(count_tests, "feature")(func="hex(countState({params}))")
 
 
-@TestSuite
+@TestFeature
 def min(self):
     """Check minState combinator."""
     load(min_tests, "feature")(func="hex(minState({params}))")
 
 
-@TestSuite
+@TestFeature
 def max(self):
     """Check maxState combinator."""
     load(max_tests, "feature")(func="hex(maxState({params}))")
 
 
-@TestSuite
+@TestFeature
 def sum(self):
     """Check sumState combinator."""
     load(sum_tests, "feature")(func="hex(sumState({params}))")
 
 
-@TestSuite
+@TestFeature
 def avg(self):
     """Check avgState combinator."""
     load(avg_tests, "feature")(func="hex(avgState({params}))")
 
 
-@TestSuite
+@TestFeature
 def any(self):
     """Check anyState combinator."""
     load(any_tests, "feature")(func="hex(anyState({params}))")
 
 
-@TestSuite
+@TestFeature
 def argMin(self):
     """Check argMinState combinator."""
     load(argMin_tests, "feature")(func="hex(argMinState({params}))")
 
 
-@TestSuite
+@TestFeature
 def argMax(self):
     """Check argMaxState combinator."""
     load(argMax_tests, "feature")(func="hex(argMaxState({params}))")

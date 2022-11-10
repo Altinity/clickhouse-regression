@@ -104,6 +104,8 @@ def execute_query(
     if snapshot_name is None:
         snapshot_name = current().name
 
+    assert "snapshot_id" in current().context, "test must set self.context.snapshot_id"
+
     with When("I execute query", description=sql):
         if format and not "FORMAT" in sql:
             sql += " FORMAT " + format
@@ -129,7 +131,7 @@ def execute_query(
                     assert that(
                         snapshot(
                             "\n" + r.output.strip() + "\n",
-                            id="tests",
+                            id=current().context.snapshot_id,
                             name=snapshot_name,
                             encoder=str,
                         )

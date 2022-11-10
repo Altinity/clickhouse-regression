@@ -1,0 +1,2829 @@
+_aggregate_functions_argMin_constant = r"""
+{"argMin(1, 2)":1}
+"""
+
+_aggregate_functions_argMin_zero_rows = r"""
+{"argMin(number, plus(number, 1))":"0"}
+"""
+
+_aggregate_functions_argMin_with_group_by = r"""
+{"even":0,"argMin(number, modulo(number, 2))":"0"}
+{"even":1,"argMin(number, modulo(number, 2))":"1"}
+"""
+
+_aggregate_functions_argMin_NULL_value_handling = r"""
+{"argMin(x, y)":3}
+"""
+
+_aggregate_functions_argMin_doc_example = r"""
+{"argMin(user, salary)":"worker"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Array_String__Date = r"""
+{"argMin(array_string, date)":[""]}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Array_String__DateTime = r"""
+{"argMin(array_string, datetime)":[""]}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Array_String__FixedString_85_ = r"""
+{"argMin(array_string, fixedstring)":[""]}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Array_String__Float32 = r"""
+{"argMin(array_string, float32)":[""]}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Array_String__Decimal128_38_ = r"""
+{"argMin(array_string, decimal)":[""]}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Array_String__Float64 = r"""
+{"argMin(array_string, float64)":[""]}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Array_String__Int64 = r"""
+{"argMin(array_string, int64)":[""]}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Array_String__LowCardinality_Date_ = r"""
+{"argMin(array_string, low_card_date)":[""]}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Array_String__LowCardinality_DateTime_ = r"""
+{"argMin(array_string, low_card_datetime)":[""]}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Array_String__LowCardinality_Float32_ = r"""
+{"argMin(array_string, low_card_float32)":[""]}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Array_String__LowCardinality_FixedString_85__ = r"""
+{"argMin(array_string, low_card_fixedstring)":[""]}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Array_String__LowCardinality_Float64_ = r"""
+{"argMin(array_string, low_card_float64)":[""]}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Array_String__LowCardinality_String_ = r"""
+{"argMin(array_string, low_card_string)":[""]}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Array_String__LowCardinality_UInt64_ = r"""
+{"argMin(array_string, low_card_uint64)":[""]}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Array_String__LowCardinality_Int64_ = r"""
+{"argMin(array_string, low_card_int64)":[""]}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Array_String__Nullable_Date_ = r"""
+{"argMin(array_string, nullable_date)":[""]}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Array_String__Nullable_DateTime_ = r"""
+{"argMin(array_string, nullable_datetime)":[""]}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Array_String__Nullable_Decimal128_38__ = r"""
+{"argMin(array_string, nullable_decimal)":[""]}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Array_String__Nullable_FixedString_85__ = r"""
+{"argMin(array_string, nullable_fixedstring)":[""]}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Array_String__Nullable_Float32_ = r"""
+{"argMin(array_string, nullable_float32)":[""]}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Array_String__Nullable_Int64_ = r"""
+{"argMin(array_string, nullable_int64)":[""]}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Array_String__Nullable_Float64_ = r"""
+{"argMin(array_string, nullable_float64)":[""]}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Array_String__Nullable_String_ = r"""
+{"argMin(array_string, nullable_string)":[""]}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Array_String__Nullable_UInt64_ = r"""
+{"argMin(array_string, nullable_uint64)":[""]}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Array_String__String = r"""
+{"argMin(array_string, string)":[""]}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Array_String__UInt64 = r"""
+{"argMin(array_string, uint64)":[""]}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Date_Array_String_ = r"""
+{"argMin(date, array_string)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Date_DateTime = r"""
+{"argMin(date, datetime)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Date_Decimal128_38_ = r"""
+{"argMin(date, decimal)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Date_FixedString_85_ = r"""
+{"argMin(date, fixedstring)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Date_Float32 = r"""
+{"argMin(date, float32)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Date_Float64 = r"""
+{"argMin(date, float64)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Date_Int64 = r"""
+{"argMin(date, int64)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Date_LowCardinality_Date_ = r"""
+{"argMin(date, low_card_date)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Date_LowCardinality_DateTime_ = r"""
+{"argMin(date, low_card_datetime)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Date_LowCardinality_FixedString_85__ = r"""
+{"argMin(date, low_card_fixedstring)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Date_LowCardinality_Float32_ = r"""
+{"argMin(date, low_card_float32)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Date_LowCardinality_Float64_ = r"""
+{"argMin(date, low_card_float64)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Date_LowCardinality_UInt64_ = r"""
+{"argMin(date, low_card_uint64)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Date_LowCardinality_String_ = r"""
+{"argMin(date, low_card_string)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Date_LowCardinality_Int64_ = r"""
+{"argMin(date, low_card_int64)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Date_Nullable_Date_ = r"""
+{"argMin(date, nullable_date)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Date_Nullable_Decimal128_38__ = r"""
+{"argMin(date, nullable_decimal)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Date_Nullable_DateTime_ = r"""
+{"argMin(date, nullable_datetime)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Date_Nullable_Float64_ = r"""
+{"argMin(date, nullable_float64)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Date_Nullable_FixedString_85__ = r"""
+{"argMin(date, nullable_fixedstring)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Date_Nullable_Float32_ = r"""
+{"argMin(date, nullable_float32)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Date_Nullable_String_ = r"""
+{"argMin(date, nullable_string)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Date_Nullable_Int64_ = r"""
+{"argMin(date, nullable_int64)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Date_Nullable_UInt64_ = r"""
+{"argMin(date, nullable_uint64)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Date_String = r"""
+{"argMin(date, string)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Date_UInt64 = r"""
+{"argMin(date, uint64)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_DateTime_Array_String_ = r"""
+{"argMin(datetime, array_string)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_DateTime_Decimal128_38_ = r"""
+{"argMin(datetime, decimal)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_DateTime_Date = r"""
+{"argMin(datetime, date)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_DateTime_FixedString_85_ = r"""
+{"argMin(datetime, fixedstring)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_DateTime_Float32 = r"""
+{"argMin(datetime, float32)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_DateTime_Float64 = r"""
+{"argMin(datetime, float64)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_DateTime_Int64 = r"""
+{"argMin(datetime, int64)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_DateTime_LowCardinality_Date_ = r"""
+{"argMin(datetime, low_card_date)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_DateTime_LowCardinality_DateTime_ = r"""
+{"argMin(datetime, low_card_datetime)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_DateTime_LowCardinality_Float64_ = r"""
+{"argMin(datetime, low_card_float64)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_DateTime_LowCardinality_FixedString_85__ = r"""
+{"argMin(datetime, low_card_fixedstring)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_DateTime_LowCardinality_Float32_ = r"""
+{"argMin(datetime, low_card_float32)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_DateTime_LowCardinality_String_ = r"""
+{"argMin(datetime, low_card_string)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_DateTime_LowCardinality_Int64_ = r"""
+{"argMin(datetime, low_card_int64)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_DateTime_LowCardinality_UInt64_ = r"""
+{"argMin(datetime, low_card_uint64)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_DateTime_Nullable_Date_ = r"""
+{"argMin(datetime, nullable_date)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_DateTime_Nullable_DateTime_ = r"""
+{"argMin(datetime, nullable_datetime)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_DateTime_Nullable_Decimal128_38__ = r"""
+{"argMin(datetime, nullable_decimal)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_DateTime_Nullable_FixedString_85__ = r"""
+{"argMin(datetime, nullable_fixedstring)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_DateTime_Nullable_Float32_ = r"""
+{"argMin(datetime, nullable_float32)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_DateTime_Nullable_Float64_ = r"""
+{"argMin(datetime, nullable_float64)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_DateTime_Nullable_Int64_ = r"""
+{"argMin(datetime, nullable_int64)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_DateTime_Nullable_UInt64_ = r"""
+{"argMin(datetime, nullable_uint64)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_DateTime_Nullable_String_ = r"""
+{"argMin(datetime, nullable_string)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_DateTime_String = r"""
+{"argMin(datetime, string)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_DateTime_UInt64 = r"""
+{"argMin(datetime, uint64)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Decimal128_38__Array_String_ = r"""
+{"argMin(decimal, array_string)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Decimal128_38__Date = r"""
+{"argMin(decimal, date)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Decimal128_38__DateTime = r"""
+{"argMin(decimal, datetime)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Decimal128_38__FixedString_85_ = r"""
+{"argMin(decimal, fixedstring)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Decimal128_38__Float32 = r"""
+{"argMin(decimal, float32)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Decimal128_38__Int64 = r"""
+{"argMin(decimal, int64)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Decimal128_38__Float64 = r"""
+{"argMin(decimal, float64)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Decimal128_38__LowCardinality_Date_ = r"""
+{"argMin(decimal, low_card_date)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Decimal128_38__LowCardinality_DateTime_ = r"""
+{"argMin(decimal, low_card_datetime)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Decimal128_38__LowCardinality_FixedString_85__ = r"""
+{"argMin(decimal, low_card_fixedstring)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Decimal128_38__LowCardinality_Float32_ = r"""
+{"argMin(decimal, low_card_float32)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Decimal128_38__LowCardinality_Float64_ = r"""
+{"argMin(decimal, low_card_float64)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Decimal128_38__LowCardinality_Int64_ = r"""
+{"argMin(decimal, low_card_int64)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Decimal128_38__LowCardinality_String_ = r"""
+{"argMin(decimal, low_card_string)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Decimal128_38__LowCardinality_UInt64_ = r"""
+{"argMin(decimal, low_card_uint64)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Decimal128_38__Nullable_DateTime_ = r"""
+{"argMin(decimal, nullable_datetime)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Decimal128_38__Nullable_Date_ = r"""
+{"argMin(decimal, nullable_date)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Decimal128_38__Nullable_Decimal128_38__ = r"""
+{"argMin(decimal, nullable_decimal)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Decimal128_38__Nullable_FixedString_85__ = r"""
+{"argMin(decimal, nullable_fixedstring)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Decimal128_38__Nullable_Float32_ = r"""
+{"argMin(decimal, nullable_float32)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Decimal128_38__Nullable_Float64_ = r"""
+{"argMin(decimal, nullable_float64)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Decimal128_38__Nullable_String_ = r"""
+{"argMin(decimal, nullable_string)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Decimal128_38__Nullable_Int64_ = r"""
+{"argMin(decimal, nullable_int64)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Decimal128_38__Nullable_UInt64_ = r"""
+{"argMin(decimal, nullable_uint64)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Decimal128_38__String = r"""
+{"argMin(decimal, string)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Decimal128_38__UInt64 = r"""
+{"argMin(decimal, uint64)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_FixedString_85__Date = r"""
+{"argMin(fixedstring, date)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_FixedString_85__Array_String_ = r"""
+{"argMin(fixedstring, array_string)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_FixedString_85__DateTime = r"""
+{"argMin(fixedstring, datetime)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_FixedString_85__Decimal128_38_ = r"""
+{"argMin(fixedstring, decimal)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_FixedString_85__Float64 = r"""
+{"argMin(fixedstring, float64)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_FixedString_85__Float32 = r"""
+{"argMin(fixedstring, float32)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_FixedString_85__LowCardinality_DateTime_ = r"""
+{"argMin(fixedstring, low_card_datetime)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_FixedString_85__Int64 = r"""
+{"argMin(fixedstring, int64)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_FixedString_85__LowCardinality_Date_ = r"""
+{"argMin(fixedstring, low_card_date)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_FixedString_85__LowCardinality_FixedString_85__ = r"""
+{"argMin(fixedstring, low_card_fixedstring)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_FixedString_85__LowCardinality_Float32_ = r"""
+{"argMin(fixedstring, low_card_float32)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_FixedString_85__LowCardinality_Float64_ = r"""
+{"argMin(fixedstring, low_card_float64)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_FixedString_85__LowCardinality_Int64_ = r"""
+{"argMin(fixedstring, low_card_int64)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_FixedString_85__LowCardinality_UInt64_ = r"""
+{"argMin(fixedstring, low_card_uint64)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_FixedString_85__LowCardinality_String_ = r"""
+{"argMin(fixedstring, low_card_string)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_FixedString_85__Nullable_Date_ = r"""
+{"argMin(fixedstring, nullable_date)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_FixedString_85__Nullable_DateTime_ = r"""
+{"argMin(fixedstring, nullable_datetime)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_FixedString_85__Nullable_Decimal128_38__ = r"""
+{"argMin(fixedstring, nullable_decimal)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_FixedString_85__Nullable_FixedString_85__ = r"""
+{"argMin(fixedstring, nullable_fixedstring)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_FixedString_85__Nullable_Float32_ = r"""
+{"argMin(fixedstring, nullable_float32)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_FixedString_85__Nullable_Float64_ = r"""
+{"argMin(fixedstring, nullable_float64)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_FixedString_85__Nullable_Int64_ = r"""
+{"argMin(fixedstring, nullable_int64)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_FixedString_85__Nullable_String_ = r"""
+{"argMin(fixedstring, nullable_string)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_FixedString_85__String = r"""
+{"argMin(fixedstring, string)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_FixedString_85__Nullable_UInt64_ = r"""
+{"argMin(fixedstring, nullable_uint64)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_FixedString_85__UInt64 = r"""
+{"argMin(fixedstring, uint64)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float32_Date = r"""
+{"argMin(float32, date)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float32_Array_String_ = r"""
+{"argMin(float32, array_string)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float32_DateTime = r"""
+{"argMin(float32, datetime)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float32_Decimal128_38_ = r"""
+{"argMin(float32, decimal)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float32_FixedString_85_ = r"""
+{"argMin(float32, fixedstring)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float32_Float64 = r"""
+{"argMin(float32, float64)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float32_LowCardinality_Date_ = r"""
+{"argMin(float32, low_card_date)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float32_Int64 = r"""
+{"argMin(float32, int64)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float32_LowCardinality_DateTime_ = r"""
+{"argMin(float32, low_card_datetime)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float32_LowCardinality_FixedString_85__ = r"""
+{"argMin(float32, low_card_fixedstring)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float32_LowCardinality_Float32_ = r"""
+{"argMin(float32, low_card_float32)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float32_LowCardinality_Float64_ = r"""
+{"argMin(float32, low_card_float64)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float32_LowCardinality_Int64_ = r"""
+{"argMin(float32, low_card_int64)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float32_LowCardinality_String_ = r"""
+{"argMin(float32, low_card_string)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float32_LowCardinality_UInt64_ = r"""
+{"argMin(float32, low_card_uint64)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float32_Nullable_Date_ = r"""
+{"argMin(float32, nullable_date)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float32_Nullable_DateTime_ = r"""
+{"argMin(float32, nullable_datetime)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float32_Nullable_Decimal128_38__ = r"""
+{"argMin(float32, nullable_decimal)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float32_Nullable_FixedString_85__ = r"""
+{"argMin(float32, nullable_fixedstring)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float32_Nullable_Float32_ = r"""
+{"argMin(float32, nullable_float32)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float32_Nullable_Float64_ = r"""
+{"argMin(float32, nullable_float64)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float32_Nullable_Int64_ = r"""
+{"argMin(float32, nullable_int64)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float32_Nullable_String_ = r"""
+{"argMin(float32, nullable_string)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float32_Nullable_UInt64_ = r"""
+{"argMin(float32, nullable_uint64)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float32_String = r"""
+{"argMin(float32, string)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float32_UInt64 = r"""
+{"argMin(float32, uint64)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float64_Date = r"""
+{"argMin(float64, date)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float64_Array_String_ = r"""
+{"argMin(float64, array_string)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float64_DateTime = r"""
+{"argMin(float64, datetime)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float64_Decimal128_38_ = r"""
+{"argMin(float64, decimal)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float64_FixedString_85_ = r"""
+{"argMin(float64, fixedstring)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float64_Int64 = r"""
+{"argMin(float64, int64)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float64_Float32 = r"""
+{"argMin(float64, float32)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float64_LowCardinality_Date_ = r"""
+{"argMin(float64, low_card_date)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float64_LowCardinality_FixedString_85__ = r"""
+{"argMin(float64, low_card_fixedstring)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float64_LowCardinality_DateTime_ = r"""
+{"argMin(float64, low_card_datetime)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float64_LowCardinality_Float32_ = r"""
+{"argMin(float64, low_card_float32)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float64_LowCardinality_Float64_ = r"""
+{"argMin(float64, low_card_float64)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float64_LowCardinality_Int64_ = r"""
+{"argMin(float64, low_card_int64)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float64_LowCardinality_String_ = r"""
+{"argMin(float64, low_card_string)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float64_LowCardinality_UInt64_ = r"""
+{"argMin(float64, low_card_uint64)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float64_Nullable_Date_ = r"""
+{"argMin(float64, nullable_date)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float64_Nullable_DateTime_ = r"""
+{"argMin(float64, nullable_datetime)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float64_Nullable_Decimal128_38__ = r"""
+{"argMin(float64, nullable_decimal)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float64_Nullable_FixedString_85__ = r"""
+{"argMin(float64, nullable_fixedstring)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float64_Nullable_Float32_ = r"""
+{"argMin(float64, nullable_float32)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float64_Nullable_Float64_ = r"""
+{"argMin(float64, nullable_float64)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float64_Nullable_Int64_ = r"""
+{"argMin(float64, nullable_int64)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float64_Nullable_UInt64_ = r"""
+{"argMin(float64, nullable_uint64)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float64_Nullable_String_ = r"""
+{"argMin(float64, nullable_string)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float64_String = r"""
+{"argMin(float64, string)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Float64_UInt64 = r"""
+{"argMin(float64, uint64)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Int64_Array_String_ = r"""
+{"argMin(int64, array_string)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Int64_Decimal128_38_ = r"""
+{"argMin(int64, decimal)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Int64_Date = r"""
+{"argMin(int64, date)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Int64_DateTime = r"""
+{"argMin(int64, datetime)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Int64_FixedString_85_ = r"""
+{"argMin(int64, fixedstring)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Int64_Float64 = r"""
+{"argMin(int64, float64)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Int64_Float32 = r"""
+{"argMin(int64, float32)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Int64_LowCardinality_Date_ = r"""
+{"argMin(int64, low_card_date)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Int64_LowCardinality_FixedString_85__ = r"""
+{"argMin(int64, low_card_fixedstring)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Int64_LowCardinality_DateTime_ = r"""
+{"argMin(int64, low_card_datetime)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Int64_LowCardinality_Float32_ = r"""
+{"argMin(int64, low_card_float32)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Int64_LowCardinality_Float64_ = r"""
+{"argMin(int64, low_card_float64)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Int64_LowCardinality_Int64_ = r"""
+{"argMin(int64, low_card_int64)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Int64_LowCardinality_String_ = r"""
+{"argMin(int64, low_card_string)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Int64_LowCardinality_UInt64_ = r"""
+{"argMin(int64, low_card_uint64)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Int64_Nullable_Date_ = r"""
+{"argMin(int64, nullable_date)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Int64_Nullable_DateTime_ = r"""
+{"argMin(int64, nullable_datetime)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Int64_Nullable_Decimal128_38__ = r"""
+{"argMin(int64, nullable_decimal)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Int64_Nullable_FixedString_85__ = r"""
+{"argMin(int64, nullable_fixedstring)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Int64_Nullable_Float32_ = r"""
+{"argMin(int64, nullable_float32)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Int64_Nullable_Float64_ = r"""
+{"argMin(int64, nullable_float64)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Int64_Nullable_Int64_ = r"""
+{"argMin(int64, nullable_int64)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Int64_Nullable_String_ = r"""
+{"argMin(int64, nullable_string)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Int64_Nullable_UInt64_ = r"""
+{"argMin(int64, nullable_uint64)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Int64_UInt64 = r"""
+{"argMin(int64, uint64)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Int64_String = r"""
+{"argMin(int64, string)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Date__DateTime = r"""
+{"argMin(low_card_date, datetime)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Date__Date = r"""
+{"argMin(low_card_date, date)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Date__Array_String_ = r"""
+{"argMin(low_card_date, array_string)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Date__FixedString_85_ = r"""
+{"argMin(low_card_date, fixedstring)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Date__Decimal128_38_ = r"""
+{"argMin(low_card_date, decimal)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Date__Float32 = r"""
+{"argMin(low_card_date, float32)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Date__Int64 = r"""
+{"argMin(low_card_date, int64)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Date__LowCardinality_DateTime_ = r"""
+{"argMin(low_card_date, low_card_datetime)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Date__Float64 = r"""
+{"argMin(low_card_date, float64)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Date__LowCardinality_Float32_ = r"""
+{"argMin(low_card_date, low_card_float32)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Date__LowCardinality_FixedString_85__ = r"""
+{"argMin(low_card_date, low_card_fixedstring)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Date__LowCardinality_Float64_ = r"""
+{"argMin(low_card_date, low_card_float64)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Date__LowCardinality_Int64_ = r"""
+{"argMin(low_card_date, low_card_int64)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Date__LowCardinality_String_ = r"""
+{"argMin(low_card_date, low_card_string)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Date__LowCardinality_UInt64_ = r"""
+{"argMin(low_card_date, low_card_uint64)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Date__Nullable_DateTime_ = r"""
+{"argMin(low_card_date, nullable_datetime)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Date__Nullable_Date_ = r"""
+{"argMin(low_card_date, nullable_date)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Date__Nullable_Decimal128_38__ = r"""
+{"argMin(low_card_date, nullable_decimal)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Date__Nullable_FixedString_85__ = r"""
+{"argMin(low_card_date, nullable_fixedstring)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Date__Nullable_Float32_ = r"""
+{"argMin(low_card_date, nullable_float32)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Date__Nullable_Float64_ = r"""
+{"argMin(low_card_date, nullable_float64)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Date__Nullable_Int64_ = r"""
+{"argMin(low_card_date, nullable_int64)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Date__Nullable_String_ = r"""
+{"argMin(low_card_date, nullable_string)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Date__Nullable_UInt64_ = r"""
+{"argMin(low_card_date, nullable_uint64)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Date__String = r"""
+{"argMin(low_card_date, string)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_DateTime__Array_String_ = r"""
+{"argMin(low_card_datetime, array_string)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Date__UInt64 = r"""
+{"argMin(low_card_date, uint64)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_DateTime__Date = r"""
+{"argMin(low_card_datetime, date)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_DateTime__DateTime = r"""
+{"argMin(low_card_datetime, datetime)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_DateTime__Decimal128_38_ = r"""
+{"argMin(low_card_datetime, decimal)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_DateTime__FixedString_85_ = r"""
+{"argMin(low_card_datetime, fixedstring)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_DateTime__Float32 = r"""
+{"argMin(low_card_datetime, float32)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_DateTime__Float64 = r"""
+{"argMin(low_card_datetime, float64)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_DateTime__Int64 = r"""
+{"argMin(low_card_datetime, int64)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_DateTime__LowCardinality_Float32_ = r"""
+{"argMin(low_card_datetime, low_card_float32)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_DateTime__LowCardinality_FixedString_85__ = r"""
+{"argMin(low_card_datetime, low_card_fixedstring)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_DateTime__LowCardinality_Date_ = r"""
+{"argMin(low_card_datetime, low_card_date)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_DateTime__LowCardinality_Float64_ = r"""
+{"argMin(low_card_datetime, low_card_float64)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_DateTime__LowCardinality_Int64_ = r"""
+{"argMin(low_card_datetime, low_card_int64)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_DateTime__LowCardinality_String_ = r"""
+{"argMin(low_card_datetime, low_card_string)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_DateTime__LowCardinality_UInt64_ = r"""
+{"argMin(low_card_datetime, low_card_uint64)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_DateTime__Nullable_Date_ = r"""
+{"argMin(low_card_datetime, nullable_date)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_DateTime__Nullable_DateTime_ = r"""
+{"argMin(low_card_datetime, nullable_datetime)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_DateTime__Nullable_Decimal128_38__ = r"""
+{"argMin(low_card_datetime, nullable_decimal)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_DateTime__Nullable_Float32_ = r"""
+{"argMin(low_card_datetime, nullable_float32)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_DateTime__Nullable_FixedString_85__ = r"""
+{"argMin(low_card_datetime, nullable_fixedstring)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_DateTime__Nullable_String_ = r"""
+{"argMin(low_card_datetime, nullable_string)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_DateTime__Nullable_Float64_ = r"""
+{"argMin(low_card_datetime, nullable_float64)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_DateTime__Nullable_Int64_ = r"""
+{"argMin(low_card_datetime, nullable_int64)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_DateTime__Nullable_UInt64_ = r"""
+{"argMin(low_card_datetime, nullable_uint64)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_DateTime__UInt64 = r"""
+{"argMin(low_card_datetime, uint64)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_DateTime__String = r"""
+{"argMin(low_card_datetime, string)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_FixedString_85___Date = r"""
+{"argMin(low_card_fixedstring, date)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_FixedString_85___DateTime = r"""
+{"argMin(low_card_fixedstring, datetime)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_FixedString_85___Array_String_ = r"""
+{"argMin(low_card_fixedstring, array_string)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_FixedString_85___Decimal128_38_ = r"""
+{"argMin(low_card_fixedstring, decimal)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_FixedString_85___FixedString_85_ = r"""
+{"argMin(low_card_fixedstring, fixedstring)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_FixedString_85___Float32 = r"""
+{"argMin(low_card_fixedstring, float32)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_FixedString_85___LowCardinality_Date_ = r"""
+{"argMin(low_card_fixedstring, low_card_date)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_FixedString_85___Int64 = r"""
+{"argMin(low_card_fixedstring, int64)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_FixedString_85___Float64 = r"""
+{"argMin(low_card_fixedstring, float64)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_FixedString_85___LowCardinality_Float32_ = r"""
+{"argMin(low_card_fixedstring, low_card_float32)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_FixedString_85___LowCardinality_Float64_ = r"""
+{"argMin(low_card_fixedstring, low_card_float64)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_FixedString_85___LowCardinality_DateTime_ = r"""
+{"argMin(low_card_fixedstring, low_card_datetime)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_FixedString_85___LowCardinality_Int64_ = r"""
+{"argMin(low_card_fixedstring, low_card_int64)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_FixedString_85___LowCardinality_UInt64_ = r"""
+{"argMin(low_card_fixedstring, low_card_uint64)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_FixedString_85___LowCardinality_String_ = r"""
+{"argMin(low_card_fixedstring, low_card_string)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_FixedString_85___Nullable_DateTime_ = r"""
+{"argMin(low_card_fixedstring, nullable_datetime)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_FixedString_85___Nullable_Date_ = r"""
+{"argMin(low_card_fixedstring, nullable_date)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_FixedString_85___Nullable_Decimal128_38__ = r"""
+{"argMin(low_card_fixedstring, nullable_decimal)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_FixedString_85___Nullable_Float32_ = r"""
+{"argMin(low_card_fixedstring, nullable_float32)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_FixedString_85___Nullable_Float64_ = r"""
+{"argMin(low_card_fixedstring, nullable_float64)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_FixedString_85___Nullable_FixedString_85__ = r"""
+{"argMin(low_card_fixedstring, nullable_fixedstring)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_FixedString_85___Nullable_String_ = r"""
+{"argMin(low_card_fixedstring, nullable_string)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_FixedString_85___Nullable_Int64_ = r"""
+{"argMin(low_card_fixedstring, nullable_int64)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_FixedString_85___Nullable_UInt64_ = r"""
+{"argMin(low_card_fixedstring, nullable_uint64)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_FixedString_85___String = r"""
+{"argMin(low_card_fixedstring, string)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float32__Array_String_ = r"""
+{"argMin(low_card_float32, array_string)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_FixedString_85___UInt64 = r"""
+{"argMin(low_card_fixedstring, uint64)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float32__Date = r"""
+{"argMin(low_card_float32, date)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float32__DateTime = r"""
+{"argMin(low_card_float32, datetime)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float32__Decimal128_38_ = r"""
+{"argMin(low_card_float32, decimal)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float32__FixedString_85_ = r"""
+{"argMin(low_card_float32, fixedstring)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float32__Float32 = r"""
+{"argMin(low_card_float32, float32)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float32__Float64 = r"""
+{"argMin(low_card_float32, float64)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float32__Int64 = r"""
+{"argMin(low_card_float32, int64)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float32__LowCardinality_DateTime_ = r"""
+{"argMin(low_card_float32, low_card_datetime)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float32__LowCardinality_Date_ = r"""
+{"argMin(low_card_float32, low_card_date)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float32__LowCardinality_FixedString_85__ = r"""
+{"argMin(low_card_float32, low_card_fixedstring)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float32__LowCardinality_Float64_ = r"""
+{"argMin(low_card_float32, low_card_float64)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float32__LowCardinality_Int64_ = r"""
+{"argMin(low_card_float32, low_card_int64)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float32__LowCardinality_String_ = r"""
+{"argMin(low_card_float32, low_card_string)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float32__LowCardinality_UInt64_ = r"""
+{"argMin(low_card_float32, low_card_uint64)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float32__Nullable_Date_ = r"""
+{"argMin(low_card_float32, nullable_date)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float32__Nullable_DateTime_ = r"""
+{"argMin(low_card_float32, nullable_datetime)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float32__Nullable_Decimal128_38__ = r"""
+{"argMin(low_card_float32, nullable_decimal)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float32__Nullable_FixedString_85__ = r"""
+{"argMin(low_card_float32, nullable_fixedstring)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float32__Nullable_Float32_ = r"""
+{"argMin(low_card_float32, nullable_float32)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float32__Nullable_Float64_ = r"""
+{"argMin(low_card_float32, nullable_float64)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float32__Nullable_Int64_ = r"""
+{"argMin(low_card_float32, nullable_int64)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float32__Nullable_String_ = r"""
+{"argMin(low_card_float32, nullable_string)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float32__Nullable_UInt64_ = r"""
+{"argMin(low_card_float32, nullable_uint64)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float32__String = r"""
+{"argMin(low_card_float32, string)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float32__UInt64 = r"""
+{"argMin(low_card_float32, uint64)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float64__Array_String_ = r"""
+{"argMin(low_card_float64, array_string)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float64__Date = r"""
+{"argMin(low_card_float64, date)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float64__Decimal128_38_ = r"""
+{"argMin(low_card_float64, decimal)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float64__DateTime = r"""
+{"argMin(low_card_float64, datetime)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float64__FixedString_85_ = r"""
+{"argMin(low_card_float64, fixedstring)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float64__Float64 = r"""
+{"argMin(low_card_float64, float64)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float64__Float32 = r"""
+{"argMin(low_card_float64, float32)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float64__LowCardinality_DateTime_ = r"""
+{"argMin(low_card_float64, low_card_datetime)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float64__LowCardinality_Date_ = r"""
+{"argMin(low_card_float64, low_card_date)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float64__Int64 = r"""
+{"argMin(low_card_float64, int64)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float64__LowCardinality_FixedString_85__ = r"""
+{"argMin(low_card_float64, low_card_fixedstring)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float64__LowCardinality_Float32_ = r"""
+{"argMin(low_card_float64, low_card_float32)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float64__LowCardinality_Int64_ = r"""
+{"argMin(low_card_float64, low_card_int64)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float64__LowCardinality_String_ = r"""
+{"argMin(low_card_float64, low_card_string)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float64__Nullable_Date_ = r"""
+{"argMin(low_card_float64, nullable_date)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float64__LowCardinality_UInt64_ = r"""
+{"argMin(low_card_float64, low_card_uint64)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float64__Nullable_DateTime_ = r"""
+{"argMin(low_card_float64, nullable_datetime)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float64__Nullable_FixedString_85__ = r"""
+{"argMin(low_card_float64, nullable_fixedstring)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float64__Nullable_Decimal128_38__ = r"""
+{"argMin(low_card_float64, nullable_decimal)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float64__Nullable_Float32_ = r"""
+{"argMin(low_card_float64, nullable_float32)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float64__Nullable_Float64_ = r"""
+{"argMin(low_card_float64, nullable_float64)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float64__Nullable_Int64_ = r"""
+{"argMin(low_card_float64, nullable_int64)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float64__Nullable_String_ = r"""
+{"argMin(low_card_float64, nullable_string)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float64__Nullable_UInt64_ = r"""
+{"argMin(low_card_float64, nullable_uint64)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float64__String = r"""
+{"argMin(low_card_float64, string)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Float64__UInt64 = r"""
+{"argMin(low_card_float64, uint64)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Int64__Array_String_ = r"""
+{"argMin(low_card_int64, array_string)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Int64__DateTime = r"""
+{"argMin(low_card_int64, datetime)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Int64__Date = r"""
+{"argMin(low_card_int64, date)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Int64__Decimal128_38_ = r"""
+{"argMin(low_card_int64, decimal)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Int64__Float64 = r"""
+{"argMin(low_card_int64, float64)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Int64__FixedString_85_ = r"""
+{"argMin(low_card_int64, fixedstring)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Int64__Float32 = r"""
+{"argMin(low_card_int64, float32)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Int64__LowCardinality_Date_ = r"""
+{"argMin(low_card_int64, low_card_date)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Int64__LowCardinality_DateTime_ = r"""
+{"argMin(low_card_int64, low_card_datetime)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Int64__Int64 = r"""
+{"argMin(low_card_int64, int64)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Int64__LowCardinality_Float32_ = r"""
+{"argMin(low_card_int64, low_card_float32)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Int64__LowCardinality_FixedString_85__ = r"""
+{"argMin(low_card_int64, low_card_fixedstring)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Int64__LowCardinality_Float64_ = r"""
+{"argMin(low_card_int64, low_card_float64)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Int64__LowCardinality_String_ = r"""
+{"argMin(low_card_int64, low_card_string)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Int64__Nullable_Date_ = r"""
+{"argMin(low_card_int64, nullable_date)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Int64__LowCardinality_UInt64_ = r"""
+{"argMin(low_card_int64, low_card_uint64)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Int64__Nullable_Decimal128_38__ = r"""
+{"argMin(low_card_int64, nullable_decimal)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Int64__Nullable_FixedString_85__ = r"""
+{"argMin(low_card_int64, nullable_fixedstring)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Int64__Nullable_DateTime_ = r"""
+{"argMin(low_card_int64, nullable_datetime)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Int64__Nullable_Float32_ = r"""
+{"argMin(low_card_int64, nullable_float32)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Int64__Nullable_Float64_ = r"""
+{"argMin(low_card_int64, nullable_float64)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Int64__Nullable_Int64_ = r"""
+{"argMin(low_card_int64, nullable_int64)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Int64__Nullable_String_ = r"""
+{"argMin(low_card_int64, nullable_string)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Int64__Nullable_UInt64_ = r"""
+{"argMin(low_card_int64, nullable_uint64)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Int64__String = r"""
+{"argMin(low_card_int64, string)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_Int64__UInt64 = r"""
+{"argMin(low_card_int64, uint64)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_String__Array_String_ = r"""
+{"argMin(low_card_string, array_string)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_String__Date = r"""
+{"argMin(low_card_string, date)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_String__DateTime = r"""
+{"argMin(low_card_string, datetime)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_String__Decimal128_38_ = r"""
+{"argMin(low_card_string, decimal)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_String__FixedString_85_ = r"""
+{"argMin(low_card_string, fixedstring)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_String__Float64 = r"""
+{"argMin(low_card_string, float64)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_String__Float32 = r"""
+{"argMin(low_card_string, float32)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_String__Int64 = r"""
+{"argMin(low_card_string, int64)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_String__LowCardinality_DateTime_ = r"""
+{"argMin(low_card_string, low_card_datetime)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_String__LowCardinality_Date_ = r"""
+{"argMin(low_card_string, low_card_date)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_String__LowCardinality_FixedString_85__ = r"""
+{"argMin(low_card_string, low_card_fixedstring)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_String__LowCardinality_Float32_ = r"""
+{"argMin(low_card_string, low_card_float32)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_String__LowCardinality_Float64_ = r"""
+{"argMin(low_card_string, low_card_float64)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_String__LowCardinality_Int64_ = r"""
+{"argMin(low_card_string, low_card_int64)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_String__LowCardinality_UInt64_ = r"""
+{"argMin(low_card_string, low_card_uint64)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_String__Nullable_Date_ = r"""
+{"argMin(low_card_string, nullable_date)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_String__Nullable_DateTime_ = r"""
+{"argMin(low_card_string, nullable_datetime)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_String__Nullable_Float32_ = r"""
+{"argMin(low_card_string, nullable_float32)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_String__Nullable_FixedString_85__ = r"""
+{"argMin(low_card_string, nullable_fixedstring)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_String__Nullable_Decimal128_38__ = r"""
+{"argMin(low_card_string, nullable_decimal)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_String__Nullable_Int64_ = r"""
+{"argMin(low_card_string, nullable_int64)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_String__Nullable_Float64_ = r"""
+{"argMin(low_card_string, nullable_float64)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_String__Nullable_String_ = r"""
+{"argMin(low_card_string, nullable_string)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_String__String = r"""
+{"argMin(low_card_string, string)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_String__Nullable_UInt64_ = r"""
+{"argMin(low_card_string, nullable_uint64)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_String__UInt64 = r"""
+{"argMin(low_card_string, uint64)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_UInt64__Array_String_ = r"""
+{"argMin(low_card_uint64, array_string)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_UInt64__Date = r"""
+{"argMin(low_card_uint64, date)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_UInt64__DateTime = r"""
+{"argMin(low_card_uint64, datetime)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_UInt64__Decimal128_38_ = r"""
+{"argMin(low_card_uint64, decimal)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_UInt64__FixedString_85_ = r"""
+{"argMin(low_card_uint64, fixedstring)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_UInt64__Float32 = r"""
+{"argMin(low_card_uint64, float32)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_UInt64__Float64 = r"""
+{"argMin(low_card_uint64, float64)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_UInt64__LowCardinality_Date_ = r"""
+{"argMin(low_card_uint64, low_card_date)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_UInt64__Int64 = r"""
+{"argMin(low_card_uint64, int64)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_UInt64__LowCardinality_DateTime_ = r"""
+{"argMin(low_card_uint64, low_card_datetime)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_UInt64__LowCardinality_Float32_ = r"""
+{"argMin(low_card_uint64, low_card_float32)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_UInt64__LowCardinality_FixedString_85__ = r"""
+{"argMin(low_card_uint64, low_card_fixedstring)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_UInt64__LowCardinality_Int64_ = r"""
+{"argMin(low_card_uint64, low_card_int64)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_UInt64__LowCardinality_Float64_ = r"""
+{"argMin(low_card_uint64, low_card_float64)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_UInt64__LowCardinality_String_ = r"""
+{"argMin(low_card_uint64, low_card_string)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_UInt64__Nullable_Date_ = r"""
+{"argMin(low_card_uint64, nullable_date)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_UInt64__Nullable_DateTime_ = r"""
+{"argMin(low_card_uint64, nullable_datetime)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_UInt64__Nullable_Decimal128_38__ = r"""
+{"argMin(low_card_uint64, nullable_decimal)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_UInt64__Nullable_Float64_ = r"""
+{"argMin(low_card_uint64, nullable_float64)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_UInt64__Nullable_FixedString_85__ = r"""
+{"argMin(low_card_uint64, nullable_fixedstring)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_UInt64__Nullable_Float32_ = r"""
+{"argMin(low_card_uint64, nullable_float32)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_UInt64__Nullable_String_ = r"""
+{"argMin(low_card_uint64, nullable_string)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_UInt64__Nullable_Int64_ = r"""
+{"argMin(low_card_uint64, nullable_int64)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_UInt64__Nullable_UInt64_ = r"""
+{"argMin(low_card_uint64, nullable_uint64)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_UInt64__UInt64 = r"""
+{"argMin(low_card_uint64, uint64)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_LowCardinality_UInt64__String = r"""
+{"argMin(low_card_uint64, string)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Date__Array_String_ = r"""
+{"argMin(nullable_date, array_string)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Date__DateTime = r"""
+{"argMin(nullable_date, datetime)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Date__Decimal128_38_ = r"""
+{"argMin(nullable_date, decimal)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Date__Date = r"""
+{"argMin(nullable_date, date)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Date__Float32 = r"""
+{"argMin(nullable_date, float32)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Date__FixedString_85_ = r"""
+{"argMin(nullable_date, fixedstring)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Date__Float64 = r"""
+{"argMin(nullable_date, float64)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Date__LowCardinality_Date_ = r"""
+{"argMin(nullable_date, low_card_date)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Date__Int64 = r"""
+{"argMin(nullable_date, int64)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Date__LowCardinality_DateTime_ = r"""
+{"argMin(nullable_date, low_card_datetime)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Date__LowCardinality_FixedString_85__ = r"""
+{"argMin(nullable_date, low_card_fixedstring)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Date__LowCardinality_Float32_ = r"""
+{"argMin(nullable_date, low_card_float32)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Date__LowCardinality_Float64_ = r"""
+{"argMin(nullable_date, low_card_float64)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Date__LowCardinality_Int64_ = r"""
+{"argMin(nullable_date, low_card_int64)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Date__LowCardinality_String_ = r"""
+{"argMin(nullable_date, low_card_string)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Date__LowCardinality_UInt64_ = r"""
+{"argMin(nullable_date, low_card_uint64)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Date__Nullable_DateTime_ = r"""
+{"argMin(nullable_date, nullable_datetime)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Date__Nullable_Decimal128_38__ = r"""
+{"argMin(nullable_date, nullable_decimal)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Date__Nullable_FixedString_85__ = r"""
+{"argMin(nullable_date, nullable_fixedstring)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Date__Nullable_Float32_ = r"""
+{"argMin(nullable_date, nullable_float32)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Date__Nullable_Float64_ = r"""
+{"argMin(nullable_date, nullable_float64)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Date__Nullable_Int64_ = r"""
+{"argMin(nullable_date, nullable_int64)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Date__Nullable_String_ = r"""
+{"argMin(nullable_date, nullable_string)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Date__Nullable_UInt64_ = r"""
+{"argMin(nullable_date, nullable_uint64)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Date__String = r"""
+{"argMin(nullable_date, string)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Date__UInt64 = r"""
+{"argMin(nullable_date, uint64)":"1970-01-01"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_DateTime__Array_String_ = r"""
+{"argMin(nullable_datetime, array_string)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_DateTime__Date = r"""
+{"argMin(nullable_datetime, date)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_DateTime__DateTime = r"""
+{"argMin(nullable_datetime, datetime)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_DateTime__Decimal128_38_ = r"""
+{"argMin(nullable_datetime, decimal)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_DateTime__FixedString_85_ = r"""
+{"argMin(nullable_datetime, fixedstring)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_DateTime__Float64 = r"""
+{"argMin(nullable_datetime, float64)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_DateTime__Float32 = r"""
+{"argMin(nullable_datetime, float32)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_DateTime__LowCardinality_Date_ = r"""
+{"argMin(nullable_datetime, low_card_date)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_DateTime__Int64 = r"""
+{"argMin(nullable_datetime, int64)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_DateTime__LowCardinality_DateTime_ = r"""
+{"argMin(nullable_datetime, low_card_datetime)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_DateTime__LowCardinality_Float32_ = r"""
+{"argMin(nullable_datetime, low_card_float32)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_DateTime__LowCardinality_FixedString_85__ = r"""
+{"argMin(nullable_datetime, low_card_fixedstring)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_DateTime__LowCardinality_Float64_ = r"""
+{"argMin(nullable_datetime, low_card_float64)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_DateTime__LowCardinality_Int64_ = r"""
+{"argMin(nullable_datetime, low_card_int64)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_DateTime__LowCardinality_String_ = r"""
+{"argMin(nullable_datetime, low_card_string)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_DateTime__LowCardinality_UInt64_ = r"""
+{"argMin(nullable_datetime, low_card_uint64)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_DateTime__Nullable_Decimal128_38__ = r"""
+{"argMin(nullable_datetime, nullable_decimal)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_DateTime__Nullable_Date_ = r"""
+{"argMin(nullable_datetime, nullable_date)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_DateTime__Nullable_FixedString_85__ = r"""
+{"argMin(nullable_datetime, nullable_fixedstring)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_DateTime__Nullable_Int64_ = r"""
+{"argMin(nullable_datetime, nullable_int64)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_DateTime__Nullable_Float64_ = r"""
+{"argMin(nullable_datetime, nullable_float64)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_DateTime__Nullable_Float32_ = r"""
+{"argMin(nullable_datetime, nullable_float32)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_DateTime__Nullable_UInt64_ = r"""
+{"argMin(nullable_datetime, nullable_uint64)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_DateTime__Nullable_String_ = r"""
+{"argMin(nullable_datetime, nullable_string)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_DateTime__String = r"""
+{"argMin(nullable_datetime, string)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_DateTime__UInt64 = r"""
+{"argMin(nullable_datetime, uint64)":"1970-01-01 03:00:00"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Decimal128_38___Array_String_ = r"""
+{"argMin(nullable_decimal, array_string)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Decimal128_38___Date = r"""
+{"argMin(nullable_decimal, date)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Decimal128_38___DateTime = r"""
+{"argMin(nullable_decimal, datetime)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Decimal128_38___Decimal128_38_ = r"""
+{"argMin(nullable_decimal, decimal)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Decimal128_38___FixedString_85_ = r"""
+{"argMin(nullable_decimal, fixedstring)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Decimal128_38___Float32 = r"""
+{"argMin(nullable_decimal, float32)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Decimal128_38___Float64 = r"""
+{"argMin(nullable_decimal, float64)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Decimal128_38___Int64 = r"""
+{"argMin(nullable_decimal, int64)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Decimal128_38___LowCardinality_Date_ = r"""
+{"argMin(nullable_decimal, low_card_date)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Decimal128_38___LowCardinality_FixedString_85__ = r"""
+{"argMin(nullable_decimal, low_card_fixedstring)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Decimal128_38___LowCardinality_DateTime_ = r"""
+{"argMin(nullable_decimal, low_card_datetime)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Decimal128_38___LowCardinality_Float32_ = r"""
+{"argMin(nullable_decimal, low_card_float32)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Decimal128_38___LowCardinality_Float64_ = r"""
+{"argMin(nullable_decimal, low_card_float64)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Decimal128_38___LowCardinality_Int64_ = r"""
+{"argMin(nullable_decimal, low_card_int64)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Decimal128_38___LowCardinality_UInt64_ = r"""
+{"argMin(nullable_decimal, low_card_uint64)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Decimal128_38___Nullable_Date_ = r"""
+{"argMin(nullable_decimal, nullable_date)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Decimal128_38___LowCardinality_String_ = r"""
+{"argMin(nullable_decimal, low_card_string)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Decimal128_38___Nullable_FixedString_85__ = r"""
+{"argMin(nullable_decimal, nullable_fixedstring)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Decimal128_38___Nullable_Float32_ = r"""
+{"argMin(nullable_decimal, nullable_float32)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Decimal128_38___Nullable_DateTime_ = r"""
+{"argMin(nullable_decimal, nullable_datetime)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Decimal128_38___Nullable_Int64_ = r"""
+{"argMin(nullable_decimal, nullable_int64)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Decimal128_38___Nullable_String_ = r"""
+{"argMin(nullable_decimal, nullable_string)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Decimal128_38___Nullable_Float64_ = r"""
+{"argMin(nullable_decimal, nullable_float64)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Decimal128_38___String = r"""
+{"argMin(nullable_decimal, string)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Decimal128_38___Nullable_UInt64_ = r"""
+{"argMin(nullable_decimal, nullable_uint64)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Decimal128_38___UInt64 = r"""
+{"argMin(nullable_decimal, uint64)":-0.9999999999999999999999999999999999999}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_FixedString_85___Array_String_ = r"""
+{"argMin(nullable_fixedstring, array_string)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_FixedString_85___Date = r"""
+{"argMin(nullable_fixedstring, date)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_FixedString_85___DateTime = r"""
+{"argMin(nullable_fixedstring, datetime)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_FixedString_85___Decimal128_38_ = r"""
+{"argMin(nullable_fixedstring, decimal)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_FixedString_85___Float64 = r"""
+{"argMin(nullable_fixedstring, float64)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_FixedString_85___Float32 = r"""
+{"argMin(nullable_fixedstring, float32)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_FixedString_85___FixedString_85_ = r"""
+{"argMin(nullable_fixedstring, fixedstring)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_FixedString_85___Int64 = r"""
+{"argMin(nullable_fixedstring, int64)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_FixedString_85___LowCardinality_Date_ = r"""
+{"argMin(nullable_fixedstring, low_card_date)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_FixedString_85___LowCardinality_DateTime_ = r"""
+{"argMin(nullable_fixedstring, low_card_datetime)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_FixedString_85___LowCardinality_FixedString_85__ = r"""
+{"argMin(nullable_fixedstring, low_card_fixedstring)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_FixedString_85___LowCardinality_Float32_ = r"""
+{"argMin(nullable_fixedstring, low_card_float32)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_FixedString_85___LowCardinality_Float64_ = r"""
+{"argMin(nullable_fixedstring, low_card_float64)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_FixedString_85___LowCardinality_Int64_ = r"""
+{"argMin(nullable_fixedstring, low_card_int64)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_FixedString_85___LowCardinality_String_ = r"""
+{"argMin(nullable_fixedstring, low_card_string)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_FixedString_85___LowCardinality_UInt64_ = r"""
+{"argMin(nullable_fixedstring, low_card_uint64)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_FixedString_85___Nullable_Date_ = r"""
+{"argMin(nullable_fixedstring, nullable_date)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_FixedString_85___Nullable_DateTime_ = r"""
+{"argMin(nullable_fixedstring, nullable_datetime)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_FixedString_85___Nullable_Decimal128_38__ = r"""
+{"argMin(nullable_fixedstring, nullable_decimal)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_FixedString_85___Nullable_Float32_ = r"""
+{"argMin(nullable_fixedstring, nullable_float32)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_FixedString_85___Nullable_Float64_ = r"""
+{"argMin(nullable_fixedstring, nullable_float64)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_FixedString_85___Nullable_Int64_ = r"""
+{"argMin(nullable_fixedstring, nullable_int64)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_FixedString_85___Nullable_UInt64_ = r"""
+{"argMin(nullable_fixedstring, nullable_uint64)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_FixedString_85___Nullable_String_ = r"""
+{"argMin(nullable_fixedstring, nullable_string)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_FixedString_85___String = r"""
+{"argMin(nullable_fixedstring, string)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_FixedString_85___UInt64 = r"""
+{"argMin(nullable_fixedstring, uint64)":"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float32__Array_String_ = r"""
+{"argMin(nullable_float32, array_string)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float32__Date = r"""
+{"argMin(nullable_float32, date)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float32__Decimal128_38_ = r"""
+{"argMin(nullable_float32, decimal)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float32__DateTime = r"""
+{"argMin(nullable_float32, datetime)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float32__FixedString_85_ = r"""
+{"argMin(nullable_float32, fixedstring)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float32__Float64 = r"""
+{"argMin(nullable_float32, float64)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float32__Float32 = r"""
+{"argMin(nullable_float32, float32)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float32__Int64 = r"""
+{"argMin(nullable_float32, int64)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float32__LowCardinality_Date_ = r"""
+{"argMin(nullable_float32, low_card_date)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float32__LowCardinality_DateTime_ = r"""
+{"argMin(nullable_float32, low_card_datetime)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float32__LowCardinality_FixedString_85__ = r"""
+{"argMin(nullable_float32, low_card_fixedstring)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float32__LowCardinality_Float32_ = r"""
+{"argMin(nullable_float32, low_card_float32)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float32__LowCardinality_Int64_ = r"""
+{"argMin(nullable_float32, low_card_int64)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float32__LowCardinality_Float64_ = r"""
+{"argMin(nullable_float32, low_card_float64)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float32__LowCardinality_String_ = r"""
+{"argMin(nullable_float32, low_card_string)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float32__Nullable_Date_ = r"""
+{"argMin(nullable_float32, nullable_date)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float32__LowCardinality_UInt64_ = r"""
+{"argMin(nullable_float32, low_card_uint64)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float32__Nullable_DateTime_ = r"""
+{"argMin(nullable_float32, nullable_datetime)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float32__Nullable_FixedString_85__ = r"""
+{"argMin(nullable_float32, nullable_fixedstring)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float32__Nullable_Decimal128_38__ = r"""
+{"argMin(nullable_float32, nullable_decimal)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float32__Nullable_Float64_ = r"""
+{"argMin(nullable_float32, nullable_float64)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float32__Nullable_String_ = r"""
+{"argMin(nullable_float32, nullable_string)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float32__Nullable_Int64_ = r"""
+{"argMin(nullable_float32, nullable_int64)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float32__Nullable_UInt64_ = r"""
+{"argMin(nullable_float32, nullable_uint64)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float32__String = r"""
+{"argMin(nullable_float32, string)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float64__Array_String_ = r"""
+{"argMin(nullable_float64, array_string)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float32__UInt64 = r"""
+{"argMin(nullable_float32, uint64)":-3.4028235e38}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float64__DateTime = r"""
+{"argMin(nullable_float64, datetime)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float64__Date = r"""
+{"argMin(nullable_float64, date)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float64__Decimal128_38_ = r"""
+{"argMin(nullable_float64, decimal)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float64__Float64 = r"""
+{"argMin(nullable_float64, float64)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float64__Float32 = r"""
+{"argMin(nullable_float64, float32)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float64__FixedString_85_ = r"""
+{"argMin(nullable_float64, fixedstring)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float64__LowCardinality_Date_ = r"""
+{"argMin(nullable_float64, low_card_date)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float64__LowCardinality_DateTime_ = r"""
+{"argMin(nullable_float64, low_card_datetime)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float64__Int64 = r"""
+{"argMin(nullable_float64, int64)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float64__LowCardinality_FixedString_85__ = r"""
+{"argMin(nullable_float64, low_card_fixedstring)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float64__LowCardinality_Float32_ = r"""
+{"argMin(nullable_float64, low_card_float32)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float64__LowCardinality_Float64_ = r"""
+{"argMin(nullable_float64, low_card_float64)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float64__LowCardinality_String_ = r"""
+{"argMin(nullable_float64, low_card_string)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float64__LowCardinality_UInt64_ = r"""
+{"argMin(nullable_float64, low_card_uint64)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float64__LowCardinality_Int64_ = r"""
+{"argMin(nullable_float64, low_card_int64)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float64__Nullable_DateTime_ = r"""
+{"argMin(nullable_float64, nullable_datetime)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float64__Nullable_Date_ = r"""
+{"argMin(nullable_float64, nullable_date)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float64__Nullable_Decimal128_38__ = r"""
+{"argMin(nullable_float64, nullable_decimal)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float64__Nullable_FixedString_85__ = r"""
+{"argMin(nullable_float64, nullable_fixedstring)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float64__Nullable_Float32_ = r"""
+{"argMin(nullable_float64, nullable_float32)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float64__Nullable_Int64_ = r"""
+{"argMin(nullable_float64, nullable_int64)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float64__Nullable_String_ = r"""
+{"argMin(nullable_float64, nullable_string)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float64__Nullable_UInt64_ = r"""
+{"argMin(nullable_float64, nullable_uint64)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float64__String = r"""
+{"argMin(nullable_float64, string)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Float64__UInt64 = r"""
+{"argMin(nullable_float64, uint64)":-1.7976909999999999e308}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Int64__Array_String_ = r"""
+{"argMin(nullable_int64, array_string)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Int64__Date = r"""
+{"argMin(nullable_int64, date)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Int64__DateTime = r"""
+{"argMin(nullable_int64, datetime)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Int64__Decimal128_38_ = r"""
+{"argMin(nullable_int64, decimal)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Int64__FixedString_85_ = r"""
+{"argMin(nullable_int64, fixedstring)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Int64__Float32 = r"""
+{"argMin(nullable_int64, float32)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Int64__Float64 = r"""
+{"argMin(nullable_int64, float64)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Int64__Int64 = r"""
+{"argMin(nullable_int64, int64)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Int64__LowCardinality_Date_ = r"""
+{"argMin(nullable_int64, low_card_date)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Int64__LowCardinality_DateTime_ = r"""
+{"argMin(nullable_int64, low_card_datetime)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Int64__LowCardinality_FixedString_85__ = r"""
+{"argMin(nullable_int64, low_card_fixedstring)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Int64__LowCardinality_Float32_ = r"""
+{"argMin(nullable_int64, low_card_float32)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Int64__LowCardinality_Float64_ = r"""
+{"argMin(nullable_int64, low_card_float64)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Int64__LowCardinality_Int64_ = r"""
+{"argMin(nullable_int64, low_card_int64)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Int64__LowCardinality_String_ = r"""
+{"argMin(nullable_int64, low_card_string)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Int64__LowCardinality_UInt64_ = r"""
+{"argMin(nullable_int64, low_card_uint64)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Int64__Nullable_Date_ = r"""
+{"argMin(nullable_int64, nullable_date)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Int64__Nullable_Decimal128_38__ = r"""
+{"argMin(nullable_int64, nullable_decimal)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Int64__Nullable_DateTime_ = r"""
+{"argMin(nullable_int64, nullable_datetime)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Int64__Nullable_FixedString_85__ = r"""
+{"argMin(nullable_int64, nullable_fixedstring)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Int64__Nullable_Float32_ = r"""
+{"argMin(nullable_int64, nullable_float32)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Int64__Nullable_Float64_ = r"""
+{"argMin(nullable_int64, nullable_float64)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Int64__Nullable_String_ = r"""
+{"argMin(nullable_int64, nullable_string)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Int64__Nullable_UInt64_ = r"""
+{"argMin(nullable_int64, nullable_uint64)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Int64__UInt64 = r"""
+{"argMin(nullable_int64, uint64)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_Int64__String = r"""
+{"argMin(nullable_int64, string)":"-9223372036854775808"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_String__Array_String_ = r"""
+{"argMin(nullable_string, array_string)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_String__Date = r"""
+{"argMin(nullable_string, date)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_String__DateTime = r"""
+{"argMin(nullable_string, datetime)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_String__Decimal128_38_ = r"""
+{"argMin(nullable_string, decimal)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_String__FixedString_85_ = r"""
+{"argMin(nullable_string, fixedstring)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_String__Float32 = r"""
+{"argMin(nullable_string, float32)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_String__Float64 = r"""
+{"argMin(nullable_string, float64)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_String__Int64 = r"""
+{"argMin(nullable_string, int64)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_String__LowCardinality_Date_ = r"""
+{"argMin(nullable_string, low_card_date)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_String__LowCardinality_DateTime_ = r"""
+{"argMin(nullable_string, low_card_datetime)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_String__LowCardinality_FixedString_85__ = r"""
+{"argMin(nullable_string, low_card_fixedstring)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_String__LowCardinality_Float64_ = r"""
+{"argMin(nullable_string, low_card_float64)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_String__LowCardinality_Float32_ = r"""
+{"argMin(nullable_string, low_card_float32)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_String__LowCardinality_String_ = r"""
+{"argMin(nullable_string, low_card_string)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_String__LowCardinality_Int64_ = r"""
+{"argMin(nullable_string, low_card_int64)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_String__LowCardinality_UInt64_ = r"""
+{"argMin(nullable_string, low_card_uint64)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_String__Nullable_Date_ = r"""
+{"argMin(nullable_string, nullable_date)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_String__Nullable_DateTime_ = r"""
+{"argMin(nullable_string, nullable_datetime)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_String__Nullable_Decimal128_38__ = r"""
+{"argMin(nullable_string, nullable_decimal)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_String__Nullable_Float64_ = r"""
+{"argMin(nullable_string, nullable_float64)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_String__Nullable_FixedString_85__ = r"""
+{"argMin(nullable_string, nullable_fixedstring)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_String__Nullable_Float32_ = r"""
+{"argMin(nullable_string, nullable_float32)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_String__Nullable_Int64_ = r"""
+{"argMin(nullable_string, nullable_int64)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_String__String = r"""
+{"argMin(nullable_string, string)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_String__Nullable_UInt64_ = r"""
+{"argMin(nullable_string, nullable_uint64)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_String__UInt64 = r"""
+{"argMin(nullable_string, uint64)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_UInt64__Date = r"""
+{"argMin(nullable_uint64, date)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_UInt64__Array_String_ = r"""
+{"argMin(nullable_uint64, array_string)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_UInt64__DateTime = r"""
+{"argMin(nullable_uint64, datetime)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_UInt64__FixedString_85_ = r"""
+{"argMin(nullable_uint64, fixedstring)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_UInt64__Decimal128_38_ = r"""
+{"argMin(nullable_uint64, decimal)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_UInt64__Float64 = r"""
+{"argMin(nullable_uint64, float64)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_UInt64__Float32 = r"""
+{"argMin(nullable_uint64, float32)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_UInt64__Int64 = r"""
+{"argMin(nullable_uint64, int64)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_UInt64__LowCardinality_Date_ = r"""
+{"argMin(nullable_uint64, low_card_date)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_UInt64__LowCardinality_FixedString_85__ = r"""
+{"argMin(nullable_uint64, low_card_fixedstring)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_UInt64__LowCardinality_DateTime_ = r"""
+{"argMin(nullable_uint64, low_card_datetime)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_UInt64__LowCardinality_Float32_ = r"""
+{"argMin(nullable_uint64, low_card_float32)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_UInt64__LowCardinality_Float64_ = r"""
+{"argMin(nullable_uint64, low_card_float64)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_UInt64__LowCardinality_Int64_ = r"""
+{"argMin(nullable_uint64, low_card_int64)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_UInt64__LowCardinality_String_ = r"""
+{"argMin(nullable_uint64, low_card_string)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_UInt64__LowCardinality_UInt64_ = r"""
+{"argMin(nullable_uint64, low_card_uint64)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_UInt64__Nullable_DateTime_ = r"""
+{"argMin(nullable_uint64, nullable_datetime)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_UInt64__Nullable_Date_ = r"""
+{"argMin(nullable_uint64, nullable_date)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_UInt64__Nullable_Decimal128_38__ = r"""
+{"argMin(nullable_uint64, nullable_decimal)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_UInt64__Nullable_FixedString_85__ = r"""
+{"argMin(nullable_uint64, nullable_fixedstring)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_UInt64__Nullable_Float32_ = r"""
+{"argMin(nullable_uint64, nullable_float32)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_UInt64__Nullable_Float64_ = r"""
+{"argMin(nullable_uint64, nullable_float64)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_UInt64__Nullable_Int64_ = r"""
+{"argMin(nullable_uint64, nullable_int64)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_UInt64__Nullable_String_ = r"""
+{"argMin(nullable_uint64, nullable_string)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_UInt64__String = r"""
+{"argMin(nullable_uint64, string)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_String_Date = r"""
+{"argMin(string, date)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_String_Array_String_ = r"""
+{"argMin(string, array_string)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_Nullable_UInt64__UInt64 = r"""
+{"argMin(nullable_uint64, uint64)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_String_DateTime = r"""
+{"argMin(string, datetime)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_String_FixedString_85_ = r"""
+{"argMin(string, fixedstring)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_String_Decimal128_38_ = r"""
+{"argMin(string, decimal)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_String_Float32 = r"""
+{"argMin(string, float32)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_String_Int64 = r"""
+{"argMin(string, int64)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_String_Float64 = r"""
+{"argMin(string, float64)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_String_LowCardinality_Date_ = r"""
+{"argMin(string, low_card_date)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_String_LowCardinality_DateTime_ = r"""
+{"argMin(string, low_card_datetime)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_String_LowCardinality_FixedString_85__ = r"""
+{"argMin(string, low_card_fixedstring)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_String_LowCardinality_Int64_ = r"""
+{"argMin(string, low_card_int64)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_String_LowCardinality_Float64_ = r"""
+{"argMin(string, low_card_float64)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_String_LowCardinality_Float32_ = r"""
+{"argMin(string, low_card_float32)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_String_LowCardinality_UInt64_ = r"""
+{"argMin(string, low_card_uint64)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_String_LowCardinality_String_ = r"""
+{"argMin(string, low_card_string)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_String_Nullable_Date_ = r"""
+{"argMin(string, nullable_date)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_String_Nullable_Decimal128_38__ = r"""
+{"argMin(string, nullable_decimal)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_String_Nullable_DateTime_ = r"""
+{"argMin(string, nullable_datetime)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_String_Nullable_FixedString_85__ = r"""
+{"argMin(string, nullable_fixedstring)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_String_Nullable_Int64_ = r"""
+{"argMin(string, nullable_int64)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_String_Nullable_Float32_ = r"""
+{"argMin(string, nullable_float32)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_String_Nullable_Float64_ = r"""
+{"argMin(string, nullable_float64)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_String_Nullable_UInt64_ = r"""
+{"argMin(string, nullable_uint64)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_String_Nullable_String_ = r"""
+{"argMin(string, nullable_string)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_String_UInt64 = r"""
+{"argMin(string, uint64)":""}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_UInt64_Array_String_ = r"""
+{"argMin(uint64, array_string)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_UInt64_DateTime = r"""
+{"argMin(uint64, datetime)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_UInt64_Date = r"""
+{"argMin(uint64, date)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_UInt64_Decimal128_38_ = r"""
+{"argMin(uint64, decimal)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_UInt64_Float32 = r"""
+{"argMin(uint64, float32)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_UInt64_FixedString_85_ = r"""
+{"argMin(uint64, fixedstring)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_UInt64_Float64 = r"""
+{"argMin(uint64, float64)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_UInt64_Int64 = r"""
+{"argMin(uint64, int64)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_UInt64_LowCardinality_Date_ = r"""
+{"argMin(uint64, low_card_date)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_UInt64_LowCardinality_DateTime_ = r"""
+{"argMin(uint64, low_card_datetime)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_UInt64_LowCardinality_FixedString_85__ = r"""
+{"argMin(uint64, low_card_fixedstring)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_UInt64_LowCardinality_Float32_ = r"""
+{"argMin(uint64, low_card_float32)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_UInt64_LowCardinality_Float64_ = r"""
+{"argMin(uint64, low_card_float64)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_UInt64_LowCardinality_Int64_ = r"""
+{"argMin(uint64, low_card_int64)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_UInt64_LowCardinality_String_ = r"""
+{"argMin(uint64, low_card_string)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_UInt64_Nullable_Date_ = r"""
+{"argMin(uint64, nullable_date)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_UInt64_LowCardinality_UInt64_ = r"""
+{"argMin(uint64, low_card_uint64)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_UInt64_Nullable_DateTime_ = r"""
+{"argMin(uint64, nullable_datetime)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_UInt64_Nullable_Decimal128_38__ = r"""
+{"argMin(uint64, nullable_decimal)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_UInt64_Nullable_FixedString_85__ = r"""
+{"argMin(uint64, nullable_fixedstring)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_UInt64_Nullable_Float32_ = r"""
+{"argMin(uint64, nullable_float32)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_UInt64_Nullable_Float64_ = r"""
+{"argMin(uint64, nullable_float64)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_UInt64_Nullable_Int64_ = r"""
+{"argMin(uint64, nullable_int64)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_UInt64_Nullable_String_ = r"""
+{"argMin(uint64, nullable_string)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_UInt64_Nullable_UInt64_ = r"""
+{"argMin(uint64, nullable_uint64)":"0"}
+"""
+
+_aggregate_functions_argMin_datatypes_sanity_UInt64_String = r"""
+{"argMin(uint64, string)":"0"}
+"""
+

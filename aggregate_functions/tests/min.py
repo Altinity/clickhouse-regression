@@ -9,6 +9,8 @@ from aggregate_functions.requirements import (
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Min("1.0"))
 def feature(self, func="min({params})", table=None):
     """Check min aggregate function."""
+    self.context.snapshot_id = func.split("(",1)[0]
+
     if table is None:
         table = self.context.table
 
