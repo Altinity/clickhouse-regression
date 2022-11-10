@@ -27,47 +27,47 @@ _aggregate_functions_state_avgState_doc_example = r"""
 {"hex(avgState(x))":"0F0000000000000006"}
 """
 
-_aggregate_functions_state_avgState_Float32 = r"""
-{"hex(avgState(float32))":"000000402244634104"}
-"""
-
 _aggregate_functions_state_avgState_UInt16 = r"""
 {"hex(avgState(uint16))":"FE7F01000000000004"}
-"""
-
-_aggregate_functions_state_avgState_Decimal128_38_ = r"""
-{"hex(avgState(decimal))":"00000080B86CCE251142A4463E62990704"}
 """
 
 _aggregate_functions_state_avgState_Int32 = r"""
 {"hex(avgState(int32))":"11219A000000000004"}
 """
 
-_aggregate_functions_state_avgState_Int64 = r"""
-{"hex(avgState(int64))":"11F3E477AE96030004"}
-"""
-
-_aggregate_functions_state_avgState_UInt32 = r"""
-{"hex(avgState(uint32))":"B44A05060100000004"}
-"""
-
 _aggregate_functions_state_avgState_UInt8 = r"""
 {"hex(avgState(uint8))":"7F0100000000000004"}
 """
 
-_aggregate_functions_state_avgState_UInt64 = r"""
-{"hex(avgState(uint64))":"11F3E477AE96030004"}
+_aggregate_functions_state_avgState_Float32 = r"""
+{"hex(avgState(float32))":"000000402244634104"}
+"""
+
+_aggregate_functions_state_avgState_Float64 = r"""
+{"hex(avgState(float64))":"72ED3A2E065E517704"}
 """
 
 _aggregate_functions_state_avgState_Int8 = r"""
 {"hex(avgState(int8))":"640000000000000004"}
 """
 
+_aggregate_functions_state_avgState_Int64 = r"""
+{"hex(avgState(int64))":"11F3E477AE96030004"}
+"""
+
+_aggregate_functions_state_avgState_UInt64 = r"""
+{"hex(avgState(uint64))":"11F3E477AE96030004"}
+"""
+
+_aggregate_functions_state_avgState_UInt32 = r"""
+{"hex(avgState(uint32))":"B44A05060100000004"}
+"""
+
 _aggregate_functions_state_avgState_Int16 = r"""
 {"hex(avgState(int16))":"742700000000000004"}
 """
 
-_aggregate_functions_state_avgState_Float64 = r"""
-{"hex(avgState(float64))":"72ED3A2E065E517704"}
+_aggregate_functions_state_avgState_Decimal128_38_ = r"""
+{"hex(avgState(decimal))":"00000080B86CCE251142A4463E62990704"}
 """
 
