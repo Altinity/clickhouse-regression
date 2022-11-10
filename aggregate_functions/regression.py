@@ -13,10 +13,17 @@ from helpers.tables import *
 from aggregate_functions.tests.steps import aggregate_functions
 from aggregate_functions.requirements import SRS_031_ClickHouse_Aggregate_Functions
 
+xfails = {
+    "/aggregate functions/singleValueOrNull/Map:": [(Fail, "not supported")],
+    "/aggregate functions/singleValueOrNull/Array:": [(Fail, "not supported")],
+    "/aggregate functions/singleValueOrNull/Tuple:": [(Fail, "not supported")],
+}
+
 
 @TestModule
 @ArgumentParser(argparser)
 @Name("aggregate functions")
+@XFails(xfails)
 @Specifications(SRS_031_ClickHouse_Aggregate_Functions)
 def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=None):
     """Aggregate functions regression suite."""

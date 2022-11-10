@@ -20,6 +20,9 @@ def feature(self, func="first_value({params})", table=None):
     with Check("zero rows"):
         execute_query(f"SELECT {func.format(params='number')} FROM numbers(0)")
 
+    with Check("single row"):
+        execute_query(f"SELECT {func.format(params='number')} FROM numbers(1)")
+
     with Check("with group by"):
         execute_query(
             f"SELECT number % 2 AS even, {func.format(params='number')} FROM numbers(10) GROUP BY even"
@@ -28,6 +31,11 @@ def feature(self, func="first_value({params})", table=None):
     with Check("NULL value handling"):
         execute_query(
             f"SELECT {func.format(params='x')}  FROM values('x Nullable(Int8)', 0, 1, NULL, 3, 4, 5)"
+        )
+
+    with Check("single NULL value"):
+        execute_query(
+            f"SELECT {func.format(params='x')}  FROM values('x Nullable(Int8)', NULL)"
         )
 
     for column in table.columns:
