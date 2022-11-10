@@ -4,39 +4,45 @@ from helpers.common import *
 from parquet.tests.common import *
 from s3.tests.common import *
 
+
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_Memory("1.0"))
 def insert_into_memory_table_from_file(self):
-    """Insert data from Parquet files into table with Memory engine using FROM INFILE clause.
-    """
-    engine="Memory"
+    """Insert data from Parquet files into table with Memory engine using FROM INFILE clause."""
+    engine = "Memory"
 
-    Scenario(test=insert_into_table_from_file)(engine = engine)
+    Scenario(test=insert_into_table_from_file)(engine=engine)
+
 
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_MergeTree("1.0"))
 def insert_into_mergetree_table_from_file(self):
-    """Insert data from Parquet files into table with MergeTree engine using FROM INFILE clause.
-    """
-    engine="MergeTree() ORDER BY uint8"
+    """Insert data from Parquet files into table with MergeTree engine using FROM INFILE clause."""
+    engine = "MergeTree() ORDER BY uint8"
 
-    Scenario(test=insert_into_table_from_file)(engine = engine)
+    Scenario(test=insert_into_table_from_file)(engine=engine)
+
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_ReplicatedMergeTree("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_ReplicatedMergeTree("1.0")
+)
 def insert_into_replicated_mergetree_table_from_file(self):
-    """Insert data from Parquet files into table with ReplicatedMergeTree engine using FROM INFILE clause.
-    """
+    """Insert data from Parquet files into table with ReplicatedMergeTree engine using FROM INFILE clause."""
     table_name = "table_" + getuid()
-    engine="ReplicatedMergeTree('/clickhouse/tables/{shard}/" + table_name + "', '{replica}') ORDER BY uint8"
+    engine = (
+        "ReplicatedMergeTree('/clickhouse/tables/{shard}/"
+        + table_name
+        + "', '{replica}') ORDER BY uint8"
+    )
 
-    Scenario(test=insert_into_table_from_file)(engine = engine, table_name = table_name)
+    Scenario(test=insert_into_table_from_file)(engine=engine, table_name=table_name)
+
 
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_Distributed("1.0"))
 def insert_into_distributed_table_from_file(self):
-    """Insert data from Parquet files into table with Distributed engine using FROM INFILE clause.
-    """
+    """Insert data from Parquet files into table with Distributed engine using FROM INFILE clause."""
     table_name = "table_" + getuid()
     dist_table_name = "dist_table_" + getuid()
     engine = f"Distributed(replicated_cluster, default, {dist_table_name})"
@@ -48,12 +54,12 @@ def insert_into_distributed_table_from_file(self):
             table_def=self.context.parquet_table_def,
         )
 
-    Scenario(test=insert_into_table_from_file)(engine = engine, table_name = table_name)
+    Scenario(test=insert_into_table_from_file)(engine=engine, table_name=table_name)
+
 
 @TestOutline
 def insert_into_table_from_file(self, engine, table_name=None):
-    """Insert data from Parquet files into tables with different engines using FROM INFILE clause.
-    """
+    """Insert data from Parquet files into tables with different engines using FROM INFILE clause."""
     node = self.context.node
     compression_type = self.context.compression_type
 
@@ -78,39 +84,48 @@ def insert_into_table_from_file(self, engine, table_name=None):
         )
 
     with Then("I check that the table contains correct data"):
-        check_query_output(query=f"SELECT * FROM {table_name}", snap_name=f"Insert into {engine} table from file")
+        check_query_output(
+            query=f"SELECT * FROM {table_name}",
+            snap_name=f"Insert into {engine} table from file",
+        )
+
 
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_Memory("1.0"))
 def select_from_memory_table_into_file(self):
-    """Select data from table with Memory engine and write to Parquet file using INTO OUTFILE clause.
-    """
-    engine="Memory"
-    Scenario(test=select_from_table_into_file)(engine = engine)
+    """Select data from table with Memory engine and write to Parquet file using INTO OUTFILE clause."""
+    engine = "Memory"
+    Scenario(test=select_from_table_into_file)(engine=engine)
+
 
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_MergeTree("1.0"))
 def select_from_mergetree_table_into_file(self):
-    """Select data from table with MergeTree engine and write to Parquet file using INTO OUTFILE clause.
-    """
-    engine="MergeTree() ORDER BY uint8"
-    Scenario(test=select_from_table_into_file)(engine = engine)
+    """Select data from table with MergeTree engine and write to Parquet file using INTO OUTFILE clause."""
+    engine = "MergeTree() ORDER BY uint8"
+    Scenario(test=select_from_table_into_file)(engine=engine)
+
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_ReplicatedMergeTree("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_ReplicatedMergeTree("1.0")
+)
 def select_from_replicated_mergetree_table_into_file(self):
-    """Select data from table with ReplicatedMergeTree engine and write to Parquet file using INTO OUTFILE clause.
-    """
+    """Select data from table with ReplicatedMergeTree engine and write to Parquet file using INTO OUTFILE clause."""
     table_name = "table_" + getuid()
-    engine="ReplicatedMergeTree('/clickhouse/tables/{shard}/" + table_name + "', '{replica}') ORDER BY uint8"
+    engine = (
+        "ReplicatedMergeTree('/clickhouse/tables/{shard}/"
+        + table_name
+        + "', '{replica}') ORDER BY uint8"
+    )
 
-    Scenario(test=select_from_table_into_file)(engine = engine, table_name = table_name)
+    Scenario(test=select_from_table_into_file)(engine=engine, table_name=table_name)
+
 
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_Distributed("1.0"))
 def select_from_distributed_table_into_file(self):
-    """Select data from table with Distributed engine and write to Parquet file using INTO OUTFILE clause.
-    """
+    """Select data from table with Distributed engine and write to Parquet file using INTO OUTFILE clause."""
     table_name = "table_" + getuid()
     dist_table_name = "dist_table_" + getuid()
     engine = f"Distributed(replicated_cluster, default, {dist_table_name})"
@@ -121,12 +136,12 @@ def select_from_distributed_table_into_file(self):
             engine="Memory",
         )
 
-    Scenario(test=select_from_table_into_file)(engine = engine, table_name = table_name)
+    Scenario(test=select_from_table_into_file)(engine=engine, table_name=table_name)
+
 
 @TestOutline
-def select_from_table_into_file(self, engine, table_name = None):
-    """Select data from tables with different engines and write to Parquet files using INTO OUTFILE clause.
-    """
+def select_from_table_into_file(self, engine, table_name=None):
+    """Select data from tables with different engines and write to Parquet files using INTO OUTFILE clause."""
     node = self.context.node
     compression_type = self.context.compression_type
 
@@ -183,7 +198,9 @@ def select_from_mat_view_into_file(self):
                 settings=[("allow_suspicious_low_cardinality_types", 1)],
             )
 
-        with When("I select data from the materialized view and write it into a Parquet file"):
+        with When(
+            "I select data from the materialized view and write it into a Parquet file"
+        ):
             node.query(
                 f"SELECT * FROM {table_name}_view INTO OUTFILE {path} COMPRESSION '{compression_type.lower()}' FORMAT Parquet"
             )
@@ -195,7 +212,7 @@ def select_from_mat_view_into_file(self):
             check_source_file(
                 path=f"/var/lib/clickhouse/user_files/{table_name}.Parquet",
                 compression=f"'{compression_type.lower()}'",
-                snap_name = "select from mat view into file"
+                snap_name="select from mat view into file",
             )
 
     finally:

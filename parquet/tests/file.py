@@ -58,7 +58,10 @@ def select_from_engine(self):
         )
 
     with Then("I check that the table reads the data correctly"):
-        check_query_output(query=f"SELECT * FROM {table_name}", snap_name="Select from FILE engine into file")
+        check_query_output(
+            query=f"SELECT * FROM {table_name}",
+            snap_name="Select from FILE engine into file",
+        )
 
 
 @TestScenario
@@ -160,7 +163,10 @@ def insert_into_engine_from_file(self, compression_type):
         )
 
     with Then("I check that the table contains correct data"):
-        check_query_output(query=f"SELECT * FROM {table_name}", snap_name = "Insert into FILE engine from file")
+        check_query_output(
+            query=f"SELECT * FROM {table_name}",
+            snap_name="Insert into FILE engine from file",
+        )
 
 
 @TestOutline(Scenario)
@@ -291,7 +297,10 @@ def select_from_function_auto_cast_types(self):
     """
 
     with Then("I check that the `file` table function contains correct data"):
-        check_query_output(query=f"SELECT * FROM file('data_NONE.Parquet', 'Parquet')", snap_name="select from file function, auto cast types")
+        check_query_output(
+            query=f"SELECT * FROM file('data_NONE.Parquet', 'Parquet')",
+            snap_name="select from file function, auto cast types",
+        )
 
 
 @TestSuite
