@@ -1,0 +1,77 @@
+_aggregate_functions_stddevPopStable_constant = r"""
+{"stddevPopStable(1)":0}
+"""
+
+_aggregate_functions_stddevPopStable_zero_rows = r"""
+{"stddevPopStable(number)":null}
+"""
+
+_aggregate_functions_stddevPopStable_single_row = r"""
+{"stddevPopStable(number)":0}
+"""
+
+_aggregate_functions_stddevPopStable_with_group_by = r"""
+{"even":0,"stddevPopStable(number)":2.8284271247461903}
+{"even":1,"stddevPopStable(number)":2.8284271247461903}
+"""
+
+_aggregate_functions_stddevPopStable_some_negative_values = r"""
+{"stddevPopStable(minus(number, 5))":2.8722813232690143}
+"""
+
+_aggregate_functions_stddevPopStable_NULL_value_handling = r"""
+{"stddevPopStable(x)":1.8547236990991407}
+"""
+
+_aggregate_functions_stddevPopStable_single_NULL_value = r"""
+{"stddevPopStable(x)":null}
+"""
+
+_aggregate_functions_stddevPopStable_return_type = r"""
+{"toTypeName(stddevPopStable(number))":"Float64"}
+"""
+
+_aggregate_functions_stddevPopStable_doc_example = r"""
+{"stddevPopStable(x)":1.707825127659933}
+"""
+
+_aggregate_functions_stddevPopStable_Float32 = r"""
+{"stddevPopStable(float32)":2.4061595482617514e38}
+"""
+
+_aggregate_functions_stddevPopStable_UInt16 = r"""
+{"stddevPopStable(uint16)":27169.338016411075}
+"""
+
+_aggregate_functions_stddevPopStable_Float64 = r"""
+{"stddevPopStable(float64)":null}
+"""
+
+_aggregate_functions_stddevPopStable_Int8 = r"""
+{"stddevPopStable(int8)":100.26714317262659}
+"""
+
+_aggregate_functions_stddevPopStable_UInt64 = r"""
+{"stddevPopStable(uint64)":7987528707593497000}
+"""
+
+_aggregate_functions_stddevPopStable_Int16 = r"""
+{"stddevPopStable(int16)":23579.364993570118}
+"""
+
+_aggregate_functions_stddevPopStable_Int32 = r"""
+{"stddevPopStable(int32)":1518506548.8307192}
+"""
+
+_aggregate_functions_stddevPopStable_UInt8 = r"""
+{"stddevPopStable(uint8)":105.75531901516821}
+"""
+
+_aggregate_functions_stddevPopStable_Int64 = r"""
+{"stddevPopStable(int64)":6521908927332880000}
+"""
+
+_aggregate_functions_stddevPopStable_UInt32 = r"""
+{"stddevPopStable(uint32)":1845656576.2004528}
+"""
+
