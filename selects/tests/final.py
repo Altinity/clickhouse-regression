@@ -15,7 +15,7 @@ def force_select_final_not_support(self):
     table_name = f"test_table_{uid}"
 
     with Given(
-            f"I create table {table_name} with with `force_select_final=1` and make check for Exception"
+            "I create table with with `force_select_final=1` and make check for Exception"
     ):
         node.query(f"create table if not exists {table_name} (x String)"
                    f" engine=MergeTree() ORDER BY x SETTINGS force_select_final=1;",
@@ -33,7 +33,7 @@ def force_select_final(self):
     table_name = f"test_table_{uid}"
 
     with Given(
-            f"I create table {table_name} with with `force_select_final=1`"
+            "I create table with with `force_select_final=1`"
     ):
         node.query(f"create table if not exists {table_name} (x String)"
                    f" engine=ReplacingMergeTree() ORDER BY x SETTINGS force_select_final=1;")
@@ -55,7 +55,7 @@ def ignore_force_select_final(self):
     table_name = f"test_table_{uid}"
 
     with Given(
-            f"I create table {table_name} with with `force_select_final=1`"
+            "I create table with with `force_select_final=1`"
     ):
         node.query(f"create table if not exists {table_name} (x String)"
                    f" engine=ReplacingMergeTree() ORDER BY x SETTINGS force_select_final=1;")
