@@ -39,141 +39,233 @@
       * 3.1.2.1 [anyHeavy](#anyheavy)
         * 3.1.2.1.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.AnyHeavy](#rqsrs-031clickhouseaggregatefunctionsspecificanyheavy)
       * 3.1.2.2 [anyLast](#anylast)
-        * 3.1.2.2.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Anylast](#rqsrs-031clickhouseaggregatefunctionsspecificanylast)
+        * 3.1.2.2.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.AnyLast](#rqsrs-031clickhouseaggregatefunctionsspecificanylast)
       * 3.1.2.3 [argMin](#argmin)
-        * 3.1.2.3.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Argmin](#rqsrs-031clickhouseaggregatefunctionsspecificargmin)
+        * 3.1.2.3.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.ArgMin](#rqsrs-031clickhouseaggregatefunctionsspecificargmin)
       * 3.1.2.4 [argMax](#argmax)
-        * 3.1.2.4.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Argmax](#rqsrs-031clickhouseaggregatefunctionsspecificargmax)
+        * 3.1.2.4.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.ArgMax](#rqsrs-031clickhouseaggregatefunctionsspecificargmax)
       * 3.1.2.5 [avgWeighted](#avgweighted)
-        * 3.1.2.5.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Avgweighted](#rqsrs-031clickhouseaggregatefunctionsspecificavgweighted)
+        * 3.1.2.5.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.AvgWeighted](#rqsrs-031clickhouseaggregatefunctionsspecificavgweighted)
       * 3.1.2.6 [topK](#topk)
-        * 3.1.2.6.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Topk](#rqsrs-031clickhouseaggregatefunctionsspecifictopk)
+        * 3.1.2.6.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.TopK](#rqsrs-031clickhouseaggregatefunctionsspecifictopk)
       * 3.1.2.7 [topKWeighted](#topkweighted)
-        * 3.1.2.7.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Topkweighted](#rqsrs-031clickhouseaggregatefunctionsspecifictopkweighted)
+        * 3.1.2.7.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.TopKWeighted](#rqsrs-031clickhouseaggregatefunctionsspecifictopkweighted)
       * 3.1.2.8 [groupArray](#grouparray)
-        * 3.1.2.8.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Grouparray](#rqsrs-031clickhouseaggregatefunctionsspecificgrouparray)
+        * 3.1.2.8.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.GroupArray](#rqsrs-031clickhouseaggregatefunctionsspecificgrouparray)
       * 3.1.2.9 [groupUniqArray](#groupuniqarray)
-        * 3.1.2.9.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Groupuniqarray](#rqsrs-031clickhouseaggregatefunctionsspecificgroupuniqarray)
+        * 3.1.2.9.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.GroupUniqArray](#rqsrs-031clickhouseaggregatefunctionsspecificgroupuniqarray)
       * 3.1.2.10 [groupArrayInsertAt](#grouparrayinsertat)
-        * 3.1.2.10.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Grouparrayinsertat](#rqsrs-031clickhouseaggregatefunctionsspecificgrouparrayinsertat)
+        * 3.1.2.10.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.GroupArrayInsertAt](#rqsrs-031clickhouseaggregatefunctionsspecificgrouparrayinsertat)
       * 3.1.2.11 [groupArrayMovingAvg](#grouparraymovingavg)
-        * 3.1.2.11.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Grouparraymovingavg](#rqsrs-031clickhouseaggregatefunctionsspecificgrouparraymovingavg)
+        * 3.1.2.11.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.GroupArrayMovingAvg](#rqsrs-031clickhouseaggregatefunctionsspecificgrouparraymovingavg)
       * 3.1.2.12 [groupArrayMovingSum](#grouparraymovingsum)
-        * 3.1.2.12.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Grouparraymovingsum](#rqsrs-031clickhouseaggregatefunctionsspecificgrouparraymovingsum)
-      * 3.1.2.13 [groupBitAnd](#groupbitand)
-        * 3.1.2.13.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Groupbitand](#rqsrs-031clickhouseaggregatefunctionsspecificgroupbitand)
-      * 3.1.2.14 [groupBitOr](#groupbitor)
-        * 3.1.2.14.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Groupbitor](#rqsrs-031clickhouseaggregatefunctionsspecificgroupbitor)
-      * 3.1.2.15 [groupBitXor](#groupbitxor)
-        * 3.1.2.15.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Groupbitxor](#rqsrs-031clickhouseaggregatefunctionsspecificgroupbitxor)
-      * 3.1.2.16 [groupBitmap](#groupbitmap)
-        * 3.1.2.16.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Groupbitmap](#rqsrs-031clickhouseaggregatefunctionsspecificgroupbitmap)
-      * 3.1.2.17 [groupBitmapAnd](#groupbitmapand)
-        * 3.1.2.17.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Groupbitmapand](#rqsrs-031clickhouseaggregatefunctionsspecificgroupbitmapand)
-      * 3.1.2.18 [groupBitmapOr](#groupbitmapor)
-        * 3.1.2.18.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Groupbitmapor](#rqsrs-031clickhouseaggregatefunctionsspecificgroupbitmapor)
-      * 3.1.2.19 [groupBitmapXor](#groupbitmapxor)
-        * 3.1.2.19.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Groupbitmapxor](#rqsrs-031clickhouseaggregatefunctionsspecificgroupbitmapxor)
-      * 3.1.2.20 [sumWithOverflow](#sumwithoverflow)
-        * 3.1.2.20.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Sumwithoverflow](#rqsrs-031clickhouseaggregatefunctionsspecificsumwithoverflow)
-      * 3.1.2.21 [sumMap](#summap)
-        * 3.1.2.21.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Summap](#rqsrs-031clickhouseaggregatefunctionsspecificsummap)
-      * 3.1.2.22 [minMap](#minmap)
-        * 3.1.2.22.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Minmap](#rqsrs-031clickhouseaggregatefunctionsspecificminmap)
-      * 3.1.2.23 [maxMap](#maxmap)
-        * 3.1.2.23.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Maxmap](#rqsrs-031clickhouseaggregatefunctionsspecificmaxmap)
-      * 3.1.2.24 [skewSamp](#skewsamp)
-        * 3.1.2.24.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Skewsamp](#rqsrs-031clickhouseaggregatefunctionsspecificskewsamp)
-      * 3.1.2.25 [skewPop](#skewpop)
-        * 3.1.2.25.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Skewpop](#rqsrs-031clickhouseaggregatefunctionsspecificskewpop)
-      * 3.1.2.26 [kurtSamp](#kurtsamp)
-        * 3.1.2.26.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Kurtsamp](#rqsrs-031clickhouseaggregatefunctionsspecifickurtsamp)
-      * 3.1.2.27 [kurtPop](#kurtpop)
-        * 3.1.2.27.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Kurtpop](#rqsrs-031clickhouseaggregatefunctionsspecifickurtpop)
-      * 3.1.2.28 [uniq](#uniq)
-        * 3.1.2.28.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Uniq](#rqsrs-031clickhouseaggregatefunctionsspecificuniq)
-      * 3.1.2.29 [uniqExact](#uniqexact)
-        * 3.1.2.29.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Uniqexact](#rqsrs-031clickhouseaggregatefunctionsspecificuniqexact)
-      * 3.1.2.30 [uniqCombined](#uniqcombined)
-        * 3.1.2.30.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Uniqcombined](#rqsrs-031clickhouseaggregatefunctionsspecificuniqcombined)
-      * 3.1.2.31 [uniqCombined64](#uniqcombined64)
-        * 3.1.2.31.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Uniqcombined64](#rqsrs-031clickhouseaggregatefunctionsspecificuniqcombined64)
-      * 3.1.2.32 [uniqHLL12](#uniqhll12)
-        * 3.1.2.32.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Uniqhll12](#rqsrs-031clickhouseaggregatefunctionsspecificuniqhll12)
-      * 3.1.2.33 [quantile](#quantile)
-        * 3.1.2.33.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Quantile](#rqsrs-031clickhouseaggregatefunctionsspecificquantile)
-      * 3.1.2.34 [quantiles](#quantiles)
-        * 3.1.2.34.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Quantiles](#rqsrs-031clickhouseaggregatefunctionsspecificquantiles)
-      * 3.1.2.35 [quantileExact](#quantileexact)
-        * 3.1.2.35.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Quantileexact](#rqsrs-031clickhouseaggregatefunctionsspecificquantileexact)
-      * 3.1.2.36 [quantileExactLow](#quantileexactlow)
-        * 3.1.2.36.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Quantileexactlow](#rqsrs-031clickhouseaggregatefunctionsspecificquantileexactlow)
-      * 3.1.2.37 [quantileExactHigh](#quantileexacthigh)
-        * 3.1.2.37.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Quantileexacthigh](#rqsrs-031clickhouseaggregatefunctionsspecificquantileexacthigh)
-      * 3.1.2.38 [quantileExactWeighted](#quantileexactweighted)
-        * 3.1.2.38.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Quantileexactweighted](#rqsrs-031clickhouseaggregatefunctionsspecificquantileexactweighted)
-      * 3.1.2.39 [quantileTiming](#quantiletiming)
-        * 3.1.2.39.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Quantiletiming](#rqsrs-031clickhouseaggregatefunctionsspecificquantiletiming)
-      * 3.1.2.40 [quantileTimingWeighted](#quantiletimingweighted)
-        * 3.1.2.40.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Quantiletimingweighted](#rqsrs-031clickhouseaggregatefunctionsspecificquantiletimingweighted)
-      * 3.1.2.41 [quantileDeterministic](#quantiledeterministic)
-        * 3.1.2.41.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Quantiledeterministic](#rqsrs-031clickhouseaggregatefunctionsspecificquantiledeterministic)
-      * 3.1.2.42 [quantileTDigest](#quantiletdigest)
-        * 3.1.2.42.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Quantiletdigest](#rqsrs-031clickhouseaggregatefunctionsspecificquantiletdigest)
-      * 3.1.2.43 [quantileTDigestWeighted](#quantiletdigestweighted)
-        * 3.1.2.43.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Quantiletdigestweighted](#rqsrs-031clickhouseaggregatefunctionsspecificquantiletdigestweighted)
-      * 3.1.2.44 [quantileBFloat16](#quantilebfloat16)
-        * 3.1.2.44.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Quantilebfloat16](#rqsrs-031clickhouseaggregatefunctionsspecificquantilebfloat16)
-      * 3.1.2.45 [quantileBFloat16Weighted](#quantilebfloat16weighted)
-        * 3.1.2.45.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Quantilebfloat16weighted](#rqsrs-031clickhouseaggregatefunctionsspecificquantilebfloat16weighted)
-      * 3.1.2.46 [simpleLinearRegression](#simplelinearregression)
-        * 3.1.2.46.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Simplelinearregression](#rqsrs-031clickhouseaggregatefunctionsspecificsimplelinearregression)
-      * 3.1.2.47 [stochasticLinearRegression](#stochasticlinearregression)
-        * 3.1.2.47.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Stochasticlinearregression](#rqsrs-031clickhouseaggregatefunctionsspecificstochasticlinearregression)
-      * 3.1.2.48 [stochasticLogisticRegression](#stochasticlogisticregression)
-        * 3.1.2.48.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Stochasticlogisticregression](#rqsrs-031clickhouseaggregatefunctionsspecificstochasticlogisticregression)
-      * 3.1.2.49 [categoricalInformationValue](#categoricalinformationvalue)
-        * 3.1.2.49.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Categoricalinformationvalue](#rqsrs-031clickhouseaggregatefunctionsspecificcategoricalinformationvalue)
-      * 3.1.2.50 [studentTTest](#studentttest)
-        * 3.1.2.50.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Studentttest](#rqsrs-031clickhouseaggregatefunctionsspecificstudentttest)
-      * 3.1.2.51 [welchTTest](#welchttest)
-        * 3.1.2.51.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Welchttest](#rqsrs-031clickhouseaggregatefunctionsspecificwelchttest)
-      * 3.1.2.52 [mannWhitneyUTest](#mannwhitneyutest)
-        * 3.1.2.52.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Mannwhitneyutest](#rqsrs-031clickhouseaggregatefunctionsspecificmannwhitneyutest)
-      * 3.1.2.53 [median](#median)
-        * 3.1.2.53.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Median](#rqsrs-031clickhouseaggregatefunctionsspecificmedian)
-      * 3.1.2.54 [rankCorr](#rankcorr)
-        * 3.1.2.54.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Rankcorr](#rqsrs-031clickhouseaggregatefunctionsspecificrankcorr)
-      * 3.1.2.55 [entropy](#entropy)
-        * 3.1.2.55.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Entropy](#rqsrs-031clickhouseaggregatefunctionsspecificentropy)
-      * 3.1.2.56 [meanZTest](#meanztest)
-        * 3.1.2.56.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.MeanZTest](#rqsrs-031clickhouseaggregatefunctionsspecificmeanztest)
-      * 3.1.2.57 [sparkbar](#sparkbar)
-        * 3.1.2.57.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Sparkbar](#rqsrs-031clickhouseaggregatefunctionsspecificsparkbar)
+        * 3.1.2.12.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.GroupArrayMovingSum](#rqsrs-031clickhouseaggregatefunctionsspecificgrouparraymovingsum)
+      * 3.1.2.13 [groupArraySample](#grouparraysample)
+        * 3.1.2.13.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.GroupArraySample](#rqsrs-031clickhouseaggregatefunctionsspecificgrouparraysample)
+      * 3.1.2.14 [groupBitAnd](#groupbitand)
+        * 3.1.2.14.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.GroupBitAnd](#rqsrs-031clickhouseaggregatefunctionsspecificgroupbitand)
+      * 3.1.2.15 [groupBitOr](#groupbitor)
+        * 3.1.2.15.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.GroupBitOr](#rqsrs-031clickhouseaggregatefunctionsspecificgroupbitor)
+      * 3.1.2.16 [groupBitXor](#groupbitxor)
+        * 3.1.2.16.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.GroupBitXor](#rqsrs-031clickhouseaggregatefunctionsspecificgroupbitxor)
+      * 3.1.2.17 [groupBitmap](#groupbitmap)
+        * 3.1.2.17.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.GroupBitmap](#rqsrs-031clickhouseaggregatefunctionsspecificgroupbitmap)
+      * 3.1.2.18 [groupBitmapAnd](#groupbitmapand)
+        * 3.1.2.18.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.GroupBitmapAnd](#rqsrs-031clickhouseaggregatefunctionsspecificgroupbitmapand)
+      * 3.1.2.19 [groupBitmapOr](#groupbitmapor)
+        * 3.1.2.19.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.GroupBitmapOr](#rqsrs-031clickhouseaggregatefunctionsspecificgroupbitmapor)
+      * 3.1.2.20 [groupBitmapXor](#groupbitmapxor)
+        * 3.1.2.20.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.GroupBitmapXor](#rqsrs-031clickhouseaggregatefunctionsspecificgroupbitmapxor)
+      * 3.1.2.21 [sumWithOverflow](#sumwithoverflow)
+        * 3.1.2.21.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.SumWithOverflow](#rqsrs-031clickhouseaggregatefunctionsspecificsumwithoverflow)
+      * 3.1.2.22 [sumMap](#summap)
+        * 3.1.2.22.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.SumMap](#rqsrs-031clickhouseaggregatefunctionsspecificsummap)
+      * 3.1.2.23 [minMap](#minmap)
+        * 3.1.2.23.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.MinMap](#rqsrs-031clickhouseaggregatefunctionsspecificminmap)
+      * 3.1.2.24 [maxMap](#maxmap)
+        * 3.1.2.24.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.MaxMap](#rqsrs-031clickhouseaggregatefunctionsspecificmaxmap)
+      * 3.1.2.25 [skewSamp](#skewsamp)
+        * 3.1.2.25.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.SkewSamp](#rqsrs-031clickhouseaggregatefunctionsspecificskewsamp)
+      * 3.1.2.26 [skewPop](#skewpop)
+        * 3.1.2.26.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.SkewPop](#rqsrs-031clickhouseaggregatefunctionsspecificskewpop)
+      * 3.1.2.27 [kurtSamp](#kurtsamp)
+        * 3.1.2.27.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.KurtSamp](#rqsrs-031clickhouseaggregatefunctionsspecifickurtsamp)
+      * 3.1.2.28 [kurtPop](#kurtpop)
+        * 3.1.2.28.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.KurtPop](#rqsrs-031clickhouseaggregatefunctionsspecifickurtpop)
+      * 3.1.2.29 [uniq](#uniq)
+        * 3.1.2.29.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Uniq](#rqsrs-031clickhouseaggregatefunctionsspecificuniq)
+      * 3.1.2.30 [uniqExact](#uniqexact)
+        * 3.1.2.30.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.UniqExact](#rqsrs-031clickhouseaggregatefunctionsspecificuniqexact)
+      * 3.1.2.31 [uniqCombined](#uniqcombined)
+        * 3.1.2.31.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.UniqCombined](#rqsrs-031clickhouseaggregatefunctionsspecificuniqcombined)
+      * 3.1.2.32 [uniqCombined64](#uniqcombined64)
+        * 3.1.2.32.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.UniqCombined64](#rqsrs-031clickhouseaggregatefunctionsspecificuniqcombined64)
+      * 3.1.2.33 [uniqHLL12](#uniqhll12)
+        * 3.1.2.33.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.UniqHLL12](#rqsrs-031clickhouseaggregatefunctionsspecificuniqhll12)
+      * 3.1.2.34 [quantile](#quantile)
+        * 3.1.2.34.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Quantile](#rqsrs-031clickhouseaggregatefunctionsspecificquantile)
+      * 3.1.2.35 [quantiles](#quantiles)
+        * 3.1.2.35.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Quantiles](#rqsrs-031clickhouseaggregatefunctionsspecificquantiles)
+      * 3.1.2.36 [quantilesExactExclusive](#quantilesexactexclusive)
+        * 3.1.2.36.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantilesExactExclusive](#rqsrs-031clickhouseaggregatefunctionsspecificquantilesexactexclusive)
+      * 3.1.2.37 [quantilesExactInclusive](#quantilesexactinclusive)
+        * 3.1.2.37.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantilesExactInclusive](#rqsrs-031clickhouseaggregatefunctionsspecificquantilesexactinclusive)
+      * 3.1.2.38 [quantilesDeterministic](#quantilesdeterministic)
+        * 3.1.2.38.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantilesDeterministic](#rqsrs-031clickhouseaggregatefunctionsspecificquantilesdeterministic)
+      * 3.1.2.39 [quantilesExact](#quantilesexact)
+        * 3.1.2.39.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantilesExact](#rqsrs-031clickhouseaggregatefunctionsspecificquantilesexact)
+      * 3.1.2.40 [quantilesExactHigh](#quantilesexacthigh)
+        * 3.1.2.40.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantilesExactHigh](#rqsrs-031clickhouseaggregatefunctionsspecificquantilesexacthigh)
+      * 3.1.2.41 [quantilesExactLow](#quantilesexactlow)
+        * 3.1.2.41.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantilesExactLow](#rqsrs-031clickhouseaggregatefunctionsspecificquantilesexactlow)
+      * 3.1.2.42 [quantilesExactWeighted](#quantilesexactweighted)
+        * 3.1.2.42.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantilesExactWeighted](#rqsrs-031clickhouseaggregatefunctionsspecificquantilesexactweighted)
+      * 3.1.2.43 [quantilesTDigest](#quantilestdigest)
+        * 3.1.2.43.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantilesTDigest](#rqsrs-031clickhouseaggregatefunctionsspecificquantilestdigest)
+      * 3.1.2.44 [quantilesTDigestWeighted](#quantilestdigestweighted)
+        * 3.1.2.44.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantilesTDigestWeighted](#rqsrs-031clickhouseaggregatefunctionsspecificquantilestdigestweighted)
+      * 3.1.2.45 [quantilesTiming](#quantilestiming)
+        * 3.1.2.45.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantilesTiming](#rqsrs-031clickhouseaggregatefunctionsspecificquantilestiming)
+      * 3.1.2.46 [quantilesTimingWeighted](#quantilestimingweighted)
+        * 3.1.2.46.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantilesTimingWeighted](#rqsrs-031clickhouseaggregatefunctionsspecificquantilestimingweighted)
+      * 3.1.2.47 [quantileExact](#quantileexact)
+        * 3.1.2.47.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantileExact](#rqsrs-031clickhouseaggregatefunctionsspecificquantileexact)
+      * 3.1.2.48 [quantileExactLow](#quantileexactlow)
+        * 3.1.2.48.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantileExactLow](#rqsrs-031clickhouseaggregatefunctionsspecificquantileexactlow)
+      * 3.1.2.49 [quantileExactHigh](#quantileexacthigh)
+        * 3.1.2.49.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantileExactHigh](#rqsrs-031clickhouseaggregatefunctionsspecificquantileexacthigh)
+      * 3.1.2.50 [quantileExactWeighted](#quantileexactweighted)
+        * 3.1.2.50.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantileExactWeighted](#rqsrs-031clickhouseaggregatefunctionsspecificquantileexactweighted)
+      * 3.1.2.51 [quantileTiming](#quantiletiming)
+        * 3.1.2.51.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantileTiming](#rqsrs-031clickhouseaggregatefunctionsspecificquantiletiming)
+      * 3.1.2.52 [quantileTimingWeighted](#quantiletimingweighted)
+        * 3.1.2.52.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantileTimingWeighted](#rqsrs-031clickhouseaggregatefunctionsspecificquantiletimingweighted)
+      * 3.1.2.53 [quantileDeterministic](#quantiledeterministic)
+        * 3.1.2.53.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantileDeterministic](#rqsrs-031clickhouseaggregatefunctionsspecificquantiledeterministic)
+      * 3.1.2.54 [quantileTDigest](#quantiletdigest)
+        * 3.1.2.54.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantileTDigest](#rqsrs-031clickhouseaggregatefunctionsspecificquantiletdigest)
+      * 3.1.2.55 [quantileTDigestWeighted](#quantiletdigestweighted)
+        * 3.1.2.55.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantileTDigestWeighted](#rqsrs-031clickhouseaggregatefunctionsspecificquantiletdigestweighted)
+      * 3.1.2.56 [quantileBFloat16](#quantilebfloat16)
+        * 3.1.2.56.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantileBFloat16](#rqsrs-031clickhouseaggregatefunctionsspecificquantilebfloat16)
+      * 3.1.2.57 [quantileBFloat16Weighted](#quantilebfloat16weighted)
+        * 3.1.2.57.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantileBFloat16Weighted](#rqsrs-031clickhouseaggregatefunctionsspecificquantilebfloat16weighted)
+      * 3.1.2.58 [simpleLinearRegression](#simplelinearregression)
+        * 3.1.2.58.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.SimpleLinearRegression](#rqsrs-031clickhouseaggregatefunctionsspecificsimplelinearregression)
+      * 3.1.2.59 [stochasticLinearRegression](#stochasticlinearregression)
+        * 3.1.2.59.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.StochasticLinearRegression](#rqsrs-031clickhouseaggregatefunctionsspecificstochasticlinearregression)
+      * 3.1.2.60 [stochasticLogisticRegression](#stochasticlogisticregression)
+        * 3.1.2.60.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.StochasticLogisticRgression](#rqsrs-031clickhouseaggregatefunctionsspecificstochasticlogisticrgression)
+      * 3.1.2.61 [categoricalInformationValue](#categoricalinformationvalue)
+        * 3.1.2.61.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.CategoricalInformationValue](#rqsrs-031clickhouseaggregatefunctionsspecificcategoricalinformationvalue)
+      * 3.1.2.62 [studentTTest](#studentttest)
+        * 3.1.2.62.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.StudentTTest](#rqsrs-031clickhouseaggregatefunctionsspecificstudentttest)
+      * 3.1.2.63 [welchTTest](#welchttest)
+        * 3.1.2.63.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.WelchTTest](#rqsrs-031clickhouseaggregatefunctionsspecificwelchttest)
+      * 3.1.2.64 [mannWhitneyUTest](#mannwhitneyutest)
+        * 3.1.2.64.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.MannWhitneyUTest](#rqsrs-031clickhouseaggregatefunctionsspecificmannwhitneyutest)
+      * 3.1.2.65 [median](#median)
+        * 3.1.2.65.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Median](#rqsrs-031clickhouseaggregatefunctionsspecificmedian)
+      * 3.1.2.66 [rankCorr](#rankcorr)
+        * 3.1.2.66.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.RankCorr](#rqsrs-031clickhouseaggregatefunctionsspecificrankcorr)
+      * 3.1.2.67 [entropy](#entropy)
+        * 3.1.2.67.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Entropy](#rqsrs-031clickhouseaggregatefunctionsspecificentropy)
+      * 3.1.2.68 [meanZTest](#meanztest)
+        * 3.1.2.68.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.MeanZTest](#rqsrs-031clickhouseaggregatefunctionsspecificmeanztest)
+      * 3.1.2.69 [sparkbar](#sparkbar)
+        * 3.1.2.69.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Sparkbar](#rqsrs-031clickhouseaggregatefunctionsspecificsparkbar)
+      * 3.1.2.70 [corr](#corr)
+        * 3.1.2.70.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Corr](#rqsrs-031clickhouseaggregatefunctionsspecificcorr)
+      * 3.1.2.71 [deltaSum](#deltasum)
+        * 3.1.2.71.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.DeltaSum](#rqsrs-031clickhouseaggregatefunctionsspecificdeltasum)
+      * 3.1.2.72 [deltaSumTimestamp](#deltasumtimestamp)
+        * 3.1.2.72.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.DeltaSumTimestamp](#rqsrs-031clickhouseaggregatefunctionsspecificdeltasumtimestamp)
+      * 3.1.2.73 [exponentialMovingAverage](#exponentialmovingaverage)
+        * 3.1.2.73.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.ExponentialMovingAverage](#rqsrs-031clickhouseaggregatefunctionsspecificexponentialmovingaverage)
+      * 3.1.2.74 [intervalLengthSum](#intervallengthsum)
+        * 3.1.2.74.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.IntervalLengthSum](#rqsrs-031clickhouseaggregatefunctionsspecificintervallengthsum)
+      * 3.1.2.75 [sumCount](#sumcount)
+        * 3.1.2.75.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.SumCount](#rqsrs-031clickhouseaggregatefunctionsspecificsumcount)
+      * 3.1.2.76 [sumKahan](#sumkahan)
+        * 3.1.2.76.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.SumKahan](#rqsrs-031clickhouseaggregatefunctionsspecificsumkahan)
     * 3.1.3 [Miscellaneous Functions](#miscellaneous-functions)
       * 3.1.3.1 [first_value](#first_value)
         * 3.1.3.1.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.FirstValue](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousfirstvalue)
       * 3.1.3.2 [last_value](#last_value)
         * 3.1.3.2.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.LastValue](#rqsrs-031clickhouseaggregatefunctionsmiscellaneouslastvalue)
-      * 3.1.3.3 [singleValueOrNull](#singlevalueornull)
-        * 3.1.3.3.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.SingleValueOrNull](#rqsrs-031clickhouseaggregatefunctionsmiscellaneoussinglevalueornull)
-      * 3.1.3.4 [maxIntersections](#maxintersections)
-        * 3.1.3.4.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.MaxIntersections](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousmaxintersections)
+      * 3.1.3.3 [lagInFrame](#laginframe)
+        * 3.1.3.3.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.LagInFrame](#rqsrs-031clickhouseaggregatefunctionsmiscellaneouslaginframe)
+      * 3.1.3.4 [leadInFrame](#leadinframe)
+        * 3.1.3.4.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.LeadInFrame](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousleadinframe)
+      * 3.1.3.5 [nth_value](#nth_value)
+        * 3.1.3.5.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.NthValue](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousnthvalue)
+      * 3.1.3.6 [rank](#rank)
+        * 3.1.3.6.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.Rank](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousrank)
+      * 3.1.3.7 [row_number](#row_number)
+        * 3.1.3.7.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.RowNumber](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousrownumber)
+      * 3.1.3.8 [singleValueOrNull](#singlevalueornull)
+        * 3.1.3.8.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.SingleValueOrNull](#rqsrs-031clickhouseaggregatefunctionsmiscellaneoussinglevalueornull)
+      * 3.1.3.9 [maxIntersections](#maxintersections)
+        * 3.1.3.9.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.MaxIntersections](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousmaxintersections)
+      * 3.1.3.10 [maxIntersectionsPosition](#maxintersectionsposition)
+        * 3.1.3.10.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.MaxIntersectionsPosition](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousmaxintersectionsposition)
+      * 3.1.3.11 [aggThrow](#aggthrow)
+        * 3.1.3.11.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.AggThrow](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousaggthrow)
+      * 3.1.3.12 [boundingRatio](#boundingratio)
+        * 3.1.3.12.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.BoundingRatio](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousboundingratio)
+      * 3.1.3.13 [contingency](#contingency)
+        * 3.1.3.13.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.Contingency](#rqsrs-031clickhouseaggregatefunctionsmiscellaneouscontingency)
+      * 3.1.3.14 [cramersV](#cramersv)
+        * 3.1.3.14.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.CramersV](#rqsrs-031clickhouseaggregatefunctionsmiscellaneouscramersv)
+      * 3.1.3.15 [cramersVBiasCorrected](#cramersvbiascorrected)
+        * 3.1.3.15.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.CramersVBiasCorrected](#rqsrs-031clickhouseaggregatefunctionsmiscellaneouscramersvbiascorrected)
+      * 3.1.3.16 [dense_rank](#dense_rank)
+        * 3.1.3.16.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.DenseRank](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousdenserank)
+      * 3.1.3.17 [exponentialTimeDecayedAvg](#exponentialtimedecayedavg)
+        * 3.1.3.17.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.ExponentialTimeDecayedAvg](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousexponentialtimedecayedavg)
+      * 3.1.3.18 [exponentialTimeDecayedCount](#exponentialtimedecayedcount)
+        * 3.1.3.18.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.ExponentialTimeDecayedCount](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousexponentialtimedecayedcount)
+      * 3.1.3.19 [exponentialTimeDecayedMax](#exponentialtimedecayedmax)
+        * 3.1.3.19.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.ExponentialTimeDecayedMax](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousexponentialtimedecayedmax)
+      * 3.1.3.20 [exponentialTimeDecayedSum](#exponentialtimedecayedsum)
+        * 3.1.3.20.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.ExponentialTimeDecayedSum](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousexponentialtimedecayedsum)
+      * 3.1.3.21 [uniqTheta](#uniqtheta)
+        * 3.1.3.21.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.UniqTheta](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousuniqtheta)
+      * 3.1.3.22 [quantileExactExclusive](#quantileexactexclusive)
+        * 3.1.3.22.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.QuantileExactExclusive](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousquantileexactexclusive)
+      * 3.1.3.23 [quantileExactInclusive](#quantileexactinclusive)
+        * 3.1.3.23.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.QuantileExactInclusive](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousquantileexactinclusive)
+      * 3.1.3.24 [sumMapFilteredWithOverflow](#summapfilteredwithoverflow)
+        * 3.1.3.24.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.SumMapFilteredWithOverflow](#rqsrs-031clickhouseaggregatefunctionsmiscellaneoussummapfilteredwithoverflow)
+      * 3.1.3.25 [sumMapWithOverflow](#summapwithoverflow)
+        * 3.1.3.25.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.SumMapWithOverflow](#rqsrs-031clickhouseaggregatefunctionsmiscellaneoussummapwithoverflow)
+      * 3.1.3.26 [sumMappedArrays](#summappedarrays)
+        * 3.1.3.26.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.SumMappedArrays](#rqsrs-031clickhouseaggregatefunctionsmiscellaneoussummappedarrays)
+      * 3.1.3.27 [nothing](#nothing)
+        * 3.1.3.27.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.Nothing](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousnothing)
+      * 3.1.3.28 [maxMappedArrays](#maxmappedarrays)
+        * 3.1.3.28.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.MaxMappedArrays](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousmaxmappedarrays)
+      * 3.1.3.29 [minMappedArrays](#minmappedarrays)
+        * 3.1.3.29.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.MinMappedArrays](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousminmappedarrays)
+      * 3.1.3.30 [nonNegativeDerivative](#nonnegativederivative)
+        * 3.1.3.30.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.NonNegativeDerivative](#rqsrs-031clickhouseaggregatefunctionsmiscellaneousnonnegativederivative)
+      * 3.1.3.31 [theilsU](#theilsu)
+        * 3.1.3.31.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.TheilsU](#rqsrs-031clickhouseaggregatefunctionsmiscellaneoustheilsu)
     * 3.1.4 [Parametric Functions](#parametric-functions)
       * 3.1.4.1 [histogram](#histogram)
         * 3.1.4.1.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Histogram](#rqsrs-031clickhouseaggregatefunctionsparametrichistogram)
       * 3.1.4.2 [sequenceMatch](#sequencematch)
-        * 3.1.4.2.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Sequencematch](#rqsrs-031clickhouseaggregatefunctionsparametricsequencematch)
+        * 3.1.4.2.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SequenceMatch](#rqsrs-031clickhouseaggregatefunctionsparametricsequencematch)
       * 3.1.4.3 [sequenceCount](#sequencecount)
-        * 3.1.4.3.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Sequencecount](#rqsrs-031clickhouseaggregatefunctionsparametricsequencecount)
+        * 3.1.4.3.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SequenceCount](#rqsrs-031clickhouseaggregatefunctionsparametricsequencecount)
       * 3.1.4.4 [windowFunnel](#windowfunnel)
-        * 3.1.4.4.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Windowfunnel](#rqsrs-031clickhouseaggregatefunctionsparametricwindowfunnel)
+        * 3.1.4.4.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.WindowFunnel](#rqsrs-031clickhouseaggregatefunctionsparametricwindowfunnel)
       * 3.1.4.5 [retention](#retention)
         * 3.1.4.5.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Retention](#rqsrs-031clickhouseaggregatefunctionsparametricretention)
       * 3.1.4.6 [uniqUpTo](#uniqupto)
-        * 3.1.4.6.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Uniqupto](#rqsrs-031clickhouseaggregatefunctionsparametricuniqupto)
+        * 3.1.4.6.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.UniqUpTo](#rqsrs-031clickhouseaggregatefunctionsparametricuniqupto)
       * 3.1.4.7 [sumMapFiltered](#summapfiltered)
-        * 3.1.4.7.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Summapfiltered](#rqsrs-031clickhouseaggregatefunctionsparametricsummapfiltered)
+        * 3.1.4.7.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SumMapFiltered](#rqsrs-031clickhouseaggregatefunctionsparametricsummapfiltered)
       * 3.1.4.8 [sequenceNextNode](#sequencenextnode)
         * 3.1.4.8.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SequenceNextNode](#rqsrs-031clickhouseaggregatefunctionsparametricsequencenextnode)
   * 3.2 [Combinator Functions](#combinator-functions)
@@ -359,182 +451,189 @@ version: 1.0
 
 ##### anyLast
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Anylast
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.AnyLast
 version: 1.0
 
 [ClickHouse] SHALL support [anyLast] specific aggregate function.
 
 ##### argMin
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Argmin
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.ArgMin
 version: 1.0
 
 [ClickHouse] SHALL support [argMin] specific aggregate function.
 
 ##### argMax
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Argmax
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.ArgMax
 version: 1.0
 
 [ClickHouse] SHALL support [argMax] specific aggregate function.
 
 ##### avgWeighted
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Avgweighted
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.AvgWeighted
 version: 1.0
 
 [ClickHouse] SHALL support [avgWeighted] specific aggregate function.
 
 ##### topK
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Topk
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.TopK
 version: 1.0
 
 [ClickHouse] SHALL support [topK] specific aggregate function.
 
 ##### topKWeighted
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Topkweighted
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.TopKWeighted
 version: 1.0
 
 [ClickHouse] SHALL support [topKWeighted] specific aggregate function.
 
 ##### groupArray
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Grouparray
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.GroupArray
 version: 1.0
 
 [ClickHouse] SHALL support [groupArray] specific aggregate function.
 
 ##### groupUniqArray
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Groupuniqarray
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.GroupUniqArray
 version: 1.0
 
 [ClickHouse] SHALL support [groupUniqArray] specific aggregate function.
 
 ##### groupArrayInsertAt
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Grouparrayinsertat
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.GroupArrayInsertAt
 version: 1.0
 
 [ClickHouse] SHALL support [groupArrayInsertAt] specific aggregate function.
 
 ##### groupArrayMovingAvg
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Grouparraymovingavg
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.GroupArrayMovingAvg
 version: 1.0
 
 [ClickHouse] SHALL support [groupArrayMovingAvg] specific aggregate function.
 
 ##### groupArrayMovingSum
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Grouparraymovingsum
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.GroupArrayMovingSum
 version: 1.0
 
 [ClickHouse] SHALL support [groupArrayMovingSum] specific aggregate function.
 
+##### groupArraySample
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.GroupArraySample
+version: 1.0
+
+[ClickHouse] SHALL support [groupArraySample] specific aggregate function.
+
 ##### groupBitAnd
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Groupbitand
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.GroupBitAnd
 version: 1.0
 
 [ClickHouse] SHALL support [groupBitAnd] specific aggregate function.
 
 ##### groupBitOr
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Groupbitor
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.GroupBitOr
 version: 1.0
 
 [ClickHouse] SHALL support [groupBitOr] specific aggregate function.
 
 ##### groupBitXor
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Groupbitxor
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.GroupBitXor
 version: 1.0
 
 [ClickHouse] SHALL support [groupBitXor] specific aggregate function.
 
 ##### groupBitmap
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Groupbitmap
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.GroupBitmap
 version: 1.0
 
 [ClickHouse] SHALL support [groupBitmap] specific aggregate function.
 
 ##### groupBitmapAnd
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Groupbitmapand
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.GroupBitmapAnd
 version: 1.0
 
 [ClickHouse] SHALL support [groupBitmapAnd] specific aggregate function.
 
 ##### groupBitmapOr
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Groupbitmapor
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.GroupBitmapOr
 version: 1.0
 
 [ClickHouse] SHALL support [groupBitmapOr] specific aggregate function.
 
 ##### groupBitmapXor
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Groupbitmapxor
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.GroupBitmapXor
 version: 1.0
 
 [ClickHouse] SHALL support [groupBitmapXor] specific aggregate function.
 
 ##### sumWithOverflow
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Sumwithoverflow
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.SumWithOverflow
 version: 1.0
 
 [ClickHouse] SHALL support [sumWithOverflow] specific aggregate function.
 
 ##### sumMap
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Summap
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.SumMap
 version: 1.0
 
 [ClickHouse] SHALL support [sumMap] specific aggregate function.
 
 ##### minMap
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Minmap
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.MinMap
 version: 1.0
 
 [ClickHouse] SHALL support [minMap] specific aggregate function.
 
 ##### maxMap
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Maxmap
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.MaxMap
 version: 1.0
 
 [ClickHouse] SHALL support [maxMap] specific aggregate function.
 
 ##### skewSamp
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Skewsamp
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.SkewSamp
 version: 1.0
 
 [ClickHouse] SHALL support [skewSamp] specific aggregate function.
 
 ##### skewPop
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Skewpop
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.SkewPop
 version: 1.0
 
 [ClickHouse] SHALL support [skewPop] specific aggregate function.
 
 ##### kurtSamp
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Kurtsamp
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.KurtSamp
 version: 1.0
 
 [ClickHouse] SHALL support [kurtSamp] specific aggregate function.
 
 ##### kurtPop
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Kurtpop
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.KurtPop
 version: 1.0
 
 [ClickHouse] SHALL support [kurtPop] specific aggregate function.
@@ -548,28 +647,28 @@ version: 1.0
 
 ##### uniqExact
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Uniqexact
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.UniqExact
 version: 1.0
 
 [ClickHouse] SHALL support [uniqExact] specific aggregate function.
 
 ##### uniqCombined
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Uniqcombined
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.UniqCombined
 version: 1.0
 
 [ClickHouse] SHALL support [uniqCombined] specific aggregate function.
 
 ##### uniqCombined64
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Uniqcombined64
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.UniqCombined64
 version: 1.0
 
 [ClickHouse] SHALL support [uniqCombined64] specific aggregate function.
 
 ##### uniqHLL12
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Uniqhll12
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.UniqHLL12
 version: 1.0
 
 [ClickHouse] SHALL support [uniqHLL12] specific aggregate function.
@@ -588,128 +687,205 @@ version: 1.0
 
 [ClickHouse] SHALL support [quantiles] specific aggregate function.
 
+##### quantilesExactExclusive
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantilesExactExclusive
+version: 1.0
+
+[ClickHouse] SHALL support [quantilesExactExclusive] specific aggregate function.
+
+##### quantilesExactInclusive
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantilesExactInclusive
+version: 1.0
+
+[ClickHouse] SHALL support [quantilesExactInclusive] specific aggregate function.
+
+##### quantilesDeterministic
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantilesDeterministic
+version: 1.0
+
+[ClickHouse] SHALL support [quantilesDeterministic] specific aggregate function.
+
+##### quantilesExact
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantilesExact
+version: 1.0
+
+[ClickHouse] SHALL support [quantilesExact] specific aggregate function.
+
+##### quantilesExactHigh
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantilesExactHigh
+version: 1.0
+
+[ClickHouse] SHALL support [quantilesExactHigh] specific aggregate function.
+
+##### quantilesExactLow
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantilesExactLow
+version: 1.0
+
+[ClickHouse] SHALL support [quantilesExactLow] specific aggregate function.
+
+##### quantilesExactWeighted
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantilesExactWeighted
+version: 1.0
+
+[ClickHouse] SHALL support [quantilesExactWeighted] specific aggregate function.
+
+##### quantilesTDigest
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantilesTDigest
+version: 1.0
+
+[ClickHouse] SHALL support [quantilesTDigest] specific aggregate function.
+
+##### quantilesTDigestWeighted
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantilesTDigestWeighted
+version: 1.0
+
+[ClickHouse] SHALL support [quantilesTDigestWeighted] specific aggregate function.
+
+##### quantilesTiming
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantilesTiming
+version: 1.0
+
+[ClickHouse] SHALL support [quantilesTiming] specific aggregate function.
+
+##### quantilesTimingWeighted
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantilesTimingWeighted
+version: 1.0
+
+[ClickHouse] SHALL support [quantilesTimingWeighted] specific aggregate function.
+
 ##### quantileExact
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Quantileexact
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantileExact
 version: 1.0
 
 [ClickHouse] SHALL support [quantileExact] specific aggregate function.
 
 ##### quantileExactLow
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Quantileexactlow
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantileExactLow
 version: 1.0
 
 [ClickHouse] SHALL support [quantileExactLow] specific aggregate function.
 
 ##### quantileExactHigh
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Quantileexacthigh
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantileExactHigh
 version: 1.0
 
 [ClickHouse] SHALL support [quantileExactHigh] specific aggregate function.
 
 ##### quantileExactWeighted
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Quantileexactweighted
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantileExactWeighted
 version: 1.0
 
 [ClickHouse] SHALL support [quantileExactWeighted] specific aggregate function.
 
 ##### quantileTiming
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Quantiletiming
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantileTiming
 version: 1.0
 
 [ClickHouse] SHALL support [quantileTiming] specific aggregate function.
 
 ##### quantileTimingWeighted
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Quantiletimingweighted
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantileTimingWeighted
 version: 1.0
 
 [ClickHouse] SHALL support [quantileTimingWeighted] specific aggregate function.
 
 ##### quantileDeterministic
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Quantiledeterministic
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantileDeterministic
 version: 1.0
 
 [ClickHouse] SHALL support [quantileDeterministic] specific aggregate function.
 
 ##### quantileTDigest
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Quantiletdigest
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantileTDigest
 version: 1.0
 
 [ClickHouse] SHALL support [quantileTDigest] specific aggregate function.
 
 ##### quantileTDigestWeighted
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Quantiletdigestweighted
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantileTDigestWeighted
 version: 1.0
 
 [ClickHouse] SHALL support [quantileTDigestWeighted] specific aggregate function.
 
 ##### quantileBFloat16
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Quantilebfloat16
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantileBFloat16
 version: 1.0
 
 [ClickHouse] SHALL support [quantileBFloat16] specific aggregate function.
 
 ##### quantileBFloat16Weighted
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Quantilebfloat16weighted
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.QuantileBFloat16Weighted
 version: 1.0
 
 [ClickHouse] SHALL support [quantileBFloat16Weighted] specific aggregate function.
 
 ##### simpleLinearRegression
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Simplelinearregression
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.SimpleLinearRegression
 version: 1.0
 
 [ClickHouse] SHALL support [simpleLinearRegression] specific aggregate function.
 
 ##### stochasticLinearRegression
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Stochasticlinearregression
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.StochasticLinearRegression
 version: 1.0
 
 [ClickHouse] SHALL support [stochasticLinearRegression] specific aggregate function.
 
 ##### stochasticLogisticRegression
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Stochasticlogisticregression
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.StochasticLogisticRgression
 version: 1.0
 
 [ClickHouse] SHALL support [stochasticLogisticRegression] specific aggregate function.
 
 ##### categoricalInformationValue
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Categoricalinformationvalue
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.CategoricalInformationValue
 version: 1.0
 
 [ClickHouse] SHALL support [categoricalInformationValue] specific aggregate function.
 
 ##### studentTTest
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Studentttest
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.StudentTTest
 version: 1.0
 
 [ClickHouse] SHALL support [studentTTest] specific aggregate function.
 
 ##### welchTTest
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Welchttest
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.WelchTTest
 version: 1.0
 
 [ClickHouse] SHALL support [welchTTest] specific aggregate function.
 
 ##### mannWhitneyUTest
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Mannwhitneyutest
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.MannWhitneyUTest
 version: 1.0
 
 [ClickHouse] SHALL support [mannWhitneyUTest] specific aggregate function.
@@ -723,7 +899,7 @@ version: 1.0
 
 ##### rankCorr
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Rankcorr
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.RankCorr
 version: 1.0
 
 [ClickHouse] SHALL support [rankCorr] specific aggregate function.
@@ -749,6 +925,55 @@ version: 1.0
 
 [ClickHouse] SHALL support [sparkbar] specific aggregate function.
 
+##### corr
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.Corr
+version: 1.0
+
+[ClickHouse] SHALL support [corr] specific aggregate function.
+
+##### deltaSum
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.DeltaSum
+version: 1.0
+
+[ClickHouse] SHALL support [deltaSum] specific aggregate function.
+
+##### deltaSumTimestamp
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.DeltaSumTimestamp
+version: 1.0
+
+[ClickHouse] SHALL support [deltaSumTimestamp] specific aggregate function.
+
+##### exponentialMovingAverage
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.ExponentialMovingAverage
+version: 1.0
+
+[ClickHouse] SHALL support [exponentialMovingAverage] specific aggregate function.
+
+##### intervalLengthSum
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.IntervalLengthSum
+version: 1.0
+
+[ClickHouse] SHALL support [intervalLengthSum] specific aggregate function.
+
+##### sumCount
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.SumCount
+version: 1.0
+
+[ClickHouse] SHALL support [sumCount] specific aggregate function.
+
+##### sumKahan
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.SumKahan
+version: 1.0
+
+[ClickHouse] SHALL support [sumKahan] specific aggregate function.
+
 #### Miscellaneous Functions
 
 ##### first_value
@@ -765,6 +990,41 @@ version: 1.0
 
 [ClickHouse] SHALL support `last_value` aggregate function.
 
+##### lagInFrame
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.LagInFrame
+version: 1.0
+
+[ClickHouse] SHALL support `lagInFrame` aggregate function.
+
+##### leadInFrame
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.LeadInFrame
+version: 1.0
+
+[ClickHouse] SHALL support `leadInFrame` aggregate function.
+
+##### nth_value
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.NthValue
+version: 1.0
+
+[ClickHouse] SHALL support `nth_value` aggregate function.
+
+##### rank
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.Rank
+version: 1.0
+
+[ClickHouse] SHALL support `rank` aggregate function.
+
+##### row_number
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.RowNumber
+version: 1.0
+
+[ClickHouse] SHALL support `row_number` aggregate function.
+
 ##### singleValueOrNull
 
 ###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.SingleValueOrNull
@@ -779,6 +1039,160 @@ version: 1.0
 
 [ClickHouse] SHALL support `maxIntersections` aggregate function.
 
+##### maxIntersectionsPosition
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.MaxIntersectionsPosition
+version: 1.0
+
+[ClickHouse] SHALL support `maxIntersectionsPosition` aggregate function.
+
+##### aggThrow
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.AggThrow
+version: 1.0
+
+[ClickHouse] SHALL support `aggThrow` aggregate function.
+
+##### boundingRatio
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.BoundingRatio
+version: 1.0
+
+[ClickHouse] SHALL support `boundingRatio` aggregate function.
+
+##### contingency
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.Contingency
+version: 1.0
+
+[ClickHouse] SHALL support `contingency` aggregate function.
+
+##### cramersV
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.CramersV
+version: 1.0
+
+[ClickHouse] SHALL support `cramersV` aggregate function.
+
+##### cramersVBiasCorrected
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.CramersVBiasCorrected
+version: 1.0
+
+[ClickHouse] SHALL support `cramersVBiasCorrected` aggregate function.
+
+##### dense_rank
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.DenseRank
+version: 1.0
+
+[ClickHouse] SHALL support `dense_rank` aggregate function.
+
+##### exponentialTimeDecayedAvg
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.ExponentialTimeDecayedAvg
+version: 1.0
+
+[ClickHouse] SHALL support `exponentialTimeDecayedAvg` aggregate function.
+
+##### exponentialTimeDecayedCount
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.ExponentialTimeDecayedCount
+version: 1.0
+
+[ClickHouse] SHALL support `exponentialTimeDecayedCount` aggregate function.
+
+##### exponentialTimeDecayedMax
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.ExponentialTimeDecayedMax
+version: 1.0
+
+[ClickHouse] SHALL support `exponentialTimeDecayedMax` aggregate function.
+
+##### exponentialTimeDecayedSum
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.ExponentialTimeDecayedSum
+version: 1.0
+
+[ClickHouse] SHALL support `exponentialTimeDecayedSum` aggregate function.
+
+##### uniqTheta
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.UniqTheta
+version: 1.0
+
+[ClickHouse] SHALL support `uniqTheta` aggregate function.
+
+##### quantileExactExclusive
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.QuantileExactExclusive
+version: 1.0
+
+[ClickHouse] SHALL support `quantileExactExclusive` aggregate function.
+
+##### quantileExactInclusive
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.QuantileExactInclusive
+version: 1.0
+
+[ClickHouse] SHALL support `quantileExactInclusive` aggregate function.
+
+##### sumMapFilteredWithOverflow
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.SumMapFilteredWithOverflow
+version: 1.0
+
+[ClickHouse] SHALL support `sumMapFilteredWithOverflow` aggregate function.
+
+##### sumMapWithOverflow
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.SumMapWithOverflow
+version: 1.0
+
+[ClickHouse] SHALL support `sumMapWithOverflow` aggregate function.
+
+##### sumMappedArrays
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.SumMappedArrays
+version: 1.0
+
+[ClickHouse] SHALL support `sumMappedArrays` aggregate function.
+
+##### nothing
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.Nothing
+version: 1.0
+
+[ClickHouse] SHALL support `nothing` aggregate function.
+
+##### maxMappedArrays
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.MaxMappedArrays
+version: 1.0
+
+[ClickHouse] SHALL support `maxMappedArrays` aggregate function.
+
+##### minMappedArrays
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.MinMappedArrays
+version: 1.0
+
+[ClickHouse] SHALL support `minMappedArrays` aggregate function.
+
+##### nonNegativeDerivative
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.NonNegativeDerivative
+version: 1.0
+
+[ClickHouse] SHALL support `nonNegativeDerivative` aggregate function.
+
+##### theilsU
+
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Miscellaneous.TheilsU
+version: 1.0
+
+[ClickHouse] SHALL support `theilsU` aggregate function.
+
 #### Parametric Functions
 
 ##### histogram
@@ -790,21 +1204,21 @@ version: 1.0
 
 ##### sequenceMatch
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Sequencematch
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SequenceMatch
 version: 1.0
 
 [ClickHouse] SHALL support [sequenceMatch] parameteric aggregate function.
 
 ##### sequenceCount
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Sequencecount
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SequenceCount
 version: 1.0
 
 [ClickHouse] SHALL support [sequenceCount] parameteric aggregate function.
 
 ##### windowFunnel
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Windowfunnel
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.WindowFunnel
 version: 1.0
 
 [ClickHouse] SHALL support [windowFunnel] parameteric aggregate function.
@@ -818,14 +1232,14 @@ version: 1.0
 
 ##### uniqUpTo
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Uniqupto
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.UniqUpTo
 version: 1.0
 
 [ClickHouse] SHALL support [uniqUpTo] parameteric aggregate function.
 
 ##### sumMapFiltered
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.Summapfiltered
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Parametric.SumMapFiltered
 version: 1.0
 
 [ClickHouse] SHALL support [sumMapFiltered] parameteric aggregate function.
@@ -1416,6 +1830,7 @@ GROUP BY
 [groupBitmapXor]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/groupbitmapxor/
 [sumWithOverflow]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/sumwithoverflow/
 [deltaSum]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/deltasum/
+[deltaSumTimestamp]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/deltasumtimestamp
 [sumMap]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/summap/
 [minMap]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/minmap/
 [maxMap]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/maxmap/
@@ -1431,6 +1846,17 @@ GROUP BY
 [uniqHLL12]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/uniqhll12/
 [quantile]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/quantile/
 [quantiles]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/quantiles/
+[quantilesExactExclusive]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/quantiles#quantilesexactexclusive
+[quantilesExactInclusive]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/quantiles#quantilesexactinclusive
+[quantilesDeterministic]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/quantiles/
+[quantilesExact]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/quantiles/
+[quantilesExactHigh]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/quantiles/
+[quantilesExactLow]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/quantiles/
+[quantilesExactWeighted]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/quantiles/
+[quantilesTDigest]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/quantiles/
+[quantilesTDigestWeighted]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/quantiles/
+[quantilesTiming]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/quantiles/
+[quantilesTimingWeighted]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/quantiles/
 [quantileExact]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/quantileexact/
 [quantileExactWeighted]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/quantileexactweighted/
 [quantileTiming]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/quantiletiming/
@@ -1460,3 +1886,7 @@ GROUP BY
 [entropy]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/entropy
 [meanZTest]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/meanztest
 [sparkbar]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/sparkbar
+[exponentialMovingAverage]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/exponentialmovingaverage
+[intervalLengthSum]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/intervalLengthSum
+[sumCount]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/sumcount
+[sumKahan]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/sumkahan

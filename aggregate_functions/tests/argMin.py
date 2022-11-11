@@ -3,7 +3,7 @@ import itertools
 from helpers.tables import common_columns
 from aggregate_functions.tests.steps import *
 from aggregate_functions.requirements import (
-    RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_Argmin,
+    RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_ArgMin,
 )
 
 
@@ -23,7 +23,7 @@ def datatype(self, func, table, col1_name, col2_name):
 
 @TestFeature
 @Name("argMin")
-@Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_Argmin("1.0"))
+@Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_ArgMin("1.0"))
 def feature(self, func="argMin({params})", table=None):
     """Check argMin or argMax or one of their combinator aggregate functions. By default: argMin."""
     self.context.snapshot_id = name.basename(current().name)
