@@ -124,16 +124,17 @@ Software Requirements Specification
 ### RQ.SRS-032.ClickHouse.AutomaticFinalModifier
 version: 1.0
 
-[ClickHouse] SHALL support adding [FINAL modifier] clause to all [SELECT] queries
-for all table engines that support it.
+[ClickHouse] SHALL support adding [FINAL modifier] clause automatically to all [SELECT] queries
+for all table engines that support [FINAL modifier] and return the same result as if [FINAL modifier] clause
+was specified in the [SELECT] query explicitly.
 
 ### Table Engine Setting
 
-#### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSetting
+#### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSetting.ForceSelectFinal
 version: 1.0 priority: 1.0
 
-[ClickHouse] SHALL support `force_select_final` table config setting to enable automatic [FINAL modifier]
-when the setting is set to `1`.
+[ClickHouse] SHALL support `force_select_final` table engine setting to enable automatic [FINAL modifier]
+on all [SELECT] queries when the setting is value is set to `1`.
 
 For example,
 
@@ -143,18 +144,19 @@ Engine=ReplacingMergeTree
 SETTTING force_select_final=1
 ```
 
-#### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSettingNotSupport
+#### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSettingNotSupportted
 version: 1.0 priority: 1.0
 
-[ClickHouse] SHALL not support `force_select_final` table config setting when MergeTree table engine
-doesn't support FINAL.
+[ClickHouse] SHALL not support `force_select_final` table engine setting for any MergeTree table engine that
+doesn't support [FINAL modifier] clause.
 
 ### Select Query Setting
 
-#### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQuerySetting
+#### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQuerySetting.IgnoreForceSelectFinal
 version: 1.0 priority: 1.0
 
-[ClickHouse] SHALL support `ignore_force_select_final` SELECT query setting to disable automatic [FINAL modifier].
+[ClickHouse] SHALL support `ignore_force_select_final` [SELECT] query setting to disable automatic [FINAL modifier]
+if the table has `force_select_final` setting set to `1`.
 
 For example,
 
@@ -195,8 +197,7 @@ table engines variants:
 ##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SupportedTableEngines.EnginesOverOtherEngines
 version: 1.0
 
-[ClickHouse] SHALL support engines that operate over other engines if they were created over supported
-MergeTree] table engines variants:
+[ClickHouse] SHALL support the following table engines over tables that have automatic [FINAL modifier] clause enabled:
 
 * [View](https://clickhouse.com/docs/en/engines/table-engines/special/view)
 * [Buffer](https://clickhouse.com/docs/en/engines/table-engines/special/buffer)
@@ -204,15 +205,12 @@ MergeTree] table engines variants:
 * [MaterializedView](https://clickhouse.com/docs/en/engines/table-engines/special/materializedview)
 
 
-### Supported Select Queries
+### Select Queries
 
-#### SelectQueries
-
-##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries
+#### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries
 version: 1.0
 
-[ClickHouse] SHALL support automatic [FINAL modifier] for [SELECT] queries with the same result 
-as for manual [FINAL modifier]:
+[ClickHouse] SHALL support automatic [FINAL modifier] for any type of [SELECT] queries.
 
 ```sql
 [WITH expr_list|(subquery)]
@@ -234,17 +232,51 @@ SELECT [DISTINCT [ON (column1, column2, ...)]] expr_list
 [FORMAT format]
 ```
 
-#### JoinSelectQueries
+#### Subquery
 
-##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.JoinSelectQueries
+##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Subquery
 version: 1.0
 
-[ClickHouse] SHALL support automatic [FINAL modifier] for [SELECT] queries with [JOIN] applying [FINAL modifier] to all
-tables which has `force_select_final=1` and disable it to them if this [SELECT] query has `SETTING`
-`ignore_force_select_final=1`.
+[ClickHouse] SHALL support applying [FINAL modifier] in any subquery that reads from a table that
+has automatic [FINAL modifier] enabled.
+
+For example,
+
+#### JOIN
+
+##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join
+version: 1.0
+
+[ClickHouse] SHALL support applying [FINAL modifier] for any table in [JOIN] clause for which
+the automatic [FINAL modifier] is enabled.
+
+For example,
+
+#### UNION
+
+##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Union
+version: 1.0
+
+[ClickHouse] SHALL support applying [FINAL modifier] for any table in [UNION] clause for which
+the automatic [FINAL modifier] is enabled.
+
+For example,
+
+#### WITH 
+
+##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.With
+version: 1.0
+
+[ClickHouse] SHALL support applying [FINAL modifier] for any table in subquery inside the [WITH] clause for which
+the automatic [FINAL modifier] is enabled.
+
+For example,
 
 [SRS]: #srs
 [SELECT]: https://clickhouse.com/docs/en/sql-reference/statements/select/
+[JOIN]: https://clickhouse.com/docs/en/sql-reference/statements/select/join
+[UNION]: https://clickhouse.com/docs/en/sql-reference/statements/select/union
+[WITH]: https://clickhouse.com/docs/en/sql-reference/statements/select/with
 [MergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/mergetree/
 [ReplacingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/replacingmergetree
 [CollapsingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/collapsingmergetree
