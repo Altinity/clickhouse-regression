@@ -1,23 +1,32 @@
-# SRS033 ClickHouse Automatic Final Modifier For Select Queries
+# SRS032 ClickHouse Automatic Final Modifier For Select Queries
 # Software Requirements Specification
 
 ## Table of Contents
 
 * 1 [Introduction](#introduction)
-* 2 [Related Resources](#related-resources)
-* 3 [Terminology](#terminology)
-  * 3.1 [SRS](#srs)
-  * 3.2 [Select Final](#select-final)
-  * 3.3 [FinalModifier](#finalmodifier)
-      * 3.3.0.1 [RQ.SRS-033.ClickHouse.SelectFinal.FinalModifier](#rqsrs-033clickhouseselectfinalfinalmodifier)
-* 4 [Requirements](#requirements)
-  * 4.1 [RQ.SRS-033.ClickHouse.SelectFinal](#rqsrs-033clickhouseselectfinal)
-  * 4.2 [Config Setting](#config-setting)
-    * 4.2.1 [RQ.SRS-033.ClickHouse.SelectFinal.ConfigSetting](#rqsrs-033clickhouseselectfinalconfigsetting)
-    * 4.2.2 [RQ.SRS-033.ClickHouse.SelectFinal.SelectAutoFinalSetting](#rqsrs-033clickhouseselectfinalselectautofinalsetting)
-  * 4.3 [Supported Table Engines](#supported-table-engines)
-    * 4.3.1 [MergeTree](#mergetree)
-      * 4.3.1.1 [RQ.SRS-033.ClickHouse.SelectFinal.SupportedTableEngines](#rqsrs-033clickhouseselectfinalsupportedtableengines)
+* 2 [Feature Diagram](#feature-diagram)
+* 3 [Related Resources](#related-resources)
+* 4 [Terminology](#terminology)
+  * 4.1 [SRS](#srs)
+* 5 [Requirements](#requirements)
+  * 5.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier](#rqsrs-032clickhouseautomaticfinalmodifier)
+  * 5.2 [Table Engine Setting](#table-engine-setting)
+    * 5.2.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSetting](#rqsrs-032clickhouseautomaticfinalmodifiertableenginesetting)
+    * 5.2.2 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSettingNotSupport](#rqsrs-032clickhouseautomaticfinalmodifiertableenginesettingnotsupport)
+  * 5.3 [Select Query Setting](#select-query-setting)
+    * 5.3.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQuerySetting](#rqsrs-032clickhouseautomaticfinalmodifierselectquerysetting)
+  * 5.4 [Supported Table Engines](#supported-table-engines)
+    * 5.4.1 [MergeTree](#mergetree)
+      * 5.4.1.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SupportedTableEngines.MergeTree](#rqsrs-032clickhouseautomaticfinalmodifiersupportedtableenginesmergetree)
+    * 5.4.2 [ReplicatedMergeTree](#replicatedmergetree)
+      * 5.4.2.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SupportedTableEngines.ReplicatedMergeTree](#rqsrs-032clickhouseautomaticfinalmodifiersupportedtableenginesreplicatedmergetree)
+    * 5.4.3 [EnginesOverOtherEngines](#enginesoverotherengines)
+      * 5.4.3.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SupportedTableEngines.EnginesOverOtherEngines](#rqsrs-032clickhouseautomaticfinalmodifiersupportedtableenginesenginesoverotherengines)
+  * 5.5 [Supported Select Queries](#supported-select-queries)
+    * 5.5.1 [SelectQueries](#selectqueries)
+      * 5.5.1.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries](#rqsrs-032clickhouseautomaticfinalmodifierselectqueries)
+    * 5.5.2 [JoinSelectQueries](#joinselectqueries)
+      * 5.5.2.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.JoinSelectQueries](#rqsrs-032clickhouseautomaticfinalmodifierjoinselectqueries)
 
 ## Introduction
 
@@ -31,11 +40,11 @@ Test feature diagram.
 ```mermaid
 flowchart TB;
 
-  classDef yellow fill:#ffff33,stroke:#333,stroke-width:4px,color:black;
-  classDef yellow2 fill:#ffff33,stroke:#333,stroke-width:4px,color:red;
-  classDef green fill:#00ff33,stroke:#333,stroke-width:4px,color:black;
-  classDef red fill:red,stroke:#333,stroke-width:4px,color:black;
-  classDef blue fill:blue,stroke:#333,stroke-width:4px,color:white;
+  classDef yellow fill:#ffff32,stroke:#323,stroke-width:4px,color:black;
+  classDef yellow2 fill:#ffff32,stroke:#323,stroke-width:4px,color:red;
+  classDef green fill:#00ff32,stroke:#323,stroke-width:4px,color:black;
+  classDef red fill:red,stroke:#323,stroke-width:4px,color:black;
+  classDef blue fill:blue,stroke:#323,stroke-width:4px,color:white;
   
   subgraph O["'Select ... Final' Test Feature Diagram"]
   A-->C-->K-->D--"JOIN"-->F
@@ -53,14 +62,14 @@ flowchart TB;
     subgraph A["Create table section"]
 
         1A["CREATE"]:::green
-        2A["apply_final_by_default"]:::yellow
+        2A["force_select_final"]:::yellow
         3A["1"]:::blue
         4A["0"]:::blue
     end
     
     subgraph D["SELECT"]
         1D["SELECT"]:::green
-        2D["auto_final"]:::yellow
+        2D["ignore_force_select_final"]:::yellow
         3D["1"]:::blue
         4D["0"]:::blue
     end
@@ -112,7 +121,7 @@ Software Requirements Specification
 
 ## Requirements
 
-### RQ.SRS-033.ClickHouse.AutomaticFinalModifier
+### RQ.SRS-032.ClickHouse.AutomaticFinalModifier
 version: 1.0
 
 [ClickHouse] SHALL support adding [FINAL modifier] clause to all [SELECT] queries
@@ -120,10 +129,10 @@ for all table engines that support it.
 
 ### Table Engine Setting
 
-#### RQ.SRS-033.ClickHouse.AutomaticFinalModifier.TableEngineSetting
+#### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSetting
 version: 1.0 priority: 1.0
 
-[ClickHouse] SHALL support `apply_final_by_default` table config setting to enable automatic [FINAL modifier]
+[ClickHouse] SHALL support `force_select_final` table config setting to enable automatic [FINAL modifier]
 when the setting is set to `1`.
 
 For example,
@@ -131,37 +140,108 @@ For example,
 ```sql
 CREATE TABLE table (...)
 Engine=ReplacingMergeTree
-SETTTING apply_final_by_default=1
+SETTTING force_select_final=1
 ```
+
+#### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSettingNotSupport
+version: 1.0 priority: 1.0
+
+[ClickHouse] SHALL support `force_select_final` table config setting when MergeTree table engine
+doesn't support FINAL.
 
 ### Select Query Setting
 
-#### RQ.SRS-033.ClickHouse.AutomaticFinalModifier.SelectQuerySetting
+#### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQuerySetting
 version: 1.0 priority: 1.0
 
-[ClickHouse] SHALL support `auto_final` SELECT query setting to either enable or disable automatic [FINAL modifier].
+[ClickHouse] SHALL support `auto_final` SELECT query setting to disable automatic [FINAL modifier].
 
 For example,
 
 ```sql
-SELECT * FROM table; -- actually does SELECT * FROM table FINAL if SETTTING apply_final_by_default=1
-SELECT * FROM table SETTINGS auto_final=0; -- 1 by default, 0 - means ignore apply_final_by_default from merge tree.
+SELECT * FROM table; -- actually does SELECT * FROM table FINAL if SETTTING force_select_final=1
+SELECT * FROM table SETTINGS ignore_force_select_final=1; -- 0 by default, 1 - means ignore force_select_final
+ from merge tree.
 ```
 
 ### Supported Table Engines
 
 #### MergeTree
 
-##### RQ.SRS-033.ClickHouse.AutomaticFinalModifier.SupportedTableEngines
+##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SupportedTableEngines.MergeTree
 version: 1.0
 
 [ClickHouse] SHALL support automatic [FINAL modifier] for the following [MergeTree] table engines variants:
 
-* [MergeTree]
 * [ReplacingMergeTree]
 * [CollapsingMergeTree]
 * [VersionedCollapsingMergeTree]
 
+#### ReplicatedMergeTree
+
+##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SupportedTableEngines.ReplicatedMergeTree
+version: 1.0
+
+[ClickHouse] SHALL support automatic [FINAL modifier] for the following replicated 
+[ReplicatedMergeTree](https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/replication) 
+table engines variants:
+
+* ReplicatedReplacingMergeTree
+* ReplicatedCollapsingMergeTree
+* ReplicatedVersionedCollapsingMergeTree
+
+#### EnginesOverOtherEngines
+
+##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SupportedTableEngines.EnginesOverOtherEngines
+version: 1.0
+
+[ClickHouse] SHALL support engines that operate over other engines if they were created over supported
+MergeTree] table engines variants:
+
+* [View](https://clickhouse.com/docs/en/engines/table-engines/special/view)
+* [Buffer](https://clickhouse.com/docs/en/engines/table-engines/special/buffer)
+* [Distributed](https://clickhouse.com/docs/en/engines/table-engines/special/distributed)
+* [MaterializedView](https://clickhouse.com/docs/en/engines/table-engines/special/materializedview)
+
+
+### Supported Select Queries
+
+#### SelectQueries
+
+##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries
+version: 1.0
+
+[ClickHouse] SHALL support automatic [FINAL modifier] for [SELECT] queries with the same result 
+as for manual [FINAL modifier]:
+
+```sql
+[WITH expr_list|(subquery)]
+SELECT [DISTINCT [ON (column1, column2, ...)]] expr_list
+[FROM [db.]table | (subquery) | table_function] [FINAL]
+[SAMPLE sample_coeff]
+[ARRAY JOIN ...]
+[GLOBAL] [ANY|ALL|ASOF] [INNER|LEFT|RIGHT|FULL|CROSS] [OUTER|SEMI|ANTI] JOIN (subquery)|table (ON <expr_list>)|(USING <column_list>)
+[PREWHERE expr]
+[WHERE expr]
+[GROUP BY expr_list] [WITH ROLLUP|WITH CUBE] [WITH TOTALS]
+[HAVING expr]
+[ORDER BY expr_list] [WITH FILL] [FROM expr] [TO expr] [STEP expr] [INTERPOLATE [(expr_list)]]
+[LIMIT [offset_value, ]n BY columns]
+[LIMIT [n, ]m] [WITH TIES]
+[SETTINGS ...]
+[UNION  ...]
+[INTO OUTFILE filename [COMPRESSION type [LEVEL level]] ]
+[FORMAT format]
+```
+
+#### JoinSelectQueries
+
+##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.JoinSelectQueries
+version: 1.0
+
+[ClickHouse] SHALL support automatic [FINAL modifier] for [SELECT] queries with [JOIN] applying [FINAL modifier] to all
+tables which has `force_select_final=1` and disable it to them if this [SELECT] query has `SETTING`
+`ignore_force_select_final=1`.
 
 [SRS]: #srs
 [SELECT]: https://clickhouse.com/docs/en/sql-reference/statements/select/
