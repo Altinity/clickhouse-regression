@@ -38,7 +38,7 @@ flowchart TB;
   classDef blue fill:blue,stroke:#333,stroke-width:4px,color:white;
   
   subgraph O["'Select ... Final' Test Feature Diagram"]
-  A-->C-->K-->B-->D--"JOIN"-->F
+  A-->C-->K-->D--"JOIN"-->F
   A-->E-->K
 
   1A---2A---3A
@@ -48,7 +48,6 @@ flowchart TB;
   1C---2C---3C---4C
   1E---2E---3E---4E
   1K---2K---3K---4K
-  1B---2B---3B---4B---5B---6B---7B
   1F---2F---3F---4F
   
     subgraph A["Create table section"]
