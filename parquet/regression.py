@@ -75,7 +75,6 @@ def regression(
             .command("cat /var/lib/clickhouse/user_files/clickhouse_table_def.txt")
             .output.strip()
         )
-        pause()
 
         Feature(run=load("parquet.tests.file", "feature"))
         Feature(run=load("parquet.tests.query", "feature"))
