@@ -154,7 +154,7 @@ doesn't support FINAL.
 #### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQuerySetting
 version: 1.0 priority: 1.0
 
-[ClickHouse] SHALL support `auto_final` SELECT query setting to disable automatic [FINAL modifier].
+[ClickHouse] SHALL support `ignore_force_select_final` SELECT query setting to disable automatic [FINAL modifier].
 
 For example,
 
