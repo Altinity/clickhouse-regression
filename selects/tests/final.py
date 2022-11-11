@@ -1,10 +1,12 @@
 from testflows.core import *
 from testflows.asserts import error
+from selects.requirements import *
 
 
 @TestFeature
 def auto_final(self):
     """Check applying FINAL modifier automatically by using `auto_final` query setting."""
+    pause()
     pass
 
 
@@ -17,7 +19,8 @@ def apply_final_by_default(self):
 
 
 @TestFeature
-@Name("final modifier")
+@Requirements(RQ_SRS_033_ClickHouse_SelectFinal("1.0"))
+@Name("final")
 def feature(self):
     """Check FINAL modifier."""
     Feature(run=auto_final)
