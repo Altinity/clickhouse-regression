@@ -35,7 +35,7 @@ xflags = {}
 @XFails(xfails)
 @XFlags(xflags)
 @Name("selects")
-@Specifications(SRS033_ClickHouse_Automatic_Final_Modifier_For_Select_Queries)
+@Specifications(SRS032_ClickHouse_Automatic_Final_Modifier_For_Select_Queries)
 def regression(
     self,
     local,
