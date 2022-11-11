@@ -146,7 +146,7 @@ SETTTING force_select_final=1
 #### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSettingNotSupport
 version: 1.0 priority: 1.0
 
-[ClickHouse] SHALL support `force_select_final` table config setting when MergeTree table engine
+[ClickHouse] SHALL not support `force_select_final` table config setting when MergeTree table engine
 doesn't support FINAL.
 
 ### Select Query Setting
