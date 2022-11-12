@@ -176,16 +176,6 @@ aggregate-functions-amd64:
   script:
     - *regression_common
 
-atomic-insert-amd64:
-  extends: .regression_amd64
-  only:
-    variables:
-     - ( $only == "" || $only == "atomic_insert" ) && $arch == "amd64"
-  variables:
-     FOLDER_PATH: "atomic_insert"
-  script:
-    - *regression_common
-
 base-58-amd64:
   extends: .regression_amd64
   only:
@@ -339,6 +329,7 @@ parquet-amd64:
      - ( $only == "" || $only == "parquet" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "parquet"
+     SUITE_OPTIONS: "--storage minio --storage aws_s3"
   script:
     - *regression_common
 
@@ -512,16 +503,6 @@ aggregate-functions-arm64:
      - ( $only == "" || $only == "aggregate_functions" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "aggregate_functions"
-  script:
-    - *regression_common
-
-atomic-insert-arm64:
-  extends: .regression_arm64
-  only:
-    variables:
-     - ( $only == "" || $only == "atomic_insert" ) && $arch == "arm64"
-  variables:
-     FOLDER_PATH: "atomic_insert"
   script:
     - *regression_common
 
