@@ -14,15 +14,17 @@ def constant_input(self, node=None):
         create_partitioned_table(table_name=table_name, extra_table_col=",y String")
 
     with When("I insert values into the table"):
-        with open('input_strings') as input_strings:
-            with open('output_strings') as output_strings:
+        with open("input_strings") as input_strings:
+            with open("output_strings") as output_strings:
                 for input_string in input_strings:
                     output_string = output_strings.readline()
-                    insert(table_name=table_name,x=input_string,y=output_string)
+                    insert(table_name=table_name, x=input_string, y=output_string)
 
     with Then("I check parseKeyValue function returns correct value"):
         hash_expected_result = node.query(f"SELECT sum(cityhash(y)) from {table_name}")
-        hash_result = node.query(f"SELECT sum(cityhash(parseKeyValue(x))) from {table_name}")
+        hash_result = node.query(
+            f"SELECT sum(cityhash(parseKeyValue(x))) from {table_name}"
+        )
         assert hash_expected_result == hash_result, error()
 
 
