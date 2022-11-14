@@ -2,7 +2,7 @@ from helpers.common import *
 from key_value.requirements.requirements import *
 
 
-def string_of_all_askii_symbols():#todo remove after debug
+def string_of_all_askii_symbols():  # todo remove after debug
     """Create string with all askii symbols with numbers from 32 to 126."""
     return "".join([chr(i) for i in range(32, 127)])
 
@@ -63,6 +63,6 @@ def optimize_table(self, table_name, final=True, node=None):
 
 
 @TestStep(When)
-def escape_symbols(self, input_string):#todo
+def escape_symbols(self, input_string):  # todo
     """Adding symbol \ to escape some symbols."""
     return input_string

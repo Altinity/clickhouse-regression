@@ -21,8 +21,8 @@ def feature(self, node="clickhouse1"):
 
     self.context.node = self.context.cluster.node(node)
 
-    with open('tests/input_strings') as input_strings:
-        with open('tests/output_strings') as output_strings:
+    with open("tests/input_strings") as input_strings:
+        with open("tests/output_strings") as output_strings:
             for input_string in input_strings:
                 output_string = output_strings.readline()
                 with Feature(f"parsing {input_string}"):
