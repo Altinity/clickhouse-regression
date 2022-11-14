@@ -30,6 +30,16 @@ def feature(self, func="min({params})", table=None):
             f"SELECT {func.format(params='x')}  FROM values('x Nullable(Int8)', 0, 1, NULL, 3, 4, 5)"
         )
 
+    for v in ["inf", "-inf", "nan"]:
+        with Check(f"{v}"):
+            execute_query(
+                f"SELECT {func.format(params='x')}  FROM values('x Float64', (0), (2.3), ({v}), (6.7), (4), (5))"
+            )
+    with Check(f"inf, -inf, nan"):
+        execute_query(
+            f"SELECT {func.format(params='x')}  FROM values('x Float64', (nan), (2.3), (inf), (6.7), (-inf), (5))"
+        )
+
     for column in table.columns:
         column_name, column_type = column.split(" ", 1)
 

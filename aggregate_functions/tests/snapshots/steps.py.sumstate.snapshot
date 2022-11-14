@@ -55,3 +55,19 @@ _aggregate_functions_state_sumState_Decimal128_38_ = r"""
 {"hex(sumState(decimal))":"00000080B86CCE251142A4463E629907"}
 """
 
+_aggregate_functions_state_sumState_inf = r"""
+{"hex(sumState(x))":"000000000000F07F"}
+"""
+
+_aggregate_functions_state_sumState__inf = r"""
+{"hex(sumState(x))":"000000000000F0FF"}
+"""
+
+_aggregate_functions_state_sumState_nan = r"""
+{"hex(sumState(x))":"000000000000F87F"}
+"""
+
+_aggregate_functions_state_sumState_inf___inf__nan = r"""
+{"hex(sumState(x))":"000000000000F87F"}
+"""
+

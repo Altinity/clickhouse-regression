@@ -79,3 +79,19 @@ _aggregate_functions_state_avgState_single_NULL_value = r"""
 {"hex(avgState(x))":"00"}
 """
 
+_aggregate_functions_state_avgState_inf = r"""
+{"hex(avgState(x))":"000000000000F07F06"}
+"""
+
+_aggregate_functions_state_avgState__inf = r"""
+{"hex(avgState(x))":"000000000000F0FF06"}
+"""
+
+_aggregate_functions_state_avgState_nan = r"""
+{"hex(avgState(x))":"000000000000F87F06"}
+"""
+
+_aggregate_functions_state_avgState_inf___inf__nan = r"""
+{"hex(avgState(x))":"000000000000F87F06"}
+"""
+

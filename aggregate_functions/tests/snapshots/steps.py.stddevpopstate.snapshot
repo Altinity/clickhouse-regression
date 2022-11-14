@@ -75,3 +75,19 @@ _aggregate_functions_state_stddevPopState_Int64 = r"""
 {"hex(stddevPopState(int64))":"0000000000001040909827BF73B50C43F7189C010000E047"}
 """
 
+_aggregate_functions_state_stddevPopState_inf = r"""
+{"hex(stddevPopState(x))":"0000000000001840000000000000F07F000000000000F07F"}
+"""
+
+_aggregate_functions_state_stddevPopState__inf = r"""
+{"hex(stddevPopState(x))":"0000000000001840000000000000F0FF000000000000F07F"}
+"""
+
+_aggregate_functions_state_stddevPopState_nan = r"""
+{"hex(stddevPopState(x))":"0000000000001840000000000000F87F000000000000F87F"}
+"""
+
+_aggregate_functions_state_stddevPopState_inf___inf__nan = r"""
+{"hex(stddevPopState(x))":"0000000000001840000000000000F87F000000000000F87F"}
+"""
+

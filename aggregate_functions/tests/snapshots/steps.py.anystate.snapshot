@@ -2509,3 +2509,15 @@ _aggregate_functions_state_anyState_Map_Int16__UInt64_ = r"""
 {"hex(anyState(map_int16_uint64))":"010100800000000000000000"}
 """
 
+_aggregate_functions_state_anyState_inf = r"""
+{"hex(anyState(x))":"01000000000000F07F"}
+"""
+
+_aggregate_functions_state_anyState__inf = r"""
+{"hex(anyState(x))":"01000000000000F0FF"}
+"""
+
+_aggregate_functions_state_anyState_nan = r"""
+{"hex(anyState(x))":"01000000000000F87F"}
+"""
+

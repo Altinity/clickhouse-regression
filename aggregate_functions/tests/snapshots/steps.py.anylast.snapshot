@@ -2509,3 +2509,15 @@ _aggregate_functions_anyLast_Map_Int64__Nullable_String__ = r"""
 {"anyLast(map_int64_nullable_string)":{"-9223372036854775808":null}}
 """
 
+_aggregate_functions_anyLast_inf = r"""
+{"anyLast(x)":null}
+"""
+
+_aggregate_functions_anyLast__inf = r"""
+{"anyLast(x)":null}
+"""
+
+_aggregate_functions_anyLast_nan = r"""
+{"anyLast(x)":null}
+"""
+

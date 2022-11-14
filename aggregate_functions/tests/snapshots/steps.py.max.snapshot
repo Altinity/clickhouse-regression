@@ -2487,3 +2487,19 @@ _aggregate_functions_max_Map_FixedString_85___Map_UInt8__UInt8__ = r"""
 {"max(map_fixedstring_map)":{"⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":{"128":128}}}
 """
 
+_aggregate_functions_max_inf = r"""
+{"max(x)":null}
+"""
+
+_aggregate_functions_max__inf = r"""
+{"max(x)":6.7}
+"""
+
+_aggregate_functions_max_nan = r"""
+{"max(x)":6.7}
+"""
+
+_aggregate_functions_max_inf___inf__nan = r"""
+{"max(x)":null}
+"""
+

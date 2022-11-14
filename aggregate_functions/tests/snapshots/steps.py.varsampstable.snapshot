@@ -75,3 +75,19 @@ _aggregate_functions_varSampStable_UInt32 = r"""
 {"varSampStable(uint32)":4541930929695970000}
 """
 
+_aggregate_functions_varSampStable_inf = r"""
+{"varSampStable(x)":null}
+"""
+
+_aggregate_functions_varSampStable__inf = r"""
+{"varSampStable(x)":null}
+"""
+
+_aggregate_functions_varSampStable_nan = r"""
+{"varSampStable(x)":null}
+"""
+
+_aggregate_functions_varSampStable_inf___inf__nan = r"""
+{"varSampStable(x)":null}
+"""
+

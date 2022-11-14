@@ -75,3 +75,19 @@ _aggregate_functions_varPop_Int8 = r"""
 {"varPop(int8)":10053.5}
 """
 
+_aggregate_functions_varPop_inf = r"""
+{"varPop(x)":0}
+"""
+
+_aggregate_functions_varPop__inf = r"""
+{"varPop(x)":0}
+"""
+
+_aggregate_functions_varPop_nan = r"""
+{"varPop(x)":0}
+"""
+
+_aggregate_functions_varPop_inf___inf__nan = r"""
+{"varPop(x)":0}
+"""
+
