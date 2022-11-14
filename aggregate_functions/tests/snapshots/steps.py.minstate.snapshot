@@ -2487,3 +2487,19 @@ _aggregate_functions_state_minState_Map_Int16__UInt64_ = r"""
 {"hex(minState(map_int16_uint64))":"010100800000000000000000"}
 """
 
+_aggregate_functions_state_minState_inf = r"""
+{"hex(minState(x))":"010000000000000000"}
+"""
+
+_aggregate_functions_state_minState__inf = r"""
+{"hex(minState(x))":"01000000000000F0FF"}
+"""
+
+_aggregate_functions_state_minState_nan = r"""
+{"hex(minState(x))":"010000000000000000"}
+"""
+
+_aggregate_functions_state_minState_inf___inf__nan = r"""
+{"hex(minState(x))":"01000000000000F87F"}
+"""
+

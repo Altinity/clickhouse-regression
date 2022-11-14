@@ -75,3 +75,19 @@ _aggregate_functions_varPopStable_UInt32 = r"""
 {"varPopStable(uint32)":3406448197271977500}
 """
 
+_aggregate_functions_varPopStable_inf = r"""
+{"varPopStable(x)":null}
+"""
+
+_aggregate_functions_varPopStable__inf = r"""
+{"varPopStable(x)":null}
+"""
+
+_aggregate_functions_varPopStable_nan = r"""
+{"varPopStable(x)":null}
+"""
+
+_aggregate_functions_varPopStable_inf___inf__nan = r"""
+{"varPopStable(x)":null}
+"""
+

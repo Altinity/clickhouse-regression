@@ -75,3 +75,19 @@ _aggregate_functions_stddevPopStable_UInt32 = r"""
 {"stddevPopStable(uint32)":1845656576.2004528}
 """
 
+_aggregate_functions_stddevPopStable_inf = r"""
+{"stddevPopStable(x)":null}
+"""
+
+_aggregate_functions_stddevPopStable__inf = r"""
+{"stddevPopStable(x)":null}
+"""
+
+_aggregate_functions_stddevPopStable_nan = r"""
+{"stddevPopStable(x)":null}
+"""
+
+_aggregate_functions_stddevPopStable_inf___inf__nan = r"""
+{"stddevPopStable(x)":null}
+"""
+

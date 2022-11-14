@@ -7663,3 +7663,39 @@ _aggregate_functions_argMax_datatypes_permutations_UInt64_UInt64 = r"""
 {"argMax(uint64, uint64)":"18446744073709551615"}
 """
 
+_aggregate_functions_argMax_inf___inf__nan_inf_inf = r"""
+{"argMax(x, y)":null}
+"""
+
+_aggregate_functions_argMax_inf___inf__nan_inf__inf = r"""
+{"argMax(x, y)":4}
+"""
+
+_aggregate_functions_argMax_inf___inf__nan_inf_nan = r"""
+{"argMax(x, y)":4}
+"""
+
+_aggregate_functions_argMax_inf___inf__nan__inf_inf = r"""
+{"argMax(x, y)":null}
+"""
+
+_aggregate_functions_argMax_inf___inf__nan__inf__inf = r"""
+{"argMax(x, y)":4}
+"""
+
+_aggregate_functions_argMax_inf___inf__nan__inf_nan = r"""
+{"argMax(x, y)":4}
+"""
+
+_aggregate_functions_argMax_inf___inf__nan_nan_inf = r"""
+{"argMax(x, y)":null}
+"""
+
+_aggregate_functions_argMax_inf___inf__nan_nan__inf = r"""
+{"argMax(x, y)":4}
+"""
+
+_aggregate_functions_argMax_inf___inf__nan_nan_nan = r"""
+{"argMax(x, y)":4}
+"""
+

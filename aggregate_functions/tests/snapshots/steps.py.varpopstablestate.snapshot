@@ -75,3 +75,19 @@ _aggregate_functions_state_varPopStableState_UInt32 = r"""
 {"hex(varPopStableState(uint32))":"04000040AB5460D0413F152C4B11A3E743"}
 """
 
+_aggregate_functions_state_varPopStableState_inf = r"""
+{"hex(varPopStableState(x))":"06000000000000F8FF000000000000F8FF"}
+"""
+
+_aggregate_functions_state_varPopStableState__inf = r"""
+{"hex(varPopStableState(x))":"06000000000000F8FF000000000000F8FF"}
+"""
+
+_aggregate_functions_state_varPopStableState_nan = r"""
+{"hex(varPopStableState(x))":"06000000000000F87F000000000000F87F"}
+"""
+
+_aggregate_functions_state_varPopStableState_inf___inf__nan = r"""
+{"hex(varPopStableState(x))":"06000000000000F87F000000000000F87F"}
+"""
+

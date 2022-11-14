@@ -75,3 +75,19 @@ _aggregate_functions_stddevSamp_Int64 = r"""
 {"stddevSamp(int64)":7530851749651723000}
 """
 
+_aggregate_functions_stddevSamp_inf = r"""
+{"stddevSamp(x)":0}
+"""
+
+_aggregate_functions_stddevSamp__inf = r"""
+{"stddevSamp(x)":0}
+"""
+
+_aggregate_functions_stddevSamp_nan = r"""
+{"stddevSamp(x)":0}
+"""
+
+_aggregate_functions_stddevSamp_inf___inf__nan = r"""
+{"stddevSamp(x)":0}
+"""
+

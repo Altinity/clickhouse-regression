@@ -2509,3 +2509,15 @@ _aggregate_functions_state_anyLastState_Map_Int64__Nullable_String__ = r"""
 {"hex(anyLastState(map_int64_nullable_string))":"0101000000000000008001"}
 """
 
+_aggregate_functions_state_anyLastState_inf = r"""
+{"hex(anyLastState(x))":"01000000000000F07F"}
+"""
+
+_aggregate_functions_state_anyLastState__inf = r"""
+{"hex(anyLastState(x))":"01000000000000F0FF"}
+"""
+
+_aggregate_functions_state_anyLastState_nan = r"""
+{"hex(anyLastState(x))":"01000000000000F87F"}
+"""
+

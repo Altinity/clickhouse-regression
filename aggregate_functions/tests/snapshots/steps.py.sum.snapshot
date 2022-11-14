@@ -55,3 +55,19 @@ _aggregate_functions_sum_UInt16 = r"""
 {"sum(uint16)":"98302"}
 """
 
+_aggregate_functions_sum_inf = r"""
+{"sum(x)":null}
+"""
+
+_aggregate_functions_sum__inf = r"""
+{"sum(x)":null}
+"""
+
+_aggregate_functions_sum_nan = r"""
+{"sum(x)":null}
+"""
+
+_aggregate_functions_sum_inf___inf__nan = r"""
+{"sum(x)":null}
+"""
+

@@ -75,3 +75,19 @@ _aggregate_functions_varSamp_Int8 = r"""
 {"varSamp(int8)":13404.666666666666}
 """
 
+_aggregate_functions_varSamp_inf = r"""
+{"varSamp(x)":0}
+"""
+
+_aggregate_functions_varSamp__inf = r"""
+{"varSamp(x)":0}
+"""
+
+_aggregate_functions_varSamp_nan = r"""
+{"varSamp(x)":0}
+"""
+
+_aggregate_functions_varSamp_inf___inf__nan = r"""
+{"varSamp(x)":0}
+"""
+

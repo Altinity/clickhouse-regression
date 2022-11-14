@@ -2495,3 +2495,15 @@ _aggregate_functions_first_value_single_NULL_value = r"""
 {"first_value(x)":null}
 """
 
+_aggregate_functions_first_value_inf = r"""
+{"first_value(x)":null}
+"""
+
+_aggregate_functions_first_value__inf = r"""
+{"first_value(x)":null}
+"""
+
+_aggregate_functions_first_value_nan = r"""
+{"first_value(x)":null}
+"""
+

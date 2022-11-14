@@ -75,3 +75,19 @@ _aggregate_functions_stddevSampStable_UInt32 = r"""
 {"stddevSampStable(uint32)":2131180642.2018688}
 """
 
+_aggregate_functions_stddevSampStable_inf = r"""
+{"stddevSampStable(x)":null}
+"""
+
+_aggregate_functions_stddevSampStable__inf = r"""
+{"stddevSampStable(x)":null}
+"""
+
+_aggregate_functions_stddevSampStable_nan = r"""
+{"stddevSampStable(x)":null}
+"""
+
+_aggregate_functions_stddevSampStable_inf___inf__nan = r"""
+{"stddevSampStable(x)":null}
+"""
+

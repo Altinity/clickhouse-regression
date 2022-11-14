@@ -7663,3 +7663,39 @@ _aggregate_functions_argMin_datatypes_permutations_UInt64_UInt64 = r"""
 {"argMin(uint64, uint64)":"0"}
 """
 
+_aggregate_functions_argMin_inf___inf__nan_inf_inf = r"""
+{"argMin(x, y)":0}
+"""
+
+_aggregate_functions_argMin_inf___inf__nan_inf__inf = r"""
+{"argMin(x, y)":null}
+"""
+
+_aggregate_functions_argMin_inf___inf__nan_inf_nan = r"""
+{"argMin(x, y)":0}
+"""
+
+_aggregate_functions_argMin_inf___inf__nan__inf_inf = r"""
+{"argMin(x, y)":0}
+"""
+
+_aggregate_functions_argMin_inf___inf__nan__inf__inf = r"""
+{"argMin(x, y)":null}
+"""
+
+_aggregate_functions_argMin_inf___inf__nan__inf_nan = r"""
+{"argMin(x, y)":0}
+"""
+
+_aggregate_functions_argMin_inf___inf__nan_nan_inf = r"""
+{"argMin(x, y)":0}
+"""
+
+_aggregate_functions_argMin_inf___inf__nan_nan__inf = r"""
+{"argMin(x, y)":null}
+"""
+
+_aggregate_functions_argMin_inf___inf__nan_nan_nan = r"""
+{"argMin(x, y)":0}
+"""
+

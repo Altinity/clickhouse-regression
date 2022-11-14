@@ -79,3 +79,19 @@ _aggregate_functions_avg_single_NULL_value = r"""
 {"avg(x)":null}
 """
 
+_aggregate_functions_avg_inf = r"""
+{"avg(x)":null}
+"""
+
+_aggregate_functions_avg__inf = r"""
+{"avg(x)":null}
+"""
+
+_aggregate_functions_avg_nan = r"""
+{"avg(x)":null}
+"""
+
+_aggregate_functions_avg_inf___inf__nan = r"""
+{"avg(x)":null}
+"""
+

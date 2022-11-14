@@ -54,6 +54,14 @@ def feature(self, func="argMin({params})", table=None):
             f"SELECT {func.format(params='user, salary')} FROM values('user String, salary Float64',('director',5000),('manager',3000),('worker', 1000))"
         )
 
+    with Check("inf, -inf, nan"):
+        for permutation in permutations_with_replacement(["inf", "-inf", "nan"], 2):
+            x, y = permutation
+            with Check(f"{x},{y}"):
+                execute_query(
+                    f"SELECT {func.format(params='x,y')}  FROM values('x Float64, y Float64', (0, 1), (1, 2.3), ({x},{y}), (6.7,3), (4,4), (5, 1))"
+                )
+
     with Feature("datatypes"):
         with Pool(3) as executor:
             for column in table.columns:

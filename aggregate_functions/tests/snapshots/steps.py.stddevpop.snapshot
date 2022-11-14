@@ -75,3 +75,19 @@ _aggregate_functions_stddevPop_Int64 = r"""
 {"stddevPop(int64)":6521908927332879000}
 """
 
+_aggregate_functions_stddevPop_inf = r"""
+{"stddevPop(x)":0}
+"""
+
+_aggregate_functions_stddevPop__inf = r"""
+{"stddevPop(x)":0}
+"""
+
+_aggregate_functions_stddevPop_nan = r"""
+{"stddevPop(x)":0}
+"""
+
+_aggregate_functions_stddevPop_inf___inf__nan = r"""
+{"stddevPop(x)":0}
+"""
+
