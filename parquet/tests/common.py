@@ -134,7 +134,9 @@ def upload_file_to_s3(self, file_src, file_dest):
     elif self.context.storage == "minio":
         with By("Uploading a file"):
             self.context.client.fput_object(
-                self.context.cluster.minio_bucket, file_dest, file_src
+                self.context.cluster.minio_bucket,
+                file_dest,
+                file_src
             )
 
     return
