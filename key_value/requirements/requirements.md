@@ -37,7 +37,7 @@ For example,
 INSERT INTO table_2 SELECT parseKeyValue(x) FROM table_1;
 ```
 
-The function SHALL return an `String` that SHALL contain parsed keys, values
+The function SHALL return an `String` that SHALL contain parsed keys, values.
 
 #### RQ.ClickHouse.ParseKeyValue.SupportedDataTypes
 version: 1.0
