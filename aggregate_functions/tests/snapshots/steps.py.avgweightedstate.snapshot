@@ -1,0 +1,221 @@
+_aggregate_functions_state_avgWeightedState_constant = r"""
+{"hex(avgWeightedState(1, 1))":"010000000000000001"}
+"""
+
+_aggregate_functions_state_avgWeightedState_zero_rows = r"""
+{"hex(avgWeightedState(number, number))":"000000000000000000"}
+"""
+
+_aggregate_functions_state_avgWeightedState_single_row = r"""
+{"hex(avgWeightedState(number, plus(number, 1)))":"000000000000000001"}
+"""
+
+_aggregate_functions_state_avgWeightedState_with_group_by = r"""
+{"even":0,"hex(avgWeightedState(number, modulo(number, 2)))":"000000000000000000"}
+{"even":1,"hex(avgWeightedState(number, modulo(number, 2)))":"190000000000000005"}
+"""
+
+_aggregate_functions_state_avgWeightedState_some_negative_values = r"""
+{"hex(avgWeightedState(minus(number, 5), plus(number, 10)))":"A0000000000000009B01"}
+"""
+
+_aggregate_functions_state_avgWeightedState_NULL_value_handling = r"""
+{"hex(avgWeightedState(x, y))":"0115000000000000000600000000000000"}
+"""
+
+_aggregate_functions_state_avgWeightedState_single_NULL_value = r"""
+{"hex(avgWeightedState(x, y))":"00"}
+"""
+
+_aggregate_functions_state_avgWeightedState_inf___inf__nan_inf_inf = r"""
+{"hex(avgWeightedState(x, y))":"000000000000F07F000000000000F07F"}
+"""
+
+_aggregate_functions_state_avgWeightedState_inf___inf__nan_inf__inf = r"""
+{"hex(avgWeightedState(x, y))":"000000000000F0FF000000000000F0FF"}
+"""
+
+_aggregate_functions_state_avgWeightedState_inf___inf__nan_inf_nan = r"""
+{"hex(avgWeightedState(x, y))":"000000000000F87F000000000000F87F"}
+"""
+
+_aggregate_functions_state_avgWeightedState_inf___inf__nan__inf_inf = r"""
+{"hex(avgWeightedState(x, y))":"000000000000F0FF000000000000F07F"}
+"""
+
+_aggregate_functions_state_avgWeightedState_inf___inf__nan__inf__inf = r"""
+{"hex(avgWeightedState(x, y))":"000000000000F07F000000000000F0FF"}
+"""
+
+_aggregate_functions_state_avgWeightedState_inf___inf__nan__inf_nan = r"""
+{"hex(avgWeightedState(x, y))":"000000000000F87F000000000000F87F"}
+"""
+
+_aggregate_functions_state_avgWeightedState_inf___inf__nan_nan_inf = r"""
+{"hex(avgWeightedState(x, y))":"000000000000F87F000000000000F07F"}
+"""
+
+_aggregate_functions_state_avgWeightedState_inf___inf__nan_nan__inf = r"""
+{"hex(avgWeightedState(x, y))":"000000000000F87F000000000000F0FF"}
+"""
+
+_aggregate_functions_state_avgWeightedState_inf___inf__nan_nan_nan = r"""
+{"hex(avgWeightedState(x, y))":"000000000000F87F000000000000F87F"}
+"""
+
+_aggregate_functions_state_avgWeightedState_return_type = r"""
+{"toTypeName(hex(avgWeightedState(number, plus(number, 1))))":"String"}
+"""
+
+_aggregate_functions_state_avgWeightedState_example = r"""
+{"hex(avgWeightedState(y, x))":"0A000000000000000F00000000000000"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_Float64_Int16 = r"""
+{"hex(avgWeightedState(float64, int16))":"00000000000000007427000000000000"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_Int16_Float64 = r"""
+{"hex(avgWeightedState(int16, float64))":"000000000000F07F72ED3A2E065E5177"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_Int32_Float64 = r"""
+{"hex(avgWeightedState(int32, float64))":"000000000000F07F72ED3A2E065E5177"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_Float64_Float64 = r"""
+{"hex(avgWeightedState(float64, float64))":"000000000000F07F72ED3A2E065E5177"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_Float64_Int32 = r"""
+{"hex(avgWeightedState(float64, int32))":"000000000000008011219A0000000000"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_Float32_Float64 = r"""
+{"hex(avgWeightedState(float32, float64))":"000000000000F07F72ED3A2E065E5177"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_Float64_Float32 = r"""
+{"hex(avgWeightedState(float64, float32))":"000000000000F07F0000004022446341"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_Float64_UInt32 = r"""
+{"hex(avgWeightedState(float64, uint32))":"0000000000000000B49595B010"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_Float64_Int8 = r"""
+{"hex(avgWeightedState(float64, int8))":"00000000000000006400000000000000"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_Int8_Float64 = r"""
+{"hex(avgWeightedState(int8, float64))":"000000000000F07F72ED3A2E065E5177"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_UInt32_Float64 = r"""
+{"hex(avgWeightedState(uint32, float64))":"000000000000F07F72ED3A2E065E5177"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_Int64_Float64 = r"""
+{"hex(avgWeightedState(int64, float64))":"000000000000F07F72ED3A2E065E5177"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_Float64_Int64 = r"""
+{"hex(avgWeightedState(float64, int64))":"000000000000008011F3E477AE960300"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_Float64_UInt16 = r"""
+{"hex(avgWeightedState(float64, uint16))":"0000000000000000FEFF05"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_UInt16_Float64 = r"""
+{"hex(avgWeightedState(uint16, float64))":"000000000000F07F72ED3A2E065E5177"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_Float64_UInt8 = r"""
+{"hex(avgWeightedState(float64, uint8))":"0000000000000080FF02"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_UInt8_Float64 = r"""
+{"hex(avgWeightedState(uint8, float64))":"000000000000F07F72ED3A2E065E5177"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_Float64_UInt64 = r"""
+{"hex(avgWeightedState(float64, uint64))":"000000000000008091E693BFE7D5E501"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_UInt64_Float64 = r"""
+{"hex(avgWeightedState(uint64, float64))":"000000000000F07F72ED3A2E065E5177"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_permutations_Float32_Float32 = r"""
+{"hex(avgWeightedState(float32, float32))":"200000C0FFFFFF4F0000004022446341"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_permutations_Float32_Int64 = r"""
+{"hex(avgWeightedState(float32, int64))":"4469422A7335A19B11F3E477AE960300"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_permutations_Int64_Float32 = r"""
+{"hex(avgWeightedState(int64, float32))":"000000E0FFFFEF4B0000004022446341"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_permutations_Int64_Int64 = r"""
+{"hex(avgWeightedState(int64, int64))":"452DDB9A342BA63211F3E477AE960300"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_permutations_Float32_UInt64 = r"""
+{"hex(avgWeightedState(float32, uint64))":"4469422A7335A19B91E693BFE7D5E501"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_permutations_UInt64_Float32 = r"""
+{"hex(avgWeightedState(uint64, float32))":"000000E0FFFFEF4B0000004022446341"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_permutations_Int64_UInt64 = r"""
+{"hex(avgWeightedState(int64, uint64))":"452DDB9A342BA6B291E693BFE7D5E501"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_permutations_UInt64_Int64 = r"""
+{"hex(avgWeightedState(uint64, int64))":"452DDB9A342BA6B211F3E477AE960300"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_permutations_UInt64_UInt64 = r"""
+{"hex(avgWeightedState(uint64, uint64))":"452DDB9A342BA63291E693BFE7D5E501"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_Float64_Decimal128_38_ = r"""
+{"hex(avgWeightedState(float64, decimal))":"00A092AAE18E1911BF49004DB774CFD100000080B86CCE251142A4463E629907"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_Decimal128_38__Float64 = r"""
+{"hex(avgWeightedState(decimal, float64))":"00A092AAE18E1911BF49004DB774CFD172ED3A2E065E5177"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_permutations_Decimal128_38__Decimal128_38_ = r"""
+{"hex(avgWeightedState(decimal, decimal))":"C800000000A66AC2E69D353AF6351ADB00000080B86CCE251142A4463E629907"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_permutations_Decimal128_38__Float32 = r"""
+{"hex(avgWeightedState(decimal, float32))":"00000000796D84AB379961E28B9073710000004022446341"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_permutations_Float32_Decimal128_38_ = r"""
+{"hex(avgWeightedState(float32, decimal))":"00000000796D84AB379961E28B90737100000080B86CCE251142A4463E629907"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_permutations_Decimal128_38__Int64 = r"""
+{"hex(avgWeightedState(decimal, int64))":"0A00000039A4FE275D48C0434185345A11F3E477AE960300"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_permutations_Decimal128_38__UInt64 = r"""
+{"hex(avgWeightedState(decimal, uint64))":"0A00000039A4FE275D48C0434185345A91E693BFE7D5E501"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_permutations_Int64_Decimal128_38_ = r"""
+{"hex(avgWeightedState(int64, decimal))":"0A00000039A4FE275D48C0434185345A00000080B86CCE251142A4463E629907"}
+"""
+
+_aggregate_functions_state_avgWeightedState_datatypes_permutations_UInt64_Decimal128_38_ = r"""
+{"hex(avgWeightedState(uint64, decimal))":"0A00000039A4FE275D48C0434185345A00000080B86CCE251142A4463E629907"}
+"""
+

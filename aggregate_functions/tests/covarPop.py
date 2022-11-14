@@ -21,7 +21,9 @@ def datatype(self, func, table, col1_name, col2_name):
 @TestFeature
 @Name("covarPop")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_CovarPop("1.0"))
-def feature(self, func="covarPop({params})", table=None, exclude_types=None):
+def feature(
+    self, func="covarPop({params})", table=None, exclude_types=None, decimal=False
+):
     """Check covarPop aggregate function."""
     self.context.snapshot_id = name.basename(current().name)
 
@@ -83,7 +85,7 @@ def feature(self, func="covarPop({params})", table=None, exclude_types=None):
             for column in table.columns:
                 col_name, col_type = column.split(" ", 1)
 
-                if not is_numeric(col_type, decimal=False):
+                if not is_numeric(col_type, decimal=decimal):
                     continue
 
                 Check(
@@ -110,7 +112,7 @@ def feature(self, func="covarPop({params})", table=None, exclude_types=None):
                     col
                     for col in table.columns
                     if col in common_columns
-                    and is_numeric(col.split(" ", 1)[-1], decimal=False)
+                    and is_numeric(col.split(" ", 1)[-1], decimal=decimal)
                 ]
                 permutations = list(permutations_with_replacement(columns, 2))
                 permutations.sort()
