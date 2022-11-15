@@ -22,8 +22,6 @@ def feature(self):
     with Pool(5) as executor:
         for name in aggregate_functions:
             func = f"hex({name}State({{params}}))"
-            if name == "exponentialMovingAverage":
-                func = f"hex({name}State(0.5)({{params}}))"
             try:
                 suite = load(f"aggregate_functions.tests.{name}", "feature")
             except ModuleNotFoundError as e:
