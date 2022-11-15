@@ -2521,3 +2521,7 @@ _aggregate_functions_state_anyLastState_nan = r"""
 {"hex(anyLastState(x))":"01000000000000F87F"}
 """
 
+_aggregate_functions_state_anyLastState_string_that_ends_with__0 = r"""
+{"hex(anyLastState(x))":"0600000068656C6C6F00"}
+"""
+

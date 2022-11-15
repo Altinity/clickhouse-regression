@@ -2521,3 +2521,7 @@ _aggregate_functions_state_anyHeavyState_nan = r"""
 {"hex(anyHeavyState(x))":"01000000000000F87F0100000000000000"}
 """
 
+_aggregate_functions_state_anyHeavyState_string_that_ends_with__0 = r"""
+{"hex(anyHeavyState(x))":"0600000068656C6C6F000100000000000000"}
+"""
+

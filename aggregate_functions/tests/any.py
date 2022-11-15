@@ -55,6 +55,11 @@ def feature(self, func="any({params})", table=None):
             f"SELECT {func.format(params='x')}, max(y) FROM values('x Nullable(Int8), y Nullable(String)', (1, NULL), (NULL, 'hello'), (3, 'hello'), (NULL, NULL), (5, 'you')) GROUP BY y"
         )
 
+    with Check("string that ends with \\0"):
+        execute_query(
+            f"SELECT {func.format(params='x')} FROM values('x String', 'hello\0\0')"
+        )
+
     for v in ["inf", "-inf", "nan"]:
         with Check(f"{v}"):
             execute_query(

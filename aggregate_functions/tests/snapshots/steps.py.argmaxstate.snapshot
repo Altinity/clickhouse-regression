@@ -7699,3 +7699,7 @@ _aggregate_functions_state_argMaxState_inf___inf__nan_nan_nan = r"""
 {"hex(argMaxState(x, y))":"010000000000001040010000000000001040"}
 """
 
+_aggregate_functions_state_argMaxState_string_that_ends_with__0 = r"""
+{"hex(argMaxState(x, y))":"02000000350004000000796F7500"}
+"""
+

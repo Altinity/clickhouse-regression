@@ -2521,3 +2521,7 @@ _aggregate_functions_anyLast_nan = r"""
 {"anyLast(x)":null}
 """
 
+_aggregate_functions_anyLast_string_that_ends_with__0 = r"""
+{"anyLast(x)":"hello"}
+"""
+
