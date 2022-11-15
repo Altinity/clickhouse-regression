@@ -1,0 +1,97 @@
+_aggregate_functions_state_groupArrayMovingAvgState_constant = r"""
+{"hex(groupArrayMovingAvgState(1))":"01000000000000F03F"}
+"""
+
+_aggregate_functions_state_groupArrayMovingAvgState_zero_rows = r"""
+{"hex(groupArrayMovingAvgState(number))":"00"}
+"""
+
+_aggregate_functions_state_groupArrayMovingAvgState_single_row = r"""
+{"hex(groupArrayMovingAvgState(number))":"010000000000000000"}
+"""
+
+_aggregate_functions_state_groupArrayMovingAvgState_with_group_by = r"""
+{"even":0,"hex(groupArrayMovingAvgState(number))":"0500000000000000000000000000000040000000000000184000000000000028400000000000003440"}
+{"even":1,"hex(groupArrayMovingAvgState(number))":"05000000000000F03F0000000000001040000000000000224000000000000030400000000000003940"}
+"""
+
+_aggregate_functions_state_groupArrayMovingAvgState_some_negative_values = r"""
+{"hex(groupArrayMovingAvgState(minus(number, 5)))":"0A00000000000010C00000000000001CC000000000000022C000000000000024C000000000000024C000000000000022C00000000000001CC000000000000010C000000000000000000000000000001440"}
+"""
+
+_aggregate_functions_state_groupArrayMovingAvgState_NULL_value_handling = r"""
+{"hex(groupArrayMovingAvgState(x))":"050000000000000000000000000000F03F000000000000104000000000000020400000000000002A40"}
+"""
+
+_aggregate_functions_state_groupArrayMovingAvgState_single_NULL_value = r"""
+{"hex(groupArrayMovingAvgState(x))":"00"}
+"""
+
+_aggregate_functions_state_groupArrayMovingAvgState_return_type = r"""
+{"toTypeName(hex(groupArrayMovingAvgState(number)))":"String"}
+"""
+
+_aggregate_functions_state_groupArrayMovingAvgState_doc_example = r"""
+{"hex(groupArrayMovingAvgState(x))":"060000000000000000000000000000F03F0000000000000840000000000000184000000000000024400000000000002E40"}
+"""
+
+_aggregate_functions_state_groupArrayMovingAvgState_inf = r"""
+{"hex(groupArrayMovingAvgState(x))":"0600000000000000006666666666660240000000000000F07F000000000000F07F000000000000F07F000000000000F07F"}
+"""
+
+_aggregate_functions_state_groupArrayMovingAvgState__inf = r"""
+{"hex(groupArrayMovingAvgState(x))":"0600000000000000006666666666660240000000000000F0FF000000000000F0FF000000000000F0FF000000000000F0FF"}
+"""
+
+_aggregate_functions_state_groupArrayMovingAvgState_nan = r"""
+{"hex(groupArrayMovingAvgState(x))":"0600000000000000006666666666660240000000000000F87F000000000000F87F000000000000F87F000000000000F87F"}
+"""
+
+_aggregate_functions_state_groupArrayMovingAvgState_inf___inf__nan = r"""
+{"hex(groupArrayMovingAvgState(x))":"06000000000000F87F000000000000F87F000000000000F87F000000000000F87F000000000000F87F000000000000F87F"}
+"""
+
+_aggregate_functions_state_groupArrayMovingAvgState_Int16 = r"""
+{"hex(groupArrayMovingAvgState(int16))":"04000000000000E0C0000000000000F0BF0000000000BAC3400000000000BAC340"}
+"""
+
+_aggregate_functions_state_groupArrayMovingAvgState_UInt8 = r"""
+{"hex(groupArrayMovingAvgState(uint8))":"0400000000000000000000000000E06F400000000000F077400000000000F07740"}
+"""
+
+_aggregate_functions_state_groupArrayMovingAvgState_UInt16 = r"""
+{"hex(groupArrayMovingAvgState(uint16))":"04000000000000000000000000E0FFEF4000000000E0FFF74000000000E0FFF740"}
+"""
+
+_aggregate_functions_state_groupArrayMovingAvgState_Int32 = r"""
+{"hex(groupArrayMovingAvgState(int32))":"04000000000000E0C1000000000000F0BF00000020224463410000002022446341"}
+"""
+
+_aggregate_functions_state_groupArrayMovingAvgState_Int8 = r"""
+{"hex(groupArrayMovingAvgState(int8))":"0400000000000060C0000000000000F0BF00000000000059400000000000005940"}
+"""
+
+_aggregate_functions_state_groupArrayMovingAvgState_UInt32 = r"""
+{"hex(groupArrayMovingAvgState(uint32))":"0400000000000000000000E0FFFFFFEF41000040AB5460F041000040AB5460F041"}
+"""
+
+_aggregate_functions_state_groupArrayMovingAvgState_Float32 = r"""
+{"hex(groupArrayMovingAvgState(float32))":"04000000E0FFFFEFC7000000000000000000000040224463410000004022446341"}
+"""
+
+_aggregate_functions_state_groupArrayMovingAvgState_UInt64 = r"""
+{"hex(groupArrayMovingAvgState(uint64))":"040000000000000000000000000000F0434F7EE76A3900F0434F7EE76A3900F043"}
+"""
+
+_aggregate_functions_state_groupArrayMovingAvgState_Float64 = r"""
+{"hex(groupArrayMovingAvgState(float64))":"0451776F82FDFFEFFF000000000000000072ED3A2E065E517772ED3A2E065E5177"}
+"""
+
+_aggregate_functions_state_groupArrayMovingAvgState_Decimal128_38_ = r"""
+{"hex(groupArrayMovingAvgState(decimal))":"040A000000C0DD75F6853B79A557B3C4B40000000000000000000000000000000000000080B86CCE251142A4463E62990700000080B86CCE251142A4463E629907"}
+"""
+
+_aggregate_functions_state_groupArrayMovingAvgState_Int64 = r"""
+{"hex(groupArrayMovingAvgState(int64))":"04000000000000E0C30000000000000000909827BF73B50C43909827BF73B50C43"}
+"""
+
