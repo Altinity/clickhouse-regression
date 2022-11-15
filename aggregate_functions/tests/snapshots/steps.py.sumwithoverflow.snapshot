@@ -1,0 +1,117 @@
+_aggregate_functions_sumWithOverflow_constant = r"""
+{"sumWithOverflow(1)":1}
+"""
+
+_aggregate_functions_sumWithOverflow_zero_rows = r"""
+{"sumWithOverflow(number)":"0"}
+"""
+
+_aggregate_functions_sumWithOverflow_with_group_by = r"""
+{"even":0,"sumWithOverflow(number)":"20"}
+{"even":1,"sumWithOverflow(number)":"25"}
+"""
+
+_aggregate_functions_sumWithOverflow_inf = r"""
+{"sumWithOverflow(x)":null}
+"""
+
+_aggregate_functions_sumWithOverflow__inf = r"""
+{"sumWithOverflow(x)":null}
+"""
+
+_aggregate_functions_sumWithOverflow_nan = r"""
+{"sumWithOverflow(x)":null}
+"""
+
+_aggregate_functions_sumWithOverflow_inf___inf__nan = r"""
+{"sumWithOverflow(x)":null}
+"""
+
+_aggregate_functions_sumWithOverflow_UInt8 = r"""
+{"sumWithOverflow(uint8)":127}
+"""
+
+_aggregate_functions_sumWithOverflow_Nullable_Int64_ = r"""
+{"sumWithOverflow(nullable_int64)":"1010101010101009"}
+"""
+
+_aggregate_functions_sumWithOverflow_Nullable_UInt64_ = r"""
+{"sumWithOverflow(nullable_uint64)":"1010101010101009"}
+"""
+
+_aggregate_functions_sumWithOverflow_UInt64 = r"""
+{"sumWithOverflow(uint64)":"1010101010101009"}
+"""
+
+_aggregate_functions_sumWithOverflow_Decimal128_38_ = r"""
+{"sumWithOverflow(decimal)":0.1010101}
+"""
+
+_aggregate_functions_sumWithOverflow_Int8 = r"""
+{"sumWithOverflow(int8)":100}
+"""
+
+_aggregate_functions_sumWithOverflow_Float32 = r"""
+{"sumWithOverflow(float32)":10101010}
+"""
+
+_aggregate_functions_sumWithOverflow_Nullable_Float32_ = r"""
+{"sumWithOverflow(nullable_float32)":10101010}
+"""
+
+_aggregate_functions_sumWithOverflow_Nullable_Int16_ = r"""
+{"sumWithOverflow(nullable_int16)":10100}
+"""
+
+_aggregate_functions_sumWithOverflow_UInt16 = r"""
+{"sumWithOverflow(uint16)":32766}
+"""
+
+_aggregate_functions_sumWithOverflow_Int32 = r"""
+{"sumWithOverflow(int32)":10101009}
+"""
+
+_aggregate_functions_sumWithOverflow_Int64 = r"""
+{"sumWithOverflow(int64)":"1010101010101009"}
+"""
+
+_aggregate_functions_sumWithOverflow_Nullable_Float64_ = r"""
+{"sumWithOverflow(nullable_float64)":5.6e266}
+"""
+
+_aggregate_functions_sumWithOverflow_Nullable_UInt8_ = r"""
+{"sumWithOverflow(nullable_uint8)":127}
+"""
+
+_aggregate_functions_sumWithOverflow_Nullable_Decimal128_38__ = r"""
+{"sumWithOverflow(nullable_decimal)":0.1010101}
+"""
+
+_aggregate_functions_sumWithOverflow_Float64 = r"""
+{"sumWithOverflow(float64)":5.6e266}
+"""
+
+_aggregate_functions_sumWithOverflow_Int16 = r"""
+{"sumWithOverflow(int16)":10100}
+"""
+
+_aggregate_functions_sumWithOverflow_UInt32 = r"""
+{"sumWithOverflow(uint32)":101010100}
+"""
+
+_aggregate_functions_sumWithOverflow_Nullable_Int32_ = r"""
+{"sumWithOverflow(nullable_int32)":10101009}
+"""
+
+_aggregate_functions_sumWithOverflow_Nullable_UInt32_ = r"""
+{"sumWithOverflow(nullable_uint32)":101010100}
+"""
+
+_aggregate_functions_sumWithOverflow_Nullable_Int8_ = r"""
+{"sumWithOverflow(nullable_int8)":100}
+"""
+
+_aggregate_functions_sumWithOverflow_Nullable_UInt16_ = r"""
+{"sumWithOverflow(nullable_uint16)":32766}
+"""
+
