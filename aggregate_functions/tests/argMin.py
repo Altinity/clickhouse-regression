@@ -1,6 +1,5 @@
-import itertools
-
 from helpers.tables import common_columns
+
 from aggregate_functions.tests.steps import *
 from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_ArgMin,
