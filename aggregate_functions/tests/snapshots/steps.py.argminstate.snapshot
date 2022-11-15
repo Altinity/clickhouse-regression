@@ -7703,3 +7703,7 @@ _aggregate_functions_state_argMinState_inf___inf__nan_nan_nan = r"""
 {"hex(argMinState(x, y))":"01000000000000000001000000000000F03F"}
 """
 
+_aggregate_functions_state_argMinState_string_that_ends_with__0 = r"""
+{"hex(argMinState(x, y))":"0200000031000600000068656C6C6F00"}
+"""
+

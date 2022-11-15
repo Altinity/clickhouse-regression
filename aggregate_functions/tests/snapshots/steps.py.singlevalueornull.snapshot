@@ -2129,3 +2129,7 @@ _aggregate_functions_singleValueOrNull_nan = r"""
 {"singleValueOrNull(x)":null}
 """
 
+_aggregate_functions_singleValueOrNull_string_that_ends_with__0 = r"""
+{"singleValueOrNull(x)":"hello"}
+"""
+

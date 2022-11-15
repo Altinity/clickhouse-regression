@@ -2507,3 +2507,7 @@ _aggregate_functions_first_value_nan = r"""
 {"first_value(x)":null}
 """
 
+_aggregate_functions_first_value_string_that_ends_with__0 = r"""
+{"first_value(x)":"hello"}
+"""
+

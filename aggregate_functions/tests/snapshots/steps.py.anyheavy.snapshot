@@ -2521,3 +2521,7 @@ _aggregate_functions_anyHeavy_nan = r"""
 {"anyHeavy(x)":null}
 """
 
+_aggregate_functions_anyHeavy_string_that_ends_with__0 = r"""
+{"anyHeavy(x)":"hello"}
+"""
+

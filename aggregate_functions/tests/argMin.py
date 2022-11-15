@@ -62,6 +62,11 @@ def feature(self, func="argMin({params})", table=None):
                     f"SELECT {func.format(params='x,y')}  FROM values('x Float64, y Float64', (0, 1), (1, 2.3), ({x},{y}), (6.7,3), (4,4), (5, 1))"
                 )
 
+    with Check("string that ends with \\0"):
+        execute_query(
+            f"SELECT {func.format(params='x, y')} FROM values('x String, y String', ('1', 'hello\0\0'), ('hello\0\0', 'hello'), ('3', 'there'), ('hello\0\0', 'there\0\0'), ('5', 'you'))"
+        )
+
     with Feature("datatypes"):
         with Pool(3) as executor:
             for column in table.columns:

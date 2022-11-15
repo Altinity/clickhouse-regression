@@ -1,0 +1,221 @@
+_aggregate_functions_state_exponentialMovingAverageState_constant = r"""
+{"hex(exponentialMovingAverageState(0.5)(1, 1))":"000000000000F03F000000000000F03F"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_zero_rows = r"""
+{"hex(exponentialMovingAverageState(0.5)(number, number))":"00000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_single_row = r"""
+{"hex(exponentialMovingAverageState(0.5)(number, plus(number, 1)))":"0000000000000000000000000000F03F"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_with_group_by = r"""
+{"even":0,"hex(exponentialMovingAverageState(0.5)(number, modulo(number, 2)))":"00000000000034400000000000000000"}
+{"even":1,"hex(exponentialMovingAverageState(0.5)(number, modulo(number, 2)))":"0000000000003940000000000000F03F"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_some_negative_values = r"""
+{"hex(exponentialMovingAverageState(0.5)(minus(number, 5), plus(number, 10)))":"0000000090E318400000000000003440"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_NULL_value_handling = r"""
+{"hex(exponentialMovingAverageState(0.5)(x, y))":"0100000000005010400000000000001040"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_single_NULL_value = r"""
+{"hex(exponentialMovingAverageState(0.5)(x, y))":"00"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_inf___inf__nan_inf_inf = r"""
+{"hex(exponentialMovingAverageState(0.5)(x, y))":"000000000000F07F000000000000F07F"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_inf___inf__nan_inf__inf = r"""
+{"hex(exponentialMovingAverageState(0.5)(x, y))":"000000000000F8FF0000000000001040"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_inf___inf__nan_inf_nan = r"""
+{"hex(exponentialMovingAverageState(0.5)(x, y))":"000000000000F07F0000000000001040"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_inf___inf__nan__inf_inf = r"""
+{"hex(exponentialMovingAverageState(0.5)(x, y))":"000000000000F0FF000000000000F07F"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_inf___inf__nan__inf__inf = r"""
+{"hex(exponentialMovingAverageState(0.5)(x, y))":"000000000000F8FF0000000000001040"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_inf___inf__nan__inf_nan = r"""
+{"hex(exponentialMovingAverageState(0.5)(x, y))":"000000000000F0FF0000000000001040"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_inf___inf__nan_nan_inf = r"""
+{"hex(exponentialMovingAverageState(0.5)(x, y))":"000000000000F87F000000000000F07F"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_inf___inf__nan_nan__inf = r"""
+{"hex(exponentialMovingAverageState(0.5)(x, y))":"000000000000F87F0000000000001040"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_inf___inf__nan_nan_nan = r"""
+{"hex(exponentialMovingAverageState(0.5)(x, y))":"000000000000F87F0000000000001040"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_return_type = r"""
+{"toTypeName(hex(exponentialMovingAverageState(0.5)(number, plus(number, 1))))":"String"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_example = r"""
+{"hex(exponentialMovingAverageState(0.5)(y, x))":"86EB51B89E0D12400000000000001440"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_Float64_UInt8 = r"""
+{"hex(exponentialMovingAverageState(0.5)(float64, uint8))":"51776F82FDFFEF7F0000000000E06F40"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_UInt8_Float64 = r"""
+{"hex(exponentialMovingAverageState(0.5)(uint8, float64))":"0000000000E06F4051776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_Float64_UInt64 = r"""
+{"hex(exponentialMovingAverageState(0.5)(float64, uint64))":"51776F82FDFFEF7F000000000000F043"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_UInt64_Float64 = r"""
+{"hex(exponentialMovingAverageState(0.5)(uint64, float64))":"000000000000F04351776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_Float64_Int8 = r"""
+{"hex(exponentialMovingAverageState(0.5)(float64, int8))":"51776F82FDFFEF7F0000000000C05F40"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_Int64_Float64 = r"""
+{"hex(exponentialMovingAverageState(0.5)(int64, float64))":"000000000000E04351776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_Int8_Float64 = r"""
+{"hex(exponentialMovingAverageState(0.5)(int8, float64))":"0000000000C05F4051776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_Float64_Int64 = r"""
+{"hex(exponentialMovingAverageState(0.5)(float64, int64))":"51776F82FDFFEF7F000000000000E043"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_Int32_Float64 = r"""
+{"hex(exponentialMovingAverageState(0.5)(int32, float64))":"0000C0FFFFFFDF4151776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_Float64_Float32 = r"""
+{"hex(exponentialMovingAverageState(0.5)(float64, float32))":"51776F82FDFFEF7F000000E0FFFFEF47"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_Float64_Int32 = r"""
+{"hex(exponentialMovingAverageState(0.5)(float64, int32))":"51776F82FDFFEF7F0000C0FFFFFFDF41"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_Float64_UInt16 = r"""
+{"hex(exponentialMovingAverageState(0.5)(float64, uint16))":"51776F82FDFFEF7F00000000E0FFEF40"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_UInt16_Float64 = r"""
+{"hex(exponentialMovingAverageState(0.5)(uint16, float64))":"00000000E0FFEF4051776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_Float32_Float64 = r"""
+{"hex(exponentialMovingAverageState(0.5)(float32, float64))":"000000E0FFFFEF4751776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_Int16_Float64 = r"""
+{"hex(exponentialMovingAverageState(0.5)(int16, float64))":"00000000C0FFDF4051776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_Float64_Int16 = r"""
+{"hex(exponentialMovingAverageState(0.5)(float64, int16))":"51776F82FDFFEF7F00000000C0FFDF40"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_Float64_Decimal128_38_ = r"""
+{"hex(exponentialMovingAverageState(0.5)(float64, decimal))":"DC7F48AAFDFFED7F000000000000F03F"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_Float64_Float64 = r"""
+{"hex(exponentialMovingAverageState(0.5)(float64, float64))":"51776F82FDFFEF7F51776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_Decimal128_38__Float64 = r"""
+{"hex(exponentialMovingAverageState(0.5)(decimal, float64))":"000000000000F03F51776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_Float64_UInt32 = r"""
+{"hex(exponentialMovingAverageState(0.5)(float64, uint32))":"51776F82FDFFEF7F0000E0FFFFFFEF41"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_UInt32_Float64 = r"""
+{"hex(exponentialMovingAverageState(0.5)(uint32, float64))":"0000E0FFFFFFEF4151776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_permutations_Decimal128_38__Decimal128_38_ = r"""
+{"hex(exponentialMovingAverageState(0.5)(decimal, decimal))":"4D35B373F6EDEE3F000000000000F03F"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_permutations_Decimal128_38__Float32 = r"""
+{"hex(exponentialMovingAverageState(0.5)(decimal, float32))":"000000000000F03F000000E0FFFFEF47"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_permutations_Decimal128_38__Int64 = r"""
+{"hex(exponentialMovingAverageState(0.5)(decimal, int64))":"000000000000F03F000000000000E043"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_permutations_Decimal128_38__UInt64 = r"""
+{"hex(exponentialMovingAverageState(0.5)(decimal, uint64))":"000000000000F03F000000000000F043"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_permutations_Float32_Decimal128_38_ = r"""
+{"hex(exponentialMovingAverageState(0.5)(float32, decimal))":"000000E2FFFFED47000000000000F03F"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_permutations_Float32_Float32 = r"""
+{"hex(exponentialMovingAverageState(0.5)(float32, float32))":"000000E0FFFFEF47000000E0FFFFEF47"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_permutations_Float32_UInt64 = r"""
+{"hex(exponentialMovingAverageState(0.5)(float32, uint64))":"000000E0FFFFEF47000000000000F043"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_permutations_Float32_Int64 = r"""
+{"hex(exponentialMovingAverageState(0.5)(float32, int64))":"000000E0FFFFEF47000000000000E043"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_permutations_Int64_Float32 = r"""
+{"hex(exponentialMovingAverageState(0.5)(int64, float32))":"000000000000E043000000E0FFFFEF47"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_permutations_Int64_Int64 = r"""
+{"hex(exponentialMovingAverageState(0.5)(int64, int64))":"000000000000E043000000000000E043"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_permutations_Int64_Decimal128_38_ = r"""
+{"hex(exponentialMovingAverageState(0.5)(int64, decimal))":"EA64440C4200DE43000000000000F03F"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_permutations_Int64_UInt64 = r"""
+{"hex(exponentialMovingAverageState(0.5)(int64, uint64))":"000000000000E043000000000000F043"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_permutations_UInt64_Float32 = r"""
+{"hex(exponentialMovingAverageState(0.5)(uint64, float32))":"000000000000F043000000E0FFFFEF47"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_permutations_UInt64_Decimal128_38_ = r"""
+{"hex(exponentialMovingAverageState(0.5)(uint64, decimal))":"3B1911831000F043000000000000F03F"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_permutations_UInt64_Int64 = r"""
+{"hex(exponentialMovingAverageState(0.5)(uint64, int64))":"000000000000F043000000000000E043"}
+"""
+
+_aggregate_functions_state_exponentialMovingAverageState_datatypes_permutations_UInt64_UInt64 = r"""
+{"hex(exponentialMovingAverageState(0.5)(uint64, uint64))":"000000000000F043000000000000F043"}
+"""
+

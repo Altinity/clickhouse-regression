@@ -2507,3 +2507,7 @@ _aggregate_functions_state_singleValueOrNullState_nan = r"""
 {"hex(singleValueOrNullState(x))":"01000000000000F87F"}
 """
 
+_aggregate_functions_state_singleValueOrNullState_string_that_ends_with__0 = r"""
+{"hex(singleValueOrNullState(x))":"0600000068656C6C6F00"}
+"""
+

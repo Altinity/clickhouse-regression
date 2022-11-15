@@ -7699,3 +7699,7 @@ _aggregate_functions_argMax_inf___inf__nan_nan_nan = r"""
 {"argMax(x, y)":4}
 """
 
+_aggregate_functions_argMax_string_that_ends_with__0 = r"""
+{"argMax(x, y)":"5"}
+"""
+
