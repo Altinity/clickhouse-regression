@@ -11,10 +11,10 @@
 * 5 [Requirements](#requirements)
   * 5.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier](#rqsrs-032clickhouseautomaticfinalmodifier)
   * 5.2 [Table Engine Setting](#table-engine-setting)
-    * 5.2.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSetting](#rqsrs-032clickhouseautomaticfinalmodifiertableenginesetting)
-    * 5.2.2 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSettingNotSupport](#rqsrs-032clickhouseautomaticfinalmodifiertableenginesettingnotsupport)
+    * 5.2.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSetting.ForceSelectFinal](#rqsrs-032clickhouseautomaticfinalmodifiertableenginesettingforceselectfinal)
+    * 5.2.2 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSettingNotSupportted](#rqsrs-032clickhouseautomaticfinalmodifiertableenginesettingnotsupportted)
   * 5.3 [Select Query Setting](#select-query-setting)
-    * 5.3.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQuerySetting](#rqsrs-032clickhouseautomaticfinalmodifierselectquerysetting)
+    * 5.3.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQuerySetting.IgnoreForceSelectFinal](#rqsrs-032clickhouseautomaticfinalmodifierselectquerysettingignoreforceselectfinal)
   * 5.4 [Supported Table Engines](#supported-table-engines)
     * 5.4.1 [MergeTree](#mergetree)
       * 5.4.1.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SupportedTableEngines.MergeTree](#rqsrs-032clickhouseautomaticfinalmodifiersupportedtableenginesmergetree)
@@ -22,11 +22,16 @@
       * 5.4.2.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SupportedTableEngines.ReplicatedMergeTree](#rqsrs-032clickhouseautomaticfinalmodifiersupportedtableenginesreplicatedmergetree)
     * 5.4.3 [EnginesOverOtherEngines](#enginesoverotherengines)
       * 5.4.3.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SupportedTableEngines.EnginesOverOtherEngines](#rqsrs-032clickhouseautomaticfinalmodifiersupportedtableenginesenginesoverotherengines)
-  * 5.5 [Supported Select Queries](#supported-select-queries)
-    * 5.5.1 [SelectQueries](#selectqueries)
-      * 5.5.1.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries](#rqsrs-032clickhouseautomaticfinalmodifierselectqueries)
-    * 5.5.2 [JoinSelectQueries](#joinselectqueries)
-      * 5.5.2.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.JoinSelectQueries](#rqsrs-032clickhouseautomaticfinalmodifierjoinselectqueries)
+  * 5.5 [Select Queries](#select-queries)
+    * 5.5.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries](#rqsrs-032clickhouseautomaticfinalmodifierselectqueries)
+    * 5.5.2 [Subquery](#subquery)
+      * 5.5.2.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Subquery](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriessubquery)
+    * 5.5.3 [JOIN](#join)
+      * 5.5.3.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesjoin)
+    * 5.5.4 [UNION](#union)
+      * 5.5.4.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Union](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesunion)
+    * 5.5.5 [WITH ](#with-)
+      * 5.5.5.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.With](#rqsrs-032clickhouseautomaticfinalmodifierselectquerieswith)
 
 ## Introduction
 
@@ -144,7 +149,7 @@ Engine=ReplacingMergeTree
 SETTTING force_select_final=1
 ```
 
-#### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSettingNotSupportted
+#### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSettingNotSupported
 version: 1.0 priority: 1.0
 
 [ClickHouse] SHALL not support `force_select_final` table engine setting for any MergeTree table engine that
@@ -250,7 +255,20 @@ version: 1.0
 [ClickHouse] SHALL support applying [FINAL modifier] for any table in [JOIN] clause for which
 the automatic [FINAL modifier] is enabled.
 
+* INNER JOIN
+* LEFT OUTER JOIN
+* RIGHT OUTER JOIN
+* FULL OUTER JOIN
+* CROSS JOIN
+* LEFT SEMI JOIN and RIGHT SEMI JOIN
+* LEFT ANTI JOIN and RIGHT ANTI JOIN
+* LEFT ANY JOIN, RIGHT ANY JOIN and INNER ANY JOIN
+* ASOF JOIN and LEFT ASOF JOIN
+
 For example,
+```sql
+select count() from lhs inner join rhs on lhs.x = rhs.x;
+```
 
 #### UNION
 
@@ -261,6 +279,9 @@ version: 1.0
 the automatic [FINAL modifier] is enabled.
 
 For example,
+```sql
+
+```
 
 #### WITH 
 
@@ -271,6 +292,9 @@ version: 1.0
 the automatic [FINAL modifier] is enabled.
 
 For example,
+```sql
+
+```
 
 [SRS]: #srs
 [SELECT]: https://clickhouse.com/docs/en/sql-reference/statements/select/

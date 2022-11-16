@@ -16,8 +16,9 @@ RQ_SRS_032_ClickHouse_AutomaticFinalModifier = Requirement(
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support adding [FINAL modifier] clause to all [SELECT] queries\n'
-        'for all table engines that support it.\n'
+        '[ClickHouse] SHALL support adding [FINAL modifier] clause automatically to all [SELECT] queries\n'
+        'for all table engines that support [FINAL modifier] and return the same result as if [FINAL modifier] clause\n'
+        'was specified in the [SELECT] query explicitly.\n'
         '\n'
     ),
     link=None,
@@ -25,16 +26,16 @@ RQ_SRS_032_ClickHouse_AutomaticFinalModifier = Requirement(
     num='5.1'
 )
 
-RQ_SRS_032_ClickHouse_AutomaticFinalModifier_TableEngineSetting = Requirement(
-    name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSetting',
+RQ_SRS_032_ClickHouse_AutomaticFinalModifier_TableEngineSetting_ForceSelectFinal = Requirement(
+    name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSetting.ForceSelectFinal',
     version='1.0',
     priority='1.0',
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support `force_select_final` table config setting to enable automatic [FINAL modifier]\n'
-        'when the setting is set to `1`.\n'
+        '[ClickHouse] SHALL support `force_select_final` table engine setting to enable automatic [FINAL modifier]\n'
+        'on all [SELECT] queries when the setting is value is set to `1`.\n'
         '\n'
         'For example,\n'
         '\n'
@@ -50,16 +51,16 @@ RQ_SRS_032_ClickHouse_AutomaticFinalModifier_TableEngineSetting = Requirement(
     num='5.2.1'
 )
 
-RQ_SRS_032_ClickHouse_AutomaticFinalModifier_TableEngineSettingNotSupport = Requirement(
-    name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSettingNotSupport',
+RQ_SRS_032_ClickHouse_AutomaticFinalModifier_TableEngineSettingNotSupportted = Requirement(
+    name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSettingNotSupportted',
     version='1.0',
     priority='1.0',
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support `force_select_final` table config setting when MergeTree table engine\n'
-        "doesn't support FINAL.\n"
+        '[ClickHouse] SHALL not support `force_select_final` table engine setting for any MergeTree table engine that\n'
+        "doesn't support [FINAL modifier] clause.\n"
         '\n'
     ),
     link=None,
@@ -67,15 +68,16 @@ RQ_SRS_032_ClickHouse_AutomaticFinalModifier_TableEngineSettingNotSupport = Requ
     num='5.2.2'
 )
 
-RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQuerySetting = Requirement(
-    name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQuerySetting',
+RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQuerySetting_IgnoreForceSelectFinal = Requirement(
+    name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQuerySetting.IgnoreForceSelectFinal',
     version='1.0',
     priority='1.0',
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support `auto_final` SELECT query setting to disable automatic [FINAL modifier].\n'
+        '[ClickHouse] SHALL support `ignore_force_select_final` [SELECT] query setting to disable automatic [FINAL modifier]\n'
+        'if the table has `force_select_final` setting set to `1`.\n'
         '\n'
         'For example,\n'
         '\n'
@@ -141,8 +143,7 @@ RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SupportedTableEngines_EnginesOverOt
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support engines that operate over other engines if they were created over supported\n'
-        'MergeTree] table engines variants:\n'
+        '[ClickHouse] SHALL support the following table engines over tables that have automatic [FINAL modifier] clause enabled:\n'
         '\n'
         '* [View](https://clickhouse.com/docs/en/engines/table-engines/special/view)\n'
         '* [Buffer](https://clickhouse.com/docs/en/engines/table-engines/special/buffer)\n'
@@ -164,8 +165,7 @@ RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries = Requirement(
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support automatic [FINAL modifier] for [SELECT] queries with the same result \n'
-        'as for manual [FINAL modifier]:\n'
+        '[ClickHouse] SHALL support automatic [FINAL modifier] for any type of [SELECT] queries.\n'
         '\n'
         '```sql\n'
         '[WITH expr_list|(subquery)]\n'
@@ -189,24 +189,85 @@ RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries = Requirement(
         '\n'
     ),
     link=None,
-    level=4,
-    num='5.5.1.1'
+    level=3,
+    num='5.5.1'
 )
 
-RQ_SRS_032_ClickHouse_AutomaticFinalModifier_JoinSelectQueries = Requirement(
-    name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.JoinSelectQueries',
+RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery = Requirement(
+    name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Subquery',
     version='1.0',
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support automatic [FINAL modifier] for [SELECT] queries with [JOIN] applying [FINAL modifier] to all\n'
-        'tables which has `force_select_final=1` and disable it to them if this [SELECT] query has `SETTING`\n'
-        '`ignore_force_select_final=1`.\n'
+        '[ClickHouse] SHALL support applying [FINAL modifier] in any subquery that reads from a table that\n'
+        'has automatic [FINAL modifier] enabled.\n'
+        '\n'
+        'For example,\n'
+        '\n'
+    ),
+    link=None,
+    level=4,
+    num='5.5.2.1'
+)
+
+RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join = Requirement(
+    name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL support applying [FINAL modifier] for any table in [JOIN] clause for which\n'
+        'the automatic [FINAL modifier] is enabled.\n'
+        '\n'
+        'For example,\n'
+        '\n'
+    ),
+    link=None,
+    level=4,
+    num='5.5.3.1'
+)
+
+RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Union = Requirement(
+    name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Union',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL support applying [FINAL modifier] for any table in [UNION] clause for which\n'
+        'the automatic [FINAL modifier] is enabled.\n'
+        '\n'
+        'For example,\n'
+        '\n'
+    ),
+    link=None,
+    level=4,
+    num='5.5.4.1'
+)
+
+RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_With = Requirement(
+    name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.With',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL support applying [FINAL modifier] for any table in subquery inside the [WITH] clause for which\n'
+        'the automatic [FINAL modifier] is enabled.\n'
+        '\n'
+        'For example,\n'
         '\n'
         '[SRS]: #srs\n'
         '[SELECT]: https://clickhouse.com/docs/en/sql-reference/statements/select/\n'
+        '[JOIN]: https://clickhouse.com/docs/en/sql-reference/statements/select/join\n'
+        '[UNION]: https://clickhouse.com/docs/en/sql-reference/statements/select/union\n'
+        '[WITH]: https://clickhouse.com/docs/en/sql-reference/statements/select/with\n'
         '[MergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/mergetree/\n'
         '[ReplacingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/replacingmergetree\n'
         '[CollapsingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/collapsingmergetree\n'
@@ -217,7 +278,7 @@ RQ_SRS_032_ClickHouse_AutomaticFinalModifier_JoinSelectQueries = Requirement(
     ),
     link=None,
     level=4,
-    num='5.5.2.1'
+    num='5.5.5.1'
 )
 
 SRS032_ClickHouse_Automatic_Final_Modifier_For_Select_Queries = Specification(
@@ -245,10 +306,10 @@ SRS032_ClickHouse_Automatic_Final_Modifier_For_Select_Queries = Specification(
         Heading(name='Requirements', level=1, num='5'),
         Heading(name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier', level=2, num='5.1'),
         Heading(name='Table Engine Setting', level=2, num='5.2'),
-        Heading(name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSetting', level=3, num='5.2.1'),
-        Heading(name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSettingNotSupport', level=3, num='5.2.2'),
+        Heading(name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSetting.ForceSelectFinal', level=3, num='5.2.1'),
+        Heading(name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSettingNotSupportted', level=3, num='5.2.2'),
         Heading(name='Select Query Setting', level=2, num='5.3'),
-        Heading(name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQuerySetting', level=3, num='5.3.1'),
+        Heading(name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQuerySetting.IgnoreForceSelectFinal', level=3, num='5.3.1'),
         Heading(name='Supported Table Engines', level=2, num='5.4'),
         Heading(name='MergeTree', level=3, num='5.4.1'),
         Heading(name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SupportedTableEngines.MergeTree', level=4, num='5.4.1.1'),
@@ -256,22 +317,30 @@ SRS032_ClickHouse_Automatic_Final_Modifier_For_Select_Queries = Specification(
         Heading(name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SupportedTableEngines.ReplicatedMergeTree', level=4, num='5.4.2.1'),
         Heading(name='EnginesOverOtherEngines', level=3, num='5.4.3'),
         Heading(name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SupportedTableEngines.EnginesOverOtherEngines', level=4, num='5.4.3.1'),
-        Heading(name='Supported Select Queries', level=2, num='5.5'),
-        Heading(name='SelectQueries', level=3, num='5.5.1'),
-        Heading(name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries', level=4, num='5.5.1.1'),
-        Heading(name='JoinSelectQueries', level=3, num='5.5.2'),
-        Heading(name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.JoinSelectQueries', level=4, num='5.5.2.1'),
+        Heading(name='Select Queries', level=2, num='5.5'),
+        Heading(name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries', level=3, num='5.5.1'),
+        Heading(name='Subquery', level=3, num='5.5.2'),
+        Heading(name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Subquery', level=4, num='5.5.2.1'),
+        Heading(name='JOIN', level=3, num='5.5.3'),
+        Heading(name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join', level=4, num='5.5.3.1'),
+        Heading(name='UNION', level=3, num='5.5.4'),
+        Heading(name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Union', level=4, num='5.5.4.1'),
+        Heading(name='WITH ', level=3, num='5.5.5'),
+        Heading(name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.With', level=4, num='5.5.5.1'),
         ),
     requirements=(
         RQ_SRS_032_ClickHouse_AutomaticFinalModifier,
-        RQ_SRS_032_ClickHouse_AutomaticFinalModifier_TableEngineSetting,
-        RQ_SRS_032_ClickHouse_AutomaticFinalModifier_TableEngineSettingNotSupport,
-        RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQuerySetting,
+        RQ_SRS_032_ClickHouse_AutomaticFinalModifier_TableEngineSetting_ForceSelectFinal,
+        RQ_SRS_032_ClickHouse_AutomaticFinalModifier_TableEngineSettingNotSupportted,
+        RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQuerySetting_IgnoreForceSelectFinal,
         RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SupportedTableEngines_MergeTree,
         RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SupportedTableEngines_ReplicatedMergeTree,
         RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SupportedTableEngines_EnginesOverOtherEngines,
         RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries,
-        RQ_SRS_032_ClickHouse_AutomaticFinalModifier_JoinSelectQueries,
+        RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery,
+        RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join,
+        RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Union,
+        RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_With,
         ),
     content='''
 # SRS032 ClickHouse Automatic Final Modifier For Select Queries
@@ -287,10 +356,10 @@ SRS032_ClickHouse_Automatic_Final_Modifier_For_Select_Queries = Specification(
 * 5 [Requirements](#requirements)
   * 5.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier](#rqsrs-032clickhouseautomaticfinalmodifier)
   * 5.2 [Table Engine Setting](#table-engine-setting)
-    * 5.2.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSetting](#rqsrs-032clickhouseautomaticfinalmodifiertableenginesetting)
-    * 5.2.2 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSettingNotSupport](#rqsrs-032clickhouseautomaticfinalmodifiertableenginesettingnotsupport)
+    * 5.2.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSetting.ForceSelectFinal](#rqsrs-032clickhouseautomaticfinalmodifiertableenginesettingforceselectfinal)
+    * 5.2.2 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSettingNotSupportted](#rqsrs-032clickhouseautomaticfinalmodifiertableenginesettingnotsupportted)
   * 5.3 [Select Query Setting](#select-query-setting)
-    * 5.3.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQuerySetting](#rqsrs-032clickhouseautomaticfinalmodifierselectquerysetting)
+    * 5.3.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQuerySetting.IgnoreForceSelectFinal](#rqsrs-032clickhouseautomaticfinalmodifierselectquerysettingignoreforceselectfinal)
   * 5.4 [Supported Table Engines](#supported-table-engines)
     * 5.4.1 [MergeTree](#mergetree)
       * 5.4.1.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SupportedTableEngines.MergeTree](#rqsrs-032clickhouseautomaticfinalmodifiersupportedtableenginesmergetree)
@@ -298,11 +367,16 @@ SRS032_ClickHouse_Automatic_Final_Modifier_For_Select_Queries = Specification(
       * 5.4.2.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SupportedTableEngines.ReplicatedMergeTree](#rqsrs-032clickhouseautomaticfinalmodifiersupportedtableenginesreplicatedmergetree)
     * 5.4.3 [EnginesOverOtherEngines](#enginesoverotherengines)
       * 5.4.3.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SupportedTableEngines.EnginesOverOtherEngines](#rqsrs-032clickhouseautomaticfinalmodifiersupportedtableenginesenginesoverotherengines)
-  * 5.5 [Supported Select Queries](#supported-select-queries)
-    * 5.5.1 [SelectQueries](#selectqueries)
-      * 5.5.1.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries](#rqsrs-032clickhouseautomaticfinalmodifierselectqueries)
-    * 5.5.2 [JoinSelectQueries](#joinselectqueries)
-      * 5.5.2.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.JoinSelectQueries](#rqsrs-032clickhouseautomaticfinalmodifierjoinselectqueries)
+  * 5.5 [Select Queries](#select-queries)
+    * 5.5.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries](#rqsrs-032clickhouseautomaticfinalmodifierselectqueries)
+    * 5.5.2 [Subquery](#subquery)
+      * 5.5.2.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Subquery](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriessubquery)
+    * 5.5.3 [JOIN](#join)
+      * 5.5.3.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesjoin)
+    * 5.5.4 [UNION](#union)
+      * 5.5.4.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Union](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesunion)
+    * 5.5.5 [WITH ](#with-)
+      * 5.5.5.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.With](#rqsrs-032clickhouseautomaticfinalmodifierselectquerieswith)
 
 ## Introduction
 
@@ -400,16 +474,17 @@ Software Requirements Specification
 ### RQ.SRS-032.ClickHouse.AutomaticFinalModifier
 version: 1.0
 
-[ClickHouse] SHALL support adding [FINAL modifier] clause to all [SELECT] queries
-for all table engines that support it.
+[ClickHouse] SHALL support adding [FINAL modifier] clause automatically to all [SELECT] queries
+for all table engines that support [FINAL modifier] and return the same result as if [FINAL modifier] clause
+was specified in the [SELECT] query explicitly.
 
 ### Table Engine Setting
 
-#### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSetting
+#### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSetting.ForceSelectFinal
 version: 1.0 priority: 1.0
 
-[ClickHouse] SHALL support `force_select_final` table config setting to enable automatic [FINAL modifier]
-when the setting is set to `1`.
+[ClickHouse] SHALL support `force_select_final` table engine setting to enable automatic [FINAL modifier]
+on all [SELECT] queries when the setting is value is set to `1`.
 
 For example,
 
@@ -419,18 +494,19 @@ Engine=ReplacingMergeTree
 SETTTING force_select_final=1
 ```
 
-#### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSettingNotSupport
+#### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSettingNotSupportted
 version: 1.0 priority: 1.0
 
-[ClickHouse] SHALL support `force_select_final` table config setting when MergeTree table engine
-doesn't support FINAL.
+[ClickHouse] SHALL not support `force_select_final` table engine setting for any MergeTree table engine that
+doesn't support [FINAL modifier] clause.
 
 ### Select Query Setting
 
-#### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQuerySetting
+#### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQuerySetting.IgnoreForceSelectFinal
 version: 1.0 priority: 1.0
 
-[ClickHouse] SHALL support `auto_final` SELECT query setting to disable automatic [FINAL modifier].
+[ClickHouse] SHALL support `ignore_force_select_final` [SELECT] query setting to disable automatic [FINAL modifier]
+if the table has `force_select_final` setting set to `1`.
 
 For example,
 
@@ -471,8 +547,7 @@ table engines variants:
 ##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SupportedTableEngines.EnginesOverOtherEngines
 version: 1.0
 
-[ClickHouse] SHALL support engines that operate over other engines if they were created over supported
-MergeTree] table engines variants:
+[ClickHouse] SHALL support the following table engines over tables that have automatic [FINAL modifier] clause enabled:
 
 * [View](https://clickhouse.com/docs/en/engines/table-engines/special/view)
 * [Buffer](https://clickhouse.com/docs/en/engines/table-engines/special/buffer)
@@ -480,15 +555,12 @@ MergeTree] table engines variants:
 * [MaterializedView](https://clickhouse.com/docs/en/engines/table-engines/special/materializedview)
 
 
-### Supported Select Queries
+### Select Queries
 
-#### SelectQueries
-
-##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries
+#### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries
 version: 1.0
 
-[ClickHouse] SHALL support automatic [FINAL modifier] for [SELECT] queries with the same result 
-as for manual [FINAL modifier]:
+[ClickHouse] SHALL support automatic [FINAL modifier] for any type of [SELECT] queries.
 
 ```sql
 [WITH expr_list|(subquery)]
@@ -510,17 +582,51 @@ SELECT [DISTINCT [ON (column1, column2, ...)]] expr_list
 [FORMAT format]
 ```
 
-#### JoinSelectQueries
+#### Subquery
 
-##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.JoinSelectQueries
+##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Subquery
 version: 1.0
 
-[ClickHouse] SHALL support automatic [FINAL modifier] for [SELECT] queries with [JOIN] applying [FINAL modifier] to all
-tables which has `force_select_final=1` and disable it to them if this [SELECT] query has `SETTING`
-`ignore_force_select_final=1`.
+[ClickHouse] SHALL support applying [FINAL modifier] in any subquery that reads from a table that
+has automatic [FINAL modifier] enabled.
+
+For example,
+
+#### JOIN
+
+##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join
+version: 1.0
+
+[ClickHouse] SHALL support applying [FINAL modifier] for any table in [JOIN] clause for which
+the automatic [FINAL modifier] is enabled.
+
+For example,
+
+#### UNION
+
+##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Union
+version: 1.0
+
+[ClickHouse] SHALL support applying [FINAL modifier] for any table in [UNION] clause for which
+the automatic [FINAL modifier] is enabled.
+
+For example,
+
+#### WITH 
+
+##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.With
+version: 1.0
+
+[ClickHouse] SHALL support applying [FINAL modifier] for any table in subquery inside the [WITH] clause for which
+the automatic [FINAL modifier] is enabled.
+
+For example,
 
 [SRS]: #srs
 [SELECT]: https://clickhouse.com/docs/en/sql-reference/statements/select/
+[JOIN]: https://clickhouse.com/docs/en/sql-reference/statements/select/join
+[UNION]: https://clickhouse.com/docs/en/sql-reference/statements/select/union
+[WITH]: https://clickhouse.com/docs/en/sql-reference/statements/select/with
 [MergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/mergetree/
 [ReplacingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/replacingmergetree
 [CollapsingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/collapsingmergetree
