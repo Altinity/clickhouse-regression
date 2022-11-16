@@ -53,8 +53,6 @@ def select_final(self, ignore_force_select_final=False, select_count=None):
                     )
 
 
-
-
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_TableEngineSetting_ForceSelectFinal("1.0"))
 def force_select_final(self):
