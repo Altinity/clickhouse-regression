@@ -29,7 +29,7 @@ def feature(self, func="topK({params})", table=None):
                 execute_query(
                     f"SELECT {_func.format(params='bitAnd(number, 7)')} FROM numbers(100)"
                 )
-    
+
     with Check("custom load factor"):
         _func = func.replace(params, f"(5,5){params}")
         execute_query(

@@ -21,6 +21,4 @@ def feature(self, func="groupUniqArray({params})", table=None):
     checks(func=func, table=table)
 
     with Check("duplicates"):
-        execute_query(
-            f"SELECT {func.format(params='number % 2')} FROM numbers(8)"
-        )
+        execute_query(f"SELECT {func.format(params='number % 2')} FROM numbers(8)")
