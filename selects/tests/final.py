@@ -40,7 +40,7 @@ def select_final(self, ignore_force_select_final=False, select_count=None):
         node.query(f"insert into {table_name} values ('abc');")
         node.query(f"insert into {table_name} values ('abc');")
 
-    with Then("I check that 'SELECT count()' output"):
+    with Then("I check 'SELECT count()' output"):
         node.query(f"select count() from {table_name}"
                    f"{' SETTINGS ignore_force_select_final=1' if ignore_force_select_final else ''};",
                    message=f"{select_count}")
@@ -88,7 +88,7 @@ def join(self, force_select_final_table1=False, force_select_final_table2=False,
         node.query(f"insert into {table2_name} values ('abc');")
         node.query(f"insert into {table2_name} values ('abc');")
 
-    with Then("I check that 'SELECT count()' output is 2 because ignore_force_select_final is turned on"):
+    with Then("I check 'SELECT count() output'"):
         node.query(f"select count() from {table1_name} inner join {table2_name} on {table1_name}.x = {table2_name}.x;",
                    message=f"{select_count}")
 
