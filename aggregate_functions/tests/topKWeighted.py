@@ -39,7 +39,9 @@ def feature(self, func="topKWeighted({params})", table=None):
         execute_query(f"SELECT {_func.format(params='number,number')} FROM numbers(0)")
 
     with Check("single row"):
-        execute_query(f"SELECT {_func.format(params='number,number+1')} FROM numbers(1)")
+        execute_query(
+            f"SELECT {_func.format(params='number,number+1')} FROM numbers(1)"
+        )
 
     with Check("with group by"):
         execute_query(
@@ -83,11 +85,7 @@ def feature(self, func="topKWeighted({params})", table=None):
             description="sanity check most common column type permutations",
         ):
             with Pool(3) as executor:
-                columns = [
-                    col
-                    for col in table.columns
-                    if col in common_columns
-                ]
+                columns = [col for col in table.columns if col in common_columns]
                 permutations = list(permutations_with_replacement(columns, 2))
                 permutations.sort()
 
@@ -95,7 +93,12 @@ def feature(self, func="topKWeighted({params})", table=None):
                     col1_name, col1_type = col1.split(" ", 1)
                     col2_name, col2_type = col2.split(" ", 1)
 
-                    if not (col2_type.startswith("UInt") or col2_type.startswith("Int") or col2_type.startswith("Nullable(UInt") or col2_type.startswith("Nullable(Int")):
+                    if not (
+                        col2_type.startswith("UInt")
+                        or col2_type.startswith("Int")
+                        or col2_type.startswith("Nullable(UInt")
+                        or col2_type.startswith("Nullable(Int")
+                    ):
                         continue
 
                     Check(
