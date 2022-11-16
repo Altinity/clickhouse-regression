@@ -38,17 +38,39 @@ data_types_and_values = {
 }
 
 
-def is_numeric(datatype, decimal=True):
+def is_numeric(datatype, decimal=True, date=False, datetime=False):
     """Return True if data type is numeric."""
-    if datatype.startswith("UInt"):
+    if datatype.startswith("UInt") or datatype.startswith("Nullable(UInt"):
         return True
-    if datatype.startswith("Int"):
+    if datatype.startswith("Int") or datatype.startswith("Nullable(Int"):
         return True
-    if datatype.startswith("Float"):
+    if datatype.startswith("Float") or datatype.startswith("Nullable(Float"):
         return True
     if decimal:
-        if datatype.startswith("Decimal"):
+        if datatype.startswith("Decimal") or datatype.startswith("Nullable(Decimal"):
             return True
+    if date:
+        if datatype.startswith("Date") or datatype.startswith("Nullable(Date"):
+            return True
+    if datetime:
+        if datatype.startswith("DateTime") or datatype.startswith("Nullable(DateTime"):
+            return True
+    return False
+
+
+def is_unsigned_integer(datatype, decimal=True):
+    """Return True if data type is unsigned integer."""
+    if datatype.startswith("UInt") or datatype.startswith("Nullable(UInt"):
+        return True
+    return False
+
+
+def is_integer(datatype, decimal=True):
+    """Return True if data type is numeric."""
+    if datatype.startswith("UInt") or datatype.startswith("Nullable(UInt"):
+        return True
+    if datatype.startswith("Int") or datatype.startswith("Nullable(Int"):
+        return True
     return False
 
 
