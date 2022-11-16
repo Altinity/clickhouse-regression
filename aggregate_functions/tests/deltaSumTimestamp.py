@@ -17,7 +17,9 @@ def datatype(self, func, table, col1_name, col2_name):
 
 @TestFeature
 @Name("deltaSumTimestamp")
-@Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_DeltaSumTimestamp("1.0"))
+@Requirements(
+    RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_DeltaSumTimestamp("1.0")
+)
 def feature(self, func="deltaSumTimestamp({params})", table=None, decimal=True):
     """Check deltaSumTimestamp aggregate function."""
     self.context.snapshot_id = name.basename(current().name)
@@ -73,7 +75,9 @@ def feature(self, func="deltaSumTimestamp({params})", table=None, decimal=True):
                     col
                     for col in table.columns
                     if col in common_columns
-                    and is_numeric(col.split(" ", 1)[-1], decimal=False, date=True, datetime=True)
+                    and is_numeric(
+                        col.split(" ", 1)[-1], decimal=False, date=True, datetime=True
+                    )
                 ]
                 permutations = list(permutations_with_replacement(columns, 2))
                 permutations.sort()

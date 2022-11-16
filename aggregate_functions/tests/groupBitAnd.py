@@ -6,6 +6,7 @@ from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_GroupBitAnd,
 )
 
+
 @TestFeature
 @Name("groupBitAnd")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_GroupBitAnd("1.0"))
@@ -48,7 +49,6 @@ def feature(self, func="groupBitAnd({params})", table=None):
         execute_query(
             f"SELECT {func.format(params='x')} FROM values('x UInt8', 0, 1, 2, 3, 4, 5)"
         )
-
 
     for column in table.columns:
         column_name, column_type = column.split(" ", 1)
