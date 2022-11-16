@@ -22,9 +22,7 @@ def feature(self, func="groupArray({params})", table=None):
     checks(func=func, table=table)
 
     with Check("max size"):
-        for size in range(1,10):
+        for size in range(1, 10):
             with When(f"{size}"):
-                _func = func.replace(params,f"({size}){params}")
-                execute_query(
-                    f"SELECT {_func.format(params='number')} FROM numbers(8)"
-                )
+                _func = func.replace(params, f"({size}){params}")
+                execute_query(f"SELECT {_func.format(params='number')} FROM numbers(8)")
