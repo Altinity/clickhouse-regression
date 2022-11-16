@@ -30,20 +30,29 @@ def select_final(self, ignore_force_select_final=False, select_count=None):
     node = self.context.cluster.node("clickhouse1")
     table_name = f"test_table_{uid}"
 
-    with Given(
-            "I create table with with `force_select_final=1`"
-    ):
-        node.query(f"create table if not exists {table_name} (x String)"
-                   f" engine=ReplacingMergeTree() ORDER BY x SETTINGS force_select_final=1;")
+    try:
+        with Given(
+                "I create table with with `force_select_final=1`"
+        ):
+            node.query(f"create table if not exists {table_name} (x String)"
+                       f" engine=ReplacingMergeTree() ORDER BY x SETTINGS force_select_final=1;")
 
-    with Then(f"I make insert into table"):
-        node.query(f"insert into {table_name} values ('abc');")
-        node.query(f"insert into {table_name} values ('abc');")
+        with Then(f"I make insert into table"):
+            node.query(f"insert into {table_name} values ('abc');")
+            node.query(f"insert into {table_name} values ('abc');")
 
-    with Then("I check 'SELECT count()' output"):
-        node.query(f"select count() from {table_name}"
-                   f"{' SETTINGS ignore_force_select_final=1' if ignore_force_select_final else ''};",
-                   message=f"{select_count}")
+        with Then("I check 'SELECT count()' output"):
+            node.query(f"select count() from {table_name}"
+                       f"{' SETTINGS ignore_force_select_final=1' if ignore_force_select_final else ''};",
+                       message=f"{select_count}")
+    finally:
+        with Finally("I clean up"):
+            with By("dropping table if exists"):
+                node.query(
+                        f"DROP TABLE IF EXISTS {table_name}"
+                    )
+
+
 
 
 @TestScenario
@@ -71,26 +80,37 @@ def join(self, force_select_final_table1=False, force_select_final_table2=False,
     table1_name = f"test_table1_{uid}"
     table2_name = f"test_table2_{uid}"
 
-    with Given(
-            "I create table with with 2 tables"
-    ):
-        node.query(f"create table if not exists {table1_name} (x String)"
-                   f" engine=ReplacingMergeTree() ORDER BY x"
-                   f"{' SETTINGS force_select_final=1' if force_select_final_table1 else ''};")
-        node.query(f"create table if not exists {table2_name} (x String)"
-                   f" engine=ReplacingMergeTree() ORDER BY x"
-                   f"{' SETTINGS force_select_final=1' if force_select_final_table2 else ''};")
+    try:
+        with Given(
+                "I create table with with 2 tables"
+        ):
+            node.query(f"create table if not exists {table1_name} (x String)"
+                       f" engine=ReplacingMergeTree() ORDER BY x"
+                       f"{' SETTINGS force_select_final=1' if force_select_final_table1 else ''};")
+            node.query(f"create table if not exists {table2_name} (x String)"
+                       f" engine=ReplacingMergeTree() ORDER BY x"
+                       f"{' SETTINGS force_select_final=1' if force_select_final_table2 else ''};")
 
-    with Then(f"I make insert into two tables table"):
-        node.query(f"insert into {table1_name} values ('abc');")
-        node.query(f"insert into {table1_name} values ('abc');")
+        with Then(f"I make insert into two tables table"):
+            node.query(f"insert into {table1_name} values ('abc');")
+            node.query(f"insert into {table1_name} values ('abc');")
 
-        node.query(f"insert into {table2_name} values ('abc');")
-        node.query(f"insert into {table2_name} values ('abc');")
+            node.query(f"insert into {table2_name} values ('abc');")
+            node.query(f"insert into {table2_name} values ('abc');")
 
-    with Then("I check 'SELECT count() output'"):
-        node.query(f"select count() from {table1_name} inner join {table2_name} on {table1_name}.x = {table2_name}.x;",
-                   message=f"{select_count}")
+        with Then("I check 'SELECT count() output'"):
+            node.query(
+                f"select count() from {table1_name} inner join {table2_name} on {table1_name}.x = {table2_name}.x;",
+                message=f"{select_count}")
+    finally:
+        with Finally("I clean up"):
+            with By("dropping table if exists"):
+                node.query(
+                        f"DROP TABLE IF EXISTS {table1_name}"
+                    )
+                node.query(
+                        f"DROP TABLE IF EXISTS {table2_name}"
+                    )
 
 
 @TestScenario
