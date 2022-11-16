@@ -113,16 +113,19 @@ def join(self, force_select_final_table1=False, force_select_final_table2=False,
 
 @TestScenario
 def join_two_tables_with_final(self):
+    """Check auto 'FINAL' modifier with 'JOIN' clause enabled for both tables."""
     join(force_select_final_table1=True, force_select_final_table2=True, select_count=1)
 
 
 @TestScenario
 def join_first_table_with_final(self):
+    """Check auto 'FINAL' modifier with 'JOIN' clause enabled only for the first table."""
     join(force_select_final_table1=True, force_select_final_table2=False, select_count=2)
 
 
 @TestScenario
 def join_second_table_with_final(self):
+    """Check auto 'FINAL' modifier with 'JOIN' clause enabled only for the second table."""
     join(force_select_final_table1=False, force_select_final_table2=True, select_count=2)
 
 
