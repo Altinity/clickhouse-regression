@@ -69,6 +69,28 @@ def ignore_force_select_final(self):
 
 
 @TestFeature
+@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_TableEngineSetting("1.0"))
+def join(self):
+    """Check disable of applying FINAL modifier automatically by using `ignore_force_select_final` query setting."""
+    uid = getuid()
+    node = self.context.cluster.node("clickhouse1")
+    table_name = f"test_table_{uid}"
+
+    with Given(
+            "I create table with with `force_select_final=1`"
+    ):
+        node.query(f"create table if not exists {table_name} (x String)"
+                   f" engine=ReplacingMergeTree() ORDER BY x SETTINGS force_select_final=1;")
+
+    with Then(f"I make insert to create ClickHouse table"):
+        node.query(f"insert into {table_name} values ('abc');")
+        node.query(f"insert into {table_name} values ('abc');")
+
+    with Then("I check that 'SELECT count()' output is 2 because ignore_force_select_final is turned on"):
+        node.query(f"select count() from {table_name} SETTINGS ignore_force_select_final=1;", message="2")
+
+
+@TestFeature
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier("1.0"))
 @Name("final")
 def feature(self):
