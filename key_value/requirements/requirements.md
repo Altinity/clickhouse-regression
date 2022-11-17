@@ -94,7 +94,7 @@ flowchart LR
 #### RQ.SRS-033.ClickHouse.ParseKeyValue.Function
 version: 1.0
 
-[ClickHouse] SHALL support `parseKeyValue` string function that SHALL have the following syntax:
+[ClickHouse] SHALL support `parseKeyValue` function that SHALL have the following syntax:
 
 
 ```sql
@@ -103,7 +103,7 @@ parseKeyValue(<column_name>|<constant>|<function_return_value>|<alias>[, item_de
 
 For example, 
 
-> Insert into the table parsed keys, values from another table
+> Insert into the table parsed key-values from another table
 
 ```sql
 INSERT INTO table_2 SELECT parseKeyValue(x) FROM table_1;
@@ -114,38 +114,39 @@ The function SHALL return a `String` object containing parsed keys and values.
 #### RQ.SRS-033.ClickHouse.ParseKeyValue.Function.SupportedDataTypes
 version: 1.0
 
-[ClickHouse] SHALL support using the "parseKeyValue" function with the following data types:
+[ClickHouse] SHALL support using the [parseKeyValue] function with the following data types:
 
-* `String`
+* [String]
+* [FixedString]
 
 #### RQ.SRS-033.ClickHouse.ParseKeyValue.Function.UnsupportedDataTypes
 version: 1.0
 
-[ClickHouse]'s `parseKeyValue` function SHALL return an error if input data type is not supported.
+[ClickHouse]'s [parseKeyValue] function SHALL return an error if input data type is not supported.
 
 ### Parsing
 
 #### RQ.SRS-033.ClickHouse.ParseKeyValue.Parsing.Noise
 version: 1.0
 
-[ClickHouse]'s `parseKeyValue` function SHALL remove all noise that is not related to the key or value.
+[ClickHouse]'s [parseKeyValue] function SHALL remove all noise that is not related to the key or value.
 
 #### RQ.SRS-033.ClickHouse.ParseKeyValue.Parsing.RecognizedKeyValuePairs
 version: 1.0
 
-[ClickHouse]'s `parseKeyValue` function SHALL output any values that are recognized as a key-value pair.
+[ClickHouse]'s [parseKeyValue] function SHALL output all values that are recognized as a key-value pair.
 
 ### Format
 
 #### RQ.SRS-033.ClickHouse.ParseKeyValue.Format.Input
 version: 1.0
 
-[ClickHouse]'s `parseKeyValue` function SHALL accept any string as input.
+[ClickHouse]'s [parseKeyValue] function SHALL accept any string as input.
 
 #### RQ.SRS-033.ClickHouse.ParseKeyValue.Format.Output
 version: 1.0
 
-[ClickHouse]'s `parseKeyValue` function SHALL return a string in the following format:
+[ClickHouse]'s [parseKeyValue] function SHALL return a string in the following format:
 
 `{'key': 'value', ...}`
 
@@ -154,7 +155,7 @@ version: 1.0
 #### RQ.SRS-033.ClickHouse.ParseKeyValue.Key.Format
 version: 1.0
 
-[ClickHouse]'s `parseKeyValue` function SHALL recognize the key in the input string
+[ClickHouse]'s [parseKeyValue] function SHALL recognize the key in the input string
 if it satisfies the following conditions:
 
 * Key starts with the symbol.
@@ -167,7 +168,7 @@ if it satisfies the following conditions:
 #### RQ.SRS-033.ClickHouse.ParseKeyValue.Value.Format
 version: 1.0
 
-[ClickHouse]'s `parseKeyValue` function SHALL recognize the value in the input string
+[ClickHouse]'s [parseKeyValue] function SHALL recognize the value in the input string
 if it satisfies the following conditions:
 
 * Key starts with any non-space symbol.
@@ -180,53 +181,42 @@ if it satisfies the following conditions:
 #### RQ.SRS-033.ClickHouse.ParseKeyValue.ItemDelimiter
 version: 1.0
 
-[ClickHouse]'s `parseKeyValue` function SHALL support specifying `item_delimeter`
+[ClickHouse]'s [parseKeyValue] function SHALL support specifying `item_delimeter`
 which SHALL divide key value pairs in input string.
 
-#### RQ.SRS-033.ClickHouse.ParseKeyValue.ItemDelimiter.default
-version: 1.0
-
-[ClickHouse]'s `parseKeyValue` function SHALL specify `item_delimeter` as `,` by default.
+By default the function SHALL specify `item_delimeter` as `,`.
 
 ### Key Value Delimiter
 
 #### RQ.SRS-033.ClickHouse.ParseKeyValue.KeyValueDelimiter
 version: 1.0
 
-[ClickHouse]'s `parseKeyValue` function SHALL support specifying `key_value_delimiter`
+[ClickHouse]'s [parseKeyValue] function SHALL support specifying `key_value_delimiter`
 which SHALL divide key value pairs among themselves.
 
-#### RQ.SRS-033.ClickHouse.ParseKeyValue.KeyValueDelimiter.default
-version: 1.0
-
-[ClickHouse]'s `parseKeyValue` function SHALL specify `key_value_delimiter` as `:` by default.
+By default the function SHALL specify `key_value_delimiter` as `:`.
 
 ### Escape Character
 
 #### RQ.SRS-033.ClickHouse.ParseKeyValue.EscapeCharacter
 version: 1.0
 
-[ClickHouse]'s `parseKeyValue` function SHALL support specifying `escape_character`
+[ClickHouse]'s [parseKeyValue] function SHALL support specifying `escape_character`
 which SHALL escape symbols which allows you to use unsupported characters in a key or value.
 
-#### RQ.SRS-033.ClickHouse.ParseKeyValue.EscapeCharacter.default
-version: 1.0
-
-[ClickHouse]'s `parseKeyValue` function SHALL specify `escape_character` as `\` by default.
+By default the function SHALL specify `escape_character` as `\`.
 
 ### Enclosing Character
 
 #### RQ.SRS-033.ClickHouse.ParseKeyValue.EnclosingCharacter
 version: 1.0
 
-[ClickHouse]'s `parseKeyValue` function SHALL support specifying `enclosing_character`
+[ClickHouse]'s [parseKeyValue] function SHALL support specifying `enclosing_character`
 which SHALL enclose symbols which allows you to use unsupported characters in a key or value.
 
-#### RQ.SRS-033.ClickHouse.ParseKeyValue.EnclosingCharacter.default
-version: 1.0
+By default the function SHALL specify `enclosing_character` as `"`.
 
-[ClickHouse]'s `parseKeyValue` function SHALL specify `enclosing_character` as `"` by default.
-
-
+[String]: https://clickhouse.com/docs/en/sql-reference/data-types/string
+[FixedString]: https://clickhouse.com/docs/en/sql-reference/data-types/fixedstring
 [parseKeyValue]: https://github.com/arthurpassos/KeyValuePairFileProcessor
 [ClickHouse]: https://clickhouse.tech
