@@ -22,16 +22,12 @@
     * 3.5.1 [RQ.SRS-033.ClickHouse.ParseKeyValue.Value.Format](#rqsrs-033clickhouseparsekeyvaluevalueformat)
   * 3.6 [Item Delimiter](#item-delimiter)
     * 3.6.1 [RQ.SRS-033.ClickHouse.ParseKeyValue.ItemDelimiter](#rqsrs-033clickhouseparsekeyvalueitemdelimiter)
-    * 3.6.2 [RQ.SRS-033.ClickHouse.ParseKeyValue.ItemDelimiter.default](#rqsrs-033clickhouseparsekeyvalueitemdelimiterdefault)
   * 3.7 [Key Value Delimiter](#key-value-delimiter)
     * 3.7.1 [RQ.SRS-033.ClickHouse.ParseKeyValue.KeyValueDelimiter](#rqsrs-033clickhouseparsekeyvaluekeyvaluedelimiter)
-    * 3.7.2 [RQ.SRS-033.ClickHouse.ParseKeyValue.KeyValueDelimiter.default](#rqsrs-033clickhouseparsekeyvaluekeyvaluedelimiterdefault)
   * 3.8 [Escape Character](#escape-character)
     * 3.8.1 [RQ.SRS-033.ClickHouse.ParseKeyValue.EscapeCharacter](#rqsrs-033clickhouseparsekeyvalueescapecharacter)
-    * 3.8.2 [RQ.SRS-033.ClickHouse.ParseKeyValue.EscapeCharacter.default](#rqsrs-033clickhouseparsekeyvalueescapecharacterdefault)
   * 3.9 [Enclosing Character](#enclosing-character)
     * 3.9.1 [RQ.SRS-033.ClickHouse.ParseKeyValue.EnclosingCharacter](#rqsrs-033clickhouseparsekeyvalueenclosingcharacter)
-    * 3.9.2 [RQ.SRS-033.ClickHouse.ParseKeyValue.EnclosingCharacter.default](#rqsrs-033clickhouseparsekeyvalueenclosingcharacterdefault)
 
 ## Introduction
 
