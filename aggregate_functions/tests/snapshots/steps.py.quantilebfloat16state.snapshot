@@ -1,0 +1,133 @@
+_aggregate_functions_state_quantileBFloat16State_constant = r"""
+{"hex(quantileBFloat16State(1))":"01803F0100000000000000"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_zero_rows = r"""
+{"hex(quantileBFloat16State(number))":"00"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_single_row = r"""
+{"hex(quantileBFloat16State(number))":"0100000100000000000000"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_with_group_by = r"""
+{"even":0,"hex(quantileBFloat16State(number))":"05000001000000000000000040010000000000000080400100000000000000C040010000000000000000410100000000000000"}
+{"even":1,"hex(quantileBFloat16State(number))":"05803F010000000000000040400100000000000000A0400100000000000000E040010000000000000010410100000000000000"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_some_negative_values = r"""
+{"hex(quantileBFloat16State(minus(number, 5)))":"0A0000010000000000000080C0010000000000000040C0010000000000000000C0010000000000000080BF0100000000000000803F0100000000000000004001000000000000004040010000000000000080400100000000000000A0400100000000000000"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_NULL_value_handling = r"""
+{"hex(quantileBFloat16State(x))":"010500000100000000000000803F01000000000000004040010000000000000080400100000000000000A0400100000000000000"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_single_NULL_value = r"""
+{"hex(quantileBFloat16State(x))":"00"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_return_type = r"""
+{"toTypeName(hex(quantileBFloat16State(number)))":"String"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_doc_example = r"""
+{"hex(quantileBFloat16State(x))":"0600000100000000000000803F0100000000000000004001000000000000004040010000000000000080400100000000000000A0400100000000000000"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_inf = r"""
+{"hex(quantileBFloat16State(x))":"0600000100000000000000807F010000000000000080400100000000000000A040010000000000000013400100000000000000D6400100000000000000"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State__inf = r"""
+{"hex(quantileBFloat16State(x))":"060000010000000000000080FF010000000000000080400100000000000000A040010000000000000013400100000000000000D6400100000000000000"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_nan = r"""
+{"hex(quantileBFloat16State(x))":"050000010000000000000080400100000000000000A040010000000000000013400100000000000000D6400100000000000000"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_inf___inf__nan = r"""
+{"hex(quantileBFloat16State(x))":"05807F010000000000000080FF0100000000000000A040010000000000000013400100000000000000D6400100000000000000"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_Nullable_UInt16_ = r"""
+{"hex(quantileBFloat16State(nullable_uint16))":"010300000100000000000000FF4601000000000000007F470100000000000000"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_Float32 = r"""
+{"hex(quantileBFloat16State(float32))":"04000001000000000000007F7F01000000000000001A4B01000000000000007FFF0100000000000000"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_Nullable_UInt32_ = r"""
+{"hex(quantileBFloat16State(nullable_uint32))":"010300000100000000000000804F0100000000000000C04C0100000000000000"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_Nullable_Int8_ = r"""
+{"hex(quantileBFloat16State(nullable_int8))":"010300C30100000000000000CA420100000000000000FE420100000000000000"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_Nullable_Float32_ = r"""
+{"hex(quantileBFloat16State(nullable_float32))":"01037F7F01000000000000001A4B01000000000000007FFF0100000000000000"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_Nullable_Int16_ = r"""
+{"hex(quantileBFloat16State(nullable_int16))":"010300C701000000000000001D460100000000000000FF460100000000000000"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_Nullable_Float64_ = r"""
+{"hex(quantileBFloat16State(nullable_float64))":"010280FF0100000000000000807F0200000000000000"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_UInt32 = r"""
+{"hex(quantileBFloat16State(uint32))":"0300000200000000000000804F0100000000000000C04C0100000000000000"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_Nullable_Int64_ = r"""
+{"hex(quantileBFloat16State(nullable_int64))":"010300DF0100000000000000005F010000000000000065580100000000000000"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_UInt8 = r"""
+{"hex(quantileBFloat16State(uint8))":"0300000200000000000000004301000000000000007F430100000000000000"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_Float64 = r"""
+{"hex(quantileBFloat16State(float64))":"030000010000000000000080FF0100000000000000807F0200000000000000"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_UInt16 = r"""
+{"hex(quantileBFloat16State(uint16))":"0300000200000000000000FF4601000000000000007F470100000000000000"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_Int32 = r"""
+{"hex(quantileBFloat16State(int32))":"040000010000000000000000CF0100000000000000004F01000000000000001A4B0100000000000000"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_Nullable_UInt64_ = r"""
+{"hex(quantileBFloat16State(nullable_uint64))":"010300000100000000000000805F010000000000000065580100000000000000"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_Int8 = r"""
+{"hex(quantileBFloat16State(int8))":"040000010000000000000000C30100000000000000CA420100000000000000FE420100000000000000"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_UInt64 = r"""
+{"hex(quantileBFloat16State(uint64))":"0300000200000000000000805F010000000000000065580100000000000000"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_Int16 = r"""
+{"hex(quantileBFloat16State(int16))":"040000010000000000000000C701000000000000001D460100000000000000FF460100000000000000"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_Nullable_Int32_ = r"""
+{"hex(quantileBFloat16State(nullable_int32))":"010300CF0100000000000000004F01000000000000001A4B0100000000000000"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_Nullable_UInt8_ = r"""
+{"hex(quantileBFloat16State(nullable_uint8))":"010300000100000000000000004301000000000000007F430100000000000000"}
+"""
+
+_aggregate_functions_state_quantileBFloat16State_Int64 = r"""
+{"hex(quantileBFloat16State(int64))":"040000010000000000000000DF0100000000000000005F010000000000000065580100000000000000"}
+"""
+

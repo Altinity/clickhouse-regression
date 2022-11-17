@@ -1,0 +1,133 @@
+_aggregate_functions_quantileBFloat16_constant = r"""
+{"quantileBFloat16(1)":1}
+"""
+
+_aggregate_functions_quantileBFloat16_zero_rows = r"""
+{"quantileBFloat16(number)":null}
+"""
+
+_aggregate_functions_quantileBFloat16_single_row = r"""
+{"quantileBFloat16(number)":0}
+"""
+
+_aggregate_functions_quantileBFloat16_with_group_by = r"""
+{"even":0,"quantileBFloat16(number)":4}
+{"even":1,"quantileBFloat16(number)":5}
+"""
+
+_aggregate_functions_quantileBFloat16_some_negative_values = r"""
+{"quantileBFloat16(minus(number, 5))":0}
+"""
+
+_aggregate_functions_quantileBFloat16_NULL_value_handling = r"""
+{"quantileBFloat16(x)":3}
+"""
+
+_aggregate_functions_quantileBFloat16_single_NULL_value = r"""
+{"quantileBFloat16(x)":null}
+"""
+
+_aggregate_functions_quantileBFloat16_return_type = r"""
+{"toTypeName(quantileBFloat16(number))":"Float64"}
+"""
+
+_aggregate_functions_quantileBFloat16_doc_example = r"""
+{"quantileBFloat16(x)":2}
+"""
+
+_aggregate_functions_quantileBFloat16_inf = r"""
+{"quantileBFloat16(x)":4}
+"""
+
+_aggregate_functions_quantileBFloat16__inf = r"""
+{"quantileBFloat16(x)":2.296875}
+"""
+
+_aggregate_functions_quantileBFloat16_nan = r"""
+{"quantileBFloat16(x)":4}
+"""
+
+_aggregate_functions_quantileBFloat16_inf___inf__nan = r"""
+{"quantileBFloat16(x)":5}
+"""
+
+_aggregate_functions_quantileBFloat16_Nullable_UInt16_ = r"""
+{"quantileBFloat16(nullable_uint16)":32640}
+"""
+
+_aggregate_functions_quantileBFloat16_Float32 = r"""
+{"quantileBFloat16(float32)":0}
+"""
+
+_aggregate_functions_quantileBFloat16_Nullable_UInt32_ = r"""
+{"quantileBFloat16(nullable_uint32)":100663296}
+"""
+
+_aggregate_functions_quantileBFloat16_Nullable_Int8_ = r"""
+{"quantileBFloat16(nullable_int8)":101}
+"""
+
+_aggregate_functions_quantileBFloat16_Nullable_Float32_ = r"""
+{"quantileBFloat16(nullable_float32)":10092544}
+"""
+
+_aggregate_functions_quantileBFloat16_Nullable_Int16_ = r"""
+{"quantileBFloat16(nullable_int16)":10048}
+"""
+
+_aggregate_functions_quantileBFloat16_Nullable_Float64_ = r"""
+{"quantileBFloat16(nullable_float64)":null}
+"""
+
+_aggregate_functions_quantileBFloat16_UInt32 = r"""
+{"quantileBFloat16(uint32)":0}
+"""
+
+_aggregate_functions_quantileBFloat16_Nullable_Int64_ = r"""
+{"quantileBFloat16(nullable_int64)":1007152651042816}
+"""
+
+_aggregate_functions_quantileBFloat16_UInt8 = r"""
+{"quantileBFloat16(uint8)":0}
+"""
+
+_aggregate_functions_quantileBFloat16_Float64 = r"""
+{"quantileBFloat16(float64)":0}
+"""
+
+_aggregate_functions_quantileBFloat16_UInt16 = r"""
+{"quantileBFloat16(uint16)":0}
+"""
+
+_aggregate_functions_quantileBFloat16_Int32 = r"""
+{"quantileBFloat16(int32)":0}
+"""
+
+_aggregate_functions_quantileBFloat16_Nullable_UInt64_ = r"""
+{"quantileBFloat16(nullable_uint64)":1007152651042816}
+"""
+
+_aggregate_functions_quantileBFloat16_Int8 = r"""
+{"quantileBFloat16(int8)":0}
+"""
+
+_aggregate_functions_quantileBFloat16_UInt64 = r"""
+{"quantileBFloat16(uint64)":0}
+"""
+
+_aggregate_functions_quantileBFloat16_Int16 = r"""
+{"quantileBFloat16(int16)":0}
+"""
+
+_aggregate_functions_quantileBFloat16_Nullable_Int32_ = r"""
+{"quantileBFloat16(nullable_int32)":10092544}
+"""
+
+_aggregate_functions_quantileBFloat16_Nullable_UInt8_ = r"""
+{"quantileBFloat16(nullable_uint8)":128}
+"""
+
+_aggregate_functions_quantileBFloat16_Int64 = r"""
+{"quantileBFloat16(int64)":0}
+"""
+
