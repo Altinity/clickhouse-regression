@@ -29,8 +29,11 @@ def constant_input(self, node=None):
 
 
 @TestModule
-@Requirements(RQ_ClickHouse_ParseKeyValue("1.0"))
-@Name("constant")
+@Requirements(RQ_SRS_033_ClickHouse_ParseKeyValue_Parsing_Noise("1.0"),
+              RQ_SRS_033_ClickHouse_ParseKeyValue_Parsing_RecognizedKeyValuePairs("1.0"),
+              RQ_SRS_033_ClickHouse_ParseKeyValue_Key_Format("1.0"),
+              RQ_SRS_033_ClickHouse_ParseKeyValue_Value_Format("1.0"))
+@Name("column")
 def feature(self, node="clickhouse1"):
     """Check that clickhouse parseKeyValue function support column input."""
 

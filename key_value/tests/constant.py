@@ -14,7 +14,10 @@ def constant_input(self, input_string, output_string, node=None):
 
 
 @TestModule
-@Requirements(RQ_ClickHouse_ParseKeyValue("1.0"))
+@Requirements(RQ_SRS_033_ClickHouse_ParseKeyValue_Parsing_Noise("1.0"),
+              RQ_SRS_033_ClickHouse_ParseKeyValue_Parsing_RecognizedKeyValuePairs("1.0"),
+              RQ_SRS_033_ClickHouse_ParseKeyValue_Key_Format("1.0"),
+              RQ_SRS_033_ClickHouse_ParseKeyValue_Value_Format("1.0"))
 @Name("constant")
 def feature(self, node="clickhouse1"):
     """Check that clickhouse parseKeyValue function support constant input."""
