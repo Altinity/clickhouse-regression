@@ -13,7 +13,6 @@ def feature(
     self,
     func="avg({params})",
     table=None,
-    exclude_types=None,
     decimal=True,
     date=False,
     datetime=False,
@@ -23,9 +22,6 @@ def feature(
 
     if table is None:
         table = self.context.table
-
-    if exclude_types is None:
-        exclude_types = []
 
     with Check("constant"):
         execute_query(f"SELECT {func.format(params='1')}")
@@ -78,9 +74,6 @@ def feature(
         column_name, column_type = column.split(" ", 1)
 
         if not is_numeric(column_type, decimal=decimal, date=date, datetime=datetime):
-            continue
-
-        if column_type in exclude_types:
             continue
 
         with Check(f"{column_type}"):

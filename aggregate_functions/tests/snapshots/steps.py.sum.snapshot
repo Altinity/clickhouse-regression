@@ -71,3 +71,47 @@ _aggregate_functions_sum_inf___inf__nan = r"""
 {"sum(x)":null}
 """
 
+_aggregate_functions_sum_Nullable_UInt64_ = r"""
+{"sum(nullable_uint64)":"1010101010101009"}
+"""
+
+_aggregate_functions_sum_Nullable_Float32_ = r"""
+{"sum(nullable_float32)":10101010}
+"""
+
+_aggregate_functions_sum_Nullable_Int32_ = r"""
+{"sum(nullable_int32)":"10101009"}
+"""
+
+_aggregate_functions_sum_Nullable_UInt32_ = r"""
+{"sum(nullable_uint32)":"4395977396"}
+"""
+
+_aggregate_functions_sum_Nullable_UInt8_ = r"""
+{"sum(nullable_uint8)":"383"}
+"""
+
+_aggregate_functions_sum_Nullable_Int16_ = r"""
+{"sum(nullable_int16)":"10100"}
+"""
+
+_aggregate_functions_sum_Nullable_Decimal128_38__ = r"""
+{"sum(nullable_decimal)":0.1010101}
+"""
+
+_aggregate_functions_sum_Nullable_UInt16_ = r"""
+{"sum(nullable_uint16)":"98302"}
+"""
+
+_aggregate_functions_sum_Nullable_Float64_ = r"""
+{"sum(nullable_float64)":5.6e266}
+"""
+
+_aggregate_functions_sum_Nullable_Int8_ = r"""
+{"sum(nullable_int8)":"100"}
+"""
+
+_aggregate_functions_sum_Nullable_Int64_ = r"""
+{"sum(nullable_int64)":"1010101010101009"}
+"""
+

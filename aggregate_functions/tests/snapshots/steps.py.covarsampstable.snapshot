@@ -387,3 +387,39 @@ _aggregate_functions_covarSampStable_datatypes_permutations_Nullable_UInt64__Int
 {"covarSampStable(nullable_uint64, int64)":8.506748655786564e37}
 """
 
+_aggregate_functions_covarSampStable_datatypes_permutations_Nullable_UInt64__Nullable_Float64_ = r"""
+{"covarSampStable(nullable_uint64, nullable_float64)":null}
+"""
+
+_aggregate_functions_covarSampStable_datatypes_permutations_Nullable_UInt64__Nullable_Float32_ = r"""
+{"covarSampStable(nullable_uint64, nullable_float32)":3.1385506806211308e57}
+"""
+
+_aggregate_functions_covarSampStable_datatypes_permutations_Nullable_UInt64__Nullable_Int64_ = r"""
+{"covarSampStable(nullable_uint64, nullable_int64)":8.506748655786564e37}
+"""
+
+_aggregate_functions_covarSampStable_datatypes_permutations_Nullable_UInt64__UInt64 = r"""
+{"covarSampStable(nullable_uint64, uint64)":1.1342124495547353e38}
+"""
+
+_aggregate_functions_covarSampStable_datatypes_permutations_Nullable_UInt64__Nullable_UInt64_ = r"""
+{"covarSampStable(nullable_uint64, nullable_uint64)":1.1342124495547353e38}
+"""
+
+_aggregate_functions_covarSampStable_datatypes_permutations_UInt64_Nullable_Float64_ = r"""
+{"covarSampStable(uint64, nullable_float64)":null}
+"""
+
+_aggregate_functions_covarSampStable_datatypes_permutations_UInt64_Nullable_Float32_ = r"""
+{"covarSampStable(uint64, nullable_float32)":3.1385506806211308e57}
+"""
+
+_aggregate_functions_covarSampStable_datatypes_permutations_UInt64_Nullable_Int64_ = r"""
+{"covarSampStable(uint64, nullable_int64)":8.506748655786564e37}
+"""
+
+_aggregate_functions_covarSampStable_datatypes_permutations_UInt64_Nullable_UInt64_ = r"""
+{"covarSampStable(uint64, nullable_uint64)":1.1342124495547353e38}
+"""
+
