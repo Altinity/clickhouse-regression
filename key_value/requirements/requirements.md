@@ -47,7 +47,7 @@ flowchart LR
             E21["String in format {'key': 'value', ...}"]
         end
     end  
-    subgraph Z["separator"]
+    subgraph Z[Separator]
         direction TB
         subgraph Z1[Key]
             direction LR
