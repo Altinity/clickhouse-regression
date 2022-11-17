@@ -95,3 +95,47 @@ _aggregate_functions_state_groupArraySampleState_Float32 = r"""
 {"hex(groupArraySampleState(3, 2)(float32))":"0300000000FFFF7F7F12211A4B04000000000000002836333634313336323233383436373933303035203020363435363634353937383330383237333939"}
 """
 
+_aggregate_functions_state_groupArraySampleState_Nullable_UInt64_ = r"""
+{"hex(groupArraySampleState(3, 2)(nullable_uint64))":"030000000000000000FFFFFFFFFFFFFFFF12F3E477AE9603000300000000000000173633363431333632323338343637393330303520302033"}
+"""
+
+_aggregate_functions_state_groupArraySampleState_Nullable_Float32_ = r"""
+{"hex(groupArraySampleState(3, 2)(nullable_float32))":"03FFFF7FFFFFFF7F7F12211A4B0300000000000000173633363431333632323338343637393330303520302033"}
+"""
+
+_aggregate_functions_state_groupArraySampleState_Nullable_Int32_ = r"""
+{"hex(groupArraySampleState(3, 2)(nullable_int32))":"0300000080FFFFFF7F12219A000300000000000000173633363431333632323338343637393330303520302033"}
+"""
+
+_aggregate_functions_state_groupArraySampleState_Nullable_UInt32_ = r"""
+{"hex(groupArraySampleState(3, 2)(nullable_uint32))":"0300000000FFFFFFFFB54A05060300000000000000173633363431333632323338343637393330303520302033"}
+"""
+
+_aggregate_functions_state_groupArraySampleState_Nullable_UInt8_ = r"""
+{"hex(groupArraySampleState(3, 2)(nullable_uint8))":"0300FF800300000000000000173633363431333632323338343637393330303520302033"}
+"""
+
+_aggregate_functions_state_groupArraySampleState_Nullable_Int16_ = r"""
+{"hex(groupArraySampleState(3, 2)(nullable_int16))":"030080FF7F75270300000000000000173633363431333632323338343637393330303520302033"}
+"""
+
+_aggregate_functions_state_groupArraySampleState_Nullable_Decimal128_38__ = r"""
+{"hex(groupArraySampleState(3, 2)(nullable_decimal))":"03100A000000C0DD75F6853B79A557B3C4B410F6FFFFFF3F228A097AC4865AA84C3B4B1000000080B86CCE251142A4463E6299070300000000000000173633363431333632323338343637393330303520302033"}
+"""
+
+_aggregate_functions_state_groupArraySampleState_Nullable_UInt16_ = r"""
+{"hex(groupArraySampleState(3, 2)(nullable_uint16))":"030000FFFFFF7F0300000000000000173633363431333632323338343637393330303520302033"}
+"""
+
+_aggregate_functions_state_groupArraySampleState_Nullable_Float64_ = r"""
+{"hex(groupArraySampleState(3, 2)(nullable_float64))":"0351776F82FDFFEFFF51776F82FDFFEF7F72ED3A2E065E51770300000000000000173633363431333632323338343637393330303520302033"}
+"""
+
+_aggregate_functions_state_groupArraySampleState_Nullable_Int8_ = r"""
+{"hex(groupArraySampleState(3, 2)(nullable_int8))":"03807F650300000000000000173633363431333632323338343637393330303520302033"}
+"""
+
+_aggregate_functions_state_groupArraySampleState_Nullable_Int64_ = r"""
+{"hex(groupArraySampleState(3, 2)(nullable_int64))":"030000000000000080FFFFFFFFFFFFFF7F12F3E477AE9603000300000000000000173633363431333632323338343637393330303520302033"}
+"""
+

@@ -25,7 +25,6 @@ def feature(
     self,
     func="covarPop({params})",
     table=None,
-    exclude_types=None,
     decimal=False,
     date=False,
     datetime=False,
@@ -35,9 +34,6 @@ def feature(
 
     if table is None:
         table = self.context.table
-
-    if exclude_types is None:
-        exclude_types = []
 
     with Check("constant"):
         execute_query(f"SELECT {func.format(params='1,1')}")

@@ -95,3 +95,47 @@ _aggregate_functions_groupArrayMovingSum_Int64 = r"""
 {"groupArrayMovingSum(int64)":["-9223372036854775808","-1","1010101010101009","1010101010101009"]}
 """
 
+_aggregate_functions_groupArrayMovingSum_Nullable_UInt64_ = r"""
+{"groupArrayMovingSum(nullable_uint64)":["0","18446744073709551615","1010101010101009"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_Nullable_Int64_ = r"""
+{"groupArrayMovingSum(nullable_int64)":["-9223372036854775808","-1","1010101010101009"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_Nullable_Float64_ = r"""
+{"groupArrayMovingSum(nullable_float64)":[-1.7976909999999999e308,0,5.6e266]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_Nullable_Decimal128_38__ = r"""
+{"groupArrayMovingSum(nullable_decimal)":[-0.9999999999999999999999999999999999999,0,0.1010101]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_Nullable_Int8_ = r"""
+{"groupArrayMovingSum(nullable_int8)":["-128","-1","100"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_Nullable_Int32_ = r"""
+{"groupArrayMovingSum(nullable_int32)":["-2147483648","-1","10101009"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_Nullable_Float32_ = r"""
+{"groupArrayMovingSum(nullable_float32)":[-3.4028234663852886e38,0,10101010]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_Nullable_Int16_ = r"""
+{"groupArrayMovingSum(nullable_int16)":["-32768","-1","10100"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_Nullable_UInt32_ = r"""
+{"groupArrayMovingSum(nullable_uint32)":["0","4294967295","4395977396"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_Nullable_UInt16_ = r"""
+{"groupArrayMovingSum(nullable_uint16)":["0","65535","98302"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_Nullable_UInt8_ = r"""
+{"groupArrayMovingSum(nullable_uint8)":["0","255","383"]}
+"""
+
