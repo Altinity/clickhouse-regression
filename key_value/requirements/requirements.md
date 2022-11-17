@@ -36,7 +36,7 @@
 ## Introduction
 
 This software requirements specification covers requirements related to [ClickHouse]
-[KeyValue] functionality that implements the parseKeyValue function.
+[parseKeyValue] function.
 
 ## Test Feature Diagram
 
@@ -228,5 +228,5 @@ version: 1.0
 [ClickHouse]'s `parseKeyValue` function SHALL specify `enclosing_character` as `"` by default.
 
 
-[KeyValue]: https://github.com/arthurpassos/KeyValuePairFileProcessor
+[parseKeyValue]: https://github.com/arthurpassos/KeyValuePairFileProcessor
 [ClickHouse]: https://clickhouse.tech
