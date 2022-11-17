@@ -20,7 +20,13 @@ def datatype(self, func, table, col1_name, col2_name):
 @Requirements(
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_DeltaSumTimestamp("1.0")
 )
-def feature(self, func="deltaSumTimestamp({params})", table=None, decimal=True):
+def feature(
+    self,
+    func="deltaSumTimestamp({params})",
+    table=None,
+    decimal=True,
+    both_arguments_with_the_same_datatype=False,
+):
     """Check deltaSumTimestamp aggregate function."""
     self.context.snapshot_id = name.basename(current().name)
 
@@ -40,7 +46,7 @@ def feature(self, func="deltaSumTimestamp({params})", table=None, decimal=True):
 
     with Check("some negative values"):
         execute_query(
-            f"SELECT {func.format(params='number-5,number+10')} FROM numbers(1, 10)"
+            f"SELECT {func.format(params='toInt64(number-5),toInt64(number+10)')} FROM numbers(1, 10)"
         )
 
     with Check("NULL value handling"):
@@ -85,6 +91,10 @@ def feature(self, func="deltaSumTimestamp({params})", table=None, decimal=True):
                 for col1, col2 in permutations:
                     col1_name, col1_type = col1.split(" ", 1)
                     col2_name, col2_type = col2.split(" ", 1)
+
+                    if both_arguments_with_the_same_datatype:
+                        if col1_type != col2_type:
+                            continue
 
                     Check(
                         f"{col1_type},{col2_type}",
