@@ -20,6 +20,18 @@
     * 3.4.1 [RQ.SRS-033.ClickHouse.ParseKeyValue.Key.Format](#rqsrs-033clickhouseparsekeyvaluekeyformat)
   * 3.5 [Value](#value)
     * 3.5.1 [RQ.SRS-033.ClickHouse.ParseKeyValue.Value.Format](#rqsrs-033clickhouseparsekeyvaluevalueformat)
+  * 3.6 [Item Delimiter](#item-delimiter)
+    * 3.6.1 [RQ.SRS-033.ClickHouse.ParseKeyValue.ItemDelimiter](#rqsrs-033clickhouseparsekeyvalueitemdelimiter)
+    * 3.6.2 [RQ.SRS-033.ClickHouse.ParseKeyValue.ItemDelimiter.default](#rqsrs-033clickhouseparsekeyvalueitemdelimiterdefault)
+  * 3.7 [Key Value Delimiter](#key-value-delimiter)
+    * 3.7.1 [RQ.SRS-033.ClickHouse.ParseKeyValue.KeyValueDelimiter](#rqsrs-033clickhouseparsekeyvaluekeyvaluedelimiter)
+    * 3.7.2 [RQ.SRS-033.ClickHouse.ParseKeyValue.KeyValueDelimiter.default](#rqsrs-033clickhouseparsekeyvaluekeyvaluedelimiterdefault)
+  * 3.8 [Escape Character](#escape-character)
+    * 3.8.1 [RQ.SRS-033.ClickHouse.ParseKeyValue.EscapeCharacter](#rqsrs-033clickhouseparsekeyvalueescapecharacter)
+    * 3.8.2 [RQ.SRS-033.ClickHouse.ParseKeyValue.EscapeCharacter.default](#rqsrs-033clickhouseparsekeyvalueescapecharacterdefault)
+  * 3.9 [Enclosing Character](#enclosing-character)
+    * 3.9.1 [RQ.SRS-033.ClickHouse.ParseKeyValue.EnclosingCharacter](#rqsrs-033clickhouseparsekeyvalueenclosingcharacter)
+    * 3.9.2 [RQ.SRS-033.ClickHouse.ParseKeyValue.EnclosingCharacter.default](#rqsrs-033clickhouseparsekeyvalueenclosingcharacterdefault)
 
 ## Introduction
 
@@ -41,6 +53,7 @@ flowchart LR
         subgraph E1[input format]
             direction LR
             E11[Any string]
+            E12["parseKeyValue(string[, item_delimiter[, key_value_delimiter[, escape_character[, enclosing_character]]]])"]
         end
         subgraph E2[output format]
             direction LR 
@@ -64,6 +77,13 @@ flowchart LR
             Z24[it accepts anything if it is between the enclosing character]
         end
     end
+    subgraph Q[Сontrol сharacters]
+        direction TB
+        Q1[item_delimiter, default ',']
+        Q2[key_value_delimiter, default ':']
+        Q3[escape_character, default '\']
+        Q4[enclosing_character, default '']
+    end
   end
 ```
 
@@ -78,7 +98,7 @@ version: 1.0
 
 
 ```sql
-parseKeyValue(<column_name>|<constant>|<function_return_value>|<alias>)
+parseKeyValue(<column_name>|<constant>|<function_return_value>|<alias>[, item_delimiter[, key_value_delimiter[, escape_character[, enclosing_character]]]])
 ```
 
 For example, 
@@ -140,7 +160,7 @@ if it satisfies the following conditions:
 * Key starts with the symbol.
 * Only symbols, numbers, and underscore are used in the key.
 * Key can't be an empty string.
-* Key can be any string if it is enclosed in escaping symbols.
+* If not supported symbols are escaped or a value is enclosed, the key can be any string. 
 
 ### Value
 
@@ -153,7 +173,59 @@ if it satisfies the following conditions:
 * Key starts with any non-space symbol.
 * Only symbols, numbers, and underscore are used in the value.
 * Value can be an empty string.
-* Value can be any string if it is enclosed in escaping symbols.
+* If not supported symbols are escaped or a value is enclosed, value can be any string. 
+
+### Item Delimiter
+
+#### RQ.SRS-033.ClickHouse.ParseKeyValue.ItemDelimiter
+version: 1.0
+
+[ClickHouse]'s `parseKeyValue` function SHALL support specifying `item_delimeter`
+which SHALL divide key value pairs in input string.
+
+#### RQ.SRS-033.ClickHouse.ParseKeyValue.ItemDelimiter.default
+version: 1.0
+
+[ClickHouse]'s `parseKeyValue` function SHALL specify `item_delimeter` as `,` by default.
+
+### Key Value Delimiter
+
+#### RQ.SRS-033.ClickHouse.ParseKeyValue.KeyValueDelimiter
+version: 1.0
+
+[ClickHouse]'s `parseKeyValue` function SHALL support specifying `key_value_delimiter`
+which SHALL divide key value pairs among themselves.
+
+#### RQ.SRS-033.ClickHouse.ParseKeyValue.KeyValueDelimiter.default
+version: 1.0
+
+[ClickHouse]'s `parseKeyValue` function SHALL specify `key_value_delimiter` as `:` by default.
+
+### Escape Character
+
+#### RQ.SRS-033.ClickHouse.ParseKeyValue.EscapeCharacter
+version: 1.0
+
+[ClickHouse]'s `parseKeyValue` function SHALL support specifying `escape_character`
+which SHALL escape symbols which allows you to use unsupported characters in a key or value.
+
+#### RQ.SRS-033.ClickHouse.ParseKeyValue.EscapeCharacter.default
+version: 1.0
+
+[ClickHouse]'s `parseKeyValue` function SHALL specify `escape_character` as `\` by default.
+
+### Enclosing Character
+
+#### RQ.SRS-033.ClickHouse.ParseKeyValue.EnclosingCharacter
+version: 1.0
+
+[ClickHouse]'s `parseKeyValue` function SHALL support specifying `enclosing_character`
+which SHALL enclose symbols which allows you to use unsupported characters in a key or value.
+
+#### RQ.SRS-033.ClickHouse.ParseKeyValue.EnclosingCharacter.default
+version: 1.0
+
+[ClickHouse]'s `parseKeyValue` function SHALL specify `enclosing_character` as `"` by default.
 
 
 [KeyValue]: https://github.com/arthurpassos/KeyValuePairFileProcessor
