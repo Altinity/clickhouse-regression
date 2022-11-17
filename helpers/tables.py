@@ -58,6 +58,22 @@ def is_numeric(datatype, decimal=True, date=False, datetime=False):
     return False
 
 
+def is_string(datatype):
+    """Return True if data type is String."""
+    if (
+        datatype.startswith("String")
+        or datatype.startswith("Nullable(String")
+        or datatype.startswith("LowCardinality(String")
+    ):
+        return True
+
+
+def is_map(datatype):
+    """Return True if data type is Map."""
+    if datatype.startswith("Map") or datatype.startswith("Nullable(Map"):
+        return True
+
+
 def is_unsigned_integer(datatype, decimal=True):
     """Return True if data type is unsigned integer."""
     if datatype.startswith("UInt") or datatype.startswith("Nullable(UInt"):
