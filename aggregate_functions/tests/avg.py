@@ -9,7 +9,15 @@ from aggregate_functions.requirements import (
 @TestFeature
 @Name("avg")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Avg("1.0"))
-def feature(self, func="avg({params})", table=None, exclude_types=None, decimal=True):
+def feature(
+    self,
+    func="avg({params})",
+    table=None,
+    exclude_types=None,
+    decimal=True,
+    date=False,
+    datetime=False,
+):
     """Check avg aggregate function."""
     self.context.snapshot_id = name.basename(current().name)
 
@@ -69,7 +77,7 @@ def feature(self, func="avg({params})", table=None, exclude_types=None, decimal=
     for column in table.columns:
         column_name, column_type = column.split(" ", 1)
 
-        if not is_numeric(column_type, decimal=decimal):
+        if not is_numeric(column_type, decimal=decimal, date=date, datetime=datetime):
             continue
 
         if column_type in exclude_types:
