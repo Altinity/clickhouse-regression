@@ -24,8 +24,8 @@ ffails = {}
 @XFlags(xflags)
 @FFails(ffails)
 @Name("key value")
-@Specifications(SRS_ClickHouse_Key_Value_Function)
-@Requirements()
+@Specifications(SRS033_ClickHouse_Key_Value_Function)
+@Requirements(RQ_SRS_033_ClickHouse_ParseKeyValue_Function("1.0"))
 def regression(
     self,
     local,
