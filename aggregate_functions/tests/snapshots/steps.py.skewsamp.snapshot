@@ -1,0 +1,133 @@
+_aggregate_functions_skewSamp_constant = r"""
+{"skewSamp(1)":null}
+"""
+
+_aggregate_functions_skewSamp_zero_rows = r"""
+{"skewSamp(number)":null}
+"""
+
+_aggregate_functions_skewSamp_single_row = r"""
+{"skewSamp(number)":null}
+"""
+
+_aggregate_functions_skewSamp_with_group_by = r"""
+{"even":0,"skewSamp(number)":0}
+{"even":1,"skewSamp(number)":0}
+"""
+
+_aggregate_functions_skewSamp_some_negative_values = r"""
+{"skewSamp(minus(number, 5))":0}
+"""
+
+_aggregate_functions_skewSamp_NULL_value_handling = r"""
+{"skewSamp(x)":-0.11304668947622726}
+"""
+
+_aggregate_functions_skewSamp_single_NULL_value = r"""
+{"skewSamp(x)":null}
+"""
+
+_aggregate_functions_skewSamp_return_type = r"""
+{"toTypeName(skewSamp(number))":"Float64"}
+"""
+
+_aggregate_functions_skewSamp_doc_example = r"""
+{"skewSamp(x)":0}
+"""
+
+_aggregate_functions_skewSamp_inf = r"""
+{"skewSamp(x)":null}
+"""
+
+_aggregate_functions_skewSamp__inf = r"""
+{"skewSamp(x)":null}
+"""
+
+_aggregate_functions_skewSamp_nan = r"""
+{"skewSamp(x)":null}
+"""
+
+_aggregate_functions_skewSamp_inf___inf__nan = r"""
+{"skewSamp(x)":null}
+"""
+
+_aggregate_functions_skewSamp_Nullable_Int32_ = r"""
+{"skewSamp(nullable_int32)":-0.003135723972624789}
+"""
+
+_aggregate_functions_skewSamp_Nullable_Int8_ = r"""
+{"skewSamp(nullable_int8)":-0.3700874456223484}
+"""
+
+_aggregate_functions_skewSamp_Nullable_Float64_ = r"""
+{"skewSamp(nullable_float64)":null}
+"""
+
+_aggregate_functions_skewSamp_UInt64 = r"""
+{"skewSamp(uint64)":0.7499999940030455}
+"""
+
+_aggregate_functions_skewSamp_Int64 = r"""
+{"skewSamp(int64)":-0.00007544721803201052}
+"""
+
+_aggregate_functions_skewSamp_Int32 = r"""
+{"skewSamp(int32)":-0.0032403754115259142}
+"""
+
+_aggregate_functions_skewSamp_UInt32 = r"""
+{"skewSamp(uint32)":0.7488829202161214}
+"""
+
+_aggregate_functions_skewSamp_Float64 = r"""
+{"skewSamp(float64)":null}
+"""
+
+_aggregate_functions_skewSamp_Nullable_UInt64_ = r"""
+{"skewSamp(nullable_uint64)":0.3849001755644958}
+"""
+
+_aggregate_functions_skewSamp_Nullable_Int16_ = r"""
+{"skewSamp(nullable_int16)":-0.19405482976698638}
+"""
+
+_aggregate_functions_skewSamp_Nullable_UInt8_ = r"""
+{"skewSamp(nullable_uint8)":-0.0026143545149478}
+"""
+
+_aggregate_functions_skewSamp_Int8 = r"""
+{"skewSamp(int8)":-0.3377988281740105}
+"""
+
+_aggregate_functions_skewSamp_UInt8 = r"""
+{"skewSamp(uint8)":0.31802607435279595}
+"""
+
+_aggregate_functions_skewSamp_Nullable_Float32_ = r"""
+{"skewSamp(nullable_float32)":null}
+"""
+
+_aggregate_functions_skewSamp_Float32 = r"""
+{"skewSamp(float32)":null}
+"""
+
+_aggregate_functions_skewSamp_Int16 = r"""
+{"skewSamp(int16)":-0.19673380470616025}
+"""
+
+_aggregate_functions_skewSamp_Nullable_Int64_ = r"""
+{"skewSamp(nullable_int64)":-0.00007301024677029751}
+"""
+
+_aggregate_functions_skewSamp_Nullable_UInt16_ = r"""
+{"skewSamp(nullable_uint16)":0.00001017268126327999}
+"""
+
+_aggregate_functions_skewSamp_UInt16 = r"""
+{"skewSamp(uint16)":0.32047062289395933}
+"""
+
+_aggregate_functions_skewSamp_Nullable_UInt32_ = r"""
+{"skewSamp(nullable_uint32)":0.38416491279872383}
+"""
+
