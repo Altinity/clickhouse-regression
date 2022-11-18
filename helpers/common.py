@@ -30,6 +30,8 @@ def check_clickhouse_version(version):
         for index, i in enumerate(clickhouse_version_list):
             if not i.isnumeric():
                 break
+            elif index == len(clickhouse_version_list) - 1:
+                index += 1
 
         if index == 0:
             raise ValueError(f"failed to parse version {clickhouse_version_list}")
