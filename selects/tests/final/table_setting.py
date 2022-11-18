@@ -15,11 +15,10 @@ def force_select_final_not_support(self):
     table_name = f"test_table_{uid}"
 
     with Given(
-            "I create table with `force_select_final=1` and make check for Exception"
+            "I create table with `force_select_final=1` and check that Exception has been ignored"
     ):
         node.query(f"create table if not exists {table_name} (x String)"
-                   f" engine=MergeTree() ORDER BY x SETTINGS force_select_final=1;",
-                   exitcode=181, message="DB::Exception: Storage MergeTree doesn't support FINAL.")
+                   f" engine=MergeTree() ORDER BY x SETTINGS force_select_final=1;")
 
 
 @TestOutline
@@ -92,6 +91,7 @@ def join(self, force_select_final_table1=False, force_select_final_table2=False,
         with Then(f"I make insert into two tables table"):
             node.query(f"insert into {table1_name} values ('abc');")
             node.query(f"insert into {table1_name} values ('abc');")
+            node.query(f"insert into {table1_name} values ('abc');")
 
             node.query(f"insert into {table2_name} values ('abc');")
             node.query(f"insert into {table2_name} values ('abc');")
@@ -126,12 +126,12 @@ def join_first_table_with_final(self):
 @TestScenario
 def join_second_table_with_final(self):
     """Check auto 'FINAL' modifier with 'JOIN' clause enabled only for the second table."""
-    join(force_select_final_table1=False, force_select_final_table2=True, select_count=2)
+    join(force_select_final_table1=False, force_select_final_table2=True, select_count=3)
 
 
 @TestFeature
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier("1.0"))
-@Name("final")
+@Name("table setting")
 def feature(self):
     """Check FINAL modifier."""
     for scenario in loads(current_module(), Scenario):
