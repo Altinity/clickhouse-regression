@@ -149,11 +149,29 @@ Engine=ReplacingMergeTree
 SETTTING force_select_final=1
 ```
 
+#### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSetting.ForceSelectFinalGlobal
+version: 1.0 priority: 1.0
+
+[ClickHouse] SHALL support `force_select_final` table engine setting to enable automatic [FINAL modifier]
+on all MergeTree tables [SELECT] queries when the setting is value is set to `1` globally. [ClickHouse] should silently
+ignore it if option unavailable to current type of engine.
+
+Config example,
+
+```sql
+<clickhouse>
+    <merge_tree>
+        <force_select_final>1</force_select_final>
+    </merge_tree>
+</clickhouse>
+
+```
+
 #### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSettingNotSupported
 version: 1.0 priority: 1.0
 
-[ClickHouse] SHALL not support `force_select_final` table engine setting for any MergeTree table engine that
-doesn't support [FINAL modifier] clause.
+[ClickHouse] SHALL not support `force_select_final` table engine setting and silently ignore it for any MergeTree table
+engine that doesn't support [FINAL modifier] clause.
 
 ### Select Query Setting
 
