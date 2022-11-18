@@ -95,3 +95,47 @@ _aggregate_functions_state_groupArrayMovingSumState_Int64 = r"""
 {"hex(groupArrayMovingSumState(int64))":"040000000000000080FFFFFFFFFFFFFFFF11F3E477AE96030011F3E477AE960300"}
 """
 
+_aggregate_functions_state_groupArrayMovingSumState_Nullable_UInt64_ = r"""
+{"hex(groupArrayMovingSumState(nullable_uint64))":"030000000000000000FFFFFFFFFFFFFFFF11F3E477AE960300"}
+"""
+
+_aggregate_functions_state_groupArrayMovingSumState_Nullable_Float32_ = r"""
+{"hex(groupArrayMovingSumState(nullable_float32))":"03000000E0FFFFEFC700000000000000000000004022446341"}
+"""
+
+_aggregate_functions_state_groupArrayMovingSumState_Nullable_Int32_ = r"""
+{"hex(groupArrayMovingSumState(nullable_int32))":"0300000080FFFFFFFFFFFFFFFFFFFFFFFF11219A0000000000"}
+"""
+
+_aggregate_functions_state_groupArrayMovingSumState_Nullable_UInt32_ = r"""
+{"hex(groupArrayMovingSumState(nullable_uint32))":"030000000000000000FFFFFFFF00000000B44A050601000000"}
+"""
+
+_aggregate_functions_state_groupArrayMovingSumState_Nullable_UInt8_ = r"""
+{"hex(groupArrayMovingSumState(nullable_uint8))":"030000000000000000FF000000000000007F01000000000000"}
+"""
+
+_aggregate_functions_state_groupArrayMovingSumState_Nullable_Int16_ = r"""
+{"hex(groupArrayMovingSumState(nullable_int16))":"030080FFFFFFFFFFFFFFFFFFFFFFFFFFFF7427000000000000"}
+"""
+
+_aggregate_functions_state_groupArrayMovingSumState_Nullable_Decimal128_38__ = r"""
+{"hex(groupArrayMovingSumState(nullable_decimal))":"030A000000C0DD75F6853B79A557B3C4B40000000000000000000000000000000000000080B86CCE251142A4463E629907"}
+"""
+
+_aggregate_functions_state_groupArrayMovingSumState_Nullable_UInt16_ = r"""
+{"hex(groupArrayMovingSumState(nullable_uint16))":"030000000000000000FFFF000000000000FE7F010000000000"}
+"""
+
+_aggregate_functions_state_groupArrayMovingSumState_Nullable_Float64_ = r"""
+{"hex(groupArrayMovingSumState(nullable_float64))":"0351776F82FDFFEFFF000000000000000072ED3A2E065E5177"}
+"""
+
+_aggregate_functions_state_groupArrayMovingSumState_Nullable_Int8_ = r"""
+{"hex(groupArrayMovingSumState(nullable_int8))":"0380FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF6400000000000000"}
+"""
+
+_aggregate_functions_state_groupArrayMovingSumState_Nullable_Int64_ = r"""
+{"hex(groupArrayMovingSumState(nullable_int64))":"030000000000000080FFFFFFFFFFFFFFFF11F3E477AE960300"}
+"""
+

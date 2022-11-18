@@ -22,16 +22,18 @@ def datatype(self, func, table, col1_name, col2_name):
 @Name("covarPop")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_CovarPop("1.0"))
 def feature(
-    self, func="covarPop({params})", table=None, exclude_types=None, decimal=False
+    self,
+    func="covarPop({params})",
+    table=None,
+    decimal=False,
+    date=False,
+    datetime=False,
 ):
     """Check covarPop aggregate function."""
     self.context.snapshot_id = name.basename(current().name)
 
     if table is None:
         table = self.context.table
-
-    if exclude_types is None:
-        exclude_types = []
 
     with Check("constant"):
         execute_query(f"SELECT {func.format(params='1,1')}")
@@ -85,7 +87,9 @@ def feature(
             for column in table.columns:
                 col_name, col_type = column.split(" ", 1)
 
-                if not is_numeric(col_type, decimal=decimal):
+                if not is_numeric(
+                    col_type, decimal=decimal, date=date, datetime=datetime
+                ):
                     continue
 
                 Check(

@@ -1,0 +1,53 @@
+_aggregate_functions_maxMap_constant = r"""
+{"maxMap(map(1, 1))":{"1":1}}
+"""
+
+_aggregate_functions_maxMap_zero_rows = r"""
+{"maxMap(map(number, number))":{}}
+"""
+
+_aggregate_functions_maxMap_with_group_by = r"""
+{"even":0,"maxMap(map(modulo(number, 2), number))":{"0":"8"}}
+{"even":1,"maxMap(map(modulo(number, 2), number))":{"1":"9"}}
+"""
+
+_aggregate_functions_maxMap_some_negative_values = r"""
+{"maxMap(map(minus(number, 5), minus(number, 10)))":{"-4":"-9","-3":"-8","-2":"-7","-1":"-6","0":"-5","1":"-4","2":"-3","3":"-2","4":"-1","5":"0"}}
+"""
+
+_aggregate_functions_maxMap_one_to_many = r"""
+{"maxMap(map(modulo(number, 2), number))":{"0":"10","1":"9"}}
+"""
+
+_aggregate_functions_maxMap_NULL_value_handling = r"""
+{"maxMap(map(x, y))":{"0":1,"1":null,"2":1,"3":4}}
+"""
+
+_aggregate_functions_maxMap_single_NULL_value = r"""
+{"maxMap(map(x, y))":{"1":null}}
+"""
+
+_aggregate_functions_maxMap_inf = r"""
+{"maxMap(map('a', x))":{"a":null}}
+"""
+
+_aggregate_functions_maxMap__inf = r"""
+{"maxMap(map('a', x))":{"a":6.7}}
+"""
+
+_aggregate_functions_maxMap_nan = r"""
+{"maxMap(map('a', x))":{"a":6.7}}
+"""
+
+_aggregate_functions_maxMap_inf___inf__nan = r"""
+{"maxMap(map('a', x))":{"a":null}}
+"""
+
+_aggregate_functions_maxMap_return_type = r"""
+{"toTypeName(maxMap(map(number, plus(number, 1))))":"Map(UInt64, UInt64)"}
+"""
+
+_aggregate_functions_maxMap_NULL_in_strings = r"""
+{"maxMap(a, b)":[["\u0003\u0000\u0000\u0000","1\u0000","2\u0000\u0000","3"],["1","2","2","1"]]}
+"""
+
