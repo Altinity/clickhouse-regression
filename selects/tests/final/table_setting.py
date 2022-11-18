@@ -152,6 +152,6 @@ def join_second_table_with_final(self):
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier("1.0"))
 @Name("table setting")
 def feature(self):
-    """Check FINAL modifier."""
+    """Check enabling automatic final modifier using table engine settings."""
     for scenario in loads(current_module(), Scenario):
         scenario()

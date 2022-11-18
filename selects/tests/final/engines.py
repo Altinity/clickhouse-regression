@@ -66,6 +66,6 @@ def force_select_final_collapsingmergetree(self):
 )
 @Name("engines")
 def feature(self):
-    """Check FINAL modifier."""
+    """Check enabling automatic FINAL modifier on different table engines."""
     for scenario in loads(current_module(), Scenario):
         scenario()

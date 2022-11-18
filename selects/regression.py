@@ -69,8 +69,7 @@ def regression(
     ) as cluster:
         self.context.cluster = cluster
 
-        Feature(run=load("selects.tests.final.table_setting", "feature"))
-        Feature(run=load("selects.tests.final.engines", "feature"))
+        Feature(run=load("selects.tests.final.feature", "feature"))
 
 
 if main():
