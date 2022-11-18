@@ -1,0 +1,53 @@
+_aggregate_functions_state_minMapState_constant = r"""
+{"hex(minMapState(map(1, 1)))":"01010101"}
+"""
+
+_aggregate_functions_state_minMapState_zero_rows = r"""
+{"hex(minMapState(map(number, number)))":"00"}
+"""
+
+_aggregate_functions_state_minMapState_with_group_by = r"""
+{"even":0,"hex(minMapState(map(modulo(number, 2), number)))":"0100010000000000000000"}
+{"even":1,"hex(minMapState(map(modulo(number, 2), number)))":"0101010100000000000000"}
+"""
+
+_aggregate_functions_state_minMapState_some_negative_values = r"""
+{"hex(minMapState(map(minus(number, 5), minus(number, 10))))":"0A0500000000000000010000000000000000000000000000000001FBFFFFFFFFFFFFFF040000000000000001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF01FAFFFFFFFFFFFFFF030000000000000001FEFFFFFFFFFFFFFFFEFFFFFFFFFFFFFF01F9FFFFFFFFFFFFFF020000000000000001FDFFFFFFFFFFFFFFFDFFFFFFFFFFFFFF01F8FFFFFFFFFFFFFF010000000000000001FCFFFFFFFFFFFFFFFCFFFFFFFFFFFFFF01F7FFFFFFFFFFFFFF"}
+"""
+
+_aggregate_functions_state_minMapState_one_to_many = r"""
+{"hex(minMapState(map(modulo(number, 2), number)))":"020001020000000000000001010100000000000000"}
+"""
+
+_aggregate_functions_state_minMapState_NULL_value_handling = r"""
+{"hex(minMapState(map(x, y)))":"040301010402010101010000010101"}
+"""
+
+_aggregate_functions_state_minMapState_single_NULL_value = r"""
+{"hex(minMapState(map(x, y)))":"010100"}
+"""
+
+_aggregate_functions_state_minMapState_inf = r"""
+{"hex(minMapState(map('a', x)))":"010161010000000000000000"}
+"""
+
+_aggregate_functions_state_minMapState__inf = r"""
+{"hex(minMapState(map('a', x)))":"01016101000000000000F0FF"}
+"""
+
+_aggregate_functions_state_minMapState_nan = r"""
+{"hex(minMapState(map('a', x)))":"010161010000000000000000"}
+"""
+
+_aggregate_functions_state_minMapState_inf___inf__nan = r"""
+{"hex(minMapState(map('a', x)))":"01016101000000000000F87F"}
+"""
+
+_aggregate_functions_state_minMapState_return_type = r"""
+{"toTypeName(hex(minMapState(map(number, plus(number, 1)))))":"String"}
+"""
+
+_aggregate_functions_state_minMapState_NULL_in_strings = r"""
+{"hex(minMapState(a, b))":"0404030000000100000000000000023100020000000000000003320000020000000000000001330100000000000000"}
+"""
+

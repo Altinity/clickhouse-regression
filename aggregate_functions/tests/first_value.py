@@ -38,6 +38,17 @@ def feature(self, func="first_value({params})", table=None):
             f"SELECT {func.format(params='x')}  FROM values('x Nullable(Int8)', NULL)"
         )
 
+    with Check("string that ends with \\0"):
+        execute_query(
+            f"SELECT {func.format(params='x')} FROM values('x String', 'hello\0\0')"
+        )
+
+    for v in ["inf", "-inf", "nan"]:
+        with Check(f"{v}"):
+            execute_query(
+                f"SELECT {func.format(params='x')}  FROM values('x Float64', ({v}))"
+            )
+
     for column in table.columns:
         column_name, column_type = column.split(" ", 1)
 

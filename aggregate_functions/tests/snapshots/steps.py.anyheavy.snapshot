@@ -2509,3 +2509,19 @@ _aggregate_functions_anyHeavy_Map_Int32__Nullable_Int32__ = r"""
 {"anyHeavy(map_int32_nullable_int32)":{"10101010":10101010}}
 """
 
+_aggregate_functions_anyHeavy_inf = r"""
+{"anyHeavy(x)":null}
+"""
+
+_aggregate_functions_anyHeavy__inf = r"""
+{"anyHeavy(x)":null}
+"""
+
+_aggregate_functions_anyHeavy_nan = r"""
+{"anyHeavy(x)":null}
+"""
+
+_aggregate_functions_anyHeavy_string_that_ends_with__0 = r"""
+{"anyHeavy(x)":"hello"}
+"""
+

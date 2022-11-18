@@ -1,0 +1,265 @@
+_aggregate_functions_state_groupArrayInsertAtState_constant = r"""
+{"hex(groupArrayInsertAtState(1, 1))":"02010001"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_zero_rows = r"""
+{"hex(groupArrayInsertAtState(number, number))":"00"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_single_row = r"""
+{"hex(groupArrayInsertAtState(number, plus(number, 1)))":"0201000000000000000000"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_with_group_by = r"""
+{"even":0,"hex(groupArrayInsertAtState(number, modulo(number, 2)))":"01000000000000000000"}
+{"even":1,"hex(groupArrayInsertAtState(number, modulo(number, 2)))":"0201000100000000000000"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_some_negative_values = r"""
+{"hex(groupArrayInsertAtState(minus(number, 5), plus(number, 10)))":"15010101010101010101010100FCFFFFFFFFFFFFFF00FDFFFFFFFFFFFFFF00FEFFFFFFFFFFFFFF00FFFFFFFFFFFFFFFF000000000000000000000100000000000000000200000000000000000300000000000000000400000000000000000500000000000000"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_NULL_value_handling = r"""
+{"hex(groupArrayInsertAtState(x, y))":"0105010000000000000004"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_single_NULL_value = r"""
+{"hex(groupArrayInsertAtState(x, y))":"010301010000"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_inf = r"""
+{"hex(groupArrayInsertAtState(x, y))":"050100000000000000000000000000000000F03F00000000000000F07F000000000000001040"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState__inf = r"""
+{"hex(groupArrayInsertAtState(x, y))":"050100000000000000000000000000000000F03F00000000000000F0FF000000000000001040"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_nan = r"""
+{"hex(groupArrayInsertAtState(x, y))":"050100000000000000000000000000000000F03F00000000000000F87F000000000000001040"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_return_type = r"""
+{"toTypeName(hex(groupArrayInsertAtState(number, plus(number, 1))))":"String"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_example = r"""
+{"hex(groupArrayInsertAtState(y, x))":"06009A9999999999B93F00C3F5285C8FC2D53F00295C8FC2F528EC3F00AE47E17A14AEF3BF006666666666660AC0009A99999999991540"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_Array_String__Nullable_UInt64_ = r"""
+{"hex(groupArrayInsertAtState(array_string, modulo(nullable_uint64, 16)))":"011000010001000137E2A18CE2A081E2A0A7E2A09120E2A0BCE2A081E2A0922020E2A18DE2A09CE2A087E2A091E2A0B9E2A0B0E2A08E20E2A1A3E2A095E2A08C0101010101010101010101010001536162636465666768696A6B6C6D6E6F707172737475767778797A4142434445464748494A4B4C4D4E4F5051525455565758595A21402324255E262A28295F2D3D2B5B5D5C7B5C7D5C7C2F3F3C3E2C2E3A3B7E60"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_Array_String__UInt64 = r"""
+{"hex(groupArrayInsertAtState(array_string, modulo(uint64, 16)))":"1000010001000137E2A18CE2A081E2A0A7E2A09120E2A0BCE2A081E2A0922020E2A18DE2A09CE2A087E2A091E2A0B9E2A0B0E2A08E20E2A1A3E2A095E2A08C0101010101010101010101010001536162636465666768696A6B6C6D6E6F707172737475767778797A4142434445464748494A4B4C4D4E4F5051525455565758595A21402324255E262A28295F2D3D2B5B5D5C7B5C7D5C7C2F3F3C3E2C2E3A3B7E60"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_DateTime_Nullable_UInt64_ = r"""
+{"hex(groupArrayInsertAtState(datetime, modulo(nullable_uint64, 16)))":"01100000000000010068324D6301010101010101010101010100CFD5FFFF"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_Date_UInt64 = r"""
+{"hex(groupArrayInsertAtState(date, modulo(uint64, 16)))":"100000000100524B01010101010101010101010100FFFF"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_Date_Nullable_UInt64_ = r"""
+{"hex(groupArrayInsertAtState(date, modulo(nullable_uint64, 16)))":"01100000000100524B01010101010101010101010100FFFF"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_DateTime_UInt64 = r"""
+{"hex(groupArrayInsertAtState(datetime, modulo(uint64, 16)))":"100000000000010068324D6301010101010101010101010100CFD5FFFF"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_Decimal128_38__Nullable_UInt64_ = r"""
+{"hex(groupArrayInsertAtState(decimal, modulo(nullable_uint64, 16)))":"0110000A000000C0DD75F6853B79A557B3C4B4010000000080B86CCE251142A4463E62990701010101010101010101010100F6FFFFFF3F228A097AC4865AA84C3B4B"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_Decimal128_38__UInt64 = r"""
+{"hex(groupArrayInsertAtState(decimal, modulo(uint64, 16)))":"10000A000000C0DD75F6853B79A557B3C4B4010000000080B86CCE251142A4463E62990701010101010101010101010100F6FFFFFF3F228A097AC4865AA84C3B4B"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_FixedString_85__Nullable_UInt64_ = r"""
+{"hex(groupArrayInsertAtState(fixedstring, modulo(nullable_uint64, 16)))":"011000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100E2A18CE2A081E2A0A7E2A09120E2A0BCE2A081E2A0922020E2A18DE2A09CE2A087E2A091E2A0B9E2A0B0E2A08E20E2A1A3E2A095E2A08C000000000000000000000000000000000000000000000000000000000000010101010101010101010101006162636465666768696A6B6C6D6E6F707172737475767778797A4142434445464748494A4B4C4D4E4F5051525455565758595A21402324255E262A28295F2D3D2B5B5D5C7B5C7D5C7C2F3F3C3E2C2E3A3B7E600000"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_Float32_Nullable_UInt64_ = r"""
+{"hex(groupArrayInsertAtState(float32, modulo(nullable_uint64, 16)))":"011000FFFF7FFF010012211A4B01010101010101010101010100FFFF7F7F"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_FixedString_85__UInt64 = r"""
+{"hex(groupArrayInsertAtState(fixedstring, modulo(uint64, 16)))":"1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100E2A18CE2A081E2A0A7E2A09120E2A0BCE2A081E2A0922020E2A18DE2A09CE2A087E2A091E2A0B9E2A0B0E2A08E20E2A1A3E2A095E2A08C000000000000000000000000000000000000000000000000000000000000010101010101010101010101006162636465666768696A6B6C6D6E6F707172737475767778797A4142434445464748494A4B4C4D4E4F5051525455565758595A21402324255E262A28295F2D3D2B5B5D5C7B5C7D5C7C2F3F3C3E2C2E3A3B7E600000"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_Float32_UInt64 = r"""
+{"hex(groupArrayInsertAtState(float32, modulo(uint64, 16)))":"1000FFFF7FFF010012211A4B01010101010101010101010100FFFF7F7F"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_Float64_UInt64 = r"""
+{"hex(groupArrayInsertAtState(float64, modulo(uint64, 16)))":"100051776F82FDFFEFFF010072ED3A2E065E51770101010101010101010101010051776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_Float64_Nullable_UInt64_ = r"""
+{"hex(groupArrayInsertAtState(float64, modulo(nullable_uint64, 16)))":"01100051776F82FDFFEFFF010072ED3A2E065E51770101010101010101010101010051776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_Int64_Nullable_UInt64_ = r"""
+{"hex(groupArrayInsertAtState(int64, modulo(nullable_uint64, 16)))":"0110000000000000000080010012F3E477AE96030001010101010101010101010100FFFFFFFFFFFFFF7F"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_Int64_UInt64 = r"""
+{"hex(groupArrayInsertAtState(int64, modulo(uint64, 16)))":"10000000000000000080010012F3E477AE96030001010101010101010101010100FFFFFFFFFFFFFF7F"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_LowCardinality_Date__Nullable_UInt64_ = r"""
+{"hex(groupArrayInsertAtState(low_card_date, modulo(nullable_uint64, 16)))":"01100000000100524B01010101010101010101010100FFFF"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_LowCardinality_DateTime__Nullable_UInt64_ = r"""
+{"hex(groupArrayInsertAtState(low_card_datetime, modulo(nullable_uint64, 16)))":"01100000000000010068324D6301010101010101010101010100CFD5FFFF"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_LowCardinality_Date__UInt64 = r"""
+{"hex(groupArrayInsertAtState(low_card_date, modulo(uint64, 16)))":"100000000100524B01010101010101010101010100FFFF"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_LowCardinality_DateTime__UInt64 = r"""
+{"hex(groupArrayInsertAtState(low_card_datetime, modulo(uint64, 16)))":"100000000000010068324D6301010101010101010101010100CFD5FFFF"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_LowCardinality_FixedString_85___Nullable_UInt64_ = r"""
+{"hex(groupArrayInsertAtState(low_card_fixedstring, modulo(nullable_uint64, 16)))":"011000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100E2A18CE2A081E2A0A7E2A09120E2A0BCE2A081E2A0922020E2A18DE2A09CE2A087E2A091E2A0B9E2A0B0E2A08E20E2A1A3E2A095E2A08C000000000000000000000000000000000000000000000000000000000000010101010101010101010101006162636465666768696A6B6C6D6E6F707172737475767778797A4142434445464748494A4B4C4D4E4F5051525455565758595A21402324255E262A28295F2D3D2B5B5D5C7B5C7D5C7C2F3F3C3E2C2E3A3B7E600000"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_LowCardinality_FixedString_85___UInt64 = r"""
+{"hex(groupArrayInsertAtState(low_card_fixedstring, modulo(uint64, 16)))":"1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100E2A18CE2A081E2A0A7E2A09120E2A0BCE2A081E2A0922020E2A18DE2A09CE2A087E2A091E2A0B9E2A0B0E2A08E20E2A1A3E2A095E2A08C000000000000000000000000000000000000000000000000000000000000010101010101010101010101006162636465666768696A6B6C6D6E6F707172737475767778797A4142434445464748494A4B4C4D4E4F5051525455565758595A21402324255E262A28295F2D3D2B5B5D5C7B5C7D5C7C2F3F3C3E2C2E3A3B7E600000"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_LowCardinality_Float32__Nullable_UInt64_ = r"""
+{"hex(groupArrayInsertAtState(low_card_float32, modulo(nullable_uint64, 16)))":"011000FFFF7FFF010012211A4B01010101010101010101010100FFFF7F7F"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_LowCardinality_Float64__Nullable_UInt64_ = r"""
+{"hex(groupArrayInsertAtState(low_card_float64, modulo(nullable_uint64, 16)))":"01100051776F82FDFFEFFF010072ED3A2E065E51770101010101010101010101010051776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_LowCardinality_Float32__UInt64 = r"""
+{"hex(groupArrayInsertAtState(low_card_float32, modulo(uint64, 16)))":"1000FFFF7FFF010012211A4B01010101010101010101010100FFFF7F7F"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_LowCardinality_Float64__UInt64 = r"""
+{"hex(groupArrayInsertAtState(low_card_float64, modulo(uint64, 16)))":"100051776F82FDFFEFFF010072ED3A2E065E51770101010101010101010101010051776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_LowCardinality_Int64__Nullable_UInt64_ = r"""
+{"hex(groupArrayInsertAtState(low_card_int64, modulo(nullable_uint64, 16)))":"0110000000000000000080010012F3E477AE96030001010101010101010101010100FFFFFFFFFFFFFF7F"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_LowCardinality_Int64__UInt64 = r"""
+{"hex(groupArrayInsertAtState(low_card_int64, modulo(uint64, 16)))":"10000000000000000080010012F3E477AE96030001010101010101010101010100FFFFFFFFFFFFFF7F"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_LowCardinality_String__Nullable_UInt64_ = r"""
+{"hex(groupArrayInsertAtState(low_card_string, modulo(nullable_uint64, 16)))":"01100000010037E2A18CE2A081E2A0A7E2A09120E2A0BCE2A081E2A0922020E2A18DE2A09CE2A087E2A091E2A0B9E2A0B0E2A08E20E2A1A3E2A095E2A08C01010101010101010101010100536162636465666768696A6B6C6D6E6F707172737475767778797A4142434445464748494A4B4C4D4E4F5051525455565758595A21402324255E262A28295F2D3D2B5B5D5C7B5C7D5C7C2F3F3C3E2C2E3A3B7E60"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_LowCardinality_UInt64__UInt64 = r"""
+{"hex(groupArrayInsertAtState(low_card_uint64, modulo(uint64, 16)))":"10000000000000000000010012F3E477AE96030001010101010101010101010100FFFFFFFFFFFFFFFF"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_LowCardinality_String__UInt64 = r"""
+{"hex(groupArrayInsertAtState(low_card_string, modulo(uint64, 16)))":"100000010037E2A18CE2A081E2A0A7E2A09120E2A0BCE2A081E2A0922020E2A18DE2A09CE2A087E2A091E2A0B9E2A0B0E2A08E20E2A1A3E2A095E2A08C01010101010101010101010100536162636465666768696A6B6C6D6E6F707172737475767778797A4142434445464748494A4B4C4D4E4F5051525455565758595A21402324255E262A28295F2D3D2B5B5D5C7B5C7D5C7C2F3F3C3E2C2E3A3B7E60"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_LowCardinality_UInt64__Nullable_UInt64_ = r"""
+{"hex(groupArrayInsertAtState(low_card_uint64, modulo(nullable_uint64, 16)))":"0110000000000000000000010012F3E477AE96030001010101010101010101010100FFFFFFFFFFFFFFFF"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_Nullable_Date__UInt64 = r"""
+{"hex(groupArrayInsertAtState(nullable_date, modulo(uint64, 16)))":"01100000000100524B01010101010101010101010100FFFF"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_Nullable_Date__Nullable_UInt64_ = r"""
+{"hex(groupArrayInsertAtState(nullable_date, modulo(nullable_uint64, 16)))":"01100000000100524B01010101010101010101010100FFFF"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_Nullable_DateTime__Nullable_UInt64_ = r"""
+{"hex(groupArrayInsertAtState(nullable_datetime, modulo(nullable_uint64, 16)))":"01100000000000010068324D6301010101010101010101010100CFD5FFFF"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_Nullable_DateTime__UInt64 = r"""
+{"hex(groupArrayInsertAtState(nullable_datetime, modulo(uint64, 16)))":"01100000000000010068324D6301010101010101010101010100CFD5FFFF"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_Nullable_Decimal128_38___Nullable_UInt64_ = r"""
+{"hex(groupArrayInsertAtState(nullable_decimal, modulo(nullable_uint64, 16)))":"0110000A000000C0DD75F6853B79A557B3C4B4010000000080B86CCE251142A4463E62990701010101010101010101010100F6FFFFFF3F228A097AC4865AA84C3B4B"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_Nullable_Decimal128_38___UInt64 = r"""
+{"hex(groupArrayInsertAtState(nullable_decimal, modulo(uint64, 16)))":"0110000A000000C0DD75F6853B79A557B3C4B4010000000080B86CCE251142A4463E62990701010101010101010101010100F6FFFFFF3F228A097AC4865AA84C3B4B"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_Nullable_FixedString_85___Nullable_UInt64_ = r"""
+{"hex(groupArrayInsertAtState(nullable_fixedstring, modulo(nullable_uint64, 16)))":"011000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100E2A18CE2A081E2A0A7E2A09120E2A0BCE2A081E2A0922020E2A18DE2A09CE2A087E2A091E2A0B9E2A0B0E2A08E20E2A1A3E2A095E2A08C000000000000000000000000000000000000000000000000000000000000010101010101010101010101006162636465666768696A6B6C6D6E6F707172737475767778797A4142434445464748494A4B4C4D4E4F5051525455565758595A21402324255E262A28295F2D3D2B5B5D5C7B5C7D5C7C2F3F3C3E2C2E3A3B7E600000"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_Nullable_FixedString_85___UInt64 = r"""
+{"hex(groupArrayInsertAtState(nullable_fixedstring, modulo(uint64, 16)))":"011000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100E2A18CE2A081E2A0A7E2A09120E2A0BCE2A081E2A0922020E2A18DE2A09CE2A087E2A091E2A0B9E2A0B0E2A08E20E2A1A3E2A095E2A08C000000000000000000000000000000000000000000000000000000000000010101010101010101010101006162636465666768696A6B6C6D6E6F707172737475767778797A4142434445464748494A4B4C4D4E4F5051525455565758595A21402324255E262A28295F2D3D2B5B5D5C7B5C7D5C7C2F3F3C3E2C2E3A3B7E600000"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_Nullable_Float32__Nullable_UInt64_ = r"""
+{"hex(groupArrayInsertAtState(nullable_float32, modulo(nullable_uint64, 16)))":"011000FFFF7FFF010012211A4B01010101010101010101010100FFFF7F7F"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_Nullable_Float32__UInt64 = r"""
+{"hex(groupArrayInsertAtState(nullable_float32, modulo(uint64, 16)))":"011000FFFF7FFF010012211A4B01010101010101010101010100FFFF7F7F"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_Nullable_Float64__UInt64 = r"""
+{"hex(groupArrayInsertAtState(nullable_float64, modulo(uint64, 16)))":"01100051776F82FDFFEFFF010072ED3A2E065E51770101010101010101010101010051776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_Nullable_Float64__Nullable_UInt64_ = r"""
+{"hex(groupArrayInsertAtState(nullable_float64, modulo(nullable_uint64, 16)))":"01100051776F82FDFFEFFF010072ED3A2E065E51770101010101010101010101010051776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_Nullable_Int64__Nullable_UInt64_ = r"""
+{"hex(groupArrayInsertAtState(nullable_int64, modulo(nullable_uint64, 16)))":"0110000000000000000080010012F3E477AE96030001010101010101010101010100FFFFFFFFFFFFFF7F"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_Nullable_Int64__UInt64 = r"""
+{"hex(groupArrayInsertAtState(nullable_int64, modulo(uint64, 16)))":"0110000000000000000080010012F3E477AE96030001010101010101010101010100FFFFFFFFFFFFFF7F"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_Nullable_String__Nullable_UInt64_ = r"""
+{"hex(groupArrayInsertAtState(nullable_string, modulo(nullable_uint64, 16)))":"01100000010037E2A18CE2A081E2A0A7E2A09120E2A0BCE2A081E2A0922020E2A18DE2A09CE2A087E2A091E2A0B9E2A0B0E2A08E20E2A1A3E2A095E2A08C01010101010101010101010100536162636465666768696A6B6C6D6E6F707172737475767778797A4142434445464748494A4B4C4D4E4F5051525455565758595A21402324255E262A28295F2D3D2B5B5D5C7B5C7D5C7C2F3F3C3E2C2E3A3B7E60"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_Nullable_String__UInt64 = r"""
+{"hex(groupArrayInsertAtState(nullable_string, modulo(uint64, 16)))":"01100000010037E2A18CE2A081E2A0A7E2A09120E2A0BCE2A081E2A0922020E2A18DE2A09CE2A087E2A091E2A0B9E2A0B0E2A08E20E2A1A3E2A095E2A08C01010101010101010101010100536162636465666768696A6B6C6D6E6F707172737475767778797A4142434445464748494A4B4C4D4E4F5051525455565758595A21402324255E262A28295F2D3D2B5B5D5C7B5C7D5C7C2F3F3C3E2C2E3A3B7E60"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_Nullable_UInt64__UInt64 = r"""
+{"hex(groupArrayInsertAtState(nullable_uint64, modulo(uint64, 16)))":"0110000000000000000000010012F3E477AE96030001010101010101010101010100FFFFFFFFFFFFFFFF"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_Nullable_UInt64__Nullable_UInt64_ = r"""
+{"hex(groupArrayInsertAtState(nullable_uint64, modulo(nullable_uint64, 16)))":"0110000000000000000000010012F3E477AE96030001010101010101010101010100FFFFFFFFFFFFFFFF"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_String_UInt64 = r"""
+{"hex(groupArrayInsertAtState(string, modulo(uint64, 16)))":"100000010037E2A18CE2A081E2A0A7E2A09120E2A0BCE2A081E2A0922020E2A18DE2A09CE2A087E2A091E2A0B9E2A0B0E2A08E20E2A1A3E2A095E2A08C01010101010101010101010100536162636465666768696A6B6C6D6E6F707172737475767778797A4142434445464748494A4B4C4D4E4F5051525455565758595A21402324255E262A28295F2D3D2B5B5D5C7B5C7D5C7C2F3F3C3E2C2E3A3B7E60"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_String_Nullable_UInt64_ = r"""
+{"hex(groupArrayInsertAtState(string, modulo(nullable_uint64, 16)))":"01100000010037E2A18CE2A081E2A0A7E2A09120E2A0BCE2A081E2A0922020E2A18DE2A09CE2A087E2A091E2A0B9E2A0B0E2A08E20E2A1A3E2A095E2A08C01010101010101010101010100536162636465666768696A6B6C6D6E6F707172737475767778797A4142434445464748494A4B4C4D4E4F5051525455565758595A21402324255E262A28295F2D3D2B5B5D5C7B5C7D5C7C2F3F3C3E2C2E3A3B7E60"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_UInt64_Nullable_UInt64_ = r"""
+{"hex(groupArrayInsertAtState(uint64, modulo(nullable_uint64, 16)))":"0110000000000000000000010012F3E477AE96030001010101010101010101010100FFFFFFFFFFFFFFFF"}
+"""
+
+_aggregate_functions_state_groupArrayInsertAtState_datatypes_permutations_UInt64_UInt64 = r"""
+{"hex(groupArrayInsertAtState(uint64, modulo(uint64, 16)))":"10000000000000000000010012F3E477AE96030001010101010101010101010100FFFFFFFFFFFFFFFF"}
+"""
+

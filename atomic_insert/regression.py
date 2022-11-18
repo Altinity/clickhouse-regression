@@ -26,7 +26,6 @@ def argparser(parser):
 
 
 xfails = {}
-
 xflags = {}
 
 
@@ -55,8 +54,8 @@ def regression(
 
     self.context.transaction_atomic_insert = True
 
-    # if check_clickhouse_version("<22.4")(self) or clickhouse_version is None:
-    #     skip(reason="only supported on ClickHouse version >= 22.4")
+    if check_clickhouse_version("<22.4")(self):
+        skip(reason="only supported on ClickHouse version >= 22.4")
 
     if stress is not None:
         self.context.stress = stress

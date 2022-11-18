@@ -1,0 +1,69 @@
+_aggregate_functions_sumMap_constant = r"""
+{"sumMap(map(1, 1))":{"1":"1"}}
+"""
+
+_aggregate_functions_sumMap_zero_rows = r"""
+{"sumMap(map(number, number))":{}}
+"""
+
+_aggregate_functions_sumMap_with_group_by = r"""
+{"even":0,"sumMap(map(modulo(number, 2), number))":{"0":"20"}}
+{"even":1,"sumMap(map(modulo(number, 2), number))":{"1":"25"}}
+"""
+
+_aggregate_functions_sumMap_some_negative_values = r"""
+{"sumMap(map(minus(number, 5), minus(number, 10)))":{"-4":"-9","-3":"-8","-2":"-7","-1":"-6","0":"-5","1":"-4","2":"-3","3":"-2","4":"-1","5":"0"}}
+"""
+
+_aggregate_functions_sumMap_one_to_many = r"""
+{"sumMap(map(modulo(number, 2), number))":{"0":"30","1":"25"}}
+"""
+
+_aggregate_functions_sumMap_NULL_value_handling = r"""
+{"sumMap(map(x, y))":{"0":"1","1":null,"2":"2","3":"4"}}
+"""
+
+_aggregate_functions_sumMap_single_NULL_value = r"""
+{"sumMap(map(x, y))":{"1":null}}
+"""
+
+_aggregate_functions_sumMap_inf = r"""
+{"sumMap(map('a', x))":{"a":null}}
+"""
+
+_aggregate_functions_sumMap__inf = r"""
+{"sumMap(map('a', x))":{"a":null}}
+"""
+
+_aggregate_functions_sumMap_nan = r"""
+{"sumMap(map('a', x))":{"a":null}}
+"""
+
+_aggregate_functions_sumMap_inf___inf__nan = r"""
+{"sumMap(map('a', x))":{"a":null}}
+"""
+
+_aggregate_functions_sumMap_return_type = r"""
+{"toTypeName(sumMap(map(number, plus(number, 1))))":"Map(UInt64, UInt64)"}
+"""
+
+_aggregate_functions_sumMap_Map_FixedString_85___Nullable_Float32__ = r"""
+{"sumMap(map_fixedstring_nullable_float32)":{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":-3.4028234663852886e38,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\\{\\}\\|\/?<>,.:;~`\u0000\u0000":3.4028234663852886e38,"⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":10101010}}
+"""
+
+_aggregate_functions_sumMap_Map_UInt16__Int32_ = r"""
+{"sumMap(map_uint16_int32)":{"0":"-2147483648","32767":"10101010","65535":"2147483647"}}
+"""
+
+_aggregate_functions_sumMap_Map_Int32__Decimal128_38__ = r"""
+{"sumMap(map_int32_decimal)":{"-2147483648":-0.9999999999999999999999999999999999999,"10101010":0.1010101,"2147483647":0.9999999999999999999999999999999999999}}
+"""
+
+_aggregate_functions_sumMap_Map_LowCardinality_String___Nullable_Int64__ = r"""
+{"sumMap(map_low_card_string_nullable_int64)":{"":"-9223372036854775808","abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\\{\\}\\|\/?<>,.:;~`":"9223372036854775807","⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌":"1010101010101010"}}
+"""
+
+_aggregate_functions_sumMap_NULL_in_strings = r"""
+{"sumMap(a, b)":[["\u0003\u0000\u0000\u0000","1\u0000","2\u0000\u0000","3"],["1","2","2","1"]]}
+"""
+

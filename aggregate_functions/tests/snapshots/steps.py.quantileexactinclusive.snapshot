@@ -1,0 +1,149 @@
+_aggregate_functions_quantileExactInclusive_constant = r"""
+{"quantileExactInclusive(1)":1}
+"""
+
+_aggregate_functions_quantileExactInclusive_zero_rows = r"""
+{"quantileExactInclusive(number)":null}
+"""
+
+_aggregate_functions_quantileExactInclusive_single_row = r"""
+{"quantileExactInclusive(number)":0}
+"""
+
+_aggregate_functions_quantileExactInclusive_with_group_by = r"""
+{"even":0,"quantileExactInclusive(number)":4}
+{"even":1,"quantileExactInclusive(number)":5}
+"""
+
+_aggregate_functions_quantileExactInclusive_some_negative_values = r"""
+{"quantileExactInclusive(minus(number, 5))":0.5}
+"""
+
+_aggregate_functions_quantileExactInclusive_NULL_value_handling = r"""
+{"quantileExactInclusive(x)":3}
+"""
+
+_aggregate_functions_quantileExactInclusive_single_NULL_value = r"""
+{"quantileExactInclusive(x)":null}
+"""
+
+_aggregate_functions_quantileExactInclusive_return_type = r"""
+{"toTypeName(quantileExactInclusive(number))":"Float64"}
+"""
+
+_aggregate_functions_quantileExactInclusive_doc_example = r"""
+{"quantileExactInclusive(x)":2.5}
+"""
+
+_aggregate_functions_quantileExactInclusive_inf = r"""
+{"quantileExactInclusive(x)":4.5}
+"""
+
+_aggregate_functions_quantileExactInclusive__inf = r"""
+{"quantileExactInclusive(x)":3.15}
+"""
+
+_aggregate_functions_quantileExactInclusive_nan = r"""
+{"quantileExactInclusive(x)":4}
+"""
+
+_aggregate_functions_quantileExactInclusive_inf___inf__nan = r"""
+{"quantileExactInclusive(x)":5}
+"""
+
+_aggregate_functions_quantileExactInclusive_Nullable_UInt64_ = r"""
+{"quantileExactInclusive(nullable_uint64)":1010101010101010}
+"""
+
+_aggregate_functions_quantileExactInclusive_DateTime = r"""
+{"quantileExactInclusive(datetime)":833001780}
+"""
+
+_aggregate_functions_quantileExactInclusive_Float64 = r"""
+{"quantileExactInclusive(float64)":2.8e266}
+"""
+
+_aggregate_functions_quantileExactInclusive_UInt64 = r"""
+{"quantileExactInclusive(uint64)":505050505050505}
+"""
+
+_aggregate_functions_quantileExactInclusive_UInt32 = r"""
+{"quantileExactInclusive(uint32)":50505050.5}
+"""
+
+_aggregate_functions_quantileExactInclusive_Nullable_UInt8_ = r"""
+{"quantileExactInclusive(nullable_uint8)":128}
+"""
+
+_aggregate_functions_quantileExactInclusive_Int64 = r"""
+{"quantileExactInclusive(int64)":505050505050505}
+"""
+
+_aggregate_functions_quantileExactInclusive_Nullable_Float64_ = r"""
+{"quantileExactInclusive(nullable_float64)":5.6e266}
+"""
+
+_aggregate_functions_quantileExactInclusive_Nullable_Int16_ = r"""
+{"quantileExactInclusive(nullable_int16)":10101}
+"""
+
+_aggregate_functions_quantileExactInclusive_Float32 = r"""
+{"quantileExactInclusive(float32)":5050505}
+"""
+
+_aggregate_functions_quantileExactInclusive_Nullable_Float32_ = r"""
+{"quantileExactInclusive(nullable_float32)":10101010}
+"""
+
+_aggregate_functions_quantileExactInclusive_Nullable_Date_ = r"""
+{"quantileExactInclusive(nullable_date)":19282}
+"""
+
+_aggregate_functions_quantileExactInclusive_UInt8 = r"""
+{"quantileExactInclusive(uint8)":64}
+"""
+
+_aggregate_functions_quantileExactInclusive_Int32 = r"""
+{"quantileExactInclusive(int32)":5050505}
+"""
+
+_aggregate_functions_quantileExactInclusive_Nullable_UInt16_ = r"""
+{"quantileExactInclusive(nullable_uint16)":32767}
+"""
+
+_aggregate_functions_quantileExactInclusive_UInt16 = r"""
+{"quantileExactInclusive(uint16)":16383.5}
+"""
+
+_aggregate_functions_quantileExactInclusive_Int16 = r"""
+{"quantileExactInclusive(int16)":5050.5}
+"""
+
+_aggregate_functions_quantileExactInclusive_Nullable_UInt32_ = r"""
+{"quantileExactInclusive(nullable_uint32)":101010101}
+"""
+
+_aggregate_functions_quantileExactInclusive_Nullable_DateTime_ = r"""
+{"quantileExactInclusive(nullable_datetime)":1666003560}
+"""
+
+_aggregate_functions_quantileExactInclusive_Nullable_Int8_ = r"""
+{"quantileExactInclusive(nullable_int8)":101}
+"""
+
+_aggregate_functions_quantileExactInclusive_Nullable_Int32_ = r"""
+{"quantileExactInclusive(nullable_int32)":10101010}
+"""
+
+_aggregate_functions_quantileExactInclusive_Date = r"""
+{"quantileExactInclusive(date)":9641}
+"""
+
+_aggregate_functions_quantileExactInclusive_Int8 = r"""
+{"quantileExactInclusive(int8)":50.5}
+"""
+
+_aggregate_functions_quantileExactInclusive_Nullable_Int64_ = r"""
+{"quantileExactInclusive(nullable_int64)":1010101010101010}
+"""
+

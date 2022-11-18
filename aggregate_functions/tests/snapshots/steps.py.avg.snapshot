@@ -79,3 +79,63 @@ _aggregate_functions_avg_single_NULL_value = r"""
 {"avg(x)":null}
 """
 
+_aggregate_functions_avg_inf = r"""
+{"avg(x)":null}
+"""
+
+_aggregate_functions_avg__inf = r"""
+{"avg(x)":null}
+"""
+
+_aggregate_functions_avg_nan = r"""
+{"avg(x)":null}
+"""
+
+_aggregate_functions_avg_inf___inf__nan = r"""
+{"avg(x)":null}
+"""
+
+_aggregate_functions_avg_Nullable_Float64_ = r"""
+{"avg(nullable_float64)":1.8666666666666667e266}
+"""
+
+_aggregate_functions_avg_Nullable_Int16_ = r"""
+{"avg(nullable_int16)":3366.6666666666665}
+"""
+
+_aggregate_functions_avg_Nullable_Float32_ = r"""
+{"avg(nullable_float32)":3367003.3333333335}
+"""
+
+_aggregate_functions_avg_Nullable_Int64_ = r"""
+{"avg(nullable_int64)":336700336700336.3}
+"""
+
+_aggregate_functions_avg_Nullable_Int8_ = r"""
+{"avg(nullable_int8)":33.333333333333336}
+"""
+
+_aggregate_functions_avg_Nullable_Int32_ = r"""
+{"avg(nullable_int32)":3367003}
+"""
+
+_aggregate_functions_avg_Nullable_UInt64_ = r"""
+{"avg(nullable_uint64)":336700336700336.3}
+"""
+
+_aggregate_functions_avg_Nullable_Decimal128_38__ = r"""
+{"avg(nullable_decimal)":0.033670033333333335}
+"""
+
+_aggregate_functions_avg_Nullable_UInt16_ = r"""
+{"avg(nullable_uint16)":32767.333333333332}
+"""
+
+_aggregate_functions_avg_Nullable_UInt32_ = r"""
+{"avg(nullable_uint32)":1465325798.6666667}
+"""
+
+_aggregate_functions_avg_Nullable_UInt8_ = r"""
+{"avg(nullable_uint8)":127.66666666666667}
+"""
+

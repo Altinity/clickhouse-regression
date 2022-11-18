@@ -2495,3 +2495,19 @@ _aggregate_functions_last_value_single_NULL_value = r"""
 {"last_value(x)":null}
 """
 
+_aggregate_functions_last_value_inf = r"""
+{"last_value(x)":null}
+"""
+
+_aggregate_functions_last_value__inf = r"""
+{"last_value(x)":null}
+"""
+
+_aggregate_functions_last_value_nan = r"""
+{"last_value(x)":null}
+"""
+
+_aggregate_functions_last_value_string_that_ends_with__0 = r"""
+{"last_value(x)":"hello"}
+"""
+

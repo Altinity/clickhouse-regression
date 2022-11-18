@@ -2495,3 +2495,19 @@ _aggregate_functions_state_singleValueOrNullState_Map_Int64__Nullable_FixedStrin
 {"hex(singleValueOrNullState(map_int64_nullable_fixedstring))":"010100000000000000800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"}
 """
 
+_aggregate_functions_state_singleValueOrNullState_inf = r"""
+{"hex(singleValueOrNullState(x))":"01000000000000F07F"}
+"""
+
+_aggregate_functions_state_singleValueOrNullState__inf = r"""
+{"hex(singleValueOrNullState(x))":"01000000000000F0FF"}
+"""
+
+_aggregate_functions_state_singleValueOrNullState_nan = r"""
+{"hex(singleValueOrNullState(x))":"01000000000000F87F"}
+"""
+
+_aggregate_functions_state_singleValueOrNullState_string_that_ends_with__0 = r"""
+{"hex(singleValueOrNullState(x))":"0600000068656C6C6F00"}
+"""
+

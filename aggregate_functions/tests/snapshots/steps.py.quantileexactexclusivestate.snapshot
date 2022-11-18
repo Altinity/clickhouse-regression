@@ -1,0 +1,149 @@
+_aggregate_functions_state_quantileExactExclusiveState_constant = r"""
+{"hex(quantileExactExclusiveState(1))":"0101"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_zero_rows = r"""
+{"hex(quantileExactExclusiveState(number))":"00"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_single_row = r"""
+{"hex(quantileExactExclusiveState(number))":"010000000000000000"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_with_group_by = r"""
+{"even":0,"hex(quantileExactExclusiveState(number))":"0500000000000000000200000000000000040000000000000006000000000000000800000000000000"}
+{"even":1,"hex(quantileExactExclusiveState(number))":"0501000000000000000300000000000000050000000000000007000000000000000900000000000000"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_some_negative_values = r"""
+{"hex(quantileExactExclusiveState(minus(number, 5)))":"0AFCFFFFFFFFFFFFFFFDFFFFFFFFFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF000000000000000001000000000000000200000000000000030000000000000004000000000000000500000000000000"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_NULL_value_handling = r"""
+{"hex(quantileExactExclusiveState(x))":"01050001030405"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_single_NULL_value = r"""
+{"hex(quantileExactExclusiveState(x))":"00"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_return_type = r"""
+{"toTypeName(hex(quantileExactExclusiveState(number)))":"String"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_doc_example = r"""
+{"hex(quantileExactExclusiveState(x))":"06000102030405"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_inf = r"""
+{"hex(quantileExactExclusiveState(x))":"0600000000000000006666666666660240000000000000F07FCDCCCCCCCCCC1A4000000000000010400000000000001440"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState__inf = r"""
+{"hex(quantileExactExclusiveState(x))":"0600000000000000006666666666660240000000000000F0FFCDCCCCCCCCCC1A4000000000000010400000000000001440"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_nan = r"""
+{"hex(quantileExactExclusiveState(x))":"0500000000000000006666666666660240CDCCCCCCCCCC1A4000000000000010400000000000001440"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_inf___inf__nan = r"""
+{"hex(quantileExactExclusiveState(x))":"056666666666660240000000000000F07FCDCCCCCCCCCC1A40000000000000F0FF0000000000001440"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_Nullable_DateTime_ = r"""
+{"hex(quantileExactExclusiveState(nullable_datetime))":"010300000000CFD5FFFF68324D63"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_Nullable_Float64_ = r"""
+{"hex(quantileExactExclusiveState(nullable_float64))":"010351776F82FDFFEFFF51776F82FDFFEF7F72ED3A2E065E5177"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_Nullable_Date_ = r"""
+{"hex(quantileExactExclusiveState(nullable_date))":"01030000FFFF524B"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_Nullable_UInt64_ = r"""
+{"hex(quantileExactExclusiveState(nullable_uint64))":"01030000000000000000FFFFFFFFFFFFFFFF12F3E477AE960300"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_Nullable_UInt16_ = r"""
+{"hex(quantileExactExclusiveState(nullable_uint16))":"01030000FFFFFF7F"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_Int64 = r"""
+{"hex(quantileExactExclusiveState(int64))":"040000000000000080FFFFFFFFFFFFFF7F12F3E477AE9603000000000000000000"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_Nullable_Int64_ = r"""
+{"hex(quantileExactExclusiveState(nullable_int64))":"01030000000000000080FFFFFFFFFFFFFF7F12F3E477AE960300"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_Float32 = r"""
+{"hex(quantileExactExclusiveState(float32))":"04FFFF7FFFFFFF7F7F12211A4B00000000"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_Float64 = r"""
+{"hex(quantileExactExclusiveState(float64))":"0451776F82FDFFEFFF51776F82FDFFEF7F72ED3A2E065E51770000000000000000"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_DateTime = r"""
+{"hex(quantileExactExclusiveState(datetime))":"0400000000CFD5FFFF68324D6300000000"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_Nullable_UInt8_ = r"""
+{"hex(quantileExactExclusiveState(nullable_uint8))":"010300FF80"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_UInt8 = r"""
+{"hex(quantileExactExclusiveState(uint8))":"0400FF8000"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_Date = r"""
+{"hex(quantileExactExclusiveState(date))":"040000FFFF524B0000"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_Nullable_UInt32_ = r"""
+{"hex(quantileExactExclusiveState(nullable_uint32))":"010300000000FFFFFFFFB54A0506"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_Int16 = r"""
+{"hex(quantileExactExclusiveState(int16))":"040080FF7F75270000"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_UInt16 = r"""
+{"hex(quantileExactExclusiveState(uint16))":"040000FFFFFF7F0000"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_UInt32 = r"""
+{"hex(quantileExactExclusiveState(uint32))":"0400000000FFFFFFFFB54A050600000000"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_Nullable_Int16_ = r"""
+{"hex(quantileExactExclusiveState(nullable_int16))":"01030080FF7F7527"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_Nullable_Float32_ = r"""
+{"hex(quantileExactExclusiveState(nullable_float32))":"0103FFFF7FFFFFFF7F7F12211A4B"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_Nullable_Int32_ = r"""
+{"hex(quantileExactExclusiveState(nullable_int32))":"010300000080FFFFFF7F12219A00"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_Int32 = r"""
+{"hex(quantileExactExclusiveState(int32))":"0400000080FFFFFF7F12219A0000000000"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_Nullable_Int8_ = r"""
+{"hex(quantileExactExclusiveState(nullable_int8))":"0103807F65"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_UInt64 = r"""
+{"hex(quantileExactExclusiveState(uint64))":"040000000000000000FFFFFFFFFFFFFFFF12F3E477AE9603000000000000000000"}
+"""
+
+_aggregate_functions_state_quantileExactExclusiveState_Int8 = r"""
+{"hex(quantileExactExclusiveState(int8))":"04807F6500"}
+"""
+

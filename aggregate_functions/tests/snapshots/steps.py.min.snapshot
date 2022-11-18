@@ -2487,3 +2487,19 @@ _aggregate_functions_min_Map_FixedString_85___Map_UInt8__UInt8__ = r"""
 {"min(map_fixedstring_map)":{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":{"0":0}}}
 """
 
+_aggregate_functions_min_inf = r"""
+{"min(x)":0}
+"""
+
+_aggregate_functions_min__inf = r"""
+{"min(x)":null}
+"""
+
+_aggregate_functions_min_nan = r"""
+{"min(x)":0}
+"""
+
+_aggregate_functions_min_inf___inf__nan = r"""
+{"min(x)":null}
+"""
+

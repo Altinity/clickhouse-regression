@@ -2509,3 +2509,19 @@ _aggregate_functions_state_anyHeavyState_Map_Int64__Nullable_String__ = r"""
 {"hex(anyHeavyState(map_int64_nullable_string))":"010112F3E477AE9603000037E2A18CE2A081E2A0A7E2A09120E2A0BCE2A081E2A0922020E2A18DE2A09CE2A087E2A091E2A0B9E2A0B0E2A08E20E2A1A3E2A095E2A08C0000000000000000"}
 """
 
+_aggregate_functions_state_anyHeavyState_inf = r"""
+{"hex(anyHeavyState(x))":"01000000000000F07F0100000000000000"}
+"""
+
+_aggregate_functions_state_anyHeavyState__inf = r"""
+{"hex(anyHeavyState(x))":"01000000000000F0FF0100000000000000"}
+"""
+
+_aggregate_functions_state_anyHeavyState_nan = r"""
+{"hex(anyHeavyState(x))":"01000000000000F87F0100000000000000"}
+"""
+
+_aggregate_functions_state_anyHeavyState_string_that_ends_with__0 = r"""
+{"hex(anyHeavyState(x))":"0600000068656C6C6F000100000000000000"}
+"""
+
