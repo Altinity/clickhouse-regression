@@ -7667,3 +7667,43 @@ _aggregate_functions_state_argMinState_datatypes_permutations_UInt64_UInt64 = r"
 {"hex(argMinState(uint64, uint64))":"010000000000000000010000000000000000"}
 """
 
+_aggregate_functions_state_argMinState_inf___inf__nan_inf_inf = r"""
+{"hex(argMinState(x, y))":"01000000000000000001000000000000F03F"}
+"""
+
+_aggregate_functions_state_argMinState_inf___inf__nan_inf__inf = r"""
+{"hex(argMinState(x, y))":"01000000000000F07F01000000000000F0FF"}
+"""
+
+_aggregate_functions_state_argMinState_inf___inf__nan_inf_nan = r"""
+{"hex(argMinState(x, y))":"01000000000000000001000000000000F03F"}
+"""
+
+_aggregate_functions_state_argMinState_inf___inf__nan__inf_inf = r"""
+{"hex(argMinState(x, y))":"01000000000000000001000000000000F03F"}
+"""
+
+_aggregate_functions_state_argMinState_inf___inf__nan__inf__inf = r"""
+{"hex(argMinState(x, y))":"01000000000000F0FF01000000000000F0FF"}
+"""
+
+_aggregate_functions_state_argMinState_inf___inf__nan__inf_nan = r"""
+{"hex(argMinState(x, y))":"01000000000000000001000000000000F03F"}
+"""
+
+_aggregate_functions_state_argMinState_inf___inf__nan_nan_inf = r"""
+{"hex(argMinState(x, y))":"01000000000000000001000000000000F03F"}
+"""
+
+_aggregate_functions_state_argMinState_inf___inf__nan_nan__inf = r"""
+{"hex(argMinState(x, y))":"01000000000000F87F01000000000000F0FF"}
+"""
+
+_aggregate_functions_state_argMinState_inf___inf__nan_nan_nan = r"""
+{"hex(argMinState(x, y))":"01000000000000000001000000000000F03F"}
+"""
+
+_aggregate_functions_state_argMinState_string_that_ends_with__0 = r"""
+{"hex(argMinState(x, y))":"0200000031000600000068656C6C6F00"}
+"""
+

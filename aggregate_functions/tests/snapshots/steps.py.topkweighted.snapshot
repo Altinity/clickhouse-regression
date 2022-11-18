@@ -1,0 +1,521 @@
+_aggregate_functions_topKWeighted_constant = r"""
+{"topKWeighted(3)(1, 1)":[1]}
+"""
+
+_aggregate_functions_topKWeighted_zero_rows = r"""
+{"topKWeighted(3)(number, number)":[]}
+"""
+
+_aggregate_functions_topKWeighted_single_row = r"""
+{"topKWeighted(3)(number, plus(number, 1))":["0"]}
+"""
+
+_aggregate_functions_topKWeighted_with_group_by = r"""
+{"even":0,"topKWeighted(3)(number, modulo(number, 2))":["0","2","4"]}
+{"even":1,"topKWeighted(3)(number, modulo(number, 2))":["1","3","5"]}
+"""
+
+_aggregate_functions_topKWeighted_some_negative_values = r"""
+{"topKWeighted(3)(minus(number, 5), plus(number, 10))":["5","4","3"]}
+"""
+
+_aggregate_functions_topKWeighted_NULL_value_handling = r"""
+{"topKWeighted(3)(x, y)":[0,4,5]}
+"""
+
+_aggregate_functions_topKWeighted_single_NULL_value = r"""
+{"topKWeighted(3)(x, y)":[0]}
+"""
+
+_aggregate_functions_topKWeighted_inf = r"""
+{"topKWeighted(3)(x, y)":[4,null,6.7]}
+"""
+
+_aggregate_functions_topKWeighted__inf = r"""
+{"topKWeighted(3)(x, y)":[4,null,6.7]}
+"""
+
+_aggregate_functions_topKWeighted_nan = r"""
+{"topKWeighted(3)(x, y)":[4,null,6.7]}
+"""
+
+_aggregate_functions_topKWeighted_return_type = r"""
+{"toTypeName(topKWeighted(3)(number, plus(number, 1)))":"Array(UInt64)"}
+"""
+
+_aggregate_functions_topKWeighted_example = r"""
+{"topKWeighted(3)(y, x)":[5.4,-3.3,-1.23]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Array_String__Int64 = r"""
+{"topKWeighted(array_string, int64)":[[""],["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\\{\\}\\|\/?<>,.:;~`"],["⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌"],["0"]]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Array_String__Nullable_Int64_ = r"""
+{"topKWeighted(array_string, nullable_int64)":[[""],["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\\{\\}\\|\/?<>,.:;~`"],["⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌"],["0"]]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Array_String__UInt64 = r"""
+{"topKWeighted(array_string, uint64)":[["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\\{\\}\\|\/?<>,.:;~`"],["⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌"],[""],["0"]]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Array_String__Nullable_UInt64_ = r"""
+{"topKWeighted(array_string, nullable_uint64)":[["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\\{\\}\\|\/?<>,.:;~`"],["⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌"],[""],["0"]]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Date_Int64 = r"""
+{"topKWeighted(date, int64)":["1970-01-01","2149-06-06","2022-10-17"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Date_Nullable_Int64_ = r"""
+{"topKWeighted(date, nullable_int64)":["1970-01-01","2149-06-06","2022-10-17"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Date_UInt64 = r"""
+{"topKWeighted(date, uint64)":["2149-06-06","2022-10-17","1970-01-01"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Date_Nullable_UInt64_ = r"""
+{"topKWeighted(date, nullable_uint64)":["2149-06-06","2022-10-17","1970-01-01"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_DateTime_Int64 = r"""
+{"topKWeighted(datetime, int64)":["1970-01-01 03:00:00","2106-02-07 06:28:15","2022-10-17 13:46:00"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_DateTime_Nullable_UInt64_ = r"""
+{"topKWeighted(datetime, nullable_uint64)":["2106-02-07 06:28:15","2022-10-17 13:46:00","1970-01-01 03:00:00"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_DateTime_Nullable_Int64_ = r"""
+{"topKWeighted(datetime, nullable_int64)":["1970-01-01 03:00:00","2106-02-07 06:28:15","2022-10-17 13:46:00"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_DateTime_UInt64 = r"""
+{"topKWeighted(datetime, uint64)":["2106-02-07 06:28:15","2022-10-17 13:46:00","1970-01-01 03:00:00"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Decimal128_38__Int64 = r"""
+{"topKWeighted(decimal, int64)":[-0.9999999999999999999999999999999999999,0.9999999999999999999999999999999999999,0.1010101,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Decimal128_38__Nullable_Int64_ = r"""
+{"topKWeighted(decimal, nullable_int64)":[-0.9999999999999999999999999999999999999,0.9999999999999999999999999999999999999,0.1010101,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Decimal128_38__Nullable_UInt64_ = r"""
+{"topKWeighted(decimal, nullable_uint64)":[0.9999999999999999999999999999999999999,0.1010101,-0.9999999999999999999999999999999999999,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Decimal128_38__UInt64 = r"""
+{"topKWeighted(decimal, uint64)":[0.9999999999999999999999999999999999999,0.1010101,-0.9999999999999999999999999999999999999,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_FixedString_85__Nullable_Int64_ = r"""
+{"topKWeighted(fixedstring, nullable_int64)":["\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\\{\\}\\|\/?<>,.:;~`\u0000\u0000","⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","0\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_FixedString_85__Int64 = r"""
+{"topKWeighted(fixedstring, int64)":["\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\\{\\}\\|\/?<>,.:;~`\u0000\u0000","⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","0\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_FixedString_85__UInt64 = r"""
+{"topKWeighted(fixedstring, uint64)":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\\{\\}\\|\/?<>,.:;~`\u0000\u0000","⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","0\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Float32_Int64 = r"""
+{"topKWeighted(float32, int64)":[-3.4028235e38,3.4028235e38,10101010,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_FixedString_85__Nullable_UInt64_ = r"""
+{"topKWeighted(fixedstring, nullable_uint64)":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\\{\\}\\|\/?<>,.:;~`\u0000\u0000","⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","0\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Float32_Nullable_Int64_ = r"""
+{"topKWeighted(float32, nullable_int64)":[-3.4028235e38,3.4028235e38,10101010,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Float32_Nullable_UInt64_ = r"""
+{"topKWeighted(float32, nullable_uint64)":[3.4028235e38,10101010,-3.4028235e38,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Float32_UInt64 = r"""
+{"topKWeighted(float32, uint64)":[3.4028235e38,10101010,-3.4028235e38,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Float64_Nullable_Int64_ = r"""
+{"topKWeighted(float64, nullable_int64)":[-1.7976909999999999e308,1.7976909999999999e308,5.6e266,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Float64_Nullable_UInt64_ = r"""
+{"topKWeighted(float64, nullable_uint64)":[1.7976909999999999e308,5.6e266,-1.7976909999999999e308,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Float64_Int64 = r"""
+{"topKWeighted(float64, int64)":[-1.7976909999999999e308,1.7976909999999999e308,5.6e266,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Int64_Nullable_Int64_ = r"""
+{"topKWeighted(int64, nullable_int64)":["-9223372036854775808","9223372036854775807","1010101010101010","0"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Float64_UInt64 = r"""
+{"topKWeighted(float64, uint64)":[1.7976909999999999e308,5.6e266,-1.7976909999999999e308,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Int64_Int64 = r"""
+{"topKWeighted(int64, int64)":["-9223372036854775808","9223372036854775807","1010101010101010","0"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Int64_Nullable_UInt64_ = r"""
+{"topKWeighted(int64, nullable_uint64)":["9223372036854775807","1010101010101010","-9223372036854775808","0"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_Date__Int64 = r"""
+{"topKWeighted(low_card_date, int64)":["1970-01-01","2149-06-06","2022-10-17"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Int64_UInt64 = r"""
+{"topKWeighted(int64, uint64)":["9223372036854775807","1010101010101010","-9223372036854775808","0"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_Date__Nullable_Int64_ = r"""
+{"topKWeighted(low_card_date, nullable_int64)":["1970-01-01","2149-06-06","2022-10-17"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_Date__Nullable_UInt64_ = r"""
+{"topKWeighted(low_card_date, nullable_uint64)":["2149-06-06","2022-10-17","1970-01-01"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_Date__UInt64 = r"""
+{"topKWeighted(low_card_date, uint64)":["2149-06-06","2022-10-17","1970-01-01"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_DateTime__Int64 = r"""
+{"topKWeighted(low_card_datetime, int64)":["1970-01-01 03:00:00","2106-02-07 06:28:15","2022-10-17 13:46:00"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_DateTime__Nullable_Int64_ = r"""
+{"topKWeighted(low_card_datetime, nullable_int64)":["1970-01-01 03:00:00","2106-02-07 06:28:15","2022-10-17 13:46:00"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_DateTime__Nullable_UInt64_ = r"""
+{"topKWeighted(low_card_datetime, nullable_uint64)":["2106-02-07 06:28:15","2022-10-17 13:46:00","1970-01-01 03:00:00"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_DateTime__UInt64 = r"""
+{"topKWeighted(low_card_datetime, uint64)":["2106-02-07 06:28:15","2022-10-17 13:46:00","1970-01-01 03:00:00"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_FixedString_85___Int64 = r"""
+{"topKWeighted(low_card_fixedstring, int64)":["\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\\{\\}\\|\/?<>,.:;~`\u0000\u0000","⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","0\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_FixedString_85___Nullable_Int64_ = r"""
+{"topKWeighted(low_card_fixedstring, nullable_int64)":["\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\\{\\}\\|\/?<>,.:;~`\u0000\u0000","⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","0\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_FixedString_85___Nullable_UInt64_ = r"""
+{"topKWeighted(low_card_fixedstring, nullable_uint64)":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\\{\\}\\|\/?<>,.:;~`\u0000\u0000","⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","0\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_FixedString_85___UInt64 = r"""
+{"topKWeighted(low_card_fixedstring, uint64)":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\\{\\}\\|\/?<>,.:;~`\u0000\u0000","⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","0\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_Float32__Int64 = r"""
+{"topKWeighted(low_card_float32, int64)":[-3.4028235e38,3.4028235e38,10101010,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_Float32__Nullable_Int64_ = r"""
+{"topKWeighted(low_card_float32, nullable_int64)":[-3.4028235e38,3.4028235e38,10101010,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_Float32__UInt64 = r"""
+{"topKWeighted(low_card_float32, uint64)":[3.4028235e38,10101010,-3.4028235e38,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_Float32__Nullable_UInt64_ = r"""
+{"topKWeighted(low_card_float32, nullable_uint64)":[3.4028235e38,10101010,-3.4028235e38,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_Float64__Int64 = r"""
+{"topKWeighted(low_card_float64, int64)":[-1.7976909999999999e308,1.7976909999999999e308,5.6e266,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_Float64__Nullable_UInt64_ = r"""
+{"topKWeighted(low_card_float64, nullable_uint64)":[1.7976909999999999e308,5.6e266,-1.7976909999999999e308,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_Float64__Nullable_Int64_ = r"""
+{"topKWeighted(low_card_float64, nullable_int64)":[-1.7976909999999999e308,1.7976909999999999e308,5.6e266,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_Int64__Nullable_Int64_ = r"""
+{"topKWeighted(low_card_int64, nullable_int64)":["-9223372036854775808","9223372036854775807","1010101010101010","0"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_Int64__Int64 = r"""
+{"topKWeighted(low_card_int64, int64)":["-9223372036854775808","9223372036854775807","1010101010101010","0"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_Float64__UInt64 = r"""
+{"topKWeighted(low_card_float64, uint64)":[1.7976909999999999e308,5.6e266,-1.7976909999999999e308,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_Int64__Nullable_UInt64_ = r"""
+{"topKWeighted(low_card_int64, nullable_uint64)":["9223372036854775807","1010101010101010","-9223372036854775808","0"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_String__Int64 = r"""
+{"topKWeighted(low_card_string, int64)":["","abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\\{\\}\\|\/?<>,.:;~`","⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌","0"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_Int64__UInt64 = r"""
+{"topKWeighted(low_card_int64, uint64)":["9223372036854775807","1010101010101010","-9223372036854775808","0"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_String__UInt64 = r"""
+{"topKWeighted(low_card_string, uint64)":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\\{\\}\\|\/?<>,.:;~`","⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌","","0"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_String__Nullable_UInt64_ = r"""
+{"topKWeighted(low_card_string, nullable_uint64)":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\\{\\}\\|\/?<>,.:;~`","⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌","","0"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_String__Nullable_Int64_ = r"""
+{"topKWeighted(low_card_string, nullable_int64)":["","abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\\{\\}\\|\/?<>,.:;~`","⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌","0"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_UInt64__Nullable_UInt64_ = r"""
+{"topKWeighted(low_card_uint64, nullable_uint64)":["18446744073709551615","1010101010101010","0"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_UInt64__Nullable_Int64_ = r"""
+{"topKWeighted(low_card_uint64, nullable_int64)":["0","18446744073709551615","1010101010101010"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_UInt64__Int64 = r"""
+{"topKWeighted(low_card_uint64, int64)":["0","18446744073709551615","1010101010101010"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_LowCardinality_UInt64__UInt64 = r"""
+{"topKWeighted(low_card_uint64, uint64)":["18446744073709551615","1010101010101010","0"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_Date__Nullable_Int64_ = r"""
+{"topKWeighted(nullable_date, nullable_int64)":["1970-01-01","2149-06-06","2022-10-17"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_Date__Int64 = r"""
+{"topKWeighted(nullable_date, int64)":["1970-01-01","2149-06-06","2022-10-17"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_Date__UInt64 = r"""
+{"topKWeighted(nullable_date, uint64)":["2149-06-06","2022-10-17","1970-01-01"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_DateTime__Int64 = r"""
+{"topKWeighted(nullable_datetime, int64)":["1970-01-01 03:00:00","2106-02-07 06:28:15","2022-10-17 13:46:00"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_Date__Nullable_UInt64_ = r"""
+{"topKWeighted(nullable_date, nullable_uint64)":["2149-06-06","2022-10-17","1970-01-01"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_DateTime__UInt64 = r"""
+{"topKWeighted(nullable_datetime, uint64)":["2106-02-07 06:28:15","2022-10-17 13:46:00","1970-01-01 03:00:00"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_DateTime__Nullable_Int64_ = r"""
+{"topKWeighted(nullable_datetime, nullable_int64)":["1970-01-01 03:00:00","2106-02-07 06:28:15","2022-10-17 13:46:00"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_DateTime__Nullable_UInt64_ = r"""
+{"topKWeighted(nullable_datetime, nullable_uint64)":["2106-02-07 06:28:15","2022-10-17 13:46:00","1970-01-01 03:00:00"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_Decimal128_38___Nullable_Int64_ = r"""
+{"topKWeighted(nullable_decimal, nullable_int64)":[-0.9999999999999999999999999999999999999,0.9999999999999999999999999999999999999,0.1010101,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_Decimal128_38___Int64 = r"""
+{"topKWeighted(nullable_decimal, int64)":[-0.9999999999999999999999999999999999999,0.9999999999999999999999999999999999999,0.1010101,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_Decimal128_38___Nullable_UInt64_ = r"""
+{"topKWeighted(nullable_decimal, nullable_uint64)":[0.9999999999999999999999999999999999999,0.1010101,-0.9999999999999999999999999999999999999,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_FixedString_85___Int64 = r"""
+{"topKWeighted(nullable_fixedstring, int64)":["\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\\{\\}\\|\/?<>,.:;~`\u0000\u0000","⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_Decimal128_38___UInt64 = r"""
+{"topKWeighted(nullable_decimal, uint64)":[0.9999999999999999999999999999999999999,0.1010101,-0.9999999999999999999999999999999999999,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_FixedString_85___Nullable_Int64_ = r"""
+{"topKWeighted(nullable_fixedstring, nullable_int64)":["\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\\{\\}\\|\/?<>,.:;~`\u0000\u0000","⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_FixedString_85___UInt64 = r"""
+{"topKWeighted(nullable_fixedstring, uint64)":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\\{\\}\\|\/?<>,.:;~`\u0000\u0000","⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_Float32__Int64 = r"""
+{"topKWeighted(nullable_float32, int64)":[-3.4028235e38,3.4028235e38,10101010,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_FixedString_85___Nullable_UInt64_ = r"""
+{"topKWeighted(nullable_fixedstring, nullable_uint64)":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\\{\\}\\|\/?<>,.:;~`\u0000\u0000","⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_Float32__Nullable_Int64_ = r"""
+{"topKWeighted(nullable_float32, nullable_int64)":[-3.4028235e38,3.4028235e38,10101010,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_Float32__UInt64 = r"""
+{"topKWeighted(nullable_float32, uint64)":[3.4028235e38,10101010,-3.4028235e38,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_Float32__Nullable_UInt64_ = r"""
+{"topKWeighted(nullable_float32, nullable_uint64)":[3.4028235e38,10101010,-3.4028235e38,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_Float64__Int64 = r"""
+{"topKWeighted(nullable_float64, int64)":[-1.7976909999999999e308,1.7976909999999999e308,5.6e266,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_Float64__Nullable_Int64_ = r"""
+{"topKWeighted(nullable_float64, nullable_int64)":[-1.7976909999999999e308,1.7976909999999999e308,5.6e266,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_Float64__Nullable_UInt64_ = r"""
+{"topKWeighted(nullable_float64, nullable_uint64)":[1.7976909999999999e308,5.6e266,-1.7976909999999999e308,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_Float64__UInt64 = r"""
+{"topKWeighted(nullable_float64, uint64)":[1.7976909999999999e308,5.6e266,-1.7976909999999999e308,0]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_Int64__Int64 = r"""
+{"topKWeighted(nullable_int64, int64)":["-9223372036854775808","9223372036854775807","1010101010101010","0"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_Int64__Nullable_Int64_ = r"""
+{"topKWeighted(nullable_int64, nullable_int64)":["-9223372036854775808","9223372036854775807","1010101010101010","0"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_Int64__Nullable_UInt64_ = r"""
+{"topKWeighted(nullable_int64, nullable_uint64)":["9223372036854775807","1010101010101010","-9223372036854775808","0"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_String__Int64 = r"""
+{"topKWeighted(nullable_string, int64)":["","abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\\{\\}\\|\/?<>,.:;~`","⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_Int64__UInt64 = r"""
+{"topKWeighted(nullable_int64, uint64)":["9223372036854775807","1010101010101010","-9223372036854775808","0"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_String__UInt64 = r"""
+{"topKWeighted(nullable_string, uint64)":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\\{\\}\\|\/?<>,.:;~`","⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌",""]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_String__Nullable_UInt64_ = r"""
+{"topKWeighted(nullable_string, nullable_uint64)":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\\{\\}\\|\/?<>,.:;~`","⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌",""]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_String__Nullable_Int64_ = r"""
+{"topKWeighted(nullable_string, nullable_int64)":["","abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\\{\\}\\|\/?<>,.:;~`","⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_UInt64__Int64 = r"""
+{"topKWeighted(nullable_uint64, int64)":["0","18446744073709551615","1010101010101010"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_UInt64__Nullable_Int64_ = r"""
+{"topKWeighted(nullable_uint64, nullable_int64)":["0","18446744073709551615","1010101010101010"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_UInt64__Nullable_UInt64_ = r"""
+{"topKWeighted(nullable_uint64, nullable_uint64)":["18446744073709551615","1010101010101010","0"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_String_Int64 = r"""
+{"topKWeighted(string, int64)":["","abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\\{\\}\\|\/?<>,.:;~`","⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌","0"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_Nullable_UInt64__UInt64 = r"""
+{"topKWeighted(nullable_uint64, uint64)":["18446744073709551615","1010101010101010","0"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_String_Nullable_Int64_ = r"""
+{"topKWeighted(string, nullable_int64)":["","abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\\{\\}\\|\/?<>,.:;~`","⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌","0"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_String_UInt64 = r"""
+{"topKWeighted(string, uint64)":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\\{\\}\\|\/?<>,.:;~`","⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌","","0"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_String_Nullable_UInt64_ = r"""
+{"topKWeighted(string, nullable_uint64)":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ!@#$%^&*()_-=+[]\\{\\}\\|\/?<>,.:;~`","⡌⠁⠧⠑ ⠼⠁⠒  ⡍⠜⠇⠑⠹⠰⠎ ⡣⠕⠌","","0"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_UInt64_Int64 = r"""
+{"topKWeighted(uint64, int64)":["0","18446744073709551615","1010101010101010"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_UInt64_Nullable_Int64_ = r"""
+{"topKWeighted(uint64, nullable_int64)":["0","18446744073709551615","1010101010101010"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_UInt64_Nullable_UInt64_ = r"""
+{"topKWeighted(uint64, nullable_uint64)":["18446744073709551615","1010101010101010","0"]}
+"""
+
+_aggregate_functions_topKWeighted_datatypes_permutations_UInt64_UInt64 = r"""
+{"topKWeighted(uint64, uint64)":["18446744073709551615","1010101010101010","0"]}
+"""
+
+_aggregate_functions_topKWeighted_K_values_1 = r"""
+{"topKWeighted(1)(bitAnd(number, 7), modulo(number, 2))":["1"]}
+"""
+
+_aggregate_functions_topKWeighted_K_values_2 = r"""
+{"topKWeighted(2)(bitAnd(number, 7), modulo(number, 2))":["1","3"]}
+"""
+
+_aggregate_functions_topKWeighted_K_values_3 = r"""
+{"topKWeighted(3)(bitAnd(number, 7), modulo(number, 2))":["1","3","5"]}
+"""
+
+_aggregate_functions_topKWeighted_K_values_4 = r"""
+{"topKWeighted(4)(bitAnd(number, 7), modulo(number, 2))":["1","3","5","7"]}
+"""
+
+_aggregate_functions_topKWeighted_K_values_5 = r"""
+{"topKWeighted(5)(bitAnd(number, 7), modulo(number, 2))":["1","3","5","7","0"]}
+"""
+
+_aggregate_functions_topKWeighted_K_values_6 = r"""
+{"topKWeighted(6)(bitAnd(number, 7), modulo(number, 2))":["1","3","5","7","0","2"]}
+"""
+
+_aggregate_functions_topKWeighted_K_values_7 = r"""
+{"topKWeighted(7)(bitAnd(number, 7), modulo(number, 2))":["1","3","5","7","0","2","4"]}
+"""
+
+_aggregate_functions_topKWeighted_K_values_8 = r"""
+{"topKWeighted(8)(bitAnd(number, 7), modulo(number, 2))":["1","3","5","7","0","2","4","6"]}
+"""
+
+_aggregate_functions_topKWeighted_K_values_9 = r"""
+{"topKWeighted(9)(bitAnd(number, 7), modulo(number, 2))":["1","3","5","7","0","2","4","6"]}
+"""
+
+_aggregate_functions_topKWeighted_custom_load_factor = r"""
+{"topKWeighted(5, 5)(bitAnd(number, 7), modulo(number, 2))":["1","3","5","7","0"]}
+"""
+

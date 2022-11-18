@@ -7663,3 +7663,43 @@ _aggregate_functions_state_argMaxState_datatypes_permutations_UInt64_UInt64 = r"
 {"hex(argMaxState(uint64, uint64))":"01FFFFFFFFFFFFFFFF01FFFFFFFFFFFFFFFF"}
 """
 
+_aggregate_functions_state_argMaxState_inf___inf__nan_inf_inf = r"""
+{"hex(argMaxState(x, y))":"01000000000000F07F01000000000000F07F"}
+"""
+
+_aggregate_functions_state_argMaxState_inf___inf__nan_inf__inf = r"""
+{"hex(argMaxState(x, y))":"010000000000001040010000000000001040"}
+"""
+
+_aggregate_functions_state_argMaxState_inf___inf__nan_inf_nan = r"""
+{"hex(argMaxState(x, y))":"010000000000001040010000000000001040"}
+"""
+
+_aggregate_functions_state_argMaxState_inf___inf__nan__inf_inf = r"""
+{"hex(argMaxState(x, y))":"01000000000000F0FF01000000000000F07F"}
+"""
+
+_aggregate_functions_state_argMaxState_inf___inf__nan__inf__inf = r"""
+{"hex(argMaxState(x, y))":"010000000000001040010000000000001040"}
+"""
+
+_aggregate_functions_state_argMaxState_inf___inf__nan__inf_nan = r"""
+{"hex(argMaxState(x, y))":"010000000000001040010000000000001040"}
+"""
+
+_aggregate_functions_state_argMaxState_inf___inf__nan_nan_inf = r"""
+{"hex(argMaxState(x, y))":"01000000000000F87F01000000000000F07F"}
+"""
+
+_aggregate_functions_state_argMaxState_inf___inf__nan_nan__inf = r"""
+{"hex(argMaxState(x, y))":"010000000000001040010000000000001040"}
+"""
+
+_aggregate_functions_state_argMaxState_inf___inf__nan_nan_nan = r"""
+{"hex(argMaxState(x, y))":"010000000000001040010000000000001040"}
+"""
+
+_aggregate_functions_state_argMaxState_string_that_ends_with__0 = r"""
+{"hex(argMaxState(x, y))":"02000000350004000000796F7500"}
+"""
+

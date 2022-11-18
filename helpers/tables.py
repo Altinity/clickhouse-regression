@@ -153,6 +153,56 @@ class Array(Column):
 
         return "[" + self.column.zero_or_null_value() + "]"
 
+def is_numeric(datatype, decimal=True, date=False, datetime=False):
+    """Return True if data type is numeric."""
+    if datatype.startswith("UInt") or datatype.startswith("Nullable(UInt"):
+        return True
+    if datatype.startswith("Int") or datatype.startswith("Nullable(Int"):
+        return True
+    if datatype.startswith("Float") or datatype.startswith("Nullable(Float"):
+        return True
+    if decimal:
+        if datatype.startswith("Decimal") or datatype.startswith("Nullable(Decimal"):
+            return True
+    if date:
+        if datatype.startswith("Date") or datatype.startswith("Nullable(Date"):
+            return True
+    if datetime:
+        if datatype.startswith("DateTime") or datatype.startswith("Nullable(DateTime"):
+            return True
+    return False
+
+def is_string(datatype):
+    """Return True if data type is String."""
+    if (
+        datatype.startswith("String")
+        or datatype.startswith("Nullable(String")
+        or datatype.startswith("LowCardinality(String")
+    ):
+        return True
+
+
+def is_map(datatype):
+    """Return True if data type is Map."""
+    if datatype.startswith("Map") or datatype.startswith("Nullable(Map"):
+        return True
+
+
+def is_unsigned_integer(datatype, decimal=True):
+    """Return True if data type is unsigned integer."""
+    if datatype.startswith("UInt") or datatype.startswith("Nullable(UInt"):
+        return True
+    return False
+
+
+def is_integer(datatype, decimal=True):
+    """Return True if data type is numeric."""
+    if datatype.startswith("UInt") or datatype.startswith("Nullable(UInt"):
+        return True
+    if datatype.startswith("Int") or datatype.startswith("Nullable(Int"):
+        return True
+    return False
+
 
 def generate_low_card_columns(column_list):
     """Generate a list of low cardinality columns based on the input list."""

@@ -2509,3 +2509,19 @@ _aggregate_functions_any_Map_FixedString_85___Map_UInt8__UInt8__ = r"""
 {"any(map_fixedstring_map)":{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":{"0":0}}}
 """
 
+_aggregate_functions_any_inf = r"""
+{"any(x)":null}
+"""
+
+_aggregate_functions_any__inf = r"""
+{"any(x)":null}
+"""
+
+_aggregate_functions_any_nan = r"""
+{"any(x)":null}
+"""
+
+_aggregate_functions_any_string_that_ends_with__0 = r"""
+{"any(x)":"hello"}
+"""
+

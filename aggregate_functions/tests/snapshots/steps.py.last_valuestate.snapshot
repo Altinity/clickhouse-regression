@@ -2495,3 +2495,19 @@ _aggregate_functions_state_last_valueState_single_NULL_value = r"""
 {"hex(last_valueState(x))":"00"}
 """
 
+_aggregate_functions_state_last_valueState_inf = r"""
+{"hex(last_valueState(x))":"01000000000000F07F"}
+"""
+
+_aggregate_functions_state_last_valueState__inf = r"""
+{"hex(last_valueState(x))":"01000000000000F0FF"}
+"""
+
+_aggregate_functions_state_last_valueState_nan = r"""
+{"hex(last_valueState(x))":"01000000000000F87F"}
+"""
+
+_aggregate_functions_state_last_valueState_string_that_ends_with__0 = r"""
+{"hex(last_valueState(x))":"0600000068656C6C6F00"}
+"""
+

@@ -1,0 +1,65 @@
+_aggregate_functions_groupBitmap_constant = r"""
+{"groupBitmap(1)":1}
+"""
+
+_aggregate_functions_groupBitmap_zero_rows = r"""
+{"groupBitmap(number)":"0"}
+"""
+
+_aggregate_functions_groupBitmap_single_row = r"""
+{"groupBitmap(number)":"1"}
+"""
+
+_aggregate_functions_groupBitmap_with_group_by = r"""
+{"even":0,"groupBitmap(number)":"5"}
+{"even":1,"groupBitmap(number)":"5"}
+"""
+
+_aggregate_functions_groupBitmap_NULL_value_handling = r"""
+{"groupBitmap(x)":5}
+"""
+
+_aggregate_functions_groupBitmap_single_NULL_value = r"""
+{"groupBitmap(x)":null}
+"""
+
+_aggregate_functions_groupBitmap_return_type = r"""
+{"toTypeName(groupBitmap(number))":"UInt64"}
+"""
+
+_aggregate_functions_groupBitmap_doc_example = r"""
+{"groupBitmap(x)":6}
+"""
+
+_aggregate_functions_groupBitmap_UInt32 = r"""
+{"groupBitmap(uint32)":3}
+"""
+
+_aggregate_functions_groupBitmap_UInt8 = r"""
+{"groupBitmap(uint8)":3}
+"""
+
+_aggregate_functions_groupBitmap_UInt16 = r"""
+{"groupBitmap(uint16)":3}
+"""
+
+_aggregate_functions_groupBitmap_Nullable_UInt64_ = r"""
+{"groupBitmap(nullable_uint64)":"3"}
+"""
+
+_aggregate_functions_groupBitmap_Nullable_UInt8_ = r"""
+{"groupBitmap(nullable_uint8)":3}
+"""
+
+_aggregate_functions_groupBitmap_Nullable_UInt16_ = r"""
+{"groupBitmap(nullable_uint16)":3}
+"""
+
+_aggregate_functions_groupBitmap_UInt64 = r"""
+{"groupBitmap(uint64)":"3"}
+"""
+
+_aggregate_functions_groupBitmap_Nullable_UInt32_ = r"""
+{"groupBitmap(nullable_uint32)":3}
+"""
+

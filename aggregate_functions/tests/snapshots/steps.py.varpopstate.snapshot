@@ -75,3 +75,59 @@ _aggregate_functions_state_varPopState_Int8 = r"""
 {"hex(varPopState(int8))":"000000000000104000000000000059400000000040DBE440"}
 """
 
+_aggregate_functions_state_varPopState_inf = r"""
+{"hex(varPopState(x))":"0000000000001840000000000000F07F000000000000F07F"}
+"""
+
+_aggregate_functions_state_varPopState__inf = r"""
+{"hex(varPopState(x))":"0000000000001840000000000000F0FF000000000000F07F"}
+"""
+
+_aggregate_functions_state_varPopState_nan = r"""
+{"hex(varPopState(x))":"0000000000001840000000000000F87F000000000000F87F"}
+"""
+
+_aggregate_functions_state_varPopState_inf___inf__nan = r"""
+{"hex(varPopState(x))":"0000000000001840000000000000F87F000000000000F87F"}
+"""
+
+_aggregate_functions_state_varPopState_Nullable_UInt64_ = r"""
+{"hex(varPopState(nullable_uint64))":"0100000000000008404F7EE76A3900F0437C0CCE000000F047"}
+"""
+
+_aggregate_functions_state_varPopState_Nullable_Float32_ = r"""
+{"hex(varPopState(nullable_float32))":"010000404012211A4B0000807F"}
+"""
+
+_aggregate_functions_state_varPopState_Nullable_Int32_ = r"""
+{"hex(varPopState(nullable_int32))":"0100000000000008400000002022446341B5BD59990B00E043"}
+"""
+
+_aggregate_functions_state_varPopState_Nullable_UInt32_ = r"""
+{"hex(varPopState(nullable_uint32))":"010000000000000840000040AB5460F041F2CDA7F94302F043"}
+"""
+
+_aggregate_functions_state_varPopState_Nullable_UInt8_ = r"""
+{"hex(varPopState(nullable_uint8))":"0100000000000008400000000000F077400000000010E0F340"}
+"""
+
+_aggregate_functions_state_varPopState_Nullable_Int16_ = r"""
+{"hex(varPopState(nullable_int16))":"0100000000000008400000000000BAC3400000406F7BC2E041"}
+"""
+
+_aggregate_functions_state_varPopState_Nullable_UInt16_ = r"""
+{"hex(varPopState(nullable_uint16))":"01000000000000084000000000E0FFF74000002000D0FFF341"}
+"""
+
+_aggregate_functions_state_varPopState_Nullable_Float64_ = r"""
+{"hex(varPopState(nullable_float64))":"01000000000000084072ED3A2E065E5177000000000000F07F"}
+"""
+
+_aggregate_functions_state_varPopState_Nullable_Int8_ = r"""
+{"hex(varPopState(nullable_int8))":"01000000000000084000000000000059400000000040DBE440"}
+"""
+
+_aggregate_functions_state_varPopState_Nullable_Int64_ = r"""
+{"hex(varPopState(nullable_int64))":"010000000000000840909827BF73B50C43F7189C010000E047"}
+"""
+
