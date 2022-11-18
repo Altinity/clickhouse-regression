@@ -91,3 +91,43 @@ _aggregate_functions_state_varSampStableState_inf___inf__nan = r"""
 {"hex(varSampStableState(x))":"06000000000000F87F000000000000F87F"}
 """
 
+_aggregate_functions_state_varSampStableState_Nullable_UInt64_ = r"""
+{"hex(varSampStableState(nullable_uint64))":"01031453DFE3A155D543E612DEC70855E547"}
+"""
+
+_aggregate_functions_state_varSampStableState_Nullable_Float32_ = r"""
+{"hex(varSampStableState(nullable_float32))":"0103ABAAAAAA2DB04941200000C0FFFFFF4F"}
+"""
+
+_aggregate_functions_state_varSampStableState_Nullable_Int32_ = r"""
+{"hex(varSampStableState(nullable_int32))":"0103000000802DB04941518B86BB0700E043"}
+"""
+
+_aggregate_functions_state_varSampStableState_Nullable_UInt32_ = r"""
+{"hex(varSampStableState(nullable_uint32))":"0103AAAAAA39C6D5D5415EE8CABDE9D7E443"}
+"""
+
+_aggregate_functions_state_varSampStableState_Nullable_UInt8_ = r"""
+{"hex(varSampStableState(nullable_uint8))":"0103ABAAAAAAAAEA5F40ABAAAAAA2AC0DF40"}
+"""
+
+_aggregate_functions_state_varSampStableState_Nullable_Int16_ = r"""
+{"hex(varSampStableState(nullable_int16))":"010355555555554DAA405555953EA081E041"}
+"""
+
+_aggregate_functions_state_varSampStableState_Nullable_UInt16_ = r"""
+{"hex(varSampStableState(nullable_uint16))":"010355555555D5FFDF40ABAA2A00C0FFDF41"}
+"""
+
+_aggregate_functions_state_varSampStableState_Nullable_Float64_ = r"""
+{"hex(varSampStableState(nullable_float64))":"0103000000000000F8FF000000000000F8FF"}
+"""
+
+_aggregate_functions_state_varSampStableState_Nullable_Int8_ = r"""
+{"hex(varSampStableState(nullable_int8))":"0103ABAAAAAAAAAA404055555555953AE340"}
+"""
+
+_aggregate_functions_state_varSampStableState_Nullable_Int64_ = r"""
+{"hex(varSampStableState(nullable_int64))":"01030BBB6F7FA223F34250BB12010000E047"}
+"""
+

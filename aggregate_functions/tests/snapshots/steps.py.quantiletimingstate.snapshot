@@ -1,0 +1,149 @@
+_aggregate_functions_state_quantileTimingState_constant = r"""
+{"hex(quantileTimingState(1))":"0101000100"}
+"""
+
+_aggregate_functions_state_quantileTimingState_zero_rows = r"""
+{"hex(quantileTimingState(number))":"010000"}
+"""
+
+_aggregate_functions_state_quantileTimingState_single_row = r"""
+{"hex(quantileTimingState(number))":"0101000000"}
+"""
+
+_aggregate_functions_state_quantileTimingState_with_group_by = r"""
+{"even":0,"hex(quantileTimingState(number))":"01050000000200040006000800"}
+{"even":1,"hex(quantileTimingState(number))":"01050001000300050007000900"}
+"""
+
+_aggregate_functions_state_quantileTimingState_some_negative_values = r"""
+{"hex(quantileTimingState(minus(number, 5)))":"010600000001000200030004000500"}
+"""
+
+_aggregate_functions_state_quantileTimingState_NULL_value_handling = r"""
+{"hex(quantileTimingState(x))":"0101050000000100030004000500"}
+"""
+
+_aggregate_functions_state_quantileTimingState_single_NULL_value = r"""
+{"hex(quantileTimingState(x))":"00"}
+"""
+
+_aggregate_functions_state_quantileTimingState_return_type = r"""
+{"toTypeName(hex(quantileTimingState(number)))":"String"}
+"""
+
+_aggregate_functions_state_quantileTimingState_doc_example = r"""
+{"hex(quantileTimingState(x))":"010600000001000200030004000500"}
+"""
+
+_aggregate_functions_state_quantileTimingState_inf = r"""
+{"hex(quantileTimingState(x))":"01050000000200060004000500"}
+"""
+
+_aggregate_functions_state_quantileTimingState__inf = r"""
+{"hex(quantileTimingState(x))":"01050000000200060004000500"}
+"""
+
+_aggregate_functions_state_quantileTimingState_nan = r"""
+{"hex(quantileTimingState(x))":"01050000000200060004000500"}
+"""
+
+_aggregate_functions_state_quantileTimingState_inf___inf__nan = r"""
+{"hex(quantileTimingState(x))":"010300020006000500"}
+"""
+
+_aggregate_functions_state_quantileTimingState_Nullable_Float32_ = r"""
+{"hex(quantileTimingState(nullable_float32))":"010101003075"}
+"""
+
+_aggregate_functions_state_quantileTimingState_Float32 = r"""
+{"hex(quantileTimingState(float32))":"01020030750000"}
+"""
+
+_aggregate_functions_state_quantileTimingState_Int8 = r"""
+{"hex(quantileTimingState(int8))":"0103007F0065000000"}
+"""
+
+_aggregate_functions_state_quantileTimingState_Nullable_UInt64_ = r"""
+{"hex(quantileTimingState(nullable_uint64))":"0101020000003075"}
+"""
+
+_aggregate_functions_state_quantileTimingState_Nullable_UInt32_ = r"""
+{"hex(quantileTimingState(nullable_uint32))":"01010300000030753075"}
+"""
+
+_aggregate_functions_state_quantileTimingState_Float64 = r"""
+{"hex(quantileTimingState(float64))":"0101000000"}
+"""
+
+_aggregate_functions_state_quantileTimingState_Nullable_Date_ = r"""
+{"hex(quantileTimingState(nullable_date))":"0101030000003075524B"}
+"""
+
+_aggregate_functions_state_quantileTimingState_Nullable_UInt16_ = r"""
+{"hex(quantileTimingState(nullable_uint16))":"01010300000030753075"}
+"""
+
+_aggregate_functions_state_quantileTimingState_Nullable_Int8_ = r"""
+{"hex(quantileTimingState(nullable_int8))":"010102007F006500"}
+"""
+
+_aggregate_functions_state_quantileTimingState_Int32 = r"""
+{"hex(quantileTimingState(int32))":"010300307530750000"}
+"""
+
+_aggregate_functions_state_quantileTimingState_UInt8 = r"""
+{"hex(quantileTimingState(uint8))":"0104000000FF0080000000"}
+"""
+
+_aggregate_functions_state_quantileTimingState_Date = r"""
+{"hex(quantileTimingState(date))":"01040000003075524B0000"}
+"""
+
+_aggregate_functions_state_quantileTimingState_UInt32 = r"""
+{"hex(quantileTimingState(uint32))":"0104000000307530750000"}
+"""
+
+_aggregate_functions_state_quantileTimingState_Int16 = r"""
+{"hex(quantileTimingState(int16))":"010300307575270000"}
+"""
+
+_aggregate_functions_state_quantileTimingState_Nullable_DateTime_ = r"""
+{"hex(quantileTimingState(nullable_datetime))":"01010300000030753075"}
+"""
+
+_aggregate_functions_state_quantileTimingState_Nullable_Int64_ = r"""
+{"hex(quantileTimingState(nullable_int64))":"0101020030753075"}
+"""
+
+_aggregate_functions_state_quantileTimingState_Int64 = r"""
+{"hex(quantileTimingState(int64))":"010300307530750000"}
+"""
+
+_aggregate_functions_state_quantileTimingState_Nullable_UInt8_ = r"""
+{"hex(quantileTimingState(nullable_uint8))":"010103000000FF008000"}
+"""
+
+_aggregate_functions_state_quantileTimingState_DateTime = r"""
+{"hex(quantileTimingState(datetime))":"0104000000307530750000"}
+"""
+
+_aggregate_functions_state_quantileTimingState_UInt16 = r"""
+{"hex(quantileTimingState(uint16))":"0104000000307530750000"}
+"""
+
+_aggregate_functions_state_quantileTimingState_Nullable_Float64_ = r"""
+{"hex(quantileTimingState(nullable_float64))":"01010000"}
+"""
+
+_aggregate_functions_state_quantileTimingState_Nullable_Int32_ = r"""
+{"hex(quantileTimingState(nullable_int32))":"0101020030753075"}
+"""
+
+_aggregate_functions_state_quantileTimingState_Nullable_Int16_ = r"""
+{"hex(quantileTimingState(nullable_int16))":"0101020030757527"}
+"""
+
+_aggregate_functions_state_quantileTimingState_UInt64 = r"""
+{"hex(quantileTimingState(uint64))":"010300000030750000"}
+"""
+

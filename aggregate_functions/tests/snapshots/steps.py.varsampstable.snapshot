@@ -91,3 +91,43 @@ _aggregate_functions_varSampStable_inf___inf__nan = r"""
 {"varSampStable(x)":null}
 """
 
+_aggregate_functions_varSampStable_Nullable_UInt64_ = r"""
+{"varSampStable(nullable_uint64)":1.1342124495547353e38}
+"""
+
+_aggregate_functions_varSampStable_Nullable_Float32_ = r"""
+{"varSampStable(nullable_float32)":1.1579207543382391e77}
+"""
+
+_aggregate_functions_varSampStable_Nullable_Int32_ = r"""
+{"varSampStable(nullable_int32)":4611720026417612000}
+"""
+
+_aggregate_functions_varSampStable_Nullable_UInt32_ = r"""
+{"varSampStable(nullable_uint32)":6007704008454666000}
+"""
+
+_aggregate_functions_varSampStable_Nullable_UInt8_ = r"""
+{"varSampStable(nullable_uint8)":16256.333333333334}
+"""
+
+_aggregate_functions_varSampStable_Nullable_Int16_ = r"""
+{"varSampStable(nullable_int16)":1107722490.3333333}
+"""
+
+_aggregate_functions_varSampStable_Nullable_UInt16_ = r"""
+{"varSampStable(nullable_uint16)":1073709056.3333334}
+"""
+
+_aggregate_functions_varSampStable_Nullable_Float64_ = r"""
+{"varSampStable(nullable_float64)":null}
+"""
+
+_aggregate_functions_varSampStable_Nullable_Int8_ = r"""
+{"varSampStable(nullable_int8)":19690.333333333332}
+"""
+
+_aggregate_functions_varSampStable_Nullable_Int64_ = r"""
+{"varSampStable(nullable_int64)":8.507059207033597e37}
+"""
+

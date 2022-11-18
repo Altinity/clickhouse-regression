@@ -17,4 +17,4 @@ def feature(self, func="varPop({params})", table=None):
     if table is None:
         table = self.context.table
 
-    avg_feature(func=func, table=table, exclude_types=["Decimal128(38)"])
+    avg_feature(func=func, table=table, decimal=False)
