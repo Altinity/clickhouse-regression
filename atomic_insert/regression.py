@@ -26,7 +26,6 @@ def argparser(parser):
 
 
 xfails = {}
-
 xflags = {}
 
 

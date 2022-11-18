@@ -86,7 +86,7 @@ def regression(
             for storage in storages:
                 if "aws_s3" == storage.lower():
                     with Given("I make sure the S3 credentials are set"):
-                        xfail('file permissions issue, fails to upload')
+                        xfail("file permissions issue, fails to upload")
 
                         if aws_s3_access_key == None:
                             fail("AWS S3 access key needs to be set")
@@ -111,7 +111,7 @@ def regression(
                     )
 
                 elif "minio" == storage.lower():
-                    xfail('minio does not start')
+                    xfail("minio does not start")
 
                     self.context.uri = "http://minio1:9001/root/data/"
                     self.context.access_key_id = "minio"
