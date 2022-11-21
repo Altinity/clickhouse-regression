@@ -6,7 +6,7 @@ from selects.tests.steps import *
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_AutomaticFinalModifier_TableEngineSettingNotSupportted("1.0")
+
 )
 def force_select_final_not_support(self):
     """Check exception message when `force_select_final` setting applies to MergeTree table with engine which
@@ -57,9 +57,7 @@ def select_final(self, ignore_force_select_final=False, select_count=None):
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_AutomaticFinalModifier_TableEngineSetting_ForceSelectFinal(
-        "1.0"
-    )
+
 )
 def force_select_final(self):
     """Check applying of 'FINAL' modifier automatically using with
@@ -150,7 +148,7 @@ def join_second_table_with_final(self):
 
 @TestFeature
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier("1.0"))
-@Name("table setting")
+@Name("table_setting")
 def feature(self):
     """Check enabling automatic final modifier using table engine settings."""
     for scenario in loads(current_module(), Scenario):

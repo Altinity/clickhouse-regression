@@ -19,8 +19,8 @@ def select_final(self, ignore_force_select_final=False, select_count=None, engin
             )
 
         with Then(f"I make insert into table"):
-            node.query(f"insert into {table_name} values ('abc');")
-            node.query(f"insert into {table_name} values ('abc');")
+            node.query(f"insert into {table_name} values ('abc',1);")
+            node.query(f"insert into {table_name} values ('abc',1);")
 
         with Then("I check 'SELECT count()' output"):
             node.query(
