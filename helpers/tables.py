@@ -7,7 +7,7 @@ from testflows.core import *
 class Column:
     def __init__(self, datatype, name=None):
         self.datatype = datatype
-        self.name = name if name is not None else self.datatype.name.replace("(","_").replace(")","_")
+        self.name = name if name is not None else self.datatype.name.replace("(","_").replace(")","_").lower()
 
     def full_definition(self):
         """Return full column definition (name and type) that can be used when defining a table in ClickHouse."""
