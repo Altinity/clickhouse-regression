@@ -7,7 +7,7 @@ from testflows.core import *
 class Column:
     def __init__(self, datatype, name=None):
         self.datatype = datatype
-        self.name = name if Name is not None else self.datatype.name.replace("(","_").replace(")","_")
+        self.name = name if name is not None else self.datatype.name.replace("(","_").replace(")","_")
 
     def full_definition(self):
         """Return full column definition (name and type) that can be used when defining a table in ClickHouse."""
@@ -39,182 +39,57 @@ class Column:
             yield values[i]
 
 
-class Tuple(Column):
-    def __init__(
-        self,
-        columns,
-    ):
-        self.columns = columns
-        self.name = "tuple_" + "_".join([column.name for column in self.columns])
-        self.type = "Tuple(" + ",".join([column.dataype.name for column in self.columns]) + ")"
-
-    def full_definition(self):
-        """Return full column definition (name and type) that can be used when defining a table in ClickHouse."""
-
-        return self.name + " " + self.datatype.name
-
-    def max_value(self):
-        """Return the maximum value for the column in string format."""
-
-        return "tuple(" + ",".join([column.max_value() for column in self.columns]) + ")"
-
-    def min_value(self):
-        """Return the minimum value for the column in string format."""
-
-        return "tuple(" + ",".join([column.min_value() for column in self.columns]) + ")"
-
-    def rand_value(self, seed=None):
-        """Return the random value for the column in string format."""
-
-        return (
-            "tuple(" + ",".join([column.rand_value(seed) for column in self.columns]) + ")"
-        )
-
-    def zero_or_null_value(self):
-        """Return the null or zero value for the column in string format."""
-
-        return (
-            "tuple("
-            + ",".join([column.zero_or_null_value() for column in self.columns])
-            + ")"
-        )
-
-
-class Map(Column):
-    def __init__(self, key, value):
-        self.key = key
-        self.value = value
-        self.name = "map_" + self.key.name + "_" + self.value.name
-        self.type = "Map(" + self.key.datatype.name + "," + self.value.datatype.name + ")"
-
-    def full_definition(self):
-        """Return full column definition (name and type) that can be used when defining a table in ClickHouse."""
-
-        return self.name + " " + self.type
-
-    def max_value(self):
-        """Return the maximum value for the column in string format."""
-
-        return "map(" + self.key.max_value() + "," + self.value.max_value() + ")"
-
-    def min_value(self):
-        """Return the minimum value for the column in string format."""
-
-        return "map(" + self.key.min_value() + "," + self.value.min_value() + ")"
-
-    def rand_value(self, seed=None):
-        """Return the random value for the column in string format."""
-
-        return (
-            "map(" + self.key.rand_value(seed) + "," + self.value.rand_value(seed) + ")"
-        )
-
-    def zero_or_null_value(self):
-        """Return the null or zero value for the column in string format."""
-
-        return (
-            "map("
-            + self.key.zero_or_null_value()
-            + ","
-            + self.value.zero_or_null_value()
-            + ")"
-        )
-
-
-class Array(Column):
-    def __init__(self, column):
-        self.column = column
-        self.name = "array_" + self.column.name
-        self.type = "Array(" + self.column.type + ")"
-
-    def full_definition(self):
-        """Return full column definition (name and type) that can be used when defining a table in ClickHouse."""
-
-        return self.name + " " + self.type
-
-    def max_value(self):
-        """Return the maximum value for the column in string format."""
-
-        return "[" + self.column.max_value() + "]"
-
-    def min_value(self):
-        """Return the minimum values for the column in string format."""
-
-        return "[" + self.column.min_value() + "]"
-
-    def rand_value(self, seed=None):
-        """Return the random values for the column in string format."""
-
-        return "[" + self.column.rand_value(seed) + "]"
-
-    def zero_or_null_value(self):
-        """Return the null or zero value for the column in string format."""
-
-        return "[" + self.column.zero_or_null_value() + "]"
-
 def is_numeric(datatype, decimal=True, date=False, datetime=False):
     """Return True if data type is numeric."""
-    if datatype.startswith("UInt") or datatype.startswith("Nullable(UInt"):
-        return True
-    if datatype.startswith("Int") or datatype.startswith("Nullable(Int"):
-        return True
-    if datatype.startswith("Float") or datatype.startswith("Nullable(Float"):
-        return True
     if decimal:
-        if datatype.startswith("Decimal") or datatype.startswith("Nullable(Decimal"):
+        if isinstance(datatype, Decimal):
             return True
     if date:
-        if datatype.startswith("Date") or datatype.startswith("Nullable(Date"):
+        if isinstance(datatype, Date):
             return True
     if datetime:
-        if datatype.startswith("DateTime") or datatype.startswith("Nullable(DateTime"):
+        if isinstance(datatype, DateTime):
             return True
-    return False
+    return datatype.is_numeric
 
 def is_string(datatype):
     """Return True if data type is String."""
-    if (
-        datatype.startswith("String")
-        or datatype.startswith("Nullable(String")
-        or datatype.startswith("LowCardinality(String")
-    ):
-        return True
+    return isinstance(datatype, String)
 
 
 def is_map(datatype):
     """Return True if data type is Map."""
-    if datatype.startswith("Map") or datatype.startswith("Nullable(Map"):
-        return True
+    return isinstance(datatype, Map)
 
 
 def is_unsigned_integer(datatype, decimal=True):
     """Return True if data type is unsigned integer."""
-    if datatype.startswith("UInt") or datatype.startswith("Nullable(UInt"):
-        return True
-    return False
+    if decimal:
+        if isinstance(datatype, Decimal):
+            return True
+    return isinstance(datatype, UInt)
 
 
 def is_integer(datatype, decimal=True):
-    """Return True if data type is numeric."""
-    if datatype.startswith("UInt") or datatype.startswith("Nullable(UInt"):
-        return True
-    if datatype.startswith("Int") or datatype.startswith("Nullable(Int"):
-        return True
-    return False
+    """Return True if data type is integer."""
+    if decimal:
+        if isinstance(datatype, Decimal):
+            return True
+    return isinstance(datatype, Int)
 
 
 def generate_low_card_columns(column_list):
     """Generate a list of low cardinality columns based on the input list."""
     return [
-        Column(LowCardinality(column.data_type))
+        Column(LowCardinality(column.datatype))
         for column in column_list
-        if column.data_type.is_low_cardinality
+        if column.datatype.supports_low_cardinality
     ]
 
 
 def generate_nullable_columns(column_list):
     """Generate a list of nullable columns based on the input list."""
-    return [Column(Nullable(column.data_type)) for column in column_list]
+    return [Column(Nullable(column.datatype)) for column in column_list]
 
 
 def generate_array_columns(column_list):
@@ -233,9 +108,9 @@ def generate_map_columns(column_list):
     map_list = []
     for key in column_list:
         if isinstance(key, Tuple) or isinstance(key, Array) or isinstance(key, Map):
-            # The if and elif have to be done seperately because Tuple, Array, Map classes do not have 'data_type'
+            # The if and elif have to be done seperately because Tuple, Array, Map classes do not have 'datatype'
             continue
-        elif key.data_type.is_valid_map_key:
+        elif key.datatype.is_valid_map_key:
             map_list += [Map(key=key, value=value) for value in column_list]
     return map_list
 
