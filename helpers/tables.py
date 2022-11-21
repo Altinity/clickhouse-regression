@@ -1,34 +1,33 @@
 from testflows.core import current, Given, Finally, TestStep, By
 from helpers.common import getuid
-from helpers.data_types import *
+from helpers.datatypes import *
 from testflows.core import *
 
 
 class Column:
-    def __init__(self, data_type):
-        self.data_type = data_type
-        self.name = data_type.name
-        self.type = data_type.type
+    def __init__(self, datatype, name=None):
+        self.datatype = datatype
+        self.name = name if Name is not None else self.datatype.name.replace("(","_").replace(")","_")
 
     def full_definition(self):
         """Return full column definition (name and type) that can be used when defining a table in ClickHouse."""
-        return self.data_type.name + " " + self.data_type.type
+        return self.name + " " + self.datatype.name
 
     def max_value(self):
         """Return the maximum value for the column in string format."""
-        return str(self.data_type.max_value())
+        return str(self.datatype.max_value())
 
     def min_value(self):
         """Return the minimum value for the column in string format."""
-        return str(self.data_type.min_value())
+        return str(self.datatype.min_value())
 
     def rand_value(self, seed=None):
         """Return the random value for the column in string format."""
-        return str(self.data_type.rand_value(seed))
+        return str(self.datatype.rand_value(seed))
 
     def zero_or_null_value(self):
         """Return the null or zero value for the column in string format."""
-        return str(self.data_type.zero_or_null_value())
+        return str(self.datatype.zero_or_null_value())
 
     def values(self, row_count, cardinality, seed=None):
         """Yield of values that have specified cardinality."""
@@ -47,12 +46,12 @@ class Tuple(Column):
     ):
         self.columns = columns
         self.name = "tuple_" + "_".join([column.name for column in self.columns])
-        self.type = "Tuple(" + ",".join([column.type for column in self.columns]) + ")"
+        self.type = "Tuple(" + ",".join([column.dataype.name for column in self.columns]) + ")"
 
     def full_definition(self):
         """Return full column definition (name and type) that can be used when defining a table in ClickHouse."""
 
-        return self.name + " " + self.type
+        return self.name + " " + self.datatype.name
 
     def max_value(self):
         """Return the maximum value for the column in string format."""
@@ -86,7 +85,7 @@ class Map(Column):
         self.key = key
         self.value = value
         self.name = "map_" + self.key.name + "_" + self.value.name
-        self.type = "Map(" + self.key.type + "," + self.value.type + ")"
+        self.type = "Map(" + self.key.datatype.name + "," + self.value.datatype.name + ")"
 
     def full_definition(self):
         """Return full column definition (name and type) that can be used when defining a table in ClickHouse."""
