@@ -158,7 +158,6 @@ def execute_query(
     format="JSONEachRow",
     use_file=False,
     hash_output=False,
-    error=None,
 ):
     """Execute SQL query and compare the output to the snapshot."""
     if snapshot_name is None:
