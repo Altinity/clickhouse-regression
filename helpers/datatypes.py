@@ -65,9 +65,7 @@ class Int32(Int):
 
 class Int64(Int):
     def __init__(self):
-        super().__init__(
-            "Int64", max=9223372036854775807, min=-9223372036854775808
-        )
+        super().__init__("Int64", max=9223372036854775807, min=-9223372036854775808)
 
 
 class Int128(Int):
@@ -159,7 +157,9 @@ class Float64(Float):
 
     def rand_value(self, seed=None):
         random.seed(seed)
-        return f"toFloat64({random.uniform(-1.79769, -1.79769)}e{random.randint(0,308)})"
+        return (
+            f"toFloat64({random.uniform(-1.79769, -1.79769)}e{random.randint(0,308)})"
+        )
 
 
 # Decimals
@@ -194,12 +194,7 @@ class Decimal32(Decimal):
             limit = "0." + "9" * (scale - 1)
         else:
             limit = "9" * (9 - scale) + "." + "9" * scale
-        super().__init__(
-            f"Decimal32({scale})",
-            max=limit,
-            min="-" + limit,
-            scale=scale
-        )
+        super().__init__(f"Decimal32({scale})", max=limit, min="-" + limit, scale=scale)
 
 
 class Decimal64(Decimal):
@@ -208,12 +203,7 @@ class Decimal64(Decimal):
             limit = "0." + "9" * (scale - 1)
         else:
             limit = "9" * (18 - scale) + "." + "9" * scale
-        super().__init__(
-            f"Decimal64({scale})",
-            max=limit,
-            min="-" + limit,
-            scale=scale
-        )
+        super().__init__(f"Decimal64({scale})", max=limit, min="-" + limit, scale=scale)
 
 
 class Decimal128(Decimal):
@@ -223,10 +213,7 @@ class Decimal128(Decimal):
         else:
             limit = "9" * (38 - scale) + "." + "9" * scale
         super().__init__(
-            f"Decimal128({scale})",
-            max=limit,
-            min="-" + limit,
-            scale=scale
+            f"Decimal128({scale})", max=limit, min="-" + limit, scale=scale
         )
 
 
@@ -236,17 +223,12 @@ class Decimal256(Decimal):
             limit = "0." + "9" * (scale - 1)
         else:
             limit = "9" * (76 - scale) + "." + "9" * scale
-        super().__init__(
-            f"Decimal32({scale})",
-            max=limit,
-            min="-" + limit,
-            scale=scale
-        )
+        super().__init__(f"Decimal32({scale})", max=limit, min="-" + limit, scale=scale)
 
 
 # Date and DateTime
 class Date(DataType):
-    def __init__(self, name="Date", name=None, max="'2149-06-06'", min="'1970-01-01'"):
+    def __init__(self, name="Date", max="'2149-06-06'", min="'1970-01-01'"):
         super().__init__(
             name=name,
             max=max,
@@ -277,7 +259,7 @@ class DateTime(Date):
         super().__init__(name=name, max=max, min=min)
 
 
-class DateTime64(Date):
+class DateTime64(DateTime):
     def __init__(self, precision):
         super().__init__(
             f"DateTime64({precision})",
@@ -292,7 +274,7 @@ class DateTime64(Date):
 class String(DataType):
     def __init__(
         self,
-        "String",
+        name="String",
         max="'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ'",
         min="''",
     ):
@@ -321,9 +303,7 @@ class FixedString(String):
         if length <= 51:
             max = (
                 "'"
-                + "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"[
-                    0:length
-                ]
+                + "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"[0:length]
                 + "'"
             )
         else:
@@ -332,9 +312,7 @@ class FixedString(String):
                 + "a" * (length - 51)
                 + "'"
             )
-        super().__init__(
-            f"FixedString({length})", max=max
-        )
+        super().__init__(f"FixedString({length})", max=max)
 
     def max_value(self):
         return f"to{self.name}({self.max},{self.length})"
@@ -438,7 +416,131 @@ class LowCardinality(DataType):
         return self.datatype.zero_or_null_value()
 
 
-basic_data_types = [
+class Tuple(DataType):
+    def __init__(
+        self,
+        datatypes,
+    ):
+        self.datatypes = datatypes
+        super().__init__(
+            "Tuple(" + ",".join([datatype.name for datatype in self.datatypes]) + ")",
+            supports_low_cardinality=False,
+            is_valid_map_key=False,
+            is_numeric=False,
+            is_unsigned=False,
+        )
+
+    def max_value(self):
+        """Return the maximum value for the column in string format."""
+
+        return (
+            "tuple("
+            + ",".join([datatype.max_value() for datatype in self.datatypes])
+            + ")"
+        )
+
+    def min_value(self):
+        """Return the minimum value for the column in string format."""
+
+        return (
+            "tuple("
+            + ",".join([datatype.min_value() for datatype in self.datatypes])
+            + ")"
+        )
+
+    def rand_value(self, seed=None):
+        """Return the random value for the column in string format."""
+
+        return (
+            "tuple("
+            + ",".join([datatype.rand_value(seed) for datatype in self.datatypes])
+            + ")"
+        )
+
+    def zero_or_null_value(self):
+        """Return the null or zero value for the column in string format."""
+
+        return (
+            "tuple("
+            + ",".join([datatype.zero_or_null_value() for datatype in self.datatypes])
+            + ")"
+        )
+
+
+class Map(DataType):
+    def __init__(self, key, value):
+        self.key = key
+        self.value = value
+        super().__init__(
+            "Map(" + self.key.name + "," + self.value.name + ")",
+            supports_low_cardinality=False,
+            is_valid_map_key=False,
+            is_numeric=False,
+            is_unsigned=False,
+        )
+
+    def max_value(self):
+        """Return the maximum value for the column in string format."""
+
+        return "map(" + self.key.max_value() + "," + self.value.max_value() + ")"
+
+    def min_value(self):
+        """Return the minimum value for the column in string format."""
+
+        return "map(" + self.key.min_value() + "," + self.value.min_value() + ")"
+
+    def rand_value(self, seed=None):
+        """Return the random value for the column in string format."""
+
+        return (
+            "map(" + self.key.rand_value(seed) + "," + self.value.rand_value(seed) + ")"
+        )
+
+    def zero_or_null_value(self):
+        """Return the null or zero value for the column in string format."""
+
+        return (
+            "map("
+            + self.key.zero_or_null_value()
+            + ","
+            + self.value.zero_or_null_value()
+            + ")"
+        )
+
+
+class Array(DataType):
+    def __init__(self, datatype):
+        self.datatype = datatype
+        super().__init__(
+            "Array(" + self.datatype.name + ")",
+            supports_low_cardinality=False,
+            is_valid_map_key=False,
+            is_numeric=False,
+            is_unsigned=False,
+        )
+
+    def max_value(self):
+        """Return the maximum value for the column in string format."""
+
+        return "[" + self.datatype.max_value() + "]"
+
+    def min_value(self):
+        """Return the minimum values for the column in string format."""
+
+        return "[" + self.datatype.min_value() + "]"
+
+    def rand_value(self, seed=None):
+        """Return the random values for the column in string format."""
+
+        return "[" + self.datatype.rand_value(seed) + "]"
+
+    def zero_or_null_value(self):
+        """Return the null or zero value for the column in string format."""
+
+        return "[" + self.datatype.zero_or_null_value() + "]"
+
+
+basic_datatypes = [
     UInt8(),
     UInt16(),
     UInt32(),
@@ -461,7 +563,7 @@ basic_data_types = [
     UUID(),
 ]
 
-common_basic_data_types = [
+common_basic_datatypes = [
     String(),
     FixedString(length=51),
     Date(),
