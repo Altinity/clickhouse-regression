@@ -7,36 +7,35 @@ from testflows.core import *
 class Column:
     def __init__(self, datatype, name=None):
         self.datatype = datatype
-        self.name = name if name is not None else self.datatype.name.replace("(","_").replace(")","_").lower()
+        self.name = (
+            name
+            if name is not None
+            else self.datatype.name.replace("(", "_")
+            .replace(")", "_")
+            .replace(",", "_")
+            .lower()
+        )
 
     def full_definition(self):
         """Return full column definition (name and type) that can be used when defining a table in ClickHouse."""
         return self.name + " " + self.datatype.name
 
-    def max_value(self):
-        """Return the maximum value for the column in string format."""
-        return str(self.datatype.max_value())
-
-    def min_value(self):
-        """Return the minimum value for the column in string format."""
-        return str(self.datatype.min_value())
-
-    def rand_value(self, seed=None):
-        """Return the random value for the column in string format."""
-        return str(self.datatype.rand_value(seed))
-
-    def zero_or_null_value(self):
-        """Return the null or zero value for the column in string format."""
-        return str(self.datatype.zero_or_null_value())
-
     def values(self, row_count, cardinality, seed=None):
         """Yield of values that have specified cardinality."""
-        values = [self.max_value(), self.min_value(), self.zero_or_null_value()]
+        values = [
+            self.datatype.max_value(),
+            self.datatype.min_value(),
+            self.datatype.zero_or_null_value(),
+        ]
+
         if row_count > 3:
-            values += [self.rand_value(seed=seed) for i in range(row_count - 3)]
+            values += [
+                self.datatype.rand_value(seed=seed) for i in range(row_count - 3)
+            ]
+
         values = values * cardinality
         for i in range(row_count):
-            yield values[i]
+            yield str(values[i])
 
 
 def is_numeric(datatype, decimal=True, date=False, datetime=False):
@@ -52,6 +51,7 @@ def is_numeric(datatype, decimal=True, date=False, datetime=False):
             return True
     return datatype.is_numeric
 
+
 def is_string(datatype):
     """Return True if data type is String."""
     return isinstance(datatype, String)
@@ -66,7 +66,7 @@ def is_unsigned_integer(datatype, decimal=True):
     """Return True if data type is unsigned integer."""
     if decimal:
         if isinstance(datatype, Decimal):
-            return True
+            return False
     return isinstance(datatype, UInt)
 
 
@@ -74,105 +74,110 @@ def is_integer(datatype, decimal=True):
     """Return True if data type is integer."""
     if decimal:
         if isinstance(datatype, Decimal):
-            return True
+            return False
     return isinstance(datatype, Int)
 
 
-def generate_low_card_columns(column_list):
-    """Generate a list of low cardinality columns based on the input list."""
+def generate_low_card_datatypes(datatype_list):
+    """Generate a list of low cardinality datatypes based on the input list."""
     return [
-        Column(LowCardinality(column.datatype))
-        for column in column_list
-        if column.datatype.supports_low_cardinality
+        LowCardinality(datatype)
+        for datatype in datatype_list
+        if datatype.supports_low_cardinality
     ]
 
 
-def generate_nullable_columns(column_list):
-    """Generate a list of nullable columns based on the input list."""
-    return [Column(Nullable(column.datatype)) for column in column_list]
+def generate_nullable_datatypes(datatype_list):
+    """Generate a list of nullable datatypes based on the input list."""
+    return [Nullable(datatype) for datatype in datatype_list]
 
 
-def generate_array_columns(column_list):
-    """Generate a list of array columns based on the input list."""
-    return [Array(column=column) for column in column_list]
+def generate_array_datatypes(datatype_list):
+    """Generate a list of array datatypes based on the input list."""
+    return [Array(datatype) for datatype in datatype_list]
 
 
-def generate_tuple_column(column_list):
-    """Generate a tuple column containing all the provided column types inside."""
-    return Tuple(column_list)
+def generate_tuple_datatype(datatype_list):
+    """Generate a tuple datatype containing all the provided datatypes inside."""
+    return Tuple([datatype for datatype in datatype_list])
 
 
-def generate_map_columns(column_list):
-    """Generate a list of map columns based on the input list.
-    Generates every combination between columns that are valid keys and all other provided columns."""
+def generate_map_datatypes(datatype_list):
+    """Generate a list of map datatypes based on the input list.
+    Generates every combination between datatypes that are valid keys and all other provided columns."""
     map_list = []
-    for key in column_list:
-        if isinstance(key, Tuple) or isinstance(key, Array) or isinstance(key, Map):
-            # The if and elif have to be done seperately because Tuple, Array, Map classes do not have 'datatype'
-            continue
-        elif key.datatype.is_valid_map_key:
-            map_list += [Map(key=key, value=value) for value in column_list]
+    for key in datatype_list:
+        if key.is_valid_map_key:
+            map_list += [Map(key=key, value=value) for value in datatype_list]
     return map_list
 
 
-basic_columns = [Column(data_type) for data_type in basic_data_types]
+low_cardinality_common_basic_datatypes = generate_low_card_datatypes(
+    common_basic_datatypes
+)
 
-common_basic_columns = [Column(data_type) for data_type in common_basic_data_types]
+null_common_basic_datatypes = generate_nullable_datatypes(common_basic_datatypes)
 
-low_cardinality_common_basic_columns = generate_low_card_columns(common_basic_columns)
-
-null_common_basic_columns = generate_nullable_columns(common_basic_columns)
-
-common_complex_columns = [
-    Array(column=Column(String())),
+common_complex_datatypes = [
+    Array(String()),
     Map(
-        key=Column(String()),
-        value=Column(LowCardinality(Float64())),
+        key=String(),
+        value=LowCardinality(Float64()),
     ),
-    Tuple([Column(String())]),
+    Tuple([String()]),
 ]
 
-common_columns = (
-    common_basic_columns
-    + low_cardinality_common_basic_columns
-    + null_common_basic_columns
-    + common_complex_columns
+common_datatypes = (
+    common_basic_datatypes
+    + low_cardinality_common_basic_datatypes
+    + null_common_basic_datatypes
+    + common_complex_datatypes
 )
+
+common_columns = [Column(datatype) for datatype in common_datatypes]
 
 
 def generate_all_column_types(include=None, exclude=None):
-    """Generate a list of columns with names and ClickHouse types including arrays, maps and tuples."""
+    """Generate a list of datatypes with names and ClickHouse types including arrays, maps and tuples."""
 
-    null_columns = generate_nullable_columns(basic_columns)
-    low_cardinality_columns = generate_low_card_columns(basic_columns + null_columns)
-
-    array_columns = generate_array_columns(
-        basic_columns + null_columns + low_cardinality_columns + common_complex_columns
+    null_datatypes = generate_nullable_datatypes(basic_datatypes)
+    low_cardinality_datatypes = generate_low_card_datatypes(
+        basic_datatypes + null_datatypes
     )
 
-    map_columns = generate_map_columns(
-        basic_columns + null_columns + low_cardinality_columns + common_complex_columns
+    array_datatypes = generate_array_datatypes(
+        basic_datatypes
+        + null_datatypes
+        + low_cardinality_datatypes
+        + common_complex_datatypes
     )
 
-    tuple_column = [
-        generate_tuple_column(
-            basic_columns
-            + null_columns
-            + low_cardinality_columns
-            + common_complex_columns
+    map_datatypes = generate_map_datatypes(
+        basic_datatypes
+        + null_datatypes
+        + low_cardinality_datatypes
+        + common_complex_datatypes
+    )
+
+    tuple_datatype = [
+        generate_tuple_datatype(
+            basic_datatypes
+            + null_datatypes
+            + low_cardinality_datatypes
+            + common_complex_datatypes
         )
     ]
 
-    all_test_columns = (
-        basic_columns
-        + map_columns
-        + null_columns
-        + array_columns
-        + low_cardinality_columns
-        + tuple_column
+    all_test_datatypes = (
+        basic_datatypes
+        + map_datatypes
+        + null_datatypes
+        + array_datatypes
+        + low_cardinality_datatypes
+        + tuple_datatype
     )
 
-    return list(all_test_columns)
+    return [Column(datatype) for datatype in all_test_datatypes]
 
 
 class Table:

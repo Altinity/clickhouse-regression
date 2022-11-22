@@ -1,4 +1,5 @@
 from helpers.tables import common_columns
+from helpers.datatypes import String
 
 from aggregate_functions.tests.steps import *
 from aggregate_functions.requirements import (
@@ -95,16 +96,14 @@ def feature(self, func="argMin({params})", table=None):
                 permutations.sort()
 
                 for col1, col2 in permutations:
-                    col1_name, col1_type = col1.split(" ", 1)
-                    col2_name, col2_type = col2.split(" ", 1)
                     # we already cover String data type above so skip it here
-                    if col1_type == "String" or col2_type == "String":
+                    if isinstance(col1.datatype, String) or isinstance(col2.datatype,String):
                         continue
                     Check(
-                        f"{col1_type},{col2_type}",
+                        f"{col1.datatype.name},{col1.datatype.name}",
                         test=datatype,
                         parallel=True,
                         executor=executor,
-                    )(func=func, table=table, col1_name=col1_name, col2_name=col2_name)
+                    )(func=func, table=table, col1_name=col1.name, col2_name=col2.name)
 
                 join()
