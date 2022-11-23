@@ -1,7 +1,7 @@
 from testflows.core import *
 from aggregate_functions.tests.steps import *
 
-from helpers.tables import common_columns
+from helpers.tables import common_columns, is_unsigned_integer
 from helpers.cluster import QueryRuntimeException
 
 from aggregate_functions.requirements import (
@@ -91,13 +91,10 @@ def feature(self, func="groupArrayInsertAt({params})", table=None):
                 permutations.sort()
 
                 for col1, col2 in permutations:
-                    col1_name, col1_type = col1.split(" ", 1)
-                    col2_name, col2_type = col2.split(" ", 1)
+                    col1_name, col1_type = col1.name, col1.datatype.name
+                    col2_name, col2_type = col2.name, col2.datatype.name
 
-                    if not (
-                        col2_type.startswith("UInt")
-                        or col2_type.startswith("Nullable(UInt")
-                    ):
+                    if not is_unsigned_integer(col2.datatype):
                         continue
 
                     Check(

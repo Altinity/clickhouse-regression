@@ -4,7 +4,7 @@ from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_ArgMax,
 )
 
-from aggregate_functions.tests.argMin import feature as argmin_feature
+from aggregate_functions.tests.argMin import feature as checks
 
 
 @TestFeature
@@ -17,4 +17,4 @@ def feature(self, func="argMax({params})", table=None):
     if table is None:
         table = self.context.table
 
-    argmin_feature(func=func, table=table)
+    checks(func=func, table=table)

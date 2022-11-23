@@ -2,7 +2,7 @@ from testflows.core import *
 from aggregate_functions.tests.steps import *
 
 from helpers.tables import common_columns
-from helpers.tables import is_numeric
+from helpers.tables import is_numeric, is_integer, is_unsigned_integer
 
 from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_TopKWeighted,
@@ -90,14 +90,12 @@ def feature(self, func="topKWeighted({params})", table=None):
                 permutations.sort()
 
                 for col1, col2 in permutations:
-                    col1_name, col1_type = col1.split(" ", 1)
-                    col2_name, col2_type = col2.split(" ", 1)
+                    col1_name, col1_type = col1.name, col1.datatype.name
+                    col2_name, col2_type = col2.name, col2.datatype.name
 
                     if not (
-                        col2_type.startswith("UInt")
-                        or col2_type.startswith("Int")
-                        or col2_type.startswith("Nullable(UInt")
-                        or col2_type.startswith("Nullable(Int")
+                        is_unsigned_integer(col2.datatype)
+                        or is_integer(col2.datatype)
                     ):
                         continue
 

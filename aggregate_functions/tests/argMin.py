@@ -1,5 +1,4 @@
-from helpers.tables import common_columns
-from helpers.datatypes import String
+from helpers.tables import common_columns, is_string
 
 from aggregate_functions.tests.steps import *
 from aggregate_functions.requirements import (
@@ -70,7 +69,7 @@ def feature(self, func="argMin({params})", table=None):
     with Feature("datatypes"):
         with Pool(3) as executor:
             for column in table.columns:
-                col_name, col_type = column.split(" ", 1)
+                col_name, col_type = column.name, column.datatype.name
                 Check(
                     f"String,{col_type}",
                     test=datatype,
@@ -97,7 +96,7 @@ def feature(self, func="argMin({params})", table=None):
 
                 for col1, col2 in permutations:
                     # we already cover String data type above so skip it here
-                    if isinstance(col1.datatype, String) or isinstance(col2.datatype,String):
+                    if is_string(col1.datatype) or is_string(col2.datatype):
                         continue
                     Check(
                         f"{col1.datatype.name},{col1.datatype.name}",

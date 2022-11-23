@@ -1,6 +1,7 @@
 from testflows.core import *
 
-from helpers.tables import is_numeric, common_columns
+from helpers.datatypes import Float64
+from helpers.tables import is_numeric, common_columns, unwrap
 from aggregate_functions.tests.steps import execute_query, permutations_with_replacement
 from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_RankCorr,
@@ -110,16 +111,16 @@ def feature(self, func="rankCorr({params})", table=None):
                     col
                     for col in table.columns
                     if col in common_columns
-                    and is_numeric(col.split(" ", 1)[-1], decimal=False)
+                    and is_numeric(col.datatype, decimal=False)
                 ]
                 permutations = list(permutations_with_replacement(columns, 2))
                 permutations.sort()
 
                 for col1, col2 in permutations:
-                    col1_name, col1_type = col1.split(" ", 1)
-                    col2_name, col2_type = col2.split(" ", 1)
+                    col1_name, col1_type = col1.name, col1.datatype.name
+                    col2_name, col2_type = col2.name, col2.datatype.name
                     # we already cover Float64 data type above so skip it here
-                    if col1_type == "Float64" or col2_type == "Float64":
+                    if isinstance(unwrap(col1.datatype), Float64) or isinstance(unwrap(col2.datatype), Float64):
                         continue
                     Check(
                         f"{col1_type},{col2_type}",

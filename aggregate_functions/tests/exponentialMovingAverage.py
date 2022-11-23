@@ -20,4 +20,5 @@ def feature(self, func="exponentialMovingAverage({params})", table=None):
         table = self.context.table
 
     func = func.replace("({params})", "(0.5)({params})")
+
     checks(func=func, table=table, decimal=True)

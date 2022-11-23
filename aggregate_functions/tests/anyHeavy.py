@@ -4,7 +4,7 @@ from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_AnyHeavy,
 )
 
-from aggregate_functions.tests.any import feature as any_feature
+from aggregate_functions.tests.any import feature as checks
 
 
 @TestFeature
@@ -17,4 +17,4 @@ def feature(self, func="anyHeavy({params})", table=None):
     if table is None:
         table = self.context.table
 
-    any_feature(func=func, table=table)
+    checks(func=func, table=table)
