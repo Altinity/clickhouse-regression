@@ -71,7 +71,7 @@ def feature(
         )
 
     for column in table.columns:
-        column_name, column_type = column.split(" ", 1)
+        column_name, column_type = column.name, column.datatype.name
 
         if not is_numeric(column_type, decimal=decimal, date=date, datetime=datetime):
             continue

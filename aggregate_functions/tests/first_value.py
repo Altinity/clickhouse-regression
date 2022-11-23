@@ -50,7 +50,7 @@ def feature(self, func="first_value({params})", table=None):
             )
 
     for column in table.columns:
-        column_name, column_type = column.split(" ", 1)
+        column_name, column_type = column.name, column.datatype.name
 
         with Check(f"{column_type}"):
             execute_query(f"SELECT {func.format(params=column_name)} FROM {table.name}")

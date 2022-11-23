@@ -4,7 +4,7 @@ from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_CovarSamp,
 )
 
-from aggregate_functions.tests.covarPop import feature as covarpop_feature
+from aggregate_functions.tests.covarPop import feature as checks
 
 
 @TestFeature
@@ -17,4 +17,4 @@ def feature(self, func="covarSamp({params})", table=None):
     if table is None:
         table = self.context.table
 
-    covarpop_feature(func=func, table=table)
+    checks(func=func, table=table)

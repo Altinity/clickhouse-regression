@@ -4,7 +4,7 @@ from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_StddevPop,
 )
 
-from aggregate_functions.tests.stddevPop import feature as stddevpop_feature
+from aggregate_functions.tests.stddevPop import feature as checks
 
 
 @TestFeature
@@ -17,4 +17,4 @@ def feature(self, func="stddevPopStable({params})", table=None):
     if table is None:
         table = self.context.table
 
-    stddevpop_feature(func=func, table=table)
+    checks(func=func, table=table)

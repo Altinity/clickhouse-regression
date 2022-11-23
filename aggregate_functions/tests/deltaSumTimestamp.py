@@ -82,15 +82,15 @@ def feature(
                     for col in table.columns
                     if col in common_columns
                     and is_numeric(
-                        col.split(" ", 1)[-1], decimal=False, date=True, datetime=True
+                        col.datatype, decimal=False, date=True, datetime=True
                     )
                 ]
                 permutations = list(permutations_with_replacement(columns, 2))
                 permutations.sort()
 
                 for col1, col2 in permutations:
-                    col1_name, col1_type = col1.split(" ", 1)
-                    col2_name, col2_type = col2.split(" ", 1)
+                    col1_name, col1_type = col1.name, col1.datatype.name
+                    col2_name, col2_type = col2.name, col2.datatype.name
 
                     if both_arguments_with_the_same_datatype:
                         if col1_type != col2_type:

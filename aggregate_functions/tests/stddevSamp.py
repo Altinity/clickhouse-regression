@@ -4,7 +4,7 @@ from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_StddevSamp,
 )
 
-from aggregate_functions.tests.avg import feature as avg_feature
+from aggregate_functions.tests.avg import feature as checks
 
 
 @TestFeature
@@ -17,4 +17,4 @@ def feature(self, func="stddevSamp({params})", table=None):
     if table is None:
         table = self.context.table
 
-    avg_feature(func=func, table=table, decimal=False)
+    checks(func=func, table=table, decimal=False)

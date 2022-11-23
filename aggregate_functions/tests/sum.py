@@ -39,9 +39,9 @@ def feature(self, func="sum({params})", table=None, decimal=True):
         )
 
     for column in table.columns:
-        column_name, column_type = column.split(" ", 1)
+        column_name, column_type = column.name, column.datatype.name
 
-        if not is_numeric(column_type, decimal=decimal):
+        if not is_numeric(column.datatype, decimal=decimal):
             continue
 
         with Check(f"{column_type}"):
