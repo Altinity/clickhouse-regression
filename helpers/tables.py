@@ -40,6 +40,8 @@ class Column:
 
 def is_numeric(datatype, decimal=True, date=False, datetime=False):
     """Return True if data type is numeric."""
+    datatype = unwrap(datatype)
+
     if decimal:
         if isinstance(datatype, Decimal):
             return True
@@ -49,21 +51,24 @@ def is_numeric(datatype, decimal=True, date=False, datetime=False):
     if datetime:
         if isinstance(datatype, DateTime):
             return True
+
     return datatype.is_numeric
 
 
 def is_string(datatype):
     """Return True if data type is String."""
-    return isinstance(datatype, String)
+    return isinstance(unwrap(datatype), String)
 
 
 def is_map(datatype):
     """Return True if data type is Map."""
-    return isinstance(datatype, Map)
+    return isinstance(unwrap(datatype), Map)
 
 
 def is_unsigned_integer(datatype, decimal=True):
     """Return True if data type is unsigned integer."""
+    datatype = unwrap(datatype)
+
     if decimal:
         if isinstance(datatype, Decimal):
             return False
@@ -72,6 +77,8 @@ def is_unsigned_integer(datatype, decimal=True):
 
 def is_integer(datatype, decimal=True):
     """Return True if data type is integer."""
+    datatype = unwrap(datatype)
+
     if decimal:
         if isinstance(datatype, Decimal):
             return False
