@@ -540,6 +540,13 @@ class Array(DataType):
         return "[" + self.datatype.zero_or_null_value() + "]"
 
 
+def unwrap(datatype):
+    """Unwrap to the inner most datatype if needed."""
+    if isinstance(datatype, Nullable) or isinstance(datatype, LowCardinality):
+        return datatype.datatype
+    return datatype
+
+
 basic_datatypes = [
     UInt8(),
     UInt16(),
