@@ -63,51 +63,75 @@ _aggregate_functions_state_intervalLengthSumState_return_type = r"""
 {"toTypeName(hex(intervalLengthSumState(number, plus(number, 1))))":"String"}
 """
 
-_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_Date_Date = r"""
-{"hex(intervalLengthSumState(date, date))":"000000000000000000"}
+_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_UInt64_UInt64 = r"""
+{"hex(intervalLengthSumState(uint64, uint64))":"000000000000000000"}
 """
 
-_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_DateTime_DateTime = r"""
-{"hex(intervalLengthSumState(datetime, datetime))":"000000000000000000"}
+_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_Nullable_UInt64__Nullable_UInt64_ = r"""
+{"hex(intervalLengthSumState(nullable_uint64_, nullable_uint64_))":"000000000000000000"}
 """
 
-_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_Float64_Float64 = r"""
-{"hex(intervalLengthSumState(float64, float64))":"000000000000000000"}
+_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_Nullable_Int64__Nullable_Int64_ = r"""
+{"hex(intervalLengthSumState(nullable_int64_, nullable_int64_))":"000000000000000000"}
+"""
+
+_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_Nullable_Float64__Nullable_Float64_ = r"""
+{"hex(intervalLengthSumState(nullable_float64_, nullable_float64_))":"000000000000000000"}
+"""
+
+_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_Nullable_Float32__Nullable_Float32_ = r"""
+{"hex(intervalLengthSumState(nullable_float32_, nullable_float32_))":"000000000000000000"}
+"""
+
+_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_LowCardinality_UInt64__LowCardinality_UInt64_ = r"""
+{"hex(intervalLengthSumState(lowcardinality_uint64_, lowcardinality_uint64_))":"000000000000000000"}
+"""
+
+_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_Nullable_DateTime__Nullable_DateTime_ = r"""
+{"hex(intervalLengthSumState(nullable_datetime_, nullable_datetime_))":"000000000000000000"}
+"""
+
+_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_Nullable_Date__Nullable_Date_ = r"""
+{"hex(intervalLengthSumState(nullable_date_, nullable_date_))":"000000000000000000"}
+"""
+
+_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_LowCardinality_Float32__LowCardinality_Float32_ = r"""
+{"hex(intervalLengthSumState(lowcardinality_float32_, lowcardinality_float32_))":"000000000000000000"}
+"""
+
+_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_LowCardinality_Float64__LowCardinality_Float64_ = r"""
+{"hex(intervalLengthSumState(lowcardinality_float64_, lowcardinality_float64_))":"000000000000000000"}
+"""
+
+_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_LowCardinality_Int64__LowCardinality_Int64_ = r"""
+{"hex(intervalLengthSumState(lowcardinality_int64_, lowcardinality_int64_))":"000000000000000000"}
+"""
+
+_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_LowCardinality_DateTime__LowCardinality_DateTime_ = r"""
+{"hex(intervalLengthSumState(lowcardinality_datetime_, lowcardinality_datetime_))":"000000000000000000"}
 """
 
 _aggregate_functions_state_intervalLengthSumState_datatypes_permutations_Int64_Int64 = r"""
 {"hex(intervalLengthSumState(int64, int64))":"000000000000000000"}
 """
 
+_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_LowCardinality_Date__LowCardinality_Date_ = r"""
+{"hex(intervalLengthSumState(lowcardinality_date_, lowcardinality_date_))":"000000000000000000"}
+"""
+
 _aggregate_functions_state_intervalLengthSumState_datatypes_permutations_Float32_Float32 = r"""
 {"hex(intervalLengthSumState(float32, float32))":"000000000000000000"}
 """
 
-_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_Nullable_Date__Nullable_Date_ = r"""
-{"hex(intervalLengthSumState(nullable_date, nullable_date))":"000000000000000000"}
+_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_Float64_Float64 = r"""
+{"hex(intervalLengthSumState(float64, float64))":"000000000000000000"}
 """
 
-_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_Nullable_DateTime__Nullable_DateTime_ = r"""
-{"hex(intervalLengthSumState(nullable_datetime, nullable_datetime))":"000000000000000000"}
+_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_DateTime_DateTime = r"""
+{"hex(intervalLengthSumState(datetime, datetime))":"000000000000000000"}
 """
 
-_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_Nullable_Float32__Nullable_Float32_ = r"""
-{"hex(intervalLengthSumState(nullable_float32, nullable_float32))":"000000000000000000"}
-"""
-
-_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_Nullable_Float64__Nullable_Float64_ = r"""
-{"hex(intervalLengthSumState(nullable_float64, nullable_float64))":"000000000000000000"}
-"""
-
-_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_Nullable_Int64__Nullable_Int64_ = r"""
-{"hex(intervalLengthSumState(nullable_int64, nullable_int64))":"000000000000000000"}
-"""
-
-_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_Nullable_UInt64__Nullable_UInt64_ = r"""
-{"hex(intervalLengthSumState(nullable_uint64, nullable_uint64))":"000000000000000000"}
-"""
-
-_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_UInt64_UInt64 = r"""
-{"hex(intervalLengthSumState(uint64, uint64))":"000000000000000000"}
+_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_Date_Date = r"""
+{"hex(intervalLengthSumState(date, date))":"000000000000000000"}
 """
 

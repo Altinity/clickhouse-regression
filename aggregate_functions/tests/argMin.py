@@ -99,7 +99,7 @@ def feature(self, func="argMin({params})", table=None):
                     if is_string(col1.datatype) or is_string(col2.datatype):
                         continue
                     Check(
-                        f"{col1.datatype.name},{col1.datatype.name}",
+                        f"{col1.datatype.name},{col2.datatype.name}",
                         test=datatype,
                         parallel=True,
                         executor=executor,

@@ -31,35 +31,67 @@ _aggregate_functions_groupBitmap_doc_example = r"""
 {"groupBitmap(x)":6}
 """
 
-_aggregate_functions_groupBitmap_UInt32 = r"""
-{"groupBitmap(uint32)":3}
-"""
-
 _aggregate_functions_groupBitmap_UInt8 = r"""
-{"groupBitmap(uint8)":3}
+{"groupBitmap(uint8)":9}
 """
 
 _aggregate_functions_groupBitmap_UInt16 = r"""
-{"groupBitmap(uint16)":3}
+{"groupBitmap(uint16)":9}
 """
 
-_aggregate_functions_groupBitmap_Nullable_UInt64_ = r"""
-{"groupBitmap(nullable_uint64)":"3"}
-"""
-
-_aggregate_functions_groupBitmap_Nullable_UInt8_ = r"""
-{"groupBitmap(nullable_uint8)":3}
-"""
-
-_aggregate_functions_groupBitmap_Nullable_UInt16_ = r"""
-{"groupBitmap(nullable_uint16)":3}
+_aggregate_functions_groupBitmap_UInt32 = r"""
+{"groupBitmap(uint32)":9}
 """
 
 _aggregate_functions_groupBitmap_UInt64 = r"""
-{"groupBitmap(uint64)":"3"}
+{"groupBitmap(uint64)":"9"}
+"""
+
+_aggregate_functions_groupBitmap_Nullable_UInt8_ = r"""
+{"groupBitmap(nullable_uint8_)":9}
+"""
+
+_aggregate_functions_groupBitmap_Nullable_UInt16_ = r"""
+{"groupBitmap(nullable_uint16_)":9}
 """
 
 _aggregate_functions_groupBitmap_Nullable_UInt32_ = r"""
-{"groupBitmap(nullable_uint32)":3}
+{"groupBitmap(nullable_uint32_)":9}
+"""
+
+_aggregate_functions_groupBitmap_Nullable_UInt64_ = r"""
+{"groupBitmap(nullable_uint64_)":"9"}
+"""
+
+_aggregate_functions_groupBitmap_LowCardinality_UInt8_ = r"""
+{"groupBitmap(lowcardinality_uint8_)":9}
+"""
+
+_aggregate_functions_groupBitmap_LowCardinality_UInt16_ = r"""
+{"groupBitmap(lowcardinality_uint16_)":9}
+"""
+
+_aggregate_functions_groupBitmap_LowCardinality_UInt32_ = r"""
+{"groupBitmap(lowcardinality_uint32_)":9}
+"""
+
+_aggregate_functions_groupBitmap_LowCardinality_UInt64_ = r"""
+{"groupBitmap(lowcardinality_uint64_)":"9"}
+"""
+
+_aggregate_functions_groupBitmap_LowCardinality_Nullable_UInt8__ = r"""
+{"groupBitmap(lowcardinality_nullable_uint8__)":9}
+"""
+
+_aggregate_functions_groupBitmap_LowCardinality_Nullable_UInt16__ = r"""
+{"groupBitmap(lowcardinality_nullable_uint16__)":9}
+"""
+
+_aggregate_functions_groupBitmap_LowCardinality_Nullable_UInt32__ = r"""
+{"groupBitmap(lowcardinality_nullable_uint32__)":9}
+"""
+
+_aggregate_functions_groupBitmap_LowCardinality_Nullable_UInt64__ = r"""
+{"groupBitmap(lowcardinality_nullable_uint64__)":"9"}
 """
 

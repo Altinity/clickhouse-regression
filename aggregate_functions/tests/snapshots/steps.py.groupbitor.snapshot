@@ -31,35 +31,67 @@ _aggregate_functions_groupBitOr_doc_example = r"""
 {"groupBitOr(x)":7}
 """
 
-_aggregate_functions_groupBitOr_UInt64 = r"""
-{"groupBitOr(uint64)":"18446744073709551615"}
+_aggregate_functions_groupBitOr_UInt8 = r"""
+{"groupBitOr(uint8)":255}
 """
 
 _aggregate_functions_groupBitOr_UInt16 = r"""
 {"groupBitOr(uint16)":65535}
 """
 
-_aggregate_functions_groupBitOr_Nullable_UInt64_ = r"""
-{"groupBitOr(nullable_uint64)":"18446744073709551615"}
-"""
-
-_aggregate_functions_groupBitOr_UInt8 = r"""
-{"groupBitOr(uint8)":255}
-"""
-
 _aggregate_functions_groupBitOr_UInt32 = r"""
 {"groupBitOr(uint32)":4294967295}
 """
 
-_aggregate_functions_groupBitOr_Nullable_UInt16_ = r"""
-{"groupBitOr(nullable_uint16)":65535}
+_aggregate_functions_groupBitOr_UInt64 = r"""
+{"groupBitOr(uint64)":"18446744073709551615"}
 """
 
 _aggregate_functions_groupBitOr_Nullable_UInt8_ = r"""
-{"groupBitOr(nullable_uint8)":255}
+{"groupBitOr(nullable_uint8_)":255}
+"""
+
+_aggregate_functions_groupBitOr_Nullable_UInt16_ = r"""
+{"groupBitOr(nullable_uint16_)":65535}
 """
 
 _aggregate_functions_groupBitOr_Nullable_UInt32_ = r"""
-{"groupBitOr(nullable_uint32)":4294967295}
+{"groupBitOr(nullable_uint32_)":4294967295}
+"""
+
+_aggregate_functions_groupBitOr_Nullable_UInt64_ = r"""
+{"groupBitOr(nullable_uint64_)":"18446744073709551615"}
+"""
+
+_aggregate_functions_groupBitOr_LowCardinality_UInt8_ = r"""
+{"groupBitOr(lowcardinality_uint8_)":255}
+"""
+
+_aggregate_functions_groupBitOr_LowCardinality_UInt16_ = r"""
+{"groupBitOr(lowcardinality_uint16_)":65535}
+"""
+
+_aggregate_functions_groupBitOr_LowCardinality_UInt32_ = r"""
+{"groupBitOr(lowcardinality_uint32_)":4294967295}
+"""
+
+_aggregate_functions_groupBitOr_LowCardinality_UInt64_ = r"""
+{"groupBitOr(lowcardinality_uint64_)":"18446744073709551615"}
+"""
+
+_aggregate_functions_groupBitOr_LowCardinality_Nullable_UInt8__ = r"""
+{"groupBitOr(lowcardinality_nullable_uint8__)":255}
+"""
+
+_aggregate_functions_groupBitOr_LowCardinality_Nullable_UInt16__ = r"""
+{"groupBitOr(lowcardinality_nullable_uint16__)":65535}
+"""
+
+_aggregate_functions_groupBitOr_LowCardinality_Nullable_UInt32__ = r"""
+{"groupBitOr(lowcardinality_nullable_uint32__)":4294967295}
+"""
+
+_aggregate_functions_groupBitOr_LowCardinality_Nullable_UInt64__ = r"""
+{"groupBitOr(lowcardinality_nullable_uint64__)":"18446744073709551615"}
 """
 

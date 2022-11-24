@@ -51,99 +51,167 @@ _aggregate_functions_quantileTiming_inf___inf__nan = r"""
 {"quantileTiming(x)":5}
 """
 
-_aggregate_functions_quantileTiming_Nullable_Float32_ = r"""
-{"quantileTiming(nullable_float32)":30000}
-"""
-
-_aggregate_functions_quantileTiming_Float32 = r"""
-{"quantileTiming(float32)":30000}
-"""
-
-_aggregate_functions_quantileTiming_Int8 = r"""
-{"quantileTiming(int8)":101}
-"""
-
-_aggregate_functions_quantileTiming_Nullable_UInt64_ = r"""
-{"quantileTiming(nullable_uint64)":30000}
-"""
-
-_aggregate_functions_quantileTiming_Nullable_UInt32_ = r"""
-{"quantileTiming(nullable_uint32)":30000}
-"""
-
-_aggregate_functions_quantileTiming_Float64 = r"""
-{"quantileTiming(float64)":0}
-"""
-
-_aggregate_functions_quantileTiming_Nullable_Date_ = r"""
-{"quantileTiming(nullable_date)":19282}
-"""
-
-_aggregate_functions_quantileTiming_Nullable_UInt16_ = r"""
-{"quantileTiming(nullable_uint16)":30000}
-"""
-
-_aggregate_functions_quantileTiming_Nullable_Int8_ = r"""
-{"quantileTiming(nullable_int8)":127}
-"""
-
-_aggregate_functions_quantileTiming_Int32 = r"""
-{"quantileTiming(int32)":30000}
-"""
-
 _aggregate_functions_quantileTiming_UInt8 = r"""
-{"quantileTiming(uint8)":128}
+{"quantileTiming(uint8)":163}
 """
 
-_aggregate_functions_quantileTiming_Date = r"""
-{"quantileTiming(date)":19282}
+_aggregate_functions_quantileTiming_UInt16 = r"""
+{"quantileTiming(uint16)":26244}
 """
 
 _aggregate_functions_quantileTiming_UInt32 = r"""
 {"quantileTiming(uint32)":30000}
 """
 
+_aggregate_functions_quantileTiming_UInt64 = r"""
+{"quantileTiming(uint64)":30000}
+"""
+
+_aggregate_functions_quantileTiming_Int8 = r"""
+{"quantileTiming(int8)":115}
+"""
+
 _aggregate_functions_quantileTiming_Int16 = r"""
-{"quantileTiming(int16)":10101}
+{"quantileTiming(int16)":9592}
 """
 
-_aggregate_functions_quantileTiming_Nullable_DateTime_ = r"""
-{"quantileTiming(nullable_datetime)":30000}
-"""
-
-_aggregate_functions_quantileTiming_Nullable_Int64_ = r"""
-{"quantileTiming(nullable_int64)":30000}
+_aggregate_functions_quantileTiming_Int32 = r"""
+{"quantileTiming(int32)":30000}
 """
 
 _aggregate_functions_quantileTiming_Int64 = r"""
 {"quantileTiming(int64)":30000}
 """
 
-_aggregate_functions_quantileTiming_Nullable_UInt8_ = r"""
-{"quantileTiming(nullable_uint8)":128}
+_aggregate_functions_quantileTiming_Float32 = r"""
+{"quantileTiming(float32)":0}
+"""
+
+_aggregate_functions_quantileTiming_Float64 = r"""
+{"quantileTiming(float64)":0}
 """
 
 _aggregate_functions_quantileTiming_DateTime = r"""
 {"quantileTiming(datetime)":30000}
 """
 
-_aggregate_functions_quantileTiming_UInt16 = r"""
-{"quantileTiming(uint16)":30000}
+_aggregate_functions_quantileTiming_Nullable_UInt8_ = r"""
+{"quantileTiming(nullable_uint8_)":65}
 """
 
-_aggregate_functions_quantileTiming_Nullable_Float64_ = r"""
-{"quantileTiming(nullable_float64)":null}
+_aggregate_functions_quantileTiming_Nullable_UInt16_ = r"""
+{"quantileTiming(nullable_uint16_)":30000}
 """
 
-_aggregate_functions_quantileTiming_Nullable_Int32_ = r"""
-{"quantileTiming(nullable_int32)":30000}
+_aggregate_functions_quantileTiming_Nullable_UInt32_ = r"""
+{"quantileTiming(nullable_uint32_)":30000}
+"""
+
+_aggregate_functions_quantileTiming_Nullable_UInt64_ = r"""
+{"quantileTiming(nullable_uint64_)":30000}
+"""
+
+_aggregate_functions_quantileTiming_Nullable_Int8_ = r"""
+{"quantileTiming(nullable_int8_)":72}
 """
 
 _aggregate_functions_quantileTiming_Nullable_Int16_ = r"""
-{"quantileTiming(nullable_int16)":30000}
+{"quantileTiming(nullable_int16_)":11484}
 """
 
-_aggregate_functions_quantileTiming_UInt64 = r"""
-{"quantileTiming(uint64)":0}
+_aggregate_functions_quantileTiming_Nullable_Int32_ = r"""
+{"quantileTiming(nullable_int32_)":30000}
+"""
+
+_aggregate_functions_quantileTiming_Nullable_Int64_ = r"""
+{"quantileTiming(nullable_int64_)":30000}
+"""
+
+_aggregate_functions_quantileTiming_Nullable_Float32_ = r"""
+{"quantileTiming(nullable_float32_)":null}
+"""
+
+_aggregate_functions_quantileTiming_Nullable_Float64_ = r"""
+{"quantileTiming(nullable_float64_)":null}
+"""
+
+_aggregate_functions_quantileTiming_LowCardinality_UInt8_ = r"""
+{"quantileTiming(lowcardinality_uint8_)":216}
+"""
+
+_aggregate_functions_quantileTiming_LowCardinality_UInt16_ = r"""
+{"quantileTiming(lowcardinality_uint16_)":30000}
+"""
+
+_aggregate_functions_quantileTiming_LowCardinality_UInt32_ = r"""
+{"quantileTiming(lowcardinality_uint32_)":30000}
+"""
+
+_aggregate_functions_quantileTiming_LowCardinality_UInt64_ = r"""
+{"quantileTiming(lowcardinality_uint64_)":30000}
+"""
+
+_aggregate_functions_quantileTiming_LowCardinality_Int8_ = r"""
+{"quantileTiming(lowcardinality_int8_)":95}
+"""
+
+_aggregate_functions_quantileTiming_LowCardinality_Int16_ = r"""
+{"quantileTiming(lowcardinality_int16_)":22678}
+"""
+
+_aggregate_functions_quantileTiming_LowCardinality_Int32_ = r"""
+{"quantileTiming(lowcardinality_int32_)":30000}
+"""
+
+_aggregate_functions_quantileTiming_LowCardinality_Int64_ = r"""
+{"quantileTiming(lowcardinality_int64_)":30000}
+"""
+
+_aggregate_functions_quantileTiming_LowCardinality_Float32_ = r"""
+{"quantileTiming(lowcardinality_float32_)":0}
+"""
+
+_aggregate_functions_quantileTiming_LowCardinality_Float64_ = r"""
+{"quantileTiming(lowcardinality_float64_)":0}
+"""
+
+_aggregate_functions_quantileTiming_LowCardinality_Nullable_UInt8__ = r"""
+{"quantileTiming(lowcardinality_nullable_uint8__)":165}
+"""
+
+_aggregate_functions_quantileTiming_LowCardinality_Nullable_UInt16__ = r"""
+{"quantileTiming(lowcardinality_nullable_uint16__)":15607}
+"""
+
+_aggregate_functions_quantileTiming_LowCardinality_Nullable_UInt32__ = r"""
+{"quantileTiming(lowcardinality_nullable_uint32__)":30000}
+"""
+
+_aggregate_functions_quantileTiming_LowCardinality_Nullable_UInt64__ = r"""
+{"quantileTiming(lowcardinality_nullable_uint64__)":30000}
+"""
+
+_aggregate_functions_quantileTiming_LowCardinality_Nullable_Int8__ = r"""
+{"quantileTiming(lowcardinality_nullable_int8__)":117}
+"""
+
+_aggregate_functions_quantileTiming_LowCardinality_Nullable_Int16__ = r"""
+{"quantileTiming(lowcardinality_nullable_int16__)":21542}
+"""
+
+_aggregate_functions_quantileTiming_LowCardinality_Nullable_Int32__ = r"""
+{"quantileTiming(lowcardinality_nullable_int32__)":30000}
+"""
+
+_aggregate_functions_quantileTiming_LowCardinality_Nullable_Int64__ = r"""
+{"quantileTiming(lowcardinality_nullable_int64__)":30000}
+"""
+
+_aggregate_functions_quantileTiming_LowCardinality_Nullable_Float32__ = r"""
+{"quantileTiming(lowcardinality_nullable_float32__)":null}
+"""
+
+_aggregate_functions_quantileTiming_LowCardinality_Nullable_Float64__ = r"""
+{"quantileTiming(lowcardinality_nullable_float64__)":15435}
 """
 

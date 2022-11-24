@@ -17,4 +17,4 @@ def feature(self, func="corr({params})", table=None):
     if table is None:
         table = self.context.table
 
-    checks(func=func, table=table, decimal=False)
+    checks(func=func, table=table, decimal=False, extended_precision=False)

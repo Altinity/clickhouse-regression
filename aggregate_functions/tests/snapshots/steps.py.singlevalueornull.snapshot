@@ -23,2098 +23,8 @@ _aggregate_functions_singleValueOrNull_single_NULL_value = r"""
 {"singleValueOrNull(x)":null}
 """
 
-_aggregate_functions_singleValueOrNull_Date = r"""
-{"singleValueOrNull(date)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_Nullable_FixedString_85__ = r"""
-{"singleValueOrNull(nullable_fixedstring)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_UInt64 = r"""
-{"singleValueOrNull(uint64)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_UInt16 = r"""
-{"singleValueOrNull(uint16)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_LowCardinality_Float32_ = r"""
-{"singleValueOrNull(low_card_float32)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_Int8 = r"""
-{"singleValueOrNull(int8)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_Nullable_Int32_ = r"""
-{"singleValueOrNull(nullable_int32)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_LowCardinality_Date_ = r"""
-{"singleValueOrNull(low_card_date)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_Decimal128_38_ = r"""
-{"singleValueOrNull(decimal)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_Nullable_Int16_ = r"""
-{"singleValueOrNull(nullable_int16)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_String = r"""
-{"singleValueOrNull(string)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_UInt8 = r"""
-{"singleValueOrNull(uint8)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_Nullable_Decimal128_38__ = r"""
-{"singleValueOrNull(nullable_decimal)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_LowCardinality_Int16_ = r"""
-{"singleValueOrNull(low_card_int16)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_Nullable_UInt32_ = r"""
-{"singleValueOrNull(nullable_uint32)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_Nullable_Date_ = r"""
-{"singleValueOrNull(nullable_date)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_FixedString_85_ = r"""
-{"singleValueOrNull(fixedstring)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_Int32 = r"""
-{"singleValueOrNull(int32)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_UInt32 = r"""
-{"singleValueOrNull(uint32)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_Int16 = r"""
-{"singleValueOrNull(int16)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_Nullable_DateTime_ = r"""
-{"singleValueOrNull(nullable_datetime)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_LowCardinality_FixedString_85__ = r"""
-{"singleValueOrNull(low_card_fixedstring)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_LowCardinality_UInt16_ = r"""
-{"singleValueOrNull(low_card_uint16)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_Nullable_UInt8_ = r"""
-{"singleValueOrNull(nullable_uint8)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_LowCardinality_Int64_ = r"""
-{"singleValueOrNull(low_card_int64)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_LowCardinality_Int32_ = r"""
-{"singleValueOrNull(low_card_int32)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_Nullable_Float32_ = r"""
-{"singleValueOrNull(nullable_float32)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_LowCardinality_UInt64_ = r"""
-{"singleValueOrNull(low_card_uint64)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_Nullable_Int8_ = r"""
-{"singleValueOrNull(nullable_int8)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_Nullable_UInt16_ = r"""
-{"singleValueOrNull(nullable_uint16)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_Nullable_UInt64_ = r"""
-{"singleValueOrNull(nullable_uint64)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_LowCardinality_Int8_ = r"""
-{"singleValueOrNull(low_card_int8)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_LowCardinality_DateTime_ = r"""
-{"singleValueOrNull(low_card_datetime)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_LowCardinality_Float64_ = r"""
-{"singleValueOrNull(low_card_float64)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_Int64 = r"""
-{"singleValueOrNull(int64)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_Float64 = r"""
-{"singleValueOrNull(float64)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_LowCardinality_UInt32_ = r"""
-{"singleValueOrNull(low_card_uint32)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_Nullable_Float64_ = r"""
-{"singleValueOrNull(nullable_float64)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_Nullable_String_ = r"""
-{"singleValueOrNull(nullable_string)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_DateTime = r"""
-{"singleValueOrNull(datetime)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_Nullable_Int64_ = r"""
-{"singleValueOrNull(nullable_int64)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_LowCardinality_String_ = r"""
-{"singleValueOrNull(low_card_string)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_LowCardinality_UInt8_ = r"""
-{"singleValueOrNull(low_card_uint8)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_Float32 = r"""
-{"singleValueOrNull(float32)":null}
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___Date_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Date) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_date) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int16__Nullable_UInt16__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int16, Nullable(UInt16)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int16_nullable_uint16) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_DateTime__Int64_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(DateTime, Int64) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_datetime_int64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___Decimal128_38__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Decimal(38, 38)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_decimal) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_DateTime__FixedString_85__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(DateTime, FixedString(85)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_datetime_fixedstring) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt8__UInt16_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt8, UInt16) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint8_uint16) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int8__Int64_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int8, Int64) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int8_int64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____LowCardinality_Nullable_FixedString_85____ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Nullable(FixedString(85))) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_low_card_nullable_fixedstring) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___LowCardinality_Nullable_DateTime___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Nullable(DateTime)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_low_card_nullable_datetime) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt32__Float64_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt32, Float64) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint32_float64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_String__Date_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Date) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_string_date) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Array_UInt8_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Array(UInt8) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(array_uint8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___UInt64_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, UInt64) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_uint64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int64__Nullable_Int8__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int64, Nullable(Int8)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int64_nullable_int8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int32__Nullable_Date__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int32, Nullable(Date)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int32_nullable_date) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt16__DateTime_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt16, DateTime) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint16_datetime) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int8__Array_UInt8__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int8, Array(UInt8)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int8_array) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt64__Nullable_Float32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt64, Nullable(Float32)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint64_nullable_float32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Array_String_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Array(String) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(array_string) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int16__Array_UInt8__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int16, Array(UInt8)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int16_array) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int8__FixedString_85__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int8, FixedString(85)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int8_fixedstring) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____LowCardinality_Int8__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Int8) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_low_card_int8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Array_LowCardinality_UInt8__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Array(UInt8) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(array_low_card_uint8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_DateTime__DateTime_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(DateTime, DateTime) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_datetime_datetime) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int16__Int16_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int16, Int16) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int16_int16) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt16__Nullable_Decimal128_38___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt16, Nullable(Decimal(38, 38))) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint16_nullable_decimal) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_String__Nullable_Float64__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Nullable(Float64)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_string_nullable_float64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt32__UInt32_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt32, UInt32) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint32_uint32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int64__Nullable_Date__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int64, Nullable(Date)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int64_nullable_date) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int32__Nullable_Decimal128_38___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int32, Nullable(Decimal(38, 38))) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int32_nullable_decimal) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int32__Nullable_Int8__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int32, Nullable(Int8)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int32_nullable_int8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int8__Nullable_Float32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int8, Nullable(Float32)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int8_nullable_float32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt8__Nullable_Int8__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt8, Nullable(Int8)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint8_nullable_int8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt64__Nullable_Int16__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt64, Nullable(Int16)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint64_nullable_int16) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt32__String_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt32, String) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint32_string) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int8__UInt8_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int8, UInt8) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int8_uint8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int64__Nullable_UInt64__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int64, Nullable(UInt64)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int64_nullable_uint64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt8__Float64_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt8, Float64) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint8_float64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____Nullable_Int64__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Nullable(Int64)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_nullable_int64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt8__Nullable_FixedString_85___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt8, Nullable(FixedString(85))) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint8_nullable_fixedstring) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Array_Nullable_Date__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Array(Nullable(Date)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(array_nullable_date) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt64__Int8_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt64, Int8) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint64_int8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_DateTime__Nullable_UInt64__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(DateTime, Nullable(UInt64)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_datetime_nullable_uint64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___LowCardinality_Date__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Date) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_low_card_date) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int32__Tuple_UInt8_Int8_UInt16_Int16_UInt32_Int32_UInt64_Int64_Float32_Float64_Decimal128_38__Date_DateTime_String_FixedString_85__Array_UInt8__Tuple_UInt8__Map_UInt8__UInt8___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int32, Tuple(UInt8, Int8, UInt16, Int16, UInt32, Int32, UInt64, Int64, Float32, Float64, Decimal(38, 38), Date, DateTime, String, FixedString(85), Array(UInt8), Tuple(UInt8), Map(UInt8, UInt8))) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int32_tuple) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Array_LowCardinality_Nullable_Int32___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Array(Nullable(Int32)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(array_low_card_nullable_int32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___UInt32_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, UInt32) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_uint32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int8__Tuple_UInt8_Int8_UInt16_Int16_UInt32_Int32_UInt64_Int64_Float32_Float64_Decimal128_38__Date_DateTime_String_FixedString_85__Array_UInt8__Tuple_UInt8__Map_UInt8__UInt8___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int8, Tuple(UInt8, Int8, UInt16, Int16, UInt32, Int32, UInt64, Int64, Float32, Float64, Decimal(38, 38), Date, DateTime, String, FixedString(85), Array(UInt8), Tuple(UInt8), Map(UInt8, UInt8))) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int8_tuple) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Array_LowCardinality_Nullable_String___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Array(Nullable(String)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(array_low_card_nullable_string) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt32__Int32_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt32, Int32) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint32_int32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_DateTime__String_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(DateTime, String) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_datetime_string) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt8__Int64_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt8, Int64) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint8_int64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___Int64_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Int64) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_int64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____LowCardinality_Int32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Int32) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_low_card_int32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_DateTime__Nullable_Date__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(DateTime, Nullable(Date)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_datetime_nullable_date) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____LowCardinality_Nullable_DateTime___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Nullable(DateTime)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_low_card_nullable_datetime) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____LowCardinality_Nullable_Int16___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Nullable(Int16)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_low_card_nullable_int16) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_DateTime__Int8_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(DateTime, Int8) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_datetime_int8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_FixedString_85___Nullable_String__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Nullable(String)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_fixedstring_nullable_string) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int64__Array_UInt8__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int64, Array(UInt8)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int64_array) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int64__Nullable_Float64__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int64, Nullable(Float64)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int64_nullable_float64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt8__Nullable_UInt16__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt8, Nullable(UInt16)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint8_nullable_uint16) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int16__Nullable_UInt32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int16, Nullable(UInt32)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int16_nullable_uint32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt64__Int16_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt64, Int16) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint64_int16) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____Int32_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Int32) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_int32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt8__Int8_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt8, Int8) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint8_int8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_FixedString_85___Nullable_UInt64__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Nullable(UInt64)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_fixedstring_nullable_uint64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt16__Int64_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt16, Int64) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint16_int64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___LowCardinality_UInt64__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, UInt64) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_low_card_uint64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_String__FixedString_85__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, FixedString(85)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_string_fixedstring) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int8__Nullable_Date__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int8, Nullable(Date)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int8_nullable_date) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_FixedString_85___Tuple_UInt8_Int8_UInt16_Int16_UInt32_Int32_UInt64_Int64_Float32_Float64_Decimal128_38__Date_DateTime_String_FixedString_85__Array_UInt8__Tuple_UInt8__Map_UInt8__UInt8___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Tuple(UInt8, Int8, UInt16, Int16, UInt32, Int32, UInt64, Int64, Float32, Float64, Decimal(38, 38), Date, DateTime, String, FixedString(85), Array(UInt8), Tuple(UInt8), Map(UInt8, UInt8))) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_fixedstring_tuple) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Date__Nullable_Float64__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Date, Nullable(Float64)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_date_nullable_float64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int8__Date_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int8, Date) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int8_date) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt8__Date_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt8, Date) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint8_date) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Array_Tuple_UInt8_Int8_UInt16_Int16_UInt32_Int32_UInt64_Int64_Float32_Float64_Decimal128_38__Date_DateTime_String_FixedString_85__Array_UInt8__Tuple_UInt8__Map_UInt8__UInt8___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Array(Tuple(UInt8, Int8, UInt16, Int16, UInt32, Int32, UInt64, Int64, Float32, Float64, Decimal(38, 38), Date, DateTime, String, FixedString(85), Array(UInt8), Tuple(UInt8), Map(UInt8, UInt8))) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(array_tuple) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____LowCardinality_Nullable_Float32___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Nullable(Float32)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_low_card_nullable_float32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____String_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), String) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_string) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt8__Nullable_UInt32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt8, Nullable(UInt32)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint8_nullable_uint32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int32__Nullable_Float64__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int32, Nullable(Float64)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int32_nullable_float64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt16__Nullable_Int16__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt16, Nullable(Int16)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint16_nullable_int16) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Array_Int16_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Array(Int16) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(array_int16) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int8__String_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int8, String) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int8_string) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___Float32_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Float32) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_float32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_String__UInt8_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, UInt8) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_string_uint8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Date__Nullable_UInt16__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Date, Nullable(UInt16)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_date_nullable_uint16) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___Nullable_Int16__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Nullable(Int16)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_nullable_int16) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt16__Nullable_String__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt16, Nullable(String)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint16_nullable_string) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___LowCardinality_Float32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Float32) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_low_card_float32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_FixedString_85___Nullable_FixedString_85___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Nullable(FixedString(85))) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_fixedstring_nullable_fixedstring) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Array_Nullable_String__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Array(Nullable(String)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(array_nullable_string) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___Nullable_DateTime__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Nullable(DateTime)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_nullable_datetime) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___Float64_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Float64) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_float64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt16__Nullable_UInt8__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt16, Nullable(UInt8)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint16_nullable_uint8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___LowCardinality_Nullable_Float32___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Nullable(Float32)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_low_card_nullable_float32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___LowCardinality_Int8__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Int8) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_low_card_int8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_FixedString_85___Nullable_Decimal128_38___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Nullable(Decimal(38, 38))) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_fixedstring_nullable_decimal) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_FixedString_85___Float32_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Float32) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_fixedstring_float32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_String__Nullable_Int8__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Nullable(Int8)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_string_nullable_int8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___Nullable_Date__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Nullable(Date)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_nullable_date) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Array_Nullable_UInt8__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Array(Nullable(UInt8)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(array_nullable_uint8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int16__Float32_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int16, Float32) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int16_float32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____Nullable_Int32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Nullable(Int32)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_nullable_int32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Array_Nullable_Int32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Array(Nullable(Int32)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(array_nullable_int32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int8__Int8_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int8, Int8) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int8_int8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int16__UInt64_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int16, UInt64) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int16_uint64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_FixedString_85___FixedString_85__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), FixedString(85)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_fixedstring_fixedstring) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___FixedString_85__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, FixedString(85)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_fixedstring) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_DateTime__Decimal128_38__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(DateTime, Decimal(38, 38)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_datetime_decimal) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_DateTime__Nullable_Float32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(DateTime, Nullable(Float32)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_datetime_nullable_float32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Date__Nullable_Int8__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Date, Nullable(Int8)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_date_nullable_int8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int64__Nullable_Decimal128_38___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int64, Nullable(Decimal(38, 38))) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int64_nullable_decimal) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___LowCardinality_Nullable_Int64___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Nullable(Int64)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_low_card_nullable_int64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int8__DateTime_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int8, DateTime) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int8_datetime) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt16__Tuple_UInt8_Int8_UInt16_Int16_UInt32_Int32_UInt64_Int64_Float32_Float64_Decimal128_38__Date_DateTime_String_FixedString_85__Array_UInt8__Tuple_UInt8__Map_UInt8__UInt8___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt16, Tuple(UInt8, Int8, UInt16, Int16, UInt32, Int32, UInt64, Int64, Float32, Float64, Decimal(38, 38), Date, DateTime, String, FixedString(85), Array(UInt8), Tuple(UInt8), Map(UInt8, UInt8))) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint16_tuple) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Array_LowCardinality_Nullable_Date___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Array(Nullable(Date)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(array_low_card_nullable_date) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt64__Float32_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt64, Float32) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint64_float32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Date__Nullable_Float32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Date, Nullable(Float32)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_date_nullable_float32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_String__Map_UInt8__UInt8__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Map(UInt8, UInt8)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_string_map) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt64__Int64_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt64, Int64) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint64_int64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt8__Array_UInt8__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt8, Array(UInt8)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint8_array) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____LowCardinality_Nullable_Date___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Nullable(Date)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_low_card_nullable_date) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt16__Float32_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt16, Float32) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint16_float32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Array_Nullable_Int8__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Array(Nullable(Int8)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(array_nullable_int8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___Nullable_UInt32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Nullable(UInt32)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_nullable_uint32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____LowCardinality_Float32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Float32) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_low_card_float32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int32__UInt64_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int32, UInt64) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int32_uint64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt64__Nullable_UInt64__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt64, Nullable(UInt64)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint64_nullable_uint64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int32__FixedString_85__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int32, FixedString(85)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int32_fixedstring) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_String__Nullable_Float32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Nullable(Float32)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_string_nullable_float32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____Nullable_Int8__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Nullable(Int8)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_nullable_int8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Array_Nullable_Float64__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Array(Nullable(Float64)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(array_nullable_float64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Date__Nullable_UInt32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Date, Nullable(UInt32)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_date_nullable_uint32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____Nullable_UInt64__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Nullable(UInt64)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_nullable_uint64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt8__Nullable_Int16__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt8, Nullable(Int16)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint8_nullable_int16) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Array_Nullable_UInt16__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Array(Nullable(UInt16)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(array_nullable_uint16) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int64__Nullable_UInt32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int64, Nullable(UInt32)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int64_nullable_uint32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt32__Int8_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt32, Int8) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint32_int8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Date__Date_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Date, Date) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_date_date) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____Nullable_String__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Nullable(String)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_nullable_string) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___String_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, String) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_string) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____LowCardinality_Nullable_String___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Nullable(String)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_low_card_nullable_string) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___Nullable_FixedString_85___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Nullable(FixedString(85))) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_nullable_fixedstring) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int16__UInt32_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int16, UInt32) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int16_uint32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt64__Nullable_Decimal128_38___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt64, Nullable(Decimal(38, 38))) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint64_nullable_decimal) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int8__UInt32_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int8, UInt32) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int8_uint32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt8__Nullable_Date__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt8, Nullable(Date)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint8_nullable_date) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt64__FixedString_85__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt64, FixedString(85)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint64_fixedstring) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Array_Int8_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Array(Int8) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(array_int8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt32__Nullable_UInt32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt32, Nullable(UInt32)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint32_nullable_uint32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int32__Nullable_DateTime__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int32, Nullable(DateTime)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int32_nullable_datetime) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___LowCardinality_Nullable_UInt8___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Nullable(UInt8)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_low_card_nullable_uint8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int32__UInt32_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int32, UInt32) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int32_uint32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____Nullable_Float64__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Nullable(Float64)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_nullable_float64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____Nullable_DateTime__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Nullable(DateTime)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_nullable_datetime) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____LowCardinality_UInt32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), UInt32) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_low_card_uint32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt32__Date_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt32, Date) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint32_date) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int8__Nullable_UInt16__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int8, Nullable(UInt16)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int8_nullable_uint16) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Array_LowCardinality_Nullable_Int16___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Array(Nullable(Int16)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(array_low_card_nullable_int16) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt8__Nullable_Int32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt8, Nullable(Int32)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint8_nullable_int32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int32__Nullable_Float32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int32, Nullable(Float32)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int32_nullable_float32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_String__Int64_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Int64) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_string_int64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int64__FixedString_85__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int64, FixedString(85)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int64_fixedstring) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_FixedString_85___Nullable_Float64__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Nullable(Float64)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_fixedstring_nullable_float64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt32__Nullable_Decimal128_38___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt32, Nullable(Decimal(38, 38))) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint32_nullable_decimal) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___Nullable_Int32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Nullable(Int32)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_nullable_int32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt16__Nullable_Int64__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt16, Nullable(Int64)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint16_nullable_int64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt64__Map_UInt8__UInt8__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt64, Map(UInt8, UInt8)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint64_map) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_DateTime__Nullable_Int8__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(DateTime, Nullable(Int8)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_datetime_nullable_int8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___LowCardinality_UInt8__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, UInt8) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_low_card_uint8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int32__String_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int32, String) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int32_string) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt16__Nullable_Float64__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt16, Nullable(Float64)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint16_nullable_float64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_FixedString_85___Nullable_UInt8__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Nullable(UInt8)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_fixedstring_nullable_uint8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Date__Nullable_UInt64__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Date, Nullable(UInt64)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_date_nullable_uint64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___Nullable_UInt8__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Nullable(UInt8)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_nullable_uint8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int32__Date_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int32, Date) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int32_date) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Array_Int64_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Array(Int64) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(array_int64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt64__Nullable_Float64__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt64, Nullable(Float64)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint64_nullable_float64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___DateTime_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, DateTime) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_datetime) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int32__Int16_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int32, Int16) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int32_int16) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_FixedString_85___Decimal128_38__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Decimal(38, 38)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_fixedstring_decimal) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_String__Int8_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Int8) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_string_int8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int64__String_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int64, String) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int64_string) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____LowCardinality_Nullable_UInt8___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Nullable(UInt8)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_low_card_nullable_uint8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Array_Map_UInt8__UInt8__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Array(Map(UInt8, UInt8)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(array_map) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt16__Map_UInt8__UInt8__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt16, Map(UInt8, UInt8)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint16_map) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt64__Nullable_UInt32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt64, Nullable(UInt32)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint64_nullable_uint32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___Nullable_Float32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Nullable(Float32)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_nullable_float32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_DateTime__Nullable_UInt8__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(DateTime, Nullable(UInt8)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_datetime_nullable_uint8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int8__Int32_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int8, Int32) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int8_int32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_DateTime__Nullable_FixedString_85___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(DateTime, Nullable(FixedString(85))) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_datetime_nullable_fixedstring) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int16__UInt8_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int16, UInt8) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int16_uint8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Date__UInt64_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Date, UInt64) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_date_uint64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int32__Int64_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int32, Int64) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int32_int64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt8__String_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt8, String) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint8_string) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____LowCardinality_UInt8__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), UInt8) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_low_card_uint8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int16__Int8_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int16, Int8) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int16_int8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Date__Nullable_DateTime__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Date, Nullable(DateTime)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_date_nullable_datetime) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_String__UInt64_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, UInt64) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_string_uint64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt64__UInt64_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt64, UInt64) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint64_uint64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____LowCardinality_Date__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Date) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_low_card_date) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___LowCardinality_Nullable_Int16___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Nullable(Int16)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_low_card_nullable_int16) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___Int32_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Int32) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_int32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int8__Nullable_Int32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int8, Nullable(Int32)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int8_nullable_int32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int32__Int8_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int32, Int8) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int32_int8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Array_LowCardinality_UInt32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Array(UInt32) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(array_low_card_uint32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Array_LowCardinality_Int64__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Array(Int64) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(array_low_card_int64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Array_Decimal128_38__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Array(Decimal(38, 38)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(array_decimal) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_String__Nullable_UInt16__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Nullable(UInt16)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_string_nullable_uint16) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt8__Nullable_Float32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt8, Nullable(Float32)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint8_nullable_float32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____LowCardinality_Nullable_UInt64___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Nullable(UInt64)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_low_card_nullable_uint64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___Nullable_Float64__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Nullable(Float64)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_nullable_float64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt8__UInt32_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt8, UInt32) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint8_uint32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Array_LowCardinality_Nullable_Float64___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Array(Nullable(Float64)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(array_low_card_nullable_float64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_FixedString_85___Nullable_Int16__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Nullable(Int16)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_fixedstring_nullable_int16) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Date__Float32_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Date, Float32) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_date_float32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Array_LowCardinality_Nullable_UInt8___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Array(Nullable(UInt8)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(array_low_card_nullable_uint8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt8__DateTime_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt8, DateTime) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint8_datetime) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt8__Nullable_UInt64__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt8, Nullable(UInt64)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint8_nullable_uint64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt64__Nullable_Date__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt64, Nullable(Date)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint64_nullable_date) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int64__Nullable_String__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int64, Nullable(String)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int64_nullable_string) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___LowCardinality_String__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, String) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_low_card_string) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Date__Float64_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Date, Float64) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_date_float64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_String__Nullable_UInt8__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Nullable(UInt8)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_string_nullable_uint8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_DateTime__Nullable_UInt32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(DateTime, Nullable(UInt32)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_datetime_nullable_uint32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt32__Nullable_UInt8__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt32, Nullable(UInt8)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint32_nullable_uint8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____LowCardinality_Int16__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Int16) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_low_card_int16) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt16__Nullable_Date__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt16, Nullable(Date)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint16_nullable_date) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int16__Float64_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int16, Float64) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int16_float64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_DateTime__Nullable_Int32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(DateTime, Nullable(Int32)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_datetime_nullable_int32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Array_DateTime_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Array(DateTime) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(array_datetime) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt64__Date_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt64, Date) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint64_date) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt64__DateTime_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt64, DateTime) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint64_datetime) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____FixedString_85__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), FixedString(85)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_fixedstring) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_String__Tuple_UInt8_Int8_UInt16_Int16_UInt32_Int32_UInt64_Int64_Float32_Float64_Decimal128_38__Date_DateTime_String_FixedString_85__Array_UInt8__Tuple_UInt8__Map_UInt8__UInt8___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Tuple(UInt8, Int8, UInt16, Int16, UInt32, Int32, UInt64, Int64, Float32, Float64, Decimal(38, 38), Date, DateTime, String, FixedString(85), Array(UInt8), Tuple(UInt8), Map(UInt8, UInt8))) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_string_tuple) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt32__Nullable_DateTime__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt32, Nullable(DateTime)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint32_nullable_datetime) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt16__UInt16_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt16, UInt16) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint16_uint16) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int64__Nullable_Float32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int64, Nullable(Float32)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int64_nullable_float32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Array_Nullable_FixedString_85___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Array(Nullable(FixedString(85))) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(array_nullable_fixedstring) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int16__Map_UInt8__UInt8__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int16, Map(UInt8, UInt8)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int16_map) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____Date_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Date) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_date) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___Nullable_UInt64__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Nullable(UInt64)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_nullable_uint64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____Nullable_Decimal128_38___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Nullable(Decimal(38, 38))) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_nullable_decimal) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Array_LowCardinality_Float64__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Array(Float64) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(array_low_card_float64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_FixedString_85___Nullable_Float32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Nullable(Float32)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_fixedstring_nullable_float32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int16__Nullable_String__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int16, Nullable(String)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int16_nullable_string) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int8__Float64_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int8, Float64) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int8_float64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____LowCardinality_String__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), String) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_low_card_string) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____LowCardinality_Nullable_UInt16___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Nullable(UInt16)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_low_card_nullable_uint16) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____Float64_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), Float64) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_float64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int8__Nullable_Int64__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int8, Nullable(Int64)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int8_nullable_int64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_String__Int32_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Int32) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_string_int32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_FixedString_85____UInt8_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), UInt8) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_fixedstring_uint8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt8__UInt8_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt8, UInt8) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint8_uint8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int16__Nullable_FixedString_85___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int16, Nullable(FixedString(85))) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int16_nullable_fixedstring) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int16__Tuple_UInt8_Int8_UInt16_Int16_UInt32_Int32_UInt64_Int64_Float32_Float64_Decimal128_38__Date_DateTime_String_FixedString_85__Array_UInt8__Tuple_UInt8__Map_UInt8__UInt8___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int16, Tuple(UInt8, Int8, UInt16, Int16, UInt32, Int32, UInt64, Int64, Float32, Float64, Decimal(38, 38), Date, DateTime, String, FixedString(85), Array(UInt8), Tuple(UInt8), Map(UInt8, UInt8))) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int16_tuple) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_FixedString_85___UInt8_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(FixedString(85), UInt8) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_fixedstring_uint8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int32__Nullable_Int32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int32, Nullable(Int32)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int32_nullable_int32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int32__UInt8_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int32, UInt8) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int32_uint8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int16__Nullable_UInt8__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int16, Nullable(UInt8)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int16_nullable_uint8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt64__Nullable_FixedString_85___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt64, Nullable(FixedString(85))) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint64_nullable_fixedstring) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Date__Nullable_Int64__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Date, Nullable(Int64)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_date_nullable_int64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt16__UInt64_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt16, UInt64) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint16_uint64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt64__Nullable_Int32__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt64, Nullable(Int32)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint64_nullable_int32) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Date__UInt8_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Date, UInt8) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_date_uint8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_DateTime__Tuple_UInt8_Int8_UInt16_Int16_UInt32_Int32_UInt64_Int64_Float32_Float64_Decimal128_38__Date_DateTime_String_FixedString_85__Array_UInt8__Tuple_UInt8__Map_UInt8__UInt8___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(DateTime, Tuple(UInt8, Int8, UInt16, Int16, UInt32, Int32, UInt64, Int64, Float32, Float64, Decimal(38, 38), Date, DateTime, String, FixedString(85), Array(UInt8), Tuple(UInt8), Map(UInt8, UInt8))) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_datetime_tuple) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___LowCardinality_Nullable_Date___ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Nullable(Date)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_low_card_nullable_date) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_DateTime__UInt8_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(DateTime, UInt8) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_datetime_uint8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_String__UInt16_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, UInt16) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_string_uint16) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_LowCardinality_String___Int8_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(String, Int8) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_low_card_string_int8) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Date__DateTime_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Date, DateTime) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_date_datetime) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int8__UInt64_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int8, UInt64) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int8_uint64) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_Int16__String_ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(Int16, String) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_int16_string) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
-"""
-
-_aggregate_functions_singleValueOrNull_Map_UInt16__Nullable_DateTime__ = r"""
-Received exception from server (version 22.7.1):
-Code: 43. DB::Exception: Received from localhost:9000. DB::Exception: Nested type Map(UInt16, Nullable(DateTime)) cannot be inside Nullable type. (ILLEGAL_TYPE_OF_ARGUMENT)
-(query: SELECT singleValueOrNull(map_uint16_nullable_datetime) FROM table_3b5033ea_6122_11ed_968e_3b8df1167732 FORMAT JSONEachRow
-)
+_aggregate_functions_singleValueOrNull_string_that_ends_with__0 = r"""
+{"singleValueOrNull(x)":"hello"}
 """
 
 _aggregate_functions_singleValueOrNull_inf = r"""
@@ -2129,7 +39,307 @@ _aggregate_functions_singleValueOrNull_nan = r"""
 {"singleValueOrNull(x)":null}
 """
 
-_aggregate_functions_singleValueOrNull_string_that_ends_with__0 = r"""
-{"singleValueOrNull(x)":"hello"}
+_aggregate_functions_singleValueOrNull_UInt8 = r"""
+{"singleValueOrNull(uint8)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_UInt16 = r"""
+{"singleValueOrNull(uint16)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_UInt32 = r"""
+{"singleValueOrNull(uint32)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_UInt64 = r"""
+{"singleValueOrNull(uint64)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_UInt128 = r"""
+{"singleValueOrNull(uint128)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_Int8 = r"""
+{"singleValueOrNull(int8)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_Int16 = r"""
+{"singleValueOrNull(int16)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_Int32 = r"""
+{"singleValueOrNull(int32)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_Int64 = r"""
+{"singleValueOrNull(int64)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_Int128 = r"""
+{"singleValueOrNull(int128)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_Float32 = r"""
+{"singleValueOrNull(float32)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_Float64 = r"""
+{"singleValueOrNull(float64)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_Decimal128_38_ = r"""
+{"singleValueOrNull(decimal128_38_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_Date = r"""
+{"singleValueOrNull(date)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_DateTime = r"""
+{"singleValueOrNull(datetime)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_DateTime64_3_ = r"""
+{"singleValueOrNull(datetime64_3_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_Bool = r"""
+{"singleValueOrNull(bool)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_String = r"""
+{"singleValueOrNull(string)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_FixedString_51_ = r"""
+{"singleValueOrNull(fixedstring_51_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_UUID = r"""
+{"singleValueOrNull(uuid)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_Nullable_UInt8_ = r"""
+{"singleValueOrNull(nullable_uint8_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_Nullable_UInt16_ = r"""
+{"singleValueOrNull(nullable_uint16_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_Nullable_UInt32_ = r"""
+{"singleValueOrNull(nullable_uint32_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_Nullable_UInt64_ = r"""
+{"singleValueOrNull(nullable_uint64_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_Nullable_UInt128_ = r"""
+{"singleValueOrNull(nullable_uint128_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_Nullable_Int8_ = r"""
+{"singleValueOrNull(nullable_int8_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_Nullable_Int16_ = r"""
+{"singleValueOrNull(nullable_int16_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_Nullable_Int32_ = r"""
+{"singleValueOrNull(nullable_int32_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_Nullable_Int64_ = r"""
+{"singleValueOrNull(nullable_int64_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_Nullable_Int128_ = r"""
+{"singleValueOrNull(nullable_int128_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_Nullable_Float32_ = r"""
+{"singleValueOrNull(nullable_float32_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_Nullable_Float64_ = r"""
+{"singleValueOrNull(nullable_float64_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_Nullable_Decimal128_38__ = r"""
+{"singleValueOrNull(nullable_decimal128_38__)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_Nullable_Date_ = r"""
+{"singleValueOrNull(nullable_date_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_Nullable_DateTime_ = r"""
+{"singleValueOrNull(nullable_datetime_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_Nullable_DateTime64_3__ = r"""
+{"singleValueOrNull(nullable_datetime64_3__)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_Nullable_Bool_ = r"""
+{"singleValueOrNull(nullable_bool_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_Nullable_String_ = r"""
+{"singleValueOrNull(nullable_string_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_Nullable_FixedString_51__ = r"""
+{"singleValueOrNull(nullable_fixedstring_51__)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_Nullable_UUID_ = r"""
+{"singleValueOrNull(nullable_uuid_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_UInt8_ = r"""
+{"singleValueOrNull(lowcardinality_uint8_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_UInt16_ = r"""
+{"singleValueOrNull(lowcardinality_uint16_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_UInt32_ = r"""
+{"singleValueOrNull(lowcardinality_uint32_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_UInt64_ = r"""
+{"singleValueOrNull(lowcardinality_uint64_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_UInt128_ = r"""
+{"singleValueOrNull(lowcardinality_uint128_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_Int8_ = r"""
+{"singleValueOrNull(lowcardinality_int8_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_Int16_ = r"""
+{"singleValueOrNull(lowcardinality_int16_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_Int32_ = r"""
+{"singleValueOrNull(lowcardinality_int32_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_Int64_ = r"""
+{"singleValueOrNull(lowcardinality_int64_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_Int128_ = r"""
+{"singleValueOrNull(lowcardinality_int128_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_Float32_ = r"""
+{"singleValueOrNull(lowcardinality_float32_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_Float64_ = r"""
+{"singleValueOrNull(lowcardinality_float64_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_Date_ = r"""
+{"singleValueOrNull(lowcardinality_date_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_DateTime_ = r"""
+{"singleValueOrNull(lowcardinality_datetime_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_Bool_ = r"""
+{"singleValueOrNull(lowcardinality_bool_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_String_ = r"""
+{"singleValueOrNull(lowcardinality_string_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_FixedString_51__ = r"""
+{"singleValueOrNull(lowcardinality_fixedstring_51__)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_UUID_ = r"""
+{"singleValueOrNull(lowcardinality_uuid_)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_Nullable_UInt8__ = r"""
+{"singleValueOrNull(lowcardinality_nullable_uint8__)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_Nullable_UInt16__ = r"""
+{"singleValueOrNull(lowcardinality_nullable_uint16__)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_Nullable_UInt32__ = r"""
+{"singleValueOrNull(lowcardinality_nullable_uint32__)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_Nullable_UInt64__ = r"""
+{"singleValueOrNull(lowcardinality_nullable_uint64__)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_Nullable_UInt128__ = r"""
+{"singleValueOrNull(lowcardinality_nullable_uint128__)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_Nullable_Int8__ = r"""
+{"singleValueOrNull(lowcardinality_nullable_int8__)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_Nullable_Int16__ = r"""
+{"singleValueOrNull(lowcardinality_nullable_int16__)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_Nullable_Int32__ = r"""
+{"singleValueOrNull(lowcardinality_nullable_int32__)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_Nullable_Int64__ = r"""
+{"singleValueOrNull(lowcardinality_nullable_int64__)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_Nullable_Int128__ = r"""
+{"singleValueOrNull(lowcardinality_nullable_int128__)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_Nullable_Float32__ = r"""
+{"singleValueOrNull(lowcardinality_nullable_float32__)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_Nullable_Float64__ = r"""
+{"singleValueOrNull(lowcardinality_nullable_float64__)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_Nullable_Date__ = r"""
+{"singleValueOrNull(lowcardinality_nullable_date__)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_Nullable_DateTime__ = r"""
+{"singleValueOrNull(lowcardinality_nullable_datetime__)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_Nullable_Bool__ = r"""
+{"singleValueOrNull(lowcardinality_nullable_bool__)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_Nullable_String__ = r"""
+{"singleValueOrNull(lowcardinality_nullable_string__)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_Nullable_FixedString_51___ = r"""
+{"singleValueOrNull(lowcardinality_nullable_fixedstring_51___)":null}
+"""
+
+_aggregate_functions_singleValueOrNull_LowCardinality_Nullable_UUID__ = r"""
+{"singleValueOrNull(lowcardinality_nullable_uuid__)":null}
 """
 

@@ -13,7 +13,7 @@ from aggregate_functions.tests.quantile import feature as checks
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_QuantileDeterministic("1.0")
 )
 def feature(
-    self, func="quantileDeterministic({params})", table=None, date=True, datetime=True
+    self, func="quantileDeterministic({params})", table=None, date=False, datetime=False
 ):
     """Check quantileDeterministic aggregate function by using the same tests as for avg."""
     self.context.snapshot_id = name.basename(current().name)
