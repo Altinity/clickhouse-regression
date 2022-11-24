@@ -552,6 +552,7 @@ class ClickHouseNode(Node):
         :param secure: use secure connection, default: False
         :param max_query_output_in_bytes: truncate query output the specified number of bytes using 'head' command utility, default: -0 (do not truncate any output)
         """
+        r = None
         retry_count = max(0, int(retry_count))
         retry_delay = max(0, float(retry_delay))
         settings = list(settings or [])
@@ -627,6 +628,9 @@ class ClickHouseNode(Node):
                 except ExpectTimeoutError:
                     self.cluster.close_bash(self.name)
                     raise
+
+        if r is None:
+            raise RuntimeError("query was not executed; did you skip the steps?")
 
         if retry_count and retry_count > 0:
             if any(msg in r.output for msg in messages_to_retry):

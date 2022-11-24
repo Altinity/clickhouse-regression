@@ -1,3 +1,6 @@
+import random
+import hashlib
+
 from testflows.core import current, Given, Finally, TestStep, By
 from helpers.common import getuid
 from helpers.datatypes import *
@@ -15,13 +18,24 @@ class Column:
             .replace(",", "_")
             .lower()
         )
+        seed = int(hashlib.sha1(self.name.encode("utf-8")).hexdigest()[:10], 16)
+        self.random = random.Random(seed)
+
+    def __eq__(self, o):
+        return isinstance(o, Column) and o.name == self.name
+
+    def __lt__(self, o):
+        return isinstance(o, Column) and o.name < self.name
 
     def full_definition(self):
         """Return full column definition (name and type) that can be used when defining a table in ClickHouse."""
         return self.name + " " + self.datatype.name
 
-    def values(self, row_count, cardinality, seed=None):
+    def values(self, row_count, cardinality, random=None):
         """Yield of values that have specified cardinality."""
+        if random is None:
+            random = self.random
+
         values = [
             self.datatype.max_value(),
             self.datatype.min_value(),
@@ -29,28 +43,32 @@ class Column:
         ]
 
         if row_count > 3:
-            values += [
-                self.datatype.rand_value(seed=seed) for i in range(row_count - 3)
-            ]
+            values += [self.datatype.rand_value(random) for i in range(row_count - 3)]
 
         values = values * cardinality
         for i in range(row_count):
             yield str(values[i])
 
 
-def is_numeric(datatype, decimal=True, date=False, datetime=False):
+def is_numeric(
+    datatype, decimal=True, date=False, datetime=False, extended_precision=True
+):
     """Return True if data type is numeric."""
     datatype = unwrap(datatype)
 
-    if decimal:
+    if not decimal:
         if isinstance(datatype, Decimal):
-            return True
+            return False
     if date:
         if isinstance(datatype, Date):
             return True
     if datetime:
         if isinstance(datatype, DateTime):
             return True
+
+    if not extended_precision:
+        if datatype.is_extended_precision:
+            return False
 
     return datatype.is_numeric
 
@@ -65,23 +83,31 @@ def is_map(datatype):
     return isinstance(unwrap(datatype), Map)
 
 
-def is_unsigned_integer(datatype, decimal=True):
+def is_unsigned_integer(datatype, decimal=False, extended_precision=True):
     """Return True if data type is unsigned integer."""
     datatype = unwrap(datatype)
 
-    if decimal:
-        if isinstance(datatype, Decimal):
+    if isinstance(datatype, Decimal):
+        return decimal
+
+    if not extended_precision:
+        if datatype.is_extended_precision:
             return False
+
     return isinstance(datatype, UInt)
 
 
-def is_integer(datatype, decimal=True):
+def is_integer(datatype, decimal=False, extended_precision=True):
     """Return True if data type is integer."""
     datatype = unwrap(datatype)
 
-    if decimal:
-        if isinstance(datatype, Decimal):
+    if isinstance(datatype, Decimal):
+        return decimal
+
+    if not extended_precision:
+        if datatype.is_extended_precision:
             return False
+
     return isinstance(datatype, Int)
 
 
@@ -90,7 +116,7 @@ def generate_low_card_datatypes(datatype_list):
     return [
         LowCardinality(datatype)
         for datatype in datatype_list
-        if datatype.supports_low_cardinality
+        if unwrap(datatype).supports_low_cardinality
     ]
 
 
@@ -194,7 +220,7 @@ class Table:
         self.engine = engine
 
     def insert_test_data(
-        self, row_count=10, cardinality=2, node=None, query_settings=None, seed=None
+        self, row_count=10, cardinality=2, node=None, query_settings=None, random=None
     ):
         """Insert data necessarily for Parquet testing into the specified table."""
 
@@ -203,22 +229,17 @@ class Table:
 
         name = self.name
         columns = self.columns
+        columns_values = [
+            column.values(row_count=row_count, cardinality=cardinality, random=random)
+            for column in columns
+        ]
 
         total_values = []
 
         for row in range(row_count):
             total_values.append(
                 "("
-                + ",".join(
-                    [
-                        next(
-                            column.values(
-                                row_count=row_count, cardinality=cardinality, seed=seed
-                            )
-                        )
-                        for column in columns
-                    ]
-                )
+                + ",".join([next(column_values) for column_values in columns_values])
                 + ")"
             )
 
