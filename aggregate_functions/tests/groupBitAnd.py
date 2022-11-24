@@ -10,7 +10,7 @@ from aggregate_functions.requirements import (
 @TestFeature
 @Name("groupBitAnd")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_GroupBitAnd("1.0"))
-def feature(self, func="groupBitAnd({params})", table=None):
+def feature(self, func="groupBitAnd({params})", table=None, extended_precision=False):
     """Check groupBitAnd aggregate function."""
     self.context.snapshot_id = name.basename(current().name)
 
@@ -53,7 +53,9 @@ def feature(self, func="groupBitAnd({params})", table=None):
     for column in table.columns:
         column_name, column_type = column.name, column.datatype.name
 
-        if not is_unsigned_integer(column.datatype):
+        if not is_unsigned_integer(
+            column.datatype, extended_precision=extended_precision
+        ):
             continue
 
         with Check(f"{column_type}"):

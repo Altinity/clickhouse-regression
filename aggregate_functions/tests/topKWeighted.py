@@ -94,8 +94,7 @@ def feature(self, func="topKWeighted({params})", table=None):
                     col2_name, col2_type = col2.name, col2.datatype.name
 
                     if not (
-                        is_unsigned_integer(col2.datatype)
-                        or is_integer(col2.datatype)
+                        is_unsigned_integer(col2.datatype) or is_integer(col2.datatype)
                     ):
                         continue
 

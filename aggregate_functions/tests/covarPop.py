@@ -30,6 +30,7 @@ def feature(
     decimal=False,
     date=False,
     datetime=False,
+    extended_precision=False,
 ):
     """Check covarPop aggregate function."""
     self.context.snapshot_id = name.basename(current().name)
@@ -87,10 +88,14 @@ def feature(
     with Feature("datatypes"):
         with Pool(3) as executor:
             for column in table.columns:
-                col_name, col_type = column.split(" ", 1)
+                col_name, col_type = column.name, column.datatype.name
 
                 if not is_numeric(
-                    col_type, decimal=decimal, date=date, datetime=datetime
+                    column.datatype,
+                    decimal=decimal,
+                    date=date,
+                    datetime=datetime,
+                    extended_precision=extended_precision,
                 ):
                     continue
 
@@ -118,7 +123,13 @@ def feature(
                     col
                     for col in table.columns
                     if col in common_columns
-                    and is_numeric(col.datatype, decimal=decimal)
+                    and is_numeric(
+                        col.datatype,
+                        decimal=decimal,
+                        date=date,
+                        datetime=datetime,
+                        extended_precision=extended_precision,
+                    )
                 ]
                 permutations = list(permutations_with_replacement(columns, 2))
                 permutations.sort()
@@ -127,7 +138,9 @@ def feature(
                     col1_name, col1_type = col1.name, col1.datatype.name
                     col2_name, col2_type = col2.name, col2.datatype.name
                     # we already cover Float64 data type above so skip it here
-                    if isinstance(unwrap(col1_type), Float64) or isinstance(unwrap(col2_type), Float64):
+                    if isinstance(unwrap(col1.datatype), Float64) or isinstance(
+                        unwrap(col2.datatype), Float64
+                    ):
                         continue
                     Check(
                         f"{col1_type},{col2_type}",

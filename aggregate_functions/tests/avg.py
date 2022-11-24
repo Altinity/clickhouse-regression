@@ -16,6 +16,7 @@ def feature(
     decimal=True,
     date=False,
     datetime=False,
+    extended_precision=False,
 ):
     """Check avg aggregate function."""
     self.context.snapshot_id = name.basename(current().name)
@@ -73,7 +74,13 @@ def feature(
     for column in table.columns:
         column_name, column_type = column.name, column.datatype.name
 
-        if not is_numeric(column_type, decimal=decimal, date=date, datetime=datetime):
+        if not is_numeric(
+            column.datatype,
+            decimal=decimal,
+            date=date,
+            datetime=datetime,
+            extended_precision=extended_precision,
+        ):
             continue
 
         with Check(f"{column_type}"):
