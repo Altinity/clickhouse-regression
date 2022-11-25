@@ -26,9 +26,12 @@ def feature(
     table=None,
     decimal=True,
     both_arguments_with_the_same_datatype=False,
+    snapshot_id=None,
 ):
     """Check deltaSumTimestamp aggregate function."""
-    self.context.snapshot_id = name.basename(current().name)
+    self.context.snapshot_id = (
+        snapshot_id if snapshot_id else name.basename(current().name)
+    )
 
     if table is None:
         table = self.context.table
