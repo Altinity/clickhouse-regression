@@ -2,7 +2,7 @@ import random
 import hashlib
 
 from testflows.core import current, Given, Finally, TestStep, By
-from helpers.common import getuid
+from helpers.common import getuid, check_clickhouse_version
 from helpers.datatypes import *
 from testflows.core import *
 
@@ -117,6 +117,10 @@ def generate_low_card_datatypes(datatype_list):
         LowCardinality(datatype)
         for datatype in datatype_list
         if unwrap(datatype).supports_low_cardinality
+        and (
+            not isinstance(datatype, Nullable)
+            and check_clickhouse_version("<22.4")(current())
+        )
     ]
 
 
@@ -145,64 +149,71 @@ def generate_map_datatypes(datatype_list):
     return map_list
 
 
-low_cardinality_common_basic_datatypes = generate_low_card_datatypes(
-    common_basic_datatypes
-)
+def low_cardinality_common_basic_datatypes():
+    return generate_low_card_datatypes(common_basic_datatypes())
 
-null_common_basic_datatypes = generate_nullable_datatypes(common_basic_datatypes)
 
-common_complex_datatypes = [
-    Array(String()),
-    Map(
-        key=String(),
-        value=LowCardinality(Float64()),
-    ),
-    Tuple([String()]),
-]
+def null_common_basic_datatypes():
+    return generate_nullable_datatypes(common_basic_datatypes())
 
-common_datatypes = (
-    common_basic_datatypes
-    + low_cardinality_common_basic_datatypes
-    + null_common_basic_datatypes
-    + common_complex_datatypes
-)
 
-common_columns = [Column(datatype) for datatype in common_datatypes]
+def common_complex_datatypes():
+    return [
+        Array(String()),
+        Map(
+            key=String(),
+            value=LowCardinality(Float64()),
+        ),
+        Tuple([String()]),
+    ]
+
+
+def common_datatypes():
+    return (
+        common_basic_datatypes()
+        + low_cardinality_common_basic_datatypes()
+        + null_common_basic_datatypes()
+        + common_complex_datatypes()
+    )
+
+
+def common_columns():
+    return [Column(datatype) for datatype in common_datatypes()]
 
 
 def generate_all_column_types(include=None, exclude=None):
     """Generate a list of datatypes with names and ClickHouse types including arrays, maps and tuples."""
 
-    null_datatypes = generate_nullable_datatypes(basic_datatypes)
+    null_datatypes = generate_nullable_datatypes(basic_datatypes())
     low_cardinality_datatypes = generate_low_card_datatypes(
-        basic_datatypes + null_datatypes
+        basic_datatypes() + null_datatypes
     )
 
     array_datatypes = generate_array_datatypes(
-        basic_datatypes
+        basic_datatypes()
         + null_datatypes
         + low_cardinality_datatypes
-        + common_complex_datatypes
+        + common_complex_datatypes()
     )
 
     map_datatypes = generate_map_datatypes(
-        basic_datatypes
+        basic_datatypes()
         + null_datatypes
         + low_cardinality_datatypes
-        + common_complex_datatypes
+        + common_complex_datatypes()
     )
 
     tuple_datatype = [
         generate_tuple_datatype(
-            basic_datatypes
+            basic_datatypes()
             + null_datatypes
             + low_cardinality_datatypes
-            + common_complex_datatypes
+            + common_complex_datatypes()
         )
     ]
 
     all_test_datatypes = (
-        basic_datatypes
+        basic_datatypes()
         + map_datatypes
         + null_datatypes
         + array_datatypes

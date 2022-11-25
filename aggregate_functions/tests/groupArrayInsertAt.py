@@ -86,7 +86,7 @@ def feature(self, func="groupArrayInsertAt({params})", table=None):
             description="sanity check most common column type permutations",
         ):
             with Pool(3) as executor:
-                columns = [col for col in table.columns if col in common_columns]
+                columns = [col for col in table.columns if col in common_columns()]
                 permutations = list(permutations_with_replacement(columns, 2))
                 permutations.sort()
 

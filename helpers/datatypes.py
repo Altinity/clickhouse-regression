@@ -629,37 +629,40 @@ def unwrap(datatype):
     return datatype
 
 
-basic_datatypes = [
-    UInt8(),
-    UInt16(),
-    UInt32(),
-    UInt64(),
-    UInt128(),
-    Int8(),
-    Int16(),
-    Int32(),
-    Int64(),
-    Int128(),
-    Float32(),
-    Float64(),
-    Decimal128(scale=38),
-    Date(),
-    DateTime(),
-    DateTime64(3),
-    Boolean(),
-    String(),
-    FixedString(length=51),
-    UUID(),
-]
+def basic_datatypes():
+    return [
+        UInt8(),
+        UInt16(),
+        UInt32(),
+        UInt64(),
+        UInt128(),
+        Int8(),
+        Int16(),
+        Int32(),
+        Int64(),
+        Int128(),
+        Float32(),
+        Float64(),
+        Decimal128(scale=38),
+        Date(),
+        DateTime(),
+        DateTime64(3),
+        Boolean(),
+        String(),
+        FixedString(length=51),
+        UUID(),
+    ]
 
-common_basic_datatypes = [
-    String(),
-    FixedString(length=51),
-    Date(),
-    DateTime(),
-    UInt64(),
-    Int64(),
-    Float32(),
-    Float64(),
-    Decimal128(scale=38),
-]
+
+def common_basic_datatypes():
+    return [
+        String(),
+        FixedString(length=51),
+        Date(),
+        DateTime(),
+        UInt64(),
+        Int64(),
+        Float32(),
+        Float64(),
+        Decimal128(scale=38),
+    ]

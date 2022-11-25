@@ -83,7 +83,7 @@ def feature(
                 columns = [
                     col
                     for col in table.columns
-                    if col in common_columns
+                    if col in common_columns()
                     and is_numeric(
                         col.datatype, decimal=False, date=True, datetime=True
                     )

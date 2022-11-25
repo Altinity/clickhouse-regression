@@ -10,4 +10,3 @@ def feature(self):
     # Feature(settings)
     Feature(run=load("selects.tests.final.engines", "feature"))
     Feature(run=load("selects.tests.final.table_setting", "feature"))
-

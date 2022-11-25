@@ -5,9 +5,7 @@ from selects.tests.steps import *
 
 
 @TestScenario
-@Requirements(
-
-)
+@Requirements()
 def force_select_final_not_support(self):
     """Check exception message when `force_select_final` setting applies to MergeTree table with engine which
     doesn't support 'FINAL' modifier.
@@ -56,9 +54,7 @@ def select_final(self, ignore_force_select_final=False, select_count=None):
 
 
 @TestScenario
-@Requirements(
-
-)
+@Requirements()
 def force_select_final(self):
     """Check applying of 'FINAL' modifier automatically using with
     `force_select_final=1` MergeTree table setting.
