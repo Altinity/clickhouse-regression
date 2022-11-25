@@ -119,7 +119,8 @@ def generate_low_card_datatypes(datatype_list):
         if unwrap(datatype).supports_low_cardinality
         and (
             not isinstance(datatype, Nullable)
-            and check_clickhouse_version("<22.4")(current())
+            if check_clickhouse_version("<22.4")(current())
+            else True
         )
     ]
 
