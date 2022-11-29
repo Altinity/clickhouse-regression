@@ -3,6 +3,6 @@
     <macros>
         <replica>clickhouse1</replica>
         <shard>01</shard>
-        <shard2>01</shard2>
+<!--        <shard2>01</shard2>-->
     </macros>
 </clickhouse>
