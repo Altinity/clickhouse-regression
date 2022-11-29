@@ -38,7 +38,9 @@ def distributed_tables(
             node.query(f"insert into {core_table_d} values ('abc',1, 1);")
             node.query(f"insert into {core_table_d} values ('abc',1, 1);")
 
-        with Then("I check data inserted into distributed table on all shards with `FINAL` modifier"):
+        with Then(
+            "I check data inserted into distributed table on all shards with `FINAL` modifier"
+        ):
             with By(f"checking table {core_table_d}"):
                 for node_name in self.context.cluster.nodes["clickhouse"]:
                     with When(f"on {node_name} "):
@@ -60,7 +62,11 @@ def distributed_tables(
 
 @TestFeature
 @Name("distributed tables")
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SupportedTableEngines_EnginesOverOtherEngines("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SupportedTableEngines_EnginesOverOtherEngines(
+        "1.0"
+    )
+)
 def feature(self):
     """Check 'force_select_final' setting works correctly with distributed tables."""
     if self.context.stress:
@@ -77,4 +83,3 @@ def feature(self):
         with Feature(f"{table_engine}"):
             for scenario in loads(current_module(), Scenario):
                 scenario(table_engine=table_engine)
-
