@@ -757,6 +757,10 @@ class Cluster(object):
                 ) = self.get_clickhouse_binary_from_docker_container(
                     self.clickhouse_binary_path
                 )
+            else:
+                self.clickhouse_binary_path = os.path.abspath(
+                    self.clickhouse_binary_path
+                )
 
         self.docker_compose += f' --ansi never --project-directory "{docker_compose_project_dir}" --file "{docker_compose_file_path}"'
         self.lock = threading.Lock()
