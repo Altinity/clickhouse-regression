@@ -751,10 +751,15 @@ class Cluster(object):
                     if not os.path.exists(f"./{filename}"):
                         with Shell() as bash:
                             bash.timeout = 300
-                            cmd = bash(
-                                f'wget --progress dot "{self.clickhouse_binary_path}" -O {filename}'
-                            )
-                            assert cmd.exitcode == 0
+                            try:
+                                cmd = bash(
+                                    f'wget --progress dot "{self.clickhouse_binary_path}" -O {filename}'
+                                )
+                                assert cmd.exitcode == 0
+                            except BaseException:
+                                if os.path.exists(filename):
+                                    os.remove(filename)
+                                raise
                     self.clickhouse_binary_path = f"./{filename}"
 
             elif self.clickhouse_binary_path.startswith("docker://"):
