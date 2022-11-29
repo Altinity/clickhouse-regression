@@ -49,7 +49,6 @@ def select_final(
 
         with Then("I check 'SELECT count()' output"):
             if graphite:
-                pause()
                 node.query(
                     f"select count() from {table_name}"
                     f"{' SETTINGS ignore_force_select_final=1' if ignore_force_select_final else ''};",
