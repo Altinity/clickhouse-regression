@@ -4,8 +4,7 @@ from selects.tests.steps import *
 
 @TestScenario
 def table_with_materialized_view(self, table_engine):
-    """
-    """
+    """ """
     node = self.context.cluster.node("clickhouse1")
     uid = getuid()
 
@@ -57,7 +56,3 @@ def feature(self, use_transaction_for_atomic_insert=True):
         with Feature(f"{table_engine}"):
             for scenario in loads(current_module(), Scenario):
                 scenario(table_engine=table_engine)
-
-
-
-
