@@ -807,6 +807,7 @@ class Cluster(object):
                             bash(
                                 f'tar -vxzf "{deb_binary_dir}/data.tar.gz" ./usr/bin/clickhouse-odbc-bridge -O > "{deb_binary_dir}/clickhouse-odbc-bridge"'
                             )
+                            bash(f'chmod +x "{deb_binary_dir}/clickhouse-odbc-bridge"')
                     self.clickhouse_binary_path = f"./{deb_binary_dir}/clickhouse"
 
             self.clickhouse_binary_path = os.path.abspath(self.clickhouse_binary_path)
