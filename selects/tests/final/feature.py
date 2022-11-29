@@ -6,7 +6,7 @@ from selects.requirements import *
 @Name("final")
 def feature(self):
     """Check FINAL modifier."""
-    # Feature(engines)
-    # Feature(settings)
     Feature(run=load("selects.tests.final.engines", "feature"))
     Feature(run=load("selects.tests.final.table_setting", "feature"))
+    Feature(run=load("selects.tests.final.mv_tables", "feature"))
+    Feature(run=load("selects.tests.final.distributed_tables", "feature"))
