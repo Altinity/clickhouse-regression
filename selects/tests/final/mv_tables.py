@@ -4,8 +4,7 @@ from selects.tests.steps import *
 
 @TestScenario
 def table_with_materialized_view(self, table_engine):
-    """Check atomic insert by making simple insert with different failure mode in chain of core table
-    (single and on cluster) with single materialized view table_B_mv with dependent table_B.
+    """
     """
     node = self.context.cluster.node("clickhouse1")
     uid = getuid()
@@ -41,7 +40,7 @@ def table_with_materialized_view(self, table_engine):
 @Name("mv_tables")
 @Requirements()
 def feature(self, use_transaction_for_atomic_insert=True):
-    """Atomic insert check for a table which has different dependent tables."""
+    """"""
     self.context.use_transaction_for_atomic_insert = use_transaction_for_atomic_insert
 
     if self.context.stress:
