@@ -70,6 +70,7 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
 
         join()
 
+    # Feature(run=load("aggregate_functions.tests.compatibility", "feature"))
     Feature(run=load("aggregate_functions.tests.state", "feature"))
 
 

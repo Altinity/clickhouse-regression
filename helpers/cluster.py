@@ -256,14 +256,14 @@ class ClickHouseNode(Node):
             with By("waiting for 5 sec for moves and merges to stop"):
                 time.sleep(5)
             with And("forcing to sync everything to disk"):
-                self.command("sync", timeout=300, exitcode=0)
+                self.command("sync", timeout=timeout, exitcode=0)
 
         with By(f"sending kill -TERM to ClickHouse server process on {self.name}"):
             pid = self.clickhouse_pid()
             self.command(f"kill -TERM {pid}", exitcode=0, steps=False)
 
         with And("checking pid does not exist"):
-            for i, attempt in enumerate(retries(timeout=100, delay=3)):
+            for i, attempt in enumerate(retries(timeout=timeout, delay=3)):
                 with attempt:
                     if i > 0 and i % 20 == 0:
                         self.command(f"kill -KILL {pid}", steps=False)
@@ -334,6 +334,25 @@ class ClickHouseNode(Node):
         """Restart ClickHouse server."""
         if self.clickhouse_pid():
             self.stop_clickhouse(timeout=timeout, safe=safe)
+
+        self.start_clickhouse(timeout=timeout, wait_healthy=wait_healthy, user=user)
+
+    def change_clickhouse_binary_path(
+        self, timeout=300, safe=True, wait_healthy=True, retry_count=5, user=None, clickhouse_number=0
+    ):
+        """Change Clickhouse server version."""
+        if self.clickhouse_pid():
+            self.stop_clickhouse(timeout=timeout, safe=safe)
+
+        current().context.clickhouse_version = None
+
+        with By("copying another clickhouse version to docker container"):
+            self.cluster.command(None, f'docker cp '
+                                       f'"{self.cluster.clickhouse_binary_path[clickhouse_number]}"'
+                                       f' "{self.cluster.node_container_id(node=self.name)}:/usr/bin/clickhouse"')
+            self.cluster.command(None, f'docker cp '
+                                       f'"{self.cluster.clickhouse_odbc_bridge_binary_path[clickhouse_number]}"'
+                                       f' "{self.cluster.node_container_id(node=self.name)}:/usr/bin/clickhouse-odbc-bridge"')
 
         self.start_clickhouse(timeout=timeout, wait_healthy=wait_healthy, user=user)
 
@@ -707,6 +726,7 @@ class Cluster(object):
         self.docker_compose = docker_compose
         self.thread_fuzzer = thread_fuzzer
         self.running = False
+        self.clickhouse_versions = []
 
         frame = inspect.currentframe().f_back
         caller_dir = os.path.dirname(os.path.abspath(frame.f_globals["__file__"]))
@@ -741,79 +761,74 @@ class Cluster(object):
                 f"docker compose file '{docker_compose_file_path}' does not exist"
             )
 
+        if self.clickhouse_odbc_bridge_binary_path is None:
+            self.clickhouse_odbc_bridge_binary_path = [
+                None,
+            ] * len(self.clickhouse_binary_path)
+
         if self.clickhouse_binary_path:
-            if self.clickhouse_binary_path.startswith(("http://", "https://")):
-                with Given(
-                    "I download ClickHouse server binary using wget",
-                    description=f"{self.clickhouse_binary_path}",
-                ):
-                    filename = f"{short_hash(self.clickhouse_binary_path)}-{self.clickhouse_binary_path.rsplit('/', 1)[-1]}"
-                    if not os.path.exists(f"./{filename}"):
-                        with Shell() as bash:
-                            bash.timeout = 300
-                            try:
-                                cmd = bash(
-                                    f'wget --progress dot "{self.clickhouse_binary_path}" -O {filename}'
-                                )
-                                assert cmd.exitcode == 0
-                            except BaseException:
-                                if os.path.exists(filename):
-                                    os.remove(filename)
-                                raise
-                    self.clickhouse_binary_path = f"./{filename}"
+            for i, path in enumerate(self.clickhouse_binary_path):
 
-            elif self.clickhouse_binary_path.startswith("docker://"):
-                if current().context.clickhouse_version is None:
-                    parsed_version = ""
-                    for c in self.clickhouse_binary_path.rsplit(":", 1)[-1]:
-                        if c in ".0123456789":
-                            parsed_version += c
-                        else:
-                            break
-                    if parsed_version:
-                        if not (
-                            parsed_version.startswith(".")
-                            or parsed_version.endswith(".")
-                        ):
-                            current().context.clickhouse_version = parsed_version
+                parsed_version = ""
+                for c in path.rsplit(":", 1)[-1]:
+                    if c in ".0123456789":
+                        parsed_version += c
+                    else:
+                        break
+                if parsed_version:
+                    if not (
+                        parsed_version.startswith(".")
+                        or parsed_version.endswith(".")
+                    ):
+                        self.clickhouse_versions.append(parsed_version)
 
-                (
-                    self.clickhouse_binary_path,
-                    self.clickhouse_odbc_bridge_binary_path,
-                ) = self.get_clickhouse_binary_from_docker_container(
-                    self.clickhouse_binary_path
-                )
+                if path.startswith("docker://"):
+                    (
+                        local_clickhouse_binary_path,
+                        local_clickhouse_odbc_bridge_binary_path,
+                    ) = self.get_clickhouse_binary_from_docker_container(path)
 
-            if self.clickhouse_binary_path.endswith(".deb"):
-                with Given(
-                    "unpack deb package", description=f"{self.clickhouse_binary_path}"
-                ):
-                    deb_binary_dir = self.clickhouse_binary_path.rsplit(".deb", 1)[0]
-                    os.makedirs(deb_binary_dir, exist_ok=True)
-                    with Shell() as bash:
-                        bash.timeout = 300
-                        if not os.path.exists(
-                            f"{deb_binary_dir}/clickhouse"
-                        ) or not os.path.exists(
-                            f"{deb_binary_dir}/clickhouse-odbc-bridge"
-                        ):
-                            bash(
-                                f'ar x "{self.clickhouse_binary_path}" --output "{deb_binary_dir}"'
-                            )
-                            bash(
-                                f'tar -vxzf "{deb_binary_dir}/data.tar.gz" ./usr/bin/clickhouse -O > "{deb_binary_dir}/clickhouse"'
-                            )
-                            bash(f'chmod +x "{deb_binary_dir}/clickhouse"')
-                            bash(
-                                f'tar -vxzf "{deb_binary_dir}/data.tar.gz" ./usr/bin/clickhouse-odbc-bridge -O > "{deb_binary_dir}/clickhouse-odbc-bridge"'
-                            )
-                            bash(f'chmod +x "{deb_binary_dir}/clickhouse-odbc-bridge"')
-                    self.clickhouse_binary_path = f"./{deb_binary_dir}/clickhouse"
+                    self.clickhouse_binary_path[i] = local_clickhouse_binary_path
+                    self.clickhouse_odbc_bridge_binary_path[
+                        i
+                    ] = local_clickhouse_odbc_bridge_binary_path
 
-            self.clickhouse_binary_path = os.path.abspath(self.clickhouse_binary_path)
+        if (len(self.clickhouse_binary_path) == 1) and (self.clickhouse_binary_path[0] == "/usr/bin/clickhouse"):
+            self.clickhouse_odbc_bridge_binary_path = ["/usr/bin/clickhouse-odbc-bridge"]
+
+        self.clickhouse_binary_path = (
+            self.clickhouse_binary_path[0]
+            if (len(self.clickhouse_binary_path) == 1)
+            else self.clickhouse_binary_path
+        )
+        self.clickhouse_odbc_bridge_binary_path = (
+            self.clickhouse_odbc_bridge_binary_path[0]
+            if (len(self.clickhouse_odbc_bridge_binary_path) == 1)
+            else self.clickhouse_odbc_bridge_binary_path
+        )
 
         self.docker_compose += f' --ansi never --project-directory "{docker_compose_project_dir}" --file "{docker_compose_file_path}"'
         self.lock = threading.Lock()
+
+    # def _change_clickhouse_binary_path(self, clickhouse_number):
+    #     """Change clickhouse binary path."""
+    #
+    #     self.down()
+    #     self.up(clickhouse_number=clickhouse_number)
+    #
+    # def change_clickhouse_version(self, clickhouse_version):
+    #     """Restart cluster with a different clickhouse version."""
+    #
+    #     if not (clickhouse_version in self.clickhouse_versions):
+    #         raise ValueError(f"clickhouse version {clickhouse_version} not specified")
+    #
+    #     if current().context.clickhouse_version == clickhouse_version:
+    #         raise ValueError(
+    #             f"cluster has already been raised with the version {clickhouse_version}"
+    #         )
+    #
+    #     clickhouse_number = self.clickhouse_versions.index(clickhouse_version)
+    #     self._change_clickhouse_binary_path(clickhouse_number=clickhouse_number)
 
     def get_clickhouse_binary_from_docker_container(
         self,
@@ -1097,26 +1112,33 @@ class Cluster(object):
 
     def up(self, timeout=30 * 60):
         """Bring cluster up."""
+        if isinstance(self.clickhouse_binary_path, str):
+            clickhouse_binary_path = [self.clickhouse_binary_path]
+            clickhouse_odbc_bridge_binary_path = [self.clickhouse_odbc_bridge_binary_path]
+        else:
+            clickhouse_binary_path = self.clickhouse_binary_path
+            clickhouse_odbc_bridge_binary_path = self.clickhouse_odbc_bridge_binary_path
+
         if self.local:
             with Given("I am running in local mode"):
                 with Then("check --clickhouse-binary-path is specified"):
                     assert (
-                        self.clickhouse_binary_path
+                        clickhouse_binary_path[0]
                     ), "when running in local mode then --clickhouse-binary-path must be specified"
                 with And("path should exist"):
-                    assert os.path.exists(self.clickhouse_binary_path)
+                    assert os.path.exists(clickhouse_binary_path[0])
 
-            with And("I set all the necessary environment variables"):
-                self.environ["COMPOSE_HTTP_TIMEOUT"] = "600"
-                self.environ[
-                    "CLICKHOUSE_TESTS_SERVER_BIN_PATH"
-                ] = self.clickhouse_binary_path
-                self.environ[
-                    "CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH"
-                ] = self.clickhouse_odbc_bridge_binary_path or os.path.join(
-                    os.path.dirname(self.clickhouse_binary_path),
-                    "clickhouse-odbc-bridge",
-                )
+            # with And("I set all the necessary environment variables"):
+            #     self.environ["COMPOSE_HTTP_TIMEOUT"] = "600"
+            #     self.environ[
+            #         "CLICKHOUSE_TESTS_SERVER_BIN_PATH"
+            #     ] = self.clickhouse_binary_path[0]
+            #     self.environ[
+            #         "CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH"
+            #     ] = self.clickhouse_odbc_bridge_binary_path[0] or os.path.join(
+            #         os.path.dirname(self.clickhouse_binary_path[0]),
+            #         "clickhouse-odbc-bridge",
+            #     )
                 self.environ["CLICKHOUSE_TESTS_DIR"] = self.configs_dir
 
             with And("I list environment variables to show their values"):
@@ -1164,6 +1186,15 @@ class Cluster(object):
                                 )
                                 if "is unhealthy" not in cmd.output:
                                     break
+
+                    with And("copying clickhouse server and clickhouse odbc bridge to docker container"):
+                        for name in self.nodes["clickhouse"]:
+                            self.command(None, f'docker cp '
+                                               f'"{clickhouse_binary_path[0]}" '
+                                               f'"{self.node_container_id(node=name)}:/usr/bin/clickhouse"')
+                            self.command(None, f'docker cp '
+                                               f'"{clickhouse_odbc_bridge_binary_path[0]}" '
+                                               f'"{self.node_container_id(node=name)}:/usr/bin/clickhouse-odbc-bridge"')
 
                     with Then("check there are no unhealthy containers"):
                         ps_cmd = self.command(

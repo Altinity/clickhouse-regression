@@ -22,10 +22,12 @@ def argparser(parser):
     parser.add_argument(
         "--clickhouse-binary-path",
         type=str,
+        nargs="+",
+        action="store",
         dest="clickhouse_binary_path",
         help="path to ClickHouse binary, default: /usr/bin/clickhouse",
         metavar="path",
-        default=os.getenv("CLICKHOUSE_TESTS_SERVER_BIN_PATH", "/usr/bin/clickhouse"),
+        default=[os.getenv("CLICKHOUSE_TESTS_SERVER_BIN_PATH", "/usr/bin/clickhouse")],
     )
 
     parser.add_argument(
