@@ -18,37 +18,21 @@ def distributed_tables(
     cluster = "replicated_cluster"
 
     with Given("I create data table"):
-        create_table(core_table=core_table, core_table_engine=table_engine, distributed=True, cluster=cluster,
-                     distributed_table=core_table_d)
+        create_table(
+            core_table=core_table,
+            core_table_engine=table_engine,
+            distributed=True,
+            cluster=cluster,
+            distributed_table=core_table_d,
+        )
 
     with And(f"I insert into distributed table"):
-        node.query(f"insert into {core_table_d} values ('abc',1, 1);")
-        node.query(f"insert into {core_table_d} values ('abc',1, 1);")
+        insert_into_table(table_name=core_table_d, row_number=4, equal_rows=True)
 
     with Then(
-            "I check data inserted into distributed table on all shards with `FINAL` modifier"
+        "I check data inserted into distributed table on all shards with `FINAL` modifier"
     ):
-        with By(f"checking table {core_table_d}"):
-            for node_name in self.context.cluster.nodes["clickhouse"]:
-                with When(f"on {node_name} "):
-                    retry(
-                        self.context.cluster.node(node_name).query,
-                        timeout=100,
-                        delay=1,
-                    )(
-                        f"select count() from {core_table_d}",
-                        message="1",
-                        exitcode=0,
-                    )
-                pause()
-
-    # try:
-
-    #                     pause()
-    # finally:
-    #     with Finally("I drop tables"):
-    #         node.query(f"DROP TABLE {core_table};")
-    #         node.query(f"DROP TABLE {core_table_d} ON CLUSTER '{cluster}';")
+        select(table_name=core_table_d, output=4)
 
 
 @TestFeature
