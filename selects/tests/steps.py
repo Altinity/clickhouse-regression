@@ -15,8 +15,14 @@ def instrument_cluster_nodes(self, test, cluster_nodes, always_dump=True):
 
 
 @TestStep(Given)
-def create_table(self, core_table=None, core_table_engine=None, distributed=None, cluster=None,
-                 distributed_table=None):
+def create_table(
+    self,
+    core_table=None,
+    core_table_engine=None,
+    distributed=None,
+    cluster=None,
+    distributed_table=None,
+):
     """
     Create clickhouse table.
 
@@ -51,4 +57,37 @@ def create_table(self, core_table=None, core_table_engine=None, distributed=None
                 node.query(f"DROP TABLE {distributed_table} ON CLUSTER '{cluster}';")
 
 
+@TestStep(Given)
+def insert_into_table(
+    self,
+    table_name=None,
+    block_number=1,
+    row_number=1,
+    unique_rows=True,
+    equal_rows=False,
+):
+    node = self.context.cluster.node("clickhouse1")
+    for i in range(block_number):
+        for k in range(row_number):
+            if unique_rows:
+                node.query(
+                    f"insert into {table_name} values (randomString(5) ,{i+1}, {k+1});"
+                )
+            elif equal_rows:
+                node.query(f"insert into {table_name} values ('abc',{i+1}, {k+1});")
 
+
+@TestStep(Given)
+def select(self, table_name=None, output=None):
+    with Given(f"Select from table {table_name}"):
+        for node_name in self.context.cluster.nodes["clickhouse"]:
+            with When(f"on {node_name} "):
+                retry(
+                    self.context.cluster.node(node_name).query,
+                    timeout=100,
+                    delay=1,
+                )(
+                    f"select count() from {table_name}",
+                    message=f"{output}",
+                    exitcode=0,
+                )
