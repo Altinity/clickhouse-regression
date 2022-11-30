@@ -17,47 +17,38 @@ def distributed_tables(
     core_table_d = f"table_A_d{uid}"
     cluster = "replicated_cluster"
 
-    try:
-        with Given("I create data table"):
-            node.query(
-                f"create table if not exists {core_table} (x String, sign Int8 DEFAULT 1, version Int8 DEFAULT 1)"
-                f" engine={table_engine} ORDER BY x SETTINGS force_select_final=1;"
-            )
+    with Given("I create data table"):
+        create_table(core_table=core_table, core_table_engine=table_engine, distributed=True, cluster=cluster,
+                     distributed_table=core_table_d)
 
-        with And("I create distributed table over data table"):
-            retry(node.query, timeout=100, delay=1)(
-                f"CREATE TABLE IF NOT EXISTS {core_table_d}  ON CLUSTER '{cluster}'"
-                f" as {core_table}"
-                " ENGINE = Distributed"
-                f"({cluster}, currentDatabase(), {core_table})",
-                steps=False,
-            )
+    with And(f"I insert into distributed table"):
+        node.query(f"insert into {core_table_d} values ('abc',1, 1);")
+        node.query(f"insert into {core_table_d} values ('abc',1, 1);")
 
-        with And(f"I insert into distributed table"):
-            pause()
-            node.query(f"insert into {core_table_d} values ('abc',1, 1);")
-            node.query(f"insert into {core_table_d} values ('abc',1, 1);")
-
-        with Then(
+    with Then(
             "I check data inserted into distributed table on all shards with `FINAL` modifier"
-        ):
-            with By(f"checking table {core_table_d}"):
-                for node_name in self.context.cluster.nodes["clickhouse"]:
-                    with When(f"on {node_name} "):
-                        retry(
-                            self.context.cluster.node(node_name).query,
-                            timeout=100,
-                            delay=1,
-                        )(
-                            f"select count() from {core_table_d}",
-                            message="1",
-                            exitcode=0,
-                        )
-                        pause()
-    finally:
-        with Finally("I drop tables"):
-            node.query(f"DROP TABLE {core_table};")
-            node.query(f"DROP TABLE {core_table_d} ON CLUSTER '{cluster}';")
+    ):
+        with By(f"checking table {core_table_d}"):
+            for node_name in self.context.cluster.nodes["clickhouse"]:
+                with When(f"on {node_name} "):
+                    retry(
+                        self.context.cluster.node(node_name).query,
+                        timeout=100,
+                        delay=1,
+                    )(
+                        f"select count() from {core_table_d}",
+                        message="1",
+                        exitcode=0,
+                    )
+                pause()
+
+    # try:
+
+    #                     pause()
+    # finally:
+    #     with Finally("I drop tables"):
+    #         node.query(f"DROP TABLE {core_table};")
+    #         node.query(f"DROP TABLE {core_table_d} ON CLUSTER '{cluster}';")
 
 
 @TestFeature
