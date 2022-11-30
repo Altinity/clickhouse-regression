@@ -2,6 +2,7 @@ import os
 import uuid
 import time
 import inspect
+import hashlib
 import threading
 import tempfile
 
@@ -30,6 +31,11 @@ MESSAGES_TO_RETRY = [
     "Shutdown is called for table",  # happens in SYSTEM SYNC REPLICA query if session with ZooKeeper is being reinitialized.
     "is executing longer than distributed_ddl_task_timeout",  # distributed TTL timeout message
 ]
+
+
+def short_hash(s):
+    """Return good enough short hash of a string."""
+    return hashlib.sha1(s.encode("utf-8")).hexdigest()[:10]
 
 
 class Shell(ShellBase):
@@ -736,7 +742,27 @@ class Cluster(object):
             )
 
         if self.clickhouse_binary_path:
-            if self.clickhouse_binary_path.startswith("docker://"):
+            if self.clickhouse_binary_path.startswith(("http://", "https://")):
+                with Given(
+                    "I download ClickHouse server binary using wget",
+                    description=f"{self.clickhouse_binary_path}",
+                ):
+                    filename = f"{short_hash(self.clickhouse_binary_path)}-{self.clickhouse_binary_path.rsplit('/', 1)[-1]}"
+                    if not os.path.exists(f"./{filename}"):
+                        with Shell() as bash:
+                            bash.timeout = 300
+                            try:
+                                cmd = bash(
+                                    f'wget --progress dot "{self.clickhouse_binary_path}" -O {filename}'
+                                )
+                                assert cmd.exitcode == 0
+                            except BaseException:
+                                if os.path.exists(filename):
+                                    os.remove(filename)
+                                raise
+                    self.clickhouse_binary_path = f"./{filename}"
+
+            elif self.clickhouse_binary_path.startswith("docker://"):
                 if current().context.clickhouse_version is None:
                     parsed_version = ""
                     for c in self.clickhouse_binary_path.rsplit(":", 1)[-1]:
@@ -757,10 +783,34 @@ class Cluster(object):
                 ) = self.get_clickhouse_binary_from_docker_container(
                     self.clickhouse_binary_path
                 )
-            else:
-                self.clickhouse_binary_path = os.path.abspath(
-                    self.clickhouse_binary_path
-                )
+
+            if self.clickhouse_binary_path.endswith(".deb"):
+                with Given(
+                    "unpack deb package", description=f"{self.clickhouse_binary_path}"
+                ):
+                    deb_binary_dir = self.clickhouse_binary_path.rsplit(".deb", 1)[0]
+                    os.makedirs(deb_binary_dir, exist_ok=True)
+                    with Shell() as bash:
+                        bash.timeout = 300
+                        if not os.path.exists(
+                            f"{deb_binary_dir}/clickhouse"
+                        ) or not os.path.exists(
+                            f"{deb_binary_dir}/clickhouse-odbc-bridge"
+                        ):
+                            bash(
+                                f'ar x "{self.clickhouse_binary_path}" --output "{deb_binary_dir}"'
+                            )
+                            bash(
+                                f'tar -vxzf "{deb_binary_dir}/data.tar.gz" ./usr/bin/clickhouse -O > "{deb_binary_dir}/clickhouse"'
+                            )
+                            bash(f'chmod +x "{deb_binary_dir}/clickhouse"')
+                            bash(
+                                f'tar -vxzf "{deb_binary_dir}/data.tar.gz" ./usr/bin/clickhouse-odbc-bridge -O > "{deb_binary_dir}/clickhouse-odbc-bridge"'
+                            )
+                            bash(f'chmod +x "{deb_binary_dir}/clickhouse-odbc-bridge"')
+                    self.clickhouse_binary_path = f"./{deb_binary_dir}/clickhouse"
+
+            self.clickhouse_binary_path = os.path.abspath(self.clickhouse_binary_path)
 
         self.docker_compose += f' --ansi never --project-directory "{docker_compose_project_dir}" --file "{docker_compose_file_path}"'
         self.lock = threading.Lock()
