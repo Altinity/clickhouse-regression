@@ -10,71 +10,66 @@ from helpers.common import *
     )
 )
 def source_replica_stopped(self):
-    """Check one part moves between two shards correct when source replica stopped."""
-    if check_clickhouse_version("<22.8")(self):
-        cluster = self.context.cluster
-        node = self.context.cluster.node("clickhouse1")
-        cluster_name = "'cluster_1replica_3shard'"
-        try:
-            with Given("Receive UID"):
-                uid = getuid()
-                table_name = f"test_table{uid}"
+    cluster = self.context.cluster
+    node = self.context.cluster.node("clickhouse1")
+    cluster_name = "'cluster_1replica_3shard'"
+    try:
+        with Given("Receive UID"):
+            uid = getuid()
+            table_name = f"test_table{uid}"
 
-            with And("I create table with simple data"):
-                create_test_table_with_insert(
-                    table_name=table_name, cluster_name=cluster_name
-                )
+        with And("I create table with simple data"):
+            create_test_table_with_insert(
+                table_name=table_name, cluster_name=cluster_name
+            )
 
-            with And("I move part from shard 1 to shard 3"):
-                node.query(
-                    f"ALTER TABLE {table_name} MOVE PART 'all_0_0_0' TO SHARD '/clickhouse/tables/"
-                    f"replicated/03/{table_name}'"
-                )
+        with And("I move part from shard 1 to shard 3"):
+            node.query(
+                f"ALTER TABLE {table_name} MOVE PART 'all_0_0_0' TO SHARD '/clickhouse/tables/"
+                f"replicated/03/{table_name}'"
+            )
+            retry(cluster.node("clickhouse1").query, timeout=100, delay=1)(
+                f"select count() from system.parts where name == 'all_0_0_0'", message="0"
+            )
 
-            with And("I stop shard 1 replica"):
-                cluster.node("clickhouse4").stop_clickhouse()
+        with And("I stop shard 1 replica"):
+            cluster.node("clickhouse4").stop_clickhouse()
 
-            with And("I move part from shard 3 to shard 1"):
-                retry(cluster.node("clickhouse3").query, timeout=100, delay=1)(
-                    f"ALTER TABLE {table_name} MOVE PART 'all_0_0_0' TO SHARD '/clickhouse/tables/"
-                    f"replicated/01/{table_name}'"
-                )
+        with And("I move part from shard 3 to shard 1"):
+            retry(cluster.node("clickhouse3").query, timeout=100, delay=1)(
+                f"ALTER TABLE {table_name} MOVE PART 'all_0_0_0' TO SHARD '/clickhouse/tables/"
+                f"replicated/01/{table_name}'"
+            )
 
-            with Then("I check part move doesn't finishing while replica down"):
-                retry(node.query, timeout=100, delay=1)(
-                    f"SELECT count() FROM {table_name}", message="0"
-                )
-                retry(cluster.node("clickhouse3").query, timeout=100, delay=1)(
-                    f"SELECT count() FROM {table_name}", message="2"
-                )
+        with Then("I check part move doesn't finishing while replica down"):
+            retry(node.query, timeout=100, delay=1)(
+                f"SELECT count() FROM {table_name}", message="0"
+            )
+            retry(cluster.node("clickhouse3").query, timeout=100, delay=1)(
+                f"SELECT count() FROM {table_name}", message="2"
+            )
 
-            with And("I start shard 1 replica"):
-                cluster.node("clickhouse4").start_clickhouse()
+        with And("I start shard 1 replica"):
+            cluster.node("clickhouse4").start_clickhouse()
 
-            with And("I start merges"):
-                node.query(f"SYSTEM START MERGES {table_name}")
-                node.query(f"OPTIMIZE TABLE {table_name} FINAL")
+        with And("I start merges"):
+            node.query(f"SYSTEM START MERGES {table_name}")
+            node.query(f"OPTIMIZE TABLE {table_name} FINAL")
 
-            with Then("I check part move finished"):
-                retry(node.query, timeout=100, delay=1)(
+        with Then("I check part move finished"):
+            retry(node.query, timeout=100, delay=1)(
+                f"SELECT count() FROM {table_name}", message="1"
+            )
+
+            for name in ["clickhouse3", "clickhouse4"]:
+                retry(cluster.node(name).query, timeout=100, delay=1)(
                     f"SELECT count() FROM {table_name}", message="1"
                 )
-
-                for name in ["clickhouse3", "clickhouse4"]:
-                    retry(cluster.node(name).query, timeout=100, delay=1)(
-                        f"SELECT count() FROM {table_name}", message="1"
-                    )
-        finally:
-            with Finally("I drop table if exists"):
-                node.query(
-                    f"DROP TABLE IF EXISTS {table_name} ON CLUSTER {cluster_name} SYNC"
-                )
-    else:
-        xfail(
-            "doesn't work from 22.8.6.71-alpine",
-            reason="Move part from shard 3 to shard 1 doesn't work",
-        )
-        pass
+    finally:
+        with Finally("I drop table if exists"):
+            node.query(
+                f"DROP TABLE IF EXISTS {table_name} ON CLUSTER {cluster_name} SYNC"
+            )
 
 
 @TestScenario
@@ -248,7 +243,6 @@ def distributed_table_stopped_replica(self):
             uid = getuid()
             table_name = f"test_table{uid}"
             table_name_d = f"test_table_d{uid}"
-
         with And("I create table with simple data"):
             create_test_table_with_insert(
                 table_name=table_name, cluster_name=cluster_name
