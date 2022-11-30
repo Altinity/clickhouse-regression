@@ -29,7 +29,8 @@ def source_replica_stopped(self):
                 f"replicated/03/{table_name}'"
             )
             retry(cluster.node("clickhouse1").query, timeout=100, delay=1)(
-                f"select count() from system.parts where name == 'all_0_0_0'", message="0"
+                f"select count() from system.parts where name == 'all_0_0_0'",
+                message="0",
             )
 
         with And("I stop shard 1 replica"):
