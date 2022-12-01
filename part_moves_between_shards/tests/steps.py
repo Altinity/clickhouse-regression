@@ -373,3 +373,16 @@ def simple_insert(self, table_name, value="777", node_name="clickhouse1"):
     retry(self.context.cluster.node(node_name).query, timeout=100, delay=1)(
         f"INSERT INTO {table_name}" f" VALUES ({value})"
     )
+
+
+@TestStep
+def move_part_with_check(self, table_name, shard_b_number, shard_a_name):
+    with Given("I move part from shard a to shard b"):
+        self.context.cluster.node(shard_a_name).query(
+            f"ALTER TABLE {table_name} MOVE PART 'all_0_0_0' TO SHARD '/clickhouse/tables/"
+            f"replicated/0{shard_b_number}/{table_name}'"
+        )
+        retry(self.context.cluster.node(shard_a_name).query, timeout=100, delay=1)(
+            f"select count() from system.parts where name == 'all_0_0_0'",
+            message="0",
+        )
