@@ -5,6 +5,7 @@ from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_GroupUniqArray,
 )
 
+from aggregate_functions.tests.steps import get_snapshot_id
 from aggregate_functions.tests.groupArray import feature as checks
 
 
@@ -13,7 +14,7 @@ from aggregate_functions.tests.groupArray import feature as checks
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_GroupUniqArray("1.0"))
 def feature(self, func="groupUniqArray({params})", table=None):
     """Check groupUniqArray aggregate function by using the same tests as for groupArray."""
-    self.context.snapshot_id = name.basename(current().name)
+    self.context.snapshot_id = get_snapshot_id()
 
     if table is None:
         table = self.context.table

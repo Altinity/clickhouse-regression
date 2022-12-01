@@ -79,19 +79,3 @@ _aggregate_functions_groupBitmap_LowCardinality_UInt64_ = r"""
 {"groupBitmap(lowcardinality_uint64_)":"9"}
 """
 
-_aggregate_functions_groupBitmap_LowCardinality_Nullable_UInt8__ = r"""
-{"groupBitmap(lowcardinality_nullable_uint8__)":9}
-"""
-
-_aggregate_functions_groupBitmap_LowCardinality_Nullable_UInt16__ = r"""
-{"groupBitmap(lowcardinality_nullable_uint16__)":9}
-"""
-
-_aggregate_functions_groupBitmap_LowCardinality_Nullable_UInt32__ = r"""
-{"groupBitmap(lowcardinality_nullable_uint32__)":9}
-"""
-
-_aggregate_functions_groupBitmap_LowCardinality_Nullable_UInt64__ = r"""
-{"groupBitmap(lowcardinality_nullable_uint64__)":"9"}
-"""
-

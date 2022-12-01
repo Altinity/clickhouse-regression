@@ -91,10 +91,6 @@ _aggregate_functions_quantileExactExclusive_Float64 = r"""
 {"quantileExactExclusive(float64)":-5.112209912988255e97}
 """
 
-_aggregate_functions_quantileExactExclusive_DateTime = r"""
-{"quantileExactExclusive(datetime)":1461182176}
-"""
-
 _aggregate_functions_quantileExactExclusive_Nullable_UInt8_ = r"""
 {"quantileExactExclusive(nullable_uint8_)":65}
 """
@@ -173,45 +169,5 @@ _aggregate_functions_quantileExactExclusive_LowCardinality_Float32_ = r"""
 
 _aggregate_functions_quantileExactExclusive_LowCardinality_Float64_ = r"""
 {"quantileExactExclusive(lowcardinality_float64_)":8.313355866648283e134}
-"""
-
-_aggregate_functions_quantileExactExclusive_LowCardinality_Nullable_UInt8__ = r"""
-{"quantileExactExclusive(lowcardinality_nullable_uint8__)":165}
-"""
-
-_aggregate_functions_quantileExactExclusive_LowCardinality_Nullable_UInt16__ = r"""
-{"quantileExactExclusive(lowcardinality_nullable_uint16__)":15607}
-"""
-
-_aggregate_functions_quantileExactExclusive_LowCardinality_Nullable_UInt32__ = r"""
-{"quantileExactExclusive(lowcardinality_nullable_uint32__)":2488434006}
-"""
-
-_aggregate_functions_quantileExactExclusive_LowCardinality_Nullable_UInt64__ = r"""
-{"quantileExactExclusive(lowcardinality_nullable_uint64__)":7718272410435570000}
-"""
-
-_aggregate_functions_quantileExactExclusive_LowCardinality_Nullable_Int8__ = r"""
-{"quantileExactExclusive(lowcardinality_nullable_int8__)":9}
-"""
-
-_aggregate_functions_quantileExactExclusive_LowCardinality_Nullable_Int16__ = r"""
-{"quantileExactExclusive(lowcardinality_nullable_int16__)":-6294}
-"""
-
-_aggregate_functions_quantileExactExclusive_LowCardinality_Nullable_Int32__ = r"""
-{"quantileExactExclusive(lowcardinality_nullable_int32__)":-242357356}
-"""
-
-_aggregate_functions_quantileExactExclusive_LowCardinality_Nullable_Int64__ = r"""
-{"quantileExactExclusive(lowcardinality_nullable_int64__)":1732198740987194000}
-"""
-
-_aggregate_functions_quantileExactExclusive_LowCardinality_Nullable_Float32__ = r"""
-{"quantileExactExclusive(lowcardinality_nullable_float32__)":-4.483521463152099e37}
-"""
-
-_aggregate_functions_quantileExactExclusive_LowCardinality_Nullable_Float64__ = r"""
-{"quantileExactExclusive(lowcardinality_nullable_float64__)":1.7674632094597634e89}
 """
 

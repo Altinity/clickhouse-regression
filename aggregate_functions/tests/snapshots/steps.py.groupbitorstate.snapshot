@@ -79,19 +79,3 @@ _aggregate_functions_state_groupBitOrState_LowCardinality_UInt64_ = r"""
 {"hex(groupBitOrState(lowcardinality_uint64_))":"FFFFFFFFFFFFFFFF"}
 """
 
-_aggregate_functions_state_groupBitOrState_LowCardinality_Nullable_UInt8__ = r"""
-{"hex(groupBitOrState(lowcardinality_nullable_uint8__))":"01FF"}
-"""
-
-_aggregate_functions_state_groupBitOrState_LowCardinality_Nullable_UInt16__ = r"""
-{"hex(groupBitOrState(lowcardinality_nullable_uint16__))":"01FFFF"}
-"""
-
-_aggregate_functions_state_groupBitOrState_LowCardinality_Nullable_UInt32__ = r"""
-{"hex(groupBitOrState(lowcardinality_nullable_uint32__))":"01FFFFFFFF"}
-"""
-
-_aggregate_functions_state_groupBitOrState_LowCardinality_Nullable_UInt64__ = r"""
-{"hex(groupBitOrState(lowcardinality_nullable_uint64__))":"01FFFFFFFFFFFFFFFF"}
-"""
-

@@ -6,6 +6,7 @@ from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_IntervalLengthSum,
 )
 
+from aggregate_functions.tests.steps import get_snapshot_id
 from aggregate_functions.tests.deltaSumTimestamp import feature as checks
 
 
@@ -19,7 +20,7 @@ def feature(self, func="intervalLengthSum({params})", table=None):
     if check_clickhouse_version("<22.4")(self):
         self.context.snapshot_id = name.basename(current().name) + "<22.4"
     else:
-        self.context.snapshot_id = name.basename(current().name)
+        self.context.snapshot_id = get_snapshot_id()
 
     if table is None:
         table = self.context.table

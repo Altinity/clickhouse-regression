@@ -4,6 +4,7 @@ from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_Quantile,
 )
 
+from aggregate_functions.tests.steps import get_snapshot_id
 from aggregate_functions.tests.avg import feature as checks
 
 
@@ -20,7 +21,7 @@ def feature(
     extended_precision=False,
 ):
     """Check quantile aggregate function by using the same tests as for avg."""
-    self.context.snapshot_id = name.basename(current().name)
+    self.context.snapshot_id = get_snapshot_id()
 
     if table is None:
         table = self.context.table

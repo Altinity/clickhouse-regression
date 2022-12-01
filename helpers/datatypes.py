@@ -1,5 +1,7 @@
 import random as default_random
 
+from helpers.common import check_clickhouse_version, current
+
 
 class DataType:
     def __init__(
@@ -318,7 +320,11 @@ class DateTime64(DateTime):
         self.precision = precision
         super().__init__(
             f"DateTime64({self.precision})",
-            max="'2299-12-31 23:59:59.99999999'"
+            max=(
+                "'2283-11-11 23:59:59.99999999'"
+                if check_clickhouse_version("<22.8")(current())
+                else "'2299-12-31 23:59:59.99999999'"
+            )
             if precision != 9
             else "'2262-04-11 23:47:16'",
             min="'1900-01-01 00:00:00'",
@@ -443,7 +449,7 @@ class Nullable(DataType):
         self.datatype = datatype
         super().__init__(
             f"Nullable({datatype.name})",
-            supports_low_cardinality=True,
+            supports_low_cardinality=datatype.supports_low_cardinality,
             is_valid_map_key=False,
             is_numeric=datatype.is_numeric,
             is_unsigned=datatype.is_unsigned,
@@ -471,7 +477,7 @@ class LowCardinality(DataType):
         self.datatype = datatype
         super().__init__(
             f"LowCardinality({datatype.name})",
-            supports_low_cardinality=True,
+            supports_low_cardinality=False,
             is_valid_map_key=True if isinstance(datatype, String) else False,
             is_numeric=datatype.is_numeric,
             is_unsigned=datatype.is_unsigned,
