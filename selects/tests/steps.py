@@ -71,7 +71,7 @@ def insert_into_table(
         for k in range(row_number):
             if unique_rows:
                 node.query(
-                    f"insert into {table_name} values (randomString(5) ,{i+1}, {k+1});"
+                    f"insert into {table_name} values (randomString(3) ,{i+1}, {k+1});"
                 )
             elif equal_rows:
                 node.query(f"insert into {table_name} values ('abc',{i+1}, {k+1});")
