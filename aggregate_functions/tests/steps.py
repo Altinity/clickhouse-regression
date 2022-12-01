@@ -174,7 +174,7 @@ def execute_query(
         snapshot_name = current().name
 
     if "DateTime64" in snapshot_name:
-        if check_clickhouse_version(">=22.8"):
+        if check_clickhouse_version(">=22.8")(current()):
             snapshot_name += ">=22.8"
 
     assert "snapshot_id" in current().context, "test must set self.context.snapshot_id"
