@@ -149,11 +149,7 @@ def get_snapshot_id(snapshot_id=None):
     """Return snapshot id based on the current test's name
     and ClickHouse server version."""
     if snapshot_id is None:
-        test_name = name.basename(current().name)
-        if "DateTime64" in test_name:
-            if check_clickhouse_version(">=22.8"):
-                return test_name + ">=22.8"
-        return test_name
+        return name.basename(current().name)
     return snapshot_id
 
 
@@ -176,6 +172,10 @@ def execute_query(
     """Execute SQL query and compare the output to the snapshot."""
     if snapshot_name is None:
         snapshot_name = current().name
+
+    if "DateTime64" in snapshot_name:
+        if check_clickhouse_version(">=22.8"):
+            snapshot_name += ">=22.8"
 
     assert "snapshot_id" in current().context, "test must set self.context.snapshot_id"
 
