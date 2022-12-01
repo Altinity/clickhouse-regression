@@ -2,7 +2,11 @@ from testflows.core import *
 
 from helpers.datatypes import Float64
 from helpers.tables import is_numeric, common_columns, unwrap
-from aggregate_functions.tests.steps import execute_query, permutations_with_replacement
+from aggregate_functions.tests.steps import (
+    execute_query,
+    permutations_with_replacement,
+    get_snapshot_id,
+)
 from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_RankCorr,
 )
@@ -21,7 +25,7 @@ def datatype(self, func, table, col1_name, col2_name):
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_RankCorr("1.0"))
 def feature(self, func="rankCorr({params})", table=None):
     """Check rankCorr aggregate function by using the same checks as for corr."""
-    self.context.snapshot_id = name.basename(current().name)
+    self.context.snapshot_id = get_snapshot_id()
 
     if table is None:
         table = self.context.table

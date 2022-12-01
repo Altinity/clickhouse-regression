@@ -75,12 +75,12 @@ _aggregate_functions_state_intervalLengthSumState_datatypes_permutations_Nullabl
 {"hex(intervalLengthSumState(nullable_float32_, nullable_float32_))":"000000000000000000"}
 """
 
-_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_Nullable_Int64__Nullable_Int64_ = r"""
-{"hex(intervalLengthSumState(nullable_int64_, nullable_int64_))":"000000000000000000"}
-"""
-
 _aggregate_functions_state_intervalLengthSumState_datatypes_permutations_Nullable_Float64__Nullable_Float64_ = r"""
 {"hex(intervalLengthSumState(nullable_float64_, nullable_float64_))":"000000000000000000"}
+"""
+
+_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_Nullable_Int64__Nullable_Int64_ = r"""
+{"hex(intervalLengthSumState(nullable_int64_, nullable_int64_))":"000000000000000000"}
 """
 
 _aggregate_functions_state_intervalLengthSumState_datatypes_permutations_Nullable_Date__Nullable_Date_ = r"""
@@ -107,10 +107,6 @@ _aggregate_functions_state_intervalLengthSumState_datatypes_permutations_LowCard
 {"hex(intervalLengthSumState(lowcardinality_float32_, lowcardinality_float32_))":"000000000000000000"}
 """
 
-_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_Int64_Int64 = r"""
-{"hex(intervalLengthSumState(int64, int64))":"000000000000000000"}
-"""
-
 _aggregate_functions_state_intervalLengthSumState_datatypes_permutations_LowCardinality_Date__LowCardinality_Date_ = r"""
 {"hex(intervalLengthSumState(lowcardinality_date_, lowcardinality_date_))":"000000000000000000"}
 """
@@ -119,8 +115,8 @@ _aggregate_functions_state_intervalLengthSumState_datatypes_permutations_LowCard
 {"hex(intervalLengthSumState(lowcardinality_datetime_, lowcardinality_datetime_))":"000000000000000000"}
 """
 
-_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_DateTime_DateTime = r"""
-{"hex(intervalLengthSumState(datetime, datetime))":"000000000000000000"}
+_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_Int64_Int64 = r"""
+{"hex(intervalLengthSumState(int64, int64))":"000000000000000000"}
 """
 
 _aggregate_functions_state_intervalLengthSumState_datatypes_permutations_Float64_Float64 = r"""
@@ -129,6 +125,10 @@ _aggregate_functions_state_intervalLengthSumState_datatypes_permutations_Float64
 
 _aggregate_functions_state_intervalLengthSumState_datatypes_permutations_Float32_Float32 = r"""
 {"hex(intervalLengthSumState(float32, float32))":"000000000000000000"}
+"""
+
+_aggregate_functions_state_intervalLengthSumState_datatypes_permutations_DateTime_DateTime = r"""
+{"hex(intervalLengthSumState(datetime, datetime))":"000000000000000000"}
 """
 
 _aggregate_functions_state_intervalLengthSumState_datatypes_permutations_Date_Date = r"""

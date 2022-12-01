@@ -9,7 +9,7 @@ from aggregate_functions.requirements import (
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_FirstValue("1.0"))
 def feature(self, func="first_value({params})", table=None):
     """Check first_value aggregate function."""
-    self.context.snapshot_id = name.basename(current().name)
+    self.context.snapshot_id = get_snapshot_id()
 
     if table is None:
         table = self.context.table

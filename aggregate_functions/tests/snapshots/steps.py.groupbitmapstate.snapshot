@@ -79,19 +79,3 @@ _aggregate_functions_state_groupBitmapState_LowCardinality_UInt64_ = r"""
 {"hex(groupBitmapState(lowcardinality_uint64_))":"0009FFFFFFFFFFFFFFFF000000000000000086B2954E989719DCF20D385D806653888E37D25C50EE55FC934704BD2F090A3791BE7253DDDB5D1885CEA70B368EA5470A4F21CDE9F717F4"}
 """
 
-_aggregate_functions_state_groupBitmapState_LowCardinality_Nullable_UInt8__ = r"""
-{"hex(groupBitmapState(lowcardinality_nullable_uint8__))":"010009FF0081C0A5CA4BCC70"}
-"""
-
-_aggregate_functions_state_groupBitmapState_LowCardinality_Nullable_UInt16__ = r"""
-{"hex(groupBitmapState(lowcardinality_nullable_uint16__))":"010009FFFF0000932A9CEE4C1AC2D8A031F73CE13F"}
-"""
-
-_aggregate_functions_state_groupBitmapState_LowCardinality_Nullable_UInt32__ = r"""
-{"hex(groupBitmapState(lowcardinality_nullable_uint32__))":"010009FFFFFFFF00000000E1281A5545D02EEA9259B4848EFAB5DB2E1439CE0763CD5B567D5294"}
-"""
-
-_aggregate_functions_state_groupBitmapState_LowCardinality_Nullable_UInt64__ = r"""
-{"hex(groupBitmapState(lowcardinality_nullable_uint64__))":"010009FFFFFFFFFFFFFFFF000000000000000077343891619FC7E673434BF5635B3D3360DD552FA430F698B9A10E25F1BA6A2897912678AFF4ABEDB8C7B537DDCF1C6B8CFF93B99C78AD0A"}
-"""
-

@@ -1,5 +1,3 @@
-from helpers.tables import is_numeric
-
 from aggregate_functions.tests.steps import *
 from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Any,
@@ -11,7 +9,7 @@ from aggregate_functions.requirements import (
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Any("1.0"))
 def feature(self, func="any({params})", table=None):
     """Check any aggregate function."""
-    self.context.snapshot_id = name.basename(current().name)
+    self.context.snapshot_id = get_snapshot_id()
 
     if table is None:
         table = self.context.table
@@ -68,4 +66,7 @@ def feature(self, func="any({params})", table=None):
 
     for column in table.columns:
         with Check(f"{column.datatype.name}"):
+            self.context.node.query(
+                f"SELECT {column.name} FROM {table.name} FORMAT CSV"
+            )
             execute_query(f"SELECT {func.format(params=column.name)} FROM {table.name}")

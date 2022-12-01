@@ -23,7 +23,7 @@ def datatype(self, func, table, col1_name, col2_name):
 def feature(self, func="topKWeighted({params})", table=None):
     """Check topKWeighted aggregate function by using the same checks as for avgWeighted
     as well as functions specific checks."""
-    self.context.snapshot_id = name.basename(current().name)
+    self.context.snapshot_id = get_snapshot_id()
 
     if table is None:
         table = self.context.table

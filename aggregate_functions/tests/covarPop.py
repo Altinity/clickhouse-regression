@@ -33,7 +33,7 @@ def feature(
     extended_precision=False,
 ):
     """Check covarPop aggregate function."""
-    self.context.snapshot_id = name.basename(current().name)
+    self.context.snapshot_id = get_snapshot_id()
 
     if table is None:
         table = self.context.table
