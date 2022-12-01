@@ -24,13 +24,8 @@ def source_replica_stopped(self):
             )
 
         with And("I move part from shard 1 to shard 3"):
-            node.query(
-                f"ALTER TABLE {table_name} MOVE PART 'all_0_0_0' TO SHARD '/clickhouse/tables/"
-                f"replicated/03/{table_name}'"
-            )
-            retry(cluster.node("clickhouse1").query, timeout=100, delay=1)(
-                f"select count() from system.parts where name == 'all_0_0_0'",
-                message="0",
+            move_part_with_check(
+                table_name=table_name, shard_b_number="3", shard_a_name="clickhouse1"
             )
 
         with And("I stop shard 1 replica"):
