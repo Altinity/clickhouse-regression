@@ -327,7 +327,9 @@ class DateTime64(DateTime):
             )
             if precision != 9
             else "'2262-04-11 23:47:16'",
-            min="'1900-01-01 00:00:00'",
+            min="'1925-01-01 00:00:00.00000000'"
+            if check_clickhouse_version("<22.8")(current())
+            else "'1900-01-01 00:00:00.00000000'",
             supports_low_cardinality=False,
             is_valid_map_key=False,
         )
