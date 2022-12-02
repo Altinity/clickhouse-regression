@@ -51,7 +51,24 @@ class Table:
                 ],
             )
 
+        
+@TestStep(Given)
+def create_and_populate_tables(self):
+    """Create and popualate all test tables for different table engines.
+    """
+    engines = [
+        "ReplacingMergeTree",
+        "ReplacingMergeTree({version})",
+        "CollapsingMergeTree({sign})",
+        "AggregatingMergeTree"
+    ]
+    for engine in engines:
+        with Given(f"{engine} table"):
+            self.context.tables.append(
+                create_and_populate_table(engine=engine)
+            )
 
+            
 @TestStep(Given)
 def create_and_populate_table(self, engine, schema, name=None):
     """
@@ -93,7 +110,7 @@ def create_and_populate_table(self, engine, schema, name=None):
         pass
 
 
-@TestStep
+@TestStep(Given)
 def create_and_populate_replacing_table(
     self, name, final_modifier_available, engine="ReplacingMergeTree", node=None
 ):
