@@ -56,7 +56,7 @@ def feature(self):
             )
         )
 
-    with Given("ReplacingMergeTree table with version"):
+    with And("ReplacingMergeTree table with version"):
         self.context.tables.append(
             create_and_populate_table(
                 engine="ReplacingMergeTree(eventTime)",
@@ -64,7 +64,7 @@ def feature(self):
             )
         )
 
-    with Given("CollapsingMergeTree table"):
+    with And("CollapsingMergeTree table"):
         self.context.tables.append(
             create_and_populate_table(
                 engine="CollapsingMergeTree(Sign)",
@@ -72,7 +72,7 @@ def feature(self):
             )
         )
 
-    with Given("I create AggregatingMergeTree table"):
+    with Given("AggregatingMergeTree table"):
         self.context.tables.append(
             create_and_populate_table(
                 engine="AggregatingMergeTree",
@@ -80,7 +80,7 @@ def feature(self):
             )
         )
 
-    with Given("SummingMergeTree tables"):
+    with And("SummingMergeTree tables"):
         xfail("not implemented")
 
     for scenario in loads(current_module(), Scenario):
