@@ -769,29 +769,92 @@ class Cluster(object):
         if self.clickhouse_binary_path:
             for i, path in enumerate(self.clickhouse_binary_path):
 
-                parsed_version = ""
-                for c in path.rsplit(":", 1)[-1]:
-                    if c in ".0123456789":
-                        parsed_version += c
-                    else:
-                        break
-                if parsed_version:
-                    if not (
-                        parsed_version.startswith(".")
-                        or parsed_version.endswith(".")
+                if path.startswith(("http://", "https://")):
+                    with Given(
+                            "I download ClickHouse server binary using wget",
+                            description=f"{path}",
                     ):
-                        self.clickhouse_versions.append(parsed_version)
+                        filename = f"{short_hash(path)}-{path.rsplit('/', 1)[-1]}"
+                        if not os.path.exists(f"./{filename}"):
+                            with Shell() as bash:
+                                bash.timeout = 300
+                                try:
+                                    cmd = bash(
+                                        f'wget --progress dot "{path}" -O {filename}'
+                                    )
+                                    assert cmd.exitcode == 0
+                                except BaseException:
+                                    if os.path.exists(filename):
+                                        os.remove(filename)
+                                    raise
+                        self.clickhouse_binary_path[i] = f"./{filename}"
 
-                if path.startswith("docker://"):
-                    (
-                        local_clickhouse_binary_path,
-                        local_clickhouse_odbc_bridge_binary_path,
-                    ) = self.get_clickhouse_binary_from_docker_container(path)
+                    parsed_version = ""
+                    for c in self.clickhouse_binary_path[i].rsplit("_")[1]:
+                        if c in ".0123456789":
+                            parsed_version += c
+                        else:
+                            break
 
-                    self.clickhouse_binary_path[i] = local_clickhouse_binary_path
-                    self.clickhouse_odbc_bridge_binary_path[
-                        i
-                    ] = local_clickhouse_odbc_bridge_binary_path
+                    if parsed_version:
+                        if not (
+                            parsed_version.startswith(".")
+                            or parsed_version.endswith(".")
+                        ):
+                            self.clickhouse_versions.append(parsed_version)
+                else:
+                    parsed_version = ""
+                    for c in path.rsplit(":", 1)[-1]:
+                        if c in ".0123456789":
+                            parsed_version += c
+                        else:
+                            break
+
+                    if parsed_version:
+                        if not (
+                            parsed_version.startswith(".")
+                            or parsed_version.endswith(".")
+                        ):
+                            self.clickhouse_versions.append(parsed_version)
+
+                    if path.startswith("docker://"):
+                        (
+                            local_clickhouse_binary_path,
+                            local_clickhouse_odbc_bridge_binary_path,
+                        ) = self.get_clickhouse_binary_from_docker_container(path)
+
+                        self.clickhouse_binary_path[i] = local_clickhouse_binary_path
+                        self.clickhouse_odbc_bridge_binary_path[
+                            i
+                        ] = local_clickhouse_odbc_bridge_binary_path
+
+                if self.clickhouse_binary_path[i].endswith(".deb"):
+                    with Given(
+                            "unpack deb package", description=f"{self.clickhouse_binary_path[i]}"
+                    ):
+                        deb_binary_dir = self.clickhouse_binary_path[i].rsplit(".deb", 1)[0]
+                        os.makedirs(deb_binary_dir, exist_ok=True)
+                        with Shell() as bash:
+                            bash.timeout = 300
+                            if not os.path.exists(
+                                    f"{deb_binary_dir}/clickhouse"
+                            ) or not os.path.exists(
+                                f"{deb_binary_dir}/clickhouse-odbc-bridge"
+                            ):
+                                bash(
+                                    f'ar x "{self.clickhouse_binary_path[i]}" --output "{deb_binary_dir}"'
+                                )
+                                bash(
+                                    f'tar -vxzf "{deb_binary_dir}/data.tar.gz" ./usr/bin/clickhouse -O > "{deb_binary_dir}/clickhouse"'
+                                )
+                                bash(f'chmod +x "{deb_binary_dir}/clickhouse"')
+                                bash(
+                                    f'tar -vxzf "{deb_binary_dir}/data.tar.gz" ./usr/bin/clickhouse-odbc-bridge -O > "{deb_binary_dir}/clickhouse-odbc-bridge"'
+                                )
+                                bash(f'chmod +x "{deb_binary_dir}/clickhouse-odbc-bridge"')
+                        self.clickhouse_binary_path[i] = f"./{deb_binary_dir}/clickhouse"
+
+                self.clickhouse_binary_path[i] = os.path.abspath(self.clickhouse_binary_path[i])
 
         if (len(self.clickhouse_binary_path) == 1) and (self.clickhouse_binary_path[0] == "/usr/bin/clickhouse"):
             self.clickhouse_odbc_bridge_binary_path = ["/usr/bin/clickhouse-odbc-bridge"]
@@ -806,7 +869,6 @@ class Cluster(object):
             if (len(self.clickhouse_odbc_bridge_binary_path) == 1)
             else self.clickhouse_odbc_bridge_binary_path
         )
-
         self.docker_compose += f' --ansi never --project-directory "{docker_compose_project_dir}" --file "{docker_compose_file_path}"'
         self.lock = threading.Lock()
 

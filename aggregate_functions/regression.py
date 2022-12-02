@@ -10,7 +10,7 @@ from helpers.cluster import create_cluster
 from helpers.argparser import argparser
 from helpers.tables import *
 
-from aggregate_functions.tests.steps import aggregate_functions
+# from aggregate_functions.tests.steps import aggregate_functions
 from aggregate_functions.requirements import SRS_031_ClickHouse_Aggregate_Functions
 
 issue_43140 = "https://github.com/ClickHouse/ClickHouse/issues/43140"
@@ -57,21 +57,22 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
     with And("I populate table with test data"):
         self.context.table.insert_test_data()
 
-    with Pool(5) as executor:
-        for name in aggregate_functions:
-            try:
-                suite = load(f"aggregate_functions.tests.{name}", "feature")
-            except ModuleNotFoundError:
-                with Feature(f"{name}"):
-                    xfail(reason=f"{name} tests are not implemented")
-                continue
+    # with Pool(5) as executor:
+    #     for name in aggregate_functions:
+    #         try:
+    #             suite = load(f"aggregate_functions.tests.{name}", "feature")
+    #         except ModuleNotFoundError:
+    #             with Feature(f"{name}"):
+    #                 xfail(reason=f"{name} tests are not implemented")
+    #             continue
+    #
+    #         Feature(test=suite, parallel=True, executor=executor)()
+    #
+    #     join()
 
-            Feature(test=suite, parallel=True, executor=executor)()
-
-        join()
-
-    # Feature(run=load("aggregate_functions.tests.compatibility", "feature"))
-    Feature(run=load("aggregate_functions.tests.state", "feature"))
+    Feature(run=load("aggregate_functions.tests.compatibility", "feature"))
+    Feature(run=load("aggregate_functions.tests.compatibility_inf_nan", "feature"))
+    # Feature(run=load("aggregate_functions.tests.state", "feature"))
 
 
 if main():
