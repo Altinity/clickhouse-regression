@@ -48,39 +48,8 @@ def feature(self):
     """Check FINAL modifier."""
     self.context.tables = []
 
-    with Given("ReplacingMergeTree table without version"):
-        self.context.tables.append(
-            create_and_populate_table(
-                engine="ReplacingMergeTree",
-            )
-        )
-
-    with And("ReplacingMergeTree table with version"):
-        self.context.tables.append(
-            create_and_populate_table(
-                engine="ReplacingMergeTree(eventTime)",
-                schema="(key Int64, someCol String, eventTime DateTime)",
-            )
-        )
-
-    with And("CollapsingMergeTree table"):
-        self.context.tables.append(
-            create_and_populate_table(
-                engine="CollapsingMergeTree(Sign)",
-                schema="(UserID UInt64, PageViews UInt8, Duration UInt8, Sign Int8)",
-            )
-        )
-
-    with Given("AggregatingMergeTree table"):
-        self.context.tables.append(
-            create_and_populate_table(
-                engine="AggregatingMergeTree",
-                schema="(a String, b UInt8, c SimpleAggregateFunction(max, UInt8))",
-            )
-        )
-
-    with And("SummingMergeTree tables"):
-        xfail("not implemented")
+    with Given("I have set of popualed tables"):
+        create_and_populate_tables()
 
     for scenario in loads(current_module(), Scenario):
         scenario()
