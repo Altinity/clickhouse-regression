@@ -17,7 +17,6 @@ def compatibility_aggregate_function_double_upgrade(self, aggregate_function, en
     ):
         assert len(self.context.cluster.clickhouse_versions) >= 3, error()
 
-    # with And("I get threee first clickhouse versions"):
     clickhouse_version0 = self.context.cluster.clickhouse_versions[0]
     clickhouse_version1 = self.context.cluster.clickhouse_versions[1]
     clickhouse_version2 = self.context.cluster.clickhouse_versions[2]
@@ -76,7 +75,6 @@ def compatibility_aggregate_function_downgrade(self, aggregate_function, engine,
     ):
         assert len(self.context.cluster.clickhouse_versions) >= 3, error()
 
-    # with And("I get two first clickhouse versions"):
     clickhouse_version0 = self.context.cluster.clickhouse_versions[0]
     clickhouse_version1 = self.context.cluster.clickhouse_versions[1]
     clickhouse_version2 = self.context.cluster.clickhouse_versions[2]
@@ -127,7 +125,6 @@ def feature(self, node="clickhouse1"):
     """Check that aggregate functions on different ClickHouse versions are compatible among themselves."""
 
     aggregate_functions_params_values = [
-        ("argMax", "String, UInt64", "'01234567890123456789', number"),
         ("argMax", "String, UInt64", "'01234567890123456789', number"),
         ("argMin", "String, UInt64", "'01234567890123456789', number"),
         ("max", "String", "char(number)"),

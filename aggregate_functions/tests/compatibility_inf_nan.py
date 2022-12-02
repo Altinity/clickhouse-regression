@@ -3,8 +3,8 @@ from helpers.common import *
 
 @TestScenario
 def compatibility_inf_nan(self, function, node=None):
-    """Check that aggregate functions on different ClickHouse versions are compatible among themselves by
-    ."""#todo
+    """Check that aggregate functions on different ClickHouse versions are compatible among themselves
+    with inf and nan in function parameters."""
 
     if node is None:
         node = self.context.node
