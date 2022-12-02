@@ -171,3 +171,43 @@ _aggregate_functions_stddevSampStable_LowCardinality_Float64_ = r"""
 {"stddevSampStable(lowcardinality_float64_)":null}
 """
 
+_aggregate_functions_stddevSampStable_LowCardinality_Nullable_UInt8__ = r"""
+{"stddevSampStable(lowcardinality_nullable_uint8__)":77.95475895956862}
+"""
+
+_aggregate_functions_stddevSampStable_LowCardinality_Nullable_UInt16__ = r"""
+{"stddevSampStable(lowcardinality_nullable_uint16__)":25750.473432541003}
+"""
+
+_aggregate_functions_stddevSampStable_LowCardinality_Nullable_UInt32__ = r"""
+{"stddevSampStable(lowcardinality_nullable_uint32__)":1412176414.5925303}
+"""
+
+_aggregate_functions_stddevSampStable_LowCardinality_Nullable_UInt64__ = r"""
+{"stddevSampStable(lowcardinality_nullable_uint64__)":7351770730073590000}
+"""
+
+_aggregate_functions_stddevSampStable_LowCardinality_Nullable_Int8__ = r"""
+{"stddevSampStable(lowcardinality_nullable_int8__)":102.35355391973451}
+"""
+
+_aggregate_functions_stddevSampStable_LowCardinality_Nullable_Int16__ = r"""
+{"stddevSampStable(lowcardinality_nullable_int16__)":22852.142737486225}
+"""
+
+_aggregate_functions_stddevSampStable_LowCardinality_Nullable_Int32__ = r"""
+{"stddevSampStable(lowcardinality_nullable_int32__)":1459691591.9313629}
+"""
+
+_aggregate_functions_stddevSampStable_LowCardinality_Nullable_Int64__ = r"""
+{"stddevSampStable(lowcardinality_nullable_int64__)":6981312787042098000}
+"""
+
+_aggregate_functions_stddevSampStable_LowCardinality_Nullable_Float32__ = r"""
+{"stddevSampStable(lowcardinality_nullable_float32__)":2.3987076912106007e38}
+"""
+
+_aggregate_functions_stddevSampStable_LowCardinality_Nullable_Float64__ = r"""
+{"stddevSampStable(lowcardinality_nullable_float64__)":null}
+"""
+

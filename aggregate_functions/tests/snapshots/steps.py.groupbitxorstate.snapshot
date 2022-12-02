@@ -79,3 +79,19 @@ _aggregate_functions_state_groupBitXorState_LowCardinality_UInt64_ = r"""
 {"hex(groupBitXorState(lowcardinality_uint64_))":"880F70989A4B05CB"}
 """
 
+_aggregate_functions_state_groupBitXorState_LowCardinality_Nullable_UInt8__ = r"""
+{"hex(groupBitXorState(lowcardinality_nullable_uint8__))":"0126"}
+"""
+
+_aggregate_functions_state_groupBitXorState_LowCardinality_Nullable_UInt16__ = r"""
+{"hex(groupBitXorState(lowcardinality_nullable_uint16__))":"01C8CB"}
+"""
+
+_aggregate_functions_state_groupBitXorState_LowCardinality_Nullable_UInt32__ = r"""
+{"hex(groupBitXorState(lowcardinality_nullable_uint32__))":"0138AE6C1E"}
+"""
+
+_aggregate_functions_state_groupBitXorState_LowCardinality_Nullable_UInt64__ = r"""
+{"hex(groupBitXorState(lowcardinality_nullable_uint64__))":"01815DD76746F28316"}
+"""
+

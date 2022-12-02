@@ -179,3 +179,43 @@ _aggregate_functions_groupArrayMovingSum_LowCardinality_Float64_ = r"""
 {"groupArrayMovingSum(lowcardinality_float64_)":[1.7976909999999999e308,0,0,1.5130733709481816e217,1.5130733709481816e217,1.5130733709481816e217,1.5130733709481816e217,1.5130733709481816e217,2.3539363430883252e260,2.3539363430883252e260]}
 """
 
+_aggregate_functions_groupArrayMovingSum_LowCardinality_Nullable_UInt8__ = r"""
+{"groupArrayMovingSum(lowcardinality_nullable_uint8__)":["255","255","384","576","741","943","1018","1222","1334"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_LowCardinality_Nullable_UInt16__ = r"""
+{"groupArrayMovingSum(lowcardinality_nullable_uint16__)":["65535","65535","76434","137518","144250","199740","212444","228051","244404"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_LowCardinality_Nullable_UInt32__ = r"""
+{"groupArrayMovingSum(lowcardinality_nullable_uint32__)":["4294967295","4294967295","5722745056","9651681573","11878093495","15564229957","19024077171","20564264058","23052698064"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_LowCardinality_Nullable_UInt64__ = r"""
+{"groupArrayMovingSum(lowcardinality_nullable_uint64__)":["18446744073709551615","18446744073709551615","16629435390485869686","1874899071165233129","12896949690928026953","15809295344848074498","14488602313617213593","3760130650343231569","4529534376217169885"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_LowCardinality_Nullable_Int8__ = r"""
+{"groupArrayMovingSum(lowcardinality_nullable_int8__)":["127","-1","116","183","192","316","230","129","96"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_LowCardinality_Nullable_Int16__ = r"""
+{"groupArrayMovingSum(lowcardinality_nullable_int16__)":["32767","-1","4069","-2797","18745","-13411","-36570","-42864","-36493"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_LowCardinality_Nullable_Int32__ = r"""
+{"groupArrayMovingSum(lowcardinality_nullable_int32__)":["2147483647","-1","-242357357","-1288433543","-2885684677","-3554411627","-2889110646","-2266819012","-570614278"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_LowCardinality_Nullable_Int64__ = r"""
+{"groupArrayMovingSum(lowcardinality_nullable_int64__)":["9223372036854775807","-1","1732198740987194199","-8549113218262792387","-852533106997804008","-1482786822367655556","5001044153960109338","-3427132905855704859","-4055992635541734030"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_LowCardinality_Nullable_Float32__ = r"""
+{"groupArrayMovingSum(lowcardinality_nullable_float32__)":[3.4028234663852886e38,0,2.383503184852617e38,1.6977764662133578e38,1.249424319898148e38,-1.4505635561688893e38,5.428498701935594e37,2.905594820113223e38,2.363335573687322e38]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_LowCardinality_Nullable_Float64__ = r"""
+{"groupArrayMovingSum(lowcardinality_nullable_float64__)":[1.7976909999999999e308,0,4.432329389190481e298,4.432329389190481e298,4.432329389190481e298,4.432329389190783e298,4.432329389190783e298,4.432329389190783e298,4.432329389190783e298]}
+"""
+

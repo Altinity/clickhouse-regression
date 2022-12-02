@@ -171,3 +171,43 @@ _aggregate_functions_quantileDeterministic_LowCardinality_Float64_ = r"""
 {"quantileDeterministic(lowcardinality_float64_, 1)":8.313355866648283e134}
 """
 
+_aggregate_functions_quantileDeterministic_LowCardinality_Nullable_UInt8__ = r"""
+{"quantileDeterministic(lowcardinality_nullable_uint8__, 1)":165}
+"""
+
+_aggregate_functions_quantileDeterministic_LowCardinality_Nullable_UInt16__ = r"""
+{"quantileDeterministic(lowcardinality_nullable_uint16__, 1)":15607}
+"""
+
+_aggregate_functions_quantileDeterministic_LowCardinality_Nullable_UInt32__ = r"""
+{"quantileDeterministic(lowcardinality_nullable_uint32__, 1)":2488434006}
+"""
+
+_aggregate_functions_quantileDeterministic_LowCardinality_Nullable_UInt64__ = r"""
+{"quantileDeterministic(lowcardinality_nullable_uint64__, 1)":7718272410435570000}
+"""
+
+_aggregate_functions_quantileDeterministic_LowCardinality_Nullable_Int8__ = r"""
+{"quantileDeterministic(lowcardinality_nullable_int8__, 1)":9}
+"""
+
+_aggregate_functions_quantileDeterministic_LowCardinality_Nullable_Int16__ = r"""
+{"quantileDeterministic(lowcardinality_nullable_int16__, 1)":-6294}
+"""
+
+_aggregate_functions_quantileDeterministic_LowCardinality_Nullable_Int32__ = r"""
+{"quantileDeterministic(lowcardinality_nullable_int32__, 1)":-242357356}
+"""
+
+_aggregate_functions_quantileDeterministic_LowCardinality_Nullable_Int64__ = r"""
+{"quantileDeterministic(lowcardinality_nullable_int64__, 1)":1732198740987194000}
+"""
+
+_aggregate_functions_quantileDeterministic_LowCardinality_Nullable_Float32__ = r"""
+{"quantileDeterministic(lowcardinality_nullable_float32__, 1)":-4.483521463152099e37}
+"""
+
+_aggregate_functions_quantileDeterministic_LowCardinality_Nullable_Float64__ = r"""
+{"quantileDeterministic(lowcardinality_nullable_float64__, 1)":1.7674632094597634e89}
+"""
+
