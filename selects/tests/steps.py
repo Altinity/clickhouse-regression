@@ -8,7 +8,7 @@ from helpers.common import getuid, instrument_clickhouse_server_log
 
 
 class Table:
-    def __init__(self, name, schema, engine, final_modifier_available):
+    def __init__(self, name, engine, final_modifier_available):
         self.name = name
         self.schema = schema
         self.engine = engine
@@ -95,11 +95,13 @@ def create_and_populate_table(self, engine, schema, name=None):
 
 @TestStep
 def create_and_populate_replacing_table(
-    self, name, schema, final_modifier_available, engine="ReplacingMergeTree", node=None
+    self, name, final_modifier_available, engine="ReplacingMergeTree", node=None
 ):
     if node is None:
         node = current().context.node
     try:
+        schema = "(key Int64, someCol String, eventTime DateTime)",
+        
         with By(f"creating table {name}"):
             node.query(
                 f"CREATE TABLE {name} {schema} " f"ENGINE = {engine} ORDER BY key;"
