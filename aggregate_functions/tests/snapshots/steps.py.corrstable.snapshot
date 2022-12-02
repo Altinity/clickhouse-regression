@@ -635,3 +635,83 @@ _aggregate_functions_corrStable_datatypes_permutations_Float32_LowCardinality_Fl
 {"corrStable(float32, lowcardinality_float32_)":0.5489829190041867}
 """
 
+_aggregate_functions_corrStable_datatypes_Float64_LowCardinality_Nullable_UInt8__ = r"""
+{"corrStable(float64, lowcardinality_nullable_uint8__)":null}
+"""
+
+_aggregate_functions_corrStable_datatypes_LowCardinality_Nullable_UInt8___Float64 = r"""
+{"corrStable(lowcardinality_nullable_uint8__, float64)":null}
+"""
+
+_aggregate_functions_corrStable_datatypes_LowCardinality_Nullable_UInt16___Float64 = r"""
+{"corrStable(lowcardinality_nullable_uint16__, float64)":null}
+"""
+
+_aggregate_functions_corrStable_datatypes_Float64_LowCardinality_Nullable_UInt32__ = r"""
+{"corrStable(float64, lowcardinality_nullable_uint32__)":null}
+"""
+
+_aggregate_functions_corrStable_datatypes_Float64_LowCardinality_Nullable_UInt16__ = r"""
+{"corrStable(float64, lowcardinality_nullable_uint16__)":null}
+"""
+
+_aggregate_functions_corrStable_datatypes_LowCardinality_Nullable_UInt32___Float64 = r"""
+{"corrStable(lowcardinality_nullable_uint32__, float64)":null}
+"""
+
+_aggregate_functions_corrStable_datatypes_LowCardinality_Nullable_UInt64___Float64 = r"""
+{"corrStable(lowcardinality_nullable_uint64__, float64)":null}
+"""
+
+_aggregate_functions_corrStable_datatypes_Float64_LowCardinality_Nullable_UInt64__ = r"""
+{"corrStable(float64, lowcardinality_nullable_uint64__)":null}
+"""
+
+_aggregate_functions_corrStable_datatypes_LowCardinality_Nullable_Int8___Float64 = r"""
+{"corrStable(lowcardinality_nullable_int8__, float64)":null}
+"""
+
+_aggregate_functions_corrStable_datatypes_Float64_LowCardinality_Nullable_Int16__ = r"""
+{"corrStable(float64, lowcardinality_nullable_int16__)":null}
+"""
+
+_aggregate_functions_corrStable_datatypes_Float64_LowCardinality_Nullable_Int8__ = r"""
+{"corrStable(float64, lowcardinality_nullable_int8__)":null}
+"""
+
+_aggregate_functions_corrStable_datatypes_LowCardinality_Nullable_Int16___Float64 = r"""
+{"corrStable(lowcardinality_nullable_int16__, float64)":null}
+"""
+
+_aggregate_functions_corrStable_datatypes_Float64_LowCardinality_Nullable_Int32__ = r"""
+{"corrStable(float64, lowcardinality_nullable_int32__)":null}
+"""
+
+_aggregate_functions_corrStable_datatypes_LowCardinality_Nullable_Int32___Float64 = r"""
+{"corrStable(lowcardinality_nullable_int32__, float64)":null}
+"""
+
+_aggregate_functions_corrStable_datatypes_Float64_LowCardinality_Nullable_Int64__ = r"""
+{"corrStable(float64, lowcardinality_nullable_int64__)":null}
+"""
+
+_aggregate_functions_corrStable_datatypes_Float64_LowCardinality_Nullable_Float32__ = r"""
+{"corrStable(float64, lowcardinality_nullable_float32__)":null}
+"""
+
+_aggregate_functions_corrStable_datatypes_LowCardinality_Nullable_Int64___Float64 = r"""
+{"corrStable(lowcardinality_nullable_int64__, float64)":null}
+"""
+
+_aggregate_functions_corrStable_datatypes_LowCardinality_Nullable_Float32___Float64 = r"""
+{"corrStable(lowcardinality_nullable_float32__, float64)":null}
+"""
+
+_aggregate_functions_corrStable_datatypes_LowCardinality_Nullable_Float64___Float64 = r"""
+{"corrStable(lowcardinality_nullable_float64__, float64)":null}
+"""
+
+_aggregate_functions_corrStable_datatypes_Float64_LowCardinality_Nullable_Float64__ = r"""
+{"corrStable(float64, lowcardinality_nullable_float64__)":null}
+"""
+

@@ -175,3 +175,51 @@ _aggregate_functions_state_deltaSumState_delta = r"""
 {"hex(deltaSumState(x))":"0201FF01"}
 """
 
+_aggregate_functions_state_deltaSumState_LowCardinality_Nullable_UInt8__ = r"""
+{"hex(deltaSumState(lowcardinality_nullable_uint8__))":"0166FF7001"}
+"""
+
+_aggregate_functions_state_deltaSumState_LowCardinality_Nullable_UInt16__ = r"""
+{"hex(deltaSumState(lowcardinality_nullable_uint16__))":"0153BBFFFFE13F01"}
+"""
+
+_aggregate_functions_state_deltaSumState_LowCardinality_Nullable_UInt32__ = r"""
+{"hex(deltaSumState(lowcardinality_nullable_uint32__))":"01908BB579FFFFFFFF567D529401"}
+"""
+
+_aggregate_functions_state_deltaSumState_LowCardinality_Nullable_UInt64__ = r"""
+{"hex(deltaSumState(lowcardinality_nullable_uint64__))":"0142BE5A1E60AEC111FFFFFFFFFFFFFFFF8CFF93B99C78AD0A01"}
+"""
+
+_aggregate_functions_state_deltaSumState_LowCardinality_Nullable_UInt128__ = r"""
+{"hex(deltaSumState(lowcardinality_nullable_uint128__))":"01FD3E0B578C2D6A7C00C1F4A873D295230100000000000000FEFFFFFFFFFFFFFFFF672AD082B0CB750098D52F7D4F348A01"}
+"""
+
+_aggregate_functions_state_deltaSumState_LowCardinality_Nullable_Int8__ = r"""
+{"hex(deltaSumState(lowcardinality_nullable_int8__))":"01AC7FDF01"}
+"""
+
+_aggregate_functions_state_deltaSumState_LowCardinality_Nullable_Int16__ = r"""
+{"hex(deltaSumState(lowcardinality_nullable_int16__))":"015D95FF7FE31801"}
+"""
+
+_aggregate_functions_state_deltaSumState_LowCardinality_Nullable_Int32__ = r"""
+{"hex(deltaSumState(lowcardinality_nullable_int32__))":"01D3566C38FFFFFF7FBE071A6501"}
+"""
+
+_aggregate_functions_state_deltaSumState_LowCardinality_Nullable_Int64__ = r"""
+{"hex(deltaSumState(lowcardinality_nullable_int64__))":"01E2328BBB5E7D48C0FFFFFFFFFFFFFF7F8D1C845E68D745F701"}
+"""
+
+_aggregate_functions_state_deltaSumState_LowCardinality_Nullable_Int128__ = r"""
+{"hex(deltaSumState(lowcardinality_nullable_int128__))":"0102DCE8AF5BE1791EFF231750A41E86E1FFFFFFFFFFFFFF7F00000000000000800062D700C86AF0F1FF9D28FF37950FCE01"}
+"""
+
+_aggregate_functions_state_deltaSumState_LowCardinality_Nullable_Float32__ = r"""
+{"hex(deltaSumState(lowcardinality_nullable_float32__))":"010000807FFFFF7F7F222E23FE01"}
+"""
+
+_aggregate_functions_state_deltaSumState_LowCardinality_Nullable_Float64__ = r"""
+{"hex(deltaSumState(lowcardinality_nullable_float64__))":"01415A9182FDFFEF7F51776F82FDFFEF7FC73542D2F3DB7FF901"}
+"""
+
