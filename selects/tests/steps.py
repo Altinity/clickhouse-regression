@@ -22,21 +22,7 @@ class Table:
 
         name = self.name
 
-        if self.engine.startswith("Replacing"):
-            return (
-                [
-                    node.query(
-                        f"INSERT INTO {name} VALUES ({i}, 'first', '2020-01-01 01:01:01')"
-                    )
-                    for i in range(50)
-                ],
-                [
-                    node.query(
-                        f"INSERT INTO {name} VALUES ({i}, 'second', '2020-01-01 00:00:00')"
-                    )
-                    for i in range(50)
-                ],
-            )
+
         elif self.engine.startswith("Collapsing"):
             return (
                 [
@@ -67,7 +53,7 @@ class Table:
 
 
 @TestStep(Given)
-def create_table(self, engine, schema, final_modifier_available, name=None):
+def create_and_populate_table(self, engine, schema, name=None):
     """
     Create clickhouse table.
 
@@ -77,17 +63,18 @@ def create_table(self, engine, schema, final_modifier_available, name=None):
     :param final_modifier_available: true if `FINAL` modifier available for engine
     """
     if name is None:
+        # generate proper table name based on engine
         name = f"table_{getuid()}"
 
     if engine.startswith("Replacing"):
-        return create_replacing_table(
+        return create_and_populate_replacing_table(
             name=name,
             schema=schema,
             final_modifier_available=final_modifier_available,
             engine=engine,
         )
     elif engine.startswith("Collapsing"):
-        return create_collapsing_table(
+        return create_and_populate_collapsing_table(
             name=name,
             schema=schema,
             final_modifier_available=final_modifier_available,
@@ -95,7 +82,7 @@ def create_table(self, engine, schema, final_modifier_available, name=None):
         )
 
     elif engine.startswith("Aggregating"):
-        return create_aggregating_table(
+        return create_and_populate_aggregating_table(
             name=name,
             schema=schema,
             final_modifier_available=final_modifier_available,
@@ -107,7 +94,7 @@ def create_table(self, engine, schema, final_modifier_available, name=None):
 
 
 @TestStep
-def create_replacing_table(
+def create_and_populate_replacing_table(
     self, name, schema, final_modifier_available, engine="ReplacingMergeTree", node=None
 ):
     if node is None:
@@ -117,6 +104,23 @@ def create_replacing_table(
             node.query(
                 f"CREATE TABLE {name} {schema} " f"ENGINE = {engine} ORDER BY key;"
             )
+        
+        with And("populating table"):
+            (
+                [
+                    node.query(
+                        f"INSERT INTO {name} VALUES ({i}, 'first', '2020-01-01 01:01:01')"
+                    )
+                    for i in range(50)
+                ],
+                [
+                    node.query(
+                        f"INSERT INTO {name} VALUES ({i}, 'second', '2020-01-01 00:00:00')"
+                    )
+                    for i in range(50)
+                ],
+            )
+    
         yield Table(name, schema, engine, final_modifier_available)
 
     finally:
