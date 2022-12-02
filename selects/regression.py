@@ -68,6 +68,7 @@ def regression(
         docker_compose_project_dir=os.path.join(current_dir(), env),
     ) as cluster:
         self.context.cluster = cluster
+        self.context.node = cluster.node("clickhouse1")
 
         Feature(run=load("selects.tests.final.feature", "feature"))
 
