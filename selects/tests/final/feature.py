@@ -52,7 +52,6 @@ def feature(self):
         self.context.tables.append(
             create_and_populate_table(
                 engine="ReplacingMergeTree",
-                schema="(key Int64, someCol String, eventTime DateTime)",
             )
         )
 
