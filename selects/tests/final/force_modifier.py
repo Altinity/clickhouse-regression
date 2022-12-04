@@ -50,4 +50,3 @@ def select(self, node=None):
 @Name("force modifier")
 def feature(self):
     """Check force_final_modifier setting."""
-

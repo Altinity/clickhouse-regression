@@ -2,6 +2,7 @@ from testflows.core import *
 from selects.requirements import *
 from selects.tests.steps import *
 import sys
+
 append_path(sys.path, "..")
 
 
@@ -27,9 +28,3 @@ def feature(self):
 
             for scenario in loads(case, Scenario):
                 scenario()
-
-
-
-
-
-

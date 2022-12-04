@@ -44,11 +44,13 @@ def add_system_tables(self):
         "system.warnings",
         "system.zeros",
         "system.zeros_mt",
-        "system.zookeeper"
+        "system.zookeeper",
     ]
     for table_name in tables_list:
         with Given(f"{table_name} table"):
-            self.context.tables.append(Table(name=table_name, engine=None, final_modifier_available=False))
+            self.context.tables.append(
+                Table(name=table_name, engine=None, final_modifier_available=False)
+            )
 
 
 @TestStep(Given)
@@ -63,7 +65,7 @@ def create_and_populate_table(self, engine, name=None):
     """
     if name is None:
         name = engine
-        symbols = [('(', '_'), (',', '_'), (')', ''), ('{', ''), ('}', '')]
+        symbols = [("(", "_"), (",", "_"), (")", ""), ("{", ""), ("}", "")]
         for symbol in symbols:
             name = name.replace(symbol[0], symbol[1])
         name = f"{name}_table_{getuid()}"
@@ -115,7 +117,11 @@ def create_and_populate_replacing_table(
     try:
         schema = "(key Int64, someCol String, eventTime DateTime)"
 
-        engine = engine.format(version="eventTime") if engine.endswith("({version})") else engine
+        engine = (
+            engine.format(version="eventTime")
+            if engine.endswith("({version})")
+            else engine
+        )
 
         with By(f"creating table {name}"):
             node.query(
@@ -322,7 +328,11 @@ def create_and_populate_versioned_table(
     try:
         schema = "(key Int64, someCol String, Sign Int8, version UInt8)"
 
-        engine = engine.format(sign='Sign', version="version") if engine.endswith("({sign},{version})") else engine
+        engine = (
+            engine.format(sign="Sign", version="version")
+            if engine.endswith("({sign},{version})")
+            else engine
+        )
 
         with By(f"creating table {name}"):
             node.query(
@@ -467,5 +477,3 @@ def create_and_populate_log_table(
     finally:
         with Finally(f"drop the table {name}"):
             node.query(f"DROP TABLE IF EXISTS {name}")
-
-
