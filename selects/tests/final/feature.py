@@ -15,8 +15,9 @@ def feature(self):
     final_test_modules = ["modifier", "force_modifier"]
 
     with Given("I have set of populated tables"):
-        create_and_populate_tables()
+        create_and_populate_core_tables()
         add_system_tables()
+        create_and_populate_distributed_tables()
 
     with And("I test all tables with `FINAL` modifier queries"):
         for module in final_test_modules:
