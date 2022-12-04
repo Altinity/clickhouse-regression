@@ -27,7 +27,6 @@ def select_count(self, node=None):
 @TestScenario
 def select(self, node=None):
     """Check select all data with `FINAL` clause equal to force_select_final select."""
-    pause()
     if node is None:
         node = current().context.node
 
