@@ -17,23 +17,38 @@ class Table:
 @TestStep(Given)
 def create_and_populate_tables(self):
     """Create and populate all test tables for different table engines."""
-    version = "eventTime"
-    sign = "Sign"
     engines = [
         "ReplacingMergeTree",
-        f"ReplacingMergeTree({version})",
-        f"CollapsingMergeTree({sign})",
+        "ReplacingMergeTree({version})",
+        "CollapsingMergeTree({sign})",
         "AggregatingMergeTree",
         "SummingMergeTree",
-        f"VersionedCollapsingMergeTree({sign},version)",
-        # "MergeTree",
-        # "StripeLog",
-        # "TinyLog",
-        # "Log",
+        "VersionedCollapsingMergeTree({sign},{version})",
+        "MergeTree",
+        "StripeLog",
+        "TinyLog",
+        "Log",
     ]
     for engine in engines:
         with Given(f"{engine} table"):
             self.context.tables.append(create_and_populate_table(engine=engine))
+
+
+@TestStep
+def add_system_tables(self):
+    tables_list = [
+        "system.time_zones",
+        "system.trace_log",
+        "system.user_directories",
+        "system.users",
+        "system.warnings",
+        "system.zeros",
+        "system.zeros_mt",
+        "system.zookeeper"
+    ]
+    for table_name in tables_list:
+        with Given(f"{table_name} table"):
+            self.context.tables.append(Table(name=table_name, engine=None, final_modifier_available=False))
 
 
 @TestStep(Given)
@@ -47,7 +62,11 @@ def create_and_populate_table(self, engine, name=None):
     :param final_modifier_available: true if `FINAL` modifier available for engine
     """
     if name is None:
-        name = f"{engine.replace('(','_').replace(',','_').replace(')','')}_table_{getuid()}"
+        name = engine
+        symbols = [('(', '_'), (',', '_'), (')', ''), ('{', ''), ('}', '')]
+        for symbol in symbols:
+            name = name.replace(symbol[0], symbol[1])
+        name = f"{name}_table_{getuid()}"
 
     if engine.startswith("Replacing"):
         return create_and_populate_replacing_table(
@@ -96,6 +115,8 @@ def create_and_populate_replacing_table(
     try:
         schema = "(key Int64, someCol String, eventTime DateTime)"
 
+        engine = engine.format(version="eventTime") if engine.endswith("({version})") else engine
+
         with By(f"creating table {name}"):
             node.query(
                 f"CREATE TABLE {name} {schema} " f"ENGINE = {engine} ORDER BY key;"
@@ -138,6 +159,8 @@ def create_and_populate_collapsing_table(
     try:
 
         schema = "( key UInt64, PageViews UInt8, Duration UInt8, Sign Int8)"
+
+        engine = engine.format(sign="Sign") if engine.endswith("({sign})") else engine
 
         with By(f"creating table {name}"):
             node.query(f"CREATE TABLE {name} {schema} ENGINE = {engine} ORDER BY key;")
@@ -299,6 +322,8 @@ def create_and_populate_versioned_table(
     try:
         schema = "(key Int64, someCol String, Sign Int8, version UInt8)"
 
+        engine = engine.format(sign='Sign', version="version") if engine.endswith("({sign},{version})") else engine
+
         with By(f"creating table {name}"):
             node.query(
                 f"CREATE TABLE {name} {schema} " f"ENGINE = {engine} ORDER BY key;"
@@ -440,6 +465,7 @@ def create_and_populate_log_table(
         yield Table(name, engine, final_modifier_available)
 
     finally:
-        pause()
         with Finally(f"drop the table {name}"):
             node.query(f"DROP TABLE IF EXISTS {name}")
+
+

@@ -50,7 +50,7 @@ def regression(
     self.context.clickhouse_version = clickhouse_version
 
     if check_clickhouse_version("<22.11")(self):
-        skip(reason="only supported on ClickHouse version >= 22.11")
+        skip(reason="force_select_final is only supported on ClickHouse version >= 22.11")
 
     if stress is not None:
         self.context.stress = stress
