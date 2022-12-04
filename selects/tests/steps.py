@@ -7,11 +7,23 @@ from helpers.common import create_xml_config_content, add_config
 from helpers.common import getuid, instrument_clickhouse_server_log
 
 
+@TestStep(Given)
+def insert(self, name, values, range_value=5, node=None):
+    if node is None:
+        node = current().context.node
+    with By("populating table"):
+        node.query("system stop merges")
+        for i in range(range_value):
+            node.query(f"INSERT INTO {name} VALUES {values[0].format(i=i)}")
+            node.query(f"INSERT INTO {name} VALUES {values[1].format(i=i)}")
+
+
 class Table:
-    def __init__(self, name, engine, final_modifier_available):
+    def __init__(self, name, engine, final_modifier_available, cluster=None):
         self.name = name
         self.engine = engine
         self.final_modifier_available = final_modifier_available
+        self.cluster = cluster
 
 
 @TestStep(Given)
@@ -129,19 +141,11 @@ def create_and_populate_replacing_table(
             )
 
         with And("populating table"):
-            (
-                node.query("system stop merges"),
-                [
-                    node.query(
-                        f"INSERT INTO {name} VALUES ({i}, 'first', '2020-01-01 01:01:01')"
-                    )
-                    for i in range(5)
-                ],
-                [
-                    node.query(
-                        f"INSERT INTO {name} VALUES ({i}, 'second', '2020-01-01 00:00:00')"
-                    )
-                    for i in range(5)
+            insert(
+                name=name,
+                values=[
+                    "({i}, 'first', '2020-01-01 01:01:01')",
+                    "({i}, 'second', '2020-01-01 00:00:00')",
                 ],
             )
 
@@ -172,22 +176,15 @@ def create_and_populate_collapsing_table(
             node.query(f"CREATE TABLE {name} {schema} ENGINE = {engine} ORDER BY key;")
 
         with And("populating table"):
-            (
-                node.query("system stop merges"),
-                [
-                    node.query(
-                        f"INSERT INTO {name} VALUES (4324182021466249494, {i}, 146, 1)"
-                    )
-                    for i in range(5)
-                ],
-                [
-                    node.query(
-                        f"INSERT INTO {name} VALUES (4324182021466249494, {i}, 146, -1),"
-                        f"(4324182021466249494, {i}, 185, 1)"
-                    )
-                    for i in range(5)
+            insert(
+                name=name,
+                values=[
+                    "(4324182021466249494, {i}, 146, 1)",
+                    "(4324182021466249494, {i}, 146, -1),"
+                    "(4324182021466249494, {i}, 185, 1)",
                 ],
             )
+
         yield Table(name, engine, final_modifier_available)
 
     finally:
@@ -213,17 +210,7 @@ def create_and_populate_aggregating_table(
             node.query(f"CREATE TABLE {name} {schema} ENGINE = {engine} ORDER BY key;")
 
         with And("populating table"):
-            (
-                node.query("system stop merges"),
-                [
-                    node.query(f"INSERT INTO {name} VALUES ('a', {i}, 1);")
-                    for i in range(5)
-                ],
-                [
-                    node.query(f"INSERT INTO {name}  VALUES ('a', {i + 1}, 2);")
-                    for i in range(5)
-                ],
-            )
+            insert(name=name, values=["('a', {i}, 1)", "('a', {i}+1, 2)"])
 
         yield Table(name, engine, final_modifier_available)
 
@@ -251,19 +238,11 @@ def create_and_populate_summing_table(
             )
 
         with And("populating table"):
-            (
-                node.query("system stop merges"),
-                [
-                    node.query(
-                        f"INSERT INTO {name} VALUES ({i}, 'first', '2020-01-01 01:01:01')"
-                    )
-                    for i in range(5)
-                ],
-                [
-                    node.query(
-                        f"INSERT INTO {name} VALUES ({i}, 'second', '2020-01-01 00:00:00')"
-                    )
-                    for i in range(5)
+            insert(
+                name=name,
+                values=[
+                    "({i}, 'first', '2020-01-01 01:01:01')",
+                    "({i}, 'second', '2020-01-01 00:00:00')",
                 ],
             )
 
@@ -293,19 +272,11 @@ def create_and_populate_merge_table(
             )
 
         with And("populating table"):
-            (
-                node.query("system stop merges"),
-                [
-                    node.query(
-                        f"INSERT INTO {name} VALUES ({i}, 'first', '2020-01-01 01:01:01')"
-                    )
-                    for i in range(5)
-                ],
-                [
-                    node.query(
-                        f"INSERT INTO {name} VALUES ({i}, 'second', '2020-01-01 00:00:00')"
-                    )
-                    for i in range(5)
+            insert(
+                name=name,
+                values=[
+                    "({i}, 'first', '2020-01-01 01:01:01')",
+                    "({i}, 'second', '2020-01-01 00:00:00')",
                 ],
             )
         yield Table(name, engine, final_modifier_available)
@@ -340,18 +311,11 @@ def create_and_populate_versioned_table(
             )
 
         with And("populating table"):
-            (
-                node.query("system stop merges"),
-                [
-                    node.query(f"INSERT INTO {name} VALUES ({i}, 'first', 1, 1)")
-                    for i in range(5)
-                ],
-                [
-                    node.query(
-                        f"INSERT INTO {name} VALUES ({i}, 'second', 1, 1),"
-                        f"({i+1}, 'third', -1, 2)"
-                    )
-                    for i in range(5)
+            insert(
+                name=name,
+                values=[
+                    "({i}, 'first', 1, 1)",
+                    "({i}, 'second', 1, 1),({i}+1, 'third', -1, 2)",
                 ],
             )
         yield Table(name, engine, final_modifier_available)
@@ -378,20 +342,13 @@ def create_and_populate_stripelog_table(
             node.query(f"CREATE TABLE {name} {schema} " f"ENGINE = {engine};")
 
         with And("populating table"):
-            (
-                node.query("system stop merges"),
-                [
-                    node.query(
-                        f"INSERT INTO {name} VALUES ({i}, 'first', '2020-01-01 01:01:01')"
-                    )
-                    for i in range(5)
+            insert(
+                name=name,
+                values=[
+                    "({i}, 'first', '2020-01-01 01:01:01')",
+                    "({i}, 'second', '2020-01-01 00:00:00')",
                 ],
-                [
-                    node.query(
-                        f"INSERT INTO {name} VALUES ({i}, 'second', '2020-01-01 00:00:00')"
-                    )
-                    for i in range(5)
-                ],
+                range_value=5,
             )
         yield Table(name, engine, final_modifier_available)
 
@@ -417,19 +374,11 @@ def create_and_populate_tinylog_table(
             node.query(f"CREATE TABLE {name} {schema} " f"ENGINE = {engine};")
 
         with And("populating table"):
-            (
-                node.query("system stop merges"),
-                [
-                    node.query(
-                        f"INSERT INTO {name} VALUES ({i}, 'first', '2020-01-01 01:01:01')"
-                    )
-                    for i in range(5)
-                ],
-                [
-                    node.query(
-                        f"INSERT INTO {name} VALUES ({i}, 'second', '2020-01-01 00:00:00')"
-                    )
-                    for i in range(5)
+            insert(
+                name=name,
+                values=[
+                    "({i}, 'first', '2020-01-01 01:01:01')",
+                    "({i}, 'second', '2020-01-01 00:00:00')",
                 ],
             )
 
@@ -457,19 +406,11 @@ def create_and_populate_log_table(
             node.query(f"CREATE TABLE {name} {schema} " f"ENGINE = {engine};")
 
         with And("populating table"):
-            (
-                node.query("system stop merges"),
-                [
-                    node.query(
-                        f"INSERT INTO {name} VALUES ({i}, 'first', '2020-01-01 01:01:01')"
-                    )
-                    for i in range(5)
-                ],
-                [
-                    node.query(
-                        f"INSERT INTO {name} VALUES ({i}, 'second', '2020-01-01 00:00:00')"
-                    )
-                    for i in range(5)
+            insert(
+                name=name,
+                values=[
+                    "({i}, 'first', '2020-01-01 01:01:01')",
+                    "({i}, 'second', '2020-01-01 00:00:00')",
                 ],
             )
         yield Table(name, engine, final_modifier_available)

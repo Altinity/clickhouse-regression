@@ -3,7 +3,7 @@
     <remote_servers>
         <replicated_cluster>
             <shard>
-                <internal_replication>true</internal_replication>
+                <internal_replication>false</internal_replication>
                 <replica>
                     <host>clickhouse1</host>
                     <port>9000</port>
