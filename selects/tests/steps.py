@@ -8,16 +8,16 @@ from helpers.common import getuid, instrument_clickhouse_server_log
 
 @TestStep(Given)
 def create_and_populate_table(
-        self,
-        name,
-        engine,
-        schema,
-        final_modifier_available,
-        cluster_name=None,
-        values=None,
-        populate=True,
-        range_value=5,
-        node=None,
+    self,
+    name,
+    engine,
+    schema,
+    final_modifier_available,
+    cluster_name=None,
+    values=None,
+    populate=True,
+    range_value=5,
+    node=None,
 ):
     """
     Create clickhouse table.
@@ -130,9 +130,9 @@ def create_and_populate_core_tables(self):
                     create_and_populate_versioned_table(name=name, engine=engine)
                 )
             elif (
-                    engine.startswith("StripeLog")
-                    or engine.startswith("TinyLog")
-                    or engine.startswith("Log")
+                engine.startswith("StripeLog")
+                or engine.startswith("TinyLog")
+                or engine.startswith("Log")
             ):
                 self.context.tables.append(
                     create_and_populate_log_table(name=name, engine=engine)
@@ -160,13 +160,13 @@ def add_system_tables(self):
 
 @TestStep(Given)
 def create_and_populate_replacing_table(
-        self,
-        name,
-        populate=True,
-        final_modifier_available=True,
-        engine="ReplacingMergeTree",
-        node=None,
-        cluster_name=None
+    self,
+    name,
+    populate=True,
+    final_modifier_available=True,
+    engine="ReplacingMergeTree",
+    node=None,
+    cluster_name=None,
 ):
     if node is None:
         node = current().context.node
@@ -190,19 +190,19 @@ def create_and_populate_replacing_table(
         final_modifier_available=final_modifier_available,
         populate=populate,
         node=node,
-        cluster_name=cluster_name
+        cluster_name=cluster_name,
     )
 
 
 @TestStep
 def create_and_populate_collapsing_table(
-        self,
-        name,
-        populate=True,
-        final_modifier_available=True,
-        engine="CollapsingMergeTree",
-        node=None,
-        cluster_name=None
+    self,
+    name,
+    populate=True,
+    final_modifier_available=True,
+    engine="CollapsingMergeTree",
+    node=None,
+    cluster_name=None,
 ):
     schema = "( key UInt64, PageViews UInt8, Duration UInt8, Sign Int8)"
 
@@ -221,19 +221,19 @@ def create_and_populate_collapsing_table(
         final_modifier_available=final_modifier_available,
         populate=populate,
         node=node,
-        cluster_name=cluster_name
+        cluster_name=cluster_name,
     )
 
 
 @TestStep
 def create_and_populate_aggregating_table(
-        self,
-        name,
-        populate=True,
-        final_modifier_available=True,
-        engine="AggregatingMergeTree",
-        node=None,
-        cluster_name=None
+    self,
+    name,
+    populate=True,
+    final_modifier_available=True,
+    engine="AggregatingMergeTree",
+    node=None,
+    cluster_name=None,
 ):
     schema = "(key String, b UInt8, c SimpleAggregateFunction(max, UInt8))"
     values = ["('a', {i}, 1)", "('a', {i}+1, 2)"]
@@ -245,19 +245,19 @@ def create_and_populate_aggregating_table(
         final_modifier_available=final_modifier_available,
         populate=populate,
         node=node,
-        cluster_name=cluster_name
+        cluster_name=cluster_name,
     )
 
 
 @TestStep
 def create_and_populate_summing_table(
-        self,
-        name,
-        populate=True,
-        final_modifier_available=True,
-        engine="SummingMergeTree",
-        node=None,
-        cluster_name=None
+    self,
+    name,
+    populate=True,
+    final_modifier_available=True,
+    engine="SummingMergeTree",
+    node=None,
+    cluster_name=None,
 ):
     schema = "(key Int64, someCol String, eventTime DateTime)"
     values = [
@@ -272,19 +272,19 @@ def create_and_populate_summing_table(
         final_modifier_available=final_modifier_available,
         populate=populate,
         node=node,
-        cluster_name=cluster_name
+        cluster_name=cluster_name,
     )
 
 
 @TestStep
 def create_and_populate_merge_table(
-        self,
-        name,
-        populate=True,
-        final_modifier_available=False,
-        engine="MergeTree",
-        node=None,
-        cluster_name=None
+    self,
+    name,
+    populate=True,
+    final_modifier_available=False,
+    engine="MergeTree",
+    node=None,
+    cluster_name=None,
 ):
     values = [
         "({i}, 'first', '2020-01-01 01:01:01')",
@@ -299,19 +299,19 @@ def create_and_populate_merge_table(
         final_modifier_available=final_modifier_available,
         populate=populate,
         node=node,
-        cluster_name=cluster_name
+        cluster_name=cluster_name,
     )
 
 
 @TestStep
 def create_and_populate_versioned_table(
-        self,
-        name,
-        populate=True,
-        final_modifier_available=True,
-        engine="VersionedCollapsingMergeTree(sign,version)",
-        node=None,
-        cluster_name=None
+    self,
+    name,
+    populate=True,
+    final_modifier_available=True,
+    engine="VersionedCollapsingMergeTree(sign,version)",
+    node=None,
+    cluster_name=None,
 ):
     values = [
         "({i}, 'first', 1, 1)",
@@ -332,19 +332,19 @@ def create_and_populate_versioned_table(
         final_modifier_available=final_modifier_available,
         populate=populate,
         node=node,
-        cluster_name=cluster_name
+        cluster_name=cluster_name,
     )
 
 
 @TestStep
 def create_and_populate_log_table(
-        self,
-        name,
-        populate=True,
-        final_modifier_available=False,
-        engine="Log",
-        node=None,
-        cluster_name=None
+    self,
+    name,
+    populate=True,
+    final_modifier_available=False,
+    engine="Log",
+    node=None,
+    cluster_name=None,
 ):
     values = [
         "({i}, 'first', '2020-01-01 01:01:01')",
@@ -359,20 +359,20 @@ def create_and_populate_log_table(
         final_modifier_available=final_modifier_available,
         populate=populate,
         node=node,
-        cluster_name=cluster_name
+        cluster_name=cluster_name,
     )
 
 
 @TestStep(Given)
 def create_and_populate_distributed_table(
-        self,
-        distributed_table_name,
-        core_table_name,
-        cluster_name,
-        final_modifier_available,
-        values,
-        node=None,
-        range_value=10,
+    self,
+    distributed_table_name,
+    core_table_name,
+    cluster_name,
+    final_modifier_available,
+    values,
+    node=None,
+    range_value=10,
 ):
     if node is None:
         node = current().context.node
@@ -390,10 +390,12 @@ def create_and_populate_distributed_table(
             for i in range(range_value):
                 node.query(
                     f"INSERT INTO {distributed_table_name} VALUES {values[0].format(i=i)}",
-                    settings=[("insert_distributed_one_random_shard", 1)])
+                    settings=[("insert_distributed_one_random_shard", 1)],
+                )
                 node.query(
                     f"INSERT INTO {distributed_table_name} VALUES {values[1].format(i=i)}",
-                    settings=[("insert_distributed_one_random_shard", 1)])
+                    settings=[("insert_distributed_one_random_shard", 1)],
+                )
 
         yield Table(distributed_table_name, "Distributed", final_modifier_available)
 
@@ -437,34 +439,26 @@ def create_and_populate_distributed_tables(self):
                     final_modifier_available = True
 
                     create_and_populate_replacing_table(
-                        name=name,
-                        engine=engine,
-                        populate=False,
-                        cluster_name=cluster
+                        name=name, engine=engine, populate=False, cluster_name=cluster
                     )
 
                 elif engine.startswith("Collapsing"):
                     values = [
                         "(4324182021466249494, {i}, 146, 1)",
-                        "(4324182021466249494, {i}, 146, -1)," "(4324182021466249494, {i}, 185, 1)",
+                        "(4324182021466249494, {i}, 146, -1),"
+                        "(4324182021466249494, {i}, 185, 1)",
                     ]
                     final_modifier_available = True
 
                     create_and_populate_collapsing_table(
-                        name=name,
-                        engine=engine,
-                        populate=False,
-                        cluster_name=cluster
+                        name=name, engine=engine, populate=False, cluster_name=cluster
                     )
 
                 elif engine.startswith("Aggregating"):
                     values = ["('a', {i}, 1)", "('a', {i}+1, 2)"]
                     final_modifier_available = True
                     create_and_populate_aggregating_table(
-                        name=name,
-                        engine=engine,
-                        populate=False,
-                        cluster_name=cluster
+                        name=name, engine=engine, populate=False, cluster_name=cluster
                     )
 
                 elif engine.startswith("Summing"):
@@ -474,10 +468,7 @@ def create_and_populate_distributed_tables(self):
                     ]
                     final_modifier_available = True
                     create_and_populate_summing_table(
-                        name=name,
-                        engine=engine,
-                        populate=False,
-                        cluster_name=cluster
+                        name=name, engine=engine, populate=False, cluster_name=cluster
                     )
 
                 elif engine.startswith("Merge"):
@@ -487,10 +478,7 @@ def create_and_populate_distributed_tables(self):
                     ]
                     final_modifier_available = False
                     create_and_populate_merge_table(
-                        name=name,
-                        engine=engine,
-                        populate=False,
-                        cluster_name=cluster
+                        name=name, engine=engine, populate=False, cluster_name=cluster
                     )
 
                 elif engine.startswith("Versioned"):
@@ -499,29 +487,29 @@ def create_and_populate_distributed_tables(self):
                         "({i}, 'second', 1, 1),({i}+1, 'third', -1, 2)",
                     ]
                     final_modifier_available = True
-                    create_and_populate_versioned_table(name=name,
-                                                        engine=engine,
-                                                        populate=False,
-                                                        cluster_name=cluster
-                                                        )
+                    create_and_populate_versioned_table(
+                        name=name, engine=engine, populate=False, cluster_name=cluster
+                    )
                 elif (
-                        engine.startswith("StripeLog")
-                        or engine.startswith("TinyLog")
-                        or engine.startswith("Log")
+                    engine.startswith("StripeLog")
+                    or engine.startswith("TinyLog")
+                    or engine.startswith("Log")
                 ):
                     values = [
                         "({i}, 'first', '2020-01-01 01:01:01')",
                         "({i}, 'second', '2020-01-01 00:00:00')",
                     ]
                     final_modifier_available = True
-                    create_and_populate_log_table(name=name, engine=engine,
-                                                  populate=False,
-                                                  cluster_name=cluster
-                                                  )
+                    create_and_populate_log_table(
+                        name=name, engine=engine, populate=False, cluster_name=cluster
+                    )
 
-                self.context.tables.append(create_and_populate_distributed_table(
-                    distributed_table_name=name + "distributed",
-                    core_table_name=name,
-                    cluster_name=cluster,
-                    final_modifier_available=final_modifier_available,
-                    values=values))
+                self.context.tables.append(
+                    create_and_populate_distributed_table(
+                        distributed_table_name=name + "distributed",
+                        core_table_name=name,
+                        cluster_name=cluster,
+                        final_modifier_available=final_modifier_available,
+                        values=values,
+                    )
+                )
