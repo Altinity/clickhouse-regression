@@ -4,6 +4,7 @@ from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_AvgWeighted,
 )
 
+from helpers.common import check_clickhouse_version
 from aggregate_functions.tests.steps import get_snapshot_id
 from aggregate_functions.tests.covarPop import feature as checks
 
@@ -24,5 +25,9 @@ def feature(
 
     if table is None:
         table = self.context.table
+
+    if check_clickhouse_version(">=22.8.7")(self):
+        xfail("doesn't work from 22.8.7",
+              "https://github.com/ClickHouse/ClickHouse/issues/43928")
 
     checks(func=func, table=table, decimal=decimal, date=date, datetime=datetime)
