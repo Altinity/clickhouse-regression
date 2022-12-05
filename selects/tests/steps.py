@@ -513,3 +513,36 @@ def create_and_populate_distributed_tables(self):
                         values=values,
                     )
                 )
+
+
+@TestStep(Given)
+def view(self, mv_name, core_table, type=None, node=None):
+    if node is None:
+        node = current().context.node
+
+    if type is None:
+        view_type = "VIEW"
+        final_modifier_available = True
+    elif type == "materialized":
+        view_type = "MATERIALIZED VIEW"
+        final_modifier_available = False
+    elif type == "live":
+        view_type = "LIVE VIEW"
+        final_modifier_available = False
+
+    try:
+        with By(f"creating materialized view {mv_name}"):
+            node.query(f"CREATE {view_type} {mv_name} IF NOT EXISTS AS SELECT * FROM {core_table}")
+
+        yield Table(mv_name, view_type, final_modifier_available)
+    finally:
+        with Finally("I drop data"):
+            node.query(f"DROP VIEW IF EXISTS {mv_name}")
+
+
+@TestStep(Given)
+def create_all_views(self, node=None):
+    xfail("need to create")
+
+
+
