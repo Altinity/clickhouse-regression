@@ -9,9 +9,10 @@ from helpers.common import *
         "1.0"
     )
 )
-def source_replica_stopped(self):
+def source_replica_stopped(self, node=None):
     cluster = self.context.cluster
-    node = self.context.cluster.node("clickhouse1")
+    if node is None:
+        node = self.context.node
     cluster_name = "'cluster_1replica_3shard'"
     try:
         with Given("Receive UID"):
@@ -25,7 +26,7 @@ def source_replica_stopped(self):
 
         with And("I move part from shard 1 to shard 3"):
             move_part_with_check(
-                table_name=table_name, shard_b_number="3", shard_a_name="clickhouse1"
+                table_name=table_name, shard_b_number="3", shard_a_name="clickhouse1", part_name='\'all_0_0_0\''
             )
 
         with And("I stop shard 1 replica"):
