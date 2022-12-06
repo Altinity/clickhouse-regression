@@ -50,7 +50,6 @@ def create_and_populate_table(
 
     finally:
         with Finally(f"drop the table {name}"):
-            pause()
             node.query(
                 f"DROP TABLE IF EXISTS {name} "
                 f"{' ON CLUSTER {cluster_name}'.format(cluster_name=cluster_name) if cluster_name is not None else ''}"

@@ -7,7 +7,7 @@ from selects.tests.steps import *
 def select_count(self, node=None):
     """Check select count() with `FINAL` clause equal to force_select_final select."""
     if node is None:
-        node = current().context.node
+        node = self.context.node
 
     for table in self.context.tables:
         with Then("I check that select with force_select_final equal 'SELECT...FINAL'"):
@@ -28,7 +28,7 @@ def select_count(self, node=None):
 def select(self, node=None):
     """Check select all data with `FINAL` clause equal to force_select_final select."""
     if node is None:
-        node = current().context.node
+        node = self.context.node
 
     for table in self.context.tables:
         with Then("I check that select with force_select_final equal 'SELECT...FINAL'"):
@@ -50,3 +50,4 @@ def select(self, node=None):
 @Name("force modifier")
 def feature(self):
     """Check force_final_modifier setting."""
+
