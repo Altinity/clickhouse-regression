@@ -50,6 +50,7 @@ def create_and_populate_table(
 
     finally:
         with Finally(f"drop the table {name}"):
+            pause()
             node.query(
                 f"DROP TABLE IF EXISTS {name} "
                 f"{' ON CLUSTER {cluster_name}'.format(cluster_name=cluster_name) if cluster_name is not None else ''}"
@@ -142,14 +143,8 @@ def create_and_populate_core_tables(self):
 @TestStep
 def add_system_tables(self):
     tables_list = [
-        "system.time_zones",
-        "system.trace_log",
-        "system.user_directories",
         "system.users",
         "system.warnings",
-        "system.zeros",
-        "system.zeros_mt",
-        "system.zookeeper",
     ]
     for table_name in tables_list:
         with Given(f"{table_name} table"):
@@ -499,7 +494,7 @@ def create_and_populate_distributed_tables(self):
                         "({i}, 'first', '2020-01-01 01:01:01')",
                         "({i}, 'second', '2020-01-01 00:00:00')",
                     ]
-                    final_modifier_available = True
+                    final_modifier_available = False
                     create_and_populate_log_table(
                         name=name, engine=engine, populate=False, cluster_name=cluster
                     )
@@ -516,33 +511,32 @@ def create_and_populate_distributed_tables(self):
 
 
 @TestStep(Given)
-def view(self, mv_name, core_table, type=None, node=None):
+def add_view(self, type, core_table, final_modifier_available, node=None):
     if node is None:
         node = current().context.node
 
-    if type is None:
+    if type == "normal":
         view_type = "VIEW"
-        final_modifier_available = True
+        view_name = core_table + "_nview"
+
     elif type == "materialized":
         view_type = "MATERIALIZED VIEW"
-        final_modifier_available = False
+        view_name = core_table + "_mview"
+
     elif type == "live":
         view_type = "LIVE VIEW"
-        final_modifier_available = False
+        view_name = core_table + "_lview"
 
     try:
-        with By(f"creating materialized view {mv_name}"):
-            node.query(f"CREATE {view_type} {mv_name} IF NOT EXISTS AS SELECT * FROM {core_table}")
+        with By(f"creating {type} view {view_name}"):
+            node.query(
+                f"CREATE {view_type} IF NOT EXISTS {view_name}"
+                f"{' TO {core_table}'.format(core_table=core_table) if type == 'materialized' else ''}"
+                f" AS SELECT * FROM {core_table}",
+                settings=[("allow_experimental_live_view", 1)],
+            )
 
-        yield Table(mv_name, view_type, final_modifier_available)
+        yield Table(view_name, view_type, final_modifier_available)
     finally:
         with Finally("I drop data"):
-            node.query(f"DROP VIEW IF EXISTS {mv_name}")
-
-
-@TestStep(Given)
-def create_all_views(self, node=None):
-    xfail("need to create")
-
-
-
+            node.query(f"DROP VIEW IF EXISTS {view_name}")
