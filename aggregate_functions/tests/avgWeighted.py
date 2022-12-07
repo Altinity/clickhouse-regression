@@ -27,7 +27,9 @@ def feature(
         table = self.context.table
 
     if check_clickhouse_version(">=22.8.7")(self):
-        xfail("doesn't work from 22.8.7",
-              "https://github.com/ClickHouse/ClickHouse/issues/31768")
+        xfail(
+            "doesn't work from 22.8.7",
+            "https://github.com/ClickHouse/ClickHouse/issues/31768",
+        )
 
     checks(func=func, table=table, decimal=decimal, date=date, datetime=datetime)
