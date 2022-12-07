@@ -16,7 +16,7 @@ def feature(self):
 
     with Given("I have set of populated tables"):
         create_and_populate_core_tables()
-        add_system_tables()
+        # add_system_tables()
         create_and_populate_distributed_tables()
         all_types = ["normal", "materialized", "live"]
         for table in self.context.tables:
