@@ -36,10 +36,11 @@ def select(self, node=None):
                 node.query(
                     f"SELECT * FROM {table.name}"
                     f"{' FINAL' if table.final_modifier_available else ''} "
-                    f"{' ORDER BY key' if not table.name.startswith('system') else ''} FORMAT JSONEachRow;"
+                    f"{' ORDER BY (key, someCol)' if not table.name.startswith('system') else ''} FORMAT JSONEachRow;"
                 ).output.strip()
                 == node.query(
-                    f"SELECT * FROM {table.name}{' ORDER BY key' if not table.name.startswith('system') else ''}"
+                    f"SELECT * FROM "
+                    f"{table.name}{' ORDER BY (key, someCol)' if not table.name.startswith('system') else ''}"
                     f" FORMAT JSONEachRow;",
                     settings=[("force_select_final", 1)],
                 ).output.strip()
@@ -50,4 +51,10 @@ def select(self, node=None):
 @Name("force modifier")
 def feature(self):
     """Check force_final_modifier setting."""
+    for scenario in loads(current_module(), Scenario):
+        scenario()
+
+
+
+
 
