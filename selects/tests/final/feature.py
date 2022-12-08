@@ -6,7 +6,7 @@ import sys
 append_path(sys.path, "..")
 
 
-@TestFeature
+@TestModule
 @Name("final")
 def feature(self):
     """Check FINAL modifier."""
@@ -34,13 +34,14 @@ def feature(self):
                         )
                     )
 
-    with And("I test all tables with `FINAL` modifier queries"):
-        for module in final_test_modules:
-            try:
-                case = load_module(f"final.{module}")
-            except ModuleNotFoundError:
-                xfail(reason=f"{module} tests are not implemented")
-                continue
+    for module in final_test_modules:
+        try:
+            case = load_module(f"final.{module}")
+        except ModuleNotFoundError:
+            xfail(reason=f"{module} tests are not implemented")
+            continue
 
-            for scenario in loads(case, Scenario):
-                scenario()
+        for feature in loads(case, Feature):
+            feature()
+
+

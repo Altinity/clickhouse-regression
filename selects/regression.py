@@ -70,7 +70,7 @@ def regression(
         self.context.cluster = cluster
         self.context.node = cluster.node("clickhouse1")
 
-        Feature(run=load("selects.tests.final.feature", "feature"))
+        Module(run=load("selects.tests.final.feature", "feature"))
 
 
 if main():

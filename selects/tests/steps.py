@@ -198,7 +198,7 @@ def create_and_populate_collapsing_table(
     node=None,
     cluster_name=None,
 ):
-    schema = "( key UInt64, PageViews UInt8, Duration UInt8, Sign Int8)"
+    schema = "( key UInt64, someCol UInt8, Duration UInt8, Sign Int8)"
 
     engine_local = engine.format(sign="Sign") if engine.endswith("({sign})") else engine
 
@@ -229,7 +229,7 @@ def create_and_populate_aggregating_table(
     node=None,
     cluster_name=None,
 ):
-    schema = "(key String, b UInt8, c SimpleAggregateFunction(max, UInt8))"
+    schema = "(key String, someCol UInt8, c SimpleAggregateFunction(max, UInt8))"
     values = ["('a', {i}, 1)", "('a', {i}+1, 2)"]
     return create_and_populate_table(
         name=name,
