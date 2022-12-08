@@ -43,5 +43,3 @@ def feature(self):
 
         for feature in loads(case, Feature):
             feature()
-
-

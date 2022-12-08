@@ -53,8 +53,3 @@ def feature(self):
     """Check force_final_modifier setting."""
     for scenario in loads(current_module(), Scenario):
         scenario()
-
-
-
-
-
