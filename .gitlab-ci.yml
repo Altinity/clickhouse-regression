@@ -119,7 +119,10 @@ variables:
         fi 
     - if [[ $version == 'latest' ]];
         then
-          version=$(docker run $(echo $package | cut -c10-):$version bash -c "./entrypoint.sh > /dev/null 2>&1 && clickhouse-client -q \"SELECT version()\"");
+          pid=$(docker run -d $(echo $package | cut -c10-):$version);
+          echo $pid;
+          version=$(docker exec $pid clickhouse-client -q "SELECT version()");
+          docker stop $pid;
         fi
     - echo "GitLab CI/CD | Print all environment variables"
     - env
