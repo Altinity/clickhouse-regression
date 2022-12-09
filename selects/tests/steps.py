@@ -65,7 +65,7 @@ class Table:
 
 
 @TestStep(Given)
-def create_and_populate_core_tables(self):
+def create_and_populate_core_tables(self, duplicate=False):
     """Create and populate all test tables for different table engines."""
     engines = [
         "ReplacingMergeTree",
@@ -85,7 +85,7 @@ def create_and_populate_core_tables(self):
             symbols = [("(", "_"), (",", "_"), (")", ""), ("{", ""), ("}", "")]
             for symbol in symbols:
                 name = name.replace(symbol[0], symbol[1])
-            name = f"{name}_table_{getuid()}"
+            name = f"{name}_table_{getuid()}_core{'_duplicate' if duplicate else ''}"
 
             if engine.startswith("Replacing"):
                 self.context.tables.append(
