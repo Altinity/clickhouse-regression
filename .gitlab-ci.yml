@@ -121,7 +121,7 @@ variables:
         then
           pid=$(docker run -d $(echo $package | cut -c10-):$version);
           echo $pid;
-          ./retry.sh 60 2 docker exec $pid clickhouse-client -q "SELECT version()"
+          ./retry.sh 60 2 "docker exec $pid clickhouse-client -q \"SELECT version()\"";
           version=$(docker exec $pid clickhouse-client -q "SELECT version()");
           docker stop $pid;
         fi
