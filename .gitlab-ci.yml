@@ -89,8 +89,7 @@ variables:
         /var/cache/debconf
         /tmp/*
     - apt-get clean
-    - pip3 install testflows==1.9.20
-    - pip3 install awscli==1.24.9
+    - pip install -r pip_requirements.txt
     - export PATH=~/local/bin:$PATH
     - echo "start dockerd"
     - dockerd-start.sh
