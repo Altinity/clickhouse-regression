@@ -540,3 +540,33 @@ def create_view(self, type, core_table, final_modifier_available, node=None):
     finally:
         with Finally("I drop data"):
             node.query(f"DROP VIEW IF EXISTS {view_name}")
+
+
+@TestStep(Given)
+def create_all_views(self):
+    all_types = ["normal", "materialized", "live"]
+    for table in self.context.tables:
+        if not (
+            table.name.startswith("system")
+            or table.name.startswith("distr")
+            or table.name.endswith("view")
+        ):
+            for type in all_types:
+                self.context.tables.append(
+                    create_view(
+                        type=type,
+                        core_table=table.name,
+                        final_modifier_available=table.final_modifier_available,
+                    )
+                )
+
+
+@TestStep(Given)
+def create_and_populate_all_tables(self):
+    """
+    Step to create all kind of tables for tests
+    """
+    create_and_populate_core_tables()
+    add_system_tables()
+    create_and_populate_distributed_tables()
+    create_all_views()
