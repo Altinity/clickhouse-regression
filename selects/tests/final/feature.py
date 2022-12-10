@@ -27,7 +27,7 @@ def feature(self):
             ):
                 for type in all_types:
                     self.context.tables.append(
-                        add_view(
+                        create_view(
                             type=type,
                             core_table=table.name,
                             final_modifier_available=table.final_modifier_available,

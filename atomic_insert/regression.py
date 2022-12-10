@@ -54,9 +54,6 @@ def regression(
 
     self.context.transaction_atomic_insert = True
 
-    if check_clickhouse_version("<22.4")(self):
-        skip(reason="only supported on ClickHouse version >= 22.4")
-
     if stress is not None:
         self.context.stress = stress
 
@@ -73,6 +70,9 @@ def regression(
         docker_compose_project_dir=os.path.join(current_dir(), env),
     ) as cluster:
         self.context.cluster = cluster
+
+        if check_clickhouse_version("<22.4")(self):
+            skip(reason="only supported on ClickHouse version >= 22.4")
 
         Feature(run=load("atomic_insert.tests.sanity", "feature"))
         Feature(run=load("atomic_insert.tests.dependent_tables", "feature"))

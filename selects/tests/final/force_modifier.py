@@ -66,7 +66,6 @@ def select_join_equal_table(self, node=None):
                     with Then(
                         "I check that select with force_select_final equal 'SELECT...FINAL'"
                     ):
-                        pause()
                         assert (
                             node.query(
                                 f"SELECT count() FROM {table.name}"
