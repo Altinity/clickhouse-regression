@@ -7,6 +7,5 @@ from selects.tests.steps import *
 @Name("modifier")
 def feature(self):
     """Check force_final_modifier setting."""
-    xfail("not implemented")
     for scenario in loads(current_module(), Scenario):
         scenario()

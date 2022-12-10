@@ -26,7 +26,9 @@ def argparser(parser):
     )
 
 
-xfails = {}
+xfails = {
+    "/selects/final/force modifier/select join equal table/:": [(Fail, "doesn't work for latest clickhouse PR")],
+}
 xflags = {}
 
 
