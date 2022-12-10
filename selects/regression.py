@@ -49,9 +49,6 @@ def regression(
 
     self.context.clickhouse_version = clickhouse_version
 
-    if check_clickhouse_version("<22.11")(self):
-        skip(reason="force_select_final is only supported on ClickHouse version >= 22.11")
-
     if stress is not None:
         self.context.stress = stress
 
@@ -69,6 +66,9 @@ def regression(
     ) as cluster:
         self.context.cluster = cluster
         self.context.node = cluster.node("clickhouse1")
+
+        if check_clickhouse_version("<22.11")(self):
+            skip(reason="force_select_final is only supported on ClickHouse version >= 22.11")
 
         Module(run=load("selects.tests.final.feature", "feature"))
 

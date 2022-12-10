@@ -53,8 +53,7 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
 
     self.context.clickhouse_version = clickhouse_version
 
-    if check_clickhouse_version("<21.4")(self):
-        skip(reason="only supported on ClickHouse version >= 21.4")
+
 
     if stress is not None:
         self.context.stress = stress
@@ -74,6 +73,9 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
         docker_compose_project_dir=os.path.join(current_dir(), env),
     ) as cluster:
         self.context.cluster = cluster
+
+        if check_clickhouse_version("<21.4")(self):
+            skip(reason="only supported on ClickHouse version >= 21.4")
 
         create_3_3_cluster_config()
         Feature(run=load("clickhouse_keeper.tests.sanity", "feature"))

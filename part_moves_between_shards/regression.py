@@ -53,9 +53,6 @@ def regression(
 
     self.context.clickhouse_version = clickhouse_version
 
-    if check_clickhouse_version("<21.4")(self):
-        skip(reason="only supported on ClickHouse version >= 21.4")
-
     if stress is not None:
         self.context.stress = stress
 
@@ -73,6 +70,9 @@ def regression(
     ) as cluster:
         self.context.cluster = cluster
         self.context.node = cluster.node("clickhouse1")
+
+        if check_clickhouse_version("<21.4")(self):
+            skip(reason="only supported on ClickHouse version >= 21.4")
 
         Feature(run=load("part_moves_between_shards.tests.sanity", "feature"))
         Feature(run=load("part_moves_between_shards.tests.part_moves", "feature"))

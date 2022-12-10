@@ -484,6 +484,7 @@ def create_and_populate_distributed_tables(self):
                     create_and_populate_versioned_table(
                         name=name, engine=engine, populate=False, cluster_name=cluster
                     )
+
                 elif (
                     engine.startswith("StripeLog")
                     or engine.startswith("TinyLog")
@@ -510,7 +511,7 @@ def create_and_populate_distributed_tables(self):
 
 
 @TestStep(Given)
-def add_view(self, type, core_table, final_modifier_available, node=None):
+def create_view(self, type, core_table, final_modifier_available, node=None):
     if node is None:
         node = current().context.node
 
