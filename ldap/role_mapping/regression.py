@@ -22,6 +22,9 @@ xfails = {
     "user dn detection/mapping/add new role not present": [
         (Error, "https://github.com/ClickHouse/ClickHouse/issues/41380")
     ],
+    "user dn detection/mapping/map role when ldap user belongs to large number of groups": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/42276")
+    ],
     "mapping/add new role not present": [
         (Error, "https://github.com/ClickHouse/ClickHouse/issues/41380")
     ],
