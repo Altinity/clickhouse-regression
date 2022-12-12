@@ -78,11 +78,11 @@ def memory_usage_for_column_input(self, node=None):
             f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '2003'"
         )
         b58_decode_memory_usage = int(r.output)
-        assert min(b58_encode_memory_usage, b64_encode_memory_usage) * 2 > max(
+        assert min(b58_encode_memory_usage, b64_encode_memory_usage) * 2 >= max(
             b58_encode_memory_usage, b64_encode_memory_usage
         ), error()
-        assert min(b58_decode_memory_usage, b64_decode_memory_usage) * 2 > max(
-            b58_encode_memory_usage, b64_encode_memory_usage
+        assert min(b58_decode_memory_usage, b64_decode_memory_usage) * 2 >= max(
+            b58_decode_memory_usage, b64_decode_memory_usage
         ), error()
 
 
