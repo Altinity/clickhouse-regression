@@ -69,7 +69,7 @@ def scenario(self, cluster, node="clickhouse1"):
                 )
 
             with When("I insert data that would fall into different TTL expressions"):
-                node.query(f"INSERT INTO {name} VALUES ({date(0)},1,'fast')")
+                node.query(f"INSERT INTO {name} VALUES ({date(0)},2,'fast')")
                 node.query(f"INSERT INTO {name} VALUES ({date(-1.1)},1,'medium')")
                 node.query(f"INSERT INTO {name} VALUES ({date(-2.1*4)},2,'slow')")
                 node.query(f"INSERT INTO {name} VALUES ({date(-4*24)},3,'delete')")
