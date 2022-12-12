@@ -5,6 +5,19 @@ from testflows.core import *
 from helpers.common import create_xml_config_content, add_config
 from helpers.common import getuid, instrument_clickhouse_server_log
 
+engines = [
+    "ReplacingMergeTree",
+    # "ReplacingMergeTree({version})",
+    # "CollapsingMergeTree({sign})",
+    # "AggregatingMergeTree",
+    # "SummingMergeTree",
+    # "VersionedCollapsingMergeTree({sign},{version})",
+    # "MergeTree",
+    # "StripeLog",
+    # "TinyLog",
+    # "Log",
+]
+
 
 @TestStep(Given)
 def create_and_populate_table(
@@ -20,7 +33,7 @@ def create_and_populate_table(
     node=None,
 ):
     """
-    Create clickhouse table.
+    Creating and populating clickhouse table.
     :param name: core table name
     :param populate: populates table default: True
     :param engine: core table engine
@@ -66,19 +79,9 @@ class Table:
 
 @TestStep(Given)
 def create_and_populate_core_tables(self, duplicate=False):
-    """Create and populate all test tables for different table engines."""
-    engines = [
-        "ReplacingMergeTree",
-        "ReplacingMergeTree({version})",
-        "CollapsingMergeTree({sign})",
-        "AggregatingMergeTree",
-        "SummingMergeTree",
-        "VersionedCollapsingMergeTree({sign},{version})",
-        "MergeTree",
-        "StripeLog",
-        "TinyLog",
-        "Log",
-    ]
+    """Creating and populating core tables for different table engines.
+    :param duplicate: if true create table with _duplicate flag in the end of name
+    """
     for engine in engines:
         with Given(f"{engine} table"):
             name = engine
@@ -94,6 +97,15 @@ def create_and_populate_core_tables(self, duplicate=False):
                         engine=engine,
                     )
                 )
+                if not engine.endswith("({version})"):
+                    self.context.tables.append(
+                        create_and_populate_replacing_table(
+                            name="Replicated" + name,
+                            engine="Replicated"
+                            + engine
+                            + "('/clickhouse/tables/{shard}/{database}/table_name', '{replica}')",
+                        )
+                    )
             elif engine.startswith("Collapsing"):
                 self.context.tables.append(
                     create_and_populate_collapsing_table(
@@ -101,12 +113,29 @@ def create_and_populate_core_tables(self, duplicate=False):
                         engine=engine,
                     )
                 )
+                if not engine.endswith("({sign})"):
+                    self.context.tables.append(
+                        create_and_populate_collapsing_table(
+                            name="Replicated" + name,
+                            engine="Replicated"
+                            + engine
+                            + "('/clickhouse/tables/{shard}/{database}/table_name', '{replica}')",
+                        )
+                    )
 
             elif engine.startswith("Aggregating"):
                 self.context.tables.append(
                     create_and_populate_aggregating_table(
                         name=name,
                         engine=engine,
+                    )
+                )
+                self.context.tables.append(
+                    create_and_populate_aggregating_table(
+                        name="Replicated" + name,
+                        engine="Replicated"
+                        + engine
+                        + "('/clickhouse/tables/{shard}/{database}/table_name', '{replica}')",
                     )
                 )
 
@@ -117,6 +146,14 @@ def create_and_populate_core_tables(self, duplicate=False):
                         engine=engine,
                     )
                 )
+                self.context.tables.append(
+                    create_and_populate_summing_table(
+                        name="Replicated" + name,
+                        engine="Replicated"
+                        + engine
+                        + "('/clickhouse/tables/{shard}/{database}/table_name', '{replica}')",
+                    )
+                )
 
             elif engine.startswith("Merge"):
                 self.context.tables.append(
@@ -125,6 +162,15 @@ def create_and_populate_core_tables(self, duplicate=False):
                         engine=engine,
                     )
                 )
+                self.context.tables.append(
+                    create_and_populate_merge_table(
+                        name="Replicated" + name,
+                        engine="Replicated"
+                        + engine
+                        + "('/clickhouse/tables/{shard}/{database}/table_name', '{replica}')",
+                    )
+                )
+
             elif engine.startswith("Versioned"):
                 self.context.tables.append(
                     create_and_populate_versioned_table(name=name, engine=engine)
@@ -137,10 +183,19 @@ def create_and_populate_core_tables(self, duplicate=False):
                 self.context.tables.append(
                     create_and_populate_log_table(name=name, engine=engine)
                 )
+                self.context.tables.append(
+                    create_and_populate_log_table(
+                        name="Replicated" + name,
+                        engine="Replicated"
+                        + engine
+                        + "('/clickhouse/tables/{shard}/{database}/table_name', '{replica}')",
+                    )
+                )
 
 
 @TestStep
 def add_system_tables(self):
+    """Adding system tables to tables list."""
     tables_list = [
         "system.users",
         "system.warnings",
@@ -162,6 +217,9 @@ def create_and_populate_replacing_table(
     node=None,
     cluster_name=None,
 ):
+    """
+    Creating and populating 'ReplacingMergeTree' engine table.
+    """
     if node is None:
         node = current().context.node
 
@@ -198,6 +256,9 @@ def create_and_populate_collapsing_table(
     node=None,
     cluster_name=None,
 ):
+    """
+    Creating and populating 'CollapsingMergeTree' engine table.
+    """
     schema = "( key UInt64, someCol UInt8, Duration UInt8, Sign Int8)"
 
     engine_local = engine.format(sign="Sign") if engine.endswith("({sign})") else engine
@@ -229,6 +290,9 @@ def create_and_populate_aggregating_table(
     node=None,
     cluster_name=None,
 ):
+    """
+    Creating and populating 'AggregatingMergeTree' engine table
+    """
     schema = "(key String, someCol UInt8, c SimpleAggregateFunction(max, UInt8))"
     values = ["('a', {i}, 1)", "('a', {i}+1, 2)"]
     return create_and_populate_table(
@@ -253,6 +317,9 @@ def create_and_populate_summing_table(
     node=None,
     cluster_name=None,
 ):
+    """
+    Creating and populating 'SummingMergeTree' engine table.
+    """
     schema = "(key Int64, someCol String, eventTime DateTime)"
     values = [
         "({i}, 'first', '2020-01-01 01:01:01')",
@@ -280,6 +347,9 @@ def create_and_populate_merge_table(
     node=None,
     cluster_name=None,
 ):
+    """
+    Creating and populating 'MergeTree' engine table.
+    """
     values = [
         "({i}, 'first', '2020-01-01 01:01:01')",
         "({i}, 'second', '2020-01-01 00:00:00')",
@@ -307,6 +377,9 @@ def create_and_populate_versioned_table(
     node=None,
     cluster_name=None,
 ):
+    """
+    Creating and populating 'VersionedCollapsingMergeTree' engine table.
+    """
     values = [
         "({i}, 'first', 1, 1)",
         "({i}, 'second', 1, 1),({i}+1, 'third', -1, 2)",
@@ -340,6 +413,9 @@ def create_and_populate_log_table(
     node=None,
     cluster_name=None,
 ):
+    """
+    Creating and populating 'Log' engine family table.
+    """
     values = [
         "({i}, 'first', '2020-01-01 01:01:01')",
         "({i}, 'second', '2020-01-01 00:00:00')",
@@ -368,6 +444,9 @@ def create_and_populate_distributed_table(
     node=None,
     range_value=10,
 ):
+    """
+    Creating 'Distributed' engine table and populating dependent tables.
+    """
     if node is None:
         node = current().context.node
 
@@ -400,19 +479,7 @@ def create_and_populate_distributed_table(
 
 @TestStep(Given)
 def create_and_populate_distributed_tables(self):
-    """Create and populate all test tables for different table engines."""
-    engines = [
-        "ReplacingMergeTree",
-        "ReplacingMergeTree({version})",
-        "CollapsingMergeTree({sign})",
-        "AggregatingMergeTree",
-        "SummingMergeTree",
-        "VersionedCollapsingMergeTree({sign},{version})",
-        "MergeTree",
-        "StripeLog",
-        "TinyLog",
-        "Log",
-    ]
+    """Creating and populating all 'Distributed' engine tables and populating dependent tables for different engines."""
 
     clusters = ["replicated_cluster", "sharded_cluster"]
 
@@ -511,27 +578,71 @@ def create_and_populate_distributed_tables(self):
 
 
 @TestStep(Given)
-def create_view(self, type, core_table, final_modifier_available, node=None):
+def create_normal_view(self, core_table, final_modifier_available, node=None):
+    """
+    Creating `NORMAL VIEW` to some table.
+    """
     if node is None:
         node = current().context.node
 
-    if type == "normal":
-        view_type = "VIEW"
-        view_name = core_table + "_nview"
-
-    elif type == "materialized":
-        view_type = "MATERIALIZED VIEW"
-        view_name = core_table + "_mview"
-
-    elif type == "live":
-        view_type = "LIVE VIEW"
-        view_name = core_table + "_lview"
+    view_type = "VIEW"
+    view_name = core_table + "_nview"
 
     try:
-        with By(f"creating {type} view {view_name}"):
+        with By(f"creating normal view {view_name}"):
             node.query(
                 f"CREATE {view_type} IF NOT EXISTS {view_name}"
-                f"{' TO {core_table}'.format(core_table=core_table) if type == 'materialized' else ''}"
+                f" AS SELECT * FROM {core_table}",
+            )
+        yield Table(view_name, view_type, final_modifier_available)
+    finally:
+        with Finally("I drop data"):
+            node.query(f"DROP VIEW IF EXISTS {view_name}")
+
+
+@TestStep(Given)
+def create_materialized_view(self, core_table, final_modifier_available, node=None):
+    """
+    Creating `MATERIALIZED VIEW` to some table.
+    """
+    if node is None:
+        node = current().context.node
+
+    view_type = "MATERIALIZED VIEW"
+    view_name = core_table + "_mview"
+
+    try:
+        with By("create core table copy"):
+            node.query(f"CREATE TABLE {core_table}_mcopy AS {core_table}")
+
+        with And(f"creating materialized view {view_name}"):
+            node.query(
+                f"CREATE {view_type} IF NOT EXISTS {view_name}"
+                f" TO {core_table}_mcopy"
+                f" AS SELECT * FROM {core_table}",
+            )
+
+        yield Table(view_name, view_type, final_modifier_available)
+    finally:
+        with Finally("I drop data"):
+            node.query(f"DROP VIEW IF EXISTS {view_name}")
+
+
+@TestStep(Given)
+def create_live_view(self, core_table, final_modifier_available, node=None):
+    """
+    Creating `LIVE VIEW` to some table.
+    """
+    if node is None:
+        node = current().context.node
+
+    view_type = "LIVE VIEW"
+    view_name = core_table + "_lview"
+
+    try:
+        with By(f"creating live view {view_name}"):
+            node.query(
+                f"CREATE {view_type} IF NOT EXISTS {view_name}"
                 f" AS SELECT * FROM {core_table}",
                 settings=[("allow_experimental_live_view", 1)],
             )
@@ -543,28 +654,81 @@ def create_view(self, type, core_table, final_modifier_available, node=None):
 
 
 @TestStep(Given)
+def create_window_view(self, core_table, final_modifier_available, node=None):
+    """
+    Creating `WINDOW VIEW` to some table.
+    """
+    if node is None:
+        node = current().context.node
+
+    view_type = "WINDOW VIEW"
+    view_name = core_table + "_wview"
+
+    try:
+        with By("create core table copy"):
+            node.query(
+                f"CREATE TABLE {core_table}_windowcore (w_start DateTime, counter UInt64)"
+                f" ENGINE=MergeTree ORDER BY w_start"
+            )
+
+        with And(f"creating window view {view_name}"):
+            node.query(
+                f"CREATE {view_type} IF NOT EXISTS {view_name}"
+                f" TO {core_table}_windowcore"
+                f" AS select tumbleStart(w_id) AS w_start, count(someCol) as counter FROM {core_table} "
+                f"GROUP BY tumble(now(), INTERVAL '5' SECOND) as w_id",
+                settings=[("allow_experimental_window_view", 1)],
+            )
+
+        yield Table(view_name, view_type, final_modifier_available)
+    finally:
+        with Finally("I drop data"):
+            node.query(f"DROP VIEW IF EXISTS {view_name}")
+
+
+@TestStep(Given)
 def create_all_views(self):
-    all_types = ["normal", "materialized", "live"]
+    """
+    Creating all types of 'VIEWS' to all core tables.
+    """
     for table in self.context.tables:
         if not (
             table.name.startswith("system")
             or table.name.startswith("distr")
             or table.name.endswith("view")
         ):
-            for type in all_types:
-                self.context.tables.append(
-                    create_view(
-                        type=type,
-                        core_table=table.name,
-                        final_modifier_available=table.final_modifier_available,
-                    )
+            self.context.tables.append(
+                create_normal_view(
+                    core_table=table.name,
+                    final_modifier_available=table.final_modifier_available,
                 )
+            )
+
+            self.context.tables.append(
+                create_materialized_view(
+                    core_table=table.name,
+                    final_modifier_available=table.final_modifier_available,
+                )
+            )
+
+            self.context.tables.append(
+                create_live_view(
+                    core_table=table.name,
+                    final_modifier_available=table.final_modifier_available,
+                )
+            )
+            self.context.tables.append(
+                create_window_view(
+                    core_table=table.name,
+                    final_modifier_available=table.final_modifier_available,
+                )
+            )
 
 
 @TestStep(Given)
 def create_and_populate_all_tables(self):
     """
-    Step to create all kind of tables for tests
+    Creating all kind of tables.
     """
     create_and_populate_core_tables()
     add_system_tables()
