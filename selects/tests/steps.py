@@ -7,12 +7,19 @@ from helpers.common import getuid, instrument_clickhouse_server_log
 
 engines = [
     "ReplacingMergeTree",
-    "ReplicatedReplacingMergeTree" "ReplacingMergeTree({version})",
+    "ReplacingMergeTree({version})",
+    "ReplicatedReplacingMergeTree",
+    "ReplicatedReplacingMergeTree({version})",
     "CollapsingMergeTree({sign})",
+    "ReplicatedCollapsingMergeTree({sign})",
     "AggregatingMergeTree",
+    "ReplicatedAggregatingMergeTree",
     "SummingMergeTree",
+    "ReplicatedSummingMergeTree",
     "VersionedCollapsingMergeTree({sign},{version})",
+    "ReplicatedVersionedCollapsingMergeTree({sign},{version})",
     "MergeTree",
+    "ReplicatedMergeTree",
     "StripeLog",
     "TinyLog",
     "Log",
@@ -89,25 +96,19 @@ def create_and_populate_core_tables(self, duplicate=False):
                 name = name.replace(symbol[0], symbol[1])
             name = f"{name}_table_{getuid()}_core{'_duplicate' if duplicate else ''}"
 
-            if engine.startswith("Replacing"):
+            if engine.startswith("Replacing") or engine.startswith(
+                "ReplicatedReplacing"
+            ):
                 self.context.tables.append(
                     create_and_populate_replacing_table(
                         name=name,
                         engine=engine,
                     )
                 )
-                if not engine.endswith("({version})"):
-                    self.context.tables.append(
-                        create_and_populate_replacing_table(
-                            name="Replicated" + name,
-                            engine="Replicated"
-                            + engine
-                            + "('/clickhouse/tables/{shard}/{database}/"
-                            + "{table_name}'".format(table_name="Replicated" + name)
-                            + ", '{replica}')",
-                        )
-                    )
-            elif engine.startswith("Collapsing"):
+
+            elif engine.startswith("Collapsing") or engine.startswith(
+                "ReplicatedCollapsing"
+            ):
                 self.context.tables.append(
                     create_and_populate_collapsing_table(
                         name=name,
@@ -115,18 +116,9 @@ def create_and_populate_core_tables(self, duplicate=False):
                     )
                 )
 
-            elif engine.startswith("ReplicatedCollapsing"):
-                self.context.tables.append(
-                    create_and_populate_collapsing_table(
-                        name=name,
-                        engine=engine
-                        + "('/clickhouse/tables/{shard}/{database}/"
-                        + f"{name}'"
-                        + ", '{replica}')",
-                    )
-                )
-
-            elif engine.startswith("Aggregating"):
+            elif engine.startswith("Aggregating") or engine.startswith(
+                "ReplicatedAggregating"
+            ):
                 self.context.tables.append(
                     create_and_populate_aggregating_table(
                         name=name,
@@ -134,7 +126,7 @@ def create_and_populate_core_tables(self, duplicate=False):
                     )
                 )
 
-            elif engine.startswith("Summing"):
+            elif engine.startswith("Summing") or engine.startswith("ReplicatedSumming"):
                 self.context.tables.append(
                     create_and_populate_summing_table(
                         name=name,
@@ -142,7 +134,7 @@ def create_and_populate_core_tables(self, duplicate=False):
                     )
                 )
 
-            elif engine.startswith("Merge"):
+            elif engine.startswith("Merge") or engine.startswith("ReplicatedMerge"):
                 self.context.tables.append(
                     create_and_populate_merge_table(
                         name=name,
@@ -150,10 +142,13 @@ def create_and_populate_core_tables(self, duplicate=False):
                     )
                 )
 
-            elif engine.startswith("Versioned"):
+            elif engine.startswith("Versioned") or engine.startswith(
+                "ReplicatedVersioned"
+            ):
                 self.context.tables.append(
                     create_and_populate_versioned_table(name=name, engine=engine)
                 )
+
             elif (
                 engine.startswith("StripeLog")
                 or engine.startswith("TinyLog")
@@ -196,9 +191,28 @@ def create_and_populate_replacing_table(
 
     schema = "(key Int64, someCol String, eventTime DateTime)"
 
-    engine_local = (
-        engine.format(version="eventTime") if engine.endswith("({version})") else engine
-    )
+    if engine.startswith("Replicated"):
+        engine_local = (
+            engine.format(
+                version="'/clickhouse/tables/{shard}/{database}/"
+                + f"{name}'"
+                + ", '{replica}'"
+                + ", eventTime"
+            )
+            if engine.endswith("({version})")
+            else (
+                engine
+                + "('/clickhouse/tables/{shard}/{database}/"
+                + f"{name}'"
+                + ", '{replica}')"
+            )
+        )
+    else:
+        engine_local = (
+            engine.format(version="eventTime")
+            if engine.endswith("{version})")
+            else engine
+        )
 
     values = [
         "({i}, 'first', '2020-01-01 01:01:01')",
@@ -232,7 +246,26 @@ def create_and_populate_collapsing_table(
     """
     schema = "( key UInt64, someCol UInt8, Duration UInt8, Sign Int8)"
 
-    engine_local = engine.format(sign="Sign") if engine.endswith("({sign})") else engine
+    if engine.startswith("Replicated"):
+        engine_local = (
+            engine.format(
+                sign="'/clickhouse/tables/{shard}/{database}/"
+                + f"{name}'"
+                + ", '{replica}'"
+                + ", Sign"
+            )
+            if engine.endswith("({sign})")
+            else (
+                engine
+                + "('/clickhouse/tables/{shard}/{database}/"
+                + f"{name}'"
+                + ", '{replica}')"
+            )
+        )
+    else:
+        engine_local = (
+            engine.format(sign="Sign") if engine.endswith("({sign})") else engine
+        )
 
     values = [
         "(4324182021466249494, {i}, 146, 1)",
@@ -264,6 +297,13 @@ def create_and_populate_aggregating_table(
     """
     Creating and populating 'AggregatingMergeTree' engine table
     """
+    if engine.startswith("Replicated"):
+        engine = (
+            engine
+            + "('/clickhouse/tables/{shard}/{database}/"
+            + f"{name}'"
+            + ", '{replica}')"
+        )
     schema = "(key String, someCol UInt8, c SimpleAggregateFunction(max, UInt8))"
     values = ["('a', {i}, 1)", "('a', {i}+1, 2)"]
     return create_and_populate_table(
@@ -291,6 +331,13 @@ def create_and_populate_summing_table(
     """
     Creating and populating 'SummingMergeTree' engine table.
     """
+    if engine.startswith("Replicated"):
+        engine = (
+            engine
+            + "('/clickhouse/tables/{shard}/{database}/"
+            + f"{name}'"
+            + ", '{replica}')"
+        )
     schema = "(key Int64, someCol String, eventTime DateTime)"
     values = [
         "({i}, 'first', '2020-01-01 01:01:01')",
@@ -321,6 +368,13 @@ def create_and_populate_merge_table(
     """
     Creating and populating 'MergeTree' engine table.
     """
+    if engine.startswith("Replicated"):
+        engine = (
+            engine
+            + "('/clickhouse/tables/{shard}/{database}/"
+            + f"{name}'"
+            + ", '{replica}')"
+        )
     values = [
         "({i}, 'first', '2020-01-01 01:01:01')",
         "({i}, 'second', '2020-01-01 00:00:00')",
@@ -357,11 +411,30 @@ def create_and_populate_versioned_table(
     ]
     schema = "(key Int64, someCol String, Sign Int8, version UInt8)"
 
-    engine_local = (
-        engine.format(sign="Sign", version="version")
-        if engine.endswith("({sign},{version})")
-        else engine
-    )
+    if engine.startswith("Replicated"):
+        engine_local = (
+            engine.format(
+                sign="'/clickhouse/tables/{shard}/{database}/"
+                + f"{name}'"
+                + ", '{replica}'"
+                + ", Sign",
+                version="version",
+            )
+            if engine.endswith("({sign},{version})")
+            else (
+                engine
+                + "('/clickhouse/tables/{shard}/{database}/"
+                + f"{name}'"
+                + ", '{replica}')"
+            )
+        )
+    else:
+        engine_local = (
+            engine.format(sign="Sign", version="version")
+            if engine.endswith("({sign},{version})")
+            else engine
+        )
+
     return create_and_populate_table(
         name=name,
         engine=engine_local,
@@ -723,6 +796,7 @@ def create_and_populate_all_tables(self):
     Creating all kind of tables.
     """
     create_and_populate_core_tables()
-    add_system_tables()
-    create_and_populate_distributed_tables()
-    create_all_views()
+    pause()
+    # add_system_tables()
+    # create_and_populate_distributed_tables()
+    # create_all_views()
