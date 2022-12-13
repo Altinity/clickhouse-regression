@@ -548,101 +548,105 @@ def create_and_populate_distributed_tables(self):
     clusters = ["replicated_cluster", "sharded_cluster"]
 
     for engine in engines:
-        for cluster in clusters:
-            with Given(f"{engine} table"):
-                name = engine
-                symbols = [("(", "_"), (",", "_"), (")", ""), ("{", ""), ("}", "")]
-                for symbol in symbols:
-                    name = name.replace(symbol[0], symbol[1])
-                name = f"distr_{name}_table_{getuid()}" + cluster
+        if not engine.startswith("Replicated"):
+            for cluster in clusters:
+                with Given(f"{engine} table"):
+                    name = engine
+                    symbols = [("(", "_"), (",", "_"), (")", ""), ("{", ""), ("}", "")]
+                    for symbol in symbols:
+                        name = name.replace(symbol[0], symbol[1])
+                    name = f"distr_{name}_table_{getuid()}" + cluster
 
-                if engine.startswith("Replacing"):
-                    values = [
-                        "({i}, 'first', '2020-01-01 01:01:01')",
-                        "({i}, 'second', '2020-01-01 00:00:00')",
-                    ]
-                    final_modifier_available = True
+                    if engine.startswith("Replacing"):
+                        values = [
+                            "({i}, 'first', '2020-01-01 01:01:01')",
+                            "({i}, 'second', '2020-01-01 00:00:00')",
+                        ]
+                        final_modifier_available = True
 
-                    create_and_populate_replacing_table(
-                        name=name, engine=engine, populate=False, cluster_name=cluster
+                        create_and_populate_replacing_table(
+                            name=name, engine=engine, populate=False, cluster_name=cluster
+                        )
+
+                    elif engine.startswith("Collapsing"):
+                        values = [
+                            "(4324182021466249494, {i}, 146, 1)",
+                            "(4324182021466249494, {i}, 146, -1),"
+                            "(4324182021466249494, {i}, 185, 1)",
+                        ]
+                        final_modifier_available = True
+
+                        create_and_populate_collapsing_table(
+                            name=name, engine=engine, populate=False, cluster_name=cluster
+                        )
+
+                    elif engine.startswith("Aggregating"):
+                        values = ["('a', {i}, 1)", "('a', {i}+1, 2)"]
+                        final_modifier_available = True
+                        create_and_populate_aggregating_table(
+                            name=name, engine=engine, populate=False, cluster_name=cluster
+                        )
+
+                    elif engine.startswith("Summing"):
+                        values = [
+                            "({i}, 'first', '2020-01-01 01:01:01')",
+                            "({i}, 'second', '2020-01-01 00:00:00')",
+                        ]
+                        final_modifier_available = True
+                        create_and_populate_summing_table(
+                            name=name, engine=engine, populate=False, cluster_name=cluster
+                        )
+
+                    elif engine.startswith("Merge"):
+                        values = [
+                            "({i}, 'first', '2020-01-01 01:01:01')",
+                            "({i}, 'second', '2020-01-01 00:00:00')",
+                        ]
+                        final_modifier_available = False
+                        create_and_populate_merge_table(
+                            name=name, engine=engine, populate=False, cluster_name=cluster
+                        )
+
+                    elif engine.startswith("Versioned"):
+                        values = [
+                            "({i}, 'first', 1, 1)",
+                            "({i}, 'second', 1, 1),({i}+1, 'third', -1, 2)",
+                        ]
+                        final_modifier_available = True
+                        create_and_populate_versioned_table(
+                            name=name, engine=engine, populate=False, cluster_name=cluster
+                        )
+
+                    elif (
+                            engine.startswith("StripeLog")
+                            or engine.startswith("TinyLog")
+                            or engine.startswith("Log")
+                    ):
+                        values = [
+                            "({i}, 'first', '2020-01-01 01:01:01')",
+                            "({i}, 'second', '2020-01-01 00:00:00')",
+                        ]
+                        final_modifier_available = False
+                        create_and_populate_log_table(
+                            name=name, engine=engine, populate=False, cluster_name=cluster
+                        )
+
+                    self.context.tables.append(
+                        create_and_populate_distributed_table(
+                            distributed_table_name=name + "distributed",
+                            core_table_name=name,
+                            cluster_name=cluster,
+                            final_modifier_available=final_modifier_available,
+                            values=values,
+                        )
                     )
 
-                elif engine.startswith("Collapsing"):
-                    values = [
-                        "(4324182021466249494, {i}, 146, 1)",
-                        "(4324182021466249494, {i}, 146, -1),"
-                        "(4324182021466249494, {i}, 185, 1)",
-                    ]
-                    final_modifier_available = True
-
-                    create_and_populate_collapsing_table(
-                        name=name, engine=engine, populate=False, cluster_name=cluster
-                    )
-
-                elif engine.startswith("Aggregating"):
-                    values = ["('a', {i}, 1)", "('a', {i}+1, 2)"]
-                    final_modifier_available = True
-                    create_and_populate_aggregating_table(
-                        name=name, engine=engine, populate=False, cluster_name=cluster
-                    )
-
-                elif engine.startswith("Summing"):
-                    values = [
-                        "({i}, 'first', '2020-01-01 01:01:01')",
-                        "({i}, 'second', '2020-01-01 00:00:00')",
-                    ]
-                    final_modifier_available = True
-                    create_and_populate_summing_table(
-                        name=name, engine=engine, populate=False, cluster_name=cluster
-                    )
-
-                elif engine.startswith("Merge"):
-                    values = [
-                        "({i}, 'first', '2020-01-01 01:01:01')",
-                        "({i}, 'second', '2020-01-01 00:00:00')",
-                    ]
-                    final_modifier_available = False
-                    create_and_populate_merge_table(
-                        name=name, engine=engine, populate=False, cluster_name=cluster
-                    )
-
-                elif engine.startswith("Versioned"):
-                    values = [
-                        "({i}, 'first', 1, 1)",
-                        "({i}, 'second', 1, 1),({i}+1, 'third', -1, 2)",
-                    ]
-                    final_modifier_available = True
-                    create_and_populate_versioned_table(
-                        name=name, engine=engine, populate=False, cluster_name=cluster
-                    )
-
-                elif (
-                    engine.startswith("StripeLog")
-                    or engine.startswith("TinyLog")
-                    or engine.startswith("Log")
-                ):
-                    values = [
-                        "({i}, 'first', '2020-01-01 01:01:01')",
-                        "({i}, 'second', '2020-01-01 00:00:00')",
-                    ]
-                    final_modifier_available = False
-                    create_and_populate_log_table(
-                        name=name, engine=engine, populate=False, cluster_name=cluster
-                    )
-
-                self.context.tables.append(
-                    create_and_populate_distributed_table(
-                        distributed_table_name=name + "distributed",
-                        core_table_name=name,
-                        cluster_name=cluster,
-                        final_modifier_available=final_modifier_available,
-                        values=values,
-                    )
-                )
 
 
 @TestStep(Given)
-def create_normal_view(self, core_table, final_modifier_available, node=None):
+def create_normal_view(
+    self, core_table, final_modifier_available, final=False, node=None
+):
     """
     Creating `NORMAL VIEW` to some table.
     """
@@ -656,7 +660,7 @@ def create_normal_view(self, core_table, final_modifier_available, node=None):
         with By(f"creating normal view {view_name}"):
             node.query(
                 f"CREATE {view_type} IF NOT EXISTS {view_name}"
-                f" AS SELECT * FROM {core_table}",
+                f" AS SELECT * FROM {core_table}{' FINAL' if final else ''}",
             )
         yield Table(view_name, view_type, final_modifier_available)
     finally:
@@ -665,7 +669,9 @@ def create_normal_view(self, core_table, final_modifier_available, node=None):
 
 
 @TestStep(Given)
-def create_materialized_view(self, core_table, final_modifier_available, node=None):
+def create_materialized_view(
+    self, core_table, final_modifier_available, final=False, node=None
+):
     """
     Creating `MATERIALIZED VIEW` to some table.
     """
@@ -683,7 +689,7 @@ def create_materialized_view(self, core_table, final_modifier_available, node=No
             node.query(
                 f"CREATE {view_type} IF NOT EXISTS {view_name}"
                 f" TO {core_table}_mcopy"
-                f" AS SELECT * FROM {core_table}",
+                f" AS SELECT * FROM {core_table}{' FINAL' if final else ''}",
             )
 
         yield Table(view_name, view_type, final_modifier_available)
@@ -693,7 +699,9 @@ def create_materialized_view(self, core_table, final_modifier_available, node=No
 
 
 @TestStep(Given)
-def create_live_view(self, core_table, final_modifier_available, node=None):
+def create_live_view(
+    self, core_table, final_modifier_available, final=False, node=None
+):
     """
     Creating `LIVE VIEW` to some table.
     """
@@ -707,7 +715,7 @@ def create_live_view(self, core_table, final_modifier_available, node=None):
         with By(f"creating live view {view_name}"):
             node.query(
                 f"CREATE {view_type} IF NOT EXISTS {view_name}"
-                f" AS SELECT * FROM {core_table}",
+                f" AS SELECT * FROM {core_table}{' FINAL' if final else ''}",
                 settings=[("allow_experimental_live_view", 1)],
             )
 
@@ -718,7 +726,9 @@ def create_live_view(self, core_table, final_modifier_available, node=None):
 
 
 @TestStep(Given)
-def create_window_view(self, core_table, final_modifier_available, node=None):
+def create_window_view(
+    self, core_table, final_modifier_available, final=False, node=None
+):
     """
     Creating `WINDOW VIEW` to some table.
     """
@@ -739,8 +749,9 @@ def create_window_view(self, core_table, final_modifier_available, node=None):
             node.query(
                 f"CREATE {view_type} IF NOT EXISTS {view_name}"
                 f" TO {core_table}_windowcore"
-                f" AS select tumbleStart(w_id) AS w_start, count(someCol) as counter FROM {core_table} "
-                f"GROUP BY tumble(now(), INTERVAL '5' SECOND) as w_id",
+                f" AS select tumbleStart(w_id) AS w_start, count(someCol) as counter FROM {core_table}"
+                f"{' FINAL' if final else ''}"
+                f" GROUP BY tumble(now(), INTERVAL '5' SECOND) as w_id",
                 settings=[("allow_experimental_window_view", 1)],
             )
 
@@ -796,7 +807,7 @@ def create_and_populate_all_tables(self):
     Creating all kind of tables.
     """
     create_and_populate_core_tables()
+    add_system_tables()
+    create_and_populate_distributed_tables()
+    create_all_views()
     pause()
-    # add_system_tables()
-    # create_and_populate_distributed_tables()
-    # create_all_views()
