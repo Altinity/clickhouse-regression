@@ -8,21 +8,16 @@ append_path(sys.path, "..")
 
 @TestModule
 @Name("final")
-def feature(self):
+def module(self):
     """Check FINAL modifier."""
     self.context.tables = []
-
-    final_test_modules = ["force_modifier"]
 
     with Given("I have set of populated tables"):
         create_and_populate_all_tables()
 
-    for module in final_test_modules:
-        try:
-            case = load_module(f"final.{module}")
-        except ModuleNotFoundError:
-            xfail(reason=f"{module} tests are not implemented")
-            continue
+    Feature(run=load("final.modifier", "feature"))
+    Feature(run=load("final.force_modifier", "feature"))
 
-        for feature in loads(case, Feature):
-            feature()
+
+
+

@@ -28,6 +28,7 @@ def argparser(parser):
 
 xfails = {
     "/selects/final/force modifier/select join equal table/:": [(Fail, "doesn't work for latest clickhouse PR")],
+    "/selects/final/modifier": [(Fail, "not implemented")],
 }
 xflags = {}
 
@@ -72,7 +73,7 @@ def regression(
         if check_clickhouse_version("<22.11")(self):
             skip(reason="force_select_final is only supported on ClickHouse version >= 22.11")
 
-        Module(run=load("selects.tests.final.feature", "feature"))
+        Module(run=load("selects.tests.final.feature", "module"))
 
 
 if main():

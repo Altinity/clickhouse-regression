@@ -86,7 +86,6 @@ def select_join_equal_table(self, node=None):
                             )
 
 
-
 @TestFeature
 @Name("force modifier")
 def feature(self):

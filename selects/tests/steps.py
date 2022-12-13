@@ -7,6 +7,7 @@ from helpers.common import getuid, instrument_clickhouse_server_log
 
 engines = [
     "ReplacingMergeTree",
+    "ReplicatedReplacingMergeTree"
     "ReplacingMergeTree({version})",
     "CollapsingMergeTree({sign})",
     "AggregatingMergeTree",
@@ -114,33 +115,20 @@ def create_and_populate_core_tables(self, duplicate=False):
                         engine=engine,
                     )
                 )
-                if not engine.endswith("({sign})"):
-                    self.context.tables.append(
-                        create_and_populate_collapsing_table(
-                            name="Replicated" + name,
-                            engine="Replicated"
-                                   + engine
-                                   + "('/clickhouse/tables/{shard}/{database}/" +
-                                   "{table_name}'".format(table_name="Replicated" + name) +
-                                   ", '{replica}')",
-                        )
+
+            elif engine.startswith("ReplicatedCollapsing"):
+                self.context.tables.append(
+                    create_and_populate_collapsing_table(
+                        name=name,
+                        engine=engine+"('/clickhouse/tables/{shard}/{database}/" + f"{name}'"+", '{replica}')",
                     )
+                )
 
             elif engine.startswith("Aggregating"):
                 self.context.tables.append(
                     create_and_populate_aggregating_table(
                         name=name,
                         engine=engine,
-                    )
-                )
-                self.context.tables.append(
-                    create_and_populate_aggregating_table(
-                        name="Replicated" + name,
-                        engine="Replicated"
-                               + engine
-                               + "('/clickhouse/tables/{shard}/{database}/" +
-                               "{table_name}'".format(table_name="Replicated" + name) +
-                               ", '{replica}')",
                     )
                 )
 
@@ -151,32 +139,12 @@ def create_and_populate_core_tables(self, duplicate=False):
                         engine=engine,
                     )
                 )
-                self.context.tables.append(
-                    create_and_populate_summing_table(
-                        name="Replicated" + name,
-                        engine="Replicated"
-                               + engine
-                               + "('/clickhouse/tables/{shard}/{database}/" +
-                               "{table_name}'".format(table_name="Replicated" + name) +
-                               ", '{replica}')",
-                    )
-                )
 
             elif engine.startswith("Merge"):
                 self.context.tables.append(
                     create_and_populate_merge_table(
                         name=name,
                         engine=engine,
-                    )
-                )
-                self.context.tables.append(
-                    create_and_populate_merge_table(
-                        name="Replicated" + name,
-                        engine="Replicated"
-                               + engine
-                               + "('/clickhouse/tables/{shard}/{database}/" +
-                               "{table_name}'".format(table_name="Replicated" + name) +
-                               ", '{replica}')",
                     )
                 )
 
