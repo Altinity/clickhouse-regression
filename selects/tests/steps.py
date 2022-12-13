@@ -7,8 +7,7 @@ from helpers.common import getuid, instrument_clickhouse_server_log
 
 engines = [
     "ReplacingMergeTree",
-    "ReplicatedReplacingMergeTree"
-    "ReplacingMergeTree({version})",
+    "ReplicatedReplacingMergeTree" "ReplacingMergeTree({version})",
     "CollapsingMergeTree({sign})",
     "AggregatingMergeTree",
     "SummingMergeTree",
@@ -22,16 +21,16 @@ engines = [
 
 @TestStep(Given)
 def create_and_populate_table(
-        self,
-        name,
-        engine,
-        schema,
-        final_modifier_available,
-        cluster_name=None,
-        values=None,
-        populate=True,
-        range_value=5,
-        node=None,
+    self,
+    name,
+    engine,
+    schema,
+    final_modifier_available,
+    cluster_name=None,
+    values=None,
+    populate=True,
+    range_value=5,
+    node=None,
 ):
     """
     Creating and populating clickhouse table.
@@ -46,7 +45,7 @@ def create_and_populate_table(
         node = current().context.node
     try:
         with By(f"creating table {name}"):
-            retry(node.query, timeout=100, delay=5, )(
+            retry(node.query, timeout=100, delay=5,)(
                 f"CREATE TABLE {name} "
                 f"{' ON CLUSTER {cluster_name}'.format(cluster_name=cluster_name) if cluster_name is not None else ''}"
                 f" {schema} "
@@ -102,10 +101,10 @@ def create_and_populate_core_tables(self, duplicate=False):
                         create_and_populate_replacing_table(
                             name="Replicated" + name,
                             engine="Replicated"
-                                   + engine
-                                   + "('/clickhouse/tables/{shard}/{database}/" +
-                                   "{table_name}'".format(table_name="Replicated" + name) +
-                                   ", '{replica}')",
+                            + engine
+                            + "('/clickhouse/tables/{shard}/{database}/"
+                            + "{table_name}'".format(table_name="Replicated" + name)
+                            + ", '{replica}')",
                         )
                     )
             elif engine.startswith("Collapsing"):
@@ -120,7 +119,10 @@ def create_and_populate_core_tables(self, duplicate=False):
                 self.context.tables.append(
                     create_and_populate_collapsing_table(
                         name=name,
-                        engine=engine+"('/clickhouse/tables/{shard}/{database}/" + f"{name}'"+", '{replica}')",
+                        engine=engine
+                        + "('/clickhouse/tables/{shard}/{database}/"
+                        + f"{name}'"
+                        + ", '{replica}')",
                     )
                 )
 
@@ -153,9 +155,9 @@ def create_and_populate_core_tables(self, duplicate=False):
                     create_and_populate_versioned_table(name=name, engine=engine)
                 )
             elif (
-                    engine.startswith("StripeLog")
-                    or engine.startswith("TinyLog")
-                    or engine.startswith("Log")
+                engine.startswith("StripeLog")
+                or engine.startswith("TinyLog")
+                or engine.startswith("Log")
             ):
                 self.context.tables.append(
                     create_and_populate_log_table(name=name, engine=engine)
@@ -178,13 +180,13 @@ def add_system_tables(self):
 
 @TestStep(Given)
 def create_and_populate_replacing_table(
-        self,
-        name,
-        populate=True,
-        final_modifier_available=True,
-        engine="ReplacingMergeTree",
-        node=None,
-        cluster_name=None,
+    self,
+    name,
+    populate=True,
+    final_modifier_available=True,
+    engine="ReplacingMergeTree",
+    node=None,
+    cluster_name=None,
 ):
     """
     Creating and populating 'ReplacingMergeTree' engine table.
@@ -217,13 +219,13 @@ def create_and_populate_replacing_table(
 
 @TestStep
 def create_and_populate_collapsing_table(
-        self,
-        name,
-        populate=True,
-        final_modifier_available=True,
-        engine="CollapsingMergeTree",
-        node=None,
-        cluster_name=None,
+    self,
+    name,
+    populate=True,
+    final_modifier_available=True,
+    engine="CollapsingMergeTree",
+    node=None,
+    cluster_name=None,
 ):
     """
     Creating and populating 'CollapsingMergeTree' engine table.
@@ -251,13 +253,13 @@ def create_and_populate_collapsing_table(
 
 @TestStep
 def create_and_populate_aggregating_table(
-        self,
-        name,
-        populate=True,
-        final_modifier_available=True,
-        engine="AggregatingMergeTree",
-        node=None,
-        cluster_name=None,
+    self,
+    name,
+    populate=True,
+    final_modifier_available=True,
+    engine="AggregatingMergeTree",
+    node=None,
+    cluster_name=None,
 ):
     """
     Creating and populating 'AggregatingMergeTree' engine table
@@ -278,13 +280,13 @@ def create_and_populate_aggregating_table(
 
 @TestStep
 def create_and_populate_summing_table(
-        self,
-        name,
-        populate=True,
-        final_modifier_available=True,
-        engine="SummingMergeTree",
-        node=None,
-        cluster_name=None,
+    self,
+    name,
+    populate=True,
+    final_modifier_available=True,
+    engine="SummingMergeTree",
+    node=None,
+    cluster_name=None,
 ):
     """
     Creating and populating 'SummingMergeTree' engine table.
@@ -308,13 +310,13 @@ def create_and_populate_summing_table(
 
 @TestStep
 def create_and_populate_merge_table(
-        self,
-        name,
-        populate=True,
-        final_modifier_available=False,
-        engine="MergeTree",
-        node=None,
-        cluster_name=None,
+    self,
+    name,
+    populate=True,
+    final_modifier_available=False,
+    engine="MergeTree",
+    node=None,
+    cluster_name=None,
 ):
     """
     Creating and populating 'MergeTree' engine table.
@@ -338,13 +340,13 @@ def create_and_populate_merge_table(
 
 @TestStep
 def create_and_populate_versioned_table(
-        self,
-        name,
-        populate=True,
-        final_modifier_available=True,
-        engine="VersionedCollapsingMergeTree(sign,version)",
-        node=None,
-        cluster_name=None,
+    self,
+    name,
+    populate=True,
+    final_modifier_available=True,
+    engine="VersionedCollapsingMergeTree(sign,version)",
+    node=None,
+    cluster_name=None,
 ):
     """
     Creating and populating 'VersionedCollapsingMergeTree' engine table.
@@ -374,13 +376,13 @@ def create_and_populate_versioned_table(
 
 @TestStep
 def create_and_populate_log_table(
-        self,
-        name,
-        populate=True,
-        final_modifier_available=False,
-        engine="Log",
-        node=None,
-        cluster_name=None,
+    self,
+    name,
+    populate=True,
+    final_modifier_available=False,
+    engine="Log",
+    node=None,
+    cluster_name=None,
 ):
     """
     Creating and populating 'Log' engine family table.
@@ -404,14 +406,14 @@ def create_and_populate_log_table(
 
 @TestStep(Given)
 def create_and_populate_distributed_table(
-        self,
-        distributed_table_name,
-        core_table_name,
-        cluster_name,
-        final_modifier_available,
-        values,
-        node=None,
-        range_value=10,
+    self,
+    distributed_table_name,
+    core_table_name,
+    cluster_name,
+    final_modifier_available,
+    values,
+    node=None,
+    range_value=10,
 ):
     """
     Creating 'Distributed' engine table and populating dependent tables.
@@ -542,9 +544,9 @@ def create_and_populate_distributed_tables(self):
                     )
 
                 elif (
-                        engine.startswith("StripeLog")
-                        or engine.startswith("TinyLog")
-                        or engine.startswith("Log")
+                    engine.startswith("StripeLog")
+                    or engine.startswith("TinyLog")
+                    or engine.startswith("Log")
                 ):
                     values = [
                         "({i}, 'first', '2020-01-01 01:01:01')",
@@ -682,10 +684,10 @@ def create_all_views(self):
     """
     for table in self.context.tables:
         if not (
-                table.name.startswith("system")
-                or table.name.startswith("distr")
-                or table.name.startswith("Replicated")
-                or table.name.endswith("view")
+            table.name.startswith("system")
+            or table.name.startswith("distr")
+            or table.name.startswith("Replicated")
+            or table.name.endswith("view")
         ):
             self.context.tables.append(
                 create_normal_view(
@@ -724,5 +726,3 @@ def create_and_populate_all_tables(self):
     add_system_tables()
     create_and_populate_distributed_tables()
     create_all_views()
-
-
