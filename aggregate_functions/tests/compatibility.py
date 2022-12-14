@@ -205,8 +205,8 @@ def feature(self, node="clickhouse1"):
     """Check that aggregate functions on different ClickHouse versions are compatible among themselves."""
 
     aggregate_functions_params_values = [
-        # ("argMax", "String, UInt64", "'01234567890123456789', number"),
-        # ("argMin", "String, UInt64", "'01234567890123456789', number"),
+        ("argMax", "String, UInt64", "'01234567890123456789', number"),
+        ("argMin", "String, UInt64", "'01234567890123456789', number"),
         ("max", "String", "concat(char(number),'1')"),
         ("min", "String", "concat(char(number),'1')"),
         ("any", "String", "concat(char(number),'1')"),
@@ -220,12 +220,12 @@ def feature(self, node="clickhouse1"):
         for engine in engines:
             with Feature(f"{aggregate_function_param_value[0]} function on {engine} engine"):
                 self.context.node = self.context.cluster.node(node)
-                # Scenario(test=compatibility_aggregate_function_downgrade)(
-                #     aggregate_function=aggregate_function_param_value[0], engine=engine,
-                #     params=aggregate_function_param_value[1], value=aggregate_function_param_value[2])
-                # Scenario(test=compatibility_aggregate_function_double_upgrade)(
-                #     aggregate_function=aggregate_function_param_value[0], engine=engine,
-                #     params=aggregate_function_param_value[1], value=aggregate_function_param_value[2])
+                Scenario(test=compatibility_aggregate_function_downgrade)(
+                    aggregate_function=aggregate_function_param_value[0], engine=engine,
+                    params=aggregate_function_param_value[1], value=aggregate_function_param_value[2])
+                Scenario(test=compatibility_aggregate_function_double_upgrade)(
+                    aggregate_function=aggregate_function_param_value[0], engine=engine,
+                    params=aggregate_function_param_value[1], value=aggregate_function_param_value[2])
                 Scenario(test=compatibility_aggregate_function_double_upgrade_with_insert)(
                     aggregate_function=aggregate_function_param_value[0], engine=engine,
                     params=aggregate_function_param_value[1], value=aggregate_function_param_value[2])
