@@ -16,10 +16,10 @@ from aggregate_functions.requirements import SRS_031_ClickHouse_Aggregate_Functi
 issue_43140 = "https://github.com/ClickHouse/ClickHouse/issues/43140"
 
 xfails = {
-    "/aggregate functions/compatibility/min function on MergeTree engine/compatibility aggregate function double upgrade with insert": [(Fail, "https://github.com/ClickHouse/ClickHouse/issues/44186")],
-    "/aggregate functions/compatibility/min function on AggregatingMergeTree engine/compatibility aggregate function double upgrade with insert": [(Fail, "https://github.com/ClickHouse/ClickHouse/issues/44186")],
-    "/aggregate functions/compatibility/any function on MergeTree engine/compatibility aggregate function double upgrade with insert": [(Fail, "https://github.com/ClickHouse/ClickHouse/issues/44186")],
-    "/aggregate functions/compatibility/any function on AggregatingMergeTree engine/compatibility aggregate function double upgrade with insert": [(Fail, "https://github.com/ClickHouse/ClickHouse/issues/44186")],
+    # "/aggregate functions/compatibility/min function on MergeTree engine/compatibility aggregate function double upgrade with insert": [(Fail, "https://github.com/ClickHouse/ClickHouse/issues/44186")],
+    # "/aggregate functions/compatibility/min function on AggregatingMergeTree engine/compatibility aggregate function double upgrade with insert": [(Fail, "https://github.com/ClickHouse/ClickHouse/issues/44186")],
+    # "/aggregate functions/compatibility/any function on MergeTree engine/compatibility aggregate function double upgrade with insert": [(Fail, "https://github.com/ClickHouse/ClickHouse/issues/44186")],
+    # "/aggregate functions/compatibility/any function on AggregatingMergeTree engine/compatibility aggregate function double upgrade with insert": [(Fail, "https://github.com/ClickHouse/ClickHouse/issues/44186")],
 }
 
 
