@@ -36,11 +36,11 @@ def select(self, node=None):
                 node.query(
                     f"SELECT * FROM {table.name}"
                     f"{' FINAL' if table.final_modifier_available else ''} "
-                    f"{' ORDER BY (key, someCol)' if not table.name.startswith('system') else ''} FORMAT JSONEachRow;"
+                    f"{' ORDER BY (id, x, someCol)' if not table.name.startswith('system') else ''} FORMAT JSONEachRow;"
                 ).output.strip()
                 == node.query(
                     f"SELECT * FROM "
-                    f"{table.name}{' ORDER BY (key, someCol)' if not table.name.startswith('system') else ''}"
+                    f"{table.name}{' ORDER BY (id, x, someCol)' if not table.name.startswith('system') else ''}"
                     f" FORMAT JSONEachRow;",
                     settings=[("force_select_final", 1)],
                 ).output.strip()

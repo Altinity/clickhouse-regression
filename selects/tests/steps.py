@@ -31,8 +31,8 @@ def create_and_populate_table(
     self,
     name,
     engine,
-    schema,
     final_modifier_available,
+    extra_table_col="",
     cluster_name=None,
     values=None,
     populate=True,
@@ -44,7 +44,7 @@ def create_and_populate_table(
     :param name: core table name
     :param populate: populates table default: True
     :param engine: core table engine
-    :param schema: core table schema
+    :param extre_table_col: core table extre_table_col
     :param final_modifier_available: true if `FINAL` modifier available for engine
     """
 
@@ -55,9 +55,10 @@ def create_and_populate_table(
             retry(node.query, timeout=100, delay=5,)(
                 f"CREATE TABLE {name} "
                 f"{' ON CLUSTER {cluster_name}'.format(cluster_name=cluster_name) if cluster_name is not None else ''}"
-                f" {schema} "
-                f"ENGINE = {engine} "
-                f"{' ORDER BY key' if not engine.endswith('Log') else ''};",
+                f"(id Int64, x Int64, {extra_table_col})"
+                f"ENGINE = {engine}"
+                f"{' PARTITION BY id' if not engine.endswith('Log') else ''}"
+                f"{' ORDER BY id' if not engine.endswith('Log') else ''};",
                 exitcode=0,
             )
 
@@ -72,6 +73,62 @@ def create_and_populate_table(
             node.query(
                 f"DROP TABLE IF EXISTS {name} "
                 f"{' ON CLUSTER {cluster_name}'.format(cluster_name=cluster_name) if cluster_name is not None else ''}"
+            )
+
+
+@TestStep(When)
+def insert(
+    self,
+    table_name,
+    values,
+    range_value,
+    distributed=False,
+    node=None,
+    partitions=2,
+    parts_per_partition=2,
+    block_size=5,
+):
+    """Insert data having specified number of partitions and parts."""
+    if node is None:
+        node = current().context.node
+
+        insert_values_1 = ",".join(
+            f"{values[0]}".format(x=x, y=y)
+            for x in range(partitions)
+            for y in range(block_size * parts_per_partition)
+        )
+        insert_values_2 = ",".join(
+            f"{values[1]}".format(x=x, y=y)
+            for x in range(partitions)
+            for y in range(block_size * parts_per_partition)
+        )
+
+        if distributed:
+            node.query("system stop merges")
+            for i in range(range_value):
+                node.query(
+                    f"INSERT INTO {table_name} VALUES {insert_values_1}",
+                    settings=[
+                        ("insert_distributed_one_random_shard", 1),
+                        ("max_block_size", block_size),
+                    ],
+                )
+                node.query(
+                    f"INSERT INTO {table_name} VALUES {insert_values_2}",
+                    settings=[
+                        ("insert_distributed_one_random_shard", 1),
+                        ("max_block_size", block_size),
+                    ],
+                )
+        else:
+            node.query("system stop merges")
+            node.query(
+                f"INSERT INTO {table_name} VALUES {insert_values_1}",
+                settings=[("max_block_size", block_size)],
+            )
+            node.query(
+                f"INSERT INTO {table_name} VALUES {insert_values_2}",
+                settings=[("max_block_size", block_size)],
             )
 
 
@@ -189,7 +246,7 @@ def create_and_populate_replacing_table(
     if node is None:
         node = current().context.node
 
-    schema = "(key Int64, someCol String, eventTime DateTime)"
+    extra_table_col = "key Int64, someCol String, eventTime DateTime"
 
     if engine.startswith("Replicated"):
         engine_local = (
@@ -215,14 +272,14 @@ def create_and_populate_replacing_table(
         )
 
     values = [
-        "({i}, 'first', '2020-01-01 01:01:01')",
-        "({i}, 'second', '2020-01-01 00:00:00')",
+        "({x},{y}, 1, 'first', '2020-01-01 01:01:01')",
+        "({x},{y}, 1, 'second', '2020-01-01 00:00:00')",
     ]
 
     return create_and_populate_table(
         name=name,
         engine=engine_local,
-        schema=schema,
+        extra_table_col=extra_table_col,
         values=values,
         final_modifier_available=final_modifier_available,
         populate=populate,
@@ -244,7 +301,7 @@ def create_and_populate_collapsing_table(
     """
     Creating and populating 'CollapsingMergeTree' engine table.
     """
-    schema = "( key UInt64, someCol UInt8, Duration UInt8, Sign Int8)"
+    extra_table_col = "key UInt64, someCol UInt8, Duration UInt8, Sign Int8"
 
     if engine.startswith("Replicated"):
         engine_local = (
@@ -268,14 +325,14 @@ def create_and_populate_collapsing_table(
         )
 
     values = [
-        "(4324182021466249494, {i}, 146, 1)",
-        "(4324182021466249494, {i}, 146, -1)," "(4324182021466249494, {i}, 185, 1)",
+        "({x},{y},4324182021466249494, 1, 146, 1)",
+        "({x},{y},4324182021466249494, 1, 146, -1), ({x},{y},4324182021466249494, 1, 185, 1)",
     ]
 
     return create_and_populate_table(
         name=name,
         engine=engine_local,
-        schema=schema,
+        extra_table_col=extra_table_col,
         values=values,
         final_modifier_available=final_modifier_available,
         populate=populate,
@@ -304,12 +361,12 @@ def create_and_populate_aggregating_table(
             + f"{name}'"
             + ", '{replica}')"
         )
-    schema = "(key String, someCol UInt8, c SimpleAggregateFunction(max, UInt8))"
-    values = ["('a', {i}, 1)", "('a', {i}+1, 2)"]
+    extra_table_col = "key String, someCol UInt8, c SimpleAggregateFunction(max, UInt8)"
+    values = ["({x},{y},'a', 1, 1)", "({x},{y},'a', 2, 2)"]
     return create_and_populate_table(
         name=name,
         engine=engine,
-        schema=schema,
+        extra_table_col=extra_table_col,
         values=values,
         final_modifier_available=final_modifier_available,
         populate=populate,
@@ -338,15 +395,15 @@ def create_and_populate_summing_table(
             + f"{name}'"
             + ", '{replica}')"
         )
-    schema = "(key Int64, someCol String, eventTime DateTime)"
+    extra_table_col = "key Int64, someCol String, eventTime DateTime"
     values = [
-        "({i}, 'first', '2020-01-01 01:01:01')",
-        "({i}, 'second', '2020-01-01 00:00:00')",
+        "({x},{y}, 1, 'first', '2020-01-01 01:01:01')",
+        "({x},{y}, 2, 'second', '2020-01-01 00:00:00')",
     ]
     return create_and_populate_table(
         name=name,
         engine=engine,
-        schema=schema,
+        extra_table_col=extra_table_col,
         values=values,
         final_modifier_available=final_modifier_available,
         populate=populate,
@@ -376,14 +433,14 @@ def create_and_populate_merge_table(
             + ", '{replica}')"
         )
     values = [
-        "({i}, 'first', '2020-01-01 01:01:01')",
-        "({i}, 'second', '2020-01-01 00:00:00')",
+        "({x},{y}, 1, 'first', '2020-01-01 01:01:01')",
+        "({x},{y}, 1, 'second', '2020-01-01 00:00:00')",
     ]
-    schema = "(key Int64, someCol String, eventTime DateTime)"
+    extra_table_col = "key Int64, someCol String, eventTime DateTime"
     return create_and_populate_table(
         name=name,
         engine=engine,
-        schema=schema,
+        extra_table_col=extra_table_col,
         values=values,
         final_modifier_available=final_modifier_available,
         populate=populate,
@@ -406,10 +463,10 @@ def create_and_populate_versioned_table(
     Creating and populating 'VersionedCollapsingMergeTree' engine table.
     """
     values = [
-        "({i}, 'first', 1, 1)",
-        "({i}, 'second', 1, 1),({i}+1, 'third', -1, 2)",
+        "({x},{y}, 1, 'first', 1, 1)",
+        "({x},{y}, 1, 'second', 1, 1),({x},{y}, 2, 'third', -1, 2)",
     ]
-    schema = "(key Int64, someCol String, Sign Int8, version UInt8)"
+    extra_table_col = "key Int64, someCol String, Sign Int8, version UInt8"
 
     if engine.startswith("Replicated"):
         engine_local = (
@@ -438,7 +495,7 @@ def create_and_populate_versioned_table(
     return create_and_populate_table(
         name=name,
         engine=engine_local,
-        schema=schema,
+        extra_table_col=extra_table_col,
         values=values,
         final_modifier_available=final_modifier_available,
         populate=populate,
@@ -461,14 +518,14 @@ def create_and_populate_log_table(
     Creating and populating 'Log' engine family table.
     """
     values = [
-        "({i}, 'first', '2020-01-01 01:01:01')",
-        "({i}, 'second', '2020-01-01 00:00:00')",
+        "({x},{y},1, 'first', '2020-01-01 01:01:01')",
+        "({x},{y},1, 'second', '2020-01-01 00:00:00')",
     ]
-    schema = "(key Int64, someCol String, eventTime DateTime)"
+    extra_table_col = "key Int64, someCol String, eventTime DateTime"
     return create_and_populate_table(
         name=name,
         engine=engine,
-        schema=schema,
+        extra_table_col=extra_table_col,
         values=values,
         final_modifier_available=final_modifier_available,
         populate=populate,
@@ -517,30 +574,6 @@ def create_and_populate_distributed_table(
             node.query(f"DROP TABLE IF EXISTS {distributed_table_name}")
 
 
-@TestStep(When)
-def insert(self, table_name, values, range_value, distributed=False, node=None):
-    """Insert data having specified number of partitions and parts."""
-    if node is None:
-        node = current().context.node
-
-    if distributed:
-        node.query("system stop merges")
-        for i in range(range_value):
-            node.query(
-                f"INSERT INTO {table_name} VALUES {values[0].format(i=i)}",
-                settings=[("insert_distributed_one_random_shard", 1)],
-            )
-            node.query(
-                f"INSERT INTO {table_name} VALUES {values[1].format(i=i)}",
-                settings=[("insert_distributed_one_random_shard", 1)],
-            )
-    else:
-        node.query("system stop merges")
-        for i in range(range_value):
-            node.query(f"INSERT INTO {table_name} VALUES {values[0].format(i=i)}")
-            node.query(f"INSERT INTO {table_name} VALUES {values[1].format(i=i)}")
-
-
 @TestStep(Given)
 def create_and_populate_distributed_tables(self):
     """Creating and populating all 'Distributed' engine tables and populating dependent tables for different engines."""
@@ -559,76 +592,97 @@ def create_and_populate_distributed_tables(self):
 
                     if engine.startswith("Replacing"):
                         values = [
-                            "({i}, 'first', '2020-01-01 01:01:01')",
-                            "({i}, 'second', '2020-01-01 00:00:00')",
+                            "({x},{y}, 1, 'first', '2020-01-01 01:01:01')",
+                            "({x},{y}, 1, 'second', '2020-01-01 00:00:00')",
                         ]
                         final_modifier_available = True
 
                         create_and_populate_replacing_table(
-                            name=name, engine=engine, populate=False, cluster_name=cluster
+                            name=name,
+                            engine=engine,
+                            populate=False,
+                            cluster_name=cluster,
                         )
 
                     elif engine.startswith("Collapsing"):
                         values = [
-                            "(4324182021466249494, {i}, 146, 1)",
-                            "(4324182021466249494, {i}, 146, -1),"
-                            "(4324182021466249494, {i}, 185, 1)",
+                            "({x},{y}, 4324182021466249494, 1, 146, 1)",
+                            "({x},{y}, 4324182021466249494, 1, 146, -1),"
+                            "({x},{y},4324182021466249494, 1, 185, 1)",
                         ]
                         final_modifier_available = True
 
                         create_and_populate_collapsing_table(
-                            name=name, engine=engine, populate=False, cluster_name=cluster
+                            name=name,
+                            engine=engine,
+                            populate=False,
+                            cluster_name=cluster,
                         )
 
                     elif engine.startswith("Aggregating"):
-                        values = ["('a', {i}, 1)", "('a', {i}+1, 2)"]
+                        values = ["({x},{y},'a', 1, 1)", "({x},{y},'a', 2, 2)"]
                         final_modifier_available = True
                         create_and_populate_aggregating_table(
-                            name=name, engine=engine, populate=False, cluster_name=cluster
+                            name=name,
+                            engine=engine,
+                            populate=False,
+                            cluster_name=cluster,
                         )
 
                     elif engine.startswith("Summing"):
                         values = [
-                            "({i}, 'first', '2020-01-01 01:01:01')",
-                            "({i}, 'second', '2020-01-01 00:00:00')",
+                            "({x},{y}, 1, 'first', '2020-01-01 01:01:01')",
+                            "({x},{y}, 1, 'second', '2020-01-01 00:00:00')",
                         ]
                         final_modifier_available = True
                         create_and_populate_summing_table(
-                            name=name, engine=engine, populate=False, cluster_name=cluster
+                            name=name,
+                            engine=engine,
+                            populate=False,
+                            cluster_name=cluster,
                         )
 
                     elif engine.startswith("Merge"):
                         values = [
-                            "({i}, 'first', '2020-01-01 01:01:01')",
-                            "({i}, 'second', '2020-01-01 00:00:00')",
+                            "({x},{y}, 1, 'first', '2020-01-01 01:01:01')",
+                            "({x},{y}, 1, 'second', '2020-01-01 00:00:00')",
                         ]
                         final_modifier_available = False
                         create_and_populate_merge_table(
-                            name=name, engine=engine, populate=False, cluster_name=cluster
+                            name=name,
+                            engine=engine,
+                            populate=False,
+                            cluster_name=cluster,
                         )
 
                     elif engine.startswith("Versioned"):
                         values = [
-                            "({i}, 'first', 1, 1)",
-                            "({i}, 'second', 1, 1),({i}+1, 'third', -1, 2)",
+                            "({x},{y}, 1, 'first', 1, 1)",
+                            "({x},{y}, 1, 'second', 1, 1),({x},{y}, 2, 'third', -1, 2)",
                         ]
                         final_modifier_available = True
                         create_and_populate_versioned_table(
-                            name=name, engine=engine, populate=False, cluster_name=cluster
+                            name=name,
+                            engine=engine,
+                            populate=False,
+                            cluster_name=cluster,
                         )
 
                     elif (
-                            engine.startswith("StripeLog")
-                            or engine.startswith("TinyLog")
-                            or engine.startswith("Log")
+                        engine.startswith("StripeLog")
+                        or engine.startswith("TinyLog")
+                        or engine.startswith("Log")
                     ):
                         values = [
-                            "({i}, 'first', '2020-01-01 01:01:01')",
-                            "({i}, 'second', '2020-01-01 00:00:00')",
+                            "({x},{y}, 1, 'first', '2020-01-01 01:01:01')",
+                            "({x},{y}, 1, 'second', '2020-01-01 00:00:00')",
                         ]
                         final_modifier_available = False
                         create_and_populate_log_table(
-                            name=name, engine=engine, populate=False, cluster_name=cluster
+                            name=name,
+                            engine=engine,
+                            populate=False,
+                            cluster_name=cluster,
                         )
 
                     self.context.tables.append(
@@ -695,6 +749,7 @@ def create_materialized_view(
     finally:
         with Finally("I drop data"):
             node.query(f"DROP VIEW IF EXISTS {view_name}")
+            node.query(f"DROP TABLE IF EXISTS {core_table}_mcopy")
 
 
 @TestStep(Given)
@@ -758,6 +813,9 @@ def create_window_view(
     finally:
         with Finally("I drop data"):
             node.query(f"DROP VIEW IF EXISTS {view_name}")
+            node.query(
+                f"DROP TABLE IF EXISTS {core_table}_windowcore{'_final' if final else ''}"
+            )
 
 
 @TestStep(Given)
@@ -784,7 +842,7 @@ def create_all_views(self):
                 create_normal_view(
                     core_table=table.name,
                     final_modifier_available=table.final_modifier_available,
-                    final=True
+                    final=True,
                 )
             )
 
@@ -806,7 +864,7 @@ def create_all_views(self):
                 create_live_view(
                     core_table=table.name,
                     final_modifier_available=table.final_modifier_available,
-                    final=True
+                    final=True,
                 )
             )
 
@@ -822,7 +880,7 @@ def create_all_views(self):
                     create_window_view(
                         core_table=table.name,
                         final_modifier_available=table.final_modifier_available,
-                        final=True
+                        final=True,
                     )
                 )
 
@@ -836,4 +894,3 @@ def create_and_populate_all_tables(self):
     add_system_tables()
     create_and_populate_distributed_tables()
     create_all_views()
-
