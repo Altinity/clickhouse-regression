@@ -24,7 +24,7 @@ def compatibility_inf_nan(self, function, node=None):
                                          f"values('x Float64, y Float64', (0, 1), (1, 2.3), "
                                          f"(inf,nan), (6.7,3), (4,4), (5, 1)) FORMAT JSONEachRow").output
 
-        with When(f"I change clickhouse version on affected version {clickhouse_version1}"):
+        with When(f"I change clickhouse version on version with a fix {clickhouse_version1}"):
             node.change_clickhouse_binary_path(
                 clickhouse_number=1
             )

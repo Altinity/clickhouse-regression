@@ -37,12 +37,92 @@ def compatibility_aggregate_function_double_upgrade(self, aggregate_function, en
                 clickhouse_number=1
             )
 
+        with When(f"I perform merge on affected version {clickhouse_version1}"):
+            node.query(f"SELECT {aggregate_function}Merge(s) FROM {table_name}")
+
         with When(f"I change clickhouse version on version with fix {clickhouse_version2}"):
             node.change_clickhouse_binary_path(
                 clickhouse_number=2
             )
 
         with Then(f"I check output on clickhouse-{clickhouse_version2} and on clickhouse-{clickhouse_version0} are identical"):
+            actual_result = node.query(f"SELECT {aggregate_function}Merge(s) FROM {table_name}").output
+            assert expected_result == actual_result, error()
+
+    finally:
+        with Finally("I revert clickhouse version back"):
+            node.change_clickhouse_binary_path(
+                clickhouse_number=0
+            )
+
+            with Then(f"I check clickhouse version is {clickhouse_version0}"):
+                r = node.query("SELECT version()")
+                assert r.output == clickhouse_version0, error()
+
+        with And("I delete table"):
+            node.query(f"DROP TABLE {table_name} SYNC")
+
+
+@TestScenario
+def compatibility_aggregate_function_double_upgrade_with_insert(self, aggregate_function, engine, params, value, node=None):
+    """Check that aggregate functions on different ClickHouse versions are compatible among themselves by
+    creating a table on a non-affected ClickHouse version, upgrading it to the affected version, inserting more data,
+    upgrading it to the fixed version, and checking if a bug appeared."""
+
+    if node is None:
+        node = self.context.node
+
+    table_name = "table_" + getuid()
+    table_name_2 = "table_" + getuid() + "_2"
+
+    with Given(
+            "I have self.context.cluster.clickhouse_versions that contains all specified clickhouse versions"
+    ):
+        assert len(self.context.cluster.clickhouse_versions) >= 3, error()
+
+    clickhouse_version0 = self.context.cluster.clickhouse_versions[0]
+    clickhouse_version1 = self.context.cluster.clickhouse_versions[1]
+    clickhouse_version2 = self.context.cluster.clickhouse_versions[2]
+
+    try:
+        with Then(f"I create tables with aggregation on the clickhouse-{clickhouse_version0} and insert data into it"):
+            node.query(f"CREATE TABLE {table_name} "
+                       f"(number Int32, s AggregateFunction({aggregate_function}, {params}))"
+                       f" Engine={engine}() ORDER BY number")
+            node.query(f"INSERT INTO {table_name} SELECT number, {aggregate_function}State({value}) "
+                       "AS s FROM numbers(1000) GROUP BY number;")
+
+            node.query(f"CREATE TABLE {table_name_2} "
+                       f"(number Int32, s AggregateFunction({aggregate_function}, {params}))"
+                       f" Engine={engine}() ORDER BY number")
+            node.query(f"INSERT INTO {table_name_2} SELECT number, {aggregate_function}State({value}) "
+                       "AS s FROM numbers(1000) GROUP BY number;")
+            node.query(f"SELECT {aggregate_function}Merge(s) FROM {table_name_2}")
+            node.query(f"INSERT INTO {table_name_2} SELECT number, {aggregate_function}State({value}) "
+                       "AS s FROM numbers(1000) GROUP BY number;")
+
+        with Then(f"I check output on clickhouse-{clickhouse_version0}"):
+            expected_result = node.query(f"SELECT {aggregate_function}Merge(s) FROM {table_name_2}").output
+
+        with When(f"I change clickhouse version on affected version {clickhouse_version1}"):
+            node.change_clickhouse_binary_path(
+                clickhouse_number=1
+            )
+
+        with When("I insert more values into the table on affected clickhouse version"):
+            node.query(f"INSERT INTO {table_name} SELECT number, {aggregate_function}State({value}) "
+                       "AS s FROM numbers(1000) GROUP BY number;")
+
+        with When(f"I perform merge on affected version {clickhouse_version1}"):
+            node.query(f"SELECT {aggregate_function}Merge(s) FROM {table_name}")
+
+        with When(f"I change clickhouse version on version with fix {clickhouse_version2}"):
+            node.change_clickhouse_binary_path(
+                clickhouse_number=2
+            )
+
+        with Then(
+                f"I check output on clickhouse-{clickhouse_version2} and on clickhouse-{clickhouse_version0} are identical"):
             actual_result = node.query(f"SELECT {aggregate_function}Merge(s) FROM {table_name}").output
             assert expected_result == actual_result, error()
 
@@ -144,5 +224,8 @@ def feature(self, node="clickhouse1"):
                     aggregate_function=aggregate_function_param_value[0], engine=engine,
                     params=aggregate_function_param_value[1], value=aggregate_function_param_value[2])
                 Scenario(test=compatibility_aggregate_function_double_upgrade)(
+                    aggregate_function=aggregate_function_param_value[0], engine=engine,
+                    params=aggregate_function_param_value[1], value=aggregate_function_param_value[2])
+                Scenario(test=compatibility_aggregate_function_double_upgrade_with_insert)(
                     aggregate_function=aggregate_function_param_value[0], engine=engine,
                     params=aggregate_function_param_value[1], value=aggregate_function_param_value[2])

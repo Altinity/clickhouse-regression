@@ -16,9 +16,10 @@ from aggregate_functions.requirements import SRS_031_ClickHouse_Aggregate_Functi
 issue_43140 = "https://github.com/ClickHouse/ClickHouse/issues/43140"
 
 xfails = {
-    "/aggregate functions/singleValueOrNull/Map:": [(Fail, issue_43140)],
-    "/aggregate functions/singleValueOrNull/Array:": [(Fail, issue_43140)],
-    "/aggregate functions/singleValueOrNull/Tuple:": [(Fail, issue_43140)],
+    "/aggregate functions/compatibility/min function on MergeTree engine/compatibility aggregate function double upgrade with insert": [(Fail, "https://github.com/ClickHouse/ClickHouse/issues/44186")],
+    "/aggregate functions/compatibility/min function on AggregatingMergeTree engine/compatibility aggregate function double upgrade with insert": [(Fail, "https://github.com/ClickHouse/ClickHouse/issues/44186")],
+    "/aggregate functions/compatibility/any function on MergeTree engine/compatibility aggregate function double upgrade with insert": [(Fail, "https://github.com/ClickHouse/ClickHouse/issues/44186")],
+    "/aggregate functions/compatibility/any function on AggregatingMergeTree engine/compatibility aggregate function double upgrade with insert": [(Fail, "https://github.com/ClickHouse/ClickHouse/issues/44186")],
 }
 
 
@@ -49,13 +50,13 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
         self.context.cluster = cluster
         self.context.node = cluster.node("clickhouse1")
 
-    with And("table with all data types"):
-        self.context.table = create_table(
-            engine="MergeTree() ORDER BY tuple()", columns=generate_all_column_types()
-        )
-
-    with And("I populate table with test data"):
-        self.context.table.insert_test_data()
+    # with And("table with all data types"):
+    #     self.context.table = create_table(
+    #         engine="MergeTree() ORDER BY tuple()", columns=generate_all_column_types()
+    #     )
+    #
+    # with And("I populate table with test data"):
+    #     self.context.table.insert_test_data()
 
     Feature(run=load("aggregate_functions.tests.compatibility", "feature"))
     Feature(run=load("aggregate_functions.tests.compatibility_inf_nan", "feature"))
