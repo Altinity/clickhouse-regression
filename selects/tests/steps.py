@@ -642,7 +642,6 @@ def create_and_populate_distributed_tables(self):
                     )
 
 
-
 @TestStep(Given)
 def create_normal_view(
     self, core_table, final_modifier_available, final=False, node=None
@@ -654,7 +653,7 @@ def create_normal_view(
         node = current().context.node
 
     view_type = "VIEW"
-    view_name = core_table + "_nview"
+    view_name = core_table + f"_nview{'_final' if final else ''}"
 
     try:
         with By(f"creating normal view {view_name}"):
@@ -679,7 +678,7 @@ def create_materialized_view(
         node = current().context.node
 
     view_type = "MATERIALIZED VIEW"
-    view_name = core_table + "_mview"
+    view_name = core_table + f"_mview"
 
     try:
         with By("create core table copy"):
@@ -688,8 +687,8 @@ def create_materialized_view(
         with And(f"creating materialized view {view_name}"):
             node.query(
                 f"CREATE {view_type} IF NOT EXISTS {view_name}"
-                f" TO {core_table}_mcopy"
-                f" AS SELECT * FROM {core_table}{' FINAL' if final else ''}",
+                f" TO {core_table}_mcopy{'_final' if final else ''}"
+                f" AS SELECT * FROM {core_table}",
             )
 
         yield Table(view_name, view_type, final_modifier_available)
@@ -709,7 +708,7 @@ def create_live_view(
         node = current().context.node
 
     view_type = "LIVE VIEW"
-    view_name = core_table + "_lview"
+    view_name = core_table + f"_lview{'_final' if final else ''}"
 
     try:
         with By(f"creating live view {view_name}"):
@@ -736,19 +735,19 @@ def create_window_view(
         node = current().context.node
 
     view_type = "WINDOW VIEW"
-    view_name = core_table + "_wview"
+    view_name = core_table + f"_wview{'_final' if final else ''}"
 
     try:
         with By("create core table copy"):
             node.query(
-                f"CREATE TABLE {core_table}_windowcore (w_start DateTime, counter UInt64)"
+                f"CREATE TABLE {core_table}_windowcore{'_final' if final else ''} (w_start DateTime, counter UInt64)"
                 f" ENGINE=MergeTree ORDER BY w_start"
             )
 
         with And(f"creating window view {view_name}"):
             node.query(
                 f"CREATE {view_type} IF NOT EXISTS {view_name}"
-                f" TO {core_table}_windowcore"
+                f" TO {core_table}_windowcore{'_final' if final else ''}"
                 f" AS select tumbleStart(w_id) AS w_start, count(someCol) as counter FROM {core_table}"
                 f"{' FINAL' if final else ''}"
                 f" GROUP BY tumble(now(), INTERVAL '5' SECOND) as w_id",
@@ -772,11 +771,20 @@ def create_all_views(self):
             or table.name.startswith("distr")
             or table.name.startswith("Replicated")
             or table.name.endswith("view")
+            or table.name.endswith("final")
         ):
             self.context.tables.append(
                 create_normal_view(
                     core_table=table.name,
                     final_modifier_available=table.final_modifier_available,
+                )
+            )
+
+            self.context.tables.append(
+                create_normal_view(
+                    core_table=table.name,
+                    final_modifier_available=table.final_modifier_available,
+                    final=True
                 )
             )
 
@@ -793,12 +801,30 @@ def create_all_views(self):
                     final_modifier_available=table.final_modifier_available,
                 )
             )
+
+            self.context.tables.append(
+                create_live_view(
+                    core_table=table.name,
+                    final_modifier_available=table.final_modifier_available,
+                    final=True
+                )
+            )
+
             self.context.tables.append(
                 create_window_view(
                     core_table=table.name,
                     final_modifier_available=table.final_modifier_available,
                 )
             )
+
+            if table.final_modifier_available:
+                self.context.tables.append(
+                    create_window_view(
+                        core_table=table.name,
+                        final_modifier_available=table.final_modifier_available,
+                        final=True
+                    )
+                )
 
 
 @TestStep(Given)
@@ -810,4 +836,4 @@ def create_and_populate_all_tables(self):
     add_system_tables()
     create_and_populate_distributed_tables()
     create_all_views()
-    pause()
+
