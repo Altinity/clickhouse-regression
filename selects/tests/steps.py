@@ -894,3 +894,4 @@ def create_and_populate_all_tables(self):
     add_system_tables()
     create_and_populate_distributed_tables()
     create_all_views()
+    create_and_populate_core_tables(duplicate=True)

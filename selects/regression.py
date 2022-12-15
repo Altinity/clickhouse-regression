@@ -27,7 +27,7 @@ def argparser(parser):
 
 
 xfails = {
-    "/selects/final/force modifier/select join equal table/:": [(Fail, "doesn't work in clickhouse"
+    "/selects/final/force modifier/select join clause/:": [(Fail, "doesn't work in clickhouse"
                                                                        " https://github.com/ClickHouse/"
                                                                        "ClickHouse/issues/8655")],
     "/selects/final/modifier": [(Fail, "not implemented")],
