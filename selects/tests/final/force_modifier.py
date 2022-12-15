@@ -142,7 +142,6 @@ def select_union_clause(self, node=None):
 def select_with_clause(self, node=None):
     """Check `SELECT` that is using 'WITH' clause with `FINAL`
     equal to the same select without force_select_final `FINAL`."""
-    # xfail("not implemented")
     if node is None:
         node = self.context.node
 
