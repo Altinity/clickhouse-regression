@@ -48,8 +48,9 @@ def select(self, node=None):
 
 
 @TestScenario
-def select_join_equal_table(self, node=None):
-    """Check select count() with `FINAL` clause equal to force_select_final for 'JOIN' clause."""
+def select_join(self, node=None):
+    """Check select count() that is using 'JOIN' clause with `FINAL`
+    equal to  the same select without force_select_final `FINAL`."""
     if node is None:
         node = self.context.node
     with Given("I create duplicate table to core tables"):
@@ -97,6 +98,45 @@ def select_join_equal_table(self, node=None):
                                     settings=[("force_select_final", 1)],
                                 ).output.strip()
                             )
+
+
+@TestScenario
+def select_union(self, node=None):
+    """Check `SELECT` that is using 'UNION' clause with `FINAL`
+    equal to the same select without force_select_final `FINAL`."""
+    if node is None:
+        node = self.context.node
+
+    with Given("I create duplicate table to core tables"):
+        create_and_populate_core_tables(duplicate=True)
+        self.context.tables.pop()
+
+    for table in self.context.tables:
+        if table.name.endswith("core"):
+            for table2 in self.context.tables:
+                if table2.name.endswith("duplicate") and table2.name.startswith(
+                    table.engine
+                ):
+                    with Then(
+                        "I check that select with force_select_final equal 'SELECT...FINAL'"
+                    ):
+                        assert (
+                            node.query(
+                                f"SELECT id, count(*) FROM {table.name}"
+                                f"{' FINAL' if table.final_modifier_available else ''} "
+                                f" GROUP BY id"
+                                f" UNION ALL"
+                                f" SELECT id, count(*) FROM {table2.name}"
+                                f"{' FINAL' if table2.final_modifier_available else ''} "
+                                f" GROUP BY id"
+                            ).output.strip()
+                            == node.query(
+                                f"SELECT id, count(*) FROM {table.name} GROUP BY id"
+                                f" UNION ALL"
+                                f" SELECT id, count(*) FROM {table2.name} GROUP BY id",
+                                settings=[("force_select_final", 1)],
+                            ).output.strip()
+                        )
 
 
 @TestFeature
