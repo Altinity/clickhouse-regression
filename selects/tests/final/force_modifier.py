@@ -140,9 +140,31 @@ def select_union_clause(self, node=None):
 def select_with_clause(self, node=None):
     """Check `SELECT` that is using 'WITH' clause with `FINAL`
     equal to the same select without force_select_final `FINAL`."""
-    xfail("not implemented")
+    # xfail("not implemented")
     if node is None:
         node = self.context.node
+
+    some_query = """
+    WITH
+        (
+            SELECT count(id)
+            FROM {table_name} {final}
+        ) AS total_ids
+    SELECT
+        (x / total_ids) AS something,
+        someCol
+    FROM {table_name} {final}
+    GROUP BY (x,someCol)
+    ORDER BY something,someCol DESC;
+    """
+    for table in self.context.tables:
+        if table.name.endswith("core"):
+            assert (
+                    node.query(some_query.format(table_name=table.name,
+                                                 final=f"{'FINAL' if table.final_modifier_available else ''}"),
+                               exitcode=0).output.strip() ==
+                    node.query(some_query.format(table_name=table.name, final=""), exitcode=0,
+                               settings=[("force_select_final", 1)]).output.strip())
 
 
 @TestFeature
