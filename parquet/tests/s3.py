@@ -217,7 +217,7 @@ def insert_into_function(self):
         "I check that the data inserted into the table function was correctly written to the file"
     ):
         check_source_file_on_s3(
-            file=file_name + ".Parquet", compression_type=compression_type
+            file=file_name + ".Parquet", compression_type=f"'{compression_type.lower()}'"
         )
 
 
@@ -247,7 +247,7 @@ def select_from_function_manual_cast_types(self):
         for column in table_columns:
             with Check(f"{column.name}"):
                 execute_query(
-                    f"SELECT {column.name}, toTypeName({column.name}) FROM s3('{self.context.uri}{table_name}.Parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'Parquet', '{table_def[1:-1]}', '{compression_type.lower()}')"
+                    f"SELECT {column.name}, toTypeName({column.name}) FROM s3('{self.context.uri}{table_name}.Parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'Parquet', '{table_def}')"
                 )
 
 
@@ -286,7 +286,7 @@ def engine(self):
     """Check that table with `S3` engine correctly reads and writes Parquet format."""
 
     with Pool(5):
-        # Scenario(run=insert_into_engine)
+        Scenario(run=insert_into_engine)
         Scenario(run=select_from_engine)
         Scenario(run=engine_to_file_to_engine)
         Scenario(run=insert_into_engine_from_file)
