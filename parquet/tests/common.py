@@ -172,7 +172,7 @@ def upload_file_to_s3(self, file_src, file_dest):
 
 
 @TestStep(Then)
-def check_source_file(self, path, compression=None, snap_name=None):
+def check_source_file(self, path, compression=None):
     """Check the contents of a Parquet file against either snapshot or provided values."""
     node = current().context.node
     table_name = "table_" + getuid()
