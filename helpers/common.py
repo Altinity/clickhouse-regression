@@ -7,7 +7,7 @@ from collections import namedtuple
 
 import testflows.settings as settings
 from testflows.core import *
-from testflows.asserts import error
+from testflows.asserts import values, error, snapshot
 from testflows.core.name import basename, parentname
 from testflows._core.testtype import TestSubType
 
@@ -585,3 +585,11 @@ def set_envs_on_node(self, envs, node=None):
         with Finally(f"I unset envs"):
             for key in envs:
                 node.command(f"unset {key}", exitcode=0)
+
+
+def get_snapshot_id(snapshot_id=None):
+    """Return snapshot id based on the current test's name
+    and ClickHouse server version."""
+    if snapshot_id is None:
+        return name.basename(current().name)
+    return snapshot_id

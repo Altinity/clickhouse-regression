@@ -1,0 +1,336 @@
+_parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a974d340_ = r"""
+{"uint8":255,"toTypeName(uint8)":"UInt8"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a974dd60_ = r"""
+{"int8":127,"toTypeName(int8)":"Int8"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a974d2e0_ = r"""
+{"uint16":65535,"toTypeName(uint16)":"UInt16"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a974d0d0_ = r"""
+{"int16":32767,"toTypeName(int16)":"Int16"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a974d370_ = r"""
+{"uint32":4294967295,"toTypeName(uint32)":"UInt32"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a96cf100_ = r"""
+{"int32":2147483647,"toTypeName(int32)":"Int32"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a96cf340_ = r"""
+{"uint64":"18446744073709551615","toTypeName(uint64)":"UInt64"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a96cfe20_ = r"""
+{"int64":"9223372036854775807","toTypeName(int64)":"Int64"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a96cf820_ = r"""
+{"float32":3.4028235e38,"toTypeName(float32)":"Float32"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a96cf130_ = r"""
+{"float64":1.7976909999999999e308,"toTypeName(float64)":"Float64"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a96cfa90_ = r"""
+{"date":"2149-06-06","toTypeName(date)":"Date"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a96cf610_ = r"""
+{"datetime":"2106-02-07 06:28:15","toTypeName(datetime)":"DateTime"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a96cfac0_ = r"""
+{"string":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","toTypeName(string)":"String"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a96cf220_ = r"""
+{"fixedstring_51_":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","toTypeName(fixedstring_51_)":"FixedString(51)"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a96cfca0_ = r"""
+{"nullable_uint8_":255,"toTypeName(nullable_uint8_)":"Nullable(UInt8)"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a96cf070_ = r"""
+{"nullable_int8_":127,"toTypeName(nullable_int8_)":"Nullable(Int8)"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a96cf0a0_ = r"""
+{"nullable_uint16_":65535,"toTypeName(nullable_uint16_)":"Nullable(UInt16)"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a96cfc40_ = r"""
+{"nullable_int16_":32767,"toTypeName(nullable_int16_)":"Nullable(Int16)"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a96cfa60_ = r"""
+{"nullable_uint32_":4294967295,"toTypeName(nullable_uint32_)":"Nullable(UInt32)"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a96cfeb0_ = r"""
+{"nullable_int32_":2147483647,"toTypeName(nullable_int32_)":"Nullable(Int32)"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a96cfa30_ = r"""
+{"nullable_uint64_":"18446744073709551615","toTypeName(nullable_uint64_)":"Nullable(UInt64)"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a96cffa0_ = r"""
+{"nullable_int64_":"9223372036854775807","toTypeName(nullable_int64_)":"Nullable(Int64)"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a96cf1f0_ = r"""
+{"nullable_float32_":3.4028235e38,"toTypeName(nullable_float32_)":"Nullable(Float32)"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a96cf2b0_ = r"""
+{"nullable_float64_":1.7976909999999999e308,"toTypeName(nullable_float64_)":"Nullable(Float64)"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a96cfd60_ = r"""
+{"nullable_date_":"2149-06-06","toTypeName(nullable_date_)":"Nullable(Date)"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a84a4580_ = r"""
+{"nullable_datetime_":"2106-02-07 06:28:15","toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a84a4640_ = r"""
+{"nullable_string_":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","toTypeName(nullable_string_)":"Nullable(String)"}
+"""
+
+_parquet_mysql_compression_type__NONE__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a84a47f0_ = r"""
+{"nullable_fixedstring_51__":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","toTypeName(nullable_fixedstring_51__)":"Nullable(FixedString(51))"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58ecba0bb0_ = r"""
+{"uint8":255,"toTypeName(uint8)":"UInt8"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58ecba0f10_ = r"""
+{"int8":127,"toTypeName(int8)":"Int8"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58ecba0e20_ = r"""
+{"uint16":65535,"toTypeName(uint16)":"UInt16"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58ec85a460_ = r"""
+{"int16":32767,"toTypeName(int16)":"Int16"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58ec85a400_ = r"""
+{"uint32":4294967295,"toTypeName(uint32)":"UInt32"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58ec85adc0_ = r"""
+{"int32":2147483647,"toTypeName(int32)":"Int32"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a914fca0_ = r"""
+{"uint64":"18446744073709551615","toTypeName(uint64)":"UInt64"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58e4d1d670_ = r"""
+{"int64":"9223372036854775807","toTypeName(int64)":"Int64"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a83f8a00_ = r"""
+{"float32":3.4028235e38,"toTypeName(float32)":"Float32"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a8a4f790_ = r"""
+{"float64":1.7976909999999999e308,"toTypeName(float64)":"Float64"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a8a4f1c0_ = r"""
+{"date":"2149-06-06","toTypeName(date)":"Date"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a8a4f2b0_ = r"""
+{"datetime":"2106-02-07 06:28:15","toTypeName(datetime)":"DateTime"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a8b374c0_ = r"""
+{"string":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","toTypeName(string)":"String"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a8b37ee0_ = r"""
+{"fixedstring_51_":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","toTypeName(fixedstring_51_)":"FixedString(51)"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a8b370d0_ = r"""
+{"nullable_uint8_":255,"toTypeName(nullable_uint8_)":"Nullable(UInt8)"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a8b37e20_ = r"""
+{"nullable_int8_":127,"toTypeName(nullable_int8_)":"Nullable(Int8)"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58dadbe070_ = r"""
+{"nullable_uint16_":65535,"toTypeName(nullable_uint16_)":"Nullable(UInt16)"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58dadbef10_ = r"""
+{"nullable_int16_":32767,"toTypeName(nullable_int16_)":"Nullable(Int16)"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58dadbe7c0_ = r"""
+{"nullable_uint32_":4294967295,"toTypeName(nullable_uint32_)":"Nullable(UInt32)"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a9b81130_ = r"""
+{"nullable_int32_":2147483647,"toTypeName(nullable_int32_)":"Nullable(Int32)"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a9b81eb0_ = r"""
+{"nullable_uint64_":"18446744073709551615","toTypeName(nullable_uint64_)":"Nullable(UInt64)"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a9b811f0_ = r"""
+{"nullable_int64_":"9223372036854775807","toTypeName(nullable_int64_)":"Nullable(Int64)"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a9b81850_ = r"""
+{"nullable_float32_":3.4028235e38,"toTypeName(nullable_float32_)":"Nullable(Float32)"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a9b81a30_ = r"""
+{"nullable_float64_":1.7976909999999999e308,"toTypeName(nullable_float64_)":"Nullable(Float64)"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a8e9b5b0_ = r"""
+{"nullable_date_":"2149-06-06","toTypeName(nullable_date_)":"Nullable(Date)"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a8e9bb20_ = r"""
+{"nullable_datetime_":"2106-02-07 06:28:15","toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a8e9bf70_ = r"""
+{"nullable_string_":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","toTypeName(nullable_string_)":"Nullable(String)"}
+"""
+
+_parquet_mysql_compression_type__GZIP__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a8e9b2b0_ = r"""
+{"nullable_fixedstring_51__":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","toTypeName(nullable_fixedstring_51__)":"Nullable(FixedString(51))"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a9e61790_ = r"""
+{"uint8":255,"toTypeName(uint8)":"UInt8"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a9e619a0_ = r"""
+{"int8":127,"toTypeName(int8)":"Int8"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a9e61c40_ = r"""
+{"uint16":65535,"toTypeName(uint16)":"UInt16"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a9e61f40_ = r"""
+{"int16":32767,"toTypeName(int16)":"Int16"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a9e61910_ = r"""
+{"uint32":4294967295,"toTypeName(uint32)":"UInt32"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a9e613d0_ = r"""
+{"int32":2147483647,"toTypeName(int32)":"Int32"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a9e612e0_ = r"""
+{"uint64":"18446744073709551615","toTypeName(uint64)":"UInt64"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58ecb0d190_ = r"""
+{"int64":"9223372036854775807","toTypeName(int64)":"Int64"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58ecb0dcd0_ = r"""
+{"float32":3.4028235e38,"toTypeName(float32)":"Float32"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58ecb0df10_ = r"""
+{"float64":1.7976909999999999e308,"toTypeName(float64)":"Float64"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58ecb0d9a0_ = r"""
+{"date":"2149-06-06","toTypeName(date)":"Date"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58ecb0dca0_ = r"""
+{"datetime":"2106-02-07 06:28:15","toTypeName(datetime)":"DateTime"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58ecb0db20_ = r"""
+{"string":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","toTypeName(string)":"String"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58ecb0de20_ = r"""
+{"fixedstring_51_":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","toTypeName(fixedstring_51_)":"FixedString(51)"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58ecb0de80_ = r"""
+{"nullable_uint8_":255,"toTypeName(nullable_uint8_)":"Nullable(UInt8)"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58ecb0d2e0_ = r"""
+{"nullable_int8_":127,"toTypeName(nullable_int8_)":"Nullable(Int8)"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58ecb0d1f0_ = r"""
+{"nullable_uint16_":65535,"toTypeName(nullable_uint16_)":"Nullable(UInt16)"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58f3823d90_ = r"""
+{"nullable_int16_":32767,"toTypeName(nullable_int16_)":"Nullable(Int16)"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a8b2c280_ = r"""
+{"nullable_uint32_":4294967295,"toTypeName(nullable_uint32_)":"Nullable(UInt32)"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a9b81d00_ = r"""
+{"nullable_int32_":2147483647,"toTypeName(nullable_int32_)":"Nullable(Int32)"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a9b813d0_ = r"""
+{"nullable_uint64_":"18446744073709551615","toTypeName(nullable_uint64_)":"Nullable(UInt64)"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a9b81af0_ = r"""
+{"nullable_int64_":"9223372036854775807","toTypeName(nullable_int64_)":"Nullable(Int64)"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a84d9a60_ = r"""
+{"nullable_float32_":3.4028235e38,"toTypeName(nullable_float32_)":"Nullable(Float32)"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a84d9a00_ = r"""
+{"nullable_float64_":1.7976909999999999e308,"toTypeName(nullable_float64_)":"Nullable(Float64)"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a84d9c40_ = r"""
+{"nullable_date_":"2149-06-06","toTypeName(nullable_date_)":"Nullable(Date)"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a8b37f40_ = r"""
+{"nullable_datetime_":"2106-02-07 06:28:15","toTypeName(nullable_datetime_)":"Nullable(DateTime)"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a8b37670_ = r"""
+{"nullable_string_":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","toTypeName(nullable_string_)":"Nullable(String)"}
+"""
+
+_parquet_mysql_compression_type__LZ4__mysql_engine_to_parquet_file_to_mysql_engine_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f58a8b37ee0_ = r"""
+{"nullable_fixedstring_51__":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","toTypeName(nullable_fixedstring_51__)":"Nullable(FixedString(51))"}
+"""
+
