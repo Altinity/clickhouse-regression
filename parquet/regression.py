@@ -3,6 +3,7 @@ import os
 import sys
 import boto3
 
+from minio import Minio
 from testflows.core import *
 
 append_path(sys.path, "..")
@@ -11,6 +12,8 @@ from helpers.cluster import Cluster
 from s3.regression import argparser
 from parquet.requirements import SRS032_ClickHouse_Parquet_Data_Format
 from helpers.common import check_clickhouse_version
+from helpers.tables import Column
+from helpers.datatypes import *
 from parquet.tests.common import start_minio
 
 xfails = {}
@@ -68,16 +71,32 @@ def regression(
         nodes=nodes,
         docker_compose_project_dir=os.path.join(current_dir(), env),
     ) as cluster:
-        self.context.cluster = cluster
-        nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
-        self.context.parquet_table_def = (
-            cluster.node("clickhouse1")
-            .command("cat /var/lib/clickhouse/user_files/clickhouse_table_def.txt")
-            .output.strip()
-        )
 
-        Feature(run=load("parquet.tests.file", "feature"))
-        Feature(run=load("parquet.tests.query", "feature"))
+        with Given("I have a Parquet table definition"):
+            self.context.cluster = cluster
+            columns = (
+                cluster.node("clickhouse1")
+                .command("cat /var/lib/test_files/clickhouse_table_def.txt")
+                .output.strip()
+                .split(".")
+            )
+            self.context.parquet_table_columns = []
+            for column in columns:
+                name, datatype = column.split(" ", 1)
+                self.context.parquet_table_columns.append(
+                    Column(datatype=eval(datatype), name=name)
+                )
+
+        with Pool(6) as executor:
+            # Feature(run=load("parquet.tests.file", "feature"))
+            # Feature(run=load("parquet.tests.query", "feature"))
+            # Feature(run=load("parquet.tests.int_list_multiple_chunks", "feature"))
+            # Feature(run=load("parquet.tests.url", "feature"))
+            # Feature(run=load("parquet.tests.mysql", "feature"))
+            # Feature(run=load("parquet.tests.postgresql", "feature"))
+            # Feature(run=load("parquet.tests.remote", "feature"))
+
+            join()
 
         if storages is None:
             pass
@@ -86,7 +105,6 @@ def regression(
             for storage in storages:
                 if "aws_s3" == storage.lower():
                     with Given("I make sure the S3 credentials are set"):
-                        xfail("file permissions issue, fails to upload")
 
                         if aws_s3_access_key == None:
                             fail("AWS S3 access key needs to be set")
@@ -104,27 +122,28 @@ def regression(
                     self.context.uri = f"https://s3.{aws_s3_region.value}.amazonaws.com/{aws_s3_bucket.value}/data/parquet/"
                     self.context.access_key_id = aws_s3_key_id.value
                     self.context.secret_access_key = aws_s3_access_key.value
-                    self.context.client = boto3.client(
+                    self.context.s3_client = boto3.client(
                         "s3",
                         aws_access_key_id=self.context.access_key_id,
                         aws_secret_access_key=self.context.secret_access_key,
                     )
 
                 elif "minio" == storage.lower():
-                    xfail("minio does not start")
 
-                    self.context.uri = "http://minio1:9001/root/data/"
+                    self.context.uri = "http://minio:9001/root/data/parquet/"
                     self.context.access_key_id = "minio"
                     self.context.secret_access_key = "minio123"
 
-                    self.context.client = start_minio()
+                    with Given("I have a minio client"):
+                        start_minio(access_key="minio", secret_key="minio123")
 
                 elif "gcs" == storage.lower():
                     xfail("GCS not implemented")
 
                 self.context.storage = storage
 
-            Feature(run=load("parquet.tests.s3", "feature"))
+            with Feature(f"{storage}"):
+                Feature(run=load("parquet.tests.s3", "feature"))
 
 
 if main():

@@ -1,0 +1,768 @@
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc75e20_ = r"""
+{"int16":32767,"toTypeName(int16)":"Int16"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc75970_ = r"""
+{"int32":2147483647,"toTypeName(int32)":"Int32"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc75dc0_ = r"""
+{"int64":"9223372036854775807","toTypeName(int64)":"Int64"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcb77d00_ = r"""
+{"float32":3.4028235e38,"toTypeName(float32)":"Float32"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc252e0_ = r"""
+{"float64":1.7976909999999999e308,"toTypeName(float64)":"Float64"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcb48f40_ = r"""
+{"date":"2149-06-06","toTypeName(date)":"Date"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcb486d0_ = r"""
+{"datetime":"2106-02-07 06:28:15.000000","toTypeName(datetime)":"DateTime64(6)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcb47670_ = r"""
+{"string":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","toTypeName(string)":"String"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc247f0_ = r"""
+{"nullable_int16_":32767,"toTypeName(nullable_int16_)":"Nullable(Int16)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc24ee0_ = r"""
+{"nullable_int32_":2147483647,"toTypeName(nullable_int32_)":"Nullable(Int32)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc245b0_ = r"""
+{"nullable_int64_":"9223372036854775807","toTypeName(nullable_int64_)":"Nullable(Int64)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc24130_ = r"""
+{"nullable_float32_":3.4028235e38,"toTypeName(nullable_float32_)":"Nullable(Float32)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc24eb0_ = r"""
+{"nullable_float64_":1.7976909999999999e308,"toTypeName(nullable_float64_)":"Nullable(Float64)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc24880_ = r"""
+{"nullable_date_":"2149-06-06","toTypeName(nullable_date_)":"Nullable(Date)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc249a0_ = r"""
+{"nullable_datetime_":"2106-02-07 06:28:15.000000","toTypeName(nullable_datetime_)":"Nullable(DateTime64(6))"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc32a30_ = r"""
+{"nullable_string_":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","toTypeName(nullable_string_)":"Nullable(String)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc32d90_ = r"""
+{"array_int16_":[32767],"toTypeName(array_int16_)":"Array(Int16)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc32490_ = r"""
+{"array_int32_":[2147483647],"toTypeName(array_int32_)":"Array(Int32)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc32c70_ = r"""
+{"array_int64_":["9223372036854775807"],"toTypeName(array_int64_)":"Array(Int64)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc32520_ = r"""
+{"array_float32_":[3.4028235e38],"toTypeName(array_float32_)":"Array(Float32)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc32970_ = r"""
+{"array_float64_":[1.7976909999999999e308],"toTypeName(array_float64_)":"Array(Float64)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc32d60_ = r"""
+{"array_date_":["2149-06-06"],"toTypeName(array_date_)":"Array(Date)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc32730_ = r"""
+{"array_datetime_":["2106-02-07 06:28:15.000000"],"toTypeName(array_datetime_)":"Array(DateTime64(6))"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc328e0_ = r"""
+{"array_string_":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"],"toTypeName(array_string_)":"Array(String)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc327f0_ = r"""
+{"array_nullable_int16__":[32767],"toTypeName(array_nullable_int16__)":"Array(Int16)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc32cd0_ = r"""
+{"array_nullable_int32__":[2147483647],"toTypeName(array_nullable_int32__)":"Array(Int32)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc32100_ = r"""
+{"array_nullable_int64__":["9223372036854775807"],"toTypeName(array_nullable_int64__)":"Array(Int64)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc322e0_ = r"""
+{"array_nullable_float32__":[3.4028235e38],"toTypeName(array_nullable_float32__)":"Array(Float32)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc32d00_ = r"""
+{"array_nullable_float64__":[1.7976909999999999e308],"toTypeName(array_nullable_float64__)":"Array(Float64)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc32940_ = r"""
+{"array_nullable_date__":["2149-06-06"],"toTypeName(array_nullable_date__)":"Array(Date)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc324f0_ = r"""
+{"array_nullable_datetime__":["2106-02-07 06:28:15.000000"],"toTypeName(array_nullable_datetime__)":"Array(DateTime64(6))"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc320d0_ = r"""
+{"array_nullable_string__":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"],"toTypeName(array_nullable_string__)":"Array(String)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcb22370_ = r"""
+{"int16":32767,"toTypeName(int16)":"Int16"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcb225b0_ = r"""
+{"int32":2147483647,"toTypeName(int32)":"Int32"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcb221f0_ = r"""
+{"int64":"9223372036854775807","toTypeName(int64)":"Int64"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcb223d0_ = r"""
+{"float32":3.4028235e38,"toTypeName(float32)":"Float32"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc325b0_ = r"""
+{"float64":1.7976909999999999e308,"toTypeName(float64)":"Float64"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bca5e2e0_ = r"""
+{"date":"2149-06-06","toTypeName(date)":"Date"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bc9d9eb0_ = r"""
+{"datetime":"2106-02-07 06:28:15.000000","toTypeName(datetime)":"DateTime64(6)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bc9d91c0_ = r"""
+{"string":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","toTypeName(string)":"String"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc252e0_ = r"""
+{"nullable_int16_":32767,"toTypeName(nullable_int16_)":"Nullable(Int16)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc257c0_ = r"""
+{"nullable_int32_":2147483647,"toTypeName(nullable_int32_)":"Nullable(Int32)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bc9f38e0_ = r"""
+{"nullable_int64_":"9223372036854775807","toTypeName(nullable_int64_)":"Nullable(Int64)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bc9f3eb0_ = r"""
+{"nullable_float32_":3.4028235e38,"toTypeName(nullable_float32_)":"Nullable(Float32)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bc9f3f10_ = r"""
+{"nullable_float64_":1.7976909999999999e308,"toTypeName(nullable_float64_)":"Nullable(Float64)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bc9f30a0_ = r"""
+{"nullable_date_":"2149-06-06","toTypeName(nullable_date_)":"Nullable(Date)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bc9f3160_ = r"""
+{"nullable_datetime_":"2106-02-07 06:28:15.000000","toTypeName(nullable_datetime_)":"Nullable(DateTime64(6))"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bc9f3220_ = r"""
+{"nullable_string_":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","toTypeName(nullable_string_)":"Nullable(String)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bca698e0_ = r"""
+{"array_int16_":[32767],"toTypeName(array_int16_)":"Array(Int16)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bca69220_ = r"""
+{"array_int32_":[2147483647],"toTypeName(array_int32_)":"Array(Int32)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bca69f70_ = r"""
+{"array_int64_":["9223372036854775807"],"toTypeName(array_int64_)":"Array(Int64)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bca69a30_ = r"""
+{"array_float32_":[3.4028235e38],"toTypeName(array_float32_)":"Array(Float32)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bca69940_ = r"""
+{"array_float64_":[1.7976909999999999e308],"toTypeName(array_float64_)":"Array(Float64)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcb3e6d0_ = r"""
+{"array_date_":["2149-06-06"],"toTypeName(array_date_)":"Array(Date)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcb3e850_ = r"""
+{"array_datetime_":["2106-02-07 06:28:15.000000"],"toTypeName(array_datetime_)":"Array(DateTime64(6))"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcb3ec40_ = r"""
+{"array_string_":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"],"toTypeName(array_string_)":"Array(String)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcb3e8b0_ = r"""
+{"array_nullable_int16__":[32767],"toTypeName(array_nullable_int16__)":"Array(Int16)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcb3ed00_ = r"""
+{"array_nullable_int32__":[2147483647],"toTypeName(array_nullable_int32__)":"Array(Int32)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcb3e580_ = r"""
+{"array_nullable_int64__":["9223372036854775807"],"toTypeName(array_nullable_int64__)":"Array(Int64)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcb3e670_ = r"""
+{"array_nullable_float32__":[3.4028235e38],"toTypeName(array_nullable_float32__)":"Array(Float32)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcb3e730_ = r"""
+{"array_nullable_float64__":[1.7976909999999999e308],"toTypeName(array_nullable_float64__)":"Array(Float64)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcb3e4c0_ = r"""
+{"array_nullable_date__":["2149-06-06"],"toTypeName(array_nullable_date__)":"Array(Date)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcb3ea30_ = r"""
+{"array_nullable_datetime__":["2106-02-07 06:28:15.000000"],"toTypeName(array_nullable_datetime__)":"Array(DateTime64(6))"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcb3e1f0_ = r"""
+{"array_nullable_string__":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"],"toTypeName(array_nullable_string__)":"Array(String)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcb77760_ = r"""
+{"int16":32767,"toTypeName(int16)":"Int16"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcb77190_ = r"""
+{"int32":2147483647,"toTypeName(int32)":"Int32"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcb775b0_ = r"""
+{"int64":"9223372036854775807","toTypeName(int64)":"Int64"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcb77ee0_ = r"""
+{"float32":3.4028235e38,"toTypeName(float32)":"Float32"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcb77be0_ = r"""
+{"float64":1.7976909999999999e308,"toTypeName(float64)":"Float64"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcb77dc0_ = r"""
+{"date":"2149-06-06","toTypeName(date)":"Date"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bd639f10_ = r"""
+{"datetime":"2106-02-07 06:28:15.000000","toTypeName(datetime)":"DateTime64(6)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc24d90_ = r"""
+{"string":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","toTypeName(string)":"String"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc245e0_ = r"""
+{"nullable_int16_":32767,"toTypeName(nullable_int16_)":"Nullable(Int16)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc759a0_ = r"""
+{"nullable_int32_":2147483647,"toTypeName(nullable_int32_)":"Nullable(Int32)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc75e50_ = r"""
+{"nullable_int64_":"9223372036854775807","toTypeName(nullable_int64_)":"Nullable(Int64)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bd574e80_ = r"""
+{"nullable_float32_":3.4028235e38,"toTypeName(nullable_float32_)":"Nullable(Float32)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcab63a0_ = r"""
+{"nullable_float64_":1.7976909999999999e308,"toTypeName(nullable_float64_)":"Nullable(Float64)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcab6730_ = r"""
+{"nullable_date_":"2149-06-06","toTypeName(nullable_date_)":"Nullable(Date)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcab60d0_ = r"""
+{"nullable_datetime_":"2106-02-07 06:28:15.000000","toTypeName(nullable_datetime_)":"Nullable(DateTime64(6))"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcab6a90_ = r"""
+{"nullable_string_":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","toTypeName(nullable_string_)":"Nullable(String)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcba3af0_ = r"""
+{"array_int16_":[32767],"toTypeName(array_int16_)":"Array(Int16)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcba3eb0_ = r"""
+{"array_int32_":[2147483647],"toTypeName(array_int32_)":"Array(Int32)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcba3370_ = r"""
+{"array_int64_":["9223372036854775807"],"toTypeName(array_int64_)":"Array(Int64)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcba36a0_ = r"""
+{"array_float32_":[3.4028235e38],"toTypeName(array_float32_)":"Array(Float32)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcba30a0_ = r"""
+{"array_float64_":[1.7976909999999999e308],"toTypeName(array_float64_)":"Array(Float64)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcb10040_ = r"""
+{"array_date_":["2149-06-06"],"toTypeName(array_date_)":"Array(Date)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcb3e850_ = r"""
+{"array_datetime_":["2106-02-07 06:28:15.000000"],"toTypeName(array_datetime_)":"Array(DateTime64(6))"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc58550_ = r"""
+{"array_string_":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"],"toTypeName(array_string_)":"Array(String)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc58bb0_ = r"""
+{"array_nullable_int16__":[32767],"toTypeName(array_nullable_int16__)":"Array(Int16)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc589d0_ = r"""
+{"array_nullable_int32__":[2147483647],"toTypeName(array_nullable_int32__)":"Array(Int32)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc58b50_ = r"""
+{"array_nullable_int64__":["9223372036854775807"],"toTypeName(array_nullable_int64__)":"Array(Int64)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bcc58580_ = r"""
+{"array_nullable_float32__":[3.4028235e38],"toTypeName(array_nullable_float32__)":"Array(Float32)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bc91dc70_ = r"""
+{"array_nullable_float64__":[1.7976909999999999e308],"toTypeName(array_nullable_float64__)":"Array(Float64)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bc91df70_ = r"""
+{"array_nullable_date__":["2149-06-06"],"toTypeName(array_nullable_date__)":"Array(Date)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bc91d7f0_ = r"""
+{"array_nullable_datetime__":["2106-02-07 06:28:15.000000"],"toTypeName(array_nullable_datetime__)":"Array(DateTime64(6))"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_the_second_table__helpers_tables_Column_object_at_0x7f60bc91d0a0_ = r"""
+{"array_nullable_string__":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"],"toTypeName(array_nullable_string__)":"Array(String)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_int16 = r"""
+{"int16":32767,"toTypeName(int16)":"Int16"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_int32 = r"""
+{"int32":2147483647,"toTypeName(int32)":"Int32"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_int64 = r"""
+{"int64":"9223372036854775807","toTypeName(int64)":"Int64"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_float32 = r"""
+{"float32":3.4028235e38,"toTypeName(float32)":"Float32"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_float64 = r"""
+{"float64":1.7976909999999999e308,"toTypeName(float64)":"Float64"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_date = r"""
+{"date":"2149-06-06","toTypeName(date)":"Date"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_datetime = r"""
+{"datetime":"2106-02-07 06:28:15.000000","toTypeName(datetime)":"DateTime64(6)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_string = r"""
+{"string":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","toTypeName(string)":"String"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_nullable_int16_ = r"""
+{"nullable_int16_":32767,"toTypeName(nullable_int16_)":"Nullable(Int16)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_nullable_int32_ = r"""
+{"nullable_int32_":2147483647,"toTypeName(nullable_int32_)":"Nullable(Int32)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_nullable_int64_ = r"""
+{"nullable_int64_":"9223372036854775807","toTypeName(nullable_int64_)":"Nullable(Int64)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_nullable_float32_ = r"""
+{"nullable_float32_":3.4028235e38,"toTypeName(nullable_float32_)":"Nullable(Float32)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_nullable_float64_ = r"""
+{"nullable_float64_":1.7976909999999999e308,"toTypeName(nullable_float64_)":"Nullable(Float64)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_nullable_date_ = r"""
+{"nullable_date_":"2149-06-06","toTypeName(nullable_date_)":"Nullable(Date)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_nullable_datetime_ = r"""
+{"nullable_datetime_":"2106-02-07 06:28:15.000000","toTypeName(nullable_datetime_)":"Nullable(DateTime64(6))"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_nullable_string_ = r"""
+{"nullable_string_":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","toTypeName(nullable_string_)":"Nullable(String)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_array_int16_ = r"""
+{"array_int16_":[32767],"toTypeName(array_int16_)":"Array(Int16)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_array_int32_ = r"""
+{"array_int32_":[2147483647],"toTypeName(array_int32_)":"Array(Int32)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_array_int64_ = r"""
+{"array_int64_":["9223372036854775807"],"toTypeName(array_int64_)":"Array(Int64)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_array_float32_ = r"""
+{"array_float32_":[3.4028235e38],"toTypeName(array_float32_)":"Array(Float32)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_array_float64_ = r"""
+{"array_float64_":[1.7976909999999999e308],"toTypeName(array_float64_)":"Array(Float64)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_array_date_ = r"""
+{"array_date_":["2149-06-06"],"toTypeName(array_date_)":"Array(Date)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_array_datetime_ = r"""
+{"array_datetime_":["2106-02-07 06:28:15.000000"],"toTypeName(array_datetime_)":"Array(DateTime64(6))"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_array_string_ = r"""
+{"array_string_":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"],"toTypeName(array_string_)":"Array(String)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_array_nullable_int16__ = r"""
+{"array_nullable_int16__":[32767],"toTypeName(array_nullable_int16__)":"Array(Int16)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_array_nullable_int32__ = r"""
+{"array_nullable_int32__":[2147483647],"toTypeName(array_nullable_int32__)":"Array(Int32)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_array_nullable_int64__ = r"""
+{"array_nullable_int64__":["9223372036854775807"],"toTypeName(array_nullable_int64__)":"Array(Int64)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_array_nullable_float32__ = r"""
+{"array_nullable_float32__":[3.4028235e38],"toTypeName(array_nullable_float32__)":"Array(Float32)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_array_nullable_float64__ = r"""
+{"array_nullable_float64__":[1.7976909999999999e308],"toTypeName(array_nullable_float64__)":"Array(Float64)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_array_nullable_date__ = r"""
+{"array_nullable_date__":["2149-06-06"],"toTypeName(array_nullable_date__)":"Array(Date)"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_array_nullable_datetime__ = r"""
+{"array_nullable_datetime__":["2106-02-07 06:28:15.000000"],"toTypeName(array_nullable_datetime__)":"Array(DateTime64(6))"}
+"""
+
+_parquet_postgresql_compression_type__NONE__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_06cda0c4_7cec_11ed_be3f_b42e99c9aef6_array_nullable_string__ = r"""
+{"array_nullable_string__":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"],"toTypeName(array_nullable_string__)":"Array(String)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_int16 = r"""
+{"int16":32767,"toTypeName(int16)":"Int16"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_int32 = r"""
+{"int32":2147483647,"toTypeName(int32)":"Int32"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_int64 = r"""
+{"int64":"9223372036854775807","toTypeName(int64)":"Int64"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_float32 = r"""
+{"float32":3.4028235e38,"toTypeName(float32)":"Float32"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_float64 = r"""
+{"float64":1.7976909999999999e308,"toTypeName(float64)":"Float64"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_date = r"""
+{"date":"2149-06-06","toTypeName(date)":"Date"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_datetime = r"""
+{"datetime":"2106-02-07 06:28:15.000000","toTypeName(datetime)":"DateTime64(6)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_string = r"""
+{"string":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","toTypeName(string)":"String"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_nullable_int16_ = r"""
+{"nullable_int16_":32767,"toTypeName(nullable_int16_)":"Nullable(Int16)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_nullable_int32_ = r"""
+{"nullable_int32_":2147483647,"toTypeName(nullable_int32_)":"Nullable(Int32)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_nullable_int64_ = r"""
+{"nullable_int64_":"9223372036854775807","toTypeName(nullable_int64_)":"Nullable(Int64)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_nullable_float32_ = r"""
+{"nullable_float32_":3.4028235e38,"toTypeName(nullable_float32_)":"Nullable(Float32)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_nullable_float64_ = r"""
+{"nullable_float64_":1.7976909999999999e308,"toTypeName(nullable_float64_)":"Nullable(Float64)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_nullable_date_ = r"""
+{"nullable_date_":"2149-06-06","toTypeName(nullable_date_)":"Nullable(Date)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_nullable_datetime_ = r"""
+{"nullable_datetime_":"2106-02-07 06:28:15.000000","toTypeName(nullable_datetime_)":"Nullable(DateTime64(6))"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_nullable_string_ = r"""
+{"nullable_string_":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","toTypeName(nullable_string_)":"Nullable(String)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_array_int16_ = r"""
+{"array_int16_":[32767],"toTypeName(array_int16_)":"Array(Int16)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_array_int32_ = r"""
+{"array_int32_":[2147483647],"toTypeName(array_int32_)":"Array(Int32)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_array_int64_ = r"""
+{"array_int64_":["9223372036854775807"],"toTypeName(array_int64_)":"Array(Int64)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_array_float32_ = r"""
+{"array_float32_":[3.4028235e38],"toTypeName(array_float32_)":"Array(Float32)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_array_float64_ = r"""
+{"array_float64_":[1.7976909999999999e308],"toTypeName(array_float64_)":"Array(Float64)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_array_date_ = r"""
+{"array_date_":["2149-06-06"],"toTypeName(array_date_)":"Array(Date)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_array_datetime_ = r"""
+{"array_datetime_":["2106-02-07 06:28:15.000000"],"toTypeName(array_datetime_)":"Array(DateTime64(6))"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_array_string_ = r"""
+{"array_string_":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"],"toTypeName(array_string_)":"Array(String)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_array_nullable_int16__ = r"""
+{"array_nullable_int16__":[32767],"toTypeName(array_nullable_int16__)":"Array(Int16)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_array_nullable_int32__ = r"""
+{"array_nullable_int32__":[2147483647],"toTypeName(array_nullable_int32__)":"Array(Int32)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_array_nullable_int64__ = r"""
+{"array_nullable_int64__":["9223372036854775807"],"toTypeName(array_nullable_int64__)":"Array(Int64)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_array_nullable_float32__ = r"""
+{"array_nullable_float32__":[3.4028235e38],"toTypeName(array_nullable_float32__)":"Array(Float32)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_array_nullable_float64__ = r"""
+{"array_nullable_float64__":[1.7976909999999999e308],"toTypeName(array_nullable_float64__)":"Array(Float64)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_array_nullable_date__ = r"""
+{"array_nullable_date__":["2149-06-06"],"toTypeName(array_nullable_date__)":"Array(Date)"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_array_nullable_datetime__ = r"""
+{"array_nullable_datetime__":["2106-02-07 06:28:15.000000"],"toTypeName(array_nullable_datetime__)":"Array(DateTime64(6))"}
+"""
+
+_parquet_postgresql_compression_type__GZIP__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_09ccf8ba_7cec_11ed_be3f_b42e99c9aef6_array_nullable_string__ = r"""
+{"array_nullable_string__":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"],"toTypeName(array_nullable_string__)":"Array(String)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_int16 = r"""
+{"int16":32767,"toTypeName(int16)":"Int16"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_int32 = r"""
+{"int32":2147483647,"toTypeName(int32)":"Int32"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_int64 = r"""
+{"int64":"9223372036854775807","toTypeName(int64)":"Int64"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_float32 = r"""
+{"float32":3.4028235e38,"toTypeName(float32)":"Float32"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_float64 = r"""
+{"float64":1.7976909999999999e308,"toTypeName(float64)":"Float64"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_date = r"""
+{"date":"2149-06-06","toTypeName(date)":"Date"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_datetime = r"""
+{"datetime":"2106-02-07 06:28:15.000000","toTypeName(datetime)":"DateTime64(6)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_string = r"""
+{"string":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","toTypeName(string)":"String"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_nullable_int16_ = r"""
+{"nullable_int16_":32767,"toTypeName(nullable_int16_)":"Nullable(Int16)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_nullable_int32_ = r"""
+{"nullable_int32_":2147483647,"toTypeName(nullable_int32_)":"Nullable(Int32)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_nullable_int64_ = r"""
+{"nullable_int64_":"9223372036854775807","toTypeName(nullable_int64_)":"Nullable(Int64)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_nullable_float32_ = r"""
+{"nullable_float32_":3.4028235e38,"toTypeName(nullable_float32_)":"Nullable(Float32)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_nullable_float64_ = r"""
+{"nullable_float64_":1.7976909999999999e308,"toTypeName(nullable_float64_)":"Nullable(Float64)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_nullable_date_ = r"""
+{"nullable_date_":"2149-06-06","toTypeName(nullable_date_)":"Nullable(Date)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_nullable_datetime_ = r"""
+{"nullable_datetime_":"2106-02-07 06:28:15.000000","toTypeName(nullable_datetime_)":"Nullable(DateTime64(6))"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_nullable_string_ = r"""
+{"nullable_string_":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","toTypeName(nullable_string_)":"Nullable(String)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_array_int16_ = r"""
+{"array_int16_":[32767],"toTypeName(array_int16_)":"Array(Int16)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_array_int32_ = r"""
+{"array_int32_":[2147483647],"toTypeName(array_int32_)":"Array(Int32)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_array_int64_ = r"""
+{"array_int64_":["9223372036854775807"],"toTypeName(array_int64_)":"Array(Int64)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_array_float32_ = r"""
+{"array_float32_":[3.4028235e38],"toTypeName(array_float32_)":"Array(Float32)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_array_float64_ = r"""
+{"array_float64_":[1.7976909999999999e308],"toTypeName(array_float64_)":"Array(Float64)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_array_date_ = r"""
+{"array_date_":["2149-06-06"],"toTypeName(array_date_)":"Array(Date)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_array_datetime_ = r"""
+{"array_datetime_":["2106-02-07 06:28:15.000000"],"toTypeName(array_datetime_)":"Array(DateTime64(6))"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_array_string_ = r"""
+{"array_string_":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"],"toTypeName(array_string_)":"Array(String)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_array_nullable_int16__ = r"""
+{"array_nullable_int16__":[32767],"toTypeName(array_nullable_int16__)":"Array(Int16)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_array_nullable_int32__ = r"""
+{"array_nullable_int32__":[2147483647],"toTypeName(array_nullable_int32__)":"Array(Int32)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_array_nullable_int64__ = r"""
+{"array_nullable_int64__":["9223372036854775807"],"toTypeName(array_nullable_int64__)":"Array(Int64)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_array_nullable_float32__ = r"""
+{"array_nullable_float32__":[3.4028235e38],"toTypeName(array_nullable_float32__)":"Array(Float32)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_array_nullable_float64__ = r"""
+{"array_nullable_float64__":[1.7976909999999999e308],"toTypeName(array_nullable_float64__)":"Array(Float64)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_array_nullable_date__ = r"""
+{"array_nullable_date__":["2149-06-06"],"toTypeName(array_nullable_date__)":"Array(Date)"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_array_nullable_datetime__ = r"""
+{"array_nullable_datetime__":["2106-02-07 06:28:15.000000"],"toTypeName(array_nullable_datetime__)":"Array(DateTime64(6))"}
+"""
+
+_parquet_postgresql_compression_type__LZ4__postgresql_function_to_parquet_file_to_postgresql_function_I_check_the_data_on_table1_0ced0710_7cec_11ed_be3f_b42e99c9aef6_array_nullable_string__ = r"""
+{"array_nullable_string__":["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"],"toTypeName(array_nullable_string__)":"Array(String)"}
+"""
+

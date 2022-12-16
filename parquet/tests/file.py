@@ -7,19 +7,22 @@ from helpers.common import *
 @TestScenario
 def insert_into_engine(self):
     """Check that when data is inserted into a table with `File(Parquet)` engine, it is written into the source file correctly."""
-
+    self.context.snapshot_id = get_snapshot_id()
     node = self.context.node
-
     table_name = "table_" + getuid()
 
     with Given("I have a table with a `File(Parquet)` engine"):
-        table(name=table_name, engine="File(Parquet)")
+        table = create_table(
+            name=table_name,
+            engine="File(Parquet)",
+            columns=generate_all_column_types(include=parquet_test_columns()),
+        )
 
-    with When(
-        "I insert data into the table",
-        description="insert data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
+    with And(
+        "I populate table with test data",
+        description="inserted data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
     ):
-        insert_test_data(name=table_name)
+        table.insert_test_data()
 
     with Then(
         "I check that the data inserted into the table was correctly written to the file"
@@ -33,55 +36,59 @@ def insert_into_engine(self):
 @TestScenario
 def select_from_engine(self):
     """Check that when a table with `File(Parquet)` engine is attached on top of a Parquet file, it reads the data correctly."""
-
     node = self.context.node
-
+    self.context.snapshot_id = get_snapshot_id()
     table_name = "table_" + getuid()
-    table_def = node.command(
-        "cat /var/lib/clickhouse/user_files/clickhouse_table_def.txt"
-    ).output.strip()
+    table_columns = self.context.parquet_table_columns
 
-    node.command(f"mkdir /var/lib/clickhouse/user_files/{table_name}")
-    node.command(
-        f"cp /var/lib/clickhouse/user_files/data_NONE.Parquet /var/lib/clickhouse/user_files/{table_name}/data.Parquet"
-    )
+    with Given("I move the Parquet file into the table directory"):
+        node.command(f"mkdir /var/lib/clickhouse/user_files/{table_name}")
+        node.command(
+            f"cp /var/lib/test_files/data_NONE.Parquet /var/lib/clickhouse/user_files/{table_name}/data.Parquet"
+        )
 
     with Given(
         "I attach a table with a `File(Parquet)` engine on top of a Parquet file"
     ):
-        table(
+        table = create_table(
             name=table_name,
             engine="File(Parquet)",
             create="ATTACH",
             path=table_name,
-            table_def=table_def,
+            columns=table_columns,
         )
 
-    with Then("I check that the table reads the data correctly"):
-        check_query_output(
-            query=f"SELECT * FROM {table_name}",
-            snap_name="Select from FILE engine into file",
-        )
+    with Then(
+        "I check that the table reads the data correctly by checking the table columns"
+    ):
+        for column in table_columns:
+            with Check(f"{column.name}"):
+                execute_query(
+                    f"SELECT {column.name}, toTypeName({column.name}) FROM {table_name}"
+                )
 
 
 @TestScenario
 def engine_to_file_to_engine(self):
     """Check that when data is inserted into a table with `File(Parquet)` engine,
     the data can be read back correctly from the source file using a different table with `File(Parquet)` engine."""
-
+    self.context.snapshot_id = get_snapshot_id()
     node = self.context.node
-
     table0_name = "table0_" + getuid()
     table1_name = "table1_" + getuid()
 
     with Given("I have a table with `File(Parquet)` engine"):
-        table(name=table0_name, engine="File(Parquet)")
+        table0 = create_table(
+            name=table0_name,
+            engine="File(Parquet)",
+            columns=generate_all_column_types(include=parquet_test_columns()),
+        )
 
     with When(
         "I insert data into the table",
-        description="insert data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
+        description="inserted data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
     ):
-        insert_test_data(name=table0_name)
+        table0.insert_test_data()
 
     with Then(
         "I check that the data inserted into the table was correctly written into the file"
@@ -100,17 +107,22 @@ def engine_to_file_to_engine(self):
     with And(
         "I attach a new table on top of the Parquet source file created by the previous table"
     ):
-        table(
+        table1 = create_table(
             name=table1_name,
             engine="File(Parquet)",
             create="ATTACH",
             path=f"/var/lib/clickhouse/user_files/{table1_name}/",
+            columns=generate_all_column_types(include=parquet_test_columns()),
         )
 
     with Then(
         "I check that the new table is able to read the data from the file correctly"
     ):
-        check_query_output(query=f"SELECT * FROM {table1_name}")
+        for column in table1.columns:
+            with Check(f"{column.datatype.name}"):
+                execute_query(
+                    f"SELECT {column.name}, toTypeName({column.name}) FROM {table1.name}"
+                )
 
 
 @TestOutline(Scenario)
@@ -126,17 +138,8 @@ def engine_to_file_to_engine(self):
             Requirements(RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Gzip("1.0")),
         ),
         (
-            "BROTLI",
-            Requirements(
-                RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Brotli("1.0")
-            ),
-        ),
-        (
             "LZ4",
-            Requirements(
-                RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Lz4("1.0"),
-                RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Lz4Raw("1.0"),
-            ),
+            Requirements(RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Lz4("1.0")),
         ),
     ],
 )
@@ -144,29 +147,32 @@ def insert_into_engine_from_file(self, compression_type):
     """Check that that data read from a Parquet file using the `INFILE` clause in `INSERT` query is
     correctly written into a table with a `File(Parquet)` engine.
     """
-
+    self.context.snapshot_id = get_snapshot_id()
     node = self.context.node
     table_name = "table_" + getuid()
-    table_def = self.context.parquet_table_def
-
-    if compression_type != "NONE":
-        xfail(
-            "DB::Exception: inflateReset failed: data error: While executing ParquetBlockInputFormat: While executing File: data for INSERT was parsed from file. (ZLIB_INFLATE_FAILED)"
-        )
+    table_columns = self.context.parquet_table_columns
 
     with Given("I have a table with a `File(Parquet)` engine"):
-        table(name=table_name, engine="File(Parquet)", table_def=table_def)
+        table = create_table(
+            name=table_name, engine="File(Parquet)", columns=table_columns
+        )
+
+    with And("I have a Parquet file"):
+        node.command(
+            f"cp /var/lib/test_files/data_{compression_type}.Parquet /var/lib/clickhouse/user_files/data_{compression_type}.Parquet"
+        )
 
     with When("I insert data into the table from a Parquet file"):
         node.query(
-            f"INSERT INTO {table_name} FROM INFILE '/var/lib/clickhouse/user_files/data_{compression_type}.Parquet{'.' + compression_type if compression_type != 'NONE' else ''}' COMPRESSION '{compression_type.lower()}' FORMAT Parquet"
+            f"INSERT INTO {table_name} FROM INFILE '/var/lib/clickhouse/user_files/data_{compression_type}.Parquet' FORMAT Parquet"
         )
 
-    with Then("I check that the table contains correct data"):
-        check_query_output(
-            query=f"SELECT * FROM {table_name}",
-            snap_name="Insert into FILE engine from file",
-        )
+    with Then("I check that the table columns contain correct data"):
+        for column in table_columns:
+            with Check(f"{column.name}"):
+                execute_query(
+                    f"SELECT {column.name}, toTypeName({column.name}) FROM {table_name}"
+                )
 
 
 @TestOutline(Scenario)
@@ -182,36 +188,30 @@ def insert_into_engine_from_file(self, compression_type):
             Requirements(RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Gzip("1.0")),
         ),
         (
-            "BROTLI",
-            Requirements(
-                RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Brotli("1.0")
-            ),
-        ),
-        (
             "LZ4",
-            Requirements(
-                RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Lz4("1.0"),
-                RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Lz4Raw("1.0"),
-            ),
+            Requirements(RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Lz4("1.0")),
         ),
     ],
 )
 def engine_select_output_to_file(self, compression_type):
     """Check that data is correctly written into a Parquet file when using `SELECT` query with `OUTFILE` clause on a table with `File(Parquet)` engine."""
-
+    self.context.snapshot_id = get_snapshot_id()
     node = self.context.node
-
     table_name = "table_" + getuid()
-    path = f"'/var/lib/clickhouse/user_files/{table_name}_{compression_type}.Parquet{'.' + compression_type if compression_type != 'NONE' else ''}'"
+    path = f"'/var/lib/clickhouse/user_files/{table_name}_{compression_type}.Parquet'"
 
     with Given("I have a table with a `File(Parquet)` engine"):
-        table(name=table_name, engine="File(Parquet)")
+        table = create_table(
+            name=table_name,
+            engine="File(Parquet)",
+            columns=generate_all_column_types(include=parquet_test_columns()),
+        )
 
     with When(
         "I insert data into the table",
-        description="insert data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
+        description="inserted data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
     ):
-        insert_test_data(name=table_name)
+        table.insert_test_data()
 
     with When("I select data from the table and write it into a Parquet file"):
         node.query(
@@ -229,78 +229,115 @@ def engine_select_output_to_file(self, compression_type):
 @TestScenario
 def insert_into_function_manual_cast_types(self):
     """Check that when data is inserted into `file` table function with manually defined structure,
-    it is written into the source file correctly.
-    """
-
-    xfail("create empty parquet file with appropriate columns.")
-
+    it is written into the source file correctly."""
+    self.context.snapshot_id = get_snapshot_id()
     node = self.context.node
     file_name = "file_" + getuid()
-    table_def = node.command(
-        "cat /var/lib/clickhouse/user_files/clickhouse_table_def.txt"
-    ).output.strip()
+    columns = generate_all_column_types(include=parquet_test_columns())
+    func_def = ",".join([column.full_definition() for column in columns])
+    columns_values = [column.values(row_count=2, cardinality=10) for column in columns]
+    total_values = []
 
-    with When("I insert test data into file table function in Parquet format"):
-        node.command(
-            f"cp /var/lib/clickhouse/user_files/data_NONE.Parquet /var/lib/clickhouse/user_files/{file_name}.Parquet"
-        )
-        insert_test_data(
-            name=f"FUNCTION file('{file_name}.Parquet', 'Parquet', '{table_def[1:-1]}')",
+    for row in range(2):
+        total_values.append(
+            "("
+            + ",".join([next(column_values) for column_values in columns_values])
+            + ")"
         )
 
-    with Then("I check the file specified in the `file` function has correct data"):
+    with When(
+        "I insert data into the `file` table function",
+        description="inserted data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
+    ):
+        node.query(
+            f"INSERT INTO FUNCTION file('{file_name}.Parquet', 'Parquet', '{func_def}') VALUES {','.join(total_values)}"
+        )
+
+    with Then("I check the specified file has correct data"):
         check_source_file(path=f"/var/lib/clickhouse/user_files/{file_name}.Parquet")
 
 
 @TestScenario
 def insert_into_function_auto_cast_types(self):
     """Check that when data is inserted into `file` table function with automatically defined structure,
-    it is written into the source file correctly.
-    """
-
-    xfail("create empty parquet file with appropriate columns.")
-
+    it is written into the source file correctly."""
+    self.context.snapshot_id = get_snapshot_id()
     node = self.context.node
     file_name = "file_" + getuid()
+    table_name = "table_" + getuid()
 
-    with When("I insert test data into `file` function in Parquet format"):
-        node.command(
-            f"cp /var/lib/clickhouse/user_files/data_NONE.Parquet /var/lib/clickhouse/user_files/{file_name}.Parquet"
+    with Given("I have a table with a `File(Parquet)` engine"):
+        table = create_table(
+            name=table_name,
+            engine="File(Parquet)",
+            columns=generate_all_column_types(include=parquet_test_columns()),
         )
-        insert_test_data(name=f"FUNCTION file('{file_name}.Parquet', 'Parquet')")
 
-    with Then("I check the file specified in the `file` function has correct data"):
-        check_source_file(path=f"/var/lib/clickhouse/user_files/{file_name}.Parquet")
+    with And(
+        "I populate table with test data",
+        description="insert data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
+    ):
+        table.insert_test_data(row_count=1, cardinality=1)
+
+    with When("I copy the Parquet file created by the table"):
+        node.command(
+            f"cp /var/lib/clickhouse/data/default/{table_name}/data.Parquet /var/lib/clickhouse/user_files/{file_name}.Parquet"
+        )
+
+    with And("I generate test values"):
+        columns_values = [
+            column.values(row_count=2, cardinality=10) for column in table.columns
+        ]
+
+        total_values = []
+
+        for row in range(2):
+            total_values.append(
+                "("
+                + ",".join([next(column_values) for column_values in columns_values])
+                + ")"
+            )
+
+    with And("I insert data into the `file` table function"):
+        node.query(
+            f"INSERT INTO FUNCTION file('{file_name}.Parquet', 'Parquet') VALUES {','.join(total_values)}",
+            settings=[("engine_file_allow_create_multiple_files", 1)],
+        )
+
+    with Then("I check that the created file has correct data"):
+        check_source_file(path=f"/var/lib/clickhouse/user_files/{file_name}.1.Parquet")
 
 
 @TestScenario
 def select_from_function_manual_cast_types(self):
     """Check that when data is selected from a `file` table function with manually cast column types,
-    it is read correctly.
-    """
-
+    it is read correctly."""
+    self.context.snapshot_id = get_snapshot_id()
     node = self.context.node
-    table_def = node.command(
-        "cat /var/lib/clickhouse/user_files/clickhouse_table_def.txt"
-    ).output.strip()
+    table_columns = self.context.parquet_table_columns
+    table_def = ",".join([column.full_definition() for column in table_columns])
 
-    with Then("I check that the `file` table function contains correct data"):
-        check_query_output(
-            query=f"SELECT * FROM file('data_NONE.Parquet', 'Parquet', '{table_def[1:-1]}')"
-        )
+    with When("I check that the `file` table function reads data correctly"):
+        for column in table_columns:
+            with Check(f"{column.name}"):
+                execute_query(
+                    f"SELECT {column.name}, toTypeName({column.name}) FROM file('data_NONE.Parquet', 'Parquet', '{table_def}')"
+                )
 
 
 @TestScenario
 def select_from_function_auto_cast_types(self):
     """Check that when data is selected from a `file` table function with automatic cast column types,
-    it is read correctly.
-    """
+    it is read correctly."""
+    self.context.snapshot_id = get_snapshot_id()
+    table_columns = self.context.parquet_table_columns
 
-    with Then("I check that the `file` table function contains correct data"):
-        check_query_output(
-            query=f"SELECT * FROM file('data_NONE.Parquet', 'Parquet')",
-            snap_name="select from file function, auto cast types",
-        )
+    with When("I check that the `file` table function reads data correctly"):
+        for column in table_columns:
+            with Check(f"{column.name}"):
+                execute_query(
+                    f"SELECT {column.name}, toTypeName({column.name}) FROM file('data_NONE.Parquet', 'Parquet')"
+                )
 
 
 @TestSuite
@@ -327,8 +364,7 @@ def function(self):
 @TestFeature
 @Name("file")
 def feature(self, node="clickhouse1"):
-    """Run checks for `File(Parquet)` table engine and `file` table function when used with Parquet format."""
-
+    """Run checks for ClickHouse using Parquet format using `File(Parquet)` table engine and `file` table function."""
     self.context.node = self.context.cluster.node(node)
 
     Suite(run=engine)

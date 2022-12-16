@@ -63,7 +63,7 @@
     * 4.6.6 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.HDFS](#rqsrs-032clickhouseparquettablefunctionshdfs)
     * 4.6.7 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.Remote](#rqsrs-032clickhouseparquettablefunctionsremote)
     * 4.6.8 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.MySQL](#rqsrs-032clickhouseparquettablefunctionsmysql)
-    * 4.6.9 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.PostgeSQL](#rqsrs-032clickhouseparquettablefunctionspostgesql)
+    * 4.6.9 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.PostgreSQL](#rqsrs-032clickhouseparquettablefunctionspostgresql)
   * 4.7 [Table Engines](#table-engines)
     * 4.7.1 [MergeTree](#mergetree)
       * 4.7.1.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.MergeTree](#rqsrs-032clickhouseparquettableenginesmergetreemergetree)
@@ -415,7 +415,7 @@ version: 1.0
 
 [ClickHouse] SHALL support `mysql` table function reading and writing Parquet format.
 
-#### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.PostgeSQL
+#### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.PostgreSQL
 version: 1.0
 
 [ClickHouse] SHALL support `postgresql` table function reading and writing Parquet format.

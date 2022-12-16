@@ -185,20 +185,25 @@ def common_columns():
 def generate_all_column_types(include=None, exclude=None):
     """Generate a list of datatypes with names and ClickHouse types including arrays, maps and tuples."""
 
-    null_datatypes = generate_nullable_datatypes(basic_datatypes())
+    if include is not None:
+        basic_datatypes = include
+    else:
+        basic_datatypes = basic_datatypes()
+        
+    null_datatypes = generate_nullable_datatypes(basic_datatypes)
     low_cardinality_datatypes = generate_low_card_datatypes(
-        basic_datatypes() + null_datatypes
+        basic_datatypes + null_datatypes
     )
 
     array_datatypes = generate_array_datatypes(
-        basic_datatypes()
+        basic_datatypes
         + null_datatypes
         + low_cardinality_datatypes
         + common_complex_datatypes()
     )
 
     map_datatypes = generate_map_datatypes(
-        basic_datatypes()
+        basic_datatypes
         + null_datatypes
         + low_cardinality_datatypes
         + common_complex_datatypes()
@@ -206,7 +211,7 @@ def generate_all_column_types(include=None, exclude=None):
 
     tuple_datatype = [
         generate_tuple_datatype(
-            basic_datatypes()
+            basic_datatypes
             + null_datatypes
             + low_cardinality_datatypes
             + common_complex_datatypes()
@@ -214,7 +219,7 @@ def generate_all_column_types(include=None, exclude=None):
     ]
 
     all_test_datatypes = (
-        basic_datatypes()
+        basic_datatypes
         + map_datatypes
         + null_datatypes
         + array_datatypes

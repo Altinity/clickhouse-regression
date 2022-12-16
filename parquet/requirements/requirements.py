@@ -745,8 +745,8 @@ RQ_SRS_032_ClickHouse_Parquet_TableFunctions_MySQL = Requirement(
     num="4.6.8",
 )
 
-RQ_SRS_032_ClickHouse_Parquet_TableFunctions_PostgeSQL = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.PostgeSQL",
+RQ_SRS_032_ClickHouse_Parquet_TableFunctions_PostgreSQL = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.PostgreSQL",
     version="1.0",
     priority=None,
     group=None,
@@ -1338,7 +1338,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             num="4.6.8",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.PostgeSQL",
+            name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.PostgreSQL",
             level=3,
             num="4.6.9",
         ),
@@ -1502,7 +1502,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_TableFunctions_HDFS,
         RQ_SRS_032_ClickHouse_Parquet_TableFunctions_Remote,
         RQ_SRS_032_ClickHouse_Parquet_TableFunctions_MySQL,
-        RQ_SRS_032_ClickHouse_Parquet_TableFunctions_PostgeSQL,
+        RQ_SRS_032_ClickHouse_Parquet_TableFunctions_PostgreSQL,
         RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_MergeTree,
         RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_ReplicatedMergeTree,
         RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_ReplacingMergeTree,
@@ -1592,7 +1592,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
     * 4.6.6 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.HDFS](#rqsrs-032clickhouseparquettablefunctionshdfs)
     * 4.6.7 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.Remote](#rqsrs-032clickhouseparquettablefunctionsremote)
     * 4.6.8 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.MySQL](#rqsrs-032clickhouseparquettablefunctionsmysql)
-    * 4.6.9 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.PostgeSQL](#rqsrs-032clickhouseparquettablefunctionspostgesql)
+    * 4.6.9 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.PostgreSQL](#rqsrs-032clickhouseparquettablefunctionspostgresql)
   * 4.7 [Table Engines](#table-engines)
     * 4.7.1 [MergeTree](#mergetree)
       * 4.7.1.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.MergeTree](#rqsrs-032clickhouseparquettableenginesmergetreemergetree)
@@ -1944,7 +1944,7 @@ version: 1.0
 
 [ClickHouse] SHALL support `mysql` table function reading and writing Parquet format.
 
-#### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.PostgeSQL
+#### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.PostgreSQL
 version: 1.0
 
 [ClickHouse] SHALL support `postgresql` table function reading and writing Parquet format.
