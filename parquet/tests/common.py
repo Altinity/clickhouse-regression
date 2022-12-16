@@ -211,7 +211,7 @@ def check_source_file_on_s3(self, file, compression_type=None):
     elif self.context.storage == "minio":
         with By("Downloading the file"):
             self.context.s3_client.fget_object(
-                self.context.cluster.minio_bucket, "data/" + file, "/tmp/test_files/data.Parquet"
+                self.context.cluster.minio_bucket, "data/parquet/" + file, "/tmp/test_files/data.Parquet"
             )
 
     with By("copying the file to the docker node"):
