@@ -10,7 +10,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import Cluster
 from s3.regression import argparser
-from parquet.requirements import SRS032_ClickHouse_Parquet_Data_Format
+from parquet.requirements import *
 from helpers.common import check_clickhouse_version
 from helpers.tables import Column
 from helpers.datatypes import *
@@ -30,6 +30,7 @@ ffails = {}
 @FFails(ffails)
 @Name("parquet")
 @Specifications(SRS032_ClickHouse_Parquet_Data_Format)
+@Requirements(RQ_SRS_032_ClickHouse_Parquet("1.0"))
 def regression(
     self,
     local,
@@ -87,14 +88,14 @@ def regression(
                     Column(datatype=eval(datatype), name=name)
                 )
 
-        with Pool(6) as executor:
-            Feature(run=load("parquet.tests.file", "feature"))
-            Feature(run=load("parquet.tests.query", "feature"))
-            Feature(run=load("parquet.tests.int_list_multiple_chunks", "feature"))
-            Feature(run=load("parquet.tests.url", "feature"))
-            Feature(run=load("parquet.tests.mysql", "feature"))
-            Feature(run=load("parquet.tests.postgresql", "feature"))
-            Feature(run=load("parquet.tests.remote", "feature"))
+        with Pool(2) as executor:
+            Feature(run=load("parquet.tests.file", "feature"), parallel=True, executor=executor)
+            Feature(run=load("parquet.tests.query", "feature"), parallel=True, executor=executor)
+            Feature(run=load("parquet.tests.int_list_multiple_chunks", "feature"), parallel=True, executor=executor)
+            Feature(run=load("parquet.tests.url", "feature"), parallel=True, executor=executor)
+            Feature(run=load("parquet.tests.mysql", "feature"), parallel=True, executor=executor)
+            Feature(run=load("parquet.tests.postgresql", "feature"), parallel=True, executor=executor)
+            Feature(run=load("parquet.tests.remote", "feature"), parallel=True, executor=executor)
 
             join()
 

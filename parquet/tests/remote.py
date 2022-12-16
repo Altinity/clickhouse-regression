@@ -77,9 +77,7 @@ def select_from_function(self):
         ),
         (
             "LZ4",
-            Requirements(
-                RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Lz4("1.0"),
-            ),
+            Requirements(RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Lz4("1.0")),
         ),
     ],
 )

@@ -29,7 +29,7 @@ def insert_into_engine(self):
         "I check that the data inserted into the table was correctly written to the file"
     ):
         check_source_file_on_s3(
-            file=table_name + ".Parquet", compression_type=compression_type
+            file=table_name + ".Parquet", compression_type=f"'{compression_type.lower()}'"
         )
 
 
@@ -56,7 +56,7 @@ def select_from_engine(self):
     with When("I create a table with a `S3` engine on top of a Parquet file"):
         table = create_table(
             name=table_name,
-            engine=f"S3('{self.context.uri}{table_name}.Parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'Parquet', '{compression_type.lower()}')",
+            engine=f"S3('{self.context.uri}{table_name}.Parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'Parquet')",
             columns=table_columns,
         )
 
@@ -97,7 +97,7 @@ def engine_to_file_to_engine(self):
         "I check that the data inserted into the table was correctly written into the file"
     ):
         check_source_file_on_s3(
-            file=table0_name + ".Parquet", compression_type=compression_type
+            file=table0_name + ".Parquet", compression_type=f"'{compression_type.lower()}'"
         )
 
     with When("I create a table with a `S3` engine on top of a Parquet file"):
@@ -130,7 +130,7 @@ def insert_into_engine_from_file(self):
     with Given("I create a table with a `S3` engine"):
         table = create_table(
             name=table_name,
-            engine=f"S3('{self.context.uri}{table_name}.Parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'Parquet', '{compression_type.lower()}')",
+            engine=f"S3('{self.context.uri}{table_name}.Parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'Parquet')",
             columns=table_columns,
         )
 
@@ -139,7 +139,7 @@ def insert_into_engine_from_file(self):
             f"cp /var/lib/test_files/data_{compression_type}.Parquet /var/lib/clickhouse/user_files/data_{compression_type}.Parquet"
         )
         node.query(
-            f"INSERT INTO {table_name} FROM INFILE '/var/lib/clickhouse/user_files/data_{compression_type}.Parquet' COMPRESSION '{compression_type.lower()}' FORMAT Parquet"
+            f"INSERT INTO {table_name} FROM INFILE '/var/lib/clickhouse/user_files/data_{compression_type}.Parquet' FORMAT Parquet"
         )
 
     with Then(
@@ -182,7 +182,7 @@ def engine_select_output_to_file(self):
         "I check that the data inserted into the table was correctly written to the file"
     ):
         check_source_file_on_s3(
-            file=table_name + ".Parquet", compression_type=compression_type
+            file=table_name + ".Parquet", compression_type=f"'{compression_type.lower()}'"
         )
 
 
@@ -273,11 +273,13 @@ def select_from_function_auto_cast_types(self):
         )
 
     with When("I check that the `s3` table function reads data correctly"):
-        for column in table_columns:
-            with Check(f"{column.name}"):
-                execute_query(
-                    f"SELECT {column.name}, toTypeName({column.name}) FROM s3('{self.context.uri}{table_name}.Parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'Parquet')"
-                )
+        with Pool(3) as executor:
+            for column in table_columns:
+                with Check(f"{column.name}", parallel=True, executor=executor):
+                    execute_query(
+                        f"SELECT {column.name}, toTypeName({column.name}) FROM s3('{self.context.uri}{table_name}.Parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'Parquet')"
+                    )
+            join()
 
 
 @TestSuite
@@ -285,12 +287,12 @@ def select_from_function_auto_cast_types(self):
 def engine(self):
     """Check that table with `S3` engine correctly reads and writes Parquet format."""
 
-    with Pool(5):
-        Scenario(run=insert_into_engine)
-        Scenario(run=select_from_engine)
-        Scenario(run=engine_to_file_to_engine)
-        Scenario(run=insert_into_engine_from_file)
-        Scenario(run=engine_select_output_to_file)
+    with Pool(2) as executor:
+        Scenario(run=insert_into_engine, parallel=True, executor=executor)
+        Scenario(run=select_from_engine, parallel=True, executor=executor)
+        Scenario(run=engine_to_file_to_engine, parallel=True, executor=executor)
+        Scenario(run=insert_into_engine_from_file, parallel=True, executor=executor)
+        Scenario(run=engine_select_output_to_file, parallel=True, executor=executor)
         join()
 
 
@@ -299,10 +301,10 @@ def engine(self):
 def function(self):
     """Check that `s3` table function correctly reads and writes Parquet format."""
 
-    with Pool(3):
-        Scenario(run=insert_into_function)
-        Scenario(run=select_from_function_manual_cast_types)
-        Scenario(run=select_from_function_auto_cast_types)
+    with Pool(3) as executor:
+        Scenario(run=insert_into_function, parallel=True, executor=executor)
+        Scenario(run=select_from_function_manual_cast_types, parallel=True, executor=executor)
+        Scenario(run=select_from_function_auto_cast_types, parallel=True, executor=executor)
         join()
 
 
