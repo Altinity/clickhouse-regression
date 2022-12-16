@@ -819,40 +819,6 @@ def create_window_view(
 
 
 @TestStep(Given)
-def create_normal_view_with_join(
-    self, node=None
-):
-    """
-    Creating `NORMAL VIEW` as `SELECT` with `JOIN` to some table with .
-    """
-    if node is None:
-        node = current().context.node
-
-    try:
-        with By(f"creating normal view with stored select join"):
-            for table in self.context.tables:
-                if table.name.endswith("core"):
-                    for table2 in self.context.tables:
-                        if table2.name.endswith("duplicate") and table2.name.startswith(
-                                table.engine
-                        ):
-                            view_name = table.name + f"_nview_join{'_final' if table.final_modifier_available else ''}"
-                            node.query(
-                                f"CREATE VIEW IF NOT EXISTS {view_name}"
-                                f" AS SELECT * FROM {table.name}"
-                                f"{' FINAL' if table.final_modifier_available else ''}"
-                                f" INNER JOIN "
-                                f" {table2.name} on"
-                                f" {table.name}.id = {table2.name}.id"
-                            )
-
-        yield Table(view_name, "VIEW", table.final_modifier_available)
-    finally:
-        with Finally("I drop data"):
-            node.query(f"DROP VIEW IF EXISTS {view_name}")
-
-
-@TestStep(Given)
 def create_all_views(self):
     """
     Creating all types of 'VIEWS' to all core tables.
@@ -920,6 +886,76 @@ def create_all_views(self):
 
 
 @TestStep(Given)
+def create_normal_view_with_join(
+    self, node=None
+):
+    """
+    Creating `NORMAL VIEW` as `SELECT` with `JOIN` clause.
+    """
+    if node is None:
+        node = current().context.node
+
+    try:
+        with By(f"creating normal view with stored select join"):
+            for table in self.context.tables:
+                if table.name.endswith("core"):
+                    for table2 in self.context.tables:
+                        if table2.name.endswith("duplicate") and table2.name.startswith(
+                                table.engine
+                        ):
+                            view_name = table.name + f"_nview_join{'_final' if table.final_modifier_available else ''}"
+                            node.query(
+                                f"CREATE VIEW IF NOT EXISTS {view_name}"
+                                f" AS SELECT * FROM {table.name}"
+                                f"{' FINAL' if table.final_modifier_available else ''}"
+                                f" INNER JOIN "
+                                f" {table2.name} on"
+                                f" {table.name}.id = {table2.name}.id"
+                            )
+
+        yield Table(view_name, "VIEW", table.final_modifier_available)
+    finally:
+        with Finally("I drop data"):
+            node.query(f"DROP VIEW IF EXISTS {view_name}")
+
+
+@TestStep(Given)
+def create_replicated_table_2shards3replicas(
+    self, node=None
+):
+    """
+    Creating distributed table to replicated table on cluster with 2 shards and 2 replicas on one shard.
+    """
+    if node is None:
+        node = current().context.node
+
+    values = [
+        "({x},{y}, 1, 'first', '2020-01-01 01:01:01')",
+        "({x},{y}, 1, 'second', '2020-01-01 00:00:00')",
+    ]
+    final_modifier_available = True
+    cluster = "sharded_replicated_cluster"
+    name = "ReplicateShardTable"
+
+    create_and_populate_replacing_table(
+        name=name,
+        engine="ReplicatedReplacingMergeTree({version})",
+        populate=False,
+        cluster_name=cluster,
+        final_modifier_available=final_modifier_available,
+    )
+    self.context.tables.append(
+        create_and_populate_distributed_table(
+            distributed_table_name=name + "distributed_replicated",
+            core_table_name=name,
+            cluster_name=cluster,
+            final_modifier_available=final_modifier_available,
+            values=values,
+        )
+    )
+
+
+@TestStep(Given)
 def create_and_populate_all_tables(self):
     """
     Creating all kind of tables.
@@ -930,4 +966,7 @@ def create_and_populate_all_tables(self):
     create_all_views()
     create_and_populate_core_tables(duplicate=True)
     create_normal_view_with_join()
+    create_replicated_table_2shards3replicas()
+
+
 
