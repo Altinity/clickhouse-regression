@@ -819,6 +819,40 @@ def create_window_view(
 
 
 @TestStep(Given)
+def create_normal_view_with_join(
+    self, node=None
+):
+    """
+    Creating `NORMAL VIEW` as `SELECT` with `JOIN` to some table with .
+    """
+    if node is None:
+        node = current().context.node
+
+    try:
+        with By(f"creating normal view with stored select join"):
+            for table in self.context.tables:
+                if table.name.endswith("core"):
+                    for table2 in self.context.tables:
+                        if table2.name.endswith("duplicate") and table2.name.startswith(
+                                table.engine
+                        ):
+                            view_name = table.name + f"_nview_join{'_final' if table.final_modifier_available else ''}"
+                            node.query(
+                                f"CREATE VIEW IF NOT EXISTS {view_name}"
+                                f" AS SELECT * FROM {table.name}"
+                                f"{' FINAL' if table.final_modifier_available else ''}"
+                                f" INNER JOIN "
+                                f" {table2.name} on"
+                                f" {table.name}.id = {table2.name}.id"
+                            )
+
+        yield Table(view_name, "VIEW", table.final_modifier_available)
+    finally:
+        with Finally("I drop data"):
+            node.query(f"DROP VIEW IF EXISTS {view_name}")
+
+
+@TestStep(Given)
 def create_all_views(self):
     """
     Creating all types of 'VIEWS' to all core tables.
@@ -895,3 +929,5 @@ def create_and_populate_all_tables(self):
     create_and_populate_distributed_tables()
     create_all_views()
     create_and_populate_core_tables(duplicate=True)
+    create_normal_view_with_join()
+
