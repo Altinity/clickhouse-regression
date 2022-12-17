@@ -61,11 +61,10 @@ def select_from_engine(self):
     with Then(
         "I check that the table reads the data correctly by checking the table columns"
     ):
-        for column in table_columns:
-            with Check(f"{column.name}"):
-                execute_query(
-                    f"SELECT {column.name}, toTypeName({column.name}) FROM {table_name}"
-                )
+        with Pool(3) as executor:
+            for column in table_columns:
+                Check(test=execute_query_step, name=f"{column.name}", parallel=True, executor=executor)(sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table_name}")
+            join()
 
 
 @TestScenario
@@ -118,11 +117,10 @@ def engine_to_file_to_engine(self):
     with Then(
         "I check that the new table is able to read the data from the file correctly"
     ):
-        for column in table1.columns:
-            with Check(f"{column.datatype.name}"):
-                execute_query(
-                    f"SELECT {column.name}, toTypeName({column.name}) FROM {table1.name}"
-                )
+        with Pool(3) as executor:
+            for column in table1.columns:
+                Check(test=execute_query_step, name=f"{column.datatype.name}", parallel=True, executor=executor)(sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table1.name}")
+            join()
 
 
 @TestOutline(Scenario)
@@ -168,11 +166,10 @@ def insert_into_engine_from_file(self, compression_type):
         )
 
     with Then("I check that the table columns contain correct data"):
-        for column in table_columns:
-            with Check(f"{column.name}"):
-                execute_query(
-                    f"SELECT {column.name}, toTypeName({column.name}) FROM {table_name}"
-                )
+        with Pool(3) as executor:
+            for column in table_columns:
+                Check(test=execute_query_step, name=f"{column.name}", parallel=True, executor=executor)(sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table_name}")
+            join()
 
 
 @TestOutline(Scenario)
@@ -318,11 +315,10 @@ def select_from_function_manual_cast_types(self):
     table_def = ",".join([column.full_definition() for column in table_columns])
 
     with When("I check that the `file` table function reads data correctly"):
-        for column in table_columns:
-            with Check(f"{column.name}"):
-                execute_query(
-                    f"SELECT {column.name}, toTypeName({column.name}) FROM file('data_NONE.Parquet', 'Parquet', '{table_def}')"
-                )
+        with Pool(3) as executor:
+            for column in table_columns:
+                Check(test=execute_query_step, name=f"{column.name}", parallel=True, executor=executor)(sql=f"SELECT {column.name}, toTypeName({column.name}) FROM file('data_NONE.Parquet', 'Parquet', '{table_def}')")
+            join()
 
 
 @TestScenario
@@ -333,11 +329,10 @@ def select_from_function_auto_cast_types(self):
     table_columns = self.context.parquet_table_columns
 
     with When("I check that the `file` table function reads data correctly"):
-        for column in table_columns:
-            with Check(f"{column.name}"):
-                execute_query(
-                    f"SELECT {column.name}, toTypeName({column.name}) FROM file('data_NONE.Parquet', 'Parquet')"
-                )
+        with Pool(3) as executor:
+            for column in table_columns:
+                Check(test=execute_query_step, name=f"{column.name}", parallel=True, executor=executor)(sql=f"SELECT {column.name}, toTypeName({column.name}) FROM file('data_NONE.Parquet', 'Parquet')")
+            join()
 
 
 @TestSuite

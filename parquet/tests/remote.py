@@ -28,11 +28,10 @@ def insert_into_function(self):
         )
 
     with Then("I check the table has correct data"):
-        for column in table_columns:
-            with Check(f"{column.name}"):
-                execute_query(
-                    f"SELECT {column.name}, toTypeName({column.name}) FROM {table_name}"
-                )
+        with Pool(3) as executor:
+            for column in table_columns:
+                Check(test=execute_query_step, name=f"{column.name}", parallel=True, executor=executor)(sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table_name}")
+            join()
 
 
 @TestScenario

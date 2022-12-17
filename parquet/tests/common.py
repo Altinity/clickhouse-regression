@@ -189,11 +189,10 @@ def check_source_file(self, path, compression=None):
             f"INSERT INTO {table_name} FROM INFILE '{path}' {'COMPRESSION '+ compression if compression and compression != 'NONE' else ''} FORMAT Parquet"
         )
 
-    for column in table.columns:
-        with Check(f"{column.datatype.name}"):
-            execute_query(
-                f"SELECT {column.name}, toTypeName({column.name}) FROM {table.name}"
-            )
+    with Pool(3) as executor:
+        for column in table.columns:
+            Check(test=execute_query_step, name=f"{column.datatype.name}", parallel=True, executor=executor)(sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table.name}")
+        join()
 
     return
 
@@ -440,6 +439,31 @@ def mysql_conversion(column):
 
     raise Exception(f"invalid type {type(column.datatype)}")
 
+@TestOutline
+def execute_query_step(
+    self,
+    sql,
+    expected=None,
+    exitcode=None,
+    message=None,
+    no_checks=False,
+    snapshot_name=None,
+    format="JSONEachRow",
+    use_file=False,
+    hash_output=False,
+    ):
+    """Wrapper to call the execute_query function using testflows Check."""
+    execute_query(
+        sql=sql,
+        expected=expected,
+        exitcode=exitcode,
+        message=message,
+        no_checks=no_checks,
+        snapshot_name=snapshot_name,
+        format=format,
+        use_file=use_file,
+        hash_output=hash_output
+    )
 
 def execute_query(
     sql,

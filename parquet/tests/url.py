@@ -54,11 +54,10 @@ def select_from_engine(self):
         )
 
     with Then("I check that the table reads the data correctly"):
-        for column in table_columns:
-            with Check(f"{column.name}"):
-                execute_query(
-                    f"SELECT {column.name}, toTypeName({column.name}) FROM {table_name}"
-                )
+        with Pool(3) as executor:
+            for column in table_columns:
+                Check(test=execute_query_step, name=f"{column.name}", parallel=True, executor=executor)(sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table_name}")
+            join()
 
 
 @TestScenario
@@ -106,11 +105,10 @@ def engine_to_file_to_engine(self):
     with Then(
         "I check that the new table is able to read the data from the file correctly"
     ):
-        for column in table1.columns:
-            with Check(f"{column.datatype.name}"):
-                execute_query(
-                    f"SELECT {column.name}, toTypeName({column.name}) FROM {table1.name}"
-                )
+        with Pool(3) as executor:
+            for column in table1.columns:
+                Check(test=execute_query_step, name=f"{column.name}", parallel=True, executor=executor)(sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table1.name}")
+            join()
 
 
 @TestOutline(Scenario)
