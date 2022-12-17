@@ -66,11 +66,10 @@ def postgresql_engine_to_parquet_file_to_postgresql_engine(self):
         )
 
     with Then(f"I check the data in {table1_name}"):
-        for column in columns:
-            with Check(f"{column.name}"):
-                execute_query(
-                    f"SELECT {column.name}, toTypeName({column.name}) FROM {table1_name}"
-                )
+        with Pool(3) as executor:
+            for column in columns:
+                Check(test=execute_query_step, name=f"{column.name}", parallel=True, executor=executor)(sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table1_name}")
+            join()
 
 
 @TestScenario
@@ -126,12 +125,10 @@ def postgresql_function_to_parquet_file_to_postgresql_function(self):
         )
 
     with Then(f"I check the data on {table1_name}"):
-        for column in columns:
-            with Check(f"{column.name}"):
-                execute_query(
-                    f"SELECT {column.name}, toTypeName({column.name}) FROM postgresql('postgres1:5432', 'default', {table1_name}, 'user', 'password')"
-                )
-
+        with Pool(3) as executor:
+            for column in columns:
+                Check(test=execute_query_step, name=f"{column.name}", parallel=True, executor=executor)(sql=f"SELECT {column.name}, toTypeName({column.name}) FROM postgresql('postgres1:5432', 'default', {table1_name}, 'user', 'password')")
+            join()
 
 @TestOutline(Feature)
 @Examples(

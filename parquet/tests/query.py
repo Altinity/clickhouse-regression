@@ -78,11 +78,10 @@ def insert_into_table_from_file(self, engine, table_name=None):
         )
 
     with Then("I check that the table contains correct data"):
-        for column in table_columns:
-            with Check(f"{column.name}"):
-                execute_query(
-                    f"SELECT {column.name}, toTypeName({column.name}) FROM {table_name}"
-                )
+        with Pool(3) as executor:
+            for column in table_columns:
+                Check(test=execute_query_step, name=f"{column.name}", parallel=True, executor=executor)(sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table_name}")
+            join()
 
 
 @TestScenario
@@ -168,8 +167,7 @@ def select_from_table_into_file(self, engine, table_name=None):
         node.command(f"cp {path} /var/lib/clickhouse/user_files/{table_name}.Parquet")
         check_source_file(
             path=f"/var/lib/clickhouse/user_files/{table_name}.Parquet",
-            compression=f"'{compression_type.lower()}'",
-            snap_name="Select from table into file " + engine,
+            compression=f"'{compression_type.lower()}'"
         )
 
 
@@ -216,8 +214,7 @@ def select_from_mat_view_into_file(self):
             )
             check_source_file(
                 path=f"/var/lib/clickhouse/user_files/{table_name}.Parquet",
-                compression=f"'{compression_type.lower()}'",
-                snap_name="select from mat view into file",
+                compression=f"'{compression_type.lower()}'"
             )
 
     finally:
@@ -254,11 +251,10 @@ def insert_into_table_with_projection_from_file(self):
         )
 
     with Then("I check that the table contains correct data"):
-        for column in table_columns:
-            with Check(f"{column.name}"):
-                execute_query(
-                    f"SELECT {column.name}, toTypeName({column.name}) FROM {table_name}"
-                )
+        with Pool(3) as executor:
+            for column in table_columns:
+                Check(test=execute_query_step, name=f"{column.name}", parallel=True, executor=executor)(sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table_name}")
+            join()
 
 
 @TestOutline(Feature)
@@ -275,9 +271,7 @@ def insert_into_table_with_projection_from_file(self):
         ),
         (
             "LZ4",
-            Requirements(
-                RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Lz4("1.0"),
-            ),
+            Requirements(RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Lz4("1.0")),
         ),
     ],
 )
