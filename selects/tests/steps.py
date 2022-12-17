@@ -929,30 +929,111 @@ def create_replicated_table_2shards3replicas(
     if node is None:
         node = current().context.node
 
-    values = [
-        "({x},{y}, 1, 'first', '2020-01-01 01:01:01')",
-        "({x},{y}, 1, 'second', '2020-01-01 00:00:00')",
-    ]
-    final_modifier_available = True
-    cluster = "sharded_replicated_cluster"
-    name = "ReplicateShardTable"
+    clusters = ["sharded_replicated_cluster"]
 
-    create_and_populate_replacing_table(
-        name=name,
-        engine="ReplicatedReplacingMergeTree({version})",
-        populate=False,
-        cluster_name=cluster,
-        final_modifier_available=final_modifier_available,
-    )
-    self.context.tables.append(
-        create_and_populate_distributed_table(
-            distributed_table_name=name + "distributed_replicated",
-            core_table_name=name,
-            cluster_name=cluster,
-            final_modifier_available=final_modifier_available,
-            values=values,
-        )
-    )
+    for engine in engines:
+        if engine.startswith("Replicated"):
+            for cluster in clusters:
+                with Given(f"{engine} table"):
+                    name = engine
+                    symbols = [("(", "_"), (",", "_"), (")", ""), ("{", ""), ("}", "")]
+                    for symbol in symbols:
+                        name = name.replace(symbol[0], symbol[1])
+                    name = f"distr_{name}_table_{getuid()}" + cluster
+
+                    if engine.startswith("ReplicatedReplacing"):
+                        values = [
+                            "({x},{y}, 1, 'first', '2020-01-01 01:01:01')",
+                            "({x},{y}, 1, 'second', '2020-01-01 00:00:00')",
+                        ]
+                        final_modifier_available = True
+
+                        create_and_populate_replacing_table(
+                            name=name,
+                            engine=engine,
+                            populate=False,
+                            cluster_name=cluster,
+                            final_modifier_available=final_modifier_available,
+                        )
+
+                    elif engine.startswith("ReplicatedCollapsing"):
+                        values = [
+                            "({x},{y}, 4324182021466249494, 1, 146, 1)",
+                            "({x},{y}, 4324182021466249494, 1, 146, -1),"
+                            "({x},{y},4324182021466249494, 1, 185, 1)",
+                        ]
+                        final_modifier_available = True
+
+                        create_and_populate_collapsing_table(
+                            name=name,
+                            engine=engine,
+                            populate=False,
+                            cluster_name=cluster,
+                            final_modifier_available=final_modifier_available,
+                        )
+
+                    elif engine.startswith("ReplicatedAggregating"):
+                        values = ["({x},{y},'a', 1, 1)", "({x},{y},'a', 2, 2)"]
+                        final_modifier_available = True
+                        create_and_populate_aggregating_table(
+                            name=name,
+                            engine=engine,
+                            populate=False,
+                            cluster_name=cluster,
+                            final_modifier_available=final_modifier_available,
+                        )
+
+                    elif engine.startswith("ReplicatedSumming"):
+                        values = [
+                            "({x},{y}, 1, 'first', '2020-01-01 01:01:01')",
+                            "({x},{y}, 1, 'second', '2020-01-01 00:00:00')",
+                        ]
+                        final_modifier_available = True
+                        create_and_populate_summing_table(
+                            name=name,
+                            engine=engine,
+                            populate=False,
+                            cluster_name=cluster,
+                            final_modifier_available=final_modifier_available,
+                        )
+
+                    elif engine.startswith("ReplicatedMerge"):
+                        values = [
+                            "({x},{y}, 1, 'first', '2020-01-01 01:01:01')",
+                            "({x},{y}, 1, 'second', '2020-01-01 00:00:00')",
+                        ]
+                        final_modifier_available = False
+                        create_and_populate_merge_table(
+                            name=name,
+                            engine=engine,
+                            populate=False,
+                            cluster_name=cluster,
+                            final_modifier_available=final_modifier_available,
+                        )
+
+                    elif engine.startswith("ReplicatedVersioned"):
+                        values = [
+                            "({x},{y}, 1, 'first', 1, 1)",
+                            "({x},{y}, 1, 'second', 1, 1),({x},{y}, 2, 'third', -1, 2)",
+                        ]
+                        final_modifier_available = True
+                        create_and_populate_versioned_table(
+                            name=name,
+                            engine=engine,
+                            populate=False,
+                            cluster_name=cluster,
+                            final_modifier_available=final_modifier_available,
+                        )
+
+                    self.context.tables.append(
+                        create_and_populate_distributed_table(
+                            distributed_table_name=name + "distributed_replicated",
+                            core_table_name=name,
+                            cluster_name=cluster,
+                            final_modifier_available=final_modifier_available,
+                            values=values,
+                        )
+                    )
 
 
 @TestStep(Given)
