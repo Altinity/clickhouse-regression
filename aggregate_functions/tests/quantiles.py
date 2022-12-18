@@ -18,8 +18,7 @@ def feature(self, func="quantiles({params})", table=None):
     if table is None:
         table = self.context.table
 
-    params = "({params})"
-
-    _func = func.replace(params, f"(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999){params}")
-
+    _func = func.replace(
+        "({params})", f"(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)({{params}})"
+    )
     checks(func=_func)
