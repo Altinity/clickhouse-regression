@@ -131,48 +131,50 @@ def regression(
             pass
 
         else:
-            for storage in storages:
-                if "aws_s3" == storage.lower():
-                    with Given("I make sure the S3 credentials are set"):
+            if "aws_s3" in storages:
+                with Given("I make sure the S3 credentials are set"):
 
-                        if aws_s3_access_key == None:
-                            fail("AWS S3 access key needs to be set")
+                    if aws_s3_access_key == None:
+                        fail("AWS S3 access key needs to be set")
 
-                        if aws_s3_key_id == None:
-                            fail("AWS S3 key id needs to be set")
+                    if aws_s3_key_id == None:
+                        fail("AWS S3 key id needs to be set")
 
-                        if aws_s3_bucket == None:
-                            fail("AWS S3 bucket needs to be set")
+                    if aws_s3_bucket == None:
+                        fail("AWS S3 bucket needs to be set")
 
-                        if aws_s3_region == None:
-                            fail("AWS S3 region needs to be set")
+                    if aws_s3_region == None:
+                        fail("AWS S3 region needs to be set")
 
-                    self.context.aws_s3_bucket = aws_s3_bucket.value
-                    self.context.uri = f"https://s3.{aws_s3_region.value}.amazonaws.com/{aws_s3_bucket.value}/data/parquet/"
-                    self.context.access_key_id = aws_s3_key_id.value
-                    self.context.secret_access_key = aws_s3_access_key.value
-                    self.context.s3_client = boto3.client(
-                        "s3",
-                        aws_access_key_id=self.context.access_key_id,
-                        aws_secret_access_key=self.context.secret_access_key,
-                    )
+                self.context.storage = "aws_s3"
+                self.context.aws_s3_bucket = aws_s3_bucket.value
+                self.context.uri = f"https://s3.{aws_s3_region.value}.amazonaws.com/{aws_s3_bucket.value}/data/parquet/"
+                self.context.access_key_id = aws_s3_key_id.value
+                self.context.secret_access_key = aws_s3_access_key.value
+                self.context.s3_client = boto3.client(
+                    "s3",
+                    aws_access_key_id=self.context.access_key_id,
+                    aws_secret_access_key=self.context.secret_access_key,
+                )
+                with Feature("aws s3"):
+                    Feature(run=load("parquet.tests.s3", "feature"))
 
-                elif "minio" == storage.lower():
 
-                    self.context.uri = "http://minio:9001/root/data/parquet/"
-                    self.context.access_key_id = "minio"
-                    self.context.secret_access_key = "minio123"
+            if "minio" in storages:
 
-                    with Given("I have a minio client"):
-                        start_minio(access_key="minio", secret_key="minio123")
+                self.context.storage = "minio"
+                self.context.uri = "http://minio:9001/root/data/parquet/"
+                self.context.access_key_id = "minio"
+                self.context.secret_access_key = "minio123"
 
-                elif "gcs" == storage.lower():
-                    xfail("GCS not implemented")
+                with Given("I have a minio client"):
+                    start_minio(access_key="minio", secret_key="minio123")
 
-                self.context.storage = storage
+                with Feature("minio"):
+                    Feature(run=load("parquet.tests.s3", "feature"))
 
-            with Feature(f"{storage}"):
-                Feature(run=load("parquet.tests.s3", "feature"))
+            if "gcs" in storages:
+                xfail("GCS not implemented")
 
 
 if main():
