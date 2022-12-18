@@ -4,9 +4,17 @@ from selects.tests.steps import *
 
 
 @TestOutline
-def simple_select(self, statement, order_by=False, limit=False, node=None):
-    """Check all basic selects with `FINAL` clause equal to force_select_final select.
-    """
+def simple_select(
+    self,
+    statement,
+    order_by=False,
+    distinct=False,
+    group_by=False,
+    limit=False,
+    where=False,
+    node=None,
+):
+    """Check all basic selects with `FINAL` clause equal to force_select_final select."""
     if node is None:
         node = self.context.node
 
@@ -17,14 +25,22 @@ def simple_select(self, statement, order_by=False, limit=False, node=None):
             ):
                 assert (
                     node.query(
-                        f"SELECT {statement} FROM {table.name}"
+                        f"SELECT{' DISTINCT' if distinct else ''} "
+                        f"{statement if not table.name.startswith('system') else '*'} "
+                        f"FROM {table.name}"
+                        f"{' WHERE (x > 10)' if not table.name.startswith('system') and where else ''}"
                         f"{' FINAL' if table.final_modifier_available else ''} "
+                        f"{' GROUP BY (id, x, someCol)' if not table.name.startswith('system') and group_by else ''}"
                         f"{' ORDER BY (id, x, someCol)' if not table.name.startswith('system') and order_by else ''}"
                         f"{' LIMIT 1' if limit else ''}"
                         f" FORMAT JSONEachRow;"
                     ).output.strip()
                     == node.query(
-                        f"SELECT {statement} FROM {table.name}"
+                        f"SELECT{' DISTINCT' if distinct else ''} "
+                        f"{statement if not table.name.startswith('system') else '*'} "
+                        f"FROM {table.name}"
+                        f"{' WHERE (x > 10)' if not table.name.startswith('system') and where else ''}"
+                        f"{' GROUP BY (id, x, someCol)' if not table.name.startswith('system') and group_by else ''}"
                         f"{' ORDER BY (id, x, someCol)' if not table.name.startswith('system') and order_by else ''}"
                         f"{' LIMIT 1' if limit else ''}"
                         f"  FORMAT JSONEachRow;",
@@ -34,22 +50,33 @@ def simple_select(self, statement, order_by=False, limit=False, node=None):
 
 
 @TestScenario
-def select_count(self, node=None):
+def select_count(self):
     """Check select count() with `FINAL` clause equal to force_select_final select."""
     simple_select(statement="count()")
 
 
 @TestScenario
-def select_order_by(self, node=None):
-    """Check  `FINAL` clause equal to force_select_final select all data with `ORDER BY`."""
-    simple_select(statement="*", order_by=True)
-
-
-@TestScenario
-def select_limit(self, node=None):
+def select_limit(self):
     """Check  `FINAL` clause equal to force_select_final select all data with `LIMIT`."""
     simple_select(statement="*", limit=True)
 
+
+@TestScenario
+def select_group_by(self):
+    """Check  `FINAL` clause equal to force_select_final select all data with `GROUP BY`."""
+    simple_select(statement="id, x, someCol", order_by=True, group_by=True)
+
+
+@TestScenario
+def select_distinct(self):
+    """Check  `FINAL` clause equal to force_select_final select all data with `DISTINCT`."""
+    simple_select(statement="*", order_by=True, distinct=True)
+
+
+@TestScenario
+def select_where(self):
+    """Check  `FINAL` clause equal to force_select_final select all data with `WHERE`."""
+    simple_select(statement="*", order_by=True, where=True)
 
 @TestScenario
 def select_join_clause(self, node=None):
