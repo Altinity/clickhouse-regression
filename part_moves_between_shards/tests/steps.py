@@ -376,7 +376,9 @@ def simple_insert(self, table_name, value="777", node_name="clickhouse1"):
 
 
 @TestStep
-def move_part_with_check(self, table_name, shard_b_number, shard_a_name, part_name='\'all_0_0_0\''):
+def move_part_with_check(
+    self, table_name, shard_b_number, shard_a_name, part_name="'all_0_0_0'"
+):
     with Given("I move part from shard a to shard b"):
         self.context.cluster.node(shard_a_name).query(
             f"ALTER TABLE {table_name} MOVE PART {part_name} TO SHARD '/clickhouse/tables/"

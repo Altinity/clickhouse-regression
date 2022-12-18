@@ -58,7 +58,14 @@ def mysql_engine_to_parquet_file_to_mysql_engine(self):
     with Then("I check the data on the second table"):
         with Pool(3) as executor:
             for column in columns:
-                Check(test=execute_query_step, name=f"{column.name}", parallel=True, executor=executor)(sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table1_name}")
+                Check(
+                    test=execute_query_step,
+                    name=f"{column.name}",
+                    parallel=True,
+                    executor=executor,
+                )(
+                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table1_name}"
+                )
             join()
 
 
@@ -117,7 +124,14 @@ def mysql_function_to_parquet_file_to_mysql_function(self):
     with Then("I check the data on the second table"):
         with Pool(3) as executor:
             for column in columns:
-                Check(test=execute_query_step, name=f"{column.name}", parallel=True, executor=executor)(sql=f"SELECT {column.name}, toTypeName({column.name}) FROM mysql('mysql1:3306', 'default', '{table1_name}', 'user', 'password')")
+                Check(
+                    test=execute_query_step,
+                    name=f"{column.name}",
+                    parallel=True,
+                    executor=executor,
+                )(
+                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM mysql('mysql1:3306', 'default', '{table1_name}', 'user', 'password')"
+                )
             join()
 
 

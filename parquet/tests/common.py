@@ -191,7 +191,12 @@ def check_source_file(self, path, compression=None):
 
     with Pool(3) as executor:
         for column in table.columns:
-            Check(test=execute_query_step, name=f"{column.datatype.name}", parallel=True, executor=executor)(sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table.name}")
+            Check(
+                test=execute_query_step,
+                name=f"{column.datatype.name}",
+                parallel=True,
+                executor=executor,
+            )(sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table.name}")
         join()
 
     return
@@ -204,13 +209,17 @@ def check_source_file_on_s3(self, file, compression_type=None):
     if self.context.storage == "aws_s3":
         with By("Downloading the file"):
             self.context.s3_client.download_file(
-                self.context.aws_s3_bucket, f"data/parquet/{file}", "/tmp/test_files/data.Parquet"
+                self.context.aws_s3_bucket,
+                f"data/parquet/{file}",
+                "/tmp/test_files/data.Parquet",
             )
 
     elif self.context.storage == "minio":
         with By("Downloading the file"):
             self.context.s3_client.fget_object(
-                self.context.cluster.minio_bucket, "data/parquet/" + file, "/tmp/test_files/data.Parquet"
+                self.context.cluster.minio_bucket,
+                "data/parquet/" + file,
+                "/tmp/test_files/data.Parquet",
             )
 
     with By("copying the file to the docker node"):
@@ -439,6 +448,7 @@ def mysql_conversion(column):
 
     raise Exception(f"invalid type {type(column.datatype)}")
 
+
 @TestOutline
 def execute_query_step(
     self,
@@ -451,7 +461,7 @@ def execute_query_step(
     format="JSONEachRow",
     use_file=False,
     hash_output=False,
-    ):
+):
     """Wrapper to call the execute_query function using testflows Check."""
     execute_query(
         sql=sql,
@@ -462,8 +472,9 @@ def execute_query_step(
         snapshot_name=snapshot_name,
         format=format,
         use_file=use_file,
-        hash_output=hash_output
+        hash_output=hash_output,
     )
+
 
 def execute_query(
     sql,

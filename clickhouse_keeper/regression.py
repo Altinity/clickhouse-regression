@@ -53,8 +53,6 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
 
     self.context.clickhouse_version = clickhouse_version
 
-
-
     if stress is not None:
         self.context.stress = stress
 

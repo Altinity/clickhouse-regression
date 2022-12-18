@@ -886,9 +886,7 @@ def create_all_views(self):
 
 
 @TestStep(Given)
-def create_normal_view_with_join(
-    self, node=None
-):
+def create_normal_view_with_join(self, node=None):
     """
     Creating `NORMAL VIEW` as `SELECT` with `JOIN` clause.
     """
@@ -901,9 +899,12 @@ def create_normal_view_with_join(
                 if table.name.endswith("core"):
                     for table2 in self.context.tables:
                         if table2.name.endswith("duplicate") and table2.name.startswith(
-                                table.engine
+                            table.engine
                         ):
-                            view_name = table.name + f"_nview_join{'_final' if table.final_modifier_available else ''}"
+                            view_name = (
+                                table.name
+                                + f"_nview_join{'_final' if table.final_modifier_available else ''}"
+                            )
                             node.query(
                                 f"CREATE VIEW IF NOT EXISTS {view_name}"
                                 f" AS SELECT * FROM {table.name}"
@@ -920,9 +921,7 @@ def create_normal_view_with_join(
 
 
 @TestStep(Given)
-def create_replicated_table_2shards3replicas(
-    self, node=None
-):
+def create_replicated_table_2shards3replicas(self, node=None):
     """
     Creating distributed table to replicated table on cluster with 2 shards and 2 replicas on one shard.
     """
@@ -1048,6 +1047,3 @@ def create_and_populate_all_tables(self):
     create_and_populate_core_tables(duplicate=True)
     create_normal_view_with_join()
     create_replicated_table_2shards3replicas()
-
-
-

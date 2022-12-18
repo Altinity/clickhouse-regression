@@ -89,13 +89,41 @@ def regression(
                 )
 
         with Pool(2) as executor:
-            Feature(run=load("parquet.tests.file", "feature"), parallel=True, executor=executor)
-            Feature(run=load("parquet.tests.query", "feature"), parallel=True, executor=executor)
-            Feature(run=load("parquet.tests.int_list_multiple_chunks", "feature"), parallel=True, executor=executor)
-            Feature(run=load("parquet.tests.url", "feature"), parallel=True, executor=executor)
-            Feature(run=load("parquet.tests.mysql", "feature"), parallel=True, executor=executor)
-            Feature(run=load("parquet.tests.postgresql", "feature"), parallel=True, executor=executor)
-            Feature(run=load("parquet.tests.remote", "feature"), parallel=True, executor=executor)
+            Feature(
+                run=load("parquet.tests.file", "feature"),
+                parallel=True,
+                executor=executor,
+            )
+            Feature(
+                run=load("parquet.tests.query", "feature"),
+                parallel=True,
+                executor=executor,
+            )
+            Feature(
+                run=load("parquet.tests.int_list_multiple_chunks", "feature"),
+                parallel=True,
+                executor=executor,
+            )
+            Feature(
+                run=load("parquet.tests.url", "feature"),
+                parallel=True,
+                executor=executor,
+            )
+            Feature(
+                run=load("parquet.tests.mysql", "feature"),
+                parallel=True,
+                executor=executor,
+            )
+            Feature(
+                run=load("parquet.tests.postgresql", "feature"),
+                parallel=True,
+                executor=executor,
+            )
+            Feature(
+                run=load("parquet.tests.remote", "feature"),
+                parallel=True,
+                executor=executor,
+            )
 
             join()
 
