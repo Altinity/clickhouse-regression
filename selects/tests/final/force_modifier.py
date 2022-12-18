@@ -28,8 +28,8 @@ def simple_select(
                         f"SELECT{' DISTINCT' if distinct else ''} "
                         f"{statement if not table.name.startswith('system') else '*'} "
                         f"FROM {table.name}"
-                        f"{' WHERE (x > 10)' if not table.name.startswith('system') and where else ''}"
-                        f"{' FINAL' if table.final_modifier_available else ''} "
+                        f"{' FINAL' if table.final_modifier_available else ''}"
+                        f"{' WHERE x > 10' if not table.name.startswith('system') and where else ''}"
                         f"{' GROUP BY (id, x, someCol)' if not table.name.startswith('system') and group_by else ''}"
                         f"{' ORDER BY (id, x, someCol)' if not table.name.startswith('system') and order_by else ''}"
                         f"{' LIMIT 1' if limit else ''}"
@@ -39,7 +39,7 @@ def simple_select(
                         f"SELECT{' DISTINCT' if distinct else ''} "
                         f"{statement if not table.name.startswith('system') else '*'} "
                         f"FROM {table.name}"
-                        f"{' WHERE (x > 10)' if not table.name.startswith('system') and where else ''}"
+                        f"{' WHERE x > 10' if not table.name.startswith('system') and where else ''}"
                         f"{' GROUP BY (id, x, someCol)' if not table.name.startswith('system') and group_by else ''}"
                         f"{' ORDER BY (id, x, someCol)' if not table.name.startswith('system') and order_by else ''}"
                         f"{' LIMIT 1' if limit else ''}"
@@ -77,6 +77,7 @@ def select_distinct(self):
 def select_where(self):
     """Check  `FINAL` clause equal to force_select_final select all data with `WHERE`."""
     simple_select(statement="*", order_by=True, where=True)
+
 
 @TestScenario
 def select_join_clause(self, node=None):
