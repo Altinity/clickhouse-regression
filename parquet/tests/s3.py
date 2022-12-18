@@ -29,7 +29,8 @@ def insert_into_engine(self):
         "I check that the data inserted into the table was correctly written to the file"
     ):
         check_source_file_on_s3(
-            file=table_name + ".Parquet", compression_type=f"'{compression_type.lower()}'"
+            file=table_name + ".Parquet",
+            compression_type=f"'{compression_type.lower()}'",
         )
 
 
@@ -65,7 +66,14 @@ def select_from_engine(self):
     ):
         with Pool(3) as executor:
             for column in table_columns:
-                Check(test=execute_query_step, name=f"{column.name}", parallel=True, executor=executor)(sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table_name}")
+                Check(
+                    test=execute_query_step,
+                    name=f"{column.name}",
+                    parallel=True,
+                    executor=executor,
+                )(
+                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table_name}"
+                )
             join()
 
 
@@ -96,7 +104,8 @@ def engine_to_file_to_engine(self):
         "I check that the data inserted into the table was correctly written into the file"
     ):
         check_source_file_on_s3(
-            file=table0_name + ".Parquet", compression_type=f"'{compression_type.lower()}'"
+            file=table0_name + ".Parquet",
+            compression_type=f"'{compression_type.lower()}'",
         )
 
     with When("I create a table with a `S3` engine on top of a Parquet file"):
@@ -111,7 +120,14 @@ def engine_to_file_to_engine(self):
     ):
         with Pool(3) as executor:
             for column in columns:
-                Check(test=execute_query_step, name=f"{column.name}", parallel=True, executor=executor)(sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table1_name}")
+                Check(
+                    test=execute_query_step,
+                    name=f"{column.name}",
+                    parallel=True,
+                    executor=executor,
+                )(
+                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table1_name}"
+                )
             join()
 
 
@@ -145,7 +161,14 @@ def insert_into_engine_from_file(self):
     ):
         with Pool(3) as executor:
             for column in table_columns:
-                Check(test=execute_query_step, name=f"{column.name}", parallel=True, executor=executor)(sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table_name}")
+                Check(
+                    test=execute_query_step,
+                    name=f"{column.name}",
+                    parallel=True,
+                    executor=executor,
+                )(
+                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table_name}"
+                )
             join()
 
 
@@ -179,7 +202,8 @@ def engine_select_output_to_file(self):
         "I check that the data inserted into the table was correctly written to the file"
     ):
         check_source_file_on_s3(
-            file=table_name + ".Parquet", compression_type=f"'{compression_type.lower()}'"
+            file=table_name + ".Parquet",
+            compression_type=f"'{compression_type.lower()}'",
         )
 
 
@@ -214,7 +238,8 @@ def insert_into_function(self):
         "I check that the data inserted into the table function was correctly written to the file"
     ):
         check_source_file_on_s3(
-            file=file_name + ".Parquet", compression_type=f"'{compression_type.lower()}'"
+            file=file_name + ".Parquet",
+            compression_type=f"'{compression_type.lower()}'",
         )
 
 
@@ -243,8 +268,15 @@ def select_from_function_manual_cast_types(self):
     with When("I check that the `s3` table function reads data correctly"):
         with Pool(3) as executor:
             for column in table_columns:
-                Check(test=execute_query_step, name=f"{column.name}", parallel=True, executor=executor)(sql=f"SELECT {column.name}, toTypeName({column.name}) FROM \
-                    s3('{self.context.uri}{table_name}.Parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'Parquet', '{table_def}')")
+                Check(
+                    test=execute_query_step,
+                    name=f"{column.name}",
+                    parallel=True,
+                    executor=executor,
+                )(
+                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM \
+                    s3('{self.context.uri}{table_name}.Parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'Parquet', '{table_def}')"
+                )
             join()
 
 
@@ -272,8 +304,15 @@ def select_from_function_auto_cast_types(self):
     with When("I check that the `s3` table function reads data correctly"):
         with Pool(3) as executor:
             for column in table_columns:
-                Check(test=execute_query_step, name=f"{column.name}", parallel=True, executor=executor)(sql=f"SELECT {column.name}, toTypeName({column.name}) FROM \
-                    s3('{self.context.uri}{table_name}.Parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'Parquet')")
+                Check(
+                    test=execute_query_step,
+                    name=f"{column.name}",
+                    parallel=True,
+                    executor=executor,
+                )(
+                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM \
+                    s3('{self.context.uri}{table_name}.Parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'Parquet')"
+                )
             join()
 
 
@@ -298,8 +337,12 @@ def function(self):
 
     with Pool(3) as executor:
         Scenario(run=insert_into_function, parallel=True, executor=executor)
-        Scenario(run=select_from_function_manual_cast_types, parallel=True, executor=executor)
-        Scenario(run=select_from_function_auto_cast_types, parallel=True, executor=executor)
+        Scenario(
+            run=select_from_function_manual_cast_types, parallel=True, executor=executor
+        )
+        Scenario(
+            run=select_from_function_auto_cast_types, parallel=True, executor=executor
+        )
         join()
 
 

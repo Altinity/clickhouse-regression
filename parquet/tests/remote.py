@@ -30,7 +30,14 @@ def insert_into_function(self):
     with Then("I check the table has correct data"):
         with Pool(3) as executor:
             for column in table_columns:
-                Check(test=execute_query_step, name=f"{column.name}", parallel=True, executor=executor)(sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table_name}")
+                Check(
+                    test=execute_query_step,
+                    name=f"{column.name}",
+                    parallel=True,
+                    executor=executor,
+                )(
+                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table_name}"
+                )
             join()
 
 
@@ -58,8 +65,10 @@ def select_from_function(self):
         )
 
     with Then("I check the Parquet file"):
-        check_source_file(path=f"/var/lib/clickhouse/user_files/{table_name}_{compression_type}.Parquet",
-            compression=f"'{compression_type.lower()}'")
+        check_source_file(
+            path=f"/var/lib/clickhouse/user_files/{table_name}_{compression_type}.Parquet",
+            compression=f"'{compression_type.lower()}'",
+        )
 
 
 @TestOutline(Feature)

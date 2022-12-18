@@ -63,7 +63,14 @@ def select_from_engine(self):
     ):
         with Pool(3) as executor:
             for column in table_columns:
-                Check(test=execute_query_step, name=f"{column.name}", parallel=True, executor=executor)(sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table_name}")
+                Check(
+                    test=execute_query_step,
+                    name=f"{column.name}",
+                    parallel=True,
+                    executor=executor,
+                )(
+                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table_name}"
+                )
             join()
 
 
@@ -119,7 +126,14 @@ def engine_to_file_to_engine(self):
     ):
         with Pool(3) as executor:
             for column in table1.columns:
-                Check(test=execute_query_step, name=f"{column.datatype.name}", parallel=True, executor=executor)(sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table1.name}")
+                Check(
+                    test=execute_query_step,
+                    name=f"{column.datatype.name}",
+                    parallel=True,
+                    executor=executor,
+                )(
+                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table1.name}"
+                )
             join()
 
 
@@ -168,7 +182,14 @@ def insert_into_engine_from_file(self, compression_type):
     with Then("I check that the table columns contain correct data"):
         with Pool(3) as executor:
             for column in table_columns:
-                Check(test=execute_query_step, name=f"{column.name}", parallel=True, executor=executor)(sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table_name}")
+                Check(
+                    test=execute_query_step,
+                    name=f"{column.name}",
+                    parallel=True,
+                    executor=executor,
+                )(
+                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table_name}"
+                )
             join()
 
 
@@ -317,7 +338,14 @@ def select_from_function_manual_cast_types(self):
     with When("I check that the `file` table function reads data correctly"):
         with Pool(3) as executor:
             for column in table_columns:
-                Check(test=execute_query_step, name=f"{column.name}", parallel=True, executor=executor)(sql=f"SELECT {column.name}, toTypeName({column.name}) FROM file('data_NONE.Parquet', 'Parquet', '{table_def}')")
+                Check(
+                    test=execute_query_step,
+                    name=f"{column.name}",
+                    parallel=True,
+                    executor=executor,
+                )(
+                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM file('data_NONE.Parquet', 'Parquet', '{table_def}')"
+                )
             join()
 
 
@@ -331,7 +359,14 @@ def select_from_function_auto_cast_types(self):
     with When("I check that the `file` table function reads data correctly"):
         with Pool(3) as executor:
             for column in table_columns:
-                Check(test=execute_query_step, name=f"{column.name}", parallel=True, executor=executor)(sql=f"SELECT {column.name}, toTypeName({column.name}) FROM file('data_NONE.Parquet', 'Parquet')")
+                Check(
+                    test=execute_query_step,
+                    name=f"{column.name}",
+                    parallel=True,
+                    executor=executor,
+                )(
+                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM file('data_NONE.Parquet', 'Parquet')"
+                )
             join()
 
 
