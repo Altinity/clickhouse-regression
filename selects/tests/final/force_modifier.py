@@ -3,9 +3,10 @@ from selects.requirements import *
 from selects.tests.steps import *
 
 
-@TestScenario
-def select_count(self, node=None):
-    """Check select count() with `FINAL` clause equal to force_select_final select."""
+@TestOutline
+def simple_select(self, statement, order_by=False, limit=False, node=None):
+    """Check all basic selects with `FINAL` clause equal to force_select_final select.
+    """
     if node is None:
         node = self.context.node
 
@@ -16,41 +17,38 @@ def select_count(self, node=None):
             ):
                 assert (
                     node.query(
-                        f"SELECT count() FROM {table.name}"
+                        f"SELECT {statement} FROM {table.name}"
                         f"{' FINAL' if table.final_modifier_available else ''} "
+                        f"{' ORDER BY (id, x, someCol)' if not table.name.startswith('system') and order_by else ''}"
+                        f"{' LIMIT 1' if limit else ''}"
                         f" FORMAT JSONEachRow;"
                     ).output.strip()
                     == node.query(
-                        f"SELECT count() FROM {table.name}  FORMAT JSONEachRow;",
+                        f"SELECT {statement} FROM {table.name}"
+                        f"{' ORDER BY (id, x, someCol)' if not table.name.startswith('system') and order_by else ''}"
+                        f"{' LIMIT 1' if limit else ''}"
+                        f"  FORMAT JSONEachRow;",
                         settings=[("force_select_final", 1)],
                     ).output.strip()
                 )
 
 
 @TestScenario
-def select(self, node=None):
-    """Check select all data with `FINAL` clause equal to force_select_final select."""
-    if node is None:
-        node = self.context.node
+def select_count(self, node=None):
+    """Check select count() with `FINAL` clause equal to force_select_final select."""
+    simple_select(statement="count()")
 
-    for table in self.context.tables:
-        if not table.name.endswith("duplicate"):
-            with Then(
-                "I check that select with force_select_final equal 'SELECT...FINAL'"
-            ):
-                assert (
-                    node.query(
-                        f"SELECT * FROM {table.name}"
-                        f"{' FINAL' if table.final_modifier_available else ''} "
-                        f"{' ORDER BY (id, x, someCol)' if not table.name.startswith('system') else ''} FORMAT JSONEachRow;"
-                    ).output.strip()
-                    == node.query(
-                        f"SELECT * FROM "
-                        f"{table.name}{' ORDER BY (id, x, someCol)' if not table.name.startswith('system') else ''}"
-                        f" FORMAT JSONEachRow;",
-                        settings=[("force_select_final", 1)],
-                    ).output.strip()
-                )
+
+@TestScenario
+def select_order_by(self, node=None):
+    """Check  `FINAL` clause equal to force_select_final select all data with `ORDER BY`."""
+    simple_select(statement="*", order_by=True)
+
+
+@TestScenario
+def select_limit(self, node=None):
+    """Check  `FINAL` clause equal to force_select_final select all data with `LIMIT`."""
+    simple_select(statement="*", limit=True)
 
 
 @TestScenario
