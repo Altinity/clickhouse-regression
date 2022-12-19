@@ -65,7 +65,7 @@ def postgresql_engine_to_parquet_file_to_postgresql_engine(self):
             f"INSERT INTO {table1_name} FROM INFILE {path} COMPRESSION '{compression_type.lower()}' FORMAT Parquet"
         )
 
-    with Then(f"I check the data in {table1_name}"):
+    with Then(f"I check the data on the table"):
         with Pool(3) as executor:
             for column in columns:
                 Check(
@@ -134,7 +134,7 @@ def postgresql_function_to_parquet_file_to_postgresql_function(self):
             f"INSERT INTO FUNCTION postgresql('postgres1:5432', 'default', '{table1_name}', 'user', 'password') FROM INFILE {path} COMPRESSION '{compression_type.lower()}' FORMAT Parquet"
         )
 
-    with Then(f"I check the data on {table1_name}"):
+    with Then(f"I check the data on the table"):
         with Pool(3) as executor:
             for column in columns:
                 Check(
