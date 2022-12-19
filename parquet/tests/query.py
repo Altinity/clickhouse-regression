@@ -73,6 +73,7 @@ def insert_into_table_from_file(self, engine, table_name=None):
         )
 
     with When("I insert data into the table from a Parquet file"):
+        node.command(f"cp /var/lib/test_files/data_{compression_type}.Parquet /var/lib/clickhouse/user_files/data_{compression_type}.Parquet")
         node.query(
             f"INSERT INTO {table_name} FROM INFILE '/var/lib/clickhouse/user_files/data_{compression_type}.Parquet' FORMAT Parquet"
         )
