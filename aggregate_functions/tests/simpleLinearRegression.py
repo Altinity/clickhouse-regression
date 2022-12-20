@@ -4,6 +4,7 @@ from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_SimpleLinearRegression,
 )
 
+from helpers.common import check_clickhouse_version
 from aggregate_functions.tests.steps import get_snapshot_id
 from aggregate_functions.tests.covarPop import feature as checks
 
@@ -15,9 +16,12 @@ from aggregate_functions.tests.covarPop import feature as checks
 )
 def feature(self, func="simpleLinearRegression({params})", table=None):
     """Check simpleLinearRegression aggregate function by using the same tests as for covarPop."""
-    self.context.snapshot_id = get_snapshot_id()
+
+    snapshot_id = None
+    if check_clickhouse_version("<22.6")(self):
+        snapshot_id = name.basename(current().name) + "<22.6"
 
     if table is None:
         table = self.context.table
 
-    checks(func=func, table=table)
+    checks(func=func, table=table, snapshot_id=snapshot_id)
