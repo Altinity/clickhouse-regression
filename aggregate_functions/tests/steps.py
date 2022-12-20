@@ -168,6 +168,8 @@ def execute_query(
     format="JSONEachRow",
     use_file=False,
     hash_output=False,
+    timeout=None,
+    settings=None,
 ):
     """Execute SQL query and compare the output to the snapshot."""
     if snapshot_name is None:
@@ -190,6 +192,8 @@ def execute_query(
             no_checks=no_checks,
             use_file=use_file,
             hash_output=hash_output,
+            timeout=timeout,
+            settings=settings,
         )
         if no_checks:
             return r
