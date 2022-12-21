@@ -159,7 +159,6 @@ def regression(
                 with Feature("aws s3"):
                     Feature(run=load("parquet.tests.s3", "feature"))
 
-
             if "minio" in storages:
 
                 self.context.storage = "minio"
