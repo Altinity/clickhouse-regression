@@ -291,3 +291,35 @@ _aggregate_functions_sparkbar_datatypes_permutations_date_lowcardinality_uint16_
 {"sparkbar(9)(date, lowcardinality_uint16_)":"▁█▅     ▄"}
 """
 
+_aggregate_functions_sparkbar_datatypes_permutations_datetime_lowcardinality_nullable_uint8__ = r"""
+{"sparkbar(9)(datetime, lowcardinality_nullable_uint8__)":"█▂      ▁"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_datetime_lowcardinality_nullable_uint64__ = r"""
+{"sparkbar(9)(datetime, lowcardinality_nullable_uint64__)":"█▁      ▃"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_datetime_lowcardinality_nullable_uint32__ = r"""
+{"sparkbar(9)(datetime, lowcardinality_nullable_uint32__)":"█▃      ▁"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_datetime_lowcardinality_nullable_uint16__ = r"""
+{"sparkbar(9)(datetime, lowcardinality_nullable_uint16__)":"█▂      ▁"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_date_lowcardinality_nullable_uint8__ = r"""
+{"sparkbar(9)(date, lowcardinality_nullable_uint8__)":"▁█▆     ▄"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_date_lowcardinality_nullable_uint64__ = r"""
+{"sparkbar(9)(date, lowcardinality_nullable_uint64__)":"▁▆█     ▅"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_date_lowcardinality_nullable_uint32__ = r"""
+{"sparkbar(9)(date, lowcardinality_nullable_uint32__)":"▁█▅     ▄"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_date_lowcardinality_nullable_uint16__ = r"""
+{"sparkbar(9)(date, lowcardinality_nullable_uint16__)":"▁█▃     ▄"}
+"""
+

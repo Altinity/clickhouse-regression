@@ -171,3 +171,43 @@ _aggregate_functions_stochasticLinearRegression_LowCardinality_Float64_ = r"""
 {"stochasticLinearRegression(0.1, 0., 5, 'SGD')(plus(plus(multiply(lowcardinality_float64_, 0.1), multiply(lowcardinality_float64_, 0.2)), 7), lowcardinality_float64_, multiply(lowcardinality_float64_, 0.3))":[null,null,null]}
 """
 
+_aggregate_functions_stochasticLinearRegression_LowCardinality_Nullable_UInt8__ = r"""
+{"stochasticLinearRegression(0.1, 0., 5, 'SGD')(plus(plus(multiply(lowcardinality_nullable_uint8__, 0.1), multiply(lowcardinality_nullable_uint8__, 0.2)), 7), lowcardinality_nullable_uint8__, multiply(lowcardinality_nullable_uint8__, 0.3))":[-8822057.796896001,-2646617.3390688,-52320.25603200001]}
+"""
+
+_aggregate_functions_stochasticLinearRegression_LowCardinality_Nullable_UInt16__ = r"""
+{"stochasticLinearRegression(0.1, 0., 5, 'SGD')(plus(plus(multiply(lowcardinality_nullable_uint16__, 0.1), multiply(lowcardinality_nullable_uint16__, 0.2)), 7), lowcardinality_nullable_uint16__, multiply(lowcardinality_nullable_uint16__, 0.3))":[-16186276817715326,-4855883045314597,-455663541127.2212]}
+"""
+
+_aggregate_functions_stochasticLinearRegression_LowCardinality_Nullable_UInt32__ = r"""
+{"stochasticLinearRegression(0.1, 0., 5, 'SGD')(plus(plus(multiply(lowcardinality_nullable_uint32__, 0.1), multiply(lowcardinality_nullable_uint32__, 0.2)), 7), lowcardinality_nullable_uint32__, multiply(lowcardinality_nullable_uint32__, 0.3))":[-7.344726657469058e35,-2.2034179972407172e35,-2.518627842728733e26]}
+"""
+
+_aggregate_functions_stochasticLinearRegression_LowCardinality_Nullable_UInt64__ = r"""
+{"stochasticLinearRegression(0.1, 0., 5, 'SGD')(plus(plus(multiply(lowcardinality_nullable_uint64__, 0.1), multiply(lowcardinality_nullable_uint64__, 0.2)), 7), lowcardinality_nullable_uint64__, multiply(lowcardinality_nullable_uint64__, 0.3))":[-1.5946169982685508e74,-4.783850994805653e73,-1.304506519486363e55]}
+"""
+
+_aggregate_functions_stochasticLinearRegression_LowCardinality_Nullable_Int8__ = r"""
+{"stochasticLinearRegression(0.1, 0., 5, 'SGD')(plus(plus(multiply(lowcardinality_nullable_int8__, 0.1), multiply(lowcardinality_nullable_int8__, 0.2)), 7), lowcardinality_nullable_int8__, multiply(lowcardinality_nullable_int8__, 0.3))":[-980744.8848336003,-294223.46545008005,2504.969582400001]}
+"""
+
+_aggregate_functions_stochasticLinearRegression_LowCardinality_Nullable_Int16__ = r"""
+{"stochasticLinearRegression(0.1, 0., 5, 'SGD')(plus(plus(multiply(lowcardinality_nullable_int16__, 0.1), multiply(lowcardinality_nullable_int16__, 0.2)), 7), lowcardinality_nullable_int16__, multiply(lowcardinality_nullable_int16__, 0.3))":[-2446236075214157.5,-733870822564247.2,38980423226.32655]}
+"""
+
+_aggregate_functions_stochasticLinearRegression_LowCardinality_Nullable_Int32__ = r"""
+{"stochasticLinearRegression(0.1, 0., 5, 'SGD')(plus(plus(multiply(lowcardinality_nullable_int32__, 0.1), multiply(lowcardinality_nullable_int32__, 0.2)), 7), lowcardinality_nullable_int32__, multiply(lowcardinality_nullable_int32__, 0.3))":[-3.6403053429619675e34,-1.0920916028885904e34,-3.896986492820894e24]}
+"""
+
+_aggregate_functions_stochasticLinearRegression_LowCardinality_Nullable_Int64__ = r"""
+{"stochasticLinearRegression(0.1, 0., 5, 'SGD')(plus(plus(multiply(lowcardinality_nullable_int64__, 0.1), multiply(lowcardinality_nullable_int64__, 0.2)), 7), lowcardinality_nullable_int64__, multiply(lowcardinality_nullable_int64__, 0.3))":[-2.171968944804506e73,-6.5159068344135165e72,-5.637595652396893e53]}
+"""
+
+_aggregate_functions_stochasticLinearRegression_LowCardinality_Nullable_Float32__ = r"""
+{"stochasticLinearRegression(0.1, 0., 5, 'SGD')(plus(plus(multiply(lowcardinality_nullable_float32__, 0.1), multiply(lowcardinality_nullable_float32__, 0.2)), 7), lowcardinality_nullable_float32__, multiply(lowcardinality_nullable_float32__, 0.3))":[-2.65925576920963e151,-7.97776730762889e150,-1.0206247358463492e112]}
+"""
+
+_aggregate_functions_stochasticLinearRegression_LowCardinality_Nullable_Float64__ = r"""
+{"stochasticLinearRegression(0.1, 0., 5, 'SGD')(plus(plus(multiply(lowcardinality_nullable_float64__, 0.1), multiply(lowcardinality_nullable_float64__, 0.2)), 7), lowcardinality_nullable_float64__, multiply(lowcardinality_nullable_float64__, 0.3))":[null,null,null]}
+"""
+

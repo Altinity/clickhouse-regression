@@ -179,3 +179,51 @@ _aggregate_functions_state_sparkbarState_datatypes_permutations_date_lowcardinal
 {"hex(sparkbarState(9)(date, lowcardinality_uint16_))":"0000FFFF0000FFFF09000000009C30F6908D321E3CCF49CD5B923404FFFFFFFFFF863082B24D4059F3603FE12F"}
 """
 
+_aggregate_functions_state_sparkbarState_datatypes_permutations_uint8_lowcardinality_nullable_uint8__ = r"""
+{"hex(sparkbarState(9)(uint8, lowcardinality_nullable_uint8__))":"0100FF00FF090000AFA5FFFFA381E6CA18CC7E70774BC9C0"}
+"""
+
+_aggregate_functions_state_sparkbarState_datatypes_permutations_uint8_lowcardinality_nullable_uint64__ = r"""
+{"hex(sparkbarState(9)(uint8, lowcardinality_nullable_uint64__))":"0100FF0000000000000000FFFFFFFFFFFFFFFF09000000000000000000AF60DD552FA430F698FFFFFFFFFFFFFFFFFFA377343891619FC7E6E6B9A10E25F1BA6A2818B8C7B537DDCF1C6B7E8CFF93B99C78AD0A7797912678AFF4ABEDC973434BF5635B3D33"}
+"""
+
+_aggregate_functions_state_sparkbarState_datatypes_permutations_uint8_lowcardinality_nullable_uint32__ = r"""
+{"hex(sparkbarState(9)(uint8, lowcardinality_nullable_uint32__))":"0100FF00000000FFFFFFFF090000000000AF9259B484FFFFFFFFFFA3E1281A55E68EFAB5DB180763CD5B7E567D5294772E1439CEC945D02EEA"}
+"""
+
+_aggregate_functions_state_sparkbarState_datatypes_permutations_uint8_lowcardinality_nullable_uint16__ = r"""
+{"hex(sparkbarState(9)(uint8, lowcardinality_nullable_uint16__))":"0100FF0000FFFF09000000AF4C1AFFFFFFA3932AE6C2D818F73C7EE13F77A031C99CEE"}
+"""
+
+_aggregate_functions_state_sparkbarState_datatypes_permutations_datetime_lowcardinality_nullable_uint8__ = r"""
+{"hex(sparkbarState(9)(datetime, lowcardinality_nullable_uint8__))":"0179446A45D0D5FFFF00FF09EAFA2A5E70B5C69E584B07BF344ACCD0D5FFFF00960E854EA50BF79055C079446A4581CFD5FFFFFFDE9BC35CCA"}
+"""
+
+_aggregate_functions_state_sparkbarState_datatypes_permutations_datetime_lowcardinality_nullable_uint64__ = r"""
+{"hex(sparkbarState(9)(datetime, lowcardinality_nullable_uint64__))":"0179446A45D0D5FFFF0000000000000000FFFFFFFFFFFFFFFF09EAFA2A5E8CFF93B99C78AD0AB5C69E5897912678AFF4ABED07BF344AB8C7B537DDCF1C6BD0D5FFFF0000000000000000960E854E60DD552FA430F6980BF7905573434BF5635B3D3379446A4577343891619FC7E6CFD5FFFFFFFFFFFFFFFFFFFFDE9BC35CB9A10E25F1BA6A28"}
+"""
+
+_aggregate_functions_state_sparkbarState_datatypes_permutations_datetime_lowcardinality_nullable_uint32__ = r"""
+{"hex(sparkbarState(9)(datetime, lowcardinality_nullable_uint32__))":"0179446A45D0D5FFFF00000000FFFFFFFF09EAFA2A5E567D5294B5C69E582E1439CE07BF344A0763CD5BD0D5FFFF00000000960E854E9259B4840BF7905545D02EEA79446A45E1281A55CFD5FFFFFFFFFFFFDE9BC35C8EFAB5DB"}
+"""
+
+_aggregate_functions_state_sparkbarState_datatypes_permutations_datetime_lowcardinality_nullable_uint16__ = r"""
+{"hex(sparkbarState(9)(datetime, lowcardinality_nullable_uint16__))":"0179446A45D0D5FFFF0000FFFF09EAFA2A5EE13FB5C69E58A03107BF344AF73CD0D5FFFF0000960E854E4C1A0BF790559CEE79446A45932ACFD5FFFFFFFFDE9BC35CC2D8"}
+"""
+
+_aggregate_functions_state_sparkbarState_datatypes_permutations_date_lowcardinality_nullable_uint8__ = r"""
+{"hex(sparkbarState(9)(date, lowcardinality_nullable_uint8__))":"010000FFFF00FF090000009C30818D32CACF49CC9234C0FFFFFF8630704D40A5603F4B"}
+"""
+
+_aggregate_functions_state_sparkbarState_datatypes_permutations_date_lowcardinality_nullable_uint64__ = r"""
+{"hex(sparkbarState(9)(date, lowcardinality_nullable_uint64__))":"010000FFFF0000000000000000FFFFFFFFFFFFFFFF09000000000000000000009C3077343891619FC7E68D32B9A10E25F1BA6A28CF49B8C7B537DDCF1C6B923473434BF5635B3D33FFFFFFFFFFFFFFFFFFFF86308CFF93B99C78AD0A4D4060DD552FA430F698603F97912678AFF4ABED"}
+"""
+
+_aggregate_functions_state_sparkbarState_datatypes_permutations_date_lowcardinality_nullable_uint32__ = r"""
+{"hex(sparkbarState(9)(date, lowcardinality_nullable_uint32__))":"010000FFFF00000000FFFFFFFF090000000000009C30E1281A558D328EFAB5DBCF490763CD5B923445D02EEAFFFFFFFFFFFF8630567D52944D409259B484603F2E1439CE"}
+"""
+
+_aggregate_functions_state_sparkbarState_datatypes_permutations_date_lowcardinality_nullable_uint16__ = r"""
+{"hex(sparkbarState(9)(date, lowcardinality_nullable_uint16__))":"010000FFFF0000FFFF09000000009C30932A8D32C2D8CF49F73C92349CEEFFFFFFFF8630E13F4D404C1A603FA031"}
+"""
+
