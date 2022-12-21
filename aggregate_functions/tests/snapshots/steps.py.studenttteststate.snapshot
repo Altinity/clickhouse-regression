@@ -1595,3 +1595,11 @@ _aggregate_functions_state_studentTTestState_datatypes_permutations_decimal128_3
 {"hex(studentTTestState(decimal128_38_, lowcardinality_uint16_))":"00000000000000400000000000002040000000000000F0BF58E84C515221E93F000000000000F03F368DBA586AF50640"}
 """
 
+_aggregate_functions_state_studentTTestState_single_value_in_0_population = r"""
+{"hex(studentTTestState(sample_data, sample_index))":"000000000000F03F000000000000144000000000000024400000000000003D4000000000000059400000000000707140"}
+"""
+
+_aggregate_functions_state_studentTTestState_single_value_in_1_population = r"""
+{"hex(studentTTestState(sample_data, sample_index))":"0000000000001440000000000000F03F0000000000003D40000000000000244000000000007071400000000000005940"}
+"""
+
