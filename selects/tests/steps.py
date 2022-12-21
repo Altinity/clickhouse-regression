@@ -713,7 +713,7 @@ def create_normal_view(
         with By(f"creating normal view {view_name}"):
             node.query(
                 f"CREATE {view_type} IF NOT EXISTS {view_name}"
-                f" AS SELECT * FROM {core_table}{' FINAL' if final else ''}",
+                f" AS SELECT * FROM {core_table}{' FINAL' if final and final_modifier_available else ''}",
             )
         yield Table(view_name, view_type, final_modifier_available)
     finally:
@@ -741,7 +741,7 @@ def create_materialized_view(
         with And(f"creating materialized view {view_name}"):
             node.query(
                 f"CREATE {view_type} IF NOT EXISTS {view_name}"
-                f" TO {core_table}_mcopy{'_final' if final else ''}"
+                f" TO {core_table}_mcopy"
                 f" AS SELECT * FROM {core_table}",
             )
 
@@ -769,7 +769,7 @@ def create_live_view(
         with By(f"creating live view {view_name}"):
             node.query(
                 f"CREATE {view_type} IF NOT EXISTS {view_name}"
-                f" AS SELECT * FROM {core_table}{' FINAL' if final else ''}",
+                f" AS SELECT * FROM {core_table}{' FINAL' if final  and final_modifier_available else ''}",
                 settings=[("allow_experimental_live_view", 1)],
             )
 
@@ -868,13 +868,6 @@ def create_all_views(self):
                 )
             )
 
-            self.context.tables.append(
-                create_window_view(
-                    core_table=table.name,
-                    final_modifier_available=table.final_modifier_available,
-                )
-            )
-
             if table.final_modifier_available:
                 self.context.tables.append(
                     create_window_view(
@@ -886,7 +879,7 @@ def create_all_views(self):
 
 
 @TestStep(Given)
-def create_normal_view_with_join(self, node=None):
+def create_normal_view_with_join(self, node=None, final1=None, final2=None):
     """
     Creating `NORMAL VIEW` as `SELECT` with `JOIN` clause.
     """
@@ -905,13 +898,21 @@ def create_normal_view_with_join(self, node=None):
                                 table.name
                                 + f"_nview_join{'_final' if table.final_modifier_available else ''}"
                             )
+                            if final1 is None:
+                                final1 = table.final_modifier_available
+                            if final2 is None:
+                                final2 = table2.final_modifier_available
+
                             node.query(
-                                f"CREATE VIEW IF NOT EXISTS {view_name}"
-                                f" AS SELECT * FROM {table.name}"
-                                f"{' FINAL' if table.final_modifier_available else ''}"
-                                f" INNER JOIN "
-                                f" {table2.name} on"
-                                f" {table.name}.id = {table2.name}.id"
+                                f"CREATE VIEW IF NOT EXISTS {view_name} AS "
+                                f"SELECT * FROM {table.name} a"
+                                f"{' FINAL' if final1 else ''}"
+                                f" JOIN "
+                                f"(SELECT * FROM {table2.name}"
+                                f"{' FINAL' if final2 else ''}) b on"
+                                f" a.id = b.id"
+                                f" ORDER BY id",
+                                settings=[("joined_subquery_requires_alias", 0)],
                             )
 
         yield Table(view_name, "VIEW", table.final_modifier_available)
