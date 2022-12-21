@@ -1595,3 +1595,11 @@ _aggregate_functions_welchTTest_datatypes_permutations_decimal128_38__lowcardina
 {"welchTTest(decimal128_38_, lowcardinality_uint16_)":[-1.0923303297691282,1]}
 """
 
+_aggregate_functions_welchTTest_single_value_in_0_population = r"""
+{"welchTTest(sample_data, sample_index)":[null,null]}
+"""
+
+_aggregate_functions_welchTTest_single_value_in_1_population = r"""
+{"welchTTest(sample_data, sample_index)":[null,null]}
+"""
+

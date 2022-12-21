@@ -4,7 +4,7 @@ from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_WelchTTest,
 )
 
-from aggregate_functions.tests.steps import get_snapshot_id
+from aggregate_functions.tests.steps import get_snapshot_id, execute_query
 from aggregate_functions.tests.quantileWeighted import feature as checks
 
 
@@ -17,5 +17,15 @@ def feature(self, func="welchTTest({params})", table=None):
 
     if table is None:
         table = self.context.table
+
+    with Check("single value in 0 population"):
+        execute_query(
+            f"SELECT {func.format(params='sample_data,sample_index')} FROM values('sample_data Int8, sample_index Int8', (10,0), (11,1), (12,1), (1,1), (2,1), (3,1))"
+        )
+
+    with Check("single value in 1 population"):
+        execute_query(
+            f"SELECT {func.format(params='sample_data,sample_index')} FROM values('sample_data Int8, sample_index Int8', (10,1), (11,0), (12,0), (1,0), (2,0), (3,0))"
+        )
 
     checks(func=func)

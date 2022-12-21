@@ -17,4 +17,5 @@ def feature(self, func="studentTTest({params})", table=None):
 
     if table is None:
         table = self.context.table
+
     checks(func=func)
