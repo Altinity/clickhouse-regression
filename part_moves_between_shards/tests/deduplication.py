@@ -26,7 +26,10 @@ def source_replica_stopped(self, node=None):
 
         with And("I move part from shard 1 to shard 3"):
             move_part_with_check(
-                table_name=table_name, shard_b_number="3", shard_a_name="clickhouse1", part_name='\'all_0_0_0\''
+                table_name=table_name,
+                shard_b_number="3",
+                shard_a_name="clickhouse1",
+                part_name="'all_0_0_0'",
             )
 
         with And("I stop shard 1 replica"):

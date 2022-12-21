@@ -42,21 +42,21 @@ data_types_and_values = {
 }
 
 pq_to_ch_types = {
-    "bool": "UInt8",
-    "uint8": "UInt8",
-    "int8": "Int8",
-    "uint16": "UInt16",
-    "int16": "Int16",
-    "uint32": "UInt32",
-    "int32": "Int32",
-    "uint64": "UInt64",
-    "int64": "Int64",
-    "float": "Float32",
-    "double": "Float64",
-    "timestamp": "DateTime",
-    "date32": "Date",
-    "string": "String",
-    "binary": "String",
+    "bool": "UInt8()",
+    "uint8": "UInt8()",
+    "int8": "Int8()",
+    "uint16": "UInt16()",
+    "int16": "Int16()",
+    "uint32": "UInt32()",
+    "int32": "Int32()",
+    "uint64": "UInt64()",
+    "int64": "Int64()",
+    "float": "Float32()",
+    "double": "Float64()",
+    "timestamp": "DateTime()",
+    "date32": "Date()",
+    "string": "String()",
+    "binary": "String()",
 }
 
 
@@ -81,7 +81,7 @@ def generate_parquet_test_files():
             ("list_struct_" + type, pa.list_(pa.struct([("a", pyarrow_types[type])])))
         )
         ch_table_def.append(
-            "list_struct_" + type + " Array(Tuple(" + pq_to_ch_types[type] + "))"
+            "list_struct_" + type + " Array(Tuple([" + pq_to_ch_types[type] + "]))"
         )
 
         if type not in ["float", "double", "timestamp"]:
@@ -176,9 +176,9 @@ def generate_parquet_test_files():
                     + inner_key
                     + " Map("
                     + pq_to_ch_types[type]
-                    + ", Tuple("
+                    + ", Tuple(["
                     + pq_to_ch_types[inner_key]
-                    + "))"
+                    + "]))"
                 )
 
     value_dict["struct"] = [
@@ -192,13 +192,13 @@ def generate_parquet_test_files():
     )
     ch_table_def.append(
         "struct"
-        + " Tuple("
+        + " Tuple[("
         + ",".join([pq_to_ch_types[type] for type in data_types_and_values.keys()])
-        + ")"
+        + "])"
     )
 
     with open("C:\\Users\\myros\\Altinity\\clickhouse_table_def.txt", "w") as f:
-        f.write("[" + ",".join(ch_table_def) + "]")
+        f.write(".".join(ch_table_def))
 
     table = pa.table(value_dict, schema=pa.schema(schema))
 
