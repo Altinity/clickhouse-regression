@@ -71,20 +71,17 @@ services:
       - proxy1
       - proxy2
 
-  minio1:
+  minio:
     extends:
       file: minio-service.yml
-      service: minio1
-    depends_on:
-      - proxy1
-      - proxy2
+      service: minio
 
   minio-client:
     extends:
       file: minio-client.yml
       service: minio-client
     depends_on:
-      minio1:
+      minio:
         condition: service_healthy
 
   aws:

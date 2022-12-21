@@ -713,7 +713,7 @@ def create_normal_view(
         with By(f"creating normal view {view_name}"):
             node.query(
                 f"CREATE {view_type} IF NOT EXISTS {view_name}"
-                f" AS SELECT * FROM {core_table}{' FINAL' if final else ''}",
+                f" AS SELECT * FROM {core_table}{' FINAL' if final and final_modifier_available else ''}",
             )
         yield Table(view_name, view_type, final_modifier_available)
     finally:
@@ -741,7 +741,7 @@ def create_materialized_view(
         with And(f"creating materialized view {view_name}"):
             node.query(
                 f"CREATE {view_type} IF NOT EXISTS {view_name}"
-                f" TO {core_table}_mcopy{'_final' if final else ''}"
+                f" TO {core_table}_mcopy"
                 f" AS SELECT * FROM {core_table}",
             )
 
@@ -769,7 +769,7 @@ def create_live_view(
         with By(f"creating live view {view_name}"):
             node.query(
                 f"CREATE {view_type} IF NOT EXISTS {view_name}"
-                f" AS SELECT * FROM {core_table}{' FINAL' if final else ''}",
+                f" AS SELECT * FROM {core_table}{' FINAL' if final  and final_modifier_available else ''}",
                 settings=[("allow_experimental_live_view", 1)],
             )
 
@@ -868,13 +868,6 @@ def create_all_views(self):
                 )
             )
 
-            self.context.tables.append(
-                create_window_view(
-                    core_table=table.name,
-                    final_modifier_available=table.final_modifier_available,
-                )
-            )
-
             if table.final_modifier_available:
                 self.context.tables.append(
                     create_window_view(
@@ -886,9 +879,7 @@ def create_all_views(self):
 
 
 @TestStep(Given)
-def create_normal_view_with_join(
-    self, node=None
-):
+def create_normal_view_with_join(self, node=None, final1=None, final2=None):
     """
     Creating `NORMAL VIEW` as `SELECT` with `JOIN` clause.
     """
@@ -901,16 +892,27 @@ def create_normal_view_with_join(
                 if table.name.endswith("core"):
                     for table2 in self.context.tables:
                         if table2.name.endswith("duplicate") and table2.name.startswith(
-                                table.engine
+                            table.engine
                         ):
-                            view_name = table.name + f"_nview_join{'_final' if table.final_modifier_available else ''}"
+                            view_name = (
+                                table.name
+                                + f"_nview_join{'_final' if table.final_modifier_available else ''}"
+                            )
+                            if final1 is None:
+                                final1 = table.final_modifier_available
+                            if final2 is None:
+                                final2 = table2.final_modifier_available
+
                             node.query(
-                                f"CREATE VIEW IF NOT EXISTS {view_name}"
-                                f" AS SELECT * FROM {table.name}"
-                                f"{' FINAL' if table.final_modifier_available else ''}"
-                                f" INNER JOIN "
-                                f" {table2.name} on"
-                                f" {table.name}.id = {table2.name}.id"
+                                f"CREATE VIEW IF NOT EXISTS {view_name} AS "
+                                f"SELECT * FROM {table.name} a"
+                                f"{' FINAL' if final1 else ''}"
+                                f" JOIN "
+                                f"(SELECT * FROM {table2.name}"
+                                f"{' FINAL' if final2 else ''}) b on"
+                                f" a.id = b.id"
+                                f" ORDER BY id",
+                                settings=[("joined_subquery_requires_alias", 0)],
                             )
 
         yield Table(view_name, "VIEW", table.final_modifier_available)
@@ -920,39 +922,118 @@ def create_normal_view_with_join(
 
 
 @TestStep(Given)
-def create_replicated_table_2shards3replicas(
-    self, node=None
-):
+def create_replicated_table_2shards3replicas(self, node=None):
     """
     Creating distributed table to replicated table on cluster with 2 shards and 2 replicas on one shard.
     """
     if node is None:
         node = current().context.node
 
-    values = [
-        "({x},{y}, 1, 'first', '2020-01-01 01:01:01')",
-        "({x},{y}, 1, 'second', '2020-01-01 00:00:00')",
-    ]
-    final_modifier_available = True
-    cluster = "sharded_replicated_cluster"
-    name = "ReplicateShardTable"
+    clusters = ["sharded_replicated_cluster"]
 
-    create_and_populate_replacing_table(
-        name=name,
-        engine="ReplicatedReplacingMergeTree({version})",
-        populate=False,
-        cluster_name=cluster,
-        final_modifier_available=final_modifier_available,
-    )
-    self.context.tables.append(
-        create_and_populate_distributed_table(
-            distributed_table_name=name + "distributed_replicated",
-            core_table_name=name,
-            cluster_name=cluster,
-            final_modifier_available=final_modifier_available,
-            values=values,
-        )
-    )
+    for engine in engines:
+        if engine.startswith("Replicated"):
+            for cluster in clusters:
+                with Given(f"{engine} table"):
+                    name = engine
+                    symbols = [("(", "_"), (",", "_"), (")", ""), ("{", ""), ("}", "")]
+                    for symbol in symbols:
+                        name = name.replace(symbol[0], symbol[1])
+                    name = f"distr_{name}_table_{getuid()}" + cluster
+
+                    if engine.startswith("ReplicatedReplacing"):
+                        values = [
+                            "({x},{y}, 1, 'first', '2020-01-01 01:01:01')",
+                            "({x},{y}, 1, 'second', '2020-01-01 00:00:00')",
+                        ]
+                        final_modifier_available = True
+
+                        create_and_populate_replacing_table(
+                            name=name,
+                            engine=engine,
+                            populate=False,
+                            cluster_name=cluster,
+                            final_modifier_available=final_modifier_available,
+                        )
+
+                    elif engine.startswith("ReplicatedCollapsing"):
+                        values = [
+                            "({x},{y}, 4324182021466249494, 1, 146, 1)",
+                            "({x},{y}, 4324182021466249494, 1, 146, -1),"
+                            "({x},{y},4324182021466249494, 1, 185, 1)",
+                        ]
+                        final_modifier_available = True
+
+                        create_and_populate_collapsing_table(
+                            name=name,
+                            engine=engine,
+                            populate=False,
+                            cluster_name=cluster,
+                            final_modifier_available=final_modifier_available,
+                        )
+
+                    elif engine.startswith("ReplicatedAggregating"):
+                        values = ["({x},{y},'a', 1, 1)", "({x},{y},'a', 2, 2)"]
+                        final_modifier_available = True
+                        create_and_populate_aggregating_table(
+                            name=name,
+                            engine=engine,
+                            populate=False,
+                            cluster_name=cluster,
+                            final_modifier_available=final_modifier_available,
+                        )
+
+                    elif engine.startswith("ReplicatedSumming"):
+                        values = [
+                            "({x},{y}, 1, 'first', '2020-01-01 01:01:01')",
+                            "({x},{y}, 1, 'second', '2020-01-01 00:00:00')",
+                        ]
+                        final_modifier_available = True
+                        create_and_populate_summing_table(
+                            name=name,
+                            engine=engine,
+                            populate=False,
+                            cluster_name=cluster,
+                            final_modifier_available=final_modifier_available,
+                        )
+
+                    elif engine.startswith("ReplicatedMerge"):
+                        values = [
+                            "({x},{y}, 1, 'first', '2020-01-01 01:01:01')",
+                            "({x},{y}, 1, 'second', '2020-01-01 00:00:00')",
+                        ]
+                        final_modifier_available = False
+                        create_and_populate_merge_table(
+                            name=name,
+                            engine=engine,
+                            populate=False,
+                            cluster_name=cluster,
+                            final_modifier_available=final_modifier_available,
+                        )
+
+                    elif engine.startswith("ReplicatedVersioned"):
+                        values = [
+                            "({x},{y}, 1, 'first', 1, 1)",
+                            "({x},{y}, 1, 'second', 1, 1),({x},{y}, 2, 'third', -1, 2)",
+                        ]
+                        final_modifier_available = True
+                        create_and_populate_versioned_table(
+                            name=name,
+                            engine=engine,
+                            populate=False,
+                            cluster_name=cluster,
+                            final_modifier_available=final_modifier_available,
+                        )
+
+                    self.context.tables.append(
+                        create_and_populate_distributed_table(
+                            distributed_table_name=name + "distributed_replicated",
+                            core_table_name=name,
+                            cluster_name=cluster,
+                            final_modifier_available=final_modifier_available,
+                            values=values,
+                        )
+                    )
 
 
 @TestStep(Given)
@@ -967,6 +1048,3 @@ def create_and_populate_all_tables(self):
     create_and_populate_core_tables(duplicate=True)
     create_normal_view_with_join()
     create_replicated_table_2shards3replicas()
-
-
-

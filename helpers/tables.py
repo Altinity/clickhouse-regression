@@ -51,20 +51,31 @@ class Column:
 
 
 def is_numeric(
-    datatype, decimal=True, date=False, datetime=False, extended_precision=True
+    datatype,
+    decimal=True,
+    date=False,
+    date32=False,
+    datetime=False,
+    datetime64=False,
+    extended_precision=True,
 ):
     """Return True if data type is numeric."""
     datatype = unwrap(datatype)
 
-    if not decimal:
-        if isinstance(datatype, Decimal):
-            return False
-    if date:
-        if isinstance(datatype, Date):
-            return True
-    if datetime:
-        if isinstance(datatype, DateTime):
-            return True
+    if isinstance(datatype, Decimal):
+        return decimal
+
+    if isinstance(datatype, Date32):
+        return date32
+
+    if isinstance(datatype, DateTime64):
+        return datetime64
+
+    if isinstance(datatype, DateTime):
+        return datetime
+
+    if isinstance(datatype, Date):
+        return date
 
     if not extended_precision:
         if datatype.is_extended_precision:
@@ -83,12 +94,42 @@ def is_map(datatype):
     return isinstance(unwrap(datatype), Map)
 
 
-def is_unsigned_integer(datatype, decimal=False, extended_precision=True):
+def is_nullable(datatype):
+    """Return True if data type is Nullable."""
+    return isinstance(datatype, Nullable)
+
+
+def is_low_cardinality(datatype):
+    """Return True if data type is LowCardinality."""
+    return isinstance(datatype, LowCardinality)
+
+
+def is_unsigned_integer(
+    datatype,
+    decimal=False,
+    extended_precision=True,
+    date=False,
+    date32=False,
+    datetime=False,
+    datetime64=False,
+):
     """Return True if data type is unsigned integer."""
     datatype = unwrap(datatype)
 
     if isinstance(datatype, Decimal):
         return decimal
+
+    if isinstance(datatype, Date32):
+        return date32
+
+    if isinstance(datatype, DateTime64):
+        return datetime64
+
+    if isinstance(datatype, DateTime):
+        return datetime
+
+    if isinstance(datatype, Date):
+        return date
 
     if not extended_precision:
         if datatype.is_extended_precision:
@@ -97,12 +138,32 @@ def is_unsigned_integer(datatype, decimal=False, extended_precision=True):
     return isinstance(datatype, UInt)
 
 
-def is_integer(datatype, decimal=False, extended_precision=True):
+def is_integer(
+    datatype,
+    decimal=False,
+    extended_precision=True,
+    date=False,
+    date32=False,
+    datetime=False,
+    datetime64=False,
+):
     """Return True if data type is integer."""
     datatype = unwrap(datatype)
 
     if isinstance(datatype, Decimal):
         return decimal
+
+    if isinstance(datatype, Date32):
+        return date32
+
+    if isinstance(datatype, DateTime64):
+        return datetime64
+
+    if isinstance(datatype, DateTime):
+        return datetime
+
+    if isinstance(datatype, Date):
+        return date
 
     if not extended_precision:
         if datatype.is_extended_precision:
@@ -185,20 +246,22 @@ def common_columns():
 def generate_all_column_types(include=None, exclude=None):
     """Generate a list of datatypes with names and ClickHouse types including arrays, maps and tuples."""
 
-    null_datatypes = generate_nullable_datatypes(basic_datatypes())
+    _basic_datatypes = include if include else basic_datatypes()
+
+    null_datatypes = generate_nullable_datatypes(_basic_datatypes)
     low_cardinality_datatypes = generate_low_card_datatypes(
-        basic_datatypes() + null_datatypes
+        _basic_datatypes + null_datatypes
     )
 
     array_datatypes = generate_array_datatypes(
-        basic_datatypes()
+        _basic_datatypes
         + null_datatypes
         + low_cardinality_datatypes
         + common_complex_datatypes()
     )
 
     map_datatypes = generate_map_datatypes(
-        basic_datatypes()
+        _basic_datatypes
         + null_datatypes
         + low_cardinality_datatypes
         + common_complex_datatypes()
@@ -206,7 +269,7 @@ def generate_all_column_types(include=None, exclude=None):
 
     tuple_datatype = [
         generate_tuple_datatype(
-            basic_datatypes()
+            _basic_datatypes
             + null_datatypes
             + low_cardinality_datatypes
             + common_complex_datatypes()
@@ -214,7 +277,7 @@ def generate_all_column_types(include=None, exclude=None):
     ]
 
     all_test_datatypes = (
-        basic_datatypes()
+        _basic_datatypes
         + map_datatypes
         + null_datatypes
         + array_datatypes

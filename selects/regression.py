@@ -27,9 +27,14 @@ def argparser(parser):
 
 
 xfails = {
-    "/selects/final/force modifier/select join clause/:": [(Fail, "doesn't work in clickhouse"
-                                                                       " https://github.com/ClickHouse/"
-                                                                       "ClickHouse/issues/8655")],
+    "/selects/final/force modifier/select join clause/:": [
+        (
+            Fail,
+            "doesn't work in clickhouse"
+            " https://github.com/ClickHouse/"
+            "ClickHouse/issues/8655",
+        )
+    ],
     "/selects/final/modifier": [(Fail, "not implemented")],
 }
 xflags = {}
@@ -73,7 +78,9 @@ def regression(
         self.context.node = cluster.node("clickhouse1")
 
         if check_clickhouse_version("<22.11")(self):
-            skip(reason="force_select_final is only supported on ClickHouse version >= 22.11")
+            skip(
+                reason="force_select_final is only supported on ClickHouse version >= 22.11"
+            )
 
         Module(run=load("selects.tests.final.feature", "module"))
 

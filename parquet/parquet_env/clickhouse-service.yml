@@ -2,7 +2,7 @@ version: '2.3'
 
 services:
   clickhouse:
-    image: registry.gitlab.com/altinity-public/container-images/test/clickhouse-intergration-test-pyarrow:3.0
+    image: registry.gitlab.com/altinity-public/container-images/test/clickhouse-intergration-test-pyarrow:4.0
     init: true
     expose:
       - "9000"
@@ -15,13 +15,15 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/ssl.xml:/etc/clickhouse-server/config.d/ssl.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/storage.xml:/etc/clickhouse-server/config.d/storage.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/zookeeper.xml:/etc/clickhouse-server/config.d/zookeeper.xml"
-      - "${CLICKHOUSE_TESTS_DIR}/test_files/clickhouse_table_def.txt:/var/lib/clickhouse/user_files/clickhouse_table_def.txt"
-      - "${CLICKHOUSE_TESTS_DIR}/test_files/data_NONE.Parquet:/var/lib/clickhouse/user_files/data_NONE.Parquet"
-      - "${CLICKHOUSE_TESTS_DIR}/test_files/data_BROTLI.Parquet:/var/lib/clickhouse/user_files/data_BROTLI.Parquet.BROTLI"
-      - "${CLICKHOUSE_TESTS_DIR}/test_files/data_GZIP.Parquet:/var/lib/clickhouse/user_files/data_GZIP.Parquet.GZIP"
-      - "${CLICKHOUSE_TESTS_DIR}/test_files/data_SNAPPY.Parquet:/var/lib/clickhouse/user_files/data_SNAPPY.Parquet.SNAPPY"
-      - "${CLICKHOUSE_TESTS_DIR}/test_files/data_ZSTD.Parquet:/var/lib/clickhouse/user_files/data_ZSTD.Parquet.ZSTD"
-      - "${CLICKHOUSE_TESTS_DIR}/test_files/data_LZ4.Parquet:/var/lib/clickhouse/user_files/data_LZ4.Parquet.LZ4"
+      - "${CLICKHOUSE_TESTS_DIR}/test_files/clickhouse_table_def.txt:/var/lib/test_files/clickhouse_table_def.txt"
+      - "${CLICKHOUSE_TESTS_DIR}/test_files/data_NONE.Parquet:/var/lib/test_files/data_NONE.Parquet"
+      - "${CLICKHOUSE_TESTS_DIR}/test_files/data_BROTLI.Parquet:/var/lib/test_files/data_BROTLI.Parquet"
+      - "${CLICKHOUSE_TESTS_DIR}/test_files/data_GZIP.Parquet:/var/lib/test_files/data_GZIP.Parquet"
+      - "${CLICKHOUSE_TESTS_DIR}/test_files/data_SNAPPY.Parquet:/var/lib/test_files/data_SNAPPY.Parquet"
+      - "${CLICKHOUSE_TESTS_DIR}/test_files/data_ZSTD.Parquet:/var/lib/test_files/data_ZSTD.Parquet"
+      - "${CLICKHOUSE_TESTS_DIR}/test_files/data_LZ4.Parquet:/var/lib/test_files/data_LZ4.Parquet"
+      - "${CLICKHOUSE_TESTS_DIR}/test_files/int-list-zero-based-chunked-array.parquet:/var/lib/test_files/int-list-zero-based-chunked-array.parquet"
+      - "${CLICKHOUSE_TESTS_DIR}/test_files/local_app.py:/var/lib/test_files/local_app.py"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/ssl:/etc/clickhouse-server/ssl"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.xml:/etc/clickhouse-server/config.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.xml:/etc/clickhouse-server/users.xml"

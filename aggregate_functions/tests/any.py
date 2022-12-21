@@ -66,7 +66,4 @@ def feature(self, func="any({params})", table=None):
 
     for column in table.columns:
         with Check(f"{column.datatype.name}"):
-            self.context.node.query(
-                f"SELECT {column.name} FROM {table.name} FORMAT CSV"
-            )
             execute_query(f"SELECT {func.format(params=column.name)} FROM {table.name}")

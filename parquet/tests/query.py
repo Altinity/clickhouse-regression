@@ -10,7 +10,6 @@ from s3.tests.common import *
 def insert_into_memory_table_from_file(self):
     """Insert data from Parquet files into table with Memory engine using FROM INFILE clause."""
     engine = "Memory"
-
     Scenario(test=insert_into_table_from_file)(engine=engine)
 
 
@@ -19,7 +18,6 @@ def insert_into_memory_table_from_file(self):
 def insert_into_mergetree_table_from_file(self):
     """Insert data from Parquet files into table with MergeTree engine using FROM INFILE clause."""
     engine = "MergeTree() ORDER BY uint8"
-
     Scenario(test=insert_into_table_from_file)(engine=engine)
 
 
@@ -35,7 +33,6 @@ def insert_into_replicated_mergetree_table_from_file(self):
         + table_name
         + "', '{replica}') ORDER BY uint8"
     )
-
     Scenario(test=insert_into_table_from_file)(engine=engine, table_name=table_name)
 
 
@@ -48,10 +45,10 @@ def insert_into_distributed_table_from_file(self):
     engine = f"Distributed(replicated_cluster, default, {dist_table_name})"
 
     with Given("I have a table for the distributed table to look at"):
-        table(
+        create_table(
             name=dist_table_name,
             engine="Memory",
-            table_def=self.context.parquet_table_def,
+            columns=self.context.parquet_table_columns,
         )
 
     Scenario(test=insert_into_table_from_file)(engine=engine, table_name=table_name)
@@ -60,34 +57,41 @@ def insert_into_distributed_table_from_file(self):
 @TestOutline
 def insert_into_table_from_file(self, engine, table_name=None):
     """Insert data from Parquet files into tables with different engines using FROM INFILE clause."""
+    self.context.snapshot_id = get_snapshot_id()
     node = self.context.node
     compression_type = self.context.compression_type
-
-    if compression_type != "NONE":
-        xfail(
-            "DB::Exception: inflateReset failed: data error: While executing ParquetBlockInputFormat: While executing File: data for INSERT was parsed from file. (ZLIB_INFLATE_FAILED)"
-        )
+    table_columns = self.context.parquet_table_columns
 
     if table_name is None:
         table_name = "table_" + getuid()
 
     with Given(f"I have a table with a {engine} engine"):
-        table(
+        create_table(
             name=table_name,
             engine=engine,
-            table_def=self.context.parquet_table_def,
+            columns=table_columns,
         )
 
     with When("I insert data into the table from a Parquet file"):
+        node.command(
+            f"cp /var/lib/test_files/data_{compression_type}.Parquet /var/lib/clickhouse/user_files/data_{compression_type}.Parquet"
+        )
         node.query(
-            f"INSERT INTO {table_name} FROM INFILE '/var/lib/clickhouse/user_files/data_{compression_type}.Parquet' COMPRESSION '{compression_type.lower()}' FORMAT Parquet"
+            f"INSERT INTO {table_name} FROM INFILE '/var/lib/clickhouse/user_files/data_{compression_type}.Parquet' FORMAT Parquet"
         )
 
     with Then("I check that the table contains correct data"):
-        check_query_output(
-            query=f"SELECT * FROM {table_name}",
-            snap_name=f"Insert into {engine} table from file",
-        )
+        with Pool(3) as executor:
+            for column in table_columns:
+                Check(
+                    test=execute_query_step,
+                    name=f"{column.name}",
+                    parallel=True,
+                    executor=executor,
+                )(
+                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table_name}"
+                )
+            join()
 
 
 @TestScenario
@@ -118,7 +122,6 @@ def select_from_replicated_mergetree_table_into_file(self):
         + table_name
         + "', '{replica}') ORDER BY uint8"
     )
-
     Scenario(test=select_from_table_into_file)(engine=engine, table_name=table_name)
 
 
@@ -131,9 +134,10 @@ def select_from_distributed_table_into_file(self):
     engine = f"Distributed(replicated_cluster, default, {dist_table_name})"
 
     with Given("I have a table for the distributed table to look at"):
-        table(
+        create_table(
             name=dist_table_name,
             engine="Memory",
+            columns=generate_all_column_types(include=parquet_test_columns()),
         )
 
     Scenario(test=select_from_table_into_file)(engine=engine, table_name=table_name)
@@ -142,22 +146,27 @@ def select_from_distributed_table_into_file(self):
 @TestOutline
 def select_from_table_into_file(self, engine, table_name=None):
     """Select data from tables with different engines and write to Parquet files using INTO OUTFILE clause."""
+    self.context.snapshot_id = get_snapshot_id()
     node = self.context.node
     compression_type = self.context.compression_type
 
     if table_name is None:
         table_name = "table_" + getuid()
 
-    path = f"'/var/lib/clickhouse/user_files/{table_name}_{compression_type}.Parquet{'.' + compression_type if compression_type != 'none' else ''}'"
+    path = f"'/var/lib/clickhouse/user_files/{table_name}_{compression_type}.Parquet'"
 
     with Given(f"I have a table with a {engine} engine"):
-        table(name=table_name, engine=engine)
+        table = create_table(
+            name=table_name,
+            engine=engine,
+            columns=generate_all_column_types(include=parquet_test_columns()),
+        )
 
-    with When(
-        "I insert data into the table",
+    with And(
+        "I populate table with test data",
         description="insert data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
     ):
-        insert_test_data(name=table_name)
+        table.insert_test_data()
 
     with When("I select data from the table and write it into a Parquet file"):
         node.query(
@@ -169,7 +178,6 @@ def select_from_table_into_file(self, engine, table_name=None):
         check_source_file(
             path=f"/var/lib/clickhouse/user_files/{table_name}.Parquet",
             compression=f"'{compression_type.lower()}'",
-            snap_name="Select from table into file " + engine,
         )
 
 
@@ -177,26 +185,31 @@ def select_from_table_into_file(self, engine, table_name=None):
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Select_MaterializedView("1.0"))
 def select_from_mat_view_into_file(self):
     """Select data from materialized view and write to Parquet files using INTO OUTFILE clause."""
+    self.context.snapshot_id = get_snapshot_id()
     node = self.context.node
     compression_type = self.context.compression_type
     table_name = "table_" + getuid()
     path = f"'/var/lib/clickhouse/user_files/{table_name}_{compression_type}.Parquet{'.' + compression_type if compression_type != 'none' else ''}'"
 
-    with Given(f"I have a table with a Memory engine"):
-        table(name=table_name, engine="Memory")
-
-    with And(
-        "I insert data into the table",
-        description="insert data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
-    ):
-        insert_test_data(name=table_name)
+    with Given("I have a table with a Memory engine"):
+        table = create_table(
+            name=table_name,
+            engine="Memory",
+            columns=generate_all_column_types(include=parquet_test_columns()),
+        )
 
     try:
-        with Given("I have a materialized view on the table"):
+        with And("I have a materialized view on the table"):
             node.query(
                 f"CREATE MATERIALIZED VIEW {table_name}_view ENGINE = Memory AS SELECT * FROM {table_name}",
                 settings=[("allow_suspicious_low_cardinality_types", 1)],
             )
+
+        with And(
+            "I populate table with test data",
+            description="insert data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
+        ):
+            table.insert_test_data()
 
         with When(
             "I select data from the materialized view and write it into a Parquet file"
@@ -212,12 +225,53 @@ def select_from_mat_view_into_file(self):
             check_source_file(
                 path=f"/var/lib/clickhouse/user_files/{table_name}.Parquet",
                 compression=f"'{compression_type.lower()}'",
-                snap_name="select from mat view into file",
             )
 
     finally:
         with Finally("I drop the materialized view"):
             node.query(f"DROP VIEW IF EXISTS {table_name}_view")
+
+
+@TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Insert_Projections("1.0"))
+def insert_into_table_with_projection_from_file(self):
+    """Insert data from a Parquet file into a table with a projection using FROM INFILE clause."""
+    self.context.snapshot_id = get_snapshot_id()
+    node = self.context.node
+    compression_type = self.context.compression_type
+    table_name = "table_" + getuid()
+    projection_name = "proj_" + getuid()
+    table_columns = self.context.parquet_table_columns
+
+    with Given(f"I have a table with a MergeTree engine"):
+        create_table(
+            name=table_name,
+            engine="MergeTree() ORDER BY uint8",
+            columns=table_columns,
+        )
+
+    with And("I have a projection on the table"):
+        node.query(
+            f"ALTER TABLE {table_name} ADD PROJECTION {projection_name} (SELECT *)"
+        )
+
+    with When("I insert data into the table from a Parquet file"):
+        node.query(
+            f"INSERT INTO {table_name} FROM INFILE '/var/lib/clickhouse/user_files/data_{compression_type}.Parquet' FORMAT Parquet"
+        )
+
+    with Then("I check that the table contains correct data"):
+        with Pool(3) as executor:
+            for column in table_columns:
+                Check(
+                    test=execute_query_step,
+                    name=f"{column.name}",
+                    parallel=True,
+                    executor=executor,
+                )(
+                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table_name}"
+                )
+            join()
 
 
 @TestOutline(Feature)
@@ -233,26 +287,16 @@ def select_from_mat_view_into_file(self):
             Requirements(RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Gzip("1.0")),
         ),
         (
-            "BROTLI",
-            Requirements(
-                RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Brotli("1.0")
-            ),
-        ),
-        (
             "LZ4",
-            Requirements(
-                RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Lz4("1.0"),
-                RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Lz4Raw("1.0"),
-            ),
+            Requirements(RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Lz4("1.0")),
         ),
     ],
 )
 @Name("query")
 def feature(self, compression_type):
-    """Check that ClickHouse correctly reads and write Parquet files when using
+    """Check that ClickHouse correctly reads and writes Parquet files when using
     `FROM INFILE` clause in SELECT query and `INTO OUTFILE` clause in INSERT query.
     """
-
     self.context.compression_type = compression_type
     self.context.node = self.context.cluster.node("clickhouse1")
 
@@ -267,3 +311,4 @@ def feature(self, compression_type):
     Scenario(run=select_from_distributed_table_into_file)
 
     Scenario(run=select_from_mat_view_into_file)
+    Scenario(run=insert_into_table_with_projection_from_file)
