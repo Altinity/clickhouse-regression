@@ -130,6 +130,58 @@ def select_join_clause(self, node=None):
 
 
 @TestScenario
+def select_join_clause_select(self, node=None):
+    """Check select count() that is using 'JOIN' clause `SELECT ... FINAL` with `FINAL`
+    equal to  the same select without force_select_final `FINAL`."""
+    if node is None:
+        node = self.context.node
+
+    join_types = [
+        "INNER JOIN",
+        "LEFT OUTER JOIN",
+        "RIGHT OUTER JOIN",
+        "FULL OUTER JOIN",
+        "LEFT SEMI JOIN",
+        "RIGHT SEMI JOIN",
+        "LEFT ANTI JOIN",
+        "RIGHT ANTI JOIN",
+        "LEFT ANY JOIN",
+        "RIGHT ANY JOIN",
+        "INNER ANY JOIN",
+    ]
+
+    for join_type in join_types:
+        for table in self.context.tables:
+            if table.name.endswith("core") and not table.name.startswith("Log") and not \
+                    table.name.startswith("StripeLog") and not table.name.startswith("TinyLog"):
+                for table2 in self.context.tables:
+                    if table2.name.endswith("duplicate") and table2.name.startswith(
+                        table.engine
+                    ):
+                        with Then(
+                            "I check that select with force_select_final equal 'SELECT...FINAL'"
+                        ):
+                            assert (
+                                node.query(
+                                    f"SELECT * FROM {table.name} a"
+                                    f"{' FINAL' if table.final_modifier_available else ''}"
+                                    f" {join_type} "
+                                    f"(SELECT * FROM {table2.name}"
+                                    f"{' FINAL' if table2.final_modifier_available else ''}) b on"
+                                    f" a.id = b.id"
+                                    f" ORDER BY (id, b.id, x, someCol, b.x, b.someCol)",
+                                    settings=[("joined_subquery_requires_alias", 0)]
+                                ).output.strip()
+                                == node.query(
+                                    f"SELECT * FROM {table.name} {join_type}"
+                                    f" {table2.name} on {table.name}.id = {table2.name}.id"
+                                    f" ORDER BY (id, {table2.name}.id, x, someCol,  {table2.name}.x, {table2.name}.someCol)",
+                                    settings=[("force_select_final", 1)],
+                                ).output.strip()
+                            )
+
+
+@TestScenario
 def select_union_clause(self, node=None):
     """Check `SELECT` that is using 'UNION' clause with `FINAL`
     equal to the same select without force_select_final `FINAL`."""
@@ -145,23 +197,25 @@ def select_union_clause(self, node=None):
                     with Then(
                         "I check that select with force_select_final equal 'SELECT...FINAL'"
                     ):
-                        assert (
-                            node.query(
-                                f"SELECT id, count(*) FROM {table.name}"
-                                f"{' FINAL' if table.final_modifier_available else ''} "
-                                f" GROUP BY id"
-                                f" UNION ALL"
-                                f" SELECT id, count(*) FROM {table2.name}"
-                                f"{' FINAL' if table2.final_modifier_available else ''} "
-                                f" GROUP BY id"
-                            ).output.strip()
-                            == node.query(
+                        for union in ["UNION ALL", "UNION DISTINCT"]:
+                            assert (
+                                    node.query(
+                                        f"SELECT id, count(*) FROM {table.name}"
+                                        f"{' FINAL' if table.final_modifier_available else ''} "
+                                        f" GROUP BY id"
+                                        f" {union}"
+                                        f" SELECT id, count(*) FROM {table2.name}"
+                                        f"{' FINAL' if table2.final_modifier_available else ''} "
+                                        f" GROUP BY id"
+                                    ).output.strip()
+                                    == node.query(
                                 f"SELECT id, count(*) FROM {table.name} GROUP BY id"
-                                f" UNION ALL"
+                                f" {union}"
                                 f" SELECT id, count(*) FROM {table2.name} GROUP BY id",
                                 settings=[("force_select_final", 1)],
                             ).output.strip()
-                        )
+                            )
+
 
 
 @TestScenario
