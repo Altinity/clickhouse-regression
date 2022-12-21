@@ -28,10 +28,10 @@
     * 3.8.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.EscapeCharacter](#rqsrs-033clickhouseextractkeyvaluepairsescapecharacter)
   * 3.9 [Enclosing Character](#enclosing-character)
     * 3.9.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.EnclosingCharacter](#rqsrs-033clickhouseextractkeyvaluepairsenclosingcharacter)
-  * 3.10 [Special Characters Conflict](#special-characters-conflict)
-    * 3.10.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.SpecialCharactersConflict](#rqsrs-033clickhouseextractkeyvaluepairsspecialcharactersconflict)
-  * 3.11 [Value Special Characters Allow List](#value-special-characters-allow-list)
-    * 3.11.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ValueSpecialCharactersAllowList](#rqsrs-033clickhouseextractkeyvaluepairsvaluespecialcharactersallowlist)
+  * 3.10 [Value Special Characters Allow List](#value-special-characters-allow-list)
+    * 3.10.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ValueSpecialCharactersAllowList](#rqsrs-033clickhouseextractkeyvaluepairsvaluespecialcharactersallowlist)
+  * 3.11 [Special Characters Conflict](#special-characters-conflict)
+    * 3.11.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.SpecialCharactersConflict](#rqsrs-033clickhouseextractkeyvaluepairsspecialcharactersconflict)
 
 ## Introduction
 
@@ -217,14 +217,6 @@ which SHALL enclose symbols which allows you to use unsupported characters in a 
 
 By default, the function SHALL specify `enclosing_character` as `"`.
 
-### Special Characters Conflict
-
-#### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.SpecialCharactersConflict
-version: 1.0
-
-[ClickHouse]'s [extractKeyValuePairs] function SHALL return an error if any 
-specified special symbols match.
-
 ### Value Special Characters Allow List
 
 #### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ValueSpecialCharactersAllowList
@@ -233,7 +225,15 @@ version: 1.0
 [ClickHouse]'s [extractKeyValuePairs] function SHALL support specifying `Value Special Characters Allow List`
 which SHALL specify symbols, that can be used in key and value without escaping or enclosing.
 
-By default, the function SHALL specify `enclosing_character` as `"`.
+By default, the function SHALL specify `value_special_characters_allow_list` as empty string.
+
+### Special Characters Conflict
+
+#### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.SpecialCharactersConflict
+version: 1.0
+
+[ClickHouse]'s [extractKeyValuePairs] function SHALL return an error if any 
+specified special symbols match.
 
 [String]: https://clickhouse.com/docs/en/sql-reference/data-types/string
 [FixedString]: https://clickhouse.com/docs/en/sql-reference/data-types/fixedstring
