@@ -5,7 +5,6 @@ from aggregate_functions.requirements import (
 )
 
 from helpers.common import check_clickhouse_version
-from aggregate_functions.tests.steps import get_snapshot_id
 from aggregate_functions.tests.covarPop import feature as checks
 
 

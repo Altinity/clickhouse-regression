@@ -1192,8 +1192,8 @@ RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_StochasticLinearRegression = R
     num="3.1.2.61.1",
 )
 
-RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_StochasticLogisticRgression = Requirement(
-    name="RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.StochasticLogisticRgression",
+RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_StochasticLogisticRegression = Requirement(
+    name="RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.StochasticLogisticRegression",
     version="1.0",
     priority=None,
     group=None,
@@ -3125,7 +3125,7 @@ SRS_031_ClickHouse_Aggregate_Functions = Specification(
         ),
         Heading(name="stochasticLogisticRegression", level=4, num="3.1.2.62"),
         Heading(
-            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.StochasticLogisticRgression",
+            name="RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.StochasticLogisticRegression",
             level=5,
             num="3.1.2.62.1",
         ),
@@ -3691,7 +3691,7 @@ SRS_031_ClickHouse_Aggregate_Functions = Specification(
         RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_QuantileBFloat16Weighted,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_SimpleLinearRegression,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_StochasticLinearRegression,
-        RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_StochasticLogisticRgression,
+        RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_StochasticLogisticRegression,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_CategoricalInformationValue,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_StudentTTest,
         RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_WelchTTest,
@@ -3932,7 +3932,7 @@ SRS_031_ClickHouse_Aggregate_Functions = Specification(
       * 3.1.2.61 [stochasticLinearRegression](#stochasticlinearregression)
         * 3.1.2.61.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.StochasticLinearRegression](#rqsrs-031clickhouseaggregatefunctionsspecificstochasticlinearregression)
       * 3.1.2.62 [stochasticLogisticRegression](#stochasticlogisticregression)
-        * 3.1.2.62.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.StochasticLogisticRgression](#rqsrs-031clickhouseaggregatefunctionsspecificstochasticlogisticrgression)
+        * 3.1.2.62.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.StochasticLogisticRegression](#rqsrs-031clickhouseaggregatefunctionsspecificstochasticlogisticregression)
       * 3.1.2.63 [categoricalInformationValue](#categoricalinformationvalue)
         * 3.1.2.63.1 [RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.CategoricalInformationValue](#rqsrs-031clickhouseaggregatefunctionsspecificcategoricalinformationvalue)
       * 3.1.2.64 [studentTTest](#studentttest)
@@ -4648,7 +4648,7 @@ version: 1.0
 
 ##### stochasticLogisticRegression
 
-###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.StochasticLogisticRgression
+###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.StochasticLogisticRegression
 version: 1.0
 
 [ClickHouse] SHALL support [stochasticLogisticRegression] specific aggregate function.
