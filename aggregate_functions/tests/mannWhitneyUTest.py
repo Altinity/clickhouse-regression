@@ -4,6 +4,7 @@ from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_MannWhitneyUTest,
 )
 
+from helpers.common import check_clickhouse_version
 from helpers.tables import is_numeric, is_unsigned_integer
 
 from aggregate_functions.tests.steps import (
@@ -16,9 +17,13 @@ from aggregate_functions.tests.steps import (
 @TestFeature
 @Name("mannWhitneyUTest")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_MannWhitneyUTest("1.0"))
-def feature(self, func="mannWhitneyUTest({params})", table=None):
+def feature(self, func="mannWhitneyUTest({params})", table=None, snapshot_id=None):
     """Check mannWhitneyUTest aggregate function by using the same tests as for welchTTest."""
-    self.context.snapshot_id = get_snapshot_id()
+    if snapshot_id is None:
+        if check_clickhouse_version(">=22.6")(self):
+            snapshot_id = name.basename(current().name) + ">=22.6"
+
+    self.context.snapshot_id = get_snapshot_id(snapshot_id)
 
     if table is None:
         table = self.context.table
