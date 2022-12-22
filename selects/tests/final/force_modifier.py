@@ -34,7 +34,7 @@ def simple_select(
                         f"{statement if not table.name.startswith('system') else '*'} "
                         f"FROM {table.name}"
                         f"{' FINAL' if table.final_modifier_available else ''}"
-                        f"{' WHERE x > 10' if not table.name.startswith('system') and where else ''}"
+                        f"{' WHERE x > 3' if not table.name.startswith('system') and where else ''}"
                         f"{' GROUP BY id, x ORDER BY id' if not table.name.startswith('system') and group_by else ''}"
                         f"{' ORDER BY (id, x, someCol)' if not table.name.startswith('system') and order_by else ''}"
                         f"{' LIMIT 1' if limit else ''}"
@@ -44,7 +44,7 @@ def simple_select(
                         f"SELECT{' DISTINCT' if distinct else ''} "
                         f"{statement if not table.name.startswith('system') else '*'} "
                         f"FROM {table.name}"
-                        f"{' WHERE x > 10' if not table.name.startswith('system') and where else ''}"
+                        f"{' WHERE x > 3' if not table.name.startswith('system') and where else ''}"
                         f"{' GROUP BY id, x ORDER BY id' if not table.name.startswith('system') and group_by else ''}"
                         f"{' ORDER BY (id, x, someCol)' if not table.name.startswith('system') and order_by else ''}"
                         f"{' LIMIT 1' if limit else ''}"
@@ -92,7 +92,7 @@ def simple_select_negative(
                         f"SELECT{' DISTINCT' if distinct else ''} "
                         f"{statement if not table.name.startswith('system') else '*'} "
                         f"FROM {table.name}"
-                        f"{' WHERE x > 10' if not table.name.startswith('system') and where else ''}"
+                        f"{' WHERE x > 3' if not table.name.startswith('system') and where else ''}"
                         f"{' GROUP BY id, x ORDER BY id' if not table.name.startswith('system') and group_by else ''}"
                         f"{' ORDER BY (id, x, someCol)' if not table.name.startswith('system') and order_by else ''}"
                         f"{' LIMIT 3' if limit else ''}"
@@ -102,7 +102,7 @@ def simple_select_negative(
                         f"SELECT{' DISTINCT' if distinct else ''} "
                         f"{statement if not table.name.startswith('system') else '*'} "
                         f"FROM {table.name}"
-                        f"{' WHERE x > 5' if not table.name.startswith('system') and where else ''}"
+                        f"{' WHERE x > 3' if not table.name.startswith('system') and where else ''}"
                         f"{' GROUP BY id, x ORDER BY id' if not table.name.startswith('system') and group_by else ''}"
                         f"{' ORDER BY (id, x, someCol)' if not table.name.startswith('system') and order_by else ''}"
                         f"{' LIMIT 1' if limit else ''}"
@@ -161,9 +161,100 @@ def select_distinct_negative(self):
 
 
 @TestScenario
+def select_prewhere(self, node=None):
+    """Check  `FINAL` clause equal to force_select_final select all data with `PREWHERE`."""
+    if node is None:
+        node = self.context.node
+
+    for table in self.context.tables:
+        if (
+            table.name.endswith("core")
+            and not table.name.startswith("Merge")
+            and not table.name.startswith("ReplicatedMerge")
+            and not table.name.startswith("Log")
+            and not table.name.startswith("StripeLog")
+            and not table.name.startswith("TinyLog")
+        ):
+            with Then(
+                "I check that select with force_select_final equal 'SELECT...FINAL'"
+            ):
+                assert (
+                    node.query(f"SELECT * FROM {table.name} FINAL PREWHERE x > 3 "
+                               f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;").output.strip()
+                    == node.query(f"SELECT * FROM {table.name} PREWHERE x > 3 "
+                                  f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
+                                  settings=[("force_select_final", 1)]).output.strip()
+                )
+
+
+@TestScenario
 def select_where(self):
     """Check  `FINAL` clause equal to force_select_final select all data with `WHERE`."""
     simple_select(statement="*", order_by=True, where=True)
+
+
+@TestScenario
+def select_array_join(self, node=None):
+    """Check  `FINAL` clause equal to force_select_final select all data with `ARRAY JOIN`."""
+    if node is None:
+        node = self.context.node
+
+    simple_table = """CREATE TABLE arrays_test
+                    (
+                        s String,
+                        arr Array(UInt8)
+                    ) ENGINE = {engine}
+                    ORDER BY s;"""
+
+    simple_table2 = """CREATE TABLE arrays_test
+                    (
+                        s String,
+                        arr Array(UInt8)
+                    ) ENGINE = {engine}"""
+
+    insert = """INSERT INTO arrays_test VALUES ('Hello', [1,2]), ('World', [3,4,5]), ('Goodbye', []);"""
+
+    select_final = "SELECT count() FROM arrays_test FINAL ARRAY JOIN arr"
+    select = "SELECT count() FROM arrays_test ARRAY JOIN arr"
+
+    engines = [
+        "ReplacingMergeTree",
+        "AggregatingMergeTree",
+        "SummingMergeTree",
+        "MergeTree",
+        "StripeLog",
+        "TinyLog",
+        "Log",
+    ]
+    for engine in engines:
+        try:
+            node.query(
+                f"{simple_table2.format(engine=engine) if engine.startswith('Stripe') or engine.startswith('Tiny') or engine.startswith('Log') else simple_table.format(engine=engine)}"
+            )
+            node.query("system stop merges")
+            node.query(insert)
+            node.query(insert)
+            if (
+                engine.startswith("Merge")
+                or engine.startswith("Stripe")
+                or engine.startswith("Tiny")
+                or engine.startswith("Log")
+            ):
+                assert (
+                    node.query(select).output.strip()
+                    == node.query(
+                        select, settings=[("force_select_final", 1)]
+                    ).output.strip()
+                )
+            else:
+                assert (
+                    node.query(select_final).output.strip()
+                    == node.query(
+                        select, settings=[("force_select_final", 1)]
+                    ).output.strip()
+                )
+        finally:
+            node.query("DROP TABLE arrays_test")
 
 
 @TestScenario
