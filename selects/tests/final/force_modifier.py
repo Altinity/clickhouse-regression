@@ -513,6 +513,67 @@ def select_with_clause_negative(self, node=None):
             )
 
 
+@TestScenario
+def select_multiple_join_clause_select(self, node=None):
+    """Check select count() that is using 'JOIN' clause `SELECT ... FINAL` with `FINAL`
+    equal to  the same select without force_select_final `FINAL`."""
+    if node is None:
+        node = self.context.node
+
+    join_types = [
+        "INNER JOIN",
+        "LEFT OUTER JOIN",
+        "RIGHT OUTER JOIN",
+        "FULL OUTER JOIN",
+        "LEFT SEMI JOIN",
+        "RIGHT SEMI JOIN",
+        "LEFT ANTI JOIN",
+        "RIGHT ANTI JOIN",
+        "LEFT ANY JOIN",
+        "RIGHT ANY JOIN",
+        "INNER ANY JOIN",
+    ]
+
+    for join_type in join_types:
+        for table in self.context.tables:
+            if (
+                table.name.endswith("core")
+                and not table.name.startswith("Merge")
+                and not table.name.startswith("Log")
+                and not table.name.startswith("StripeLog")
+                and not table.name.startswith("TinyLog")
+                and not table.name.startswith("ReplicatedMerge")
+            ):
+                for table2 in self.context.tables:
+                    if table2.name.endswith("duplicate") and table2.name.startswith(
+                        table.engine
+                    ):
+                        with Then(
+                            "I check that select with force_select_final equal 'SELECT...FINAL'"
+                        ):
+                            join_statement = (
+                                f"SELECT count() FROM {table.name} c FINAL {join_type}"
+                                f"(SELECT * FROM {table.name} a"
+                                f"{' FINAL' if table.final_modifier_available else ''}"
+                                f" {join_type} "
+                                f"(SELECT * FROM {table2.name}"
+                                f"{' FINAL' if table2.final_modifier_available else ''}) b on"
+                                f" a.id = b.id) d on c.id=d.id"
+                            )
+                            assert (
+                                node.query(
+                                    join_statement,
+                                    settings=[("joined_subquery_requires_alias", 0)],
+                                ).output.strip()
+                                == node.query(
+                                    f"SELECT count() FROM {table.name} a {join_type}"
+                                    f"(SELECT * FROM {table.name} {join_type}"
+                                    f" {table2.name} on {table.name}.id = {table2.name}.id) b on a.id=b.id",
+                                    settings=[("force_select_final", 1)],
+                                ).output.strip()
+                            )
+
+
 @TestFeature
 @Name("force modifier")
 def feature(self):
