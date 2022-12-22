@@ -179,11 +179,15 @@ def select_prewhere(self, node=None):
                 "I check that select with force_select_final equal 'SELECT...FINAL'"
             ):
                 assert (
-                    node.query(f"SELECT * FROM {table.name} FINAL PREWHERE x > 3 "
-                               f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;").output.strip()
-                    == node.query(f"SELECT * FROM {table.name} PREWHERE x > 3 "
-                                  f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
-                                  settings=[("force_select_final", 1)]).output.strip()
+                    node.query(
+                        f"SELECT * FROM {table.name} FINAL PREWHERE x > 3 "
+                        f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;"
+                    ).output.strip()
+                    == node.query(
+                        f"SELECT * FROM {table.name} PREWHERE x > 3 "
+                        f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
+                        settings=[("force_select_final", 1)],
+                    ).output.strip()
                 )
 
 
@@ -663,6 +667,33 @@ def select_multiple_join_clause_select(self, node=None):
                                     settings=[("force_select_final", 1)],
                                 ).output.strip()
                             )
+
+
+@TestScenario
+def select_subquery(self, node=None):
+    if node is None:
+        node = self.context.node
+
+    for table in self.context.tables:
+        if (
+            not table.name.endswith("duplicate")
+            and not table.name.endswith("wview_final")
+            and not table.name.endswith("_nview")
+            and not table.name.endswith("_lview")
+        ):
+            with Then(
+                "I check that select with force_select_final equal 'SELECT...FINAL'"
+            ):
+                assert (
+                    node.query(
+                        f"SELECT count() FROM (SELECT * FROM {table.name}"
+                        f"{' FINAL' if table.final_modifier_available else ''})"
+                    ).output.strip()
+                    == node.query(
+                        f"SELECT count() FROM (SELECT * FROM {table.name})",
+                        settings=[("force_select_final", 1)],
+                    ).output.strip()
+                )
 
 
 @TestFeature
