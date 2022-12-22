@@ -241,9 +241,11 @@ def select_join_clause_select(self, node=None):
         for table in self.context.tables:
             if (
                 table.name.endswith("core")
+                and not table.name.startswith("Merge")
                 and not table.name.startswith("Log")
                 and not table.name.startswith("StripeLog")
                 and not table.name.startswith("TinyLog")
+                and not table.name.startswith("ReplicatedMerge")
             ):
                 for table2 in self.context.tables:
                     if table2.name.endswith("duplicate") and table2.name.startswith(
@@ -252,19 +254,46 @@ def select_join_clause_select(self, node=None):
                         with Then(
                             "I check that select with force_select_final equal 'SELECT...FINAL'"
                         ):
+                            join_statement = (
+                                f"SELECT count() FROM {table.name} a"
+                                f"{' FINAL' if table.final_modifier_available else ''}"
+                                f" {join_type} "
+                                f"(SELECT * FROM {table2.name}"
+                                f"{' FINAL' if table2.final_modifier_available else ''}) b on"
+                                f" a.id = b.id"
+                            )
                             assert (
                                 node.query(
-                                    f"SELECT count() FROM {table.name} a"
-                                    f"{' FINAL' if table.final_modifier_available else ''}"
-                                    f" {join_type} "
-                                    f"(SELECT * FROM {table2.name}"
-                                    f"{' FINAL' if table2.final_modifier_available else ''}) b on"
-                                    f" a.id = b.id",
+                                    join_statement,
                                     settings=[("joined_subquery_requires_alias", 0)],
                                 ).output.strip()
                                 == node.query(
                                     f"SELECT count() FROM {table.name} {join_type}"
                                     f" {table2.name} on {table.name}.id = {table2.name}.id",
+                                    settings=[("force_select_final", 1)],
+                                ).output.strip()
+                            )
+
+                            assert (
+                                node.query(
+                                    join_statement,
+                                    settings=[("joined_subquery_requires_alias", 0)],
+                                ).output.strip()
+                                == node.query(
+                                    f"SELECT count() FROM {table.name} FINAL {join_type}"
+                                    f" {table2.name} on {table.name}.id = {table2.name}.id",
+                                    settings=[("force_select_final", 1)],
+                                ).output.strip()
+                            )
+
+                            assert (
+                                node.query(
+                                    join_statement,
+                                    settings=[("joined_subquery_requires_alias", 0)],
+                                ).output.strip()
+                                == node.query(
+                                    f"SELECT count() FROM {table.name} FINAL {join_type}"
+                                    f" {table2.name} FINAL on {table.name}.id = {table2.name}.id",
                                     settings=[("force_select_final", 1)],
                                 ).output.strip()
                             )
