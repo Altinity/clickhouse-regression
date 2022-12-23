@@ -1039,6 +1039,10 @@ def create_replicated_table_2shards3replicas(self, node=None):
 
 @TestStep(Given)
 def create_expression_subquery_table(self, node=None):
+    """
+    Creating table for expressions with subquery.
+    """
+
     name = f"expr_subquery_{getuid()}"
     table_statement = """
                         CREATE TABLE {name}
