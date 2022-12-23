@@ -826,6 +826,7 @@ def create_all_views(self):
     for table in self.context.tables:
         if not (
             table.name.startswith("system")
+            or table.name.startswith("expr_subquery")
             or table.name.startswith("distr")
             or table.name.startswith("Replicated")
             or table.name.endswith("view")
@@ -1055,7 +1056,7 @@ def create_expression_subquery_table(self, node=None):
         with Given("I create simple table with integer and array columns"):
             node.query(table_statement.format(name=name))
 
-        with Then("I insert same data in it with stop merges"):
+        with Then("I insert few equal raws in it with stopped merges"):
             node.query("system stop merges")
             for i in range(3):
                 node.query(f"INSERT INTO {name} VALUES (1, [1]);")
@@ -1072,7 +1073,6 @@ def create_and_populate_all_tables(self):
     """
     Creating all kind of tables.
     """
-    create_expression_subquery_table()
     create_and_populate_core_tables()
     add_system_tables()
     create_and_populate_distributed_tables()
@@ -1080,3 +1080,4 @@ def create_and_populate_all_tables(self):
     create_and_populate_core_tables(duplicate=True)
     create_normal_view_with_join()
     create_replicated_table_2shards3replicas()
+    create_expression_subquery_table()
