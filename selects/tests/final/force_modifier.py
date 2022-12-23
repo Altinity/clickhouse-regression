@@ -22,6 +22,7 @@ def simple_select(
     for table in self.context.tables:
         if (
             not table.name.endswith("duplicate")
+            and not table.name.startswith("expr_subquery")
             and not table.name.endswith("wview_final")
             and not table.name.endswith("_nview")
             and not table.name.endswith("_lview")
@@ -94,7 +95,7 @@ def simple_select_negative(
                         f"{statement if not table.name.startswith('system') else '*'} "
                         f"FROM {table.name}"
                         f"{' WHERE x > 3' if not table.name.startswith('system') and where else ''}"
-                        f"{' GROUP BY id, x ORDER BY id' if not table.name.startswith('system') and group_by else ''}"
+                        f"{' GROUP BY (id, x) ORDER BY (id, cx)' if not table.name.startswith('system') and group_by else ''}"
                         f"{' ORDER BY (id, x, someCol)' if not table.name.startswith('system') and order_by else ''}"
                         f"{' LIMIT 3' if limit else ''}"
                         f" FORMAT JSONEachRow;"
@@ -104,7 +105,7 @@ def simple_select_negative(
                         f"{statement if not table.name.startswith('system') else '*'} "
                         f"FROM {table.name}"
                         f"{' WHERE x > 3' if not table.name.startswith('system') and where else ''}"
-                        f"{' GROUP BY id, x ORDER BY id' if not table.name.startswith('system') and group_by else ''}"
+                        f"{' GROUP BY (id, x) ORDER BY (id, cx)' if not table.name.startswith('system') and group_by else ''}"
                         f"{' ORDER BY (id, x, someCol)' if not table.name.startswith('system') and order_by else ''}"
                         f"{' LIMIT 1' if limit else ''}"
                         f"  FORMAT JSONEachRow;",
@@ -140,7 +141,7 @@ def select_limit_negative(self):
 @TestScenario
 def select_group_by(self):
     """Check  `FINAL` clause equal to force_select_final select all data with `GROUP BY`."""
-    simple_select(statement=f"id,count(x)", group_by=True)
+    simple_select(statement=f"id,count(x) as cx", group_by=True)
 
 
 @TestScenario
@@ -707,6 +708,7 @@ def select_subquery(self, node=None):
     for table in self.context.tables:
         if (
             not table.name.endswith("duplicate")
+            and not table.name.startswith("expr_subquery")
             and not table.name.endswith("wview_final")
             and not table.name.endswith("_nview")
             and not table.name.endswith("_lview")
@@ -736,6 +738,7 @@ def select_nested_subquery(self, node=None):
     for table in self.context.tables:
         if (
             not table.name.endswith("duplicate")
+            and not table.name.startswith("expr_subquery")
             and not table.name.endswith("wview_final")
             and not table.name.endswith("_nview")
             and not table.name.endswith("_lview")
