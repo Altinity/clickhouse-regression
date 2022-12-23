@@ -17,25 +17,23 @@
       * 5.2.2.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSetting.ConfigFile](#rqsrs-032clickhouseautomaticfinalmodifiertableenginesettingconfigfile)
     * 5.2.3 [Not Supported Table Engines](#not-supported-table-engines)
       * 5.2.3.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSetting.IgnoreOnNotSupportedTableEngines](#rqsrs-032clickhouseautomaticfinalmodifiertableenginesettingignoreonnotsupportedtableengines)
-  * 5.3 [Select Query Setting](#select-query-setting)
-    * 5.3.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQuerySetting.IgnoreForceSelectFinal](#rqsrs-032clickhouseautomaticfinalmodifierselectquerysettingignoreforceselectfinal)
-  * 5.4 [Supported Table Engines](#supported-table-engines)
-    * 5.4.1 [MergeTree](#mergetree)
-      * 5.4.1.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SupportedTableEngines.MergeTree](#rqsrs-032clickhouseautomaticfinalmodifiersupportedtableenginesmergetree)
-    * 5.4.2 [ReplicatedMergeTree](#replicatedmergetree)
-      * 5.4.2.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SupportedTableEngines.ReplicatedMergeTree](#rqsrs-032clickhouseautomaticfinalmodifiersupportedtableenginesreplicatedmergetree)
-    * 5.4.3 [EnginesOverOtherEngines](#enginesoverotherengines)
-      * 5.4.3.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SupportedTableEngines.EnginesOverOtherEngines](#rqsrs-032clickhouseautomaticfinalmodifiersupportedtableenginesenginesoverotherengines)
-  * 5.5 [Select Queries](#select-queries)
-    * 5.5.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries](#rqsrs-032clickhouseautomaticfinalmodifierselectqueries)
-    * 5.5.2 [Subquery](#subquery)
-      * 5.5.2.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Subquery](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriessubquery)
-    * 5.5.3 [JOIN](#join)
-      * 5.5.3.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesjoin)
-    * 5.5.4 [UNION](#union)
-      * 5.5.4.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Union](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesunion)
-    * 5.5.5 [WITH ](#with-)
-      * 5.5.5.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.With](#rqsrs-032clickhouseautomaticfinalmodifierselectquerieswith)
+  * 5.3 [Supported Table Engines](#supported-table-engines)
+    * 5.3.1 [MergeTree](#mergetree)
+      * 5.3.1.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SupportedTableEngines.MergeTree](#rqsrs-032clickhouseautomaticfinalmodifiersupportedtableenginesmergetree)
+    * 5.3.2 [ReplicatedMergeTree](#replicatedmergetree)
+      * 5.3.2.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SupportedTableEngines.ReplicatedMergeTree](#rqsrs-032clickhouseautomaticfinalmodifiersupportedtableenginesreplicatedmergetree)
+    * 5.3.3 [EnginesOverOtherEngines](#enginesoverotherengines)
+      * 5.3.3.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SupportedTableEngines.EnginesOverOtherEngines](#rqsrs-032clickhouseautomaticfinalmodifiersupportedtableenginesenginesoverotherengines)
+  * 5.4 [Select Queries](#select-queries)
+    * 5.4.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries](#rqsrs-032clickhouseautomaticfinalmodifierselectqueries)
+    * 5.4.2 [Subquery](#subquery)
+      * 5.4.2.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Subquery](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriessubquery)
+    * 5.4.3 [JOIN](#join)
+      * 5.4.3.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesjoin)
+    * 5.4.4 [UNION](#union)
+      * 5.4.4.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Union](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesunion)
+    * 5.4.5 [WITH ](#with-)
+      * 5.4.5.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.With](#rqsrs-032clickhouseautomaticfinalmodifierselectquerieswith)
 
 ## Introduction
 
@@ -179,24 +177,9 @@ For example,
 ##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSetting.IgnoreOnNotSupportedTableEngines
 version: 1.0 priority: 1.0
 
-[ClickHouse] SHALL silently ignore `force_select_final` table engine setting for any MergeTree table
+[ClickHouse] SHALL silently ignore `force_select_final` table engine setting for any table
 engine that doesn't support [FINAL modifier] clause.
 
-### Select Query Setting
-
-#### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQuerySetting.IgnoreForceSelectFinal
-version: 1.0 priority: 1.0
-
-[ClickHouse] SHALL support `ignore_force_select_final` [SELECT] query setting to disable automatic [FINAL modifier]
-if the table has `force_select_final` setting set to `1`.
-
-For example,
-
-```sql
-SELECT * FROM table; -- actually does SELECT * FROM table FINAL if SETTTING force_select_final=1
-SELECT * FROM table SETTINGS ignore_force_select_final=1; -- 0 by default, 1 - means ignore force_select_final
- from merge tree.
-```
 
 ### Supported Table Engines
 
@@ -208,8 +191,12 @@ version: 1.0
 [ClickHouse] SHALL support automatic [FINAL modifier] for the following [MergeTree] table engines variants:
 
 * [ReplacingMergeTree]
-* [CollapsingMergeTree]
-* [VersionedCollapsingMergeTree]
+* ReplacingMergeTree(version)
+* [CollapsingMergeTree(sign)]
+* AggregatingMergeTree
+* SummingMergeTree
+* [VersionedCollapsingMergeTree(sign,version)]
+
 
 #### ReplicatedMergeTree
 
@@ -221,8 +208,11 @@ version: 1.0
 table engines variants:
 
 * ReplicatedReplacingMergeTree
-* ReplicatedCollapsingMergeTree
-* ReplicatedVersionedCollapsingMergeTree
+* ReplicatedReplacingMergeTree(version)
+* ReplicatedCollapsingMergeTree(sign)
+* ReplicatedAggregatingMergeTree
+* ReplicatedSummingMergeTree
+* ReplicatedVersionedCollapsingMergeTree(sign,version)
 
 #### EnginesOverOtherEngines
 
@@ -330,8 +320,8 @@ For example,
 [WITH]: https://clickhouse.com/docs/en/sql-reference/statements/select/with
 [MergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/mergetree/
 [ReplacingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/replacingmergetree
-[CollapsingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/collapsingmergetree
-[VersionedCollapsingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/versionedcollapsingmergetree
+[CollapsingMergeTree(sign)]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/collapsingmergetree
+[VersionedCollapsingMergeTree(sign,version)]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/versionedcollapsingmergetree
 [FINAL modifier]: https://clickhouse.com/docs/en/sql-reference/statements/select/from/#final-modifier
 [ClickHouse]: https://clickhouse.com
 

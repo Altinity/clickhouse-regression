@@ -4,6 +4,7 @@ from selects.tests.steps import *
 
 
 @TestOutline
+@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries("1.0"))
 def simple_select(
     self,
     statement,
@@ -312,6 +313,7 @@ def select_join_clause(self, node=None):
 
 
 @TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join("1.0"))
 def select_join_clause_select(self, node=None):
     """Check select count() that is using 'JOIN' clause `SELECT ... FINAL` with `FINAL`
     equal to  the same select without force_select_final `FINAL`."""
@@ -482,6 +484,7 @@ def select_family_union_clause(self, node=None, clause=None):
 
 
 @TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Union("1.0"))
 def select_union_clause(self):
     """Check `SELECT` that is using `UNION` clause with `FINAL`
     equal to the same select without force_select_final `FINAL`."""
@@ -545,6 +548,7 @@ def select_union_clause_negative(self, node=None):
 
 
 @TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_With("1.0"))
 def select_with_clause(self, node=None):
     """Check `SELECT` that is using 'WITH' clause with `FINAL`
     equal to the same force_select_final select without `FINAL`."""
@@ -631,7 +635,7 @@ def select_with_clause_negative(self, node=None):
 
 @TestScenario
 def select_multiple_join_clause_select(self, node=None):
-    """Check select count() that is using 'JOIN' clause `SELECT ... FINAL` with `FINAL`
+    """Check that select count() that is using 'JOIN' clause `SELECT ... FINAL` with `FINAL`
     equal to  the same select without force_select_final `FINAL`."""
     if node is None:
         node = self.context.node
@@ -691,7 +695,12 @@ def select_multiple_join_clause_select(self, node=None):
 
 
 @TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery("1.0")
+)
 def select_subquery(self, node=None):
+    """Check that select count() that with `FINAL` subquery
+    equal to the same force_select_final select without `FINAL`."""
     if node is None:
         node = self.context.node
 
@@ -715,6 +724,162 @@ def select_subquery(self, node=None):
                         settings=[("force_select_final", 1)],
                     ).output.strip()
                 )
+
+
+@TestScenario
+def select_nested_subquery(self, node=None):
+    """Check that select count() that with `FINAL` nested subquery
+    equal to the same force_select_final select without `FINAL`."""
+    if node is None:
+        node = self.context.node
+
+    for table in self.context.tables:
+        if (
+            not table.name.endswith("duplicate")
+            and not table.name.endswith("wview_final")
+            and not table.name.endswith("_nview")
+            and not table.name.endswith("_lview")
+        ):
+            with Then(
+                "I check that select with force_select_final equal 'SELECT...FINAL'"
+            ):
+                assert (
+                    node.query(
+                        f"SELECT count() FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM {table.name}"
+                        f"{' FINAL' if table.final_modifier_available else ''})))"
+                    ).output.strip()
+                    == node.query(
+                        f"SELECT count() FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM {table.name})))",
+                        settings=[("force_select_final", 1)],
+                    ).output.strip()
+                )
+
+
+@TestOutline
+def select_prewhere_where_subquery(self, node=None, clause=None):
+    """Check  `FINAL` clause equal to force_select_final select all data with `PREWHERE`/`WHERE'."""
+    if node is None:
+        node = self.context.node
+
+    for table in self.context.tables:
+        if (
+            table.name.endswith("core")
+            and not table.name.startswith("Merge")
+            and not table.name.startswith("ReplicatedMerge")
+            and not table.name.startswith("Log")
+            and not table.name.startswith("StripeLog")
+            and not table.name.startswith("TinyLog")
+        ):
+            for table2 in self.context.tables:
+                if table2.name.startswith("expr_subquery"):
+                    with Then(
+                        "I check that select with force_select_final equal 'SELECT...FINAL'"
+                    ):
+                        assert (
+                            node.query(
+                                f"SELECT * FROM {table.name} FINAL {clause}"
+                                f" x = (SELECT x FROM {table2.name} FINAL) "
+                                f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;"
+                            ).output.strip()
+                            == node.query(
+                                f"SELECT * FROM {table.name} {clause} x = (SELECT x FROM {table2.name}) "
+                                f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
+                                settings=[("force_select_final", 1)],
+                            ).output.strip()
+                        )
+
+
+@TestScenario
+def select_prewhere_subquery(self):
+    """Check  `FINAL` clause equal to force_select_final select all data with `PREWHERE`."""
+    select_prewhere_where_subquery(clause="PREWHERE")
+
+
+@TestScenario
+def select_where_subquery(self):
+    """Check  `FINAL` clause equal to force_select_final select all data with `WHERE`."""
+    select_prewhere_where_subquery(clause="WHERE")
+
+
+@TestScenario
+def select_array_join_subquery(self, node=None):
+    """Check  `FINAL` clause equal to force_select_final select all data with `ARRAY JOIN` with subquery."""
+    if node is None:
+        node = self.context.node
+
+    simple_table = """CREATE TABLE arrays_test
+                    (
+                        s String,
+                        arr Array(UInt8)
+                    ) ENGINE = {engine}
+                    ORDER BY s;"""
+
+    simple_table2 = """CREATE TABLE arrays_test
+                    (
+                        s String,
+                        arr Array(UInt8)
+                    ) ENGINE = {engine}"""
+
+    insert = """INSERT INTO arrays_test VALUES ('Hello', [1]), ('World', [3,4,5]), ('Goodbye', []);"""
+
+    select_final = (
+        "SELECT count() FROM arrays_test FINAL ARRAY JOIN"
+        " (select arr from {sub_table} FINAL) as zz"
+    )
+    select = (
+        "SELECT count() FROM arrays_test ARRAY JOIN "
+        "(select arr from {sub_table} LIMIT 1) as zz"
+    )
+
+    engines = [
+        "ReplacingMergeTree",
+        "AggregatingMergeTree",
+        "SummingMergeTree",
+        "MergeTree",
+        "StripeLog",
+        "TinyLog",
+        "Log",
+    ]
+    for engine in engines:
+        try:
+            node.query(
+                f"{simple_table2.format(engine=engine) if engine.startswith('Stripe') or engine.startswith('Tiny') or engine.startswith('Log') else simple_table.format(engine=engine)}"
+            )
+            node.query("system stop merges")
+            node.query(insert)
+            node.query(insert)
+            if (
+                engine.startswith("Merge")
+                or engine.startswith("Stripe")
+                or engine.startswith("Tiny")
+                or engine.startswith("Log")
+            ):
+                for table2 in self.context.tables:
+                    if table2.name.startswith("expr_subquery"):
+                        assert (
+                            node.query(
+                                select.format(sub_table=table2.name)
+                            ).output.strip()
+                            == node.query(
+                                select.format(sub_table=table2.name),
+                                settings=[("force_select_final", 1)],
+                            ).output.strip()
+                        )
+
+            else:
+                for table2 in self.context.tables:
+                    if table2.name.startswith("expr_subquery"):
+                        assert (
+                            node.query(
+                                select_final.format(sub_table=table2.name)
+                            ).output.strip()
+                            == node.query(
+                                select.format(sub_table=table2.name),
+                                settings=[("force_select_final", 1)],
+                            ).output.strip()
+                        )
+        finally:
+            node.query("DROP TABLE IF EXISTS arrays_test")
 
 
 @TestFeature
