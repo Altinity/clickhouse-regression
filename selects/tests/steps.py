@@ -1037,10 +1037,42 @@ def create_replicated_table_2shards3replicas(self, node=None):
 
 
 @TestStep(Given)
+def create_expression_subquery_table(self, node=None):
+    name = f"expr_subquery_{getuid()}"
+    table_statement = """
+                        CREATE TABLE {name}
+                    (
+                        x Int32,
+                        arr Array(UInt8)
+                    )
+                    ENGINE = ReplacingMergeTree
+                    ORDER BY x"""
+
+    if node is None:
+        node = current().context.node
+
+    try:
+        with Given("I create simple table with integer and array columns"):
+            node.query(table_statement.format(name=name))
+
+        with Then("I insert same data in it with stop merges"):
+            node.query("system stop merges")
+            for i in range(3):
+                node.query(f"INSERT INTO {name} VALUES (1, [1]);")
+
+        self.context.tables.append(Table(name, "ReplacingMergeTree", True))
+        yield
+    finally:
+        with Finally("I drop data"):
+            node.query(f"DROP TABLE IF EXISTS {name}")
+
+
+@TestStep(Given)
 def create_and_populate_all_tables(self):
     """
     Creating all kind of tables.
     """
+    create_expression_subquery_table()
     create_and_populate_core_tables()
     add_system_tables()
     create_and_populate_distributed_tables()
