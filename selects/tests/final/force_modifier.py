@@ -147,7 +147,7 @@ def select_group_by(self):
 @TestScenario
 def select_group_by_negative(self):
     """Check simple select is not equal to force_select_final select all data with `GROUP BY`."""
-    simple_select_negative(statement=f"id,count(x)", group_by=True)
+    simple_select_negative(statement=f"id,count(x) as cx", group_by=True)
 
 
 @TestScenario
