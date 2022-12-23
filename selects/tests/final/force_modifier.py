@@ -446,9 +446,9 @@ def select_join_clause_select_negative(self, node=None):
                             )
 
 
-@TestScenario
-def select_union_clause(self, node=None):
-    """Check `SELECT` that is using 'UNION' clause with `FINAL`
+@TestOutline
+def select_family_union_clause(self, node=None, clause=None):
+    """Check `SELECT` that is using union family clause with `FINAL`
     equal to the same select without force_select_final `FINAL`."""
     if node is None:
         node = self.context.node
@@ -462,24 +462,45 @@ def select_union_clause(self, node=None):
                     with Then(
                         "I check that select with force_select_final equal 'SELECT...FINAL'"
                     ):
-                        for union in ["UNION ALL", "UNION DISTINCT"]:
-                            assert (
-                                node.query(
-                                    f"SELECT id, count(*) FROM {table.name}"
-                                    f"{' FINAL' if table.final_modifier_available else ''} "
-                                    f" GROUP BY id"
-                                    f" {union}"
-                                    f" SELECT id, count(*) FROM {table2.name}"
-                                    f"{' FINAL' if table2.final_modifier_available else ''} "
-                                    f" GROUP BY id"
-                                ).output.strip()
-                                == node.query(
-                                    f"SELECT id, count(*) FROM {table.name} GROUP BY id"
-                                    f" {union}"
-                                    f" SELECT id, count(*) FROM {table2.name} GROUP BY id",
-                                    settings=[("force_select_final", 1)],
-                                ).output.strip()
-                            )
+                        assert (
+                            node.query(
+                                f"SELECT id, count(*) FROM {table.name}"
+                                f"{' FINAL' if table.final_modifier_available else ''} "
+                                f" GROUP BY id"
+                                f" {clause}"
+                                f" SELECT id, count(*) FROM {table2.name}"
+                                f"{' FINAL' if table2.final_modifier_available else ''} "
+                                f" GROUP BY id"
+                            ).output.strip()
+                            == node.query(
+                                f"SELECT id, count(*) FROM {table.name} GROUP BY id"
+                                f" {clause}"
+                                f" SELECT id, count(*) FROM {table2.name} GROUP BY id",
+                                settings=[("force_select_final", 1)],
+                            ).output.strip()
+                        )
+
+
+@TestScenario
+def select_union_clause(self):
+    """Check `SELECT` that is using `UNION` clause with `FINAL`
+    equal to the same select without force_select_final `FINAL`."""
+    select_family_union_clause(clause="UNION ALL")
+    select_family_union_clause(clause="UNION DISTINCT")
+
+
+@TestScenario
+def select_intersect_clause(self):
+    """Check `SELECT` that is using `INTERSECT` clause with `FINAL`
+    equal to the same select without force_select_final `FINAL`."""
+    select_family_union_clause(clause="INTERSECT")
+
+
+@TestScenario
+def select_except_clause(self):
+    """Check `SELECT` that is using `EXCEPT` clause with `FINAL`
+    equal to the same select without force_select_final `FINAL`."""
+    select_family_union_clause(clause="EXCEPT")
 
 
 @TestScenario
