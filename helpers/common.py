@@ -587,9 +587,14 @@ def set_envs_on_node(self, envs, node=None):
                 node.command(f"unset {key}", exitcode=0)
 
 
-def get_snapshot_id(snapshot_id=None):
+def get_snapshot_id(snapshot_id=None, clickhouse_version=None):
     """Return snapshot id based on the current test's name
     and ClickHouse server version."""
+    id_postfix = ""
+    if clickhouse_version:
+        if check_clickhouse_version(clickhouse_version)(current()):
+            id_postfix = clickhouse_version
+
     if snapshot_id is None:
-        return name.basename(current().name)
+        return name.basename(current().name) + id_postfix
     return snapshot_id
