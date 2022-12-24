@@ -3,7 +3,7 @@ import itertools
 from testflows.core import *
 from testflows.asserts import values, error, snapshot
 
-from helpers.common import check_clickhouse_version
+from helpers.common import check_clickhouse_version, get_snapshot_id
 
 # exhaustive list of all aggregate functions
 aggregate_functions = [
@@ -143,14 +143,6 @@ aggregate_functions = [
     "welchTTest",
     "windowFunnel",
 ]
-
-
-def get_snapshot_id(snapshot_id=None):
-    """Return snapshot id based on the current test's name
-    and ClickHouse server version."""
-    if snapshot_id is None:
-        return name.basename(current().name)
-    return snapshot_id
 
 
 def permutations_with_replacement(n, r):
