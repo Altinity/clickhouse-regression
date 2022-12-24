@@ -53,6 +53,9 @@ def regression(
         if parallel is not None:
             self.context.parallel = parallel
 
+        if check_clickhouse_version("<22.7")(self):
+            skip(reason="only supported on ClickHouse version >= 22.7")
+
         Feature(run=load("base_58.tests.consistency", "feature"))
         Feature(run=load("base_58.tests.null", "feature"))
         Feature(run=load("base_58.tests.alias_input", "feature"))
