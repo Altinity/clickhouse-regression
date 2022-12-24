@@ -285,7 +285,7 @@ def select_from_function_auto_cast_types(self):
     """Check that when data is selected from an `s3` table function with automatic cast column types,
     it is read correctly.
     """
-    self.context.snapshot_id = get_snapshot_id()
+    self.context.snapshot_id = get_snapshot_id(clickhouse_version="<22.6")
     compression_type = self.context.compression_type
     table_name = "table_" + getuid()
     table_columns = self.context.parquet_table_columns
