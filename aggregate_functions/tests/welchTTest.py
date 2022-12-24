@@ -4,7 +4,6 @@ from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_WelchTTest,
 )
 
-from helpers.common import check_clickhouse_version
 from aggregate_functions.tests.steps import get_snapshot_id, execute_query
 from aggregate_functions.tests.quantileWeighted import feature as checks
 
@@ -14,11 +13,7 @@ from aggregate_functions.tests.quantileWeighted import feature as checks
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_WelchTTest("1.0"))
 def feature(self, func="welchTTest({params})", table=None, snapshot_id=None):
     """Check welchTTest aggregate function by using the same tests as for quantileWeighted."""
-    if snapshot_id is None:
-        if check_clickhouse_version(">=22.6")(self):
-            snapshot_id = name.basename(current().name) + ">=22.6"
-
-    self.context.snapshot_id = get_snapshot_id(snapshot_id)
+    self.context.snapshot_id = get_snapshot_id(snapshot_id, clickhouse_version=">=22.6")
 
     if table is None:
         table = self.context.table
@@ -33,4 +28,4 @@ def feature(self, func="welchTTest({params})", table=None, snapshot_id=None):
             f"SELECT {func.format(params='sample_data,sample_index')} FROM values('sample_data Int8, sample_index Int8', (10,1), (11,0), (12,0), (1,0), (2,0), (3,0))"
         )
 
-    checks(func=func, snapshot_id=snapshot_id)
+    checks(func=func, snapshot_id=self.context.snapshot_id)
