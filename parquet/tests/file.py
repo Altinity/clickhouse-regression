@@ -353,7 +353,7 @@ def select_from_function_manual_cast_types(self):
 def select_from_function_auto_cast_types(self):
     """Check that when data is selected from a `file` table function with automatic cast column types,
     it is read correctly."""
-    self.context.snapshot_id = get_snapshot_id()
+    self.context.snapshot_id = get_snapshot_id(clickhouse_version="<22.6")
     table_columns = self.context.parquet_table_columns
 
     with When("I check that the `file` table function reads data correctly"):
