@@ -1,3 +1,5 @@
+import json
+
 from helpers.common import *
 from key_value.requirements.requirements import *
 
@@ -14,8 +16,8 @@ def create_partitioned_table(
     extra_table_col="",
     cluster="",
     engine="MergeTree",
-    partition="PARTITION BY id",
-    order="ORDER BY id",
+    partition="PARTITION BY x",
+    order="ORDER BY x",
     settings="",
     node=None,
     options="",
@@ -62,7 +64,19 @@ def optimize_table(self, table_name, final=True, node=None):
     return node.query(query)
 
 
-@TestStep(When)
-def escape_symbols(self, input_string):  # todo
-    """Adding symbol \ to escape some symbols."""
-    return input_string
+@TestStep(Then)
+def check_constant_input(self, input_string, output_string=None, exitcode=0, node=None):
+    """Check that clickhouse parseKeyValue function support constant input."""
+
+    if node is None:
+        node = self.context.node
+
+    with Then("I check parseKeyValue function returns correct value"):
+        if exitcode != 0:
+            node.query(f"SELECT extractKeyValuePairs({input_string})", use_file=True, exitcode=exitcode)
+        else:
+            r = node.query(f"SELECT extractKeyValuePairs({input_string})", use_file=True)
+            if ':' in output_string and ':' in r.output:
+                assert json.loads(r.output.replace("'", '"')) == json.loads(output_string.replace("'", '"')), error()
+            else:
+                assert r.output == output_string, error()

@@ -20,12 +20,12 @@
     * 3.4.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Key.Format](#rqsrs-033clickhouseextractkeyvaluepairskeyformat)
   * 3.5 [Value](#value)
     * 3.5.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Value.Format](#rqsrs-033clickhouseextractkeyvaluepairsvalueformat)
-  * 3.6 [Item Delimiter](#item-delimiter)
-    * 3.6.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ItemDelimiter](#rqsrs-033clickhouseextractkeyvaluepairsitemdelimiter)
+  * 3.6 [Escape Character](#escape-character)
+    * 3.6.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.EscapeCharacter](#rqsrs-033clickhouseextractkeyvaluepairsescapecharacter)
   * 3.7 [Key Value Delimiter](#key-value-delimiter)
-    * 3.7.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.KeyValueDelimiter](#rqsrs-033clickhouseextractkeyvaluepairskeyvaluedelimiter)
-  * 3.8 [Escape Character](#escape-character)
-    * 3.8.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.EscapeCharacter](#rqsrs-033clickhouseextractkeyvaluepairsescapecharacter)
+    * 3.7.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.KeyValuePairDelimiter](#rqsrs-033clickhouseextractkeyvaluepairskeyvaluepairdelimiter)
+  * 3.8 [Item Delimiter](#item-delimiter)
+    * 3.8.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ItemDelimiter](#rqsrs-033clickhouseextractkeyvaluepairsitemdelimiter)
   * 3.9 [Enclosing Character](#enclosing-character)
     * 3.9.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.EnclosingCharacter](#rqsrs-033clickhouseextractkeyvaluepairsenclosingcharacter)
   * 3.10 [Value Special Characters Allow List](#value-special-characters-allow-list)
@@ -177,25 +177,6 @@ if it satisfies the following conditions:
 * Value can be an empty string.
 * If not supported symbols are escaped or a value is enclosed, value can be any string. 
 
-### Item Delimiter
-
-#### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ItemDelimiter
-version: 1.0
-
-[ClickHouse]'s [extractKeyValuePairs] function SHALL support specifying `item_delimeter`
-which SHALL divide key value pairs in input string.
-
-By default, the function SHALL specify `item_delimeter` as `,`.
-
-### Key Value Delimiter
-
-#### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.KeyValueDelimiter
-version: 1.0
-
-[ClickHouse]'s [extractKeyValuePairs] function SHALL support specifying `key_value_delimiter`
-which SHALL divide key value pairs among themselves.
-
-By default, the function SHALL specify `key_value_delimiter` as `:`.
 
 ### Escape Character
 
@@ -205,7 +186,27 @@ version: 1.0
 [ClickHouse]'s [extractKeyValuePairs] function SHALL support specifying `escape_character`
 which SHALL escape symbols which allows you to use unsupported characters in a key or value.
 
-By default, the function SHALL specify `escape_character` as `\`.
+By default, the function SHALL specify `escape_character` as \ .
+
+### Key Value Delimiter
+
+#### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.KeyValuePairDelimiter
+version: 1.0
+
+[ClickHouse]'s [extractKeyValuePairs] function SHALL support specifying `key_value_pair_delimiter`
+which SHALL divide key value pairs among themselves.
+
+By default, the function SHALL specify `key_value_pair_delimiter` as `:`.
+
+### Item Delimiter
+
+#### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ItemDelimiter
+version: 1.0
+
+[ClickHouse]'s [extractKeyValuePairs] function SHALL support specifying `item_delimeter`
+which SHALL divide key value pairs in input string.
+
+By default, the function SHALL specify `item_delimeter` as `,`.
 
 ### Enclosing Character
 
@@ -223,7 +224,7 @@ By default, the function SHALL specify `enclosing_character` as `"`.
 version: 1.0
 
 [ClickHouse]'s [extractKeyValuePairs] function SHALL support specifying `Value Special Characters Allow List`
-which SHALL specify symbols, that can be used in key and value without escaping or enclosing.
+which SHALL specify symbols, that can be used in value without escaping or enclosing.
 
 By default, the function SHALL specify `value_special_characters_allow_list` as empty string.
 
