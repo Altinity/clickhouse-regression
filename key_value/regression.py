@@ -25,7 +25,7 @@ ffails = {}
 @FFails(ffails)
 @Name("key value")
 @Specifications(SRS033_ClickHouse_Key_Value_Function)
-@Requirements(RQ_SRS_033_ClickHouse_ParseKeyValue_Function("1.0"))
+@Requirements(RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Function("1.0"))
 def regression(
     self,
     local,
@@ -38,6 +38,9 @@ def regression(
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
     self.context.clickhouse_version = clickhouse_version
+
+    if check_clickhouse_version("<22.12")(self):
+        skip(reason="only supported on ClickHouse version >= 22.12")
 
     with Cluster(
         local,
@@ -53,8 +56,11 @@ def regression(
         if parallel is not None:
             self.context.parallel = parallel
 
-        Feature(run=load("key_value.tests.constant", "feature"))
+        # Feature(run=load("key_value.tests.constant", "feature"))
         Feature(run=load("key_value.tests.column", "feature"))
+        # Feature(run=load("key_value.tests.specifying_special_symbols", "feature"))
+        # Feature(run=load("key_value.tests.special_symbols_conflict", "feature"))
+        # Feature(run=load("key_value.tests.default_values_for_special_symbols", "feature"))
 
 
 if main():
