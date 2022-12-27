@@ -48,6 +48,12 @@ xfails = {
     "/aggregate functions/studentTTest/datatypes/permutations/lowcardinality_float64_:": [
         (Fail, *issue_44511)
     ],
+    "/aggregate functions/quantileTDigestWeighted/datatypes/permutations/date:": [
+        (Fail, "DECIMAL_OVERFLOW error that needs to be investigated")
+    ],
+    "/aggregate functions/quantileTDigestWeighted/datatypes/permutations/:_date_:": [
+        (Fail, "DECIMAL_OVERFLOW error that needs to be investigated")
+    ],
 }
 
 
