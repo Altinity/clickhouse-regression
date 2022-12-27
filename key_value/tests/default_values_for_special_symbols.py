@@ -7,7 +7,7 @@ from key_value.tests.steps import *
               RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_ItemDelimiter("1.0"),
               RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_KeyValuePairDelimiter("1.0"),
               RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_EscapeCharacter("1.0"))
-def specifying_value_special_characters_allow_list(self, node=None):
+def special_symbols_default_values(self, node=None):
     """Check that clickhouse extractKeyValuePairs default values for special symbols are
     `\` - for escape_character, `:` - for key_value_pair_delimiter, `,` for item_delimeter
     `"` for enclosing_character, empty string for value_special_characters_allow_list."""

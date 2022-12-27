@@ -41,12 +41,12 @@ def create_partitioned_table(
 
 
 @TestStep(When)
-def insert(self, table_name, x, y, node=None):
+def insert(self, table_name, x, y, node=None, use_file=True):
     """Insert data into the table"""
     if node is None:
         node = self.context.node
 
-    node.query(f'INSERT INTO {table_name} VALUES ("{x}", "{y}")')
+    node.query(f"INSERT INTO {table_name} VALUES ({x}, '{y}')", use_file=use_file)
 
 
 @TestStep(When)
