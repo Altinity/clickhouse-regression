@@ -118,6 +118,7 @@ version: 1.0
 [ClickHouse] SHALL support using the [extractKeyValuePairs] function with the following data types:
 
 * [String]
+* [LowCardinality]
 * [FixedString]
 
 #### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Function.UnsupportedDataTypes
@@ -147,7 +148,7 @@ version: 1.0
 #### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Format.Output
 version: 1.0
 
-[ClickHouse]'s [extractKeyValuePairs] function SHALL return a string in the following format:
+[ClickHouse]'s [extractKeyValuePairs] function SHALL return a map that contains recognized keys and values:
 
 `{'key': 'value', ...}`
 
@@ -238,5 +239,6 @@ specified special symbols match.
 
 [String]: https://clickhouse.com/docs/en/sql-reference/data-types/string
 [FixedString]: https://clickhouse.com/docs/en/sql-reference/data-types/fixedstring
+[LowCardinality]: https://clickhouse.com/docs/en/sql-reference/data-types/lowcardinality
 [extractKeyValuePairs]: https://github.com/arthurpassos/KeyValuePairFileProcessor
 [ClickHouse]: https://clickhouse.tech

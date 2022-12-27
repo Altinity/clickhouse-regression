@@ -56,11 +56,14 @@ def regression(
         if parallel is not None:
             self.context.parallel = parallel
 
-        # Feature(run=load("key_value.tests.constant", "feature"))
+        Feature(run=load("key_value.tests.constant", "feature"))
         Feature(run=load("key_value.tests.column", "feature"))
-        # Feature(run=load("key_value.tests.specifying_special_symbols", "feature"))
-        # Feature(run=load("key_value.tests.special_symbols_conflict", "feature"))
-        # Feature(run=load("key_value.tests.default_values_for_special_symbols", "feature"))
+        Feature(run=load("key_value.tests.specifying_special_symbols", "feature"))
+        Feature(run=load("key_value.tests.special_symbols_conflict", "feature"))
+        Feature(run=load("key_value.tests.default_values_for_special_symbols", "feature"))
+        Feature(run=load("key_value.tests.supported_data_types", "feature"))
+        Feature(run=load("key_value.tests.unsupported_data_types", "feature"))
+        Feature(run=load("key_value.tests.noise", "feature"))
 
 
 if main():
