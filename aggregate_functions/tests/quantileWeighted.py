@@ -10,8 +10,8 @@ def feature(
     func="avg({params})",
     table=None,
     decimal=True,
-    date=False,
-    datetime=False,
+    date=True,
+    datetime=True,
     extended_precision=False,
     snapshot_id=None,
 ):

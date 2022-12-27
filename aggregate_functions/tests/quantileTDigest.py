@@ -18,4 +18,4 @@ def feature(self, func="quantileTDigest({params})", table=None):
     if table is None:
         table = self.context.table
 
-    checks(func=func, table=table, decimal=False, date=False, datetime=False)
+    checks(func=func, table=table, decimal=False)
