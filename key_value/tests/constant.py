@@ -19,10 +19,11 @@ def constant_input(self, input_string, output_string, node=None):
 
 @TestModule
 @Requirements(
-    RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parsing_Noise("1.0"),
     RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parsing_RecognizedKeyValuePairs("1.0"),
     RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Key_Format("1.0"),
     RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Value_Format("1.0"),
+    RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Format_Input("1.0"),
+    RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Format_Output("1.0")
 )
 @Name("constant")
 def feature(self, node="clickhouse1"):
@@ -34,6 +35,6 @@ def feature(self, node="clickhouse1"):
         with open("tests/output_strings") as output_strings:
             for input_string in input_strings:
                 output_string = output_strings.readline()
-                with Feature(f"parsing {input_string}"):
+                with Feature(f"parsing {input_string[0:-1]}"):
                     for scenario in loads(current_module(), Scenario):
                         scenario(input_string=input_string[0:-1], output_string=output_string[0:-1])
