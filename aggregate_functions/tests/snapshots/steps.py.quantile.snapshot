@@ -219,3 +219,27 @@ _aggregate_functions_quantile_LowCardinality_Nullable_Float64__ = r"""
 {"quantile(lowcardinality_nullable_float64__)":1.7674632094597634e89}
 """
 
+_aggregate_functions_quantile_Date = r"""
+{"quantile(date)":"2006-02-20"}
+"""
+
+_aggregate_functions_quantile_DateTime = r"""
+{"quantile(datetime)":"2016-04-20 22:56:16"}
+"""
+
+_aggregate_functions_quantile_Nullable_Date_ = r"""
+{"quantile(nullable_date_)":"2012-02-07"}
+"""
+
+_aggregate_functions_quantile_Nullable_DateTime_ = r"""
+{"quantile(nullable_datetime_)":"2014-04-10 11:39:46"}
+"""
+
+_aggregate_functions_quantile_LowCardinality_Date_ = r"""
+{"quantile(lowcardinality_date_)":"2009-03-10"}
+"""
+
+_aggregate_functions_quantile_LowCardinality_DateTime_ = r"""
+{"quantile(lowcardinality_datetime_)":"2015-04-17 14:43:28"}
+"""
+
