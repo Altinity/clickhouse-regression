@@ -4,7 +4,6 @@ from selects.tests.steps import *
 
 
 @TestOutline
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries("1.0"))
 def select(
     self,
     statement,
@@ -142,30 +141,33 @@ def select_distinct(self):
 
 
 @TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Prewhere("1.0"))
 def select_prewhere(self, node=None):
-    """Check  `FINAL` clause equal to force_select_final select all data with `PREWHERE`."""
+    """Check SELECT query with `PREWHERE` clause."""
     if node is None:
         node = self.context.node
 
-    for table in self.context.tables:
-        with Given("I exclude Log family engines as they don't support `PREWHERE`"):
-            if table.name.endswith("core") and not table.engine.endswith("Log"):
-                with Then(
-                    f"I check that select with force_select_final=1 setting equal 'SELECT...FINAL' for table "
-                    f"with {table.engine} engine"
-                ):
-                    assert (
-                        node.query(
-                            f"SELECT * FROM {table.name} {' FINAL' if table.final_modifier_available else ''}"
-                            f" PREWHERE x > 3 "
-                            f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;"
-                        ).output.strip()
-                        == node.query(
-                            f"SELECT * FROM {table.name} PREWHERE x > 3 "
-                            f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
-                            settings=[("force_select_final", 1)],
-                        ).output.strip()
-                    )
+    with Given("I exclude Log family engines as they don't support `PREWHERE`"):
+        tables = [table for table in self.context.table if table.name.endswith("core") and not table.engine.endswith("Log")]
+        
+    for table in tables:
+        with When(f"{table}"):
+            with When("I execute query with FINAL modifier specified explicitly"):
+                explicit_final = node.query(
+                        f"SELECT * FROM {table.name} {' FINAL' if table.final_modifier_available else ''}"
+                        f" PREWHERE x > 3 "
+                        f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;"
+                    ).output.strip()
+
+            with And("I execute the same query without FINAL modifiers but with force_select_final=1 setting"):
+                force_select_final = node.query(
+                    f"SELECT * FROM {table.name} PREWHERE x > 3 "
+                    f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
+                    settings=[("force_select_final", 1)],
+                ).output.strip()
+
+            with Then("I compare results are the same"):
+                assert explicit_final == force_select_final
 
 
 @TestScenario
@@ -495,6 +497,7 @@ def select_union_clause_negative(self, node=None):
 
 @TestFeature
 @Name("force modifier")
+@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries("1.0"))
 def feature(self):
     """Check force_final_modifier setting."""
     for scenario in loads(current_module(), Scenario):
