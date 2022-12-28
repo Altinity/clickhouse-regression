@@ -156,15 +156,11 @@ class Table:
         engine,
         final_modifier_available,
         cluster=None,
-        auxiliary_table=False,
-        view_not_final=False,
     ):
         self.name = name
         self.engine = engine
         self.final_modifier_available = final_modifier_available
         self.cluster = cluster
-        self.auxiliary_table = auxiliary_table
-        self.view_not_final = view_not_final
 
 
 @TestStep(Given)
@@ -747,7 +743,7 @@ def create_normal_view(
                 f"CREATE {view_type} IF NOT EXISTS {view_name}"
                 f" AS SELECT * FROM {core_table}{' FINAL' if final and final_modifier_available else ''}",
             )
-        yield Table(view_name, view_type, final_modifier_available, view_not_final)
+        yield Table(view_name, view_type, final_modifier_available)
     finally:
         with Finally("I drop data"):
             node.query(f"DROP VIEW IF EXISTS {view_name}")
@@ -782,7 +778,7 @@ def create_materialized_view(
                 f" AS SELECT * FROM {core_table}",
             )
 
-        yield Table(view_name, view_type, final_modifier_available, view_not_final)
+        yield Table(view_name, view_type, final_modifier_available)
     finally:
         with Finally("I drop data"):
             node.query(f"DROP VIEW IF EXISTS {view_name}")
@@ -815,7 +811,7 @@ def create_live_view(
                 settings=[("allow_experimental_live_view", 1)],
             )
 
-        yield Table(view_name, view_type, final_modifier_available, view_not_final)
+        yield Table(view_name, view_type, final_modifier_available)
     finally:
         with Finally("I drop data"):
             node.query(f"DROP VIEW IF EXISTS {view_name}")
@@ -856,7 +852,7 @@ def create_window_view(
                 settings=[("allow_experimental_window_view", 1)],
             )
 
-        yield Table(view_name, view_type, final_modifier_available, view_not_final)
+        yield Table(view_name, view_type, final_modifier_available)
     finally:
         with Finally("I drop data"):
             node.query(f"DROP VIEW IF EXISTS {view_name}")
@@ -873,19 +869,18 @@ def create_all_views(self):
     for table in self.context.tables:
         if not (
             table.name.startswith("system")
-            or table.auxiliary_table
+            or table.name.startswith("expr_subquery")
             or table.name.startswith("distr")
             or table.name.startswith("Replicated")
             or table.name.endswith("view")
             or table.name.endswith("final")
         ):
-            # self.context.tables.append(
-            #     create_normal_view(
-            #         core_table=table.name,
-            #         final_modifier_available=table.final_modifier_available,
-            #         view_not_final=True
-            #     )
-            # )
+            self.context.tables.append(
+                create_normal_view(
+                    core_table=table.name,
+                    final_modifier_available=table.final_modifier_available,
+                )
+            )
 
             self.context.tables.append(
                 create_normal_view(
@@ -899,17 +894,15 @@ def create_all_views(self):
                 create_materialized_view(
                     core_table=table.name,
                     final_modifier_available=table.final_modifier_available,
-                    view_not_final=True,
                 )
             )
 
-            # self.context.tables.append(
-            #     create_live_view(
-            #         core_table=table.name,
-            #         final_modifier_available=table.final_modifier_available,
-            #         view_not_final=True
-            #     )
-            # )
+            self.context.tables.append(
+                create_live_view(
+                    core_table=table.name,
+                    final_modifier_available=table.final_modifier_available,
+                )
+            )
 
             self.context.tables.append(
                 create_live_view(
@@ -919,14 +912,14 @@ def create_all_views(self):
                 )
             )
 
-            # if table.final_modifier_available:
-            #     self.context.tables.append(
-            #         create_window_view(
-            #             core_table=table.name,
-            #             final_modifier_available=table.final_modifier_available,
-            #             final=True,
-            #         )
-            #     )
+            if table.final_modifier_available:
+                self.context.tables.append(
+                    create_window_view(
+                        core_table=table.name,
+                        final_modifier_available=table.final_modifier_available,
+                        final=True,
+                    )
+                )
 
 
 @TestStep(Given)
@@ -1116,7 +1109,7 @@ def create_expression_subquery_table(self, node=None):
                 node.query(f"INSERT INTO {name} VALUES (1, [1]);")
 
         yield self.context.tables.append(
-            Table(name, "ReplacingMergeTree", True, auxiliary_table=True)
+            Table(name, "ReplacingMergeTree", True)
         )
 
     finally:

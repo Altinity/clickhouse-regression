@@ -9,76 +9,52 @@ def select(
     statement,
     statement_final,
     node=None,
+    negative=False
 ):
     """Checking basic selects with `FINAL` clause equal to force_select_final select only for core table."""
     if node is None:
         node = self.context.node
 
-    for table in self.context.tables:
-        if table.name.endswith("core") or table.name.endswith("_nview_final"):
-            with Then(
-                f"I check that 'SELECT ...' with force_select_final=1 setting is"
-                f" equal 'SELECT...FINAL' for table with {table.engine} engine"
-            ):
-                if not table.auxiliary_table:
-                    assert (
-                        node.query(
-                            statement_final.format(
-                                name=table.name,
-                                final=f"{' FINAL' if table.final_modifier_available else ''}",
-                            )
-                        ).output.strip()
-                        == node.query(
-                            statement.format(name=table.name),
-                            settings=[("force_select_final", 1)],
-                        ).output.strip()
-                    )
+    with Given("I exclude auxiliary and unsupported tables by the current test"):
+        if negative:
+            tables = [table for table in self.context.tables if table.name.endswith("core")]
+        else:
+            tables = [table for table in self.context.tables if table.name.endswith("core")
+                      or table.name.endswith("_nview_final") or table.name.endswith("_mview")]
 
+    for table in tables:
+        with When(f"{table.name}"):
+            with When("I execute query with FINAL modifier specified explicitly"):
+                explicit_final = node.query(statement_final.format(name=table.name,
+                                final=f"{' FINAL' if table.final_modifier_available else ''}")).output.strip()
 
-@TestOutline
-def select_negative(
-    self,
-    statement,
-    statement_final,
-    node=None,
-):
-    """Checking basic select clause not equal to force_select_final select only for core tables."""
-    if node is None:
-        node = self.context.node
-
-    for table in self.context.tables:
-        if table.name.endswith("core"):
-            with Then(
-                f"I check that 'SELECT ...' with force_select_final=1 setting is"
-                f"not equal 'SELECT...' for table with {table.engine} engine"
-                f" (when the result is not equal to 'SELECT ... FINAL')"
-            ):
-                statement_local = node.query(
+            with And("I execute the same query without FINAL modifier"):
+                without_final = node.query(
                     statement.format(name=table.name)
                 ).output.strip()
-                statement_final_local = node.query(
-                    statement_final.format(
-                        name=table.name,
-                        final=f"{' FINAL' if table.final_modifier_available else ''}",
-                    )
-                ).output.strip()
 
-                if (
-                    table.final_modifier_available
-                    and statement_local != statement_final_local
-                ):
-                    assert (
-                        statement_local
-                        != node.query(
+            with And("I execute the same query without FINAL modifiers but with force_select_final=1 setting"):
+                force_select_final = node.query(
                             statement.format(name=table.name),
                             settings=[("force_select_final", 1)],
                         ).output.strip()
-                    )
+
+            if negative:
+                with Then("I check that compare results are different"):
+                    if (
+                            table.final_modifier_available
+                            and without_final != explicit_final
+                    ):
+                        assert without_final != force_select_final
+            else:
+                with Then("I check that compare results are the same"):
+                    assert explicit_final == force_select_final
 
 
 @TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Select("1.0"))
 def select_count(self):
-    """Checking force_select_final setting for 'SELECT count()...'."""
+    """Check `SELECT count()` clause."""
     with Given("I create statements with and without `FINAL`."):
         statement = "SELECT count() FROM {name} FORMAT JSONEachRow;"
         statement_final = "SELECT count() FROM {name} {final} FORMAT JSONEachRow;"
@@ -87,12 +63,13 @@ def select_count(self):
         "I verify for query with `FINAL` data equivalence and non-equivalence for query without `FINAL`."
     ):
         select(statement=statement, statement_final=statement_final)
-        select_negative(statement=statement, statement_final=statement_final)
+        select(statement=statement, statement_final=statement_final, negative=True)
 
 
 @TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Limit("1.0"))
 def select_limit(self):
-    """Check `FINAL` clause equal to force_select_final select all data with `LIMIT`."""
+    """Check SELECT query with `LIMIT` clause."""
     with Given("I create statements with and without `FINAL`."):
         statement = (
             "SELECT * FROM {name} ORDER BY (id, x, someCol) LIMIT 1 FORMAT JSONEachRow;"
@@ -103,12 +80,30 @@ def select_limit(self):
         "I verify for query with `FINAL` data equivalence and non-equivalence for query without `FINAL`."
     ):
         select(statement=statement, statement_final=statement_final)
-        select_negative(statement=statement, statement_final=statement_final)
+        select(statement=statement, statement_final=statement_final, negative=True)
 
 
 @TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_LimitBy("1.0"))
+def select_limit_by(self):
+    """Check SELECT query with `LIMIT BY` clause."""
+    with Given("I create statements with and without `FINAL`."):
+        statement = (
+            "SELECT * FROM {name} ORDER BY (id, x, someCol) LIMIT 1 BY id FORMAT JSONEachRow;"
+        )
+        statement_final = "SELECT * FROM {name} {final} ORDER BY (id, x, someCol) LIMIT 1 BY id FORMAT JSONEachRow;"
+
+    with Then(
+        "I verify data equivalence for query with `FINAL` and non-equivalence for query without `FINAL`."
+    ):
+        select(statement=statement, statement_final=statement_final)
+        select(statement=statement, statement_final=statement_final, negative=True)
+
+
+@TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_GroupBy("1.0"))
 def select_group_by(self):
-    """Check  `FINAL` clause equal to force_select_final select all data with `GROUP BY`."""
+    """Check SELECT query with `GROUP BY` clause."""
     with Given("I create statements with and without `FINAL`"):
         statement = "SELECT id, count(x) as cx FROM {name} GROUP BY (id, x) ORDER BY (id, cx) FORMAT JSONEachRow;"
         statement_final = (
@@ -120,12 +115,13 @@ def select_group_by(self):
         "I verify for query with `FINAL` data equivalence and non-equivalence for query without `FINAL`"
     ):
         select(statement=statement, statement_final=statement_final)
-        select_negative(statement=statement, statement_final=statement_final)
+        select(statement=statement, statement_final=statement_final, negative=True)
 
 
 @TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Distinct("1.0"))
 def select_distinct(self):
-    """Check  `FINAL` clause equal to force_select_final select all data with `DISTINCT`."""
+    """Check SELECT query with `DISTINCT` clause."""
     with Given("I create statements with and without `FINAL`"):
         statement = "SELECT DISTINCT * FROM {name} ORDER BY (id, x, someCol) FORMAT JSONEachRow;"
         statement_final = (
@@ -137,7 +133,7 @@ def select_distinct(self):
         "I verify for query with `FINAL` data equivalence and non-equivalence for query without `FINAL`"
     ):
         select(statement=statement, statement_final=statement_final)
-        select_negative(statement=statement, statement_final=statement_final)
+        select(statement=statement, statement_final=statement_final, negative=True)
 
 
 @TestScenario
@@ -148,7 +144,8 @@ def select_prewhere(self, node=None):
         node = self.context.node
 
     with Given("I exclude Log family engines as they don't support `PREWHERE`"):
-        tables = [table for table in self.context.table if table.name.endswith("core") and not table.engine.endswith("Log")]
+        tables = [table for table in self.context.tables if table.name.endswith("core")
+                  and not table.engine.endswith("Log")]
         
     for table in tables:
         with When(f"{table}"):
@@ -171,8 +168,9 @@ def select_prewhere(self, node=None):
 
 
 @TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Where("1.0"))
 def select_where(self):
-    """Check  `FINAL` clause equal to force_select_final select all data with `WHERE`."""
+    """Check SELECT query with `WHERE` clause."""
     with Given("I create statements with and without `FINAL`"):
         statement = "SELECT * FROM {name} WHERE x > 3 ORDER BY (id, x, someCol) FORMAT JSONEachRow;"
         statement_final = "SELECT * FROM {name} {final} WHERE x > 3 ORDER BY (id, x, someCol) FORMAT JSONEachRow;"
@@ -181,12 +179,13 @@ def select_where(self):
         "I verify for query with `FINAL` data equivalence and non-equivalence for query without `FINAL`"
     ):
         select(statement=statement, statement_final=statement_final)
-        select_negative(statement=statement, statement_final=statement_final)
+        select(statement=statement, statement_final=statement_final, negative=True)
 
 
 @TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_ArrayJoin("1.0"))
 def select_array_join(self, node=None):
-    """Check  `FINAL` clause equal to force_select_final select all data with `ARRAY JOIN`."""
+    """Check SELECT query with `ARRAY JOIN` clause."""
     if node is None:
         node = self.context.node
 
@@ -352,7 +351,6 @@ def select_join_clause_select_all_types(self, node=None):
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join("1.0"))
 def select_join_clause_select_all_engine_combinations(self, node=None):
     """Check select count() that is using 'INNER JOIN' clause `SELECT ... FINAL` with `FINAL`
     equal to the same select without `FINAL` but with force_select_final=1 setting` for different
@@ -442,6 +440,7 @@ def select_union_clause(self):
 
 
 @TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Intersect("1.0"))
 def select_intersect_clause(self):
     """Check `SELECT` that is using `INTERSECT` clause with `FINAL`
     equal to the same select without force_select_final `FINAL`."""
@@ -449,6 +448,7 @@ def select_intersect_clause(self):
 
 
 @TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Except("1.0"))
 def select_except_clause(self):
     """Check `SELECT` that is using `EXCEPT` clause with `FINAL`
     equal to the same select without force_select_final `FINAL`."""
