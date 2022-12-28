@@ -26,14 +26,34 @@
       * 5.3.3.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SupportedTableEngines.EnginesOverOtherEngines](#rqsrs-032clickhouseautomaticfinalmodifiersupportedtableenginesenginesoverotherengines)
   * 5.4 [Select Queries](#select-queries)
     * 5.4.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries](#rqsrs-032clickhouseautomaticfinalmodifierselectqueries)
-    * 5.4.2 [Subquery](#subquery)
-      * 5.4.2.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Subquery](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriessubquery)
-    * 5.4.3 [JOIN](#join)
-      * 5.4.3.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesjoin)
-    * 5.4.4 [UNION](#union)
-      * 5.4.4.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Union](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesunion)
-    * 5.4.5 [WITH ](#with-)
-      * 5.4.5.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.With](#rqsrs-032clickhouseautomaticfinalmodifierselectquerieswith)
+    * 5.4.2 [Select](#select)
+      * 5.4.2.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Select](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesselect)
+    * 5.4.3 [Distinct](#distinct)
+      * 5.4.3.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Distinct](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesdistinct)
+    * 5.4.4 [Prewhere](#prewhere)
+      * 5.4.4.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Prewhere](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesprewhere)
+    * 5.4.5 [Where](#where)
+      * 5.4.5.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Where](#rqsrs-032clickhouseautomaticfinalmodifierselectquerieswhere)
+    * 5.4.6 [Group By](#group-by)
+      * 5.4.6.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.GroupBy](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesgroupby)
+    * 5.4.7 [Limit By](#limit-by)
+      * 5.4.7.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.LimitBy](#rqsrs-032clickhouseautomaticfinalmodifierselectquerieslimitby)
+    * 5.4.8 [Limit](#limit)
+      * 5.4.8.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Limit](#rqsrs-032clickhouseautomaticfinalmodifierselectquerieslimit)
+    * 5.4.9 [Array Join](#array-join)
+      * 5.4.9.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.ArrayJoin](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesarrayjoin)
+    * 5.4.10 [Subquery](#subquery)
+      * 5.4.10.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Subquery](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriessubquery)
+    * 5.4.11 [JOIN](#join)
+      * 5.4.11.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesjoin)
+    * 5.4.12 [UNION](#union)
+      * 5.4.12.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Union](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesunion)
+    * 5.4.13 [INTERSECT](#intersect)
+      * 5.4.13.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Intersect](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesintersect)
+    * 5.4.14 [EXCEPT](#except)
+      * 5.4.14.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Except](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesexcept)
+    * 5.4.15 [WITH ](#with-)
+      * 5.4.15.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.With](#rqsrs-032clickhouseautomaticfinalmodifierselectquerieswith)
 
 ## Introduction
 
@@ -254,6 +274,63 @@ SELECT [DISTINCT [ON (column1, column2, ...)]] expr_list
 [FORMAT format]
 ```
 
+#### Select
+
+##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Select
+version: 1.0
+
+[ClickHouse] SHALL support automatic [FINAL modifier] for [SELECT] queries with [SELECT] clause.
+
+
+#### Distinct
+
+##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Distinct
+version: 1.0
+
+[ClickHouse] SHALL support automatic [FINAL modifier] for [SELECT] queries with [DISTINCT] clause.
+
+#### Prewhere
+
+##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Prewhere
+version: 1.0
+
+[ClickHouse] SHALL support automatic [FINAL modifier] for [SELECT] queries with [PREWHERE] clause.
+
+#### Where
+
+##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Where
+version: 1.0
+
+[ClickHouse] SHALL support automatic [FINAL modifier] for [SELECT] queries with [WHERE] clause.
+
+#### Group By
+
+##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.GroupBy
+version: 1.0
+
+[ClickHouse] SHALL support automatic [FINAL modifier] for [SELECT] queries with [GROUP BY] clause.
+
+#### Limit By
+
+##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.LimitBy
+version: 1.0
+
+[ClickHouse] SHALL support automatic [FINAL modifier] for [SELECT] queries with [LIMIT BY] clause.
+
+#### Limit
+
+##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Limit
+version: 1.0
+
+[ClickHouse] SHALL support automatic [FINAL modifier] for [SELECT] queries with [LIMIT] clause.
+
+#### Array Join
+
+##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.ArrayJoin
+version: 1.0
+
+[ClickHouse] SHALL support automatic [FINAL modifier] for [SELECT] queries with [ARRAY JOIN] clause.
+
 #### Subquery
 
 ##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Subquery
@@ -297,6 +374,59 @@ the automatic [FINAL modifier] is enabled.
 
 For example,
 ```sql
+SELECT id, count(*)
+    FROM test1 FINAL
+    GROUP BY id
+
+UNION ALL
+
+SELECT id, count(*)
+    FROM test2 FINAL
+    GROUP BY id
+
+```
+
+#### INTERSECT
+
+##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Intersect
+version: 1.0
+
+[ClickHouse] SHALL support applying [FINAL modifier] for any table in [INTERSECT] clause for which
+the automatic [FINAL modifier] is enabled.
+
+For example,
+```sql
+SELECT id, count(*)
+    FROM test1 FINAL
+    GROUP BY id
+
+INTERSECT
+
+SELECT id, count(*)
+    FROM test2 FINAL
+    GROUP BY id
+
+```
+
+#### EXCEPT
+
+##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Except
+version: 1.0
+
+[ClickHouse] SHALL support applying [FINAL modifier] for any table in [EXCEPT] clause for which
+the automatic [FINAL modifier] is enabled.
+
+For example,
+```sql
+SELECT id, count(*)
+    FROM test1 FINAL
+    GROUP BY id
+
+EXCEPT
+
+SELECT id, count(*)
+    FROM test2 FINAL
+    GROUP BY id
 
 ```
 
@@ -315,8 +445,17 @@ For example,
 
 [SRS]: #srs
 [SELECT]: https://clickhouse.com/docs/en/sql-reference/statements/select/
+[DISTINCT]: https://clickhouse.com/docs/en/sql-reference/statements/select/distinct
+[GROUP BY]: https://clickhouse.com/docs/en/sql-reference/statements/select/group-by
+[LIMIT BY]: https://clickhouse.com/docs/en/sql-reference/statements/select/limit-by
+[LIMIT]: https://clickhouse.com/docs/en/sql-reference/statements/select/limit
+[WHERE]: https://clickhouse.com/docs/en/sql-reference/statements/select/where
+[PREWHERE]: https://clickhouse.com/docs/en/sql-reference/statements/select/prewhere
 [JOIN]: https://clickhouse.com/docs/en/sql-reference/statements/select/join
 [UNION]: https://clickhouse.com/docs/en/sql-reference/statements/select/union
+[INTERSECT]: https://clickhouse.com/docs/en/sql-reference/statements/select/intersect
+[EXCEPT]: https://clickhouse.com/docs/en/sql-reference/statements/select/except
+[ARRAY JOIN]: https://clickhouse.com/docs/en/sql-reference/statements/select/array-join
 [WITH]: https://clickhouse.com/docs/en/sql-reference/statements/select/with
 [MergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/mergetree/
 [ReplacingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/replacingmergetree
