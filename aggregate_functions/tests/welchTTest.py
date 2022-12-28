@@ -11,7 +11,15 @@ from aggregate_functions.tests.quantileWeighted import feature as checks
 @TestFeature
 @Name("welchTTest")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_WelchTTest("1.0"))
-def feature(self, func="welchTTest({params})", table=None, snapshot_id=None):
+def feature(
+    self,
+    func="welchTTest({params})",
+    table=None,
+    snapshot_id=None,
+    decimal=True,
+    date=False,
+    datetime=False,
+):
     """Check welchTTest aggregate function by using the same tests as for quantileWeighted."""
     self.context.snapshot_id = get_snapshot_id(snapshot_id, clickhouse_version=">=22.6")
 
@@ -28,4 +36,10 @@ def feature(self, func="welchTTest({params})", table=None, snapshot_id=None):
             f"SELECT {func.format(params='sample_data,sample_index')} FROM values('sample_data Int8, sample_index Int8', (10,1), (11,0), (12,0), (1,0), (2,0), (3,0))"
         )
 
-    checks(func=func, snapshot_id=self.context.snapshot_id)
+    checks(
+        func=func,
+        snapshot_id=self.context.snapshot_id,
+        decimal=decimal,
+        date=date,
+        datetime=datetime,
+    )
