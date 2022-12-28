@@ -6,19 +6,54 @@ from testflows.core import *
 
 append_path(sys.path, "..")
 
-from helpers.cluster import create_cluster
-from helpers.argparser import argparser
 from helpers.tables import *
+from helpers.argparser import argparser
+from helpers.cluster import create_cluster
+from helpers.common import check_clickhouse_version
 
 from aggregate_functions.tests.steps import aggregate_functions
 from aggregate_functions.requirements import SRS_031_ClickHouse_Aggregate_Functions
 
 issue_43140 = "https://github.com/ClickHouse/ClickHouse/issues/43140"
+issue_44511 = (
+    "https://github.com/ClickHouse/ClickHouse/issues/44511",
+    check_clickhouse_version(">=22.6"),
+)
 
 xfails = {
     "/aggregate functions/singleValueOrNull/Map:": [(Fail, issue_43140)],
     "/aggregate functions/singleValueOrNull/Array:": [(Fail, issue_43140)],
     "/aggregate functions/singleValueOrNull/Tuple:": [(Fail, issue_43140)],
+    "/aggregate functions/welchTTest/datatypes/permutations/float64:": [
+        (Fail, *issue_44511)
+    ],
+    "/aggregate functions/welchTTest/datatypes/permutations/nullable_float64_:": [
+        (Fail, *issue_44511)
+    ],
+    "/aggregate functions/welchTTest/datatypes/permutations/lowcardinality_nullable_float64__:": [
+        (Fail, *issue_44511)
+    ],
+    "/aggregate functions/welchTTest/datatypes/permutations/lowcardinality_float64_:": [
+        (Fail, *issue_44511)
+    ],
+    "/aggregate functions/studentTTest/datatypes/permutations/float64:": [
+        (Fail, *issue_44511)
+    ],
+    "/aggregate functions/studentTTest/datatypes/permutations/nullable_float64_:": [
+        (Fail, *issue_44511)
+    ],
+    "/aggregate functions/studentTTest/datatypes/permutations/lowcardinality_nullable_float64__:": [
+        (Fail, *issue_44511)
+    ],
+    "/aggregate functions/studentTTest/datatypes/permutations/lowcardinality_float64_:": [
+        (Fail, *issue_44511)
+    ],
+    "/aggregate functions/quantileTDigestWeighted/datatypes/permutations/date:": [
+        (Fail, "DECIMAL_OVERFLOW error that needs to be investigated")
+    ],
+    "/aggregate functions/quantileTDigestWeighted/datatypes/permutations/:_date_:": [
+        (Fail, "DECIMAL_OVERFLOW error that needs to be investigated")
+    ],
 }
 
 

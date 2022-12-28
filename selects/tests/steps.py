@@ -6,9 +6,11 @@ from helpers.common import create_xml_config_content, add_config
 from helpers.common import getuid, instrument_clickhouse_server_log
 
 engines = [
+    "Log",
+    "MergeTree",
     "ReplacingMergeTree",
-    "ReplacingMergeTree({version})",
     "ReplicatedReplacingMergeTree",
+    "ReplacingMergeTree({version})",
     "ReplicatedReplacingMergeTree({version})",
     "CollapsingMergeTree({sign})",
     "ReplicatedCollapsingMergeTree({sign})",
@@ -18,11 +20,26 @@ engines = [
     "ReplicatedSummingMergeTree",
     "VersionedCollapsingMergeTree({sign},{version})",
     "ReplicatedVersionedCollapsingMergeTree({sign},{version})",
-    "MergeTree",
     "ReplicatedMergeTree",
     "StripeLog",
     "TinyLog",
-    "Log",
+]
+
+join_types = [
+    "INNER JOIN",
+    "LEFT OUTER JOIN",
+    "RIGHT OUTER JOIN",
+    "FULL OUTER JOIN",
+    "CROSS JOIN",
+    "LEFT SEMI JOIN",
+    "RIGHT SEMI JOIN",
+    "LEFT ANTI JOIN",
+    "RIGHT ANTI JOIN",
+    "LEFT ANY JOIN",
+    "RIGHT ANY JOIN",
+    "INNER ANY JOIN",
+    "ASOF JOIN",
+    "LEFT ASOF JOIN",
 ]
 
 
@@ -86,7 +103,7 @@ def insert(
     node=None,
     partitions=2,
     parts_per_partition=2,
-    block_size=5,
+    block_size=2,
 ):
     """Insert data having specified number of partitions and parts."""
     if node is None:
@@ -133,7 +150,13 @@ def insert(
 
 
 class Table:
-    def __init__(self, name, engine, final_modifier_available, cluster=None):
+    def __init__(
+        self,
+        name,
+        engine,
+        final_modifier_available,
+        cluster=None,
+    ):
         self.name = name
         self.engine = engine
         self.final_modifier_available = final_modifier_available
@@ -698,7 +721,12 @@ def create_and_populate_distributed_tables(self):
 
 @TestStep(Given)
 def create_normal_view(
-    self, core_table, final_modifier_available, final=False, node=None
+    self,
+    core_table,
+    final_modifier_available,
+    final=False,
+    node=None,
+    view_not_final=False,
 ):
     """
     Creating `NORMAL VIEW` to some table.
@@ -723,7 +751,12 @@ def create_normal_view(
 
 @TestStep(Given)
 def create_materialized_view(
-    self, core_table, final_modifier_available, final=False, node=None
+    self,
+    core_table,
+    final_modifier_available,
+    final=False,
+    node=None,
+    view_not_final=False,
 ):
     """
     Creating `MATERIALIZED VIEW` to some table.
@@ -754,7 +787,12 @@ def create_materialized_view(
 
 @TestStep(Given)
 def create_live_view(
-    self, core_table, final_modifier_available, final=False, node=None
+    self,
+    core_table,
+    final_modifier_available,
+    final=False,
+    node=None,
+    view_not_final=False,
 ):
     """
     Creating `LIVE VIEW` to some table.
@@ -781,7 +819,12 @@ def create_live_view(
 
 @TestStep(Given)
 def create_window_view(
-    self, core_table, final_modifier_available, final=False, node=None
+    self,
+    core_table,
+    final_modifier_available,
+    final=False,
+    node=None,
+    view_not_final=False,
 ):
     """
     Creating `WINDOW VIEW` to some table.
@@ -1065,11 +1108,72 @@ def create_expression_subquery_table(self, node=None):
             for i in range(3):
                 node.query(f"INSERT INTO {name} VALUES (1, [1]);")
 
-        self.context.tables.append(Table(name, "ReplacingMergeTree", True))
-        yield
+        yield self.context.tables.append(
+            Table(name, "ReplacingMergeTree", True)
+        )
+
     finally:
         with Finally("I drop data"):
             node.query(f"DROP TABLE IF EXISTS {name}")
+
+
+@TestStep(Given)
+def assert_joins(self, join_statement, table, table2, join_type, node=None):
+    if node is None:
+        node = current().context.node
+
+    with Given("I check `SELECT ... FINAL` equal to `SELECT` with force_select_final "):
+        with Then("without `FINAL`"):
+            assert (
+                node.query(
+                    join_statement,
+                    settings=[("joined_subquery_requires_alias", 0)],
+                ).output.strip()
+                == node.query(
+                    f"SELECT count() FROM {table.name} {join_type}"
+                    f" {table2.name} on {table.name}.id = {table2.name}.id",
+                    settings=[("force_select_final", 1)],
+                ).output.strip()
+            )
+
+        with Then("with `FINAL` clause on left table"):
+            assert (
+                node.query(
+                    join_statement,
+                    settings=[("joined_subquery_requires_alias", 0)],
+                ).output.strip()
+                == node.query(
+                    f"SELECT count() FROM {table.name} {' FINAL' if table.final_modifier_available else ''} {join_type}"
+                    f" {table2.name} on {table.name}.id = {table2.name}.id",
+                    settings=[("force_select_final", 1)],
+                ).output.strip()
+            )
+
+        with Then("with `FINAL` clause on right table"):
+            assert (
+                node.query(
+                    join_statement,
+                    settings=[("joined_subquery_requires_alias", 0)],
+                ).output.strip()
+                == node.query(
+                    f"SELECT count() FROM {table.name} {join_type}"
+                    f" {table2.name} {' FINAL' if table2.final_modifier_available else ''} on {table.name}.id = {table2.name}.id",
+                    settings=[("force_select_final", 1)],
+                ).output.strip()
+            )
+
+        with Then("with `FINAL` clause on both tables"):
+            assert (
+                node.query(
+                    join_statement,
+                    settings=[("joined_subquery_requires_alias", 0)],
+                ).output.strip()
+                == node.query(
+                    f"SELECT count() FROM {table.name} {' FINAL' if table.final_modifier_available else ''} {join_type}"
+                    f" {table2.name} {' FINAL' if table2.final_modifier_available else ''} on {table.name}.id = {table2.name}.id",
+                    settings=[("force_select_final", 1)],
+                ).output.strip()
+            )
 
 
 @TestStep(Given)
@@ -1077,11 +1181,11 @@ def create_and_populate_all_tables(self):
     """
     Creating all kind of tables.
     """
-    create_and_populate_core_tables()
-    add_system_tables()
-    create_and_populate_distributed_tables()
-    create_all_views()
-    create_and_populate_core_tables(duplicate=True)
-    create_normal_view_with_join()
-    create_replicated_table_2shards3replicas()
-    create_expression_subquery_table()
+    # create_and_populate_core_tables()
+    # add_system_tables()
+    # create_and_populate_distributed_tables()
+    # create_all_views()
+    # create_and_populate_core_tables(duplicate=True)
+    # create_normal_view_with_join()
+    # create_replicated_table_2shards3replicas()
+    # create_expression_subquery_table()

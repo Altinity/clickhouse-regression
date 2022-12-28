@@ -211,3 +211,35 @@ _aggregate_functions_quantileExactHigh_LowCardinality_Nullable_Float64__ = r"""
 {"quantileExactHigh(lowcardinality_nullable_float64__)":1.7674632094597634e89}
 """
 
+_aggregate_functions_quantileExactHigh_Date = r"""
+{"quantileExactHigh(date)":"2006-11-06"}
+"""
+
+_aggregate_functions_quantileExactHigh_DateTime = r"""
+{"quantileExactHigh(datetime)":"2017-02-11 11:09:25"}
+"""
+
+_aggregate_functions_quantileExactHigh_Nullable_Date_ = r"""
+{"quantileExactHigh(nullable_date_)":"2012-02-07"}
+"""
+
+_aggregate_functions_quantileExactHigh_Nullable_DateTime_ = r"""
+{"quantileExactHigh(nullable_datetime_)":"2014-04-10 11:39:46"}
+"""
+
+_aggregate_functions_quantileExactHigh_LowCardinality_Date_ = r"""
+{"quantileExactHigh(lowcardinality_date_)":"2009-11-18"}
+"""
+
+_aggregate_functions_quantileExactHigh_LowCardinality_DateTime_ = r"""
+{"quantileExactHigh(lowcardinality_datetime_)":"2016-11-27 14:16:37"}
+"""
+
+_aggregate_functions_quantileExactHigh_LowCardinality_Nullable_Date__ = r"""
+{"quantileExactHigh(lowcardinality_nullable_date__)":"2013-09-28"}
+"""
+
+_aggregate_functions_quantileExactHigh_LowCardinality_Nullable_DateTime__ = r"""
+{"quantileExactHigh(lowcardinality_nullable_datetime__)":"2013-08-28 14:39:09"}
+"""
+

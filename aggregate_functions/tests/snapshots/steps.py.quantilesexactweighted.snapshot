@@ -2747,3 +2747,515 @@ _aggregate_functions_quantilesExactWeighted_datatypes_permutations_decimal128_38
 {"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(decimal128_38_, lowcardinality_nullable_uint16__)":[0.35781566593334310386900970995740493312,0.58989463244210612148403810068212452864,0.99999999999999997752612184630461283328,0.99999999999999997752612184630461283328,0.99999999999999997752612184630461283328,0.99999999999999997752612184630461283328,0.99999999999999997752612184630461283328]}
 """
 
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_datetime__uint8 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_datetime_, uint8)":["2006-01-25 22:44:12","2009-05-31 01:43:18","2017-06-27 04:09:51","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_datetime__uint64 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_datetime_, uint64)":["2006-08-10 23:14:26","2015-12-28 12:07:33","2017-06-27 04:09:51","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_datetime__uint32 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_datetime_, uint32)":["2006-01-25 22:44:12","2009-05-31 01:43:18","2017-06-27 04:09:51","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_datetime__uint16 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_datetime_, uint16)":["2006-01-25 22:44:12","2014-04-10 11:39:46","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_datetime__nullable_uint8_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_datetime_, nullable_uint8_)":["2009-05-31 01:43:18","2014-04-10 11:39:46","2017-06-27 04:09:51","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_datetime__nullable_uint64_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_datetime_, nullable_uint64_)":["2006-08-10 23:14:26","2014-04-10 11:39:46","2017-06-27 04:09:51","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_datetime__nullable_uint32_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_datetime_, nullable_uint32_)":["2009-05-31 01:43:18","2014-04-10 11:39:46","2017-06-27 04:09:51","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_datetime__nullable_uint16_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_datetime_, nullable_uint16_)":["2006-08-10 23:14:26","2014-04-10 11:39:46","2017-06-27 04:09:51","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_datetime__lowcardinality_uint8_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_datetime_, lowcardinality_uint8_)":["2006-01-25 22:44:12","2009-05-31 01:43:18","2017-06-27 04:09:51","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_datetime__lowcardinality_uint64_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_datetime_, lowcardinality_uint64_)":["2006-08-10 23:14:26","2014-04-10 11:39:46","2017-06-27 04:09:51","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_datetime__lowcardinality_uint32_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_datetime_, lowcardinality_uint32_)":["2006-01-25 22:44:12","2014-04-10 11:39:46","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_datetime__lowcardinality_uint16_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_datetime_, lowcardinality_uint16_)":["2006-08-10 23:14:26","2014-04-10 11:39:46","2017-06-27 04:09:51","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_datetime__lowcardinality_nullable_uint8__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_datetime_, lowcardinality_nullable_uint8__)":["2006-01-25 22:44:12","2014-04-10 11:39:46","2017-06-27 04:09:51","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_datetime__lowcardinality_nullable_uint64__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_datetime_, lowcardinality_nullable_uint64__)":["2009-05-31 01:43:18","2014-04-10 11:39:46","2015-12-28 12:07:33","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_datetime__lowcardinality_nullable_uint32__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_datetime_, lowcardinality_nullable_uint32__)":["2006-01-25 22:44:12","2009-05-31 01:43:18","2017-06-27 04:09:51","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_datetime__lowcardinality_nullable_uint16__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_datetime_, lowcardinality_nullable_uint16__)":["2006-01-25 22:44:12","2006-08-10 23:14:26","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_date__uint8 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_date_, uint8)":["2005-10-25","2012-02-07","2022-01-01","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_date__uint64 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_date_, uint64)":["2017-01-08","2018-10-13","2022-01-01","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_date__uint32 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_date_, uint32)":["2007-12-06","2017-01-08","2022-01-01","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_date__uint16 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_date_, uint16)":["2007-12-06","2012-02-07","2149-06-06","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_date__nullable_uint8_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_date_, nullable_uint8_)":["2005-10-25","2017-01-08","2022-01-01","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_date__nullable_uint64_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_date_, nullable_uint64_)":["2012-02-07","2017-01-08","2022-01-01","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_date__nullable_uint32_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_date_, nullable_uint32_)":["2005-10-25","2012-02-07","2022-01-01","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_date__nullable_uint16_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_date_, nullable_uint16_)":["2007-12-06","2017-01-08","2022-01-01","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_date__lowcardinality_uint8_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_date_, lowcardinality_uint8_)":["2005-10-25","2012-02-07","2022-01-01","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_date__lowcardinality_uint64_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_date_, lowcardinality_uint64_)":["2005-10-25","2017-01-08","2022-01-01","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_date__lowcardinality_uint32_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_date_, lowcardinality_uint32_)":["2005-10-25","2017-01-08","2149-06-06","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_date__lowcardinality_uint16_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_date_, lowcardinality_uint16_)":["2005-10-25","2017-01-08","2022-01-01","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_date__lowcardinality_nullable_uint8__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_date_, lowcardinality_nullable_uint8__)":["2007-12-06","2017-01-08","2022-01-01","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_date__lowcardinality_nullable_uint64__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_date_, lowcardinality_nullable_uint64__)":["2005-10-25","2012-02-07","2018-10-13","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_date__lowcardinality_nullable_uint32__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_date_, lowcardinality_nullable_uint32__)":["2007-12-06","2012-02-07","2022-01-01","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_nullable_date__lowcardinality_nullable_uint16__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_date_, lowcardinality_nullable_uint16__)":["2005-10-25","2007-12-06","2149-06-06","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___uint8 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_datetime__, uint8)":["2012-08-21 21:37:58","2013-08-28 14:39:09","2020-04-15 16:09:40","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___uint64 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_datetime__, uint64)":["2007-01-21 18:49:21","2013-05-05 05:17:45","2013-11-29 13:42:31","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___uint32 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_datetime__, uint32)":["2012-08-21 21:37:58","2013-08-28 14:39:09","2020-04-15 16:09:40","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___uint16 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_datetime__, uint16)":["2012-08-21 21:37:58","2013-08-28 14:39:09","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___nullable_uint8_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_datetime__, nullable_uint8_)":["2012-08-21 21:37:58","2013-05-05 05:17:45","2020-04-15 16:09:40","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___nullable_uint64_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_datetime__, nullable_uint64_)":["2012-08-21 21:37:58","2013-08-28 14:39:09","2020-04-15 16:09:40","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___nullable_uint32_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_datetime__, nullable_uint32_)":["2012-08-21 21:37:58","2013-11-29 13:42:31","2020-04-15 16:09:40","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___nullable_uint16_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_datetime__, nullable_uint16_)":["2007-01-21 18:49:21","2013-05-05 05:17:45","2013-11-29 13:42:31","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_uint8_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_datetime__, lowcardinality_uint8_)":["2012-08-21 21:37:58","2013-08-28 14:39:09","2020-04-15 16:09:40","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_uint64_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_datetime__, lowcardinality_uint64_)":["2012-08-21 21:37:58","2013-05-05 05:17:45","2013-11-29 13:42:31","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_uint32_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_datetime__, lowcardinality_uint32_)":["2007-01-21 18:49:21","2013-05-05 05:17:45","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_uint16_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_datetime__, lowcardinality_uint16_)":["2007-01-21 18:49:21","2013-05-05 05:17:45","2013-11-29 13:42:31","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_nullable_uint8__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_datetime__, lowcardinality_nullable_uint8__)":["2007-01-21 18:49:21","2013-05-05 05:17:45","2013-11-29 13:42:31","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_nullable_uint64__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_datetime__, lowcardinality_nullable_uint64__)":["2012-08-21 21:37:58","2013-08-28 14:39:09","2020-04-15 16:09:40","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_nullable_uint32__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_datetime__, lowcardinality_nullable_uint32__)":["2012-08-21 21:37:58","2013-08-28 14:39:09","2020-04-15 16:09:40","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_nullable_uint16__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_datetime__, lowcardinality_nullable_uint16__)":["2007-01-21 18:49:21","2013-08-28 14:39:09","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_date___uint8 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_date__, uint8)":["2007-03-04","2013-09-28","2021-08-04","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_date___uint64 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_date__, uint64)":["2013-09-28","2015-12-28","2021-08-04","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_date___uint32 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_date__, uint32)":["2007-03-04","2013-09-28","2018-12-01","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_date___uint16 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_date__, uint16)":["2007-03-04","2015-12-28","2149-06-06","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_date___nullable_uint8_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_date__, nullable_uint8_)":["2008-02-09","2018-12-01","2021-08-04","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_date___nullable_uint64_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_date__, nullable_uint64_)":["2013-09-28","2018-12-01","2021-08-04","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_date___nullable_uint32_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_date__, nullable_uint32_)":["2008-02-09","2015-12-28","2021-08-04","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_date___nullable_uint16_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_date__, nullable_uint16_)":["2008-02-09","2015-12-28","2021-08-04","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_date___lowcardinality_uint8_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_date__, lowcardinality_uint8_)":["2007-03-04","2013-09-28","2021-08-04","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_date___lowcardinality_uint64_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_date__, lowcardinality_uint64_)":["2013-09-28","2018-12-01","2021-08-04","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_date___lowcardinality_uint32_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_date__, lowcardinality_uint32_)":["2007-03-04","2015-12-28","2149-06-06","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_date___lowcardinality_uint16_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_date__, lowcardinality_uint16_)":["2008-02-09","2018-12-01","2021-08-04","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_date___lowcardinality_nullable_uint8__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_date__, lowcardinality_nullable_uint8__)":["2007-03-04","2015-12-28","2021-08-04","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_date___lowcardinality_nullable_uint64__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_date__, lowcardinality_nullable_uint64__)":["2008-02-09","2018-12-01","2021-08-04","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_date___lowcardinality_nullable_uint32__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_date__, lowcardinality_nullable_uint32__)":["2007-03-04","2013-09-28","2018-12-01","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_nullable_date___lowcardinality_nullable_uint16__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_date__, lowcardinality_nullable_uint16__)":["2007-03-04","2008-02-09","2149-06-06","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_datetime__uint8 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_datetime_, uint8)":["2012-01-02 12:35:45","2019-02-09 01:58:10","2021-09-18 09:15:28","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_datetime__uint64 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_datetime_, uint64)":["2011-09-29 05:43:51","2013-09-04 16:10:20","2021-09-18 09:15:28","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_datetime__uint32 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_datetime_, uint32)":["2012-01-02 12:35:45","2016-11-27 14:16:37","2019-02-09 01:58:10","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_datetime__uint16 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_datetime_, uint16)":["2012-01-02 12:35:45","2019-02-09 01:58:10","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_datetime__nullable_uint8_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_datetime_, nullable_uint8_)":["2012-01-02 12:35:45","2016-11-27 14:16:37","2021-09-18 09:15:28","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_datetime__nullable_uint64_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_datetime_, nullable_uint64_)":["2011-09-29 05:43:51","2016-11-27 14:16:37","2021-09-18 09:15:28","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_datetime__nullable_uint32_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_datetime_, nullable_uint32_)":["2013-09-04 16:10:20","2016-11-27 14:16:37","2021-09-18 09:15:28","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_datetime__nullable_uint16_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_datetime_, nullable_uint16_)":["2011-09-29 05:43:51","2012-01-02 12:35:45","2021-09-18 09:15:28","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_uint8_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_datetime_, lowcardinality_uint8_)":["2012-01-02 12:35:45","2016-11-27 14:16:37","2021-09-18 09:15:28","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_uint64_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_datetime_, lowcardinality_uint64_)":["2011-09-29 05:43:51","2013-09-04 16:10:20","2021-09-18 09:15:28","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_uint32_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_datetime_, lowcardinality_uint32_)":["2011-09-29 05:43:51","2019-02-09 01:58:10","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_uint16_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_datetime_, lowcardinality_uint16_)":["2011-09-29 05:43:51","2013-09-04 16:10:20","2021-09-18 09:15:28","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_nullable_uint8__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_datetime_, lowcardinality_nullable_uint8__)":["2011-09-29 05:43:51","2013-09-04 16:10:20","2021-09-18 09:15:28","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_nullable_uint64__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_datetime_, lowcardinality_nullable_uint64__)":["2012-01-02 12:35:45","2016-11-27 14:16:37","2021-09-18 09:15:28","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_nullable_uint32__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_datetime_, lowcardinality_nullable_uint32__)":["2012-01-02 12:35:45","2016-11-27 14:16:37","2019-02-09 01:58:10","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_nullable_uint16__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_datetime_, lowcardinality_nullable_uint16__)":["2012-01-02 12:35:45","2019-02-09 01:58:10","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_date__uint8 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_date_, uint8)":["2008-06-30","2013-09-23","2022-06-02","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_date__uint64 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_date_, uint64)":["2005-02-18","2008-06-30","2022-06-02","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_date__uint32 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_date_, uint32)":["2008-06-30","2009-11-18","2022-06-02","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_date__uint16 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_date_, uint16)":["2009-11-18","2020-01-11","2149-06-06","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_date__nullable_uint8_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_date_, nullable_uint8_)":["2008-06-30","2020-01-11","2022-06-02","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_date__nullable_uint64_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_date_, nullable_uint64_)":["2008-06-30","2013-09-23","2020-01-11","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_date__nullable_uint32_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_date_, nullable_uint32_)":["2009-11-18","2020-01-11","2022-06-02","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_date__nullable_uint16_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_date_, nullable_uint16_)":["2008-06-30","2009-11-18","2022-06-02","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_date__lowcardinality_uint8_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_date_, lowcardinality_uint8_)":["2008-06-30","2013-09-23","2022-06-02","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_date__lowcardinality_uint64_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_date_, lowcardinality_uint64_)":["2005-02-18","2013-09-23","2022-06-02","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_date__lowcardinality_uint32_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_date_, lowcardinality_uint32_)":["2008-06-30","2020-01-11","2149-06-06","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_date__lowcardinality_uint16_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_date_, lowcardinality_uint16_)":["2008-06-30","2020-01-11","2022-06-02","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_date__lowcardinality_nullable_uint8__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_date_, lowcardinality_nullable_uint8__)":["2008-06-30","2009-11-18","2022-06-02","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_date__lowcardinality_nullable_uint64__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_date_, lowcardinality_nullable_uint64__)":["2009-11-18","2013-09-23","2022-06-02","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_date__lowcardinality_nullable_uint32__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_date_, lowcardinality_nullable_uint32__)":["2008-06-30","2013-09-23","2022-06-02","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_lowcardinality_date__lowcardinality_nullable_uint16__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_date_, lowcardinality_nullable_uint16__)":["2009-11-18","2022-06-02","2149-06-06","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_datetime_uint8 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(datetime, uint8)":["2011-09-30 04:34:30","2017-02-11 11:09:25","2020-01-24 17:10:50","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_datetime_uint64 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(datetime, uint64)":["2011-09-30 04:34:30","2015-06-29 10:43:07","2020-01-24 17:10:50","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_datetime_uint32 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(datetime, uint32)":["2011-09-30 04:34:30","2017-02-11 11:09:25","2020-01-24 17:10:50","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_datetime_uint16 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(datetime, uint16)":["2009-06-14 13:12:39","2019-04-27 03:01:34","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_datetime_nullable_uint8_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(datetime, nullable_uint8_)":["2009-06-14 13:12:39","2015-06-29 10:43:07","2020-01-24 17:10:50","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_datetime_nullable_uint64_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(datetime, nullable_uint64_)":["2011-09-30 04:34:30","2017-02-11 11:09:25","2020-01-24 17:10:50","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_datetime_nullable_uint32_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(datetime, nullable_uint32_)":["2009-06-14 13:12:39","2017-02-11 11:09:25","2020-01-24 17:10:50","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_datetime_nullable_uint16_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(datetime, nullable_uint16_)":["2011-09-30 04:34:30","2015-06-29 10:43:07","2020-01-24 17:10:50","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_datetime_lowcardinality_uint8_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(datetime, lowcardinality_uint8_)":["2011-09-30 04:34:30","2017-02-11 11:09:25","2020-01-24 17:10:50","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_datetime_lowcardinality_uint64_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(datetime, lowcardinality_uint64_)":["2011-09-30 04:34:30","2015-06-29 10:43:07","2020-01-24 17:10:50","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_datetime_lowcardinality_uint32_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(datetime, lowcardinality_uint32_)":["2009-06-14 13:12:39","2015-06-29 10:43:07","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_datetime_lowcardinality_uint16_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(datetime, lowcardinality_uint16_)":["2011-09-30 04:34:30","2015-06-29 10:43:07","2020-01-24 17:10:50","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_datetime_lowcardinality_nullable_uint8__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(datetime, lowcardinality_nullable_uint8__)":["2011-09-30 04:34:30","2015-06-29 10:43:07","2020-01-24 17:10:50","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_datetime_lowcardinality_nullable_uint64__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(datetime, lowcardinality_nullable_uint64__)":["2009-06-14 13:12:39","2017-02-11 11:09:25","2019-04-27 03:01:34","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_datetime_lowcardinality_nullable_uint32__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(datetime, lowcardinality_nullable_uint32__)":["2015-06-29 10:43:07","2017-02-11 11:09:25","2020-01-24 17:10:50","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_datetime_lowcardinality_nullable_uint16__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(datetime, lowcardinality_nullable_uint16__)":["2015-06-29 10:43:07","2019-04-27 03:01:34","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_date_uint8 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(date, uint8)":["2005-06-07","2006-11-06","2015-01-26","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_date_uint64 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(date, uint64)":["2005-06-07","2015-01-26","2021-09-25","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_date_uint32 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(date, uint32)":["2005-06-07","2014-06-03","2021-09-25","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_date_uint16 = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(date, uint16)":["2005-06-07","2014-06-03","2149-06-06","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_date_nullable_uint8_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(date, nullable_uint8_)":["2005-06-07","2014-06-03","2021-09-25","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_date_nullable_uint64_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(date, nullable_uint64_)":["2004-01-27","2014-06-03","2021-09-25","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_date_nullable_uint32_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(date, nullable_uint32_)":["2004-01-27","2006-11-06","2021-09-25","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_date_nullable_uint16_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(date, nullable_uint16_)":["2005-06-07","2015-01-26","2021-09-25","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_date_lowcardinality_uint8_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(date, lowcardinality_uint8_)":["2005-06-07","2006-11-06","2015-01-26","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_date_lowcardinality_uint64_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(date, lowcardinality_uint64_)":["2004-01-27","2006-11-06","2021-09-25","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_date_lowcardinality_uint32_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(date, lowcardinality_uint32_)":["2005-06-07","2015-01-26","2149-06-06","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_date_lowcardinality_uint16_ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(date, lowcardinality_uint16_)":["2004-01-27","2014-06-03","2021-09-25","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_date_lowcardinality_nullable_uint8__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(date, lowcardinality_nullable_uint8__)":["2005-06-07","2014-06-03","2021-09-25","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_date_lowcardinality_nullable_uint64__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(date, lowcardinality_nullable_uint64__)":["2005-06-07","2014-06-03","2021-09-25","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_date_lowcardinality_nullable_uint32__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(date, lowcardinality_nullable_uint32__)":["2005-06-07","2006-11-06","2021-09-25","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactWeighted_datatypes_permutations_date_lowcardinality_nullable_uint16__ = r"""
+{"quantilesExactWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(date, lowcardinality_nullable_uint16__)":["2005-06-07","2006-11-06","2149-06-06","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
