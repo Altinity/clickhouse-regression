@@ -211,3 +211,35 @@ _aggregate_functions_quantilesExactInclusive_LowCardinality_Nullable_Float64__ =
 {"quantilesExactInclusive(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_float64__)":[-1.3724029909877588e195,1.7674632094597634e89,3.01733034930727e285,3.59538200354585e307,1.0786146001772924e308,1.6538757200354584e308,1.7833094720035472e308]}
 """
 
+_aggregate_functions_quantilesExactInclusive_Date = r"""
+{"quantilesExactInclusive(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(date)":[12427.5,13199.5,16401.75,23558.999999999985,44546.99999999995,61337.40000000001,65115.23999999998]}
+"""
+
+_aggregate_functions_quantilesExactInclusive_DateTime = r"""
+{"quantilesExactInclusive(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(datetime)":[1263063786.75,1461182176,1573987111,4294956495.1,4294956495.55,4294956495.91,4294956495.991]}
+"""
+
+_aggregate_functions_quantilesExactInclusive_Nullable_Date_ = r"""
+{"quantilesExactInclusive(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_date_)":[13081,15377,17817,28301.399999999965,46918.19999999998,61811.64,65162.66400000004]}
+"""
+
+_aggregate_functions_quantilesExactInclusive_Nullable_DateTime_ = r"""
+{"quantilesExactInclusive(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_datetime_)":[1155237266,1397115586,1498525791,4294956495.2,4294956495.6,4294956495.92,4294956495.992]}
+"""
+
+_aggregate_functions_quantilesExactInclusive_LowCardinality_Date_ = r"""
+{"quantilesExactInclusive(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_date_)":[12542.5,14313,17696.75,23783.999999999985,44659.49999999995,61359.90000000001,65117.48999999998]}
+"""
+
+_aggregate_functions_quantilesExactInclusive_LowCardinality_DateTime_ = r"""
+{"quantilesExactInclusive(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_datetime_)":[1319318809.5,1429271008.5,1611375968.5,4294956495.1,4294956495.55,4294956495.91,4294956495.991]}
+"""
+
+_aggregate_functions_quantilesExactInclusive_LowCardinality_Nullable_Date__ = r"""
+{"quantilesExactInclusive(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_date__)":[13576,15976,17866,28181.399999999965,46858.19999999998,61799.64,65161.46400000004]}
+"""
+
+_aggregate_functions_quantilesExactInclusive_LowCardinality_Nullable_DateTime__ = r"""
+{"quantilesExactInclusive(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_datetime__)":[1345570678,1377686349,1586956180,4294956495.2,4294956495.6,4294956495.92,4294956495.992]}
+"""
+
