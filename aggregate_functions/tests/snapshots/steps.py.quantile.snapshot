@@ -243,3 +243,11 @@ _aggregate_functions_quantile_LowCardinality_DateTime_ = r"""
 {"quantile(lowcardinality_datetime_)":"2015-04-17 14:43:28"}
 """
 
+_aggregate_functions_quantile_LowCardinality_Nullable_Date__ = r"""
+{"quantile(lowcardinality_nullable_date__)":"2013-09-28"}
+"""
+
+_aggregate_functions_quantile_LowCardinality_Nullable_DateTime__ = r"""
+{"quantile(lowcardinality_nullable_datetime__)":"2013-08-28 14:39:09"}
+"""
+
