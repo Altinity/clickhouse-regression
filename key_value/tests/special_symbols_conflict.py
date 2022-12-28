@@ -2,30 +2,41 @@ from key_value.tests.steps import *
 
 
 @TestScenario
-@Requirements(RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_EscapeCharacter("1.0"))
-def special_symbols_conflict(self, node=None):
-    """Check that clickhouse extractKeyValuePairs function returns an error if any
-    specified special symbols match."""
+def special_symbols_conflict(self, node=None, i=0, j=0):
+    """Check that clickhouse extractKeyValuePairs function returns an error any of the:
+    `escape_character`, `key_value_pair_delimiter`, `item_delimiter`, `enclosing_character`,
+    `value_special_characters_allow_list` specified with the same symbol."""
 
     if node is None:
         node = self.context.node
 
+    with When("I specify parameters, some of them with the same symbol"):
+        parameters = ["'\\\\'", "':'", "','", "'\"'", "''"]
+        parameters[j] = parameters[i]
+
     with When("I specifying input values for extractKeyValuePairs function"):
-        input_strings = ["'ppp:pp', 'p', 'p'"]
+        input_strings = [f"'ppp:pp, qqq:q', {','.join(parameters)}"]
 
     with Then("I check extractKeyValuePairs function returns an error."):
         for i, input_string in enumerate(input_strings):
             check_constant_input(input_string=input_string, exitcode=10)# todo fing existing exitcode after inmplementation
 
 
-@TestFeature
+@TestModule
 @Requirements(RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_SpecialCharactersConflict("1.0"))
 @Name("special symbols conflict")
 def feature(self, node="clickhouse1"):
-    """Check that clickhouse extractKeyValuePairs function returns an error if any
-    specified special symbols match."""
+    """Check that clickhouse extractKeyValuePairs function returns an error any of the:
+    `escape_character`, `key_value_pair_delimiter`, `item_delimeter`, `enclosing_character`,
+    `value_special_characters_allow_list` specified with the same symbol."""
 
     self.context.node = self.context.cluster.node(node)
 
-    for scenario in loads(current_module(), Scenario):
-        scenario()
+    parameter_names = ['escape_character','key_value_pair_delimiter',
+                        'item_delimiter','enclosing_character','value_special_characters_allow_list']
+
+    for i in range(5):
+        for j in range(i+1, 5):
+            with Feature(f"{parameter_names[i]} and {parameter_names[j]}"):
+                for scenario in loads(current_module(), Scenario):
+                    scenario(i=i, j=j)

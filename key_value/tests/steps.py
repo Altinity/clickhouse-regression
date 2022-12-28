@@ -4,9 +4,9 @@ from helpers.common import *
 from key_value.requirements.requirements import *
 
 
-def string_of_all_askii_symbols():  # todo remove after debug
-    """Create string with all askii symbols with numbers from 32 to 126."""
-    return "".join([chr(i) for i in range(32, 127)])
+askii_alfa = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+askii_num = "0123456789"
+askii_punctuation_marks = " !\"#$%&'()*+,-./:;>=<?@[\\]^_`{|}~"
 
 
 @TestStep(Given)

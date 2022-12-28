@@ -124,7 +124,8 @@ version: 1.0
 #### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Function.UnsupportedDataTypes
 version: 1.0
 
-[ClickHouse]'s [extractKeyValuePairs] function SHALL return an error if input data type is not supported.
+[ClickHouse]'s [extractKeyValuePairs] function SHALL return an error if input data type is not supported. 
+Nullable types are not supported.
 
 ### Parsing
 
@@ -204,10 +205,10 @@ By default, the function SHALL specify `key_value_pair_delimiter` as `:`.
 #### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ItemDelimiter
 version: 1.0
 
-[ClickHouse]'s [extractKeyValuePairs] function SHALL support specifying `item_delimeter`
+[ClickHouse]'s [extractKeyValuePairs] function SHALL support specifying `item_delimiter`
 which SHALL divide key value pairs in input string.
 
-By default, the function SHALL specify `item_delimeter` as `,`.
+By default, the function SHALL specify `item_delimiter` as `,`.
 
 ### Enclosing Character
 
@@ -234,8 +235,13 @@ By default, the function SHALL specify `value_special_characters_allow_list` as 
 #### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.SpecialCharactersConflict
 version: 1.0
 
-[ClickHouse]'s [extractKeyValuePairs] function SHALL return an error if any 
-specified special symbols match.
+[ClickHouse]'s [extractKeyValuePairs] function SHALL return an error if any of the following 
+parameters are specified with the same symbol: `escape_character`, `key_value_pair_delimiter`, 
+`item_delimiter`, `enclosing_character`, `value_special_characters_allow_list`.
+
+For example:
+
+`SELECT extractKeyValuePairs('a=a', '=', '=', '=', '=')`
 
 [String]: https://clickhouse.com/docs/en/sql-reference/data-types/string
 [FixedString]: https://clickhouse.com/docs/en/sql-reference/data-types/fixedstring

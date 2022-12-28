@@ -10,9 +10,17 @@ def noise(self, node=None):
     if node is None:
         node = self.context.node
 
+    noise = askii_punctuation_marks.replace("\\", "\\\\").replace('"', '\\"').\
+        replace("!", "\\!").replace("`", "\\`").replace("'", "\\'")
+    key1 = askii_alfa + "1"
+    key2 = askii_alfa + "2"
+    value = askii_num
+
     with When("I specifying input and output values for extractKeyValuePairs function"):
-        input_strings = ["')(*)(.*a*)(*a:^*^*a*(^(^(*a*(**'"]#todo noise after key?
-        output_strings = ["{'a':'a'}"]
+        input_strings = [f"'{noise} {key1}:{value} {noise}, {noise} {key2}:{value} {noise}'"]
+        print(input_strings[0])
+        output_strings = ["{'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1':'0123456789',"
+                          "'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz2':'0123456789'}"]
 
     with Then("I check extractKeyValuePairs function returns correct value"):
         for i, input_string in enumerate(input_strings):
