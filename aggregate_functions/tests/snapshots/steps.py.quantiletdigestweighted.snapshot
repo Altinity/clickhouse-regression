@@ -2683,3 +2683,307 @@ _aggregate_functions_quantileTDigestWeighted_datatypes_permutations_float32_lowc
 {"quantileTDigestWeighted(float32, lowcardinality_nullable_uint16__)":-5.788363e37}
 """
 
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_nullable_date__uint8 = r"""
+Received exception from server (version 22.8.11):
+Code: 407. DB::Exception: Received from localhost:9000. DB::Exception: Numeric overflow: While executing ConvertingAggregatedToChunksTransform. (DECIMAL_OVERFLOW)
+(query: SELECT quantileTDigestWeighted(nullable_date_,uint8) FROM table_6dc38796_8635_11ed_af52_7f1d80abb235 FORMAT JSONEachRow
+)
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_nullable_date__uint64 = r"""
+Received exception from server (version 22.8.11):
+Code: 407. DB::Exception: Received from localhost:9000. DB::Exception: Numeric overflow: While executing ConvertingAggregatedToChunksTransform. (DECIMAL_OVERFLOW)
+(query: SELECT quantileTDigestWeighted(nullable_date_,uint64) FROM table_6dc38796_8635_11ed_af52_7f1d80abb235 FORMAT JSONEachRow
+)
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_nullable_date__uint32 = r"""
+Received exception from server (version 22.8.11):
+Code: 407. DB::Exception: Received from localhost:9000. DB::Exception: Numeric overflow: While executing ConvertingAggregatedToChunksTransform. (DECIMAL_OVERFLOW)
+(query: SELECT quantileTDigestWeighted(nullable_date_,uint32) FROM table_6dc38796_8635_11ed_af52_7f1d80abb235 FORMAT JSONEachRow
+)
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_nullable_date__uint16 = r"""
+Received exception from server (version 22.8.11):
+Code: 407. DB::Exception: Received from localhost:9000. DB::Exception: Numeric overflow: While executing ConvertingAggregatedToChunksTransform. (DECIMAL_OVERFLOW)
+(query: SELECT quantileTDigestWeighted(nullable_date_,uint16) FROM table_6dc38796_8635_11ed_af52_7f1d80abb235 FORMAT JSONEachRow
+)
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_nullable_date__nullable_uint8_ = r"""
+Received exception from server (version 22.8.11):
+Code: 407. DB::Exception: Received from localhost:9000. DB::Exception: Numeric overflow: While executing ConvertingAggregatedToChunksTransform. (DECIMAL_OVERFLOW)
+(query: SELECT quantileTDigestWeighted(nullable_date_,nullable_uint8_) FROM table_6dc38796_8635_11ed_af52_7f1d80abb235 FORMAT JSONEachRow
+)
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_nullable_date__nullable_uint64_ = r"""
+Received exception from server (version 22.8.11):
+Code: 407. DB::Exception: Received from localhost:9000. DB::Exception: Numeric overflow: While executing ConvertingAggregatedToChunksTransform. (DECIMAL_OVERFLOW)
+(query: SELECT quantileTDigestWeighted(nullable_date_,nullable_uint64_) FROM table_6dc38796_8635_11ed_af52_7f1d80abb235 FORMAT JSONEachRow
+)
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_nullable_date__nullable_uint32_ = r"""
+Received exception from server (version 22.8.11):
+Code: 407. DB::Exception: Received from localhost:9000. DB::Exception: Numeric overflow: While executing ConvertingAggregatedToChunksTransform. (DECIMAL_OVERFLOW)
+(query: SELECT quantileTDigestWeighted(nullable_date_,nullable_uint32_) FROM table_6dc38796_8635_11ed_af52_7f1d80abb235 FORMAT JSONEachRow
+)
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_nullable_date__nullable_uint16_ = r"""
+Received exception from server (version 22.8.11):
+Code: 407. DB::Exception: Received from localhost:9000. DB::Exception: Numeric overflow: While executing ConvertingAggregatedToChunksTransform. (DECIMAL_OVERFLOW)
+(query: SELECT quantileTDigestWeighted(nullable_date_,nullable_uint16_) FROM table_6dc38796_8635_11ed_af52_7f1d80abb235 FORMAT JSONEachRow
+)
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_nullable_date__lowcardinality_uint8_ = r"""
+Received exception from server (version 22.8.11):
+Code: 407. DB::Exception: Received from localhost:9000. DB::Exception: Numeric overflow: While executing ConvertingAggregatedToChunksTransform. (DECIMAL_OVERFLOW)
+(query: SELECT quantileTDigestWeighted(nullable_date_,lowcardinality_uint8_) FROM table_6dc38796_8635_11ed_af52_7f1d80abb235 FORMAT JSONEachRow
+)
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_nullable_date__lowcardinality_uint64_ = r"""
+Received exception from server (version 22.8.11):
+Code: 407. DB::Exception: Received from localhost:9000. DB::Exception: Numeric overflow: While executing ConvertingAggregatedToChunksTransform. (DECIMAL_OVERFLOW)
+(query: SELECT quantileTDigestWeighted(nullable_date_,lowcardinality_uint64_) FROM table_6dc38796_8635_11ed_af52_7f1d80abb235 FORMAT JSONEachRow
+)
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_nullable_date__lowcardinality_uint32_ = r"""
+Received exception from server (version 22.8.11):
+Code: 407. DB::Exception: Received from localhost:9000. DB::Exception: Numeric overflow: While executing ConvertingAggregatedToChunksTransform. (DECIMAL_OVERFLOW)
+(query: SELECT quantileTDigestWeighted(nullable_date_,lowcardinality_uint32_) FROM table_6dc38796_8635_11ed_af52_7f1d80abb235 FORMAT JSONEachRow
+)
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_nullable_date__lowcardinality_uint16_ = r"""
+Received exception from server (version 22.8.11):
+Code: 407. DB::Exception: Received from localhost:9000. DB::Exception: Numeric overflow: While executing ConvertingAggregatedToChunksTransform. (DECIMAL_OVERFLOW)
+(query: SELECT quantileTDigestWeighted(nullable_date_,lowcardinality_uint16_) FROM table_6dc38796_8635_11ed_af52_7f1d80abb235 FORMAT JSONEachRow
+)
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_nullable_date__lowcardinality_nullable_uint8__ = r"""
+Received exception from server (version 22.8.11):
+Code: 407. DB::Exception: Received from localhost:9000. DB::Exception: Numeric overflow: While executing ConvertingAggregatedToChunksTransform. (DECIMAL_OVERFLOW)
+(query: SELECT quantileTDigestWeighted(nullable_date_,lowcardinality_nullable_uint8__) FROM table_6dc38796_8635_11ed_af52_7f1d80abb235 FORMAT JSONEachRow
+)
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_nullable_date__lowcardinality_nullable_uint64__ = r"""
+Received exception from server (version 22.8.11):
+Code: 407. DB::Exception: Received from localhost:9000. DB::Exception: Numeric overflow: While executing ConvertingAggregatedToChunksTransform. (DECIMAL_OVERFLOW)
+(query: SELECT quantileTDigestWeighted(nullable_date_,lowcardinality_nullable_uint64__) FROM table_6dc38796_8635_11ed_af52_7f1d80abb235 FORMAT JSONEachRow
+)
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_nullable_date__lowcardinality_nullable_uint32__ = r"""
+Received exception from server (version 22.8.11):
+Code: 407. DB::Exception: Received from localhost:9000. DB::Exception: Numeric overflow: While executing ConvertingAggregatedToChunksTransform. (DECIMAL_OVERFLOW)
+(query: SELECT quantileTDigestWeighted(nullable_date_,lowcardinality_nullable_uint32__) FROM table_6dc38796_8635_11ed_af52_7f1d80abb235 FORMAT JSONEachRow
+)
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_nullable_date__lowcardinality_nullable_uint16__ = r"""
+Received exception from server (version 22.8.11):
+Code: 407. DB::Exception: Received from localhost:9000. DB::Exception: Numeric overflow: While executing ConvertingAggregatedToChunksTransform. (DECIMAL_OVERFLOW)
+(query: SELECT quantileTDigestWeighted(nullable_date_,lowcardinality_nullable_uint16__) FROM table_6dc38796_8635_11ed_af52_7f1d80abb235 FORMAT JSONEachRow
+)
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_nullable_datetime___uint8 = r"""
+{"quantileTDigestWeighted(lowcardinality_nullable_datetime__, uint8)":"2013-08-10 15:52:32"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_nullable_datetime___uint64 = r"""
+{"quantileTDigestWeighted(lowcardinality_nullable_datetime__, uint64)":"2013-07-21 13:38:08"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_nullable_datetime___uint32 = r"""
+{"quantileTDigestWeighted(lowcardinality_nullable_datetime__, uint32)":"2013-08-31 18:45:20"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_nullable_datetime___uint16 = r"""
+{"quantileTDigestWeighted(lowcardinality_nullable_datetime__, uint16)":"2013-07-30 00:56:32"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_nullable_datetime___nullable_uint8_ = r"""
+{"quantileTDigestWeighted(lowcardinality_nullable_datetime__, nullable_uint8_)":"2013-05-08 22:37:52"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_nullable_datetime___nullable_uint64_ = r"""
+{"quantileTDigestWeighted(lowcardinality_nullable_datetime__, nullable_uint64_)":"2013-09-04 11:00:16"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_nullable_datetime___nullable_uint32_ = r"""
+{"quantileTDigestWeighted(lowcardinality_nullable_datetime__, nullable_uint32_)":"2013-11-20 12:51:12"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_nullable_datetime___nullable_uint16_ = r"""
+{"quantileTDigestWeighted(lowcardinality_nullable_datetime__, nullable_uint16_)":"2013-05-13 02:38:56"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_uint8_ = r"""
+{"quantileTDigestWeighted(lowcardinality_nullable_datetime__, lowcardinality_uint8_)":"2013-09-06 23:26:56"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_uint64_ = r"""
+{"quantileTDigestWeighted(lowcardinality_nullable_datetime__, lowcardinality_uint64_)":"2013-07-01 01:37:04"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_uint32_ = r"""
+{"quantileTDigestWeighted(lowcardinality_nullable_datetime__, lowcardinality_uint32_)":"2013-03-09 14:52:48"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_uint16_ = r"""
+{"quantileTDigestWeighted(lowcardinality_nullable_datetime__, lowcardinality_uint16_)":"2013-05-24 12:10:40"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_nullable_uint8__ = r"""
+{"quantileTDigestWeighted(lowcardinality_nullable_datetime__, lowcardinality_nullable_uint8__)":"2013-06-11 15:16:16"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_nullable_uint64__ = r"""
+{"quantileTDigestWeighted(lowcardinality_nullable_datetime__, lowcardinality_nullable_uint64__)":"2013-08-06 02:06:56"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_nullable_uint32__ = r"""
+{"quantileTDigestWeighted(lowcardinality_nullable_datetime__, lowcardinality_nullable_uint32__)":"2013-09-14 11:19:28"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_nullable_uint16__ = r"""
+{"quantileTDigestWeighted(lowcardinality_nullable_datetime__, lowcardinality_nullable_uint16__)":"2013-08-28 23:03:28"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_datetime__uint8 = r"""
+{"quantileTDigestWeighted(lowcardinality_datetime_, uint8)":"2017-09-04 11:17:04"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_datetime__uint64 = r"""
+{"quantileTDigestWeighted(lowcardinality_datetime_, uint64)":"2012-12-22 20:34:08"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_datetime__uint32 = r"""
+{"quantileTDigestWeighted(lowcardinality_datetime_, uint32)":"2015-12-14 02:00:16"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_datetime__uint16 = r"""
+{"quantileTDigestWeighted(lowcardinality_datetime_, uint16)":"2019-04-16 16:34:56"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_datetime__nullable_uint8_ = r"""
+{"quantileTDigestWeighted(lowcardinality_datetime_, nullable_uint8_)":"2018-08-28 19:32:00"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_datetime__nullable_uint64_ = r"""
+{"quantileTDigestWeighted(lowcardinality_datetime_, nullable_uint64_)":"2015-07-21 07:16:00"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_datetime__nullable_uint32_ = r"""
+{"quantileTDigestWeighted(lowcardinality_datetime_, nullable_uint32_)":"2018-06-20 19:59:44"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_datetime__nullable_uint16_ = r"""
+{"quantileTDigestWeighted(lowcardinality_datetime_, nullable_uint16_)":"2013-01-12 04:21:20"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_uint8_ = r"""
+{"quantileTDigestWeighted(lowcardinality_datetime_, lowcardinality_uint8_)":"2016-12-21 20:06:08"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_uint64_ = r"""
+{"quantileTDigestWeighted(lowcardinality_datetime_, lowcardinality_uint64_)":"2014-10-28 01:17:36"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_uint32_ = r"""
+{"quantileTDigestWeighted(lowcardinality_datetime_, lowcardinality_uint32_)":"2017-05-09 01:09:04"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_uint16_ = r"""
+{"quantileTDigestWeighted(lowcardinality_datetime_, lowcardinality_uint16_)":"2013-05-13 04:32:00"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_nullable_uint8__ = r"""
+{"quantileTDigestWeighted(lowcardinality_datetime_, lowcardinality_nullable_uint8__)":"2015-05-28 15:03:12"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_nullable_uint64__ = r"""
+{"quantileTDigestWeighted(lowcardinality_datetime_, lowcardinality_nullable_uint64__)":"2018-07-13 11:57:36"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_nullable_uint32__ = r"""
+{"quantileTDigestWeighted(lowcardinality_datetime_, lowcardinality_nullable_uint32__)":"2016-06-26 20:10:24"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_nullable_uint16__ = r"""
+{"quantileTDigestWeighted(lowcardinality_datetime_, lowcardinality_nullable_uint16__)":"2017-12-11 08:58:24"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_datetime_uint8 = r"""
+{"quantileTDigestWeighted(datetime, uint8)":"2017-06-02 03:12:48"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_datetime_uint64 = r"""
+{"quantileTDigestWeighted(datetime, uint64)":"2016-06-15 11:10:40"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_datetime_uint32 = r"""
+{"quantileTDigestWeighted(datetime, uint32)":"2017-06-30 09:04:48"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_datetime_uint16 = r"""
+{"quantileTDigestWeighted(datetime, uint16)":"2017-09-13 21:10:08"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_datetime_nullable_uint8_ = r"""
+{"quantileTDigestWeighted(datetime, nullable_uint8_)":"2015-07-01 17:28:16"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_datetime_nullable_uint64_ = r"""
+{"quantileTDigestWeighted(datetime, nullable_uint64_)":"2016-03-15 02:32:16"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_datetime_nullable_uint32_ = r"""
+{"quantileTDigestWeighted(datetime, nullable_uint32_)":"2017-12-15 04:25:20"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_datetime_nullable_uint16_ = r"""
+{"quantileTDigestWeighted(datetime, nullable_uint16_)":"2015-02-14 11:40:32"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_datetime_lowcardinality_uint8_ = r"""
+{"quantileTDigestWeighted(datetime, lowcardinality_uint8_)":"2017-03-28 13:16:32"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_datetime_lowcardinality_uint64_ = r"""
+{"quantileTDigestWeighted(datetime, lowcardinality_uint64_)":"2015-11-07 03:36:16"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_datetime_lowcardinality_uint32_ = r"""
+{"quantileTDigestWeighted(datetime, lowcardinality_uint32_)":"2016-02-01 18:47:12"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_datetime_lowcardinality_uint16_ = r"""
+{"quantileTDigestWeighted(datetime, lowcardinality_uint16_)":"2015-10-29 14:20:32"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_datetime_lowcardinality_nullable_uint8__ = r"""
+{"quantileTDigestWeighted(datetime, lowcardinality_nullable_uint8__)":"2016-05-18 17:15:28"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_datetime_lowcardinality_nullable_uint64__ = r"""
+{"quantileTDigestWeighted(datetime, lowcardinality_nullable_uint64__)":"2015-10-18 02:34:24"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_datetime_lowcardinality_nullable_uint32__ = r"""
+{"quantileTDigestWeighted(datetime, lowcardinality_nullable_uint32__)":"2017-07-13 01:17:36"}
+"""
+
+_aggregate_functions_quantileTDigestWeighted_datatypes_permutations_datetime_lowcardinality_nullable_uint16__ = r"""
+{"quantileTDigestWeighted(datetime, lowcardinality_nullable_uint16__)":"2018-07-04 12:12:32"}
+"""
+

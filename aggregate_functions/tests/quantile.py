@@ -16,8 +16,8 @@ def feature(
     func="quantile({params})",
     table=None,
     decimal=True,
-    date=False,
-    datetime=False,
+    date=True,
+    datetime=True,
     extended_precision=False,
 ):
     """Check quantile aggregate function by using the same tests as for avg."""
