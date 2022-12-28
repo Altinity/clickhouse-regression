@@ -391,6 +391,7 @@ class ClickHouseNode(Node):
         settings=None,
         secure=False,
         query_id=None,
+        pipe_cmd="echo -e",
         *args,
         **kwargs,
     ):
@@ -421,7 +422,7 @@ class ClickHouseNode(Node):
                     name, value = setting
                     command += f' --{name} "{value}"'
                 description = f"""
-                            echo -e \"{sql[:100]}...\" > {query.name}
+                            {pipe_cmd} \"{sql[:100]}...\" > {query.name}
                             {command}
                         """
                 with step(
@@ -434,7 +435,7 @@ class ClickHouseNode(Node):
                     except ExpectTimeoutError:
                         self.cluster.close_bash(None)
         else:
-            command = f'set -o pipefail && echo -e "{sql}" | {client} | {hash_utility}'
+            command = f'set -o pipefail && {pipe_cmd} "{sql}" | {client} | {hash_utility}'
             for setting in query_settings:
                 name, value = setting
                 command += f' --{name} "{value}"'
@@ -460,6 +461,7 @@ class ClickHouseNode(Node):
         settings=None,
         secure=False,
         query_id=None,
+        pipe_cmd="echo -e",
         *args,
         **kwargs,
     ):
@@ -494,7 +496,7 @@ class ClickHouseNode(Node):
                     name, value = setting
                     command += f' --{name} "{value}"'
                 description = f"""
-                    echo -e \"{sql[:100]}...\" > {query.name}
+                    {pipe_cmd} \"{sql[:100]}...\" > {query.name}
                     {command}
                 """
                 with step(
@@ -507,7 +509,7 @@ class ClickHouseNode(Node):
                     except ExpectTimeoutError:
                         self.cluster.close_bash(None)
         else:
-            command = f'diff <(echo -e "{sql}" | {self.cluster.docker_compose} exec -T {self.name} {client}) {expected_output}'
+            command = f'diff <({pipe_cmd} "{sql}" | {self.cluster.docker_compose} exec -T {self.name} {client}) {expected_output}'
             for setting in query_settings:
                 name, value = setting
                 command += f' --{name} "{value}"'
@@ -540,6 +542,7 @@ class ClickHouseNode(Node):
         query_id=None,
         use_file=False,
         hash_output=None,
+        pipe_cmd="echo -e",
         *args,
         **kwargs,
     ):
@@ -599,7 +602,7 @@ class ClickHouseNode(Node):
                         command = f'cat "{query.name}" | {self.cluster.docker_compose} exec -T {self.name} bash -c "{client}{client_options} 2>&1"'
 
                 description = f"""
-                    echo -e \"{sql[:100]}...\" > {query.name}
+                    {pipe_cmd} \"{sql[:100]}...\" > {query.name}
                     {command}
                 """
                 with step(
@@ -619,12 +622,12 @@ class ClickHouseNode(Node):
                 client_options += f' --{name} "{value}"'
 
             if max_query_output_in_bytes != "-0":
-                command = f'(set -o pipefail && echo -e "{sql}" | {client}{client_options} 2>&1 | head -c {max_query_output_in_bytes})'
+                command = f'(set -o pipefail && {pipe_cmd} "{sql}" | {client}{client_options} 2>&1 | head -c {max_query_output_in_bytes})'
             else:
                 if hash_output:
-                    command = f'(set -o pipefail && echo -e "{sql}" | {client}{client_options} 2>&1 | sha512sum)'
+                    command = f'(set -o pipefail && {pipe_cmd} "{sql}" | {client}{client_options} 2>&1 | sha512sum)'
                 else:
-                    command = f'echo -e "{sql}" | {client}{client_options} 2>&1'
+                    command = f'{pipe_cmd} "{sql}" | {client}{client_options} 2>&1'
 
             with step(
                 "executing command", description=command, format_description=False
