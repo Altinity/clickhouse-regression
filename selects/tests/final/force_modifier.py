@@ -4,46 +4,53 @@ from selects.tests.steps import *
 
 
 @TestOutline
-def select(
-    self,
-    statement,
-    statement_final,
-    node=None,
-    negative=False
-):
+def select(self, statement, statement_final, node=None, negative=False):
     """Checking basic selects with `FINAL` clause equal to force_select_final select only for core table."""
     if node is None:
         node = self.context.node
 
     with Given("I exclude auxiliary and unsupported tables by the current test"):
         if negative:
-            tables = [table for table in self.context.tables if table.name.endswith("core")]
+            tables = [
+                table for table in self.context.tables if table.name.endswith("core")
+            ]
         else:
-            tables = [table for table in self.context.tables if table.name.endswith("core")
-                      or table.name.endswith("_nview_final") or table.name.endswith("_mview")]
+            tables = [
+                table
+                for table in self.context.tables
+                if table.name.endswith("core")
+                or table.name.endswith("_nview_final")
+                or table.name.endswith("_mview")
+            ]
 
     for table in tables:
         with When(f"{table.name}"):
             with When("I execute query with FINAL modifier specified explicitly"):
-                explicit_final = node.query(statement_final.format(name=table.name,
-                                final=f"{' FINAL' if table.final_modifier_available else ''}")).output.strip()
+                explicit_final = node.query(
+                    statement_final.format(
+                        name=table.name,
+                        final=f"{' FINAL' if table.final_modifier_available else ''}",
+                    )
+                ).output.strip()
 
             with And("I execute the same query without FINAL modifier"):
                 without_final = node.query(
                     statement.format(name=table.name)
                 ).output.strip()
 
-            with And("I execute the same query without FINAL modifiers but with force_select_final=1 setting"):
+            with And(
+                "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
+            ):
                 force_select_final = node.query(
-                            statement.format(name=table.name),
-                            settings=[("force_select_final", 1)],
-                        ).output.strip()
+                    statement.format(name=table.name),
+                    settings=[("force_select_final", 1)],
+                ).output.strip()
 
             if negative:
                 with Then("I check that compare results are different"):
                     if (
-                            table.final_modifier_available
-                            and without_final != explicit_final
+                        table.final_modifier_available
+                        and without_final != explicit_final
                     ):
                         assert without_final != force_select_final
             else:
@@ -88,9 +95,7 @@ def select_limit(self):
 def select_limit_by(self):
     """Check SELECT query with `LIMIT BY` clause."""
     with Given("I create statements with and without `FINAL`."):
-        statement = (
-            "SELECT * FROM {name} ORDER BY (id, x, someCol) LIMIT 1 BY id FORMAT JSONEachRow;"
-        )
+        statement = "SELECT * FROM {name} ORDER BY (id, x, someCol) LIMIT 1 BY id FORMAT JSONEachRow;"
         statement_final = "SELECT * FROM {name} {final} ORDER BY (id, x, someCol) LIMIT 1 BY id FORMAT JSONEachRow;"
 
     with Then(
@@ -119,7 +124,9 @@ def select_group_by(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Distinct("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Distinct("1.0")
+)
 def select_distinct(self):
     """Check SELECT query with `DISTINCT` clause."""
     with Given("I create statements with and without `FINAL`"):
@@ -137,26 +144,33 @@ def select_distinct(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Prewhere("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Prewhere("1.0")
+)
 def select_prewhere(self, node=None):
     """Check SELECT query with `PREWHERE` clause."""
     if node is None:
         node = self.context.node
 
     with Given("I exclude Log family engines as they don't support `PREWHERE`"):
-        tables = [table for table in self.context.tables if table.name.endswith("core")
-                  and not table.engine.endswith("Log")]
-        
+        tables = [
+            table
+            for table in self.context.tables
+            if table.name.endswith("core") and not table.engine.endswith("Log")
+        ]
+
     for table in tables:
         with When(f"{table}"):
             with When("I execute query with FINAL modifier specified explicitly"):
                 explicit_final = node.query(
-                        f"SELECT * FROM {table.name} {' FINAL' if table.final_modifier_available else ''}"
-                        f" PREWHERE x > 3 "
-                        f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;"
-                    ).output.strip()
+                    f"SELECT * FROM {table.name} {' FINAL' if table.final_modifier_available else ''}"
+                    f" PREWHERE x > 3 "
+                    f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;"
+                ).output.strip()
 
-            with And("I execute the same query without FINAL modifiers but with force_select_final=1 setting"):
+            with And(
+                "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
+            ):
                 force_select_final = node.query(
                     f"SELECT * FROM {table.name} PREWHERE x > 3 "
                     f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
@@ -183,7 +197,9 @@ def select_where(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_ArrayJoin("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_ArrayJoin("1.0")
+)
 def select_array_join(self, node=None):
     """Check SELECT query with `ARRAY JOIN` clause."""
     if node is None:
@@ -216,7 +232,7 @@ def select_array_join(self, node=None):
             with When(f"{engine}"):
                 try:
                     with When(
-                            f"I create and populate table with array type for {engine} from engine list"
+                        f"I create and populate table with array type for {engine} from engine list"
                     ):
                         node.query(
                             f"{table.format(engine=engine, order='') if engine.endswith('Log') else table.format(engine=engine, order='ORDER BY s;')}"
@@ -226,23 +242,30 @@ def select_array_join(self, node=None):
                         node.query(insert)
 
                     with When("I execute query with force_select_final=1 setting"):
-                        force_select_final = node.query("SELECT count() FROM arrays_test ARRAY JOIN arr",
-                                                        settings=[("force_select_final", 1)],
-                                                        ).output.strip()
+                        force_select_final = node.query(
+                            "SELECT count() FROM arrays_test ARRAY JOIN arr",
+                            settings=[("force_select_final", 1)],
+                        ).output.strip()
 
                         if engine.startswith("Merge") or engine.endswith("Log"):
-                            with When("I execute the same query with FINAL modifier specified explicitly"):
+                            with When(
+                                "I execute the same query with FINAL modifier specified explicitly"
+                            ):
                                 without_final = node.query(
-                                    f"SELECT count() FROM arrays_test ARRAY JOIN arr").output.strip()
+                                    f"SELECT count() FROM arrays_test ARRAY JOIN arr"
+                                ).output.strip()
                             with Then("I compare results are the same"):
-                                assert (without_final == force_select_final)
+                                assert without_final == force_select_final
 
                         else:
-                            with When("I execute the same query with FINAL modifier specified explicitly"):
+                            with When(
+                                "I execute the same query with FINAL modifier specified explicitly"
+                            ):
                                 explicit_final = node.query(
-                                    "SELECT count() FROM arrays_test FINAL ARRAY JOIN arr").output.strip()
+                                    "SELECT count() FROM arrays_test FINAL ARRAY JOIN arr"
+                                ).output.strip()
                             with Then("I compare results are the same"):
-                                assert (explicit_final == force_select_final)
+                                assert explicit_final == force_select_final
 
                 finally:
                     node.query("DROP TABLE arrays_test")
@@ -250,8 +273,7 @@ def select_array_join(self, node=None):
 
 @TestScenario
 def select_join_clause(self, node=None):
-    """Check `select count()` with some type of 'JOIN' clause with `FINAL` clause
-    equal to the same select without `FINAL` but with force_select_final=1 setting."""
+    """Check SELECT query with `JOIN` clause."""
     if node is None:
         node = self.context.node
 
@@ -300,78 +322,35 @@ def select_join_clause_select_all_types(self, node=None):
     if node is None:
         node = self.context.node
 
-    for join_type in join_types:
-        if (
-            join_type.startswith("CROSS JOIN")
-            or join_type.startswith("ASOF JOIN")
-            or join_type.startswith("LEFT ASOF JOIN")
-        ):
-            with Given(f"Test doesn't support {join_type}"):
-                pass
-        else:
-            with Given(f"I check force_select_final feature for {join_type}"):
-                for table1 in self.context.tables:
-                    if table1.name.endswith("core"):
+    with Given("I exclude doesn't support engines"):
+        join_types_local = [
+            join_type
+            for join_type in join_types if not join_type.startswith("CROSS") or not join_type.startswith("ASOF")
+                                           or not join_type.startswith("LEFT ASOF")
+        ]
 
-                        with When(f"I select {table1.name} as table a"):
-                            for table2 in self.context.tables:
-                                if (
-                                    table2.name.endswith("duplicate")
-                                    and table2.engine == table1.engine
-                                ):
-                                    with When(
-                                        f"I select same structure table {table2.name} as table b"
-                                    ):
-                                        with Then(
-                                            "I check that select with force_select_final=1 setting"
-                                            f" equal 'SELECT...FINAL' for {table1.engine}"
-                                            f"with {join_type} clause"
-                                        ):
-                                            join_statement = (
-                                                f"SELECT count() FROM {table1.name} a"
-                                                f"{' FINAL' if table1.final_modifier_available else ''}"
-                                                f" {join_type} "
-                                                f"(SELECT * FROM {table2.name}"
-                                                f"{' FINAL' if table2.final_modifier_available else ''}) b on"
-                                                f" a.id = b.id"
-                                            )
-                                            assert_joins(
-                                                join_statement=join_statement,
-                                                table=table1,
-                                                table2=table2,
-                                                join_type=join_type,
-                                                node=node,
-                                            )
-
-
-@TestScenario
-def select_join_clause_select_all_engine_combinations(self, node=None):
-    """Check select count() that is using 'INNER JOIN' clause `SELECT ... FINAL` with `FINAL`
-    equal to the same select without `FINAL` but with force_select_final=1 setting` for different
-     engine combinations."""
-    if node is None:
-        node = self.context.node
-
-        with Given(f"I check force_select_final feature for `INNER JOIN`"):
+    for join_type in join_types_local:
+        with When(f"I check force_select_final feature for {join_type}"):
             for table1 in self.context.tables:
                 if table1.name.endswith("core"):
-
                     with When(f"I select {table1.name} as table a"):
                         for table2 in self.context.tables:
-
-                            if (table2.name != table1.name) and table2.name.endswith(
-                                "core"
+                            if (
+                                table2.name.endswith("duplicate")
+                                and table2.engine == table1.engine
                             ):
-                                with When(f"I select {table2.name} as table b"):
+                                with When(
+                                    f"I select same structure table {table2.name} as table b"
+                                ):
                                     with Then(
                                         "I check that select with force_select_final=1 setting"
-                                        f" equal 'SELECT...FINAL' for {table1.name} and {table2.name} "
-                                        f"with 'INNER JOIN' clause"
+                                        f" equal 'SELECT...FINAL' for {table1.engine}"
+                                        f"with {join_type} clause"
                                     ):
                                         join_statement = (
                                             f"SELECT count() FROM {table1.name} a"
                                             f"{' FINAL' if table1.final_modifier_available else ''}"
-                                            f" INNER JOIN "
+                                            f" {join_type} "
                                             f"(SELECT * FROM {table2.name}"
                                             f"{' FINAL' if table2.final_modifier_available else ''}) b on"
                                             f" a.id = b.id"
@@ -380,9 +359,48 @@ def select_join_clause_select_all_engine_combinations(self, node=None):
                                             join_statement=join_statement,
                                             table=table1,
                                             table2=table2,
-                                            join_type="INNER JOIN",
+                                            join_type=join_type,
                                             node=node,
                                         )
+
+
+@TestScenario
+def select_join_clause_select_all_engine_combinations(self, node=None):
+    """Check SELECT query with `INNER JOIN` clause."""
+    if node is None:
+        node = self.context.node
+
+    with Given(f"I check force_select_final feature for `INNER JOIN`"):
+        for table1 in self.context.tables:
+            if table1.name.endswith("core"):
+
+                with When(f"I select {table1.name} as table a"):
+                    for table2 in self.context.tables:
+
+                        if (table2.name != table1.name) and table2.name.endswith(
+                            "core"
+                        ):
+                            with When(f"I select {table2.name} as table b"):
+                                with Then(
+                                    "I check that select with force_select_final=1 setting"
+                                    f" equal 'SELECT...FINAL' for {table1.name} and {table2.name} "
+                                    f"with 'INNER JOIN' clause"
+                                ):
+                                    join_statement = (
+                                        f"SELECT count() FROM {table1.name} a"
+                                        f"{' FINAL' if table1.final_modifier_available else ''}"
+                                        f" INNER JOIN "
+                                        f"(SELECT * FROM {table2.name}"
+                                        f"{' FINAL' if table2.final_modifier_available else ''}) b on"
+                                        f" a.id = b.id"
+                                    )
+                                    assert_joins(
+                                        join_statement=join_statement,
+                                        table=table1,
+                                        table2=table2,
+                                        join_type="INNER JOIN",
+                                        node=node,
+                                    )
 
 
 @TestOutline
@@ -427,25 +445,24 @@ def select_family_union_clause(self, node=None, clause=None):
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Union("1.0"))
 def select_union_clause(self):
-    """Check `SELECT` that is using `UNION` clause with `FINAL`
-    equal to the same select without force_select_final `FINAL`."""
+    """Check SELECT query with `UNION` clause."""
     select_family_union_clause(clause="UNION ALL")
     select_family_union_clause(clause="UNION DISTINCT")
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Intersect("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Intersect("1.0")
+)
 def select_intersect_clause(self):
-    """Check `SELECT` that is using `INTERSECT` clause with `FINAL`
-    equal to the same select without force_select_final `FINAL`."""
+    """Check SELECT query with `INTERSECT` clause."""
     select_family_union_clause(clause="INTERSECT")
 
 
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Except("1.0"))
 def select_except_clause(self):
-    """Check `SELECT` that is using `EXCEPT` clause with `FINAL`
-    equal to the same select without force_select_final `FINAL`."""
+    """Check SELECT query with `EXCEPT` clause."""
     select_family_union_clause(clause="EXCEPT")
 
 
