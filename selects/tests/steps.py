@@ -1108,9 +1108,7 @@ def create_expression_subquery_table(self, node=None):
             for i in range(3):
                 node.query(f"INSERT INTO {name} VALUES (1, [1]);")
 
-        yield self.context.tables.append(
-            Table(name, "ReplacingMergeTree", True)
-        )
+        yield self.context.tables.append(Table(name, "ReplacingMergeTree", True))
 
     finally:
         with Finally("I drop data"):
@@ -1123,57 +1121,54 @@ def assert_joins(self, join_statement, table, table2, join_type, node=None):
         node = current().context.node
 
     with Given("I check `SELECT ... FINAL` equal to `SELECT` with force_select_final "):
-        with Then("without `FINAL`"):
-            assert (
-                node.query(
-                    join_statement,
-                    settings=[("joined_subquery_requires_alias", 0)],
-                ).output.strip()
-                == node.query(
-                    f"SELECT count() FROM {table.name} {join_type}"
-                    f" {table2.name} on {table.name}.id = {table2.name}.id",
-                    settings=[("force_select_final", 1)],
-                ).output.strip()
-            )
+        with When("I execute query with FINAL modifier specified explicitly"):
+            explicit_final = node.query(
+                join_statement,
+                settings=[("joined_subquery_requires_alias", 0)],
+            ).output.strip()
 
-        with Then("with `FINAL` clause on left table"):
-            assert (
-                node.query(
-                    join_statement,
-                    settings=[("joined_subquery_requires_alias", 0)],
-                ).output.strip()
-                == node.query(
-                    f"SELECT count() FROM {table.name} {' FINAL' if table.final_modifier_available else ''} {join_type}"
-                    f" {table2.name} on {table.name}.id = {table2.name}.id",
-                    settings=[("force_select_final", 1)],
-                ).output.strip()
-            )
+        with And(
+            "I execute the same query without FINAL modifiers and with force_select_final=1 setting"
+        ):
+            force_select_final_without = node.query(
+                f"SELECT count() FROM {table.name} {join_type}"
+                f" {table2.name} on {table.name}.id = {table2.name}.id",
+                settings=[("force_select_final", 1)],
+            ).output.strip()
 
-        with Then("with `FINAL` clause on right table"):
-            assert (
-                node.query(
-                    join_statement,
-                    settings=[("joined_subquery_requires_alias", 0)],
-                ).output.strip()
-                == node.query(
-                    f"SELECT count() FROM {table.name} {join_type}"
-                    f" {table2.name} {' FINAL' if table2.final_modifier_available else ''} on {table.name}.id = {table2.name}.id",
-                    settings=[("force_select_final", 1)],
-                ).output.strip()
-            )
+        with And(
+            "I execute the same query with `FINAL` clause on left table and with force_select_final=1 setting"
+        ):
+            force_select_final_left = node.query(
+                f"SELECT count() FROM {table.name} "
+                f"{' FINAL' if table.final_modifier_available else ''} {join_type}"
+                f" {table2.name} on {table.name}.id = {table2.name}.id",
+                settings=[("force_select_final", 1)],
+            ).output.strip()
 
-        with Then("with `FINAL` clause on both tables"):
-            assert (
-                node.query(
-                    join_statement,
-                    settings=[("joined_subquery_requires_alias", 0)],
-                ).output.strip()
-                == node.query(
-                    f"SELECT count() FROM {table.name} {' FINAL' if table.final_modifier_available else ''} {join_type}"
-                    f" {table2.name} {' FINAL' if table2.final_modifier_available else ''} on {table.name}.id = {table2.name}.id",
-                    settings=[("force_select_final", 1)],
-                ).output.strip()
-            )
+        with And(
+            "I execute the same query with `FINAL` clause on right table and with force_select_final=1 setting"
+        ):
+            force_select_final_right = node.query(
+                f"SELECT count() FROM {table.name} {join_type}"
+                f" {table2.name} {' FINAL' if table2.final_modifier_available else ''} on {table.name}.id = {table2.name}.id",
+                settings=[("force_select_final", 1)],
+            ).output.strip()
+
+        with And(
+            "I execute the same query with `FINAL` clause on both tables and with force_select_final=1 setting"
+        ):
+            force_select_final_double = node.query(
+                f"SELECT count() FROM {table.name} {' FINAL' if table.final_modifier_available else ''} {join_type}"
+                f" {table2.name} {' FINAL' if table2.final_modifier_available else ''} on {table.name}.id = {table2.name}.id",
+                settings=[("force_select_final", 1)],
+            ).output.strip()
+
+        with Then("I compare results are the same"):
+            assert explicit_final == force_select_final_without
+            assert explicit_final == force_select_final_left
+            assert explicit_final == force_select_final_right
+            assert explicit_final == force_select_final_double
 
 
 @TestStep(Given)
@@ -1181,11 +1176,11 @@ def create_and_populate_all_tables(self):
     """
     Creating all kind of tables.
     """
-    # create_and_populate_core_tables()
+    create_and_populate_core_tables()
     # add_system_tables()
     # create_and_populate_distributed_tables()
     # create_all_views()
-    # create_and_populate_core_tables(duplicate=True)
+    create_and_populate_core_tables(duplicate=True)
     # create_normal_view_with_join()
     # create_replicated_table_2shards3replicas()
     # create_expression_subquery_table()
