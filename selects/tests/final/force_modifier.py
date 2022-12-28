@@ -189,22 +189,19 @@ def select_array_join(self, node=None):
     if node is None:
         node = self.context.node
 
-    engines = [
-        "ReplacingMergeTree",
-        "AggregatingMergeTree",
-        "SummingMergeTree",
-        "MergeTree",
-        "StripeLog",
-        "TinyLog",
-        "Log",
-    ]
-
-    with Given("Creating statements with and without `FINAL`"):
-        select_final = "SELECT count() FROM arrays_test FINAL ARRAY JOIN arr"
-        select = "SELECT count() FROM arrays_test ARRAY JOIN arr"
+    with Given("I create engines list for current test"):
+        engines = [
+            "ReplacingMergeTree",
+            "AggregatingMergeTree",
+            "SummingMergeTree",
+            "MergeTree",
+            "StripeLog",
+            "TinyLog",
+            "Log",
+        ]
 
     with And(
-        "I form `create` and `populate` statements for table with array data type and for all engines from engine list"
+        "I form `create` and `populate` statements for table with array data type and all engines from engine list"
     ):
         table = """CREATE TABLE arrays_test
                         (
@@ -216,42 +213,39 @@ def select_array_join(self, node=None):
         insert = """INSERT INTO arrays_test VALUES ('Hello', [1,2]), ('World', [3,4,5]), ('Goodbye', []);"""
 
         for engine in engines:
-            try:
-                with Given(
-                    f"I create and populate table with array type for {engine} from engine list"
-                ):
-                    node.query(
-                        f"{table.format(engine=engine, order='') if engine.endswith('Log') else table.format(engine=engine, order='ORDER BY s;')}"
-                    )
-                    node.query("SYSTEM STOP MERGES")
-                    node.query(insert)
-                    node.query(insert)
-
-                if engine.startswith("Merge") or engine.endswith("Log"):
-                    with Then(
-                        f"I check that tables {engine} `SELECT ...`  equal to the same"
-                        f" select with force_select_final=1 setting"
+            with When(f"{engine}"):
+                try:
+                    with When(
+                            f"I create and populate table with array type for {engine} from engine list"
                     ):
-                        assert (
-                            node.query(select).output.strip()
-                            == node.query(
-                                select, settings=[("force_select_final", 1)]
-                            ).output.strip()
+                        node.query(
+                            f"{table.format(engine=engine, order='') if engine.endswith('Log') else table.format(engine=engine, order='ORDER BY s;')}"
                         )
-                else:
-                    with Then(
-                        f"I check that tables {engine} `SELECT ... FINAL` equal to the same"
-                        f" select with force_select_final=1 setting"
-                    ):
-                        assert (
-                            node.query(select_final).output.strip()
-                            == node.query(
-                                select, settings=[("force_select_final", 1)]
-                            ).output.strip()
-                        )
+                        node.query("SYSTEM STOP MERGES")
+                        node.query(insert)
+                        node.query(insert)
 
-            finally:
-                node.query("DROP TABLE arrays_test")
+                    with When("I execute query with force_select_final=1 setting"):
+                        force_select_final = node.query("SELECT count() FROM arrays_test ARRAY JOIN arr",
+                                                        settings=[("force_select_final", 1)],
+                                                        ).output.strip()
+
+                        if engine.startswith("Merge") or engine.endswith("Log"):
+                            with When("I execute the same query with FINAL modifier specified explicitly"):
+                                without_final = node.query(
+                                    f"SELECT count() FROM arrays_test ARRAY JOIN arr").output.strip()
+                            with Then("I compare results are the same"):
+                                assert (without_final == force_select_final)
+
+                        else:
+                            with When("I execute the same query with FINAL modifier specified explicitly"):
+                                explicit_final = node.query(
+                                    "SELECT count() FROM arrays_test FINAL ARRAY JOIN arr").output.strip()
+                            with Then("I compare results are the same"):
+                                assert (explicit_final == force_select_final)
+
+                finally:
+                    node.query("DROP TABLE arrays_test")
 
 
 @TestScenario
