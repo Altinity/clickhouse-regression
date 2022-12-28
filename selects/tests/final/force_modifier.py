@@ -4,11 +4,12 @@ from selects.tests.steps import *
 
 
 @TestOutline
-def select(self, statement, statement_final, node=None, negative=False):
+def select(self, query, query_with_final, node=None, negative=False):
     """Checking basic selects with `FINAL` clause equal to force_select_final select only for core table."""
     if node is None:
         node = self.context.node
 
+    # FIXME: move Given inside if/esle
     with Given("I exclude auxiliary and unsupported tables by the current test"):
         if negative:
             tables = [
@@ -61,15 +62,15 @@ def select(self, statement, statement_final, node=None, negative=False):
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Select("1.0"))
 def select_count(self):
-    """Check `SELECT count()` clause."""
-    with Given("I create statements with and without `FINAL`."):
-        statement = "SELECT count() FROM {name} FORMAT JSONEachRow;"
-        statement_final = "SELECT count() FROM {name} {final} FORMAT JSONEachRow;"
+    """Check `SELECT count()` clause."""   
+    with Given("I create queries with and without `FINAL`."):
+        query = "SELECT count() FROM {name} FORMAT JSONEachRow;"
+        query_with_final = "SELECT count() FROM {name} {final} FORMAT JSONEachRow;
 
-    with Then(
-        "I verify for query with `FINAL` data equivalence and non-equivalence for query without `FINAL`."
-    ):
+    with Then("I check positive case"):
         select(statement=statement, statement_final=statement_final)
+    
+    with And("I check negative case"):
         select(statement=statement, statement_final=statement_final, negative=True)
 
 
@@ -228,47 +229,40 @@ def select_array_join(self, node=None):
 
         insert = """INSERT INTO arrays_test VALUES ('Hello', [1,2]), ('World', [3,4,5]), ('Goodbye', []);"""
 
-        for engine in engines:
-            with When(f"{engine}"):
-                try:
-                    with When(
-                        f"I create and populate table with array type for {engine} from engine list"
-                    ):
-                        node.query(
-                            f"{table.format(engine=engine, order='') if engine.endswith('Log') else table.format(engine=engine, order='ORDER BY s;')}"
-                        )
-                        node.query("SYSTEM STOP MERGES")
-                        node.query(insert)
-                        node.query(insert)
+    for engine in engines:
+        with When(f"{engine}"):
+            try:
+                with When(
+                    f"I create and populate table with array type"
+                ):
+                    node.query(
+                        f"{table.format(engine=engine, order='') if engine.endswith('Log') else table.format(engine=engine, order='ORDER BY s;')}"
+                    )
+                    node.query("SYSTEM STOP MERGES")
+                    node.query(insert)
+                    node.query(insert)
 
-                    with When("I execute query with force_select_final=1 setting"):
-                        force_select_final = node.query(
-                            "SELECT count() FROM arrays_test ARRAY JOIN arr",
-                            settings=[("force_select_final", 1)],
+                with When("I execute query with force_select_final=1 setting"):
+                    force_select_final = node.query(
+                        "SELECT count() FROM arrays_test ARRAY JOIN arr",
+                        settings=[("force_select_final", 1)],
+                    ).output.strip()
+
+                with And("I execute the same query with FINAL modifier specified explicitly"):
+                    if engine.startswith("Merge") or engine.endswith("Log"):
+                        without_final = node.query(
+                            f"SELECT count() FROM arrays_test ARRAY JOIN arr"
                         ).output.strip()
+                    else:
+                        explicit_final = node.query(
+                            "SELECT count() FROM arrays_test FINAL ARRAY JOIN arr"
+                        ).output.strip()
+    
+                with Then("I compare results are the same"):
+                    assert explicit_final == force_select_final
 
-                        if engine.startswith("Merge") or engine.endswith("Log"):
-                            with When(
-                                "I execute the same query with FINAL modifier specified explicitly"
-                            ):
-                                without_final = node.query(
-                                    f"SELECT count() FROM arrays_test ARRAY JOIN arr"
-                                ).output.strip()
-                            with Then("I compare results are the same"):
-                                assert without_final == force_select_final
-
-                        else:
-                            with When(
-                                "I execute the same query with FINAL modifier specified explicitly"
-                            ):
-                                explicit_final = node.query(
-                                    "SELECT count() FROM arrays_test FINAL ARRAY JOIN arr"
-                                ).output.strip()
-                            with Then("I compare results are the same"):
-                                assert explicit_final == force_select_final
-
-                finally:
-                    node.query("DROP TABLE arrays_test")
+            finally:
+                node.query("DROP TABLE arrays_test")
 
 
 @TestScenario
@@ -277,41 +271,41 @@ def select_join_clause(self, node=None):
     if node is None:
         node = self.context.node
 
+    table_pairs = []
+
+    with Given("I have a list of core table"):
+        core_tables = [table for table in self.context.tables if table1.name.endswith("core")
+    
+    with And("I have a list of corresponding duplicate tables"):
+        for table1 in core_tables:
+            for table2 in self.context.tables:
+                if table2.name.endswith("duplicate") and table2.engine == table1.engine:
+                    table_pairs.append((table1, table2))
+  
     for join_type in join_types:
-        with Given(f"I check force_select_final feature for {join_type}"):
-            for table1 in self.context.tables:
-                if table1.name.endswith("core"):
+        with When(f"{join_type}"):
+            for table1, table2 in table_pairs:
+                with When(f"I have {table1.name} and corresponding {table2.name}"):
+                    with Then(
+                        "I check that select with force_select_final=1 setting"
+                        f" equals 'SELECT...FINAL' for {table1.name} and {table2.name} "
+                        f"with {join_type} clause"
+                    ):
+                        join_statement = (
+                            f"SELECT count() FROM {table1.name}"
+                            f"{' FINAL' if table1.final_modifier_available else ''}"
+                            f" {join_type} "
+                            f" {table2.name} on"
+                            f" {table1.name}.key = {table2.name}.key"
+                        )
 
-                    with When(f"I select {table1.name} as table a"):
-                        for table2 in self.context.tables:
-                            if (
-                                table2.name.endswith("duplicate")
-                                and table2.engine == table1.engine
-                            ):
-
-                                with When(
-                                    f"I select table with the same structure {table2.name} as table b"
-                                ):
-                                    with Then(
-                                        "I check that select with force_select_final=1 setting"
-                                        f" equal 'SELECT...FINAL' for {table1.name} and {table2.name} "
-                                        f"with {join_type} clause"
-                                    ):
-                                        join_statement = (
-                                            f"SELECT count() FROM {table1.name}"
-                                            f"{' FINAL' if table1.final_modifier_available else ''}"
-                                            f" {join_type} "
-                                            f" {table2.name} on"
-                                            f" {table1.name}.key = {table2.name}.key"
-                                        )
-
-                                        assert_joins(
-                                            join_statement=join_statement,
-                                            table=table1,
-                                            table2=table2,
-                                            join_type=join_type,
-                                            node=node,
-                                        )
+                        assert_joins(
+                            join_statement=join_statement,
+                            table=table1,
+                            table2=table2,
+                            join_type=join_type,
+                            node=node,
+                        )
 
 
 @TestScenario
@@ -446,8 +440,11 @@ def select_family_union_clause(self, node=None, clause=None):
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Union("1.0"))
 def select_union_clause(self):
     """Check SELECT query with `UNION` clause."""
-    select_family_union_clause(clause="UNION ALL")
-    select_family_union_clause(clause="UNION DISTINCT")
+    with Check("UNION ALL"):
+        select_family_union_clause(clause="UNION ALL")
+    
+    with Check("UNION DISTINCT"):
+        select_family_union_clause(clause="UNION DISTINCT")
 
 
 @TestScenario
