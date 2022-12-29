@@ -26,7 +26,7 @@ def special_symbols_default_values(self, node=None):
 
 @TestFeature
 @Requirements()
-@Name("specifying special symbols")
+@Name("default special symbols")
 def feature(self, node="clickhouse1"):
     """Check that clickhouse extractKeyValuePairs default values for special symbols are
     `\` - for escape_character, `:` - for key_value_pair_delimiter, `,` for item_delimeter

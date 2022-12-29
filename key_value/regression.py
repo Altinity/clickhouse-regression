@@ -25,7 +25,10 @@ ffails = {}
 @FFails(ffails)
 @Name("key value")
 @Specifications(SRS033_ClickHouse_Key_Value_Function)
-@Requirements(RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Function("1.0"))
+@Requirements(RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Function("1.0"),
+              RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parsing_RecognizedKeyValuePairs("1.0"),
+              RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Format_Output("1.0")
+              )
 def regression(
     self,
     local,
@@ -56,15 +59,12 @@ def regression(
         if parallel is not None:
             self.context.parallel = parallel
 
-        Feature(run=load("key_value.tests.constant", "feature"))
-        Feature(run=load("key_value.tests.column", "feature"))
-        Feature(run=load("key_value.tests.array_map_input", "feature"))
-        Feature(run=load("key_value.tests.specifying_special_symbols", "feature"))
+        Feature(run=load("key_value.tests.constant", "module"))
+        Feature(run=load("key_value.tests.column", "module"))
+        Feature(run=load("key_value.tests.array_map_input", "module"))
         Feature(run=load("key_value.tests.special_symbols_conflict", "feature"))
-        Feature(run=load("key_value.tests.default_values_for_special_symbols", "feature"))
         Feature(run=load("key_value.tests.supported_data_types", "feature"))
         Feature(run=load("key_value.tests.unsupported_data_types", "feature"))
-        Feature(run=load("key_value.tests.noise", "feature"))
 
 
 if main():
