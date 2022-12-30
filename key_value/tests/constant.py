@@ -1,9 +1,11 @@
 from key_value.tests.steps import *
+from key_value.tests.checks import *
 
 
 @TestOutline
+@Requirements(RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_InputDataSource_Constant("1.0"))
 def constant_input(self, input, output, params, node=None):
-    """Check that clickhouse extractKeyValuePairs function support constant input."""
+    """Check that clickhouse extractKeyValuePairs function support constant input string."""
 
     if node is None:
         node = self.context.node
@@ -13,17 +15,11 @@ def constant_input(self, input, output, params, node=None):
 
 
 @TestModule
-@Requirements(
-    RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parsing_RecognizedKeyValuePairs("1.0"),
-    RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Format_Output("1.0")
-)
 @Name("constant")
 def module(self, node="clickhouse1"):
-    """Check that clickhouse extractKeyValuePairs function support constant."""
+    """Check that clickhouse extractKeyValuePairs function support constant input string."""
 
     self.context.node = self.context.cluster.node(node)
 
-    key_format_feature(scenario=constant_input)
-    value_format_feature(scenario=constant_input)
-    input_format(scenario=constant_input)
-    specifying_special_symbols(scenario=constant_input)
+    for check in checks:
+        check(scenario=constant_input)

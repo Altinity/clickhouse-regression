@@ -25,10 +25,7 @@ ffails = {}
 @FFails(ffails)
 @Name("key value")
 @Specifications(SRS033_ClickHouse_Key_Value_Function)
-@Requirements(RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Function("1.0"),
-              RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parsing_RecognizedKeyValuePairs("1.0"),
-              RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Format_Output("1.0")
-              )
+@Requirements(RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Function("1.0"))
 def regression(
     self,
     local,

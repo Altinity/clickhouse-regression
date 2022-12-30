@@ -1,7 +1,9 @@
 from key_value.tests.steps import *
+from key_value.tests.checks import *
 
 
 @TestOutline
+@Requirements(RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_InputDataSource_Column("1.0"))
 def column_input(self, input, output, params, node=None):
     """Check that clickhouse extractKeyValuePairs function supports column input."""
 
@@ -29,7 +31,5 @@ def module(self, node="clickhouse1"):
 
     self.context.node = self.context.cluster.node(node)
 
-    key_format_feature(scenario=column_input)
-    value_format_feature(scenario=column_input)
-    input_format(scenario=column_input)
-    specifying_special_symbols(scenario=column_input)
+    for check in checks:
+        check(scenario=column_input)
