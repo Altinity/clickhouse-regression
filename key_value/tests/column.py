@@ -18,18 +18,24 @@ def column_input(self, input, output, params, node=None):
         insert(table_name=table_name, x=input, y=output.replace("'", "\\'"))
 
     with Then("I check extractKeyValuePairs function returns correct value"):
-        r = node.query(f"""select toString(extractKeyValuePairs(x, {params})), y from {table_name}""", use_file=True)
-        r = node.query(f"""select toString(extractKeyValuePairs(x, {params})) == y from {table_name}""", use_file=True)
-        assert r.output == '1', error()
+        r = node.query(
+            f"""select toString(extractKeyValuePairs(x, {params})), y from {table_name}""",
+            use_file=True,
+        )
+        r = node.query(
+            f"""select toString(extractKeyValuePairs(x, {params})) == y from {table_name}""",
+            use_file=True,
+        )
+        assert r.output == "1", error()
 
 
-@TestModule
+@TestFeature
 @Name("column")
 @Requirements(RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_InputDataSource_Column("1.0"))
-def module(self, node="clickhouse1"):
+def feature(self, node="clickhouse1"):
     """Check that clickhouse extractKeyValuePairs function support column input."""
 
     self.context.node = self.context.cluster.node(node)
 
     for check in checks:
-        check(scenario=column_input)
+        Scenario(test=check)(scenario=column_input)

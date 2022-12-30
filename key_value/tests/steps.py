@@ -11,13 +11,23 @@ ascii_punctuation_marks = "!\"#$%&'()*+,-./:;>=<?@[\\]^_`{|}~"
 
 noise = ascii_punctuation_marks + ascii_num
 
-parsed_noise = ascii_punctuation_marks.replace("\\", "\\\\").replace('"', '\\"'). \
-    replace("!", "\\!").replace("`", "\\`").replace("'", "\\'")
+parsed_noise = (
+    ascii_punctuation_marks.replace("\\", "\\\\")
+    .replace('"', '\\"')
+    .replace("!", "\\!")
+    .replace("`", "\\`")
+    .replace("'", "\\'")
+)
 
-noise_without_quotation_mark = noise.replace('"', '')
+noise_without_quotation_mark = noise.replace('"', "")
 
-parsed_noise_without_quotation_mark = noise_without_quotation_mark.replace("\\", "\\\\").replace('"', '\\"'). \
-    replace("!", "\\!").replace("`", "\\`").replace("'", "\\'")
+parsed_noise_without_quotation_mark = (
+    noise_without_quotation_mark.replace("\\", "\\\\")
+    .replace('"', '\\"')
+    .replace("!", "\\!")
+    .replace("`", "\\`")
+    .replace("'", "\\'")
+)
 
 
 @TestStep(Given)
@@ -76,16 +86,22 @@ def optimize_table(self, table_name, final=True, node=None):
 
 
 @TestStep(Then)
-def check_constant_input(self, input, output=None, params='', exitcode=0, node=None):
+def check_constant_input(self, input, output=None, params="", exitcode=0, node=None):
     """Check that clickhouse parseKeyValue function support constant input."""
 
     if node is None:
         node = self.context.node
-    if params != '':
-        params = ', '+params
+    if params != "":
+        params = ", " + params
     with Then("I check parseKeyValue function returns correct value"):
         if exitcode != 0:
-            node.query(f"SELECT extractKeyValuePairs({input}{params})", use_file=True, exitcode=exitcode)
+            node.query(
+                f"SELECT extractKeyValuePairs({input}{params})",
+                use_file=True,
+                exitcode=exitcode,
+            )
         else:
-            r = node.query(f"SELECT extractKeyValuePairs({input}{params})", use_file=True)
+            r = node.query(
+                f"SELECT extractKeyValuePairs({input}{params})", use_file=True
+            )
             assert r.output == output, error()

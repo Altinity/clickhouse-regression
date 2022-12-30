@@ -56,9 +56,10 @@ def regression(
         if parallel is not None:
             self.context.parallel = parallel
 
-        Feature(run=load("key_value.tests.constant", "module"))
-        Feature(run=load("key_value.tests.column", "module"))
-        Feature(run=load("key_value.tests.array_map_input", "module"))
+        Feature(run=load("key_value.tests.constant", "feature"))
+        Feature(run=load("key_value.tests.column", "feature"))
+        Feature(run=load("key_value.tests.map", "feature"))
+        Feature(run=load("key_value.tests.array", "feature"))
         Feature(run=load("key_value.tests.special_symbols_conflict", "feature"))
         Feature(run=load("key_value.tests.supported_data_types", "feature"))
         Feature(run=load("key_value.tests.unsupported_data_types", "feature"))
