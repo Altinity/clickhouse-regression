@@ -731,7 +731,7 @@ def select_nested_join_clause_select(self, node=None):
 @TestScenario
 def select_multiple_join_clause_select(self, node=None):
     """Check SELECT query with nested `JOIN` clause."""
-    xfail("doesn't work ")
+    # xfail("doesn't work ")
     if node is None:
         node = self.context.node
 
@@ -772,11 +772,11 @@ def select_multiple_join_clause_select(self, node=None):
                             "Multiple join query",
                             f"SELECT count() FROM {table1.name} c"
                             f"{' FINAL' if table1.final_modifier_available else ''}  {join_type} "
-                            f"(SELECT * FROM {table2.name}) a"
-                            f"{' FINAL' if table2.final_modifier_available else ''} on c.id = a.id"
+                            f"(SELECT * FROM {table2.name} "
+                            f"{' FINAL' if table2.final_modifier_available else ''}) a on c.id = a.id"
                             f" {join_type} "
-                            f"(SELECT * FROM {table2.name}) "
-                            f"b {' FINAL' if table2.final_modifier_available else ''} on"
+                            f"(SELECT * FROM {table2.name} "
+                            f"{' FINAL' if table2.final_modifier_available else ''}) b on"
                             f" a.id=b.id",
                         )
 
