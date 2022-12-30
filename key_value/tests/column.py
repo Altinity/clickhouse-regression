@@ -3,7 +3,6 @@ from key_value.tests.checks import *
 
 
 @TestOutline
-@Requirements(RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_InputDataSource_Column("1.0"))
 def column_input(self, input, output, params, node=None):
     """Check that clickhouse extractKeyValuePairs function supports column input."""
 
@@ -26,6 +25,7 @@ def column_input(self, input, output, params, node=None):
 
 @TestModule
 @Name("column")
+@Requirements(RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_InputDataSource_Column("1.0"))
 def module(self, node="clickhouse1"):
     """Check that clickhouse extractKeyValuePairs function support column input."""
 
