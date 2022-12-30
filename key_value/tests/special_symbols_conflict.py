@@ -14,7 +14,7 @@ def special_symbols_conflict(self, node=None, i=0, j=0):
         parameters = ["'\\\\'", "':'", "','", "'\"'", "''"]
         parameters[j] = parameters[i]
 
-    with When("I specifying input values for extractKeyValuePairs function"):
+    with And("I specifying input values for extractKeyValuePairs function"):
         input_strings = [f"'ppp:pp, qqq:q', {','.join(parameters)}"]
 
     with Then("I check extractKeyValuePairs function returns an error."):
