@@ -7,7 +7,7 @@ def supported_types(self, constant_type="String", nullable=False, node=None):
     if node is None:
         node = self.context.node
 
-    with When("I change constant type if it has arguments"):
+    with When("I change constant type if the type has arguments"):
         if "(" in constant_type:
             extra_args = (
                 ","
@@ -17,7 +17,7 @@ def supported_types(self, constant_type="String", nullable=False, node=None):
         else:
             extra_args = ""
 
-    with When("I add toNullable if it is needed"):
+    with And("I add toNullable if it is needed"):
         if nullable:
             to_nullable_start = "toNullable("
             to_nullable_end = ")"
@@ -25,11 +25,12 @@ def supported_types(self, constant_type="String", nullable=False, node=None):
             to_nullable_start = ""
             to_nullable_end = ""
 
-    with When(f"I check extractKeyValuePairs support {constant_type}"):
+    with Then(f"I check extractKeyValuePairs support {constant_type}"):
         r = node.query(
             f"SELECT extractKeyValuePairs({to_nullable_start}to{constant_type}('100'{extra_args}){to_nullable_end})"
         )
-    with When(f"I check extractKeyValuePairs support {constant_type}"):
+
+    with And(f"I check extractKeyValuePairs support {constant_type}"):
         r = node.query(
             f"SELECT extractKeyValuePairs({to_nullable_start}to{constant_type}('123'{extra_args}){to_nullable_end})"
         )
