@@ -21,7 +21,7 @@ def special_symbols_conflict(self, node=None, i=0, j=0):
         for i, input_string in enumerate(input_strings):
             check_constant_input(
                 input=input_string, exitcode=10
-            )  # todo fing existing exitcode after inmplementation
+            )  # FIXME: find existing exitcode after inmplementation
 
 
 @TestModule
