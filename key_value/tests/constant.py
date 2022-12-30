@@ -3,7 +3,6 @@ from key_value.tests.checks import *
 
 
 @TestOutline
-@Requirements(RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_InputDataSource_Constant("1.0"))
 def constant_input(self, input, output, params, node=None):
     """Check that clickhouse extractKeyValuePairs function support constant input string."""
 
@@ -15,6 +14,7 @@ def constant_input(self, input, output, params, node=None):
 
 
 @TestModule
+@Requirements(RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_InputDataSource_Constant("1.0"))
 @Name("constant")
 def module(self, node="clickhouse1"):
     """Check that clickhouse extractKeyValuePairs function support constant input string."""
