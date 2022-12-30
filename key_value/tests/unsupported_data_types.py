@@ -106,6 +106,7 @@ def unsupported_types(self, constant_type="Int64", nullable=False, node=None):
                 no_checks=True,
             )
             assert r.exitcode != 0, error()
+
     else:
         with When(f"I check extractKeyValuePairs support {constant_type}"):
             r = node.query(
@@ -163,11 +164,9 @@ def feature(self, node="clickhouse1"):
                 with Feature(f"{constant_type}"):
                     for scenario in loads(current_module(), Scenario):
                         scenario(constant_type=constant_type, nullable=nullable)
-    with Feature(f"Nullable(String)"):
-        for scenario in loads(current_module(), Scenario):
-            scenario(constant_type="Nullable(String)", nullable=True)
 
     nullable_constant_types = ["String", "LowCardinality", "FixedString(3)"]
+
     for constant_type in nullable_constant_types:
         with Feature(f"Nullable({constant_type})"):
             for scenario in loads(current_module(), Scenario):
