@@ -10,25 +10,13 @@ def select(self, query, query_with_final, node=None, negative=False):
         node = self.context.node
 
     with Given("I exclude auxiliary and unsupported tables by the current test"):
-        define(
-            "Tables list for current test",
-            [
-                table.name
-                for table in self.context.tables
-                if table.name.endswith("core")
-                or table.name.endswith("_nview_final")
-                or table.name.endswith("_mview")
-            ],
-            encoder=lambda s: ", ".join(s),
-        )
-
-        tables = [
+        tables = define("tables", [
             table
             for table in self.context.tables
             if table.name.endswith("core")
             or table.name.endswith("_nview_final")
             or table.name.endswith("_mview")
-        ]
+        ], encoder=lambda tables: ", ".join([table.name for table in tables]))
 
     for table in tables:
         with When(f"{table.name}"):
@@ -258,17 +246,17 @@ def select_array_join(self, node=None):
         "I form `create` and `populate` queries for table with array data type and all engines from engine list"
     ):
         table = define(
-            "Array table query",
+            "array table query",
             """CREATE TABLE arrays_test
-                                            (
-                                                s String,
-                                                arr Array(UInt8)
-                                            ) ENGINE = {engine}
-                                            {order}""",
+            (
+                s String,
+                arr Array(UInt8)
+            ) ENGINE = {engine}
+            {order}""",
         )
 
         insert = define(
-            "Array value insert",
+            "array value insert query",
             "INSERT INTO arrays_test VALUES ('Hello', [1,2]), ('World', [3,4,5]), ('Goodbye', []);",
         )
 
@@ -376,7 +364,7 @@ def select_join_clause_select_all_types(self, node=None):
             encoder=lambda s: ", ".join(s),
         )
 
-    with Given("I have a list of core table"):
+    with And("I have a list of core table"):
         core_tables = [
             table for table in self.context.tables if table.name.endswith("core")
         ]
@@ -587,7 +575,7 @@ def select_with_clause(self, node=None, negative=False):
                 or table.name.endswith("_mview")
             ],
             encoder=lambda s: ", ".join(s),
-        )
+        ) # FIXME: change!
 
         tables = [
             table
@@ -599,20 +587,20 @@ def select_with_clause(self, node=None, negative=False):
 
     with Given("I create `WITH` query with and without `FINAL`"):
         with_query = define(
-            "`WITH` query",
+            "query",
             """
-    WITH
-        (
-            SELECT count(id)
+            WITH
+                (
+                    SELECT count(id)
+                    FROM {table_name} {final}
+                ) AS total_ids
+            SELECT
+                (x / total_ids) AS something,
+                someCol
             FROM {table_name} {final}
-        ) AS total_ids
-    SELECT
-        (x / total_ids) AS something,
-        someCol
-    FROM {table_name} {final}
-    GROUP BY (x,someCol)
-    ORDER BY something,someCol DESC;
-    """,
+            GROUP BY (x,someCol)
+            ORDER BY something,someCol DESC;
+            """,
         )
 
     for table in tables:
@@ -679,6 +667,7 @@ def select_nested_join_clause_select(self, node=None):
         )
 
     with Given("I have a list of core table"):
+        # FIXME: use define
         core_tables = [
             table for table in self.context.tables if table.name.endswith("core")
         ]
@@ -750,7 +739,7 @@ def select_multiple_join_clause_select(self, node=None):
             encoder=lambda s: ", ".join(s),
         )
 
-    with Given("I have a list of core table"):
+    with And("I have a list of core table"):
         core_tables = [
             table for table in self.context.tables if table.name.endswith("core")
         ]
