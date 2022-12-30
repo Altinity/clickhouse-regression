@@ -56,8 +56,7 @@ def create_and_populate_table(
     range_value=5,
     node=None,
 ):
-    """
-    Creating and populating clickhouse table.
+    """Creating and populating clickhouse table.
     :param name: core table name
     :param populate: populates table default: True
     :param engine: core table engine
@@ -263,9 +262,7 @@ def create_and_populate_replacing_table(
     node=None,
     cluster_name=None,
 ):
-    """
-    Creating and populating 'ReplacingMergeTree' engine table.
-    """
+    """Creating and populating 'ReplacingMergeTree' engine table."""
     if node is None:
         node = current().context.node
 
@@ -321,9 +318,7 @@ def create_and_populate_collapsing_table(
     node=None,
     cluster_name=None,
 ):
-    """
-    Creating and populating 'CollapsingMergeTree' engine table.
-    """
+    """Creating and populating 'CollapsingMergeTree' engine table."""
     extra_table_col = "key UInt64, someCol UInt8, Duration UInt8, Sign Int8"
 
     if engine.startswith("Replicated"):
@@ -374,9 +369,7 @@ def create_and_populate_aggregating_table(
     node=None,
     cluster_name=None,
 ):
-    """
-    Creating and populating 'AggregatingMergeTree' engine table
-    """
+    """Creating and populating 'AggregatingMergeTree' engine table."""
     if engine.startswith("Replicated"):
         engine = (
             engine
@@ -408,9 +401,7 @@ def create_and_populate_summing_table(
     node=None,
     cluster_name=None,
 ):
-    """
-    Creating and populating 'SummingMergeTree' engine table.
-    """
+    """Creating and populating 'SummingMergeTree' engine table."""
     if engine.startswith("Replicated"):
         engine = (
             engine
@@ -423,6 +414,7 @@ def create_and_populate_summing_table(
         "({x},{y}, 1, 'first', '2020-01-01 01:01:01')",
         "({x},{y}, 2, 'second', '2020-01-01 00:00:00')",
     ]
+
     return create_and_populate_table(
         name=name,
         engine=engine,
@@ -445,9 +437,8 @@ def create_and_populate_merge_table(
     node=None,
     cluster_name=None,
 ):
-    """
-    Creating and populating 'MergeTree' engine table.
-    """
+    """Creating and populating 'MergeTree' engine table."""
+ 
     if engine.startswith("Replicated"):
         engine = (
             engine
@@ -482,9 +473,8 @@ def create_and_populate_versioned_table(
     node=None,
     cluster_name=None,
 ):
-    """
-    Creating and populating 'VersionedCollapsingMergeTree' engine table.
-    """
+    """Creating and populating 'VersionedCollapsingMergeTree' engine table."""
+    
     values = [
         "({x},{y}, 1, 'first', 1, 1)",
         "({x},{y}, 1, 'second', 1, 1),({x},{y}, 2, 'third', -1, 2)",
@@ -537,14 +527,15 @@ def create_and_populate_log_table(
     node=None,
     cluster_name=None,
 ):
-    """
-    Creating and populating 'Log' engine family table.
-    """
+    """Creating and populating 'Log' engine family table."""
+    
     values = [
         "({x},{y},1, 'first', '2020-01-01 01:01:01')",
         "({x},{y},1, 'second', '2020-01-01 00:00:00')",
     ]
+    
     extra_table_col = "key Int64, someCol String, eventTime DateTime"
+    
     return create_and_populate_table(
         name=name,
         engine=engine,
@@ -568,9 +559,7 @@ def create_and_populate_distributed_table(
     node=None,
     range_value=10,
 ):
-    """
-    Creating 'Distributed' engine table and populating dependent tables.
-    """
+    """Creating 'Distributed' engine table and populating dependent tables."""
     if node is None:
         node = current().context.node
 
@@ -728,9 +717,8 @@ def create_normal_view(
     node=None,
     view_not_final=False,
 ):
-    """
-    Creating `NORMAL VIEW` to some table.
-    """
+    """Creating `NORMAL VIEW` to some table."""
+  
     if node is None:
         node = current().context.node
 
@@ -758,9 +746,8 @@ def create_materialized_view(
     node=None,
     view_not_final=False,
 ):
-    """
-    Creating `MATERIALIZED VIEW` to some table.
-    """
+    """Creating `MATERIALIZED VIEW` to some table."""
+    
     if node is None:
         node = current().context.node
 
@@ -794,9 +781,8 @@ def create_live_view(
     node=None,
     view_not_final=False,
 ):
-    """
-    Creating `LIVE VIEW` to some table.
-    """
+    """Creating `LIVE VIEW` to some table."""
+    
     if node is None:
         node = current().context.node
 
@@ -826,9 +812,8 @@ def create_window_view(
     node=None,
     view_not_final=False,
 ):
-    """
-    Creating `WINDOW VIEW` to some table.
-    """
+    """Creating `WINDOW VIEW` to some table."""
+    
     if node is None:
         node = current().context.node
 
@@ -853,6 +838,7 @@ def create_window_view(
             )
 
         yield Table(view_name, view_type, final_modifier_available)
+
     finally:
         with Finally("I drop data"):
             node.query(f"DROP VIEW IF EXISTS {view_name}")
@@ -863,9 +849,8 @@ def create_window_view(
 
 @TestStep(Given)
 def create_all_views(self):
-    """
-    Creating all types of 'VIEWS' to all core tables.
-    """
+    """Creating all types of 'VIEWS' to all core tables."""
+    
     for table in self.context.tables:
         if not (
             table.name.startswith("system")
@@ -924,9 +909,8 @@ def create_all_views(self):
 
 @TestStep(Given)
 def create_normal_view_with_join(self, node=None, final1=None, final2=None):
-    """
-    Creating `NORMAL VIEW` as `SELECT` with `JOIN` clause.
-    """
+    """Creating `NORMAL VIEW` as `SELECT` with `JOIN` clause."""
+    
     if node is None:
         node = current().context.node
 
@@ -960,6 +944,7 @@ def create_normal_view_with_join(self, node=None, final1=None, final2=None):
                             )
 
         yield Table(view_name, "VIEW", table.final_modifier_available)
+   
     finally:
         with Finally("I drop data"):
             node.query(f"DROP VIEW IF EXISTS {view_name}")
@@ -967,9 +952,7 @@ def create_normal_view_with_join(self, node=None, final1=None, final2=None):
 
 @TestStep(Given)
 def create_replicated_table_2shards3replicas(self, node=None):
-    """
-    Creating distributed table to replicated table on cluster with 2 shards and 2 replicas on one shard.
-    """
+    """Creating distributed table to replicated table on cluster with 2 shards and 2 replicas on one shard."""
     if node is None:
         node = current().context.node
 
@@ -1082,9 +1065,7 @@ def create_replicated_table_2shards3replicas(self, node=None):
 
 @TestStep(Given)
 def create_expression_subquery_table(self, node=None):
-    """
-    Creating table for expressions with subquery.
-    """
+    """Creating table for expressions with subquery."""
 
     name = f"expr_subquery_{getuid()}"
     table_statement = """
@@ -1115,72 +1096,72 @@ def create_expression_subquery_table(self, node=None):
             node.query(f"DROP TABLE IF EXISTS {name}")
 
 
-@TestStep(Given)
+@TestStep(Then)
 def assert_joins(self, join_statement, table, table2, join_type, node=None):
+    """"Check `SELECT ... FINAL` equal to `SELECT` with force_select_final for all cases of using FINAL with JOINs.""""
+    
     if node is None:
         node = current().context.node
 
-    with Given("I check `SELECT ... FINAL` equal to `SELECT` with force_select_final "):
-        with When("I execute query with FINAL modifier specified explicitly"):
-            explicit_final = node.query(
-                join_statement,
-                settings=[("joined_subquery_requires_alias", 0)],
-            ).output.strip()
+    with When("I execute query with FINAL modifier specified explicitly"):
+        explicit_final = node.query(
+            join_statement,
+            settings=[("joined_subquery_requires_alias", 0)],
+        ).output.strip()
 
-        with And(
-            "I execute the same query without FINAL modifiers and with force_select_final=1 setting"
-        ):
-            force_select_final_without = node.query(
-                f"SELECT count() FROM {table.name} {join_type}"
-                f" {table2.name} on {table.name}.id = {table2.name}.id",
-                settings=[("force_select_final", 1)],
-            ).output.strip()
+    with And(
+        "I execute the same query without FINAL modifiers and with force_select_final=1 setting"
+    ):
+        force_select_final_without = node.query(
+            f"SELECT count() FROM {table.name} {join_type}"
+            f" {table2.name} on {table.name}.id = {table2.name}.id",
+            settings=[("force_select_final", 1)],
+        ).output.strip()
 
-        with And(
-            "I execute the same query with `FINAL` clause on left table and with force_select_final=1 setting"
-        ):
-            force_select_final_left = node.query(
-                f"SELECT count() FROM {table.name} "
-                f"{' FINAL' if table.final_modifier_available else ''} {join_type}"
-                f" {table2.name} on {table.name}.id = {table2.name}.id",
-                settings=[("force_select_final", 1)],
-            ).output.strip()
+    with And(
+        "I execute the same query with `FINAL` clause on left table and with force_select_final=1 setting"
+    ):
+        force_select_final_left = node.query(
+            f"SELECT count() FROM {table.name} "
+            f"{' FINAL' if table.final_modifier_available else ''} {join_type}"
+            f" {table2.name} on {table.name}.id = {table2.name}.id",
+            settings=[("force_select_final", 1)],
+        ).output.strip()
 
-        with And(
-            "I execute the same query with `FINAL` clause on right table and with force_select_final=1 setting"
-        ):
-            force_select_final_right = node.query(
-                f"SELECT count() FROM {table.name} {join_type}"
-                f" {table2.name} {' FINAL' if table2.final_modifier_available else ''} on {table.name}.id = {table2.name}.id",
-                settings=[("force_select_final", 1)],
-            ).output.strip()
+    with And(
+        "I execute the same query with `FINAL` clause on right table and with force_select_final=1 setting"
+    ):
+        force_select_final_right = node.query(
+            f"SELECT count() FROM {table.name} {join_type}"
+            f" {table2.name} {' FINAL' if table2.final_modifier_available else ''} on {table.name}.id = {table2.name}.id",
+            settings=[("force_select_final", 1)],
+        ).output.strip()
 
-        with And(
-            "I execute the same query with `FINAL` clause on both tables and with force_select_final=1 setting"
-        ):
-            force_select_final_double = node.query(
-                f"SELECT count() FROM {table.name} {' FINAL' if table.final_modifier_available else ''} {join_type}"
-                f" {table2.name} {' FINAL' if table2.final_modifier_available else ''} on {table.name}.id = {table2.name}.id",
-                settings=[("force_select_final", 1)],
-            ).output.strip()
+    with And(
+        "I execute the same query with `FINAL` clause on both tables and with force_select_final=1 setting"
+    ):
+        force_select_final_double = node.query(
+            f"SELECT count() FROM {table.name} {' FINAL' if table.final_modifier_available else ''} {join_type}"
+            f" {table2.name} {' FINAL' if table2.final_modifier_available else ''} on {table.name}.id = {table2.name}.id",
+            settings=[("force_select_final", 1)],
+        ).output.strip()
 
-        with Then("I compare results are the same"):
-            assert explicit_final == force_select_final_without
-            assert explicit_final == force_select_final_left
-            assert explicit_final == force_select_final_right
-            assert explicit_final == force_select_final_double
+    with Then("I compare results are the same"):
+        assert explicit_final == force_select_final_without
+        assert explicit_final == force_select_final_left
+        assert explicit_final == force_select_final_right
+        assert explicit_final == force_select_final_double
 
 
 @TestStep(Given)
 def create_and_populate_all_tables(self):
-    """
-    Creating all kind of tables.
-    """
+    """Create all kind of tables."""
+
     create_and_populate_core_tables()
-    # add_system_tables()
-    # create_and_populate_distributed_tables()
-    # create_all_views()
+    add_system_tables()
+    create_and_populate_distributed_tables()
+    create_all_views()
     create_and_populate_core_tables(duplicate=True)
-    # create_normal_view_with_join()
-    # create_replicated_table_2shards3replicas()
-    # create_expression_subquery_table()
+    create_normal_view_with_join()
+    create_replicated_table_2shards3replicas()
+    create_expression_subquery_table()
