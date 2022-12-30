@@ -181,7 +181,7 @@ class KeyWithAttributes:
 
 
 def create_xml_config_content(
-    entries, config_file, config_d_dir="/etc/clickhouse-server/config.d"
+    entries, config_file, config_d_dir="/etc/clickhouse-server/config.d", root="yandex"
 ):
     """Create XML configuration file from a dictionary.
 
@@ -192,7 +192,7 @@ def create_xml_config_content(
     uid = getuid()
     path = os.path.join(config_d_dir, config_file)
     name = config_file
-    root = xmltree.Element("yandex")
+    root = xmltree.Element(root)
     root.append(xmltree.Comment(text=f"config uid: {uid}"))
 
     def create_xml_tree(entries, root):
