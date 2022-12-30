@@ -16,7 +16,6 @@ def array_input(self, input, output, params, node=None):
 
 
 @TestOutline
-@Requirements(RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_InputDataSource_Map("1.0"))
 def map_input(self, input, output, params, node=None):
     """Check that clickhouse extractKeyValuePairs function support input as the value from the map."""
 
@@ -29,9 +28,10 @@ def map_input(self, input, output, params, node=None):
 
 
 @TestModule
-@Name("array_map_input")
+@Name("map input")
+@Requirements(RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_InputDataSource_Map("1.0"))
 def module(self, node="clickhouse1"):
-    """Check that clickhouse extractKeyValuePairs function support input as value from array and map."""
+    """Check that clickhouse extractKeyValuePairs function support input as value from a map."""
 
     self.context.node = self.context.cluster.node(node)
     for outline in loads(current_module(), Outline):
