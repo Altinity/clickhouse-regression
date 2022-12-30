@@ -1,10 +1,11 @@
 from key_value.tests.steps import *
-import json
+from key_value.tests.checks import *
 
 
 @TestOutline
+@Requirements(RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_InputDataSource_Array("1.0"))
 def array_input(self, input, output, params, node=None):
-    """Check that clickhouse extractKeyValuePairs function support input as value from array."""
+    """Check that clickhouse extractKeyValuePairs function support input as the value from the array."""
 
     if node is None:
         node = self.context.node
@@ -14,9 +15,10 @@ def array_input(self, input, output, params, node=None):
         assert r.output == output, error()
 
 
-@TestScenario
+@TestOutline
+@Requirements(RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_InputDataSource_Map("1.0"))
 def map_input(self, input, output, params, node=None):
-    """Check that clickhouse extractKeyValuePairs function support input as value from map."""
+    """Check that clickhouse extractKeyValuePairs function support input as the value from the map."""
 
     if node is None:
         node = self.context.node
@@ -27,16 +29,11 @@ def map_input(self, input, output, params, node=None):
 
 
 @TestModule
-@Requirements(
-    RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Function("1.0")
-)
 @Name("array_map_input")
 def module(self, node="clickhouse1"):
     """Check that clickhouse extractKeyValuePairs function support input as value from array and map."""
 
     self.context.node = self.context.cluster.node(node)
     for outline in loads(current_module(), Outline):
-        key_format_feature(scenario=outline)
-        value_format_feature(scenario=outline)
-        input_format(scenario=outline)
-        specifying_special_symbols(scenario=outline)
+        for check in checks:
+            check(scenario=outline)
