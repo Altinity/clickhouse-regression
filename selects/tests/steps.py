@@ -438,7 +438,7 @@ def create_and_populate_merge_table(
     cluster_name=None,
 ):
     """Creating and populating 'MergeTree' engine table."""
- 
+
     if engine.startswith("Replicated"):
         engine = (
             engine
@@ -474,7 +474,7 @@ def create_and_populate_versioned_table(
     cluster_name=None,
 ):
     """Creating and populating 'VersionedCollapsingMergeTree' engine table."""
-    
+
     values = [
         "({x},{y}, 1, 'first', 1, 1)",
         "({x},{y}, 1, 'second', 1, 1),({x},{y}, 2, 'third', -1, 2)",
@@ -528,14 +528,14 @@ def create_and_populate_log_table(
     cluster_name=None,
 ):
     """Creating and populating 'Log' engine family table."""
-    
+
     values = [
         "({x},{y},1, 'first', '2020-01-01 01:01:01')",
         "({x},{y},1, 'second', '2020-01-01 00:00:00')",
     ]
-    
+
     extra_table_col = "key Int64, someCol String, eventTime DateTime"
-    
+
     return create_and_populate_table(
         name=name,
         engine=engine,
@@ -718,7 +718,7 @@ def create_normal_view(
     view_not_final=False,
 ):
     """Creating `NORMAL VIEW` to some table."""
-  
+
     if node is None:
         node = current().context.node
 
@@ -747,7 +747,7 @@ def create_materialized_view(
     view_not_final=False,
 ):
     """Creating `MATERIALIZED VIEW` to some table."""
-    
+
     if node is None:
         node = current().context.node
 
@@ -782,7 +782,7 @@ def create_live_view(
     view_not_final=False,
 ):
     """Creating `LIVE VIEW` to some table."""
-    
+
     if node is None:
         node = current().context.node
 
@@ -813,7 +813,7 @@ def create_window_view(
     view_not_final=False,
 ):
     """Creating `WINDOW VIEW` to some table."""
-    
+
     if node is None:
         node = current().context.node
 
@@ -850,7 +850,7 @@ def create_window_view(
 @TestStep(Given)
 def create_all_views(self):
     """Creating all types of 'VIEWS' to all core tables."""
-    
+
     for table in self.context.tables:
         if not (
             table.name.startswith("system")
@@ -910,7 +910,7 @@ def create_all_views(self):
 @TestStep(Given)
 def create_normal_view_with_join(self, node=None, final1=None, final2=None):
     """Creating `NORMAL VIEW` as `SELECT` with `JOIN` clause."""
-    
+
     if node is None:
         node = current().context.node
 
@@ -944,7 +944,7 @@ def create_normal_view_with_join(self, node=None, final1=None, final2=None):
                             )
 
         yield Table(view_name, "VIEW", table.final_modifier_available)
-   
+
     finally:
         with Finally("I drop data"):
             node.query(f"DROP VIEW IF EXISTS {view_name}")
@@ -1098,8 +1098,8 @@ def create_expression_subquery_table(self, node=None):
 
 @TestStep(Then)
 def assert_joins(self, join_statement, table, table2, join_type, node=None):
-    """"Check `SELECT ... FINAL` equal to `SELECT` with force_select_final for all cases of using FINAL with JOINs.""""
-    
+    """ "Check `SELECT ... FINAL` equal to `SELECT` with force_select_final for all cases of using FINAL with JOINs."""
+
     if node is None:
         node = current().context.node
 
@@ -1156,7 +1156,6 @@ def assert_joins(self, join_statement, table, table2, join_type, node=None):
 @TestStep(Given)
 def create_and_populate_all_tables(self):
     """Create all kind of tables."""
-
     create_and_populate_core_tables()
     add_system_tables()
     create_and_populate_distributed_tables()

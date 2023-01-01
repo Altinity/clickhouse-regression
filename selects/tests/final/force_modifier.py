@@ -10,13 +10,17 @@ def select(self, query, query_with_final, node=None, negative=False):
         node = self.context.node
 
     with Given("I exclude auxiliary and unsupported tables by the current test"):
-        tables = define("tables", [
-            table
-            for table in self.context.tables
-            if table.name.endswith("core")
-            or table.name.endswith("_nview_final")
-            or table.name.endswith("_mview")
-        ], encoder=lambda tables: ", ".join([table.name for table in tables]))
+        tables = define(
+            "tables",
+            [
+                table
+                for table in self.context.tables
+                if table.name.endswith("core")
+                or table.name.endswith("_nview_final")
+                or table.name.endswith("_mview")
+            ],
+            encoder=lambda tables: ", ".join([table.name for table in tables]),
+        )
 
     for table in tables:
         with When(f"{table.name}"):
@@ -565,7 +569,7 @@ def select_with_clause(self, node=None, negative=False):
         node = self.context.node
 
     with Given("I exclude auxiliary and unsupported tables by the current test"):
-        define(
+        tables = define(
             "Tables list for current test",
             [
                 table.name
@@ -574,16 +578,8 @@ def select_with_clause(self, node=None, negative=False):
                 or table.name.endswith("_nview_final")
                 or table.name.endswith("_mview")
             ],
-            encoder=lambda s: ", ".join(s),
-        ) # FIXME: change!
-
-        tables = [
-            table
-            for table in self.context.tables
-            if table.name.endswith("core")
-            or table.name.endswith("_nview_final")
-            or table.name.endswith("_mview")
-        ]
+            encoder=lambda tables: ", ".join([table.name for table in tables]),
+        )
 
     with Given("I create `WITH` query with and without `FINAL`"):
         with_query = define(
@@ -667,10 +663,11 @@ def select_nested_join_clause_select(self, node=None):
         )
 
     with Given("I have a list of core table"):
-        # FIXME: use define
-        core_tables = [
-            table for table in self.context.tables if table.name.endswith("core")
-        ]
+        core_tables = define(
+            "List of tables for the test",
+            [table for table in self.context.tables if table.name.endswith("core")],
+            encoder=lambda tables: ", ".join(table.name for table in tables))
+        pause()
 
     with And("I have a list of corresponding duplicate tables"):
         for table1 in core_tables:
