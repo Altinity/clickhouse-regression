@@ -435,7 +435,9 @@ class ClickHouseNode(Node):
                     except ExpectTimeoutError:
                         self.cluster.close_bash(None)
         else:
-            command = f'set -o pipefail && {pipe_cmd} "{sql}" | {client} | {hash_utility}'
+            command = (
+                f'set -o pipefail && {pipe_cmd} "{sql}" | {client} | {hash_utility}'
+            )
             for setting in query_settings:
                 name, value = setting
                 command += f' --{name} "{value}"'
