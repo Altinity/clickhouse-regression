@@ -156,6 +156,9 @@ def add_secure_ports_configuration_file(
     node=None,
 ):
     """Add SSL secure ports to config.xml."""
+    self.context.secure_http_port = https
+    self.context.secure_tcp_port = tcp
+
     entries = {"https_port": f"{https}", "tcp_port_secure": f"{tcp}"}
     if config is None:
         config = create_xml_config_content(
@@ -163,6 +166,57 @@ def add_secure_ports_configuration_file(
         )
 
     return add_config(config, timeout=timeout, restart=restart, node=node)
+
+
+@TestStep(Given)
+def add_ssl_clickhouse_client_configuration_file(
+    self,
+    entries,
+    config=None,
+    config_d_dir="/etc/clickhouse-client/",
+    config_file="config.xml",
+    timeout=300,
+    restart=False,
+    node=None,
+):
+    """Add clickhouse-client SSL configuration file.
+
+    <config>
+        <openSSL>
+            <client> <!-- Used for connection to server's secure tcp port -->
+                <loadDefaultCAFile>true</loadDefaultCAFile>
+                <cacheSessions>true</cacheSessions>
+                <disableProtocols>sslv2,sslv3</disableProtocols>
+                <preferServerCiphers>true</preferServerCiphers>
+                <!-- Use for self-signed: <verificationMode>none</verificationMode> -->
+                <invalidCertificateHandler>
+                    <!-- Use for self-signed: <name>AcceptCertificateHandler</name> -->
+                    <name>RejectCertificateHandler</name>
+                </invalidCertificateHandler>
+            </client>
+        </openSSL>
+    </config>
+    """
+    if node is None:
+        node = self.context.node
+
+    entries = {"openSSL": {"client": entries}}
+    if config is None:
+        config = create_xml_config_content(
+            entries, config_file=config_file, config_d_dir=config_d_dir, root="config"
+        )
+
+    try:
+        with When("I add the config", description=config.path):
+            node.command(f"mkdir -p {config_d_dir}", exitcode=0)
+            command = f"cat <<HEREDOC > {config.path}\n{config.content}\nHEREDOC"
+            node.command(command, steps=False, exitcode=0)
+
+        yield
+    finally:
+        with Finally(f"I remove {config.name} on {node.name}"):
+            with By("deleting the config file", description=config.path):
+                node.command(f"rm -rf {config.path}", exitcode=0)
 
 
 @TestStep(Given)
@@ -449,3 +503,81 @@ def add_trusted_ca_certificate(
         with Finally("I remove CA certificate from being trusted by the system"):
             node.command(f"rm -rf {path}")
             node.command("update-ca-certificates -f", exitcode=0)
+
+
+@TestStep(Then)
+def openssl_client_connection(
+    self,
+    options="",
+    port=None,
+    node=None,
+    hostname=None,
+    success=True,
+    message=None,
+    messages=None,
+    exitcode=None,
+):
+    """Check SSL connection using openssl s_client utility."""
+    if node is None:
+        node = self.context.node
+
+    if port is None:
+        port = self.context.connection_port
+
+    if hostname is None:
+        hostname = node.name
+
+    if exitcode is None:
+        if success:
+            exitcode = 0
+        else:
+            exitcode = "!= 0"
+
+    node.command(
+        f'openssl s_client -brief {options} -connect {hostname}:{port} <<< "Q"',
+        message=message,
+        messages=messages,
+        exitcode=exitcode,
+    )
+
+
+@TestStep(Then)
+def curl_client_connection(
+    self,
+    options="",
+    port=None,
+    node=None,
+    hostname=None,
+    success=True,
+    message=None,
+    messages=None,
+    exitcode=None,
+    insecure=True,
+):
+    """Check SSL HTTP connection using curl utility.
+
+    curl options:
+        --tlsv1 and --tlsv1.1, --tlsv1.2, --tlsv1.3, --sslv2, --sslv3
+        --ciphers
+    """
+    if node is None:
+        node = self.context.node
+
+    if port is None:
+        port = self.context.connection_port
+
+    if hostname is None:
+        hostname = node.name
+
+    if exitcode is None:
+        if success:
+            exitcode = 0
+        else:
+            exitcode = "!= 0"
+
+    node.command(
+        f'curl {"--insecure" if insecure else ""} https://{hostname}:{port} {options} -v',
+        message=message,
+        messages=messages,
+        exitcode=exitcode,
+    )
