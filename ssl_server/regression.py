@@ -22,6 +22,16 @@ xfails = {
     "ssl context/enable ssl with server key passphrase dynamically": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/35950")
     ],
+    # fips
+    "fips/server/:/:cipher ECDHE-ECDSA-AES256-GCM-SHA384 should work": [
+        (Fail, "not supported by SSL library")
+    ],
+    "fips/server/:/:cipher ECDHE-ECDSA-AES128-GCM-SHA256 should work": [
+        (Fail, "not supported by SSL library")
+    ],
+    "fips/server/:/TLSv1.3 suite connection should be rejected": [
+        (Fail, "needs to be reviewed")
+    ],
 }
 
 xflags = {}
@@ -74,6 +84,7 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
 
         Feature(run=load("ssl_server.tests.sanity", "feature"))
         Feature(run=load("ssl_server.tests.ssl_context", "feature"))
+        Feature(run=load("ssl_server.tests.fips", "feature"))
 
 
 if main():

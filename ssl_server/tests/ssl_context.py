@@ -97,7 +97,6 @@ def enable_ssl(
             "verificationMode": "none",
             "loadDefaultCAFile": "true",
             "cacheSessions": "true",
-            "disableProtocols": "sslv2,sslv3",
             "preferServerCiphers": "true",
         }
         if server_key_passphrase:
