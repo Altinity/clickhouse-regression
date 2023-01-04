@@ -666,7 +666,8 @@ def select_nested_join_clause_select(self, node=None):
         core_tables = define(
             "List of tables for the test",
             [table for table in self.context.tables if table.name.endswith("core")],
-            encoder=lambda tables: ", ".join(table.name for table in tables))
+            encoder=lambda tables: ", ".join(table.name for table in tables),
+        )
         pause()
 
     with And("I have a list of corresponding duplicate tables"):
