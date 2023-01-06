@@ -581,3 +581,63 @@ def curl_client_connection(
         messages=messages,
         exitcode=exitcode,
     )
+
+
+@TestStep(Then)
+def clickhouse_client_connection(
+    self,
+    options=None,
+    port=None,
+    node=None,
+    hostname=None,
+    success=True,
+    message=None,
+    messages=None,
+    exitcode=None,
+    insecure=True,
+    prefer_server_ciphers=False,
+):
+    """Check SSL TCP connection using clickhouse-client utility.
+
+    supported configuration options:
+        <verificationMode>none|relaxed|strict|once</verificationMode>
+        <cipherList>ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH</cipherList>
+        <preferServerCiphers>true|false</preferServerCiphers>
+        <requireTLSv1>true|false</requireTLSv1>
+        <requireTLSv1_1>true|false</requireTLSv1_1>
+        <requireTLSv1_2>true|false</requireTLSv1_2>
+        <requireTLSv1_3>true|false</requireTLSv1_3>
+        <disableProtocols>sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_2,tlsv1_3</disableProtocols>
+    """
+    if node is None:
+        node = self.context.node
+
+    if port is None:
+        port = self.context.connection_port
+
+    if hostname is None:
+        hostname = node.name
+
+    if options is None:
+        options = {}
+
+    if exitcode is None:
+        if success:
+            exitcode = 0
+        else:
+            exitcode = "!= 0"
+
+    if insecure:
+        options["verificationMode"] = "none"
+
+    options["preferServerCiphers"] = "true" if prefer_server_ciphers else "false"
+
+    with Given("custom clickhouse-client SSL configuration"):
+        add_ssl_clickhouse_client_configuration_file(entries=options)
+
+    node.command(
+        f'clickhouse client -s --verbose --host {hostname} --port {port} -q "SELECT 1"',
+        message=message,
+        messages=messages,
+        exitcode=exitcode,
+    )
