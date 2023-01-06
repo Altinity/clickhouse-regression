@@ -76,9 +76,10 @@ all_ciphers = [
 ]
 
 
-@TestOutline(Scenario)
-def server_connection(self, port):
-    """Check that server accepts only FIPS compatible secure connections on a given port."""
+@TestOutline
+def server_connection_openssl_client(self, port):
+    """Check that server accepts only FIPS compatible secure connections on a given port
+    using openssl s_client utility."""
     self.context.connection_port = port
 
     with Given(
@@ -141,21 +142,103 @@ def server_connection(self, port):
             openssl_client_connection(options=f'-cipher "{cipher}"', success=False)
 
 
-@TestScenario
-@Requirements()
-def server_tcp_connection(self):
-    """Check that server accepts only FIPS compatible secure TCP connections."""
-    server_connection(port=self.context.secure_tcp_port)
+@TestOutline
+def server_tcp_connection_clickhouse_client(self, port=None):
+    """Check that server accepts only FIPS compatible TCP connections using clickhouse-client."""
+    if port is None:
+        port = self.context.secure_tcp_port
+
+    with Given(
+        "server is configured to accept only FIPS compatible connections",
+        description=f"on port {port}",
+    ):
+        self.context.connection_port = port
+
+    with Check("TLSv1.2 suite connection should work"):
+        clickhouse_client_connection(
+            options={
+                "requireTLSv1_2": "true",
+                "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3",
+            },
+            success=True,
+        )
+
+    with Check("TLSv1 suite connection should be rejected"):
+        clickhouse_client_connection(
+            options={
+                "requireTLSv1": "true",
+                "disableProtocols": "sslv2,sslv3,tlsv1_1,tlsv1_2,tlsv1_3",
+            },
+            success=False,
+            message="TLSV1_ALERT_PROTOCOL_VERSION",
+        )
+
+    with Check("TLSv1.1 suite connection should be rejected"):
+        clickhouse_client_connection(
+            options={
+                "requireTLSv1_1": "true",
+                "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_2,tlsv1_3",
+            },
+            success=False,
+            message="TLSV1_ALERT_PROTOCOL_VERSION",
+        )
+
+    with Check("TLSv1.3 suite connection should be rejected"):
+        clickhouse_client_connection(
+            options={
+                "requireTLSv1_3": "true",
+                "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_2",
+            },
+            success=False,
+            message="TLSV1_ALERT_PROTOCOL_VERSION",
+        )
+
+    with Check("just disabling TLSv1 suite connection should work"):
+        clickhouse_client_connection(
+            options={"disableProtocols": "tlsv1"},
+            success=True,
+            prefer_server_ciphers=True,
+        )
+
+    with Check("just disabling TLSv1.1 suite connection should work"):
+        clickhouse_client_connection(
+            options={"disableProtocols": "tlsv1_1"},
+            success=True,
+            prefer_server_ciphers=True,
+        )
+
+    with Check("just disabling TLSv1.3 suite connection should work"):
+        clickhouse_client_connection(
+            options={"disableProtocols": "tlsv1_3"},
+            success=True,
+            prefer_server_ciphers=True,
+        )
+
+    for cipher in fips_compatible_tlsv1_2_cipher_suites.values():
+        with Check(f"connection using FIPS compatible cipher {cipher} should work"):
+            clickhouse_client_connection(
+                options={
+                    "requireTLSv1_2": "true",
+                    "cipherList": cipher,
+                    "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3",
+                },
+                success=True,
+            )
+
+    for cipher in all_ciphers:
+        if cipher in fips_compatible_tlsv1_2_cipher_suites.values():
+            continue
+        with Check(
+            f"connection using non-FIPS compatible cipher {cipher} should be rejected"
+        ):
+            clickhouse_client_connection(
+                options={"cipherList": cipher, "disableProtocols": ""},
+                success=False,
+                message="SSLV3_ALERT_HANDSHAKE_FAILURE",
+            )
 
 
-@TestScenario
-@Requirements()
-def server_https_connection(self):
-    """Check that server accepts only FIPS compatible HTTPS connections."""
-    server_connection(port=self.context.secure_http_port)
-
-
-@TestScenario
+@TestOutline
 def server_https_connection_curl(self, port=None):
     """Check that server accepts only FIPS compatible HTTPS connections using curl."""
     if port is None:
@@ -215,7 +298,31 @@ def server_https_connection_curl(self, port=None):
         with Check(
             f"connection using non-FIPS compatible cipher {cipher} should be rejected"
         ):
-            openssl_client_connection(options=f'--ciphers "{cipher}"', success=False)
+            curl_client_connection(options=f'--ciphers "{cipher}"', success=False)
+
+
+@TestFeature
+@Name("tcp connection")
+@Requirements()
+def server_tcp_connection(self):
+    """Check that server accepts only FIPS compatible secure TCP connections."""
+    with Scenario("openssl s_client"):
+        server_connection_openssl_client(port=self.context.secure_tcp_port)
+
+    with Scenario("clickhouse-client"):
+        server_tcp_connection_clickhouse_client(port=self.context.secure_tcp_port)
+
+
+@TestFeature
+@Name("https connection")
+@Requirements()
+def server_https_connection(self):
+    """Check that server accepts only FIPS compatible HTTPS connections."""
+    with Scenario("openssl s_client"):
+        server_connection_openssl_client(port=self.context.secure_http_port)
+
+    with Scenario("curl"):
+        server_https_connection_curl()
 
 
 @TestFeature
@@ -242,9 +349,8 @@ def server(self, node=None):
             entries=entries, config_file="ssl_cipher_list.xml", restart=True
         )
 
-    Scenario(run=server_tcp_connection)
-    Scenario(run=server_https_connection)
-    Scenario(run=server_https_connection_curl)
+    Feature(run=server_tcp_connection)
+    Feature(run=server_https_connection)
 
 
 @TestFeature
