@@ -3,14 +3,14 @@ from testflows.core import *
 from ssl_server.tests.common import *
 from ssl_server.tests.ssl_context import enable_ssl
 
-fips_compatible_tlsv1_2_cipher_suites = {
-    "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256": "ECDHE-RSA-AES128-GCM-SHA256",
-    "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384": "ECDHE-RSA-AES256-GCM-SHA384",
-    "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256": "ECDHE-ECDSA-AES128-GCM-SHA256",
-    "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384": "ECDHE-ECDSA-AES256-GCM-SHA384",
-    "TLS_RSA_WITH_AES_128_GCM_SHA256": "AES128-GCM-SHA256",
-    "TLS_RSA_WITH_AES_256_GCM_SHA384": "AES256-GCM-SHA384",
-}
+fips_compatible_tlsv1_2_cipher_suites = [
+    "ECDHE-RSA-AES128-GCM-SHA256",
+    "ECDHE-RSA-AES256-GCM-SHA384",
+    "ECDHE-ECDSA-AES128-GCM-SHA256",
+    "ECDHE-ECDSA-AES256-GCM-SHA384",
+    "AES128-GCM-SHA256",
+    "AES256-GCM-SHA384",
+]
 
 all_ciphers = [
     "TLS_AES_256_GCM_SHA384",
@@ -127,14 +127,14 @@ def server_connection_openssl_client(self, port):
     with Check("disabling TLSv1.2 suite connection should be rejected"):
         openssl_client_connection(options="-no_tls1_2", success=False)
 
-    for cipher in fips_compatible_tlsv1_2_cipher_suites.values():
+    for cipher in fips_compatible_tlsv1_2_cipher_suites:
         with Check(f"connection using FIPS compatible cipher {cipher} should work"):
             openssl_client_connection(
                 options=f'-cipher "{cipher}"', success=True, message=f"{cipher}"
             )
 
     for cipher in all_ciphers:
-        if cipher in fips_compatible_tlsv1_2_cipher_suites.values():
+        if cipher in fips_compatible_tlsv1_2_cipher_suites:
             continue
         with Check(
             f"connection using non-FIPS compatible cipher {cipher} should be rejected"
@@ -214,7 +214,7 @@ def server_tcp_connection_clickhouse_client(self, port=None):
             prefer_server_ciphers=True,
         )
 
-    for cipher in fips_compatible_tlsv1_2_cipher_suites.values():
+    for cipher in fips_compatible_tlsv1_2_cipher_suites:
         with Check(f"connection using FIPS compatible cipher {cipher} should work"):
             clickhouse_client_connection(
                 options={
@@ -226,7 +226,7 @@ def server_tcp_connection_clickhouse_client(self, port=None):
             )
 
     for cipher in all_ciphers:
-        if cipher in fips_compatible_tlsv1_2_cipher_suites.values():
+        if cipher in fips_compatible_tlsv1_2_cipher_suites:
             continue
         with Check(
             f"connection using non-FIPS compatible cipher {cipher} should be rejected"
@@ -284,7 +284,7 @@ def server_https_connection_curl(self, port=None):
     with Check("just disabling TLSv1.3 suite connection should work"):
         curl_client_connection(options="--tls-max 1.2", success=True)
 
-    for cipher in fips_compatible_tlsv1_2_cipher_suites.values():
+    for cipher in fips_compatible_tlsv1_2_cipher_suites:
         with Check(f"connection using FIPS compatible cipher {cipher} should work"):
             curl_client_connection(
                 options=f'--ciphers "{cipher}" --tls-max 1.2 --tlsv1.2',
@@ -293,7 +293,7 @@ def server_https_connection_curl(self, port=None):
             )
 
     for cipher in all_ciphers:
-        if cipher in fips_compatible_tlsv1_2_cipher_suites.values():
+        if cipher in fips_compatible_tlsv1_2_cipher_suites:
             continue
         with Check(
             f"connection using non-FIPS compatible cipher {cipher} should be rejected"
@@ -337,7 +337,7 @@ def server(self, node=None):
             "SSL settings",
             {
                 "cipherList": ":".join(
-                    [v for v in fips_compatible_tlsv1_2_cipher_suites.values()]
+                    [v for v in fips_compatible_tlsv1_2_cipher_suites]
                 ),
                 "preferServerCiphers": "true",
                 "requireTLSv1_2": "true",
