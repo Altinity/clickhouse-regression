@@ -45,7 +45,7 @@ xflags = {}
 @XFails(xfails)
 @XFlags(xflags)
 @Name("selects")
-@Specifications(SRS032_ClickHouse_Automatic_Final_Modifier_For_Select_Queries) # FIXME: move to force_modifier.py
+@Specifications()
 def regression(
     self,
     local,
@@ -76,11 +76,6 @@ def regression(
     ) as cluster:
         self.context.cluster = cluster
         self.context.node = cluster.node("clickhouse1")
-
-        if check_clickhouse_version("<22.11")(self): # FIXME: move to force_modifier.py
-            skip(
-                reason="force_select_final is only supported on ClickHouse version >= 22.11"
-            )
 
         Module(run=load("selects.tests.final.feature", "module"))
 
