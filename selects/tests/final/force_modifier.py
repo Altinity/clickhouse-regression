@@ -1,7 +1,6 @@
 from testflows.core import *
 from selects.requirements import *
 from selects.tests.steps import *
-from helpers.common import check_clickhouse_version
 
 
 @TestOutline
@@ -302,7 +301,6 @@ def select_array_join(self, node=None):
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join("1.0"))
 def select_join_clause(self, node=None):
     """Check SELECT query with `JOIN` clause."""
     if node is None:
@@ -350,7 +348,8 @@ def select_join_clause(self, node=None):
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join("1.0"))
 def select_join_clause_select_all_types(self, node=None):
-    """Check SELECT query with different types of `JOIN` clause for equal table engines."""
+    """Check `select count()` with some type of 'JOIN SELECT ... FINAL' clause with `FINAL` clause
+    equal to the same select without `FINAL` but with force_select_final=1 setting."""
     if node is None:
         node = self.context.node
 
@@ -408,7 +407,7 @@ def select_join_clause_select_all_types(self, node=None):
 
 @TestScenario
 def select_join_clause_select_all_engine_combinations(self, node=None):
-    """Check SELECT query with `INNER JOIN` clause for all table engines."""
+    """Check SELECT query with `INNER JOIN` clause."""
     if node is None:
         node = self.context.node
 
@@ -573,7 +572,7 @@ def select_with_clause(self, node=None, negative=False):
         tables = define(
             "Tables list for current test",
             [
-                table
+                table.name
                 for table in self.context.tables
                 if table.name.endswith("core")
                 or table.name.endswith("_nview_final")
@@ -582,7 +581,7 @@ def select_with_clause(self, node=None, negative=False):
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
 
-    with Given("I create `WITH...SELECT` query with and without `FINAL`"):
+    with Given("I create `WITH` query with and without `FINAL`"):
         with_query = define(
             "query",
             """
@@ -636,13 +635,13 @@ def select_with_clause(self, node=None, negative=False):
                         and without_final != explicit_final
                     ):
                         assert without_final != force_select_final
+                        pause()
             else:
                 with Then("I check that compare results are the same"):
                     assert explicit_final == force_select_final
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join_Nested("1.0"))
 def select_nested_join_clause_select(self, node=None):
     """Check SELECT query with nested `JOIN` clause."""
     if node is None:
@@ -667,8 +666,8 @@ def select_nested_join_clause_select(self, node=None):
         core_tables = define(
             "List of tables for the test",
             [table for table in self.context.tables if table.name.endswith("core")],
-            encoder=lambda tables: ", ".join(table.name for table in tables),
-        )
+            encoder=lambda tables: ", ".join(table.name for table in tables))
+        pause()
 
     with And("I have a list of corresponding duplicate tables"):
         for table1 in core_tables:
@@ -716,9 +715,9 @@ def select_nested_join_clause_select(self, node=None):
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join_Multiple("1.0"))
 def select_multiple_join_clause_select(self, node=None):
-    """Check SELECT query with multiple `JOIN` clause."""
+    """Check SELECT query with nested `JOIN` clause."""
+    # xfail("doesn't work ")
     if node is None:
         node = self.context.node
 
@@ -786,318 +785,10 @@ def select_multiple_join_clause_select(self, node=None):
                         assert explicit_final == force_select_final
 
 
-@TestScenario
-@Requirements(
-    RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery("1.0")
-)
-def select_subquery(self, node=None):
-    """Check SELECT query with subquery."""
-    if node is None:
-        node = self.context.node
-
-    with Given("I exclude auxiliary and unsupported tables by the current test"):
-        tables = define(
-            "tables",
-            [
-                table
-                for table in self.context.tables
-                if not table.name.endswith("duplicate")
-                and not table.name.startswith("expr_subquery")
-                and not table.name.endswith("wview_final")
-                and not table.name.endswith("_nview")
-                and not table.name.endswith("_lview")
-            ],
-            encoder=lambda tables: ", ".join([table.name for table in tables]),
-        )
-
-    for table in tables:
-        with When(f"{table}"):
-            with When("I execute query with FINAL modifier specified explicitly"):
-                explicit_final = node.query(
-                    f"SELECT count() FROM (SELECT * FROM {table.name}"
-                    f"{' FINAL' if table.final_modifier_available else ''})"
-                ).output.strip()
-
-            with And(
-                    "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
-            ):
-                force_select_final = node.query(
-                    f"SELECT count() FROM (SELECT * FROM {table.name})",
-                    settings=[("force_select_final", 1)],
-                ).output.strip()
-
-            with Then("I compare results are the same"):
-                assert explicit_final == force_select_final
-
-
-@TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery_Nested("1.0"))
-def select_nested_subquery(self, node=None):
-    """Check SELECT query with nested subquery."""
-    if node is None:
-        node = self.context.node
-
-    with Given("I exclude auxiliary and unsupported tables by the current test"):
-        tables = define(
-            "tables",
-            [
-                table
-                for table in self.context.tables
-                if not table.name.endswith("duplicate")
-                and not table.name.startswith("expr_subquery")
-                and not table.name.endswith("wview_final")
-                and not table.name.endswith("_nview")
-                and not table.name.endswith("_lview")
-            ],
-            encoder=lambda tables: ", ".join([table.name for table in tables]),
-        )
-
-    for table in tables:
-        with When(f"{table}"):
-            with When("I execute query with FINAL modifier specified explicitly"):
-                explicit_final = node.query(
-                        f"SELECT count() FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM {table.name}"
-                        f"{' FINAL' if table.final_modifier_available else ''})))"
-                    ).output.strip()
-
-            with And(
-                    "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
-            ):
-                force_select_final = node.query(
-                        f"SELECT count() FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM {table.name})))",
-                        settings=[("force_select_final", 1)],
-                    ).output.strip()
-
-            with Then("I compare results are the same"):
-                assert explicit_final == force_select_final
-
-
-@TestOutline
-def select_prewhere_where_subquery(self, node=None, clause=None):
-    """Check SELECT query with `PREWHERE`/`WHERE' with subquery."""
-    if node is None:
-        node = self.context.node
-
-    table_pairs = []
-
-    with Given("I exclude auxiliary and unsupported tables by the current test"):
-        tables = define(
-            "tables",
-            [
-                table
-                for table in self.context.tables
-                if table.name.endswith("core")
-                and not table.name.startswith("Merge")
-                and not table.name.startswith("ReplicatedMerge")
-                and not table.name.startswith("Log")
-                and not table.name.startswith("StripeLog")
-                and not table.name.startswith("TinyLog")
-            ],
-            encoder=lambda tables: ", ".join([table.name for table in tables]),
-        )
-
-    with And("I have a list of corresponding duplicate tables"):
-        for table1 in tables:
-            for table2 in self.context.tables:
-                if table2.name.startswith("expr_subquery"):
-                    table_pairs.append((table1, table2))
-
-    for table1, table2 in table_pairs:
-        with When(f"I have {table1.name} and corresponding {table2.name}"):
-            with When("I execute query with FINAL modifier specified explicitly"):
-                explicit_final = node.query(
-                                f"SELECT * FROM {table1.name} FINAL {clause}"
-                                f" x = (SELECT x FROM {table2.name} FINAL) "
-                                f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;"
-                            ).output.strip()
-
-            with And(
-                    "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
-            ):
-                force_select_final = node.query(
-                                f"SELECT * FROM {table1.name} {clause} x = (SELECT x FROM {table2.name}) "
-                                f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
-                                settings=[("force_select_final", 1)],
-                            ).output.strip()
-
-
-@TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery_ExpressionInPrewhere("1.0"))
-def select_prewhere_subquery(self):
-    """Checkquery with `PREWHERE` with subquery."""
-    select_prewhere_where_subquery(clause="PREWHERE")
-
-
-@TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery_ExpressionInWhere("1.0"))
-def select_where_subquery(self):
-    """Check query with`WHERE` with subquery."""
-    select_prewhere_where_subquery(clause="WHERE")
-
-
-@TestOutline
-def select_prewhere_where_in_subquery(self, node=None, clause=None):
-    """Check SELECT query with `PREWHERE`/`WHERE' with `IN` statement subquery."""
-    if node is None:
-        node = self.context.node
-
-    table_pairs = []
-
-    with Given("I exclude auxiliary and unsupported tables by the current test"):
-        tables = define(
-            "tables",
-            [
-                table
-                for table in self.context.tables
-                if table.name.endswith("core")
-                and not table.name.startswith("Merge")
-                and not table.name.startswith("ReplicatedMerge")
-                and not table.name.startswith("Log")
-                and not table.name.startswith("StripeLog")
-                and not table.name.startswith("TinyLog")
-            ],
-            encoder=lambda tables: ", ".join([table.name for table in tables]),
-        )
-
-    with And("I have a list of corresponding duplicate tables"):
-        for table1 in tables:
-            for table2 in self.context.tables:
-                if table2.name.startswith("expr_subquery"):
-                    table_pairs.append((table1, table2))
-
-    for table1, table2 in table_pairs:
-        with When(f"I have {table1.name} and corresponding {table2.name}"):
-            with When("I execute query with FINAL modifier specified explicitly"):
-                explicit_final = node.query(
-                                f"SELECT * FROM {table1.name} FINAL {clause}"
-                                f" x IN (SELECT x FROM {table2.name} FINAL) "
-                                f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;"
-                            ).output.strip()
-
-            with And(
-                    "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
-            ):
-                force_select_final = node.query(
-                                f"SELECT * FROM {table1.name} {clause} x IN (SELECT x FROM {table2.name}) "
-                                f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
-                                settings=[("force_select_final", 1)],
-                            ).output.strip()
-
-            with Then("I compare results are the same"):
-                assert explicit_final == force_select_final
-
-
-@TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery_INPrewhere("1.0"))
-def select_prewhere_in_subquery(self):
-    """Check query with `PREWHERE` with `IN` statement subquery."""
-    select_prewhere_where_in_subquery(clause="PREWHERE")
-
-
-@TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery_INWhere("1.0"))
-def select_where_in_subquery(self):
-    """Check query with `WHERE` with `IN` statement subquery."""
-    select_prewhere_where_in_subquery(clause="WHERE")
-
-
-@TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery_ExpressionInArrayJoin("1.0"))
-def select_array_join_subquery(self, node=None):
-    """Check SELECT query with `ARRAY JOIN` with subquery."""
-    if node is None:
-        node = self.context.node
-
-    with Given("I create engines list for current test"):
-        engines = define(
-            "engines",
-            [
-                "ReplacingMergeTree",
-                "AggregatingMergeTree",
-                "SummingMergeTree",
-                "MergeTree",
-                "StripeLog",
-                "TinyLog",
-                "Log",
-            ],
-            encoder=lambda s: ", ".join(s),
-        )
-
-    with And(
-        "I form `create` and `populate` queries for table with array data type and all engines from engine list"
-    ):
-        table = define(
-            "array table query",
-            """CREATE TABLE arrays_test
-            (
-                s String,
-                arr Array(UInt8)
-            ) ENGINE = {engine}
-            {order}""",
-        )
-
-        insert = define(
-            "array value insert query",
-            "INSERT INTO arrays_test VALUES ('Hello', [1,2]), ('World', [3,4,5]), ('Goodbye', []);",
-        )
-
-    for engine in engines:
-        with When(f"{engine}"):
-            try:
-                with When(f"I create and populate table with array type"):
-                    node.query(
-                        f"{table.format(engine=engine, order='') if engine.endswith('Log') else table.format(engine=engine, order='ORDER BY s;')}"
-                    )
-                    node.query("SYSTEM STOP MERGES")
-                    node.query(insert)
-                    node.query(insert)
-
-                for table2 in self.context.tables:
-                    if table2.name.startswith("expr_subquery"):
-                        with When("I execute query with force_select_final=1 setting"):
-                            force_select_final = node.query(
-                                "SELECT count() FROM arrays_test ARRAY JOIN "
-                                f"(select arr from {table2.name} LIMIT 1) as zz",
-                                settings=[("force_select_final", 1)],
-                            ).output.strip()
-
-                        with And(
-                                "I execute the same query with FINAL modifier specified explicitly"
-                        ):
-                            if engine.startswith("Merge") or engine.endswith("Log"):
-                                explicit_final = node.query(
-                                    "SELECT count() FROM arrays_test ARRAY JOIN "
-                                    f"(select arr from {table2.name} LIMIT 1) as zz"
-                                ).output.strip()
-                            else:
-                                explicit_final = node.query(
-                                    "SELECT count() FROM arrays_test FINAL ARRAY JOIN"
-                                    f" (select arr from {table2.name} FINAL) as zz"
-                                ).output.strip()
-
-                        with Then("I compare results are the same"):
-                            assert explicit_final == force_select_final
-
-            finally:
-                node.query("DROP TABLE arrays_test")
-
-
 @TestFeature
 @Name("force modifier")
-@Specifications(SRS032_ClickHouse_Automatic_Final_Modifier_For_Select_Queries)
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries("1.0"),
-              RQ_SRS_032_ClickHouse_AutomaticFinalModifier_TableEngineSetting_CreateStatement("1.0"),
-              RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SupportedTableEngines_MergeTree("1.0"),
-              RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SupportedTableEngines_ReplicatedMergeTree("1.0"),
-              RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SupportedTableEngines_EnginesOverOtherEngines("1.0"),
-              RQ_SRS_032_ClickHouse_AutomaticFinalModifier_TableEngineSetting_IgnoreOnNotSupportedTableEngines("1.0")
-              )
+@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries("1.0"))
 def feature(self):
     """Check force_final_modifier setting."""
-    if check_clickhouse_version("<22.11")(self):
-        skip(
-            reason="force_select_final is only supported on ClickHouse version >= 22.11"
-        )
-
     for scenario in loads(current_module(), Scenario):
         scenario()

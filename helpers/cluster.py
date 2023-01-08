@@ -435,7 +435,9 @@ class ClickHouseNode(Node):
                     except ExpectTimeoutError:
                         self.cluster.close_bash(None)
         else:
-            command = f'set -o pipefail && {pipe_cmd} "{sql}" | {client} | {hash_utility}'
+            command = (
+                f'set -o pipefail && {pipe_cmd} "{sql}" | {client} | {hash_utility}'
+            )
             for setting in query_settings:
                 name, value = setting
                 command += f' --{name} "{value}"'
@@ -1203,6 +1205,7 @@ class Cluster(object):
         node,
         command,
         message=None,
+        messages=None,
         exitcode=None,
         steps=True,
         bash=None,
@@ -1215,6 +1218,7 @@ class Cluster(object):
         :param node: name of the service
         :param command: command
         :param message: expected message that should be in the output, default: None
+        :param messages: expected messages that should be in the output, default: None
         :param exitcode: expected exitcode, default: None
         :param steps: don't break command into steps, default: True
         """
@@ -1236,11 +1240,21 @@ class Cluster(object):
             with Then(
                 f"exitcode should be {exitcode}", format_name=False
             ) if steps else NullStep():
-                assert r.exitcode == exitcode, error(r.output)
+                if str(exitcode).startswith("!="):
+                    exitcode = int(str(exitcode).split("!=", 1)[-1].strip())
+                    assert r.exitcode != exitcode, error(r.output)
+                else:
+                    assert r.exitcode == exitcode, error(r.output)
 
-        if message is not None:
+        if messages is None:
+            messages = []
+
+        if message:
+            messages = [message] + messages
+
+        for i, message in enumerate(messages):
             with Then(
-                f"output should contain message",
+                f"output should contain message{' #' + str(i) if i > 0 else ''}",
                 description=message,
                 format_description=False,
             ) if steps else NullStep():
