@@ -13,10 +13,8 @@
   * 5.2 [Table Engine Setting](#table-engine-setting)
     * 5.2.1 [Create Statement](#create-statement)
       * 5.2.1.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSetting.CreateStatement](#rqsrs-032clickhouseautomaticfinalmodifiertableenginesettingcreatestatement)
-    * 5.2.2 [Configuration File](#configuration-file)
-      * 5.2.2.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSetting.ConfigFile](#rqsrs-032clickhouseautomaticfinalmodifiertableenginesettingconfigfile)
-    * 5.2.3 [Not Supported Table Engines](#not-supported-table-engines)
-      * 5.2.3.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSetting.IgnoreOnNotSupportedTableEngines](#rqsrs-032clickhouseautomaticfinalmodifiertableenginesettingignoreonnotsupportedtableengines)
+    * 5.2.2 [Not Supported Table Engines](#not-supported-table-engines)
+      * 5.2.2.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSetting.IgnoreOnNotSupportedTableEngines](#rqsrs-032clickhouseautomaticfinalmodifiertableenginesettingignoreonnotsupportedtableengines)
   * 5.3 [Supported Table Engines](#supported-table-engines)
     * 5.3.1 [MergeTree](#mergetree)
       * 5.3.1.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SupportedTableEngines.MergeTree](#rqsrs-032clickhouseautomaticfinalmodifiersupportedtableenginesmergetree)
@@ -44,8 +42,16 @@
       * 5.4.9.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.ArrayJoin](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesarrayjoin)
     * 5.4.10 [Subquery](#subquery)
       * 5.4.10.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Subquery](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriessubquery)
+        * 5.4.10.1.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Subquery.Nested](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriessubquerynested)
+        * 5.4.10.1.2 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Subquery.ExpressionInWhere](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriessubqueryexpressioninwhere)
+        * 5.4.10.1.3 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Subquery.ExpressionInPrewhere](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriessubqueryexpressioninprewhere)
+        * 5.4.10.1.4 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Subquery.ExpressionInArrayJoin](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriessubqueryexpressioninarrayjoin)
+        * 5.4.10.1.5 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Subquery.INPrewhere](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriessubqueryinprewhere)
+        * 5.4.10.1.6 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Subquery.INWhere](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriessubqueryinwhere)
     * 5.4.11 [JOIN](#join)
       * 5.4.11.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesjoin)
+        * 5.4.11.1.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join.Multiple](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesjoinmultiple)
+        * 5.4.11.1.2 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join.Nested](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesjoinnested)
     * 5.4.12 [UNION](#union)
       * 5.4.12.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Union](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesunion)
     * 5.4.13 [INTERSECT](#intersect)
@@ -171,25 +177,6 @@ For example,
 CREATE TABLE table (...)
 Engine=ReplacingMergeTree
 SETTTING force_select_final=1
-```
-
-#### Configuration File
-
-##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.TableEngineSetting.ConfigFile
-version: 1.0 priority: 1.0
-
-[ClickHouse] SHALL support specifying `force_select_final` [MergeTree] table setting to enable automatic [FINAL modifier]
-on all MergeTree tables [SELECT] queries inside the XML configuration file.
-
-For example,
-
-```sql
-<clickhouse>
-    <merge_tree>
-        <force_select_final>1</force_select_final>
-    </merge_tree>
-</clickhouse>
-
 ```
 
 #### Not Supported Table Engines
@@ -339,7 +326,41 @@ version: 1.0
 [ClickHouse] SHALL support applying [FINAL modifier] in any subquery that reads from a table that
 has automatic [FINAL modifier] enabled.
 
-For example,
+###### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Subquery.Nested
+version: 1.0
+
+[ClickHouse] SHALL support applying [FINAL modifier] in any nested subquery that reads from a table that
+has automatic [FINAL modifier] enabled.
+
+###### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Subquery.ExpressionInWhere
+version: 1.0
+
+[ClickHouse] SHALL support applying [FINAL modifier] in any subquery as expression in `WHERE` clause that reads from a table that
+has automatic [FINAL modifier] enabled.
+
+###### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Subquery.ExpressionInPrewhere
+version: 1.0
+
+[ClickHouse] SHALL support applying [FINAL modifier] in any subquery as expression in `PREWHERE` clause that reads from a table that
+has automatic [FINAL modifier] enabled.
+
+###### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Subquery.ExpressionInArrayJoin
+version: 1.0
+
+[ClickHouse] SHALL support applying [FINAL modifier] in any subquery as expression in `ARRAY JOIN` clause that reads from a table that
+has automatic [FINAL modifier] enabled.
+
+###### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Subquery.INPrewhere
+version: 1.0
+
+[ClickHouse] SHALL support applying [FINAL modifier] in any subquery with `IN` clause in `PREWHERE` that reads from a table that
+has automatic [FINAL modifier] enabled.
+
+###### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Subquery.INWhere
+version: 1.0
+
+[ClickHouse] SHALL support applying [FINAL modifier] in any subquery with `IN` clause in `WHERE` that reads from a table that
+has automatic [FINAL modifier] enabled.
 
 #### JOIN
 
@@ -363,6 +384,18 @@ For example,
 ```sql
 select count() from lhs inner join rhs on lhs.x = rhs.x;
 ```
+
+###### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join.Multiple
+version: 1.0
+
+[ClickHouse] SHALL support applying [FINAL modifier] for any table in multiple [JOIN] clause for which
+the automatic [FINAL modifier] is enabled.
+
+###### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join.Nested
+version: 1.0
+
+[ClickHouse] SHALL support applying [FINAL modifier] for any table in nested [JOIN] clause for which
+the automatic [FINAL modifier] is enabled.
 
 #### UNION
 
