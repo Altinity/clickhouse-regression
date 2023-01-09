@@ -470,10 +470,6 @@ version: 1.0
 [ClickHouse] SHALL support applying [FINAL modifier] for any table in subquery inside the [WITH] clause for which
 the automatic [FINAL modifier] is enabled.
 
-For example,
-```sql
-
-```
 
 [SRS]: #srs
 [SELECT]: https://clickhouse.com/docs/en/sql-reference/statements/select/
