@@ -78,8 +78,11 @@ variables:
         echo "getting image from $docker_image"
         docker pull $docker_image:$version
         clickhouse_bin_path=docker://$docker_image:$version
+      elif [[ $package == "https://"* ]]; then
+        echo "use ClickHouse binary from $package"
+        clickhouse_bin_path=$package
       else
-        echo "Invalid package. Must be 'deb://' or 'docker://'."
+        echo "Invalid package. Must be 'deb://', 'docker://', or 'https://'."
         exit 1
       fi
 
