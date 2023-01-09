@@ -263,7 +263,7 @@ def trigger():
 
         print(
             f"   Pipeline {pipeline.id} started by {pipeline.user['username']}, status: {pipeline.status} at\n"
-            f"   \u2728https://gitlab.com/altinity-qa/clickhouse/cicd/clickhouse-regression/-/pipelines/{pipeline.id}\u2728"
+            f"   \u2728 https://gitlab.com/altinity-qa/clickhouse/cicd/clickhouse-regression/-/pipelines/{pipeline.id} \u2728"
         )
         print("\n".join(f"   {k}: {v}" for k, v in variables.items()))
 
