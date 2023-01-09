@@ -88,10 +88,10 @@ def argparser(parser):
     )
     parser.add_argument(
         "--package",
-        metavar="deb://<url>|docker://<image>",
+        metavar="deb://<url>|docker://<image>|https://<url>",
         action="store",
         help=(
-            "Either 'deb://' or 'docker://' package specifier to use for tests, "
+            "Either 'deb://', 'docker://', or 'https://' package specifier to use for tests, "
             "default: docker://clickhouse/clickhouse-server. The url for deb package specifier"
             "should not contain 'https://' prefix. "
             "For example: "
