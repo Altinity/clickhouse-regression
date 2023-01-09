@@ -814,12 +814,12 @@ class Cluster(object):
                             )
                             bash(f'chmod +x "{deb_binary_dir}/clickhouse-odbc-bridge"')
                     self.clickhouse_binary_path = f"./{deb_binary_dir}/clickhouse"
-            else:
-                with Shell() as bash:
-                    bash.timeout = 300
-                    bash(f'chmod +x {self.clickhouse_binary_path}')
 
             self.clickhouse_binary_path = os.path.abspath(self.clickhouse_binary_path)
+
+            with Shell() as bash:
+                bash.timeout = 300
+                bash(f'chmod +x {self.clickhouse_binary_path}')
 
         self.docker_compose += f' --ansi never --project-directory "{docker_compose_project_dir}" --file "{docker_compose_file_path}"'
         self.lock = threading.Lock()
