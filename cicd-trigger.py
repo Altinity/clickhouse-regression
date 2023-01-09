@@ -236,9 +236,11 @@ def trigger():
     with Action("Trigger pipeline"):
         variables = {}
         if args.package:
-            assert args.package.startswith("deb://") or args.package.startswith(
-                "docker://"
-            ), "package name should start with deb:// or docker://"
+            assert (
+                args.package.startswith("deb://")
+                or args.package.startswith("docker://")
+                or args.package.startswith("https://")
+            ), "package name should start with deb://, docker:// or https://"
             variables["package"] = args.package
         if args.version:
             variables["version"] = args.version
