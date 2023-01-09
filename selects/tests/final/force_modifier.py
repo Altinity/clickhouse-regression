@@ -833,7 +833,7 @@ def select_subquery(self, node=None):
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery_Nested("1.0"))
 def select_nested_subquery(self, node=None):
-    """Check SELECT query with nested subquery."""
+    """Check SELECT query with nested 3 lvl subquery."""
     if node is None:
         node = self.context.node
 
@@ -896,14 +896,14 @@ def select_prewhere_where_subquery(self, node=None, clause=None):
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
 
-    with And("I have a list of corresponding duplicate tables"):
+    with And("I create list of table pairs for this test"):
         for table1 in tables:
             for table2 in self.context.tables:
                 if table2.name.startswith("expr_subquery"):
                     table_pairs.append((table1, table2))
 
     for table1, table2 in table_pairs:
-        with When(f"I have {table1.name} and corresponding {table2.name}"):
+        with When(f"I have {table1.name} and subquery table {table2.name}"):
             with When("I execute query with FINAL modifier specified explicitly"):
                 explicit_final = node.query(
                                 f"SELECT * FROM {table1.name} FINAL {clause}"
@@ -920,11 +920,14 @@ def select_prewhere_where_subquery(self, node=None, clause=None):
                                 settings=[("force_select_final", 1)],
                             ).output.strip()
 
+            with Then("I compare results are the same"):
+                assert explicit_final == force_select_final
+
 
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery_ExpressionInPrewhere("1.0"))
 def select_prewhere_subquery(self):
-    """Checkquery with `PREWHERE` with subquery."""
+    """Check query with `PREWHERE` with subquery."""
     select_prewhere_where_subquery(clause="PREWHERE")
 
 
@@ -959,14 +962,14 @@ def select_prewhere_where_in_subquery(self, node=None, clause=None):
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
 
-    with And("I have a list of corresponding duplicate tables"):
+    with And("I create list of table pairs for this test"):
         for table1 in tables:
             for table2 in self.context.tables:
                 if table2.name.startswith("expr_subquery"):
                     table_pairs.append((table1, table2))
 
     for table1, table2 in table_pairs:
-        with When(f"I have {table1.name} and corresponding {table2.name}"):
+        with When(f"I have {table1.name} and subquery table {table2.name}"):
             with When("I execute query with FINAL modifier specified explicitly"):
                 explicit_final = node.query(
                                 f"SELECT * FROM {table1.name} FINAL {clause}"
@@ -1004,7 +1007,7 @@ def select_where_in_subquery(self):
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery_ExpressionInArrayJoin("1.0"))
 def select_array_join_subquery(self, node=None):
-    """Check SELECT query with `ARRAY JOIN` with subquery."""
+    """Check SELECT query with `ARRAY JOIN` where array is build from a sub-query result."""
     if node is None:
         node = self.context.node
 
@@ -1085,7 +1088,8 @@ def select_array_join_subquery(self, node=None):
 @TestFeature
 @Name("force modifier")
 @Specifications(SRS032_ClickHouse_Automatic_Final_Modifier_For_Select_Queries)
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries("1.0"),
+@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier("1.0"),
+              RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries("1.0"),
               RQ_SRS_032_ClickHouse_AutomaticFinalModifier_TableEngineSetting_CreateStatement("1.0"),
               RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SupportedTableEngines_MergeTree("1.0"),
               RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SupportedTableEngines_ReplicatedMergeTree("1.0"),
