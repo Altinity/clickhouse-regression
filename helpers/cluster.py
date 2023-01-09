@@ -814,6 +814,10 @@ class Cluster(object):
                             )
                             bash(f'chmod +x "{deb_binary_dir}/clickhouse-odbc-bridge"')
                     self.clickhouse_binary_path = f"./{deb_binary_dir}/clickhouse"
+            else:
+                with Shell() as bash:
+                    bash.timeout = 300
+                    bash(f'chmod +x {self.clickhouse_binary_path}')
 
             self.clickhouse_binary_path = os.path.abspath(self.clickhouse_binary_path)
 
