@@ -89,7 +89,7 @@ flowchart TB;
   2D---4D
   1C---2C---3C---4C
   1E---2E---3E---4E
-  1K---2K---3K---4K
+  1K---2K---3K
   1F---2F---3F---4F
   
     subgraph A["Create table section"]
