@@ -322,9 +322,9 @@ def select_join_clause(self, node=None):
                     table_pairs.append((table1, table2))
 
     for join_type in join_types:
-        with When(f"{join_type}"):
+        with Example(f"{join_type}", flags=TE):
             for table1, table2 in table_pairs:
-                with When(f"I have {table1.name} and corresponding {table2.name}"):
+                with When(f"I have {table1.name} and corresponding {table2.name}", flags=TE):
                     with Then(
                         "I check that select with force_select_final=1 setting"
                         f" equals 'SELECT...FINAL' for {table1.name} and {table2.name} "
@@ -381,7 +381,7 @@ def select_join_clause_select_all_types(self, node=None):
                     table_pairs.append((table1, table2))
 
     for join_type in join_types_local:
-        with When(f"{join_type}"):
+        with Example(f"{join_type}"):
             for table1, table2 in table_pairs:
                 with When(f"I have {table1.name} and corresponding {table2.name}"):
                     with Then(
