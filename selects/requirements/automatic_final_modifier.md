@@ -130,9 +130,8 @@ flowchart TB;
     
     subgraph K["Engines that operate over other engines"]
         1K["View"]:::yellow
-        2K["Buffer"]:::yellow
-        3K["Distributed"]:::yellow
-        4K["MaterializedView"]:::yellow
+        2K["Distributed"]:::yellow
+        3K["MaterializedView"]:::yellow
     end
 
     
