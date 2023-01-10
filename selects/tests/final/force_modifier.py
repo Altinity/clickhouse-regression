@@ -348,7 +348,7 @@ def select_join_clause(self, node=None):
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join("1.0"))
+@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join_Select("1.0"))
 def select_join_clause_select_all_types(self, node=None):
     """Check SELECT query with different types of `JOIN` clause for equal table engines."""
     if node is None:
@@ -677,7 +677,7 @@ def select_nested_join_clause_select(self, node=None):
                     table_pairs.append((table1, table2))
 
     for join_type in join_types_local:
-        with When(f"{join_type}"):
+        with Example(f"{join_type}", flags=TE):
             for table1, table2 in table_pairs:
                 with When(f"I have {table1.name} and corresponding {table2.name}"):
 
@@ -749,7 +749,7 @@ def select_multiple_join_clause_select(self, node=None):
                     table_pairs.append((table1, table2))
 
     for join_type in join_types_local:
-        with When(f"{join_type}"):
+        with Example(f"{join_type}", flags=TE):
             for table1, table2 in table_pairs:
                 with When(f"I have {table1.name} and corresponding {table2.name}"):
                     with When(
