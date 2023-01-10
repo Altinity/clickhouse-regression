@@ -6,7 +6,11 @@ from s3.tests.common import *
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_PostgreSQL("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_PostgreSQL("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Insert("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Select("1.0"),
+)
 def postgresql_engine_to_parquet_file_to_postgresql_engine(self):
     """Check that ClickHouse reads data from a `PostgreSQL` table engine into a Parquet file and
     writes the data back into a `PostgreSQL` table engine correctly."""
@@ -80,7 +84,11 @@ def postgresql_engine_to_parquet_file_to_postgresql_engine(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_Parquet_TableFunctions_PostgreSQL("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_TableFunctions_PostgreSQL("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Insert("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Select("1.0"),
+)
 def postgresql_function_to_parquet_file_to_postgresql_function(self):
     """Check that ClickHouse reads data from a `postgresql` table function into a Parquet file and
     writes the data back into a `postgresql` table function correctly."""
@@ -154,16 +162,16 @@ def postgresql_function_to_parquet_file_to_postgresql_function(self):
     [
         (
             "NONE",
-            Requirements(RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_None("1.0")),
+            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_None("1.0")),
         ),
         (
             "GZIP",
-            Requirements(RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Gzip("1.0")),
+            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip("1.0")),
         ),
         (
             "LZ4",
             Requirements(
-                RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Lz4("1.0"),
+                RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0"),
             ),
         ),
     ],

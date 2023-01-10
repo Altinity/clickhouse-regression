@@ -1,6 +1,6 @@
 # These requirements were auto generated
 # from software requirements specification (SRS)
-# document by TestFlows v1.9.220810.1192506.
+# document by TestFlows v1.9.230109.1215236.
 # Do not edit by hand but re-generate instead
 # using 'tfs requirements generate' command.
 from testflows.core import Specification
@@ -21,22 +21,6 @@ RQ_SRS_032_ClickHouse_Parquet = Requirement(
     num="4.1.1",
 )
 
-RQ_SRS_032_ClickHouse_Parquet_Null = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.Null",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL support Null and Nullable(type) data when reading or writing Parquet format.\n"
-        "\n"
-    ),
-    link=None,
-    level=3,
-    num="4.1.2",
-)
-
 RQ_SRS_032_ClickHouse_Parquet_Encryption = Requirement(
     name="RQ.SRS-032.ClickHouse.Parquet.Encryption",
     version="1.0",
@@ -48,8 +32,246 @@ RQ_SRS_032_ClickHouse_Parquet_Encryption = Requirement(
         "[ClickHouse] MAY not support reading encrypted Parquet files.\n" "\n"
     ),
     link=None,
+    level=3,
+    num="4.1.2",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Compression_None = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Compression.None",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support reading or writing uncompressed Parquet files.\n"
+        "\n"
+    ),
+    link=None,
     level=4,
-    num="4.1.2.1",
+    num="4.1.3.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Compression.Gzip",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support reading or writing Parquet files compressed using gzip.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="4.1.3.2",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Compression_Brotli = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Compression.Brotli",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support reading or writing Parquet files compressed using brotli.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="4.1.3.3",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4 = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support reading or writing Parquet files compressed using lz4.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="4.1.3.4",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4Raw = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4Raw",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support reading or writing Parquet files compressed using lz4_raw.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="4.1.3.5",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Snappy = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Snappy",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] MAY not support reading or writing Parquet files compressed using snapy.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="4.1.4.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Lzo = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Lzo",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] MAY not support reading or writing Parquet files compressed using lzo.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="4.1.4.2",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Zstd = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Zstd",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] MAY not support reading or writing Parquet files compressed using zstd.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="4.1.4.3",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_DataTypes_Read = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.Read",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support reading the following Parquet data types:\n"
+        "Parquet Decimal is currently not tested.\n"
+        "\n"
+        "- UInt8\n"
+        "- Bool\n"
+        "- Int8\n"
+        "- UInt16\n"
+        "- UInt32\n"
+        "- UInt64\n"
+        "- Int16\n"
+        "- Int32\n"
+        "- Int64\n"
+        "- Float\n"
+        "- Half_Float\n"
+        "- Double\n"
+        "- Date32\n"
+        "- Date64\n"
+        "- Timestamp\n"
+        "- String\n"
+        "- Binary\n"
+        "- Decimal\n"
+        "- List\n"
+        "- Struct\n"
+        "- Map\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.2.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_DataTypes_Write = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support writing the following datatypes to Parquet:\n"
+        "\n"
+        "- UInt8\n"
+        "- Int8\n"
+        "- UInt16\n"
+        "- UInt32\n"
+        "- UInt64\n"
+        "- Int16\n"
+        "- Int32\n"
+        "- Int64\n"
+        "- Float32\n"
+        "- Float64\n"
+        "- Date\n"
+        "- DateTime\n"
+        "- String\n"
+        "- Decimal128\n"
+        "- Array\n"
+        "- Tuple\n"
+        "- Map\n"
+        "- Nullable\n"
+        "- LowCardinality\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.2.2",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_UnsupportedParquetTypes = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] MAY not support the following Parquet types:\n"
+        "\n"
+        "- `Time32`\n"
+        "- `Fixed_Size_Binary`\n"
+        "- `JSON`\n"
+        "- `UUID`\n"
+        "- `ENUM`\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.3.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_UnsupportedParquetTypes_ChunkedArray = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.ChunkedArray",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=("[ClickHouse] MAY not support Parquet chunked arrays.\n" "\n"),
+    link=None,
+    level=3,
+    num="4.3.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Insert = Requirement(
@@ -66,7 +288,7 @@ RQ_SRS_032_ClickHouse_Parquet_Insert = Requirement(
     ),
     link=None,
     level=3,
-    num="4.2.1",
+    num="4.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Insert_Projections = Requirement(
@@ -82,132 +304,7 @@ RQ_SRS_032_ClickHouse_Parquet_Insert_Projections = Requirement(
     ),
     link=None,
     level=3,
-    num="4.2.2",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_None = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.Insert.Compression.None",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL support reading uncompressed Parquet files.\n" "\n"
-    ),
-    link=None,
-    level=4,
-    num="4.2.3.1",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Gzip = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.Insert.Compression.Gzip",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL support reading Parquet files compressed using gzip.\n" "\n"
-    ),
-    link=None,
-    level=4,
-    num="4.2.3.2",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Brotli = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.Insert.Compression.Brotli",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL support reading Parquet files compressed using brotli.\n"
-        "\n"
-    ),
-    link=None,
-    level=4,
-    num="4.2.3.3",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Lz4 = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.Insert.Compression.Lz4",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL support reading Parquet files compressed using lz4.\n" "\n"
-    ),
-    link=None,
-    level=4,
-    num="4.2.3.4",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Lz4Raw = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.Insert.Compression.Lz4Raw",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL support reading Parquet files compressed using lz4_raw.\n"
-        "\n"
-    ),
-    link=None,
-    level=4,
-    num="4.2.3.5",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_Insert_UnsupportedCompression_Snappy = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.Insert.UnsupportedCompression.Snappy",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] MAY not support reading Parquet files compressed using snapy.\n"
-        "\n"
-    ),
-    link=None,
-    level=4,
-    num="4.2.4.1",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_Insert_UnsupportedCompression_Lzo = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.Insert.UnsupportedCompression.Lzo",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] MAY not support reading Parquet files compressed using lzo.\n"
-        "\n"
-    ),
-    link=None,
-    level=4,
-    num="4.2.4.2",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_Insert_UnsupportedCompression_Zstd = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.Insert.UnsupportedCompression.Zstd",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] MAY not support reading Parquet files compressed using zstd.\n"
-        "\n"
-    ),
-    link=None,
-    level=4,
-    num="4.2.4.3",
+    num="4.4.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Insert_Settings_ImportNested = Requirement(
@@ -225,7 +322,7 @@ RQ_SRS_032_ClickHouse_Parquet_Insert_Settings_ImportNested = Requirement(
     ),
     link=None,
     level=4,
-    num="4.2.5.1",
+    num="4.4.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Insert_Settings_CaseInsensitiveColumnMatching = Requirement(
@@ -243,7 +340,7 @@ RQ_SRS_032_ClickHouse_Parquet_Insert_Settings_CaseInsensitiveColumnMatching = Re
     ),
     link=None,
     level=4,
-    num="4.2.5.2",
+    num="4.4.3.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Insert_Settings_AllowMissingColumns = Requirement(
@@ -260,7 +357,7 @@ RQ_SRS_032_ClickHouse_Parquet_Insert_Settings_AllowMissingColumns = Requirement(
     ),
     link=None,
     level=4,
-    num="4.2.5.3",
+    num="4.4.3.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Insert_Settings_SkipColumnsWithUnsupportedTypesInSchemaInference = Requirement(
@@ -272,54 +369,13 @@ RQ_SRS_032_ClickHouse_Parquet_Insert_Settings_SkipColumnsWithUnsupportedTypesInS
     uid=None,
     description=(
         "[ClickHouse] SHALL support specifying `input_format_parquet_skip_columns_with_unsupported_types_in_schema_inference`\n"
-        "to allow skipping unsupported types..Format\n"
+        "to allow skipping unsupported types.\n"
         "Default: `false`\n"
         "\n"
     ),
     link=None,
     level=4,
-    num="4.2.5.4",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_InsertConversions = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.InsertConversions",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL convert Parquet types to ClickHouse types in the following manner:\n"
-        "Parquet Decimal to ClickHouse Decimal128 is currently not tested.\n"
-        "\n"
-        "Parquet | ClickHouse\n"
-        "--- | ---\n"
-        "UInt8 | UInt8\n"
-        "Bool | UInt8\n"
-        "Int8 | Int8\n"
-        "UInt16 | UInt16\n"
-        "UInt32 | UInt32\n"
-        "UInt64 | UInt64\n"
-        "Int16 | Int16\n"
-        "Int32 | Int32\n"
-        "Int64 | Int64\n"
-        "Float | Float32\n"
-        "Half_Float | Float32\n"
-        "Double | Float64\n"
-        "Date32 | Date\n"
-        "Date64 | DateTime\n"
-        "Timestamp | DateTime\n"
-        "String | String\n"
-        "Binary | String\n"
-        "Decimal | Decimal128\n"
-        "List | Array\n"
-        "Struct | Tuple\n"
-        "Map | Map\n"
-        "\n"
-    ),
-    link=None,
-    level=4,
-    num="4.2.6.1",
+    num="4.4.3.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Select = Requirement(
@@ -338,7 +394,7 @@ RQ_SRS_032_ClickHouse_Parquet_Select = Requirement(
     ),
     link=None,
     level=3,
-    num="4.3.1",
+    num="4.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Select_Join = Requirement(
@@ -354,7 +410,7 @@ RQ_SRS_032_ClickHouse_Parquet_Select_Join = Requirement(
     ),
     link=None,
     level=3,
-    num="4.3.2",
+    num="4.5.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Select_Union = Requirement(
@@ -370,7 +426,7 @@ RQ_SRS_032_ClickHouse_Parquet_Select_Union = Requirement(
     ),
     link=None,
     level=3,
-    num="4.3.3",
+    num="4.5.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Select_View = Requirement(
@@ -386,7 +442,7 @@ RQ_SRS_032_ClickHouse_Parquet_Select_View = Requirement(
     ),
     link=None,
     level=3,
-    num="4.3.4",
+    num="4.5.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Select_MaterializedView = Requirement(
@@ -402,7 +458,7 @@ RQ_SRS_032_ClickHouse_Parquet_Select_MaterializedView = Requirement(
     ),
     link=None,
     level=3,
-    num="4.3.5",
+    num="4.5.5",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Select_Settings_RowGroupSize = Requirement(
@@ -419,7 +475,7 @@ RQ_SRS_032_ClickHouse_Parquet_Select_Settings_RowGroupSize = Requirement(
     ),
     link=None,
     level=4,
-    num="4.3.6.1",
+    num="4.5.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Select_Settings_StringAsString = Requirement(
@@ -436,185 +492,7 @@ RQ_SRS_032_ClickHouse_Parquet_Select_Settings_StringAsString = Requirement(
     ),
     link=None,
     level=4,
-    num="4.3.6.2",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_SelectConversions = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.SelectConversions",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL convert ClickHouse types to Parquet types in the following manner:\n"
-        "\n"
-        "ClickHouse | Parquet\n"
-        "--- | ---\n"
-        "UInt8 | UInt8\n"
-        "Int8 | Int8\n"
-        "UInt16 | UInt16\n"
-        "UInt32 | UInt32\n"
-        "UInt64 | UInt64\n"
-        "Int16 | Int16\n"
-        "Int32 | Int32\n"
-        "Int64 | Int64\n"
-        "Float32 | Float\n"
-        "Float64 | Double\n"
-        "Date | UInt16\n"
-        "DateTime | UInt32\n"
-        "String | Binary\n"
-        "Decimal128 | Decimal\n"
-        "Array | List\n"
-        "Tuple | Struct\n"
-        "Map | Map\n"
-        "\n"
-    ),
-    link=None,
-    level=4,
-    num="4.3.7.1",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_NestedTypes_Arrays = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.NestedTypes.Arrays",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL support nested `arrays` in Parquet format.\n" "\n"
-    ),
-    link=None,
-    level=3,
-    num="4.4.1",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_NestedTypes_Tuple = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.NestedTypes.Tuple",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL support nested `tuples` in Parquet format.\n" "\n"
-    ),
-    link=None,
-    level=3,
-    num="4.4.2",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_NestedTypes_Map = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.NestedTypes.Map",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=("[ClickHouse] SHALL support nested `maps` in Parquet format.\n" "\n"),
-    link=None,
-    level=3,
-    num="4.4.3",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_NestedTypes_LowCardinalityNullable = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.NestedTypes.LowCardinalityNullable",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL support nesting LowCardinality and Nullable data types in any order.\n"
-        "Example:\n"
-        "LowCardinality(Nullable(String))\n"
-        "Nullable(LowCradinality(String))\n"
-        "\n"
-    ),
-    link=None,
-    level=3,
-    num="4.4.4",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_UnsupportedParquetTypes_Time32 = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.Time32",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=("[ClickHouse] MAY not support Parquet `Time32` type.\n" "\n"),
-    link=None,
-    level=3,
-    num="4.5.1",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_UnsupportedParquetTypes_FixedSizeBinary = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.FixedSizeBinary",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] MAY not support Parquet `Fixed_Size_Binary` type.\n" "\n"
-    ),
-    link=None,
-    level=3,
-    num="4.5.2",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_UnsupportedParquetTypes_JSON = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.JSON",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=("[ClickHouse] MAY not support Parquet `JSON` type.\n" "\n"),
-    link=None,
-    level=3,
-    num="4.5.3",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_UnsupportedParquetTypes_UUID = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.UUID",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=("[ClickHouse] MAY not support Parquet `UUID` type.\n" "\n"),
-    link=None,
-    level=3,
-    num="4.5.4",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_UnsupportedParquetTypes_ENUM = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.ENUM",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=("[ClickHouse] MAY not support Parquet `ENUM` type.\n" "\n"),
-    link=None,
-    level=3,
-    num="4.5.5",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_UnsupportedParquetTypes_ChunkedArray = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.ChunkedArray",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=("[ClickHouse] MAY not support Parquet chunked arrays.\n" "\n"),
-    link=None,
-    level=3,
-    num="4.5.6",
+    num="4.5.6.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableFunctions_URL = Requirement(
@@ -1141,162 +1019,115 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         Heading(name="Requirements", level=1, num="4"),
         Heading(name="General", level=2, num="4.1"),
         Heading(name="RQ.SRS-032.ClickHouse.Parquet", level=3, num="4.1.1"),
-        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Null", level=3, num="4.1.2"),
+        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Encryption", level=3, num="4.1.2"),
+        Heading(name="Compression", level=3, num="4.1.3"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Encryption", level=4, num="4.1.2.1"
+            name="RQ.SRS-032.ClickHouse.Parquet.Compression.None",
+            level=4,
+            num="4.1.3.1",
         ),
-        Heading(name="INSERT", level=2, num="4.2"),
-        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Insert", level=3, num="4.2.1"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Insert.Projections",
+            name="RQ.SRS-032.ClickHouse.Parquet.Compression.Gzip",
+            level=4,
+            num="4.1.3.2",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Compression.Brotli",
+            level=4,
+            num="4.1.3.3",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4", level=4, num="4.1.3.4"
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4Raw",
+            level=4,
+            num="4.1.3.5",
+        ),
+        Heading(name="Unsupported Compression", level=3, num="4.1.4"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Snappy",
+            level=4,
+            num="4.1.4.1",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Lzo",
+            level=4,
+            num="4.1.4.2",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Zstd",
+            level=4,
+            num="4.1.4.3",
+        ),
+        Heading(name="Data Types", level=2, num="4.2"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.Read", level=3, num="4.2.1"
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write", level=3, num="4.2.2"
+        ),
+        Heading(name="Unsupported Parquet Types", level=2, num="4.3"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes",
             level=3,
-            num="4.2.2",
-        ),
-        Heading(name="Compression", level=3, num="4.2.3"),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Insert.Compression.None",
-            level=4,
-            num="4.2.3.1",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Insert.Compression.Gzip",
-            level=4,
-            num="4.2.3.2",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Insert.Compression.Brotli",
-            level=4,
-            num="4.2.3.3",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Insert.Compression.Lz4",
-            level=4,
-            num="4.2.3.4",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Insert.Compression.Lz4Raw",
-            level=4,
-            num="4.2.3.5",
-        ),
-        Heading(name="Unsupported Compression", level=3, num="4.2.4"),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Insert.UnsupportedCompression.Snappy",
-            level=4,
-            num="4.2.4.1",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Insert.UnsupportedCompression.Lzo",
-            level=4,
-            num="4.2.4.2",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Insert.UnsupportedCompression.Zstd",
-            level=4,
-            num="4.2.4.3",
-        ),
-        Heading(name="INSERT Settings", level=3, num="4.2.5"),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.ImportNested",
-            level=4,
-            num="4.2.5.1",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.CaseInsensitiveColumnMatching",
-            level=4,
-            num="4.2.5.2",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.AllowMissingColumns",
-            level=4,
-            num="4.2.5.3",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.SkipColumnsWithUnsupportedTypesInSchemaInference",
-            level=4,
-            num="4.2.5.4",
-        ),
-        Heading(name="INSERT Conversions", level=3, num="4.2.6"),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.InsertConversions",
-            level=4,
-            num="4.2.6.1",
-        ),
-        Heading(name="SELECT", level=2, num="4.3"),
-        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Select", level=3, num="4.3.1"),
-        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Select.Join", level=3, num="4.3.2"),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Select.Union", level=3, num="4.3.3"
-        ),
-        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Select.View", level=3, num="4.3.4"),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Select.MaterializedView",
-            level=3,
-            num="4.3.5",
-        ),
-        Heading(name="SELECT Settings", level=3, num="4.3.6"),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Select.Settings.RowGroupSize",
-            level=4,
-            num="4.3.6.1",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Select.Settings.StringAsString",
-            level=4,
-            num="4.3.6.2",
-        ),
-        Heading(name="SELECT Conversions", level=3, num="4.3.7"),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.SelectConversions",
-            level=4,
-            num="4.3.7.1",
-        ),
-        Heading(name="Nested Types", level=2, num="4.4"),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.NestedTypes.Arrays",
-            level=3,
-            num="4.4.1",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.NestedTypes.Tuple", level=3, num="4.4.2"
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.NestedTypes.Map", level=3, num="4.4.3"
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.NestedTypes.LowCardinalityNullable",
-            level=3,
-            num="4.4.4",
-        ),
-        Heading(name="Unsupported Parquet Types", level=2, num="4.5"),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.Time32",
-            level=3,
-            num="4.5.1",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.FixedSizeBinary",
-            level=3,
-            num="4.5.2",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.JSON",
-            level=3,
-            num="4.5.3",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.UUID",
-            level=3,
-            num="4.5.4",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.ENUM",
-            level=3,
-            num="4.5.5",
+            num="4.3.1",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.ChunkedArray",
             level=3,
-            num="4.5.6",
+            num="4.3.2",
+        ),
+        Heading(name="INSERT", level=2, num="4.4"),
+        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Insert", level=3, num="4.4.1"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Insert.Projections",
+            level=3,
+            num="4.4.2",
+        ),
+        Heading(name="INSERT Settings", level=3, num="4.4.3"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.ImportNested",
+            level=4,
+            num="4.4.3.1",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.CaseInsensitiveColumnMatching",
+            level=4,
+            num="4.4.3.2",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.AllowMissingColumns",
+            level=4,
+            num="4.4.3.3",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.SkipColumnsWithUnsupportedTypesInSchemaInference",
+            level=4,
+            num="4.4.3.4",
+        ),
+        Heading(name="SELECT", level=2, num="4.5"),
+        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Select", level=3, num="4.5.1"),
+        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Select.Join", level=3, num="4.5.2"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Select.Union", level=3, num="4.5.3"
+        ),
+        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Select.View", level=3, num="4.5.4"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Select.MaterializedView",
+            level=3,
+            num="4.5.5",
+        ),
+        Heading(name="SELECT Settings", level=3, num="4.5.6"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Select.Settings.RowGroupSize",
+            level=4,
+            num="4.5.6.1",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Select.Settings.StringAsString",
+            level=4,
+            num="4.5.6.2",
         ),
         Heading(name="Table Functions", level=2, num="4.6"),
         Heading(
@@ -1459,23 +1290,25 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
     ),
     requirements=(
         RQ_SRS_032_ClickHouse_Parquet,
-        RQ_SRS_032_ClickHouse_Parquet_Null,
         RQ_SRS_032_ClickHouse_Parquet_Encryption,
+        RQ_SRS_032_ClickHouse_Parquet_Compression_None,
+        RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip,
+        RQ_SRS_032_ClickHouse_Parquet_Compression_Brotli,
+        RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4,
+        RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4Raw,
+        RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Snappy,
+        RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Lzo,
+        RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Zstd,
+        RQ_SRS_032_ClickHouse_Parquet_DataTypes_Read,
+        RQ_SRS_032_ClickHouse_Parquet_DataTypes_Write,
+        RQ_SRS_032_ClickHouse_Parquet_UnsupportedParquetTypes,
+        RQ_SRS_032_ClickHouse_Parquet_UnsupportedParquetTypes_ChunkedArray,
         RQ_SRS_032_ClickHouse_Parquet_Insert,
         RQ_SRS_032_ClickHouse_Parquet_Insert_Projections,
-        RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_None,
-        RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Gzip,
-        RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Brotli,
-        RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Lz4,
-        RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Lz4Raw,
-        RQ_SRS_032_ClickHouse_Parquet_Insert_UnsupportedCompression_Snappy,
-        RQ_SRS_032_ClickHouse_Parquet_Insert_UnsupportedCompression_Lzo,
-        RQ_SRS_032_ClickHouse_Parquet_Insert_UnsupportedCompression_Zstd,
         RQ_SRS_032_ClickHouse_Parquet_Insert_Settings_ImportNested,
         RQ_SRS_032_ClickHouse_Parquet_Insert_Settings_CaseInsensitiveColumnMatching,
         RQ_SRS_032_ClickHouse_Parquet_Insert_Settings_AllowMissingColumns,
         RQ_SRS_032_ClickHouse_Parquet_Insert_Settings_SkipColumnsWithUnsupportedTypesInSchemaInference,
-        RQ_SRS_032_ClickHouse_Parquet_InsertConversions,
         RQ_SRS_032_ClickHouse_Parquet_Select,
         RQ_SRS_032_ClickHouse_Parquet_Select_Join,
         RQ_SRS_032_ClickHouse_Parquet_Select_Union,
@@ -1483,17 +1316,6 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_Select_MaterializedView,
         RQ_SRS_032_ClickHouse_Parquet_Select_Settings_RowGroupSize,
         RQ_SRS_032_ClickHouse_Parquet_Select_Settings_StringAsString,
-        RQ_SRS_032_ClickHouse_Parquet_SelectConversions,
-        RQ_SRS_032_ClickHouse_Parquet_NestedTypes_Arrays,
-        RQ_SRS_032_ClickHouse_Parquet_NestedTypes_Tuple,
-        RQ_SRS_032_ClickHouse_Parquet_NestedTypes_Map,
-        RQ_SRS_032_ClickHouse_Parquet_NestedTypes_LowCardinalityNullable,
-        RQ_SRS_032_ClickHouse_Parquet_UnsupportedParquetTypes_Time32,
-        RQ_SRS_032_ClickHouse_Parquet_UnsupportedParquetTypes_FixedSizeBinary,
-        RQ_SRS_032_ClickHouse_Parquet_UnsupportedParquetTypes_JSON,
-        RQ_SRS_032_ClickHouse_Parquet_UnsupportedParquetTypes_UUID,
-        RQ_SRS_032_ClickHouse_Parquet_UnsupportedParquetTypes_ENUM,
-        RQ_SRS_032_ClickHouse_Parquet_UnsupportedParquetTypes_ChunkedArray,
         RQ_SRS_032_ClickHouse_Parquet_TableFunctions_URL,
         RQ_SRS_032_ClickHouse_Parquet_TableFunctions_File,
         RQ_SRS_032_ClickHouse_Parquet_TableFunctions_S3,
@@ -1646,15 +1468,127 @@ version: 1.0
 
 [ClickHouse] SHALL support `Parquet` data format.
 
-#### RQ.SRS-032.ClickHouse.Parquet.Null
-version:1.0
-
-[ClickHouse] SHALL support Null and Nullable(type) data when reading or writing Parquet format.
-
-##### RQ.SRS-032.ClickHouse.Parquet.Encryption
+#### RQ.SRS-032.ClickHouse.Parquet.Encryption
 version: 1.0
 
 [ClickHouse] MAY not support reading encrypted Parquet files.
+
+#### Compression
+
+##### RQ.SRS-032.ClickHouse.Parquet.Compression.None
+version: 1.0
+
+[ClickHouse] SHALL support reading or writing uncompressed Parquet files.
+
+##### RQ.SRS-032.ClickHouse.Parquet.Compression.Gzip
+version: 1.0
+
+[ClickHouse] SHALL support reading or writing Parquet files compressed using gzip.
+
+##### RQ.SRS-032.ClickHouse.Parquet.Compression.Brotli
+version: 1.0
+
+[ClickHouse] SHALL support reading or writing Parquet files compressed using brotli.
+
+##### RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4
+version: 1.0
+
+[ClickHouse] SHALL support reading or writing Parquet files compressed using lz4.
+
+##### RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4Raw
+version: 1.0
+
+[ClickHouse] SHALL support reading or writing Parquet files compressed using lz4_raw.
+
+#### Unsupported Compression
+
+##### RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Snappy
+version: 1.0
+
+[ClickHouse] MAY not support reading or writing Parquet files compressed using snapy.
+
+##### RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Lzo
+version: 1.0
+
+[ClickHouse] MAY not support reading or writing Parquet files compressed using lzo.
+
+##### RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Zstd
+version: 1.0
+
+[ClickHouse] MAY not support reading or writing Parquet files compressed using zstd.
+
+### Data Types
+
+#### RQ.SRS-032.ClickHouse.Parquet.DataTypes.Read
+version:1.0
+
+[ClickHouse] SHALL support reading the following Parquet data types:
+Parquet Decimal is currently not tested.
+
+- UInt8
+- Bool
+- Int8
+- UInt16
+- UInt32
+- UInt64
+- Int16
+- Int32
+- Int64
+- Float
+- Half_Float
+- Double
+- Date32
+- Date64
+- Timestamp
+- String
+- Binary
+- Decimal
+- List
+- Struct
+- Map
+
+#### RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write
+version:1.0
+
+[ClickHouse] SHALL support writing the following datatypes to Parquet:
+
+- UInt8
+- Int8
+- UInt16
+- UInt32
+- UInt64
+- Int16
+- Int32
+- Int64
+- Float32
+- Float64
+- Date
+- DateTime
+- String
+- Decimal128
+- Array
+- Tuple
+- Map
+- Nullable
+- LowCardinality
+
+### Unsupported Parquet Types
+
+#### RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes
+version:1.0
+
+[ClickHouse] MAY not support the following Parquet types:
+
+- `Time32`
+- `Fixed_Size_Binary`
+- `JSON`
+- `UUID`
+- `ENUM`
+
+#### RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.ChunkedArray
+version:1.0
+
+[ClickHouse] MAY not support Parquet chunked arrays.
 
 ### INSERT
 
@@ -1668,50 +1602,6 @@ read data from Parquet files and insert data into tables or table functions.
 version: 1.0
 
 [ClickHouse] SHALL support inserting parquet data into a table that has a projection on it.
-
-#### Compression
-
-##### RQ.SRS-032.ClickHouse.Parquet.Insert.Compression.None
-version: 1.0
-
-[ClickHouse] SHALL support reading uncompressed Parquet files.
-
-##### RQ.SRS-032.ClickHouse.Parquet.Insert.Compression.Gzip
-version: 1.0
-
-[ClickHouse] SHALL support reading Parquet files compressed using gzip.
-
-##### RQ.SRS-032.ClickHouse.Parquet.Insert.Compression.Brotli
-version: 1.0
-
-[ClickHouse] SHALL support reading Parquet files compressed using brotli.
-
-##### RQ.SRS-032.ClickHouse.Parquet.Insert.Compression.Lz4
-version: 1.0
-
-[ClickHouse] SHALL support reading Parquet files compressed using lz4.
-
-##### RQ.SRS-032.ClickHouse.Parquet.Insert.Compression.Lz4Raw
-version: 1.0
-
-[ClickHouse] SHALL support reading Parquet files compressed using lz4_raw.
-
-#### Unsupported Compression
-
-##### RQ.SRS-032.ClickHouse.Parquet.Insert.UnsupportedCompression.Snappy
-version: 1.0
-
-[ClickHouse] MAY not support reading Parquet files compressed using snapy.
-
-##### RQ.SRS-032.ClickHouse.Parquet.Insert.UnsupportedCompression.Lzo
-version: 1.0
-
-[ClickHouse] MAY not support reading Parquet files compressed using lzo.
-
-##### RQ.SRS-032.ClickHouse.Parquet.Insert.UnsupportedCompression.Zstd
-version: 1.0
-
-[ClickHouse] MAY not support reading Parquet files compressed using zstd.
 
 #### INSERT Settings
 
@@ -1739,40 +1629,8 @@ Default: `false`
 version: 1.0
 
 [ClickHouse] SHALL support specifying `input_format_parquet_skip_columns_with_unsupported_types_in_schema_inference`
-to allow skipping unsupported types..Format
+to allow skipping unsupported types.
 Default: `false`
-
-#### INSERT Conversions
-
-##### RQ.SRS-032.ClickHouse.Parquet.InsertConversions
-version:1.0
-
-[ClickHouse] SHALL convert Parquet types to ClickHouse types in the following manner:
-Parquet Decimal to ClickHouse Decimal128 is currently not tested.
-
-Parquet | ClickHouse
---- | ---
-UInt8 | UInt8
-Bool | UInt8
-Int8 | Int8
-UInt16 | UInt16
-UInt32 | UInt32
-UInt64 | UInt64
-Int16 | Int16
-Int32 | Int32
-Int64 | Int64
-Float | Float32
-Half_Float | Float32
-Double | Float64
-Date32 | Date
-Date64 | DateTime
-Timestamp | DateTime
-String | String
-Binary | String
-Decimal | Decimal128
-List | Array
-Struct | Tuple
-Map | Map
 
 ### SELECT
 
@@ -1817,90 +1675,6 @@ version: 1.0
 
 [ClickHouse] SHALL support specifying `output_format_parquet_string_as_string` to use Parquet String type instead of Binary.
 Default: `false`
-
-#### SELECT Conversions
-
-##### RQ.SRS-032.ClickHouse.Parquet.SelectConversions
-version:1.0
-
-[ClickHouse] SHALL convert ClickHouse types to Parquet types in the following manner:
-
-ClickHouse | Parquet
---- | ---
-UInt8 | UInt8
-Int8 | Int8
-UInt16 | UInt16
-UInt32 | UInt32
-UInt64 | UInt64
-Int16 | Int16
-Int32 | Int32
-Int64 | Int64
-Float32 | Float
-Float64 | Double
-Date | UInt16
-DateTime | UInt32
-String | Binary
-Decimal128 | Decimal
-Array | List
-Tuple | Struct
-Map | Map
-
-### Nested Types
-
-#### RQ.SRS-032.ClickHouse.Parquet.NestedTypes.Arrays
-version:1.0
-
-[ClickHouse] SHALL support nested `arrays` in Parquet format.
-
-#### RQ.SRS-032.ClickHouse.Parquet.NestedTypes.Tuple
-version:1.0
-
-[ClickHouse] SHALL support nested `tuples` in Parquet format.
-
-#### RQ.SRS-032.ClickHouse.Parquet.NestedTypes.Map
-version:1.0
-
-[ClickHouse] SHALL support nested `maps` in Parquet format.
-
-#### RQ.SRS-032.ClickHouse.Parquet.NestedTypes.LowCardinalityNullable
-version: 1.0
-
-[ClickHouse] SHALL support nesting LowCardinality and Nullable data types in any order.
-Example:
-LowCardinality(Nullable(String))
-Nullable(LowCradinality(String))
-
-### Unsupported Parquet Types
-
-#### RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.Time32
-version:1.0
-
-[ClickHouse] MAY not support Parquet `Time32` type.
-
-#### RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.FixedSizeBinary
-version:1.0
-
-[ClickHouse] MAY not support Parquet `Fixed_Size_Binary` type.
-
-#### RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.JSON
-version:1.0
-
-[ClickHouse] MAY not support Parquet `JSON` type.
-
-#### RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.UUID
-version:1.0
-
-[ClickHouse] MAY not support Parquet `UUID` type.
-
-#### RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.ENUM
-version:1.0
-
-[ClickHouse] MAY not support Parquet `ENUM` type.
-
-#### RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.ChunkedArray
-version:1.0
-
-[ClickHouse] MAY not support Parquet chunked arrays.
 
 ### Table Functions
 

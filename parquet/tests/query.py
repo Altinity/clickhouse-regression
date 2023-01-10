@@ -55,6 +55,10 @@ def insert_into_distributed_table_from_file(self):
 
 
 @TestOutline
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Insert("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_DataTypes_Read("1.0"),
+)
 def insert_into_table_from_file(self, engine, table_name=None):
     """Insert data from Parquet files into tables with different engines using FROM INFILE clause."""
     self.context.snapshot_id = get_snapshot_id()
@@ -144,6 +148,10 @@ def select_from_distributed_table_into_file(self):
 
 
 @TestOutline
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Select("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_DataTypes_Write("1.0"),
+)
 def select_from_table_into_file(self, engine, table_name=None):
     """Select data from tables with different engines and write to Parquet files using INTO OUTFILE clause."""
     self.context.snapshot_id = get_snapshot_id()
@@ -182,7 +190,11 @@ def select_from_table_into_file(self, engine, table_name=None):
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_Parquet_Select_MaterializedView("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Select_MaterializedView("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Select("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_DataTypes_Write("1.0"),
+)
 def select_from_mat_view_into_file(self):
     """Select data from materialized view and write to Parquet files using INTO OUTFILE clause."""
     self.context.snapshot_id = get_snapshot_id()
@@ -233,7 +245,11 @@ def select_from_mat_view_into_file(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_Parquet_Insert_Projections("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Insert_Projections("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Insert("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_DataTypes_Read("1.0"),
+)
 def insert_into_table_with_projection_from_file(self):
     """Insert data from a Parquet file into a table with a projection using FROM INFILE clause."""
     self.context.snapshot_id = get_snapshot_id()
@@ -280,15 +296,15 @@ def insert_into_table_with_projection_from_file(self):
     [
         (
             "NONE",
-            Requirements(RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_None("1.0")),
+            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_None("1.0")),
         ),
         (
             "GZIP",
-            Requirements(RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Gzip("1.0")),
+            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip("1.0")),
         ),
         (
             "LZ4",
-            Requirements(RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Lz4("1.0")),
+            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0")),
         ),
     ],
 )

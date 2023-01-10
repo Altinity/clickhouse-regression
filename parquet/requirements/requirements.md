@@ -117,15 +117,127 @@ version: 1.0
 
 [ClickHouse] SHALL support `Parquet` data format.
 
-#### RQ.SRS-032.ClickHouse.Parquet.Null
-version:1.0
-
-[ClickHouse] SHALL support Null and Nullable(type) data when reading or writing Parquet format.
-
-##### RQ.SRS-032.ClickHouse.Parquet.Encryption
+#### RQ.SRS-032.ClickHouse.Parquet.Encryption
 version: 1.0
 
 [ClickHouse] MAY not support reading encrypted Parquet files.
+
+#### Compression
+
+##### RQ.SRS-032.ClickHouse.Parquet.Compression.None
+version: 1.0
+
+[ClickHouse] SHALL support reading or writing uncompressed Parquet files.
+
+##### RQ.SRS-032.ClickHouse.Parquet.Compression.Gzip
+version: 1.0
+
+[ClickHouse] SHALL support reading or writing Parquet files compressed using gzip.
+
+##### RQ.SRS-032.ClickHouse.Parquet.Compression.Brotli
+version: 1.0
+
+[ClickHouse] SHALL support reading or writing Parquet files compressed using brotli.
+
+##### RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4
+version: 1.0
+
+[ClickHouse] SHALL support reading or writing Parquet files compressed using lz4.
+
+##### RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4Raw
+version: 1.0
+
+[ClickHouse] SHALL support reading or writing Parquet files compressed using lz4_raw.
+
+#### Unsupported Compression
+
+##### RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Snappy
+version: 1.0
+
+[ClickHouse] MAY not support reading or writing Parquet files compressed using snapy.
+
+##### RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Lzo
+version: 1.0
+
+[ClickHouse] MAY not support reading or writing Parquet files compressed using lzo.
+
+##### RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Zstd
+version: 1.0
+
+[ClickHouse] MAY not support reading or writing Parquet files compressed using zstd.
+
+### Data Types
+
+#### RQ.SRS-032.ClickHouse.Parquet.DataTypes.Read
+version:1.0
+
+[ClickHouse] SHALL support reading the following Parquet data types:
+Parquet Decimal is currently not tested.
+
+- Bool
+- UInt8
+- Int8
+- UInt16
+- UInt32
+- UInt64
+- Int16
+- Int32
+- Int64
+- Float
+- Half_Float
+- Double
+- Date32
+- Date64
+- Timestamp
+- String
+- Binary
+- Decimal
+- List
+- Struct
+- Map
+
+#### RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write
+version:1.0
+
+[ClickHouse] SHALL support writing the following datatypes to Parquet:
+
+- UInt8
+- Int8
+- UInt16
+- UInt32
+- UInt64
+- Int16
+- Int32
+- Int64
+- Float32
+- Float64
+- Date
+- DateTime
+- String
+- Decimal128
+- Array
+- Tuple
+- Map
+- Nullable
+- LowCardinality
+
+### Unsupported Parquet Types
+
+#### RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes
+version:1.0
+
+[ClickHouse] MAY not support the following Parquet types:
+
+- `Time32`
+- `Fixed_Size_Binary`
+- `JSON`
+- `UUID`
+- `ENUM`
+
+#### RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.ChunkedArray
+version:1.0
+
+[ClickHouse] MAY not support Parquet chunked arrays.
 
 ### INSERT
 
@@ -139,50 +251,6 @@ read data from Parquet files and insert data into tables or table functions.
 version: 1.0
 
 [ClickHouse] SHALL support inserting parquet data into a table that has a projection on it.
-
-#### Compression
-
-##### RQ.SRS-032.ClickHouse.Parquet.Insert.Compression.None
-version: 1.0
-
-[ClickHouse] SHALL support reading uncompressed Parquet files.
-
-##### RQ.SRS-032.ClickHouse.Parquet.Insert.Compression.Gzip
-version: 1.0
-
-[ClickHouse] SHALL support reading Parquet files compressed using gzip.
-
-##### RQ.SRS-032.ClickHouse.Parquet.Insert.Compression.Brotli
-version: 1.0
-
-[ClickHouse] SHALL support reading Parquet files compressed using brotli.
-
-##### RQ.SRS-032.ClickHouse.Parquet.Insert.Compression.Lz4
-version: 1.0
-
-[ClickHouse] SHALL support reading Parquet files compressed using lz4.
-
-##### RQ.SRS-032.ClickHouse.Parquet.Insert.Compression.Lz4Raw
-version: 1.0
-
-[ClickHouse] SHALL support reading Parquet files compressed using lz4_raw.
-
-#### Unsupported Compression
-
-##### RQ.SRS-032.ClickHouse.Parquet.Insert.UnsupportedCompression.Snappy
-version: 1.0
-
-[ClickHouse] MAY not support reading Parquet files compressed using snapy.
-
-##### RQ.SRS-032.ClickHouse.Parquet.Insert.UnsupportedCompression.Lzo
-version: 1.0
-
-[ClickHouse] MAY not support reading Parquet files compressed using lzo.
-
-##### RQ.SRS-032.ClickHouse.Parquet.Insert.UnsupportedCompression.Zstd
-version: 1.0
-
-[ClickHouse] MAY not support reading Parquet files compressed using zstd.
 
 #### INSERT Settings
 
@@ -210,40 +278,8 @@ Default: `false`
 version: 1.0
 
 [ClickHouse] SHALL support specifying `input_format_parquet_skip_columns_with_unsupported_types_in_schema_inference`
-to allow skipping unsupported types..Format
+to allow skipping unsupported types.
 Default: `false`
-
-#### INSERT Conversions
-
-##### RQ.SRS-032.ClickHouse.Parquet.InsertConversions
-version:1.0
-
-[ClickHouse] SHALL convert Parquet types to ClickHouse types in the following manner:
-Parquet Decimal to ClickHouse Decimal128 is currently not tested.
-
-Parquet | ClickHouse
---- | ---
-UInt8 | UInt8
-Bool | UInt8
-Int8 | Int8
-UInt16 | UInt16
-UInt32 | UInt32
-UInt64 | UInt64
-Int16 | Int16
-Int32 | Int32
-Int64 | Int64
-Float | Float32
-Half_Float | Float32
-Double | Float64
-Date32 | Date
-Date64 | DateTime
-Timestamp | DateTime
-String | String
-Binary | String
-Decimal | Decimal128
-List | Array
-Struct | Tuple
-Map | Map
 
 ### SELECT
 
@@ -288,90 +324,6 @@ version: 1.0
 
 [ClickHouse] SHALL support specifying `output_format_parquet_string_as_string` to use Parquet String type instead of Binary.
 Default: `false`
-
-#### SELECT Conversions
-
-##### RQ.SRS-032.ClickHouse.Parquet.SelectConversions
-version:1.0
-
-[ClickHouse] SHALL convert ClickHouse types to Parquet types in the following manner:
-
-ClickHouse | Parquet
---- | ---
-UInt8 | UInt8
-Int8 | Int8
-UInt16 | UInt16
-UInt32 | UInt32
-UInt64 | UInt64
-Int16 | Int16
-Int32 | Int32
-Int64 | Int64
-Float32 | Float
-Float64 | Double
-Date | UInt16
-DateTime | UInt32
-String | Binary
-Decimal128 | Decimal
-Array | List
-Tuple | Struct
-Map | Map
-
-### Nested Types
-
-#### RQ.SRS-032.ClickHouse.Parquet.NestedTypes.Arrays
-version:1.0
-
-[ClickHouse] SHALL support nested `arrays` in Parquet format.
-
-#### RQ.SRS-032.ClickHouse.Parquet.NestedTypes.Tuple
-version:1.0
-
-[ClickHouse] SHALL support nested `tuples` in Parquet format.
-
-#### RQ.SRS-032.ClickHouse.Parquet.NestedTypes.Map
-version:1.0
-
-[ClickHouse] SHALL support nested `maps` in Parquet format.
-
-#### RQ.SRS-032.ClickHouse.Parquet.NestedTypes.LowCardinalityNullable
-version: 1.0
-
-[ClickHouse] SHALL support nesting LowCardinality and Nullable data types in any order.
-Example:
-LowCardinality(Nullable(String))
-Nullable(LowCradinality(String))
-
-### Unsupported Parquet Types
-
-#### RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.Time32
-version:1.0
-
-[ClickHouse] MAY not support Parquet `Time32` type.
-
-#### RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.FixedSizeBinary
-version:1.0
-
-[ClickHouse] MAY not support Parquet `Fixed_Size_Binary` type.
-
-#### RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.JSON
-version:1.0
-
-[ClickHouse] MAY not support Parquet `JSON` type.
-
-#### RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.UUID
-version:1.0
-
-[ClickHouse] MAY not support Parquet `UUID` type.
-
-#### RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.ENUM
-version:1.0
-
-[ClickHouse] MAY not support Parquet `ENUM` type.
-
-#### RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.ChunkedArray
-version:1.0
-
-[ClickHouse] MAY not support Parquet chunked arrays.
 
 ### Table Functions
 

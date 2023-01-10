@@ -6,6 +6,7 @@ from s3.tests.common import *
 
 
 @TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_DataTypes_Write("1.0"))
 def insert_into_engine(self):
     """Check that when data is inserted into a table with `S3` engine, it is written into the source file correctly."""
     self.context.snapshot_id = get_snapshot_id()
@@ -35,6 +36,7 @@ def insert_into_engine(self):
 
 
 @TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_DataTypes_Read("1.0"))
 def select_from_engine(self):
     """Check that when a table with `S3` engine is attached on top of a Parquet file, it reads the data correctly."""
     self.context.snapshot_id = get_snapshot_id()
@@ -132,6 +134,10 @@ def engine_to_file_to_engine(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Insert("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_DataTypes_Read("1.0"),
+)
 def insert_into_engine_from_file(self):
     """Check that that data read from a Parquet file using the `INFILE` clause in `INSERT` query is
     correctly written into a table with a `S3` engine."""
@@ -173,6 +179,10 @@ def insert_into_engine_from_file(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Select("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_DataTypes_Write("1.0"),
+)
 def engine_select_output_to_file(self):
     """Check that data is correctly written into a Parquet file when using `SELECT` query with `OUTFILE` clause on a table with `S3` engine."""
     self.context.snapshot_id = get_snapshot_id()
@@ -208,6 +218,7 @@ def engine_select_output_to_file(self):
 
 
 @TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_DataTypes_Write("1.0"))
 def insert_into_function(self):
     """Check that when data is inserted into `s3` table function with manually defined structure,
     it is written into the source file correctly.
@@ -244,6 +255,7 @@ def insert_into_function(self):
 
 
 @TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_DataTypes_Read("1.0"))
 def select_from_function_manual_cast_types(self):
     """Check that when data is selected from an `s3` table function with manually cast column types,
     it is read correctly.
@@ -281,6 +293,7 @@ def select_from_function_manual_cast_types(self):
 
 
 @TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_DataTypes_Read("1.0"))
 def select_from_function_auto_cast_types(self):
     """Check that when data is selected from an `s3` table function with automatic cast column types,
     it is read correctly.
@@ -352,15 +365,15 @@ def function(self):
     [
         (
             "NONE",
-            Requirements(RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_None("1.0")),
+            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_None("1.0")),
         ),
         (
             "GZIP",
-            Requirements(RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Gzip("1.0")),
+            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip("1.0")),
         ),
         (
             "LZ4",
-            Requirements(RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Lz4("1.0")),
+            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0")),
         ),
     ],
 )
