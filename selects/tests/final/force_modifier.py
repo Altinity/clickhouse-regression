@@ -6,7 +6,7 @@ from helpers.common import check_clickhouse_version
 
 @TestOutline
 def select(self, query, query_with_final, node=None, negative=False):
-    """Checking basic selects with `FINAL` clause equal to force_select_final select only for core table."""
+    """Checking basic selects with `FINAL` clause equal to force_select_final select."""
     if node is None:
         node = self.context.node
 
@@ -17,6 +17,8 @@ def select(self, query, query_with_final, node=None, negative=False):
                 table
                 for table in self.context.tables
                 if table.name.endswith("core")
+                or table.name.endswith("cluster")
+                or table.name.endswith("clusterdistributed")
                 or table.name.endswith("_nview_final")
                 or table.name.endswith("_mview")
             ],
