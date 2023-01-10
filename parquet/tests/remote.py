@@ -6,6 +6,10 @@ from s3.tests.common import *
 
 
 @TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Insert("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_DataTypes_Read("1.0"),
+)
 def insert_into_function(self):
     """Check that when data is inserted into `remote` table function it is written into the source file correctly."""
     self.context.snapshot_id = get_snapshot_id()
@@ -42,6 +46,10 @@ def insert_into_function(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Select("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_DataTypes_Write("1.0"),
+)
 def select_from_function(self):
     """Check that when data is selected from a `remote` table function into a Parquet file it is written correctly."""
     self.context.snapshot_id = get_snapshot_id()
@@ -77,15 +85,15 @@ def select_from_function(self):
     [
         (
             "NONE",
-            Requirements(RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_None("1.0")),
+            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_None("1.0")),
         ),
         (
             "GZIP",
-            Requirements(RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Gzip("1.0")),
+            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip("1.0")),
         ),
         (
             "LZ4",
-            Requirements(RQ_SRS_032_ClickHouse_Parquet_Insert_Compression_Lz4("1.0")),
+            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0")),
         ),
     ],
 )

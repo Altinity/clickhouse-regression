@@ -12,9 +12,9 @@ from helpers.cluster import Cluster
 from s3.regression import argparser
 from parquet.requirements import *
 from helpers.common import check_clickhouse_version
-from helpers.tables import Column
+from helpers.tables import Column, generate_all_column_types
 from helpers.datatypes import *
-from parquet.tests.common import start_minio
+from parquet.tests.common import start_minio, parquet_test_columns
 
 xfails = {}
 
@@ -87,6 +87,38 @@ def regression(
                 self.context.parquet_table_columns.append(
                     Column(datatype=eval(datatype), name=name)
                 )
+
+        with And("I check that common code provides all necessary data types"):
+            columns = generate_all_column_types(include=parquet_test_columns())
+            datatypes = [type(column.datatype) for column in columns]
+            print(datatypes)
+            pause()
+            for datatype in [
+                UInt8,
+                Int8,
+                UInt16,
+                UInt32,
+                UInt64,
+                Int16,
+                Int32,
+                Int64,
+                Float32,
+                Float64,
+                Date,
+                DateTime,
+                String,
+                Decimal128,
+                Array,
+                Tuple,
+                Map,
+                Nullable,
+                LowCardinality,
+            ]:
+                assert datatype in datatypes, fail(
+                    f"Common code did not provide {datatype}"
+                )
+
+        pause()
 
         with Pool(2) as executor:
             Feature(
