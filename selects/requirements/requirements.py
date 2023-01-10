@@ -456,6 +456,23 @@ RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join = Requirement(
     num='5.4.11.1'
 )
 
+RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join_Select = Requirement(
+    name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join.Select',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL support applying [FINAL modifier] for any table in [JOIN] clause with [SELECT] subquery for which\n'
+        'the automatic [FINAL modifier] is enabled.\n'
+        '\n'
+    ),
+    link=None,
+    level=4,
+    num='5.4.11.2'
+)
+
 RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join_Multiple = Requirement(
     name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join.Multiple',
     version='1.0',
@@ -470,7 +487,7 @@ RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join_Multiple = Requi
     ),
     link=None,
     level=5,
-    num='5.4.11.1.1'
+    num='5.4.11.2.1'
 )
 
 RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join_Nested = Requirement(
@@ -487,7 +504,7 @@ RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join_Nested = Require
     ),
     link=None,
     level=5,
-    num='5.4.11.1.2'
+    num='5.4.11.2.2'
 )
 
 RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Union = Requirement(
@@ -594,10 +611,6 @@ RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_With = Requirement(
         '[ClickHouse] SHALL support applying [FINAL modifier] for any table in subquery inside the [WITH] clause for which\n'
         'the automatic [FINAL modifier] is enabled.\n'
         '\n'
-        'For example,\n'
-        '```sql\n'
-        '\n'
-        '```\n'
         '\n'
         '[SRS]: #srs\n'
         '[SELECT]: https://clickhouse.com/docs/en/sql-reference/statements/select/\n'
@@ -690,8 +703,9 @@ SRS032_ClickHouse_Automatic_Final_Modifier_For_Select_Queries = Specification(
         Heading(name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Subquery.INWhere', level=5, num='5.4.10.1.6'),
         Heading(name='JOIN', level=3, num='5.4.11'),
         Heading(name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join', level=4, num='5.4.11.1'),
-        Heading(name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join.Multiple', level=5, num='5.4.11.1.1'),
-        Heading(name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join.Nested', level=5, num='5.4.11.1.2'),
+        Heading(name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join.Select', level=4, num='5.4.11.2'),
+        Heading(name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join.Multiple', level=5, num='5.4.11.2.1'),
+        Heading(name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join.Nested', level=5, num='5.4.11.2.2'),
         Heading(name='UNION', level=3, num='5.4.12'),
         Heading(name='RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Union', level=4, num='5.4.12.1'),
         Heading(name='INTERSECT', level=3, num='5.4.13'),
@@ -725,6 +739,7 @@ SRS032_ClickHouse_Automatic_Final_Modifier_For_Select_Queries = Specification(
         RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery_INPrewhere,
         RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery_INWhere,
         RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join,
+        RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join_Select,
         RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join_Multiple,
         RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join_Nested,
         RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Union,
@@ -785,8 +800,9 @@ SRS032_ClickHouse_Automatic_Final_Modifier_For_Select_Queries = Specification(
         * 5.4.10.1.6 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Subquery.INWhere](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriessubqueryinwhere)
     * 5.4.11 [JOIN](#join)
       * 5.4.11.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesjoin)
-        * 5.4.11.1.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join.Multiple](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesjoinmultiple)
-        * 5.4.11.1.2 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join.Nested](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesjoinnested)
+      * 5.4.11.2 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join.Select](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesjoinselect)
+        * 5.4.11.2.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join.Multiple](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesjoinmultiple)
+        * 5.4.11.2.2 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join.Nested](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesjoinnested)
     * 5.4.12 [UNION](#union)
       * 5.4.12.1 [RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Union](#rqsrs-032clickhouseautomaticfinalmodifierselectqueriesunion)
     * 5.4.13 [INTERSECT](#intersect)
@@ -824,7 +840,7 @@ flowchart TB;
   2D---4D
   1C---2C---3C---4C
   1E---2E---3E---4E
-  1K---2K---3K---4K
+  1K---2K---3K
   1F---2F---3F---4F
   
     subgraph A["Create table section"]
@@ -865,9 +881,8 @@ flowchart TB;
     
     subgraph K["Engines that operate over other engines"]
         1K["View"]:::yellow
-        2K["Buffer"]:::yellow
-        3K["Distributed"]:::yellow
-        4K["MaterializedView"]:::yellow
+        2K["Distributed"]:::yellow
+        3K["MaterializedView"]:::yellow
     end
 
     
@@ -1120,6 +1135,12 @@ For example,
 select count() from lhs inner join rhs on lhs.x = rhs.x;
 ```
 
+##### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join.Select
+version: 1.0
+
+[ClickHouse] SHALL support applying [FINAL modifier] for any table in [JOIN] clause with [SELECT] subquery for which
+the automatic [FINAL modifier] is enabled.
+
 ###### RQ.SRS-032.ClickHouse.AutomaticFinalModifier.SelectQueries.Join.Multiple
 version: 1.0
 
@@ -1206,10 +1227,6 @@ version: 1.0
 [ClickHouse] SHALL support applying [FINAL modifier] for any table in subquery inside the [WITH] clause for which
 the automatic [FINAL modifier] is enabled.
 
-For example,
-```sql
-
-```
 
 [SRS]: #srs
 [SELECT]: https://clickhouse.com/docs/en/sql-reference/statements/select/
