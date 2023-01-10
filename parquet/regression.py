@@ -91,8 +91,6 @@ def regression(
         with And("I check that common code provides all necessary data types"):
             columns = generate_all_column_types(include=parquet_test_columns())
             datatypes = [type(column.datatype) for column in columns]
-            print(datatypes)
-            pause()
             for datatype in [
                 UInt8,
                 Int8,
@@ -117,8 +115,6 @@ def regression(
                 assert datatype in datatypes, fail(
                     f"Common code did not provide {datatype}"
                 )
-
-        pause()
 
         with Pool(2) as executor:
             Feature(
