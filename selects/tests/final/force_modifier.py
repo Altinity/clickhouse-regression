@@ -326,7 +326,9 @@ def select_join_clause(self, node=None):
     for join_type in join_types:
         with Example(f"{join_type}", flags=TE):
             for table1, table2 in table_pairs:
-                with When(f"I have {table1.name} and corresponding {table2.name}", flags=TE):
+                with When(
+                    f"I have {table1.name} and corresponding {table2.name}", flags=TE
+                ):
                     with Then(
                         "I check that select with force_select_final=1 setting"
                         f" equals 'SELECT...FINAL' for {table1.name} and {table2.name} "
@@ -350,7 +352,9 @@ def select_join_clause(self, node=None):
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join_Select("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join_Select("1.0")
+)
 def select_join_clause_select_all_types(self, node=None):
     """Check SELECT query with different types of `JOIN` clause for equal table engines."""
     if node is None:
@@ -644,7 +648,9 @@ def select_with_clause(self, node=None, negative=False):
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join_Nested("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join_Nested("1.0")
+)
 def select_nested_join_clause_select(self, node=None):
     """Check SELECT query with nested `JOIN` clause."""
     if node is None:
@@ -718,7 +724,9 @@ def select_nested_join_clause_select(self, node=None):
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join_Multiple("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join_Multiple("1.0")
+)
 def select_multiple_join_clause_select(self, node=None):
     """Check SELECT query with multiple `JOIN` clause."""
     if node is None:
@@ -821,7 +829,7 @@ def select_subquery(self, node=None):
                 ).output.strip()
 
             with And(
-                    "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
+                "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
             ):
                 force_select_final = node.query(
                     f"SELECT count() FROM (SELECT * FROM {table.name})",
@@ -833,7 +841,9 @@ def select_subquery(self, node=None):
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery_Nested("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery_Nested("1.0")
+)
 def select_nested_subquery(self, node=None):
     """Check SELECT query with nested 3 lvl subquery."""
     if node is None:
@@ -858,17 +868,17 @@ def select_nested_subquery(self, node=None):
         with When(f"{table}"):
             with When("I execute query with FINAL modifier specified explicitly"):
                 explicit_final = node.query(
-                        f"SELECT count() FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM {table.name}"
-                        f"{' FINAL' if table.final_modifier_available else ''})))"
-                    ).output.strip()
+                    f"SELECT count() FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM {table.name}"
+                    f"{' FINAL' if table.final_modifier_available else ''})))"
+                ).output.strip()
 
             with And(
-                    "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
+                "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
             ):
                 force_select_final = node.query(
-                        f"SELECT count() FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM {table.name})))",
-                        settings=[("force_select_final", 1)],
-                    ).output.strip()
+                    f"SELECT count() FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM {table.name})))",
+                    settings=[("force_select_final", 1)],
+                ).output.strip()
 
             with Then("I compare results are the same"):
                 assert explicit_final == force_select_final
@@ -908,33 +918,41 @@ def select_prewhere_where_subquery(self, node=None, clause=None):
         with When(f"I have {table1.name} and subquery table {table2.name}"):
             with When("I execute query with FINAL modifier specified explicitly"):
                 explicit_final = node.query(
-                                f"SELECT * FROM {table1.name} FINAL {clause}"
-                                f" x = (SELECT x FROM {table2.name} FINAL) "
-                                f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;"
-                            ).output.strip()
+                    f"SELECT * FROM {table1.name} FINAL {clause}"
+                    f" x = (SELECT x FROM {table2.name} FINAL) "
+                    f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;"
+                ).output.strip()
 
             with And(
-                    "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
+                "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
             ):
                 force_select_final = node.query(
-                                f"SELECT * FROM {table1.name} {clause} x = (SELECT x FROM {table2.name}) "
-                                f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
-                                settings=[("force_select_final", 1)],
-                            ).output.strip()
+                    f"SELECT * FROM {table1.name} {clause} x = (SELECT x FROM {table2.name}) "
+                    f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
+                    settings=[("force_select_final", 1)],
+                ).output.strip()
 
             with Then("I compare results are the same"):
                 assert explicit_final == force_select_final
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery_ExpressionInPrewhere("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery_ExpressionInPrewhere(
+        "1.0"
+    )
+)
 def select_prewhere_subquery(self):
     """Check query with `PREWHERE` with subquery."""
     select_prewhere_where_subquery(clause="PREWHERE")
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery_ExpressionInWhere("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery_ExpressionInWhere(
+        "1.0"
+    )
+)
 def select_where_subquery(self):
     """Check query with`WHERE` with subquery."""
     select_prewhere_where_subquery(clause="WHERE")
@@ -974,40 +992,50 @@ def select_prewhere_where_in_subquery(self, node=None, clause=None):
         with When(f"I have {table1.name} and subquery table {table2.name}"):
             with When("I execute query with FINAL modifier specified explicitly"):
                 explicit_final = node.query(
-                                f"SELECT * FROM {table1.name} FINAL {clause}"
-                                f" x IN (SELECT x FROM {table2.name} FINAL) "
-                                f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;"
-                            ).output.strip()
+                    f"SELECT * FROM {table1.name} FINAL {clause}"
+                    f" x IN (SELECT x FROM {table2.name} FINAL) "
+                    f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;"
+                ).output.strip()
 
             with And(
-                    "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
+                "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
             ):
                 force_select_final = node.query(
-                                f"SELECT * FROM {table1.name} {clause} x IN (SELECT x FROM {table2.name}) "
-                                f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
-                                settings=[("force_select_final", 1)],
-                            ).output.strip()
+                    f"SELECT * FROM {table1.name} {clause} x IN (SELECT x FROM {table2.name}) "
+                    f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
+                    settings=[("force_select_final", 1)],
+                ).output.strip()
 
             with Then("I compare results are the same"):
                 assert explicit_final == force_select_final
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery_INPrewhere("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery_INPrewhere(
+        "1.0"
+    )
+)
 def select_prewhere_in_subquery(self):
     """Check query with `PREWHERE` with `IN` statement subquery."""
     select_prewhere_where_in_subquery(clause="PREWHERE")
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery_INWhere("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery_INWhere("1.0")
+)
 def select_where_in_subquery(self):
     """Check query with `WHERE` with `IN` statement subquery."""
     select_prewhere_where_in_subquery(clause="WHERE")
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery_ExpressionInArrayJoin("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery_ExpressionInArrayJoin(
+        "1.0"
+    )
+)
 def select_array_join_subquery(self, node=None):
     """Check SELECT query with `ARRAY JOIN` where array is build from a sub-query result."""
     if node is None:
@@ -1067,7 +1095,7 @@ def select_array_join_subquery(self, node=None):
                             ).output.strip()
 
                         with And(
-                                "I execute the same query with FINAL modifier specified explicitly"
+                            "I execute the same query with FINAL modifier specified explicitly"
                         ):
                             if engine.startswith("Merge") or engine.endswith("Log"):
                                 explicit_final = node.query(
@@ -1090,14 +1118,23 @@ def select_array_join_subquery(self, node=None):
 @TestFeature
 @Name("force modifier")
 @Specifications(SRS032_ClickHouse_Automatic_Final_Modifier_For_Select_Queries)
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier("1.0"),
-              RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries("1.0"),
-              RQ_SRS_032_ClickHouse_AutomaticFinalModifier_TableEngineSetting_CreateStatement("1.0"),
-              RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SupportedTableEngines_MergeTree("1.0"),
-              RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SupportedTableEngines_ReplicatedMergeTree("1.0"),
-              RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SupportedTableEngines_EnginesOverOtherEngines("1.0"),
-              RQ_SRS_032_ClickHouse_AutomaticFinalModifier_TableEngineSetting_IgnoreOnNotSupportedTableEngines("1.0")
-              )
+@Requirements(
+    RQ_SRS_032_ClickHouse_AutomaticFinalModifier("1.0"),
+    RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries("1.0"),
+    RQ_SRS_032_ClickHouse_AutomaticFinalModifier_TableEngineSetting_CreateStatement(
+        "1.0"
+    ),
+    RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SupportedTableEngines_MergeTree("1.0"),
+    RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SupportedTableEngines_ReplicatedMergeTree(
+        "1.0"
+    ),
+    RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SupportedTableEngines_EnginesOverOtherEngines(
+        "1.0"
+    ),
+    RQ_SRS_032_ClickHouse_AutomaticFinalModifier_TableEngineSetting_IgnoreOnNotSupportedTableEngines(
+        "1.0"
+    ),
+)
 def feature(self):
     """Check force_final_modifier setting."""
     if check_clickhouse_version("<22.11")(self):
