@@ -819,7 +819,7 @@ class Cluster(object):
 
             with Shell() as bash:
                 bash.timeout = 300
-                bash(f'chmod +x {self.clickhouse_binary_path}')
+                bash(f"chmod +x {self.clickhouse_binary_path}")
 
         self.docker_compose += f' --ansi never --project-directory "{docker_compose_project_dir}" --file "{docker_compose_file_path}"'
         self.lock = threading.Lock()
