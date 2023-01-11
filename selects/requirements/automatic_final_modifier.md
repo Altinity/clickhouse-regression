@@ -229,7 +229,6 @@ version: 1.0
 [ClickHouse] SHALL support the following table engines over tables that have automatic [FINAL modifier] clause enabled:
 
 * [View](https://clickhouse.com/docs/en/engines/table-engines/special/view)
-* [Buffer](https://clickhouse.com/docs/en/engines/table-engines/special/buffer)
 * [Distributed](https://clickhouse.com/docs/en/engines/table-engines/special/distributed)
 * [MaterializedView](https://clickhouse.com/docs/en/engines/table-engines/special/materializedview)
 
