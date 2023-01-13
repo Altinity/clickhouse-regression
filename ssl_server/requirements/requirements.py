@@ -1,6 +1,6 @@
 # These requirements were auto generated
 # from software requirements specification (SRS)
-# document by TestFlows v1.7.210802.1144954.
+# document by TestFlows v1.9.230109.1215236.
 # Do not edit by hand but re-generate instead
 # using 'tfs requirements generate' command.
 from testflows.core import Specification
@@ -8,8 +8,8 @@ from testflows.core import Requirement
 
 Heading = Specification.Heading
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_HTTPS_Port = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.HTTPS.Port",
+RQ_SRS_017_ClickHouse_SSL_Server_HTTPS_Port = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.HTTPS.Port",
     version="1.0",
     priority=None,
     group=None,
@@ -25,8 +25,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_HTTPS_Port = Requirement(
     num="3.1.1",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_TCP_Port = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.TCP.Port",
+RQ_SRS_017_ClickHouse_SSL_Server_TCP_Port = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.TCP.Port",
     version="1.0",
     priority=None,
     group=None,
@@ -42,8 +42,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_TCP_Port = Requirement(
     num="3.1.2",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Disable = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Disable",
+RQ_SRS_017_ClickHouse_SSL_Server_Protocols_Disable = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Disable",
     version="1.0",
     priority=None,
     group=None,
@@ -73,8 +73,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Disable = Requirement(
     num="3.2.1.1",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Disable_SSLv2 = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Disable.SSLv2",
+RQ_SRS_017_ClickHouse_SSL_Server_Protocols_Disable_SSLv2 = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Disable.SSLv2",
     version="1.0",
     priority=None,
     group=None,
@@ -90,8 +90,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Disable_SSLv2 = Requirement(
     num="3.2.1.2",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Disable_SSLv3 = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Disable.SSLv3",
+RQ_SRS_017_ClickHouse_SSL_Server_Protocols_Disable_SSLv3 = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Disable.SSLv3",
     version="1.0",
     priority=None,
     group=None,
@@ -107,8 +107,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Disable_SSLv3 = Requirement(
     num="3.2.1.3",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Disable_TLSv1 = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Disable.TLSv1",
+RQ_SRS_017_ClickHouse_SSL_Server_Protocols_Disable_TLSv1 = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Disable.TLSv1",
     version="1.0",
     priority=None,
     group=None,
@@ -124,8 +124,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Disable_TLSv1 = Requirement(
     num="3.2.1.4",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Disable_TLSv1_1 = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Disable.TLSv1_1",
+RQ_SRS_017_ClickHouse_SSL_Server_Protocols_Disable_TLSv1_1 = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Disable.TLSv1_1",
     version="1.0",
     priority=None,
     group=None,
@@ -141,8 +141,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Disable_TLSv1_1 = Requiremen
     num="3.2.1.5",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Disable_TLSv1_2 = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Disable.TLSv1_2",
+RQ_SRS_017_ClickHouse_SSL_Server_Protocols_Disable_TLSv1_2 = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Disable.TLSv1_2",
     version="1.0",
     priority=None,
     group=None,
@@ -158,8 +158,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Disable_TLSv1_2 = Requiremen
     num="3.2.1.6",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Disable_TLSv1_3_NotAllowed = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Disable.TLSv1_3.NotAllowed",
+RQ_SRS_017_ClickHouse_SSL_Server_Protocols_Disable_TLSv1_3_NotAllowed = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Disable.TLSv1_3.NotAllowed",
     version="1.0",
     priority=None,
     group=None,
@@ -176,8 +176,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Disable_TLSv1_3_NotAllowed =
     num="3.2.1.7",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Require_TLS = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Require.TLS",
+RQ_SRS_017_ClickHouse_SSL_Server_Protocols_Require_TLS = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Require.TLS",
     version="1.0",
     priority=None,
     group=None,
@@ -196,8 +196,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Require_TLS = Requirement(
     num="3.2.2.1",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Require_TLSv1 = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Require.TLSv1",
+RQ_SRS_017_ClickHouse_SSL_Server_Protocols_Require_TLSv1 = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Require.TLSv1",
     version="1.0",
     priority=None,
     group=None,
@@ -213,8 +213,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Require_TLSv1 = Requirement(
     num="3.2.2.2",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Require_TLSv1_1 = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Require.TLSv1_1",
+RQ_SRS_017_ClickHouse_SSL_Server_Protocols_Require_TLSv1_1 = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Require.TLSv1_1",
     version="1.0",
     priority=None,
     group=None,
@@ -230,8 +230,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Require_TLSv1_1 = Requiremen
     num="3.2.2.3",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Require_TLSv1_2 = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Require.TLSv1_2",
+RQ_SRS_017_ClickHouse_SSL_Server_Protocols_Require_TLSv1_2 = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Require.TLSv1_2",
     version="1.0",
     priority=None,
     group=None,
@@ -247,8 +247,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Require_TLSv1_2 = Requiremen
     num="3.2.2.4",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Require_TLSv1_3 = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Require.TLSv1_3",
+RQ_SRS_017_ClickHouse_SSL_Server_Protocols_Require_TLSv1_3 = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Require.TLSv1_3",
     version="1.0",
     priority=None,
     group=None,
@@ -264,8 +264,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Require_TLSv1_3 = Requiremen
     num="3.2.2.5",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_CipherSuites = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.CipherSuites",
+RQ_SRS_017_ClickHouse_SSL_Server_CipherSuites = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.CipherSuites",
     version="1.0",
     priority=None,
     group=None,
@@ -300,8 +300,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_CipherSuites = Requirement(
     num="3.3.1.1",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_CipherSuites_PreferServerCiphers = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.CipherSuites.PreferServerCiphers",
+RQ_SRS_017_ClickHouse_SSL_Server_CipherSuites_PreferServerCiphers = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.CipherSuites.PreferServerCiphers",
     version="1.0",
     priority=None,
     group=None,
@@ -329,8 +329,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_CipherSuites_PreferServerCiphers = Req
     num="3.3.2.1",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_CipherSuites_ECDHCurve = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.CipherSuites.ECDHCurve",
+RQ_SRS_017_ClickHouse_SSL_Server_CipherSuites_ECDHCurve = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.CipherSuites.ECDHCurve",
     version="1.0",
     priority=None,
     group=None,
@@ -359,8 +359,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_CipherSuites_ECDHCurve = Requirement(
     num="3.3.3.1",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_CipherSuites_ECDHCurve_DefaultValue = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.CipherSuites.ECDHCurve.DefaultValue",
+RQ_SRS_017_ClickHouse_SSL_Server_CipherSuites_ECDHCurve_DefaultValue = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.CipherSuites.ECDHCurve.DefaultValue",
     version="1.0",
     priority=None,
     group=None,
@@ -378,8 +378,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_CipherSuites_ECDHCurve_DefaultValue = 
     num="3.3.3.2",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_FIPS_Mode = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.FIPS.Mode",
+RQ_SRS_017_ClickHouse_SSL_Server_FIPS_Mode = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Mode",
     version="1.0",
     priority=None,
     group=None,
@@ -410,8 +410,29 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_FIPS_Mode = Requirement(
     num="3.4.1",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_FIPS_Mode_ApprovedSecurityFunctions = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.FIPS.Mode.ApprovedSecurityFunctions",
+RQ_SRS_017_ClickHouse_SSL_Server_FIPS_Mode_LogMessage = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Mode.LogMessage",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL provide the following message in `/var/log/clickhouse-server/clickhouse-server.log`\n"
+        "when ClickHouse is started in FIPS mode:\n"
+        "\n"
+        "```\n"
+        "<Information> Application: Starting in FIPS mode, KAT test result: 1\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="3.4.2",
+)
+
+RQ_SRS_017_ClickHouse_SSL_Server_FIPS_Mode_ApprovedSecurityFunctions = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Mode.ApprovedSecurityFunctions",
     version="1.0",
     priority=None,
     group=None,
@@ -457,11 +478,11 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_FIPS_Mode_ApprovedSecurityFunctions = 
     ),
     link=None,
     level=3,
-    num="3.4.2",
+    num="3.4.3",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_DH_Parameters = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.DH.Parameters",
+RQ_SRS_017_ClickHouse_SSL_Server_DH_Parameters = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.DH.Parameters",
     version="1.0",
     priority=None,
     group=None,
@@ -490,8 +511,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_DH_Parameters = Requirement(
     num="3.5.1",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_PrivateKey = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.PrivateKey",
+RQ_SRS_017_ClickHouse_SSL_Server_Certificates_PrivateKey = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Certificates.PrivateKey",
     version="1.0",
     priority=None,
     group=None,
@@ -521,8 +542,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_PrivateKey = Requirement(
     num="3.6.1.1",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_PrivateKeyHandler = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.PrivateKeyHandler",
+RQ_SRS_017_ClickHouse_SSL_Server_Certificates_PrivateKeyHandler = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Certificates.PrivateKeyHandler",
     version="1.0",
     priority=None,
     group=None,
@@ -553,8 +574,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_PrivateKeyHandler = Requi
     num="3.6.1.2.1",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_PrivateKeyHandler_Password = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.PrivateKeyHandler.Password",
+RQ_SRS_017_ClickHouse_SSL_Server_Certificates_PrivateKeyHandler_Password = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Certificates.PrivateKeyHandler.Password",
     version="1.0",
     priority=None,
     group=None,
@@ -587,8 +608,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_PrivateKeyHandler_Passwor
     num="3.6.1.2.2",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_Certificate = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.Certificate",
+RQ_SRS_017_ClickHouse_SSL_Server_Certificates_Certificate = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Certificates.Certificate",
     version="1.0",
     priority=None,
     group=None,
@@ -618,8 +639,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_Certificate = Requirement
     num="3.6.2.1",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_CAConfig = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.CAConfig",
+RQ_SRS_017_ClickHouse_SSL_Server_Certificates_CAConfig = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Certificates.CAConfig",
     version="1.0",
     priority=None,
     group=None,
@@ -646,8 +667,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_CAConfig = Requirement(
     num="3.6.3.1.1",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_LoadDefaultCAFile = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.LoadDefaultCAFile",
+RQ_SRS_017_ClickHouse_SSL_Server_Certificates_LoadDefaultCAFile = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Certificates.LoadDefaultCAFile",
     version="1.0",
     priority=None,
     group=None,
@@ -664,8 +685,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_LoadDefaultCAFile = Requi
     num="3.6.3.2.1",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_VerificationMode = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.VerificationMode",
+RQ_SRS_017_ClickHouse_SSL_Server_Certificates_VerificationMode = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Certificates.VerificationMode",
     version="1.0",
     priority=None,
     group=None,
@@ -681,8 +702,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_VerificationMode = Requir
     num="3.6.4.1.1",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_VerificationMode_None = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.VerificationMode.None",
+RQ_SRS_017_ClickHouse_SSL_Server_Certificates_VerificationMode_None = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Certificates.VerificationMode.None",
     version="1.0",
     priority=None,
     group=None,
@@ -699,8 +720,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_VerificationMode_None = R
     num="3.6.4.1.2",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_VerificationMode_Relaxed = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.VerificationMode.Relaxed",
+RQ_SRS_017_ClickHouse_SSL_Server_Certificates_VerificationMode_Relaxed = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Certificates.VerificationMode.Relaxed",
     version="1.0",
     priority=None,
     group=None,
@@ -719,8 +740,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_VerificationMode_Relaxed 
     num="3.6.4.1.3",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_VerificationMode_Strict = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.VerificationMode.Strict",
+RQ_SRS_017_ClickHouse_SSL_Server_Certificates_VerificationMode_Strict = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Certificates.VerificationMode.Strict",
     version="1.0",
     priority=None,
     group=None,
@@ -738,8 +759,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_VerificationMode_Strict =
     num="3.6.4.1.4",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_VerificationMode_Once = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.VerificationMode.Once",
+RQ_SRS_017_ClickHouse_SSL_Server_Certificates_VerificationMode_Once = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Certificates.VerificationMode.Once",
     version="1.0",
     priority=None,
     group=None,
@@ -757,8 +778,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_VerificationMode_Once = R
     num="3.6.4.1.5",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_VerificationExtended = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.VerificationExtended",
+RQ_SRS_017_ClickHouse_SSL_Server_Certificates_VerificationExtended = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Certificates.VerificationExtended",
     version="1.0",
     priority=None,
     group=None,
@@ -776,8 +797,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_VerificationExtended = Re
     num="3.6.4.2.1",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_VerificationDepth = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.VerificationDepth",
+RQ_SRS_017_ClickHouse_SSL_Server_Certificates_VerificationDepth = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Certificates.VerificationDepth",
     version="1.0",
     priority=None,
     group=None,
@@ -795,8 +816,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_VerificationDepth = Requi
     num="3.6.4.3.1",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_InvalidCertificateHandler = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.InvalidCertificateHandler",
+RQ_SRS_017_ClickHouse_SSL_Server_Certificates_InvalidCertificateHandler = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Certificates.InvalidCertificateHandler",
     version="1.0",
     priority=None,
     group=None,
@@ -826,8 +847,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_InvalidCertificateHandler
     num="3.6.5.3.1",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_Session_Cache = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Session.Cache",
+RQ_SRS_017_ClickHouse_SSL_Server_Session_Cache = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Session.Cache",
     version="1.0",
     priority=None,
     group=None,
@@ -854,8 +875,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_Session_Cache = Requirement(
     num="3.7.1",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_Session_CacheSize = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Session.CacheSize",
+RQ_SRS_017_ClickHouse_SSL_Server_Session_CacheSize = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Session.CacheSize",
     version="1.0",
     priority=None,
     group=None,
@@ -886,8 +907,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_Session_CacheSize = Requirement(
     num="3.7.2",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_Session_IdContext = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Session.IdContext",
+RQ_SRS_017_ClickHouse_SSL_Server_Session_IdContext = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Session.IdContext",
     version="1.0",
     priority=None,
     group=None,
@@ -921,8 +942,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_Session_IdContext = Requirement(
     num="3.7.3",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_Session_Timeout = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Session.Timeout",
+RQ_SRS_017_ClickHouse_SSL_Server_Session_Timeout = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Session.Timeout",
     version="1.0",
     priority=None,
     group=None,
@@ -950,8 +971,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_Session_Timeout = Requirement(
     num="3.7.4",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_DynamicContext_Certificate_Reload = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.DynamicContext.Certificate.Reload",
+RQ_SRS_017_ClickHouse_SSL_Server_DynamicContext_Certificate_Reload = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.DynamicContext.Certificate.Reload",
     version="1.0",
     priority=None,
     group=None,
@@ -970,8 +991,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_DynamicContext_Certificate_Reload = Re
     num="3.8.5.1",
 )
 
-RQ_SRS_017_ClickHouse_Security_SSL_Server_DynamicContext_PrivateKey_Reload = Requirement(
-    name="RQ.SRS-017.ClickHouse.Security.SSL.Server.DynamicContext.PrivateKey.Reload",
+RQ_SRS_017_ClickHouse_SSL_Server_DynamicContext_PrivateKey_Reload = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.DynamicContext.PrivateKey.Reload",
     version="1.0",
     priority=None,
     group=None,
@@ -1011,8 +1032,8 @@ RQ_SRS_017_ClickHouse_Security_SSL_Server_DynamicContext_PrivateKey_Reload = Req
     num="3.8.6.1",
 )
 
-SRS017_ClickHouse_Security_SSL_Server = Specification(
-    name="SRS017 ClickHouse Security SSL Server",
+SRS017_ClickHouse_SSL = Specification(
+    name="SRS017 ClickHouse SSL",
     description=None,
     author=None,
     date=None,
@@ -1035,286 +1056,278 @@ SRS017_ClickHouse_Security_SSL_Server = Specification(
         Heading(name="Requirements", level=1, num="3"),
         Heading(name="Secure Connections", level=2, num="3.1"),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.HTTPS.Port",
-            level=3,
-            num="3.1.1",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.HTTPS.Port", level=3, num="3.1.1"
         ),
-        Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.TCP.Port",
-            level=3,
-            num="3.1.2",
-        ),
+        Heading(name="RQ.SRS-017.ClickHouse.SSL.Server.TCP.Port", level=3, num="3.1.2"),
         Heading(name="Protocols", level=2, num="3.2"),
         Heading(name="Disabling", level=3, num="3.2.1"),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Disable",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Disable",
             level=4,
             num="3.2.1.1",
         ),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Disable.SSLv2",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Disable.SSLv2",
             level=4,
             num="3.2.1.2",
         ),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Disable.SSLv3",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Disable.SSLv3",
             level=4,
             num="3.2.1.3",
         ),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Disable.TLSv1",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Disable.TLSv1",
             level=4,
             num="3.2.1.4",
         ),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Disable.TLSv1_1",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Disable.TLSv1_1",
             level=4,
             num="3.2.1.5",
         ),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Disable.TLSv1_2",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Disable.TLSv1_2",
             level=4,
             num="3.2.1.6",
         ),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Disable.TLSv1_3.NotAllowed",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Disable.TLSv1_3.NotAllowed",
             level=4,
             num="3.2.1.7",
         ),
         Heading(name="Require TLS", level=3, num="3.2.2"),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Require.TLS",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Require.TLS",
             level=4,
             num="3.2.2.1",
         ),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Require.TLSv1",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Require.TLSv1",
             level=4,
             num="3.2.2.2",
         ),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Require.TLSv1_1",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Require.TLSv1_1",
             level=4,
             num="3.2.2.3",
         ),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Require.TLSv1_2",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Require.TLSv1_2",
             level=4,
             num="3.2.2.4",
         ),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Require.TLSv1_3",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Require.TLSv1_3",
             level=4,
             num="3.2.2.5",
         ),
         Heading(name="Cipher Suites", level=2, num="3.3"),
         Heading(name="Cipher List", level=3, num="3.3.1"),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.CipherSuites",
-            level=4,
-            num="3.3.1.1",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.CipherSuites", level=4, num="3.3.1.1"
         ),
         Heading(name="Prefer Server Ciphers", level=3, num="3.3.2"),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.CipherSuites.PreferServerCiphers",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.CipherSuites.PreferServerCiphers",
             level=4,
             num="3.3.2.1",
         ),
         Heading(name="ECDH Curve", level=3, num="3.3.3"),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.CipherSuites.ECDHCurve",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.CipherSuites.ECDHCurve",
             level=4,
             num="3.3.3.1",
         ),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.CipherSuites.ECDHCurve.DefaultValue",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.CipherSuites.ECDHCurve.DefaultValue",
             level=4,
             num="3.3.3.2",
         ),
         Heading(name="FIPS Mode", level=2, num="3.4"),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.FIPS.Mode",
-            level=3,
-            num="3.4.1",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Mode", level=3, num="3.4.1"
         ),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.FIPS.Mode.ApprovedSecurityFunctions",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Mode.LogMessage",
             level=3,
             num="3.4.2",
         ),
+        Heading(
+            name="RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Mode.ApprovedSecurityFunctions",
+            level=3,
+            num="3.4.3",
+        ),
         Heading(name="Diffie-Hellman (DH) Parameters", level=2, num="3.5"),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.DH.Parameters",
-            level=3,
-            num="3.5.1",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.DH.Parameters", level=3, num="3.5.1"
         ),
         Heading(name="Certificates", level=2, num="3.6"),
         Heading(name="Private Key", level=3, num="3.6.1"),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.PrivateKey",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Certificates.PrivateKey",
             level=4,
             num="3.6.1.1",
         ),
         Heading(name="Private Key Handler", level=4, num="3.6.1.2"),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.PrivateKeyHandler",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Certificates.PrivateKeyHandler",
             level=5,
             num="3.6.1.2.1",
         ),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.PrivateKeyHandler.Password",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Certificates.PrivateKeyHandler.Password",
             level=5,
             num="3.6.1.2.2",
         ),
         Heading(name="Certificate", level=3, num="3.6.2"),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.Certificate",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Certificates.Certificate",
             level=4,
             num="3.6.2.1",
         ),
         Heading(name="CA Certificates", level=3, num="3.6.3"),
         Heading(name="Config", level=4, num="3.6.3.1"),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.CAConfig",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Certificates.CAConfig",
             level=5,
             num="3.6.3.1.1",
         ),
         Heading(name="Default", level=4, num="3.6.3.2"),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.LoadDefaultCAFile",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Certificates.LoadDefaultCAFile",
             level=5,
             num="3.6.3.2.1",
         ),
         Heading(name="Verification", level=3, num="3.6.4"),
         Heading(name="Mode", level=4, num="3.6.4.1"),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.VerificationMode",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Certificates.VerificationMode",
             level=5,
             num="3.6.4.1.1",
         ),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.VerificationMode.None",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Certificates.VerificationMode.None",
             level=5,
             num="3.6.4.1.2",
         ),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.VerificationMode.Relaxed",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Certificates.VerificationMode.Relaxed",
             level=5,
             num="3.6.4.1.3",
         ),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.VerificationMode.Strict",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Certificates.VerificationMode.Strict",
             level=5,
             num="3.6.4.1.4",
         ),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.VerificationMode.Once",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Certificates.VerificationMode.Once",
             level=5,
             num="3.6.4.1.5",
         ),
         Heading(name="Extended Mode", level=4, num="3.6.4.2"),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.VerificationExtended",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Certificates.VerificationExtended",
             level=5,
             num="3.6.4.2.1",
         ),
         Heading(name="Depth", level=4, num="3.6.4.3"),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.VerificationDepth",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Certificates.VerificationDepth",
             level=5,
             num="3.6.4.3.1",
         ),
         Heading(name="Invalid Certificate Handler", level=3, num="3.6.5"),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.InvalidCertificateHandler",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Certificates.InvalidCertificateHandler",
             level=5,
             num="3.6.5.3.1",
         ),
         Heading(name="Session", level=2, num="3.7"),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Session.Cache",
-            level=3,
-            num="3.7.1",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Session.Cache", level=3, num="3.7.1"
         ),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Session.CacheSize",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Session.CacheSize",
             level=3,
             num="3.7.2",
         ),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Session.IdContext",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Session.IdContext",
             level=3,
             num="3.7.3",
         ),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.Session.Timeout",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Session.Timeout",
             level=3,
             num="3.7.4",
         ),
         Heading(name="Dynamic SSL Context", level=2, num="3.8"),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.DynamicContext.Reload",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.DynamicContext.Reload",
             level=4,
             num="3.8.4.1",
         ),
         Heading(name="Certificate Reload", level=3, num="3.8.5"),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.DynamicContext.Certificate.Reload",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.DynamicContext.Certificate.Reload",
             level=4,
             num="3.8.5.1",
         ),
         Heading(name="Private Key Reload", level=3, num="3.8.6"),
         Heading(
-            name="RQ.SRS-017.ClickHouse.Security.SSL.Server.DynamicContext.PrivateKey.Reload",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.DynamicContext.PrivateKey.Reload",
             level=4,
             num="3.8.6.1",
         ),
     ),
     requirements=(
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_HTTPS_Port,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_TCP_Port,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Disable,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Disable_SSLv2,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Disable_SSLv3,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Disable_TLSv1,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Disable_TLSv1_1,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Disable_TLSv1_2,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Disable_TLSv1_3_NotAllowed,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Require_TLS,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Require_TLSv1,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Require_TLSv1_1,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Require_TLSv1_2,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_Protocols_Require_TLSv1_3,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_CipherSuites,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_CipherSuites_PreferServerCiphers,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_CipherSuites_ECDHCurve,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_CipherSuites_ECDHCurve_DefaultValue,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_FIPS_Mode,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_FIPS_Mode_ApprovedSecurityFunctions,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_DH_Parameters,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_PrivateKey,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_PrivateKeyHandler,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_PrivateKeyHandler_Password,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_Certificate,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_CAConfig,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_LoadDefaultCAFile,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_VerificationMode,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_VerificationMode_None,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_VerificationMode_Relaxed,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_VerificationMode_Strict,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_VerificationMode_Once,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_VerificationExtended,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_VerificationDepth,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_Certificates_InvalidCertificateHandler,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_Session_Cache,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_Session_CacheSize,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_Session_IdContext,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_Session_Timeout,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_DynamicContext_Certificate_Reload,
-        RQ_SRS_017_ClickHouse_Security_SSL_Server_DynamicContext_PrivateKey_Reload,
+        RQ_SRS_017_ClickHouse_SSL_Server_HTTPS_Port,
+        RQ_SRS_017_ClickHouse_SSL_Server_TCP_Port,
+        RQ_SRS_017_ClickHouse_SSL_Server_Protocols_Disable,
+        RQ_SRS_017_ClickHouse_SSL_Server_Protocols_Disable_SSLv2,
+        RQ_SRS_017_ClickHouse_SSL_Server_Protocols_Disable_SSLv3,
+        RQ_SRS_017_ClickHouse_SSL_Server_Protocols_Disable_TLSv1,
+        RQ_SRS_017_ClickHouse_SSL_Server_Protocols_Disable_TLSv1_1,
+        RQ_SRS_017_ClickHouse_SSL_Server_Protocols_Disable_TLSv1_2,
+        RQ_SRS_017_ClickHouse_SSL_Server_Protocols_Disable_TLSv1_3_NotAllowed,
+        RQ_SRS_017_ClickHouse_SSL_Server_Protocols_Require_TLS,
+        RQ_SRS_017_ClickHouse_SSL_Server_Protocols_Require_TLSv1,
+        RQ_SRS_017_ClickHouse_SSL_Server_Protocols_Require_TLSv1_1,
+        RQ_SRS_017_ClickHouse_SSL_Server_Protocols_Require_TLSv1_2,
+        RQ_SRS_017_ClickHouse_SSL_Server_Protocols_Require_TLSv1_3,
+        RQ_SRS_017_ClickHouse_SSL_Server_CipherSuites,
+        RQ_SRS_017_ClickHouse_SSL_Server_CipherSuites_PreferServerCiphers,
+        RQ_SRS_017_ClickHouse_SSL_Server_CipherSuites_ECDHCurve,
+        RQ_SRS_017_ClickHouse_SSL_Server_CipherSuites_ECDHCurve_DefaultValue,
+        RQ_SRS_017_ClickHouse_SSL_Server_FIPS_Mode,
+        RQ_SRS_017_ClickHouse_SSL_Server_FIPS_Mode_LogMessage,
+        RQ_SRS_017_ClickHouse_SSL_Server_FIPS_Mode_ApprovedSecurityFunctions,
+        RQ_SRS_017_ClickHouse_SSL_Server_DH_Parameters,
+        RQ_SRS_017_ClickHouse_SSL_Server_Certificates_PrivateKey,
+        RQ_SRS_017_ClickHouse_SSL_Server_Certificates_PrivateKeyHandler,
+        RQ_SRS_017_ClickHouse_SSL_Server_Certificates_PrivateKeyHandler_Password,
+        RQ_SRS_017_ClickHouse_SSL_Server_Certificates_Certificate,
+        RQ_SRS_017_ClickHouse_SSL_Server_Certificates_CAConfig,
+        RQ_SRS_017_ClickHouse_SSL_Server_Certificates_LoadDefaultCAFile,
+        RQ_SRS_017_ClickHouse_SSL_Server_Certificates_VerificationMode,
+        RQ_SRS_017_ClickHouse_SSL_Server_Certificates_VerificationMode_None,
+        RQ_SRS_017_ClickHouse_SSL_Server_Certificates_VerificationMode_Relaxed,
+        RQ_SRS_017_ClickHouse_SSL_Server_Certificates_VerificationMode_Strict,
+        RQ_SRS_017_ClickHouse_SSL_Server_Certificates_VerificationMode_Once,
+        RQ_SRS_017_ClickHouse_SSL_Server_Certificates_VerificationExtended,
+        RQ_SRS_017_ClickHouse_SSL_Server_Certificates_VerificationDepth,
+        RQ_SRS_017_ClickHouse_SSL_Server_Certificates_InvalidCertificateHandler,
+        RQ_SRS_017_ClickHouse_SSL_Server_Session_Cache,
+        RQ_SRS_017_ClickHouse_SSL_Server_Session_CacheSize,
+        RQ_SRS_017_ClickHouse_SSL_Server_Session_IdContext,
+        RQ_SRS_017_ClickHouse_SSL_Server_Session_Timeout,
+        RQ_SRS_017_ClickHouse_SSL_Server_DynamicContext_Certificate_Reload,
+        RQ_SRS_017_ClickHouse_SSL_Server_DynamicContext_PrivateKey_Reload,
     ),
     content="""
-# SRS017 ClickHouse Security SSL Server
+# SRS017 ClickHouse SSL
 # Software Requirements Specification
 
 ## Table of Contents
@@ -1325,73 +1338,73 @@ SRS017_ClickHouse_Security_SSL_Server = Specification(
   * 2.2 [TLS Protocol](#tls-protocol)
 * 3 [Requirements](#requirements)
   * 3.1 [Secure Connections](#secure-connections)
-    * 3.1.1 [RQ.SRS-017.ClickHouse.Security.SSL.Server.HTTPS.Port](#rqsrs-017clickhousesecuritysslserverhttpsport)
-    * 3.1.2 [RQ.SRS-017.ClickHouse.Security.SSL.Server.TCP.Port](#rqsrs-017clickhousesecuritysslservertcpport)
+    * 3.1.1 [RQ.SRS-017.ClickHouse.SSL.Server.HTTPS.Port](#rqsrs-017clickhousesecuritysslserverhttpsport)
+    * 3.1.2 [RQ.SRS-017.ClickHouse.SSL.Server.TCP.Port](#rqsrs-017clickhousesecuritysslservertcpport)
   * 3.2 [Protocols](#protocols)
     * 3.2.1 [Disabling](#disabling)
-      * 3.2.1.1 [RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Disable](#rqsrs-017clickhousesecuritysslserverprotocolsdisable)
-      * 3.2.1.2 [RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Disable.SSLv2](#rqsrs-017clickhousesecuritysslserverprotocolsdisablesslv2)
-      * 3.2.1.3 [RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Disable.SSLv3](#rqsrs-017clickhousesecuritysslserverprotocolsdisablesslv3)
-      * 3.2.1.4 [RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Disable.TLSv1](#rqsrs-017clickhousesecuritysslserverprotocolsdisabletlsv1)
-      * 3.2.1.5 [RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Disable.TLSv1_1](#rqsrs-017clickhousesecuritysslserverprotocolsdisabletlsv1_1)
-      * 3.2.1.6 [RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Disable.TLSv1_2](#rqsrs-017clickhousesecuritysslserverprotocolsdisabletlsv1_2)
-      * 3.2.1.7 [RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Disable.TLSv1_3.NotAllowed](#rqsrs-017clickhousesecuritysslserverprotocolsdisabletlsv1_3notallowed)
+      * 3.2.1.1 [RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Disable](#rqsrs-017clickhousesecuritysslserverprotocolsdisable)
+      * 3.2.1.2 [RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Disable.SSLv2](#rqsrs-017clickhousesecuritysslserverprotocolsdisablesslv2)
+      * 3.2.1.3 [RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Disable.SSLv3](#rqsrs-017clickhousesecuritysslserverprotocolsdisablesslv3)
+      * 3.2.1.4 [RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Disable.TLSv1](#rqsrs-017clickhousesecuritysslserverprotocolsdisabletlsv1)
+      * 3.2.1.5 [RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Disable.TLSv1_1](#rqsrs-017clickhousesecuritysslserverprotocolsdisabletlsv1_1)
+      * 3.2.1.6 [RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Disable.TLSv1_2](#rqsrs-017clickhousesecuritysslserverprotocolsdisabletlsv1_2)
+      * 3.2.1.7 [RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Disable.TLSv1_3.NotAllowed](#rqsrs-017clickhousesecuritysslserverprotocolsdisabletlsv1_3notallowed)
     * 3.2.2 [Require TLS](#require-tls)
-      * 3.2.2.1 [RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Require.TLS](#rqsrs-017clickhousesecuritysslserverprotocolsrequiretls)
-      * 3.2.2.2 [RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Require.TLSv1](#rqsrs-017clickhousesecuritysslserverprotocolsrequiretlsv1)
-      * 3.2.2.3 [RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Require.TLSv1_1](#rqsrs-017clickhousesecuritysslserverprotocolsrequiretlsv1_1)
-      * 3.2.2.4 [RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Require.TLSv1_2](#rqsrs-017clickhousesecuritysslserverprotocolsrequiretlsv1_2)
-      * 3.2.2.5 [RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Require.TLSv1_3](#rqsrs-017clickhousesecuritysslserverprotocolsrequiretlsv1_3)
+      * 3.2.2.1 [RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Require.TLS](#rqsrs-017clickhousesecuritysslserverprotocolsrequiretls)
+      * 3.2.2.2 [RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Require.TLSv1](#rqsrs-017clickhousesecuritysslserverprotocolsrequiretlsv1)
+      * 3.2.2.3 [RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Require.TLSv1_1](#rqsrs-017clickhousesecuritysslserverprotocolsrequiretlsv1_1)
+      * 3.2.2.4 [RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Require.TLSv1_2](#rqsrs-017clickhousesecuritysslserverprotocolsrequiretlsv1_2)
+      * 3.2.2.5 [RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Require.TLSv1_3](#rqsrs-017clickhousesecuritysslserverprotocolsrequiretlsv1_3)
   * 3.3 [Cipher Suites](#cipher-suites)
     * 3.3.1 [Cipher List](#cipher-list)
-      * 3.3.1.1 [RQ.SRS-017.ClickHouse.Security.SSL.Server.CipherSuites](#rqsrs-017clickhousesecuritysslserverciphersuites)
+      * 3.3.1.1 [RQ.SRS-017.ClickHouse.SSL.Server.CipherSuites](#rqsrs-017clickhousesecuritysslserverciphersuites)
     * 3.3.2 [Prefer Server Ciphers](#prefer-server-ciphers)
-      * 3.3.2.1 [RQ.SRS-017.ClickHouse.Security.SSL.Server.CipherSuites.PreferServerCiphers](#rqsrs-017clickhousesecuritysslserverciphersuitespreferserverciphers)
+      * 3.3.2.1 [RQ.SRS-017.ClickHouse.SSL.Server.CipherSuites.PreferServerCiphers](#rqsrs-017clickhousesecuritysslserverciphersuitespreferserverciphers)
     * 3.3.3 [ECDH Curve](#ecdh-curve)
-      * 3.3.3.1 [RQ.SRS-017.ClickHouse.Security.SSL.Server.CipherSuites.ECDHCurve](#rqsrs-017clickhousesecuritysslserverciphersuitesecdhcurve)
-      * 3.3.3.2 [RQ.SRS-017.ClickHouse.Security.SSL.Server.CipherSuites.ECDHCurve.DefaultValue](#rqsrs-017clickhousesecuritysslserverciphersuitesecdhcurvedefaultvalue)
+      * 3.3.3.1 [RQ.SRS-017.ClickHouse.SSL.Server.CipherSuites.ECDHCurve](#rqsrs-017clickhousesecuritysslserverciphersuitesecdhcurve)
+      * 3.3.3.2 [RQ.SRS-017.ClickHouse.SSL.Server.CipherSuites.ECDHCurve.DefaultValue](#rqsrs-017clickhousesecuritysslserverciphersuitesecdhcurvedefaultvalue)
   * 3.4 [FIPS Mode](#fips-mode)
-    * 3.4.1 [RQ.SRS-017.ClickHouse.Security.SSL.Server.FIPS.Mode](#rqsrs-017clickhousesecuritysslserverfipsmode)
-    * 3.4.2 [RQ.SRS-017.ClickHouse.Security.SSL.Server.FIPS.Mode.ApprovedSecurityFunctions](#rqsrs-017clickhousesecuritysslserverfipsmodeapprovedsecurityfunctions)
+    * 3.4.1 [RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Mode](#rqsrs-017clickhousesecuritysslserverfipsmode)
+    * 3.4.2 [RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Mode.ApprovedSecurityFunctions](#rqsrs-017clickhousesecuritysslserverfipsmodeapprovedsecurityfunctions)
   * 3.5 [Diffie-Hellman (DH) Parameters](#diffie-hellman-dh-parameters)
-    * 3.5.1 [RQ.SRS-017.ClickHouse.Security.SSL.Server.DH.Parameters](#rqsrs-017clickhousesecuritysslserverdhparameters)
+    * 3.5.1 [RQ.SRS-017.ClickHouse.SSL.Server.DH.Parameters](#rqsrs-017clickhousesecuritysslserverdhparameters)
   * 3.6 [Certificates](#certificates)
     * 3.6.1 [Private Key](#private-key)
-      * 3.6.1.1 [RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.PrivateKey](#rqsrs-017clickhousesecuritysslservercertificatesprivatekey)
+      * 3.6.1.1 [RQ.SRS-017.ClickHouse.SSL.Server.Certificates.PrivateKey](#rqsrs-017clickhousesecuritysslservercertificatesprivatekey)
       * 3.6.1.2 [Private Key Handler](#private-key-handler)
-        * 3.6.1.2.1 [RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.PrivateKeyHandler](#rqsrs-017clickhousesecuritysslservercertificatesprivatekeyhandler)
-        * 3.6.1.2.2 [RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.PrivateKeyHandler.Password](#rqsrs-017clickhousesecuritysslservercertificatesprivatekeyhandlerpassword)
+        * 3.6.1.2.1 [RQ.SRS-017.ClickHouse.SSL.Server.Certificates.PrivateKeyHandler](#rqsrs-017clickhousesecuritysslservercertificatesprivatekeyhandler)
+        * 3.6.1.2.2 [RQ.SRS-017.ClickHouse.SSL.Server.Certificates.PrivateKeyHandler.Password](#rqsrs-017clickhousesecuritysslservercertificatesprivatekeyhandlerpassword)
     * 3.6.2 [Certificate](#certificate)
-      * 3.6.2.1 [RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.Certificate](#rqsrs-017clickhousesecuritysslservercertificatescertificate)
+      * 3.6.2.1 [RQ.SRS-017.ClickHouse.SSL.Server.Certificates.Certificate](#rqsrs-017clickhousesecuritysslservercertificatescertificate)
     * 3.6.3 [CA Certificates](#ca-certificates)
       * 3.6.3.1 [Config](#config)
-        * 3.6.3.1.1 [RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.CAConfig](#rqsrs-017clickhousesecuritysslservercertificatescaconfig)
+        * 3.6.3.1.1 [RQ.SRS-017.ClickHouse.SSL.Server.Certificates.CAConfig](#rqsrs-017clickhousesecuritysslservercertificatescaconfig)
       * 3.6.3.2 [Default](#default)
-        * 3.6.3.2.1 [RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.LoadDefaultCAFile](#rqsrs-017clickhousesecuritysslservercertificatesloaddefaultcafile)
+        * 3.6.3.2.1 [RQ.SRS-017.ClickHouse.SSL.Server.Certificates.LoadDefaultCAFile](#rqsrs-017clickhousesecuritysslservercertificatesloaddefaultcafile)
     * 3.6.4 [Verification](#verification)
       * 3.6.4.1 [Mode](#mode)
-        * 3.6.4.1.1 [RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.VerificationMode](#rqsrs-017clickhousesecuritysslservercertificatesverificationmode)
-        * 3.6.4.1.2 [RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.VerificationMode.None](#rqsrs-017clickhousesecuritysslservercertificatesverificationmodenone)
-        * 3.6.4.1.3 [RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.VerificationMode.Relaxed](#rqsrs-017clickhousesecuritysslservercertificatesverificationmoderelaxed)
-        * 3.6.4.1.4 [RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.VerificationMode.Strict](#rqsrs-017clickhousesecuritysslservercertificatesverificationmodestrict)
-        * 3.6.4.1.5 [RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.VerificationMode.Once](#rqsrs-017clickhousesecuritysslservercertificatesverificationmodeonce)
+        * 3.6.4.1.1 [RQ.SRS-017.ClickHouse.SSL.Server.Certificates.VerificationMode](#rqsrs-017clickhousesecuritysslservercertificatesverificationmode)
+        * 3.6.4.1.2 [RQ.SRS-017.ClickHouse.SSL.Server.Certificates.VerificationMode.None](#rqsrs-017clickhousesecuritysslservercertificatesverificationmodenone)
+        * 3.6.4.1.3 [RQ.SRS-017.ClickHouse.SSL.Server.Certificates.VerificationMode.Relaxed](#rqsrs-017clickhousesecuritysslservercertificatesverificationmoderelaxed)
+        * 3.6.4.1.4 [RQ.SRS-017.ClickHouse.SSL.Server.Certificates.VerificationMode.Strict](#rqsrs-017clickhousesecuritysslservercertificatesverificationmodestrict)
+        * 3.6.4.1.5 [RQ.SRS-017.ClickHouse.SSL.Server.Certificates.VerificationMode.Once](#rqsrs-017clickhousesecuritysslservercertificatesverificationmodeonce)
       * 3.6.4.2 [Extended Mode](#extended-mode)
-        * 3.6.4.2.1 [RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.VerificationExtended](#rqsrs-017clickhousesecuritysslservercertificatesverificationextended)
+        * 3.6.4.2.1 [RQ.SRS-017.ClickHouse.SSL.Server.Certificates.VerificationExtended](#rqsrs-017clickhousesecuritysslservercertificatesverificationextended)
       * 3.6.4.3 [Depth](#depth)
-        * 3.6.4.3.1 [RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.VerificationDepth](#rqsrs-017clickhousesecuritysslservercertificatesverificationdepth)
+        * 3.6.4.3.1 [RQ.SRS-017.ClickHouse.SSL.Server.Certificates.VerificationDepth](#rqsrs-017clickhousesecuritysslservercertificatesverificationdepth)
     * 3.6.5 [Invalid Certificate Handler](#invalid-certificate-handler)
-        * 3.6.5.3.1 [RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.InvalidCertificateHandler](#rqsrs-017clickhousesecuritysslservercertificatesinvalidcertificatehandler)
+        * 3.6.5.3.1 [RQ.SRS-017.ClickHouse.SSL.Server.Certificates.InvalidCertificateHandler](#rqsrs-017clickhousesecuritysslservercertificatesinvalidcertificatehandler)
   * 3.7 [Session](#session)
-    * 3.7.1 [RQ.SRS-017.ClickHouse.Security.SSL.Server.Session.Cache](#rqsrs-017clickhousesecuritysslserversessioncache)
-    * 3.7.2 [RQ.SRS-017.ClickHouse.Security.SSL.Server.Session.CacheSize](#rqsrs-017clickhousesecuritysslserversessioncachesize)
-    * 3.7.3 [RQ.SRS-017.ClickHouse.Security.SSL.Server.Session.IdContext](#rqsrs-017clickhousesecuritysslserversessionidcontext)
-    * 3.7.4 [RQ.SRS-017.ClickHouse.Security.SSL.Server.Session.Timeout](#rqsrs-017clickhousesecuritysslserversessiontimeout)
+    * 3.7.1 [RQ.SRS-017.ClickHouse.SSL.Server.Session.Cache](#rqsrs-017clickhousesecuritysslserversessioncache)
+    * 3.7.2 [RQ.SRS-017.ClickHouse.SSL.Server.Session.CacheSize](#rqsrs-017clickhousesecuritysslserversessioncachesize)
+    * 3.7.3 [RQ.SRS-017.ClickHouse.SSL.Server.Session.IdContext](#rqsrs-017clickhousesecuritysslserversessionidcontext)
+    * 3.7.4 [RQ.SRS-017.ClickHouse.SSL.Server.Session.Timeout](#rqsrs-017clickhousesecuritysslserversessiontimeout)
   * 3.8 [Dynamic SSL Context](#dynamic-ssl-context)
-      * 3.8.4.1 [RQ.SRS-017.ClickHouse.Security.SSL.Server.DynamicContext.Reload](#rqsrs-017clickhousesecuritysslserverdynamiccontextreload)
+      * 3.8.4.1 [RQ.SRS-017.ClickHouse.SSL.Server.DynamicContext.Reload](#rqsrs-017clickhousesecuritysslserverdynamiccontextreload)
     * 3.8.5 [Certificate Reload](#certificate-reload)
-      * 3.8.5.1 [RQ.SRS-017.ClickHouse.Security.SSL.Server.DynamicContext.Certificate.Reload](#rqsrs-017clickhousesecuritysslserverdynamiccontextcertificatereload)
+      * 3.8.5.1 [RQ.SRS-017.ClickHouse.SSL.Server.DynamicContext.Certificate.Reload](#rqsrs-017clickhousesecuritysslserverdynamiccontextcertificatereload)
     * 3.8.6 [Private Key Reload](#private-key-reload)
-      * 3.8.6.1 [RQ.SRS-017.ClickHouse.Security.SSL.Server.DynamicContext.PrivateKey.Reload](#rqsrs-017clickhousesecuritysslserverdynamiccontextprivatekeyreload)
+      * 3.8.6.1 [RQ.SRS-017.ClickHouse.SSL.Server.DynamicContext.PrivateKey.Reload](#rqsrs-017clickhousesecuritysslserverdynamiccontextprivatekeyreload)
 
 ## Introduction
 
@@ -1413,13 +1426,13 @@ client and [ClickHouse] server.
 
 ### Secure Connections
 
-#### RQ.SRS-017.ClickHouse.Security.SSL.Server.HTTPS.Port
+#### RQ.SRS-017.ClickHouse.SSL.Server.HTTPS.Port
 version: 1.0
 
 [ClickHouse] SHALL support acting as a [SSL] server to provide secure client connections
 over the [HTTPS] port.
 
-#### RQ.SRS-017.ClickHouse.Security.SSL.Server.TCP.Port
+#### RQ.SRS-017.ClickHouse.SSL.Server.TCP.Port
 version: 1.0
 
 [ClickHouse] SHALL support acting as a [SSL] server to provide secure client connections
@@ -1429,7 +1442,7 @@ over secure [TCP] port.
 
 #### Disabling
 
-##### RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Disable
+##### RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Disable
 version: 1.0
 
 [ClickHouse] SHALL support disabling protocols using
@@ -1449,37 +1462,37 @@ disabled protocol SHALL fail and downgrading to these protocols SHALL not be all
 </clickhouse>
 ```
 
-##### RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Disable.SSLv2
+##### RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Disable.SSLv2
 version: 1.0
 
 [ClickHouse] SHALL support disabling vulnerable `SSLv2`
 using the `sslv2` as the protocol name in the `<disableProtocols>` parameter.
 
-##### RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Disable.SSLv3
+##### RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Disable.SSLv3
 version: 1.0
 
 [ClickHouse] SHALL support disabling vulnerable `SSLv3`
 using the `sslv3` as the protocol name in the `<disableProtocols>` parameter.
 
-##### RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Disable.TLSv1
+##### RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Disable.TLSv1
 version: 1.0
 
 [ClickHouse] SHALL support disabling vulnerable `TLSv1`
 using the `tlsv1` as the protocol name in the `<disableProtocols>` parameter.
 
-##### RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Disable.TLSv1_1
+##### RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Disable.TLSv1_1
 version: 1.0
 
 [ClickHouse] SHALL support disabling `TLSv1_1`
 using the `tlsv1_1` as the protocol name in the `<disableProtocols>` parameter.
 
-##### RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Disable.TLSv1_2
+##### RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Disable.TLSv1_2
 version: 1.0
 
 [ClickHouse] SHALL support disabling `TLSv1_2`
 using the `tlsv1_2` as the protocol name in the `<disableProtocols>` parameter.
 
-##### RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Disable.TLSv1_3.NotAllowed
+##### RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Disable.TLSv1_3.NotAllowed
 version: 1.0
 
 [ClickHouse] SHALL not support disabling `TLSv1_3` protocol and if
@@ -1488,7 +1501,7 @@ then an error SHALL be returned.
 
 #### Require TLS
 
-##### RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Require.TLS
+##### RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Require.TLS
 version: 1.0
 
 [ClickHouse] SHALL support requiring specific TLS protocol version
@@ -1497,25 +1510,25 @@ of the `config.xml` and when specified SHALL only establish
 the connection if and only if the required protocol version will be used
 without downgrading.
 
-##### RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Require.TLSv1
+##### RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Require.TLSv1
 version: 1.0
 
 [ClickHouse] SHALL support requiring `TLSv1` connection
 using the `<requireTLSv1>` parameter to boolean `true`.
 
-##### RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Require.TLSv1_1
+##### RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Require.TLSv1_1
 version: 1.0
 
 [ClickHouse] SHALL support requiring `TLSv1.1` connection
 using the `<requireTLSv1_1>` parameter to boolean `true`.
 
-##### RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Require.TLSv1_2
+##### RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Require.TLSv1_2
 version: 1.0
 
 [ClickHouse] SHALL support requiring `TLSv1.2` connection
 using the `<requireTLSv1_2>` parameter to boolean `true`.
 
-##### RQ.SRS-017.ClickHouse.Security.SSL.Server.Protocols.Require.TLSv1_3
+##### RQ.SRS-017.ClickHouse.SSL.Server.Protocols.Require.TLSv1_3
 version: 1.0
 
 [ClickHouse] SHALL support requiring `TLSv1.3` connection
@@ -1525,7 +1538,7 @@ using the `<requireTLSv1_3>` parameter to boolean `true`.
 
 #### Cipher List
 
-##### RQ.SRS-017.ClickHouse.Security.SSL.Server.CipherSuites
+##### RQ.SRS-017.ClickHouse.SSL.Server.CipherSuites
 version: 1.0
 
 [ClickHouse] SHALL support specifying cipher suites to be used
@@ -1552,7 +1565,7 @@ will be used for the connection without downgrading.
 
 #### Prefer Server Ciphers
 
-##### RQ.SRS-017.ClickHouse.Security.SSL.Server.CipherSuites.PreferServerCiphers
+##### RQ.SRS-017.ClickHouse.SSL.Server.CipherSuites.PreferServerCiphers
 version: 1.0
 
 [ClickHouse] SHALL use own cipher suite preferences when
@@ -1572,7 +1585,7 @@ of the `config.xml` is set to `true`.
 
 #### ECDH Curve
 
-##### RQ.SRS-017.ClickHouse.Security.SSL.Server.CipherSuites.ECDHCurve
+##### RQ.SRS-017.ClickHouse.SSL.Server.CipherSuites.ECDHCurve
 version: 1.0
 
 [ClickHouse] SHALL support specifying the curve to be used for [ECDH] key agreement protocol
@@ -1591,7 +1604,7 @@ the curves specified in the [RFC 4492].
 </clickhouse>
 ```
 
-##### RQ.SRS-017.ClickHouse.Security.SSL.Server.CipherSuites.ECDHCurve.DefaultValue
+##### RQ.SRS-017.ClickHouse.SSL.Server.CipherSuites.ECDHCurve.DefaultValue
 version: 1.0
 
 [ClickHouse] SHALL use the `prime256v1` as the default value
@@ -1601,7 +1614,7 @@ curve for establishing [Shared Secret] using the [ECDH] key agreement protocol.
 
 ### FIPS Mode
 
-#### RQ.SRS-017.ClickHouse.Security.SSL.Server.FIPS.Mode
+#### RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Mode
 version: 1.0
 
 [ClickHouse] SHALL support enabling [FIPS Mode] using the
@@ -1622,7 +1635,17 @@ then the server SHALL return an error.
 </clickhouse>
 ```
 
-#### RQ.SRS-017.ClickHouse.Security.SSL.Server.FIPS.Mode.ApprovedSecurityFunctions
+#### RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Mode.LogMessage
+version: 1.0
+
+[ClickHouse] SHALL provide the following message in `/var/log/clickhouse-server/clickhouse-server.log`
+when ClickHouse is started in FIPS mode:
+
+```
+<Information> Application: Starting in FIPS mode, KAT test result: 1
+```
+
+#### RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Mode.ApprovedSecurityFunctions
 version: 1.0
 
 [ClickHouse] SHALL only support the use of security functions
@@ -1663,7 +1686,7 @@ approved by [FIPS 140-2] when [FIPS Mode] is enabled.
 
 ### Diffie-Hellman (DH) Parameters
 
-#### RQ.SRS-017.ClickHouse.Security.SSL.Server.DH.Parameters
+#### RQ.SRS-017.ClickHouse.SSL.Server.DH.Parameters
 version: 1.0
 
 [ClickHouse] SHALL support specifying a file containing Diffie-Hellman (DH) parameters.
@@ -1686,7 +1709,7 @@ if not specified or empty, the default parameters SHALL be used.
 
 #### Private Key
 
-##### RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.PrivateKey
+##### RQ.SRS-017.ClickHouse.SSL.Server.Certificates.PrivateKey
 version: 1.0
 
 [ClickHouse] SHALL support specifying private key as the path to the
@@ -1708,7 +1731,7 @@ of the `config.xml`.
 
 ##### Private Key Handler
 
-###### RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.PrivateKeyHandler
+###### RQ.SRS-017.ClickHouse.SSL.Server.Certificates.PrivateKeyHandler
 version: 1.0
 
 [ClickHouse] SHALL support specifying the name of the class that is subclass of `PrivateKeyPassphraseHandler`
@@ -1729,7 +1752,7 @@ used for obtaining the passphrase for accessing the private key using a string a
 </clickhouse>
 ```
 
-###### RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.PrivateKeyHandler.Password
+###### RQ.SRS-017.ClickHouse.SSL.Server.Certificates.PrivateKeyHandler.Password
 version: 1.0
 
 [ClickHouse] SHALL support specifying the password to be used by the private key handler using a string
@@ -1754,7 +1777,7 @@ as a value of the `<privateKeyPassphraseHandler><options><password>` parameter i
 
 #### Certificate
 
-##### RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.Certificate
+##### RQ.SRS-017.ClickHouse.SSL.Server.Certificates.Certificate
 version: 1.0
 
 [ClickHouse] SHALL support specifying the path to the file containing the server's
@@ -1778,7 +1801,7 @@ the certificate then this parameter SHALL be ignored.
 
 ##### Config
 
-###### RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.CAConfig
+###### RQ.SRS-017.ClickHouse.SSL.Server.Certificates.CAConfig
 version: 1.0
 
 [ClickHouse] SHALL support specifying the path to the file or directory containing the trusted root certificates
@@ -1797,7 +1820,7 @@ using the `<caConfig>` parameter in the `<clickhouse><openSSL><server>` section 
 
 ##### Default
 
-###### RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.LoadDefaultCAFile
+###### RQ.SRS-017.ClickHouse.SSL.Server.Certificates.LoadDefaultCAFile
 version: 1.0
 
 [ClickHouse] SHALL support specifying whether the builtin CA certificates provided by the [SSL]
@@ -1808,20 +1831,20 @@ library SHALL be used using the `<loadDefaultCAFile>` parameter with a boolean v
 
 ##### Mode
 
-###### RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.VerificationMode
+###### RQ.SRS-017.ClickHouse.SSL.Server.Certificates.VerificationMode
 version: 1.0
 
 [ClickHouse] SHALL support specifying whether and how client certificates are validated
 using the `<verificationMode>` parameter in the `<clickhouse><openSSL><server>` section of the `config.xml`.
 
-###### RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.VerificationMode.None
+###### RQ.SRS-017.ClickHouse.SSL.Server.Certificates.VerificationMode.None
 version: 1.0
 
 [ClickHouse] SHALL not perform client certificate validation when the `<verificationMode>` parameter
 in the `<clickhouse><openSSL><server>` section of the `config.xml` is set to `none`
 by not sending a `client certificate request` to the client so that the client will not send a certificate.
 
-###### RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.VerificationMode.Relaxed
+###### RQ.SRS-017.ClickHouse.SSL.Server.Certificates.VerificationMode.Relaxed
 version: 1.0
 
 [ClickHouse] SHALL perform relaxed client certificate validation when the `<verificationMode>` parameter
@@ -1830,7 +1853,7 @@ sending a `client certificate request` to the client. The certificate SHALL only
 If the client certificate verification process fails, the TLS/SSL handshake SHALL be immediately
 terminated with an alert message containing the reason for the verification failure.
 
-###### RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.VerificationMode.Strict
+###### RQ.SRS-017.ClickHouse.SSL.Server.Certificates.VerificationMode.Strict
 version: 1.0
 
 [ClickHouse] SHALL perform strict client certificate validation when the `<verificationMode>` parameter
@@ -1838,7 +1861,7 @@ in the `<clickhouse><openSSL><server>` section of the `config.xml` is set to `st
 immediately terminating TLS/SSL handshake if the client did not return a certificate or
 certificate validation process fails with a handshake failure alert.
 
-###### RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.VerificationMode.Once
+###### RQ.SRS-017.ClickHouse.SSL.Server.Certificates.VerificationMode.Once
 version: 1.0
 
 [ClickHouse] SHALL perform client certificate validation only once when the `<verificationMode>` parameter
@@ -1848,7 +1871,7 @@ During renegotiation client certificate SHALL not be requested and verified agai
 
 ##### Extended Mode
 
-###### RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.VerificationExtended
+###### RQ.SRS-017.ClickHouse.SSL.Server.Certificates.VerificationExtended
 version: 1.0
 
 [ClickHouse] SHALL support enabling or disabling automatic post-connection extended certificate verification
@@ -1858,7 +1881,7 @@ if extended certificate verification is enabled and fails.
 
 ##### Depth
 
-###### RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.VerificationDepth
+###### RQ.SRS-017.ClickHouse.SSL.Server.Certificates.VerificationDepth
 version: 1.0
 
 [ClickHouse] SHALL support specifying the upper limit for the client certificate verification chain size
@@ -1868,7 +1891,7 @@ is encountered.
 
 #### Invalid Certificate Handler
 
-###### RQ.SRS-017.ClickHouse.Security.SSL.Server.Certificates.InvalidCertificateHandler
+###### RQ.SRS-017.ClickHouse.SSL.Server.Certificates.InvalidCertificateHandler
 version: 1.0
 
 [ClickHouse] SHALL support specifying the name of the class that is a subclass of `CertificateHandler`
@@ -1890,7 +1913,7 @@ that SHALL be used for confirming invalid certificates using a string as the val
 
 ### Session
 
-#### RQ.SRS-017.ClickHouse.Security.SSL.Server.Session.Cache
+#### RQ.SRS-017.ClickHouse.SSL.Server.Session.Cache
 version: 1.0
 
 [ClickHouse] SHALL support enabling or disabling session caching using a boolean as a value of the
@@ -1907,7 +1930,7 @@ version: 1.0
 </clickhouse>
 ```
 
-#### RQ.SRS-017.ClickHouse.Security.SSL.Server.Session.CacheSize
+#### RQ.SRS-017.ClickHouse.SSL.Server.Session.CacheSize
 version: 1.0
 
 [ClickHouse] SHALL support specifying the maximum size of the server session cache as the number of sessions
@@ -1928,7 +1951,7 @@ using an integer as a value of the `<sessionCacheSize>` parameter in the
 </clickhouse>
 ```
 
-#### RQ.SRS-017.ClickHouse.Security.SSL.Server.Session.IdContext
+#### RQ.SRS-017.ClickHouse.SSL.Server.Session.IdContext
 version: 1.0
 
 [ClickHouse] SHALL support specifying unique session ID context, which SHALL become part of each
@@ -1952,7 +1975,7 @@ in the `<clickhouse><openSSL><server>` section of the `config.xml`.
 </clickhouse>
 ```
 
-#### RQ.SRS-017.ClickHouse.Security.SSL.Server.Session.Timeout
+#### RQ.SRS-017.ClickHouse.SSL.Server.Session.Timeout
 version: 1.0
 
 [ClickHouse] SHALL support setting the timeout in seconds of sessions cached on the server
@@ -1972,7 +1995,7 @@ using an integer as a value of the <sessionTimeout>` parameter in the
 
 ### Dynamic SSL Context
 
-##### RQ.SRS-017.ClickHouse.Security.SSL.Server.DynamicContext.Reload
+##### RQ.SRS-017.ClickHouse.SSL.Server.DynamicContext.Reload
 
 [ClickHouse] SHALL reload dynamic SSL context any time `config.xml` configuration file
 or any of its parts defined inside the `/etc/clickhouse-server/configs.d/`
@@ -1981,7 +2004,7 @@ configuration file generation and reload.
 
 #### Certificate Reload
 
-##### RQ.SRS-017.ClickHouse.Security.SSL.Server.DynamicContext.Certificate.Reload
+##### RQ.SRS-017.ClickHouse.SSL.Server.DynamicContext.Certificate.Reload
 version: 1.0
 
 [ClickHouse] SHALL reload server SSL certificate specified 
@@ -1992,7 +2015,7 @@ to any to new SSL connections made to the server.
 
 #### Private Key Reload
 
-##### RQ.SRS-017.ClickHouse.Security.SSL.Server.DynamicContext.PrivateKey.Reload
+##### RQ.SRS-017.ClickHouse.SSL.Server.DynamicContext.PrivateKey.Reload
 version: 1.0
 
 [ClickHouse] SHALL reload server SSL private key specified 
