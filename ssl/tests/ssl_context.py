@@ -2,8 +2,8 @@ import os
 
 from testflows.core import *
 from testflows.asserts import error
-from ssl_server.requirements import *
-from ssl_server.tests.common import *
+from ssl.requirements import *
+from ssl.tests.common import *
 
 
 @TestOutline
