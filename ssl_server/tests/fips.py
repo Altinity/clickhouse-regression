@@ -2,6 +2,7 @@ from testflows.core import *
 
 from ssl_server.tests.common import *
 from ssl_server.tests.ssl_context import enable_ssl
+from ssl_server.requirements import *
 
 fips_compatible_tlsv1_2_cipher_suites = [
     "ECDHE-RSA-AES128-GCM-SHA256",
@@ -303,7 +304,7 @@ def server_https_connection_curl(self, port=None):
 
 @TestScenario
 @Name("fips check")
-@Requirements()
+@Requirements(RQ_SRS_017_ClickHouse_SSL_Server_FIPS_Mode_LogMessage("1.0"))
 def fips_check(self):
     """Check that the server is running in FIPS mode."""
     exitcode = self.context.node.command("cat /var/log/clickhouse-server/clickhouse-server.log | grep '<Information> Application: Starting in FIPS mode, KAT test result: 1' > /dev/null").exitcode
