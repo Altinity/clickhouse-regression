@@ -10,7 +10,7 @@ from helpers.cluster import Cluster
 from helpers.argparser import argparser as argparser_base
 from helpers.common import check_clickhouse_version
 
-from ssl_server.requirements import SRS017_ClickHouse_Security_SSL_Server
+from ssl_server.requirements import SRS017_ClickHouse_SSL
 
 def argparser(parser):
     """Default argument for regressions."""
@@ -70,7 +70,7 @@ ffails = {
 @XFlags(xflags)
 @FFails(ffails)
 @Name("ssl server")
-@Specifications(SRS017_ClickHouse_Security_SSL_Server)
+@Specifications(SRS017_ClickHouse_SSL)
 def regression(self, local, clickhouse_binary_path, clickhouse_version, fips_mode, stress=None):
     """ClickHouse security SSL server regression."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
