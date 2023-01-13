@@ -48,6 +48,7 @@ def enable_ssl(
             passphrase=my_own_ca_key_passphrase,
             common_name="root",
         )
+        current().context.my_own_ca_crt = my_own_ca_crt
 
     with And("I generate DH parameters"):
         dh_params = create_dh_params(outfile=dh_params)
