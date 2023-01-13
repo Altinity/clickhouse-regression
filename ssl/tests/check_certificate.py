@@ -2,8 +2,8 @@ import json
 
 from testflows.core import *
 
-from ssl_server.tests.common import *
-from ssl_server.tests.ssl_context import enable_ssl
+from ssl.tests.common import *
+from ssl.tests.ssl_context import enable_ssl
 
 @TestScenario
 @Requirements()

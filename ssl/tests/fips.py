@@ -1,8 +1,8 @@
 from testflows.core import *
 
-from ssl_server.tests.common import *
-from ssl_server.tests.ssl_context import enable_ssl
-from ssl_server.requirements import *
+from ssl.tests.common import *
+from ssl.tests.ssl_context import enable_ssl
+from ssl.requirements import *
 
 fips_compatible_tlsv1_2_cipher_suites = [
     "ECDHE-RSA-AES128-GCM-SHA256",
@@ -310,6 +310,27 @@ def fips_check(self):
     exitcode = self.context.node.command("cat /var/log/clickhouse-server/clickhouse-server.log | grep '<Information> Application: Starting in FIPS mode, KAT test result: 1' > /dev/null").exitcode
     assert exitcode == 0, error()
 
+
+@TestScenario
+@Name("break hash")
+def break_hash(self):
+    """Check that when break_hash.go is run on the binary, it fails the integrity check."""
+
+    self.context.cluster.command(None, "ls")
+    try:
+        with Given("I apply break-hash to the clickhouse binary"):
+            self.context.cluster.command(None, f"./test_files/break-hash '{self.context.cluster.clickhouse_binary_path}' 'clickhouse-broken-binary'")
+
+        with When(f"I try to start the broken clickhouse binary"):
+            output = self.context.cluster.command(None, f"./clickhouse-broken-binary server").output
+            debug(output)
+            pause()
+            assert "FIPS integrity test failed." in output, error()
+
+    finally:
+        with Finally("I remove the broken clickhouse binary"):
+            self.context.cluster.command(None, "rm clickhouse-broken-binary")
+
 @TestFeature
 @Name("tcp connection")
 @Requirements()
@@ -375,4 +396,5 @@ def feature(self, node="clickhouse1"):
     if self.context.fips_mode:
         Scenario(run=fips_check)
 
+    Scenario(run=break_hash)
     Feature(run=server)
