@@ -301,6 +301,14 @@ def server_https_connection_curl(self, port=None):
             curl_client_connection(options=f'--ciphers "{cipher}"', success=False)
 
 
+@TestScenario
+@Name("fips check")
+@Requirements()
+def fips_check(self):
+    """Check that the server is running in FIPS mode."""
+    exitcode = self.context.node.command("cat /var/log/clickhouse-server/clickhouse-server.log | grep '<Information> Application: Starting in FIPS mode, KAT test result: 1' > /dev/null").exitcode
+    assert exitcode == 0, error()
+
 @TestFeature
 @Name("tcp connection")
 @Requirements()
@@ -362,5 +370,8 @@ def feature(self, node="clickhouse1"):
 
     with Given("I enable SSL"):
         enable_ssl(my_own_ca_key_passphrase="", server_key_passphrase="")
+
+    if self.context.fips_mode:
+        Scenario(run=fips_check)
 
     Feature(run=server)

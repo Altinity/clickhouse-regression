@@ -7,10 +7,21 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from helpers.cluster import Cluster
-from helpers.argparser import argparser
+from helpers.argparser import argparser as argparser_base
 from helpers.common import check_clickhouse_version
 
 from ssl_server.requirements import SRS017_ClickHouse_Security_SSL_Server
+
+def argparser(parser):
+    """Default argument for regressions."""
+    argparser_base(parser)
+
+    parser.add_argument(
+        "--fips-mode",
+        action="store_true",
+        help="specify whether the provided ClickHouse binary is in FIPS mode",
+        default=False,
+    )
 
 xfails = {
     "ssl context/enable ssl with server key passphrase": [
@@ -60,10 +71,11 @@ ffails = {
 @FFails(ffails)
 @Name("ssl server")
 @Specifications(SRS017_ClickHouse_Security_SSL_Server)
-def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=None):
+def regression(self, local, clickhouse_binary_path, clickhouse_version, fips_mode, stress=None):
     """ClickHouse security SSL server regression."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
+    self.context.fips_mode = fips_mode
     self.context.clickhouse_version = clickhouse_version
 
     if stress is not None:
@@ -85,6 +97,7 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
     ) as cluster:
         self.context.cluster = cluster
 
+        Feature(run=load("ssl_server.tests.check_certificate", "feature"))
         Feature(run=load("ssl_server.tests.sanity", "feature"))
         Feature(run=load("ssl_server.tests.ssl_context", "feature"))
         Feature(run=load("ssl_server.tests.fips", "feature"))
