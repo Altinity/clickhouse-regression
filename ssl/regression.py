@@ -10,7 +10,7 @@ from helpers.cluster import Cluster
 from helpers.argparser import argparser as argparser_base
 from helpers.common import check_clickhouse_version
 
-from ssl_server.requirements import SRS017_ClickHouse_SSL
+from ssl.requirements import SRS017_ClickHouse_SSL
 
 def argparser(parser):
     """Default argument for regressions."""
@@ -97,10 +97,10 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, fips_mod
     ) as cluster:
         self.context.cluster = cluster
 
-        Feature(run=load("ssl_server.tests.check_certificate", "feature"))
-        Feature(run=load("ssl_server.tests.sanity", "feature"))
-        Feature(run=load("ssl_server.tests.ssl_context", "feature"))
-        Feature(run=load("ssl_server.tests.fips", "feature"))
+        Feature(run=load("ssl.tests.check_certificate", "feature"))
+        Feature(run=load("ssl.sanity", "feature"))
+        Feature(run=load("ssl.tests.ssl_context", "feature"))
+        Feature(run=load("ssl.tests.fips", "feature"))
 
 
 if main():
