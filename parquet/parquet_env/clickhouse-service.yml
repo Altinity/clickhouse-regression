@@ -23,6 +23,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/test_files/data_ZSTD.Parquet:/var/lib/test_files/data_ZSTD.Parquet"
       - "${CLICKHOUSE_TESTS_DIR}/test_files/data_LZ4.Parquet:/var/lib/test_files/data_LZ4.Parquet"
       - "${CLICKHOUSE_TESTS_DIR}/test_files/int-list-zero-based-chunked-array.parquet:/var/lib/test_files/int-list-zero-based-chunked-array.parquet"
+      - "${CLICKHOUSE_TESTS_DIR}/test_files/list_monotonically_increasing_offsets.parquet:/var/lib/test_files/list_monotonically_increasing_offsets.parquet"
       - "${CLICKHOUSE_TESTS_DIR}/test_files/local_app.py:/var/lib/test_files/local_app.py"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/ssl:/etc/clickhouse-server/ssl"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.xml:/etc/clickhouse-server/config.xml"
