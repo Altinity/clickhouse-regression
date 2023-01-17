@@ -38,7 +38,7 @@ suites = [
     "s3_aws",
     "s3_gcs",
     "selects",
-    "ssl",
+    "ssl_server",
     "tiered_storage",
     "tiered_storage_aws",
     "tiered_storage_gcs",
