@@ -111,7 +111,7 @@ def server_connection_openssl_client(self, port):
 
     with Check("TLSv1.3 suite connection should be rejected"):
         openssl_client_connection(
-            options="-tls1_3", success=False, message="no protocols available"
+            options="-tls1_3", success=False, message="tlsv1 alert protocol version"
         )
 
     with Check("any DTLS suite connection should be rejected"):
@@ -151,8 +151,10 @@ def server_connection_openssl_client(self, port):
 
 
 @TestOutline
-def server_tcp_connection_fips_clickhouse_client(self, port=None):
-    """Check that server accepts only FIPS compatible TCP connections using clickhouse-client."""
+def server_tcp_connection_clickhouse_client(self, node, hostname = "clickhouse1", port=None):
+    """Check that server accepts only FIPS compatible TCP connections using clickhouse-client"""
+    self.context.node = node
+    
     if port is None:
         port = self.context.secure_tcp_port
 
@@ -169,6 +171,7 @@ def server_tcp_connection_fips_clickhouse_client(self, port=None):
             },
             success=False,
             message="NO_SUPPORTED_VERSIONS_ENABLED",
+            hostname=hostname,
         )
 
     with Check("TLSv1.2 suite connection should work"):
@@ -178,6 +181,7 @@ def server_tcp_connection_fips_clickhouse_client(self, port=None):
                 "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3",
             },
             success=True,
+            hostname=hostname,
         )
 
     with Check("TLSv1 suite connection should be rejected"):
@@ -188,6 +192,7 @@ def server_tcp_connection_fips_clickhouse_client(self, port=None):
             },
             success=False,
             message="TLSV1_ALERT_PROTOCOL_VERSION",
+            hostname=hostname,
         )
 
     with Check("TLSv1.1 suite connection should be rejected"):
@@ -198,6 +203,7 @@ def server_tcp_connection_fips_clickhouse_client(self, port=None):
             },
             success=False,
             message="TLSV1_ALERT_PROTOCOL_VERSION",
+            hostname=hostname,
         )
 
     with Check("TLSv1.3 suite connection should be rejected"):
@@ -207,7 +213,8 @@ def server_tcp_connection_fips_clickhouse_client(self, port=None):
                 "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_2",
             },
             success=False,
-            message="TLSV1_ALERT_PROTOCOL_VERSION",
+            message="NO_SUPPORTED_VERSIONS_ENABLED",
+            hostname=hostname,
         )
 
     with Check("just disabling TLSv1 suite connection should work"):
@@ -215,6 +222,7 @@ def server_tcp_connection_fips_clickhouse_client(self, port=None):
             options={"disableProtocols": "tlsv1"},
             success=True,
             prefer_server_ciphers=True,
+            hostname=hostname,
         )
 
     with Check("just disabling TLSv1.1 suite connection should work"):
@@ -222,6 +230,7 @@ def server_tcp_connection_fips_clickhouse_client(self, port=None):
             options={"disableProtocols": "tlsv1_1"},
             success=True,
             prefer_server_ciphers=True,
+            hostname=hostname,
         )
 
     with Check("just disabling TLSv1.3 suite connection should work"):
@@ -229,6 +238,7 @@ def server_tcp_connection_fips_clickhouse_client(self, port=None):
             options={"disableProtocols": "tlsv1_3"},
             success=True,
             prefer_server_ciphers=True,
+            hostname=hostname,
         )
 
     for cipher in fips_compatible_tlsv1_2_cipher_suites:
@@ -240,6 +250,7 @@ def server_tcp_connection_fips_clickhouse_client(self, port=None):
                     "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3",
                 },
                 success=True,
+                hostname=hostname,
             )
 
     for cipher in all_ciphers:
@@ -251,6 +262,7 @@ def server_tcp_connection_fips_clickhouse_client(self, port=None):
             output = clickhouse_client_connection(
                 options={"cipherList": cipher, "disableProtocols": ""},
                 success=False,
+                hostname=hostname,
             )
             assert "NO_CIPHERS_AVAILABLE" or "SSLV3_ALERT_HANDSHAKE_FAILURE" in output, error()
 
@@ -368,7 +380,17 @@ def server_tcp_connection(self):
         server_connection_openssl_client(port=self.context.secure_tcp_port)
 
     with Scenario("fips clickhouse client"):
-        server_tcp_connection_fips_clickhouse_client(port=self.context.secure_tcp_port)
+        server_tcp_connection_clickhouse_client(node=self.context.cluster.node("clickhouse1"), port=self.context.secure_tcp_port)
+
+    with Scenario("non fips clickhouse2 client"):
+        node = self.context.cluster.node("clickhouse2")
+        add_trusted_ca_certificate(node=node, certificate=current().context.my_own_ca_crt)
+        server_tcp_connection_clickhouse_client(node=node, port=self.context.secure_tcp_port)
+
+    # with Scenario("non fips clickhouse client"):
+    #     node = self.context.cluster.node("non_fips_clickhouse")
+    #     add_trusted_ca_certificate(node=node, certificate=current().context.my_own_ca_crt)
+    #     server_tcp_connection_clickhouse_client(node=node, port=self.context.secure_tcp_port)
 
 
 @TestFeature
