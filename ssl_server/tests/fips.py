@@ -421,6 +421,7 @@ def server(self, node=None):
                 ),
                 "preferServerCiphers": "true",
                 "requireTLSv1_2": "true",
+                "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3"
             },
         )
 
