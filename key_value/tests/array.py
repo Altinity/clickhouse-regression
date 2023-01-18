@@ -10,9 +10,12 @@ def array_input(self, input, output, params, node=None):
     if node is None:
         node = self.context.node
 
+    if params != "":
+        params = ", " + params
+
     with Then("I check parseKeyValue function returns correct value"):
         r = node.query(
-            f"SELECT extractKeyValuePairs([{input}][1], {params})", use_file=True
+            f"SELECT extractKeyValuePairs([{input}][1]{params})", use_file=True
         )
         assert r.output == output, error()
 
