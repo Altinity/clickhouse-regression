@@ -416,7 +416,7 @@ def specifying_escape_character_alpha(self, scenario):
         output = define(
             "expected output", "{" + f"'{ascii_alpha.replace('q', '')}':')'" + "}"
         )
-        params = define("function parameters with escape character as `-`", "'q'")
+        params = define("function parameters with escape character as `q`", "'q'")
 
     scenario(input=input, output=output, params=params)
 
