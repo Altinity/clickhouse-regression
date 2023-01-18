@@ -9,9 +9,12 @@ def map_input(self, input, output, params, node=None):
     if node is None:
         node = self.context.node
 
+    if params != "":
+        params = ", " + params
+
     with Then("I check parseKeyValue function returns correct value"):
         r = node.query(
-            f"SELECT extractKeyValuePairs(map({input}, {input})[{input}], {params})",
+            f"SELECT extractKeyValuePairs(map({input}, {input})[{input}]{params})",
             use_file=True,
         )
         assert r.output == output, error()

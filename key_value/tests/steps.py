@@ -14,7 +14,6 @@ noise = ascii_punctuation_marks + ascii_num
 parsed_noise = (
     ascii_punctuation_marks.replace("\\", "\\\\")
     .replace('"', '\\"')
-    .replace("!", "\\!")
     .replace("`", "\\`")
     .replace("'", "\\'")
 )
@@ -24,7 +23,6 @@ noise_without_quotation_mark = noise.replace('"', "")
 parsed_noise_without_quotation_mark = (
     noise_without_quotation_mark.replace("\\", "\\\\")
     .replace('"', '\\"')
-    .replace("!", "\\!")
     .replace("`", "\\`")
     .replace("'", "\\'")
 )

@@ -11,6 +11,9 @@ def column_input(self, input, output, params, node=None):
 
     table_name = f"table_{getuid()}"
 
+    if params != "":
+        params = ", " + params
+
     with Given("I have a table"):
         create_partitioned_table(table_name=table_name, extra_table_col=",y String")
 
@@ -18,12 +21,9 @@ def column_input(self, input, output, params, node=None):
         insert(table_name=table_name, x=input, y=output.replace("'", "\\'"))
 
     with Then("I check extractKeyValuePairs function returns correct value"):
+
         r = node.query(
-            f"""select toString(extractKeyValuePairs(x, {params})), y from {table_name}""",
-            use_file=True,
-        )
-        r = node.query(
-            f"""select toString(extractKeyValuePairs(x, {params})) == y from {table_name}""",
+            f"""select toString(extractKeyValuePairs(x{params})) == y from {table_name}""",
             use_file=True,
         )
         assert r.output == "1", error()
