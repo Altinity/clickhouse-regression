@@ -29,7 +29,7 @@
   * 4.7 [ACVP Check Expected Tests](#acvp-check-expected-tests)
     * 4.7.1 [RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.ACVP.CheckExpectedTests](#rqsrs-034clickhousefipscompatibleboringsslacvpcheckexpectedtests)
   * 4.8 [Build Options System Table](#build-options-system-table)
-      * 4.8.1.1 [RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.SystemTable.BuildOptions](#rqsrs-034clickhousefipscompatibleboringsslsystemtablebuildoptions)
+    * 4.8.1 [RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.SystemTable.BuildOptions](#rqsrs-034clickhousefipscompatibleboringsslsystemtablebuildoptions)
   * 4.9 [SSL Configuration](#ssl-configuration)
     * 4.9.1 [FIPS Setting](#fips-setting)
       * 4.9.1.1 [RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.SSL.Client.Config.Settings.FIPS](#rqsrs-034clickhousefipscompatibleboringsslsslclientconfigsettingsfips)
@@ -225,7 +225,7 @@ version: 1.0
 
 ### Build Options System Table
 
-##### RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.SystemTable.BuildOptions
+#### RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.SystemTable.BuildOptions
 
 version: 1.0
 
