@@ -635,9 +635,11 @@ def clickhouse_client_connection(
     with Given("custom clickhouse-client SSL configuration"):
         add_ssl_clickhouse_client_configuration_file(entries=options)
 
-    node.command(
+    output = node.command(
         f'clickhouse client -s --verbose --host {hostname} --port {port} -q "SELECT 1"',
         message=message,
         messages=messages,
         exitcode=exitcode,
-    )
+    ).output
+
+    return output
