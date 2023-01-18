@@ -89,6 +89,13 @@ def server_connection_openssl_client(self, port):
     ):
         pass
 
+    with Check("Connection with no protocols should be rejected"):
+        openssl_client_connection(
+            options="-no_tls1 -no_tls1_1 -no_tls1_2 -no_tls1_3",
+            success=False,
+            message="no protocols available",
+        )
+
     with Check("TLSv1.2 suite connection should work"):
         openssl_client_connection(options="-tls1_2", success=True)
 
@@ -184,7 +191,6 @@ def server_tcp_connection_fips_clickhouse_client(self, port=None):
         )
 
     with Check("TLSv1.1 suite connection should be rejected"):
-        xfail("Should not pass")
         clickhouse_client_connection(
             options={
                 "requireTLSv1_1": "true",
@@ -323,7 +329,7 @@ def log_check(self):
 
 @TestScenario
 @Name("check build options")
-#@Requirements(RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_SystemTable_BuildOptions("1.0"))
+@Requirements(RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_SystemTable_BuildOptions("1.0"))
 def build_options_check(self):
     """Check that system.build_options shows that ClickHouse was built using FIPs compliant BoringSSL library."""
     xfail("No mention of FIPS mode in build options")
