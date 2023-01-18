@@ -94,7 +94,7 @@ def key_first_symbol(self, scenario):
             "input string with key, that starts with number",
             f"'{ascii_num}{ascii_alpha}:{ascii_num}'",
         )
-        output = define("expected output", "{"+f"'{ascii_alpha}':'{ascii_num}'"+"}")
+        output = define("expected output", "{" + f"'{ascii_alpha}':'{ascii_num}'" + "}")
         params = define("function parameters", f"'\\\\\\\\', ':', ',', '\\\"'")
 
     scenario(input=input, output=output, params=params)
@@ -109,7 +109,7 @@ def key_symbols(self, scenario):
             "input string with key, that contains punctuation marks",
             f"'{ascii_alpha}{parsed_noise_without_quotation_mark}{ascii_alpha}:{ascii_num}'",
         )
-        output = define("expected output", "{"+f"'{ascii_alpha}':'{ascii_num}'"+"}")
+        output = define("expected output", "{" + f"'{ascii_alpha}':'{ascii_num}'" + "}")
         params = define("function parameters", f"'\\\\\\\\', ':', ',', '\\\"'")
 
     scenario(input=input, output=output, params=params)
@@ -169,7 +169,7 @@ def value_symbols(self, scenario):
             "input string with value that contains punctuation marks",
             f"'{ascii_alpha}:{ascii_num}{parsed_noise}{ascii_alpha}'",
         )
-        output = define("expected output", "{"+f"'{ascii_alpha}':'{ascii_num}'"+"}")
+        output = define("expected output", "{" + f"'{ascii_alpha}':'{ascii_num}'" + "}")
         params = define("function parameters", f"'\\\\\\\\', ':', ',', '\\\"'")
 
     scenario(input=input, output=output, params=params)
@@ -237,7 +237,9 @@ def specifying_enclosing_character_non_alpha(self, scenario):
         )
         output = define(
             "expected output",
-            "{" + f"'{ascii_alpha}':'{ascii_alpha}{noise_without_quotation_mark.replace('-', '')}'" + "}",
+            "{"
+            + f"'{ascii_alpha}':'{ascii_alpha}{noise_without_quotation_mark.replace('-', '')}'"
+            + "}",
         )
         params = define(
             "function parameters with enclosing character as `-`",
@@ -259,10 +261,14 @@ def specifying_enclosing_character_alpha(self, scenario):
 
     with Given("I specify input, expected output and parameters"):
         input = define(
-            "input string, that contains `q`", f"'{ascii_alpha.replace('q', '')}:q{parsed_noise_without_quotation_mark}q'"
+            "input string, that contains `q`",
+            f"'{ascii_alpha.replace('q', '')}:q{parsed_noise_without_quotation_mark}q'",
         )
         output = define(
-            "expected output", "{" + f"'{ascii_alpha.replace('q', '')}':'{noise_without_quotation_mark}" + "}"
+            "expected output",
+            "{"
+            + f"'{ascii_alpha.replace('q', '')}':'{noise_without_quotation_mark}"
+            + "}",
         )
         params = define(
             "function parameters with enclosing character as `q`",
@@ -410,7 +416,7 @@ def specifying_escape_character_alpha(self, scenario):
         output = define(
             "expected output", "{" + f"'{ascii_alpha.replace('q', '')}':')'" + "}"
         )
-        params = define("function parameters with escape character as `-`", "'q'")
+        params = define("function parameters with escape character as `q`", "'q'")
 
     scenario(input=input, output=output, params=params)
 
