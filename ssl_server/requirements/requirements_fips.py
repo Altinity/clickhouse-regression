@@ -1,6 +1,6 @@
 # These requirements were auto generated
 # from software requirements specification (SRS)
-# document by TestFlows v1.9.230109.1215236.
+# document by TestFlows v1.9.230115.1195521.
 # Do not edit by hand but re-generate instead
 # using 'tfs requirements generate' command.
 from testflows.core import Specification
@@ -89,6 +89,314 @@ RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_PowerOnSelfTest_KnownAnswerTest 
     link=None,
     level=4,
     num="4.3.2.1",
+)
+
+RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_ConditionalSelfTests = Requirement(
+    name="RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.ConditionalSelfTests",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL be statically linked with a [FIPS] compatible [BoringSSL] library that implements the following conditional\n"
+        "self-tests:\n"
+        "\n"
+        "Type | Test\n"
+        "--- | ---\n"
+        "Pair-wise Consistency Test | ECDSA Key Pair generation, RSA Key Pair generation\n"
+        "CRNGT | Performed on the passively received entropy\n"
+        "DRBG Health Tests | Performed on DRBG, per SP 800‐90A Section 11.3. Required per IG C.1. \n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.4.1",
+)
+
+RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_SSLTests = Requirement(
+    name="RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.SSLTests",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL be statically linked with a [FIPS] compatible [BoringSSL] library that passes all\n"
+        "SSL tests as defined by https://github.com/google/boringssl/blob/master/ssl/ssl_test.cc.\n"
+        "\n"
+        "For example,\n"
+        "\n"
+        "```bash\n"
+        "./ssl/ssl_test\n"
+        "...\n"
+        "[==========] 330 tests from 6 test suites ran. (2410 ms total)\n"
+        "[  PASSED  ] 330 tests.\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.5.1",
+)
+
+RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_AllTestsUtility = Requirement(
+    name="RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.AllTestsUtility",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL be statically linked with [FIPS] compatible [BoringSSL] library that passes all\n"
+        "`util/all_tests.go` tests. \n"
+        "\n"
+        "For example,\n"
+        "\n"
+        "```bash\n"
+        "go run util/all_tests.go\n"
+        "...\n"
+        "All tests passed!\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.6.1",
+)
+
+RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_ACVP_CheckExpectedTests = Requirement(
+    name="RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.ACVP.CheckExpectedTests",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL be statically linked with a [FIPS] compatible [BoringSSL] library that passes all\n"
+        "`/util/fipstools/acvp/acvptool/test/check_expected.go` tests.\n"
+        "\n"
+        "```bash\n"
+        "./boringssl/util/fipstools/acvp/acvptool/test$ go run check_expected.go -tool ../acvptool -module-wrappers modulewrapper:../../../../../build/util/fipstools/acvp/modulewrapper/modulewrapper,testmodulewrapper:../testmodulewrapper/testmodulewrapper -tests tests.json \n"
+        "2022/12/14 20:57:26 32 ACVP tests matched expectations\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.7.1",
+)
+
+RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_SystemTable_BuildOptions = Requirement(
+    name="RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.SystemTable.BuildOptions",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] with statically linked [FIPS] compatible [BoringSSL] SHALL support\n"
+        "reporting that the binary was build with FIPS enabled [BoringSSL] library\n"
+        "in the `system.build_options` table.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.8.1",
+)
+
+RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_SSL_Client_Config_Settings_FIPS = Requirement(
+    name="RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.SSL.Client.Config.Settings.FIPS",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] with statically linked [FIPS] compatible [BoringSSL] SHALL support\n"
+        "`<clickhouse><openSSL><fips>` setting in the `config.xml`.\n"
+        "\n"
+        "```xml\n"
+        "<clickhouse>\n"
+        "    <openSSL>\n"
+        "        <fips>true</fips>\n"
+        "    </openSSL>\n"
+        "</clickhouse>\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="4.9.1.1",
+)
+
+RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_SSL_Server_Config = Requirement(
+    name="RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.SSL.Server.Config",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] with statically linked [FIPS] compatible [BoringSSL] SHALL support configuring\n"
+        "server SSL to accept only [FIPS Compatible SSL Connection]s\n"
+        "using the `<clickhouse><openSSL><server>` section in the `config.xml` using the following\n"
+        "settings:\n"
+        "\n"
+        "```xml\n"
+        "<clickhouse>\n"
+        "    <openSSL>\n"
+        "        <server> <!-- Used for https server AND secure tcp port -->\n"
+        "            <cipherList>ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH</cipherList>\n"
+        "            <requireTLSv1>true|false</requireTLSv1>\n"
+        "            <requireTLSv1_1>true|false</requireTLSv1_1>\n"
+        "            <requireTLSv1_2>true|false</requireTLSv1_2>\n"
+        "            <disableProtocols>sslv2,sslv3</disableProtocols>\n"
+        "            <preferServerCiphers>true</preferServerCiphers>\n"
+        "        </server>\n"
+        "    </openSSL>\n"
+        "<clickhouse>\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="4.9.2.1",
+)
+
+RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_SSL_Client_Config = Requirement(
+    name="RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.SSL.Client.Config",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] with statically linked [FIPS] compatible [BoringSSL] SHALL support configuring\n"
+        "SSL when server is acting as a client to establish only [FIPS Compatible SSL Connection]s\n"
+        "using the `<clickhouse><openSSL><client>` section in the `config.xml` using the following\n"
+        "settings:\n"
+        "\n"
+        "```xml\n"
+        "<clickhouse>\n"
+        "    <openSSL>\n"
+        "        <client> <!-- Used for connecting to https dictionary source and secured Zookeeper communication -->\n"
+        "            <cipherList>ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH</cipherList>\n"
+        "            <requireTLSv1>true|false</requireTLSv1>\n"
+        "            <requireTLSv1_1>true|false</requireTLSv1_1>\n"
+        "            <requireTLSv1_2>true|false</requireTLSv1_2>\n"
+        "            <disableProtocols>sslv2,sslv3</disableProtocols>\n"
+        "            <preferServerCiphers>true</preferServerCiphers>\n"
+        "        </client>\n"
+        "    </openSSL>\n"
+        "</clickhouse>\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="4.9.3.1",
+)
+
+RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Server_SSL_TCP = Requirement(
+    name="RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Server.SSL.TCP",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] with statically linked [FIPS] compatible [BoringSSL] SHALL support configuring\n"
+        "server to accept only [FIPS Compatible SSL Connection]s native TCP connections.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.10.1",
+)
+
+RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Server_SSL_HTTPS = Requirement(
+    name="RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Server.SSL.HTTPS",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] with statically linked [FIPS] compatible [BoringSSL] SHALL support configuring\n"
+        "server to accept only [FIPS Compatible SSL Connection]s HTTPS connections.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.11.1",
+)
+
+RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Clients_SSL_TCP_ClickHouseClient = Requirement(
+    name="RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Clients.SSL.TCP.ClickHouseClient",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] with statically linked [FIPS] compatible [BoringSSL] SHALL support accepting\n"
+        "connections from [clickhouse-client] which uses native TCP protocol\n"
+        "that is configured to establish only [FIPS Compatible SSL Connection]s.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="4.12.1.1",
+)
+
+RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Clients_SSL_TCP_Python = Requirement(
+    name="RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Clients.SSL.TCP.Python",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] with statically linked [FIPS] compatible [BoringSSL] SHALL support accepting\n"
+        "connections from test Python client which uses native TCP protocol\n"
+        "that is configured to establish only [FIPS Compatible SSL Connection]s.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="4.12.2.1",
+)
+
+RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Clients_SSL_HTTPS_Curl = Requirement(
+    name="RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Clients.SSL.HTTPS.Curl",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] with statically linked [FIPS] compatible [BoringSSL] SHALL support accepting\n"
+        "connections from [curl] used as HTTPS protocol client that is configured to establish only [FIPS Compatible SSL Connection]s.\n"
+        "\n"
+        "[FIPS Compatible SSL Connection]: #fips_compatible_ssl_connection\n"
+        "[OpenSSL ciphers]: https://www.openssl.org/docs/man1.1.1/man1/ciphers.html\n"
+        "[curl]: https://curl.se/docs/manpage.html\n"
+        "[ClickHouse]: https://clickhouse.com\n"
+        "[GitHub Repository]: https://github.com/Altinity/clickhouse-regression/tree/main/ssl_server/requirements/requirements_fips.md\n"
+        "[Revision History]: https://github.com/Altinity/clickhouse-regression/commits/main/ssl_server/requirements/requirements_fips.md\n"
+        "[Git]: https://git-scm.com/\n"
+        "[GitHub]: https://github.com\n"
+        "[FIPS]: https://csrc.nist.gov/publications/detail/fips/140/2/final\n"
+        "[FIPS 140-2]: https://csrc.nist.gov/publications/detail/fips/140/2/final\n"
+        "[BoringSSL]: https://github.com/google/boringssl/\n"
+        "[BoringCrypto]: https://github.com/google/boringssl/tree/master/crypto\n"
+        "[ACVP]: https://pages.nist.gov/ACVP/\n"
+    ),
+    link=None,
+    level=4,
+    num="4.13.1.1",
 )
 
 SRS_034_ClickHouse_With_FIPS_Compatible_BoringSSL = Specification(
@@ -226,6 +534,19 @@ SRS_034_ClickHouse_With_FIPS_Compatible_BoringSSL = Specification(
         RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Version,
         RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_PowerOnSelfTest_IntegrityTest,
         RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_PowerOnSelfTest_KnownAnswerTest,
+        RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_ConditionalSelfTests,
+        RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_SSLTests,
+        RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_AllTestsUtility,
+        RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_ACVP_CheckExpectedTests,
+        RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_SystemTable_BuildOptions,
+        RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_SSL_Client_Config_Settings_FIPS,
+        RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_SSL_Server_Config,
+        RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_SSL_Client_Config,
+        RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Server_SSL_TCP,
+        RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Server_SSL_HTTPS,
+        RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Clients_SSL_TCP_ClickHouseClient,
+        RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Clients_SSL_TCP_Python,
+        RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Clients_SSL_HTTPS_Curl,
     ),
     content="""
 # SRS-034 ClickHouse With FIPS Compatible BoringSSL
@@ -391,7 +712,6 @@ SHA KAT (SHA-1, SHA-256, SHA-512)
 ### Conditional Self-Tests
 
 #### RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.ConditionalSelfTests
-
 version: 1.0
 
 [ClickHouse] SHALL be statically linked with a [FIPS] compatible [BoringSSL] library that implements the following conditional
@@ -407,7 +727,6 @@ DRBG Health Tests | Performed on DRBG, per SP 800‐90A Section 11.3. Required p
 ### SSL Tests
 
 #### RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.SSLTests
-
 version: 1.0
 
 [ClickHouse] SHALL be statically linked with a [FIPS] compatible [BoringSSL] library that passes all
@@ -425,7 +744,6 @@ For example,
 ### All-tests Utility
 
 #### RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.AllTestsUtility
-
 version: 1.0
 
 [ClickHouse] SHALL be statically linked with [FIPS] compatible [BoringSSL] library that passes all
@@ -442,7 +760,6 @@ All tests passed!
 ### ACVP Check Expected Tests
 
 #### RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.ACVP.CheckExpectedTests
-
 version: 1.0
 
 [ClickHouse] SHALL be statically linked with a [FIPS] compatible [BoringSSL] library that passes all
@@ -456,7 +773,6 @@ version: 1.0
 ### Build Options System Table
 
 #### RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.SystemTable.BuildOptions
-
 version: 1.0
 
 [ClickHouse] with statically linked [FIPS] compatible [BoringSSL] SHALL support
@@ -468,7 +784,6 @@ in the `system.build_options` table.
 #### FIPS Setting
 
 ##### RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.SSL.Client.Config.Settings.FIPS
-
 version: 1.0
 
 [ClickHouse] with statically linked [FIPS] compatible [BoringSSL] SHALL support
@@ -485,7 +800,6 @@ version: 1.0
 #### Server SSL Configuration
 
 ##### RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.SSL.Server.Config
-
 version: 1.0
 
 [ClickHouse] with statically linked [FIPS] compatible [BoringSSL] SHALL support configuring
@@ -511,7 +825,6 @@ settings:
 #### Client SSL Configuration
 
 ##### RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.SSL.Client.Config
-
 version: 1.0
 
 [ClickHouse] with statically linked [FIPS] compatible [BoringSSL] SHALL support configuring
@@ -537,7 +850,6 @@ settings:
 ### Server TCP Connections
 
 #### RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Server.SSL.TCP
-
 version: 1.0
 
 [ClickHouse] with statically linked [FIPS] compatible [BoringSSL] SHALL support configuring
@@ -546,7 +858,6 @@ server to accept only [FIPS Compatible SSL Connection]s native TCP connections.
 ### Server HTTPS Connections
 
 #### RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Server.SSL.HTTPS
-
 version: 1.0
 
 [ClickHouse] with statically linked [FIPS] compatible [BoringSSL] SHALL support configuring
@@ -557,7 +868,6 @@ server to accept only [FIPS Compatible SSL Connection]s HTTPS connections.
 #### clickhouse-client
 
 ##### RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Clients.SSL.TCP.ClickHouseClient
-
 version: 1.0
 
 [ClickHouse] with statically linked [FIPS] compatible [BoringSSL] SHALL support accepting
@@ -567,7 +877,6 @@ that is configured to establish only [FIPS Compatible SSL Connection]s.
 #### Test Python Client
 
 ##### RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Clients.SSL.TCP.Python
-
 version: 1.0
 
 [ClickHouse] with statically linked [FIPS] compatible [BoringSSL] SHALL support accepting
@@ -579,7 +888,6 @@ that is configured to establish only [FIPS Compatible SSL Connection]s.
 #### curl
 
 ##### RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Clients.SSL.HTTPS.Curl
-
 version: 1.0
 
 [ClickHouse] with statically linked [FIPS] compatible [BoringSSL] SHALL support accepting
@@ -589,8 +897,8 @@ connections from [curl] used as HTTPS protocol client that is configured to esta
 [OpenSSL ciphers]: https://www.openssl.org/docs/man1.1.1/man1/ciphers.html
 [curl]: https://curl.se/docs/manpage.html
 [ClickHouse]: https://clickhouse.com
-[GitHub Repository]: https://github.com/Altinity/clickhouse-regression/tree/main/ssl/requirements/QA_SRS034_ClickHouse_With_FIPS_Compatible_BoringSSL.md
-[Revision History]: https://github.com/Altinity/clickhouse-regression/commits/main/ssl/requirements/QA_SRS034_ClickHouse_With_FIPS_Compatible_BoringSSL.md
+[GitHub Repository]: https://github.com/Altinity/clickhouse-regression/tree/main/ssl_server/requirements/requirements_fips.md
+[Revision History]: https://github.com/Altinity/clickhouse-regression/commits/main/ssl_server/requirements/requirements_fips.md
 [Git]: https://git-scm.com/
 [GitHub]: https://github.com
 [FIPS]: https://csrc.nist.gov/publications/detail/fips/140/2/final
