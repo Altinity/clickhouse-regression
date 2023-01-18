@@ -144,7 +144,7 @@ def server_connection_openssl_client(self, port):
 
 
 @TestOutline
-def server_tcp_connection_clickhouse_client(self, port=None):
+def server_tcp_connection_fips_clickhouse_client(self, port=None):
     """Check that server accepts only FIPS compatible TCP connections using clickhouse-client."""
     if port is None:
         port = self.context.secure_tcp_port
@@ -154,6 +154,15 @@ def server_tcp_connection_clickhouse_client(self, port=None):
         description=f"on port {port}",
     ):
         self.context.connection_port = port
+
+    with Check("Connection with no protocols should be rejected"):
+        clickhouse_client_connection(
+            options={
+                "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_2,tlsv1_3",
+            },
+            success=False,
+            message="NO_SUPPORTED_VERSIONS_ENABLED",
+        )
 
     with Check("TLSv1.2 suite connection should work"):
         clickhouse_client_connection(
@@ -232,11 +241,11 @@ def server_tcp_connection_clickhouse_client(self, port=None):
         with Check(
             f"connection using non-FIPS compatible cipher {cipher} should be rejected"
         ):
-            clickhouse_client_connection(
+            output = clickhouse_client_connection(
                 options={"cipherList": cipher, "disableProtocols": ""},
                 success=False,
-                message="SSLV3_ALERT_HANDSHAKE_FAILURE",
             )
+            assert "NO_CIPHERS_AVAILABLE" or "SSLV3_ALERT_HANDSHAKE_FAILURE" in output, error()
 
 
 @TestOutline
@@ -337,8 +346,8 @@ def server_tcp_connection(self):
     with Scenario("openssl s_client"):
         server_connection_openssl_client(port=self.context.secure_tcp_port)
 
-    with Scenario("clickhouse-client"):
-        server_tcp_connection_clickhouse_client(port=self.context.secure_tcp_port)
+    with Scenario("fips clickhouse client"):
+        server_tcp_connection_fips_clickhouse_client(port=self.context.secure_tcp_port)
 
 
 @TestFeature
