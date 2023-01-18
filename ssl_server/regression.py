@@ -43,7 +43,7 @@ xfails = {
     "fips/server/:/:/TLSv1.3 suite connection should be rejected": [
         (Fail, "needs to be reviewed")
     ],
-    "fips/server/tcp connection/clickhouse-client/just disabling TLSv1.1 suite connection should work": [
+    "fips/server/tcp connection/fips clickhouse client/just disabling TLSv1.1 suite connection should work": [
         (Fail, "needs to be reviewed")
     ],
 }

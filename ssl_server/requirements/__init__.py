@@ -1,2 +1,2 @@
 from .requirements import *
-from .requirements_BoringSSL_FIPS import *
+from .requirements_fips import *
