@@ -40,10 +40,7 @@ xfails = {
     "fips/server/:/:/:cipher ECDHE-ECDSA-AES128-GCM-SHA256 should work": [
         (Fail, "not supported by SSL library")
     ],
-    "fips/server/:/:/TLSv1.3 suite connection should be rejected": [
-        (Fail, "needs to be reviewed")
-    ],
-    "fips/server/tcp connection/fips clickhouse client/just disabling TLSv1.1 suite connection should work": [
+    "fips/server/tcp connection/:/just disabling TLSv1.1 suite connection should work": [
         (Fail, "needs to be reviewed")
     ],
 }

@@ -78,10 +78,11 @@ all_ciphers = [
 
 
 @TestOutline
-def server_connection_openssl_client(self, port):
+def server_connection_openssl_client(self, port, tls1_2_enabled=True):
     """Check that server accepts only FIPS compatible secure connections on a given port
     using openssl s_client utility."""
     self.context.connection_port = port
+    tls1_2_status = "work" if tls1_2_enabled else "be rejected"
 
     with Given(
         "server is configured to accept only FIPS compatible connections",
@@ -96,8 +97,8 @@ def server_connection_openssl_client(self, port):
             message="no protocols available",
         )
 
-    with Check("TLSv1.2 suite connection should work"):
-        openssl_client_connection(options="-tls1_2", success=True)
+    with Check(f"TLSv1.2 suite connection should {tls1_2_status}"):
+        openssl_client_connection(options="-tls1_2", success=tls1_2_enabled)
 
     with Check("TLSv1 suite connection should be rejected"):
         openssl_client_connection(
@@ -123,22 +124,22 @@ def server_connection_openssl_client(self, port):
     with Check("DTLSv1.2 suite connection should be rejected"):
         openssl_client_connection(options="-dtls1.2", success=False)
 
-    with Check("just disabling TLSv1 suite connection should work"):
-        openssl_client_connection(options="-no_tls1", success=True)
+    with Check(f"just disabling TLSv1 suite connection should {tls1_2_status}"):
+        openssl_client_connection(options="-no_tls1", success=tls1_2_enabled)
 
-    with Check("just disabling TLSv1.1 suite connection should work"):
-        openssl_client_connection(options="-no_tls1_1", success=True)
+    with Check(f"just disabling TLSv1.1 suite connection should {tls1_2_status}"):
+        openssl_client_connection(options="-no_tls1_1", success=tls1_2_enabled)
 
-    with Check("just disabling TLSv1.3 suite connection should work"):
-        openssl_client_connection(options="-no_tls1_3", success=True)
+    with Check(f"just disabling TLSv1.3 suite connection should {tls1_2_status}"):
+        openssl_client_connection(options="-no_tls1_3", success=tls1_2_enabled)
 
     with Check("disabling TLSv1.2 suite connection should be rejected"):
         openssl_client_connection(options="-no_tls1_2", success=False)
 
     for cipher in fips_compatible_tlsv1_2_cipher_suites:
-        with Check(f"connection using FIPS compatible cipher {cipher} should work"):
+        with Check(f"connection using FIPS compatible cipher {cipher} should {tls1_2_status}"):
             openssl_client_connection(
-                options=f'-cipher "{cipher}"', success=True, message=f"{cipher}"
+                options=f'-cipher "{cipher}"', success=tls1_2_enabled, message=f"{cipher}"
             )
 
     for cipher in all_ciphers:
@@ -151,9 +152,10 @@ def server_connection_openssl_client(self, port):
 
 
 @TestOutline
-def server_tcp_connection_clickhouse_client(self, node, hostname = "clickhouse1", port=None):
+def tcp_connection_clickhouse_client(self, node, hostname="clickhouse1", tls1_2_enabled=True, port=None):
     """Check that server accepts only FIPS compatible TCP connections using clickhouse-client"""
     self.context.node = node
+    tls1_2_status = "work" if tls1_2_enabled else "be rejected"
     
     if port is None:
         port = self.context.secure_tcp_port
@@ -174,13 +176,13 @@ def server_tcp_connection_clickhouse_client(self, node, hostname = "clickhouse1"
             hostname=hostname,
         )
 
-    with Check("TLSv1.2 suite connection should work"):
+    with Check(f"TLSv1.2 suite connection should {tls1_2_status}"):
         clickhouse_client_connection(
             options={
                 "requireTLSv1_2": "true",
                 "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3",
             },
-            success=True,
+            success=tls1_2_enabled,
             hostname=hostname,
         )
 
@@ -217,39 +219,39 @@ def server_tcp_connection_clickhouse_client(self, node, hostname = "clickhouse1"
             hostname=hostname,
         )
 
-    with Check("just disabling TLSv1 suite connection should work"):
+    with Check(f"just disabling TLSv1 suite connection should {tls1_2_status}"):
         clickhouse_client_connection(
             options={"disableProtocols": "tlsv1"},
-            success=True,
+            success=tls1_2_enabled,
             prefer_server_ciphers=True,
             hostname=hostname,
         )
 
-    with Check("just disabling TLSv1.1 suite connection should work"):
+    with Check(f"just disabling TLSv1.1 suite connection should {tls1_2_status}"):
         clickhouse_client_connection(
             options={"disableProtocols": "tlsv1_1"},
-            success=True,
+            success=tls1_2_enabled,
             prefer_server_ciphers=True,
             hostname=hostname,
         )
 
-    with Check("just disabling TLSv1.3 suite connection should work"):
+    with Check(f"just disabling TLSv1.3 suite connection should {tls1_2_status}"):
         clickhouse_client_connection(
             options={"disableProtocols": "tlsv1_3"},
-            success=True,
+            success=tls1_2_enabled,
             prefer_server_ciphers=True,
             hostname=hostname,
         )
 
     for cipher in fips_compatible_tlsv1_2_cipher_suites:
-        with Check(f"connection using FIPS compatible cipher {cipher} should work"):
+        with Check(f"connection using FIPS compatible cipher {cipher} should {tls1_2_status}"):
             clickhouse_client_connection(
                 options={
                     "requireTLSv1_2": "true",
                     "cipherList": cipher,
                     "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3",
                 },
-                success=True,
+                success=tls1_2_enabled,
                 hostname=hostname,
             )
 
@@ -268,8 +270,9 @@ def server_tcp_connection_clickhouse_client(self, node, hostname = "clickhouse1"
 
 
 @TestOutline
-def server_https_connection_curl(self, port=None):
+def server_https_connection_curl(self, port=None, tls1_2_enabled=True):
     """Check that server accepts only FIPS compatible HTTPS connections using curl."""
+    tls1_2_status = "work" if tls1_2_enabled else "be rejected"
     if port is None:
         port = self.context.secure_http_port
 
@@ -279,10 +282,10 @@ def server_https_connection_curl(self, port=None):
     ):
         self.context.connection_port = port
 
-    with Check("TLSv1.2 suite connection should work"):
+    with Check(f"TLSv1.2 suite connection should {tls1_2_status}"):
         curl_client_connection(
             options="--tls-max 1.2 --tlsv1.2",
-            success=True,
+            success=tls1_2_enabled,
             message="SSL connection using TLSv1.2 / ECDHE-RSA-AES128-GCM-SHA256",
         )
 
@@ -304,20 +307,20 @@ def server_https_connection_curl(self, port=None):
             success=False,
         )
 
-    with Check("just disabling TLSv1 suite connection should work"):
-        curl_client_connection(options="--tlsv1.1", success=True)
+    with Check(f"just disabling TLSv1 suite connection should {tls1_2_status}"):
+        curl_client_connection(options="--tlsv1.1", success=tls1_2_enabled)
 
-    with Check("just disabling TLSv1.1 suite connection should work"):
-        curl_client_connection(options="--tlsv1.2", success=True)
+    with Check(f"just disabling TLSv1.1 suite connection should {tls1_2_status}"):
+        curl_client_connection(options="--tlsv1.2", success=tls1_2_enabled)
 
-    with Check("just disabling TLSv1.3 suite connection should work"):
-        curl_client_connection(options="--tls-max 1.2", success=True)
+    with Check(f"just disabling TLSv1.3 suite connection should {tls1_2_status}"):
+        curl_client_connection(options="--tls-max 1.2", success=tls1_2_enabled)
 
     for cipher in fips_compatible_tlsv1_2_cipher_suites:
-        with Check(f"connection using FIPS compatible cipher {cipher} should work"):
+        with Check(f"connection using FIPS compatible cipher {cipher} should {tls1_2_status}"):
             curl_client_connection(
                 options=f'--ciphers "{cipher}" --tls-max 1.2 --tlsv1.2',
-                success=True,
+                success=tls1_2_enabled,
                 message=f"{cipher}",
             )
 
@@ -374,35 +377,58 @@ def break_hash(self):
 @TestFeature
 @Name("tcp connection")
 @Requirements()
-def server_tcp_connection(self):
+def server_tcp_connection(self, tls1_2_enabled=True):
     """Check that server accepts only FIPS compatible secure TCP connections."""
     with Scenario("openssl s_client"):
-        server_connection_openssl_client(port=self.context.secure_tcp_port)
+        server_connection_openssl_client(port=self.context.secure_tcp_port, tls1_2_enabled=tls1_2_enabled)
 
-    with Scenario("fips clickhouse client"):
-        server_tcp_connection_clickhouse_client(node=self.context.cluster.node("clickhouse1"), port=self.context.secure_tcp_port)
+    with Scenario(
+        "fips clickhouse client",
+        requirements=RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Clients_SSL_TCP_ClickHouseClient_FIPS("1.0"),
+        ):
+        tcp_connection_clickhouse_client(node=self.context.cluster.node("clickhouse1"), port=self.context.secure_tcp_port, tls1_2_enabled=tls1_2_enabled)
 
-    with Scenario("non fips clickhouse2 client"):
-        node = self.context.cluster.node("clickhouse2")
+    with Scenario(
+        "non fips clickhouse client",
+        requirements=RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Clients_SSL_TCP_ClickHouseClient_NonFIPS("1.0"),
+        ):
+        node = self.context.cluster.node("non_fips_clickhouse")
         add_trusted_ca_certificate(node=node, certificate=current().context.my_own_ca_crt)
-        server_tcp_connection_clickhouse_client(node=node, port=self.context.secure_tcp_port)
-
-    # with Scenario("non fips clickhouse client"):
-    #     node = self.context.cluster.node("non_fips_clickhouse")
-    #     add_trusted_ca_certificate(node=node, certificate=current().context.my_own_ca_crt)
-    #     server_tcp_connection_clickhouse_client(node=node, port=self.context.secure_tcp_port)
+        tcp_connection_clickhouse_client(node=node, port=self.context.secure_tcp_port, tls1_2_enabled=tls1_2_enabled)
 
 
 @TestFeature
 @Name("https connection")
 @Requirements()
-def server_https_connection(self):
+def server_https_connection(self, tls1_2_enabled=True):
     """Check that server accepts only FIPS compatible HTTPS connections."""
     with Scenario("openssl s_client"):
-        server_connection_openssl_client(port=self.context.secure_http_port)
+        server_connection_openssl_client(port=self.context.secure_http_port, tls1_2_enabled=tls1_2_enabled)
 
     with Scenario("curl"):
-        server_https_connection_curl()
+        server_https_connection_curl(tls1_2_enabled=tls1_2_enabled)
+
+
+@TestFeature
+@Name("all protocols disabled")
+@Requirements()
+def server_all_protocols_disabled(self):
+    """Check that the server accepts no connections."""
+    with Given("I set SSL server to not accept any connections"):
+        entries = define(
+            "SSL settings",
+            {
+                "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_2,tlsv1_3"
+            },
+        )
+
+    with And("I apply SSL server configuration"):
+        add_ssl_server_configuration_file(
+            entries=entries, config_file="ssl_disable_connections.xml", restart=True
+        )
+
+    Feature(test=server_tcp_connection)(tls1_2_enabled=False)
+    Feature(test=server_https_connection)(tls1_2_enabled=False)
 
 
 @TestFeature
@@ -431,8 +457,16 @@ def server(self, node=None):
         )
 
     Feature(run=server_tcp_connection)
-    Feature(run=server_https_connection)
+    Feature(run=server_https_connection)    
+    Feature(run=server_all_protocols_disabled)
 
+
+@TestFeature
+@Requirements()
+def client(self):
+    """Check forcing client to use only FIPS compatible cipher suites to connect to non FIPS server."""
+    with Scenario("fips clickhouse client"):
+        tcp_connection_clickhouse_client(node=self.context.cluster.node("clickhouse1"), port=self.context.secure_tcp_port)
 
 @TestFeature
 @Name("fips check")
@@ -441,6 +475,7 @@ def fips_check(self):
     """Run checks that ClickHouse is in FIPS mode."""
     Scenario(run=log_check)
     Scenario(run=build_options_check)
+
 
 @TestFeature
 @Name("fips")
@@ -457,3 +492,4 @@ def feature(self, node="clickhouse1"):
         Scenario(run=break_hash)
 
     Feature(run=server)
+    Feature(run=client)

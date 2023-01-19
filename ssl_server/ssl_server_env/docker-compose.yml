@@ -48,6 +48,20 @@ services:
       zookeeper:
         condition: service_healthy
 
+  non_fips_clickhouse:
+    extends:
+      file: non-fips-clickhouse-service.yml
+      service: clickhouse
+    hostname: non_fips_clickhouse
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/non_fips_clickhouse/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/non_fips_clickhouse/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/non_fips_clickhouse/etc/:/etc/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/non_fips_clickhouse/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+
   # dummy service which does nothing, but allows to postpone
   # 'docker-compose up -d' till all dependecies will go healthy
   all_services_ready:
@@ -58,6 +72,8 @@ services:
       clickhouse2:
         condition: service_healthy
       clickhouse3:
+        condition: service_healthy
+      non_fips_clickhouse:
         condition: service_healthy
       zookeeper:
         condition: service_healthy
