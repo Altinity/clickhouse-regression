@@ -1,6 +1,6 @@
 # These requirements were auto generated
 # from software requirements specification (SRS)
-# document by TestFlows v1.9.230115.1195521.
+# document by TestFlows v1.9.230110.1184526.
 # Do not edit by hand but re-generate instead
 # using 'tfs requirements generate' command.
 from testflows.core import Specification
@@ -206,6 +206,23 @@ RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_SystemTable_BuildOptions = Requi
     num="4.8.1",
 )
 
+RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_MySQLFunction = Requirement(
+    name="RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.MySQLFunction",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] with statically linked [FIPS] compatible [BoringSSL] SHALL support\n"
+        "reporting that it is FIPS compliant in the MySQL FIPS function.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.9.1",
+)
+
 RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_SSL_Client_Config_Settings_FIPS = Requirement(
     name="RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.SSL.Client.Config.Settings.FIPS",
     version="1.0",
@@ -228,7 +245,7 @@ RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_SSL_Client_Config_Settings_FIPS 
     ),
     link=None,
     level=4,
-    num="4.9.1.1",
+    num="4.10.1.1",
 )
 
 RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_SSL_Server_Config = Requirement(
@@ -262,7 +279,7 @@ RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_SSL_Server_Config = Requirement(
     ),
     link=None,
     level=4,
-    num="4.9.2.1",
+    num="4.10.2.1",
 )
 
 RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_SSL_Client_Config = Requirement(
@@ -296,7 +313,7 @@ RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_SSL_Client_Config = Requirement(
     ),
     link=None,
     level=4,
-    num="4.9.3.1",
+    num="4.10.3.1",
 )
 
 RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Server_SSL_TCP = Requirement(
@@ -313,7 +330,7 @@ RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Server_SSL_TCP = Requirement(
     ),
     link=None,
     level=3,
-    num="4.10.1",
+    num="4.11.1",
 )
 
 RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Server_SSL_HTTPS = Requirement(
@@ -330,11 +347,11 @@ RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Server_SSL_HTTPS = Requirement(
     ),
     link=None,
     level=3,
-    num="4.11.1",
+    num="4.12.1",
 )
 
-RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Clients_SSL_TCP_ClickHouseClient = Requirement(
-    name="RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Clients.SSL.TCP.ClickHouseClient",
+RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Clients_SSL_TCP_ClickHouseClient_FIPS = Requirement(
+    name="RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Clients.SSL.TCP.ClickHouseClient.FIPS",
     version="1.0",
     priority=None,
     group=None,
@@ -342,13 +359,31 @@ RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Clients_SSL_TCP_ClickHouseClient
     uid=None,
     description=(
         "[ClickHouse] with statically linked [FIPS] compatible [BoringSSL] SHALL support accepting\n"
-        "connections from [clickhouse-client] which uses native TCP protocol\n"
+        "connections from FIPS compliant [clickhouse-client] which uses native TCP protocol\n"
         "that is configured to establish only [FIPS Compatible SSL Connection]s.\n"
         "\n"
     ),
     link=None,
     level=4,
-    num="4.12.1.1",
+    num="4.13.1.1",
+)
+
+RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Clients_SSL_TCP_ClickHouseClient_NonFIPS = Requirement(
+    name="RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Clients.SSL.TCP.ClickHouseClient.NonFIPS",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] with statically linked [FIPS] compatible [BoringSSL] SHALL support accepting\n"
+        "connections from non FIPS compliant [clickhouse-client] which uses native TCP protocol\n"
+        "that is configured to establish only [FIPS Compatible SSL Connection]s.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="4.13.1.2",
 )
 
 RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Clients_SSL_TCP_Python = Requirement(
@@ -366,7 +401,7 @@ RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Clients_SSL_TCP_Python = Require
     ),
     link=None,
     level=4,
-    num="4.12.2.1",
+    num="4.13.2.1",
 )
 
 RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Clients_SSL_HTTPS_Curl = Requirement(
@@ -396,7 +431,7 @@ RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Clients_SSL_HTTPS_Curl = Require
     ),
     link=None,
     level=4,
-    num="4.13.1.1",
+    num="4.14.1.1",
 )
 
 SRS_034_ClickHouse_With_FIPS_Compatible_BoringSSL = Specification(
@@ -477,56 +512,67 @@ SRS_034_ClickHouse_With_FIPS_Compatible_BoringSSL = Specification(
             level=3,
             num="4.8.1",
         ),
-        Heading(name="SSL Configuration", level=2, num="4.9"),
-        Heading(name="FIPS Setting", level=3, num="4.9.1"),
+        Heading(name="MySQL FIPS Function", level=2, num="4.9"),
+        Heading(
+            name="RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.MySQLFunction",
+            level=3,
+            num="4.9.1",
+        ),
+        Heading(name="SSL Configuration", level=2, num="4.10"),
+        Heading(name="FIPS Setting", level=3, num="4.10.1"),
         Heading(
             name="RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.SSL.Client.Config.Settings.FIPS",
             level=4,
-            num="4.9.1.1",
+            num="4.10.1.1",
         ),
-        Heading(name="Server SSL Configuration", level=3, num="4.9.2"),
+        Heading(name="Server SSL Configuration", level=3, num="4.10.2"),
         Heading(
             name="RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.SSL.Server.Config",
             level=4,
-            num="4.9.2.1",
+            num="4.10.2.1",
         ),
-        Heading(name="Client SSL Configuration", level=3, num="4.9.3"),
+        Heading(name="Client SSL Configuration", level=3, num="4.10.3"),
         Heading(
             name="RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.SSL.Client.Config",
             level=4,
-            num="4.9.3.1",
+            num="4.10.3.1",
         ),
-        Heading(name="Server TCP Connections", level=2, num="4.10"),
+        Heading(name="Server TCP Connections", level=2, num="4.11"),
         Heading(
             name="RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Server.SSL.TCP",
             level=3,
-            num="4.10.1",
+            num="4.11.1",
         ),
-        Heading(name="Server HTTPS Connections", level=2, num="4.11"),
+        Heading(name="Server HTTPS Connections", level=2, num="4.12"),
         Heading(
             name="RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Server.SSL.HTTPS",
             level=3,
-            num="4.11.1",
+            num="4.12.1",
         ),
-        Heading(name="TCP Clients", level=2, num="4.12"),
-        Heading(name="clickhouse-client", level=3, num="4.12.1"),
+        Heading(name="TCP Clients", level=2, num="4.13"),
+        Heading(name="clickhouse-client", level=3, num="4.13.1"),
         Heading(
-            name="RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Clients.SSL.TCP.ClickHouseClient",
+            name="RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Clients.SSL.TCP.ClickHouseClient.FIPS",
             level=4,
-            num="4.12.1.1",
+            num="4.13.1.1",
         ),
-        Heading(name="Test Python Client", level=3, num="4.12.2"),
+        Heading(
+            name="RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Clients.SSL.TCP.ClickHouseClient.NonFIPS",
+            level=4,
+            num="4.13.1.2",
+        ),
+        Heading(name="Test Python Client", level=3, num="4.13.2"),
         Heading(
             name="RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Clients.SSL.TCP.Python",
             level=4,
-            num="4.12.2.1",
+            num="4.13.2.1",
         ),
-        Heading(name="HTTPS Clients", level=2, num="4.13"),
-        Heading(name="curl", level=3, num="4.13.1"),
+        Heading(name="HTTPS Clients", level=2, num="4.14"),
+        Heading(name="curl", level=3, num="4.14.1"),
         Heading(
             name="RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Clients.SSL.HTTPS.Curl",
             level=4,
-            num="4.13.1.1",
+            num="4.14.1.1",
         ),
     ),
     requirements=(
@@ -539,12 +585,14 @@ SRS_034_ClickHouse_With_FIPS_Compatible_BoringSSL = Specification(
         RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_AllTestsUtility,
         RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_ACVP_CheckExpectedTests,
         RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_SystemTable_BuildOptions,
+        RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_MySQLFunction,
         RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_SSL_Client_Config_Settings_FIPS,
         RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_SSL_Server_Config,
         RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_SSL_Client_Config,
         RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Server_SSL_TCP,
         RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Server_SSL_HTTPS,
-        RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Clients_SSL_TCP_ClickHouseClient,
+        RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Clients_SSL_TCP_ClickHouseClient_FIPS,
+        RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Clients_SSL_TCP_ClickHouseClient_NonFIPS,
         RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Clients_SSL_TCP_Python,
         RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Clients_SSL_HTTPS_Curl,
     ),
@@ -581,25 +629,28 @@ SRS_034_ClickHouse_With_FIPS_Compatible_BoringSSL = Specification(
     * 4.7.1 [RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.ACVP.CheckExpectedTests](#rqsrs-034clickhousefipscompatibleboringsslacvpcheckexpectedtests)
   * 4.8 [Build Options System Table](#build-options-system-table)
     * 4.8.1 [RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.SystemTable.BuildOptions](#rqsrs-034clickhousefipscompatibleboringsslsystemtablebuildoptions)
-  * 4.9 [SSL Configuration](#ssl-configuration)
-    * 4.9.1 [FIPS Setting](#fips-setting)
-      * 4.9.1.1 [RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.SSL.Client.Config.Settings.FIPS](#rqsrs-034clickhousefipscompatibleboringsslsslclientconfigsettingsfips)
-    * 4.9.2 [Server SSL Configuration](#server-ssl-configuration)
-      * 4.9.2.1 [RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.SSL.Server.Config](#rqsrs-034clickhousefipscompatibleboringsslsslserverconfig)
-    * 4.9.3 [Client SSL Configuration](#client-ssl-configuration)
-      * 4.9.3.1 [RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.SSL.Client.Config](#rqsrs-034clickhousefipscompatibleboringsslsslclientconfig)
-  * 4.10 [Server TCP Connections](#server-tcp-connections)
-    * 4.10.1 [RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Server.SSL.TCP](#rqsrs-034clickhousefipscompatibleboringsslserverssltcp)
-  * 4.11 [Server HTTPS Connections](#server-https-connections)
-    * 4.11.1 [RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Server.SSL.HTTPS](#rqsrs-034clickhousefipscompatibleboringsslserversslhttps)
-  * 4.12 [TCP Clients](#tcp-clients)
-    * 4.12.1 [clickhouse-client](#clickhouse-client)
-      * 4.12.1.1 [RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Clients.SSL.TCP.ClickHouseClient](#rqsrs-034clickhousefipscompatibleboringsslclientsssltcpclickhouseclient)
-    * 4.12.2 [Test Python Client](#test-python-client)
-      * 4.12.2.1 [RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Clients.SSL.TCP.Python](#rqsrs-034clickhousefipscompatibleboringsslclientsssltcppython)
-  * 4.13 [HTTPS Clients](#https-clients)
-    * 4.13.1 [curl](#curl)
-      * 4.13.1.1 [RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Clients.SSL.HTTPS.Curl](#rqsrs-034clickhousefipscompatibleboringsslclientssslhttpscurl)
+  * 4.9 [MySQL FIPS Function](#mysql-fips-function)
+    * 4.9.1 [RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.MySQLFunction](#rqsrs-034clickhousefipscompatibleboringsslmysqlfunction)
+  * 4.10 [SSL Configuration](#ssl-configuration)
+    * 4.10.1 [FIPS Setting](#fips-setting)
+      * 4.10.1.1 [RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.SSL.Client.Config.Settings.FIPS](#rqsrs-034clickhousefipscompatibleboringsslsslclientconfigsettingsfips)
+    * 4.10.2 [Server SSL Configuration](#server-ssl-configuration)
+      * 4.10.2.1 [RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.SSL.Server.Config](#rqsrs-034clickhousefipscompatibleboringsslsslserverconfig)
+    * 4.10.3 [Client SSL Configuration](#client-ssl-configuration)
+      * 4.10.3.1 [RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.SSL.Client.Config](#rqsrs-034clickhousefipscompatibleboringsslsslclientconfig)
+  * 4.11 [Server TCP Connections](#server-tcp-connections)
+    * 4.11.1 [RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Server.SSL.TCP](#rqsrs-034clickhousefipscompatibleboringsslserverssltcp)
+  * 4.12 [Server HTTPS Connections](#server-https-connections)
+    * 4.12.1 [RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Server.SSL.HTTPS](#rqsrs-034clickhousefipscompatibleboringsslserversslhttps)
+  * 4.13 [TCP Clients](#tcp-clients)
+    * 4.13.1 [clickhouse-client](#clickhouse-client)
+      * 4.13.1.1 [RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Clients.SSL.TCP.ClickHouseClient.FIPS](#rqsrs-034clickhousefipscompatibleboringsslclientsssltcpclickhouseclientfips)
+      * 4.13.1.2 [RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Clients.SSL.TCP.ClickHouseClient.NonFIPS](#rqsrs-034clickhousefipscompatibleboringsslclientsssltcpclickhouseclientnonfips)
+    * 4.13.2 [Test Python Client](#test-python-client)
+      * 4.13.2.1 [RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Clients.SSL.TCP.Python](#rqsrs-034clickhousefipscompatibleboringsslclientsssltcppython)
+  * 4.14 [HTTPS Clients](#https-clients)
+    * 4.14.1 [curl](#curl)
+      * 4.14.1.1 [RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Clients.SSL.HTTPS.Curl](#rqsrs-034clickhousefipscompatibleboringsslclientssslhttpscurl)
 
 
 ## Revision History
@@ -779,6 +830,14 @@ version: 1.0
 reporting that the binary was build with FIPS enabled [BoringSSL] library
 in the `system.build_options` table.
 
+### MySQL FIPS Function
+
+#### RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.MySQLFunction
+version: 1.0
+
+[ClickHouse] with statically linked [FIPS] compatible [BoringSSL] SHALL support
+reporting that it is FIPS compliant in the MySQL FIPS function.
+
 ### SSL Configuration
 
 #### FIPS Setting
@@ -867,11 +926,18 @@ server to accept only [FIPS Compatible SSL Connection]s HTTPS connections.
 
 #### clickhouse-client
 
-##### RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Clients.SSL.TCP.ClickHouseClient
+##### RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Clients.SSL.TCP.ClickHouseClient.FIPS
 version: 1.0
 
 [ClickHouse] with statically linked [FIPS] compatible [BoringSSL] SHALL support accepting
-connections from [clickhouse-client] which uses native TCP protocol
+connections from FIPS compliant [clickhouse-client] which uses native TCP protocol
+that is configured to establish only [FIPS Compatible SSL Connection]s.
+
+##### RQ.SRS-034.ClickHouse.FIPS.Compatible.BoringSSL.Clients.SSL.TCP.ClickHouseClient.NonFIPS
+version: 1.0
+
+[ClickHouse] with statically linked [FIPS] compatible [BoringSSL] SHALL support accepting
+connections from non FIPS compliant [clickhouse-client] which uses native TCP protocol
 that is configured to establish only [FIPS Compatible SSL Connection]s.
 
 #### Test Python Client

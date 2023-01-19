@@ -25,7 +25,7 @@ def show_certificate(self):
     node = self.context.node
 
     with When("I get the serial number of my certificate"):
-        serial_number = node.command(f"openssl x509 -text -in /etc/clickhouse-server/server.crt -serial | grep serial=  --color=never").output[7:]
+        serial_number = node.command(f"openssl x509 -text -in /etc/clickhouse-server/server.crt -serial | grep serial=  --color=never").output[7:].lstrip("0")
 
     with Then("I check that it matches the serial number in the showCertificate() function"):
         output = node.query(f"SELECT showCertificate() FORMAT JSON").output
