@@ -383,14 +383,14 @@ def server_tcp_connection(self, tls1_2_enabled=True):
         server_connection_openssl_client(port=self.context.secure_tcp_port, tls1_2_enabled=tls1_2_enabled)
 
     with Scenario(
-        "fips clickhouse client",
-        requirements=RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Clients_SSL_TCP_ClickHouseClient_FIPS("1.0"),
+        name="fips clickhouse client",
+        requirements=[RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Clients_SSL_TCP_ClickHouseClient_FIPS("1.0")],
         ):
         tcp_connection_clickhouse_client(node=self.context.cluster.node("clickhouse1"), port=self.context.secure_tcp_port, tls1_2_enabled=tls1_2_enabled)
 
     with Scenario(
-        "non fips clickhouse client",
-        requirements=RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Clients_SSL_TCP_ClickHouseClient_NonFIPS("1.0"),
+        name="non fips clickhouse client",
+        requirements=[RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Clients_SSL_TCP_ClickHouseClient_NonFIPS("1.0")],
         ):
         node = self.context.cluster.node("non_fips_clickhouse")
         add_trusted_ca_certificate(node=node, certificate=current().context.my_own_ca_crt)
