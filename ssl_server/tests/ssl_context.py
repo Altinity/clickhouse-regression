@@ -55,10 +55,7 @@ def enable_ssl(
         bash = self.context.cluster.bash(node=None)
         bash(f"sudo cp {my_own_ca_crt} /usr/local/share/ca-certificates")
         bash("sudo update-ca-certificates")
-        # my_own_ca_crt = "/usr/local/share/ca-certificates/" + my_own_ca_crt.split('/')[-1]
         debug(my_own_ca_crt)
-
-    pause()
 
     with And("I generate DH parameters"):
         dh_params = create_dh_params(outfile=dh_params)
