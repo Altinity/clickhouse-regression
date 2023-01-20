@@ -574,17 +574,16 @@ def server(self, node=None):
 
 @TestFeature
 @Requirements()
-def client(self):
+def clickhouse_client(self):
     """Check forcing client to use only FIPS compatible cipher suites to connect to non FIPS server."""
-    with Scenario("fips clickhouse client"):
-        tcp_connection_clickhouse_client(
-            node=self.context.cluster.node("clickhouse1"),
-            port=self.context.secure_tcp_port,
-        )
+    # FIXME: two features one running against locked-down server and one that is not locked down.
+    Scenario("fips clickhouse client", test=tcp_connection_clickhouse_client)(
+        node=self.context.cluster.node("clickhouse1"),
+        port=self.context.secure_tcp_port,
+    )
 
-    with Scenario("user authentication using certificate"):
-        user_certificate_authentication()
-
+    Scenario("user authentication using certificate", run=user_certificate_authentication):
+        
 
 @TestFeature
 @Name("fips check")
@@ -610,4 +609,4 @@ def feature(self, node="clickhouse1"):
         Scenario(run=break_hash)
 
     Feature(run=server)
-    Feature(run=client)
+    Feature(run=clickhouse_client)
