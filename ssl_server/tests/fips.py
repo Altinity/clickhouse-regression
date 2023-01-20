@@ -137,9 +137,13 @@ def server_connection_openssl_client(self, port, tls1_2_enabled=True):
         openssl_client_connection(options="-no_tls1_2", success=False)
 
     for cipher in fips_compatible_tlsv1_2_cipher_suites:
-        with Check(f"connection using FIPS compatible cipher {cipher} should {tls1_2_status}"):
+        with Check(
+            f"connection using FIPS compatible cipher {cipher} should {tls1_2_status}"
+        ):
             openssl_client_connection(
-                options=f'-cipher "{cipher}"', success=tls1_2_enabled, message=f"{cipher}"
+                options=f'-cipher "{cipher}"',
+                success=tls1_2_enabled,
+                message=f"{cipher}",
             )
 
     for cipher in all_ciphers:
@@ -152,11 +156,13 @@ def server_connection_openssl_client(self, port, tls1_2_enabled=True):
 
 
 @TestOutline
-def tcp_connection_clickhouse_client(self, node, hostname="clickhouse1", tls1_2_enabled=True, port=None):
+def tcp_connection_clickhouse_client(
+    self, node, hostname="clickhouse1", tls1_2_enabled=True, port=None
+):
     """Check that server accepts only FIPS compatible TCP connections using clickhouse-client"""
     self.context.node = node
     tls1_2_status = "work" if tls1_2_enabled else "be rejected"
-    
+
     if port is None:
         port = self.context.secure_tcp_port
 
@@ -167,14 +173,16 @@ def tcp_connection_clickhouse_client(self, node, hostname="clickhouse1", tls1_2_
         self.context.connection_port = port
 
     with Check("Connection with no protocols should be rejected"):
-        clickhouse_client_connection(
+        output = clickhouse_client_connection(
             options={
                 "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_2,tlsv1_3",
             },
             success=False,
-            message="NO_SUPPORTED_VERSIONS_ENABLED",
             hostname=hostname,
         )
+        assert (
+            "NO_SUPPORTED_VERSIONS_ENABLED" or "TLSV1_ALERT_PROTOCOL_VERSION" in output
+        ), error()
 
     with Check(f"TLSv1.2 suite connection should {tls1_2_status}"):
         clickhouse_client_connection(
@@ -209,15 +217,17 @@ def tcp_connection_clickhouse_client(self, node, hostname="clickhouse1", tls1_2_
         )
 
     with Check("TLSv1.3 suite connection should be rejected"):
-        clickhouse_client_connection(
+        output = clickhouse_client_connection(
             options={
                 "requireTLSv1_3": "true",
                 "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_2",
             },
             success=False,
-            message="NO_SUPPORTED_VERSIONS_ENABLED",
             hostname=hostname,
         )
+        assert (
+            "NO_SUPPORTED_VERSIONS_ENABLED" or "TLSV1_ALERT_PROTOCOL_VERSION" in output
+        ), error()
 
     with Check(f"just disabling TLSv1 suite connection should {tls1_2_status}"):
         clickhouse_client_connection(
@@ -244,7 +254,9 @@ def tcp_connection_clickhouse_client(self, node, hostname="clickhouse1", tls1_2_
         )
 
     for cipher in fips_compatible_tlsv1_2_cipher_suites:
-        with Check(f"connection using FIPS compatible cipher {cipher} should {tls1_2_status}"):
+        with Check(
+            f"connection using FIPS compatible cipher {cipher} should {tls1_2_status}"
+        ):
             clickhouse_client_connection(
                 options={
                     "requireTLSv1_2": "true",
@@ -266,7 +278,9 @@ def tcp_connection_clickhouse_client(self, node, hostname="clickhouse1", tls1_2_
                 success=False,
                 hostname=hostname,
             )
-            assert "NO_CIPHERS_AVAILABLE" or "SSLV3_ALERT_HANDSHAKE_FAILURE" in output, error()
+            assert (
+                "NO_CIPHERS_AVAILABLE" or "SSLV3_ALERT_HANDSHAKE_FAILURE" in output
+            ), error()
 
 
 @TestOutline
@@ -317,7 +331,9 @@ def server_https_connection_curl(self, port=None, tls1_2_enabled=True):
         curl_client_connection(options="--tls-max 1.2", success=tls1_2_enabled)
 
     for cipher in fips_compatible_tlsv1_2_cipher_suites:
-        with Check(f"connection using FIPS compatible cipher {cipher} should {tls1_2_status}"):
+        with Check(
+            f"connection using FIPS compatible cipher {cipher} should {tls1_2_status}"
+        ):
             curl_client_connection(
                 options=f'--ciphers "{cipher}" --tls-max 1.2 --tlsv1.2',
                 success=tls1_2_enabled,
@@ -338,13 +354,17 @@ def server_https_connection_curl(self, port=None, tls1_2_enabled=True):
 @Requirements(RQ_SRS_017_ClickHouse_SSL_Server_FIPS_Mode_LogMessage("1.0"))
 def log_check(self):
     """Check the server log to ensure ClickHouse is running in FIPS mode."""
-    exitcode = self.context.node.command("cat /var/log/clickhouse-server/clickhouse-server.log | grep '<Information> Application: Starting in FIPS mode, KAT test result: 1' > /dev/null").exitcode
+    exitcode = self.context.node.command(
+        "cat /var/log/clickhouse-server/clickhouse-server.log | grep '<Information> Application: Starting in FIPS mode, KAT test result: 1' > /dev/null"
+    ).exitcode
     assert exitcode == 0, error()
 
 
 @TestScenario
 @Name("check build options")
-@Requirements(RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_SystemTable_BuildOptions("1.0"))
+@Requirements(
+    RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_SystemTable_BuildOptions("1.0")
+)
 def build_options_check(self):
     """Check that system.build_options shows that ClickHouse was built using FIPs compliant BoringSSL library."""
     xfail("No mention of FIPS mode in build options")
@@ -364,15 +384,66 @@ def break_hash(self):
     self.context.cluster.command(None, "ls")
     try:
         with Given("I apply break-hash to the clickhouse binary"):
-            self.context.cluster.command(None, f"./test_files/break-hash '{self.context.cluster.clickhouse_binary_path}' 'clickhouse-broken-binary'")
+            self.context.cluster.command(
+                None,
+                f"./test_files/break-hash '{self.context.cluster.clickhouse_binary_path}' 'clickhouse-broken-binary'",
+            )
 
         with When(f"I try to start the broken clickhouse binary"):
-            output = self.context.cluster.command(None, f"./clickhouse-broken-binary server").output
+            output = self.context.cluster.command(
+                None, f"./clickhouse-broken-binary server"
+            ).output
             assert "FIPS integrity test failed." in output, error()
 
     finally:
         with Finally("I remove the broken clickhouse binary"):
             self.context.cluster.command(None, "rm clickhouse-broken-binary")
+
+
+@TestScenario
+def user_certificate_authentication(self, node=None):
+    """Check that user is able to be authenticated using certificate rather than password."""
+    if node is None:
+        node = self.context.node
+    user_name = "user_" + getuid()
+
+    try:
+        with Given("I have a csr and key"):
+            node.command(
+                f"openssl req -newkey rsa:2048 -nodes -subj '/CN=clickhouse1:{user_name}' -keyout {user_name}_cert.key -out {user_name}_cert.csr"
+            )
+
+        with And("I generate a key that will be used for CA"):
+            node.command(f"openssl genrsa -out {user_name}_ca.key 2048")
+
+        with And("I generate a self-signed CA certfificate"):
+            node.command(
+                f"openssl req -x509 -subj '/CN=clickhouse1 CA' -nodes -key {user_name}_ca.key -days 1095 -out {user_name}_ca.crt"
+            )
+
+        with And("I generate and sign the new user certificate"):
+            node.command(
+                f"openssl x509 -req -in {user_name}_cert.csr -out {user_name}_cert.crt -CAcreateserial -CA {user_name}_ca.crt -CAkey {user_name}_ca.key -days 365"
+            )
+
+        with When("I create a user identified by the certificate"):
+            node.query(
+                f"CREATE USER {user_name} IDENTIFIED WITH ssl_certificate CN 'clickhouse1:{user_name}'"
+            )
+
+        with Then("I login as the user using the certificate"):
+            output = node.command(
+                f"echo 'SELECT 1' | curl https://clickhouse1:{self.context.secure_http_port} --cert {user_name}_cert.crt --key {user_name}_cert.key --cacert {user_name}_ca.crt -H 'X-ClickHouse-SSL-Certificate-Auth: on' -H 'X-ClickHouse-User: {user_name}' --data-binary @-"
+            ).output
+            assert output == "1", error()
+
+    finally:
+        with Finally("I remove the certificates and keys"):
+            node.command(f"rm -f {user_name}_ca.crt")
+            node.command(f"rm -f {user_name}_ca.key")
+            node.command(f"rm -f {user_name}_cert.crt")
+            node.command(f"rm -f {user_name}_cert.key")
+
 
 @TestFeature
 @Name("tcp connection")
@@ -380,21 +451,39 @@ def break_hash(self):
 def server_tcp_connection(self, tls1_2_enabled=True):
     """Check that server accepts only FIPS compatible secure TCP connections."""
     with Scenario("openssl s_client"):
-        server_connection_openssl_client(port=self.context.secure_tcp_port, tls1_2_enabled=tls1_2_enabled)
+        server_connection_openssl_client(
+            port=self.context.secure_tcp_port, tls1_2_enabled=tls1_2_enabled
+        )
 
     with Scenario(
         name="fips clickhouse client",
-        requirements=[RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Clients_SSL_TCP_ClickHouseClient_FIPS("1.0")],
-        ):
-        tcp_connection_clickhouse_client(node=self.context.cluster.node("clickhouse1"), port=self.context.secure_tcp_port, tls1_2_enabled=tls1_2_enabled)
+        requirements=[
+            RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Clients_SSL_TCP_ClickHouseClient_FIPS(
+                "1.0"
+            )
+        ],
+    ):
+        tcp_connection_clickhouse_client(
+            node=self.context.cluster.node("clickhouse1"),
+            port=self.context.secure_tcp_port,
+            tls1_2_enabled=tls1_2_enabled,
+        )
 
     with Scenario(
         name="non fips clickhouse client",
-        requirements=[RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Clients_SSL_TCP_ClickHouseClient_NonFIPS("1.0")],
-        ):
+        requirements=[
+            RQ_SRS_034_ClickHouse_FIPS_Compatible_BoringSSL_Clients_SSL_TCP_ClickHouseClient_NonFIPS(
+                "1.0"
+            )
+        ],
+    ):
         node = self.context.cluster.node("non_fips_clickhouse")
-        add_trusted_ca_certificate(node=node, certificate=current().context.my_own_ca_crt)
-        tcp_connection_clickhouse_client(node=node, port=self.context.secure_tcp_port, tls1_2_enabled=tls1_2_enabled)
+        add_trusted_ca_certificate(
+            node=node, certificate=current().context.my_own_ca_crt
+        )
+        tcp_connection_clickhouse_client(
+            node=node, port=self.context.secure_tcp_port, tls1_2_enabled=tls1_2_enabled
+        )
 
 
 @TestFeature
@@ -403,7 +492,9 @@ def server_tcp_connection(self, tls1_2_enabled=True):
 def server_https_connection(self, tls1_2_enabled=True):
     """Check that server accepts only FIPS compatible HTTPS connections."""
     with Scenario("openssl s_client"):
-        server_connection_openssl_client(port=self.context.secure_http_port, tls1_2_enabled=tls1_2_enabled)
+        server_connection_openssl_client(
+            port=self.context.secure_http_port, tls1_2_enabled=tls1_2_enabled
+        )
 
     with Scenario("curl"):
         server_https_connection_curl(tls1_2_enabled=tls1_2_enabled)
@@ -417,9 +508,7 @@ def server_all_protocols_disabled(self):
     with Given("I set SSL server to not accept any connections"):
         entries = define(
             "SSL settings",
-            {
-                "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_2,tlsv1_3"
-            },
+            {"disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_2,tlsv1_3"},
         )
 
     with And("I apply SSL server configuration"):
@@ -429,6 +518,24 @@ def server_all_protocols_disabled(self):
 
     Feature(test=server_tcp_connection)(tls1_2_enabled=False)
     Feature(test=server_https_connection)(tls1_2_enabled=False)
+
+
+@TestOutline
+def server_verification_mode(self, mode):
+    """Check that server runs correctly with different verification modes"""
+    with Given("I set SSL server to accept only FIPS compatible connections"):
+        entries = define(
+            "SSL settings",
+            {"verificationMode": mode},
+        )
+
+    with And("I apply SSL server configuration"):
+        add_ssl_server_configuration_file(
+            entries=entries, config_file="ssl_verification_mode.xml", restart=True
+        )
+
+    Feature(run=server_tcp_connection)
+    Feature(run=server_https_connection)
 
 
 @TestFeature
@@ -447,7 +554,7 @@ def server(self, node=None):
                 ),
                 "preferServerCiphers": "true",
                 "requireTLSv1_2": "true",
-                "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3"
+                "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3",
             },
         )
 
@@ -457,8 +564,12 @@ def server(self, node=None):
         )
 
     Feature(run=server_tcp_connection)
-    Feature(run=server_https_connection)    
+    Feature(run=server_https_connection)
     Feature(run=server_all_protocols_disabled)
+
+    for mode in ["relaxed", "strict", "once"]:
+        with Feature(f"{mode} verification mode"):
+            server_verification_mode(mode=mode)
 
 
 @TestFeature
@@ -466,7 +577,14 @@ def server(self, node=None):
 def client(self):
     """Check forcing client to use only FIPS compatible cipher suites to connect to non FIPS server."""
     with Scenario("fips clickhouse client"):
-        tcp_connection_clickhouse_client(node=self.context.cluster.node("clickhouse1"), port=self.context.secure_tcp_port)
+        tcp_connection_clickhouse_client(
+            node=self.context.cluster.node("clickhouse1"),
+            port=self.context.secure_tcp_port,
+        )
+
+    with Scenario("user authentication using certificate"):
+        user_certificate_authentication()
+
 
 @TestFeature
 @Name("fips check")
