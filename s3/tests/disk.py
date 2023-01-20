@@ -2662,6 +2662,44 @@ def config_over_restart(self):
         )
 
 
+@TestScenario
+@Requirements()
+def low_cardinality_offset(self, use_alter_delete=True):
+    """Check that low cardinality data with an offset is correctly selected from s3.
+    """
+    name = "table_" + getuid()
+    self.context.table_engine = "MergeTree"
+    node = self.context.node
+
+    with Given("I update the config to have s3 and local disks"):
+        default_s3_disk_and_volume()
+
+    try:
+        with And(f"I have a table {name}"):
+            node.query(
+                f"""
+                    CREATE TABLE {name} (
+                        d LowCardinality(String)
+                    ) ENGINE = MergeTree()
+                    ORDER BY d
+                    SETTINGS storage_policy='external',
+                    min_bytes_for_wide_part=0,
+                    max_compress_block_size=10000
+                """
+            )
+
+        with When("I insert data into the table"):
+            node.query(f"INSERT INTO {name} SELECT toString(number % 8000) \
+                || if(number < 8192 * 3, 'aaaaaaaaaaaaaaaa', if(number < 8192 * 6, 'bbbbbbbbbbbbbbbbbbbbbbbb', 'ccccccccccccccccccc')) from numbers(8192 * 9)")
+
+        with Then("I select data from the table"):
+            output = node.query(f"SELECT uniq(d) FROM {name}", settings=[("max_threads", "2"), ("merge_tree_min_rows_for_concurrent_read_for_remote_filesystem", "1"),("merge_tree_min_bytes_for_concurrent_read_for_remote_filesystem", "1")]).output
+            assert output == "23999\n", error()
+
+    finally:
+        with Finally(f"I remove the table {name}"):
+            node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+
 @TestFeature
 @Requirements(
     RQ_SRS_015_S3_AWS_SSEC("1.0"),

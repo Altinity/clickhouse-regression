@@ -12,6 +12,7 @@ from helpers.common import check_clickhouse_version
 
 from ssl_server.requirements import SRS017_ClickHouse_SSL
 
+
 def argparser(parser):
     """Default argument for regressions."""
     argparser_base(parser)
@@ -22,6 +23,7 @@ def argparser(parser):
         help="specify whether the provided ClickHouse binary is in FIPS mode",
         default=False,
     )
+
 
 xfails = {
     "ssl context/enable ssl with server key passphrase": [
@@ -41,6 +43,15 @@ xfails = {
         (Fail, "not supported by SSL library")
     ],
     "fips/server/tcp connection/:/just disabling TLSv1.1 suite connection should work": [
+        (Fail, "needs to be reviewed")
+    ],
+    "fips/server/:/:/:/:cipher ECDHE-ECDSA-AES256-GCM-SHA384 should work": [
+        (Fail, "not supported by SSL library")
+    ],
+    "fips/server/:/:/:/:cipher ECDHE-ECDSA-AES128-GCM-SHA256 should work": [
+        (Fail, "not supported by SSL library")
+    ],
+    "fips/server/:/tcp connection/:/just disabling TLSv1.1 suite connection should work": [
         (Fail, "needs to be reviewed")
     ],
 }
@@ -68,7 +79,9 @@ ffails = {
 @FFails(ffails)
 @Name("ssl server")
 @Specifications(SRS017_ClickHouse_SSL)
-def regression(self, local, clickhouse_binary_path, clickhouse_version, fips_mode, stress=None):
+def regression(
+    self, local, clickhouse_binary_path, clickhouse_version, fips_mode, stress=None
+):
     """ClickHouse security SSL server regression."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
