@@ -450,6 +450,7 @@ def user_certificate_authentication(self, node=None):
 @Requirements()
 def server_tcp_connection(self, tls1_2_enabled=True):
     """Check that server accepts only FIPS compatible secure TCP connections."""
+    # FIXME: don't use inline scenarios
     with Scenario("openssl s_client"):
         server_connection_openssl_client(
             port=self.context.secure_tcp_port, tls1_2_enabled=tls1_2_enabled
@@ -577,6 +578,7 @@ def server(self, node=None):
 def clickhouse_client(self):
     """Check forcing client to use only FIPS compatible cipher suites to connect to non FIPS server."""
     # FIXME: two features one running against locked-down server and one that is not locked down.
+    # FIXME: features when using non-fips client
     Scenario("fips clickhouse client", test=tcp_connection_clickhouse_client)(
         node=self.context.cluster.node("clickhouse1"),
         port=self.context.secure_tcp_port,
