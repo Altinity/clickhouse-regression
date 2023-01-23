@@ -451,7 +451,7 @@ def validate_certificate(self, certificate, ca_certificate, node=None):
     """Validate certificate using CA certificate."""
     bash = self.context.cluster.bash(node=node)
 
-    cmd = bash(f"openssl verify -CAfile {ca_certificate} {certificate}")
+    cmd = bash(f"openssl verify -x509_strict -CAfile {ca_certificate} {certificate}")
 
     with By("checking certificate was validated"):
         assert "OK" in cmd.output, error()

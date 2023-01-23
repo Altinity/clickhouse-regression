@@ -53,7 +53,9 @@ def enable_ssl(
 
     with And("I install the CA certificate in the trust store"):
         bash = self.context.cluster.bash(node=None)
-        bash(f"sudo cp {my_own_ca_crt} /usr/local/share/ca-certificates")
+        bash(
+            f"sudo cp {my_own_ca_crt} /usr/local/share/ca-certificates/{my_own_ca_crt.split('/')[-1]}.crt"
+        )
         bash("sudo update-ca-certificates")
         debug(my_own_ca_crt)
 
