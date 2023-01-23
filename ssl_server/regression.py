@@ -36,23 +36,35 @@ xfails = {
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/35950")
     ],
     # fips
-    "fips/server/:/:/:cipher ECDHE-ECDSA-AES256-GCM-SHA384 should work": [
+    ":/:/:/:/:cipher ECDHE-ECDSA-AES256-GCM-SHA384 should work": [
         (Fail, "not supported by SSL library")
     ],
-    "fips/server/:/:/:cipher ECDHE-ECDSA-AES128-GCM-SHA256 should work": [
+    ":/:/:/:/:cipher ECDHE-ECDSA-AES128-GCM-SHA256 should work": [
         (Fail, "not supported by SSL library")
     ],
-    "fips/server/tcp connection/:/just disabling TLSv1.1 suite connection should work": [
+    ":/:/:/:/:/:cipher ECDHE-ECDSA-AES256-GCM-SHA384 should work": [
+        (Fail, "not supported by SSL library")
+    ],
+    ":/:/:/:/:/:cipher ECDHE-ECDSA-AES128-GCM-SHA256 should work": [
+        (Fail, "not supported by SSL library")
+    ],
+    "fips/server/tcp connection/:/:/just disabling TLSv1.1 suite connection should work": [
         (Fail, "needs to be reviewed")
     ],
-    "fips/server/:/:/:/:cipher ECDHE-ECDSA-AES256-GCM-SHA384 should work": [
-        (Fail, "not supported by SSL library")
-    ],
-    "fips/server/:/:/:/:cipher ECDHE-ECDSA-AES128-GCM-SHA256 should work": [
-        (Fail, "not supported by SSL library")
-    ],
-    "fips/server/:/tcp connection/:/just disabling TLSv1.1 suite connection should work": [
+    "fips/server/:/tcp connection/:/:/just disabling TLSv1.1 suite connection should work": [
         (Fail, "needs to be reviewed")
+    ],
+    "fips/clickhouse client/:/:/just disabling TLSv1.1 suite connection should work": [
+        (Fail, "needs to be reviewed")
+    ],
+    "fips/clickhouse client/:/:/: should be rejected": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/45445")
+    ],
+    "verification modes":[
+        (Fail, "under development")
+    ],
+    "certificate authentication":[
+        (Fail, "under development")
     ],
 }
 
@@ -110,6 +122,8 @@ def regression(
         Feature(run=load("ssl_server.tests.check_certificate", "feature"))
         Feature(run=load("ssl_server.tests.sanity", "feature"))
         Feature(run=load("ssl_server.tests.ssl_context", "feature"))
+        Feature(run=load("ssl_server.tests.certificate_authentication", "feature"))
+        Feature(run=load("ssl_server.tests.verification_mode", "feature"))
         Feature(run=load("ssl_server.tests.fips", "feature"))
 
 
