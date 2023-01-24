@@ -110,6 +110,16 @@
             <profile>readonly</profile>
             <quota>default</quota>
         </readonly> -->
+        <CN_user>
+            <ssl_certificates>
+                <common_name>client2</common_name>
+            </ssl_certificates>
+        </CN_user>
+        <CN_hostname_user>
+            <ssl_certificates>
+                <common_name>clickhouse1:client3</common_name>
+            </ssl_certificates>
+        </CN_hostname_user>        
     </users>
 
     <!-- Quotas. -->

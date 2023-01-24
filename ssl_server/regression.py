@@ -60,10 +60,7 @@ xfails = {
     "fips/clickhouse client/:/:/: should be rejected": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/45445")
     ],
-    "verification modes":[
-        (Fail, "under development")
-    ],
-    "certificate authentication":[
+    "verification modes/:/:/:/:":[
         (Fail, "under development")
     ],
 }
