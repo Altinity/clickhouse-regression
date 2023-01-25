@@ -16,7 +16,10 @@ def feature(self, node="clickhouse1"):
     with Given("I have a table"):
         create_table(
             engine="Memory",
-            columns=[Column(name="list", datatype=Array(UInt64())), Column(name="json", datatype=Nullable(String()))],
+            columns=[
+                Column(name="list", datatype=Array(UInt64())),
+                Column(name="json", datatype=Nullable(String())),
+            ],
             name=table_name,
         )
 
