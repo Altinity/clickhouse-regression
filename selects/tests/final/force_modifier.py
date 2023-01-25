@@ -1141,10 +1141,10 @@ def feature(self):
         skip(
             reason="force_select_final is only supported on ClickHouse version >= 22.11"
         )
-   
-    with Pool(6) as executor:       
+
+    with Pool(6) as executor:
         try:
-            for scenario in scenarios(loads(current_module(), Scenario)):
+            for scenario in loads(current_module(), Scenario):
                 Feature(test=scenario, parallel=True, executor=executor)()
         finally:
             join()
