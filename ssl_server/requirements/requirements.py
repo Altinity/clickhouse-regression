@@ -378,40 +378,8 @@ RQ_SRS_017_ClickHouse_SSL_Server_CipherSuites_ECDHCurve_DefaultValue = Requireme
     num="3.3.3.2",
 )
 
-RQ_SRS_017_ClickHouse_SSL_Server_FIPS_Mode = Requirement(
-    name="RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Mode",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL support enabling [FIPS Mode] using the\n"
-        "`<fips>` parameter set to `true` in the  `<clickhouse><openSSL><server>` section\n"
-        "of the `config.xml` that SHALL enable [FIPS 140-2] mode of operation\n"
-        "if the [SSL] library used by the server supports it. If the\n"
-        "[FIPS mode] is not supported by the library\n"
-        "then the server SHALL return an error.\n"
-        "\n"
-        "```xml\n"
-        "<clickhouse>\n"
-        "    <openSSL>\n"
-        "        <server>\n"
-        "            ...\n"
-        "        </server>\n"
-        "        <fips>true</fips>\n"
-        "    </openSSL>\n"
-        "</clickhouse>\n"
-        "```\n"
-        "\n"
-    ),
-    link=None,
-    level=3,
-    num="3.4.1",
-)
-
-RQ_SRS_017_ClickHouse_SSL_Server_FIPS_Mode_LogMessage = Requirement(
-    name="RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Mode.LogMessage",
+RQ_SRS_017_ClickHouse_SSL_Server_FIPS_Compatible_LogMessage = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Compatible.LogMessage",
     version="1.0",
     priority=None,
     group=None,
@@ -419,7 +387,7 @@ RQ_SRS_017_ClickHouse_SSL_Server_FIPS_Mode_LogMessage = Requirement(
     uid=None,
     description=(
         "[ClickHouse] SHALL provide the following message in `/var/log/clickhouse-server/clickhouse-server.log`\n"
-        "when ClickHouse is started in FIPS mode:\n"
+        "when ClickHouse is started from a FIPS compatible binary:\n"
         "\n"
         "```\n"
         "<Information> Application: Starting in FIPS mode, KAT test result: 1\n"
@@ -428,11 +396,11 @@ RQ_SRS_017_ClickHouse_SSL_Server_FIPS_Mode_LogMessage = Requirement(
     ),
     link=None,
     level=3,
-    num="3.4.2",
+    num="3.4.1",
 )
 
-RQ_SRS_017_ClickHouse_SSL_Server_FIPS_Mode_ApprovedSecurityFunctions = Requirement(
-    name="RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Mode.ApprovedSecurityFunctions",
+RQ_SRS_017_ClickHouse_SSL_Server_FIPS_Compatible_ApprovedSecurityFunctions = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Compatible.ApprovedSecurityFunctions",
     version="1.0",
     priority=None,
     group=None,
@@ -478,7 +446,7 @@ RQ_SRS_017_ClickHouse_SSL_Server_FIPS_Mode_ApprovedSecurityFunctions = Requireme
     ),
     link=None,
     level=3,
-    num="3.4.3",
+    num="3.4.2",
 )
 
 RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL = Requirement(
@@ -494,7 +462,7 @@ RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL = Requirement(
     ),
     link=None,
     level=3,
-    num="3.4.4",
+    num="3.4.3",
 )
 
 RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_Version = Requirement(
@@ -513,7 +481,7 @@ RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_Version = Requirement
     ),
     link=None,
     level=4,
-    num="3.4.5.1",
+    num="3.4.4.1",
 )
 
 RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_PowerOnSelfTest_IntegrityTest = Requirement(
@@ -530,7 +498,7 @@ RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_PowerOnSelfTest_Integ
     ),
     link=None,
     level=5,
-    num="3.4.6.1.1",
+    num="3.4.5.1.1",
 )
 
 RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_PowerOnSelfTest_KnownAnswerTest = Requirement(
@@ -561,7 +529,7 @@ RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_PowerOnSelfTest_Known
     ),
     link=None,
     level=5,
-    num="3.4.6.2.1",
+    num="3.4.5.2.1",
 )
 
 RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_ConditionalSelfTests = Requirement(
@@ -584,7 +552,7 @@ RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_ConditionalSelfTests 
     ),
     link=None,
     level=4,
-    num="3.4.7.1",
+    num="3.4.6.1",
 )
 
 RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_SSLTests = Requirement(
@@ -610,7 +578,7 @@ RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_SSLTests = Requiremen
     ),
     link=None,
     level=4,
-    num="3.4.8.1",
+    num="3.4.7.1",
 )
 
 RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_AllTestsUtility = Requirement(
@@ -635,7 +603,7 @@ RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_AllTestsUtility = Req
     ),
     link=None,
     level=4,
-    num="3.4.9.1",
+    num="3.4.8.1",
 )
 
 RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_ACVP_CheckExpectedTests = Requirement(
@@ -657,7 +625,7 @@ RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_ACVP_CheckExpectedTes
     ),
     link=None,
     level=4,
-    num="3.4.10.1",
+    num="3.4.9.1",
 )
 
 RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_SystemTable_BuildOptions = Requirement(
@@ -675,7 +643,7 @@ RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_SystemTable_BuildOpti
     ),
     link=None,
     level=4,
-    num="3.4.11.1",
+    num="3.4.10.1",
 )
 
 RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_MySQLFunction = Requirement(
@@ -692,7 +660,7 @@ RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_MySQLFunction = Requi
     ),
     link=None,
     level=4,
-    num="3.4.12.1",
+    num="3.4.11.1",
 )
 
 RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_SSL_Client_Config_Settings_FIPS = Requirement(
@@ -717,7 +685,7 @@ RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_SSL_Client_Config_Set
     ),
     link=None,
     level=5,
-    num="3.4.13.1.1",
+    num="3.4.12.1.1",
 )
 
 RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_SSL_Server_Config = Requirement(
@@ -751,7 +719,7 @@ RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_SSL_Server_Config = R
     ),
     link=None,
     level=5,
-    num="3.4.13.2.1",
+    num="3.4.12.2.1",
 )
 
 RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_Client_Config = Requirement(
@@ -785,7 +753,7 @@ RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_Client_Config = Requi
     ),
     link=None,
     level=5,
-    num="3.4.13.3.1",
+    num="3.4.12.3.1",
 )
 
 RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_Server_TCP = Requirement(
@@ -802,7 +770,7 @@ RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_Server_TCP = Requirem
     ),
     link=None,
     level=4,
-    num="3.4.14.1",
+    num="3.4.13.1",
 )
 
 RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_Server_HTTPS = Requirement(
@@ -819,7 +787,7 @@ RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_Server_HTTPS = Requir
     ),
     link=None,
     level=4,
-    num="3.4.15.1",
+    num="3.4.14.1",
 )
 
 RQ_SRS_034_ClickHouse_SSL_FIPS_Compatible_BoringSSL_Clients_TCP_ClickHouseClient_FIPS = Requirement(
@@ -837,7 +805,7 @@ RQ_SRS_034_ClickHouse_SSL_FIPS_Compatible_BoringSSL_Clients_TCP_ClickHouseClient
     ),
     link=None,
     level=5,
-    num="3.4.16.1.1",
+    num="3.4.15.1.1",
 )
 
 RQ_SRS_034_ClickHouse_SSL_FIPS_Compatible_BoringSSL_Clients_TCP_ClickHouseClient_NonFIPS = Requirement(
@@ -855,7 +823,7 @@ RQ_SRS_034_ClickHouse_SSL_FIPS_Compatible_BoringSSL_Clients_TCP_ClickHouseClient
     ),
     link=None,
     level=5,
-    num="3.4.16.1.2",
+    num="3.4.15.1.2",
 )
 
 RQ_SRS_034_ClickHouse_SSL_FIPS_Compatible_BoringSSL_Clients_TCP_Python = Requirement(
@@ -873,7 +841,7 @@ RQ_SRS_034_ClickHouse_SSL_FIPS_Compatible_BoringSSL_Clients_TCP_Python = Require
     ),
     link=None,
     level=5,
-    num="3.4.16.2.1",
+    num="3.4.15.2.1",
 )
 
 RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_Clients_HTTPS_Curl = Requirement(
@@ -890,7 +858,7 @@ RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_Clients_HTTPS_Curl = 
     ),
     link=None,
     level=5,
-    num="3.4.17.1.1",
+    num="3.4.16.1.1",
 )
 
 RQ_SRS_017_ClickHouse_SSL_Server_DH_Parameters = Requirement(
@@ -1589,135 +1557,132 @@ SRS017_ClickHouse_SSL = Specification(
             level=4,
             num="3.3.3.2",
         ),
-        Heading(name="FIPS Mode", level=2, num="3.4"),
+        Heading(name="FIPS Compatible Binary", level=2, num="3.4"),
         Heading(
-            name="RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Mode", level=3, num="3.4.1"
+            name="RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Compatible.LogMessage",
+            level=3,
+            num="3.4.1",
         ),
         Heading(
-            name="RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Mode.LogMessage",
+            name="RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Compatible.ApprovedSecurityFunctions",
             level=3,
             num="3.4.2",
         ),
         Heading(
-            name="RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Mode.ApprovedSecurityFunctions",
+            name="RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL",
             level=3,
             num="3.4.3",
         ),
-        Heading(
-            name="RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL",
-            level=3,
-            num="3.4.4",
-        ),
-        Heading(name="BoringSSL Version", level=3, num="3.4.5"),
+        Heading(name="BoringSSL Version", level=3, num="3.4.4"),
         Heading(
             name="RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.Version",
             level=4,
-            num="3.4.5.1",
+            num="3.4.4.1",
         ),
-        Heading(name="Power-On Self-Tests", level=3, num="3.4.6"),
-        Heading(name="Integrity Test", level=4, num="3.4.6.1"),
+        Heading(name="Power-On Self-Tests", level=3, num="3.4.5"),
+        Heading(name="Integrity Test", level=4, num="3.4.5.1"),
         Heading(
             name="RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.PowerOnSelfTest.IntegrityTest",
             level=5,
-            num="3.4.6.1.1",
+            num="3.4.5.1.1",
         ),
-        Heading(name="Known Answer Test", level=4, num="3.4.6.2"),
+        Heading(name="Known Answer Test", level=4, num="3.4.5.2"),
         Heading(
             name="RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.PowerOnSelfTest.KnownAnswerTest",
             level=5,
-            num="3.4.6.2.1",
+            num="3.4.5.2.1",
         ),
-        Heading(name="Conditional Self-Tests", level=3, num="3.4.7"),
+        Heading(name="Conditional Self-Tests", level=3, num="3.4.6"),
         Heading(
             name="RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.ConditionalSelfTests",
             level=4,
-            num="3.4.7.1",
+            num="3.4.6.1",
         ),
-        Heading(name="SSL Tests", level=3, num="3.4.8"),
+        Heading(name="SSL Tests", level=3, num="3.4.7"),
         Heading(
             name="RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.SSLTests",
             level=4,
-            num="3.4.8.1",
+            num="3.4.7.1",
         ),
-        Heading(name="All-tests Utility", level=3, num="3.4.9"),
+        Heading(name="All-tests Utility", level=3, num="3.4.8"),
         Heading(
             name="RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.AllTestsUtility",
             level=4,
-            num="3.4.9.1",
+            num="3.4.8.1",
         ),
-        Heading(name="ACVP Check Expected Tests", level=3, num="3.4.10"),
+        Heading(name="ACVP Check Expected Tests", level=3, num="3.4.9"),
         Heading(
             name="RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.ACVP.CheckExpectedTests",
             level=4,
-            num="3.4.10.1",
+            num="3.4.9.1",
         ),
-        Heading(name="Build Options System Table", level=3, num="3.4.11"),
+        Heading(name="Build Options System Table", level=3, num="3.4.10"),
         Heading(
             name="RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.SystemTable.BuildOptions",
             level=4,
-            num="3.4.11.1",
+            num="3.4.10.1",
         ),
-        Heading(name="MySQL FIPS Function", level=3, num="3.4.12"),
+        Heading(name="MySQL FIPS Function", level=3, num="3.4.11"),
         Heading(
             name="RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.MySQLFunction",
             level=4,
-            num="3.4.12.1",
+            num="3.4.11.1",
         ),
-        Heading(name="SSL Configuration", level=3, num="3.4.13"),
-        Heading(name="FIPS Setting", level=4, num="3.4.13.1"),
+        Heading(name="SSL Configuration", level=3, num="3.4.12"),
+        Heading(name="FIPS Setting", level=4, num="3.4.12.1"),
         Heading(
             name="RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.SSL.Client.Config.Settings.FIPS",
             level=5,
-            num="3.4.13.1.1",
+            num="3.4.12.1.1",
         ),
-        Heading(name="Server SSL Configuration", level=4, num="3.4.13.2"),
+        Heading(name="Server SSL Configuration", level=4, num="3.4.12.2"),
         Heading(
             name="RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.SSL.Server.Config",
             level=5,
-            num="3.4.13.2.1",
+            num="3.4.12.2.1",
         ),
-        Heading(name="Client SSL Configuration", level=4, num="3.4.13.3"),
+        Heading(name="Client SSL Configuration", level=4, num="3.4.12.3"),
         Heading(
             name="RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.Client.Config",
             level=5,
-            num="3.4.13.3.1",
+            num="3.4.12.3.1",
         ),
-        Heading(name="Server TCP Connections", level=3, num="3.4.14"),
+        Heading(name="Server TCP Connections", level=3, num="3.4.13"),
         Heading(
             name="RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.Server.TCP",
             level=4,
-            num="3.4.14.1",
+            num="3.4.13.1",
         ),
-        Heading(name="Server HTTPS Connections", level=3, num="3.4.15"),
+        Heading(name="Server HTTPS Connections", level=3, num="3.4.14"),
         Heading(
             name="RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.Server.HTTPS",
             level=4,
-            num="3.4.15.1",
+            num="3.4.14.1",
         ),
-        Heading(name="TCP Clients", level=3, num="3.4.16"),
-        Heading(name="clickhouse-client", level=4, num="3.4.16.1"),
+        Heading(name="TCP Clients", level=3, num="3.4.15"),
+        Heading(name="clickhouse-client", level=4, num="3.4.15.1"),
         Heading(
             name="RQ.SRS-034.ClickHouse.SSL.FIPS.Compatible.BoringSSL.Clients.TCP.ClickHouseClient.FIPS",
             level=5,
-            num="3.4.16.1.1",
+            num="3.4.15.1.1",
         ),
         Heading(
             name="RQ.SRS-034.ClickHouse.SSL.FIPS.Compatible.BoringSSL.Clients.TCP.ClickHouseClient.NonFIPS",
             level=5,
-            num="3.4.16.1.2",
+            num="3.4.15.1.2",
         ),
-        Heading(name="Test Python Client", level=4, num="3.4.16.2"),
+        Heading(name="Test Python Client", level=4, num="3.4.15.2"),
         Heading(
             name="RQ.SRS-034.ClickHouse.SSL.FIPS.Compatible.BoringSSL.Clients.TCP.Python",
             level=5,
-            num="3.4.16.2.1",
+            num="3.4.15.2.1",
         ),
-        Heading(name="HTTPS Clients", level=3, num="3.4.17"),
-        Heading(name="curl", level=4, num="3.4.17.1"),
+        Heading(name="HTTPS Clients", level=3, num="3.4.16"),
+        Heading(name="curl", level=4, num="3.4.16.1"),
         Heading(
             name="RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.Clients.HTTPS.Curl",
             level=5,
-            num="3.4.17.1.1",
+            num="3.4.16.1.1",
         ),
         Heading(name="Diffie-Hellman (DH) Parameters", level=2, num="3.5"),
         Heading(
@@ -1868,9 +1833,8 @@ SRS017_ClickHouse_SSL = Specification(
         RQ_SRS_017_ClickHouse_SSL_Server_CipherSuites_PreferServerCiphers,
         RQ_SRS_017_ClickHouse_SSL_Server_CipherSuites_ECDHCurve,
         RQ_SRS_017_ClickHouse_SSL_Server_CipherSuites_ECDHCurve_DefaultValue,
-        RQ_SRS_017_ClickHouse_SSL_Server_FIPS_Mode,
-        RQ_SRS_017_ClickHouse_SSL_Server_FIPS_Mode_LogMessage,
-        RQ_SRS_017_ClickHouse_SSL_Server_FIPS_Mode_ApprovedSecurityFunctions,
+        RQ_SRS_017_ClickHouse_SSL_Server_FIPS_Compatible_LogMessage,
+        RQ_SRS_017_ClickHouse_SSL_Server_FIPS_Compatible_ApprovedSecurityFunctions,
         RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL,
         RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_Version,
         RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_PowerOnSelfTest_IntegrityTest,
@@ -1954,50 +1918,49 @@ SRS017_ClickHouse_SSL = Specification(
     * 3.3.3 [ECDH Curve](#ecdh-curve)
       * 3.3.3.1 [RQ.SRS-017.ClickHouse.SSL.Server.CipherSuites.ECDHCurve](#rqsrs-017clickhousesslserverciphersuitesecdhcurve)
       * 3.3.3.2 [RQ.SRS-017.ClickHouse.SSL.Server.CipherSuites.ECDHCurve.DefaultValue](#rqsrs-017clickhousesslserverciphersuitesecdhcurvedefaultvalue)
-  * 3.4 [FIPS Mode](#fips-mode)
-    * 3.4.1 [RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Mode](#rqsrs-017clickhousesslserverfipsmode)
-    * 3.4.2 [RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Mode.LogMessage](#rqsrs-017clickhousesslserverfipsmodelogmessage)
-    * 3.4.3 [RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Mode.ApprovedSecurityFunctions](#rqsrs-017clickhousesslserverfipsmodeapprovedsecurityfunctions)
-    * 3.4.4 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL](#rqsrs-034clickhousesslserverfipscompatibleboringssl)
-    * 3.4.5 [BoringSSL Version](#boringssl-version)
-      * 3.4.5.1 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.Version](#rqsrs-034clickhousesslserverfipscompatibleboringsslversion)
-    * 3.4.6 [Power-On Self-Tests](#power-on-self-tests)
-      * 3.4.6.1 [Integrity Test](#integrity-test)
-        * 3.4.6.1.1 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.PowerOnSelfTest.IntegrityTest](#rqsrs-034clickhousesslserverfipscompatibleboringsslpoweronselftestintegritytest)
-      * 3.4.6.2 [Known Answer Test](#known-answer-test)
-        * 3.4.6.2.1 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.PowerOnSelfTest.KnownAnswerTest](#rqsrs-034clickhousesslserverfipscompatibleboringsslpoweronselftestknownanswertest)
-    * 3.4.7 [Conditional Self-Tests](#conditional-self-tests)
-      * 3.4.7.1 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.ConditionalSelfTests](#rqsrs-034clickhousesslserverfipscompatibleboringsslconditionalselftests)
-    * 3.4.8 [SSL Tests](#ssl-tests)
-      * 3.4.8.1 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.SSLTests](#rqsrs-034clickhousesslserverfipscompatibleboringsslssltests)
-    * 3.4.9 [All-tests Utility](#all-tests-utility)
-      * 3.4.9.1 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.AllTestsUtility](#rqsrs-034clickhousesslserverfipscompatibleboringsslalltestsutility)
-    * 3.4.10 [ACVP Check Expected Tests](#acvp-check-expected-tests)
-      * 3.4.10.1 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.ACVP.CheckExpectedTests](#rqsrs-034clickhousesslserverfipscompatibleboringsslacvpcheckexpectedtests)
-    * 3.4.11 [Build Options System Table](#build-options-system-table)
-      * 3.4.11.1 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.SystemTable.BuildOptions](#rqsrs-034clickhousesslserverfipscompatibleboringsslsystemtablebuildoptions)
-    * 3.4.12 [MySQL FIPS Function](#mysql-fips-function)
-      * 3.4.12.1 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.MySQLFunction](#rqsrs-034clickhousesslserverfipscompatibleboringsslmysqlfunction)
-    * 3.4.13 [SSL Configuration](#ssl-configuration)
-      * 3.4.13.1 [FIPS Setting](#fips-setting)
-        * 3.4.13.1.1 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.SSL.Client.Config.Settings.FIPS](#rqsrs-034clickhousesslserverfipscompatibleboringsslsslclientconfigsettingsfips)
-      * 3.4.13.2 [Server SSL Configuration](#server-ssl-configuration)
-        * 3.4.13.2.1 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.SSL.Server.Config](#rqsrs-034clickhousesslserverfipscompatibleboringsslsslserverconfig)
-      * 3.4.13.3 [Client SSL Configuration](#client-ssl-configuration)
-        * 3.4.13.3.1 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.Client.Config](#rqsrs-034clickhousesslserverfipscompatibleboringsslclientconfig)
-    * 3.4.14 [Server TCP Connections](#server-tcp-connections)
-      * 3.4.14.1 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.Server.TCP](#rqsrs-034clickhousesslserverfipscompatibleboringsslservertcp)
-    * 3.4.15 [Server HTTPS Connections](#server-https-connections)
-      * 3.4.15.1 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.Server.HTTPS](#rqsrs-034clickhousesslserverfipscompatibleboringsslserverhttps)
-    * 3.4.16 [TCP Clients](#tcp-clients)
-      * 3.4.16.1 [clickhouse-client](#clickhouse-client)
-        * 3.4.16.1.1 [RQ.SRS-034.ClickHouse.SSL.FIPS.Compatible.BoringSSL.Clients.TCP.ClickHouseClient.FIPS](#rqsrs-034clickhousesslfipscompatibleboringsslclientstcpclickhouseclientfips)
-        * 3.4.16.1.2 [RQ.SRS-034.ClickHouse.SSL.FIPS.Compatible.BoringSSL.Clients.TCP.ClickHouseClient.NonFIPS](#rqsrs-034clickhousesslfipscompatibleboringsslclientstcpclickhouseclientnonfips)
-      * 3.4.16.2 [Test Python Client](#test-python-client)
-        * 3.4.16.2.1 [RQ.SRS-034.ClickHouse.SSL.FIPS.Compatible.BoringSSL.Clients.TCP.Python](#rqsrs-034clickhousesslfipscompatibleboringsslclientstcppython)
-    * 3.4.17 [HTTPS Clients](#https-clients)
-      * 3.4.17.1 [curl](#curl)
-        * 3.4.17.1.1 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.Clients.HTTPS.Curl](#rqsrs-034clickhousesslserverfipscompatibleboringsslclientshttpscurl)
+  * 3.4 [FIPS Compatible Binary](#fips-compatible-binary)
+    * 3.4.1 [RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Compatible.LogMessage](#rqsrs-017clickhousesslserverfipscompatiblelogmessage)
+    * 3.4.2 [RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Compatible.ApprovedSecurityFunctions](#rqsrs-017clickhousesslserverfipscompatibleapprovedsecurityfunctions)
+    * 3.4.3 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL](#rqsrs-034clickhousesslserverfipscompatibleboringssl)
+    * 3.4.4 [BoringSSL Version](#boringssl-version)
+      * 3.4.4.1 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.Version](#rqsrs-034clickhousesslserverfipscompatibleboringsslversion)
+    * 3.4.5 [Power-On Self-Tests](#power-on-self-tests)
+      * 3.4.5.1 [Integrity Test](#integrity-test)
+        * 3.4.5.1.1 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.PowerOnSelfTest.IntegrityTest](#rqsrs-034clickhousesslserverfipscompatibleboringsslpoweronselftestintegritytest)
+      * 3.4.5.2 [Known Answer Test](#known-answer-test)
+        * 3.4.5.2.1 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.PowerOnSelfTest.KnownAnswerTest](#rqsrs-034clickhousesslserverfipscompatibleboringsslpoweronselftestknownanswertest)
+    * 3.4.6 [Conditional Self-Tests](#conditional-self-tests)
+      * 3.4.6.1 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.ConditionalSelfTests](#rqsrs-034clickhousesslserverfipscompatibleboringsslconditionalselftests)
+    * 3.4.7 [SSL Tests](#ssl-tests)
+      * 3.4.7.1 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.SSLTests](#rqsrs-034clickhousesslserverfipscompatibleboringsslssltests)
+    * 3.4.8 [All-tests Utility](#all-tests-utility)
+      * 3.4.8.1 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.AllTestsUtility](#rqsrs-034clickhousesslserverfipscompatibleboringsslalltestsutility)
+    * 3.4.9 [ACVP Check Expected Tests](#acvp-check-expected-tests)
+      * 3.4.9.1 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.ACVP.CheckExpectedTests](#rqsrs-034clickhousesslserverfipscompatibleboringsslacvpcheckexpectedtests)
+    * 3.4.10 [Build Options System Table](#build-options-system-table)
+      * 3.4.10.1 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.SystemTable.BuildOptions](#rqsrs-034clickhousesslserverfipscompatibleboringsslsystemtablebuildoptions)
+    * 3.4.11 [MySQL FIPS Function](#mysql-fips-function)
+      * 3.4.11.1 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.MySQLFunction](#rqsrs-034clickhousesslserverfipscompatibleboringsslmysqlfunction)
+    * 3.4.12 [SSL Configuration](#ssl-configuration)
+      * 3.4.12.1 [FIPS Setting](#fips-setting)
+        * 3.4.12.1.1 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.SSL.Client.Config.Settings.FIPS](#rqsrs-034clickhousesslserverfipscompatibleboringsslsslclientconfigsettingsfips)
+      * 3.4.12.2 [Server SSL Configuration](#server-ssl-configuration)
+        * 3.4.12.2.1 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.SSL.Server.Config](#rqsrs-034clickhousesslserverfipscompatibleboringsslsslserverconfig)
+      * 3.4.12.3 [Client SSL Configuration](#client-ssl-configuration)
+        * 3.4.12.3.1 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.Client.Config](#rqsrs-034clickhousesslserverfipscompatibleboringsslclientconfig)
+    * 3.4.13 [Server TCP Connections](#server-tcp-connections)
+      * 3.4.13.1 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.Server.TCP](#rqsrs-034clickhousesslserverfipscompatibleboringsslservertcp)
+    * 3.4.14 [Server HTTPS Connections](#server-https-connections)
+      * 3.4.14.1 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.Server.HTTPS](#rqsrs-034clickhousesslserverfipscompatibleboringsslserverhttps)
+    * 3.4.15 [TCP Clients](#tcp-clients)
+      * 3.4.15.1 [clickhouse-client](#clickhouse-client)
+        * 3.4.15.1.1 [RQ.SRS-034.ClickHouse.SSL.FIPS.Compatible.BoringSSL.Clients.TCP.ClickHouseClient.FIPS](#rqsrs-034clickhousesslfipscompatibleboringsslclientstcpclickhouseclientfips)
+        * 3.4.15.1.2 [RQ.SRS-034.ClickHouse.SSL.FIPS.Compatible.BoringSSL.Clients.TCP.ClickHouseClient.NonFIPS](#rqsrs-034clickhousesslfipscompatibleboringsslclientstcpclickhouseclientnonfips)
+      * 3.4.15.2 [Test Python Client](#test-python-client)
+        * 3.4.15.2.1 [RQ.SRS-034.ClickHouse.SSL.FIPS.Compatible.BoringSSL.Clients.TCP.Python](#rqsrs-034clickhousesslfipscompatibleboringsslclientstcppython)
+    * 3.4.16 [HTTPS Clients](#https-clients)
+      * 3.4.16.1 [curl](#curl)
+        * 3.4.16.1.1 [RQ.SRS-034.ClickHouse.SSL.Server.FIPS.Compatible.BoringSSL.Clients.HTTPS.Curl](#rqsrs-034clickhousesslserverfipscompatibleboringsslclientshttpscurl)
   * 3.5 [Diffie-Hellman (DH) Parameters](#diffie-hellman-dh-parameters)
     * 3.5.1 [RQ.SRS-017.ClickHouse.SSL.Server.DH.Parameters](#rqsrs-017clickhousesslserverdhparameters)
   * 3.6 [Certificates](#certificates)
@@ -2289,40 +2252,19 @@ for the `<ecdhCurve>` parameter in the `<clickhouse><openSSL><server>` section
 of the `config.xml` that SHALL force the server to use the corresponding
 curve for establishing [Shared Secret] using the [ECDH] key agreement protocol.
 
-### FIPS Mode
+### FIPS Compatible Binary
 
-#### RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Mode
-version: 1.0
-
-[ClickHouse] SHALL support enabling [FIPS Mode] using the
-`<fips>` parameter set to `true` in the  `<clickhouse><openSSL><server>` section
-of the `config.xml` that SHALL enable [FIPS 140-2] mode of operation
-if the [SSL] library used by the server supports it. If the
-[FIPS mode] is not supported by the library
-then the server SHALL return an error.
-
-```xml
-<clickhouse>
-    <openSSL>
-        <server>
-            ...
-        </server>
-        <fips>true</fips>
-    </openSSL>
-</clickhouse>
-```
-
-#### RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Mode.LogMessage
+#### RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Compatible.LogMessage
 version: 1.0
 
 [ClickHouse] SHALL provide the following message in `/var/log/clickhouse-server/clickhouse-server.log`
-when ClickHouse is started in FIPS mode:
+when ClickHouse is started from a FIPS compatible binary:
 
 ```
 <Information> Application: Starting in FIPS mode, KAT test result: 1
 ```
 
-#### RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Mode.ApprovedSecurityFunctions
+#### RQ.SRS-017.ClickHouse.SSL.Server.FIPS.Compatible.ApprovedSecurityFunctions
 version: 1.0
 
 [ClickHouse] SHALL only support the use of security functions
