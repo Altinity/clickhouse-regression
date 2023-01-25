@@ -6,76 +6,29 @@ from ssl_server.requirements import *
 
 
 @TestOutline
-def server_connection_openssl_client(self, port, options=None):
-    """Check that server accepts only FIPS compatible secure connections on a given port
-    using openssl s_client utility."""
-    self.context.connection_port = port
-    options = options or ""
-
-    openssl_client_connection(
-        options=options,
-        success=True
-    )
-
-
-@TestOutline
-def tcp_connection_clickhouse_client(
-    self, hostname="clickhouse1", port=None, options=None
+@Name("check connections")
+def check_connections(
+    self, openssl_options="", curl_options="", clickhouse_client_options=None
 ):
-    """Check that server accepts only FIPS compatible TCP connections using clickhouse-client"""
-    if port is None:
-        port = self.context.secure_tcp_port
+    """Check connections to the clickhouse-server using openssl s_client https and tcp, curl, and clickhouse-client."""
 
-    self.context.connection_port = port
+    with Then("I connect to clickhouse-server using openssl s_client http"):
+        openssl_client_connection(
+            port=self.context.secure_http_port, options=openssl_options
+        )
 
-    clickhouse_client_connection(
-        options=options,
-        success=True,
-        hostname=hostname,
-    )
+    with And("I connect to clickhouse-server using openssl s_client tcp"):
+        openssl_client_connection(
+            port=self.context.secure_tcp_port, options=openssl_options
+        )
 
+    with And("I connect to clickhouse-server using clickhouse-client tcp"):
+        clickhouse_client_connection(
+            port=self.context.secure_tcp_port, options=clickhouse_client_options
+        )
 
-@TestOutline
-def server_https_connection_curl(self, port=None, options=None):
-    """Check that server accepts only FIPS compatible HTTPS connections using curl."""
-    options= options or ""
-    if port is None:
-        port = self.context.secure_http_port
-    self.context.connection_port = port
-
-    curl_client_connection(
-        options=options,
-        success=True,
-    )
-
-@TestFeature
-@Name("tcp connection")
-@Requirements()
-def server_tcp_connection(self, ssl_options=None, clickhouse_client_options=None):
-    """Check that server accepts only FIPS compatible secure TCP connections."""
-    Scenario(name="openssl s_client", test=server_connection_openssl_client)(
-        port=self.context.secure_tcp_port,
-        options=ssl_options
-    )
-
-    Scenario(name="clickhouse client", test=tcp_connection_clickhouse_client)(
-        port=self.context.secure_tcp_port,
-        options=clickhouse_client_options
-    )
-
-
-@TestFeature
-@Name("https connection")
-@Requirements()
-def server_https_connection(self, ssl_options=None, curl_options=None):
-    """Check that server accepts only FIPS compatible HTTPS connections."""
-    Scenario("openssl s_client", test=server_connection_openssl_client)(
-        port=self.context.secure_http_port, options=ssl_options
-    )
-
-    Scenario("curl", test=server_https_connection_curl)(
-        options=curl_options
-    )
+    with And("I connect to clickhouse-server using curl tcp"):
+        curl_client_connection(port=self.context.secure_http_port, options=curl_options)
 
 
 @TestFeature
@@ -84,94 +37,87 @@ def server_https_connection(self, ssl_options=None, curl_options=None):
     RQ_SRS_017_ClickHouse_SSL_Server_Certificates_VerificationMode_None("1.0")
 )
 def none(self):
-
+    """Check connections to the clickhouse-server with `none` verification mode."""
     with Given("I set SSL server to `none` verification mode"):
-        entries = define(
-            "SSL settings",
-            {
-                "verificationMode": "none",
-            },
-        )
+        clickhouse_server_verification_mode(mode="none")
 
-    with And("I apply SSL server configuration"):
-        add_ssl_server_configuration_file(
-            entries=entries, config_file="ssl_verification_mode.xml", restart=True
-        )
-
-    Feature(run=server_tcp_connection)
-    Feature(run=server_https_connection)
+    Scenario("check connections", run=check_connections)
 
 
-@TestFeature
+@TestSuite
 @Name("once")
 @Requirements(
     RQ_SRS_017_ClickHouse_SSL_Server_Certificates_VerificationMode_Once("1.0")
 )
 def once(self):
+    """Check connections to the clickhouse-server with `once` verification mode."""
     with Given("I set SSL server to `once` verification mode"):
-        entries = define(
-            "SSL settings",
-            {
-                "verificationMode": "once",
-            },
-        )
+        clickhouse_server_verification_mode(mode="once")
 
-    with And("I apply SSL server configuration"):
-        add_ssl_server_configuration_file(
-            entries=entries, config_file="ssl_verification_mode.xml", restart=True
-        )
-
-    Feature(run=server_tcp_connection)
-    Feature(run=server_https_connection)
+    Scenario("check connections", run=check_connections)
+    Scenario(
+        "check connections with client certificate and key specified",
+        test=check_connections,
+    )(
+        openssl_options="-cert /client.crt -key /client.key",
+        curl_options="--cert /client.crt --key /client.key",
+        clickhouse_client_options=self.context.clickhouse_client_entries,
+    )
 
 
-@TestFeature
+@TestSuite
 @Name("relaxed")
 @Requirements(
     RQ_SRS_017_ClickHouse_SSL_Server_Certificates_VerificationMode_Relaxed("1.0")
 )
 def relaxed(self):
-    with Given("I set SSL server to `relaxed verification mode"):
-        entries = define(
-            "SSL settings",
-            {
-                "verificationMode": "relaxed",
-            },
-        )
+    """Check connections to the clickhouse-server with `relaxed` verification mode."""
+    with Given("I set SSL server to `relaxed` verification mode"):
+        clickhouse_server_verification_mode(mode="relaxed")
 
-    with And("I apply SSL server configuration"):
-        add_ssl_server_configuration_file(
-            entries=entries, config_file="ssl_verification_mode.xml", restart=True
-        )
-
-    Feature(run=server_tcp_connection)
-    Feature(run=server_https_connection)
+    Scenario("check connections", run=check_connections)
+    Scenario(
+        "check connections with client certificate and key specified",
+        test=check_connections,
+    )(
+        openssl_options="-cert /client.crt -key /client.key",
+        curl_options="--cert /client.crt --key /client.key",
+        clickhouse_client_options=self.context.clickhouse_client_entries,
+    )
 
 
-@TestFeature
+@TestSuite
 @Name("strict")
 @Requirements(
     RQ_SRS_017_ClickHouse_SSL_Server_Certificates_VerificationMode_Strict("1.0")
 )
 def strict(self):
-    node = self.context.node
+    """Check connections to the clickhouse-server with `strict` verification mode."""
     with Given("I set SSL server to `strict` verification mode"):
-        entries = define(
-            "SSL settings",
-            {
-                "verificationMode": "strict",
-            },
-        )
+        clickhouse_server_verification_mode(mode="strict")
 
-    with And("I apply SSL server configuration"):
-        add_ssl_server_configuration_file(
-            entries=entries, config_file="ssl_verification_mode.xml", restart=True
-        )
+    Scenario(
+        "check connections with client certificate and key specified",
+        test=check_connections,
+    )(
+        openssl_options="-cert /client.crt -key /client.key",
+        curl_options="--cert /client.crt --key /client.key",
+        clickhouse_client_options=self.context.clickhouse_client_entries,
+    )
+
+
+@TestFeature
+@Name("verification modes")
+@Requirements(RQ_SRS_017_ClickHouse_SSL_Server_Certificates_VerificationMode("1.0"))
+def feature(self, node="clickhouse1"):
+    """Check SSL connection to the clickhouse server with different verification modes."""
+    self.context.node = self.context.cluster.node(node)
+
+    with Given("I enable SSL"):
+        enable_ssl(my_own_ca_key_passphrase="", server_key_passphrase="")
 
     with And("I generate client key"):
-        client_key = create_rsa_private_key(
-            outfile="client.key", passphrase=""
-        )
+        client_key = create_rsa_private_key(outfile="client.key", passphrase="")
 
     with And("I generate client certificate signing request"):
         client_csr = create_certificate_signing_request(
@@ -191,39 +137,23 @@ def strict(self):
         )
 
     with And("I validate client certificate"):
-        validate_certificate(certificate=client_crt, ca_certificate=current().context.my_own_ca_crt)
+        validate_certificate(
+            certificate=client_crt, ca_certificate=current().context.my_own_ca_crt
+        )
 
-    with And("I copy client certificate and key", description=f"{node}"):
-        copy(dest_node=node, src_path=client_crt, dest_path="/client.crt")
-        copy(dest_node=node, src_path=client_key, dest_path="/client.key")
+    with And("I copy client certificate and key", description=f"{self.context.node}"):
+        copy(dest_node=self.context.node, src_path=client_crt, dest_path="/client.crt")
+        copy(dest_node=self.context.node, src_path=client_key, dest_path="/client.key")
 
     with And("I create the clickhouse-client config entries"):
-        entries = {
+        self.context.clickhouse_client_entries = {
             "certificateFile": "/client.crt",
             "privateKeyFile": "/client.key",
         }
 
-    Feature(test=server_tcp_connection)(
-        ssl_options="-cert client.crt -key client.key",
-        clickhouse_client_options=entries
-    )
-    Feature(test=server_https_connection)(
-        ssl_options="-cert /client.crt -key /client.key",
-        curl_options="--cert /client.crt --key /client.key"
-    )
-
-
-@TestFeature
-@Name("verification modes")
-@Requirements(RQ_SRS_017_ClickHouse_SSL_Server_Certificates_VerificationMode("1.0"))
-def feature(self, node="clickhouse1"):
-    """Check SSL connection to the clickhouse server with different verification modes."""
-    self.context.node = self.context.cluster.node(node)
-
-    with Given("I enable SSL"):
-        enable_ssl(my_own_ca_key_passphrase="", server_key_passphrase="")
-
-    Feature(run=none)
-    Feature(run=once)
-    Feature(run=relaxed)
-    Feature(run=strict)
+    Suite(run=none)
+    Suite(run=once)
+    Suite(run=relaxed)
+    Suite(run=strict)
+    with Suite("fail cases"):
+        xfail("not implemented.")
