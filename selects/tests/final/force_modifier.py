@@ -1141,32 +1141,10 @@ def feature(self):
         skip(
             reason="force_select_final is only supported on ClickHouse version >= 22.11"
         )
-    with Pool(6) as executor:
+   
+    with Pool(6) as executor:       
         try:
-            Feature(test=select_count, parallel=True, executor=executor)()
-            Feature(test=select_limit, parallel=True, executor=executor)()
-            Feature(test=select_limit_by, parallel=True, executor=executor)()
-            Feature(test=select_group_by, parallel=True, executor=executor)()
-            Feature(test=select_distinct, parallel=True, executor=executor)()
-            Feature(test=select_prewhere, parallel=True, executor=executor)()
-            Feature(test=select_where, parallel=True, executor=executor)()
-            Feature(test=select_array_join, parallel=True, executor=executor)()
-            Feature(test=select_join_clause, parallel=True, executor=executor)()
-            Feature(test=select_join_clause_select_all_types, parallel=True, executor=executor)()
-            Feature(test=select_join_clause_select_all_engine_combinations, parallel=True, executor=executor)()
-            Feature(test=select_union_clause, parallel=True, executor=executor)()
-            Feature(test=select_intersect_clause, parallel=True, executor=executor)()
-            Feature(test=select_except_clause, parallel=True, executor=executor)()
-            Feature(test=select_with_clause, parallel=True, executor=executor)()
-            Feature(test=select_nested_join_clause_select, parallel=True, executor=executor)()
-            Feature(test=select_multiple_join_clause_select, parallel=True, executor=executor)()
-            Feature(test=select_subquery, parallel=True, executor=executor)()
-            Feature(test=select_nested_subquery, parallel=True, executor=executor)()
-            Feature(test=select_where_subquery, parallel=True, executor=executor)()
-            Feature(test=select_prewhere_subquery, parallel=True, executor=executor)()
-            Feature(test=select_prewhere_in_subquery, parallel=True, executor=executor)()
-            Feature(test=select_where_in_subquery, parallel=True, executor=executor)()
-            Feature(test=select_array_join_subquery, parallel=True, executor=executor)()
-
+            for scenario in scenarios(loads(current_module(), Scenario)):
+                Feature(test=scenario, parallel=True, executor=executor)()
         finally:
             join()
