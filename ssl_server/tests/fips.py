@@ -344,7 +344,7 @@ def server_https_connection_curl(self, port=None, tls1_2_enabled=True):
 
 @TestScenario
 @Name("log check")
-@Requirements(RQ_SRS_017_ClickHouse_SSL_Server_FIPS_Mode_LogMessage("1.0"))
+@Requirements(RQ_SRS_017_ClickHouse_SSL_Server_FIPS_Compatible_LogMessage("1.0"))
 def log_check(self):
     """Check the server log to ensure ClickHouse is running in FIPS mode."""
     exitcode = self.context.node.command(
