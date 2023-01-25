@@ -177,7 +177,7 @@ xfails = {
     "aws s3 table function/ssec encryption check": [
         (Fail, "https://altinity.atlassian.net/browse/CH-242")
     ],
-    ": disk/low cardinality offset":[
+    ": disk/low cardinality offset": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/pull/44875")
     ],
 }
