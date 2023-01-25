@@ -96,7 +96,7 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
                 test=load("s3.regression", "regression"), parallel=True, executor=pool
             )(**args)
             Feature(
-                test=load("ssl.regression", "regression"),
+                test=load("ssl_server.regression", "regression"),
                 parallel=True,
                 executor=pool,
             )(**args)

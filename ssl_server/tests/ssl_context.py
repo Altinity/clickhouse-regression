@@ -2,8 +2,8 @@ import os
 
 from testflows.core import *
 from testflows.asserts import error
-from ssl.requirements import *
-from ssl.tests.common import *
+from ssl_server.requirements import *
+from ssl_server.tests.common import *
 
 
 @TestOutline
@@ -40,6 +40,7 @@ def enable_ssl(
             outfile=my_own_ca_key, passphrase=my_own_ca_key_passphrase
         )
         debug(f"{my_own_ca_key}")
+        current().context.my_own_ca_key = my_own_ca_key
 
     with And("I create my own CA certificate"):
         my_own_ca_crt = create_ca_certificate(
@@ -49,6 +50,14 @@ def enable_ssl(
             common_name="root",
         )
         current().context.my_own_ca_crt = my_own_ca_crt
+
+    with And("I install the CA certificate in the trust store"):
+        bash = self.context.cluster.bash(node=None)
+        bash(
+            f"sudo cp {my_own_ca_crt} /usr/local/share/ca-certificates/{my_own_ca_crt.split('/')[-1]}.crt"
+        )
+        bash("sudo update-ca-certificates")
+        debug(my_own_ca_crt)
 
     with And("I generate DH parameters"):
         dh_params = create_dh_params(outfile=dh_params)

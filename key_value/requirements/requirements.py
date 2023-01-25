@@ -160,6 +160,27 @@ RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parsing_Noise = Requirement(
     num="3.3.1",
 )
 
+RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parsing_IdenticalKeys = Requirement(
+    name="RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parsing.IdenticalKeys",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse]'s [extractKeyValuePairs] function SHALL return the last key value pair \n"
+        "for all key value pairs with the same key.\n"
+        "\n"
+        "For example:\n"
+        "\n"
+        "`SELECT extractKeyValuePairs('a:a, a:b')`\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="3.3.2",
+)
+
 RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Format_Input = Requirement(
     name="RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Format.Input",
     version="1.0",
@@ -405,8 +426,8 @@ RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Default_EnclosingCharacter = Requirem
     type=None,
     uid=None,
     description=(
-        "By default, [ClickHouse]'s [extractKeyValuePairs] function SHALL \n"
-        'specify `enclosing_character` using `"`.\n'
+        "By default, [ClickHouse]'s [extractKeyValuePairs] function SHALL not\n"
+        "specify `enclosing_character`.\n"
         "\n"
     ),
     link=None,
@@ -498,6 +519,11 @@ SRS033_ClickHouse_Key_Value_Function = Specification(
             name="RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parsing.Noise",
             level=3,
             num="3.3.1",
+        ),
+        Heading(
+            name="RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parsing.IdenticalKeys",
+            level=3,
+            num="3.3.2",
         ),
         Heading(name="Format", level=2, num="3.4"),
         Heading(
@@ -595,6 +621,7 @@ SRS033_ClickHouse_Key_Value_Function = Specification(
         RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_InputDataSource_Array,
         RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_InputDataSource_Map,
         RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parsing_Noise,
+        RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parsing_IdenticalKeys,
         RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Format_Input,
         RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Key_Format,
         RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Value_Format,
@@ -631,6 +658,7 @@ SRS033_ClickHouse_Key_Value_Function = Specification(
     * 3.2.4 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.InputDataSource.Map](#rqsrs-033clickhouseextractkeyvaluepairsinputdatasourcemap)
   * 3.3 [Parsing](#parsing)
     * 3.3.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parsing.Noise](#rqsrs-033clickhouseextractkeyvaluepairsparsingnoise)
+    * 3.3.2 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parsing.IdenticalKeys](#rqsrs-033clickhouseextractkeyvaluepairsparsingidenticalkeys)
   * 3.4 [Format](#format)
     * 3.4.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Format.Input](#rqsrs-033clickhouseextractkeyvaluepairsformatinput)
   * 3.5 [Key](#key)
@@ -657,6 +685,7 @@ SRS033_ClickHouse_Key_Value_Function = Specification(
     * 3.9.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.ItemDelimiter](#rqsrs-033clickhouseextractkeyvaluepairsdefaultitemdelimiter)
     * 3.9.2 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.EnclosingCharacter](#rqsrs-033clickhouseextractkeyvaluepairsdefaultenclosingcharacter)
     * 3.9.3 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.ValueSpecialCharactersAllowList](#rqsrs-033clickhouseextractkeyvaluepairsdefaultvaluespecialcharactersallowlist)
+
 ## Introduction
 
 This software requirements specification covers requirements related to [ClickHouse]
@@ -706,8 +735,8 @@ flowchart LR
         Q1[item_delimiter, default ',']
         Q2[key_value_delimiter, default ':']
         Q3[escape_character, default '\']
-        Q4[enclosing_character, default '']
-        Q5[value_special_characters_allow_list, default '']
+        Q4[enclosing_character, not specified by default]
+        Q5[value_special_characters_allow_list, default empty string]
     end
   end
 ```
@@ -783,6 +812,16 @@ value that returned from the map.
 version: 1.0
 
 [ClickHouse]'s [extractKeyValuePairs] function SHALL remove all noise that is not related to the key or value.
+
+#### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parsing.IdenticalKeys
+version: 1.0
+
+[ClickHouse]'s [extractKeyValuePairs] function SHALL return the last key value pair 
+for all key value pairs with the same key.
+
+For example:
+
+`SELECT extractKeyValuePairs('a:a, a:b')`
 
 ### Format
 
@@ -903,8 +942,8 @@ specify `item_delimiter` using `,`.
 #### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.EnclosingCharacter
 version: 1.0
 
-By default, [ClickHouse]'s [extractKeyValuePairs] function SHALL 
-specify `enclosing_character` using `"`.
+By default, [ClickHouse]'s [extractKeyValuePairs] function SHALL not
+specify `enclosing_character`.
 
 #### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.ValueSpecialCharactersAllowList
 version: 1.0
