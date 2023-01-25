@@ -643,3 +643,23 @@ def clickhouse_client_connection(
     ).output
 
     return output
+
+
+@TestStep(Given)
+def clickhouse_server_verification_mode(self, mode):
+    """Update clickhouse-server openssl configs to use specified verification mode."""
+
+    with Given(f"I set SSL server to `{mode}` verification mode"):
+        entries = define(
+            "SSL settings",
+            {
+                "verificationMode": mode,
+            },
+        )
+
+    with And("I apply SSL server configuration"):
+        add_ssl_server_configuration_file(
+            entries=entries, config_file="ssl_verification_mode.xml", restart=True
+        )
+
+    return
