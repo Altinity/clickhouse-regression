@@ -7,16 +7,21 @@ from ssl_server.requirements import *
 
 @TestScenario
 def rbac_user_no_hostname(self):
-    """User defined by RBAC with no hostname in the Common Name of the certificate.
-    """
+    """User defined by RBAC with no hostname in the Common Name of the certificate."""
     node = self.context.node
 
     try:
-        with Given("I generate client's private key and certificate signing request (CSR)"):
-            node.command(f"openssl req -newkey rsa:4096 -nodes -batch -keyout client1-key.pem -out client1-req.pem -subj '/C=AU/ST=Some-State/O=Internet Widgits Pty Ltd/CN=client1'")
+        with Given(
+            "I generate client's private key and certificate signing request (CSR)"
+        ):
+            node.command(
+                f"openssl req -newkey rsa:4096 -nodes -batch -keyout client1-key.pem -out client1-req.pem -subj '/C=AU/ST=Some-State/O=Internet Widgits Pty Ltd/CN=client1'"
+            )
 
         with And("I use the CA to sign the client's CSR"):
-            node.command(f"openssl x509 -req -days 3650 -in client1-req.pem -CA ca-cert.pem -CAkey ca-key.pem -CAcreateserial -out client1-cert.pem")
+            node.command(
+                f"openssl x509 -req -days 3650 -in client1-req.pem -CA ca-cert.pem -CAkey ca-key.pem -CAcreateserial -out client1-cert.pem"
+            )
 
         with When("I create a user identified by the certificate"):
             node.query(
@@ -41,16 +46,21 @@ def rbac_user_no_hostname(self):
 
 @TestScenario
 def rbac_user_hostname(self):
-    """User defined by RBAC with hostname in the Common Name of the certificate.
-    """
+    """User defined by RBAC with hostname in the Common Name of the certificate."""
     node = self.context.node
 
     try:
-        with Given("I generate client's private key and certificate signing request (CSR)"):
-            node.command(f"openssl req -newkey rsa:4096 -nodes -batch -keyout client4-key.pem -out client4-req.pem -subj '/C=AU/ST=Some-State/O=Internet Widgits Pty Ltd/CN=clickhouse1:client4'")
+        with Given(
+            "I generate client's private key and certificate signing request (CSR)"
+        ):
+            node.command(
+                f"openssl req -newkey rsa:4096 -nodes -batch -keyout client4-key.pem -out client4-req.pem -subj '/C=AU/ST=Some-State/O=Internet Widgits Pty Ltd/CN=clickhouse1:client4'"
+            )
 
         with And("I use the CA to sign the client's CSR"):
-            node.command(f"openssl x509 -req -days 3650 -in client4-req.pem -CA ca-cert.pem -CAkey ca-key.pem -CAcreateserial -out client4-cert.pem")
+            node.command(
+                f"openssl x509 -req -days 3650 -in client4-req.pem -CA ca-cert.pem -CAkey ca-key.pem -CAcreateserial -out client4-cert.pem"
+            )
 
         with When("I create a user identified by the certificate"):
             node.query(
@@ -79,11 +89,17 @@ def config_user_no_hostname(self):
     node = self.context.node
 
     try:
-        with Given("I generate client's private key and certificate signing request (CSR)"):
-            node.command(f"openssl req -newkey rsa:4096 -nodes -batch -keyout client2-key.pem -out client2-req.pem -subj '/C=AU/ST=Some-State/O=Internet Widgits Pty Ltd/CN=client2'")
+        with Given(
+            "I generate client's private key and certificate signing request (CSR)"
+        ):
+            node.command(
+                f"openssl req -newkey rsa:4096 -nodes -batch -keyout client2-key.pem -out client2-req.pem -subj '/C=AU/ST=Some-State/O=Internet Widgits Pty Ltd/CN=client2'"
+            )
 
         with And("I use the CA to sign the client's CSR"):
-            node.command(f"openssl x509 -req -days 3650 -in client2-req.pem -CA ca-cert.pem -CAkey ca-key.pem -CAcreateserial -out client2-cert.pem")
+            node.command(
+                f"openssl x509 -req -days 3650 -in client2-req.pem -CA ca-cert.pem -CAkey ca-key.pem -CAcreateserial -out client2-cert.pem"
+            )
 
         with Then("I login as the user using the certificate"):
             output = node.command(
@@ -104,11 +120,17 @@ def config_user_hostname(self):
     node = self.context.node
 
     try:
-        with Given("I generate client's private key and certificate signing request (CSR)"):
-            node.command(f"openssl req -newkey rsa:4096 -nodes -batch -keyout client3-key.pem -out client3-req.pem -subj '/C=AU/ST=Some-State/O=Internet Widgits Pty Ltd/CN=clickhouse1:client3'")
+        with Given(
+            "I generate client's private key and certificate signing request (CSR)"
+        ):
+            node.command(
+                f"openssl req -newkey rsa:4096 -nodes -batch -keyout client3-key.pem -out client3-req.pem -subj '/C=AU/ST=Some-State/O=Internet Widgits Pty Ltd/CN=clickhouse1:client3'"
+            )
 
         with And("I use the CA to sign the client's CSR"):
-            node.command(f"openssl x509 -req -days 3650 -in client3-req.pem -CA ca-cert.pem -CAkey ca-key.pem -CAcreateserial -out client3-cert.pem")
+            node.command(
+                f"openssl x509 -req -days 3650 -in client3-req.pem -CA ca-cert.pem -CAkey ca-key.pem -CAcreateserial -out client3-cert.pem"
+            )
 
         with Then("I login as the user using the certificate"):
             output = node.command(
@@ -149,7 +171,9 @@ def feature(self, node="clickhouse1"):
 
     try:
         with Given("I generate CA's private key and self-signed certificate"):
-            node.command(f"openssl req -newkey rsa:4096 -x509 -days 3650 -nodes -batch -keyout ca-key.pem -out ca-cert.pem -subj '/C=AU/ST=Some-State/O=Internet Widgits Pty Ltd/CN=ca'")
+            node.command(
+                f"openssl req -newkey rsa:4096 -x509 -days 3650 -nodes -batch -keyout ca-key.pem -out ca-cert.pem -subj '/C=AU/ST=Some-State/O=Internet Widgits Pty Ltd/CN=ca'"
+            )
 
         with And("I set the caConfig"):
             entries = define(
@@ -161,7 +185,9 @@ def feature(self, node="clickhouse1"):
 
         with And("I apply SSL server configuration"):
             add_ssl_server_configuration_file(
-                entries=entries, config_file="ssl_caconfig_certificate_auth.xml", restart=True
+                entries=entries,
+                config_file="ssl_caconfig_certificate_auth.xml",
+                restart=True,
             )
 
         Scenario(run=rbac_user_no_hostname)
