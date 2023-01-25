@@ -234,6 +234,8 @@ def select_array_join(self, node=None):
     if node is None:
         node = self.context.node
 
+    name = f"arrays_test{getuid()}"
+
     with Given("I create engines list for current test"):
         engines = define(
             "engines",
@@ -254,7 +256,7 @@ def select_array_join(self, node=None):
     ):
         table = define(
             "array table query",
-            """CREATE TABLE arrays_test
+            """CREATE TABLE {name}
             (
                 s String,
                 arr Array(UInt8)
@@ -264,7 +266,7 @@ def select_array_join(self, node=None):
 
         insert = define(
             "array value insert query",
-            "INSERT INTO arrays_test VALUES ('Hello', [1,2]), ('World', [3,4,5]), ('Goodbye', []);",
+            f"INSERT INTO {name} VALUES ('Hello', [1,2]), ('World', [3,4,5]), ('Goodbye', []);",
         )
 
     for engine in engines:
@@ -272,7 +274,7 @@ def select_array_join(self, node=None):
             try:
                 with When(f"I create and populate table with array type"):
                     node.query(
-                        f"{table.format(engine=engine, order='') if engine.endswith('Log') else table.format(engine=engine, order='ORDER BY s;')}"
+                        f"{table.format(name=name, engine=engine, order='') if engine.endswith('Log') else table.format(name=name, engine=engine, order='ORDER BY s;')}"
                     )
                     node.query("SYSTEM STOP MERGES")
                     node.query(insert)
@@ -280,7 +282,7 @@ def select_array_join(self, node=None):
 
                 with When("I execute query with force_select_final=1 setting"):
                     force_select_final = node.query(
-                        "SELECT count() FROM arrays_test ARRAY JOIN arr",
+                        f"SELECT count() FROM {name} ARRAY JOIN arr",
                         settings=[("force_select_final", 1)],
                     ).output.strip()
 
@@ -289,18 +291,18 @@ def select_array_join(self, node=None):
                 ):
                     if engine.startswith("Merge") or engine.endswith("Log"):
                         explicit_final = node.query(
-                            f"SELECT count() FROM arrays_test ARRAY JOIN arr"
+                            f"SELECT count() FROM {name} ARRAY JOIN arr"
                         ).output.strip()
                     else:
                         explicit_final = node.query(
-                            "SELECT count() FROM arrays_test FINAL ARRAY JOIN arr"
+                            f"SELECT count() FROM {name} FINAL ARRAY JOIN arr"
                         ).output.strip()
 
                 with Then("I compare results are the same"):
                     assert explicit_final == force_select_final
 
             finally:
-                node.query("DROP TABLE arrays_test")
+                node.query(f"DROP TABLE {name}")
 
 
 @TestScenario
@@ -1041,6 +1043,8 @@ def select_array_join_subquery(self, node=None):
     if node is None:
         node = self.context.node
 
+    name = f"arrays_test{getuid()}"
+
     with Given("I create engines list for current test"):
         engines = define(
             "engines",
@@ -1061,7 +1065,7 @@ def select_array_join_subquery(self, node=None):
     ):
         table = define(
             "array table query",
-            """CREATE TABLE arrays_test
+            """CREATE TABLE {name}
             (
                 s String,
                 arr Array(UInt8)
@@ -1071,7 +1075,7 @@ def select_array_join_subquery(self, node=None):
 
         insert = define(
             "array value insert query",
-            "INSERT INTO arrays_test VALUES ('Hello', [1,2]), ('World', [3,4,5]), ('Goodbye', []);",
+            f"INSERT INTO {name} VALUES ('Hello', [1,2]), ('World', [3,4,5]), ('Goodbye', []);",
         )
 
     for engine in engines:
@@ -1079,7 +1083,7 @@ def select_array_join_subquery(self, node=None):
             try:
                 with When(f"I create and populate table with array type"):
                     node.query(
-                        f"{table.format(engine=engine, order='') if engine.endswith('Log') else table.format(engine=engine, order='ORDER BY s;')}"
+                        f"{table.format(name=name, engine=engine, order='') if engine.endswith('Log') else table.format(name=name, engine=engine, order='ORDER BY s;')}"
                     )
                     node.query("SYSTEM STOP MERGES")
                     node.query(insert)
@@ -1089,7 +1093,7 @@ def select_array_join_subquery(self, node=None):
                     if table2.name.startswith("expr_subquery"):
                         with When("I execute query with force_select_final=1 setting"):
                             force_select_final = node.query(
-                                "SELECT count() FROM arrays_test ARRAY JOIN "
+                                f"SELECT count() FROM {name} ARRAY JOIN "
                                 f"(select arr from {table2.name} LIMIT 1) as zz",
                                 settings=[("force_select_final", 1)],
                             ).output.strip()
@@ -1099,12 +1103,12 @@ def select_array_join_subquery(self, node=None):
                         ):
                             if engine.startswith("Merge") or engine.endswith("Log"):
                                 explicit_final = node.query(
-                                    "SELECT count() FROM arrays_test ARRAY JOIN "
+                                    f"SELECT count() FROM {name} ARRAY JOIN "
                                     f"(select arr from {table2.name} LIMIT 1) as zz"
                                 ).output.strip()
                             else:
                                 explicit_final = node.query(
-                                    "SELECT count() FROM arrays_test FINAL ARRAY JOIN"
+                                    f"SELECT count() FROM {name} FINAL ARRAY JOIN"
                                     f" (select arr from {table2.name} FINAL) as zz"
                                 ).output.strip()
 
@@ -1112,7 +1116,7 @@ def select_array_join_subquery(self, node=None):
                             assert explicit_final == force_select_final
 
             finally:
-                node.query("DROP TABLE arrays_test")
+                node.query(f"DROP TABLE {name}")
 
 
 @TestFeature
@@ -1142,7 +1146,7 @@ def feature(self):
             reason="force_select_final is only supported on ClickHouse version >= 22.11"
         )
 
-    with Pool(6) as executor:
+    with Pool(8) as executor:
         try:
             for scenario in loads(current_module(), Scenario):
                 Feature(test=scenario, parallel=True, executor=executor)()
