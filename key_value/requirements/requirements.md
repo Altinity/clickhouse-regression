@@ -17,6 +17,7 @@
     * 3.2.4 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.InputDataSource.Map](#rqsrs-033clickhouseextractkeyvaluepairsinputdatasourcemap)
   * 3.3 [Parsing](#parsing)
     * 3.3.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parsing.Noise](#rqsrs-033clickhouseextractkeyvaluepairsparsingnoise)
+    * 3.3.2 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parsing.IdenticalKeys](#rqsrs-033clickhouseextractkeyvaluepairsparsingidenticalkeys)
   * 3.4 [Format](#format)
     * 3.4.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Format.Input](#rqsrs-033clickhouseextractkeyvaluepairsformatinput)
   * 3.5 [Key](#key)
@@ -43,6 +44,7 @@
     * 3.9.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.ItemDelimiter](#rqsrs-033clickhouseextractkeyvaluepairsdefaultitemdelimiter)
     * 3.9.2 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.EnclosingCharacter](#rqsrs-033clickhouseextractkeyvaluepairsdefaultenclosingcharacter)
     * 3.9.3 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.ValueSpecialCharactersAllowList](#rqsrs-033clickhouseextractkeyvaluepairsdefaultvaluespecialcharactersallowlist)
+
 ## Introduction
 
 This software requirements specification covers requirements related to [ClickHouse]
@@ -92,8 +94,8 @@ flowchart LR
         Q1[item_delimiter, default ',']
         Q2[key_value_delimiter, default ':']
         Q3[escape_character, default '\']
-        Q4[enclosing_character, default '']
-        Q5[value_special_characters_allow_list, default '']
+        Q4[enclosing_character, not specified by default]
+        Q5[value_special_characters_allow_list, default empty string]
     end
   end
 ```
@@ -169,6 +171,16 @@ value that returned from the map.
 version: 1.0
 
 [ClickHouse]'s [extractKeyValuePairs] function SHALL remove all noise that is not related to the key or value.
+
+#### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parsing.IdenticalKeys
+version: 1.0
+
+[ClickHouse]'s [extractKeyValuePairs] function SHALL return the last key value pair 
+for all key value pairs with the same key.
+
+For example:
+
+`SELECT extractKeyValuePairs('a:a, a:b')`
 
 ### Format
 
@@ -289,8 +301,8 @@ specify `item_delimiter` using `,`.
 #### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.EnclosingCharacter
 version: 1.0
 
-By default, [ClickHouse]'s [extractKeyValuePairs] function SHALL 
-specify `enclosing_character` using `"`.
+By default, [ClickHouse]'s [extractKeyValuePairs] function SHALL not
+specify `enclosing_character`.
 
 #### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.ValueSpecialCharactersAllowList
 version: 1.0

@@ -2,8 +2,9 @@ import json
 
 from testflows.core import *
 
-from ssl.tests.common import *
-from ssl.tests.ssl_context import enable_ssl
+from ssl_server.tests.common import *
+from ssl_server.tests.ssl_context import enable_ssl
+
 
 @TestScenario
 @Requirements()
@@ -12,11 +13,16 @@ def system_certificates(self):
     node = self.context.node
 
     with When("I get the serial number of my certificate"):
-        serial_number = node.command(f"openssl x509 -text -in /etc/ssl/certs/{current().context.my_own_ca_crt.split('/')[-1]}.pem -serial | grep serial= --color=never").output[7:]
+        serial_number = node.command(
+            f"openssl x509 -text -in /etc/ssl/certs/{current().context.my_own_ca_crt.split('/')[-1]}.pem -serial | grep serial= --color=never"
+        ).output[7:]
 
     with Then("I check that system.certificates has the serial number"):
-        output = node.query(f"SELECT count() FROM system.certificates WHERE serial_number = '{serial_number.lower()}'").output
-        assert output == '1', error()
+        output = node.query(
+            f"SELECT count() FROM system.certificates WHERE serial_number = '{serial_number.lower()}'"
+        ).output
+        assert output == "1", error()
+
 
 @TestScenario
 @Requirements()
@@ -25,12 +31,24 @@ def show_certificate(self):
     node = self.context.node
 
     with When("I get the serial number of my certificate"):
-        serial_number = node.command(f"openssl x509 -text -in /etc/clickhouse-server/server.crt -serial | grep serial=  --color=never").output[7:]
+        serial_number = (
+            node.command(
+                f"openssl x509 -text -in /etc/clickhouse-server/server.crt -serial | grep serial=  --color=never"
+            )
+            .output[7:]
+            .lstrip("0")
+        )
 
-    with Then("I check that it matches the serial number in the showCertificate() function"):
+    with Then(
+        "I check that it matches the serial number in the showCertificate() function"
+    ):
         output = node.query(f"SELECT showCertificate() FORMAT JSON").output
         output = json.loads(output)
-        assert output["data"][0]["showCertificate()"]["serial_number"] == serial_number.lower(), error()
+        assert (
+            output["data"][0]["showCertificate()"]["serial_number"]
+            == serial_number.lower()
+        ), error()
+
 
 @TestFeature
 @Name("check certificate")

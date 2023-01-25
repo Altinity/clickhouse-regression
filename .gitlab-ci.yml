@@ -433,13 +433,13 @@ s3-benchmark-amd64:
     - ontime=1
     - *regression_common
 
-ssl-amd64:
+ssl-server-amd64:
   extends: .regression_amd64
   only:
     variables:
-      - ( $only == "" || $only == "ssl" ) && $arch == "amd64"
+      - ( $only == "" || $only == "ssl_server" ) && $arch == "amd64"
   variables: 
-    FOLDER_PATH: "ssl"
+    FOLDER_PATH: "ssl_server"
   script:
     - *regression_common
 
@@ -762,13 +762,13 @@ s3-benchmark-arm64:
     - ontime=1
     - *regression_common
 
-ssl-arm64:
+ssl-server-arm64:
   extends: .regression_arm64
   only:
     variables:
-      - ( $only == "" || $only == "ssl" ) && $arch == "arm64"
+      - ( $only == "" || $only == "ssl_server" ) && $arch == "arm64"
   variables: 
-    FOLDER_PATH: "ssl"
+    FOLDER_PATH: "ssl_server"
   script:
     - *regression_common
 

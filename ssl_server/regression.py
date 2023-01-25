@@ -10,7 +10,8 @@ from helpers.cluster import Cluster
 from helpers.argparser import argparser as argparser_base
 from helpers.common import check_clickhouse_version
 
-from ssl.requirements import SRS017_ClickHouse_SSL
+from ssl_server.requirements import SRS017_ClickHouse_SSL
+
 
 def argparser(parser):
     """Default argument for regressions."""
@@ -23,6 +24,7 @@ def argparser(parser):
         default=False,
     )
 
+
 xfails = {
     "ssl context/enable ssl with server key passphrase": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/35950")
@@ -34,17 +36,32 @@ xfails = {
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/35950")
     ],
     # fips
-    "fips/server/:/:/:cipher ECDHE-ECDSA-AES256-GCM-SHA384 should work": [
+    ":/:/:/:/:cipher ECDHE-ECDSA-AES256-GCM-SHA384 should work": [
         (Fail, "not supported by SSL library")
     ],
-    "fips/server/:/:/:cipher ECDHE-ECDSA-AES128-GCM-SHA256 should work": [
+    ":/:/:/:/:cipher ECDHE-ECDSA-AES128-GCM-SHA256 should work": [
         (Fail, "not supported by SSL library")
     ],
-    "fips/server/:/:/TLSv1.3 suite connection should be rejected": [
+    ":/:/:/:/:/:cipher ECDHE-ECDSA-AES256-GCM-SHA384 should work": [
+        (Fail, "not supported by SSL library")
+    ],
+    ":/:/:/:/:/:cipher ECDHE-ECDSA-AES128-GCM-SHA256 should work": [
+        (Fail, "not supported by SSL library")
+    ],
+    "fips/server/tcp connection/:/:/just disabling TLSv1.1 suite connection should work": [
         (Fail, "needs to be reviewed")
     ],
-    "fips/server/tcp connection/clickhouse-client/just disabling TLSv1.1 suite connection should work": [
+    "fips/server/:/tcp connection/:/:/just disabling TLSv1.1 suite connection should work": [
         (Fail, "needs to be reviewed")
+    ],
+    "fips/clickhouse client/:/:/just disabling TLSv1.1 suite connection should work": [
+        (Fail, "needs to be reviewed")
+    ],
+    "fips/clickhouse client/:/:/: should be rejected": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/45445")
+    ],
+    "verification modes/:/:/:/:":[
+        (Fail, "under development")
     ],
 }
 
@@ -71,7 +88,9 @@ ffails = {
 @FFails(ffails)
 @Name("ssl server")
 @Specifications(SRS017_ClickHouse_SSL)
-def regression(self, local, clickhouse_binary_path, clickhouse_version, fips_mode, stress=None):
+def regression(
+    self, local, clickhouse_binary_path, clickhouse_version, fips_mode, stress=None
+):
     """ClickHouse security SSL server regression."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
@@ -97,10 +116,12 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, fips_mod
     ) as cluster:
         self.context.cluster = cluster
 
-        Feature(run=load("ssl.tests.check_certificate", "feature"))
-        Feature(run=load("ssl.sanity", "feature"))
-        Feature(run=load("ssl.tests.ssl_context", "feature"))
-        Feature(run=load("ssl.tests.fips", "feature"))
+        Feature(run=load("ssl_server.tests.check_certificate", "feature"))
+        Feature(run=load("ssl_server.tests.sanity", "feature"))
+        Feature(run=load("ssl_server.tests.ssl_context", "feature"))
+        Feature(run=load("ssl_server.tests.certificate_authentication", "feature"))
+        Feature(run=load("ssl_server.tests.verification_mode", "feature"))
+        Feature(run=load("ssl_server.tests.fips", "feature"))
 
 
 if main():
