@@ -183,7 +183,7 @@ def argparser(parser):
     )
     
     parser.add_argument(
-        "--artifact_s3_bucket",
+        "--artifacts",
         action="store",
         help="Specify whether to upload to internal or public s3 bucket. \
             'altinity-internal-test-reports' for internal upload, 'altinity-test-reports' for public",
@@ -265,8 +265,8 @@ def trigger():
             variables["options"] = args.options
         if args.arch:
             variables["arch"] = args.arch
-        if args.artifact_s3_bucket:
-            variables["artifact_s3_bucket"] = args.artifact_s3_bucket
+        if args.artifacts:
+            variables["artifacts"] = args.artifacts
 
         pipeline = project.trigger_pipeline(
             args.branch, trigger.token, variables=variables
