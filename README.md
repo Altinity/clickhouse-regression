@@ -122,7 +122,7 @@ with following options
 --options             Extra options that will be added to test run command.
 --arch                Architecture to run the tests on, default: 'amd64'.
 --branch              Specify which branch to run the tests on, default: 'main'.
---artifact_s3_bucket_path Specify where to upload the job artifacts. For internal upload 'altinity-internal-test-reports/reports'. For public upload 'altinity-test-reports/reports'. default: 'altinity-internal-test-reports/reports'. 
+--artifacts           Specify whether to upload artifacts internally or publically, default: 'internal'. Bucket for internal upload: 'altinity-internal-test-reports'. Bucket for public upload 'altinity-test-reports'.
 ```
 
 
