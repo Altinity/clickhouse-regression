@@ -139,8 +139,7 @@ variables:
         then
           artifact_s3_bucket_path="altinity-internal-test-reports/reports";
           confidential="--confidential";
-        fi
-    - elif [[ $artifact_s3_bucket == 'public' ]];
+      elif [[ $artifact_s3_bucket == 'public' ]];
         then
           artifact_s3_bucket_path="altinity-test-reports/reports";
           confidential="";
