@@ -137,13 +137,13 @@ variables:
     - python3 -u $FOLDER_PATH/$regression.py --test-to-end --local -o $output --clickhouse-binary-path $clickhouse_bin_path --parallel $parallel --clickhouse-version $version $SUITE_OPTIONS $options --attr project="$CI_PROJECT_PATH" project.id="$CI_PROJECT_ID" user.name="$GITLAB_USER_NAME" user.email="$GITLAB_USER_EMAIL" version="$version" repository="$package" commit.short.hash="$CI_COMMIT_SHORT_SHA" commit.hash="$CI_COMMIT_SHA" job.id="$CI_JOB_ID" job.url="$CI_JOB_URL" arch="$arch" --tag altinity-runner --log raw.log || exitcode=$?
     - if [[ $artifact_s3_bucket == 'internal' ]];
         then
-          artifact_s3_bucket_path="altinity-internal-test-reports/reports"
-          confidential="--confidential"
+          artifact_s3_bucket_path="altinity-internal-test-reports/reports";
+          confidential="--confidential";
         fi
     - elif [[ $artifact_s3_bucket == 'public' ]];
         then
-          artifact_s3_bucket_path="altinity-test-reports/reports"
-          confidential=""
+          artifact_s3_bucket_path="altinity-test-reports/reports";
+          confidential="";
         fi
     - echo "$version" > version.log.txt
     - echo "https://gitlab.com/altinity-qa/clickhouse/cicd/clickhouse-regression/-/pipelines/$CI_PIPELINE_ID" > pipeline_url.log.txt
