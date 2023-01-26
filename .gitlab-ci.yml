@@ -149,9 +149,9 @@ variables:
     - tfs --debug --no-colors transform compact raw.log compact.log
     - tfs --debug --no-colors transform nice raw.log nice.log.txt 
     - tfs --debug --no-colors transform short raw.log short.log.txt
-    - tfs --debug --no-colors report coverage - raw.log - --confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > coverage.html
-    - tfs --debug --no-colors report results -a "$CI_JOB_URL/artifacts/browse" raw.log - --confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > report.html
-    - tfs --debug --no-colors report compare results --log compact.log --order-by version --confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > compare.html
+    - tfs --debug --no-colors report coverage - raw.log - $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > coverage.html
+    - tfs --debug --no-colors report results -a "$CI_JOB_URL/artifacts/browse" raw.log - $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > report.html
+    - tfs --debug --no-colors report compare results --log compact.log --order-by version $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > compare.html
     - if [[ $upload_logs -ge 1 ]]; 
         then
            export AWS_ACCESS_KEY_ID=$aws_report_key_id;
