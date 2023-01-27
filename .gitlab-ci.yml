@@ -137,11 +137,11 @@ variables:
     - python3 -u $FOLDER_PATH/$regression.py --test-to-end --local -o $output --clickhouse-binary-path $clickhouse_bin_path --parallel $parallel --clickhouse-version $version $SUITE_OPTIONS $options --attr project="$CI_PROJECT_PATH" project.id="$CI_PROJECT_ID" user.name="$GITLAB_USER_NAME" user.email="$GITLAB_USER_EMAIL" version="$version" repository="$package" commit.short.hash="$CI_COMMIT_SHORT_SHA" commit.hash="$CI_COMMIT_SHA" job.id="$CI_JOB_ID" job.url="$CI_JOB_URL" arch="$arch" --tag altinity-runner --log raw.log || exitcode=$?
     - if [[ $artifacts == 'internal' ]];
         then
-          artifact_s3_bucket_path="altinity-internal-test-reports/reports";
+          artifact_s3_bucket_path="altinity-internal-test-reports";
           confidential="--confidential";
       elif [[ $artifacts == 'public' ]];
         then
-          artifact_s3_bucket_path="altinity-test-reports/reports";
+          artifact_s3_bucket_path="altinity-test-reports";
           confidential="";
         fi
     - echo "$version" > version.log.txt
@@ -158,17 +158,17 @@ variables:
            export AWS_SECRET_ACCESS_KEY=$aws_report_secret_access_key;
            export AWS_DEFAULT_REGION=$aws_report_region;
            
-           aws s3 cp pipeline_url.log.txt s3://$artifact_s3_bucket_path/$scheduled_path$version/$CI_PIPELINE_ID/testflows/pipeline_url.log.txt --content-type "text/plain; charset=utf-8";
-           aws s3 cp version.log.txt s3://$artifact_s3_bucket_path/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/version.log.txt --content-type "text/plain; charset=utf-8";
-           aws s3 cp raw.log s3://$artifact_s3_bucket_path/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/raw.log;
-           aws s3 cp compact.log s3://$artifact_s3_bucket_path/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/compact.log;
-           aws s3 cp nice.log.txt s3://$artifact_s3_bucket_path/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/nice.log.txt --content-type "text/plain; charset=utf-8";
-           aws s3 cp short.log.txt s3://$artifact_s3_bucket_path/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/short.log.txt --content-type "text/plain; charset=utf-8";
-           aws s3 cp report.html s3://$artifact_s3_bucket_path/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/report.html;
-           aws s3 cp compare.html s3://$artifact_s3_bucket_path/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/compare.html;
-           aws s3 cp coverage.html s3://$artifact_s3_bucket_path/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/coverage.html;
+           aws s3 cp pipeline_url.log.txt s3://$artifact_s3_bucket_path/clickhouse/$scheduled_path$version/$CI_PIPELINE_ID/testflows/pipeline_url.log.txt --content-type "text/plain; charset=utf-8";
+           aws s3 cp version.log.txt s3://$artifact_s3_bucket_path/clickhouse/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/version.log.txt --content-type "text/plain; charset=utf-8";
+           aws s3 cp raw.log s3://$artifact_s3_bucket_path/clickhouse/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/raw.log;
+           aws s3 cp compact.log s3://$artifact_s3_bucket_path/clickhouse/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/compact.log;
+           aws s3 cp nice.log.txt s3://$artifact_s3_bucket_path/clickhouse/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/nice.log.txt --content-type "text/plain; charset=utf-8";
+           aws s3 cp short.log.txt s3://$artifact_s3_bucket_path/clickhouse/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/short.log.txt --content-type "text/plain; charset=utf-8";
+           aws s3 cp report.html s3://$artifact_s3_bucket_path/clickhouse/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/report.html;
+           aws s3 cp compare.html s3://$artifact_s3_bucket_path/clickhouse/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/compare.html;
+           aws s3 cp coverage.html s3://$artifact_s3_bucket_path/clickhouse/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/coverage.html;
            rm --recursive --force $FOLDER_PATH/_instances/*/database/;
-           aws s3 cp . s3://$artifact_s3_bucket_path/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/ --recursive --exclude "*" --include "*/_instances/*/logs/*.log" --content-type "text/plain; charset=utf-8";
+           aws s3 cp . s3://$artifact_s3_bucket_path/clickhouse/$scheduled_path$version/$CI_PIPELINE_ID/testflows/$FOLDER_PATH$SUBFOLDER_PATH/ --recursive --exclude "*" --include "*/_instances/*/logs/*.log" --content-type "text/plain; charset=utf-8";
         fi
     - exit $exitcode
 
