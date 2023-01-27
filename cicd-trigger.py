@@ -4,47 +4,13 @@
 import os
 import sys
 import time
-import uuid
 import gitlab
 import datetime
 import contextlib
-
 from argparse import ArgumentParser, ArgumentTypeError, RawTextHelpFormatter
 
 PROJECT_ID = 39540585
-DEBUG = False  # set True to debug this trigger program
 PROGRESS = "\u2591"
-
-suites = [
-    "aes_encryption",
-    "aggregate_functions",
-    "atomic_insert",
-    "base_58",
-    "clickhouse_keeper",
-    "datetime64_extended_range",
-    "disk_level_encryption",
-    "dns",
-    "example",
-    "extended_precision_data_types",
-    "kafka",
-    "kerberos",
-    "ldap",
-    "lightweight_delete",
-    "map_type",
-    "parquet",
-    "part_moves_between_shards",
-    "rbac",
-    "s3",
-    "s3_aws",
-    "s3_gcs",
-    "selects",
-    "ssl_server",
-    "tiered_storage",
-    "tiered_storage_aws",
-    "tiered_storage_gcs",
-    "window_functions",
-    "benchmark",
-]
 
 
 def timestamp():
@@ -53,145 +19,25 @@ def timestamp():
     return dt.astimezone().strftime("%b %d,%Y %H:%M:%S.%f %Z")
 
 
-@contextlib.contextmanager
-def Action(name):
+class Action:
     """Simple action wrapper."""
-    try:
-        print(f"{timestamp()} \u270D  {name}")
-        yield
-    except BaseException as e:
-        print(f"{timestamp()} \u274C Error", e)
-        if DEBUG:
-            raise
-        sys.exit(1)
-    else:
-        print(f"{timestamp()} \u2705 OK")
 
+    debug = False
 
-def token_type(v):
-    if not v:
-        v = default = os.getenv("GITLAB_TOKEN", None)
-    if v is None:
-        raise ArgumentTypeError("must be set")
-    return v
+    def __init__(self, name):
+        self.name = name
 
+    def __enter__(self):
+        print(f"{timestamp()} \u270D  {self.name}")
 
-def argparser(parser):
-    """Argument parser."""
-
-    parser.add_argument(
-        "-w",
-        "--wait",
-        action="store_true",
-        help="Wait for pipeline to finish, default: False",
-        default=False,
-    )
-    parser.add_argument(
-        "--package",
-        metavar="deb://<url>|docker://<image>|https://<url>",
-        action="store",
-        help=(
-            "Either 'deb://', 'docker://', or 'https://' package specifier to use for tests, "
-            "default: docker://clickhouse/clickhouse-server. The url for deb package specifier"
-            "should not contain 'https://' prefix. "
-            "For example: "
-            "'docker://altinity/clickhouse-server', 'docker://clickhouse/clickhouse-server', "
-            "'deb://builds.altinity.cloud/apt-repo/pool/main', "
-            "'deb://s3.amazonaws.com/clickhouse-builds/37882/f74618722585d507cf5fe6d9284cf32028c67716/package_release'"
-        ),
-        default="docker://clickhouse/clickhouse-server",
-    )
-
-    parser.add_argument(
-        "--version",
-        metavar="value",
-        action="store",
-        help=(
-            "Version of clickhouse to use for tests, default: 22.3.8.39-alpine. When package option "
-            "uses docker:// specifier then the version is the image tag. For example: "
-            "'22.3.9.19-alpine', '22.3.8.40.altinitystable', etc."
-        ),
-        default="22.3.9.19-alpine",
-    )
-
-    parser.add_argument(
-        "--package-postfix",
-        metavar="{all,amd64}",
-        action="store",
-        help=(
-            "Postfix of the clickhouse-server and clickhouse-client deb package; either 'all' or 'amd64', default: 'amd64'. "
-            "Before 22.3 the server and client packages ended with '_all.deb' and starting with 22.3 they end with '_amd64.deb'."
-        ),
-        default="amd64",
-    )
-
-    parser.add_argument(
-        "--only",
-        action="store",
-        metavar="suite",
-        help=f"Select test suite to run; only one suite can be selected. Choices {str(suites)[1:-1]}",
-        choices=suites,
-        default=None,
-    )
-
-    parser.add_argument(
-        "--output",
-        metavar="format",
-        action="store",
-        help="Tests stdout output style, default: 'classic'. Choices 'nice', 'classic', 'short', etc.",
-        default="classic",
-    )
-
-    parser.add_argument(
-        "--parallel",
-        action="store",
-        help="Enable or disable running tests in parallel.",
-        default="on",
-        choices=["on", "off"],
-    )
-
-    parser.add_argument(
-        "--token",
-        metavar="value",
-        help="Personal access token or private token with api access to the gitlab project, default: 'GITLAB_TOKEN' environment variable.",
-        type=token_type,
-        default="",
-    )
-
-    parser.add_argument(
-        "--options",
-        metavar="value",
-        action="store",
-        help="Extra options that will be added to test run command.",
-        default="",
-    )
-
-    parser.add_argument(
-        "--arch",
-        metavar="{arm64,amd64}",
-        action="store",
-        help="Architecture to run the tests on, default: 'amd64'.",
-        default="amd64",
-        choices=["amd64", "arm64"],
-    )
-
-    parser.add_argument(
-        "--branch",
-        action="store",
-        help="Choose which branch to run the tests on",
-        default="main",
-    )
-    
-    parser.add_argument(
-        "--artifacts",
-        action="store",
-        help="Specify whether to upload to internal or public s3 bucket. \
-            'altinity-internal-test-reports' for internal upload, 'altinity-test-reports' for public",
-        default="internal",
-        choices=["internal", "public"],
-    )
-
-    return parser
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        if exc_value is not None:
+            print(f"{timestamp()} \u274C Error", BaseException)
+            if self.debug:
+                raise
+            sys.exit(1)
+        else:
+            print(f"{timestamp()} \u2705 OK")
 
 
 def get_or_create_pipeline_trigger(username, project, description=None):
@@ -205,31 +51,286 @@ def get_or_create_pipeline_trigger(username, project, description=None):
     return project.triggers.create({"description": description})
 
 
+description = """Script to launch CI/CD pipeline.
+    
+    Either pass GitLab user token using the '--token' option (make sure it has the 'api' scope)
+    or even better set $GITLAB_TOKEN environment variable that will be used by default.
+    
+    Examples:
+    
+    Run all available suites on master branch with a specified token:
+        python3 cicd_trigger.py --token $GITLAB_TOKEN
+
+     Run all available suites on master branch and wait for it to complete:
+        python3 cicd_trigger.py --wait
+
+    Run all available suites on master branch and upload artifacts to public aws s3 bucket:
+        python3 cicd_trigger.py --artifacts public
+
+    Run all available suites on master branch on a specific build:
+        python3 cicd_trigger.py --package https://s3.amazonaws.com/altinity-build-artifacts/217/c14c89992f760772f487f91fdb8bb71367b51e81/package_release/clickhouse-common-static_22.8.11.17.altinityfips_amd64.deb --version 22.8.11.17.altinityfips
+
+    Run aes_encryption suite:
+        python3 cicd_trigger.py --suite aes_encryption
+
+    Run aggregate_function suite:
+        python3 cicd_trigger.py --suite aggregate_function
+
+    Run atomic_insert suite:
+        python3 cicd_trigger.py --suite atomic_insert
+
+    Run base_58 suite:
+        python3 cicd_trigger.py --suite base_58
+
+    Run clickhouse_keeper suite:
+        python3 cicd_trigger.py --suite clickhouse_keeper
+
+    Run datetime64_extended_range suite:
+        python3 cicd_trigger.py --suite datetime64_extended_range
+
+    Run disk_level_encryption suite:
+        python3 cicd_trigger.py --suite disk_level_encryption
+
+    Run dns suite:
+        python3 cicd_trigger.py --suite dns
+
+    Run example suite:
+        python3 cicd_trigger.py --suite example
+
+    Run extended_precision_data_types suite:
+        python3 cicd_trigger.py --suite extended_precision_data_types
+
+    Run kafka suite:
+        python3 cicd_trigger.py --suite kafka
+
+    Run kerberos suite:
+        python3 cicd_trigger.py --suite kerberos
+
+    Run ldap suite:
+        python3 cicd_trigger.py --suite ldap
+
+    Run lightweight_delete suite:
+        python3 cicd_trigger.py --suite lightweight_delete
+
+    Run map_type suite:
+        python3 cicd_trigger.py --suite map_type
+
+    Run parquet suite:
+        python3 cicd_trigger.py --suite parquet
+
+    Run part_moves_between_shards suite:
+        python3 cicd_trigger.py --suite part_moves_between_shards
+
+    Run rbac suite:
+        python3 cicd_trigger.py --suite rbac
+
+    Run s3 suite:
+        python3 cicd_trigger.py --suite s3
+
+    Run s3_aws suite:
+        python3 cicd_trigger.py --suite s3_aws
+
+    Run s3_gcs suite:
+        python3 cicd_trigger.py --suite s3_gcs
+
+    Run selects suite:
+        python3 cicd_trigger.py --suite selects
+
+    Run ssl_server suite:
+        python3 cicd_trigger.py --suite ssl_server
+
+    Run tiered_storage suite:
+        python3 cicd_trigger.py --suite tiered_storage
+
+    Run tiered_storage_aws suite:
+        python3 cicd_trigger.py --suite tiered_storage_aws
+
+    Run tiered_storage_gcs suite:
+        python3 cicd_trigger.py --suite tiered_storage_gcs
+
+    Run window_functions suite:
+        python3 cicd_trigger.py --suite window_functions
+
+    Run benchmark suite:
+        python3 cicd_trigger.py --suite benchmark
+    """
+
+
+def argparser(parser):
+    """Argument parser for running the pipelines."""
+    suites = [
+        "all",
+        "aes_encryption",
+        "aggregate_functions",
+        "atomic_insert",
+        "base_58",
+        "clickhouse_keeper",
+        "datetime64_extended_range",
+        "disk_level_encryption",
+        "dns",
+        "example",
+        "extended_precision_data_types",
+        "kafka",
+        "kerberos",
+        "ldap",
+        "lightweight_delete",
+        "map_type",
+        "parquet",
+        "part_moves_between_shards",
+        "rbac",
+        "s3",
+        "s3_aws",
+        "s3_gcs",
+        "selects",
+        "ssl_server",
+        "tiered_storage",
+        "tiered_storage_aws",
+        "tiered_storage_gcs",
+        "window_functions",
+        "benchmark",
+    ]
+    outputs = ["classic", "nice"]
+    arches = ["amd64", "arm64"]
+    package_post_fix_choices = ["all", "amd64"]
+    parallel_choices = ["on", "off"]
+    artifact_locations = ["internal", "public"]
+    default_package = "docker://clickhouse/clickhouse-server"
+    default_version = "22.3.9.19-alpine"
+    default_package_post_fix = "amd64"
+    default_suite = "all"
+    default_output = "classic"
+    default_parallel = "on"
+    default_artifact_location = "internal"
+    default_arch = "amd64"
+    default_branch = "main"
+
+    parser.add_argument(
+        "--wait",
+        action="store_true",
+        default=False,
+        help="wait for the pipeline to finish, default: False",
+    )
+    parser.add_argument(
+        "--package",
+        metavar="deb://<url>|docker://<image>|https://<url>",
+        action="store",
+        help=(
+            "Either 'deb://', 'docker://', or 'https://' package specifier to use for tests, "
+            f"default: {default_package}."
+            "For example: "
+            "'docker://altinity/clickhouse-server', 'docker://clickhouse/clickhouse-server', "
+            "'deb://builds.altinity.cloud/apt-repo/pool/main', "
+            "'deb://s3.amazonaws.com/clickhouse-builds/37882/f74618722585d507cf5fe6d9284cf32028c67716/package_release',"
+            "'https://s3.amazonaws.com/altinity-build-artifacts/217/acf34c9fc6932aaf9af69425612070b50529f484/package_release/clickhouse-client_22.8.11.17.altinitystable_amd64.deb'"
+        ),
+        default=default_package,
+    )
+    parser.add_argument(
+        "--version",
+        metavar="value",
+        action="store",
+        help=(
+            f"Version of clickhouse to use for tests, default: {default_version}. When package option "
+            "uses docker:// specifier then the version is the image tag. For example: "
+            "'22.3.9.19-alpine', '22.3.8.40.altinitystable', 'latest', etc."
+        ),
+        default=default_version,
+    )
+    parser.add_argument(
+        "--package-postfix",
+        metavar=f"{package_post_fix_choices}",
+        action="store",
+        help=(
+            f"Postfix of the clickhouse-server and clickhouse-client deb package; choices: {package_post_fix_choices}, default: '{default_package_post_fix}'. "
+            "Before 22.3 the server and client packages ended with '_all.deb' and starting with 22.3 they end with '_amd64.deb'."
+        ),
+        default=default_package_post_fix,
+    )
+    parser.add_argument(
+        "-s",
+        "--suite",
+        metavar="name",
+        type=str,
+        action="store",
+        default=default_suite,
+        choices=suites,
+        help=f"choose specific suite you want to run, choices: {suites}, default: '{default_suite}'",
+    )
+    parser.add_argument(
+        "-o",
+        "--output",
+        metavar="type",
+        action="store",
+        type=str,
+        default=default_output,
+        choices=outputs,
+        help=f"choose test program's output format, choices: {outputs}, default: '{default_output}'",
+    )
+    parser.add_argument(
+        "--parallel",
+        action="store",
+        help=f"Enable or disable running tests in parallel, choices: {parallel_choices}, default: '{default_parallel}'.",
+        default=default_parallel,
+        choices=parallel_choices,
+    )
+    parser.add_argument(
+        "--token",
+        metavar="value",
+        type=str,
+        help="GitLab personal access token or private token with api access to the project, default: $GITLAB_TOKEN env variable.",
+        default=os.getenv("GITLAB_TOKEN"),
+    )
+    parser.add_argument(
+        "--options",
+        metavar="value",
+        action="store",
+        help="Extra options that will be added to test run command, default: ''.",
+        default="",
+    )
+    parser.add_argument(
+        "--arch",
+        metavar=f"{arches}",
+        action="store",
+        help=f"Architecture to run the tests on, choices: '{arches}', default: '{default_arch}'.",
+        default=default_arch,
+        choices=arches,
+    )
+    parser.add_argument(
+        "--branch",
+        action="store",
+        help=f"Choose which branch to run the tests on, default: '{default_branch}'",
+        default=default_branch,
+    )
+    parser.add_argument(
+        "--artifacts",
+        action="store",
+        help=f"Specify whether to upload to internal or public s3 bucket, choices: '{artifact_locations}', default: '{default_artifact_location}'. \
+            'altinity-internal-test-reports' for internal upload, 'altinity-test-reports' for public",
+        default=default_artifact_location,
+        choices=artifact_locations,
+    )
+    parser.add_argument(
+        "--debug",
+        default=False,
+        action="store_true",
+        help="enable script debugging mode, default: False",
+    )
+
+    return parser
+
+
 def trigger():
     """CI/CD trigger."""
     args = argparser(
         ArgumentParser(
             "cicd-trigger.py",
-            description="""Script to launch the CI/CD pipeline.
-
-        Either pass GitLab user token using the '--token' option (make sure it has 'api' scope)
-        or even better set GITLAB_TOKEN environemnt variable that will be used by default.
-
-        Examples:
-        
-        Running docker image clickhouse/clickhouse-server:22.3.7.28-alpine:
-            $ ./cicd-trigger.py --package docker://clickhouse/clickhouse-server --version 22.3.7.28-alpine
-
-        Running deb package from Altinity repo:
-            $ ./cicd-trigger.py --package deb://builds.altinity.cloud/apt-repo/pool/main --version 21.8.8.1.altinitystable --package-postfix all`
-        
-        Running deb package from ClickHouse repo, example link 
-        https://s3.amazonaws.com/clickhouse-builds/37882/f74618722585d507cf5fe6d9284cf32028c67716/package_release/clickhouse-client_22.7.1.1738_amd64.deb:
-            $ ./cicd-trigger.py --package deb://s3.amazonaws.com/clickhouse-builds/37882/f74618722585d507cf5fe6d9284cf32028c67716/package_release --version 22.7.1.1738 --package-postfix amd64`
-        """,
+            description=description,
             formatter_class=RawTextHelpFormatter,
         )
     ).parse_args()
+
+    if args.debug:
+        Action.debug = True
 
     with Action("Authenticate using token with https://gitlab.com"):
         gl = gitlab.Gitlab("https://gitlab.com/", private_token=args.token)

@@ -7,7 +7,7 @@ variables:
   version: "22.3.9.19-alpine"
   package: "docker://clickhouse/clickhouse-server"
   package_postfix: "amd64"
-  only: ""
+  suite: "all"
   options: ""
   parallel: "on"
   output: "classic"
@@ -176,7 +176,7 @@ aes-encryption-amd64:
   extends: .regression_amd64
   only:
     variables:
-     - ( $only == "" || $only == "aes_encryption" ) && $arch == "amd64"
+     - ( $suite == "all" || $suite == "aes_encryption" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "aes_encryption"
   script:
@@ -186,7 +186,7 @@ aggregate-functions-amd64:
   extends: .regression_amd64
   only:
     variables:
-     - ( $only == "" || $only == "aggregate_functions" ) && $arch == "amd64"
+     - ( $suite == "all" || $suite == "aggregate_functions" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "aggregate_functions"
   script:
@@ -196,7 +196,7 @@ atomic-insert-amd64:
   extends: .regression_amd64
   only:
     variables:
-     - ( $only == "" || $only == "atomic_insert" ) && $arch == "amd64"
+     - ( $suite == "all" || $suite == "atomic_insert" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "atomic_insert"
   script:
@@ -206,7 +206,7 @@ base-58-amd64:
   extends: .regression_amd64
   only:
     variables:
-     - ( $only == "" || $only == "base_58" ) && $arch == "amd64"
+     - ( $suite == "all" || $suite == "base_58" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "base_58"
   script:
@@ -216,7 +216,7 @@ clickhouse-keeper-amd64:
   extends: .regression_amd64
   only:
     variables:
-      - ( $only == "" || $only == "clickhouse_keeper" ) && $arch == "amd64"
+      - ( $suite == "all" || $suite == "clickhouse_keeper" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "clickhouse_keeper"
   script:
@@ -226,7 +226,7 @@ datetime64-extended-range-amd64:
   extends: .regression_amd64
   only:
     variables:
-      - ( $only == "" || $only == "datetime64_extended_range" ) && $arch == "amd64"
+      - ( $suite == "all" || $suite == "datetime64_extended_range" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "datetime64_extended_range"
   script:
@@ -236,7 +236,7 @@ disk-level-encryption-amd64:
   extends: .regression_amd64
   only:
     variables:
-      - ( $only == "" || $only == "disk_level_encryption" ) && $arch == "amd64"
+      - ( $suite == "all" || $suite == "disk_level_encryption" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "disk_level_encryption"
   script:
@@ -246,7 +246,7 @@ dns-amd64:
   extends: .regression_amd64
   only:
     variables:
-      - ( $only == "" || $only == "dns" ) && $arch == "amd64"
+      - ( $suite == "all" || $suite == "dns" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "dns"
   script:
@@ -256,7 +256,7 @@ example-amd64:
   extends: .regression_amd64
   only:
     variables:
-      - ( $only == "" || $only == "example" ) && $arch == "amd64"
+      - ( $suite == "all" || $suite == "example" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "example"
   script:
@@ -266,7 +266,7 @@ extended-precision-data-types-amd64:
   extends: .regression_amd64
   only:
     variables:
-      - ( $only == "" || $only == "extended_precision_data_types" ) && $arch == "amd64"
+      - ( $suite == "all" || $suite == "extended_precision_data_types" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "extended_precision_data_types"
   script:
@@ -276,7 +276,7 @@ kafka-amd64:
   extends: .regression_amd64
   only:
     variables:
-    - ( $only == "" || $only == "kafka" ) && $arch == "amd64"
+    - ( $suite == "all" || $suite == "kafka" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "kafka"
   script:
@@ -286,7 +286,7 @@ kerberos-amd64:
   extends: .regression_amd64
   only:
     variables:
-      - ( $only == "" || $only == "kerberos" ) && $arch == "amd64"
+      - ( $suite == "all" || $suite == "kerberos" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "kerberos"
   script:
@@ -298,7 +298,7 @@ ldap-authentication-amd64:
   extends: .regression_amd64
   only:
     variables:
-      - ( $only == "" || $only == "ldap" ) && $arch == "amd64"
+      - ( $suite == "all" || $suite == "ldap" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "ldap/authentication"
   script:
@@ -309,7 +309,7 @@ ldap-external-user-directory-amd64:
   extends: .regression_amd64
   only:
     variables:
-      - ( $only == "" || $only == "ldap" ) && $arch == "amd64"
+      - ( $suite == "all" || $suite == "ldap" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "ldap/external_user_directory"
   script:
@@ -320,7 +320,7 @@ ldap-role-mapping-amd64:
   extends: .regression_amd64
   only:
     variables:
-      - ( $only == "" || $only == "ldap" ) && $arch == "amd64"
+      - ( $suite == "all" || $suite == "ldap" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "ldap/role_mapping"
   script:
@@ -331,7 +331,7 @@ lightweight-delete-amd64:
   image: registry.gitlab.com/altinity-qa/clickhouse/cicd/regression/benchmark/multiarch:latest
   only:
     variables:
-      - ( $only == "" || $only == "lightweight_delete" ) && $arch == "amd64"
+      - ( $suite == "all" || $suite == "lightweight_delete" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "lightweight_delete"
   script:
@@ -342,7 +342,7 @@ map-type-amd64:
   extends: .regression_amd64
   only:
     variables:
-      - ( $only == "" || $only == "map_type" )  && $arch == "amd64"
+      - ( $suite == "all" || $suite == "map_type" )  && $arch == "amd64"
   variables:
      FOLDER_PATH: "map_type"
   script:
@@ -352,7 +352,7 @@ parquet-amd64:
   extends: .regression_amd64
   only:
     variables:
-     - ( $only == "" || $only == "parquet" ) && $arch == "amd64"
+     - ( $suite == "all" || $suite == "parquet" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "parquet"
      SUITE_OPTIONS: "--storage minio --storage aws_s3"
@@ -363,7 +363,7 @@ part-moves-between-shards-amd64:
   extends: .regression_amd64
   only:
     variables:
-      - ( $only == "" || $only == "part_moves_between_shards" ) && $arch == "amd64"
+      - ( $suite == "all" || $suite == "part_moves_between_shards" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "part_moves_between_shards"
   script:
@@ -373,7 +373,7 @@ rbac-amd64:
   extends: .regression_amd64
   only:
     variables:
-      - ( $only == "" || $only == "rbac" ) && $arch == "amd64"
+      - ( $suite == "all" || $suite == "rbac" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "rbac"
   script:
@@ -383,7 +383,7 @@ selects-amd64:
   extends: .regression_amd64
   only:
     variables:
-      - ( $only == "" || $only == "selects" ) && $arch == "amd64"
+      - ( $suite == "all" || $suite == "selects" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "selects"
   script:
@@ -393,7 +393,7 @@ s3-minio-amd64:
   extends: .regression_amd64
   only:
     variables:
-      - ( $only == "" || $only == "s3" ) && $arch == "amd64"
+      - ( $suite == "all" || $suite == "s3" ) && $arch == "amd64"
   variables:
     SUITE_OPTIONS: "--storage minio"
     FOLDER_PATH: "s3"
@@ -406,7 +406,7 @@ s3-aws-amd64:
   extends: .regression_amd64
   only:
     variables:
-      - $s3_aws == "1" && ($only == "" || $only == "s3") && $arch == "amd64"
+      - $s3_aws == "1" && ($suite == "all" || $suite == "s3") && $arch == "amd64"
   variables:
     SUITE_OPTIONS: "--storage aws_s3"
     FOLDER_PATH: "s3"
@@ -419,7 +419,7 @@ s3-gcs-amd64:
   extends: .regression_amd64
   only:
     variables:
-      - $s3_gcs == "1"  && ($only == "" || $only == "s3") && $arch == "amd64"
+      - $s3_gcs == "1"  && ($suite == "all" || $suite == "s3") && $arch == "amd64"
   variables:
     SUITE_OPTIONS: "--storage gcs"
     FOLDER_PATH: "s3"
@@ -433,7 +433,7 @@ s3-benchmark-amd64:
   image: registry.gitlab.com/altinity-public/container-images/benchmark/multiarch:22.8
   only:
     variables:
-      - ( $only == "" || $only == "benchmark" ) && $arch == "amd64"
+      - ( $suite == "all" || $suite == "benchmark" ) && $arch == "amd64"
   variables: 
     FOLDER_PATH: "s3"
     SUBFOLDER_PATH: "/benchmark"
@@ -447,7 +447,7 @@ ssl-server-amd64:
   extends: .regression_amd64
   only:
     variables:
-      - ( $only == "" || $only == "ssl_server" ) && $arch == "amd64"
+      - ( $suite == "all" || $suite == "ssl_server" ) && $arch == "amd64"
   variables: 
     FOLDER_PATH: "ssl_server"
   script:
@@ -456,7 +456,7 @@ ssl-server-amd64:
 tiered-storage-original-amd64:
   only:
     variables:
-      - ( $only == "" || $only == "tiered_storage" ) && $arch == "amd64"
+      - ( $suite == "all" || $suite == "tiered_storage" ) && $arch == "amd64"
   extends: .regression_amd64
   variables: 
     FOLDER_PATH: "tiered_storage"
@@ -468,7 +468,7 @@ tiered-storage-minio-amd64:
   extends: .regression_amd64
   only:
     variables:
-      - ( $only == "" || $only == "tiered_storage" ) && $arch == "amd64"
+      - ( $suite == "all" || $suite == "tiered_storage" ) && $arch == "amd64"
   variables: 
     FOLDER_PATH: "tiered_storage"
     SUITE_OPTIONS: "--with-minio"
@@ -481,7 +481,7 @@ tiered-storage-aws-amd64:
   extends: .regression_amd64
   only:
     variables:
-      - $tiered_storage_aws  == "1" && ($only == "" || $only == "tiered_storage") && $arch == "amd64"
+      - $tiered_storage_aws  == "1" && ($suite == "all" || $suite == "tiered_storage") && $arch == "amd64"
   variables: 
     FOLDER_PATH: "tiered_storage"
     SUITE_OPTIONS: "--with-s3amazon"
@@ -494,7 +494,7 @@ tiered-storage-gcs-amd64:
   extends: .regression_amd64
   only:
     variables:
-      - $tiered_storage_gcs  == "1" && ($only == "" || $only == "tiered_storage") && $arch == "amd64"
+      - $tiered_storage_gcs  == "1" && ($suite == "all" || $suite == "tiered_storage") && $arch == "amd64"
   variables: 
     FOLDER_PATH: "tiered_storage"
     SUITE_OPTIONS: "--with-s3gcs"
@@ -506,7 +506,7 @@ window-functions-amd64:
   extends: .regression_amd64
   only:
     variables:
-      - ( $only == "" || $only == "window_functions" ) && $arch == "amd64"
+      - ( $suite == "all" || $suite == "window_functions" ) && $arch == "amd64"
   variables: 
     FOLDER_PATH: "window_functions"
   script:
@@ -516,7 +516,7 @@ aes-encryption-arm64:
   extends: .regression_arm64
   only:
     variables:
-     - ( $only == "" || $only == "aes_encryption" ) && $arch == "arm64"
+     - ( $suite == "all" || $suite == "aes_encryption" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "aes_encryption"
   script:
@@ -526,7 +526,7 @@ aggregate-functions-arm64:
   extends: .regression_arm64
   only:
     variables:
-     - ( $only == "" || $only == "aggregate_functions" ) && $arch == "arm64"
+     - ( $suite == "all" || $suite == "aggregate_functions" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "aggregate_functions"
   script:
@@ -536,7 +536,7 @@ atomic-insert-arm64:
   extends: .regression_arm64
   only:
     variables:
-     - ( $only == "" || $only == "atomic_insert" ) && $arch == "arm64"
+     - ( $suite == "all" || $suite == "atomic_insert" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "atomic_insert"
   script:
@@ -546,7 +546,7 @@ base-58-arm64:
   extends: .regression_arm64
   only:
     variables:
-     - ( $only == "" || $only == "base_58" ) && $arch == "arm64"
+     - ( $suite == "all" || $suite == "base_58" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "base_58"
   script:
@@ -556,7 +556,7 @@ clickhouse-keeper-arm64:
   extends: .regression_arm64
   only:
     variables:
-      - ( $only == "" || $only == "clickhouse_keeper" ) && $arch == "arm64"
+      - ( $suite == "all" || $suite == "clickhouse_keeper" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "clickhouse_keeper"
   script:
@@ -566,7 +566,7 @@ datetime64-extended-range-arm64:
   extends: .regression_arm64
   only:
     variables:
-      - ( $only == "" || $only == "datetime64_extended_range" ) && $arch == "arm64"
+      - ( $suite == "all" || $suite == "datetime64_extended_range" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "datetime64_extended_range"
   script:
@@ -576,7 +576,7 @@ disk-level-encryption-arm64:
   extends: .regression_arm64
   only:
     variables:
-      - ( $only == "" || $only == "disk_level_encryption" ) && $arch == "arm64"
+      - ( $suite == "all" || $suite == "disk_level_encryption" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "disk_level_encryption"
   script:
@@ -586,7 +586,7 @@ example-arm64:
   extends: .regression_arm64
   only:
     variables:
-      - ( $only == "" || $only == "example" ) && $arch == "arm64"
+      - ( $suite == "all" || $suite == "example" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "example"
   script:
@@ -596,7 +596,7 @@ extended-precision-data-types-arm64:
   extends: .regression_arm64
   only:
     variables:
-      - ( $only == "" || $only == "extended_precision_data_types" ) && $arch == "arm64"
+      - ( $suite == "all" || $suite == "extended_precision_data_types" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "extended_precision_data_types"
   script:
@@ -606,7 +606,7 @@ kafka-arm64:
   extends: .regression_arm64
   only:
     variables:
-    - ( $only == "" || $only == "kafka" ) && $arch == "arm64"
+    - ( $suite == "all" || $suite == "kafka" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "kafka"
   script:
@@ -616,7 +616,7 @@ kerberos-arm64:
   extends: .regression_arm64
   only:
     variables:
-      - ( $only == "" || $only == "kerberos" ) && $arch == "arm64"
+      - ( $suite == "all" || $suite == "kerberos" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "kerberos"
   script:
@@ -628,7 +628,7 @@ ldap-authentication-arm64:
   extends: .regression_arm64
   only:
     variables:
-      - ( $only == "" || $only == "ldap" ) && $arch == "arm64"
+      - ( $suite == "all" || $suite == "ldap" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "ldap/authentication"
   script:
@@ -639,7 +639,7 @@ ldap-external-user-directory-arm64:
   extends: .regression_arm64
   only:
     variables:
-      - ( $only == "" || $only == "ldap" ) && $arch == "arm64"
+      - ( $suite == "all" || $suite == "ldap" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "ldap/external_user_directory"
   script:
@@ -650,7 +650,7 @@ ldap-role-mapping-arm64:
   extends: .regression_arm64
   only:
     variables:
-      - ( $only == "" || $only == "ldap" ) && $arch == "arm64"
+      - ( $suite == "all" || $suite == "ldap" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "ldap/role_mapping"
   script:
@@ -661,7 +661,7 @@ lightweight-delete-arm64:
   image: registry.gitlab.com/altinity-qa/clickhouse/cicd/regression/benchmark/multiarch:latest
   only:
     variables:
-      - ( $only == "" || $only == "lightweight_delete" ) && $arch == "arm64"
+      - ( $suite == "all" || $suite == "lightweight_delete" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "lightweight_delete"
   script:
@@ -672,7 +672,7 @@ map-type-arm64:
   extends: .regression_arm64
   only:
     variables:
-      - ($only == "" || $only == "map_type") && $arch == "arm64"
+      - ($suite == "all" || $suite == "map_type") && $arch == "arm64"
   variables:
      FOLDER_PATH: "map_type"
   script:
@@ -682,7 +682,7 @@ parquet-arm64:
   extends: .regression_arm64
   only:
     variables:
-     - ( $only == "" || $only == "parquet" ) && $arch == "arm64"
+     - ( $suite == "all" || $suite == "parquet" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "parquet"
   script:
@@ -692,7 +692,7 @@ part-moves-between-shards-arm64:
   extends: .regression_arm64
   only:
     variables:
-      - ( $only == "" || $only == "part_moves_between_shards" ) && $arch == "arm64"
+      - ( $suite == "all" || $suite == "part_moves_between_shards" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "part_moves_between_shards"
   script:
@@ -702,7 +702,7 @@ rbac-arm64:
   extends: .regression_arm64
   only:
     variables:
-      - ( $only == "" || $only == "rbac" ) && $arch == "arm64"
+      - ( $suite == "all" || $suite == "rbac" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "rbac"
   script:
@@ -712,7 +712,7 @@ selects-arm64:
   extends: .regression_arm64
   only:
     variables:
-      - ( $only == "" || $only == "selects" ) && $arch == "arm64"
+      - ( $suite == "all" || $suite == "selects" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "selects"
   script:
@@ -722,7 +722,7 @@ s3-minio-arm64:
   extends: .regression_arm64
   only:
     variables:
-      - ( $only == "" || $only == "s3" ) && $arch == "arm64"
+      - ( $suite == "all" || $suite == "s3" ) && $arch == "arm64"
   variables:
     SUITE_OPTIONS: "--storage minio"
     FOLDER_PATH: "s3"
@@ -735,7 +735,7 @@ s3-aws-arm64:
   extends: .regression_arm64
   only:
     variables:
-      - $s3_aws == "1" && ($only == "" || $only == "s3") && $arch == "arm64"
+      - $s3_aws == "1" && ($suite == "all" || $suite == "s3") && $arch == "arm64"
   variables:
     SUITE_OPTIONS: "--storage aws_s3"
     FOLDER_PATH: "s3"
@@ -748,7 +748,7 @@ s3-gcs-arm64:
   extends: .regression_arm64
   only:
     variables:
-      - $s3_gcs == "1"  && ($only == "" || $only == "s3") && $arch == "arm64"
+      - $s3_gcs == "1"  && ($suite == "all" || $suite == "s3") && $arch == "arm64"
   variables:
     SUITE_OPTIONS: "--storage gcs"
     FOLDER_PATH: "s3"
@@ -762,7 +762,7 @@ s3-benchmark-arm64:
   image: registry.gitlab.com/altinity-public/container-images/benchmark/multiarch:22.8
   only:
     variables:
-      - ( $only == "" || $only == "benchmark" ) && $arch == "arm64"
+      - ( $suite == "all" || $suite == "benchmark" ) && $arch == "arm64"
   variables: 
     FOLDER_PATH: "s3"
     SUBFOLDER_PATH: "/benchmark"
@@ -776,7 +776,7 @@ ssl-server-arm64:
   extends: .regression_arm64
   only:
     variables:
-      - ( $only == "" || $only == "ssl_server" ) && $arch == "arm64"
+      - ( $suite == "all" || $suite == "ssl_server" ) && $arch == "arm64"
   variables: 
     FOLDER_PATH: "ssl_server"
   script:
@@ -785,7 +785,7 @@ ssl-server-arm64:
 tiered-storage-original-arm64:
   only:
     variables:
-      - ( $only == "" || $only == "tiered_storage" ) && $arch == "arm64"
+      - ( $suite == "all" || $suite == "tiered_storage" ) && $arch == "arm64"
   extends: .regression_arm64
   variables: 
     FOLDER_PATH: "tiered_storage"
@@ -797,7 +797,7 @@ tiered-storage-minio-arm64:
   extends: .regression_arm64
   only:
     variables:
-      - ( $only == "" || $only == "tiered_storage" ) && $arch == "arm64"
+      - ( $suite == "all" || $suite == "tiered_storage" ) && $arch == "arm64"
   variables: 
     FOLDER_PATH: "tiered_storage"
     SUITE_OPTIONS: "--with-minio"
@@ -810,7 +810,7 @@ tiered-storage-aws-arm64:
   extends: .regression_arm64
   only:
     variables:
-      - $tiered_storage_aws  == "1" && ($only == "" || $only == "tiered_storage") && $arch == "arm64"
+      - $tiered_storage_aws  == "1" && ($suite == "all" || $suite == "tiered_storage") && $arch == "arm64"
   variables: 
     FOLDER_PATH: "tiered_storage"
     SUITE_OPTIONS: "--with-s3amazon"
@@ -823,7 +823,7 @@ tiered-storage-gcs-arm64:
   extends: .regression_arm64
   only:
     variables:
-      - $tiered_storage_gcs  == "1" && ($only == "" || $only == "tiered_storage") && $arch == "arm64"
+      - $tiered_storage_gcs  == "1" && ($suite == "all" || $suite == "tiered_storage") && $arch == "arm64"
   variables: 
     FOLDER_PATH: "tiered_storage"
     SUITE_OPTIONS: "--with-s3gcs"
@@ -835,7 +835,7 @@ window-functions-arm64:
   extends: .regression_arm64
   only:
     variables:
-      - ( $only == "" || $only == "window_functions" ) && $arch == "arm64"
+      - ( $suite == "all" || $suite == "window_functions" ) && $arch == "arm64"
   variables: 
     FOLDER_PATH: "window_functions"
   script:
