@@ -2,7 +2,7 @@ version: '2.3'
 
 services:
   clickhouse:
-    image: registry.gitlab.com/altinity-public/container-images/test/clickhouse-integration-test:21.12
+    image: registry.gitlab.com/altinity-public/container-images/test/clickhouse-intergration-test-pyarrow:4.0
     init: true
     expose:
       - "9000"
@@ -12,6 +12,8 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.xml:/etc/clickhouse-server/config.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.xml:/etc/clickhouse-server/users.xml"
       - "${CLICKHOUSE_TESTS_DIR}/test_files/break-hash:/var/lib/break-hash"
+      - "${CLICKHOUSE_TESTS_DIR}/test_files/https_app_file.py:/https_app_file.py"
+      - "${CLICKHOUSE_TESTS_DIR}/test_files/http_app_file.py:/http_app_file.py"
       - "${CLICKHOUSE_TESTS_SERVER_BIN_PATH:-/usr/bin/clickhouse}:/usr/bin/clickhouse"
       - "${CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH:-/usr/bin/clickhouse-odbc-bridge}:/usr/bin/clickhouse-odbc-bridge"
     entrypoint: bash -c "tail -f /dev/null"

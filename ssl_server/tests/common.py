@@ -663,3 +663,92 @@ def clickhouse_server_verification_mode(self, mode):
         )
 
     return
+
+
+@TestStep(Given)
+def create_crt_and_key(self, name, node=None, common_name=""):
+    """Create certificate and private key with specified name."""
+    if node is None:
+        node = self.context.node
+
+    with Given("I generate private key"):
+        private_key = create_rsa_private_key(outfile=f"{name}.key", passphrase="")
+
+    with And("I generate the certificate signing request"):
+        csr = create_certificate_signing_request(
+            outfile=f"{name}.csr",
+            common_name=common_name,
+            key=private_key,
+            passphrase="",
+        )
+
+    with And("I sign the certificate with my own CA"):
+        crt = sign_certificate(
+            outfile=f"{name}.crt",
+            csr=csr,
+            ca_certificate=current().context.my_own_ca_crt,
+            ca_key=current().context.my_own_ca_key,
+            ca_passphrase="",
+        )
+
+    with And("I validate the certificate"):
+        validate_certificate(
+            certificate=crt, ca_certificate=current().context.my_own_ca_crt
+        )
+
+    with And("I copy the certificate and key", description=f"{node}"):
+        copy(dest_node=node, src_path=crt, dest_path=f"/{name}.crt")
+        copy(dest_node=node, src_path=private_key, dest_path=f"/{name}.key")
+
+
+@TestStep(Given)
+def flask_server(self, protocol="https"):
+    """Run specified flask server"""
+    assert protocol == "https" or protocol == "http", error("invalid protocol")
+
+    with self.context.cluster.shell(self.context.node.name) as bash:
+        cmd = f"python3 /{protocol}_app_file.py"
+        port = "5001" if protocol == "https" else "5000"
+
+        try:
+            with Given("I launch the flask server"):
+                bash.send(cmd)
+                bash.expect(cmd, escape=True)
+                bash.expect("\n")
+                bash.expect(f"Serving Flask app '{protocol} server'", escape=True)
+
+            yield
+
+        finally:
+            while True:
+                try:
+                    bash.expect("\n")
+                except Exception:
+                    break
+
+            with Finally("I kill the flask server"):
+                bash.send(
+                    f"ss -ltnup | grep '{port}' | awk -F',' '/pid=/{{print $2}}' | awk -F'=' '{{print $2}}'"
+                )
+
+
+@TestStep(Then)
+def https_server_connection(self, success=True, options=None, node=None):
+    """Check reading data from an https server with specified clickhouse-server config."""
+    if node is None:
+        node = self.context.node
+
+    if success:
+        message = "12345"
+    else:
+        message = "Exception:"
+
+    if options is not None:
+        with When("I update the clickhouse-server configs"):
+            add_ssl_client_configuration_file(entries=options)
+
+    with Then("I read data from the server using `url` table function"):
+        node.query(
+            "SELECT * FROM url('https://127.0.0.1:5001/data', 'CSV') FORMAT CSV",
+            message=message,
+        )
