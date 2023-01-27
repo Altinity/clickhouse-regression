@@ -116,34 +116,8 @@ def feature(self, node="clickhouse1"):
     with Given("I enable SSL"):
         enable_ssl(my_own_ca_key_passphrase="", server_key_passphrase="")
 
-    with And("I generate client key"):
-        client_key = create_rsa_private_key(outfile="client.key", passphrase="")
-
-    with And("I generate client certificate signing request"):
-        client_csr = create_certificate_signing_request(
-            outfile="client.csr",
-            common_name="",
-            key=client_key,
-            passphrase="",
-        )
-
-    with And("I sign client certificate with my own CA"):
-        client_crt = sign_certificate(
-            outfile="client.crt",
-            csr=client_csr,
-            ca_certificate=current().context.my_own_ca_crt,
-            ca_key=current().context.my_own_ca_key,
-            ca_passphrase="",
-        )
-
-    with And("I validate client certificate"):
-        validate_certificate(
-            certificate=client_crt, ca_certificate=current().context.my_own_ca_crt
-        )
-
-    with And("I copy client certificate and key", description=f"{self.context.node}"):
-        copy(dest_node=self.context.node, src_path=client_crt, dest_path="/client.crt")
-        copy(dest_node=self.context.node, src_path=client_key, dest_path="/client.key")
+    with And("I generate client private key and certificate"):
+        create_crt_and_key(name="client")
 
     with And("I create the clickhouse-client config entries"):
         self.context.clickhouse_client_entries = {

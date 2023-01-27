@@ -4,6 +4,7 @@ from ssl_server.tests.common import *
 from ssl_server.tests.ssl_context import enable_ssl
 from ssl_server.requirements import *
 
+
 fips_compatible_tlsv1_2_cipher_suites = [
     "ECDHE-RSA-AES128-GCM-SHA256",
     "ECDHE-RSA-AES256-GCM-SHA384",
@@ -505,6 +506,113 @@ def server_verification_mode(self, mode):
     Feature(run=server_https_connection)
 
 
+@TestOutline
+def http_server(self):
+    """Check clickhouse-server connection to http server"""
+    node = self.context.node
+
+    with Given("I launch the http flask server"):
+        flask_server(protocol="http")
+
+    with Then("I read data from the server using `url` table function"):
+        output = node.query(
+            "SELECT * FROM url('http://127.0.0.1:5000/data', 'CSV') FORMAT CSV"
+        ).output
+        assert output == "12345", error()
+
+
+@TestSuite
+def https_server_checks(self):
+    """Check clickhouse-server connection to https server with different configs."""
+
+    with Given("I launch the https flask server"):
+        flask_server(protocol="https")
+
+    with Check("Connection with no protocols should be rejected"):
+        https_server_connection(
+            options={
+                "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_2,tlsv1_3",
+            },
+            success=False,
+        )
+
+    with Check(f"TLSv1.2 suite connection should work"):
+        https_server_connection(
+            options={
+                "requireTLSv1_2": "true",
+                "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3",
+            },
+            success=True,
+        )
+
+    with Check("TLSv1 suite connection should be rejected"):
+        https_server_connection(
+            options={
+                "requireTLSv1": "true",
+                "disableProtocols": "sslv2,sslv3,tlsv1_1,tlsv1_2,tlsv1_3",
+            },
+            success=False,
+        )
+
+    with Check("TLSv1.1 suite connection should be rejected"):
+        https_server_connection(
+            options={
+                "requireTLSv1_1": "true",
+                "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_2,tlsv1_3",
+            },
+            success=False,
+        )
+
+    with Check("TLSv1.3 suite connection should be rejected"):
+        https_server_connection(
+            options={
+                "requireTLSv1_3": "true",
+                "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_2",
+            },
+            success=False,
+        )
+
+    with Check(f"just disabling TLSv1 suite connection should work"):
+        https_server_connection(
+            options={"disableProtocols": "tlsv1"},
+            success=True,
+        )
+
+    with Check(f"just disabling TLSv1.1 suite connection should work"):
+        https_server_connection(
+            options={"disableProtocols": "tlsv1_1"},
+            success=True,
+        )
+
+    with Check(f"just disabling TLSv1.3 suite connection should work"):
+        https_server_connection(
+            options={"disableProtocols": "tlsv1_3"},
+            success=True,
+        )
+
+    for cipher in fips_compatible_tlsv1_2_cipher_suites:
+        with Check(f"connection using FIPS compatible cipher {cipher} should work"):
+            https_server_connection(
+                options={
+                    "requireTLSv1_2": "true",
+                    "cipherList": cipher,
+                    "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3",
+                },
+                success=True,
+            )
+
+    for cipher in all_ciphers:
+        if cipher in fips_compatible_tlsv1_2_cipher_suites:
+            continue
+        with Check(
+            f"connection using non-FIPS compatible cipher {cipher} should be rejected"
+        ):
+            https_server_connection(
+                options={"cipherList": cipher, "disableProtocols": ""},
+                success=False,
+            )
+
+
 @TestFeature
 @Requirements()
 def server(self, node=None):
@@ -575,6 +683,21 @@ def fips_check(self):
 
 
 @TestFeature
+@Name("clickhouse-server connecting as client")
+@Requirements(
+    RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_Client_Config("1.0")
+)
+def server_as_client(self):
+    """Check connection from clickhouse-server when it is configured using openSSL client configs."""
+
+    with Given("I generate private key and certificate for https server"):
+        create_crt_and_key(name="https_server", common_name="127.0.0.1")
+
+    Suite(run=https_server_checks)
+    Scenario(run=http_server)
+
+
+@TestFeature
 @Name("fips")
 @Requirements()
 def feature(self, node="clickhouse1"):
@@ -590,3 +713,4 @@ def feature(self, node="clickhouse1"):
 
     Feature(run=server)
     Feature(run=clickhouse_client)
+    Feature(run=server_as_client)
