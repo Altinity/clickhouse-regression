@@ -59,15 +59,15 @@ description = """Script to launch CI/CD pipeline.
     Examples:
     
     Run all available suites on master branch with a specified token:
-        python3 cicd_trigger.py --token $GITLAB_TOKEN
+        python3 cicd_trigger.py --branch master --token $GITLAB_TOKEN
 
-     Run all available suites on master branch and wait for it to complete:
+     Run all available suites wait for the run to complete:
         python3 cicd_trigger.py --wait
 
-    Run all available suites on master branch and upload artifacts to public aws s3 bucket:
+    Run all available suites and upload artifacts to public aws s3 bucket:
         python3 cicd_trigger.py --artifacts public
 
-    Run all available suites on master branch on a specific build:
+    Run all available suites on a specific build:
         python3 cicd_trigger.py --package https://s3.amazonaws.com/altinity-build-artifacts/217/c14c89992f760772f487f91fdb8bb71367b51e81/package_release/clickhouse-common-static_22.8.11.17.altinityfips_amd64.deb --version 22.8.11.17.altinityfips
 
     Run aes_encryption suite:
