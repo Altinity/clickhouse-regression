@@ -356,8 +356,8 @@ def trigger():
             variables["version"] = args.version
         if args.package_postfix:
             variables["package_postfix"] = args.package_postfix
-        if args.only:
-            variables["only"] = args.only
+        if args.suite:
+            variables["suite"] = args.suite
         if args.output:
             variables["output"] = args.output
         if args.parallel:
