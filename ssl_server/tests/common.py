@@ -1,8 +1,84 @@
 import os
+import ssl
 from testflows.core import *
 from testflows.asserts import error
 from testflows.stash import stashed
 from helpers.common import *
+from ssl_server.test_files.https_app_file import ciphers
+from ssl_server.test_files.https_app_file import https_protocol
+
+
+fips_compatible_tlsv1_2_cipher_suites = [
+    "ECDHE-RSA-AES128-GCM-SHA256",
+    "ECDHE-RSA-AES256-GCM-SHA384",
+    "ECDHE-ECDSA-AES128-GCM-SHA256",
+    "ECDHE-ECDSA-AES256-GCM-SHA384",
+    "AES128-GCM-SHA256",
+    "AES256-GCM-SHA384",
+]
+
+all_ciphers = [
+    "TLS_AES_256_GCM_SHA384",
+    "TLS_CHACHA20_POLY1305_SHA256",
+    "TLS_AES_128_GCM_SHA256",
+    "ECDHE-ECDSA-AES256-GCM-SHA384",
+    "ECDHE-RSA-AES256-GCM-SHA384",
+    "DHE-RSA-AES256-GCM-SHA384",
+    "ECDHE-ECDSA-CHACHA20-POLY1305",
+    "ECDHE-RSA-CHACHA20-POLY1305",
+    "DHE-RSA-CHACHA20-POLY1305",
+    "ECDHE-ECDSA-AES128-GCM-SHA256",
+    "ECDHE-RSA-AES128-GCM-SHA256",
+    "DHE-RSA-AES128-GCM-SHA256",
+    "ECDHE-ECDSA-AES256-SHA384",
+    "ECDHE-RSA-AES256-SHA384",
+    "DHE-RSA-AES256-SHA256",
+    "ECDHE-ECDSA-AES128-SHA256",
+    "ECDHE-RSA-AES128-SHA256",
+    "DHE-RSA-AES128-SHA256",
+    "ECDHE-ECDSA-AES256-SHA",
+    "ECDHE-RSA-AES256-SHA",
+    "DHE-RSA-AES256-SHA",
+    "ECDHE-ECDSA-AES128-SHA",
+    "ECDHE-RSA-AES128-SHA",
+    "DHE-RSA-AES128-SHA",
+    "RSA-PSK-AES256-GCM-SHA384",
+    "DHE-PSK-AES256-GCM-SHA384",
+    "RSA-PSK-CHACHA20-POLY1305",
+    "DHE-PSK-CHACHA20-POLY1305",
+    "ECDHE-PSK-CHACHA20-POLY1305",
+    "AES256-GCM-SHA384",
+    "PSK-AES256-GCM-SHA384",
+    "PSK-CHACHA20-POLY1305",
+    "RSA-PSK-AES128-GCM-SHA256",
+    "DHE-PSK-AES128-GCM-SHA256",
+    "AES128-GCM-SHA256",
+    "PSK-AES128-GCM-SHA256",
+    "AES256-SHA256",
+    "AES128-SHA256",
+    "ECDHE-PSK-AES256-CBC-SHA384",
+    "ECDHE-PSK-AES256-CBC-SHA",
+    "SRP-RSA-AES-256-CBC-SHA",
+    "SRP-AES-256-CBC-SHA",
+    "RSA-PSK-AES256-CBC-SHA384",
+    "DHE-PSK-AES256-CBC-SHA384",
+    "RSA-PSK-AES256-CBC-SHA",
+    "DHE-PSK-AES256-CBC-SHA",
+    "AES256-SHA",
+    "PSK-AES256-CBC-SHA384",
+    "PSK-AES256-CBC-SHA",
+    "ECDHE-PSK-AES128-CBC-SHA256",
+    "ECDHE-PSK-AES128-CBC-SHA",
+    "SRP-RSA-AES-128-CBC-SHA",
+    "SRP-AES-128-CBC-SHA",
+    "RSA-PSK-AES128-CBC-SHA256",
+    "DHE-PSK-AES128-CBC-SHA256",
+    "RSA-PSK-AES128-CBC-SHA",
+    "DHE-PSK-AES128-CBC-SHA",
+    "AES128-SHA",
+    "PSK-AES128-CBC-SHA256",
+    "PSK-AES128-CBC-SHA",
+]
 
 
 @TestStep(Given)
@@ -709,9 +785,16 @@ def flask_server(self, protocol="https"):
     with self.context.cluster.shell(self.context.node.name) as bash:
         cmd = f"python3 /{protocol}_app_file.py"
         port = "5001" if protocol == "https" else "5000"
+        description = (
+            f"protocol: {https_protocol}, ciphers: {fips_compatible_tlsv1_2_cipher_suites}"
+            if protocol == "https"
+            else ""
+        )
 
         try:
-            with Given("I launch the flask server"):
+            with Given(
+                f"I launch the {protocol} flask server", description=description
+            ):
                 bash.send(cmd)
                 bash.expect(cmd, escape=True)
                 bash.expect("\n")
@@ -728,12 +811,12 @@ def flask_server(self, protocol="https"):
 
             with Finally("I kill the flask server"):
                 bash.send(
-                    f"ss -ltnup | grep '{port}' | awk -F',' '/pid=/{{print $2}}' | awk -F'=' '{{print $2}}'"
+                    f"ss -ltnup | grep '{port}' | awk -F',' '/pid=/{{print $2}}' | awk -F'=' '{{print $2}}' | xargs kill"
                 )
 
 
 @TestStep(Then)
-def https_server_connection(self, success=True, options=None, node=None):
+def https_server_url_function_connection(self, success=True, options=None, node=None):
     """Check reading data from an https server with specified clickhouse-server config."""
     if node is None:
         node = self.context.node
@@ -745,10 +828,44 @@ def https_server_connection(self, success=True, options=None, node=None):
 
     if options is not None:
         with When("I update the clickhouse-server configs"):
-            add_ssl_client_configuration_file(entries=options)
+            add_ssl_client_configuration_file(entries=options, restart=True)
 
     with Then("I read data from the server using `url` table function"):
         node.query(
             "SELECT * FROM url('https://127.0.0.1:5001/data', 'CSV') FORMAT CSV",
             message=message,
         )
+
+
+@TestStep(Given)
+def https_server_https_dictionary_connection(
+    self, name=None, node=None, success=True, options=None
+):
+    """Check reading data from a dictionary sourced from an https server"""
+    if node is None:
+        node = self.context.node
+
+    if name is None:
+        name = "dictionary_" + getuid()
+
+    if success:
+        message = "12345"
+    else:
+        message = "Exception:"
+
+    if options is not None:
+        with When("I update the clickhouse-server configs"):
+            add_ssl_client_configuration_file(entries=options, restart=True)
+
+    try:
+        with When("I create a dictionary using an https source"):
+            node.query(
+                f"CREATE DICTIONARY {name} (c1 Int64) PRIMARY KEY c1 SOURCE(HTTP(URL 'https://127.0.0.1:5001/data' FORMAT 'CSV')) LIFETIME(MIN 0 MAX 0) LAYOUT(FLAT())"
+            )
+
+        with Then("I select data from the dictionary"):
+            node.query(f"SELECT * FROM {name} FORMAT CSV", message=message)
+
+    finally:
+        with Finally("I remove the dictionary"):
+            node.query(f"DROP DICTIONARY IF EXISTS {name}")
