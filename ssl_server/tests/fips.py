@@ -5,79 +5,6 @@ from ssl_server.tests.ssl_context import enable_ssl
 from ssl_server.requirements import *
 
 
-fips_compatible_tlsv1_2_cipher_suites = [
-    "ECDHE-RSA-AES128-GCM-SHA256",
-    "ECDHE-RSA-AES256-GCM-SHA384",
-    "ECDHE-ECDSA-AES128-GCM-SHA256",
-    "ECDHE-ECDSA-AES256-GCM-SHA384",
-    "AES128-GCM-SHA256",
-    "AES256-GCM-SHA384",
-]
-
-all_ciphers = [
-    "TLS_AES_256_GCM_SHA384",
-    "TLS_CHACHA20_POLY1305_SHA256",
-    "TLS_AES_128_GCM_SHA256",
-    "ECDHE-ECDSA-AES256-GCM-SHA384",
-    "ECDHE-RSA-AES256-GCM-SHA384",
-    "DHE-RSA-AES256-GCM-SHA384",
-    "ECDHE-ECDSA-CHACHA20-POLY1305",
-    "ECDHE-RSA-CHACHA20-POLY1305",
-    "DHE-RSA-CHACHA20-POLY1305",
-    "ECDHE-ECDSA-AES128-GCM-SHA256",
-    "ECDHE-RSA-AES128-GCM-SHA256",
-    "DHE-RSA-AES128-GCM-SHA256",
-    "ECDHE-ECDSA-AES256-SHA384",
-    "ECDHE-RSA-AES256-SHA384",
-    "DHE-RSA-AES256-SHA256",
-    "ECDHE-ECDSA-AES128-SHA256",
-    "ECDHE-RSA-AES128-SHA256",
-    "DHE-RSA-AES128-SHA256",
-    "ECDHE-ECDSA-AES256-SHA",
-    "ECDHE-RSA-AES256-SHA",
-    "DHE-RSA-AES256-SHA",
-    "ECDHE-ECDSA-AES128-SHA",
-    "ECDHE-RSA-AES128-SHA",
-    "DHE-RSA-AES128-SHA",
-    "RSA-PSK-AES256-GCM-SHA384",
-    "DHE-PSK-AES256-GCM-SHA384",
-    "RSA-PSK-CHACHA20-POLY1305",
-    "DHE-PSK-CHACHA20-POLY1305",
-    "ECDHE-PSK-CHACHA20-POLY1305",
-    "AES256-GCM-SHA384",
-    "PSK-AES256-GCM-SHA384",
-    "PSK-CHACHA20-POLY1305",
-    "RSA-PSK-AES128-GCM-SHA256",
-    "DHE-PSK-AES128-GCM-SHA256",
-    "AES128-GCM-SHA256",
-    "PSK-AES128-GCM-SHA256",
-    "AES256-SHA256",
-    "AES128-SHA256",
-    "ECDHE-PSK-AES256-CBC-SHA384",
-    "ECDHE-PSK-AES256-CBC-SHA",
-    "SRP-RSA-AES-256-CBC-SHA",
-    "SRP-AES-256-CBC-SHA",
-    "RSA-PSK-AES256-CBC-SHA384",
-    "DHE-PSK-AES256-CBC-SHA384",
-    "RSA-PSK-AES256-CBC-SHA",
-    "DHE-PSK-AES256-CBC-SHA",
-    "AES256-SHA",
-    "PSK-AES256-CBC-SHA384",
-    "PSK-AES256-CBC-SHA",
-    "ECDHE-PSK-AES128-CBC-SHA256",
-    "ECDHE-PSK-AES128-CBC-SHA",
-    "SRP-RSA-AES-128-CBC-SHA",
-    "SRP-AES-128-CBC-SHA",
-    "RSA-PSK-AES128-CBC-SHA256",
-    "DHE-PSK-AES128-CBC-SHA256",
-    "RSA-PSK-AES128-CBC-SHA",
-    "DHE-PSK-AES128-CBC-SHA",
-    "AES128-SHA",
-    "PSK-AES128-CBC-SHA256",
-    "PSK-AES128-CBC-SHA",
-]
-
-
 @TestOutline
 def server_connection_openssl_client(self, port, tls1_2_enabled=True):
     """Check that server accepts only FIPS compatible secure connections on a given port
@@ -507,29 +434,29 @@ def server_verification_mode(self, mode):
 
 
 @TestOutline
-def http_server(self):
-    """Check clickhouse-server connection to http server"""
+def http_server_url_function_checks(self):
+    """Check the connection from clickhouse-server when it is acting as a client to an http server using `url` table function."""
     node = self.context.node
 
     with Given("I launch the http flask server"):
         flask_server(protocol="http")
 
-    with Then("I read data from the server using `url` table function"):
+    with Check("I read data from the http server using `url` table function"):
         output = node.query(
             "SELECT * FROM url('http://127.0.0.1:5000/data', 'CSV') FORMAT CSV"
         ).output
         assert output == "12345", error()
 
 
-@TestSuite
-def https_server_checks(self):
-    """Check clickhouse-server connection to https server with different configs."""
+@TestOutline
+def https_server_url_function_checks(self):
+    """Check the connection from clickhouse-server when it is acting as a client to https server with different configs using `url` table function."""
 
     with Given("I launch the https flask server"):
         flask_server(protocol="https")
 
     with Check("Connection with no protocols should be rejected"):
-        https_server_connection(
+        https_server_url_function_connection(
             options={
                 "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_2,tlsv1_3",
             },
@@ -537,7 +464,7 @@ def https_server_checks(self):
         )
 
     with Check(f"TLSv1.2 suite connection should work"):
-        https_server_connection(
+        https_server_url_function_connection(
             options={
                 "requireTLSv1_2": "true",
                 "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3",
@@ -546,7 +473,7 @@ def https_server_checks(self):
         )
 
     with Check("TLSv1 suite connection should be rejected"):
-        https_server_connection(
+        https_server_url_function_connection(
             options={
                 "requireTLSv1": "true",
                 "disableProtocols": "sslv2,sslv3,tlsv1_1,tlsv1_2,tlsv1_3",
@@ -555,7 +482,7 @@ def https_server_checks(self):
         )
 
     with Check("TLSv1.1 suite connection should be rejected"):
-        https_server_connection(
+        https_server_url_function_connection(
             options={
                 "requireTLSv1_1": "true",
                 "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_2,tlsv1_3",
@@ -564,7 +491,7 @@ def https_server_checks(self):
         )
 
     with Check("TLSv1.3 suite connection should be rejected"):
-        https_server_connection(
+        https_server_url_function_connection(
             options={
                 "requireTLSv1_3": "true",
                 "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_2",
@@ -573,26 +500,26 @@ def https_server_checks(self):
         )
 
     with Check(f"just disabling TLSv1 suite connection should work"):
-        https_server_connection(
+        https_server_url_function_connection(
             options={"disableProtocols": "tlsv1"},
             success=True,
         )
 
     with Check(f"just disabling TLSv1.1 suite connection should work"):
-        https_server_connection(
+        https_server_url_function_connection(
             options={"disableProtocols": "tlsv1_1"},
             success=True,
         )
 
     with Check(f"just disabling TLSv1.3 suite connection should work"):
-        https_server_connection(
+        https_server_url_function_connection(
             options={"disableProtocols": "tlsv1_3"},
             success=True,
         )
 
     for cipher in fips_compatible_tlsv1_2_cipher_suites:
         with Check(f"connection using FIPS compatible cipher {cipher} should work"):
-            https_server_connection(
+            https_server_url_function_connection(
                 options={
                     "requireTLSv1_2": "true",
                     "cipherList": cipher,
@@ -607,7 +534,124 @@ def https_server_checks(self):
         with Check(
             f"connection using non-FIPS compatible cipher {cipher} should be rejected"
         ):
-            https_server_connection(
+            https_server_url_function_connection(
+                options={"cipherList": cipher, "disableProtocols": ""},
+                success=False,
+            )
+
+
+@TestOutline
+def http_server_dictionary_checks(self):
+    """Check the connection from clickhouse-server when it is acting as a client to an http server using a dictionary."""
+    node = self.context.node
+    name = "dictionary_" + getuid()
+
+    with Given("I launch the http flask server"):
+        flask_server(protocol="http")
+
+    with Check("connection to http server using a dictionary"):
+        try:
+            with When("I create a dictionary using an https source"):
+                node.query(
+                    f"CREATE DICTIONARY {name} (c1 Int64) PRIMARY KEY c1 SOURCE(HTTP(URL 'http://127.0.0.1:5000/data' FORMAT 'CSV')) LIFETIME(MIN 0 MAX 0) LAYOUT(FLAT())"
+                )
+
+            with Then("I select data from the dictionary"):
+                output = node.query(f"SELECT * FROM {name} FORMAT CSV").output
+                assert output == "12345", error()
+
+        finally:
+            with Finally("I remove the dictionary"):
+                node.query(f"DROP DICTIONARY IF EXISTS {name}")
+
+
+@TestOutline
+def https_server_dictionary_checks(self):
+    """Check the connection from clickhouse-server when it is acting as a client to https server with different configs using a dictionary."""
+
+    with Given("I launch the https flask server"):
+        flask_server(protocol="https")
+
+    with Check("Connection with no protocols should be rejected"):
+        https_server_https_dictionary_connection(
+            options={
+                "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_2,tlsv1_3",
+            },
+            success=False,
+        )
+
+    with Check(f"TLSv1.2 suite connection should work"):
+        https_server_https_dictionary_connection(
+            options={
+                "requireTLSv1_2": "true",
+                "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3",
+            },
+            success=True,
+        )
+
+    with Check("TLSv1 suite connection should be rejected"):
+        https_server_https_dictionary_connection(
+            options={
+                "requireTLSv1": "true",
+                "disableProtocols": "sslv2,sslv3,tlsv1_1,tlsv1_2,tlsv1_3",
+            },
+            success=False,
+        )
+
+    with Check("TLSv1.1 suite connection should be rejected"):
+        https_server_https_dictionary_connection(
+            options={
+                "requireTLSv1_1": "true",
+                "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_2,tlsv1_3",
+            },
+            success=False,
+        )
+
+    with Check("TLSv1.3 suite connection should be rejected"):
+        https_server_https_dictionary_connection(
+            options={
+                "requireTLSv1_3": "true",
+                "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_2",
+            },
+            success=False,
+        )
+
+    with Check(f"just disabling TLSv1 suite connection should work"):
+        https_server_https_dictionary_connection(
+            options={"disableProtocols": "tlsv1"},
+            success=True,
+        )
+
+    with Check(f"just disabling TLSv1.1 suite connection should work"):
+        https_server_https_dictionary_connection(
+            options={"disableProtocols": "tlsv1_1"},
+            success=True,
+        )
+
+    with Check(f"just disabling TLSv1.3 suite connection should work"):
+        https_server_https_dictionary_connection(
+            options={"disableProtocols": "tlsv1_3"},
+            success=True,
+        )
+
+    for cipher in fips_compatible_tlsv1_2_cipher_suites:
+        with Check(f"connection using FIPS compatible cipher {cipher} should work"):
+            https_server_https_dictionary_connection(
+                options={
+                    "requireTLSv1_2": "true",
+                    "cipherList": cipher,
+                    "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3",
+                },
+                success=True,
+            )
+
+    for cipher in all_ciphers:
+        if cipher in fips_compatible_tlsv1_2_cipher_suites:
+            continue
+        with Check(
+            f"connection using non-FIPS compatible cipher {cipher} should be rejected"
+        ):
+            https_server_https_dictionary_connection(
                 options={"cipherList": cipher, "disableProtocols": ""},
                 success=False,
             )
@@ -683,18 +727,41 @@ def fips_check(self):
 
 
 @TestFeature
+@Name("url table function")
+@Requirements()
+def url_table_function(self):
+    """Check clickhouse-server connections using `url` table function."""
+
+    with Given("I generate private key and certificate for https server"):
+        create_crt_and_key(name="https_server", common_name="127.0.0.1")
+
+    Suite(run=https_server_url_function_checks)
+    Suite(run=http_server_url_function_checks)
+
+
+@TestFeature
+@Name("dictionary")
+@Requirements()
+def dictionary(self):
+    """Check clickhouse-server connections using a dictionary."""
+
+    with Given("I generate private key and certificate for https server"):
+        create_crt_and_key(name="https_server", common_name="127.0.0.1")
+
+    Suite(run=https_server_dictionary_checks)
+    Suite(run=http_server_dictionary_checks)
+
+
+@TestFeature
 @Name("clickhouse-server connecting as client")
 @Requirements(
     RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_Client_Config("1.0")
 )
 def server_as_client(self):
-    """Check connection from clickhouse-server when it is configured using openSSL client configs."""
+    """Check connections from clickhouse-server when it is acting as a client and configured using openSSL client configs."""
 
-    with Given("I generate private key and certificate for https server"):
-        create_crt_and_key(name="https_server", common_name="127.0.0.1")
-
-    Suite(run=https_server_checks)
-    Scenario(run=http_server)
+    Feature(run=url_table_function)
+    Feature(run=dictionary)
 
 
 @TestFeature

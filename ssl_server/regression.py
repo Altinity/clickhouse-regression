@@ -54,7 +54,7 @@ xfails = {
     "fips/server/:/tcp connection/:/:/just disabling TLSv1.1 suite connection should work": [
         (Fail, "needs to be reviewed")
     ],
-    "fips/clickhouse client/:/:/just disabling TLSv1.1 suite connection should work": [
+    "fips/:/:/:/just disabling TLSv1.1 suite connection should work": [
         (Fail, "needs to be reviewed")
     ],
     "fips/clickhouse client/:/:/: should be rejected": [
