@@ -115,7 +115,7 @@ with following options
 --package             Specify docker:// or deb:// package.
 --version             Specify clickhouse version.
 --package-postfix     Postfix of the clickhouse-server and clickhouse-client deb package.
---only                Select test suite to run.
+--suite                Select test suite to run.
 --output              Tests stdout output style, default: 'classic'. Choices 'nice', 'classic', 'short', etc.
 --parallel            Enable or disable running tests in parallel. Choices 'on', 'off'.
 --token               Personal access token or private token with api access to the gitlab project, default: 'GITLAB_TOKEN' environment variable.
