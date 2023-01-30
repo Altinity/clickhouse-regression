@@ -51,33 +51,33 @@ To install all necessary Python modules (incl. [TestFlows]), execute the followi
 
 ### Running Only Specific Suites
 
-Specify `only` variable to select running only specific suites
+Specify `suite` variable to select running only specific suites
 
 | Variable | | |
 | --- | --- | ---  |
-| `only` | `window_functions` | Window Functions suite |
-| `only` | `aes_encryption` | AES Encryption Functions suite |
-| `only` | `clickhouse_keeper` | ClickHouse Keeper suite |
-| `only` | `datetime64_extended_range` | Extended DateTime64 suite |
-| `only` | `disk_level_encryption` | Disk Level Encryption |
-| `only` | `example` | Example suite |
-| `only` | `extended_precision_data_types` | Extended Precision Data Types suite |
-| `only` | `kafka` | Kafka suite |
-| `only` | `kerberos` | Kerberos suite |
-| `only` | `ldap` | LDAP suite |
-| `only` | `lightweight_delete` | Lightweight Delete suite |
-| `only` | `map_type` | Map Data Type suite |
-| `only` | `parquet` | Parquet Data Type suite |
-| `only` | `part_moves_between_shards` | Part Moves Between Shards suite |
-| `only` | `s3` | All S3 (MinIO, AWS, GCS) suites |
-| `only` | `s3_aws` | S3 AWS suite |
-| `only` | `s3_gcs` | S3 GCS suite |
-| `only` | `ssl_server` | SSL Server suite |
-| `only` | `tiered_storage` | All Tiered Storage (Local Disk, MinIO, AWS, GCS) suites |
-| `only` | `tiered_storage_aws` | Tiered Storage AWS suite |
-| `only` | `tiered_storage_gcs` | Tiered Storage GCS suite |
-| `only` | `window_functions` | Window Functions suite |
-| `only` | `benchmark` | S3 Benchmak suite |
+| `suite` | `window_functions` | Window Functions suite |
+| `suite` | `aes_encryption` | AES Encryption Functions suite |
+| `suite` | `clickhouse_keeper` | ClickHouse Keeper suite |
+| `suite` | `datetime64_extended_range` | Extended DateTime64 suite |
+| `suite` | `disk_level_encryption` | Disk Level Encryption |
+| `suite` | `example` | Example suite |
+| `suite` | `extended_precision_data_types` | Extended Precision Data Types suite |
+| `suite` | `kafka` | Kafka suite |
+| `suite` | `kerberos` | Kerberos suite |
+| `suite` | `ldap` | LDAP suite |
+| `suite` | `lightweight_delete` | Lightweight Delete suite |
+| `suite` | `map_type` | Map Data Type suite |
+| `suite` | `parquet` | Parquet Data Type suite |
+| `suite` | `part_moves_between_shards` | Part Moves Between Shards suite |
+| `suite` | `s3` | All S3 (MinIO, AWS, GCS) suites |
+| `suite` | `s3_aws` | S3 AWS suite |
+| `suite` | `s3_gcs` | S3 GCS suite |
+| `suite` | `ssl_server` | SSL Server suite |
+| `suite` | `tiered_storage` | All Tiered Storage (Local Disk, MinIO, AWS, GCS) suites |
+| `suite` | `tiered_storage_aws` | Tiered Storage AWS suite |
+| `suite` | `tiered_storage_gcs` | Tiered Storage GCS suite |
+| `suite` | `window_functions` | Window Functions suite |
+| `suite` | `benchmark` | S3 Benchmak suite |
 
 ### Running from Docker image
 When running the CI/CD pipeline, provide the following variables:  
