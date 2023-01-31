@@ -58,7 +58,7 @@ def select(self, query, query_with_final, node=None, negative=False):
                     assert explicit_final == force_select_final
 
 
-@TestFeature
+@TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Select("1.0"))
 def select_count(self):
     """Check `SELECT count()` clause."""
@@ -77,7 +77,7 @@ def select_count(self):
         select(query=query, query_with_final=query_with_final, negative=True)
 
 
-@TestFeature
+@TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Limit("1.0"))
 def select_limit(self):
     """Check SELECT query with `LIMIT` clause."""
@@ -98,7 +98,7 @@ def select_limit(self):
         select(query=query, query_with_final=query_with_final, negative=True)
 
 
-@TestFeature
+@TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_LimitBy("1.0"))
 def select_limit_by(self):
     """Check SELECT query with `LIMIT BY` clause."""
@@ -120,7 +120,7 @@ def select_limit_by(self):
         select(query=query, query_with_final=query_with_final, negative=True)
 
 
-@TestFeature
+@TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_GroupBy("1.0"))
 def select_group_by(self):
     """Check SELECT query with `GROUP BY` clause."""
@@ -142,7 +142,7 @@ def select_group_by(self):
         select(query=query, query_with_final=query_with_final, negative=True)
 
 
-@TestFeature
+@TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Distinct("1.0")
 )
@@ -165,7 +165,7 @@ def select_distinct(self):
         select(query=query, query_with_final=query_with_final, negative=True)
 
 
-@TestFeature
+@TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Prewhere("1.0")
 )
@@ -203,7 +203,7 @@ def select_prewhere(self, node=None):
                 assert explicit_final == force_select_final
 
 
-@TestFeature
+@TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Where("1.0"))
 def select_where(self):
     """Check SELECT query with `WHERE` clause."""
@@ -225,7 +225,7 @@ def select_where(self):
         select(query=query, query_with_final=query_with_final, negative=True)
 
 
-@TestFeature
+@TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_ArrayJoin("1.0")
 )
@@ -305,7 +305,7 @@ def select_array_join(self, node=None):
                 node.query(f"DROP TABLE {name}")
 
 
-@TestFeature
+@TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join("1.0"))
 def select_join_clause(self, node=None):
     """Check SELECT query with `JOIN` clause."""
@@ -529,7 +529,7 @@ def select_family_union_clause(self, node=None, clause=None, negative=False):
                         assert explicit_final == force_select_final
 
 
-@TestFeature
+@TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Union("1.0"))
 def select_union_clause(self):
     """Check SELECT query with `UNION` clause."""
@@ -548,7 +548,7 @@ def select_union_clause(self):
             select_family_union_clause(clause="UNION DISTINCT", negative=True)
 
 
-@TestFeature
+@TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Intersect("1.0")
 )
@@ -561,7 +561,7 @@ def select_intersect_clause(self):
         select_family_union_clause(clause="INTERSECT", negative=True)
 
 
-@TestFeature
+@TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Except("1.0"))
 def select_except_clause(self):
     """Check SELECT query with `EXCEPT` clause."""
@@ -572,7 +572,7 @@ def select_except_clause(self):
         select_family_union_clause(clause="EXCEPT", negative=True)
 
 
-@TestFeature
+@TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_With("1.0"))
 def select_with_clause(self, node=None, negative=False):
     """Check SELECT query with `WITH` clause."""
@@ -726,8 +726,6 @@ def select_nested_join_clause_select(self, node=None):
                         assert explicit_final == force_select_final
 
 
-
-
 @TestFeature
 @Requirements(
     RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join_Multiple("1.0")
@@ -801,7 +799,7 @@ def select_multiple_join_clause_select(self, node=None):
                         assert explicit_final == force_select_final
 
 
-@TestFeature
+@TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery("1.0")
 )
@@ -845,7 +843,7 @@ def select_subquery(self, node=None):
                 assert explicit_final == force_select_final
 
 
-@TestFeature
+@TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery_Nested("1.0")
 )
@@ -941,7 +939,7 @@ def select_prewhere_where_subquery(self, node=None, clause=None):
                 assert explicit_final == force_select_final
 
 
-@TestFeature
+@TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery_ExpressionInPrewhere(
         "1.0"
@@ -952,7 +950,7 @@ def select_prewhere_subquery(self):
     select_prewhere_where_subquery(clause="PREWHERE")
 
 
-@TestFeature
+@TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery_ExpressionInWhere(
         "1.0"
@@ -1015,7 +1013,7 @@ def select_prewhere_where_in_subquery(self, node=None, clause=None):
                 assert explicit_final == force_select_final
 
 
-@TestFeature
+@TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery_INPrewhere(
         "1.0"
@@ -1026,7 +1024,7 @@ def select_prewhere_in_subquery(self):
     select_prewhere_where_in_subquery(clause="PREWHERE")
 
 
-@TestFeature
+@TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery_INWhere("1.0")
 )
@@ -1035,7 +1033,7 @@ def select_where_in_subquery(self):
     select_prewhere_where_in_subquery(clause="WHERE")
 
 
-@TestFeature
+@TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Subquery_ExpressionInArrayJoin(
         "1.0"
@@ -1122,7 +1120,7 @@ def select_array_join_subquery(self, node=None):
                 node.query(f"DROP TABLE {name}")
 
 
-@TestFeature
+@TestModule
 @Name("force modifier")
 @Specifications(SRS032_ClickHouse_Automatic_Final_Modifier_For_Select_Queries)
 @Requirements(
@@ -1149,6 +1147,10 @@ def feature(self):
             reason="force_select_final is only supported on ClickHouse version >= 22.11"
         )
 
+
+    for feature in loads(current_module(), Feature):
+        feature()
+
     with Pool(8) as executor:
         try:
             for scenario in loads(current_module(), Scenario):
@@ -1156,9 +1158,4 @@ def feature(self):
         finally:
             join()
 
-    with Pool(8) as executor:
-        try:
-            for feature in loads(current_module(), Feature):
-                Feature(test=feature, parallel=True, executor=executor)()
-        finally:
-            join()
+
