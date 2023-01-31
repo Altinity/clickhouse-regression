@@ -1147,9 +1147,12 @@ def feature(self):
             reason="force_select_final is only supported on ClickHouse version >= 22.11"
         )
 
-
-    for feature in loads(current_module(), Feature):
-        feature()
+    with Pool(1) as executor:
+        try:
+            for feature in loads(current_module(), Feature):
+                Feature(test=feature, parallel=True, executor=executor)()
+        finally:
+            join()
 
     with Pool(8) as executor:
         try:
