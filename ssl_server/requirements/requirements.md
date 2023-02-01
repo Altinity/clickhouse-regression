@@ -122,6 +122,10 @@
       * 3.8.5.1 [RQ.SRS-017.ClickHouse.SSL.Server.DynamicContext.Certificate.Reload](#rqsrs-017clickhousesslserverdynamiccontextcertificatereload)
     * 3.8.6 [Private Key Reload](#private-key-reload)
       * 3.8.6.1 [RQ.SRS-017.ClickHouse.SSL.Server.DynamicContext.PrivateKey.Reload](#rqsrs-017clickhousesslserverdynamiccontextprivatekeyreload)
+    * 3.8.7 [Url Table Function](#url-table-function)
+      * 3.8.7.1 [RQ.SRS-017.ClickHouse.SSL.Server.UrlTableFunction](#rqsrs-017clickhousesslserverurltablefunction)
+    * 3.8.8 [Dictionary](#dictionary)
+      * 3.8.8.1 [RQ.SRS-017.ClickHouse.SSL.Server.Dictionary](#rqsrs-017clickhousesslserverdictionary)
 
 ## Introduction
 
@@ -1015,6 +1019,22 @@ by the `<privateKeyFile>` parameter in the `<clickhouse><openSSL><server>` secti
 of the `config.xml` any time [Dynamic SSL Context] is reloaded  
 and the reloaded SSL private key SHALL be immediately applied
 to any new SSL connections made to the server.
+
+#### Url Table Function
+
+##### RQ.SRS-017.ClickHouse.SSL.Server.UrlTableFunction
+version: 1.0
+
+[ClickHouse] SHALL use the protocols and ciphers specified in  `<clickhouse><openSSL><client>` section
+of the `config.xml` when `url()` table function is used to make a connection using HTTPS.
+
+#### Dictionary
+
+##### RQ.SRS-017.ClickHouse.SSL.Server.Dictionary
+version: 1.0
+
+[ClickHouse] SHALL use the protocols and ciphers specified in  `<clickhouse><openSSL><client>` section
+of the `config.xml` when a dictionary with an HTTP source is used to make a connection using HTTPS.
 
 [SRS]: #srs
 [SSL Protocol]: #ssl-protocol
