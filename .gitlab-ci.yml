@@ -134,7 +134,7 @@ variables:
     - python3 -c "import platform; print('Platform machine:', platform.machine())"
     - export PYTHONIOENCODING=utf-8
     - *move_ontime
-    - python3 -u $FOLDER_PATH/$regression.py --test-to-end --local -o $output --clickhouse-binary-path $clickhouse_bin_path --parallel $parallel --clickhouse-version $version $SUITE_OPTIONS $options --attr project="$CI_PROJECT_PATH" project.id="$CI_PROJECT_ID" user.name="$GITLAB_USER_NAME" user.email="$GITLAB_USER_EMAIL" version="$version" repository="$package" commit.short.hash="$CI_COMMIT_SHORT_SHA" commit.hash="$CI_COMMIT_SHA" job.id="$CI_JOB_ID" job.url="$CI_JOB_URL" arch="$arch" --tag altinity-runner --log raw.log || exitcode=$?
+    - python3 -u $FOLDER_PATH/$regression.py --test-to-end --local -o $output --clickhouse-binary-path $clickhouse_bin_path --parallel $parallel --clickhouse-version $version $SUITE_OPTIONS $options --attr project="$CI_PROJECT_PATH" project.id="$CI_PROJECT_ID" user.name="$GITLAB_USER_NAME" user.email="$GITLAB_USER_EMAIL" version="$version" package="$package" repository="https://github.com/Altinity/clickhouse-regression" commit.short.hash="$CI_COMMIT_SHORT_SHA" commit.hash="$CI_COMMIT_SHA" job.id="$CI_JOB_ID" job.url="$CI_JOB_URL" arch="$arch" --tag altinity-runner --log raw.log || exitcode=$?
     - if [[ $artifacts == 'internal' ]];
         then
           artifact_s3_bucket_path="altinity-internal-test-reports";
@@ -150,7 +150,7 @@ variables:
     - tfs --debug --no-colors transform nice raw.log nice.log.txt 
     - tfs --debug --no-colors transform short raw.log short.log.txt
     - tfs --debug --no-colors report coverage - raw.log - $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > coverage.html
-    - tfs --debug --no-colors report results -a "$CI_JOB_URL/artifacts/browse" raw.log - $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > report.html
+    - tfs --debug --no-colors report results -a "https://$artifact_s3_bucket_path.s3.amazonaws.com/index.html#clickhouse/" raw.log - $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > report.html
     - tfs --debug --no-colors report compare results --log compact.log --order-by version $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > compare.html
     - if [[ $upload_logs -ge 1 ]]; 
         then
