@@ -313,7 +313,7 @@ def argparser(parser):
         "--debug",
         default=False,
         action="store_true",
-        help="enable script debugging mode, default: False",
+        help="Enable script debug mode, default: False",
     )
 
     return parser

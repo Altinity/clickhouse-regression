@@ -29,12 +29,22 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
                 executor=pool,
             )(**args)
             Feature(
-                test=load("clickhouse_keeper.regression", "regression"),
+                test=load("aggregate_functions.regression", "regression"),
                 parallel=True,
                 executor=pool,
             )(**args)
             Feature(
-                test=load("atomic_insert.regression", "regression"),
+                test=load("atomic_inserts.regression", "regression"),
+                parallel=True,
+                executor=pool,
+            )(**args)
+            Feature(
+                test=load("base58.regression", "regression"),
+                parallel=True,
+                executor=pool,
+            )(**args)
+            Feature(
+                test=load("clickhouse_keeper.regression", "regression"),
                 parallel=True,
                 executor=pool,
             )(**args)
@@ -72,6 +82,11 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
                 executor=pool,
             )(**args)
             Feature(
+                test=load("key_value.regression", "regression"),
+                parallel=True,
+                executor=pool,
+            )(**args)
+            Feature(
                 test=load("ldap.regression", "regression"), parallel=True, executor=pool
             )(**args)
             Feature(
@@ -93,7 +108,15 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
                 test=load("rbac.regression", "regression"), parallel=True, executor=pool
             )(**args)
             Feature(
-                test=load("s3.regression", "regression"), parallel=True, executor=pool
+                test=load("s3.regression", "regression"),
+                parallel=True,
+                executor=pool,
+                xfails={"s3":[(Fail, "Required inputs are not specified, needs to be launch seperately.")]},
+            )(**args)
+            Feature(
+                test=load("selects.regression", "regression"),
+                parallel=True,
+                executor=pool,
             )(**args)
             Feature(
                 test=load("ssl_server.regression", "regression"),
@@ -104,6 +127,7 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
                 test=load("tiered_storage.regression", "regression"),
                 parallel=True,
                 executor=pool,
+                xfails={"tiered_storage":[(Fail, "Required inputs are not specified, needs to be launch seperately.")]},
             )(**args)
             Feature(
                 test=load("window_functions.regression", "regression"),
