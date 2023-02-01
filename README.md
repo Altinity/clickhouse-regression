@@ -114,15 +114,16 @@ with following options
 -w --wait             Wait for pipeline to finish.
 --package             Specify docker:// or deb:// package.
 --version             Specify clickhouse version.
---package-postfix     Postfix of the clickhouse-server and clickhouse-client deb package.
---suite                Select test suite to run.
+--package-postfix     Postfix of the clickhouse-server and clickhouse-client deb package, default: 'amd64'. Choices 'amd64', 'all'.
+--suite               Select test suite to run, default: 'all'. Choices "all", "aes_encryption", "aggregate_functions", "atomic_insert", "base_58", "clickhouse_keeper", "datetime64_extended_range", "disk_level_encryption", "dns", "example", "extended_precision_data_types", "kafka", "kerberos", "ldap", "lightweight_delete", "map_type", "parquet", "part_moves_between_shards", "rbac", "s3", "s3_aws", "s3_gcs", "selects", "ssl_server", "tiered_storage", "tiered_storage_aws", "tiered_storage_gcs", "window_functions", "benchmark".
 --output              Tests stdout output style, default: 'classic'. Choices 'nice', 'classic', 'short', etc.
---parallel            Enable or disable running tests in parallel. Choices 'on', 'off'.
+--parallel            Enable or disable running tests in parallel, default: 'on'. Choices 'on', 'off'.
 --token               Personal access token or private token with api access to the gitlab project, default: 'GITLAB_TOKEN' environment variable.
 --options             Extra options that will be added to test run command.
---arch                Architecture to run the tests on, default: 'amd64'.
+--arch                Architecture to run the tests on, default: 'amd64'. Choices 'amd64', 'arm64'.
 --branch              Specify which branch to run the tests on, default: 'main'.
---artifacts           Specify whether to upload artifacts internally or publically, default: 'internal'. Bucket for internal upload: 'altinity-internal-test-reports'. Bucket for public upload 'altinity-test-reports'.
+--artifacts           Specify whether to upload artifacts internally or publically, default: 'internal'. Choices 'internal', 'public'. Bucket for internal upload: 'altinity-internal-test-reports'. Bucket for public upload 'altinity-test-reports'.
+--debug               Enable script running in debug mode, default: 'False'. Choices 'True', 'False'.
 ```
 
 
