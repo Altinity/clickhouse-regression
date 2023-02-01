@@ -7,7 +7,7 @@ https_protocol = ssl.PROTOCOL_TLSv1_2
 ciphers = "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-GCM-SHA384"
 
 
-app = Flask("https server")
+app = Flask("flask server")
 app.secret_key = bytes(os.urandom(16))
 
 

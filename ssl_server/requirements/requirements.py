@@ -1402,6 +1402,40 @@ RQ_SRS_017_ClickHouse_SSL_Server_DynamicContext_PrivateKey_Reload = Requirement(
         "and the reloaded SSL private key SHALL be immediately applied\n"
         "to any new SSL connections made to the server.\n"
         "\n"
+    ),
+    link=None,
+    level=4,
+    num="3.8.6.1",
+)
+
+RQ_SRS_017_ClickHouse_SSL_Server_UrlTableFunction = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.UrlTableFunction",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL use the protocols and ciphers specified in  `<clickhouse><openSSL><client>` section\n"
+        "of the `config.xml` when `url()` table function is used to make a connection using HTTPS.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="3.8.7.1",
+)
+
+RQ_SRS_017_ClickHouse_SSL_Server_Dictionary = Requirement(
+    name="RQ.SRS-017.ClickHouse.SSL.Server.Dictionary",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL use the protocols and ciphers specified in  `<clickhouse><openSSL><client>` section\n"
+        "of the `config.xml` when a dictionary with an HTTP source is used to make a connection using HTTPS.\n"
+        "\n"
         "[SRS]: #srs\n"
         "[SSL Protocol]: #ssl-protocol\n"
         "[TLS Protocol]: #tls-protocol\n"
@@ -1438,7 +1472,7 @@ RQ_SRS_017_ClickHouse_SSL_Server_DynamicContext_PrivateKey_Reload = Requirement(
     ),
     link=None,
     level=4,
-    num="3.8.6.1",
+    num="3.8.8.1",
 )
 
 SRS017_ClickHouse_SSL = Specification(
@@ -1813,6 +1847,16 @@ SRS017_ClickHouse_SSL = Specification(
             level=4,
             num="3.8.6.1",
         ),
+        Heading(name="Url Table Function", level=3, num="3.8.7"),
+        Heading(
+            name="RQ.SRS-017.ClickHouse.SSL.Server.UrlTableFunction",
+            level=4,
+            num="3.8.7.1",
+        ),
+        Heading(name="Dictionary", level=3, num="3.8.8"),
+        Heading(
+            name="RQ.SRS-017.ClickHouse.SSL.Server.Dictionary", level=4, num="3.8.8.1"
+        ),
     ),
     requirements=(
         RQ_SRS_017_ClickHouse_SSL_Server_HTTPS_Port,
@@ -1876,6 +1920,8 @@ SRS017_ClickHouse_SSL = Specification(
         RQ_SRS_017_ClickHouse_SSL_Server_Session_Timeout,
         RQ_SRS_017_ClickHouse_SSL_Server_DynamicContext_Certificate_Reload,
         RQ_SRS_017_ClickHouse_SSL_Server_DynamicContext_PrivateKey_Reload,
+        RQ_SRS_017_ClickHouse_SSL_Server_UrlTableFunction,
+        RQ_SRS_017_ClickHouse_SSL_Server_Dictionary,
     ),
     content="""
 # SRS017 ClickHouse SSL
@@ -2002,6 +2048,10 @@ SRS017_ClickHouse_SSL = Specification(
       * 3.8.5.1 [RQ.SRS-017.ClickHouse.SSL.Server.DynamicContext.Certificate.Reload](#rqsrs-017clickhousesslserverdynamiccontextcertificatereload)
     * 3.8.6 [Private Key Reload](#private-key-reload)
       * 3.8.6.1 [RQ.SRS-017.ClickHouse.SSL.Server.DynamicContext.PrivateKey.Reload](#rqsrs-017clickhousesslserverdynamiccontextprivatekeyreload)
+    * 3.8.7 [Url Table Function](#url-table-function)
+      * 3.8.7.1 [RQ.SRS-017.ClickHouse.SSL.Server.UrlTableFunction](#rqsrs-017clickhousesslserverurltablefunction)
+    * 3.8.8 [Dictionary](#dictionary)
+      * 3.8.8.1 [RQ.SRS-017.ClickHouse.SSL.Server.Dictionary](#rqsrs-017clickhousesslserverdictionary)
 
 ## Introduction
 
@@ -2895,6 +2945,22 @@ by the `<privateKeyFile>` parameter in the `<clickhouse><openSSL><server>` secti
 of the `config.xml` any time [Dynamic SSL Context] is reloaded  
 and the reloaded SSL private key SHALL be immediately applied
 to any new SSL connections made to the server.
+
+#### Url Table Function
+
+##### RQ.SRS-017.ClickHouse.SSL.Server.UrlTableFunction
+version: 1.0
+
+[ClickHouse] SHALL use the protocols and ciphers specified in  `<clickhouse><openSSL><client>` section
+of the `config.xml` when `url()` table function is used to make a connection using HTTPS.
+
+#### Dictionary
+
+##### RQ.SRS-017.ClickHouse.SSL.Server.Dictionary
+version: 1.0
+
+[ClickHouse] SHALL use the protocols and ciphers specified in  `<clickhouse><openSSL><client>` section
+of the `config.xml` when a dictionary with an HTTP source is used to make a connection using HTTPS.
 
 [SRS]: #srs
 [SSL Protocol]: #ssl-protocol

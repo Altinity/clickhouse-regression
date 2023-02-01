@@ -778,27 +778,19 @@ def create_crt_and_key(self, name, node=None, common_name=""):
 
 
 @TestStep(Given)
-def flask_server(self, protocol="https"):
+def flask_server(self, server_path, port):
     """Run specified flask server"""
-    assert protocol == "https" or protocol == "http", error("invalid protocol")
-
     with self.context.cluster.shell(self.context.node.name) as bash:
-        cmd = f"python3 /{protocol}_app_file.py"
-        port = "5001" if protocol == "https" else "5000"
-        description = (
-            f"protocol: {https_protocol}, ciphers: {fips_compatible_tlsv1_2_cipher_suites}"
-            if protocol == "https"
-            else ""
-        )
+        cmd = f"python3 {server_path}"
 
         try:
             with Given(
-                f"I launch the {protocol} flask server", description=description
+                f"I launch the flask server",
             ):
                 bash.send(cmd)
                 bash.expect(cmd, escape=True)
                 bash.expect("\n")
-                bash.expect(f"Serving Flask app '{protocol} server'", escape=True)
+                bash.expect(f"Serving Flask app 'flask server'", escape=True)
 
             yield
 
@@ -816,10 +808,15 @@ def flask_server(self, protocol="https"):
 
 
 @TestStep(Then)
-def https_server_url_function_connection(self, success=True, options=None, node=None):
+def https_server_url_function_connection(
+    self, success=True, options=None, node=None, port=None
+):
     """Check reading data from an https server with specified clickhouse-server config."""
     if node is None:
         node = self.context.node
+
+    if port is None:
+        port = 5001
 
     if success:
         message = "12345"
@@ -832,14 +829,14 @@ def https_server_url_function_connection(self, success=True, options=None, node=
 
     with Then("I read data from the server using `url` table function"):
         node.query(
-            "SELECT * FROM url('https://127.0.0.1:5001/data', 'CSV') FORMAT CSV",
+            f"SELECT * FROM url('https://127.0.0.1:{port}/data', 'CSV') FORMAT CSV",
             message=message,
         )
 
 
 @TestStep(Given)
 def https_server_https_dictionary_connection(
-    self, name=None, node=None, success=True, options=None
+    self, name=None, node=None, success=True, options=None, port=None
 ):
     """Check reading data from a dictionary sourced from an https server"""
     if node is None:
@@ -847,6 +844,9 @@ def https_server_https_dictionary_connection(
 
     if name is None:
         name = "dictionary_" + getuid()
+
+    if port is None:
+        port = 5001
 
     if success:
         message = "12345"
@@ -860,7 +860,7 @@ def https_server_https_dictionary_connection(
     try:
         with When("I create a dictionary using an https source"):
             node.query(
-                f"CREATE DICTIONARY {name} (c1 Int64) PRIMARY KEY c1 SOURCE(HTTP(URL 'https://127.0.0.1:5001/data' FORMAT 'CSV')) LIFETIME(MIN 0 MAX 0) LAYOUT(FLAT())"
+                f"CREATE DICTIONARY {name} (c1 Int64) PRIMARY KEY c1 SOURCE(HTTP(URL 'https://127.0.0.1:{port}/data' FORMAT 'CSV')) LIFETIME(MIN 0 MAX 0) LAYOUT(FLAT())"
             )
 
         with Then("I select data from the dictionary"):
@@ -869,3 +869,86 @@ def https_server_https_dictionary_connection(
     finally:
         with Finally("I remove the dictionary"):
             node.query(f"DROP DICTIONARY IF EXISTS {name}")
+
+
+@TestStep(When)
+def update_https_server_config(
+    self, server_file_path, options=None, node=None, port=None
+):
+    """Change the https server config"""
+    if node is None:
+        node = self.context.node
+
+    if port is None:
+        port = 5001
+
+    try:
+        with When(f"I change the server protocol to {options['protocol']}"):
+            node.command(
+                f"sed -i 's/https_protocol = ssl.PROTOCOL_TLSv1_2/https_protocol = {options['protocol']}/g' {server_file_path}"
+            )
+
+        with And(
+            "I change the server ciphers",
+            description=f"ciphers={options['ciphers']}",
+        ):
+            node.command(
+                'sed -i \'s/ciphers = "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-GCM-SHA384"'
+                f"/ciphers = {options['ciphers']}/g' {server_file_path}"
+            )
+
+        with And(f"I change the port to {port}"):
+            node.command(f"sed -i 's/port=5001/port={port}/g' {server_file_path}")
+            debug(node.command(f"cat {server_file_path}").output)
+        yield
+
+    finally:
+        with Finally("I change the config back to the original"):
+            node.command(f"cat /https_app_file.py > {server_file_path}")
+
+
+@TestStep(Then)
+def configured_https_server_http_dictionary_connection(
+    self, https_server_options, success=True, port=None
+):
+    """Check connection from clickhouse server to configured HTTPS server using dictionary with HTTP source."""
+
+    with When("I change the HTTPS server"):
+        update_https_server_config(options=https_server_options, port=port)
+
+    with Then("I check the connection using a dictionary"):
+        https_server_https_dictionary_connection(port=port, success=success)
+
+
+@TestStep(Then)
+def configured_https_server_url_function_connection(
+    self, https_server_options, server_file_path, success=True, port=None
+):
+    """Check connection from clickhouse server to configured HTTPS server using url table function."""
+
+    with When("I change the HTTPS server"):
+        update_https_server_config(
+            options=https_server_options, port=port, server_file_path=server_file_path
+        )
+
+    for retry in retries(count=10, delay=0.5):
+        with retry:
+            with Then("I check the connection using a dictionary"):
+                https_server_url_function_connection(port=port, success=success)
+
+
+@TestStep(Then)
+def configured_https_server_dictionary_connection(
+    self, https_server_options, server_file_path, success=True, port=None
+):
+    """Check connection from clickhouse server to configured HTTPS server using a dictionary."""
+
+    with When("I change the HTTPS server"):
+        update_https_server_config(
+            options=https_server_options, port=port, server_file_path=server_file_path
+        )
+
+    for retry in retries(count=10, delay=0.5):
+        with retry:
+            with Then("I check the connection using a dictionary"):
+                https_server_https_dictionary_connection(port=port, success=success)

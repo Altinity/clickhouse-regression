@@ -1,7 +1,7 @@
 from flask import Flask
 import os
 
-app = Flask("http server")
+app = Flask("flask server")
 app.secret_key = bytes(os.urandom(16))
 
 
