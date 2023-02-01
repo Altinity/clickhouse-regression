@@ -670,8 +670,6 @@ def server(self, node=None):
             entries=entries, config_file="ssl_cipher_list.xml", restart=True
         )
 
-    pause()
-
     Feature(run=server_tcp_connection)
     Feature(run=server_https_connection)
     Feature(run=server_all_protocols_disabled)
