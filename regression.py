@@ -6,9 +6,20 @@ append_path(sys.path, ".")
 
 from helpers.argparser import argparser
 
+ffails = {
+    "s3": (
+        Skip,
+        "Required inputs are not specified, must be launch seperately.",
+    ),
+    "tiered_storage": (
+        Skip,
+        "Required inputs are not specified, must be launch seperately.",
+    ),
+}
 
 @TestModule
 @Name("clickhouse")
+@FFails(ffails)
 @ArgumentParser(argparser)
 def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=None):
     """ClickHouse regression."""
@@ -111,7 +122,6 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
                 test=load("s3.regression", "regression"),
                 parallel=True,
                 executor=pool,
-                xfails={"s3":[(Fail, "Required inputs are not specified, needs to be launch seperately.")]},
             )(**args)
             Feature(
                 test=load("selects.regression", "regression"),
@@ -127,7 +137,6 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
                 test=load("tiered_storage.regression", "regression"),
                 parallel=True,
                 executor=pool,
-                xfails={"tiered_storage":[(Fail, "Required inputs are not specified, needs to be launch seperately.")]},
             )(**args)
             Feature(
                 test=load("window_functions.regression", "regression"),
