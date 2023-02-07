@@ -106,6 +106,7 @@ def regression(
     """ClickHouse security SSL server regression."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
     self.context.clickhouse_version = clickhouse_version
+    self.context.fips_mode = False
 
     if stress is not None:
         self.context.stress = stress
