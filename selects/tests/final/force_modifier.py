@@ -1136,17 +1136,21 @@ def run_tests(self):
         finally:
             join()
 
+
 @TestFeature
 def with_experimental_analyzer(self):
+    """Run all tests with allow_experimental_analyzer=1."""
     with Given("I set allow_experimental_analyzer=1"):
-        ...
+        allow_experimental_analyzer()
 
     run_tests()
 
     
 @TestFeature
 def without_experimental_analyzer(self):
+    """Run all tests without allow_experimental_analyzer set."""
     run_tests()
+
 
 @TestModule
 @Name("force modifier")
