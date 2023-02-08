@@ -1119,6 +1119,34 @@ def select_array_join_subquery(self, node=None):
             finally:
                 node.query(f"DROP TABLE {name}")
 
+@TestOutline
+def run_tests(self):
+    """Outline to run all tests."""
+    with Pool(1) as executor:
+        try:
+            for feature in loads(current_module(), Feature):
+                Feature(test=feature, parallel=True, executor=executor)()
+        finally:
+            join()
+
+    with Pool(8) as executor:
+        try:
+            for scenario in loads(current_module(), Scenario):
+                Feature(test=scenario, parallel=True, executor=executor)()
+        finally:
+            join()
+
+@TestFeature
+def with_experimental_analyzer(self):
+    with Given("I set allow_experimental_analyzer=1"):
+        ...
+
+    run_tests()
+
+    
+@TestFeature
+def without_experimental_analyzer(self):
+    run_tests()
 
 @TestModule
 @Name("force modifier")
@@ -1147,18 +1175,6 @@ def feature(self):
             reason="force_select_final is only supported on ClickHouse version >= 22.11"
         )
 
-    with Pool(1) as executor:
-        try:
-            for feature in loads(current_module(), Feature):
-                Feature(test=feature, parallel=True, executor=executor)()
-        finally:
-            join()
-
-    with Pool(8) as executor:
-        try:
-            for scenario in loads(current_module(), Scenario):
-                Feature(test=scenario, parallel=True, executor=executor)()
-        finally:
-            join()
-
-
+    Feature(run=without_experimental_analyzer)
+    Feature(run=with_experimental_analyzer)
+ 
