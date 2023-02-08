@@ -42,6 +42,14 @@ join_types = [
     "LEFT ASOF JOIN",
 ]
 
+@TestStep(Given)
+def allow_experimental_analyzer(self):
+    """Add allow_experimental_analyzer to the default query settings."""
+    default_query_settings = getsattr(
+        current().context, "default_query_settings", []
+    )
+    default_query_settings.append(("allow_experimental_analyzer", 1))
+
 
 @TestStep(Given)
 def create_and_populate_table(
