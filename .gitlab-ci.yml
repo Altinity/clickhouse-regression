@@ -279,6 +279,7 @@ functional-amd64:
       - ( $suite == "all" || $suite == "functional" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "clickhouse/functional"
+     regression: "functional"
   script:
     - *regression_common
 
