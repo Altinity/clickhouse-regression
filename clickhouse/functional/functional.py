@@ -41,7 +41,7 @@ ffails = {}
 @XFails(xfails)
 @XFlags(xflags)
 @FFails(ffails)
-@Name("external tests")
+@Name("functional")
 def regression(self, local, clickhouse_binary_path, clickhouse_version, s3, replicated_database, stress=None):
     """Run the ClickHouse functional (stateless and stateful) tests."""
     nodes = {"clickhouse": ("clickhouse1",)}
