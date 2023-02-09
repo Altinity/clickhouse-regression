@@ -1,0 +1,43 @@
+version: '2.3'
+
+services:
+  clickhouse:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    init: true
+    expose:
+      - "9000" # remote
+      - "8123" # http
+      - "11111" # s3
+      - "8443" # https
+      - "9440" # tcp
+      - "9181" # zookeeper
+      - "9010" # tcp proxy
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/../configs/clickhouse/config.d/logs.xml:/etc/clickhouse-server/config.d/logs.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/../configs/clickhouse/config.d/storage.xml:/etc/clickhouse-server/config.d/storage.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/../configs/clickhouse/config.xml:/etc/clickhouse-server/config.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/../configs/clickhouse/users.xml:/etc/clickhouse-server/users.xml"
+      - "${CLICKHOUSE_TESTS_SERVER_BIN_PATH:-/usr/bin/clickhouse}:/usr/bin/clickhouse"
+      - "${CLICKHOUSE_TESTS_DIR}/wrappers/clickhouse-benchmark:/usr/bin/clickhouse-benchmark"
+      - "${CLICKHOUSE_TESTS_DIR}/wrappers/clickhouse-client:/usr/bin/clickhouse-client"
+      - "${CLICKHOUSE_TESTS_DIR}/wrappers/clickhouse-compressor:/usr/bin/clickhouse-compressor"
+      - "${CLICKHOUSE_TESTS_DIR}/wrappers/clickhouse-extract-from-config:/usr/bin/clickhouse-extract-from-config"
+      - "${CLICKHOUSE_TESTS_DIR}/wrappers/clickhouse-git-import:/usr/bin/clickhouse-git-import"
+      - "${CLICKHOUSE_TESTS_DIR}/wrappers/clickhouse-local:/usr/bin/clickhouse-local"
+      - "${CLICKHOUSE_TESTS_DIR}/wrappers/clickhouse-obfuscator:/usr/bin/clickhouse-obfuscator"
+      - "${CLICKHOUSE_TESTS_DIR}/wrappers/clickhouse-server:/usr/bin/clickhouse-server"
+      - "${CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH:-/usr/bin/clickhouse-odbc-bridge}:/usr/bin/clickhouse-odbc-bridge"
+      - "${CLICKHOUSE_TESTS_DIR}/src/:/functional/"
+    entrypoint: bash -c "tail -f /dev/null"
+    healthcheck:
+      test: echo 1
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 300s
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - label:disable

@@ -1,0 +1,22 @@
+version: '2.3'
+
+services:
+  zookeeper:
+    image: bitnami/zookeeper:3.7.1-debian-11-r90
+    ports:
+      - "9181"
+    expose:
+      - "9181"
+    environment:
+      - ZOO_TICK_TIME=500
+      - ZOO_MY_ID=1
+      - ZOO_PORT_NUMBER=9181
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    healthcheck:
+      test: echo stat | nc localhost 9181
+      interval: 3s
+      timeout: 2s
+      retries: 5
+      start_period: 2s
+    security_opt:
+      - label:disable

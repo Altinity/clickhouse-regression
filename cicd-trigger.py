@@ -100,6 +100,9 @@ description = """Script to launch CI/CD pipeline.
     Run extended_precision_data_types suite:
         python3 cicd_trigger.py --suite extended_precision_data_types
 
+    Run extended_precision_data_types suite:
+        python3 cicd_trigger.py --suite functional
+
     Run kafka suite:
         python3 cicd_trigger.py --suite kafka
 
@@ -170,6 +173,7 @@ def argparser(parser):
         "dns",
         "example",
         "extended_precision_data_types",
+        "functional",
         "kafka",
         "kerberos",
         "ldap",

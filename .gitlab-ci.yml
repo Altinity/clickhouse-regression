@@ -272,6 +272,16 @@ extended-precision-data-types-amd64:
   script:
     - *regression_common
 
+functional-amd64:
+  extends: .regression_amd64
+  only:
+    variables:
+      - ( $suite == "all" || $suite == "functional" ) && $arch == "amd64"
+  variables:
+     FOLDER_PATH: "clickhouse/functional"
+  script:
+    - *regression_common
+
 kafka-amd64:
   extends: .regression_amd64
   only:
