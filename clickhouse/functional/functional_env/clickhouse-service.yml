@@ -2,9 +2,7 @@ version: '2.3'
 
 services:
   clickhouse:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: registry.gitlab.com/altinity-public/container-images/test/clickhouse-functional-test:1.0
     init: true
     expose:
       - "9000" # remote
@@ -15,10 +13,18 @@ services:
       - "9181" # zookeeper
       - "9010" # tcp proxy
     volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/../configs/clickhouse/config.d/logs.xml:/etc/clickhouse-server/config.d/logs.xml"
-      - "${CLICKHOUSE_TESTS_DIR}/../configs/clickhouse/config.d/storage.xml:/etc/clickhouse-server/config.d/storage.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/../configs/clickhouse/config.d/access_control.xml:/etc/clickhouse-server/config.d/access_control.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/../configs/clickhouse/config.d/keeper_port.xml:/etc/clickhouse-server/config.d/keeper_port.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/../configs/clickhouse/config.d/log_to_console.xml:/etc/clickhouse-server/config.d/log_to_console.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/../configs/clickhouse/config.d/logging_no_rotate.xml:/etc/clickhouse-server/config.d/logging_no_rotate.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/../configs/clickhouse/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/../configs/clickhouse/config.d/more_clusters.xml:/etc/clickhouse-server/config.d/more_clusters.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/../configs/clickhouse/config.d/path.xml:/etc/clickhouse-server/config.d/path.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/../configs/clickhouse/config.d/query_masking_rules.xml:/etc/clickhouse-server/config.d/query_masking_rules.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/../configs/clickhouse/config.d/tcp_with_proxy.xml:/etc/clickhouse-server/config.d/tcp_with_proxy.xml"
       - "${CLICKHOUSE_TESTS_DIR}/../configs/clickhouse/config.xml:/etc/clickhouse-server/config.xml"
       - "${CLICKHOUSE_TESTS_DIR}/../configs/clickhouse/users.xml:/etc/clickhouse-server/users.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/../configs/clickhouse/embedded.xml:/etc/clickhouse-server/embedded.xml"
       - "${CLICKHOUSE_TESTS_SERVER_BIN_PATH:-/usr/bin/clickhouse}:/usr/bin/clickhouse"
       - "${CLICKHOUSE_TESTS_DIR}/wrappers/clickhouse-benchmark:/usr/bin/clickhouse-benchmark"
       - "${CLICKHOUSE_TESTS_DIR}/wrappers/clickhouse-client:/usr/bin/clickhouse-client"
