@@ -27,7 +27,15 @@ def argparser(parser):
 
 
 xfails = {
-    "final/force modifier/select join clause": [
+    "final/force modifier/without experimental analyzer/select join clause": [
+        (
+            Fail,
+            "doesn't work in clickhouse"
+            " https://github.com/ClickHouse/"
+            "ClickHouse/issues/8655",
+        )
+    ],
+    "final/force modifier/with experimental analyzer/select join clause": [
         (
             Fail,
             "doesn't work in clickhouse"
