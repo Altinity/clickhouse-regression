@@ -55,9 +55,6 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
         with And("change the host from localhost to zookeeper in zookeeper.xml"):
             node.command("sed -i 's/localhost/zookeeper/g' /etc/clickhouse-server/config.d/zookeeper.xml")
 
-        with And("setup minio"):
-            node.command("/functional/setup_minio.sh")
-
         with And("restart"):
             node.restart_clickhouse()
 
