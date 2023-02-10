@@ -1123,7 +1123,7 @@ def assert_joins(self, join_statement, table, table2, join_type, node=None):
         force_select_final_without = node.query(
             f"SELECT count() FROM {table.name} {join_type}"
             f" {table2.name} on {table.name}.id = {table2.name}.id",
-            settings=[("force_select_final", 1)],
+            settings=[("final", 1)],
         ).output.strip()
 
     with And(
@@ -1133,7 +1133,7 @@ def assert_joins(self, join_statement, table, table2, join_type, node=None):
             f"SELECT count() FROM {table.name} "
             f"{' FINAL' if table.final_modifier_available else ''} {join_type}"
             f" {table2.name} on {table.name}.id = {table2.name}.id",
-            settings=[("force_select_final", 1)],
+            settings=[("final", 1)],
         ).output.strip()
 
     with And(
@@ -1142,7 +1142,7 @@ def assert_joins(self, join_statement, table, table2, join_type, node=None):
         force_select_final_right = node.query(
             f"SELECT count() FROM {table.name} {join_type}"
             f" {table2.name} {' FINAL' if table2.final_modifier_available else ''} on {table.name}.id = {table2.name}.id",
-            settings=[("force_select_final", 1)],
+            settings=[("final", 1)],
         ).output.strip()
 
     with And(
@@ -1151,7 +1151,7 @@ def assert_joins(self, join_statement, table, table2, join_type, node=None):
         force_select_final_double = node.query(
             f"SELECT count() FROM {table.name} {' FINAL' if table.final_modifier_available else ''} {join_type}"
             f" {table2.name} {' FINAL' if table2.final_modifier_available else ''} on {table.name}.id = {table2.name}.id",
-            settings=[("force_select_final", 1)],
+            settings=[("final", 1)],
         ).output.strip()
 
     with Then("I compare results are the same"):

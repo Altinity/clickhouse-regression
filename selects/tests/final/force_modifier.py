@@ -43,7 +43,7 @@ def select(self, query, query_with_final, node=None, negative=False):
             ):
                 force_select_final = node.query(
                     query.format(name=table.name),
-                    settings=[("force_select_final", 1)],
+                    settings=[("final", 1)],
                 ).output.strip()
 
             if negative:
@@ -196,7 +196,7 @@ def select_prewhere(self, node=None):
                 force_select_final = node.query(
                     f"SELECT * FROM {table.name} PREWHERE x > 3 "
                     f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
-                    settings=[("force_select_final", 1)],
+                    settings=[("final", 1)],
                 ).output.strip()
 
             with Then("I compare results are the same"):
@@ -283,7 +283,7 @@ def select_array_join(self, node=None):
                 with When("I execute query with force_select_final=1 setting"):
                     force_select_final = node.query(
                         f"SELECT count() FROM {name} ARRAY JOIN arr",
-                        settings=[("force_select_final", 1)],
+                        settings=[("final", 1)],
                     ).output.strip()
 
                 with And(
@@ -513,7 +513,7 @@ def select_family_union_clause(self, node=None, clause=None, negative=False):
                         f"SELECT id, count(*) FROM {table1.name} GROUP BY id"
                         f" {clause}"
                         f" SELECT id, count(*) FROM {table2.name} GROUP BY id",
-                        settings=[("force_select_final", 1)],
+                        settings=[("final", 1)],
                     ).output.strip()
 
                 if negative:
@@ -636,7 +636,7 @@ def select_with_clause(self, node=None, negative=False):
                 force_select_final = node.query(
                     with_query.format(table_name=table.name, final=""),
                     exitcode=0,
-                    settings=[("force_select_final", 1)],
+                    settings=[("final", 1)],
                 ).output.strip()
 
             if negative:
@@ -719,7 +719,7 @@ def select_nested_join_clause_select(self, node=None):
                             f"SELECT count() FROM {table1.name} a {join_type}"
                             f"(SELECT * FROM {table1.name} {join_type}"
                             f" {table2.name} on {table1.name}.id = {table2.name}.id) b on a.id=b.id",
-                            settings=[("force_select_final", 1)],
+                            settings=[("final", 1)],
                         ).output.strip()
 
                     with Then("I check that compare results are the same"):
@@ -792,7 +792,7 @@ def select_multiple_join_clause_select(self, node=None):
                             f"SELECT count() FROM {table1.name} {join_type} "
                             f"{table2.name} on {table1.name}.id = {table2.name}.id {join_type}"
                             f" {table2.name} b on {table2.name}.id=b.id",
-                            settings=[("force_select_final", 1)],
+                            settings=[("final", 1)],
                         ).output.strip()
 
                     with Then("I check that compare results are the same"):
@@ -836,7 +836,7 @@ def select_subquery(self, node=None):
             ):
                 force_select_final = node.query(
                     f"SELECT count() FROM (SELECT * FROM {table.name})",
-                    settings=[("force_select_final", 1)],
+                    settings=[("final", 1)],
                 ).output.strip()
 
             with Then("I compare results are the same"):
@@ -880,7 +880,7 @@ def select_nested_subquery(self, node=None):
             ):
                 force_select_final = node.query(
                     f"SELECT count() FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM {table.name})))",
-                    settings=[("force_select_final", 1)],
+                    settings=[("final", 1)],
                 ).output.strip()
 
             with Then("I compare results are the same"):
@@ -932,7 +932,7 @@ def select_prewhere_where_subquery(self, node=None, clause=None):
                 force_select_final = node.query(
                     f"SELECT * FROM {table1.name} {clause} x = (SELECT x FROM {table2.name}) "
                     f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
-                    settings=[("force_select_final", 1)],
+                    settings=[("final", 1)],
                 ).output.strip()
 
             with Then("I compare results are the same"):
@@ -1006,7 +1006,7 @@ def select_prewhere_where_in_subquery(self, node=None, clause=None):
                 force_select_final = node.query(
                     f"SELECT * FROM {table1.name} {clause} x IN (SELECT x FROM {table2.name}) "
                     f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
-                    settings=[("force_select_final", 1)],
+                    settings=[("final", 1)],
                 ).output.strip()
 
             with Then("I compare results are the same"):
@@ -1096,7 +1096,7 @@ def select_array_join_subquery(self, node=None):
                             force_select_final = node.query(
                                 f"SELECT count() FROM {name} ARRAY JOIN "
                                 f"(select arr from {table2.name} LIMIT 1) as zz",
-                                settings=[("force_select_final", 1)],
+                                settings=[("final", 1)],
                             ).output.strip()
 
                         with And(
@@ -1119,13 +1119,15 @@ def select_array_join_subquery(self, node=None):
             finally:
                 node.query(f"DROP TABLE {name}")
 
+
 @TestOutline
 def run_tests(self):
     """Outline to run all tests."""
     with Pool(1) as executor:
         try:
             for feature in loads(current_module(), Feature):
-                Feature(test=feature, parallel=True, executor=executor)()
+                if not feature.name.endswith("experimental analyzer"):
+                    Feature(test=feature, parallel=True, executor=executor)()
         finally:
             join()
 
@@ -1137,7 +1139,7 @@ def run_tests(self):
             join()
 
 
-@TestFeature
+@TestModule
 def with_experimental_analyzer(self):
     """Run all tests with allow_experimental_analyzer=1."""
     with Given("I set allow_experimental_analyzer=1"):
@@ -1146,7 +1148,7 @@ def with_experimental_analyzer(self):
     run_tests()
 
     
-@TestFeature
+@TestModule
 def without_experimental_analyzer(self):
     """Run all tests without allow_experimental_analyzer set."""
     run_tests()
