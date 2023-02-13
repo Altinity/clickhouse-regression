@@ -12,6 +12,9 @@ services:
       - "9440" # tcp
       - "9181" # zookeeper
       - "9010" # tcp proxy
+      - "9004" # mysql
+      - "9005" # postgresql
+      - "9009" # interserver http
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/../configs/clickhouse/config.d/access_control.xml:/etc/clickhouse-server/config.d/access_control.xml"
       - "${CLICKHOUSE_TESTS_DIR}/../configs/clickhouse/config.d/keeper_port.xml:/etc/clickhouse-server/config.d/keeper_port.xml"
