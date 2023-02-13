@@ -1306,7 +1306,7 @@ def concurrent_queries(
     query,
     query_with_final,
     node=None,
-    negative=negative,
+    negative=False,
     concurent_data_changes=False,
 ):
     """
