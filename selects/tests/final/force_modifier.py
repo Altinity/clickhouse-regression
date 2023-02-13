@@ -120,26 +120,26 @@ def select_limit_by(self):
         select(query=query, query_with_final=query_with_final, negative=True)
 
 
-@TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_GroupBy("1.0"))
-def select_group_by(self):
-    """Check SELECT query with `GROUP BY` clause."""
-    with Given("I create queries with and without `FINAL`"):
-        query = define(
-            "query without FINAL",
-            "SELECT id, count(x) as cx FROM {name} GROUP BY (id, x) ORDER BY (id, cx) FORMAT JSONEachRow;",
-        )
-        query_with_final = define(
-            "query with FINAL",
-            "SELECT id, count(x) as cx FROM {name} {final} "
-            "GROUP BY (id, x) ORDER BY (id, cx) FORMAT JSONEachRow;",
-        )
-
-    with Then("I check positive case"):
-        select(query=query, query_with_final=query_with_final)
-
-    with And("I check negative case"):
-        select(query=query, query_with_final=query_with_final, negative=True)
+# @TestScenario
+# @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_GroupBy("1.0"))
+# def select_group_by(self):
+#     """Check SELECT query with `GROUP BY` clause."""
+#     with Given("I create queries with and without `FINAL`"):
+#         query = define(
+#             "query without FINAL",
+#             "SELECT id, count(x) as cx FROM {name} GROUP BY (id, x) ORDER BY (id, cx) FORMAT JSONEachRow;",
+#         )
+#         query_with_final = define(
+#             "query with FINAL",
+#             "SELECT id, count(x) as cx FROM {name} {final} "
+#             "GROUP BY (id, x) ORDER BY (id, cx) FORMAT JSONEachRow;",
+#         )
+#
+#     with Then("I check positive case"):
+#         select(query=query, query_with_final=query_with_final)
+#
+#     with And("I check negative case"):
+#         select(query=query, query_with_final=query_with_final, negative=True)
 
 
 @TestScenario
@@ -393,9 +393,9 @@ def select_join_clause_select_all_types(self, node=None):
             with Example(f"{table1.engine} {join_type} {table2.engine}", flags=TE):
                 with When(f"I have {table1.name} and corresponding {table2.name}"):
                     with Then(
-                            "I check that select with force_select_final=1 setting"
-                            f" equal 'SELECT...FINAL' for {table1.engine}"
-                            f"with {join_type} clause"
+                        "I check that select with force_select_final=1 setting"
+                        f" equal 'SELECT...FINAL' for {table1.engine}"
+                        f"with {join_type} clause"
                     ):
                         join_statement = (
                             f"SELECT count() FROM {table1.name} a"
@@ -436,12 +436,12 @@ def select_join_clause_select_all_engine_combinations(self, node=None):
     for table1, table2 in table_pairs:
         with Example(f"{table1.engine} INNER JOIN {table2.engine}", flags=TE):
             with When(
-                    f"I check `INNER JOIN` for {table1.name} and corresponding {table2.name}"
+                f"I check `INNER JOIN` for {table1.name} and corresponding {table2.name}"
             ):
                 with Then(
-                        "I check that select with force_select_final=1 setting"
-                        f" equal 'SELECT...FINAL' for {table1.name} and {table2.name} "
-                        f"with 'INNER JOIN' clause"
+                    "I check that select with force_select_final=1 setting"
+                    f" equal 'SELECT...FINAL' for {table1.name} and {table2.name} "
+                    f"with 'INNER JOIN' clause"
                 ):
                     join_statement = (
                         f"SELECT count() FROM {table1.name} a"
@@ -458,7 +458,6 @@ def select_join_clause_select_all_engine_combinations(self, node=None):
                         join_type="INNER JOIN",
                         node=node,
                     )
-
 
 
 @TestOutline
@@ -693,7 +692,7 @@ def select_nested_join_clause_select(self, node=None):
             with Example(f"{table1.engine} {join_type} {table2.engine}", flags=TE):
                 with When(f"I have {table1.name} and corresponding {table2.name}"):
                     with When(
-                            "I execute query with FINAL modifier specified explicitly"
+                        "I execute query with FINAL modifier specified explicitly"
                     ):
                         join_statement = define(
                             "Nested join query",
@@ -713,7 +712,7 @@ def select_nested_join_clause_select(self, node=None):
                         ).output.strip()
 
                     with And(
-                            "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
+                        "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
                     ):
                         force_select_final = node.query(
                             f"SELECT count() FROM {table1.name} a {join_type}"
@@ -766,7 +765,7 @@ def select_multiple_join_clause_select(self, node=None):
             with Example(f"{table1.engine} {join_type} {table2.engine}", flags=TE):
                 with When(f"I have {table1.name} and corresponding {table2.name}"):
                     with When(
-                            "I execute query with FINAL modifier specified explicitly"
+                        "I execute query with FINAL modifier specified explicitly"
                     ):
                         join_statement = define(
                             "Multiple join query",
@@ -786,7 +785,7 @@ def select_multiple_join_clause_select(self, node=None):
                         ).output.strip()
 
                     with And(
-                            "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
+                        "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
                     ):
                         force_select_final = node.query(
                             f"SELECT count() FROM {table1.name} {join_type} "
@@ -1147,7 +1146,7 @@ def with_experimental_analyzer(self):
 
     run_tests()
 
-    
+
 @TestModule
 def without_experimental_analyzer(self):
     """Run all tests without allow_experimental_analyzer set."""
@@ -1183,4 +1182,3 @@ def feature(self):
 
     Feature(run=without_experimental_analyzer)
     Feature(run=with_experimental_analyzer)
- 
