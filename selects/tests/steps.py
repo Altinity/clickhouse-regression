@@ -42,12 +42,11 @@ join_types = [
     "LEFT ASOF JOIN",
 ]
 
+
 @TestStep(Given)
 def allow_experimental_analyzer(self):
     """Add allow_experimental_analyzer to the default query settings."""
-    default_query_settings = getsattr(
-        current().context, "default_query_settings", []
-    )
+    default_query_settings = getsattr(current().context, "default_query_settings", [])
     default_query_settings.append(("allow_experimental_analyzer", 1))
 
 
@@ -1304,7 +1303,10 @@ def concurrent_queries(
     last_delete_id,
     first_update_id,
     last_update_id,
-    query, query_with_final, node=None, negative=negative,
+    query,
+    query_with_final,
+    node=None,
+    negative=negative,
     concurent_data_changes=False,
 ):
     """
@@ -1327,20 +1329,18 @@ def concurrent_queries(
         )
 
         if concurent_data_changes:
-            By("inserting data", test=insert_controlled_interval, parallel=True, )(
+            By("inserting data", test=insert_controlled_interval, parallel=True,)(
                 first_insert_id=first_insert_id,
                 last_insert_id=last_insert_id,
                 table_name=table_name,
             )
-            By("deleting data", test=delete, parallel=True, )(
+            By("deleting data", test=delete, parallel=True,)(
                 first_delete_id=first_delete_id,
                 last_delete_id=last_delete_id,
                 table_name=table_name,
             )
-            By("updating data", test=update, parallel=True, )(
+            By("updating data", test=update, parallel=True,)(
                 first_update_id=first_update_id,
                 last_update_id=last_update_id,
                 table_name=table_name,
             )
-
-
