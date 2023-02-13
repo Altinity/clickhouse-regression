@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<clickhouse>
-    <profiles replace="replace">
-        <default>
-            <xyz>8</xyz>
-        </default>
-    </profiles>
-</clickhouse>
