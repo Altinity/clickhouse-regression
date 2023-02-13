@@ -42,12 +42,11 @@ join_types = [
     "LEFT ASOF JOIN",
 ]
 
+
 @TestStep(Given)
 def allow_experimental_analyzer(self):
     """Add allow_experimental_analyzer to the default query settings."""
-    default_query_settings = getsattr(
-        current().context, "default_query_settings", []
-    )
+    default_query_settings = getsattr(current().context, "default_query_settings", [])
     default_query_settings.append(("allow_experimental_analyzer", 1))
 
 
@@ -1172,3 +1171,176 @@ def create_and_populate_all_tables(self):
     create_normal_view_with_join()
     create_replicated_table_2shards3replicas()
     create_expression_subquery_table()
+
+
+@TestStep(Given)
+def select_simple(self, query, query_with_final, node=None, negative=False):
+    """Checking basic selects with `FINAL` clause equal to force_select_final select."""
+    if node is None:
+        node = self.context.node
+
+    with Given("I exclude auxiliary and unsupported tables by the current test"):
+        tables = define(
+            "tables",
+            [
+                table
+                for table in self.context.tables
+                if table.name.endswith("core")
+                or table.name.endswith("cluster")
+                or table.name.endswith("clusterdistributed")
+                or table.name.endswith("_nview_final")
+                or table.name.endswith("_mview")
+            ],
+            encoder=lambda tables: ", ".join([table.name for table in tables]),
+        )
+
+    for table in tables:
+        with When(f"{table.name}"):
+            with When("I execute query with FINAL modifier specified explicitly"):
+                explicit_final = node.query(
+                    query_with_final.format(
+                        name=table.name,
+                        final=f"{' FINAL' if table.final_modifier_available else ''}",
+                    )
+                ).output.strip()
+
+            with And("I execute the same query without FINAL modifier"):
+                without_final = node.query(query.format(name=table.name)).output.strip()
+
+            with And(
+                "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
+            ):
+                force_select_final = node.query(
+                    query.format(name=table.name),
+                    settings=[("final", 1)],
+                ).output.strip()
+
+            if negative:
+                with Then("I check that compare results are different"):
+                    if (
+                        table.final_modifier_available
+                        and without_final != explicit_final
+                    ):
+                        assert without_final != force_select_final
+            else:
+                with Then("I check that compare results are the same"):
+                    assert explicit_final == force_select_final
+
+
+@TestStep(Given)
+def insert_controlled_interval(
+    self,
+    first_insert_id,
+    last_insert_id,
+    table_name,
+    insert_values="({x},2,'a','b')",
+    node=None,
+):
+    """
+    Insert some controlled interval of id's
+    :param self:
+    :param node:
+    :param first_insert_id:
+    :param last_insert_id:
+    :param table_name:
+    :return:
+    """
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    with Given(
+        f"I insert {first_insert_id - last_insert_id} rows of data in MySql table"
+    ):
+        for i in range(first_insert_id, last_insert_id + 1):
+            node.query(f"INSERT INTO {table_name} VALUES {insert_values}".format(x=i))
+
+
+@TestStep(When)
+def delete(self, first_delete_id, last_delete_id, table_name):
+    """
+    Delete query step
+    :param self:
+    :param first_delete_id:
+    :param last_delete_id:
+    :param table_name:
+    :return:
+    """
+    mysql = self.context.cluster.node("clickhouse1")
+
+    with Given(
+        f"I delete {last_delete_id - first_delete_id} rows of data in MySql table"
+    ):
+        for i in range(first_delete_id, last_delete_id):
+            mysql.query(f"DELETE FROM {table_name} WHERE id={i}")
+
+
+@TestStep(When)
+def update(self, first_update_id, last_update_id, table_name):
+    """
+    Update query step
+    :param self:
+    :param first_update_id:
+    :param last_update_id:
+    :param table_name:
+    :return:
+    """
+    mysql = self.context.cluster.node("clickhouse1")
+
+    with Given(
+        f"I update {last_update_id - first_update_id} rows of data in MySql table"
+    ):
+        for i in range(first_update_id, last_update_id):
+            mysql.query(f"UPDATE {table_name} SET k=k+5 WHERE id={i};")
+
+
+@TestStep(Then)
+def concurrent_queries(
+    self,
+    table_name,
+    first_insert_id,
+    last_insert_id,
+    first_delete_id,
+    last_delete_id,
+    first_update_id,
+    last_update_id,
+    query,
+    query_with_final,
+    node=None,
+    negative=False,
+    concurent_data_changes=False,
+):
+    """
+    Insert, update, delete for concurrent queries.
+    :param self:
+    :param table_name: table name
+    :param first_insert_number: first id of precondition insert
+    :param last_insert_number:  last id of precondition insert
+    :param first_insert_id: first id of concurrent insert
+    :param last_insert_id: last id of concurrent insert
+    :param first_delete_id: first id of concurrent delete
+    :param last_delete_id: last id of concurrent delete
+    :param first_update_id: first id of concurrent update
+    :param last_update_id: last id of concurrent update
+    :return:
+    """
+    with Given("I start concurrently insert, update and delete queries in MySql table"):
+        By("checking data", select=select_simple, parallel=True)(
+            query=query, query_with_final=query_with_final, node=node, negative=negative
+        )
+
+        if concurent_data_changes:
+            By("inserting data", test=insert_controlled_interval, parallel=True,)(
+                first_insert_id=first_insert_id,
+                last_insert_id=last_insert_id,
+                table_name=table_name,
+            )
+            By("deleting data", test=delete, parallel=True,)(
+                first_delete_id=first_delete_id,
+                last_delete_id=last_delete_id,
+                table_name=table_name,
+            )
+            By("updating data", test=update, parallel=True,)(
+                first_update_id=first_update_id,
+                last_update_id=last_update_id,
+                table_name=table_name,
+            )
