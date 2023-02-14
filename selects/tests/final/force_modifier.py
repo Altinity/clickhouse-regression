@@ -5,7 +5,9 @@ from helpers.common import check_clickhouse_version
 
 
 @TestOutline
-def select(self, query, query_with_final, node=None, negative=False):
+def select(
+    self, query, query_with_final, node=None, negative=False, concurrent_select=True
+):
     """Checking basic selects with `FINAL` clause equal to force_select_final select."""
     if node is None:
         node = self.context.node
@@ -56,6 +58,12 @@ def select(self, query, query_with_final, node=None, negative=False):
             else:
                 with Then("I check that compare results are the same"):
                     assert explicit_final == force_select_final
+            if concurrent_select:
+                concurrent_queries(
+                    statement=query_with_final.format(final=f"", name=table.name),
+                    parallel_selects=3,
+                    final=1,
+                )
 
 
 @TestScenario
@@ -120,26 +128,26 @@ def select_limit_by(self):
         select(query=query, query_with_final=query_with_final, negative=True)
 
 
-# @TestScenario
-# @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_GroupBy("1.0"))
-# def select_group_by(self):
-#     """Check SELECT query with `GROUP BY` clause."""
-#     with Given("I create queries with and without `FINAL`"):
-#         query = define(
-#             "query without FINAL",
-#             "SELECT id, count(x) as cx FROM {name} GROUP BY (id, x) ORDER BY (id, cx) FORMAT JSONEachRow;",
-#         )
-#         query_with_final = define(
-#             "query with FINAL",
-#             "SELECT id, count(x) as cx FROM {name} {final} "
-#             "GROUP BY (id, x) ORDER BY (id, cx) FORMAT JSONEachRow;",
-#         )
-#
-#     with Then("I check positive case"):
-#         select(query=query, query_with_final=query_with_final)
-#
-#     with And("I check negative case"):
-#         select(query=query, query_with_final=query_with_final, negative=True)
+@TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_GroupBy("1.0"))
+def select_group_by(self):
+    """Check SELECT query with `GROUP BY` clause."""
+    with Given("I create queries with and without `FINAL`"):
+        query = define(
+            "query without FINAL",
+            "SELECT id, count(x) as cx FROM {name} GROUP BY (id, x) ORDER BY (id, cx) FORMAT JSONEachRow;",
+        )
+        query_with_final = define(
+            "query with FINAL",
+            "SELECT id, count(x) as cx FROM {name} {final} "
+            "GROUP BY (id, x) ORDER BY (id, cx) FORMAT JSONEachRow;",
+        )
+
+    with Then("I check positive case"):
+        select(query=query, query_with_final=query_with_final)
+
+    with And("I check negative case"):
+        select(query=query, query_with_final=query_with_final, negative=True)
 
 
 @TestScenario

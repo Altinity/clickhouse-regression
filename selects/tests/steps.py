@@ -1174,85 +1174,13 @@ def create_and_populate_all_tables(self):
 
 
 @TestStep(Given)
-def select_simple(self, query, query_with_final, node=None, negative=False):
-    """Checking basic selects with `FINAL` clause equal to force_select_final select."""
-    if node is None:
-        node = self.context.node
-
-    with Given("I exclude auxiliary and unsupported tables by the current test"):
-        tables = define(
-            "tables",
-            [
-                table
-                for table in self.context.tables
-                if table.name.endswith("core")
-                or table.name.endswith("cluster")
-                or table.name.endswith("clusterdistributed")
-                or table.name.endswith("_nview_final")
-                or table.name.endswith("_mview")
-            ],
-            encoder=lambda tables: ", ".join([table.name for table in tables]),
-        )
-
-    for table in tables:
-        with When(f"{table.name}"):
-            with When("I execute query with FINAL modifier specified explicitly"):
-                explicit_final = node.query(
-                    query_with_final.format(
-                        name=table.name,
-                        final=f"{' FINAL' if table.final_modifier_available else ''}",
-                    )
-                ).output.strip()
-
-            with And("I execute the same query without FINAL modifier"):
-                without_final = node.query(query.format(name=table.name)).output.strip()
-
-            with And(
-                "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
-            ):
-                force_select_final = node.query(
-                    query.format(name=table.name),
-                    settings=[("final", 1)],
-                ).output.strip()
-
-            if negative:
-                with Then("I check that compare results are different"):
-                    if (
-                        table.final_modifier_available
-                        and without_final != explicit_final
-                    ):
-                        assert without_final != force_select_final
-            else:
-                with Then("I check that compare results are the same"):
-                    assert explicit_final == force_select_final
-
-
-@TestStep(Given)
-def insert_controlled_interval(
-    self,
-    first_insert_id,
-    last_insert_id,
-    table_name,
-    insert_values="({x},2,'a','b')",
-    node=None,
-):
-    """
-    Insert some controlled interval of id's
-    :param self:
-    :param node:
-    :param first_insert_id:
-    :param last_insert_id:
-    :param table_name:
-    :return:
-    """
+def select_simple(self, statement, final=0, node=None):
+    """Select query step."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
-    with Given(
-        f"I insert {first_insert_id - last_insert_id} rows of data in MySql table"
-    ):
-        for i in range(first_insert_id, last_insert_id + 1):
-            node.query(f"INSERT INTO {table_name} VALUES {insert_values}".format(x=i))
+    with Given(f"I make select from table"):
+        node.query(f"{statement}", settings=[("final", final)])
 
 
 @TestStep(When)
@@ -1296,18 +1224,16 @@ def update(self, first_update_id, last_update_id, table_name):
 @TestStep(Then)
 def concurrent_queries(
     self,
-    table_name,
-    first_insert_id,
-    last_insert_id,
-    first_delete_id,
-    last_delete_id,
-    first_update_id,
-    last_update_id,
-    query,
-    query_with_final,
+    statement,
+    parallel_selects=1,
+    final=0,
+    table_name=None,
     node=None,
-    negative=False,
     concurent_data_changes=False,
+    first_delete_id=None,
+    last_delete_id=None,
+    first_update_id=None,
+    last_update_id=None,
 ):
     """
     Insert, update, delete for concurrent queries.
@@ -1324,16 +1250,12 @@ def concurrent_queries(
     :return:
     """
     with Given("I start concurrently insert, update and delete queries in MySql table"):
-        By("checking data", select=select_simple, parallel=True)(
-            query=query, query_with_final=query_with_final, node=node, negative=negative
-        )
+        for i in range(parallel_selects):
+            By("checking data", test=select_simple, parallel=True)(
+                statement=statement, final=final, node=node
+            )
 
         if concurent_data_changes:
-            By("inserting data", test=insert_controlled_interval, parallel=True,)(
-                first_insert_id=first_insert_id,
-                last_insert_id=last_insert_id,
-                table_name=table_name,
-            )
             By("deleting data", test=delete, parallel=True,)(
                 first_delete_id=first_delete_id,
                 last_delete_id=last_delete_id,
