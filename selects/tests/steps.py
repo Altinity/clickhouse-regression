@@ -1221,7 +1221,7 @@ def update(self, first_update_id, last_update_id, table_name):
             mysql.query(f"UPDATE {table_name} SET k=k+5 WHERE id={i};")
 
 
-@TestStep(Then)
+@TestStep(When)
 def concurrent_queries(
     self,
     statement,
@@ -1236,7 +1236,8 @@ def concurrent_queries(
     last_update_id=None,
 ):
     """
-    Insert, update, delete for concurrent queries.
+    Run concurrent queries with optional parallel insert, update, and delete.
+   
     :param self:
     :param table_name: table name
     :param first_insert_number: first id of precondition insert
@@ -1249,20 +1250,20 @@ def concurrent_queries(
     :param last_update_id: last id of concurrent update
     :return:
     """
-    with Given("I start concurrently insert, update and delete queries in MySql table"):
-        for i in range(parallel_selects):
-            By("checking data", test=select_simple, parallel=True)(
-                statement=statement, final=final, node=node
-            )
+    for i in range(parallel_selects):
+        By("seleting data", test=select_simple, parallel=True)(
+            statement=statement, final=final, node=node
+        )
 
-        if concurent_data_changes:
-            By("deleting data", test=delete, parallel=True,)(
-                first_delete_id=first_delete_id,
-                last_delete_id=last_delete_id,
-                table_name=table_name,
-            )
-            By("updating data", test=update, parallel=True,)(
-                first_update_id=first_update_id,
-                last_update_id=last_update_id,
-                table_name=table_name,
-            )
+    if concurent_data_changes:
+        By("deleting data", test=delete, parallel=True,)(
+            first_delete_id=first_delete_id,
+            last_delete_id=last_delete_id,
+            table_name=table_name,
+        )
+   
+        By("updating data", test=update, parallel=True,)(
+            first_update_id=first_update_id,
+            last_update_id=last_update_id,
+            table_name=table_name,
+        )
