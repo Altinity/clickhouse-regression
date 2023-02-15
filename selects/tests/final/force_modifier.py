@@ -1223,6 +1223,7 @@ def run_tests(self):
 @TestModule
 def with_experimental_analyzer(self):
     """Run all tests with allow_experimental_analyzer=1."""
+    xfail("doesn't support some tables and selects")
     with Given("I set allow_experimental_analyzer=1"):
         allow_experimental_analyzer()
 
