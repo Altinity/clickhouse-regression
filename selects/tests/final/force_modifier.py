@@ -5,9 +5,7 @@ from helpers.common import check_clickhouse_version
 
 
 @TestOutline
-def select(
-    self, query, query_with_final, node=None, negative=False, table=None
-):
+def select(self, query, query_with_final, node=None, negative=False, table=None):
     """Checking basic selects with `FINAL` clause equal to force_select_final select."""
     if node is None:
         node = self.context.node
@@ -25,7 +23,7 @@ def select(
                 without_final = node.query(query.format(name=table.name)).output.strip()
 
             with And(
-                    "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
+                "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
             ):
                 force_select_final = node.query(
                     query.format(name=table.name),
@@ -35,8 +33,8 @@ def select(
             if negative:
                 with Then("I check that compare results are different"):
                     if (
-                            table.final_modifier_available
-                            and without_final != explicit_final
+                        table.final_modifier_available
+                        and without_final != explicit_final
                     ):
                         assert without_final != force_select_final
             else:
@@ -63,10 +61,10 @@ def select_count(self):
                 table
                 for table in self.context.tables
                 if table.name.endswith("core")
-                   or table.name.endswith("cluster")
-                   or table.name.endswith("clusterdistributed")
-                   or table.name.endswith("_nview_final")
-                   or table.name.endswith("_mview")
+                or table.name.endswith("cluster")
+                or table.name.endswith("clusterdistributed")
+                or table.name.endswith("_nview_final")
+                or table.name.endswith("_mview")
             ],
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
@@ -76,7 +74,12 @@ def select_count(self):
             select(query=query, query_with_final=query_with_final, table=table)
 
         with And("I check negative case"):
-            select(query=query, query_with_final=query_with_final, table=table, negative=True)
+            select(
+                query=query,
+                query_with_final=query_with_final,
+                table=table,
+                negative=True,
+            )
 
 
 @TestScenario
@@ -100,10 +103,10 @@ def select_limit(self):
                 table
                 for table in self.context.tables
                 if table.name.endswith("core")
-                   or table.name.endswith("cluster")
-                   or table.name.endswith("clusterdistributed")
-                   or table.name.endswith("_nview_final")
-                   or table.name.endswith("_mview")
+                or table.name.endswith("cluster")
+                or table.name.endswith("clusterdistributed")
+                or table.name.endswith("_nview_final")
+                or table.name.endswith("_mview")
             ],
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
@@ -113,7 +116,12 @@ def select_limit(self):
             select(query=query, query_with_final=query_with_final, table=table)
 
         with And("I check negative case"):
-            select(query=query, query_with_final=query_with_final, table=table, negative=True)
+            select(
+                query=query,
+                query_with_final=query_with_final,
+                table=table,
+                negative=True,
+            )
 
 
 @TestScenario
@@ -138,10 +146,10 @@ def select_limit_by(self):
                 table
                 for table in self.context.tables
                 if table.name.endswith("core")
-                   or table.name.endswith("cluster")
-                   or table.name.endswith("clusterdistributed")
-                   or table.name.endswith("_nview_final")
-                   or table.name.endswith("_mview")
+                or table.name.endswith("cluster")
+                or table.name.endswith("clusterdistributed")
+                or table.name.endswith("_nview_final")
+                or table.name.endswith("_mview")
             ],
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
@@ -151,7 +159,12 @@ def select_limit_by(self):
             select(query=query, query_with_final=query_with_final, table=table)
 
         with And("I check negative case"):
-            select(query=query, query_with_final=query_with_final, table=table, negative=True)
+            select(
+                query=query,
+                query_with_final=query_with_final,
+                table=table,
+                negative=True,
+            )
 
 
 @TestScenario
@@ -176,10 +189,10 @@ def select_group_by(self):
                 table
                 for table in self.context.tables
                 if table.name.endswith("core")
-                   or table.name.endswith("cluster")
-                   or table.name.endswith("clusterdistributed")
-                   or table.name.endswith("_nview_final")
-                   or table.name.endswith("_mview")
+                or table.name.endswith("cluster")
+                or table.name.endswith("clusterdistributed")
+                or table.name.endswith("_nview_final")
+                or table.name.endswith("_mview")
             ],
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
@@ -189,7 +202,12 @@ def select_group_by(self):
             select(query=query, query_with_final=query_with_final, table=table)
 
         with And("I check negative case"):
-            select(query=query, query_with_final=query_with_final, table=table, negative=True)
+            select(
+                query=query,
+                query_with_final=query_with_final,
+                table=table,
+                negative=True,
+            )
 
 
 @TestScenario
@@ -215,10 +233,10 @@ def select_distinct(self):
                 table
                 for table in self.context.tables
                 if table.name.endswith("core")
-                   or table.name.endswith("cluster")
-                   or table.name.endswith("clusterdistributed")
-                   or table.name.endswith("_nview_final")
-                   or table.name.endswith("_mview")
+                or table.name.endswith("cluster")
+                or table.name.endswith("clusterdistributed")
+                or table.name.endswith("_nview_final")
+                or table.name.endswith("_mview")
             ],
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
@@ -228,7 +246,12 @@ def select_distinct(self):
             select(query=query, query_with_final=query_with_final, table=table)
 
         with And("I check negative case"):
-            select(query=query, query_with_final=query_with_final, table=table, negative=True)
+            select(
+                query=query,
+                query_with_final=query_with_final,
+                table=table,
+                negative=True,
+            )
 
 
 @TestScenario
@@ -291,10 +314,10 @@ def select_where(self):
                 table
                 for table in self.context.tables
                 if table.name.endswith("core")
-                   or table.name.endswith("cluster")
-                   or table.name.endswith("clusterdistributed")
-                   or table.name.endswith("_nview_final")
-                   or table.name.endswith("_mview")
+                or table.name.endswith("cluster")
+                or table.name.endswith("clusterdistributed")
+                or table.name.endswith("_nview_final")
+                or table.name.endswith("_mview")
             ],
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
@@ -304,7 +327,12 @@ def select_where(self):
             select(query=query, query_with_final=query_with_final, table=table)
 
         with And("I check negative case"):
-            select(query=query, query_with_final=query_with_final, table=table, negative=True)
+            select(
+                query=query,
+                query_with_final=query_with_final,
+                table=table,
+                negative=True,
+            )
 
 
 @TestScenario
