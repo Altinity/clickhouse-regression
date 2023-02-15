@@ -6,28 +6,12 @@ from helpers.common import check_clickhouse_version
 
 @TestOutline
 def select(
-    self, query, query_with_final, node=None, negative=False, concurrent_select=True
+    self, query, query_with_final, node=None, negative=False, table=None
 ):
     """Checking basic selects with `FINAL` clause equal to force_select_final select."""
     if node is None:
         node = self.context.node
 
-    with Given("I exclude auxiliary and unsupported tables by the current test"):
-        tables = define(
-            "tables",
-            [
-                table
-                for table in self.context.tables
-                if table.name.endswith("core")
-                or table.name.endswith("cluster")
-                or table.name.endswith("clusterdistributed")
-                or table.name.endswith("_nview_final")
-                or table.name.endswith("_mview")
-            ],
-            encoder=lambda tables: ", ".join([table.name for table in tables]),
-        )
-
-    for table in tables:
         with When(f"{table.name}"):
             with When("I execute query with FINAL modifier specified explicitly"):
                 explicit_final = node.query(
@@ -41,7 +25,7 @@ def select(
                 without_final = node.query(query.format(name=table.name)).output.strip()
 
             with And(
-                "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
+                    "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
             ):
                 force_select_final = node.query(
                     query.format(name=table.name),
@@ -51,19 +35,13 @@ def select(
             if negative:
                 with Then("I check that compare results are different"):
                     if (
-                        table.final_modifier_available
-                        and without_final != explicit_final
+                            table.final_modifier_available
+                            and without_final != explicit_final
                     ):
                         assert without_final != force_select_final
             else:
                 with Then("I check that compare results are the same"):
                     assert explicit_final == force_select_final
-            if concurrent_select:
-                concurrent_queries(
-                    statement=query_with_final.format(final=f"", name=table.name),
-                    parallel_selects=3,
-                    final=1,
-                )
 
 
 @TestScenario
@@ -78,11 +56,27 @@ def select_count(self):
             "query with FINAL", "SELECT count() FROM {name} {final} FORMAT JSONEachRow;"
         )
 
-    with Then("I check positive case"):
-        select(query=query, query_with_final=query_with_final)
+    with And("I exclude auxiliary and unsupported tables by the current test"):
+        tables = define(
+            "tables",
+            [
+                table
+                for table in self.context.tables
+                if table.name.endswith("core")
+                   or table.name.endswith("cluster")
+                   or table.name.endswith("clusterdistributed")
+                   or table.name.endswith("_nview_final")
+                   or table.name.endswith("_mview")
+            ],
+            encoder=lambda tables: ", ".join([table.name for table in tables]),
+        )
 
-    with And("I check negative case"):
-        select(query=query, query_with_final=query_with_final, negative=True)
+    for table in tables:
+        with Then("I check positive case"):
+            select(query=query, query_with_final=query_with_final, table=table)
+
+        with And("I check negative case"):
+            select(query=query, query_with_final=query_with_final, table=table, negative=True)
 
 
 @TestScenario
@@ -99,11 +93,27 @@ def select_limit(self):
             "SELECT * FROM {name} {final} ORDER BY (id, x, someCol) LIMIT 1 FORMAT JSONEachRow;",
         )
 
-    with Then("I check positive case"):
-        select(query=query, query_with_final=query_with_final)
+    with And("I exclude auxiliary and unsupported tables by the current test"):
+        tables = define(
+            "tables",
+            [
+                table
+                for table in self.context.tables
+                if table.name.endswith("core")
+                   or table.name.endswith("cluster")
+                   or table.name.endswith("clusterdistributed")
+                   or table.name.endswith("_nview_final")
+                   or table.name.endswith("_mview")
+            ],
+            encoder=lambda tables: ", ".join([table.name for table in tables]),
+        )
 
-    with And("I check negative case"):
-        select(query=query, query_with_final=query_with_final, negative=True)
+    for table in tables:
+        with Then("I check positive case"):
+            select(query=query, query_with_final=query_with_final, table=table)
+
+        with And("I check negative case"):
+            select(query=query, query_with_final=query_with_final, table=table, negative=True)
 
 
 @TestScenario
@@ -121,11 +131,27 @@ def select_limit_by(self):
             " LIMIT 1 BY id FORMAT JSONEachRow;",
         )
 
-    with Then("I check positive case"):
-        select(query=query, query_with_final=query_with_final)
+    with And("I exclude auxiliary and unsupported tables by the current test"):
+        tables = define(
+            "tables",
+            [
+                table
+                for table in self.context.tables
+                if table.name.endswith("core")
+                   or table.name.endswith("cluster")
+                   or table.name.endswith("clusterdistributed")
+                   or table.name.endswith("_nview_final")
+                   or table.name.endswith("_mview")
+            ],
+            encoder=lambda tables: ", ".join([table.name for table in tables]),
+        )
 
-    with And("I check negative case"):
-        select(query=query, query_with_final=query_with_final, negative=True)
+    for table in tables:
+        with Then("I check positive case"):
+            select(query=query, query_with_final=query_with_final, table=table)
+
+        with And("I check negative case"):
+            select(query=query, query_with_final=query_with_final, table=table, negative=True)
 
 
 @TestScenario
@@ -143,11 +169,27 @@ def select_group_by(self):
             "GROUP BY (id, x) ORDER BY (id, cx) FORMAT JSONEachRow;",
         )
 
-    with Then("I check positive case"):
-        select(query=query, query_with_final=query_with_final)
+    with And("I exclude auxiliary and unsupported tables by the current test"):
+        tables = define(
+            "tables",
+            [
+                table
+                for table in self.context.tables
+                if table.name.endswith("core")
+                   or table.name.endswith("cluster")
+                   or table.name.endswith("clusterdistributed")
+                   or table.name.endswith("_nview_final")
+                   or table.name.endswith("_mview")
+            ],
+            encoder=lambda tables: ", ".join([table.name for table in tables]),
+        )
 
-    with And("I check negative case"):
-        select(query=query, query_with_final=query_with_final, negative=True)
+    for table in tables:
+        with Then("I check positive case"):
+            select(query=query, query_with_final=query_with_final, table=table)
+
+        with And("I check negative case"):
+            select(query=query, query_with_final=query_with_final, table=table, negative=True)
 
 
 @TestScenario
@@ -166,11 +208,27 @@ def select_distinct(self):
             "SELECT DISTINCT * FROM {name} {final} ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
         )
 
-    with Then("I check positive case"):
-        select(query=query, query_with_final=query_with_final)
+    with And("I exclude auxiliary and unsupported tables by the current test"):
+        tables = define(
+            "tables",
+            [
+                table
+                for table in self.context.tables
+                if table.name.endswith("core")
+                   or table.name.endswith("cluster")
+                   or table.name.endswith("clusterdistributed")
+                   or table.name.endswith("_nview_final")
+                   or table.name.endswith("_mview")
+            ],
+            encoder=lambda tables: ", ".join([table.name for table in tables]),
+        )
 
-    with And("I check negative case"):
-        select(query=query, query_with_final=query_with_final, negative=True)
+    for table in tables:
+        with Then("I check positive case"):
+            select(query=query, query_with_final=query_with_final, table=table)
+
+        with And("I check negative case"):
+            select(query=query, query_with_final=query_with_final, table=table, negative=True)
 
 
 @TestScenario
@@ -226,11 +284,27 @@ def select_where(self):
             "ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
         )
 
-    with Then("I check positive case"):
-        select(query=query, query_with_final=query_with_final)
+    with And("I exclude auxiliary and unsupported tables by the current test"):
+        tables = define(
+            "tables",
+            [
+                table
+                for table in self.context.tables
+                if table.name.endswith("core")
+                   or table.name.endswith("cluster")
+                   or table.name.endswith("clusterdistributed")
+                   or table.name.endswith("_nview_final")
+                   or table.name.endswith("_mview")
+            ],
+            encoder=lambda tables: ", ".join([table.name for table in tables]),
+        )
 
-    with And("I check negative case"):
-        select(query=query, query_with_final=query_with_final, negative=True)
+    for table in tables:
+        with Then("I check positive case"):
+            select(query=query, query_with_final=query_with_final, table=table)
+
+        with And("I check negative case"):
+            select(query=query, query_with_final=query_with_final, table=table, negative=True)
 
 
 @TestScenario

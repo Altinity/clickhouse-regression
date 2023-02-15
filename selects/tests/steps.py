@@ -99,62 +99,6 @@ def create_and_populate_table(
             )
 
 
-@TestStep(When)
-def insert(
-    self,
-    table_name,
-    values,
-    range_value,
-    distributed=False,
-    node=None,
-    partitions=2,
-    parts_per_partition=2,
-    block_size=2,
-):
-    """Insert data having specified number of partitions and parts."""
-    if node is None:
-        node = current().context.node
-
-        insert_values_1 = ",".join(
-            f"{values[0]}".format(x=x, y=y)
-            for x in range(partitions)
-            for y in range(block_size * parts_per_partition)
-        )
-        insert_values_2 = ",".join(
-            f"{values[1]}".format(x=x, y=y)
-            for x in range(partitions)
-            for y in range(block_size * parts_per_partition)
-        )
-
-        if distributed:
-            node.query("system stop merges")
-            for i in range(range_value):
-                node.query(
-                    f"INSERT INTO {table_name} VALUES {insert_values_1}",
-                    settings=[
-                        ("insert_distributed_one_random_shard", 1),
-                        ("max_block_size", block_size),
-                    ],
-                )
-                node.query(
-                    f"INSERT INTO {table_name} VALUES {insert_values_2}",
-                    settings=[
-                        ("insert_distributed_one_random_shard", 1),
-                        ("max_block_size", block_size),
-                    ],
-                )
-        else:
-            node.query("system stop merges")
-            node.query(
-                f"INSERT INTO {table_name} VALUES {insert_values_1}",
-                settings=[("max_block_size", block_size)],
-            )
-            node.query(
-                f"INSERT INTO {table_name} VALUES {insert_values_2}",
-                settings=[("max_block_size", block_size)],
-            )
-
-
 class Table:
     def __init__(
         self,
@@ -1184,6 +1128,62 @@ def select_simple(self, statement, final=0, node=None):
 
 
 @TestStep(When)
+def insert(
+    self,
+    table_name,
+    values,
+    range_value,
+    distributed=False,
+    node=None,
+    partitions=2,
+    parts_per_partition=2,
+    block_size=2,
+):
+    """Insert data having specified number of partitions and parts."""
+    if node is None:
+        node = current().context.node
+
+        insert_values_1 = ",".join(
+            f"{values[0]}".format(x=x, y=y)
+            for x in range(partitions)
+            for y in range(block_size * parts_per_partition)
+        )
+        insert_values_2 = ",".join(
+            f"{values[1]}".format(x=x, y=y)
+            for x in range(partitions)
+            for y in range(block_size * parts_per_partition)
+        )
+
+        if distributed:
+            node.query("system stop merges")
+            for i in range(range_value):
+                node.query(
+                    f"INSERT INTO {table_name} VALUES {insert_values_1}",
+                    settings=[
+                        ("insert_distributed_one_random_shard", 1),
+                        ("max_block_size", block_size),
+                    ],
+                )
+                node.query(
+                    f"INSERT INTO {table_name} VALUES {insert_values_2}",
+                    settings=[
+                        ("insert_distributed_one_random_shard", 1),
+                        ("max_block_size", block_size),
+                    ],
+                )
+        else:
+            node.query("system stop merges")
+            node.query(
+                f"INSERT INTO {table_name} VALUES {insert_values_1}",
+                settings=[("max_block_size", block_size)],
+            )
+            node.query(
+                f"INSERT INTO {table_name} VALUES {insert_values_2}",
+                settings=[("max_block_size", block_size)],
+            )
+
+
+@TestStep(When)
 def delete(self, first_delete_id, last_delete_id, table_name):
     """
     Delete query step
@@ -1218,7 +1218,7 @@ def update(self, first_update_id, last_update_id, table_name):
         f"I update {last_update_id - first_update_id} rows of data in MySql table"
     ):
         for i in range(first_update_id, last_update_id):
-            mysql.query(f"UPDATE {table_name} SET k=k+5 WHERE id={i};")
+            mysql.query(f"UPDATE {table_name} SET x=x+5 WHERE id={i};")
 
 
 @TestStep(When)
@@ -1251,11 +1251,12 @@ def concurrent_queries(
     :return:
     """
     for i in range(parallel_selects):
-        By("seleting data", test=select_simple, parallel=True)(
+        By("selecting data", test=select_simple, parallel=True)(
             statement=statement, final=final, node=node
         )
 
-    if concurent_data_changes:
+        By("")
+
         By("deleting data", test=delete, parallel=True,)(
             first_delete_id=first_delete_id,
             last_delete_id=last_delete_id,
