@@ -1184,6 +1184,24 @@ def insert(
 
 
 @TestStep(When)
+def simple_insert(self, first_insert_id, last_insert_id, table_name):
+    """
+    Delete query step
+    :param self:
+    :param first_delete_id:
+    :param last_delete_id:
+    :param table_name:
+    :return:
+    """
+    mysql = self.context.cluster.node("clickhouse1")
+
+    with Given(
+        f"I delete {first_insert_id - last_insert_id} rows of data in MySql table"
+    ):
+        for i in range(first_insert_id, last_insert_id):
+            mysql.query(f"DELETE FROM {table_name} WHERE id={i}")
+
+@TestStep(When)
 def delete(self, first_delete_id, last_delete_id, table_name):
     """
     Delete query step
@@ -1225,11 +1243,16 @@ def update(self, first_update_id, last_update_id, table_name):
 def concurrent_queries(
     self,
     statement,
-    parallel_selects=1,
+    parallel_runs=1,
+    parallel_selects=0,
+    parallel_inserts=0,
+    parallel_deletes=0,
+    parallel_updates=0,
     final=0,
     table_name=None,
     node=None,
-    concurent_data_changes=False,
+    first_insert_id=None,
+    last_insert_id=None,
     first_delete_id=None,
     last_delete_id=None,
     first_update_id=None,
@@ -1250,21 +1273,43 @@ def concurrent_queries(
     :param last_update_id: last id of concurrent update
     :return:
     """
-    for i in range(parallel_selects):
-        By("selecting data", test=select_simple, parallel=True)(
-            statement=statement, final=final, node=node
-        )
+    for i in range(parallel_runs):
+        if parallel_selects > 0:
+            for i in range(parallel_selects):
+                By("selecting data", test=select_simple, parallel=True)(
+                    statement=statement, final=final, node=node
+                )
 
-        By("")
+        if parallel_inserts > 0:
+            for i in range(parallel_inserts):
+                By("inserting data", test=simple_insert, parallel=True)(
+                    first_delete_id=first_delete_id,
+                    last_delete_id=last_delete_id,
+                    table_name=table_name,
+                )
 
-        By("deleting data", test=delete, parallel=True,)(
-            first_delete_id=first_delete_id,
-            last_delete_id=last_delete_id,
-            table_name=table_name,
-        )
+        if parallel_deletes > 0:
+            for i in range(parallel_deletes):
+                By("deleting data", test=delete, parallel=True, )(
+                    first_insert_id=first_insert_id,
+                    last_insert_id=last_insert_id,
+                    table_name=table_name,
+                )
+
+        if parallel_updates > 0:
+            for i in range(parallel_updates):
+                By("updating data", test=update, parallel=True, )(
+                    first_update_id=first_update_id,
+                    last_update_id=last_update_id,
+                    table_name=table_name,
+                )
+
+
+
+
+
+
+
+
    
-        By("updating data", test=update, parallel=True,)(
-            first_update_id=first_update_id,
-            last_update_id=last_update_id,
-            table_name=table_name,
-        )
+
