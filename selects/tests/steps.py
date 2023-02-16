@@ -1164,13 +1164,13 @@ def insert(
 def create_and_populate_all_tables(self):
     """Create all kind of tables."""
     create_and_populate_core_tables()
-    # add_system_tables()
-    # create_and_populate_distributed_tables()
-    # create_all_views()
-    # create_and_populate_core_tables(duplicate=True)
-    # create_normal_view_with_join()
-    # create_replicated_table_2shards3replicas()
-    # create_expression_subquery_table()
+    add_system_tables()
+    create_and_populate_distributed_tables()
+    create_all_views()
+    create_and_populate_core_tables(duplicate=True)
+    create_normal_view_with_join()
+    create_replicated_table_2shards3replicas()
+    create_expression_subquery_table()
 
 
 @TestStep(When)
