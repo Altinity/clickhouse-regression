@@ -1171,6 +1171,3 @@ def create_and_populate_all_tables(self):
     create_normal_view_with_join()
     create_replicated_table_2shards3replicas()
     create_expression_subquery_table()
-
-
-

@@ -1,60 +1,17 @@
+import os
 from testflows.core import *
 from selects.requirements import *
 from selects.tests.steps import *
 from helpers.common import check_clickhouse_version
-
-
-@TestOutline
-def select(self, query, query_with_final, node=None, negative=False, table=None):
-    """Checking basic selects with `FINAL` clause equal to force_select_final select."""
-    if node is None:
-        node = self.context.node
-
-        with When(f"{table.name}"):
-            with When("I execute query with FINAL modifier specified explicitly"):
-                explicit_final = node.query(
-                    query_with_final.format(
-                        name=table.name,
-                        final=f"{' FINAL' if table.final_modifier_available else ''}",
-                    )
-                ).output.strip()
-
-            with And("I execute the same query without FINAL modifier"):
-                without_final = node.query(query.format(name=table.name)).output.strip()
-
-            with And(
-                "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
-            ):
-                force_select_final = node.query(
-                    query.format(name=table.name),
-                    settings=[("final", 1)],
-                ).output.strip()
-
-            if negative:
-                with Then("I check that compare results are different"):
-                    if (
-                        table.final_modifier_available
-                        and without_final != explicit_final
-                    ):
-                        assert without_final != force_select_final
-            else:
-                with Then("I check that compare results are the same"):
-                    assert explicit_final == force_select_final
+import tests.select_steps as select
+from tests.concurrent_query_steps import *
 
 
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Select("1.0"))
-def select_count(self):
+def simple_select_count(self):
     """Check `SELECT count()` clause."""
-    with Given("I create queries with and without `FINAL`."):
-        query = define(
-            "query without FINAL", "SELECT count() FROM {name} FORMAT JSONEachRow;"
-        )
-        query_with_final = define(
-            "query with FINAL", "SELECT count() FROM {name} {final} FORMAT JSONEachRow;"
-        )
-
-    with And("I exclude auxiliary and unsupported tables by the current test"):
+    with Given("I chose tables for testing"):
         tables = define(
             "tables",
             [
@@ -69,34 +26,23 @@ def select_count(self):
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
 
-    for table in tables:
-        with Then("I check positive case"):
-            select(query=query, query_with_final=query_with_final, table=table)
+    with And("I choose check selects for testing"):
+        selects_check = define(
+            "Select statements",
+            [
+                select.count_result_check,
+                select.count_negative_result_check,
+            ],
+        )
 
-        with And("I check negative case"):
-            select(
-                query=query,
-                query_with_final=query_with_final,
-                table=table,
-                negative=True,
-            )
+    parallel_outline(tables=tables, selects=selects_check, iterations=1, parallel_select=False)
 
 
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Limit("1.0"))
-def select_limit(self):
+def simple_select_limit(self):
     """Check SELECT query with `LIMIT` clause."""
-    with Given("I create queries with and without `FINAL`."):
-        query = define(
-            "query without FINAL",
-            "SELECT * FROM {name} ORDER BY (id, x, someCol) LIMIT 1 FORMAT JSONEachRow;",
-        )
-        query_with_final = define(
-            "query with FINAL",
-            "SELECT * FROM {name} {final} ORDER BY (id, x, someCol) LIMIT 1 FORMAT JSONEachRow;",
-        )
-
-    with And("I exclude auxiliary and unsupported tables by the current test"):
+    with Given("I chose tables for testing"):
         tables = define(
             "tables",
             [
@@ -105,41 +51,28 @@ def select_limit(self):
                 if table.name.endswith("core")
                 or table.name.endswith("cluster")
                 or table.name.endswith("clusterdistributed")
-                or table.name.endswith("_nview_final")
                 or table.name.endswith("_mview")
             ],
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
 
-    for table in tables:
-        with Then("I check positive case"):
-            select(query=query, query_with_final=query_with_final, table=table)
+    with And("I choose check selects for testing"):
+        selects_check = define(
+            "Select statements",
+            [
+                select.limit_result_check,
+                select.limit_negative_result_check,
+            ],
+        )
 
-        with And("I check negative case"):
-            select(
-                query=query,
-                query_with_final=query_with_final,
-                table=table,
-                negative=True,
-            )
+    parallel_outline(tables=tables, selects=selects_check, iterations=1, parallel_select=False)
 
 
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_LimitBy("1.0"))
-def select_limit_by(self):
+def simple_select_limit_by(self):
     """Check SELECT query with `LIMIT BY` clause."""
-    with Given("I create queries with and without `FINAL`."):
-        query = define(
-            "query without FINAL",
-            "SELECT * FROM {name} ORDER BY (id, x, someCol) LIMIT 1 BY id FORMAT JSONEachRow;",
-        )
-        query_with_final = define(
-            "query with FINAL",
-            "SELECT * FROM {name} {final} ORDER BY (id, x, someCol)"
-            " LIMIT 1 BY id FORMAT JSONEachRow;",
-        )
-
-    with And("I exclude auxiliary and unsupported tables by the current test"):
+    with Given("I chose tables for testing"):
         tables = define(
             "tables",
             [
@@ -154,35 +87,23 @@ def select_limit_by(self):
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
 
-    for table in tables:
-        with Then("I check positive case"):
-            select(query=query, query_with_final=query_with_final, table=table)
+    with And("I choose check selects for testing"):
+        selects_check = define(
+            "Select statements",
+            [
+                select.limit_by_result_check,
+                select.limit_by_negative_result_check,
+            ],
+        )
 
-        with And("I check negative case"):
-            select(
-                query=query,
-                query_with_final=query_with_final,
-                table=table,
-                negative=True,
-            )
+    parallel_outline(tables=tables, selects=selects_check, iterations=1, parallel_select=False)
 
 
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_GroupBy("1.0"))
-def select_group_by(self):
+def simple_select_group_by(self):
     """Check SELECT query with `GROUP BY` clause."""
-    with Given("I create queries with and without `FINAL`"):
-        query = define(
-            "query without FINAL",
-            "SELECT id, count(x) as cx FROM {name} GROUP BY (id, x) ORDER BY (id, cx) FORMAT JSONEachRow;",
-        )
-        query_with_final = define(
-            "query with FINAL",
-            "SELECT id, count(x) as cx FROM {name} {final} "
-            "GROUP BY (id, x) ORDER BY (id, cx) FORMAT JSONEachRow;",
-        )
-
-    with And("I exclude auxiliary and unsupported tables by the current test"):
+    with Given("I chose tables for testing"):
         tables = define(
             "tables",
             [
@@ -197,36 +118,25 @@ def select_group_by(self):
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
 
-    for table in tables:
-        with Then("I check positive case"):
-            select(query=query, query_with_final=query_with_final, table=table)
+    with And("I choose check selects for testing"):
+        selects_check = define(
+            "Select statements",
+            [
+                select.group_by_result_check,
+                select.group_by_negative_result_check,
+            ],
+        )
 
-        with And("I check negative case"):
-            select(
-                query=query,
-                query_with_final=query_with_final,
-                table=table,
-                negative=True,
-            )
+    parallel_outline(tables=tables, selects=selects_check, iterations=1, parallel_select=False)
 
 
 @TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Distinct("1.0")
 )
-def select_distinct(self):
+def simple_select_distinct(self):
     """Check SELECT query with `DISTINCT` clause."""
-    with Given("I create queries with and without `FINAL`"):
-        query = define(
-            "query without FINAL",
-            "SELECT DISTINCT * FROM {name} ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
-        )
-        query_with_final = define(
-            "query with FINAL",
-            "SELECT DISTINCT * FROM {name} {final} ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
-        )
-
-    with And("I exclude auxiliary and unsupported tables by the current test"):
+    with Given("I chose tables for testing"):
         tables = define(
             "tables",
             [
@@ -241,73 +151,52 @@ def select_distinct(self):
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
 
-    for table in tables:
-        with Then("I check positive case"):
-            select(query=query, query_with_final=query_with_final, table=table)
+    with And("I choose check selects for testing"):
+        selects_check = define(
+            "Select statements",
+            [
+                select.distinct_result_check,
+                select.distinct_negative_result_check,
+            ],
+        )
 
-        with And("I check negative case"):
-            select(
-                query=query,
-                query_with_final=query_with_final,
-                table=table,
-                negative=True,
-            )
+    parallel_outline(tables=tables, selects=selects_check, iterations=1, parallel_select=False)
 
 
 @TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Prewhere("1.0")
 )
-def select_prewhere(self, node=None):
+def simple_select_prewhere(self, node=None):
     """Check SELECT query with `PREWHERE` clause."""
-    if node is None:
-        node = self.context.node
+    with Given("I chose tables for testing"):
+        tables = define(
+            "tables",
+            [
+                table
+                for table in self.context.tables
+                if table.name.endswith("core") and not table.engine.endswith("Log")
+            ],
+            encoder=lambda tables: ", ".join([table.name for table in tables]),
+        )
 
-    with Given("I exclude Log family engines as they don't support `PREWHERE`"):
-        tables = [
-            table
-            for table in self.context.tables
-            if table.name.endswith("core") and not table.engine.endswith("Log")
-        ]
+    with And("I choose check selects for testing"):
+        selects_check = define(
+            "Select statements",
+            [
+                select.prewhere_result_check,
+                select.prewhere_negative_result_check,
+            ],
+        )
 
-    for table in tables:
-        with When(f"{table}"):
-            with When("I execute query with FINAL modifier specified explicitly"):
-                explicit_final = node.query(
-                    f"SELECT * FROM {table.name} {' FINAL' if table.final_modifier_available else ''}"
-                    f" PREWHERE x > 3 "
-                    f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;"
-                ).output.strip()
-
-            with And(
-                "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
-            ):
-                force_select_final = node.query(
-                    f"SELECT * FROM {table.name} PREWHERE x > 3 "
-                    f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
-                    settings=[("final", 1)],
-                ).output.strip()
-
-            with Then("I compare results are the same"):
-                assert explicit_final == force_select_final
+    parallel_outline(tables=tables, selects=selects_check, iterations=1, parallel_select=False)
 
 
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Where("1.0"))
-def select_where(self):
+def simple_select_where(self):
     """Check SELECT query with `WHERE` clause."""
-    with Given("I create queries with and without `FINAL`"):
-        query = define(
-            "query without FINAL",
-            "SELECT * FROM {name} WHERE x > 3 ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
-        )
-        query_with_final = define(
-            "query with FINAL",
-            "SELECT * FROM {name} {final} WHERE x > 3 "
-            "ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
-        )
-
-    with And("I exclude auxiliary and unsupported tables by the current test"):
+    with Given("I chose tables for testing"):
         tables = define(
             "tables",
             [
@@ -322,17 +211,16 @@ def select_where(self):
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
 
-    for table in tables:
-        with Then("I check positive case"):
-            select(query=query, query_with_final=query_with_final, table=table)
+    with And("I choose check selects for testing"):
+        selects_check = define(
+            "Select statements",
+            [
+                select.where_result_check,
+                select.where_negative_result_check,
+            ],
+        )
 
-        with And("I check negative case"):
-            select(
-                query=query,
-                query_with_final=query_with_final,
-                table=table,
-                negative=True,
-            )
+    parallel_outline(tables=tables, selects=selects_check, iterations=1, parallel_select=False)
 
 
 @TestScenario
