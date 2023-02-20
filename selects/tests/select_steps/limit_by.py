@@ -65,31 +65,51 @@ def limit_by_query(
 
 @TestStep
 @Name("SELECT `LIMIT BY`")
-def limit_by(self, name,  final_modifier_available):
-    limit_by_query(name=name,  final_modifier_available=final_modifier_available, final_manual=False, final_force=0)
+def limit_by(self, name, final_modifier_available):
+    limit_by_query(
+        name=name,
+        final_modifier_available=final_modifier_available,
+        final_manual=False,
+        final_force=0,
+    )
 
 
 @TestStep
 @Name("SELECT `LIMIT BY` FINAL")
-def limit_by_final(self, name,  final_modifier_available):
-    limit_by_query(name=name,  final_modifier_available=final_modifier_available, final_manual=True, final_force=0)
+def limit_by_final(self, name, final_modifier_available):
+    limit_by_query(
+        name=name,
+        final_modifier_available=final_modifier_available,
+        final_manual=True,
+        final_force=0,
+    )
 
 
 @TestStep
 @Name("SELECT `LIMIT BY` force final")
 def limit_by_ffinal(self, name, final_modifier_available):
-    limit_by_query(name=name,  final_modifier_available=final_modifier_available, final_manual=False, final_force=1)
+    limit_by_query(
+        name=name,
+        final_modifier_available=final_modifier_available,
+        final_manual=False,
+        final_force=1,
+    )
 
 
 @TestStep
 @Name("SELECT `LIMIT BY` FINAL force final")
-def limit_by_final_ffinal(self, name,  final_modifier_available):
-    limit_by_query(name=name,  final_modifier_available=final_modifier_available, final_manual=True, final_force=1)
+def limit_by_final_ffinal(self, name, final_modifier_available):
+    limit_by_query(
+        name=name,
+        final_modifier_available=final_modifier_available,
+        final_manual=True,
+        final_force=1,
+    )
 
 
 @TestStep
 @Name("`LIMIT BY` result check")
-def limit_by_result_check(self, name,  final_modifier_available):
+def limit_by_result_check(self, name, final_modifier_available):
     limit_by_query(
         name=name,
         final_manual=False,

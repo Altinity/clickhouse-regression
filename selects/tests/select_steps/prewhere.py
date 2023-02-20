@@ -65,31 +65,51 @@ def prewhere_query(
 
 @TestStep
 @Name("SELECT `PREWHERE`")
-def prewhere(self, name,  final_modifier_available):
-    prewhere_query(name=name,  final_modifier_available=final_modifier_available, final_manual=False, final_force=0)
+def prewhere(self, name, final_modifier_available):
+    prewhere_query(
+        name=name,
+        final_modifier_available=final_modifier_available,
+        final_manual=False,
+        final_force=0,
+    )
 
 
 @TestStep
 @Name("SELECT `PREWHERE` FINAL")
-def prewhere_final(self, name,  final_modifier_available):
-    prewhere_query(name=name,  final_modifier_available=final_modifier_available, final_manual=True, final_force=0)
+def prewhere_final(self, name, final_modifier_available):
+    prewhere_query(
+        name=name,
+        final_modifier_available=final_modifier_available,
+        final_manual=True,
+        final_force=0,
+    )
 
 
 @TestStep
 @Name("SELECT `PREWHERE` force final")
 def prewhere_ffinal(self, name, final_modifier_available):
-    prewhere_query(name=name,  final_modifier_available=final_modifier_available, final_manual=False, final_force=1)
+    prewhere_query(
+        name=name,
+        final_modifier_available=final_modifier_available,
+        final_manual=False,
+        final_force=1,
+    )
 
 
 @TestStep
 @Name("SELECT `PREWHERE` FINAL force final")
-def prewhere_final_ffinal(self, name,  final_modifier_available):
-    prewhere_query(name=name,  final_modifier_available=final_modifier_available, final_manual=True, final_force=1)
+def prewhere_final_ffinal(self, name, final_modifier_available):
+    prewhere_query(
+        name=name,
+        final_modifier_available=final_modifier_available,
+        final_manual=True,
+        final_force=1,
+    )
 
 
 @TestStep
 @Name("`PREWHERE` result check")
-def prewhere_result_check(self, name,  final_modifier_available):
+def prewhere_result_check(self, name, final_modifier_available):
     prewhere_query(
         name=name,
         final_manual=False,

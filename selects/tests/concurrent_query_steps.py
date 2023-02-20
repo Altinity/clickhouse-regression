@@ -86,11 +86,13 @@ def parallel_outline(
                     if select.name.endswith("negative_select_check"):
                         with Example(f"negative", flags=TE):
                             By(f"{select.name}", test=select, parallel=parallel_select)(
-                                name=table.name, final_modifier_available=table.final_modifier_available,
+                                name=table.name,
+                                final_modifier_available=table.final_modifier_available,
                             )
                     else:
                         By(f"{select.name}", test=select, parallel=parallel_select)(
-                            name=table.name, final_modifier_available=table.final_modifier_available,
+                            name=table.name,
+                            final_modifier_available=table.final_modifier_available,
                         )
 
                 if not inserts is None:

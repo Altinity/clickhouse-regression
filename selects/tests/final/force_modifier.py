@@ -35,7 +35,9 @@ def simple_select_count(self):
             ],
         )
 
-    parallel_outline(tables=tables, selects=selects_check, iterations=1, parallel_select=False)
+    parallel_outline(
+        tables=tables, selects=selects_check, iterations=1, parallel_select=False
+    )
 
 
 @TestScenario
@@ -65,7 +67,9 @@ def simple_select_limit(self):
             ],
         )
 
-    parallel_outline(tables=tables, selects=selects_check, iterations=1, parallel_select=False)
+    parallel_outline(
+        tables=tables, selects=selects_check, iterations=1, parallel_select=False
+    )
 
 
 @TestScenario
@@ -96,7 +100,9 @@ def simple_select_limit_by(self):
             ],
         )
 
-    parallel_outline(tables=tables, selects=selects_check, iterations=1, parallel_select=False)
+    parallel_outline(
+        tables=tables, selects=selects_check, iterations=1, parallel_select=False
+    )
 
 
 @TestScenario
@@ -127,7 +133,9 @@ def simple_select_group_by(self):
             ],
         )
 
-    parallel_outline(tables=tables, selects=selects_check, iterations=1, parallel_select=False)
+    parallel_outline(
+        tables=tables, selects=selects_check, iterations=1, parallel_select=False
+    )
 
 
 @TestScenario
@@ -160,7 +168,9 @@ def simple_select_distinct(self):
             ],
         )
 
-    parallel_outline(tables=tables, selects=selects_check, iterations=1, parallel_select=False)
+    parallel_outline(
+        tables=tables, selects=selects_check, iterations=1, parallel_select=False
+    )
 
 
 @TestScenario
@@ -189,7 +199,9 @@ def simple_select_prewhere(self, node=None):
             ],
         )
 
-    parallel_outline(tables=tables, selects=selects_check, iterations=1, parallel_select=False)
+    parallel_outline(
+        tables=tables, selects=selects_check, iterations=1, parallel_select=False
+    )
 
 
 @TestScenario
@@ -220,7 +232,9 @@ def simple_select_where(self):
             ],
         )
 
-    parallel_outline(tables=tables, selects=selects_check, iterations=1, parallel_select=False)
+    parallel_outline(
+        tables=tables, selects=selects_check, iterations=1, parallel_select=False
+    )
 
 
 @TestScenario

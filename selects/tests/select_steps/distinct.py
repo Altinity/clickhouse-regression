@@ -65,31 +65,51 @@ def distinct_query(
 
 @TestStep
 @Name("SELECT `DISTINCT`")
-def distinct(self, name,  final_modifier_available):
-    distinct_query(name=name,  final_modifier_available=final_modifier_available, final_manual=False, final_force=0)
+def distinct(self, name, final_modifier_available):
+    distinct_query(
+        name=name,
+        final_modifier_available=final_modifier_available,
+        final_manual=False,
+        final_force=0,
+    )
 
 
 @TestStep
 @Name("SELECT `DISTINCT` FINAL")
-def distinct_final(self, name,  final_modifier_available):
-    distinct_query(name=name,  final_modifier_available=final_modifier_available, final_manual=True, final_force=0)
+def distinct_final(self, name, final_modifier_available):
+    distinct_query(
+        name=name,
+        final_modifier_available=final_modifier_available,
+        final_manual=True,
+        final_force=0,
+    )
 
 
 @TestStep
 @Name("SELECT `DISTINCT` force final")
 def distinct_ffinal(self, name, final_modifier_available):
-    distinct_query(name=name,  final_modifier_available=final_modifier_available, final_manual=False, final_force=1)
+    distinct_query(
+        name=name,
+        final_modifier_available=final_modifier_available,
+        final_manual=False,
+        final_force=1,
+    )
 
 
 @TestStep
 @Name("SELECT `DISTINCT` FINAL force final")
-def distinct_final_ffinal(self, name,  final_modifier_available):
-    distinct_query(name=name,  final_modifier_available=final_modifier_available, final_manual=True, final_force=1)
+def distinct_final_ffinal(self, name, final_modifier_available):
+    distinct_query(
+        name=name,
+        final_modifier_available=final_modifier_available,
+        final_manual=True,
+        final_force=1,
+    )
 
 
 @TestStep
 @Name("`DISTINCT` result check")
-def distinct_result_check(self, name,  final_modifier_available):
+def distinct_result_check(self, name, final_modifier_available):
     distinct_query(
         name=name,
         final_manual=False,

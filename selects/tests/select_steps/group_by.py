@@ -65,31 +65,51 @@ def group_by_query(
 
 @TestStep
 @Name("SELECT `GROUP BY`")
-def group_by(self, name,  final_modifier_available):
-    group_by_query(name=name,  final_modifier_available=final_modifier_available, final_manual=False, final_force=0)
+def group_by(self, name, final_modifier_available):
+    group_by_query(
+        name=name,
+        final_modifier_available=final_modifier_available,
+        final_manual=False,
+        final_force=0,
+    )
 
 
 @TestStep
 @Name("SELECT `GROUP BY` FINAL")
-def group_by_final(self, name,  final_modifier_available):
-    group_by_query(name=name,  final_modifier_available=final_modifier_available, final_manual=True, final_force=0)
+def group_by_final(self, name, final_modifier_available):
+    group_by_query(
+        name=name,
+        final_modifier_available=final_modifier_available,
+        final_manual=True,
+        final_force=0,
+    )
 
 
 @TestStep
 @Name("SELECT `GROUP BY` force final")
 def group_by_ffinal(self, name, final_modifier_available):
-    group_by_query(name=name,  final_modifier_available=final_modifier_available, final_manual=False, final_force=1)
+    group_by_query(
+        name=name,
+        final_modifier_available=final_modifier_available,
+        final_manual=False,
+        final_force=1,
+    )
 
 
 @TestStep
 @Name("SELECT `GROUP BY` FINAL force final")
-def group_by_final_ffinal(self, name,  final_modifier_available):
-    group_by_query(name=name,  final_modifier_available=final_modifier_available, final_manual=True, final_force=1)
+def group_by_final_ffinal(self, name, final_modifier_available):
+    group_by_query(
+        name=name,
+        final_modifier_available=final_modifier_available,
+        final_manual=True,
+        final_force=1,
+    )
 
 
 @TestStep
 @Name("`GROUP BY` result check")
-def group_by_result_check(self, name,  final_modifier_available):
+def group_by_result_check(self, name, final_modifier_available):
     group_by_query(
         name=name,
         final_manual=False,
