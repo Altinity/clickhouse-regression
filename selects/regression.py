@@ -12,6 +12,7 @@ from helpers.common import check_clickhouse_version
 from platform import processor as current_cpu
 
 from selects.requirements import *
+from xfails import *
 
 
 def argparser(parser):
@@ -26,47 +27,7 @@ def argparser(parser):
     )
 
 
-xfails = {
-    "final/force modifier/without experimental analyzer/select join clause": [
-        (
-            Fail,
-            "doesn't work in clickhouse"
-            " https://github.com/ClickHouse/"
-            "ClickHouse/issues/8655",
-        )
-    ],
-    "final/modifier": [(Fail, "not implemented")],
-    "/selects/final/force modifier/with experimental analyzer/select group by": [(Fail, "group by conflict analyzer")],
-    "/selects/final/force modifier/with experimental analyzer/select count": [
-        (Fail, "column fail for distributed tables")],
-    "/selects/final/force modifier/with experimental analyzer/select limit": [
-        (Fail, "column fail for distributed tables")],
-    "/selects/final/force modifier/with experimental analyzer/select limit by": [
-        (Fail, "column fail for distributed tables")],
-    "/selects/final/force modifier/with experimental analyzer/select distinct": [
-        (Fail, "column fail for distributed tables")],
-    "/selects/final/force modifier/with experimental analyzer/select prewhere": [
-        (Fail, "column fail for distributed tables")],
-    "/selects/final/force modifier/with experimental analyzer/select where": [
-        (Fail, "column fail for distributed tables")],
-    "/selects/final/force modifier/with experimental analyzer/select multiple join clause select": [
-        (Fail, "column fail for distributed tables")],
-    "/selects/final/force modifier/with experimental analyzer/select nested join clause select": [
-        (Fail, "column fail for distributed tables")],
-    "/selects/final/force modifier/with experimental analyzer/select join clause": [
-        (Fail, "column fail for distributed tables")],
-    "/selects/final/force modifier/with experimental analyzer/select prewhere subquery": [
-        (Fail, "column fail for distributed tables")],
-    "/selects/final/force modifier/with experimental analyzer/select nested subquery": [
-        (Fail, "column fail for distributed tables")],
-    "/selects/final/force modifier/with experimental analyzer/select where subquery": [
-        (Fail, "column fail for distributed tables")],
-    "/selects/final/force modifier/with experimental analyzer/select subquery": [
-        (Fail, "column fail for distributed tables")],
-    "/selects/final/force modifier/with experimental analyzer/select with clause": [
-        (Fail, "column fail for distributed tables")],
-
-}
+xfails = xfails_file
 xflags = {}
 
 

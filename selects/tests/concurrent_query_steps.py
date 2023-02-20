@@ -15,13 +15,13 @@ def simple_select(self, statement, name, final_manual, final=0, node=None):
 
 
 @TestStep(When)
-def simple_insert(self, first_insert_id, last_insert_id, table_name):
+def simple_insert(self, name, first_insert_id=1, last_insert_id=4):
     """
     Insert query step
     :param self:
     :param first_delete_id:
     :param last_delete_id:
-    :param table_name:
+    :param name:
     :return:
     """
     node = self.context.cluster.node("clickhouse1")
@@ -29,109 +29,84 @@ def simple_insert(self, first_insert_id, last_insert_id, table_name):
     with When(f"I insert {first_insert_id - last_insert_id} rows of data"):
         for i in range(first_insert_id, last_insert_id):
             node.query(
-                f"INSERT INTO {table_name} VALUES ({i},777, 77{i}, 'ivan', '2019-01-01 00:00:00')"
+                f"INSERT INTO {name} VALUES ({i},777, 77{i}, 'ivan', '2019-01-01 00:00:00')"
             )
 
 
 @TestStep(When)
-def delete(self, first_delete_id, last_delete_id, table_name):
+def delete(self, name, first_delete_id=1, last_delete_id=4):
     """
     Delete query step
     :param self:
     :param first_delete_id:
     :param last_delete_id:
-    :param table_name:
+    :param name:
     :return:
     """
     node = self.context.cluster.node("clickhouse1")
 
     with When(f"I delete {last_delete_id - first_delete_id} rows of data"):
         for i in range(first_delete_id, last_delete_id):
-            node.query(f"ALTER TABLE {table_name} DELETE WHERE id={i}")
+            node.query(f"ALTER TABLE {name} DELETE WHERE id={i}")
 
 
 @TestStep(When)
-def update(self, first_update_id, last_update_id, table_name):
+def update(self, name, first_update_id=1, last_update_id=4):
     """
     Update query step
     :param self:
     :param first_update_id:
     :param last_update_id:
-    :param table_name:
+    :param name:
     :return:
     """
     node = self.context.cluster.node("clickhouse1")
 
     with When(f"I update {last_update_id - first_update_id} rows of data"):
         for i in range(first_update_id, last_update_id):
-            node.query(f"ALTER TABLE {table_name} UPDATE x=x+5 WHERE id={i};")
+            node.query(f"ALTER TABLE {name} UPDATE x=x+5 WHERE id={i};")
 
-@TestStep(When)
-def concurrent_queries(
+
+@TestOutline
+def parallel_outline(
     self,
-    statement="SELECT count() FROM {name} {final} FORMAT JSONEachRow;",
-    parallel_runs=1,
-    parallel_selects=0,
-    parallel_inserts=0,
-    parallel_deletes=0,
-    parallel_updates=0,
-    final=0,
-    final_manual="",
-    table_name=None,
-    node=None,
-    first_insert_id=None,
-    last_insert_id=None,
-    first_delete_id=None,
-    last_delete_id=None,
-    first_update_id=None,
-    last_update_id=None,
+    tables,
+    selects,
+    inserts=None,
+    updates=None,
+    deletes=None,
+    iterations=10,
+    parallel_select=True,
 ):
-    """
-    Run concurrent select queries with optional parallel insert, update, and delete.
+    """Execute specified selects, inserts, updates, and deletes in parallel."""
+    for table in tables:
+        with Example(f"{table.name}", flags=TE):
+            for i in range(iterations):
+                for select in selects:
+                    if select.name.endswith("negative_select_check"):
+                        with Example(f"negative", flags=TE):
+                            By(f"{select.name}", test=select, parallel=parallel_select)(
+                                name=table.name, final_modifier_available=table.final_modifier_available,
+                            )
+                    else:
+                        By(f"{select.name}", test=select, parallel=parallel_select)(
+                            name=table.name, final_modifier_available=table.final_modifier_available,
+                        )
 
-    :param self:
-    :param table_name: table name
-    :param first_insert_number: first id of precondition insert
-    :param last_insert_number:  last id of precondition insert
-    :param first_insert_id: first id of concurrent insert
-    :param last_insert_id: last id of concurrent insert
-    :param first_delete_id: first id of concurrent delete
-    :param last_delete_id: last id of concurrent delete
-    :param first_update_id: first id of concurrent update
-    :param last_update_id: last id of concurrent update
-    :return:
-    """
-    for i in range(parallel_runs):
-        if parallel_selects > 0:
-            for i in range(parallel_selects):
-                By("selecting data", test=simple_select, parallel=True)(
-                    statement=statement,
-                    name=table_name,
-                    final_manual=final_manual,
-                    final=final,
-                    node=node,
-                )
+                if not inserts is None:
+                    for insert in inserts:
+                        By(f"{insert.name}", test=simple_insert, parallel=True)(
+                            name=table.name
+                        )
 
-        if parallel_inserts > 0:
-            for i in range(parallel_inserts):
-                By("inserting data", test=simple_insert, parallel=True)(
-                    first_insert_id=first_insert_id,
-                    last_insert_id=last_insert_id,
-                    table_name=table_name,
-                )
+                if not updates is None:
+                    for update in updates:
+                        By(f"{update.name}", test=update, parallel=True)(
+                            name=table.name
+                        )
 
-        if parallel_deletes > 0:
-            for i in range(parallel_deletes):
-                By("deleting data", test=delete, parallel=True,)(
-                    first_delete_id=first_delete_id,
-                    last_delete_id=last_delete_id,
-                    table_name=table_name,
-                )
-
-        if parallel_updates > 0:
-            for i in range(parallel_updates):
-                By("updating data", test=update, parallel=True,)(
-                    first_update_id=first_update_id,
-                    last_update_id=last_update_id,
-                    table_name=table_name,
-                )
+                if not deletes is None:
+                    for delete in deletes:
+                        By(f"{delete.name}", test=delete, parallel=True)(
+                            name=table.name
+                        )
