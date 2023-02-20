@@ -48,7 +48,9 @@ def select_count_parallel(self):
     join()
 
     with Then("I check results"):
-        parallel_outline(tables=tables, selects=selects_check, iterations=1, parallel_select=False)
+        parallel_outline(
+            tables=tables, selects=selects_check, iterations=1, parallel_select=False
+        )
 
 
 @TestScenario
@@ -81,22 +83,16 @@ def select_count_parallel_idu(self):
         )
         inserts = define(
             "Insert statements",
-            [
-                insert
-            ],
+            [insert],
         )
         updates = define(
             "Update statements",
-            [
-                update
-            ],
+            [update],
         )
 
         deletes = define(
             "Delete statements",
-            [
-                delete
-            ],
+            [delete],
         )
 
     with And("I choose check selects for testing"):
@@ -109,13 +105,21 @@ def select_count_parallel_idu(self):
         )
 
     with When("I execute concurrent select, insert, delete, update queries"):
-        parallel_outline(tables=tables, selects=selects, inserts=inserts, deletes=deletes, updates=updates,
-                         iterations=10)
+        parallel_outline(
+            tables=tables,
+            selects=selects,
+            inserts=inserts,
+            deletes=deletes,
+            updates=updates,
+            iterations=10,
+        )
 
     join()
 
     with Then("I check results"):
-        parallel_outline(tables=tables, selects=selects_check, iterations=1, parallel_select=False)
+        parallel_outline(
+            tables=tables, selects=selects_check, iterations=1, parallel_select=False
+        )
 
 
 @TestScenario
@@ -162,7 +166,9 @@ def select_limit_parallel(self):
     join()
 
     with Then("I check results"):
-        parallel_outline(tables=tables, selects=selects_check, iterations=1, parallel_select=False)
+        parallel_outline(
+            tables=tables, selects=selects_check, iterations=1, parallel_select=False
+        )
 
 
 @TestScenario
@@ -195,22 +201,16 @@ def select_limit_parallel_idu(self):
         )
         inserts = define(
             "Insert statements",
-            [
-                insert
-            ],
+            [insert],
         )
         updates = define(
             "Update statements",
-            [
-                update
-            ],
+            [update],
         )
 
         deletes = define(
             "Delete statements",
-            [
-                delete
-            ],
+            [delete],
         )
 
     with And("I choose check selects for testing"):
@@ -223,13 +223,21 @@ def select_limit_parallel_idu(self):
         )
 
     with When("I execute concurrent select, insert, delete, update queries"):
-        parallel_outline(tables=tables, selects=selects, inserts=inserts, deletes=deletes, updates=updates,
-                         iterations=10)
+        parallel_outline(
+            tables=tables,
+            selects=selects,
+            inserts=inserts,
+            deletes=deletes,
+            updates=updates,
+            iterations=10,
+        )
 
     join()
 
     with Then("I check results"):
-        parallel_outline(tables=tables, selects=selects_check, iterations=1, parallel_select=False)
+        parallel_outline(
+            tables=tables, selects=selects_check, iterations=1, parallel_select=False
+        )
 
 
 @TestScenario
@@ -276,7 +284,9 @@ def select_limit_by_parallel(self):
     join()
 
     with Then("I check results"):
-        parallel_outline(tables=tables, selects=selects_check, iterations=1, parallel_select=False)
+        parallel_outline(
+            tables=tables, selects=selects_check, iterations=1, parallel_select=False
+        )
 
 
 @TestScenario
@@ -309,22 +319,16 @@ def select_limit_by_parallel_idu(self):
         )
         inserts = define(
             "Insert statements",
-            [
-                insert
-            ],
+            [insert],
         )
         updates = define(
             "Update statements",
-            [
-                update
-            ],
+            [update],
         )
 
         deletes = define(
             "Delete statements",
-            [
-                delete
-            ],
+            [delete],
         )
 
     with And("I choose check selects for testing"):
@@ -337,13 +341,21 @@ def select_limit_by_parallel_idu(self):
         )
 
     with When("I execute concurrent select, insert, delete, update queries"):
-        parallel_outline(tables=tables, selects=selects, inserts=inserts, deletes=deletes, updates=updates,
-                         iterations=10)
+        parallel_outline(
+            tables=tables,
+            selects=selects,
+            inserts=inserts,
+            deletes=deletes,
+            updates=updates,
+            iterations=10,
+        )
 
     join()
 
     with Then("I check results"):
-        parallel_outline(tables=tables, selects=selects_check, iterations=1, parallel_select=False)
+        parallel_outline(
+            tables=tables, selects=selects_check, iterations=1, parallel_select=False
+        )
 
 
 @TestScenario
@@ -390,7 +402,9 @@ def select_group_by_parallel(self):
     join()
 
     with Then("I check results"):
-        parallel_outline(tables=tables, selects=selects_check, iterations=1, parallel_select=False)
+        parallel_outline(
+            tables=tables, selects=selects_check, iterations=1, parallel_select=False
+        )
 
 
 @TestScenario
@@ -423,22 +437,16 @@ def select_group_by_parallel_idu(self):
         )
         inserts = define(
             "Insert statements",
-            [
-                insert
-            ],
+            [insert],
         )
         updates = define(
             "Update statements",
-            [
-                update
-            ],
+            [update],
         )
 
         deletes = define(
             "Delete statements",
-            [
-                delete
-            ],
+            [delete],
         )
 
     with And("I choose check selects for testing"):
@@ -451,13 +459,21 @@ def select_group_by_parallel_idu(self):
         )
 
     with When("I execute concurrent select, insert, delete, update queries"):
-        parallel_outline(tables=tables, selects=selects, inserts=inserts, deletes=deletes, updates=updates,
-                         iterations=10)
+        parallel_outline(
+            tables=tables,
+            selects=selects,
+            inserts=inserts,
+            deletes=deletes,
+            updates=updates,
+            iterations=10,
+        )
 
     join()
 
     with Then("I check results"):
-        parallel_outline(tables=tables, selects=selects_check, iterations=1, parallel_select=False)
+        parallel_outline(
+            tables=tables, selects=selects_check, iterations=1, parallel_select=False
+        )
 
 
 @TestScenario
@@ -504,7 +520,9 @@ def select_distinct_parallel(self):
     join()
 
     with Then("I check results"):
-        parallel_outline(tables=tables, selects=selects_check, iterations=1, parallel_select=False)
+        parallel_outline(
+            tables=tables, selects=selects_check, iterations=1, parallel_select=False
+        )
 
 
 @TestScenario
@@ -537,22 +555,16 @@ def select_distinct_parallel_idu(self):
         )
         inserts = define(
             "Insert statements",
-            [
-                insert
-            ],
+            [insert],
         )
         updates = define(
             "Update statements",
-            [
-                update
-            ],
+            [update],
         )
 
         deletes = define(
             "Delete statements",
-            [
-                delete
-            ],
+            [delete],
         )
 
     with And("I choose check selects for testing"):
@@ -565,13 +577,21 @@ def select_distinct_parallel_idu(self):
         )
 
     with When("I execute concurrent select, insert, delete, update queries"):
-        parallel_outline(tables=tables, selects=selects, inserts=inserts, deletes=deletes, updates=updates,
-                         iterations=10)
+        parallel_outline(
+            tables=tables,
+            selects=selects,
+            inserts=inserts,
+            deletes=deletes,
+            updates=updates,
+            iterations=10,
+        )
 
     join()
 
     with Then("I check results"):
-        parallel_outline(tables=tables, selects=selects_check, iterations=1, parallel_select=False)
+        parallel_outline(
+            tables=tables, selects=selects_check, iterations=1, parallel_select=False
+        )
 
 
 @TestScenario
@@ -618,7 +638,9 @@ def select_prewhere_parallel(self):
     join()
 
     with Then("I check results"):
-        parallel_outline(tables=tables, selects=selects_check, iterations=1, parallel_select=False)
+        parallel_outline(
+            tables=tables, selects=selects_check, iterations=1, parallel_select=False
+        )
 
 
 @TestScenario
@@ -651,22 +673,16 @@ def select_prewhere_parallel_idu(self):
         )
         inserts = define(
             "Insert statements",
-            [
-                insert
-            ],
+            [insert],
         )
         updates = define(
             "Update statements",
-            [
-                update
-            ],
+            [update],
         )
 
         deletes = define(
             "Delete statements",
-            [
-                delete
-            ],
+            [delete],
         )
 
     with And("I choose check selects for testing"):
@@ -679,13 +695,21 @@ def select_prewhere_parallel_idu(self):
         )
 
     with When("I execute concurrent select, insert, delete, update queries"):
-        parallel_outline(tables=tables, selects=selects, inserts=inserts, deletes=deletes, updates=updates,
-                         iterations=10)
+        parallel_outline(
+            tables=tables,
+            selects=selects,
+            inserts=inserts,
+            deletes=deletes,
+            updates=updates,
+            iterations=10,
+        )
 
     join()
 
     with Then("I check results"):
-        parallel_outline(tables=tables, selects=selects_check, iterations=1, parallel_select=False)
+        parallel_outline(
+            tables=tables, selects=selects_check, iterations=1, parallel_select=False
+        )
 
 
 @TestScenario
@@ -732,7 +756,9 @@ def select_where_parallel(self):
     join()
 
     with Then("I check results"):
-        parallel_outline(tables=tables, selects=selects_check, iterations=1, parallel_select=False)
+        parallel_outline(
+            tables=tables, selects=selects_check, iterations=1, parallel_select=False
+        )
 
 
 @TestScenario
@@ -765,22 +791,16 @@ def select_where_parallel_idu(self):
         )
         inserts = define(
             "Insert statements",
-            [
-                insert
-            ],
+            [insert],
         )
         updates = define(
             "Update statements",
-            [
-                update
-            ],
+            [update],
         )
 
         deletes = define(
             "Delete statements",
-            [
-                delete
-            ],
+            [delete],
         )
 
     with And("I choose check selects for testing"):
@@ -793,13 +813,21 @@ def select_where_parallel_idu(self):
         )
 
     with When("I execute concurrent select, insert, delete, update queries"):
-        parallel_outline(tables=tables, selects=selects, inserts=inserts, deletes=deletes, updates=updates,
-                         iterations=10)
+        parallel_outline(
+            tables=tables,
+            selects=selects,
+            inserts=inserts,
+            deletes=deletes,
+            updates=updates,
+            iterations=10,
+        )
 
     join()
 
     with Then("I check results"):
-        parallel_outline(tables=tables, selects=selects_check, iterations=1, parallel_select=False)
+        parallel_outline(
+            tables=tables, selects=selects_check, iterations=1, parallel_select=False
+        )
 
 
 @TestScenario
@@ -872,7 +900,7 @@ def all_simple_selects_parallel(self):
                 select.group_by_result_check,
                 select.group_by_negative_result_check,
                 select.distinct_result_check,
-                select.distinct_negative_result_check
+                select.distinct_negative_result_check,
             ],
         )
 
@@ -882,7 +910,9 @@ def all_simple_selects_parallel(self):
     join()
 
     with Then("I check results"):
-        parallel_outline(tables=tables, selects=selects_check, iterations=1, parallel_select=False)
+        parallel_outline(
+            tables=tables, selects=selects_check, iterations=1, parallel_select=False
+        )
 
 
 @TestModule

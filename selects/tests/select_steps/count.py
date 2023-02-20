@@ -58,31 +58,51 @@ def count_query(
 
 @TestStep
 @Name("SELECT count()")
-def count(self, name,  final_modifier_available):
-    count_query(name=name,  final_modifier_available=final_modifier_available, final_manual=False, final_force=0)
+def count(self, name, final_modifier_available):
+    count_query(
+        name=name,
+        final_modifier_available=final_modifier_available,
+        final_manual=False,
+        final_force=0,
+    )
 
 
 @TestStep
 @Name("SELECT count() FINAL")
-def count_final(self, name,  final_modifier_available):
-    count_query(name=name,  final_modifier_available=final_modifier_available, final_manual=True, final_force=0)
+def count_final(self, name, final_modifier_available):
+    count_query(
+        name=name,
+        final_modifier_available=final_modifier_available,
+        final_manual=True,
+        final_force=0,
+    )
 
 
 @TestStep
 @Name("SELECT count() force final")
 def count_ffinal(self, name, final_modifier_available):
-    count_query(name=name,  final_modifier_available=final_modifier_available, final_manual=False, final_force=1)
+    count_query(
+        name=name,
+        final_modifier_available=final_modifier_available,
+        final_manual=False,
+        final_force=1,
+    )
 
 
 @TestStep
 @Name("SELECT count() FINAL force final")
-def count_final_ffinal(self, name,  final_modifier_available):
-    count_query(name=name,  final_modifier_available=final_modifier_available, final_manual=True, final_force=1)
+def count_final_ffinal(self, name, final_modifier_available):
+    count_query(
+        name=name,
+        final_modifier_available=final_modifier_available,
+        final_manual=True,
+        final_force=1,
+    )
 
 
 @TestStep
 @Name("count() result check")
-def count_result_check(self, name,  final_modifier_available):
+def count_result_check(self, name, final_modifier_available):
     count_query(
         name=name,
         final_manual=False,

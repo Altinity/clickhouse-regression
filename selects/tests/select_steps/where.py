@@ -65,31 +65,51 @@ def where_query(
 
 @TestStep
 @Name("SELECT `WHERE`")
-def where(self, name,  final_modifier_available):
-    where_query(name=name,  final_modifier_available=final_modifier_available, final_manual=False, final_force=0)
+def where(self, name, final_modifier_available):
+    where_query(
+        name=name,
+        final_modifier_available=final_modifier_available,
+        final_manual=False,
+        final_force=0,
+    )
 
 
 @TestStep
 @Name("SELECT `WHERE` FINAL")
-def where_final(self, name,  final_modifier_available):
-    where_query(name=name,  final_modifier_available=final_modifier_available, final_manual=True, final_force=0)
+def where_final(self, name, final_modifier_available):
+    where_query(
+        name=name,
+        final_modifier_available=final_modifier_available,
+        final_manual=True,
+        final_force=0,
+    )
 
 
 @TestStep
 @Name("SELECT `WHERE` force final")
 def where_ffinal(self, name, final_modifier_available):
-    where_query(name=name,  final_modifier_available=final_modifier_available, final_manual=False, final_force=1)
+    where_query(
+        name=name,
+        final_modifier_available=final_modifier_available,
+        final_manual=False,
+        final_force=1,
+    )
 
 
 @TestStep
 @Name("SELECT `WHERE` FINAL force final")
-def where_final_ffinal(self, name,  final_modifier_available):
-    where_query(name=name,  final_modifier_available=final_modifier_available, final_manual=True, final_force=1)
+def where_final_ffinal(self, name, final_modifier_available):
+    where_query(
+        name=name,
+        final_modifier_available=final_modifier_available,
+        final_manual=True,
+        final_force=1,
+    )
 
 
 @TestStep
 @Name("`WHERE` result check")
-def where_result_check(self, name,  final_modifier_available):
+def where_result_check(self, name, final_modifier_available):
     where_query(
         name=name,
         final_manual=False,

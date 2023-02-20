@@ -47,8 +47,7 @@ def limit_query(
                         if (
                             final_modifier_available
                             and node.query(
-                                f"SELECT * FROM {name}"
-                                f" LIMIT 1 FORMAT JSONEachRow"
+                                f"SELECT * FROM {name}" f" LIMIT 1 FORMAT JSONEachRow"
                             ).output.strip()
                             != node.query(
                                 f"SELECT * FROM {name}"
@@ -65,31 +64,51 @@ def limit_query(
 
 @TestStep
 @Name("SELECT `LIMIT`")
-def limit(self, name,  final_modifier_available):
-    limit_query(name=name,  final_modifier_available=final_modifier_available, final_manual=False, final_force=0)
+def limit(self, name, final_modifier_available):
+    limit_query(
+        name=name,
+        final_modifier_available=final_modifier_available,
+        final_manual=False,
+        final_force=0,
+    )
 
 
 @TestStep
 @Name("SELECT `LIMIT` FINAL")
-def limit_final(self, name,  final_modifier_available):
-    limit_query(name=name,  final_modifier_available=final_modifier_available, final_manual=True, final_force=0)
+def limit_final(self, name, final_modifier_available):
+    limit_query(
+        name=name,
+        final_modifier_available=final_modifier_available,
+        final_manual=True,
+        final_force=0,
+    )
 
 
 @TestStep
 @Name("SELECT `LIMIT` force final")
 def limit_ffinal(self, name, final_modifier_available):
-    limit_query(name=name,  final_modifier_available=final_modifier_available, final_manual=False, final_force=1)
+    limit_query(
+        name=name,
+        final_modifier_available=final_modifier_available,
+        final_manual=False,
+        final_force=1,
+    )
 
 
 @TestStep
 @Name("SELECT `LIMIT` FINAL force final")
-def limit_final_ffinal(self, name,  final_modifier_available):
-    limit_query(name=name,  final_modifier_available=final_modifier_available, final_manual=True, final_force=1)
+def limit_final_ffinal(self, name, final_modifier_available):
+    limit_query(
+        name=name,
+        final_modifier_available=final_modifier_available,
+        final_manual=True,
+        final_force=1,
+    )
 
 
 @TestStep
 @Name("`LIMIT` result check")
-def limit_result_check(self, name,  final_modifier_available):
+def limit_result_check(self, name, final_modifier_available):
     limit_query(
         name=name,
         final_manual=False,
@@ -115,4 +134,3 @@ def limit_negative_result_check(self, name, final_modifier_available):
         final_force_check=0,
         negative=True,
     )
-
