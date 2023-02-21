@@ -18,3 +18,4 @@ def module(self):
     Feature(run=load("final.modifier", "feature"))
     Feature(run=load("final.force_modifier", "feature"))
     Feature(run=load("final.force_modifier_concurrent", "feature"))
+    Feature(run=load("final.force_modifier_user_rights", "feature"))
