@@ -143,3 +143,9 @@ def count_negative_result_check(self, name, final_modifier_available):
         final_force_check=0,
         negative=True,
     )
+
+
+@TestStep
+def count_all_combinations(self, name, final_modifier_available):
+    """...."""
+    ...
