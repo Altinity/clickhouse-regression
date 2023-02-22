@@ -4,9 +4,9 @@ from tests.concurrent_query_steps import *
 from tests.steps import *
 
 
-@TestScenario
-@Name("SELECT count() parallel")
-def select_count_parallel(self):
+@TestOutline
+def table_selection(self):
+    """Selecting test tables from all tables"""
     with Given("I chose tables for testing"):
         tables = define(
             "tables",
@@ -14,15 +14,22 @@ def select_count_parallel(self):
                 table
                 for table in self.context.tables
                 if table.name.endswith("core")
-                and (
-                    table.name.startswith("ReplacingMergeTree_table")
-                    or table.name.startswith("MergeTree_table")
-                )
+                   and (
+                           table.name.startswith("ReplacingMergeTree_table")
+                           or table.name.startswith("MergeTree_table")
+                   )
             ],
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
+    return tables
 
-    with And("I choose selects for testing"):
+
+@TestScenario
+@Name("SELECT count() parallel")
+def select_count_parallel(self):
+    tables = table_selection()
+
+    with Given("I choose selects for testing"):
         selects = define(
             "Select statements",
             [
@@ -56,22 +63,9 @@ def select_count_parallel(self):
 @TestScenario
 @Name("SELECT count() parallel inserts, deletes, updates")
 def select_count_parallel_idu(self):
-    with Given("I chose tables for testing"):
-        tables = define(
-            "tables",
-            [
-                table
-                for table in self.context.tables
-                if table.name.endswith("core")
-                and (
-                    table.name.startswith("ReplacingMergeTree_table")
-                    or table.name.startswith("MergeTree_table")
-                )
-            ],
-            encoder=lambda tables: ", ".join([table.name for table in tables]),
-        )
+    tables = table_selection()
 
-    with And("I choose selects, inserts, updates, deletes  for testing"):
+    with Given("I choose selects, inserts, updates, deletes  for testing"):
         selects = define(
             "Select statements",
             [
@@ -125,22 +119,9 @@ def select_count_parallel_idu(self):
 @TestScenario
 @Name("SELECT LIMIT parallel")
 def select_limit_parallel(self):
-    with Given("I chose tables for testing"):
-        tables = define(
-            "tables",
-            [
-                table
-                for table in self.context.tables
-                if table.name.endswith("core")
-                and (
-                    table.name.startswith("ReplacingMergeTree_table")
-                    or table.name.startswith("MergeTree_table")
-                )
-            ],
-            encoder=lambda tables: ", ".join([table.name for table in tables]),
-        )
+    tables = table_selection()
 
-    with And("I choose selects for testing"):
+    with Given("I choose selects for testing"):
         selects = define(
             "Select statements",
             [
@@ -174,22 +155,9 @@ def select_limit_parallel(self):
 @TestScenario
 @Name("SELECT LIMIT parallel inserts, deletes, updates")
 def select_limit_parallel_idu(self):
-    with Given("I chose tables for testing"):
-        tables = define(
-            "tables",
-            [
-                table
-                for table in self.context.tables
-                if table.name.endswith("core")
-                and (
-                    table.name.startswith("ReplacingMergeTree_table")
-                    or table.name.startswith("MergeTree_table")
-                )
-            ],
-            encoder=lambda tables: ", ".join([table.name for table in tables]),
-        )
+    tables = table_selection()
 
-    with And("I choose selects, inserts, updates, deletes  for testing"):
+    with Given("I choose selects, inserts, updates, deletes  for testing"):
         selects = define(
             "Select statements",
             [
@@ -243,22 +211,9 @@ def select_limit_parallel_idu(self):
 @TestScenario
 @Name("SELECT LIMIT BY parallel")
 def select_limit_by_parallel(self):
-    with Given("I chose tables for testing"):
-        tables = define(
-            "tables",
-            [
-                table
-                for table in self.context.tables
-                if table.name.endswith("core")
-                and (
-                    table.name.startswith("ReplacingMergeTree_table")
-                    or table.name.startswith("MergeTree_table")
-                )
-            ],
-            encoder=lambda tables: ", ".join([table.name for table in tables]),
-        )
+    tables = table_selection()
 
-    with And("I choose selects for testing"):
+    with Given("I choose selects for testing"):
         selects = define(
             "Select statements",
             [
@@ -292,22 +247,9 @@ def select_limit_by_parallel(self):
 @TestScenario
 @Name("SELECT LIMIT BY parallel inserts, deletes, updates")
 def select_limit_by_parallel_idu(self):
-    with Given("I chose tables for testing"):
-        tables = define(
-            "tables",
-            [
-                table
-                for table in self.context.tables
-                if table.name.endswith("core")
-                and (
-                    table.name.startswith("ReplacingMergeTree_table")
-                    or table.name.startswith("MergeTree_table")
-                )
-            ],
-            encoder=lambda tables: ", ".join([table.name for table in tables]),
-        )
+    tables = table_selection()
 
-    with And("I choose selects, inserts, updates, deletes  for testing"):
+    with Given("I choose selects, inserts, updates, deletes  for testing"):
         selects = define(
             "Select statements",
             [
@@ -361,22 +303,9 @@ def select_limit_by_parallel_idu(self):
 @TestScenario
 @Name("SELECT GROUP BY parallel")
 def select_group_by_parallel(self):
-    with Given("I chose tables for testing"):
-        tables = define(
-            "tables",
-            [
-                table
-                for table in self.context.tables
-                if table.name.endswith("core")
-                and (
-                    table.name.startswith("ReplacingMergeTree_table")
-                    or table.name.startswith("MergeTree_table")
-                )
-            ],
-            encoder=lambda tables: ", ".join([table.name for table in tables]),
-        )
+    tables = table_selection()
 
-    with And("I choose selects for testing"):
+    with Given("I choose selects for testing"):
         selects = define(
             "Select statements",
             [
@@ -410,22 +339,9 @@ def select_group_by_parallel(self):
 @TestScenario
 @Name("SELECT GROUP BY parallel inserts, deletes, updates")
 def select_group_by_parallel_idu(self):
-    with Given("I chose tables for testing"):
-        tables = define(
-            "tables",
-            [
-                table
-                for table in self.context.tables
-                if table.name.endswith("core")
-                and (
-                    table.name.startswith("ReplacingMergeTree_table")
-                    or table.name.startswith("MergeTree_table")
-                )
-            ],
-            encoder=lambda tables: ", ".join([table.name for table in tables]),
-        )
+    tables = table_selection()
 
-    with And("I choose selects, inserts, updates, deletes  for testing"):
+    with Given("I choose selects, inserts, updates, deletes  for testing"):
         selects = define(
             "Select statements",
             [
@@ -479,22 +395,9 @@ def select_group_by_parallel_idu(self):
 @TestScenario
 @Name("SELECT DISTINCT parallel")
 def select_distinct_parallel(self):
-    with Given("I chose tables for testing"):
-        tables = define(
-            "tables",
-            [
-                table
-                for table in self.context.tables
-                if table.name.endswith("core")
-                and (
-                    table.name.startswith("ReplacingMergeTree_table")
-                    or table.name.startswith("MergeTree_table")
-                )
-            ],
-            encoder=lambda tables: ", ".join([table.name for table in tables]),
-        )
+    tables = table_selection()
 
-    with And("I choose selects for testing"):
+    with Given("I choose selects for testing"):
         selects = define(
             "Select statements",
             [
@@ -528,22 +431,9 @@ def select_distinct_parallel(self):
 @TestScenario
 @Name("SELECT DISTINCT parallel inserts, deletes, updates")
 def select_distinct_parallel_idu(self):
-    with Given("I chose tables for testing"):
-        tables = define(
-            "tables",
-            [
-                table
-                for table in self.context.tables
-                if table.name.endswith("core")
-                and (
-                    table.name.startswith("ReplacingMergeTree_table")
-                    or table.name.startswith("MergeTree_table")
-                )
-            ],
-            encoder=lambda tables: ", ".join([table.name for table in tables]),
-        )
+    tables = table_selection()
 
-    with And("I choose selects, inserts, updates, deletes  for testing"):
+    with Given("I choose selects, inserts, updates, deletes  for testing"):
         selects = define(
             "Select statements",
             [
@@ -597,22 +487,9 @@ def select_distinct_parallel_idu(self):
 @TestScenario
 @Name("SELECT PREWHERE parallel")
 def select_prewhere_parallel(self):
-    with Given("I chose tables for testing"):
-        tables = define(
-            "tables",
-            [
-                table
-                for table in self.context.tables
-                if table.name.endswith("core")
-                and (
-                    table.name.startswith("ReplacingMergeTree_table")
-                    or table.name.startswith("MergeTree_table")
-                )
-            ],
-            encoder=lambda tables: ", ".join([table.name for table in tables]),
-        )
+    tables = table_selection()
 
-    with And("I choose selects for testing"):
+    with Given("I choose selects for testing"):
         selects = define(
             "Select statements",
             [
@@ -646,22 +523,9 @@ def select_prewhere_parallel(self):
 @TestScenario
 @Name("SELECT PREWHERE parallel inserts, deletes, updates")
 def select_prewhere_parallel_idu(self):
-    with Given("I chose tables for testing"):
-        tables = define(
-            "tables",
-            [
-                table
-                for table in self.context.tables
-                if table.name.endswith("core")
-                and (
-                    table.name.startswith("ReplacingMergeTree_table")
-                    or table.name.startswith("MergeTree_table")
-                )
-            ],
-            encoder=lambda tables: ", ".join([table.name for table in tables]),
-        )
+    tables = table_selection()
 
-    with And("I choose selects, inserts, updates, deletes for testing"):
+    with Given("I choose selects, inserts, updates, deletes for testing"):
         selects = define(
             "Select statements",
             [
@@ -715,22 +579,9 @@ def select_prewhere_parallel_idu(self):
 @TestScenario
 @Name("SELECT WHERE parallel")
 def select_where_parallel(self):
-    with Given("I chose tables for testing"):
-        tables = define(
-            "tables",
-            [
-                table
-                for table in self.context.tables
-                if table.name.endswith("core")
-                and (
-                    table.name.startswith("ReplacingMergeTree_table")
-                    or table.name.startswith("MergeTree_table")
-                )
-            ],
-            encoder=lambda tables: ", ".join([table.name for table in tables]),
-        )
+    tables = table_selection()
 
-    with And("I choose selects for testing"):
+    with Given("I choose selects for testing"):
         selects = define(
             "Select statements",
             [
@@ -764,22 +615,9 @@ def select_where_parallel(self):
 @TestScenario
 @Name("SELECT WHERE parallel inserts, deletes, updates")
 def select_where_parallel_idu(self):
-    with Given("I chose tables for testing"):
-        tables = define(
-            "tables",
-            [
-                table
-                for table in self.context.tables
-                if table.name.endswith("core")
-                and (
-                    table.name.startswith("ReplacingMergeTree_table")
-                    or table.name.startswith("MergeTree_table")
-                )
-            ],
-            encoder=lambda tables: ", ".join([table.name for table in tables]),
-        )
+    tables = table_selection()
 
-    with And("I choose selects, inserts, updates, deletes for testing"):
+    with Given("I choose selects, inserts, updates, deletes for testing"):
         selects = define(
             "Select statements",
             [
@@ -829,29 +667,114 @@ def select_where_parallel_idu(self):
             tables=tables, selects=selects_check, iterations=1, parallel_select=False
         )
 
+@TestScenario
+@Name("SELECT as parallel")
+def select_as_parallel(self):
+    """Scenario to check all `SELECT as` combinations with/without, final/force_final in parallel"""
+    tables = table_selection()
+
+    with Given("I choose selects for testing"):
+        selects = define(
+            "Select statements",
+            [
+                select.as_statement,
+                select.as_final,
+                select.as_ffinal,
+                select.as_final_ffinal,
+            ],
+        )
+
+    with And("I choose check selects for testing"):
+        selects_check = define(
+            "Select statements",
+            [
+                select.as_result_check,
+                select.as_negative_result_check,
+            ],
+        )
+
+    with When("I execute concurrent select, insert, delete, update queries"):
+        parallel_outline(tables=tables, selects=selects, iterations=10)
+
+    join()
+
+    with Then("I check results"):
+        parallel_outline(
+            tables=tables, selects=selects_check, iterations=1, parallel_select=False
+        )
+
+
+@TestScenario
+@Name("SELECT WHERE parallel inserts, deletes, updates")
+def select_as_parallel_idu(self):
+    """Scenario to check all `SELECT as` combinations with/without, final/force_final in parallel with
+    inserts, updates and deletes"""
+    tables = table_selection()
+
+    with Given("I choose selects, inserts, updates, deletes for testing"):
+        selects = define(
+            "Select statements",
+            [
+                select.as_statement,
+                select.as_final,
+                select.as_ffinal,
+                select.as_final_ffinal,
+            ],
+        )
+        inserts = define(
+            "Insert statements",
+            [insert],
+        )
+        updates = define(
+            "Update statements",
+            [update],
+        )
+
+        deletes = define(
+            "Delete statements",
+            [delete],
+        )
+
+    with And("I choose check selects for testing"):
+        selects_check = define(
+            "Select statements",
+            [
+                select.as_result_check,
+                select.as_negative_result_check,
+            ],
+        )
+
+    with When("I execute concurrent select, insert, delete, update queries"):
+        parallel_outline(
+            tables=tables,
+            selects=selects,
+            inserts=inserts,
+            deletes=deletes,
+            updates=updates,
+            iterations=10,
+        )
+
+    join()
+
+    with Then("I check results"):
+        parallel_outline(
+            tables=tables, selects=selects_check, iterations=1, parallel_select=False
+        )
+
 
 @TestScenario
 @Name("SELECT all simple selects parallel")
 def all_simple_selects_parallel(self):
-    with Given("I chose tables for testing"):
-        tables = define(
-            "tables",
-            [
-                table
-                for table in self.context.tables
-                if table.name.endswith("core")
-                and (
-                    table.name.startswith("ReplacingMergeTree_table")
-                    or table.name.startswith("MergeTree_table")
-                )
-            ],
-            encoder=lambda tables: ", ".join([table.name for table in tables]),
-        )
+    tables = table_selection()
 
-    with And("I choose selects for testing"):
+    with Given("I choose selects for testing"):
         selects = define(
             "Select statements",
             [
+                select.as_statement,
+                select.as_final,
+                select.as_ffinal,
+                select.as_final_ffinal,
                 select.prewhere,
                 select.prewhere_final,
                 select.prewhere_ffinal,
@@ -887,6 +810,8 @@ def all_simple_selects_parallel(self):
         selects_check = define(
             "Select statements",
             [
+                select.where_result_check,
+                select.where_negative_result_check,
                 select.prewhere_result_check,
                 select.prewhere_negative_result_check,
                 select.where_result_check,
