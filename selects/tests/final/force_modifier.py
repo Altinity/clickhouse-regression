@@ -192,18 +192,12 @@ def simple_select_distinct(self):
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
 
-    with And("I choose check selects for testing"):
-        selects_check = define(
-            "Select statements",
-            [
-                select.distinct_result_check,
-                select.distinct_negative_result_check,
-            ],
-        )
-
-    parallel_outline(
-        tables=tables, selects=selects_check, iterations=1, parallel_select=False
-    )
+    for table in tables:
+        with Scenario(f"{table}"):
+            with When("I run DISTINCT .... "):
+                select.distinct_result_check(table=table)
+            with And("....")    
+                select.distinct_negative_result_check(table=table)
 
 
 @TestScenario
