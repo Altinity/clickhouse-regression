@@ -1,6 +1,7 @@
 import tests.select_steps as select
 from helpers.common import check_clickhouse_version
 from tests.concurrent_query_steps import *
+from selects.requirements import *
 from tests.steps import *
 
 

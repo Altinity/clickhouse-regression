@@ -14,7 +14,8 @@ def count_query(
     negative=False,
     node=None,
 ):
-    """Select count() query step."""
+    """Select count() query outline."""
+
 
     if node is None:
         node = self.context.cluster.node("clickhouse1")
@@ -59,6 +60,8 @@ def count_query(
 @TestStep
 @Name("SELECT count()")
 def count(self, name, final_modifier_available):
+    """Select count() query step without `FINAL` without force final."""
+
     count_query(
         name=name,
         final_modifier_available=final_modifier_available,
@@ -70,6 +73,8 @@ def count(self, name, final_modifier_available):
 @TestStep
 @Name("SELECT count() FINAL")
 def count_final(self, name, final_modifier_available):
+    """Select count() query step with `FINAL` without force final."""
+
     count_query(
         name=name,
         final_modifier_available=final_modifier_available,
@@ -81,6 +86,8 @@ def count_final(self, name, final_modifier_available):
 @TestStep
 @Name("SELECT count() force final")
 def count_ffinal(self, name, final_modifier_available):
+    """Select count() query step without `FINAL` with force final."""
+
     count_query(
         name=name,
         final_modifier_available=final_modifier_available,
@@ -92,6 +99,8 @@ def count_ffinal(self, name, final_modifier_available):
 @TestStep
 @Name("SELECT count() FINAL force final")
 def count_final_ffinal(self, name, final_modifier_available):
+    """Select count() query step with `FINAL` with force final."""
+
     count_query(
         name=name,
         final_modifier_available=final_modifier_available,
@@ -103,6 +112,9 @@ def count_final_ffinal(self, name, final_modifier_available):
 @TestStep
 @Name("count() result check")
 def count_result_check(self, name, final_modifier_available):
+    """Compare results between count() queries with `FINAL` without force final and without `FINAL`
+    and with force final."""
+
     count_query(
         name=name,
         final_manual=False,
@@ -118,6 +130,9 @@ def count_result_check(self, name, final_modifier_available):
 @TestStep
 @Name("count() negative result check")
 def count_negative_result_check(self, name, final_modifier_available):
+    """Compare results between count() queries without `FINAL` with force final and without `FINAL`
+    and without force final."""
+
     count_query(
         name=name,
         final_manual=False,

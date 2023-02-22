@@ -15,7 +15,7 @@ def distinct_query(
     negative=False,
     node=None,
 ):
-    """Select with `DISTINCT` query step."""
+    """Select with `DISTINCT` query outline."""
 
     if node is None:
         node = self.context.cluster.node("clickhouse1")

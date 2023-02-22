@@ -6,10 +6,11 @@ from helpers.common import check_clickhouse_version
 import tests.select_steps as select
 from tests.concurrent_query_steps import *
 
+
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_As("1.0"))
 def simple_select_as(self):
-    """Check SELECT query with `as`."""
+    """Check `SELECT some_col as new_some_col`."""
     with Given("I chose tables for testing"):
         tables = define(
             "tables",

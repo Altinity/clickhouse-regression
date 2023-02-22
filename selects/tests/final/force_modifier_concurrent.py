@@ -1,6 +1,7 @@
 import tests.select_steps as select
 from helpers.common import check_clickhouse_version
 from tests.concurrent_query_steps import *
+from selects.requirements.automatic_final_modifier import *
 from tests.steps import *
 
 
@@ -27,6 +28,9 @@ def table_selection(self):
 @TestScenario
 @Name("SELECT count() parallel")
 def select_count_parallel(self):
+    """Scenario to check all `SELECT count()` combinations with/without, final/force_final in parallel
+    doesn't break force select final"""
+
     tables = table_selection()
 
     with Given("I choose selects for testing"):
@@ -63,6 +67,9 @@ def select_count_parallel(self):
 @TestScenario
 @Name("SELECT count() parallel inserts, deletes, updates")
 def select_count_parallel_idu(self):
+    """Scenario to check all `SELECT count()` combinations with/without, final/force_final in parallel with
+    inserts, updates and deletes doesn't break force select final"""
+
     tables = table_selection()
 
     with Given("I choose selects, inserts, updates, deletes  for testing"):
@@ -119,6 +126,9 @@ def select_count_parallel_idu(self):
 @TestScenario
 @Name("SELECT LIMIT parallel")
 def select_limit_parallel(self):
+    """Scenario to check all `SELECT ... LIMIT` combinations with/without, final/force_final in parallel
+    doesn't break force select final"""
+
     tables = table_selection()
 
     with Given("I choose selects for testing"):
@@ -155,6 +165,9 @@ def select_limit_parallel(self):
 @TestScenario
 @Name("SELECT LIMIT parallel inserts, deletes, updates")
 def select_limit_parallel_idu(self):
+    """Scenario to check all `SELECT ... LIMIT` combinations with/without, final/force_final in parallel with
+    inserts, updates and deletes doesn't break force select final"""
+
     tables = table_selection()
 
     with Given("I choose selects, inserts, updates, deletes  for testing"):
@@ -211,6 +224,9 @@ def select_limit_parallel_idu(self):
 @TestScenario
 @Name("SELECT LIMIT BY parallel")
 def select_limit_by_parallel(self):
+    """Scenario to check all `SELECT ... LIMIT BY` combinations with/without, final/force_final in parallel
+    doesn't break force select final"""
+
     tables = table_selection()
 
     with Given("I choose selects for testing"):
@@ -247,6 +263,9 @@ def select_limit_by_parallel(self):
 @TestScenario
 @Name("SELECT LIMIT BY parallel inserts, deletes, updates")
 def select_limit_by_parallel_idu(self):
+    """Scenario to check all `SELECT ... LIMIT BY` combinations with/without, final/force_final in parallel with
+    inserts, updates and deletes doesn't break force select final"""
+
     tables = table_selection()
 
     with Given("I choose selects, inserts, updates, deletes  for testing"):
@@ -303,6 +322,9 @@ def select_limit_by_parallel_idu(self):
 @TestScenario
 @Name("SELECT GROUP BY parallel")
 def select_group_by_parallel(self):
+    """Scenario to check all `SELECT ... GROUP BY` combinations with/without, final/force_final in parallel
+    doesn't break force select final"""
+
     tables = table_selection()
 
     with Given("I choose selects for testing"):
@@ -339,6 +361,10 @@ def select_group_by_parallel(self):
 @TestScenario
 @Name("SELECT GROUP BY parallel inserts, deletes, updates")
 def select_group_by_parallel_idu(self):
+    """Scenario to check all `SELECT ... GROUP BY` combinations with/without, final/force_final in parallel with
+    inserts, updates and deletes doesn't break force select final"""
+
+
     tables = table_selection()
 
     with Given("I choose selects, inserts, updates, deletes  for testing"):
@@ -395,6 +421,9 @@ def select_group_by_parallel_idu(self):
 @TestScenario
 @Name("SELECT DISTINCT parallel")
 def select_distinct_parallel(self):
+    """Scenario to check all `SELECT DISTINCT` combinations with/without, final/force_final in parallel
+    doesn't break force select final"""
+
     tables = table_selection()
 
     with Given("I choose selects for testing"):
@@ -431,6 +460,9 @@ def select_distinct_parallel(self):
 @TestScenario
 @Name("SELECT DISTINCT parallel inserts, deletes, updates")
 def select_distinct_parallel_idu(self):
+    """Scenario to check all `SELECT DISTINCT` combinations with/without, final/force_final in parallel with
+    inserts, updates and deletes doesn't break force select final"""
+
     tables = table_selection()
 
     with Given("I choose selects, inserts, updates, deletes  for testing"):
@@ -487,6 +519,9 @@ def select_distinct_parallel_idu(self):
 @TestScenario
 @Name("SELECT PREWHERE parallel")
 def select_prewhere_parallel(self):
+    """Scenario to check all `SELECT ... PREWHERE` combinations with/without, final/force_final in parallel
+    doesn't break force select final"""
+
     tables = table_selection()
 
     with Given("I choose selects for testing"):
@@ -523,6 +558,9 @@ def select_prewhere_parallel(self):
 @TestScenario
 @Name("SELECT PREWHERE parallel inserts, deletes, updates")
 def select_prewhere_parallel_idu(self):
+    """Scenario to check all `SELECT PREWHERE` combinations with/without, final/force_final in parallel with
+    inserts, updates and deletes doesn't break force select final"""
+
     tables = table_selection()
 
     with Given("I choose selects, inserts, updates, deletes for testing"):
@@ -579,6 +617,9 @@ def select_prewhere_parallel_idu(self):
 @TestScenario
 @Name("SELECT WHERE parallel")
 def select_where_parallel(self):
+    """Scenario to check all `SELECT ... WHERE` combinations with/without, final/force_final in parallel
+    doesn't break force select final"""
+
     tables = table_selection()
 
     with Given("I choose selects for testing"):
@@ -615,6 +656,9 @@ def select_where_parallel(self):
 @TestScenario
 @Name("SELECT WHERE parallel inserts, deletes, updates")
 def select_where_parallel_idu(self):
+    """Scenario to check all `SELECT WHERE` combinations with/without, final/force_final in parallel with
+    inserts, updates and deletes doesn't break force select final"""
+
     tables = table_selection()
 
     with Given("I choose selects, inserts, updates, deletes for testing"):
@@ -670,7 +714,8 @@ def select_where_parallel_idu(self):
 @TestScenario
 @Name("SELECT as parallel")
 def select_as_parallel(self):
-    """Scenario to check all `SELECT as` combinations with/without, final/force_final in parallel"""
+    """Scenario to check all `SELECT some_col as new_some_col` combinations with/without, final/force_final in parallel
+    doesn't break force select final"""
     tables = table_selection()
 
     with Given("I choose selects for testing"):
@@ -708,7 +753,7 @@ def select_as_parallel(self):
 @Name("SELECT WHERE parallel inserts, deletes, updates")
 def select_as_parallel_idu(self):
     """Scenario to check all `SELECT as` combinations with/without, final/force_final in parallel with
-    inserts, updates and deletes"""
+    inserts, updates and deletes doesn't break force select final"""
     tables = table_selection()
 
     with Given("I choose selects, inserts, updates, deletes for testing"):
@@ -765,6 +810,9 @@ def select_as_parallel_idu(self):
 @TestScenario
 @Name("SELECT all simple selects parallel")
 def all_simple_selects_parallel(self):
+    """Scenario to check all simple selects combinations with/without, final/force_final in parallel
+    doesn't break force select final"""
+
     tables = table_selection()
 
     with Given("I choose selects for testing"):

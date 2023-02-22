@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<clickhouse>
+    <merge_tree>
+<!--        <force_select_final>0</force_select_final>-->
+    </merge_tree>
+</clickhouse>
