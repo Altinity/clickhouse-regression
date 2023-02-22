@@ -5,45 +5,27 @@ from selects.requirements.automatic_final_modifier import *
 from tests.steps import *
 
 
-@TestOutline
-def table_selection(self):
-    """Selecting test tables from all tables"""
-    with Given("I chose tables for testing"):
-        tables = define(
-            "tables",
-            [
-                table
-                for table in self.context.tables
-                if table.name.endswith("core")
-                and (
-                    table.name.startswith("ReplacingMergeTree_table")
-                    or table.name.startswith("MergeTree_table")
-                )
-            ],
-            encoder=lambda tables: ", ".join([table.name for table in tables]),
-        )
-    return tables
-
-
 @TestScenario
 @Name("SELECT count() parallel")
 def select_count_parallel(self):
     """Scenario to check all `SELECT count()` combinations with/without, final/force_final in parallel
     doesn't break force select final"""
 
-    tables = table_selection()
+    selects = []
+    selects_check = []
+       
+    with Given("I select count() query without FINAL and without --final"):
+        selects.append(selec.count)
+    
+    with And("I select count() query with FINAL clause"):
+        selects.append(selec.count_final)
 
-    with Given("I choose selects for testing"):
-        selects = define(
-            "Select statements",
-            [
-                select.count,
-                select.count_final,
-                select.count_ffinal,
-                select.count_final_ffinal,
-            ],
-        )
+    with And("I select count() query with --final"):
+        selects.append(selec.count_force_final)
 
+    with And("I select count() query with FINAL clause and with --final"):
+        selects.append(selec.count_with_final_and_force_final)
+        
     with And("I choose check selects for testing"):
         selects_check = define(
             "Select statements",
@@ -54,7 +36,7 @@ def select_count_parallel(self):
         )
 
     with When("I execute concurrent select, insert, delete, update queries"):
-        parallel_outline(tables=tables, selects=selects, iterations=10)
+        run_queries_in_parallel(tables=tables, queries=selects, iterations=10)
 
     join()
 
@@ -900,5 +882,20 @@ def feature(self):
             reason="force_select_final is only supported on ClickHouse version >= 22.11"
         )
 
+    with Given("I choose only ReplacingMergeTree and MergeTree tables"):
+        self.context.tables = define(
+            "tables",
+            [
+                table
+                for table in self.context.tables
+                if table.name.endswith("core")
+                and (
+                    table.name.startswith("ReplacingMergeTree_table")
+                    or table.name.startswith("MergeTree_table")
+                )
+            ],
+            encoder=lambda tables: ", ".join([table.name for table in tables]),
+        )
+        
     for scenario in loads(current_module(), Scenario):
         scenario()
