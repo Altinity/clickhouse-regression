@@ -5,3 +5,4 @@ from tests.select_steps.group_by import *
 from tests.select_steps.distinct import *
 from tests.select_steps.prewhere import *
 from tests.select_steps.where import *
+from tests.select_steps.as_statement import *

@@ -6,6 +6,37 @@ from helpers.common import check_clickhouse_version
 import tests.select_steps as select
 from tests.concurrent_query_steps import *
 
+@TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_As("1.0"))
+def simple_select_as(self):
+    """Check SELECT query with `as`."""
+    with Given("I chose tables for testing"):
+        tables = define(
+            "tables",
+            [
+                table
+                for table in self.context.tables
+                if table.name.endswith("core")
+                or table.name.endswith("cluster")
+                or table.name.endswith("clusterdistributed")
+                or table.name.endswith("_mview")
+            ],
+            encoder=lambda tables: ", ".join([table.name for table in tables]),
+        )
+
+    with And("I choose check selects for testing"):
+        selects_check = define(
+            "Select statements",
+            [
+                select.as_result_check,
+                select.as_negative_result_check,
+            ],
+        )
+
+    parallel_outline(
+        tables=tables, selects=selects_check, iterations=1, parallel_select=False
+    )
+
 
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Select("1.0"))
