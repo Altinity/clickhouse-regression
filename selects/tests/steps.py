@@ -1052,8 +1052,10 @@ def create_alias_table(self, node=None):
     """Creating table with alias column."""
 
     name = f"alias_{getuid()}"
-    table_statement = ("CREATE TABLE IF NOT EXISTS {name}(id Int32, x Int32, s Int32 ALIAS id + x) "
-                       "ENGINE = ReplacingMergeTree ORDER BY tuple()")
+    table_statement = (
+        "CREATE TABLE IF NOT EXISTS {name}(id Int32, x Int32, s Int32 ALIAS id + x) "
+        "ENGINE = ReplacingMergeTree ORDER BY tuple()"
+    )
 
     if node is None:
         node = current().context.node
@@ -1190,12 +1192,12 @@ def insert(
 @TestStep(Given)
 def create_and_populate_all_tables(self):
     """Create all kind of tables."""
-    # create_and_populate_core_tables()
+    create_and_populate_core_tables()
     create_alias_table()
-    # add_system_tables()
-    # create_and_populate_distributed_tables()
-    # create_all_views()
-    # create_and_populate_core_tables(duplicate=True)
-    # create_normal_view_with_join()
-    # create_replicated_table_2shards3replicas()
-    # create_expression_subquery_table()
+    add_system_tables()
+    create_and_populate_distributed_tables()
+    create_all_views()
+    create_and_populate_core_tables(duplicate=True)
+    create_normal_view_with_join()
+    create_replicated_table_2shards3replicas()
+    create_expression_subquery_table()
