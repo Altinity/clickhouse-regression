@@ -11,14 +11,11 @@ def table_selection(self):
     with Given("I chose tables for testing"):
         tables = define(
             "tables",
-            [
-                table
-                for table in self.context.tables
-                if table.name.startswith("alias")
-            ],
+            [table for table in self.context.tables if table.name.startswith("alias")],
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
     return tables
+
 
 # @TestOutline
 # @Requirements()
@@ -58,25 +55,28 @@ def test_alias_columns(self, node=None):
                     f"SELECT * FROM default.{table.name}",
                     settings=[("user", "some_user"), ("final", 1)],
                     message="Received from localhost:9000."
-                            " DB::Exception: some_user: "
-                            "Not enough privileges. To execute"
-                            " this query it's necessary",
+                    " DB::Exception: some_user: "
+                    "Not enough privileges. To execute"
+                    " this query it's necessary",
                 )
 
             with And("I give rights"):
                 node.query(
-                    f"GRANT SELECT(id,x) ON default.{table.name} TO some_user", settings=[("final", 1)]
+                    f"GRANT SELECT(id,x) ON default.{table.name} TO some_user",
+                    settings=[("final", 1)],
                 )
 
             with Then("I check select is passing"):
                 node.query(
                     f"SELECT * FROM default.{table.name} FORMAT JSONEachRow;",
-                    settings=[("user", "some_user"), ("final", 1)], message='{"id":1,"x":2}'
+                    settings=[("user", "some_user"), ("final", 1)],
+                    message='{"id":1,"x":2}',
                 )
 
             with And("I give rights"):
                 node.query(
-                    f"REVOKE SELECT(id,x) ON default.{table.name} FROM some_user", settings=[("final", 1)]
+                    f"REVOKE SELECT(id,x) ON default.{table.name} FROM some_user",
+                    settings=[("final", 1)],
                 )
 
 
@@ -98,22 +98,29 @@ def test_alias_columns_alias_column(self, node=None):
                     f"SELECT(s) FROM default.{table.name}",
                     settings=[("user", "some_user"), ("final", 1)],
                     message="Received from localhost:9000."
-                            " DB::Exception: some_user: "
-                            "Not enough privileges. To execute"
-                            " this query it's necessary",
+                    " DB::Exception: some_user: "
+                    "Not enough privileges. To execute"
+                    " this query it's necessary",
                 )
 
             with And("I give privileges to some_user"):
-                node.query(f"GRANT SELECT(s) ON default.{table.name} TO some_user", settings=[("final", 1)])
+                node.query(
+                    f"GRANT SELECT(s) ON default.{table.name} TO some_user",
+                    settings=[("final", 1)],
+                )
 
             with Then("I check select is passing"):
                 node.query(
                     f"SELECT(s) FROM default.{table.name} FORMAT JSONEachRow;",
-                    settings=[("user", "some_user"), ("final", 1)], message='{"s":3}'
+                    settings=[("user", "some_user"), ("final", 1)],
+                    message='{"s":3}',
                 )
 
             with And("I revoke privileges from some_user"):
-                node.query(f"REVOKE SELECT(s) ON default.{table.name} FROM some_user", settings=[("final", 1)])
+                node.query(
+                    f"REVOKE SELECT(s) ON default.{table.name} FROM some_user",
+                    settings=[("final", 1)],
+                )
 
 
 @TestModule
