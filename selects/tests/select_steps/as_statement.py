@@ -15,7 +15,7 @@ def as_query(
     negative=False,
     node=None,
 ):
-    """Select with `as` query step."""
+    """Outline to check all `SELECT as` combinations with/without, final/force_final and compare results."""
 
     if node is None:
         node = self.context.cluster.node("clickhouse1")
@@ -66,6 +66,7 @@ def as_query(
 @TestStep
 @Name("SELECT `as`")
 def as_statement(self, name, final_modifier_available):
+    """Select with `as` query step without `FINAL` without force final."""
     as_query(
         name=name,
         final_modifier_available=final_modifier_available,
@@ -77,6 +78,8 @@ def as_statement(self, name, final_modifier_available):
 @TestStep
 @Name("SELECT `as` FINAL")
 def as_final(self, name, final_modifier_available):
+    """Select with `as` query step with `FINAL` without force final."""
+
     as_query(
         name=name,
         final_modifier_available=final_modifier_available,
@@ -88,6 +91,8 @@ def as_final(self, name, final_modifier_available):
 @TestStep
 @Name("SELECT `as` force final")
 def as_ffinal(self, name, final_modifier_available):
+    """Select with `as` query step without `FINAL` with force final."""
+
     as_query(
         name=name,
         final_modifier_available=final_modifier_available,
@@ -99,6 +104,8 @@ def as_ffinal(self, name, final_modifier_available):
 @TestStep
 @Name("SELECT `as` FINAL force final")
 def as_final_ffinal(self, name, final_modifier_available):
+    """Select with `as` query step with `FINAL` with force final."""
+
     as_query(
         name=name,
         final_modifier_available=final_modifier_available,
@@ -110,6 +117,9 @@ def as_final_ffinal(self, name, final_modifier_available):
 @TestStep
 @Name("`as` result check")
 def as_result_check(self, name, final_modifier_available):
+    """Compare results between `SELECT as` query with `FINAL`,without force final and query without `FINAL`,
+    with force final."""
+
     as_query(
         name=name,
         final_manual=False,
@@ -125,6 +135,9 @@ def as_result_check(self, name, final_modifier_available):
 @TestStep
 @Name("`as` negative result check")
 def as_negative_result_check(self, name, final_modifier_available):
+    """Compare results between `SELECT as` query without `FINAL`,with force final and query without `FINAL`,
+    without force final."""
+
     as_query(
         name=name,
         final_manual=False,

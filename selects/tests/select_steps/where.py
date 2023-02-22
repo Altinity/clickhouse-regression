@@ -15,7 +15,7 @@ def where_query(
     negative=False,
     node=None,
 ):
-    """Select with `WHERE` query step."""
+    """Outline to check all `SELECT WHERE` combinations with/without, final/force_final and compare results."""
 
     if node is None:
         node = self.context.cluster.node("clickhouse1")
@@ -66,6 +66,7 @@ def where_query(
 @TestStep
 @Name("SELECT `WHERE`")
 def where(self, name, final_modifier_available):
+    """Select `WHERE` query step without `FINAL` without force final."""
     where_query(
         name=name,
         final_modifier_available=final_modifier_available,
@@ -77,6 +78,8 @@ def where(self, name, final_modifier_available):
 @TestStep
 @Name("SELECT `WHERE` FINAL")
 def where_final(self, name, final_modifier_available):
+    """Select `WHERE` query step with `FINAL` without force final."""
+
     where_query(
         name=name,
         final_modifier_available=final_modifier_available,
@@ -88,6 +91,8 @@ def where_final(self, name, final_modifier_available):
 @TestStep
 @Name("SELECT `WHERE` force final")
 def where_ffinal(self, name, final_modifier_available):
+    """Select `WHERE` query step without `FINAL` with force final."""
+
     where_query(
         name=name,
         final_modifier_available=final_modifier_available,
@@ -99,6 +104,7 @@ def where_ffinal(self, name, final_modifier_available):
 @TestStep
 @Name("SELECT `WHERE` FINAL force final")
 def where_final_ffinal(self, name, final_modifier_available):
+    """Select `WHERE` query step with `FINAL` with force final."""
     where_query(
         name=name,
         final_modifier_available=final_modifier_available,
@@ -110,6 +116,9 @@ def where_final_ffinal(self, name, final_modifier_available):
 @TestStep
 @Name("`WHERE` result check")
 def where_result_check(self, name, final_modifier_available):
+    """Compare results between `WHERE` query with `FINAL`,without force final and query without `FINAL`,
+    with force final."""
+
     where_query(
         name=name,
         final_manual=False,
@@ -125,6 +134,8 @@ def where_result_check(self, name, final_modifier_available):
 @TestStep
 @Name("`WHERE` negative result check")
 def where_negative_result_check(self, name, final_modifier_available):
+    """Compare results between `WHERE` query without `FINAL`,with force final and query without `FINAL`,
+    without force final."""
     where_query(
         name=name,
         final_manual=False,

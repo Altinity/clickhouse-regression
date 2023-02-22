@@ -6,78 +6,118 @@ from tests.steps import *
 
 
 @TestOutline
-@Requirements()
-def test_alias(self, table_name, node=None):
-    """
-    Creating `ALIAS` table.
-    """
-    if node is None:
-        node = self.context.cluster.node("clickhouse1")
+def table_selection(self):
+    """Selecting test tables from all tables"""
+    with Given("I chose tables for testing"):
+        tables = define(
+            "tables",
+            [
+                table
+                for table in self.context.tables
+                if table.name.startswith("alias")
+            ],
+            encoder=lambda tables: ", ".join([table.name for table in tables]),
+        )
+    return tables
 
-    try:
-        with Given("I create table"):
-            node.query(f"CREATE TABLE IF NOT EXISTS {table_name}(x Int32, y Int32, s Int32 ALIAS x + y) "
-                       "ENGINE = MergeTree ORDER BY tuple()")
-        yield
-    finally:
-        with Finally("I drop table"):
-            node.query(f"DROP TABLE IF EXISTS {table_name}")
+# @TestOutline
+# @Requirements()
+# def table_with_alias(self, table_name, node=None):
+#     """
+#     Creating `ALIAS` table.
+#     """
+#     if node is None:
+#         node = self.context.cluster.node("clickhouse1")
+#
+#     try:
+#         with Given("I create table"):
+#             node.query(
+#                 f"CREATE TABLE IF NOT EXISTS {table_name}(id Int32, x Int32, s Int32 ALIAS id + x) "
+#                 "ENGINE = MergeTree ORDER BY tuple()"
+#             )
+#         yield
+#     finally:
+#         with Finally("I drop table"):
+#             node.query(f"DROP TABLE IF EXISTS {table_name}")
 
 
 @TestScenario
 @Requirements()
 def test_alias_columns(self, node=None):
+    """Check for user rights `GRANT` and `REVOKE` options on `ALIAS` table for some
+    columns with force finale enabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
-    table_name = f"user_rights_{getuid()}"
+    tables = table_selection()
 
-    test_alias(table_name=table_name)
+    for table in tables:
+        with Example(f"{table.name}", flags=TE):
+            with Given("I make select as user without rights"):
+                node.query(
+                    f"SELECT * FROM default.{table.name}",
+                    settings=[("user", "some_user"), ("final", 1)],
+                    message="Received from localhost:9000."
+                            " DB::Exception: some_user: "
+                            "Not enough privileges. To execute"
+                            " this query it's necessary",
+                )
 
-    with Given("I make select as user without rights"):
-        node.query(f"SELECT * FROM default.{table_name}", settings=[("user", "some_user")], message="Received from localhost:9000."
-                                                                                     " DB::Exception: some_user: "
-                                                                                     "Not enough privileges. To execute"
-                                                                                     " this query it's necessary")
+            with And("I give rights"):
+                node.query(
+                    f"GRANT SELECT(id,x) ON default.{table.name} TO some_user", settings=[("final", 1)]
+                )
 
-    with And("I give rights"):
-        node.query(f"GRANT SELECT(x,y) ON default.{table_name} TO some_user")
+            with Then("I check select is passing"):
+                node.query(
+                    f"SELECT * FROM default.{table.name} FORMAT JSONEachRow;",
+                    settings=[("user", "some_user"), ("final", 1)], message='{"id":1,"x":2}'
+                )
 
-    with Then("I check select is passing"):
-        node.query(f"SELECT * FROM default.{table_name}", settings=[("user", "some_user")])
-
-    with And("I give rights"):
-        node.query(f"REVOKE SELECT(x,y) ON default.{table_name} FROM some_user")
+            with And("I give rights"):
+                node.query(
+                    f"REVOKE SELECT(id,x) ON default.{table.name} FROM some_user", settings=[("final", 1)]
+                )
 
 
 @TestScenario
 @Requirements()
 def test_alias_columns_alias_column(self, node=None):
+    """Check for user rights `GRANT` and `REVOKE` options on `ALIAS` table for alias
+    columns with force finale enabled."""
+
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
-    table_name = f"user_rights_{getuid()}"
+    tables = table_selection()
 
-    test_alias(table_name=table_name)
+    for table in tables:
+        with Example(f"{table.name}", flags=TE):
+            with Given("I make select as user without rights"):
+                node.query(
+                    f"SELECT(s) FROM default.{table.name}",
+                    settings=[("user", "some_user"), ("final", 1)],
+                    message="Received from localhost:9000."
+                            " DB::Exception: some_user: "
+                            "Not enough privileges. To execute"
+                            " this query it's necessary",
+                )
 
-    with Given("I make select as user without rights"):
-        node.query(f"SELECT(s) FROM default.{table_name}", settings=[("user", "some_user")], message="Received from localhost:9000."
-                                                                                     " DB::Exception: some_user: "
-                                                                                     "Not enough privileges. To execute"
-                                                                                     " this query it's necessary")
+            with And("I give privileges to some_user"):
+                node.query(f"GRANT SELECT(s) ON default.{table.name} TO some_user", settings=[("final", 1)])
 
-    with And("I give rights"):
-        node.query(f"GRANT SELECT(s) ON default.{table_name} TO some_user")
+            with Then("I check select is passing"):
+                node.query(
+                    f"SELECT(s) FROM default.{table.name} FORMAT JSONEachRow;",
+                    settings=[("user", "some_user"), ("final", 1)], message='{"s":3}'
+                )
 
-    with Then("I check select is passing"):
-        node.query(f"SELECT(s) FROM default.{table_name}", settings=[("user", "some_user")])
-
-    with And("I give rights"):
-        node.query(f"REVOKE SELECT(s) ON default.{table_name} FROM some_user")
+            with And("I revoke privileges from some_user"):
+                node.query(f"REVOKE SELECT(s) ON default.{table.name} FROM some_user", settings=[("final", 1)])
 
 
 @TestModule
-@Requirements()
+@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_UserRights("1.0"))
 @Name("force modifier user rights")
 def feature(self, node=None):
     """User rights."""
@@ -101,4 +141,3 @@ def feature(self, node=None):
     finally:
         with Finally("I drop user"):
             node.query("DROP USER IF EXISTS some_user")
-

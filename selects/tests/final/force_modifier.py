@@ -54,6 +54,7 @@ def simple_select_count(self):
                 or table.name.endswith("clusterdistributed")
                 or table.name.endswith("_nview_final")
                 or table.name.endswith("_mview")
+                or table.name.startswith("alias")
             ],
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
@@ -1216,6 +1217,7 @@ def without_experimental_analyzer(self):
     RQ_SRS_032_ClickHouse_AutomaticFinalModifier_TableEngineSetting_IgnoreOnNotSupportedTableEngines(
         "1.0"
     ),
+    RQ_SRS_032_ClickHouse_AutomaticFinalModifier_TableSchema_Alias("1.0")
 )
 def feature(self):
     """Check force_final_modifier setting."""
