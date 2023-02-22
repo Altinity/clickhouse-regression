@@ -15,10 +15,10 @@ def table_selection(self):
                 table
                 for table in self.context.tables
                 if table.name.endswith("core")
-                   and (
-                           table.name.startswith("ReplacingMergeTree_table")
-                           or table.name.startswith("MergeTree_table")
-                   )
+                and (
+                    table.name.startswith("ReplacingMergeTree_table")
+                    or table.name.startswith("MergeTree_table")
+                )
             ],
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
@@ -363,7 +363,6 @@ def select_group_by_parallel(self):
 def select_group_by_parallel_idu(self):
     """Scenario to check all `SELECT ... GROUP BY` combinations with/without, final/force_final in parallel with
     inserts, updates and deletes doesn't break force select final"""
-
 
     tables = table_selection()
 
@@ -711,6 +710,7 @@ def select_where_parallel_idu(self):
             tables=tables, selects=selects_check, iterations=1, parallel_select=False
         )
 
+
 @TestScenario
 @Name("SELECT as parallel")
 def select_as_parallel(self):
@@ -889,7 +889,7 @@ def all_simple_selects_parallel(self):
 
 
 @TestModule
-@Requirements()
+@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Parallel("1.0"))
 @Name("force modifier concurrent")
 def feature(self):
     """Parallel queries tests for force select final."""

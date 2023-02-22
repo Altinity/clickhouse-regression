@@ -1047,6 +1047,33 @@ def create_expression_subquery_table(self, node=None):
             node.query(f"DROP TABLE IF EXISTS {name}")
 
 
+@TestStep(Given)
+def create_alias_table(self, node=None):
+    """Creating table with alias column."""
+
+    name = f"alias_{getuid()}"
+    table_statement = ("CREATE TABLE IF NOT EXISTS {name}(id Int32, x Int32, s Int32 ALIAS id + x) "
+                       "ENGINE = ReplacingMergeTree ORDER BY tuple()")
+
+    if node is None:
+        node = current().context.node
+
+    try:
+        with Given("I create simple table with integer and array columns"):
+            node.query(table_statement.format(name=name))
+
+        with Then("I insert few equal raws in it with stopped merges"):
+            node.query("system stop merges")
+            for i in range(3):
+                node.query(f"INSERT INTO {name} VALUES (1, 2);")
+
+        yield self.context.tables.append(Table(name, "ReplacingMergeTree", True))
+
+    finally:
+        with Finally("I drop data"):
+            node.query(f"DROP TABLE IF EXISTS {name}")
+
+
 @TestStep(Then)
 def assert_joins(self, join_statement, table, table2, join_type, node=None):
     """ "Check `SELECT ... FINAL` equal to `SELECT` with force_select_final for all cases of using FINAL with JOINs."""
@@ -1163,7 +1190,8 @@ def insert(
 @TestStep(Given)
 def create_and_populate_all_tables(self):
     """Create all kind of tables."""
-    create_and_populate_core_tables()
+    # create_and_populate_core_tables()
+    create_alias_table()
     # add_system_tables()
     # create_and_populate_distributed_tables()
     # create_all_views()

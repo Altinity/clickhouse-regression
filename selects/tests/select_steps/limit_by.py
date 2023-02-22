@@ -15,7 +15,7 @@ def limit_by_query(
     negative=False,
     node=None,
 ):
-    """Select with `LIMIT BY` query step."""
+    """Outline to check all `SELECT LIMIT BY` combinations with/without, final/force_final and compare results."""
 
     if node is None:
         node = self.context.cluster.node("clickhouse1")
@@ -66,6 +66,7 @@ def limit_by_query(
 @TestStep
 @Name("SELECT `LIMIT BY`")
 def limit_by(self, name, final_modifier_available):
+    """Select `LIMIT BY` query step without `FINAL` without force final."""
     limit_by_query(
         name=name,
         final_modifier_available=final_modifier_available,
@@ -77,6 +78,7 @@ def limit_by(self, name, final_modifier_available):
 @TestStep
 @Name("SELECT `LIMIT BY` FINAL")
 def limit_by_final(self, name, final_modifier_available):
+    """Select `LIMIT BY` query step with `FINAL` without force final."""
     limit_by_query(
         name=name,
         final_modifier_available=final_modifier_available,
@@ -88,6 +90,8 @@ def limit_by_final(self, name, final_modifier_available):
 @TestStep
 @Name("SELECT `LIMIT BY` force final")
 def limit_by_ffinal(self, name, final_modifier_available):
+    """Select `LIMIT BY` query step without `FINAL` with force final."""
+
     limit_by_query(
         name=name,
         final_modifier_available=final_modifier_available,
@@ -99,6 +103,8 @@ def limit_by_ffinal(self, name, final_modifier_available):
 @TestStep
 @Name("SELECT `LIMIT BY` FINAL force final")
 def limit_by_final_ffinal(self, name, final_modifier_available):
+    """Select `LIMIT BY` query step with `FINAL` with force final."""
+
     limit_by_query(
         name=name,
         final_modifier_available=final_modifier_available,
@@ -110,6 +116,9 @@ def limit_by_final_ffinal(self, name, final_modifier_available):
 @TestStep
 @Name("`LIMIT BY` result check")
 def limit_by_result_check(self, name, final_modifier_available):
+    """Compare results between `LIMIT BY` query with `FINAL`,without force final and query without `FINAL`,
+    with force final."""
+
     limit_by_query(
         name=name,
         final_manual=False,
@@ -125,6 +134,9 @@ def limit_by_result_check(self, name, final_modifier_available):
 @TestStep
 @Name("`LIMIT BY` negative result check")
 def limit_by_negative_result_check(self, name, final_modifier_available):
+    """Compare results between `LIMIT BY` query without `FINAL`,with force final and query without `FINAL`,
+    without force final."""
+
     limit_by_query(
         name=name,
         final_manual=False,

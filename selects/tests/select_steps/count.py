@@ -14,8 +14,7 @@ def count_query(
     negative=False,
     node=None,
 ):
-    """Select count() query outline."""
-
+    """Outline to check all `SELECT count()` combinations with/without, final/force_final and compare results."""
 
     if node is None:
         node = self.context.cluster.node("clickhouse1")
@@ -112,8 +111,8 @@ def count_final_ffinal(self, name, final_modifier_available):
 @TestStep
 @Name("count() result check")
 def count_result_check(self, name, final_modifier_available):
-    """Compare results between count() queries with `FINAL` without force final and without `FINAL`
-    and with force final."""
+    """Compare results between count() query with `FINAL`,without force final and query without `FINAL`,
+    with force final."""
 
     count_query(
         name=name,
@@ -130,8 +129,8 @@ def count_result_check(self, name, final_modifier_available):
 @TestStep
 @Name("count() negative result check")
 def count_negative_result_check(self, name, final_modifier_available):
-    """Compare results between count() queries without `FINAL` with force final and without `FINAL`
-    and without force final."""
+    """Compare results between count() query without `FINAL`,with force final and query without `FINAL`,
+    without force final."""
 
     count_query(
         name=name,

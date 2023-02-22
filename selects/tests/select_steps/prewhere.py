@@ -15,7 +15,7 @@ def prewhere_query(
     negative=False,
     node=None,
 ):
-    """Select with `PREWHERE` query step."""
+    """Outline to check all `SELECT PREWHERE` combinations with/without, final/force_final and compare results."""
 
     if node is None:
         node = self.context.cluster.node("clickhouse1")
@@ -66,6 +66,7 @@ def prewhere_query(
 @TestStep
 @Name("SELECT `PREWHERE`")
 def prewhere(self, name, final_modifier_available):
+    """Select `PREWHERE` query step without `FINAL` without force final."""
     prewhere_query(
         name=name,
         final_modifier_available=final_modifier_available,
@@ -77,6 +78,7 @@ def prewhere(self, name, final_modifier_available):
 @TestStep
 @Name("SELECT `PREWHERE` FINAL")
 def prewhere_final(self, name, final_modifier_available):
+    """Select `PREWHERE` query step with `FINAL` without force final."""
     prewhere_query(
         name=name,
         final_modifier_available=final_modifier_available,
@@ -88,6 +90,7 @@ def prewhere_final(self, name, final_modifier_available):
 @TestStep
 @Name("SELECT `PREWHERE` force final")
 def prewhere_ffinal(self, name, final_modifier_available):
+    """Select `PREWHERE` query step without `FINAL` with force final."""
     prewhere_query(
         name=name,
         final_modifier_available=final_modifier_available,
@@ -99,6 +102,7 @@ def prewhere_ffinal(self, name, final_modifier_available):
 @TestStep
 @Name("SELECT `PREWHERE` FINAL force final")
 def prewhere_final_ffinal(self, name, final_modifier_available):
+    """Select `PREWHERE` query step with `FINAL` with force final."""
     prewhere_query(
         name=name,
         final_modifier_available=final_modifier_available,
@@ -110,6 +114,9 @@ def prewhere_final_ffinal(self, name, final_modifier_available):
 @TestStep
 @Name("`PREWHERE` result check")
 def prewhere_result_check(self, name, final_modifier_available):
+    """Compare results between `PREWHERE` query with `FINAL`,without force final and query without `FINAL`,
+    with force final."""
+
     prewhere_query(
         name=name,
         final_manual=False,
@@ -125,6 +132,9 @@ def prewhere_result_check(self, name, final_modifier_available):
 @TestStep
 @Name("`PREWHERE` negative result check")
 def prewhere_negative_result_check(self, name, final_modifier_available):
+    """Compare results between `PREWHERE` query without `FINAL`,with force final and query without `FINAL`,
+    without force final."""
+
     prewhere_query(
         name=name,
         final_manual=False,

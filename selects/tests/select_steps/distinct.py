@@ -15,7 +15,7 @@ def distinct_query(
     negative=False,
     node=None,
 ):
-    """Select with `DISTINCT` query outline."""
+    """Outline to check all `SELECT DISTINCT` combinations with/without, final/force_final and compare results."""
 
     if node is None:
         node = self.context.cluster.node("clickhouse1")
@@ -66,6 +66,8 @@ def distinct_query(
 @TestStep
 @Name("SELECT `DISTINCT`")
 def distinct(self, name, final_modifier_available):
+    """Select `DISTINCT` query step without `FINAL` without force final."""
+
     distinct_query(
         name=name,
         final_modifier_available=final_modifier_available,
@@ -77,6 +79,8 @@ def distinct(self, name, final_modifier_available):
 @TestStep
 @Name("SELECT `DISTINCT` FINAL")
 def distinct_final(self, name, final_modifier_available):
+    """Select `DISTINCT` query step with `FINAL` without force final."""
+
     distinct_query(
         name=name,
         final_modifier_available=final_modifier_available,
@@ -88,6 +92,7 @@ def distinct_final(self, name, final_modifier_available):
 @TestStep
 @Name("SELECT `DISTINCT` force final")
 def distinct_ffinal(self, name, final_modifier_available):
+    """Select `DISTINCT` query step without `FINAL` with force final."""
     distinct_query(
         name=name,
         final_modifier_available=final_modifier_available,
@@ -99,6 +104,7 @@ def distinct_ffinal(self, name, final_modifier_available):
 @TestStep
 @Name("SELECT `DISTINCT` FINAL force final")
 def distinct_final_ffinal(self, name, final_modifier_available):
+    """Select `DISTINCT` query step with `FINAL` with force final."""
     distinct_query(
         name=name,
         final_modifier_available=final_modifier_available,
@@ -110,6 +116,9 @@ def distinct_final_ffinal(self, name, final_modifier_available):
 @TestStep
 @Name("`DISTINCT` result check")
 def distinct_result_check(self, name, final_modifier_available):
+    """Compare results between `DISTINCT` query with `FINAL`,without force final and query without `FINAL`,
+    with force final."""
+
     distinct_query(
         name=name,
         final_manual=False,
@@ -125,6 +134,9 @@ def distinct_result_check(self, name, final_modifier_available):
 @TestStep
 @Name("`DISTINCT` negative result check")
 def distinct_negative_result_check(self, name, final_modifier_available):
+    """Compare results between `DISTINCT` query without `FINAL`,with force final and query without `FINAL`,
+    without force final."""
+
     distinct_query(
         name=name,
         final_manual=False,
