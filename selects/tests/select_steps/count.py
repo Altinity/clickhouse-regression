@@ -1,8 +1,8 @@
 from selects.tests.steps import *
 
-
+# FIXME: remove outline 
 @TestOutline(When)
-def count_query(
+def query(
     self,
     name,
     final_manual=False,
@@ -14,7 +14,13 @@ def count_query(
     negative=False,
     node=None,
 ):
-    """Outline to check all `SELECT count()` combinations with/without, final/force_final and compare results."""
+    """Outline to check all `SELECT count()` combinations:
+    
+    * with FINAL clause included in the query
+    * without FINAL clause included in the query
+    * with --final setting enabled
+    * without --final setting enabled
+    """
 
     if node is None:
         node = self.context.cluster.node("clickhouse1")
@@ -59,9 +65,8 @@ def count_query(
 @TestStep
 @Name("SELECT count()")
 def count(self, name, final_modifier_available):
-    """Select count() query step without `FINAL` without force final."""
-
-    count_query(
+    """Execute select count() query without `FINAL` clause and without force final."""
+    query(
         name=name,
         final_modifier_available=final_modifier_available,
         final_manual=False,
@@ -70,11 +75,10 @@ def count(self, name, final_modifier_available):
 
 
 @TestStep
-@Name("SELECT count() FINAL")
-def count_final(self, name, final_modifier_available):
-    """Select count() query step with `FINAL` without force final."""
-
-    count_query(
+@Name("SELECT count() with FINAL")
+def count_with_final_clause(self, name, final_modifier_available):
+    """Execute select count() query step with `FINAL` clause but without force final."""
+    query(
         name=name,
         final_modifier_available=final_modifier_available,
         final_manual=True,
@@ -83,11 +87,10 @@ def count_final(self, name, final_modifier_available):
 
 
 @TestStep
-@Name("SELECT count() force final")
-def count_ffinal(self, name, final_modifier_available):
-    """Select count() query step without `FINAL` with force final."""
-
-    count_query(
+@Name("SELECT count() with --final")
+def count_with_force_final(self, name, final_modifier_available):
+    """Execute count() query step without `FINAL` clause but with force final enabled."""
+    query(
         name=name,
         final_modifier_available=final_modifier_available,
         final_manual=False,
@@ -96,10 +99,9 @@ def count_ffinal(self, name, final_modifier_available):
 
 
 @TestStep
-@Name("SELECT count() FINAL force final")
-def count_final_ffinal(self, name, final_modifier_available):
-    """Select count() query step with `FINAL` with force final."""
-
+@Name("SELECT count() with FINAL and --final")
+def count_with_final_clause_and_force_final(self, name, final_modifier_available):
+    """Select count() query step with `FINAL` clause and with force final enabled."""
     count_query(
         name=name,
         final_modifier_available=final_modifier_available,
@@ -111,10 +113,8 @@ def count_final_ffinal(self, name, final_modifier_available):
 @TestStep
 @Name("count() result check")
 def count_result_check(self, name, final_modifier_available):
-    """Compare results between count() query with `FINAL`,without force final and query without `FINAL`,
-    with force final."""
-
-    count_query(
+    """Compare results between count() query with `FINAL` and count() query with --final setting enabled."""
+    query(
         name=name,
         final_manual=False,
         final_force=1,
@@ -129,10 +129,11 @@ def count_result_check(self, name, final_modifier_available):
 @TestStep
 @Name("count() negative result check")
 def count_negative_result_check(self, name, final_modifier_available):
-    """Compare results between count() query without `FINAL`,with force final and query without `FINAL`,
-    without force final."""
+    """Compare results between count() query with --final and count() query without `FINAL` and without --final.
 
-    count_query(
+    The expectation is that query results should be different when collapsed rows are present but FINAL modifier is not applied
+    either explicitly using FINAL clause or using --final query setting."""
+    query(
         name=name,
         final_manual=False,
         final_force=1,
