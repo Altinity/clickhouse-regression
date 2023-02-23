@@ -1193,7 +1193,6 @@ def insert(
 def create_and_populate_all_tables(self):
     """Create all kind of tables."""
     create_and_populate_core_tables()
-    create_alias_table()
     add_system_tables()
     create_and_populate_distributed_tables()
     create_all_views()
@@ -1201,3 +1200,111 @@ def create_and_populate_all_tables(self):
     create_normal_view_with_join()
     create_replicated_table_2shards3replicas()
     create_expression_subquery_table()
+    create_alias_table()
+
+
+@TestStep(When)
+def simple_select(self, statement, table, final_manual, final=0, node=None):
+    """Select query step."""
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    with When(f"I make select from table"):
+        node.query(
+            f"{statement}".format(table=table, final=final_manual),
+            settings=[("final", final)],
+        )
+
+
+@TestStep(When)
+def simple_insert(self, table, first_insert_id=1, last_insert_id=4):
+    """
+    Insert query step
+    :param self:
+    :param first_delete_id:
+    :param last_delete_id:
+    :param table:
+    :return:
+    """
+    node = self.context.cluster.node("clickhouse1")
+
+    with When(f"I insert {first_insert_id - last_insert_id} rows of data"):
+        for i in range(first_insert_id, last_insert_id):
+            node.query(
+                f"INSERT INTO {table} VALUES ({i},777, 77{i}, 'ivan', '2019-01-01 00:00:00')"
+            )
+
+
+@TestStep(When)
+def delete(self, table, first_delete_id=1, last_delete_id=4):
+    """
+    Delete query step
+    :param self:
+    :param first_delete_id:
+    :param last_delete_id:
+    :param table:
+    :return:
+    """
+    node = self.context.cluster.node("clickhouse1")
+
+    with When(f"I delete {last_delete_id - first_delete_id} rows of data"):
+        for i in range(first_delete_id, last_delete_id):
+            node.query(f"ALTER TABLE {table} DELETE WHERE id={i}")
+
+
+@TestStep(When)
+def update(self, table, first_update_id=1, last_update_id=4):
+    """
+    Update query step
+    :param self:
+    :param first_update_id:
+    :param last_update_id:
+    :param table:
+    :return:
+    """
+    node = self.context.cluster.node("clickhouse1")
+
+    with When(f"I update {last_update_id - first_update_id} rows of data"):
+        for i in range(first_update_id, last_update_id):
+            node.query(f"ALTER TABLE {table} UPDATE x=x+5 WHERE id={i};")
+
+
+@TestOutline
+def run_queries_in_parallel(
+    self,
+    table,
+    selects,
+    inserts=None,
+    updates=None,
+    deletes=None,
+    iterations=10,
+    parallel_select=True,
+):
+    """Execute specified selects, inserts, updates, and deletes in parallel."""
+    for i in range(iterations):
+        for select in selects:
+            if select.name.endswith("negative_select_check"):
+                with Example(f"negative", flags=TE):
+                    By(f"{select.name}", test=select, parallel=parallel_select)(
+                        table=table.name,
+                        final_modifier_available=table.final_modifier_available,
+                    )
+            else:
+                By(f"{select.name}", test=select, parallel=parallel_select)(
+                    table=table.name,
+                    final_modifier_available=table.final_modifier_available,
+                )
+
+        if not inserts is None:
+            for insert in inserts:
+                By(f"{insert.name}", test=simple_insert, parallel=True)(
+                    table=table.name
+                )
+
+        if not updates is None:
+            for update in updates:
+                By(f"{update.name}", test=update, parallel=True)(table=table.name)
+
+        if not deletes is None:
+            for delete in deletes:
+                By(f"{delete.name}", test=delete, parallel=True)(table=table.name)
