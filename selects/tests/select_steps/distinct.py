@@ -1,149 +1,145 @@
 from selects.tests.steps import *
 
 
-@TestOutline(When)
-@Name("SELECT ... DISTINCT")
-def distinct_query(
-    self,
-    name,
-    final_manual=False,
-    final_force=1,
-    final_modifier_available=True,
-    check_results=False,
-    final_manual_check=True,
-    final_force_check=0,
-    negative=False,
-    node=None,
-):
-    """Outline to check all `SELECT DISTINCT` combinations with/without, final/force_final and compare results."""
+@TestStep(When)
+@Name("SELECT 'DISTINCT'")
+def distinct(self, table, final_modifier_available, node=None):
+    """Execute select 'DISTINCT' query without `FINAL` clause and with --final setting disabled."""
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
 
+    with When(f"I make `SELECT DISTINCT ... ` from table {name}"):
+        node.query(
+            f"SELECT DISTINCT * FROM {table} ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
+            settings=[("final", 0)],
+        ).output.strip()
+
+
+@TestStep
+@Name("SELECT DISTINCT with FINAL")
+def distinct_with_final_clause(self, table, final_modifier_available, node=None):
+    """Execute select 'DISTINCT' query step with `FINAL` clause and with --final setting disabled."""
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    with When(f"I make `SELECT DISTINCT ... FINAL` from table {name}"):
+        node.query(
+            f"SELECT DISTINCT * FROM {table} {'FINAL' if final_modifier_available else ''} "
+            f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
+            settings=[("final", 0)],
+        ).output.strip()
+
+
+@TestStep
+@Name("SELECT DISTINCT with --final")
+def distinct_with_force_final(self, table, final_modifier_available, node=None):
+    """Execute select 'DISTINCT' query step without `FINAL` clause but with --final setting enabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
     with When(
-        f"I make `SELECT DISTINCT ... {'FINAL' if final_manual else ''} ...` "
-        f"{'with enabled force select final modifier' if final_force == 1 else ''} from table {name}"
+        f"I make `SELECT DISTINCT ... ` with --final setting enabled from table {name}"
     ):
-        result1 = node.query(
-            f"SELECT DISTINCT * FROM {name} {'FINAL' if final_manual and final_modifier_available else ''}"
-            f" ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
-            settings=[("final", final_force)],
+        node.query(
+            f"SELECT DISTINCT * FROM {table} ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
+            settings=[("final", 1)],
         ).output.strip()
 
-        if check_results:
-            with Then(
-                f"I compare previous query result with check query result "
-                f"I make `SELECT DISTINCT ... {'FINAL' if final_manual else ''} ...` "
-                f"{'with enabled force select final modifier' if final_force_check == 1 else ''} from table {name}"
-            ):
-                result2 = node.query(
-                    f"SELECT DISTINCT * FROM {name} {'FINAL' if final_manual_check and final_modifier_available else ''}"
-                    f" ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
-                    settings=[("final", final_force_check)],
+
+@TestStep
+@Name("SELECT DISTINCT with FINAL and --final")
+def distinct_with_final_clause_and_force_final(
+    self, table, final_modifier_available, node=None
+):
+    """Select 'DISTINCT' query step with `FINAL` clause and --final setting enabled."""
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    with When(
+        f"I make `SELECT DISTINCT ... FINAL` with --final setting enabled from table {name}"
+    ):
+        node.query(
+            f"SELECT DISTINCT * FROM {table} {'FINAL' if final_modifier_available else ''} "
+            f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
+            settings=[("final", 1)],
+        ).output.strip()
+
+
+@TestStep(Then)
+@Name("'DISTINCT' compare results")
+def distinct_result_check(self, table, final_modifier_available, node=None):
+    """Compare results between 'DISTINCT' query with `FINAL`  clause and
+    'DISTINCT' query with --final setting enabled."""
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    with Then("I check that compare results are the same"):
+        assert (
+            node.query(
+                f"SELECT DISTINCT * FROM {table} {'FINAL' if final_modifier_available else ''} "
+                f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
+                settings=[("final", 0)],
+            ).output.strip()
+            == node.query(
+                f"SELECT DISTINCT * FROM {table} ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
+                settings=[("final", 1)],
+            ).output.strip()
+        )
+
+
+@TestStep
+@Name("'DISTINCT' negative compare results")
+def distinct_negative_result_check(self, table, final_modifier_available, node=None):
+    """Compare results between distinct query with --final and distinct query without `FINAL` and without --final.
+
+    The expectation is that query results should be different when collapsed rows are present but FINAL modifier is not applied
+    either explicitly using FINAL clause or using --final query setting."""
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    with Then("I check that compare results are different"):
+        if (
+            final_modifier_available
+            and node.query(
+                f"SELECT DISTINCT * FROM {table}"
+                f" ORDER BY (id, x, someCol) FORMAT JSONEachRow;"
+            ).output.strip()
+            != node.query(
+                f"SELECT DISTINCT * FROM {table} FINAL"
+                f" ORDER BY (id, x, someCol) FORMAT JSONEachRow;"
+            ).output.strip()
+        ):
+            assert (
+                node.query(
+                    f"SELECT DISTINCT * FROM {table} ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
+                    settings=[("final", 0)],
                 ).output.strip()
-
-                if negative:
-                    with Then("I check that compare results are different"):
-                        if (
-                            final_modifier_available
-                            and node.query(
-                                f"SELECT DISTINCT * FROM {name}"
-                                f" ORDER BY (id, x, someCol) FORMAT JSONEachRow;"
-                            ).output.strip()
-                            != node.query(
-                                f"SELECT DISTINCT * FROM {name} FINAL"
-                                f" ORDER BY (id, x, someCol) FORMAT JSONEachRow;"
-                            ).output.strip()
-                        ):
-                            assert result1 != result2
-                        else:
-                            xfail("not enough data for negative check")
-                else:
-                    with Then("I check that compare results are the same"):
-                        assert result1 == result2
+                != node.query(
+                    f"SELECT DISTINCT * FROM {table} ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
+                    settings=[("final", 1)],
+                ).output.strip()
+            )
+        else:
+            xfail("not enough data for negative check")
 
 
 @TestStep
-@Name("SELECT `DISTINCT`")
-def distinct(self, name, final_modifier_available):
-    """Select `DISTINCT` query step without `FINAL` without force final."""
+def distinct_all_combinations(self, table):
+    """Step to start all `SELECT DISTINCT` combinations with/without `FINAL` and --final enabled/disabled"""
 
-    distinct_query(
-        name=name,
-        final_modifier_available=final_modifier_available,
-        final_manual=False,
-        final_force=0,
-    )
+    selects = []
 
+    with Given("I select distinct query without FINAL and without --final"):
+        selects.append(distinct)
 
-@TestStep
-@Name("SELECT `DISTINCT` FINAL")
-def distinct_final(self, name, final_modifier_available):
-    """Select `DISTINCT` query step with `FINAL` without force final."""
+    with And("I select distinct query with FINAL clause"):
+        selects.append(distinct_with_final_clause)
 
-    distinct_query(
-        name=name,
-        final_modifier_available=final_modifier_available,
-        final_manual=True,
-        final_force=0,
-    )
+    with And("I select distinct query with --final"):
+        selects.append(distinct_with_force_final)
 
+    with And("I select distinct query with FINAL clause and with --final"):
+        selects.append(distinct_with_final_clause_and_force_final)
 
-@TestStep
-@Name("SELECT `DISTINCT` force final")
-def distinct_ffinal(self, name, final_modifier_available):
-    """Select `DISTINCT` query step without `FINAL` with force final."""
-    distinct_query(
-        name=name,
-        final_modifier_available=final_modifier_available,
-        final_manual=False,
-        final_force=1,
-    )
-
-
-@TestStep
-@Name("SELECT `DISTINCT` FINAL force final")
-def distinct_final_ffinal(self, name, final_modifier_available):
-    """Select `DISTINCT` query step with `FINAL` with force final."""
-    distinct_query(
-        name=name,
-        final_modifier_available=final_modifier_available,
-        final_manual=True,
-        final_force=1,
-    )
-
-
-@TestStep
-@Name("`DISTINCT` result check")
-def distinct_result_check(self, name, final_modifier_available):
-    """Compare results between `DISTINCT` query with `FINAL`,without force final and query without `FINAL`,
-    with force final."""
-
-    distinct_query(
-        name=name,
-        final_manual=False,
-        final_force=1,
-        check_results=True,
-        final_modifier_available=final_modifier_available,
-        final_manual_check=True,
-        final_force_check=0,
-        negative=False,
-    )
-
-
-@TestStep
-@Name("`DISTINCT` negative result check")
-def distinct_negative_result_check(self, name, final_modifier_available):
-    """Compare results between `DISTINCT` query without `FINAL`,with force final and query without `FINAL`,
-    without force final."""
-
-    distinct_query(
-        name=name,
-        final_manual=False,
-        final_force=1,
-        check_results=True,
-        final_modifier_available=final_modifier_available,
-        final_manual_check=False,
-        final_force_check=0,
-        negative=True,
-    )
+    with When("I execute selects concurrently"):
+        run_queries_in_parallel(table=table, selects=selects, iterations=10)

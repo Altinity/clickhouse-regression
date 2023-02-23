@@ -1,41 +1,7 @@
 import tests.select_steps as select
 from helpers.common import check_clickhouse_version
-from tests.concurrent_query_steps import *
 from selects.requirements import *
 from tests.steps import *
-
-
-@TestOutline
-def table_selection(self):
-    """Selecting test tables from all tables"""
-    with Given("I chose tables for testing"):
-        tables = define(
-            "tables",
-            [table for table in self.context.tables if table.name.startswith("alias")],
-            encoder=lambda tables: ", ".join([table.name for table in tables]),
-        )
-    return tables
-
-
-# @TestOutline
-# @Requirements()
-# def table_with_alias(self, table_name, node=None):
-#     """
-#     Creating `ALIAS` table.
-#     """
-#     if node is None:
-#         node = self.context.cluster.node("clickhouse1")
-#
-#     try:
-#         with Given("I create table"):
-#             node.query(
-#                 f"CREATE TABLE IF NOT EXISTS {table_name}(id Int32, x Int32, s Int32 ALIAS id + x) "
-#                 "ENGINE = MergeTree ORDER BY tuple()"
-#             )
-#         yield
-#     finally:
-#         with Finally("I drop table"):
-#             node.query(f"DROP TABLE IF EXISTS {table_name}")
 
 
 @TestScenario
@@ -46,9 +12,7 @@ def test_alias_columns(self, node=None):
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
-    tables = table_selection()
-
-    for table in tables:
+    for table in self.context.tables:
         with Example(f"{table.name}", flags=TE):
             with Given("I make select as user without rights"):
                 node.query(
@@ -89,9 +53,7 @@ def test_alias_columns_alias_column(self, node=None):
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
-    tables = table_selection()
-
-    for table in tables:
+    for table in self.context.tables:
         with Example(f"{table.name}", flags=TE):
             with Given("I make select as user without rights"):
                 node.query(
@@ -141,6 +103,17 @@ def feature(self, node=None):
 
         with Then("I check user was created"):
             node.query("SHOW USERS", message="some_user")
+
+        with And("I chose tables for testing"):
+            self.context.tables = define(
+                "tables",
+                [
+                    table
+                    for table in self.context.tables
+                    if table.name.startswith("alias")
+                ],
+                encoder=lambda tables: ", ".join([table.name for table in tables]),
+            )
 
         for scenario in loads(current_module(), Scenario):
             scenario()

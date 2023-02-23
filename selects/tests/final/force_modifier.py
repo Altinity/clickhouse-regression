@@ -4,7 +4,6 @@ from selects.requirements import *
 from selects.tests.steps import *
 from helpers.common import check_clickhouse_version
 import tests.select_steps as select
-from tests.concurrent_query_steps import *
 
 
 @TestScenario
@@ -25,18 +24,25 @@ def simple_select_as(self):
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
 
-    with And("I choose check selects for testing"):
-        selects_check = define(
-            "Select statements",
-            [
-                select.as_result_check,
-                select.as_negative_result_check,
-            ],
-        )
+    for table in tables:
+        with Example(f"{table.name}", flags=TE):
+            with Then(
+                "Compare results between `SELECT column as new_column` query with `FINAL` clause "
+                "and `SELECT column as new_column` query with --final setting enabled."
+            ):
+                select.as_result_check(
+                    table=table.name,
+                    final_modifier_available=table.final_modifier_available,
+                )
 
-    parallel_outline(
-        tables=tables, selects=selects_check, iterations=1, parallel_select=False
-    )
+            with And(
+                "Compare results between `SELECT column as new_column` query with --final "
+                "and `SELECT column as new_column` query without `FINAL` and without --final."
+            ):
+                select.as_negative_result_check(
+                    table=table.name,
+                    final_modifier_available=table.final_modifier_available,
+                )
 
 
 @TestScenario
@@ -59,18 +65,107 @@ def simple_select_count(self):
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
 
-    with And("I choose check selects for testing"):
-        selects_check = define(
-            "Select statements",
+    for table in tables:
+        with Example(f"{table.name}", flags=TE):
+            with Then(
+                "Compare results between count() query with `FINAL`  clause "
+                "and count() query with --final setting enabled."
+            ):
+                select.count_result_check(
+                    table=table.name,
+                    final_modifier_available=table.final_modifier_available,
+                )
+
+            with And(
+                "Compare results between count() query with --final "
+                "and count() query without `FINAL` and without --final."
+            ):
+                select.count_negative_result_check(
+                    table=table.name,
+                    final_modifier_available=table.final_modifier_available,
+                )
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Distinct("1.0")
+)
+def simple_select_distinct(self):
+    """Check SELECT query with `DISTINCT` clause."""
+    with Given("I chose tables for testing"):
+        tables = define(
+            "tables",
             [
-                select.count_result_check,
-                select.count_negative_result_check,
+                table
+                for table in self.context.tables
+                if table.name.endswith("core")
+                or table.name.endswith("cluster")
+                or table.name.endswith("clusterdistributed")
+                or table.name.endswith("_nview_final")
+                or table.name.endswith("_mview")
             ],
+            encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
 
-    parallel_outline(
-        tables=tables, selects=selects_check, iterations=1, parallel_select=False
-    )
+    for table in tables:
+        with Example(f"{table.name}", flags=TE):
+            with Then(
+                "Compare results between distinct query with `FINAL`  clause "
+                "and distinct query with --final setting enabled."
+            ):
+                select.distinct_result_check(
+                    table=table.name,
+                    final_modifier_available=table.final_modifier_available,
+                )
+
+            with And(
+                "Compare results between distinct query with --final "
+                "and distinct query without `FINAL` and without --final."
+            ):
+                select.distinct_negative_result_check(
+                    table=table.name,
+                    final_modifier_available=table.final_modifier_available,
+                )
+
+
+@TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_GroupBy("1.0"))
+def simple_select_group_by(self):
+    """Check SELECT query with `GROUP BY` clause."""
+    with Given("I chose tables for testing"):
+        tables = define(
+            "tables",
+            [
+                table
+                for table in self.context.tables
+                if table.name.endswith("core")
+                or table.name.endswith("cluster")
+                or table.name.endswith("clusterdistributed")
+                or table.name.endswith("_nview_final")
+                or table.name.endswith("_mview")
+            ],
+            encoder=lambda tables: ", ".join([table.name for table in tables]),
+        )
+
+    for table in tables:
+        with Example(f"{table.name}", flags=TE):
+            with Then(
+                "Compare results between group by query with `FINAL`  clause "
+                "and group by query with --final setting enabled."
+            ):
+                select.group_by_result_check(
+                    table=table.name,
+                    final_modifier_available=table.final_modifier_available,
+                )
+
+            with And(
+                "Compare results between group by query with --final "
+                "and group by query without `FINAL` and without --final."
+            ):
+                select.group_by(
+                    table=table.name,
+                    final_modifier_available=table.final_modifier_available,
+                )
 
 
 @TestScenario
@@ -136,68 +231,6 @@ def simple_select_limit_by(self):
     parallel_outline(
         tables=tables, selects=selects_check, iterations=1, parallel_select=False
     )
-
-
-@TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_GroupBy("1.0"))
-def simple_select_group_by(self):
-    """Check SELECT query with `GROUP BY` clause."""
-    with Given("I chose tables for testing"):
-        tables = define(
-            "tables",
-            [
-                table
-                for table in self.context.tables
-                if table.name.endswith("core")
-                or table.name.endswith("cluster")
-                or table.name.endswith("clusterdistributed")
-                or table.name.endswith("_nview_final")
-                or table.name.endswith("_mview")
-            ],
-            encoder=lambda tables: ", ".join([table.name for table in tables]),
-        )
-
-    with And("I choose check selects for testing"):
-        selects_check = define(
-            "Select statements",
-            [
-                select.group_by_result_check,
-                select.group_by_negative_result_check,
-            ],
-        )
-
-    parallel_outline(
-        tables=tables, selects=selects_check, iterations=1, parallel_select=False
-    )
-
-
-@TestScenario
-@Requirements(
-    RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Distinct("1.0")
-)
-def simple_select_distinct(self):
-    """Check SELECT query with `DISTINCT` clause."""
-    with Given("I chose tables for testing"):
-        tables = define(
-            "tables",
-            [
-                table
-                for table in self.context.tables
-                if table.name.endswith("core")
-                or table.name.endswith("cluster")
-                or table.name.endswith("clusterdistributed")
-                or table.name.endswith("_nview_final")
-                or table.name.endswith("_mview")
-            ],
-            encoder=lambda tables: ", ".join([table.name for table in tables]),
-        )
-
-    for table in tables:
-        with Scenario(f"{table}"):
-            with When("I run DISTINCT .... "):
-                select.distinct_result_check(table=table)
-            with And("....")    
-                select.distinct_negative_result_check(table=table)
 
 
 @TestScenario
