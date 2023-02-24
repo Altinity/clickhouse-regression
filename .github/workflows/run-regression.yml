@@ -1,4 +1,4 @@
-name: run-regression
+name: Start GitLab CI/CD regression run
 run-name: ${{ github.actor }} is running regression tests
 on: 
   workflow_dispatch:
