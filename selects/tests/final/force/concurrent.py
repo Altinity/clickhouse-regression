@@ -1061,7 +1061,7 @@ def all_simple_selects_parallel(self):
 @Requirements(
     RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Parallel("1.0")
 )
-@Name("force modifier concurrent")
+@Name("concurrent")
 def feature(self):
     """Parallel queries tests for force select final."""
     if check_clickhouse_version("<22.11")(self):
