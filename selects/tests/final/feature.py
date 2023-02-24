@@ -1,7 +1,8 @@
+import sys
+
 from testflows.core import *
 from selects.requirements import *
 from selects.tests.steps import *
-import sys
 
 append_path(sys.path, "..")
 
