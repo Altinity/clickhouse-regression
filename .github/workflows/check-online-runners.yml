@@ -1,0 +1,15 @@
+name: Check online runners
+on: 
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: "Altinity repo to list online runners of, default: ClickHouse"
+        type: str
+        default: ClickHouse
+
+jobs:
+  list-online-runners:
+    runs-on: ubuntu-latest
+    steps:
+      - run: ./online-runners.py --token ${{ secrets.GH_ROBOT_TOKEN }} --repo ${{ inputs.repo }}
+
