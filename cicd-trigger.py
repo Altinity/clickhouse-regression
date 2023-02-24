@@ -387,7 +387,7 @@ def trigger():
         )
         print("\n".join(f"   {k}: {v}" for k, v in variables.items()))
         print(
-            f"Job logs will be located in https://{log_path}.s3.amazonaws.com/index.html#clickhouse/{variables['version']}/{pipeline.id}/testflows/ after the run is complete"
+            f"   Job logs will be located in https://{log_path}.s3.amazonaws.com/index.html#clickhouse/{variables['version']}/{pipeline.id}/testflows/ after the run is complete"
         )
 
     if args.wait:
