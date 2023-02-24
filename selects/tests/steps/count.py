@@ -1,4 +1,4 @@
-from selects.tests.steps import *
+from selects.tests.steps.main_steps import *
 
 
 @TestStep(When)

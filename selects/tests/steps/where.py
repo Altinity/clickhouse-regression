@@ -1,9 +1,9 @@
-from selects.tests.steps import *
+from selects.tests.steps.main_steps import *
 
 
 @TestOutline(When)
-@Name("SELECT ... LIMIT")
-def limit_query(
+@Name("SELECT ... WHERE")
+def where_query(
     self,
     name,
     final_manual=False,
@@ -15,30 +15,30 @@ def limit_query(
     negative=False,
     node=None,
 ):
-    """Outline to check all `SELECT LIMIT` combinations with/without, final/force_final and compare results."""
+    """Outline to check all `SELECT WHERE` combinations with/without, final/force_final and compare results."""
 
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
     with When(
-        f"I make `SELECT ... {'FINAL' if final_manual else ''} LIMIT...` "
+        f"I make `SELECT ... {'FINAL' if final_manual else ''} WHERE ... ` "
         f"{'with enabled force select final modifier' if final_force == 1 else ''} from table {name}"
     ):
         result1 = node.query(
-            f"SELECT * FROM  {name} {'FINAL' if final_manual and final_modifier_available else ''}"
-            f" LIMIT 1 FORMAT JSONEachRow;",
+            f"SELECT * FROM {name} {'FINAL' if final_manual and final_modifier_available else ''}"
+            f" WHERE x > 3 ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
             settings=[("final", final_force)],
         ).output.strip()
 
         if check_results:
             with Then(
                 f"I compare previous query result with check query result "
-                f"`SELECT ... {'FINAL' if final_manual_check else ''} LIMIT ...` "
+                f"`SELECT ... {'FINAL' if final_manual_check else ''} WHERE ...` "
                 f"{'with enabled force select final modifier' if final_force_check == 1 else ''} from table {name}"
             ):
                 result2 = node.query(
-                    f"SELECT * FROM  {name} {'FINAL' if final_manual_check and final_modifier_available else ''} "
-                    f"LIMIT 1 FORMAT JSONEachRow;",
+                    f"SELECT * FROM {name} {'FINAL' if final_manual_check and final_modifier_available else ''}"
+                    f" WHERE x > 3 ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
                     settings=[("final", final_force_check)],
                 ).output.strip()
 
@@ -47,11 +47,12 @@ def limit_query(
                         if (
                             final_modifier_available
                             and node.query(
-                                f"SELECT * FROM {name}" f" LIMIT 1 FORMAT JSONEachRow"
+                                f"SELECT * FROM {name}"
+                                f" WHERE x > 3 ORDER BY (id, x, someCol) FORMAT JSONEachRow;"
                             ).output.strip()
                             != node.query(
-                                f"SELECT * FROM {name}"
-                                f" FINAL LIMIT 1 FORMAT JSONEachRow"
+                                f"SELECT * FROM {name} FINAL"
+                                f" WHERE x > 3 ORDER BY (id, x, someCol) FORMAT JSONEachRow;"
                             ).output.strip()
                         ):
                             assert result1 != result2
@@ -63,11 +64,10 @@ def limit_query(
 
 
 @TestStep
-@Name("SELECT `LIMIT`")
-def limit(self, name, final_modifier_available):
-    """Select `LIMIT` query step without `FINAL` without force final."""
-
-    limit_query(
+@Name("SELECT `WHERE`")
+def where(self, name, final_modifier_available):
+    """Select `WHERE` query step without `FINAL` without force final."""
+    where_query(
         name=name,
         final_modifier_available=final_modifier_available,
         final_manual=False,
@@ -76,11 +76,11 @@ def limit(self, name, final_modifier_available):
 
 
 @TestStep
-@Name("SELECT `LIMIT` FINAL")
-def limit_final(self, name, final_modifier_available):
-    """Select `LIMIT` query step with `FINAL` without force final."""
+@Name("SELECT `WHERE` FINAL")
+def where_final(self, name, final_modifier_available):
+    """Select `WHERE` query step with `FINAL` without force final."""
 
-    limit_query(
+    where_query(
         name=name,
         final_modifier_available=final_modifier_available,
         final_manual=True,
@@ -89,11 +89,11 @@ def limit_final(self, name, final_modifier_available):
 
 
 @TestStep
-@Name("SELECT `LIMIT` force final")
-def limit_ffinal(self, name, final_modifier_available):
-    """Select `LIMIT` query step without `FINAL` with force final."""
+@Name("SELECT `WHERE` force final")
+def where_ffinal(self, name, final_modifier_available):
+    """Select `WHERE` query step without `FINAL` with force final."""
 
-    limit_query(
+    where_query(
         name=name,
         final_modifier_available=final_modifier_available,
         final_manual=False,
@@ -102,11 +102,10 @@ def limit_ffinal(self, name, final_modifier_available):
 
 
 @TestStep
-@Name("SELECT `LIMIT` FINAL force final")
-def limit_final_ffinal(self, name, final_modifier_available):
-    """Select `LIMIT` query step with `FINAL` with force final."""
-
-    limit_query(
+@Name("SELECT `WHERE` FINAL force final")
+def where_final_ffinal(self, name, final_modifier_available):
+    """Select `WHERE` query step with `FINAL` with force final."""
+    where_query(
         name=name,
         final_modifier_available=final_modifier_available,
         final_manual=True,
@@ -115,11 +114,12 @@ def limit_final_ffinal(self, name, final_modifier_available):
 
 
 @TestStep
-@Name("`LIMIT` result check")
-def limit_result_check(self, name, final_modifier_available):
-    """Compare results between `LIMIT` query with `FINAL`,without force final and query without `FINAL`,
+@Name("`WHERE` result check")
+def where_result_check(self, name, final_modifier_available):
+    """Compare results between `WHERE` query with `FINAL`,without force final and query without `FINAL`,
     with force final."""
-    limit_query(
+
+    where_query(
         name=name,
         final_manual=False,
         final_force=1,
@@ -132,12 +132,11 @@ def limit_result_check(self, name, final_modifier_available):
 
 
 @TestStep
-@Name("`LIMIT` negative result check")
-def limit_negative_result_check(self, name, final_modifier_available):
-    """Compare results between `LIMIT` query without `FINAL`,with force final and query without `FINAL`,
+@Name("`WHERE` negative result check")
+def where_negative_result_check(self, name, final_modifier_available):
+    """Compare results between `WHERE` query without `FINAL`,with force final and query without `FINAL`,
     without force final."""
-
-    limit_query(
+    where_query(
         name=name,
         final_manual=False,
         final_force=1,
