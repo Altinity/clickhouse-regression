@@ -4,11 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       package:
-        description: "Either 'deb://', 'docker://', or 'https://' package specifier to use for tests"
+        description: 'Either deb://, docker://, or https:// package specifier to use for tests.'
         required: true
         type: string
       version:
-        description: "Version of clickhouse to use for tests."
+        description: 'Version of clickhouse to use for tests.'
         required: true
         type: string
       token:
