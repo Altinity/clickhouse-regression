@@ -87,7 +87,7 @@ def test_alias_columns_alias_column(self, node=None):
 
 @TestFeature
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_UserRights("1.0"))
-@Name("force modifier user rights")
+@Name("user rights")
 def feature(self, node=None):
     """User rights."""
     if check_clickhouse_version("<22.11")(self):
