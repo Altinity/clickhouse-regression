@@ -1,6 +1,7 @@
 from testflows.core import *
 
 @TestFeature
+@Name("force")
 def feature(self):
     """Run tests for --final query setting that force FINAL clause modifier on all tables used in the query."""
 
