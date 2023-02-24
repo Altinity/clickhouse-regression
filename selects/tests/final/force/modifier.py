@@ -1273,7 +1273,7 @@ def without_experimental_analyzer(self):
 
 
 @TestFeature
-@Name("force modifier")
+@Name("general")
 @Specifications(SRS032_ClickHouse_Automatic_Final_Modifier_For_Select_Queries)
 @Requirements(
     RQ_SRS_032_ClickHouse_AutomaticFinalModifier("1.0"),
@@ -1294,10 +1294,10 @@ def without_experimental_analyzer(self):
     RQ_SRS_032_ClickHouse_AutomaticFinalModifier_TableSchema_Alias("1.0"),
 )
 def feature(self):
-    """Check force_final_modifier setting."""
+    """Sanity tests for --final query setting."""
     if check_clickhouse_version("<22.11")(self):
         skip(
-            reason="force_select_final is only supported on ClickHouse version >= 22.11"
+            reason="--final query setting is only supported on ClickHouse version >= 22.11"
         )
 
     Feature(run=without_experimental_analyzer)
