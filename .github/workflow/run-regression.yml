@@ -1,0 +1,64 @@
+name: run-regression
+run-name: ${{ github.actor }} is running regression tests
+on: 
+  workflow_dispatch:
+    inputs:
+      package:
+        description: "Either 'deb://', 'docker://', or 'https://' package specifier to use for tests,
+            For example:
+            'docker://altinity/clickhouse-server', 'docker://clickhouse/clickhouse-server',
+            'deb://s3.amazonaws.com/clickhouse-builds/37882/f74618722585d507cf5fe6d9284cf32028c67716/package_release'
+            'https://s3.amazonaws.com/altinity-build-artifacts/217/acf34c9fc6932aaf9af69425612070b50529f484/package_release/clickhouse-client_22.8.11.17.altinitystable_amd64.deb'"
+        required: true
+        type: string
+      version:
+        description: "Version of clickhouse to use for tests. When package option 
+            uses docker:// specifier then the version is the image tag. For example:
+            '22.3.9.19-alpine', '22.3.8.40.altinitystable', 'latest', etc."
+        required: true
+        type: string
+      token:
+        description: 'Token with access to the Altinity gitlab pipeline.'
+        required: true
+        type: string
+      suite:
+        description: 'Regression suites to run, default: all'
+        type: choice
+        options:
+          - all
+          - aes_encryption
+          - aggregate_functions
+          - atomic_insert
+          - base_58
+          - clickhouse_keeper
+          - datetime64_extended_range
+          - disk_level_encryption
+          - dns
+          - example
+          - extended_precision_data_types
+          - functional
+          - kafka
+          - kerberos
+          - ldap
+          - lightweight_delete
+          - map_type
+          - parquet
+          - part_moves_between_shards
+          - rbac
+          - s3
+          - s3_aws
+          - s3_gcs
+          - selects
+          - ssl_server
+          - tiered_storage
+          - tiered_storage_aws
+          - tiered_storage_gcs
+          - window_functions
+          - benchmark
+
+jobs:
+  regression:
+    runs-on: ubuntu/latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: ./cicd-trigger.py --package ${{ inputs.package }} --version ${{ inputs.version }} --suite ${{ inputs.suite }} --token ${{ inputs.token }}
