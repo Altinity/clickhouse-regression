@@ -11,12 +11,6 @@ on:
         description: "Version of clickhouse to use for tests."
         required: true
         type: string
-      artifacts:
-        description: "Specify whether to upload to internal or public s3 bucket, default: 'internal'.\n Storage locations are 'altinity-internal-test-reports' for internal upload, 'altinity-test-reports' for public",
-        type: choice
-        options:
-          - internal
-          - public
       suite:
         description: "Regression suite to run, default: all"
         type: choice
