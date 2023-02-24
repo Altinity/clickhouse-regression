@@ -38,7 +38,7 @@ if __name__ == "__main__":
     args = argparser().parse_args()
 
     assert args.token is not None, "token must be set"
-    assert args.repository is not None, "repository must be set"
+    assert args.repo is not None, "repository must be set"
 
     start_time = time.time()
     timeout = 60
@@ -51,7 +51,7 @@ if __name__ == "__main__":
 
     while True:
         response = requests.get(
-            f"https://api.github.com/repos/altinity/{args.repository}/actions/runners",
+            f"https://api.github.com/repos/altinity/{args.repo}/actions/runners",
             headers=headers,
         )
 
@@ -60,7 +60,7 @@ if __name__ == "__main__":
         if response.status_code == 200:
             for runner in json.loads(response_content)["runners"]:
                 if runner["status"] == "online":
-                    print(f"    Runner \033[94m {runner['name']} \033[0m is online \033[92m \u2714 \033[0m ")
+                    print(f"    Runner\033[94m {runner['name']}\033[0m is online \033[92m\u2714\033[0m")
 
         else:
             print("API get request failed")
