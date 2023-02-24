@@ -1,149 +1,150 @@
 from selects.tests.steps.main_steps import *
 
 
-@TestOutline(When)
-@Name("SELECT ... LIMIT BY")
-def limit_by_query(
-    self,
-    name,
-    final_manual=False,
-    final_force=1,
-    final_modifier_available=True,
-    check_results=False,
-    final_manual_check=True,
-    final_force_check=0,
-    negative=False,
-    node=None,
-):
-    """Outline to check all `SELECT LIMIT BY` combinations with/without, final/force_final and compare results."""
+@TestStep
+@Name("SELECT `LIMIT BY`")
+def limit_by(self, table, final_modifier_available, node=None):
+    """Execute select 'LIMIT BY' query without `FINAL` clause and with --final setting disabled."""
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
 
+    with When(f"I make `SELECT LIMIT BY` from table {table}"):
+        node.query(
+            f"SELECT * FROM  {table} "
+            f" ORDER BY (id, x, someCol) LIMIT 1 BY id FORMAT JSONEachRow;",
+            settings=[("final", 0)],
+        ).output.strip()
+
+
+@TestStep
+@Name("SELECT LIMIT BY with FINAL")
+def limit_by_with_final_clause(self, table, final_modifier_available, node=None):
+    """Execute select 'LIMIT BY' query step with `FINAL` clause and with --final setting disabled."""
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    with When(f"I make `SELECT LIMIT BY FINAL` from table {table}"):
+        node.query(
+            f"SELECT * FROM  {table} {'FINAL' if final_modifier_available else ''}"
+            f" ORDER BY (id, x, someCol) LIMIT 1 BY id FORMAT JSONEachRow;",
+            settings=[("final", 0)],
+        ).output.strip()
+
+
+@TestStep
+@Name("SELECT LIMIT BY with --final")
+def limit_by_with_force_final(self, table, final_modifier_available, node=None):
+    """Execute select 'LIMIT BY' query step without `FINAL` clause but with --final setting enabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
     with When(
-        f"I make `SELECT ... {'FINAL' if final_manual else ''} LIMIT BY ... ` "
-        f"{'with enabled force select final modifier' if final_force == 1 else ''} from table {name}"
+        f"I make `SELECT LIMIT BY` with --final setting enabled from table {table}"
     ):
-        result1 = node.query(
-            f"SELECT * FROM  {name} {'FINAL' if final_manual and final_modifier_available else ''}"
+        node.query(
+            f"SELECT * FROM  {table} "
             f" ORDER BY (id, x, someCol) LIMIT 1 BY id FORMAT JSONEachRow;",
-            settings=[("final", final_force)],
+            settings=[("final", 1)],
         ).output.strip()
 
-        if check_results:
-            with Then(
-                f"I compare previous query result with check query result "
-                f"`SELECT ... {'FINAL' if final_manual_check else ''} LIMIT BY...` "
-                f"{'with enabled force select final modifier' if final_force_check == 1 else ''} from table {name}"
-            ):
-                result2 = node.query(
-                    f"SELECT * FROM  {name} {'FINAL' if final_manual_check and final_modifier_available else ''}"
+
+@TestStep
+@Name("SELECT LIMIT BY with FINAL and --final")
+def limit_by_with_final_clause_and_force_final(
+    self, table, final_modifier_available, node=None
+):
+    """Select 'LIMIT BY' query step with `FINAL` clause and --final setting enabled."""
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    with When(
+        f"I make `SELECT LIMIT BY FINAL` with --final setting enabled from table {table}"
+    ):
+        node.query(
+            f"SELECT * FROM  {table} {'FINAL' if final_modifier_available else ''}"
+            f" ORDER BY (id, x, someCol) LIMIT 1 BY id FORMAT JSONEachRow;",
+            settings=[("final", 1)],
+        ).output.strip()
+
+
+@TestStep(Then)
+@Name("'LIMIT BY' compare results")
+def limit_by_result_check(self, table, final_modifier_available, node=None):
+    """Compare results between 'LIMIT BY' query with `FINAL`  clause and
+    'LIMIT BY' query with --final setting enabled."""
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    with Then("I check that compare results are the same"):
+        assert (
+            node.query(
+                f"SELECT * FROM  {table} {'FINAL' if final_modifier_available else ''}"
+                f" ORDER BY (id, x, someCol) LIMIT 1 BY id FORMAT JSONEachRow;",
+                settings=[("final", 0)],
+            ).output.strip()
+            == node.query(
+                f"SELECT * FROM  {table} "
+                f" ORDER BY (id, x, someCol) LIMIT 1 BY id FORMAT JSONEachRow;",
+                settings=[("final", 1)],
+            ).output.strip()
+        )
+
+
+@TestStep
+@Name("'LIMIT BY' negative compare results")
+def limit_by_negative_result_check(self, table, final_modifier_available, node=None):
+    """Compare results between limit_by query with --final and limit_by query without `FINAL` and without --final.
+
+    The expectation is that query results should be different when collapsed rows are present but FINAL modifier is not applied
+    either explicitly using FINAL clause or using --final query setting."""
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    with Then("I check that compare results are different"):
+        if (
+            final_modifier_available
+            and node.query(
+                f"SELECT * FROM {table}"
+                f" ORDER BY (id, x, someCol) LIMIT 1 BY id FORMAT JSONEachRow;"
+            ).output.strip()
+            != node.query(
+                f"SELECT * FROM {table} FINAL"
+                f" ORDER BY (id, x, someCol) LIMIT 1 BY id FORMAT JSONEachRow;"
+            ).output.strip()
+        ):
+            assert (
+                node.query(
+                    f"SELECT * FROM  {table} "
                     f" ORDER BY (id, x, someCol) LIMIT 1 BY id FORMAT JSONEachRow;",
-                    settings=[("final", final_force_check)],
+                    settings=[("final", 0)],
                 ).output.strip()
-
-                if negative:
-                    with Then("I check that compare results are different"):
-                        if (
-                            final_modifier_available
-                            and node.query(
-                                f"SELECT * FROM {name}"
-                                f" ORDER BY (id, x, someCol) LIMIT 1 BY id FORMAT JSONEachRow;"
-                            ).output.strip()
-                            != node.query(
-                                f"SELECT * FROM {name} FINAL"
-                                f" ORDER BY (id, x, someCol) LIMIT 1 BY id FORMAT JSONEachRow;"
-                            ).output.strip()
-                        ):
-                            assert result1 != result2
-                        else:
-                            xfail("not enough data for negative check")
-                else:
-                    with Then("I check that compare results are the same"):
-                        assert result1 == result2
+                != node.query(
+                    f"SELECT * FROM  {table} "
+                    f" ORDER BY (id, x, someCol) LIMIT 1 BY id FORMAT JSONEachRow;",
+                    settings=[("final", 1)],
+                ).output.strip()
+            )
+        else:
+            xfail("not enough data for negative check")
 
 
 @TestStep
-@Name("SELECT `LIMIT BY`")
-def limit_by(self, name, final_modifier_available):
-    """Select `LIMIT BY` query step without `FINAL` without force final."""
-    limit_by_query(
-        name=name,
-        final_modifier_available=final_modifier_available,
-        final_manual=False,
-        final_force=0,
-    )
+def limit_by_all_combinations(self, table):
+    """Step to start all `SELECT LIMIT BY` combinations with/without `FINAL` and --final enabled/disabled"""
 
+    selects = []
 
-@TestStep
-@Name("SELECT `LIMIT BY` FINAL")
-def limit_by_final(self, name, final_modifier_available):
-    """Select `LIMIT BY` query step with `FINAL` without force final."""
-    limit_by_query(
-        name=name,
-        final_modifier_available=final_modifier_available,
-        final_manual=True,
-        final_force=0,
-    )
+    with Given("I select limit_by query without FINAL and without --final"):
+        selects.append(limit_by)
 
+    with And("I select limit_by query with FINAL clause"):
+        selects.append(limit_by_with_final_clause)
 
-@TestStep
-@Name("SELECT `LIMIT BY` force final")
-def limit_by_ffinal(self, name, final_modifier_available):
-    """Select `LIMIT BY` query step without `FINAL` with force final."""
+    with And("I select limit_by query with --final"):
+        selects.append(limit_by_with_force_final)
 
-    limit_by_query(
-        name=name,
-        final_modifier_available=final_modifier_available,
-        final_manual=False,
-        final_force=1,
-    )
+    with And("I select limit_by query with FINAL clause and with --final"):
+        selects.append(limit_by_with_final_clause_and_force_final)
 
-
-@TestStep
-@Name("SELECT `LIMIT BY` FINAL force final")
-def limit_by_final_ffinal(self, name, final_modifier_available):
-    """Select `LIMIT BY` query step with `FINAL` with force final."""
-
-    limit_by_query(
-        name=name,
-        final_modifier_available=final_modifier_available,
-        final_manual=True,
-        final_force=1,
-    )
-
-
-@TestStep
-@Name("`LIMIT BY` result check")
-def limit_by_result_check(self, name, final_modifier_available):
-    """Compare results between `LIMIT BY` query with `FINAL`,without force final and query without `FINAL`,
-    with force final."""
-
-    limit_by_query(
-        name=name,
-        final_manual=False,
-        final_force=1,
-        check_results=True,
-        final_modifier_available=final_modifier_available,
-        final_manual_check=True,
-        final_force_check=0,
-        negative=False,
-    )
-
-
-@TestStep
-@Name("`LIMIT BY` negative result check")
-def limit_by_negative_result_check(self, name, final_modifier_available):
-    """Compare results between `LIMIT BY` query without `FINAL`,with force final and query without `FINAL`,
-    without force final."""
-
-    limit_by_query(
-        name=name,
-        final_manual=False,
-        final_force=1,
-        check_results=True,
-        final_modifier_available=final_modifier_available,
-        final_manual_check=False,
-        final_force_check=0,
-        negative=True,
-    )
+    with When("I execute selects concurrently"):
+        run_queries_in_parallel(table=table, selects=selects, iterations=10)
