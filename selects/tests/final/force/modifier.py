@@ -351,7 +351,7 @@ def select_array_join(self, node=None):
     if node is None:
         node = self.context.node
 
-    name = f"arrays_test{getuid()}"
+    name = f"arrays_test_{getuid()}"
 
     with Given("I create engines list for current test"):
         engines = define(
