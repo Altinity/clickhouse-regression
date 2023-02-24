@@ -317,7 +317,6 @@ def simple_select_where(self):
                 if not table.name.endswith("_wview_final")
                 if not table.name.startswith("expr_subquery")
                 if not table.name.startswith("alias")
-
             ],
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )

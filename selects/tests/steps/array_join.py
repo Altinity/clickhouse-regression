@@ -1,5 +1,6 @@
 from selects.tests.steps.main_steps import *
 
+
 @TestStep
 def select_array_join(self, node=None):
     """Check SELECT query with `ARRAY JOIN` clause."""
