@@ -1,149 +1,141 @@
 from selects.tests.steps.main_steps import *
 
 
-@TestOutline(When)
-@Name("SELECT ... LIMIT")
-def limit_query(
-    self,
-    name,
-    final_manual=False,
-    final_force=1,
-    final_modifier_available=True,
-    check_results=False,
-    final_manual_check=True,
-    final_force_check=0,
-    negative=False,
-    node=None,
-):
-    """Outline to check all `SELECT LIMIT` combinations with/without, final/force_final and compare results."""
+@TestStep
+@Name("SELECT `LIMIT`")
+def limit(self, table, final_modifier_available, node=None):
+    """Execute select 'LIMIT' query without `FINAL` clause and with --final setting disabled."""
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
 
+    with When(f"I make `SELECT LIMIT` from table {table}"):
+        node.query(
+            f"SELECT * FROM  {table} LIMIT 1 FORMAT JSONEachRow;",
+            settings=[("final", 0)],
+        ).output.strip()
+
+
+@TestStep
+@Name("SELECT LIMIT with FINAL")
+def limit_with_final_clause(self, table, final_modifier_available, node=None):
+    """Execute select 'LIMIT' query step with `FINAL` clause and with --final setting disabled."""
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    with When(f"I make `SELECT LIMIT FINAL` from table {table}"):
+        node.query(
+            f"SELECT * FROM  {table} {'FINAL' if final_modifier_available else ''}"
+            f" LIMIT 1 FORMAT JSONEachRow;",
+            settings=[("final", 0)],
+        ).output.strip()
+
+
+@TestStep
+@Name("SELECT LIMIT with --final")
+def limit_with_force_final(self, table, final_modifier_available, node=None):
+    """Execute select 'LIMIT' query step without `FINAL` clause but with --final setting enabled."""
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    with When(f"I make `SELECT LIMIT` with --final setting enabled from table {table}"):
+        node.query(
+            f"SELECT * FROM  {table} LIMIT 1 FORMAT JSONEachRow;",
+            settings=[("final", 1)],
+        ).output.strip()
+
+
+@TestStep
+@Name("SELECT LIMIT with FINAL and --final")
+def limit_with_final_clause_and_force_final(
+    self, table, final_modifier_available, node=None
+):
+    """Select 'LIMIT' query step with `FINAL` clause and --final setting enabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
     with When(
-        f"I make `SELECT ... {'FINAL' if final_manual else ''} LIMIT...` "
-        f"{'with enabled force select final modifier' if final_force == 1 else ''} from table {name}"
+        f"I make `SELECT LIMIT FINAL` with --final setting enabled from table {table}"
     ):
-        result1 = node.query(
-            f"SELECT * FROM  {name} {'FINAL' if final_manual and final_modifier_available else ''}"
+        node.query(
+            f"SELECT * FROM  {table} {'FINAL' if final_modifier_available else ''}"
             f" LIMIT 1 FORMAT JSONEachRow;",
-            settings=[("final", final_force)],
+            settings=[("final", 1)],
         ).output.strip()
 
-        if check_results:
-            with Then(
-                f"I compare previous query result with check query result "
-                f"`SELECT ... {'FINAL' if final_manual_check else ''} LIMIT ...` "
-                f"{'with enabled force select final modifier' if final_force_check == 1 else ''} from table {name}"
-            ):
-                result2 = node.query(
-                    f"SELECT * FROM  {name} {'FINAL' if final_manual_check and final_modifier_available else ''} "
-                    f"LIMIT 1 FORMAT JSONEachRow;",
-                    settings=[("final", final_force_check)],
+
+@TestStep(Then)
+@Name("'LIMIT' compare results")
+def limit_result_check(self, table, final_modifier_available, node=None):
+    """Compare results between 'LIMIT' query with `FINAL`  clause and
+    'LIMIT' query with --final setting enabled."""
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    with Then("I check that compare results are the same"):
+        assert (
+            node.query(
+                f"SELECT * FROM  {table} {'FINAL' if final_modifier_available else ''}"
+                f" LIMIT 1 FORMAT JSONEachRow;",
+                settings=[("final", 0)],
+            ).output.strip()
+            == node.query(
+                f"SELECT * FROM  {table} LIMIT 1 FORMAT JSONEachRow;",
+                settings=[("final", 1)],
+            ).output.strip()
+        )
+
+
+@TestStep
+@Name("'LIMIT' negative compare results")
+def limit_negative_result_check(self, table, final_modifier_available, node=None):
+    """Compare results between limit query with --final and limit query without `FINAL` and without --final.
+
+    The expectation is that query results should be different when collapsed rows are present but FINAL modifier is not applied
+    either explicitly using FINAL clause or using --final query setting."""
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    with Then("I check that compare results are different"):
+        if (
+            final_modifier_available
+            and node.query(
+                f"SELECT * FROM {table}" f" LIMIT 1 FORMAT JSONEachRow"
+            ).output.strip()
+            != node.query(
+                f"SELECT * FROM {table}" f" FINAL LIMIT 1 FORMAT JSONEachRow"
+            ).output.strip()
+        ):
+            assert (
+                node.query(
+                    f"SELECT * FROM  {table} LIMIT 1 FORMAT JSONEachRow;",
+                    settings=[("final", 0)],
                 ).output.strip()
-
-                if negative:
-                    with Then("I check that compare results are different"):
-                        if (
-                            final_modifier_available
-                            and node.query(
-                                f"SELECT * FROM {name}" f" LIMIT 1 FORMAT JSONEachRow"
-                            ).output.strip()
-                            != node.query(
-                                f"SELECT * FROM {name}"
-                                f" FINAL LIMIT 1 FORMAT JSONEachRow"
-                            ).output.strip()
-                        ):
-                            assert result1 != result2
-                        else:
-                            xfail("not enough data for negative check")
-                else:
-                    with Then("I check that compare results are the same"):
-                        assert result1 == result2
+                != node.query(
+                    f"SELECT * FROM  {table} LIMIT 1 FORMAT JSONEachRow;",
+                    settings=[("final", 1)],
+                ).output.strip()
+            )
+        else:
+            xfail("not enough data for negative check")
 
 
 @TestStep
-@Name("SELECT `LIMIT`")
-def limit(self, name, final_modifier_available):
-    """Select `LIMIT` query step without `FINAL` without force final."""
+def limit_all_combinations(self, table):
+    """Step to start all `SELECT LIMIT` combinations with/without `FINAL` and --final enabled/disabled"""
 
-    limit_query(
-        name=name,
-        final_modifier_available=final_modifier_available,
-        final_manual=False,
-        final_force=0,
-    )
+    selects = []
 
+    with Given("I select limit query without FINAL and without --final"):
+        selects.append(limit)
 
-@TestStep
-@Name("SELECT `LIMIT` FINAL")
-def limit_final(self, name, final_modifier_available):
-    """Select `LIMIT` query step with `FINAL` without force final."""
+    with And("I select limit query with FINAL clause"):
+        selects.append(limit_with_final_clause)
 
-    limit_query(
-        name=name,
-        final_modifier_available=final_modifier_available,
-        final_manual=True,
-        final_force=0,
-    )
+    with And("I select limit query with --final"):
+        selects.append(limit_with_force_final)
 
+    with And("I select limit query with FINAL clause and with --final"):
+        selects.append(limit_with_final_clause_and_force_final)
 
-@TestStep
-@Name("SELECT `LIMIT` force final")
-def limit_ffinal(self, name, final_modifier_available):
-    """Select `LIMIT` query step without `FINAL` with force final."""
-
-    limit_query(
-        name=name,
-        final_modifier_available=final_modifier_available,
-        final_manual=False,
-        final_force=1,
-    )
-
-
-@TestStep
-@Name("SELECT `LIMIT` FINAL force final")
-def limit_final_ffinal(self, name, final_modifier_available):
-    """Select `LIMIT` query step with `FINAL` with force final."""
-
-    limit_query(
-        name=name,
-        final_modifier_available=final_modifier_available,
-        final_manual=True,
-        final_force=1,
-    )
-
-
-@TestStep
-@Name("`LIMIT` result check")
-def limit_result_check(self, name, final_modifier_available):
-    """Compare results between `LIMIT` query with `FINAL`,without force final and query without `FINAL`,
-    with force final."""
-    limit_query(
-        name=name,
-        final_manual=False,
-        final_force=1,
-        check_results=True,
-        final_modifier_available=final_modifier_available,
-        final_manual_check=True,
-        final_force_check=0,
-        negative=False,
-    )
-
-
-@TestStep
-@Name("`LIMIT` negative result check")
-def limit_negative_result_check(self, name, final_modifier_available):
-    """Compare results between `LIMIT` query without `FINAL`,with force final and query without `FINAL`,
-    without force final."""
-
-    limit_query(
-        name=name,
-        final_manual=False,
-        final_force=1,
-        check_results=True,
-        final_modifier_available=final_modifier_available,
-        final_manual_check=False,
-        final_force_check=0,
-        negative=True,
-    )
+    with When("I execute selects concurrently"):
+        run_queries_in_parallel(table=table, selects=selects, iterations=10)

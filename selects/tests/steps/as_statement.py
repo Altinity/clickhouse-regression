@@ -126,20 +126,20 @@ def as_negative_result_check(self, table, final_modifier_available, node=None):
 
 @TestStep
 def as_all_combinations(self, table):
-    """Step to start all `SELECT count()` combinations with/without `FINAL` and --final enabled/disabled"""
+    """Step to start all `select column as new_column`` combinations with/without `FINAL` and --final enabled/disabled"""
 
     selects = []
 
-    with Given("I select count() query without FINAL and without --final"):
+    with Given("I select as query without FINAL and without --final"):
         selects.append(as_statement)
 
-    with And("I select count() query with FINAL clause"):
+    with And("I select as query with FINAL clause"):
         selects.append(as_with_final_clause)
 
-    with And("I select count() query with --final"):
+    with And("I select as query with --final"):
         selects.append(as_with_force_final)
 
-    with And("I select count() query with FINAL clause and with --final"):
+    with And("I select as query with FINAL clause and with --final"):
         selects.append(as_with_final_clause_and_force_final)
 
     with When("I execute selects concurrently"):
