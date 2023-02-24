@@ -1,7 +1,7 @@
-import tests.select_steps as select
+import tests.steps as select
 from helpers.common import check_clickhouse_version
 from selects.requirements.automatic_final_modifier import *
-from tests.steps import *
+from tests.steps.main_steps import *
 
 
 @TestScenario
@@ -940,7 +940,7 @@ def all_simple_selects_parallel(self):
                 )
 
 
-@TestModule
+@TestFeature
 @Requirements(
     RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Parallel("1.0")
 )

@@ -1,9 +1,9 @@
 import os
 from testflows.core import *
 from selects.requirements import *
-from selects.tests.steps import *
+from selects.tests.steps.main_steps import *
 from helpers.common import check_clickhouse_version
-import tests.select_steps as select
+import tests.steps as select
 
 
 @TestScenario
@@ -16,10 +16,12 @@ def simple_select_as(self):
             [
                 table
                 for table in self.context.tables
-                if table.name.endswith("core")
-                or table.name.endswith("cluster")
-                or table.name.endswith("clusterdistributed")
-                or table.name.endswith("_mview")
+                if not table.name.endswith("duplicate")
+                if not table.name.endswith("nview")
+                if not table.name.startswith("system")
+                if not table.name.endswith("_wview_final")
+                if not table.name.startswith("expr_subquery")
+
             ],
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
@@ -55,12 +57,8 @@ def simple_select_count(self):
             [
                 table
                 for table in self.context.tables
-                if table.name.endswith("core")
-                or table.name.endswith("cluster")
-                or table.name.endswith("clusterdistributed")
-                or table.name.endswith("_nview_final")
-                or table.name.endswith("_mview")
-                or table.name.startswith("alias")
+                if not table.name.endswith("duplicate")
+                if not table.name.endswith("nview")
             ],
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
@@ -1210,7 +1208,7 @@ def run_tests(self):
             join()
 
 
-@TestModule
+@TestFeature
 def with_experimental_analyzer(self):
     """Run all tests with allow_experimental_analyzer=1."""
     with Given("I set allow_experimental_analyzer=1"):
@@ -1219,13 +1217,13 @@ def with_experimental_analyzer(self):
     run_tests()
 
 
-@TestModule
+@TestFeature
 def without_experimental_analyzer(self):
     """Run all tests without allow_experimental_analyzer set."""
     run_tests()
 
 
-@TestModule
+@TestFeature
 @Name("force modifier")
 @Specifications(SRS032_ClickHouse_Automatic_Final_Modifier_For_Select_Queries)
 @Requirements(

@@ -1,7 +1,7 @@
-import tests.select_steps as select
+import tests.steps as select
 from helpers.common import check_clickhouse_version
 from selects.requirements import *
-from tests.steps import *
+from tests.steps.main_steps import *
 
 
 @TestScenario
@@ -85,7 +85,7 @@ def test_alias_columns_alias_column(self, node=None):
                 )
 
 
-@TestModule
+@TestFeature
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_UserRights("1.0"))
 @Name("force modifier user rights")
 def feature(self, node=None):

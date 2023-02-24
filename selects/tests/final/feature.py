@@ -36,6 +36,6 @@ def module(self):
         create_alias_table()
 
     Feature(run=load("final.modifier", "feature"))
-    Feature(run=load("final.force_modifier", "feature"))
-    Feature(run=load("final.force_modifier_concurrent", "feature"))
-    Feature(run=load("final.force_modifier_user_rights", "feature"))
+    Feature(run=load("final.force.modifier", "feature"))
+    Feature(run=load("final.force.concurrent", "feature"))
+    Feature(run=load("final.force.user_rights", "feature"))
