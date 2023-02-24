@@ -11,5 +11,6 @@ jobs:
   list-online-runners:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - run: ./online-runners.py --token ${{ secrets.GH_ROBOT_TOKEN }} --repo ${{ inputs.repo }}
 
