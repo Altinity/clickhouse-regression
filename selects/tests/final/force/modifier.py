@@ -12,7 +12,8 @@ def simple_select_as(self):
     """Check `SELECT some_col as new_some_col`."""
     with Given("I chose tables for testing"):
         tables = define(
-            "tables",
+            "Source set of tables with excluded duplicate, system, auxiliary tables and "
+            "some not supported views by this test",
             [
                 table
                 for table in self.context.tables
@@ -21,7 +22,6 @@ def simple_select_as(self):
                 if not table.name.startswith("system")
                 if not table.name.endswith("_wview_final")
                 if not table.name.startswith("expr_subquery")
-
             ],
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
@@ -53,7 +53,7 @@ def simple_select_count(self):
     """Check `SELECT count()` clause."""
     with Given("I chose tables for testing"):
         tables = define(
-            "tables",
+            "Source set of tables with excluded duplicate, system, auxiliary tables and some not supported views",
             [
                 table
                 for table in self.context.tables
@@ -92,15 +92,17 @@ def simple_select_distinct(self):
     """Check SELECT query with `DISTINCT` clause."""
     with Given("I chose tables for testing"):
         tables = define(
-            "tables",
+            "Source set of tables with excluded duplicate, system, auxiliary tables and "
+            "some not supported views by this test",
             [
                 table
                 for table in self.context.tables
-                if table.name.endswith("core")
-                or table.name.endswith("cluster")
-                or table.name.endswith("clusterdistributed")
-                or table.name.endswith("_nview_final")
-                or table.name.endswith("_mview")
+                if not table.name.endswith("duplicate")
+                if not table.name.endswith("nview")
+                if not table.name.startswith("system")
+                if not table.name.endswith("_wview_final")
+                if not table.name.startswith("expr_subquery")
+                if not table.name.startswith("alias")
             ],
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
@@ -132,15 +134,16 @@ def simple_select_group_by(self):
     """Check SELECT query with `GROUP BY` clause."""
     with Given("I chose tables for testing"):
         tables = define(
-            "tables",
+            "Source set of tables with excluded duplicate, system, auxiliary tables and "
+            "some not supported views by this test",
             [
                 table
                 for table in self.context.tables
-                if table.name.endswith("core")
-                or table.name.endswith("cluster")
-                or table.name.endswith("clusterdistributed")
-                or table.name.endswith("_nview_final")
-                or table.name.endswith("_mview")
+                if not table.name.endswith("duplicate")
+                if not table.name.endswith("nview")
+                if not table.name.startswith("system")
+                if not table.name.endswith("_wview_final")
+                if not table.name.startswith("expr_subquery")
             ],
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
@@ -172,30 +175,48 @@ def simple_select_limit(self):
     """Check SELECT query with `LIMIT` clause."""
     with Given("I chose tables for testing"):
         tables = define(
-            "tables",
+            "Source set of tables with excluded duplicate, system, auxiliary tables and "
+            "some not supported views by this test",
             [
                 table
                 for table in self.context.tables
-                if table.name.endswith("core")
-                or table.name.endswith("cluster")
-                or table.name.endswith("clusterdistributed")
-                or table.name.endswith("_mview")
+                if not table.name.endswith("duplicate")
+                if not table.name.endswith("nview")
+                if not table.name.endswith("nview_final")
+                if (
+                    not table.name.endswith("distr_ReplacingMergeTree)")
+                    and not table.name.endswith("clusterdistributed")
+                )
+                if (
+                    not table.name.endswith("distr_ReplicatedReplacingMergeTree)")
+                    and not table.name.endswith("clusterdistributed")
+                )
+                if not table.name.startswith("system")
+                if not table.name.endswith("_wview_final")
+                if not table.name.startswith("expr_subquery")
             ],
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
 
-    with And("I choose check selects for testing"):
-        selects_check = define(
-            "Select statements",
-            [
-                select.limit_result_check,
-                select.limit_negative_result_check,
-            ],
-        )
+    for table in tables:
+        with Example(f"{table.name}", flags=TE):
+            with Then(
+                "Compare results between `SELECT LIMIT` query with `FINAL`  clause "
+                "and `SELECT LIMIT` query with --final setting enabled."
+            ):
+                select.limit_result_check(
+                    table=table.name,
+                    final_modifier_available=table.final_modifier_available,
+                )
 
-    parallel_outline(
-        tables=tables, selects=selects_check, iterations=1, parallel_select=False
-    )
+            with And(
+                "Compare results between `SELECT LIMIT` query with --final "
+                "and `SELECT LIMIT` query without `FINAL` and without --final."
+            ):
+                select.limit_negative_result_check(
+                    table=table.name,
+                    final_modifier_available=table.final_modifier_available,
+                )
 
 
 @TestScenario
@@ -204,31 +225,40 @@ def simple_select_limit_by(self):
     """Check SELECT query with `LIMIT BY` clause."""
     with Given("I chose tables for testing"):
         tables = define(
-            "tables",
+            "Source set of tables with excluded duplicate, system, auxiliary tables and "
+            "some not supported views by this test",
             [
                 table
                 for table in self.context.tables
-                if table.name.endswith("core")
-                or table.name.endswith("cluster")
-                or table.name.endswith("clusterdistributed")
-                or table.name.endswith("_nview_final")
-                or table.name.endswith("_mview")
+                if not table.name.endswith("duplicate")
+                if not table.name.endswith("nview")
+                if not table.name.startswith("system")
+                if not table.name.endswith("_wview_final")
+                if not table.name.startswith("expr_subquery")
+                if not table.name.startswith("alias")
             ],
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
 
-    with And("I choose check selects for testing"):
-        selects_check = define(
-            "Select statements",
-            [
-                select.limit_by_result_check,
-                select.limit_by_negative_result_check,
-            ],
-        )
+    for table in tables:
+        with Example(f"{table.name}", flags=TE):
+            with Then(
+                "Compare results between `SELECT LIMIT BY` query with `FINAL`  clause "
+                "and `SELECT LIMIT BY` query with --final setting enabled."
+            ):
+                select.limit_by_result_check(
+                    table=table.name,
+                    final_modifier_available=table.final_modifier_available,
+                )
 
-    parallel_outline(
-        tables=tables, selects=selects_check, iterations=1, parallel_select=False
-    )
+            with And(
+                "Compare results between `SELECT LIMIT BY` query with --final "
+                "and `SELECT LIMIT BY` query without `FINAL` and without --final."
+            ):
+                select.limit_by_negative_result_check(
+                    table=table.name,
+                    final_modifier_available=table.final_modifier_available,
+                )
 
 
 @TestScenario
@@ -239,7 +269,8 @@ def simple_select_prewhere(self, node=None):
     """Check SELECT query with `PREWHERE` clause."""
     with Given("I chose tables for testing"):
         tables = define(
-            "tables",
+            "Source set of tables with excluded duplicate, system, auxiliary tables and "
+            "some not supported views by this test",
             [
                 table
                 for table in self.context.tables
@@ -248,18 +279,25 @@ def simple_select_prewhere(self, node=None):
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
 
-    with And("I choose check selects for testing"):
-        selects_check = define(
-            "Select statements",
-            [
-                select.prewhere_result_check,
-                select.prewhere_negative_result_check,
-            ],
-        )
+    for table in tables:
+        with Example(f"{table.name}", flags=TE):
+            with Then(
+                "Compare results between `SELECT PREWHERE` query with `FINAL`  clause "
+                "and `SELECT PREWHERE` query with --final setting enabled."
+            ):
+                select.prewhere_result_check(
+                    table=table.name,
+                    final_modifier_available=table.final_modifier_available,
+                )
 
-    parallel_outline(
-        tables=tables, selects=selects_check, iterations=1, parallel_select=False
-    )
+            with And(
+                "Compare results between `SELECT PREWHERE` query with --final "
+                "and `SELECT PREWHERE` query without `FINAL` and without --final."
+            ):
+                select.prewhere_negative_result_check(
+                    table=table.name,
+                    final_modifier_available=table.final_modifier_available,
+                )
 
 
 @TestScenario
@@ -268,31 +306,40 @@ def simple_select_where(self):
     """Check SELECT query with `WHERE` clause."""
     with Given("I chose tables for testing"):
         tables = define(
-            "tables",
+            "Source set of tables with excluded duplicate, system, auxiliary tables and "
+            "some not supported views by this test",
             [
                 table
                 for table in self.context.tables
-                if table.name.endswith("core")
-                or table.name.endswith("cluster")
-                or table.name.endswith("clusterdistributed")
-                or table.name.endswith("_nview_final")
-                or table.name.endswith("_mview")
+                if not table.name.endswith("duplicate")
+                if not table.name.endswith("nview")
+                if not table.name.startswith("system")
+                if not table.name.endswith("_wview_final")
+                if not table.name.startswith("expr_subquery")
+                if not table.name.startswith("alias")
             ],
             encoder=lambda tables: ", ".join([table.name for table in tables]),
         )
 
-    with And("I choose check selects for testing"):
-        selects_check = define(
-            "Select statements",
-            [
-                select.where_result_check,
-                select.where_negative_result_check,
-            ],
-        )
+    for table in tables:
+        with Example(f"{table.name}", flags=TE):
+            with Then(
+                "Compare results between `SELECT WHERE` query with `FINAL`  clause "
+                "and `SELECT WHERE` query with --final setting enabled."
+            ):
+                select.where_result_check(
+                    table=table.name,
+                    final_modifier_available=table.final_modifier_available,
+                )
 
-    parallel_outline(
-        tables=tables, selects=selects_check, iterations=1, parallel_select=False
-    )
+            with And(
+                "Compare results between `SELECT WHERE` query with --final "
+                "and `SELECT WHERE` query without `FINAL` and without --final."
+            ):
+                select.where_negative_result_check(
+                    table=table.name,
+                    final_modifier_available=table.final_modifier_available,
+                )
 
 
 @TestScenario
@@ -1195,7 +1242,9 @@ def run_tests(self):
     with Pool(1) as executor:
         try:
             for feature in loads(current_module(), Feature):
-                if not feature.name.endswith("experimental analyzer"):
+                if not feature.name.endswith(
+                    "experimental analyzer"
+                ) and not feature.name.endswith("force modifier"):
                     Feature(test=feature, parallel=True, executor=executor)()
         finally:
             join()
