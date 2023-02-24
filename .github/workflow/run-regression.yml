@@ -58,7 +58,7 @@ on:
 
 jobs:
   regression:
-    runs-on: ubuntu/latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - run: ./cicd-trigger.py --package ${{ inputs.package }} --version ${{ inputs.version }} --suite ${{ inputs.suite }} --token ${{ inputs.token }}
