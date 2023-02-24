@@ -50,8 +50,7 @@ on:
           - window_functions
           - benchmark
       artifacts:
-        description: "Specify whether to upload to internal or public s3 bucket.\n
-          Storage locations are 'altinity-internal-test-reports' for internal upload, 'altinity-test-reports' for public"
+        description: "Specify whether to upload to internal or public s3 bucket."
         type: choice
         options:
           - internal

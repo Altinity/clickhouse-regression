@@ -372,6 +372,10 @@ def trigger():
             variables["arch"] = args.arch
         if args.artifacts:
             variables["artifacts"] = args.artifacts
+            if args.artifacts == "internal":
+                log_path = "altinity-internal-test-reports"
+            elif args.artifacts == "public":
+                log_path = "altinity-test-reports"
 
         pipeline = project.trigger_pipeline(
             args.branch, trigger.token, variables=variables
@@ -382,6 +386,9 @@ def trigger():
             f"   \u2728 https://gitlab.com/altinity-qa/clickhouse/cicd/clickhouse-regression/-/pipelines/{pipeline.id} \u2728"
         )
         print("\n".join(f"   {k}: {v}" for k, v in variables.items()))
+        print(
+            f"   Job logs will be located in https://{log_path}.s3.amazonaws.com/index.html#clickhouse/{variables['version']}/{pipeline.id}/testflows/ after the run is complete"
+        )
 
     if args.wait:
         with Action("Wait for pipeline to finish"):
