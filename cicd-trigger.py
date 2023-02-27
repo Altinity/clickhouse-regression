@@ -384,7 +384,7 @@ def trigger():
             elif args.artifacts == "public":
                 log_path = "altinity-test-reports"
         if args.from_github:
-            variables["from_github"] = args.from_github
+            variables["from_github"] = str(args.from_github)
 
         pipeline = project.trigger_pipeline(
             args.branch, trigger.token, variables=variables
