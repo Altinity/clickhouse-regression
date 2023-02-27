@@ -45,12 +45,12 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
                 executor=pool,
             )(**args)
             Feature(
-                test=load("atomic_inserts.regression", "regression"),
+                test=load("atomic_insert.regression", "regression"),
                 parallel=True,
                 executor=pool,
             )(**args)
             Feature(
-                test=load("base58.regression", "regression"),
+                test=load("base_58.regression", "regression"),
                 parallel=True,
                 executor=pool,
             )(**args)
