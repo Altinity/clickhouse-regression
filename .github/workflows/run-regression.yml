@@ -89,7 +89,7 @@ jobs:
           benchmark
           ]
     name: ${{ matrix.suite }}
-    if: contains(${{ inputs.suite }}, ['all', ${{ matrix.suite }}])
+    if: ${{ inputs.suite }} == ${{ matrix.suite }} || ${{ inputs.suite }}  == 'all'
     steps:
       - uses: actions/checkout@v3
       - run: pip install python-gitlab
