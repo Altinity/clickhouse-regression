@@ -319,6 +319,13 @@ def argparser(parser):
         action="store_true",
         help="Enable script debug mode, default: False",
     )
+    parser.add_argument(
+        "--from-github",
+        default=False,
+        action="store_true",
+        help="Indicate whether the call was initialized from github workflows, default: False",
+    )
+
 
     return parser
 
@@ -376,6 +383,8 @@ def trigger():
                 log_path = "altinity-internal-test-reports"
             elif args.artifacts == "public":
                 log_path = "altinity-test-reports"
+        if args.from_github:
+            variables["from_github"] = args.from_github
 
         pipeline = project.trigger_pipeline(
             args.branch, trigger.token, variables=variables
