@@ -89,8 +89,10 @@ jobs:
           benchmark
           ]
     name: ${{ matrix.suite }}
-    if: ${{ inputs.suite ==  matrix.suite || inputs.suite  == 'all' }}
     steps:
       - uses: actions/checkout@v3
+        if: ${{ inputs.suite ==  matrix.suite || inputs.suite  == 'all' }}
       - run: pip install python-gitlab
+        if: ${{ inputs.suite ==  matrix.suite || inputs.suite  == 'all' }}
       - run: ./cicd-trigger.py --package ${{ inputs.package }} --version ${{ inputs.version }} --suite ${{ matrix.suite }} --token ${{ secrets.GL_PIPELINE_TOKEN }} --artifacts ${{ inputs.artifacts }} --wait
+        if: ${{ inputs.suite ==  matrix.suite || inputs.suite  == 'all' }}
