@@ -6,3 +6,4 @@ from tests.steps.distinct import *
 from tests.steps.prewhere import *
 from tests.steps.where import *
 from tests.steps.as_statement import *
+from tests.steps.join import *

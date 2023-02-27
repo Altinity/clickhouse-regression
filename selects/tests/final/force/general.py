@@ -33,8 +33,7 @@ def simple_select_as(self):
                 "and `SELECT column as new_column` query with --final setting enabled."
             ):
                 select.as_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
             with And(
@@ -42,8 +41,7 @@ def simple_select_as(self):
                 "and `SELECT column as new_column` query without `FINAL` and without --final."
             ):
                 select.as_negative_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
 
@@ -70,8 +68,7 @@ def simple_select_count(self):
                 "and count() query with --final setting enabled."
             ):
                 select.count_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
             with And(
@@ -79,8 +76,7 @@ def simple_select_count(self):
                 "and count() query without `FINAL` and without --final."
             ):
                 select.count_negative_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
 
@@ -114,8 +110,7 @@ def simple_select_distinct(self):
                 "and distinct query with --final setting enabled."
             ):
                 select.distinct_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
             with And(
@@ -123,8 +118,7 @@ def simple_select_distinct(self):
                 "and distinct query without `FINAL` and without --final."
             ):
                 select.distinct_negative_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
 
@@ -155,8 +149,7 @@ def simple_select_group_by(self):
                 "and group by query with --final setting enabled."
             ):
                 select.group_by_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
             with And(
@@ -164,8 +157,7 @@ def simple_select_group_by(self):
                 "and group by query without `FINAL` and without --final."
             ):
                 select.group_by(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
 
@@ -183,14 +175,6 @@ def simple_select_limit(self):
                 if not table.name.endswith("duplicate")
                 if not table.name.endswith("nview")
                 if not table.name.endswith("nview_final")
-                if (
-                    not table.name.endswith("distr_ReplacingMergeTree)")
-                    and not table.name.endswith("clusterdistributed")
-                )
-                if (
-                    not table.name.endswith("distr_ReplicatedReplacingMergeTree)")
-                    and not table.name.endswith("clusterdistributed")
-                )
                 if not table.name.startswith("system")
                 if not table.name.endswith("_wview_final")
                 if not table.name.startswith("expr_subquery")
@@ -205,8 +189,7 @@ def simple_select_limit(self):
                 "and `SELECT LIMIT` query with --final setting enabled."
             ):
                 select.limit_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
             with And(
@@ -214,8 +197,7 @@ def simple_select_limit(self):
                 "and `SELECT LIMIT` query without `FINAL` and without --final."
             ):
                 select.limit_negative_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
 
@@ -247,8 +229,7 @@ def simple_select_limit_by(self):
                 "and `SELECT LIMIT BY` query with --final setting enabled."
             ):
                 select.limit_by_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
             with And(
@@ -256,8 +237,7 @@ def simple_select_limit_by(self):
                 "and `SELECT LIMIT BY` query without `FINAL` and without --final."
             ):
                 select.limit_by_negative_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
 
@@ -286,8 +266,7 @@ def simple_select_prewhere(self, node=None):
                 "and `SELECT PREWHERE` query with --final setting enabled."
             ):
                 select.prewhere_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
             with And(
@@ -295,8 +274,7 @@ def simple_select_prewhere(self, node=None):
                 "and `SELECT PREWHERE` query without `FINAL` and without --final."
             ):
                 select.prewhere_negative_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
 
@@ -328,8 +306,7 @@ def simple_select_where(self):
                 "and `SELECT WHERE` query with --final setting enabled."
             ):
                 select.where_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
             with And(
@@ -337,8 +314,7 @@ def simple_select_where(self):
                 "and `SELECT WHERE` query without `FINAL` and without --final."
             ):
                 select.where_negative_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
 
@@ -1244,12 +1220,12 @@ def run_tests(self):
             for feature in loads(current_module(), Feature):
                 if not feature.name.endswith(
                     "experimental analyzer"
-                ) and not feature.name.endswith("force modifier"):
+                ) and not feature.name.endswith("general"):
                     Feature(test=feature, parallel=True, executor=executor)()
         finally:
             join()
 
-    with Pool(8) as executor:
+    with Pool(1) as executor:
         try:
             for scenario in loads(current_module(), Scenario):
                 Feature(test=scenario, parallel=True, executor=executor)()

@@ -27,7 +27,7 @@ def argparser(parser):
 
 
 xfails = {
-    "final/force modifier/without experimental analyzer/select join clause": [
+    "final/force/general/without experimental analyzer/select join clause": [
         (
             Fail,
             "doesn't work in clickhouse"
@@ -36,35 +36,35 @@ xfails = {
         )
     ],
     "final/modifier": [(Fail, "not implemented")],
-    "final/force modifier/with experimental analyzer/simple select group by/*":
+    "final/force/general/with experimental analyzer/simple select group by/*":
         [(Fail, "group by conflict analyzer")],
-    "final/force modifier/with experimental analyzer/simple select count/simple select count/distr_*": [
+    "final/force/general/with experimental analyzer/simple select count/simple select count/distr_*": [
         (Fail, "column fail for distributed tables")],
-    "final/force modifier/with experimental analyzer/simple select as/simple select as/distr_*": [
+    "final/force/general/with experimental analyzer/simple select as/simple select as/distr_*": [
         (Fail, "column fail for distributed tables")],
-    "final/force modifier/with experimental analyzer/simple select limit/simple select limit/distr_*": [
+    "final/force/general/with experimental analyzer/simple select limit/simple select limit/distr_*": [
         (Fail, "column fail for distributed tables")],
-    "final/force modifier/with experimental analyzer/simple select limit by/simple select limit by/distr_*": [
+    "final/force/general/with experimental analyzer/simple select limit by/simple select limit by/distr_*": [
         (Fail, "column fail for distributed tables")],
-    "final/force modifier/with experimental analyzer/simple select distinct/simple select distinct/distr_*": [
+    "final/force/general/with experimental analyzer/simple select distinct/simple select distinct/distr_*": [
         (Fail, "column fail for distributed tables")],
-    "final/force modifier/with experimental analyzer/simple select where/simple select where/distr_*": [
+    "final/force/general/with experimental analyzer/simple select where/simple select where/distr_*": [
         (Fail, "column fail for distributed tables")],
-    "final/force modifier/with experimental analyzer/select multiple join clause select/*": [
+    "final/force/general/with experimental analyzer/select multiple join clause select/*": [
         (Fail, "unknown, need to debug")],
-    "final/force modifier/with experimental analyzer/select nested join clause select/*": [
+    "final/force/general/with experimental analyzer/select nested join clause select/*": [
         (Fail, "unknown, need to debug")],
-    "final/force modifier/with experimental analyzer/select join clause/*": [
+    "final/force/general/with experimental analyzer/select join clause/*": [
         (Fail, "unknown, need to debug")],
-    "final/force modifier/with experimental analyzer/select prewhere subquery/*": [
+    "final/force/general/with experimental analyzer/select prewhere subquery/*": [
         (Fail, "unknown, need to debug")],
-    "final/force modifier/with experimental analyzer/select nested subquery/*": [
+    "final/force/general/with experimental analyzer/select nested subquery/*": [
         (Fail, "unknown, need to debug")],
-    "final/force modifier/with experimental analyzer/select where subquery/*": [
+    "final/force/general/with experimental analyzer/select where subquery/*": [
         (Fail, "unknown, need to debug")],
-    "final/force modifier/with experimental analyzer/select subquery/*": [
+    "final/force/general/with experimental analyzer/select subquery/*": [
         (Fail, "unknown, need to debug")],
-    "final/force modifier/with experimental analyzer/select with clause/*": [
+    "final/force/general/with experimental analyzer/select with clause/*": [
         (Fail, "unknown, need to debug")],
 
 }
