@@ -88,8 +88,8 @@ jobs:
           window_functions,
           benchmark
           ]
-    if: contains(${{ inputs.suite }}, ['all', ${{ matrix.suite }}])
     name: ${{ matrix.suite }}
+    if: contains(${{ inputs.suite }}, ['all', ${{ matrix.suite }}])
     steps:
       - uses: actions/checkout@v3
       - run: pip install python-gitlab
