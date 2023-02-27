@@ -55,44 +55,7 @@ on:
 jobs:
   regression:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        suite: [
-          aes_encryption,
-          aggregate_functions,
-          atomic_insert,
-          base_58,
-          clickhouse_keeper,
-          datetime64_extended_range,
-          disk_level_encryption,
-          dns,
-          example,
-          extended_precision_data_types,
-          functional,
-          kafka,
-          kerberos,
-          ldap,
-          lightweight_delete,
-          map_type,
-          parquet,
-          part_moves_between_shards,
-          rbac,
-          s3,
-          s3_aws,
-          s3_gcs,
-          selects,
-          ssl_server,
-          tiered_storage,
-          tiered_storage_aws,
-          tiered_storage_gcs,
-          window_functions,
-          benchmark
-          ]
-    name: ${{ matrix.suite }}
     steps:
       - uses: actions/checkout@v3
-        if: ${{ inputs.suite ==  matrix.suite || inputs.suite  == 'all' }}
       - run: pip install python-gitlab
-        if: ${{ inputs.suite ==  matrix.suite || inputs.suite  == 'all' }}
-      - run: ./cicd-trigger.py --package ${{ inputs.package }} --version ${{ inputs.version }} --suite ${{ matrix.suite }} --token ${{ secrets.GL_PIPELINE_TOKEN }} --artifacts ${{ inputs.artifacts }} --wait
-        if: ${{ inputs.suite ==  matrix.suite || inputs.suite  == 'all' }}
+      - run: ./cicd-trigger.py --package ${{ inputs.package }} --version ${{ inputs.version }} --suite ${{ inputs.suite }} --token ${{ secrets.GL_PIPELINE_TOKEN }} --artifacts ${{ inputs.artifacts }} --from-github
