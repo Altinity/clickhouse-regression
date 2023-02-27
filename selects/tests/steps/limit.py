@@ -3,28 +3,28 @@ from selects.tests.steps.main_steps import *
 
 @TestStep
 @Name("SELECT `LIMIT`")
-def limit(self, table, final_modifier_available, node=None):
+def limit(self, table, node=None):
     """Execute select 'LIMIT' query without `FINAL` clause and with --final setting disabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
-    with When(f"I make `SELECT LIMIT` from table {table}"):
+    with When(f"I make `SELECT LIMIT` from table {table.name}"):
         node.query(
-            f"SELECT * FROM  {table} LIMIT 1 FORMAT JSONEachRow;",
+            f"SELECT * FROM  {table.name} LIMIT 1 FORMAT JSONEachRow;",
             settings=[("final", 0)],
         ).output.strip()
 
 
 @TestStep
 @Name("SELECT LIMIT with FINAL")
-def limit_with_final_clause(self, table, final_modifier_available, node=None):
+def limit_with_final_clause(self, table, node=None):
     """Execute select 'LIMIT' query step with `FINAL` clause and with --final setting disabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
-    with When(f"I make `SELECT LIMIT FINAL` from table {table}"):
+    with When(f"I make `SELECT LIMIT FINAL` from table {table.name}"):
         node.query(
-            f"SELECT * FROM  {table} {'FINAL' if final_modifier_available else ''}"
+            f"SELECT * FROM  {table.name} {'FINAL' if table.final_modifier_available else ''}"
             f" LIMIT 1 FORMAT JSONEachRow;",
             settings=[("final", 0)],
         ).output.strip()
@@ -32,14 +32,14 @@ def limit_with_final_clause(self, table, final_modifier_available, node=None):
 
 @TestStep
 @Name("SELECT LIMIT with --final")
-def limit_with_force_final(self, table, final_modifier_available, node=None):
+def limit_with_force_final(self, table, node=None):
     """Execute select 'LIMIT' query step without `FINAL` clause but with --final setting enabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
-    with When(f"I make `SELECT LIMIT` with --final setting enabled from table {table}"):
+    with When(f"I make `SELECT LIMIT` with --final setting enabled from table {table.name}"):
         node.query(
-            f"SELECT * FROM  {table} LIMIT 1 FORMAT JSONEachRow;",
+            f"SELECT * FROM  {table.name} LIMIT 1 FORMAT JSONEachRow;",
             settings=[("final", 1)],
         ).output.strip()
 
@@ -47,17 +47,17 @@ def limit_with_force_final(self, table, final_modifier_available, node=None):
 @TestStep
 @Name("SELECT LIMIT with FINAL and --final")
 def limit_with_final_clause_and_force_final(
-    self, table, final_modifier_available, node=None
+    self, table, node=None
 ):
     """Select 'LIMIT' query step with `FINAL` clause and --final setting enabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
     with When(
-        f"I make `SELECT LIMIT FINAL` with --final setting enabled from table {table}"
+        f"I make `SELECT LIMIT FINAL` with --final setting enabled from table {table.name}"
     ):
         node.query(
-            f"SELECT * FROM  {table} {'FINAL' if final_modifier_available else ''}"
+            f"SELECT * FROM  {table.name} {'FINAL' if table.final_modifier_available else ''}"
             f" LIMIT 1 FORMAT JSONEachRow;",
             settings=[("final", 1)],
         ).output.strip()
@@ -65,7 +65,7 @@ def limit_with_final_clause_and_force_final(
 
 @TestStep(Then)
 @Name("'LIMIT' compare results")
-def limit_result_check(self, table, final_modifier_available, node=None):
+def limit_result_check(self, table, node=None):
     """Compare results between 'LIMIT' query with `FINAL`  clause and
     'LIMIT' query with --final setting enabled."""
     if node is None:
@@ -74,12 +74,12 @@ def limit_result_check(self, table, final_modifier_available, node=None):
     with Then("I check that compare results are the same"):
         assert (
             node.query(
-                f"SELECT * FROM  {table} {'FINAL' if final_modifier_available else ''}"
+                f"SELECT * FROM  {table.name} {'FINAL' if table.final_modifier_available else ''}"
                 f" LIMIT 1 FORMAT JSONEachRow;",
                 settings=[("final", 0)],
             ).output.strip()
             == node.query(
-                f"SELECT * FROM  {table} LIMIT 1 FORMAT JSONEachRow;",
+                f"SELECT * FROM  {table.name} LIMIT 1 FORMAT JSONEachRow;",
                 settings=[("final", 1)],
             ).output.strip()
         )
@@ -87,7 +87,7 @@ def limit_result_check(self, table, final_modifier_available, node=None):
 
 @TestStep
 @Name("'LIMIT' negative compare results")
-def limit_negative_result_check(self, table, final_modifier_available, node=None):
+def limit_negative_result_check(self, table, node=None):
     """Compare results between limit query with --final and limit query without `FINAL` and without --final.
 
     The expectation is that query results should be different when collapsed rows are present but FINAL modifier is not applied
@@ -97,21 +97,21 @@ def limit_negative_result_check(self, table, final_modifier_available, node=None
 
     with Then("I check that compare results are different"):
         if (
-            final_modifier_available
+            table.final_modifier_available
             and node.query(
-                f"SELECT * FROM {table}" f" LIMIT 1 FORMAT JSONEachRow"
+                f"SELECT * FROM {table.name}" f" LIMIT 1 FORMAT JSONEachRow"
             ).output.strip()
             != node.query(
-                f"SELECT * FROM {table}" f" FINAL LIMIT 1 FORMAT JSONEachRow"
+                f"SELECT * FROM {table.name}" f" FINAL LIMIT 1 FORMAT JSONEachRow"
             ).output.strip()
         ):
             assert (
                 node.query(
-                    f"SELECT * FROM  {table} LIMIT 1 FORMAT JSONEachRow;",
+                    f"SELECT * FROM  {table.name} LIMIT 1 FORMAT JSONEachRow;",
                     settings=[("final", 0)],
                 ).output.strip()
                 != node.query(
-                    f"SELECT * FROM  {table} LIMIT 1 FORMAT JSONEachRow;",
+                    f"SELECT * FROM  {table.name} LIMIT 1 FORMAT JSONEachRow;",
                     settings=[("final", 1)],
                 ).output.strip()
             )

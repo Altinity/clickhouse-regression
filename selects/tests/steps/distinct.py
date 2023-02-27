@@ -3,28 +3,28 @@ from selects.tests.steps.main_steps import *
 
 @TestStep(When)
 @Name("SELECT 'DISTINCT'")
-def distinct(self, table, final_modifier_available, node=None):
+def distinct(self, table, node=None):
     """Execute select 'DISTINCT' query without `FINAL` clause and with --final setting disabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
-    with When(f"I make `SELECT DISTINCT ... ` from table {name}"):
+    with When(f"I make `SELECT DISTINCT ... ` from table {table.name}"):
         node.query(
-            f"SELECT DISTINCT * FROM {table} ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
+            f"SELECT DISTINCT * FROM {table.name} ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
             settings=[("final", 0)],
         ).output.strip()
 
 
 @TestStep
 @Name("SELECT DISTINCT with FINAL")
-def distinct_with_final_clause(self, table, final_modifier_available, node=None):
+def distinct_with_final_clause(self, table, node=None):
     """Execute select 'DISTINCT' query step with `FINAL` clause and with --final setting disabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
-    with When(f"I make `SELECT DISTINCT ... FINAL` from table {name}"):
+    with When(f"I make `SELECT DISTINCT ... FINAL` from table {table.name}"):
         node.query(
-            f"SELECT DISTINCT * FROM {table} {'FINAL' if final_modifier_available else ''} "
+            f"SELECT DISTINCT * FROM {table.name} {'FINAL' if table.final_modifier_available else ''} "
             f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
             settings=[("final", 0)],
         ).output.strip()
@@ -32,16 +32,16 @@ def distinct_with_final_clause(self, table, final_modifier_available, node=None)
 
 @TestStep
 @Name("SELECT DISTINCT with --final")
-def distinct_with_force_final(self, table, final_modifier_available, node=None):
+def distinct_with_force_final(self, table, node=None):
     """Execute select 'DISTINCT' query step without `FINAL` clause but with --final setting enabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
     with When(
-        f"I make `SELECT DISTINCT ... ` with --final setting enabled from table {name}"
+        f"I make `SELECT DISTINCT ... ` with --final setting enabled from table {table.name}"
     ):
         node.query(
-            f"SELECT DISTINCT * FROM {table} ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
+            f"SELECT DISTINCT * FROM {table.name} ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
             settings=[("final", 1)],
         ).output.strip()
 
@@ -49,17 +49,17 @@ def distinct_with_force_final(self, table, final_modifier_available, node=None):
 @TestStep
 @Name("SELECT DISTINCT with FINAL and --final")
 def distinct_with_final_clause_and_force_final(
-    self, table, final_modifier_available, node=None
+    self, table, node=None
 ):
     """Select 'DISTINCT' query step with `FINAL` clause and --final setting enabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
     with When(
-        f"I make `SELECT DISTINCT ... FINAL` with --final setting enabled from table {name}"
+        f"I make `SELECT DISTINCT ... FINAL` with --final setting enabled from table {table.name}"
     ):
         node.query(
-            f"SELECT DISTINCT * FROM {table} {'FINAL' if final_modifier_available else ''} "
+            f"SELECT DISTINCT * FROM {table.name} {'FINAL' if table.final_modifier_available else ''} "
             f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
             settings=[("final", 1)],
         ).output.strip()
@@ -67,7 +67,7 @@ def distinct_with_final_clause_and_force_final(
 
 @TestStep(Then)
 @Name("'DISTINCT' compare results")
-def distinct_result_check(self, table, final_modifier_available, node=None):
+def distinct_result_check(self, table, node=None):
     """Compare results between 'DISTINCT' query with `FINAL`  clause and
     'DISTINCT' query with --final setting enabled."""
     if node is None:
@@ -76,12 +76,12 @@ def distinct_result_check(self, table, final_modifier_available, node=None):
     with Then("I check that compare results are the same"):
         assert (
             node.query(
-                f"SELECT DISTINCT * FROM {table} {'FINAL' if final_modifier_available else ''} "
+                f"SELECT DISTINCT * FROM {table.name} {'FINAL' if table.final_modifier_available else ''} "
                 f"ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
                 settings=[("final", 0)],
             ).output.strip()
             == node.query(
-                f"SELECT DISTINCT * FROM {table} ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
+                f"SELECT DISTINCT * FROM {table.name} ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
                 settings=[("final", 1)],
             ).output.strip()
         )
@@ -89,7 +89,7 @@ def distinct_result_check(self, table, final_modifier_available, node=None):
 
 @TestStep
 @Name("'DISTINCT' negative compare results")
-def distinct_negative_result_check(self, table, final_modifier_available, node=None):
+def distinct_negative_result_check(self, table, node=None):
     """Compare results between distinct query with --final and distinct query without `FINAL` and without --final.
 
     The expectation is that query results should be different when collapsed rows are present but FINAL modifier is not applied
@@ -99,23 +99,23 @@ def distinct_negative_result_check(self, table, final_modifier_available, node=N
 
     with Then("I check that compare results are different"):
         if (
-            final_modifier_available
+            table.final_modifier_available
             and node.query(
-                f"SELECT DISTINCT * FROM {table}"
+                f"SELECT DISTINCT * FROM {table.name}"
                 f" ORDER BY (id, x, someCol) FORMAT JSONEachRow;"
             ).output.strip()
             != node.query(
-                f"SELECT DISTINCT * FROM {table} FINAL"
+                f"SELECT DISTINCT * FROM {table.name} FINAL"
                 f" ORDER BY (id, x, someCol) FORMAT JSONEachRow;"
             ).output.strip()
         ):
             assert (
                 node.query(
-                    f"SELECT DISTINCT * FROM {table} ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
+                    f"SELECT DISTINCT * FROM {table.name} ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
                     settings=[("final", 0)],
                 ).output.strip()
                 != node.query(
-                    f"SELECT DISTINCT * FROM {table} ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
+                    f"SELECT DISTINCT * FROM {table.name} ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
                     settings=[("final", 1)],
                 ).output.strip()
             )

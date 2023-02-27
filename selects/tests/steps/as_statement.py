@@ -3,28 +3,28 @@ from selects.tests.steps.main_steps import *
 
 @TestStep
 @Name("SELECT column as new_column")
-def as_statement(self, table, final_modifier_available, node=None):
+def as_statement(self, table, node=None):
     """Execute select `as` query without `FINAL` clause and with --final setting disabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
-    with When(f"I make `SELECT column as new_column ... ` from table {name}"):
+    with When(f"I make `SELECT column as new_column ... ` from table {table.name}"):
         node.query(
-            f"SELECT id as new_id FROM {table} ORDER BY (id) FORMAT JSONEachRow;",
+            f"SELECT id as new_id FROM {table.name} ORDER BY (id) FORMAT JSONEachRow;",
             settings=[("final", 0)],
         ).output.strip()
 
 
 @TestStep
 @Name("SELECT column as new_column with FINAL")
-def as_with_final_clause(self, table, final_modifier_available, node=None):
+def as_with_final_clause(self, table, node=None):
     """Execute select `as` query step with `FINAL` clause and with --final setting disabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
-    with When(f"I make `SELECT column as new_column ... FINAL` from table {table}"):
+    with When(f"I make `SELECT column as new_column ... FINAL` from table {table.name}"):
         node.query(
-            f"SELECT id as new_id FROM {table} {'FINAL' if final_modifier_available else ''} ORDER BY (id) FORMAT"
+            f"SELECT id as new_id FROM {table.name} {'FINAL' if table.final_modifier_available else ''} ORDER BY (id) FORMAT"
             f" JSONEachRow;",
             settings=[("final", 0)],
         ).output.strip()
@@ -32,16 +32,16 @@ def as_with_final_clause(self, table, final_modifier_available, node=None):
 
 @TestStep
 @Name("SELECT column as new_column with --final")
-def as_with_force_final(self, table, final_modifier_available, node=None):
+def as_with_force_final(self, table, node=None):
     """Execute select `as` query step without `FINAL` clause but with --final setting enabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
     with When(
-        f"I make `SELECT column as new_column ... ` with --final setting enabled from table {table}"
+        f"I make `SELECT column as new_column ... ` with --final setting enabled from table {table.name}"
     ):
         node.query(
-            f"SELECT id as new_id FROM {table} ORDER BY (id) FORMAT JSONEachRow;",
+            f"SELECT id as new_id FROM {table.name} ORDER BY (id) FORMAT JSONEachRow;",
             settings=[("final", 1)],
         ).output.strip()
 
@@ -49,17 +49,17 @@ def as_with_force_final(self, table, final_modifier_available, node=None):
 @TestStep
 @Name("SELECT `as` FINAL force final")
 def as_with_final_clause_and_force_final(
-    self, table, final_modifier_available, node=None
+    self, table, node=None
 ):
     """Execute select as query step with `FINAL` clause and with --final setting enabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
     with When(
-        f"I make `SELECT column as new_column ... FINAL` with --final setting enabled from table {table}"
+        f"I make `SELECT column as new_column ... FINAL` with --final setting enabled from table {table.name}"
     ):
         node.query(
-            f"SELECT id as new_id FROM {table} {'FINAL' if final_modifier_available else ''} ORDER BY (id)"
+            f"SELECT id as new_id FROM {table.name} {'FINAL' if table.final_modifier_available else ''} ORDER BY (id)"
             f" FORMAT JSONEachRow;",
             settings=[("final", 1)],
         ).output.strip()
@@ -67,7 +67,7 @@ def as_with_final_clause_and_force_final(
 
 @TestStep
 @Name("`as` result check")
-def as_result_check(self, table, final_modifier_available, node=None):
+def as_result_check(self, table, node=None):
     """Compare results between `select column as new_column` query with `FINAL` clause and
     `select column as new_column` query with --final setting enabled."""
     if node is None:
@@ -76,12 +76,12 @@ def as_result_check(self, table, final_modifier_available, node=None):
     with Then("I check that compare results are the same"):
         assert (
             node.query(
-                f"SELECT id as new_id FROM {table} {'FINAL' if final_modifier_available else ''} ORDER BY (id) FORMAT"
+                f"SELECT id as new_id FROM {table.name} {'FINAL' if table.final_modifier_available else ''} ORDER BY (id) FORMAT"
                 f" JSONEachRow;",
                 settings=[("final", 0)],
             ).output.strip()
             == node.query(
-                f"SELECT id as new_id FROM {table} ORDER BY (id) FORMAT JSONEachRow;",
+                f"SELECT id as new_id FROM {table.name} ORDER BY (id) FORMAT JSONEachRow;",
                 settings=[("final", 1)],
             ).output.strip()
         )
@@ -89,7 +89,7 @@ def as_result_check(self, table, final_modifier_available, node=None):
 
 @TestStep
 @Name("`as` negative result check")
-def as_negative_result_check(self, table, final_modifier_available, node=None):
+def as_negative_result_check(self, table, node=None):
     """Compare results between `select column as new_column` query with --final and
      `select column as new_column` query without `FINAL` and without --final.
 
@@ -100,23 +100,23 @@ def as_negative_result_check(self, table, final_modifier_available, node=None):
 
     with Then("I check that compare results are different"):
         if (
-            final_modifier_available
+            table.final_modifier_available
             and node.query(
-                f"SELECT id as new_id FROM {table}"
+                f"SELECT id as new_id FROM {table.name}"
                 f" ORDER BY (id) FORMAT JSONEachRow;"
             ).output.strip()
             != node.query(
-                f"SELECT id as new_id FROM {table} FINAL"
+                f"SELECT id as new_id FROM {table.name} FINAL"
                 f" ORDER BY (id) FORMAT JSONEachRow;"
             ).output.strip()
         ):
             assert (
                 node.query(
-                    f"SELECT id as new_id FROM {table} ORDER BY (id) FORMAT JSONEachRow;",
+                    f"SELECT id as new_id FROM {table.name} ORDER BY (id) FORMAT JSONEachRow;",
                     settings=[("final", 0)],
                 ).output.strip()
                 != node.query(
-                    f"SELECT id as new_id FROM {table} ORDER BY (id) FORMAT JSONEachRow;",
+                    f"SELECT id as new_id FROM {table.name} ORDER BY (id) FORMAT JSONEachRow;",
                     settings=[("final", 1)],
                 ).output.strip()
             )

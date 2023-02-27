@@ -3,68 +3,68 @@ from selects.tests.steps.main_steps import *
 
 @TestStep(When)
 @Name("SELECT count()")
-def count(self, table, final_modifier_available, node=None):
+def count(self, table, node=None):
     """Execute select count() query without `FINAL` clause and with --final setting disabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
-    with When(f"I make `SELECT count() ... ` from table {name}"):
+    with When(f"I make `SELECT count() ... ` from table {table.name}"):
         node.query(
-            f"SELECT count() FROM {table} FORMAT JSONEachRow;", settings=[("final", 0)]
+            f"SELECT count() FROM {table.name} FORMAT JSONEachRow;", settings=[("final", 0)]
         ).output.strip()
 
 
 @TestStep
 @Name("SELECT count() with FINAL")
-def count_with_final_clause(self, table, final_modifier_available, node=None):
+def count_with_final_clause(self, table, node=None):
     """Execute select count() query step with `FINAL` clause and with --final setting disabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
-    with When(f"I make `SELECT count() ... FINAL` from table {name}"):
+    with When(f"I make `SELECT count() ... FINAL` from table {table.name}"):
 
         node.query(
-            f"SELECT count() FROM {table} {'FINAL' if final_modifier_available else ''} FORMAT JSONEachRow;",
+            f"SELECT count() FROM {table.name} {'FINAL' if table.final_modifier_available else ''} FORMAT JSONEachRow;",
             settings=[("final", 0)],
         ).output.strip()
 
 
 @TestStep
 @Name("SELECT count() with --final")
-def count_with_force_final(self, table, final_modifier_available, node=None):
+def count_with_force_final(self, table, node=None):
     """Execute select count() query step without `FINAL` clause but with --final setting enabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
     with When(
-        f"I make `SELECT count() ... ` with --final setting enabled from table {name}"
+        f"I make `SELECT count() ... ` with --final setting enabled from table {table.name}"
     ):
         node.query(
-            f"SELECT count() FROM {table} FORMAT JSONEachRow;", settings=[("final", 1)]
+            f"SELECT count() FROM {table.name} FORMAT JSONEachRow;", settings=[("final", 1)]
         ).output.strip()
 
 
 @TestStep
 @Name("SELECT count() with FINAL and --final")
 def count_with_final_clause_and_force_final(
-    self, table, final_modifier_available, node=None
+    self, table, node=None
 ):
     """Select count() query step with `FINAL` clause and --final setting enabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
     with When(
-        f"I make `SELECT count() ... FINAL` with --final setting enabled from table {name}"
+        f"I make `SELECT count() ... FINAL` with --final setting enabled from table {table.name}"
     ):
         node.query(
-            f"SELECT count() FROM {table} {'FINAL' if final_modifier_available else ''} FORMAT JSONEachRow;",
+            f"SELECT count() FROM {table.name} {'FINAL' if table.final_modifier_available else ''} FORMAT JSONEachRow;",
             settings=[("final", 1)],
         ).output.strip()
 
 
 @TestStep(Then)
 @Name("count() compare results")
-def count_result_check(self, table, final_modifier_available, node=None):
+def count_result_check(self, table, node=None):
     """Compare results between count() query with `FINAL`  clause and count() query with --final setting enabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
@@ -72,11 +72,11 @@ def count_result_check(self, table, final_modifier_available, node=None):
     with Then("I check that compare results are the same"):
         assert (
             node.query(
-                f"SELECT count() FROM {table} {'FINAL' if final_modifier_available else ''} FORMAT JSONEachRow;",
+                f"SELECT count() FROM {table.name} {'FINAL' if table.final_modifier_available else ''} FORMAT JSONEachRow;",
                 settings=[("final", 0)],
             ).output.strip()
             == node.query(
-                f"SELECT count() FROM {table} FORMAT JSONEachRow;",
+                f"SELECT count() FROM {table.name} FORMAT JSONEachRow;",
                 settings=[("final", 1)],
             ).output.strip()
         )
@@ -84,7 +84,7 @@ def count_result_check(self, table, final_modifier_available, node=None):
 
 @TestStep
 @Name("count() negative compare results")
-def count_negative_result_check(self, table, final_modifier_available, node=None):
+def count_negative_result_check(self, table, node=None):
     """Compare results between count() query with --final and count() query without `FINAL` and without --final.
 
     The expectation is that query results should be different when collapsed rows are present but FINAL modifier is not applied
@@ -94,17 +94,17 @@ def count_negative_result_check(self, table, final_modifier_available, node=None
 
     with Then("I check that compare results are different"):
         if (
-            final_modifier_available
-            and node.query(f"SELECT count() FROM {table}").output.strip()
-            != node.query(f"SELECT count() FROM {table} FINAL").output.strip()
+            table.final_modifier_available
+            and node.query(f"SELECT count() FROM {table.name}").output.strip()
+            != node.query(f"SELECT count() FROM {table.name} FINAL").output.strip()
         ):
             assert (
                 node.query(
-                    f"SELECT count() FROM {table} FORMAT JSONEachRow;",
+                    f"SELECT count() FROM {table.name} FORMAT JSONEachRow;",
                     settings=[("final", 1)],
                 ).output.strip()
                 != node.query(
-                    f"SELECT count() FROM {table} FORMAT JSONEachRow;",
+                    f"SELECT count() FROM {table.name} FORMAT JSONEachRow;",
                     settings=[("final", 0)],
                 ).output.strip()
             )

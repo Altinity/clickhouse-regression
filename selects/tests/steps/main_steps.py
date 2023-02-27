@@ -744,7 +744,7 @@ def create_live_view(
         with By(f"creating live view {view_name}"):
             node.query(
                 f"CREATE {view_type} IF NOT EXISTS {view_name}"
-                f" AS SELECT * FROM {core_table}{' FINAL' if final  and final_modifier_available else ''}",
+                f" AS SELECT * FROM {core_table}{' FINAL' if final and final_modifier_available else ''}",
                 settings=[("allow_experimental_live_view", 1)],
             )
 
@@ -1279,20 +1279,19 @@ def run_queries_in_parallel(
     deletes=None,
     iterations=10,
     parallel_select=True,
+    tables_auxiliary=None,
 ):
     """Execute specified selects, inserts, updates, and deletes in parallel."""
     for i in range(iterations):
         for select in selects:
-            if select.name.endswith("negative_select_check"):
-                with Example(f"negative", flags=TE):
-                    By(f"{select.name}", test=select, parallel=parallel_select)(
-                        table=table.name,
-                        final_modifier_available=table.final_modifier_available,
-                    )
+            if tables_auxiliary != None:
+                By(f"{select.name}", test=select, parallel=parallel_select)(
+                    table=table,
+                    tables_auxiliary=tables_auxiliary
+                )
             else:
                 By(f"{select.name}", test=select, parallel=parallel_select)(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table,
                 )
 
         if not inserts is None:

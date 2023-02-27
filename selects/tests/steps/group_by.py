@@ -3,14 +3,14 @@ from selects.tests.steps.main_steps import *
 
 @TestStep
 @Name("SELECT `GROUP BY`")
-def group_by(self, table, final_modifier_available, node=None):
+def group_by(self, table, node=None):
     """Execute select 'GROUP BY' query without `FINAL` clause and with --final setting disabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
-    with When(f"I make `SELECT GROUP BY ... ` from table {table}"):
+    with When(f"I make `SELECT GROUP BY ... ` from table {table.name}"):
         node.query(
-            f"SELECT id, count(x) as cx FROM {table}"
+            f"SELECT id, count(x) as cx FROM {table.name}"
             f" GROUP BY (id, x) ORDER BY (id, cx) FORMAT JSONEachRow;",
             settings=[("final", 0)],
         ).output.strip()
@@ -18,14 +18,14 @@ def group_by(self, table, final_modifier_available, node=None):
 
 @TestStep
 @Name("SELECT GROUP BY with FINAL")
-def group_by_with_final_clause(self, table, final_modifier_available, node=None):
+def group_by_with_final_clause(self, table, node=None):
     """Execute select 'GROUP BY' query step with `FINAL` clause and with --final setting disabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
-    with When(f"I make `SELECT GROUP BY FINAL` from table {table}"):
+    with When(f"I make `SELECT GROUP BY FINAL` from table {table.name}"):
         node.query(
-            f"SELECT id, count(x) as cx FROM {table} {'FINAL' if final_modifier_available else ''}"
+            f"SELECT id, count(x) as cx FROM {table.name} {'FINAL' if table.final_modifier_available else ''}"
             f" GROUP BY (id, x) ORDER BY (id, cx) FORMAT JSONEachRow;",
             settings=[("final", 0)],
         ).output.strip()
@@ -33,16 +33,16 @@ def group_by_with_final_clause(self, table, final_modifier_available, node=None)
 
 @TestStep
 @Name("SELECT GROUP BY with --final")
-def group_by_with_force_final(self, table, final_modifier_available, node=None):
+def group_by_with_force_final(self, table, node=None):
     """Execute select 'GROUP BY' query step without `FINAL` clause but with --final setting enabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
     with When(
-        f"I make `SELECT GROUP BY ` with --final setting enabled from table {table}"
+        f"I make `SELECT GROUP BY ` with --final setting enabled from table {table.name}"
     ):
         node.query(
-            f"SELECT id, count(x) as cx FROM {table}"
+            f"SELECT id, count(x) as cx FROM {table.name}"
             f" GROUP BY (id, x) ORDER BY (id, cx) FORMAT JSONEachRow;",
             settings=[("final", 1)],
         ).output.strip()
@@ -51,17 +51,17 @@ def group_by_with_force_final(self, table, final_modifier_available, node=None):
 @TestStep
 @Name("SELECT GROUP BY with FINAL and --final")
 def group_by_with_final_clause_and_force_final(
-    self, table, final_modifier_available, node=None
+    self, table, node=None
 ):
     """Select 'GROUP BY' query step with `FINAL` clause and --final setting enabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
     with When(
-        f"I make `SELECT GROUP BY ... FINAL` with --final setting enabled from table {table}"
+        f"I make `SELECT GROUP BY ... FINAL` with --final setting enabled from table {table.name}"
     ):
         node.query(
-            f"SELECT id, count(x) as cx FROM {table} {'FINAL' if final_modifier_available else ''}"
+            f"SELECT id, count(x) as cx FROM {table.name} {'FINAL' if table.final_modifier_available else ''}"
             f" GROUP BY (id, x) ORDER BY (id, cx) FORMAT JSONEachRow;",
             settings=[("final", 1)],
         ).output.strip()
@@ -69,7 +69,7 @@ def group_by_with_final_clause_and_force_final(
 
 @TestStep(Then)
 @Name("'GROUP BY' compare results")
-def group_by_result_check(self, table, final_modifier_available, node=None):
+def group_by_result_check(self, table, node=None):
     """Compare results between 'GROUP BY' query with `FINAL`  clause and
     'GROUP BY' query with --final setting enabled."""
     if node is None:
@@ -78,12 +78,12 @@ def group_by_result_check(self, table, final_modifier_available, node=None):
     with Then("I check that compare results are the same"):
         assert (
             node.query(
-                f"SELECT id, count(x) as cx FROM {table} {'FINAL' if final_modifier_available else ''}"
+                f"SELECT id, count(x) as cx FROM {table.name} {'FINAL' if table.final_modifier_available else ''}"
                 f" GROUP BY (id, x) ORDER BY (id, cx) FORMAT JSONEachRow;",
                 settings=[("final", 0)],
             ).output.strip()
             == node.query(
-                f"SELECT id, count(x) as cx FROM {table}"
+                f"SELECT id, count(x) as cx FROM {table.name}"
                 f" GROUP BY (id, x) ORDER BY (id, cx) FORMAT JSONEachRow;",
                 settings=[("final", 1)],
             ).output.strip()
@@ -92,7 +92,7 @@ def group_by_result_check(self, table, final_modifier_available, node=None):
 
 @TestStep
 @Name("'GROUP BY' negative compare results")
-def group_by_negative_result_check(self, table, final_modifier_available, node=None):
+def group_by_negative_result_check(self, table, node=None):
     """Compare results between group_by query with --final and group_by query without `FINAL` and without --final.
 
     The expectation is that query results should be different when collapsed rows are present but FINAL modifier is not applied
@@ -102,26 +102,26 @@ def group_by_negative_result_check(self, table, final_modifier_available, node=N
 
     with Then("I check that compare results are different"):
         if (
-            final_modifier_available
+            table.final_modifier_available
             and node.query(
-                f"SELECT id, count(x) as cx FROM {table}"
+                f"SELECT id, count(x) as cx FROM {table.name}"
                 f" GROUP BY (id, x) ORDER BY (id, cx) FORMAT JSONEachRow;",
                 settings=[("final", 0)],
             ).output.strip()
             != node.query(
-                f"SELECT id, count(x) as cx FROM {table} FINAL"
+                f"SELECT id, count(x) as cx FROM {table.name} FINAL"
                 f" GROUP BY (id, x) ORDER BY (id, cx) FORMAT JSONEachRow;",
                 settings=[("final", 0)],
             ).output.strip()
         ):
             assert (
                 node.query(
-                    f"SELECT id, count(x) as cx FROM {table}"
+                    f"SELECT id, count(x) as cx FROM {table.name}"
                     f" GROUP BY (id, x) ORDER BY (id, cx) FORMAT JSONEachRow;",
                     settings=[("final", 0)],
                 ).output.strip()
                 != node.query(
-                    f"SELECT id, count(x) as cx FROM {table}"
+                    f"SELECT id, count(x) as cx FROM {table.name}"
                     f" GROUP BY (id, x) ORDER BY (id, cx) FORMAT JSONEachRow;",
                     settings=[("final", 1)],
                 ).output.strip()

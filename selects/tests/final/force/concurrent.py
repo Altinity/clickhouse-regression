@@ -36,8 +36,7 @@ def select_count_parallel(self):
                 "and count() query with --final setting enabled."
             ):
                 select.count_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
             with And(
@@ -45,8 +44,7 @@ def select_count_parallel(self):
                 "and count() query without `FINAL` and without --final."
             ):
                 select.count_negative_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
 
@@ -108,8 +106,7 @@ def select_count_parallel_idu(self):
                     "and count() query with --final setting enabled."
                 ):
                     select.count_result_check(
-                        table=table.name,
-                        final_modifier_available=table.final_modifier_available,
+                        table=table
                     )
 
                 with And(
@@ -117,8 +114,7 @@ def select_count_parallel_idu(self):
                     "and count() query without `FINAL` and without --final."
                 ):
                     select.count_negative_result_check(
-                        table=table.name,
-                        final_modifier_available=table.final_modifier_available,
+                        table=table
                     )
 
 
@@ -158,8 +154,7 @@ def select_as_parallel(self):
                 "and `SELECT column as new_column` query with --final setting enabled."
             ):
                 select.as_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
             with And(
@@ -167,8 +162,7 @@ def select_as_parallel(self):
                 "and `SELECT column as new_column` query without `FINAL` and without --final."
             ):
                 select.as_negative_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
 
@@ -234,8 +228,7 @@ def select_as_parallel_idu(self):
                     "and `SELECT column as new_column` query with --final setting enabled."
                 ):
                     select.as_result_check(
-                        table=table.name,
-                        final_modifier_available=table.final_modifier_available,
+                        table=table
                     )
 
                 with And(
@@ -243,8 +236,7 @@ def select_as_parallel_idu(self):
                     "and `SELECT column as new_column` query without `FINAL` and without --final."
                 ):
                     select.as_negative_result_check(
-                        table=table.name,
-                        final_modifier_available=table.final_modifier_available,
+                        table=table
                     )
 
 
@@ -280,8 +272,7 @@ def select_distinct_parallel(self):
                 "and `SELECT DISTINCT` query with --final setting enabled."
             ):
                 select.distinct_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
             with And(
@@ -289,8 +280,7 @@ def select_distinct_parallel(self):
                 "and `SELECT DISTINCT` query without `FINAL` and without --final."
             ):
                 select.distinct_negative_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
 
@@ -352,8 +342,7 @@ def select_distinct_parallel_idu(self):
                     "and `SELECT DISTINCT` query with --final setting enabled."
                 ):
                     select.distinct_result_check(
-                        table=table.name,
-                        final_modifier_available=table.final_modifier_available,
+                        table=table
                     )
 
                 with And(
@@ -361,8 +350,7 @@ def select_distinct_parallel_idu(self):
                     "and `SELECT DISTINCT` query without `FINAL` and without --final."
                 ):
                     select.distinct_negative_result_check(
-                        table=table.name,
-                        final_modifier_available=table.final_modifier_available,
+                        table=table
                     )
 
 
@@ -398,8 +386,7 @@ def select_group_by_parallel(self):
                 "and `SELECT GROUP BY` query with --final setting enabled."
             ):
                 select.group_by_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
             with And(
@@ -407,8 +394,7 @@ def select_group_by_parallel(self):
                 "and `SELECT GROUP BY` query without `FINAL` and without --final."
             ):
                 select.group_by_negative_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
 
@@ -470,8 +456,7 @@ def select_group_by_parallel_idu(self):
                     "and `SELECT GROUP BY` query with --final setting enabled."
                 ):
                     select.group_by_result_check(
-                        table=table.name,
-                        final_modifier_available=table.final_modifier_available,
+                        table=table
                     )
 
                 with And(
@@ -479,8 +464,7 @@ def select_group_by_parallel_idu(self):
                     "and `SELECT GROUP BY` query without `FINAL` and without --final."
                 ):
                     select.group_by_negative_result_check(
-                        table=table.name,
-                        final_modifier_available=table.final_modifier_available,
+                        table=table
                     )
 
 
@@ -516,8 +500,7 @@ def select_limit_parallel(self):
                 "and `SELECT LIMIT` query with --final setting enabled."
             ):
                 select.limit_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
             with And(
@@ -525,8 +508,7 @@ def select_limit_parallel(self):
                 "and `SELECT LIMIT` query without `FINAL` and without --final."
             ):
                 select.limit_negative_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
 
@@ -588,8 +570,7 @@ def select_limit_parallel_idu(self):
                     "and `SELECT LIMIT` query with --final setting enabled."
                 ):
                     select.limit_result_check(
-                        table=table.name,
-                        final_modifier_available=table.final_modifier_available,
+                        table=table
                     )
 
                 with And(
@@ -597,8 +578,7 @@ def select_limit_parallel_idu(self):
                     "and `SELECT LIMIT` query without `FINAL` and without --final."
                 ):
                     select.limit_negative_result_check(
-                        table=table.name,
-                        final_modifier_available=table.final_modifier_available,
+                        table=table
                     )
 
 
@@ -634,8 +614,7 @@ def select_limit_by_parallel(self):
                 "and `SELECT LIMIT BY` query with --final setting enabled."
             ):
                 select.limit_by_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
             with And(
@@ -643,8 +622,7 @@ def select_limit_by_parallel(self):
                 "and `SELECT LIMIT BY` query without `FINAL` and without --final."
             ):
                 select.limit_by_negative_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
 
@@ -706,8 +684,7 @@ def select_limit_by_parallel_idu(self):
                     "and `SELECT LIMIT BY` query with --final setting enabled."
                 ):
                     select.limit_by_result_check(
-                        table=table.name,
-                        final_modifier_available=table.final_modifier_available,
+                        table=table
                     )
 
                 with And(
@@ -715,8 +692,7 @@ def select_limit_by_parallel_idu(self):
                     "and `SELECT LIMIT BY` query without `FINAL` and without --final."
                 ):
                     select.limit_by_negative_result_check(
-                        table=table.name,
-                        final_modifier_available=table.final_modifier_available,
+                        table=table
                     )
 
 
@@ -752,8 +728,7 @@ def select_prewhere_parallel(self):
                 "and `SELECT PREWHERE` query with --final setting enabled."
             ):
                 select.prewhere_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
             with And(
@@ -761,8 +736,7 @@ def select_prewhere_parallel(self):
                 "and `SELECT PREWHERE` query without `FINAL` and without --final."
             ):
                 select.prewhere_negative_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
 
@@ -824,8 +798,7 @@ def select_prewhere_parallel_idu(self):
                     "and `SELECT PREWHERE` query with --final setting enabled."
                 ):
                     select.prewhere_result_check(
-                        table=table.name,
-                        final_modifier_available=table.final_modifier_available,
+                        table=table
                     )
 
                 with And(
@@ -833,8 +806,7 @@ def select_prewhere_parallel_idu(self):
                     "and `SELECT PREWHERE` query without `FINAL` and without --final."
                 ):
                     select.prewhere_negative_result_check(
-                        table=table.name,
-                        final_modifier_available=table.final_modifier_available,
+                        table=table
                     )
 
 
@@ -870,8 +842,7 @@ def select_where_parallel(self):
                 "and `SELECT WHERE` query with --final setting enabled."
             ):
                 select.where_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table,
                 )
 
             with And(
@@ -879,8 +850,7 @@ def select_where_parallel(self):
                 "and `SELECT WHERE` query without `FINAL` and without --final."
             ):
                 select.where_negative_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table,
                 )
 
 
@@ -942,8 +912,7 @@ def select_where_parallel_idu(self):
                     "and `SELECT WHERE` query with --final setting enabled."
                 ):
                     select.where_result_check(
-                        table=table.name,
-                        final_modifier_available=table.final_modifier_available,
+                        table=table
                     )
 
                 with And(
@@ -951,8 +920,7 @@ def select_where_parallel_idu(self):
                     "and `SELECT WHERE` query without `FINAL` and without --final."
                 ):
                     select.where_negative_result_check(
-                        table=table.name,
-                        final_modifier_available=table.final_modifier_available,
+                        table=table
                     )
 
 
@@ -1017,44 +985,65 @@ def all_simple_selects_parallel(self):
                 "and query with --final setting enabled."
             ):
                 select.count_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
                 select.as_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
                 select.distinct_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
                 select.group_by_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
                 select.limit_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
                 select.limit_by_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
                 select.prewhere_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
 
                 select.where_result_check(
-                    table=table.name,
-                    final_modifier_available=table.final_modifier_available,
+                    table=table
                 )
+
+
+@TestScenario
+@Name("joins")
+def select_joins_parallel(self):
+    """Scenario to check Joins."""
+
+    selects = []
+
+    with Given("I select `JOIN` query without FINAL and without --final"):
+        selects.append(select.join_step)
+
+    for table in self.context.tables:
+        if not table.name.endswith("duplicate"):
+            tables_auxiliary = []
+            for table_auxiliary in self.context.tables:
+                if table.name != table_auxiliary.name:
+                    tables_auxiliary.append(table_auxiliary)
+                    with Example(f"{table.name}", flags=TE):
+                        with When("I execute selects concurrently"):
+                            run_queries_in_parallel(
+                                table=table,
+                                selects=selects,
+                                iterations=10,
+                                tables_auxiliary=tables_auxiliary,
+                            )
+
+                        join()
+                        pause()
 
 
 @TestFeature
