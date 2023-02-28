@@ -175,7 +175,7 @@ variables:
     - exit $exitcode
 
 .create_status: &create_status 
-    - if [[ $from_github == "True" && $commit_sha == $CI_COMMIT_SHA ]]; then
+    - if [[ $from_github == "True" && $commit_sha == "$CI_COMMIT_SHA" ]]; then
         echo $commit_sha;
         echo $CI_COMMIT_SHA;
         echo "Provided commit sha does not match CI commit sha.";
@@ -187,7 +187,7 @@ variables:
         -H "Accept:application/vnd.github+json" 
         -H "Authorization:Bearer $GH_ROBOT_TOKEN" 
         -H "X-GitHub-Api-Version:2022-11-28" https://api.github.com/repos/Altinity/clickhouse-regression/statuses/$commit_sha 
-        -d '{"state":"pending","description":"${CI_JOB_NAME} suite check","context":"suite:${CI_JOB_NAME}, package:${package}, version:${version}"}';
+        -d '{"state":"pending","description":"$CI_JOB_NAME suite check","context":"suite:$CI_JOB_NAME, package:$package, version:$version"}';
       fi
 
 .update_status: &update_status
@@ -201,7 +201,7 @@ variables:
       -H "Accept:application/vnd.github+json" 
       -H "Authorization:Bearer $GH_ROBOT_TOKEN" 
       -H "X-GitHub-Api-Version:2022-11-28" https://api.github.com/repos/Altinity/clickhouse-regression/statuses/$commit_sha 
-      -d '{"state":$exit_status, "description":"$CI_JOB_NAME suite check","context":"suite:${CI_JOB_NAME}, package:${package}, version:${version}"}';
+      -d '{"state":$exit_status, "description":"$CI_JOB_NAME suite check","context":"suite:$CI_JOB_NAME, package:$package, version:$version"}';
 
 aes-encryption-amd64:
   extends: .regression_amd64
