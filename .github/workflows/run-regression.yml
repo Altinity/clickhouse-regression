@@ -58,4 +58,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: pip install python-gitlab
-      - run: ./cicd-trigger.py --package ${{ inputs.package }} --version ${{ inputs.version }} --suite ${{ inputs.suite }} --token ${{ secrets.GL_PIPELINE_TOKEN }} --artifacts ${{ inputs.artifacts }} --from-github
+      - run: ./cicd-trigger.py 
+        --package ${{ inputs.package }} 
+        --version ${{ inputs.version }} 
+        --suite ${{ inputs.suite }} 
+        --token ${{ secrets.GL_PIPELINE_TOKEN }} 
+        --artifacts ${{ inputs.artifacts }} 
+        --from-github 
+        --commit-sha $GITHUB_SHA
