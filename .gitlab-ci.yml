@@ -180,6 +180,9 @@ variables:
         exit 1; 
       fi
     - context="suite:$CI_JOB_NAME, package:$package, version:$version"
+    - target_url="https://gitlab.com/altinity-qa/clickhouse/cicd/clickhouse-regression/-/jobs/$CI_JOB_ID"
+    - echo $CI_JOB_URL;
+    - echo $target_url;
     - if [[ $from_github == "True" ]]; then
         curl
         -X POST 
