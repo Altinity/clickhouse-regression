@@ -27,7 +27,7 @@ def argparser(parser):
 
 
 xfails = {
-    "final/force/general/without experimental analyzer/select join clause": [
+    "final/force/general/without experimental analyzer/select join clause/*": [
         (
             Fail,
             "doesn't work in clickhouse"
@@ -49,20 +49,18 @@ xfails = {
         (Fail, "column fail for distributed tables")],
     "final/force/general/with experimental analyzer/simple select where/simple select where/distr_*": [
         (Fail, "column fail for distributed tables")],
-    "final/force/general/with experimental analyzer/select multiple join clause select/*": [
-        (Fail, "unknown, need to debug")],
-    "final/force/general/with experimental analyzer/select nested join clause select/*": [
-        (Fail, "unknown, need to debug")],
-    "final/force/general/with experimental analyzer/select prewhere subquery/*": [
-        (Fail, "unknown, need to debug")],
-    "final/force/general/with experimental analyzer/select nested subquery/*": [
-        (Fail, "unknown, need to debug")],
-    "final/force/general/with experimental analyzer/select where subquery/*": [
-        (Fail, "unknown, need to debug")],
-    "final/force/general/with experimental analyzer/select subquery/*": [
-        (Fail, "unknown, need to debug")],
+    "final/force/general/with experimental analyzer/select multiple join clause select/AggregatingMergeTree*": [
+        (Fail, "AggregatingFunction problem with analyzer")],
+    "final/force/general/with experimental analyzer/select nested join clause select/AggregatingMergeTree*": [
+        (Fail, "AggregatingFunction problem with analyzer")],
+    "final/force/general/with experimental analyzer/select nested subquery/select nested subquery/distr_*": [
+        (Fail, "column fail for distributed tables")],
+    "final/force/general/with experimental analyzer/select where subquery/select where subquery/distr_*": [
+        (Fail, "column fail for distributed tables")],
+    "final/force/general/with experimental analyzer/select subquery/select subquery/distr_*": [
+        (Fail, "column fail for distributed tables")],
     "final/force/general/with experimental analyzer/select with clause/*": [
-        (Fail, "unknown, need to debug")],
+        (Fail, "group by conflict analyzer")],
 
 }
 

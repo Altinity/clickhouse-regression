@@ -990,6 +990,14 @@ def select_joins_parallel(self):
 
                         join()
 
+                        with Then(
+                            "Compare results between `JOIN` query with `FINAL`  clause "
+                            "and `JOIN` query with --final setting enabled."
+                        ):
+                            select.join_result_check(
+                                table=table, tables_auxiliary=tables_auxiliary
+                            )
+
 
 @TestFeature
 @Requirements(
