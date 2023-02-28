@@ -1,21 +1,18 @@
-from testflows.core import *
-from selects.requirements import *
-from selects.tests.steps import *
 import sys
+
+from testflows.core import *
+from engines.requirements import *
+from engines.tests.steps import *
+
 
 append_path(sys.path, "..")
 
 
 @TestModule
-@Name("newReplacingMergeTree")
+@Name("new_ReplacingMergeTree")
 def module(self):
-    """Check FINAL modifier."""
-    self.context.tables = []
+    """Check new ReplacingMergeTree modifier."""
 
-    with Given("I have set of populated tables"):
-        create_and_populate_all_tables()
 
-    Feature(run=load("final.modifier", "feature"))
-    Feature(run=load("final.force_modifier", "feature"))
-    Feature(run=load("final.force_modifier_concurrent", "feature"))
-    Feature(run=load("final.force_modifier_user_rights", "feature"))
+    # Feature(run=load("final.", "feature"))
+

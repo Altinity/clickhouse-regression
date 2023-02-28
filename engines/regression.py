@@ -11,8 +11,7 @@ from helpers.argparser import argparser as base_argparser
 from helpers.common import check_clickhouse_version
 from platform import processor as current_cpu
 
-from selects.requirements import *
-from xfails import *
+from engines.requirements import *
 
 
 def argparser(parser):
@@ -26,8 +25,7 @@ def argparser(parser):
         default=False,
     )
 
-
-xfails = xfails_file
+xfails = {}
 xflags = {}
 
 
