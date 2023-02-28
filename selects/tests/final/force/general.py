@@ -897,7 +897,7 @@ def select_subquery(self, node=None):
         )
 
     for table in tables:
-        with When(f"{table}"):
+        with When(f"{table.name}"):
             with When("I execute query with FINAL modifier specified explicitly"):
                 explicit_final = node.query(
                     f"SELECT count() FROM (SELECT * FROM {table.name}"
@@ -927,7 +927,8 @@ def select_nested_subquery(self, node=None):
 
     with Given("I exclude auxiliary and unsupported tables by the current test"):
         tables = define(
-            "tables",
+            "Source set of tables with excluded duplicate, system, auxiliary tables and "
+            "some not supported views by this test",
             [
                 table
                 for table in self.context.tables
@@ -941,7 +942,7 @@ def select_nested_subquery(self, node=None):
         )
 
     for table in tables:
-        with When(f"{table}"):
+        with When(f"{table.name}"):
             with When("I execute query with FINAL modifier specified explicitly"):
                 explicit_final = node.query(
                     f"SELECT count() FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM {table.name}"
@@ -970,7 +971,8 @@ def select_prewhere_where_subquery(self, node=None, clause=None):
 
     with Given("I exclude auxiliary and unsupported tables by the current test"):
         tables = define(
-            "tables",
+            "Source set of tables with excluded duplicate, system, auxiliary tables and "
+            "some not supported views by this test",
             [
                 table
                 for table in self.context.tables
