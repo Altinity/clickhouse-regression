@@ -176,7 +176,7 @@ variables:
 
 .create_status: &create_status |
       if [[ $from_github == "True" ]]; then
-        if [[ $commit_sha != $CI_COMMIT_SHA ]]; then
+        if [[ $commit_sha != $CI_COMMIT_SHA ]] then
           echo "Provided commit sha does not match the sha of the latest commit"
           exit 1
         fi
@@ -189,7 +189,7 @@ variables:
 
 .update_status: &update_status |
       if [[ $from_github == "True" ]]; then
-        if [[ $CI_JOB_STATUS == "failed" || $CI_JOB_STATUS == "cancelled"]]; then
+        if [[ $CI_JOB_STATUS == "failed" || $CI_JOB_STATUS == "cancelled"]] then
           exit_status="failure"
         else
           exit_status="success"
