@@ -38,7 +38,9 @@ def where_with_force_final(self, table, node=None):
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
-    with When(f"I make `SELECT WHERE` with --final setting enabled from table {table.name}"):
+    with When(
+        f"I make `SELECT WHERE` with --final setting enabled from table {table.name}"
+    ):
         node.query(
             f"SELECT * FROM {table.name} "
             f" WHERE x > 3 ORDER BY (id, x, someCol) FORMAT JSONEachRow;",
@@ -48,9 +50,7 @@ def where_with_force_final(self, table, node=None):
 
 @TestStep
 @Name("SELECT WHERE with FINAL and --final")
-def where_with_final_clause_and_force_final(
-    self, table, node=None
-):
+def where_with_final_clause_and_force_final(self, table, node=None):
     """Select 'WHERE' query step with `FINAL` clause and --final setting enabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")

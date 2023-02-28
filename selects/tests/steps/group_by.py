@@ -50,9 +50,7 @@ def group_by_with_force_final(self, table, node=None):
 
 @TestStep
 @Name("SELECT GROUP BY with FINAL and --final")
-def group_by_with_final_clause_and_force_final(
-    self, table, node=None
-):
+def group_by_with_final_clause_and_force_final(self, table, node=None):
     """Select 'GROUP BY' query step with `FINAL` clause and --final setting enabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")

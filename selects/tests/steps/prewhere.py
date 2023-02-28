@@ -50,9 +50,7 @@ def prewhere_with_force_final(self, table, node=None):
 
 @TestStep
 @Name("SELECT PREWHERE with FINAL and --final")
-def prewhere_with_final_clause_and_force_final(
-    self, table, node=None
-):
+def prewhere_with_final_clause_and_force_final(self, table, node=None):
     """Select 'PREWHERE' query step with `FINAL` clause and --final setting enabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")

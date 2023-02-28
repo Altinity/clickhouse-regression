@@ -22,7 +22,9 @@ def as_with_final_clause(self, table, node=None):
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
-    with When(f"I make `SELECT column as new_column ... FINAL` from table {table.name}"):
+    with When(
+        f"I make `SELECT column as new_column ... FINAL` from table {table.name}"
+    ):
         node.query(
             f"SELECT id as new_id FROM {table.name} {'FINAL' if table.final_modifier_available else ''} ORDER BY (id) FORMAT"
             f" JSONEachRow;",
@@ -48,9 +50,7 @@ def as_with_force_final(self, table, node=None):
 
 @TestStep
 @Name("SELECT `as` FINAL force final")
-def as_with_final_clause_and_force_final(
-    self, table, node=None
-):
+def as_with_final_clause_and_force_final(self, table, node=None):
     """Execute select as query step with `FINAL` clause and with --final setting enabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
