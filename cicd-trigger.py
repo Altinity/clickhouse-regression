@@ -331,6 +331,12 @@ def argparser(parser):
         action="store",
         help="Provide latest commit sha, default: None",
     )
+    parser.add_argument(
+        "--github-actor",
+        default=None,
+        action="store",
+        help="GitHub actor responsible for launching the pipeline, default: None",
+    )
 
     return parser
 
@@ -392,6 +398,8 @@ def trigger():
             variables["from_github"] = str(args.from_github)
         if args.commit_sha:
             variables["commit_sha"] = args.commit_sha
+        if args.github_actor:
+            variables["github_actor"] = args.github_actor
 
         pipeline = project.trigger_pipeline(
             args.branch, trigger.token, variables=variables
