@@ -191,12 +191,12 @@ variables:
       fi
 
 .update_status: &update_status
-    - if [[ ( $CI_JOB_STATUS == "failed" || $CI_JOB_STATUS == "cancelled" ) && $from_github == "True" ]]; then
-        exit_status="failure";
-      elif [[ $CI_JOB_STATUS == "success" && $from_github == "True" ]]; then
-        exit_status="success";
-      fi
-    - if [[ $from_github == "True" ]]; then
+    - if [[ $from_github == "True "]]; then
+        if [[ $CI_JOB_STATUS == "failed" || $CI_JOB_STATUS == "cancelled" ]]; then
+          exit_status="failure";
+        elif [[ $CI_JOB_STATUS == "success" && $from_github == "True" ]]; then
+          exit_status="success";
+        fi
         curl
         -X POST 
         -H "Accept:application/vnd.github+json" 
