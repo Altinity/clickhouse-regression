@@ -191,7 +191,7 @@ variables:
       fi
 
 .update_status: &update_status
-    - if [[ $from_github == "True "]]; then
+    - if [[ $from_github == "True" ]]; then
         if [[ $CI_JOB_STATUS == "failed" || $CI_JOB_STATUS == "cancelled" ]]; then
           exit_status="failure";
         elif [[ $CI_JOB_STATUS == "success" && $from_github == "True" ]]; then
