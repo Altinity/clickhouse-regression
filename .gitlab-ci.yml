@@ -175,9 +175,7 @@ variables:
     - exit $exitcode
 
 .create_status: &create_status 
-    - if [[ ( $from_github == "True" ) && ( "$commit_sha" == *"$CI_COMMIT_SHA"* ) ]]; then
-        echo $commit_sha;
-        echo $CI_COMMIT_SHA;
+    - if [[ ( $from_github == "True" ) && ( $commit_sha != $CI_COMMIT_SHA ) ]]; then
         echo "Provided commit sha does not match CI commit sha.";
         exit 1; 
       fi
