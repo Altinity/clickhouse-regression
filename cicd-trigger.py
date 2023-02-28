@@ -325,7 +325,12 @@ def argparser(parser):
         action="store_true",
         help="Indicate whether the call was initialized from github workflows, default: False",
     )
-
+    parser.add_argument(
+        "--commit-sha",
+        default=None,
+        action="store",
+        help="Provide latest commit sha, default: None",
+    )
 
     return parser
 
@@ -385,6 +390,8 @@ def trigger():
                 log_path = "altinity-test-reports"
         if args.from_github:
             variables["from_github"] = str(args.from_github)
+        if args.commit_sha:
+            variables["commit_sha"] = args.commit_sha
 
         pipeline = project.trigger_pipeline(
             args.branch, trigger.token, variables=variables
