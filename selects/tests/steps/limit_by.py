@@ -50,9 +50,7 @@ def limit_by_with_force_final(self, table, node=None):
 
 @TestStep
 @Name("SELECT LIMIT BY with FINAL and --final")
-def limit_by_with_final_clause_and_force_final(
-    self, table, node=None
-):
+def limit_by_with_final_clause_and_force_final(self, table, node=None):
     """Select 'LIMIT BY' query step with `FINAL` clause and --final setting enabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")

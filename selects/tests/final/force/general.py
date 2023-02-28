@@ -32,17 +32,13 @@ def simple_select_as(self):
                 "Compare results between `SELECT column as new_column` query with `FINAL` clause "
                 "and `SELECT column as new_column` query with --final setting enabled."
             ):
-                select.as_result_check(
-                    table=table
-                )
+                select.as_result_check(table=table)
 
             with And(
                 "Compare results between `SELECT column as new_column` query with --final "
                 "and `SELECT column as new_column` query without `FINAL` and without --final."
             ):
-                select.as_negative_result_check(
-                    table=table
-                )
+                select.as_negative_result_check(table=table)
 
 
 @TestScenario
@@ -67,17 +63,13 @@ def simple_select_count(self):
                 "Compare results between count() query with `FINAL`  clause "
                 "and count() query with --final setting enabled."
             ):
-                select.count_result_check(
-                    table=table
-                )
+                select.count_result_check(table=table)
 
             with And(
                 "Compare results between count() query with --final "
                 "and count() query without `FINAL` and without --final."
             ):
-                select.count_negative_result_check(
-                    table=table
-                )
+                select.count_negative_result_check(table=table)
 
 
 @TestScenario
@@ -109,17 +101,13 @@ def simple_select_distinct(self):
                 "Compare results between distinct query with `FINAL`  clause "
                 "and distinct query with --final setting enabled."
             ):
-                select.distinct_result_check(
-                    table=table
-                )
+                select.distinct_result_check(table=table)
 
             with And(
                 "Compare results between distinct query with --final "
                 "and distinct query without `FINAL` and without --final."
             ):
-                select.distinct_negative_result_check(
-                    table=table
-                )
+                select.distinct_negative_result_check(table=table)
 
 
 @TestScenario
@@ -148,17 +136,13 @@ def simple_select_group_by(self):
                 "Compare results between group by query with `FINAL`  clause "
                 "and group by query with --final setting enabled."
             ):
-                select.group_by_result_check(
-                    table=table
-                )
+                select.group_by_result_check(table=table)
 
             with And(
                 "Compare results between group by query with --final "
                 "and group by query without `FINAL` and without --final."
             ):
-                select.group_by(
-                    table=table
-                )
+                select.group_by(table=table)
 
 
 @TestScenario
@@ -188,17 +172,13 @@ def simple_select_limit(self):
                 "Compare results between `SELECT LIMIT` query with `FINAL`  clause "
                 "and `SELECT LIMIT` query with --final setting enabled."
             ):
-                select.limit_result_check(
-                    table=table
-                )
+                select.limit_result_check(table=table)
 
             with And(
                 "Compare results between `SELECT LIMIT` query with --final "
                 "and `SELECT LIMIT` query without `FINAL` and without --final."
             ):
-                select.limit_negative_result_check(
-                    table=table
-                )
+                select.limit_negative_result_check(table=table)
 
 
 @TestScenario
@@ -228,17 +208,13 @@ def simple_select_limit_by(self):
                 "Compare results between `SELECT LIMIT BY` query with `FINAL`  clause "
                 "and `SELECT LIMIT BY` query with --final setting enabled."
             ):
-                select.limit_by_result_check(
-                    table=table
-                )
+                select.limit_by_result_check(table=table)
 
             with And(
                 "Compare results between `SELECT LIMIT BY` query with --final "
                 "and `SELECT LIMIT BY` query without `FINAL` and without --final."
             ):
-                select.limit_by_negative_result_check(
-                    table=table
-                )
+                select.limit_by_negative_result_check(table=table)
 
 
 @TestScenario
@@ -265,17 +241,13 @@ def simple_select_prewhere(self, node=None):
                 "Compare results between `SELECT PREWHERE` query with `FINAL`  clause "
                 "and `SELECT PREWHERE` query with --final setting enabled."
             ):
-                select.prewhere_result_check(
-                    table=table
-                )
+                select.prewhere_result_check(table=table)
 
             with And(
                 "Compare results between `SELECT PREWHERE` query with --final "
                 "and `SELECT PREWHERE` query without `FINAL` and without --final."
             ):
-                select.prewhere_negative_result_check(
-                    table=table
-                )
+                select.prewhere_negative_result_check(table=table)
 
 
 @TestScenario
@@ -305,17 +277,13 @@ def simple_select_where(self):
                 "Compare results between `SELECT WHERE` query with `FINAL`  clause "
                 "and `SELECT WHERE` query with --final setting enabled."
             ):
-                select.where_result_check(
-                    table=table
-                )
+                select.where_result_check(table=table)
 
             with And(
                 "Compare results between `SELECT WHERE` query with --final "
                 "and `SELECT WHERE` query without `FINAL` and without --final."
             ):
-                select.where_negative_result_check(
-                    table=table
-                )
+                select.where_negative_result_check(table=table)
 
 
 @TestScenario
@@ -418,7 +386,20 @@ def select_join_clause(self, node=None):
                 if table2.name.endswith("duplicate") and table2.engine == table1.engine:
                     table_pairs.append((table1, table2))
 
-    for join_type in join_types:
+    with Given("I have a list of available join types for this test"):
+        join_types_local = define(
+            "Create a list of join types that are supported by test construction and exclude those that are not.",
+            [
+                join_type
+                for join_type in join_types
+                if not join_type.startswith("CROSS")
+                and not join_type.startswith("ASOF")
+                and not join_type.startswith("LEFT ASOF")
+            ],
+            encoder=lambda s: ", ".join(s),
+        )
+
+    for join_type in join_types_local:
         with Example(f"{join_type}", flags=TE):
             for table1, table2 in table_pairs:
                 with When(
@@ -433,8 +414,8 @@ def select_join_clause(self, node=None):
                             f"SELECT count() FROM {table1.name}"
                             f"{' FINAL' if table1.final_modifier_available else ''}"
                             f" {join_type} "
-                            f" {table2.name} on"
-                            f" {table1.name}.key = {table2.name}.key"
+                            f" {table2.name} {' FINAL' if table2.final_modifier_available else ''} on"
+                            f" {table1.name}.id = {table2.name}.id"
                         )
 
                         assert_joins(

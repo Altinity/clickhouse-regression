@@ -1286,8 +1286,7 @@ def run_queries_in_parallel(
         for select in selects:
             if tables_auxiliary != None:
                 By(f"{select.name}", test=select, parallel=parallel_select)(
-                    table=table,
-                    tables_auxiliary=tables_auxiliary
+                    table=table, tables_auxiliary=tables_auxiliary
                 )
             else:
                 By(f"{select.name}", test=select, parallel=parallel_select)(

@@ -31,8 +31,7 @@ xfails = {
         (
             Fail,
             "doesn't work in clickhouse"
-            " https://github.com/ClickHouse/"
-            "ClickHouse/issues/8655",
+            " https://github.com/ClickHouse/ClickHouse/issues/8655",
         )
     ],
     "final/modifier": [(Fail, "not implemented")],
@@ -53,8 +52,6 @@ xfails = {
     "final/force/general/with experimental analyzer/select multiple join clause select/*": [
         (Fail, "unknown, need to debug")],
     "final/force/general/with experimental analyzer/select nested join clause select/*": [
-        (Fail, "unknown, need to debug")],
-    "final/force/general/with experimental analyzer/select join clause/*": [
         (Fail, "unknown, need to debug")],
     "final/force/general/with experimental analyzer/select prewhere subquery/*": [
         (Fail, "unknown, need to debug")],

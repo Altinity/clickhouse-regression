@@ -35,17 +35,13 @@ def select_count_parallel(self):
                 "Compare results between count() query with `FINAL`  clause "
                 "and count() query with --final setting enabled."
             ):
-                select.count_result_check(
-                    table=table
-                )
+                select.count_result_check(table=table)
 
             with And(
                 "Compare results between count() query with --final "
                 "and count() query without `FINAL` and without --final."
             ):
-                select.count_negative_result_check(
-                    table=table
-                )
+                select.count_negative_result_check(table=table)
 
 
 @TestScenario
@@ -105,17 +101,13 @@ def select_count_parallel_idu(self):
                     "Compare results between count() query with `FINAL`  clause "
                     "and count() query with --final setting enabled."
                 ):
-                    select.count_result_check(
-                        table=table
-                    )
+                    select.count_result_check(table=table)
 
                 with And(
                     "Compare results between count() query with --final "
                     "and count() query without `FINAL` and without --final."
                 ):
-                    select.count_negative_result_check(
-                        table=table
-                    )
+                    select.count_negative_result_check(table=table)
 
 
 @TestScenario
@@ -153,17 +145,13 @@ def select_as_parallel(self):
                 "Compare results between `SELECT column as new_column` query with `FINAL`  clause "
                 "and `SELECT column as new_column` query with --final setting enabled."
             ):
-                select.as_result_check(
-                    table=table
-                )
+                select.as_result_check(table=table)
 
             with And(
                 "Compare results between `SELECT column as new_column` query with --final "
                 "and `SELECT column as new_column` query without `FINAL` and without --final."
             ):
-                select.as_negative_result_check(
-                    table=table
-                )
+                select.as_negative_result_check(table=table)
 
 
 @TestScenario
@@ -227,17 +215,13 @@ def select_as_parallel_idu(self):
                     "Compare results between `SELECT column as new_column` query with `FINAL`  clause "
                     "and `SELECT column as new_column` query with --final setting enabled."
                 ):
-                    select.as_result_check(
-                        table=table
-                    )
+                    select.as_result_check(table=table)
 
                 with And(
                     "Compare results between `SELECT column as new_column` query with --final "
                     "and `SELECT column as new_column` query without `FINAL` and without --final."
                 ):
-                    select.as_negative_result_check(
-                        table=table
-                    )
+                    select.as_negative_result_check(table=table)
 
 
 @TestScenario
@@ -271,17 +255,13 @@ def select_distinct_parallel(self):
                 "Compare results between `SELECT DISTINCT` query with `FINAL`  clause "
                 "and `SELECT DISTINCT` query with --final setting enabled."
             ):
-                select.distinct_result_check(
-                    table=table
-                )
+                select.distinct_result_check(table=table)
 
             with And(
                 "Compare results between `SELECT DISTINCT` query with --final "
                 "and `SELECT DISTINCT` query without `FINAL` and without --final."
             ):
-                select.distinct_negative_result_check(
-                    table=table
-                )
+                select.distinct_negative_result_check(table=table)
 
 
 @TestScenario
@@ -341,17 +321,13 @@ def select_distinct_parallel_idu(self):
                     "Compare results between `SELECT DISTINCT` query with `FINAL`  clause "
                     "and `SELECT DISTINCT` query with --final setting enabled."
                 ):
-                    select.distinct_result_check(
-                        table=table
-                    )
+                    select.distinct_result_check(table=table)
 
                 with And(
                     "Compare results between `SELECT DISTINCT` query with --final "
                     "and `SELECT DISTINCT` query without `FINAL` and without --final."
                 ):
-                    select.distinct_negative_result_check(
-                        table=table
-                    )
+                    select.distinct_negative_result_check(table=table)
 
 
 @TestScenario
@@ -385,17 +361,13 @@ def select_group_by_parallel(self):
                 "Compare results between `SELECT GROUP BY` query with `FINAL`  clause "
                 "and `SELECT GROUP BY` query with --final setting enabled."
             ):
-                select.group_by_result_check(
-                    table=table
-                )
+                select.group_by_result_check(table=table)
 
             with And(
                 "Compare results between `SELECT GROUP BY` query with --final "
                 "and `SELECT GROUP BY` query without `FINAL` and without --final."
             ):
-                select.group_by_negative_result_check(
-                    table=table
-                )
+                select.group_by_negative_result_check(table=table)
 
 
 @TestScenario
@@ -455,17 +427,13 @@ def select_group_by_parallel_idu(self):
                     "Compare results between `SELECT GROUP BY` query with `FINAL`  clause "
                     "and `SELECT GROUP BY` query with --final setting enabled."
                 ):
-                    select.group_by_result_check(
-                        table=table
-                    )
+                    select.group_by_result_check(table=table)
 
                 with And(
                     "Compare results between `SELECT GROUP BY` query with --final "
                     "and `SELECT GROUP BY` query without `FINAL` and without --final."
                 ):
-                    select.group_by_negative_result_check(
-                        table=table
-                    )
+                    select.group_by_negative_result_check(table=table)
 
 
 @TestScenario
@@ -499,17 +467,13 @@ def select_limit_parallel(self):
                 "Compare results between `SELECT LIMIT` query with `FINAL`  clause "
                 "and `SELECT LIMIT` query with --final setting enabled."
             ):
-                select.limit_result_check(
-                    table=table
-                )
+                select.limit_result_check(table=table)
 
             with And(
                 "Compare results between `SELECT LIMIT` query with --final "
                 "and `SELECT LIMIT` query without `FINAL` and without --final."
             ):
-                select.limit_negative_result_check(
-                    table=table
-                )
+                select.limit_negative_result_check(table=table)
 
 
 @TestScenario
@@ -569,17 +533,13 @@ def select_limit_parallel_idu(self):
                     "Compare results between `SELECT LIMIT` query with `FINAL`  clause "
                     "and `SELECT LIMIT` query with --final setting enabled."
                 ):
-                    select.limit_result_check(
-                        table=table
-                    )
+                    select.limit_result_check(table=table)
 
                 with And(
                     "Compare results between `SELECT LIMIT` query with --final "
                     "and `SELECT LIMIT` query without `FINAL` and without --final."
                 ):
-                    select.limit_negative_result_check(
-                        table=table
-                    )
+                    select.limit_negative_result_check(table=table)
 
 
 @TestScenario
@@ -613,17 +573,13 @@ def select_limit_by_parallel(self):
                 "Compare results between `SELECT LIMIT BY` query with `FINAL`  clause "
                 "and `SELECT LIMIT BY` query with --final setting enabled."
             ):
-                select.limit_by_result_check(
-                    table=table
-                )
+                select.limit_by_result_check(table=table)
 
             with And(
                 "Compare results between `SELECT LIMIT BY` query with --final "
                 "and `SELECT LIMIT BY` query without `FINAL` and without --final."
             ):
-                select.limit_by_negative_result_check(
-                    table=table
-                )
+                select.limit_by_negative_result_check(table=table)
 
 
 @TestScenario
@@ -683,17 +639,13 @@ def select_limit_by_parallel_idu(self):
                     "Compare results between `SELECT LIMIT BY` query with `FINAL`  clause "
                     "and `SELECT LIMIT BY` query with --final setting enabled."
                 ):
-                    select.limit_by_result_check(
-                        table=table
-                    )
+                    select.limit_by_result_check(table=table)
 
                 with And(
                     "Compare results between `SELECT LIMIT BY` query with --final "
                     "and `SELECT LIMIT BY` query without `FINAL` and without --final."
                 ):
-                    select.limit_by_negative_result_check(
-                        table=table
-                    )
+                    select.limit_by_negative_result_check(table=table)
 
 
 @TestScenario
@@ -727,17 +679,13 @@ def select_prewhere_parallel(self):
                 "Compare results between `SELECT PREWHERE` query with `FINAL`  clause "
                 "and `SELECT PREWHERE` query with --final setting enabled."
             ):
-                select.prewhere_result_check(
-                    table=table
-                )
+                select.prewhere_result_check(table=table)
 
             with And(
                 "Compare results between `SELECT PREWHERE` query with --final "
                 "and `SELECT PREWHERE` query without `FINAL` and without --final."
             ):
-                select.prewhere_negative_result_check(
-                    table=table
-                )
+                select.prewhere_negative_result_check(table=table)
 
 
 @TestScenario
@@ -797,17 +745,13 @@ def select_prewhere_parallel_idu(self):
                     "Compare results between `SELECT PREWHERE` query with `FINAL`  clause "
                     "and `SELECT PREWHERE` query with --final setting enabled."
                 ):
-                    select.prewhere_result_check(
-                        table=table
-                    )
+                    select.prewhere_result_check(table=table)
 
                 with And(
                     "Compare results between `SELECT PREWHERE` query with --final "
                     "and `SELECT PREWHERE` query without `FINAL` and without --final."
                 ):
-                    select.prewhere_negative_result_check(
-                        table=table
-                    )
+                    select.prewhere_negative_result_check(table=table)
 
 
 @TestScenario
@@ -911,17 +855,13 @@ def select_where_parallel_idu(self):
                     "Compare results between `SELECT WHERE` query with `FINAL`  clause "
                     "and `SELECT WHERE` query with --final setting enabled."
                 ):
-                    select.where_result_check(
-                        table=table
-                    )
+                    select.where_result_check(table=table)
 
                 with And(
                     "Compare results between `SELECT WHERE` query with --final "
                     "and `SELECT WHERE` query without `FINAL` and without --final."
                 ):
-                    select.where_negative_result_check(
-                        table=table
-                    )
+                    select.where_negative_result_check(table=table)
 
 
 @TestScenario
@@ -984,48 +924,54 @@ def all_simple_selects_parallel(self):
                 "Compare results all previous select types between query with `FINAL` clause "
                 "and query with --final setting enabled."
             ):
-                select.count_result_check(
-                    table=table
-                )
+                select.count_result_check(table=table)
 
-                select.as_result_check(
-                    table=table
-                )
+                select.as_result_check(table=table)
 
-                select.distinct_result_check(
-                    table=table
-                )
+                select.distinct_result_check(table=table)
 
-                select.group_by_result_check(
-                    table=table
-                )
+                select.group_by_result_check(table=table)
 
-                select.limit_result_check(
-                    table=table
-                )
+                select.limit_result_check(table=table)
 
-                select.limit_by_result_check(
-                    table=table
-                )
+                select.limit_by_result_check(table=table)
 
-                select.prewhere_result_check(
-                    table=table
-                )
+                select.prewhere_result_check(table=table)
 
-                select.where_result_check(
-                    table=table
-                )
+                select.where_result_check(table=table)
 
 
 @TestScenario
 @Name("joins")
 def select_joins_parallel(self):
-    """Scenario to check Joins."""
+    """Scenario to check all `INNER JOINS` combinations with/without `FINAL` and --final enabled/disabled
+    in parallel doesn't break force select final"""
 
     selects = []
 
     with Given("I select `JOIN` query without FINAL and without --final"):
         selects.append(select.join_step)
+
+    with And("I select `JOIN` query with FINAL clause left table"):
+        selects.append(select.join_with_final_on_left_table)
+
+    with And("I select `JOIN` query with FINAL clause right table"):
+        selects.append(select.join_with_final_on_right_table)
+
+    with And("I select `JOIN` query with FINAL clause both tables"):
+        selects.append(select.join_with_final_on_both_tables)
+
+    with Given("I select `JOIN` query without FINAL and with --final"):
+        selects.append(select.join_with_force_final)
+
+    with And("I select `JOIN` query with FINAL clause left table and with --final"):
+        selects.append(select.join_with_final_on_left_table_with_force_final)
+
+    with And("I select `JOIN` query with FINAL clause right table and with --final"):
+        selects.append(select.join_with_final_on_right_table_with_force_final)
+
+    with And("I select `JOIN` query with FINAL clause both tables and with --final"):
+        selects.append(select.join_with_final_on_both_tables_with_force_final)
 
     for table in self.context.tables:
         if not table.name.endswith("duplicate"):
@@ -1043,7 +989,6 @@ def select_joins_parallel(self):
                             )
 
                         join()
-                        pause()
 
 
 @TestFeature

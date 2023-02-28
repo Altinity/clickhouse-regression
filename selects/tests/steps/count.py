@@ -10,7 +10,8 @@ def count(self, table, node=None):
 
     with When(f"I make `SELECT count() ... ` from table {table.name}"):
         node.query(
-            f"SELECT count() FROM {table.name} FORMAT JSONEachRow;", settings=[("final", 0)]
+            f"SELECT count() FROM {table.name} FORMAT JSONEachRow;",
+            settings=[("final", 0)],
         ).output.strip()
 
 
@@ -40,15 +41,14 @@ def count_with_force_final(self, table, node=None):
         f"I make `SELECT count() ... ` with --final setting enabled from table {table.name}"
     ):
         node.query(
-            f"SELECT count() FROM {table.name} FORMAT JSONEachRow;", settings=[("final", 1)]
+            f"SELECT count() FROM {table.name} FORMAT JSONEachRow;",
+            settings=[("final", 1)],
         ).output.strip()
 
 
 @TestStep
 @Name("SELECT count() with FINAL and --final")
-def count_with_final_clause_and_force_final(
-    self, table, node=None
-):
+def count_with_final_clause_and_force_final(self, table, node=None):
     """Select count() query step with `FINAL` clause and --final setting enabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")

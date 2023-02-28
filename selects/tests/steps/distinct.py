@@ -48,9 +48,7 @@ def distinct_with_force_final(self, table, node=None):
 
 @TestStep
 @Name("SELECT DISTINCT with FINAL and --final")
-def distinct_with_final_clause_and_force_final(
-    self, table, node=None
-):
+def distinct_with_final_clause_and_force_final(self, table, node=None):
     """Select 'DISTINCT' query step with `FINAL` clause and --final setting enabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
