@@ -176,6 +176,7 @@ variables:
 
 .create_status: &create_status 
     - if [[ $from_github == "True" && $commit_sha == $CI_COMMIT_SHA ]]; then
+        echo "Provided commit sha does not match CI commit sha.";
         exit 1; 
       fi
     - if [[ $from_github == "True" ]]; then
@@ -189,7 +190,12 @@ variables:
 
 .update_status: &update_status
     - if [[ ( $CI_JOB_STATUS == "failed" || $CI_JOB_STATUS == "cancelled" ) && $from_github == "True" ]]; then
-         curl -X POST -H "Accept:application/vnd.github+json" -H "Authorization:Bearer $GH_ROBOT_TOKEN" -H "X-GitHub-Api-Version:2022-11-28" https://api.github.com/repos/Altinity/clickhouse-regression/statuses/$commit_sha -d '{"state":"failure","description":"$CI_JOB_NAME suite check","context":"suite:$CI_JOB_NAME, package:$package, version:$version"}';
+         curl
+         -X POST 
+         -H "Accept:application/vnd.github+json" 
+         -H "Authorization:Bearer $GH_ROBOT_TOKEN" 
+         -H "X-GitHub-Api-Version:2022-11-28" https://api.github.com/repos/Altinity/clickhouse-regression/statuses/$commit_sha 
+         -d '{"state":"failure","description":"$CI_JOB_NAME suite check","context":"suite:$CI_JOB_NAME, package:$package, version:$version"}';
       elif [[ $CI_JOB_STATUS == "success" && $from_github == "True" ]]; then
         curl -X POST -H "Accept:application/vnd.github+json" -H "Authorization:Bearer $GH_ROBOT_TOKEN" -H "X-GitHub-Api-Version:2022-11-28" https://api.github.com/repos/Altinity/clickhouse-regression/statuses/$commit_sha -d '{"state":"success","description":"$CI_JOB_NAME suite check","context":"suite:$CI_JOB_NAME, package:$package, version:$version"}';
       fi
