@@ -213,8 +213,12 @@ aes-encryption-amd64:
      - ( $suite == "all" || $suite == "aes_encryption" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "aes_encryption"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 aggregate-functions-amd64:
   extends: .regression_amd64
@@ -223,8 +227,12 @@ aggregate-functions-amd64:
      - ( $suite == "all" || $suite == "aggregate_functions" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "aggregate_functions"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 atomic-insert-amd64:
   extends: .regression_amd64
@@ -233,8 +241,12 @@ atomic-insert-amd64:
      - ( $suite == "all" || $suite == "atomic_insert" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "atomic_insert"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 base-58-amd64:
   extends: .regression_amd64
@@ -243,8 +255,12 @@ base-58-amd64:
      - ( $suite == "all" || $suite == "base_58" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "base_58"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 clickhouse-keeper-amd64:
   extends: .regression_amd64
@@ -253,8 +269,12 @@ clickhouse-keeper-amd64:
       - ( $suite == "all" || $suite == "clickhouse_keeper" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "clickhouse_keeper"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 datetime64-extended-range-amd64:
   extends: .regression_amd64
@@ -263,8 +283,12 @@ datetime64-extended-range-amd64:
       - ( $suite == "all" || $suite == "datetime64_extended_range" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "datetime64_extended_range"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 disk-level-encryption-amd64:
   extends: .regression_amd64
@@ -273,8 +297,12 @@ disk-level-encryption-amd64:
       - ( $suite == "all" || $suite == "disk_level_encryption" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "disk_level_encryption"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 dns-amd64:
   extends: .regression_amd64
@@ -283,8 +311,12 @@ dns-amd64:
       - ( $suite == "all" || $suite == "dns" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "dns"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 example-amd64:
   extends: .regression_amd64
@@ -307,8 +339,12 @@ extended-precision-data-types-amd64:
       - ( $suite == "all" || $suite == "extended_precision_data_types" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "extended_precision_data_types"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 functional-amd64:
   extends: .regression_amd64
@@ -318,8 +354,12 @@ functional-amd64:
   variables:
      FOLDER_PATH: "clickhouse/functional"
      regression: "functional"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 kafka-amd64:
   extends: .regression_amd64
@@ -328,8 +368,12 @@ kafka-amd64:
     - ( $suite == "all" || $suite == "kafka" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "kafka"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 kerberos-amd64:
   extends: .regression_amd64
@@ -338,9 +382,13 @@ kerberos-amd64:
       - ( $suite == "all" || $suite == "kerberos" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "kerberos"
+  before_script:
+    - *create_status
   script:
     - export CLICKHOUSE_TESTS_DIR=$(pwd)/kerberos
     - *regression_common
+  after_script:
+    - *update_status
 
 ldap-authentication-amd64:
   timeout: 90m
@@ -350,8 +398,12 @@ ldap-authentication-amd64:
       - ( $suite == "all" || $suite == "ldap" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "ldap/authentication"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 ldap-external-user-directory-amd64:
   timeout: 90m
@@ -361,8 +413,12 @@ ldap-external-user-directory-amd64:
       - ( $suite == "all" || $suite == "ldap" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "ldap/external_user_directory"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 ldap-role-mapping-amd64:
   timeout: 90m
@@ -372,8 +428,12 @@ ldap-role-mapping-amd64:
       - ( $suite == "all" || $suite == "ldap" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "ldap/role_mapping"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 lightweight-delete-amd64:
   extends: .regression_amd64
@@ -383,9 +443,13 @@ lightweight-delete-amd64:
       - ( $suite == "all" || $suite == "lightweight_delete" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "lightweight_delete"
+  before_script:
+    - *create_status
   script:
     - *move_ontime
     - *regression_common
+  after_script:
+    - *update_status
 
 map-type-amd64:
   extends: .regression_amd64
@@ -394,8 +458,12 @@ map-type-amd64:
       - ( $suite == "all" || $suite == "map_type" )  && $arch == "amd64"
   variables:
      FOLDER_PATH: "map_type"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 parquet-amd64:
   extends: .regression_amd64
@@ -405,8 +473,12 @@ parquet-amd64:
   variables:
      FOLDER_PATH: "parquet"
      SUITE_OPTIONS: "--storage minio --storage aws_s3"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 part-moves-between-shards-amd64:
   extends: .regression_amd64
@@ -415,8 +487,12 @@ part-moves-between-shards-amd64:
       - ( $suite == "all" || $suite == "part_moves_between_shards" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "part_moves_between_shards"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 rbac-amd64:
   extends: .regression_amd64
@@ -425,8 +501,12 @@ rbac-amd64:
       - ( $suite == "all" || $suite == "rbac" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "rbac"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 selects-amd64:
   extends: .regression_amd64
@@ -435,8 +515,12 @@ selects-amd64:
       - ( $suite == "all" || $suite == "selects" ) && $arch == "amd64"
   variables:
      FOLDER_PATH: "selects"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 s3-minio-amd64:
   extends: .regression_amd64
@@ -447,9 +531,13 @@ s3-minio-amd64:
     SUITE_OPTIONS: "--storage minio"
     FOLDER_PATH: "s3"
     SUBFOLDER_PATH: "/minio"
+  before_script:
+    - *create_status
   script:
     - pip install minio==7.1.3
     - *regression_common
+  after_script:
+    - *update_status
 
 s3-aws-amd64:
   extends: .regression_amd64
@@ -460,9 +548,13 @@ s3-aws-amd64:
     SUITE_OPTIONS: "--storage aws_s3"
     FOLDER_PATH: "s3"
     SUBFOLDER_PATH: "/aws"
+  before_script:
+    - *create_status
   script:
     - pip install minio==7.1.3
     - *regression_common
+  after_script:
+    - *update_status
 
 s3-gcs-amd64:
   extends: .regression_amd64
@@ -473,9 +565,13 @@ s3-gcs-amd64:
     SUITE_OPTIONS: "--storage gcs"
     FOLDER_PATH: "s3"
     SUBFOLDER_PATH: "/gcs"
+  before_script:
+    - *create_status
   script:
     - pip install minio==7.1.3
     - *regression_common
+  after_script:
+    - *update_status
 
 s3-benchmark-amd64:
   extends: .regression_amd64
@@ -488,9 +584,13 @@ s3-benchmark-amd64:
     SUBFOLDER_PATH: "/benchmark"
     SUITE_OPTIONS: "--storage minio --storage aws_s3 --storage gcs"
     regression: "benchmark"
+  before_script:
+    - *create_status
   script:
     - ontime=1
     - *regression_common
+  after_script:
+    - *update_status
 
 ssl-server-amd64:
   extends: .regression_amd64
@@ -499,8 +599,12 @@ ssl-server-amd64:
       - ( $suite == "all" || $suite == "ssl_server" ) && $arch == "amd64"
   variables: 
     FOLDER_PATH: "ssl_server"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 tiered-storage-original-amd64:
   only:
@@ -510,8 +614,12 @@ tiered-storage-original-amd64:
   variables: 
     FOLDER_PATH: "tiered_storage"
     SUBFOLDER_PATH: "/original"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 tiered-storage-minio-amd64:
   extends: .regression_amd64
@@ -522,9 +630,13 @@ tiered-storage-minio-amd64:
     FOLDER_PATH: "tiered_storage"
     SUITE_OPTIONS: "--with-minio"
     SUBFOLDER_PATH: "/minio"
+  before_script:
+    - *create_status
   script:
     - pip install minio==7.1.3
     - *regression_common
+  after_script:
+    - *update_status
 
 tiered-storage-aws-amd64:
   extends: .regression_amd64
@@ -535,9 +647,13 @@ tiered-storage-aws-amd64:
     FOLDER_PATH: "tiered_storage"
     SUITE_OPTIONS: "--with-s3amazon"
     SUBFOLDER_PATH: "/aws_s3"
+  before_script:
+    - *create_status
   script:
     - pip install minio==7.1.3
     - *regression_common
+  after_script:
+    - *update_status
 
 tiered-storage-gcs-amd64:
   extends: .regression_amd64
@@ -548,8 +664,12 @@ tiered-storage-gcs-amd64:
     FOLDER_PATH: "tiered_storage"
     SUITE_OPTIONS: "--with-s3gcs"
     SUBFOLDER_PATH: "/gcs_s3"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 window-functions-amd64:
   extends: .regression_amd64
@@ -558,8 +678,12 @@ window-functions-amd64:
       - ( $suite == "all" || $suite == "window_functions" ) && $arch == "amd64"
   variables: 
     FOLDER_PATH: "window_functions"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 aes-encryption-arm64:
   extends: .regression_arm64
@@ -568,8 +692,12 @@ aes-encryption-arm64:
      - ( $suite == "all" || $suite == "aes_encryption" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "aes_encryption"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 aggregate-functions-arm64:
   extends: .regression_arm64
@@ -578,8 +706,12 @@ aggregate-functions-arm64:
      - ( $suite == "all" || $suite == "aggregate_functions" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "aggregate_functions"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 atomic-insert-arm64:
   extends: .regression_arm64
@@ -588,8 +720,12 @@ atomic-insert-arm64:
      - ( $suite == "all" || $suite == "atomic_insert" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "atomic_insert"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 base-58-arm64:
   extends: .regression_arm64
@@ -598,8 +734,12 @@ base-58-arm64:
      - ( $suite == "all" || $suite == "base_58" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "base_58"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
   
 clickhouse-keeper-arm64:
   extends: .regression_arm64
@@ -608,8 +748,12 @@ clickhouse-keeper-arm64:
       - ( $suite == "all" || $suite == "clickhouse_keeper" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "clickhouse_keeper"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 datetime64-extended-range-arm64:
   extends: .regression_arm64
@@ -618,8 +762,12 @@ datetime64-extended-range-arm64:
       - ( $suite == "all" || $suite == "datetime64_extended_range" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "datetime64_extended_range"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 disk-level-encryption-arm64:
   extends: .regression_arm64
@@ -628,8 +776,12 @@ disk-level-encryption-arm64:
       - ( $suite == "all" || $suite == "disk_level_encryption" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "disk_level_encryption"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 example-arm64:
   extends: .regression_arm64
@@ -638,8 +790,12 @@ example-arm64:
       - ( $suite == "all" || $suite == "example" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "example"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 extended-precision-data-types-arm64:
   extends: .regression_arm64
@@ -648,8 +804,12 @@ extended-precision-data-types-arm64:
       - ( $suite == "all" || $suite == "extended_precision_data_types" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "extended_precision_data_types"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 kafka-arm64:
   extends: .regression_arm64
@@ -658,8 +818,12 @@ kafka-arm64:
     - ( $suite == "all" || $suite == "kafka" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "kafka"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 kerberos-arm64:
   extends: .regression_arm64
@@ -668,9 +832,13 @@ kerberos-arm64:
       - ( $suite == "all" || $suite == "kerberos" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "kerberos"
+  before_script:
+    - *create_status
   script:
     - export CLICKHOUSE_TESTS_DIR=$(pwd)/kerberos
     - *regression_common
+  after_script:
+    - *update_status
 
 ldap-authentication-arm64:
   timeout: 90m
@@ -680,8 +848,12 @@ ldap-authentication-arm64:
       - ( $suite == "all" || $suite == "ldap" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "ldap/authentication"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 ldap-external-user-directory-arm64:
   timeout: 90m
@@ -691,8 +863,12 @@ ldap-external-user-directory-arm64:
       - ( $suite == "all" || $suite == "ldap" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "ldap/external_user_directory"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 ldap-role-mapping-arm64:
   timeout: 90m
@@ -702,8 +878,12 @@ ldap-role-mapping-arm64:
       - ( $suite == "all" || $suite == "ldap" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "ldap/role_mapping"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 lightweight-delete-arm64:
   extends: .regression_arm64
@@ -713,9 +893,13 @@ lightweight-delete-arm64:
       - ( $suite == "all" || $suite == "lightweight_delete" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "lightweight_delete"
+  before_script:
+    - *create_status
   script:
     - *move_ontime
     - *regression_common
+  after_script:
+    - *update_status
 
 map-type-arm64:
   extends: .regression_arm64
@@ -724,8 +908,12 @@ map-type-arm64:
       - ($suite == "all" || $suite == "map_type") && $arch == "arm64"
   variables:
      FOLDER_PATH: "map_type"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 parquet-arm64:
   extends: .regression_arm64
@@ -734,8 +922,12 @@ parquet-arm64:
      - ( $suite == "all" || $suite == "parquet" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "parquet"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 part-moves-between-shards-arm64:
   extends: .regression_arm64
@@ -744,8 +936,12 @@ part-moves-between-shards-arm64:
       - ( $suite == "all" || $suite == "part_moves_between_shards" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "part_moves_between_shards"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 rbac-arm64:
   extends: .regression_arm64
@@ -754,8 +950,12 @@ rbac-arm64:
       - ( $suite == "all" || $suite == "rbac" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "rbac"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 selects-arm64:
   extends: .regression_arm64
@@ -764,8 +964,12 @@ selects-arm64:
       - ( $suite == "all" || $suite == "selects" ) && $arch == "arm64"
   variables:
      FOLDER_PATH: "selects"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 s3-minio-arm64:
   extends: .regression_arm64
@@ -776,9 +980,13 @@ s3-minio-arm64:
     SUITE_OPTIONS: "--storage minio"
     FOLDER_PATH: "s3"
     SUBFOLDER_PATH: "/minio"
+  before_script:
+    - *create_status
   script:
     - pip install minio==7.1.3
     - *regression_common
+  after_script:
+    - *update_status
 
 s3-aws-arm64:
   extends: .regression_arm64
@@ -789,9 +997,13 @@ s3-aws-arm64:
     SUITE_OPTIONS: "--storage aws_s3"
     FOLDER_PATH: "s3"
     SUBFOLDER_PATH: "/aws"
+  before_script:
+    - *create_status
   script:
     - pip install minio==7.1.3
     - *regression_common
+  after_script:
+    - *update_status
 
 s3-gcs-arm64:
   extends: .regression_arm64
@@ -802,9 +1014,13 @@ s3-gcs-arm64:
     SUITE_OPTIONS: "--storage gcs"
     FOLDER_PATH: "s3"
     SUBFOLDER_PATH: "/gcs"
+  before_script:
+    - *create_status
   script:
     - pip install minio==7.1.3
     - *regression_common
+  after_script:
+    - *update_status
 
 s3-benchmark-arm64:
   extends: .regression_arm64
@@ -817,9 +1033,13 @@ s3-benchmark-arm64:
     SUBFOLDER_PATH: "/benchmark"
     SUITE_OPTIONS: "--storage minio --storage aws_s3 --storage gcs"
     regression: "benchmark"
+  before_script:
+    - *create_status
   script:
     - ontime=1
     - *regression_common
+  after_script:
+    - *update_status
 
 ssl-server-arm64:
   extends: .regression_arm64
@@ -828,8 +1048,12 @@ ssl-server-arm64:
       - ( $suite == "all" || $suite == "ssl_server" ) && $arch == "arm64"
   variables: 
     FOLDER_PATH: "ssl_server"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 tiered-storage-original-arm64:
   only:
@@ -839,8 +1063,12 @@ tiered-storage-original-arm64:
   variables: 
     FOLDER_PATH: "tiered_storage"
     SUBFOLDER_PATH: "/original"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 tiered-storage-minio-arm64:
   extends: .regression_arm64
@@ -851,9 +1079,13 @@ tiered-storage-minio-arm64:
     FOLDER_PATH: "tiered_storage"
     SUITE_OPTIONS: "--with-minio"
     SUBFOLDER_PATH: "/minio"
+  before_script:
+    - *create_status
   script:
     - pip install minio==7.1.3
     - *regression_common
+  after_script:
+    - *update_status
 
 tiered-storage-aws-arm64:
   extends: .regression_arm64
@@ -864,9 +1096,13 @@ tiered-storage-aws-arm64:
     FOLDER_PATH: "tiered_storage"
     SUITE_OPTIONS: "--with-s3amazon"
     SUBFOLDER_PATH: "/aws_s3"
+  before_script:
+    - *create_status
   script:
     - pip install minio==7.1.3
     - *regression_common
+  after_script:
+    - *update_status
 
 tiered-storage-gcs-arm64:
   extends: .regression_arm64
@@ -877,8 +1113,12 @@ tiered-storage-gcs-arm64:
     FOLDER_PATH: "tiered_storage"
     SUITE_OPTIONS: "--with-s3gcs"
     SUBFOLDER_PATH: "/gcs_s3"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
 
 window-functions-arm64:
   extends: .regression_arm64
@@ -887,5 +1127,9 @@ window-functions-arm64:
       - ( $suite == "all" || $suite == "window_functions" ) && $arch == "arm64"
   variables: 
     FOLDER_PATH: "window_functions"
+  before_script:
+    - *create_status
   script:
     - *regression_common
+  after_script:
+    - *update_status
