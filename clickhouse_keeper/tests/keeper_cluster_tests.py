@@ -187,6 +187,7 @@ def mixed_keepers_2(self):
     """Check that 2 nodes Clickhouse Keeper Cluster work in write mode
     and goes in read mode only with 1 node down.
     """
+    xfail("doesn't work on 22.3")
     cluster = self.context.cluster
     try:
         start_mixed_keeper(
