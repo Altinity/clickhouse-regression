@@ -18,6 +18,7 @@ variables:
   artifacts: "internal"
   from_github: "False"
   commit_sha: 0
+  github_actor: "Not specified"
 
 .regression:
   stage: test
@@ -179,8 +180,7 @@ variables:
         echo "Provided commit sha does not match CI commit sha.";
         exit 1; 
       fi
-    - context="suite:$CI_JOB_NAME, package:$package, version:$version"
-    - target_url="https://gitlab.com/altinity-qa/clickhouse/cicd/clickhouse-regression/-/jobs/$CI_JOB_ID"
+    - context="suite:$CI_JOB_NAME, package:$package, version:$version, github_actor:$github_actor"
     - if [[ $from_github == "True" ]]; then
         curl
         -X POST 
@@ -196,7 +196,7 @@ variables:
       elif [[ $CI_JOB_STATUS == "success" && $from_github == "True" ]]; then
         exit_status="success";
       fi
-    - context="suite:$CI_JOB_NAME, package:$package, version:$version"
+    - context="suite:$CI_JOB_NAME, package:$package, version:$version, github_actor:$github_actor";
     - if [[ $from_github == "True" ]]; then
         curl
         -X POST 
