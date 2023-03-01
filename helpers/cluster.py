@@ -534,6 +534,7 @@ class ClickHouseNode(Node):
         steps=True,
         no_checks=False,
         raise_on_exception=False,
+        ignore_exception=False,
         step=By,
         settings=None,
         retry_count=5,
@@ -674,12 +675,13 @@ class ClickHouseNode(Node):
             ) if steps else NullStep():
                 assert message in r.output, error(r.output)
 
-        if message is None or "Exception:" not in message:
-            with Then("check if output has exception") if steps else NullStep():
-                if "Exception:" in r.output:
-                    if raise_on_exception:
-                        raise QueryRuntimeException(r.output)
-                    assert False, error(r.output)
+        if not ignore_exception:
+            if message is None or "Exception:" not in message:
+                with Then("check if output has exception") if steps else NullStep():
+                    if "Exception:" in r.output:
+                        if raise_on_exception:
+                            raise QueryRuntimeException(r.output)
+                        assert False, error(r.output)
 
         return r
 

@@ -9,6 +9,7 @@ from argparse import ArgumentParser, RawTextHelpFormatter
 description = """List online GitHub Actions runners from specified repository.
 """
 
+
 def argparser():
     """Command line argument parser."""
     parser = ArgumentParser(
@@ -42,7 +43,7 @@ if __name__ == "__main__":
 
     start_time = time.time()
     timeout = 60
-    retry_delay=10
+    retry_delay = 10
     headers = {
         "Accept": "application/vnd.github+json",
         "Authorization": f"Bearer {args.token}",
@@ -60,7 +61,9 @@ if __name__ == "__main__":
         if response.status_code == 200:
             for runner in json.loads(response_content)["runners"]:
                 if runner["status"] == "online":
-                    print(f"    Runner\033[94m {runner['name']}\033[0m is online \033[92m\u2714\033[0m")
+                    print(
+                        f"    Runner\033[94m {runner['name']}\033[0m is online \033[92m\u2714\033[0m"
+                    )
 
         else:
             print("API get request failed")

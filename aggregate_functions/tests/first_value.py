@@ -53,4 +53,30 @@ def feature(self, func="first_value({params})", table=None):
         column_name, column_type = column.name, column.datatype.name
 
         with Check(f"{column_type}"):
-            execute_query(f"SELECT {func.format(params=column_name)} FROM {table.name}")
+            try:
+                execute_query(
+                    f"SELECT {func.format(params=column_name)} FROM {table.name}"
+                )
+            except (Error, Fail):
+                repro_table = getuid()
+                with Then("on fail dump data"):
+                    data = self.context.node.query(
+                        f"SELECT {column_name} FROM {table.name} FORMAT SQLInsert",
+                        steps=False,
+                    )
+
+                with And("create repro case"):
+                    debug(f"DROP TABLE IF EXISTS {repro_table} SYNC;")
+                    debug(
+                        f"CREATE TABLE {repro_table} ({column_name} {column_type}) ENGINE MergeTree() ORDER BY tuple();"
+                    )
+                    debug(
+                        data.output.strip().replace(
+                            "INSERT INTO table", f"INSERT INTO {repro_table}", 1
+                        )
+                    )
+                    debug(
+                        f"SELECT {func.format(params=column_name)} FROM {repro_table};"
+                    )
+
+                raise

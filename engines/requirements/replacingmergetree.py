@@ -9,183 +9,183 @@ from testflows.core import Requirement
 Heading = Specification.Heading
 
 RQ_SRS_03x_ClickHouse_ReplacingMergeTree = Requirement(
-    name='RQ.SRS-03x.ClickHouse.ReplacingMergeTree',
-    version='1.0',
+    name="RQ.SRS-03x.ClickHouse.ReplacingMergeTree",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support [ReplacingMergeTree] engine which allows to  remove duplicate entries with the same sorting \n'
-        'key value (`ORDER BY` table section, not `PRIMARY KEY`) during a merge process. The deduplication occurs only during a \n'
-        'merge, which occurs in the background at an unknown time, and the system cannot be planned for. \n'
-        'However, the `OPTIMIZE` query can be used to run an unscheduled merge.\n'
-        '\n'
+        "[ClickHouse] SHALL support [ReplacingMergeTree] engine which allows to  remove duplicate entries with the same sorting \n"
+        "key value (`ORDER BY` table section, not `PRIMARY KEY`) during a merge process. The deduplication occurs only during a \n"
+        "merge, which occurs in the background at an unknown time, and the system cannot be planned for. \n"
+        "However, the `OPTIMIZE` query can be used to run an unscheduled merge.\n"
+        "\n"
     ),
     link=None,
     level=2,
-    num='5.1'
+    num="5.1",
 )
 
 RQ_SRS_03x_ClickHouse_ReplacingMergeTree_DataDeduplication = Requirement(
-    name='RQ.SRS-03x.ClickHouse.ReplacingMergeTree.DataDeduplication',
-    version='1.0',
+    name="RQ.SRS-03x.ClickHouse.ReplacingMergeTree.DataDeduplication",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ReplacingMergeTree] engine shall support remove duplicate entries with the same sorting key value during a \n'
-        'merge process.\n'
-        '\n'
+        "[ReplacingMergeTree] engine shall support remove duplicate entries with the same sorting key value during a \n"
+        "merge process.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='5.2.1'
+    num="5.2.1",
 )
 
 RQ_SRS_03x_ClickHouse_ReplacingMergeTree_OptimizeMerge = Requirement(
-    name='RQ.SRS-03x.ClickHouse.ReplacingMergeTree.OptimizeMerge',
-    version='1.0',
+    name="RQ.SRS-03x.ClickHouse.ReplacingMergeTree.OptimizeMerge",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ReplacingMergeTree] engine shall support `OPTIMIZE` query which can be used to run an unscheduled merge as merge process \n'
-        'must occur in the background at an unknown time, and the system cannot be planned for.\n'
-        '\n'
+        "[ReplacingMergeTree] engine shall support `OPTIMIZE` query which can be used to run an unscheduled merge as merge process \n"
+        "must occur in the background at an unknown time, and the system cannot be planned for.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='5.3.1'
+    num="5.3.1",
 )
 
 RQ_SRS_03x_ClickHouse_ReplacingMergeTree_UniquenessOfRows = Requirement(
-    name='RQ.SRS-03x.ClickHouse.ReplacingMergeTree.UniquenessOfRows',
-    version='1.0',
+    name="RQ.SRS-03x.ClickHouse.ReplacingMergeTree.UniquenessOfRows",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ReplacingMergeTree] engine shall support uniqueness of rows determined by the `ORDER BY` table section, \n'
-        'not PRIMARY KEY.\n'
-        '\n'
+        "[ReplacingMergeTree] engine shall support uniqueness of rows determined by the `ORDER BY` table section, \n"
+        "not PRIMARY KEY.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='5.4.1'
+    num="5.4.1",
 )
 
 RQ_SRS_03x_ClickHouse_ReplacingMergeTree_VersionColumn = Requirement(
-    name='RQ.SRS-03x.ClickHouse.ReplacingMergeTree.VersionColumn',
-    version='1.0',
+    name="RQ.SRS-03x.ClickHouse.ReplacingMergeTree.VersionColumn",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ReplacingMergeTree] engine shall support a version column with a type of UInt*, Date, DateTime, or DateTime64.\n'
-        '\n'
+        "[ReplacingMergeTree] engine shall support a version column with a type of UInt*, Date, DateTime, or DateTime64.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='5.5.1'
+    num="5.5.1",
 )
 
 RQ_SRS_03x_ClickHouse_ReplacingMergeTree_SelectionOfRows = Requirement(
-    name='RQ.SRS-03x.ClickHouse.ReplacingMergeTree.SelectionOfRows',
-    version='1.0',
+    name="RQ.SRS-03x.ClickHouse.ReplacingMergeTree.SelectionOfRows",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ReplacingMergeTree] engine shall support merging, the engine must leave only one row from all the rows with the same \n'
-        'sorting key. \n'
-        '\n'
+        "[ReplacingMergeTree] engine shall support merging, the engine must leave only one row from all the rows with the same \n"
+        "sorting key. \n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='5.6.1'
+    num="5.6.1",
 )
 
 RQ_SRS_03x_ClickHouse_ReplacingMergeTree_SelectionOfRows_SelectionRules = Requirement(
-    name='RQ.SRS-03x.ClickHouse.ReplacingMergeTree.SelectionOfRows.SelectionRules',
-    version='1.0',
+    name="RQ.SRS-03x.ClickHouse.ReplacingMergeTree.SelectionOfRows.SelectionRules",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ReplacingMergeTree] engine shall support selection rules: if a version column is specified, the engine must select the \n'
-        'row with the maximum version. If no version column is specified, the engine must select the last row in the selection.\n'
-        '\n'
+        "[ReplacingMergeTree] engine shall support selection rules: if a version column is specified, the engine must select the \n"
+        "row with the maximum version. If no version column is specified, the engine must select the last row in the selection.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='5.6.2.1'
+    num="5.6.2.1",
 )
 
 RQ_SRS_03x_ClickHouse_ReplacingMergeTree_TableCreation = Requirement(
-    name='RQ.SRS-03x.ClickHouse.ReplacingMergeTree.TableCreation',
-    version='1.0',
+    name="RQ.SRS-03x.ClickHouse.ReplacingMergeTree.TableCreation",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ReplacingMergeTree] engine shall support same clauses as when creating a MergeTree table, with the addition of the \n'
-        'ver column.\n'
-        '\n'
+        "[ReplacingMergeTree] engine shall support same clauses as when creating a MergeTree table, with the addition of the \n"
+        "ver column.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='5.7.1'
+    num="5.7.1",
 )
 
 RQ_SRS_03x_ClickHouse_ReplacingMergeTree_NonFunctionalRequirements_Performance = Requirement(
-    name='RQ.SRS-03x.ClickHouse.ReplacingMergeTree.NonFunctionalRequirements.Performance',
-    version='1.0',
+    name="RQ.SRS-03x.ClickHouse.ReplacingMergeTree.NonFunctionalRequirements.Performance",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[NewReplacingMergeTree] engine shall allow handle large volumes of data efficiently.\n'
-        '\n'
+        "[NewReplacingMergeTree] engine shall allow handle large volumes of data efficiently.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='5.7.2.2'
+    num="5.7.2.2",
 )
 
 RQ_SRS_03x_ClickHouse_ReplacingMergeTree_NonFunctionalRequirements_Reliability = Requirement(
-    name='RQ.SRS-03x.ClickHouse.ReplacingMergeTree.NonFunctionalRequirements.Reliability',
-    version='1.0',
+    name="RQ.SRS-03x.ClickHouse.ReplacingMergeTree.NonFunctionalRequirements.Reliability",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[NewReplacingMergeTree] engine shall be reliable and not lose any data.\n'
-        '\n'
-        '\n'
-        '\n'
-        '[SRS]: #srs\n'
-        '[ReplacingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/replacingmergetree/\n'
-        '\n'
-        '\n'
-        '\n'
+        "[NewReplacingMergeTree] engine shall be reliable and not lose any data.\n"
+        "\n"
+        "\n"
+        "\n"
+        "[SRS]: #srs\n"
+        "[ReplacingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/replacingmergetree/\n"
+        "\n"
+        "\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='5.7.2.4'
+    num="5.7.2.4",
 )
 
 SRS03x_ClickHouse_ReplacingMergeTree = Specification(
-    name='SRS03x ClickHouse ReplacingMergeTree',
+    name="SRS03x ClickHouse ReplacingMergeTree",
     description=None,
     author=None,
     date=None,
@@ -201,33 +201,69 @@ SRS03x_ClickHouse_ReplacingMergeTree = Specification(
     parent=None,
     children=None,
     headings=(
-        Heading(name='Introduction', level=1, num='1'),
-        Heading(name='Feature Diagram', level=1, num='2'),
-        Heading(name='Related Resources', level=1, num='3'),
-        Heading(name='Terminology', level=1, num='4'),
-        Heading(name='SRS', level=2, num='4.1'),
-        Heading(name='Requirements', level=1, num='5'),
-        Heading(name='RQ.SRS-03x.ClickHouse.ReplacingMergeTree', level=2, num='5.1'),
-        Heading(name='Data Deduplication', level=2, num='5.2'),
-        Heading(name='RQ.SRS-03x.ClickHouse.ReplacingMergeTree.DataDeduplication', level=3, num='5.2.1'),
-        Heading(name='Optimize Merge', level=2, num='5.3'),
-        Heading(name='RQ.SRS-03x.ClickHouse.ReplacingMergeTree.OptimizeMerge', level=3, num='5.3.1'),
-        Heading(name='UniquenessOfRows', level=2, num='5.4'),
-        Heading(name='RQ.SRS-03x.ClickHouse.ReplacingMergeTree.UniquenessOfRows', level=3, num='5.4.1'),
-        Heading(name='VersionColumn', level=2, num='5.5'),
-        Heading(name='RQ.SRS-03x.ClickHouse.ReplacingMergeTree.VersionColumn', level=3, num='5.5.1'),
-        Heading(name='SelectionOfRows', level=2, num='5.6'),
-        Heading(name='RQ.SRS-03x.ClickHouse.ReplacingMergeTree.SelectionOfRows', level=3, num='5.6.1'),
-        Heading(name='SelectionRules', level=3, num='5.6.2'),
-        Heading(name='RQ.SRS-03x.ClickHouse.ReplacingMergeTree.SelectionOfRows.SelectionRules', level=4, num='5.6.2.1'),
-        Heading(name='TableCreation', level=2, num='5.7'),
-        Heading(name='RQ.SRS-03x.ClickHouse.ReplacingMergeTree.TableCreation', level=3, num='5.7.1'),
-        Heading(name='Non-Functional Requirements', level=3, num='5.7.2'),
-        Heading(name='Performance', level=4, num='5.7.2.1'),
-        Heading(name='RQ.SRS-03x.ClickHouse.ReplacingMergeTree.NonFunctionalRequirements.Performance', level=4, num='5.7.2.2'),
-        Heading(name='Reliability', level=4, num='5.7.2.3'),
-        Heading(name='RQ.SRS-03x.ClickHouse.ReplacingMergeTree.NonFunctionalRequirements.Reliability', level=4, num='5.7.2.4'),
+        Heading(name="Introduction", level=1, num="1"),
+        Heading(name="Feature Diagram", level=1, num="2"),
+        Heading(name="Related Resources", level=1, num="3"),
+        Heading(name="Terminology", level=1, num="4"),
+        Heading(name="SRS", level=2, num="4.1"),
+        Heading(name="Requirements", level=1, num="5"),
+        Heading(name="RQ.SRS-03x.ClickHouse.ReplacingMergeTree", level=2, num="5.1"),
+        Heading(name="Data Deduplication", level=2, num="5.2"),
+        Heading(
+            name="RQ.SRS-03x.ClickHouse.ReplacingMergeTree.DataDeduplication",
+            level=3,
+            num="5.2.1",
         ),
+        Heading(name="Optimize Merge", level=2, num="5.3"),
+        Heading(
+            name="RQ.SRS-03x.ClickHouse.ReplacingMergeTree.OptimizeMerge",
+            level=3,
+            num="5.3.1",
+        ),
+        Heading(name="UniquenessOfRows", level=2, num="5.4"),
+        Heading(
+            name="RQ.SRS-03x.ClickHouse.ReplacingMergeTree.UniquenessOfRows",
+            level=3,
+            num="5.4.1",
+        ),
+        Heading(name="VersionColumn", level=2, num="5.5"),
+        Heading(
+            name="RQ.SRS-03x.ClickHouse.ReplacingMergeTree.VersionColumn",
+            level=3,
+            num="5.5.1",
+        ),
+        Heading(name="SelectionOfRows", level=2, num="5.6"),
+        Heading(
+            name="RQ.SRS-03x.ClickHouse.ReplacingMergeTree.SelectionOfRows",
+            level=3,
+            num="5.6.1",
+        ),
+        Heading(name="SelectionRules", level=3, num="5.6.2"),
+        Heading(
+            name="RQ.SRS-03x.ClickHouse.ReplacingMergeTree.SelectionOfRows.SelectionRules",
+            level=4,
+            num="5.6.2.1",
+        ),
+        Heading(name="TableCreation", level=2, num="5.7"),
+        Heading(
+            name="RQ.SRS-03x.ClickHouse.ReplacingMergeTree.TableCreation",
+            level=3,
+            num="5.7.1",
+        ),
+        Heading(name="Non-Functional Requirements", level=3, num="5.7.2"),
+        Heading(name="Performance", level=4, num="5.7.2.1"),
+        Heading(
+            name="RQ.SRS-03x.ClickHouse.ReplacingMergeTree.NonFunctionalRequirements.Performance",
+            level=4,
+            num="5.7.2.2",
+        ),
+        Heading(name="Reliability", level=4, num="5.7.2.3"),
+        Heading(
+            name="RQ.SRS-03x.ClickHouse.ReplacingMergeTree.NonFunctionalRequirements.Reliability",
+            level=4,
+            num="5.7.2.4",
+        ),
+    ),
     requirements=(
         RQ_SRS_03x_ClickHouse_ReplacingMergeTree,
         RQ_SRS_03x_ClickHouse_ReplacingMergeTree_DataDeduplication,
@@ -239,8 +275,8 @@ SRS03x_ClickHouse_ReplacingMergeTree = Specification(
         RQ_SRS_03x_ClickHouse_ReplacingMergeTree_TableCreation,
         RQ_SRS_03x_ClickHouse_ReplacingMergeTree_NonFunctionalRequirements_Performance,
         RQ_SRS_03x_ClickHouse_ReplacingMergeTree_NonFunctionalRequirements_Reliability,
-        ),
-    content='''
+    ),
+    content="""
 # SRS03x ClickHouse ReplacingMergeTree
 # Software Requirements Specification
 
@@ -388,5 +424,5 @@ version: 1.0
 
 [SRS]: #srs
 [ReplacingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/replacingmergetree/
-'''
+""",
 )
