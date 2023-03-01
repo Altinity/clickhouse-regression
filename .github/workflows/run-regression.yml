@@ -66,3 +66,4 @@ jobs:
           --artifacts ${{ inputs.artifacts }} 
           --from-github 
           --commit-sha $GITHUB_SHA
+          --github-actor ${{ github.actor }}
