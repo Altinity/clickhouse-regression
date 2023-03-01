@@ -50,18 +50,29 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
             node.command("/functional/config/install.sh")
 
         with And("change the listening port in listen.xml from :: to 0.0.0.0"):
-            node.command("sed -i 's/::/0.0.0.0/g' /etc/clickhouse-server/config.d/listen.xml")
+            node.command(
+                "sed -i 's/::/0.0.0.0/g' /etc/clickhouse-server/config.d/listen.xml"
+            )
 
         with And("change the host from localhost to zookeeper in zookeeper.xml"):
-            node.command("sed -i 's/localhost/zookeeper/g' /etc/clickhouse-server/config.d/zookeeper.xml")
+            node.command(
+                "sed -i 's/localhost/zookeeper/g' /etc/clickhouse-server/config.d/zookeeper.xml"
+            )
 
         with And("restart"):
             node.restart_clickhouse()
 
         with Suite("stateless"):
-            with Given("get all stateless tests", description="test endings: .sql, .sh, .sql.j2, .py, .expect"):
-                output = node.command("ls --color=none /functional/queries/0_stateless/*{.expect,.py,.sh,.sql,.sql.j2}").output
-                stateless_tests = output.replace("\n", "").split("/functional/queries/0_stateless/")[1:]
+            with Given(
+                "get all stateless tests",
+                description="test endings: .sql, .sh, .sql.j2, .py, .expect",
+            ):
+                output = node.command(
+                    "ls --color=none /functional/queries/0_stateless/*{.expect,.py,.sh,.sql,.sql.j2}"
+                ).output
+                stateless_tests = output.replace("\n", "").split(
+                    "/functional/queries/0_stateless/"
+                )[1:]
 
             for test in stateless_tests:
                 with Scenario(test):
@@ -73,9 +84,16 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
                     )
 
         with Suite("stateful"):
-            with Given("get all stateful tests", description="test endings: .sql, .sh, .sql.j2, .py, .expect"):
-                output = node.command("ls --color=none /functional/queries/1_stateful/*{.expect,.py,.sh,.sql,.sql.j2}").output
-                stateful_tests = output.replace("\n", "").split("/functional/queries/1_stateful/")[1:]
+            with Given(
+                "get all stateful tests",
+                description="test endings: .sql, .sh, .sql.j2, .py, .expect",
+            ):
+                output = node.command(
+                    "ls --color=none /functional/queries/1_stateful/*{.expect,.py,.sh,.sql,.sql.j2}"
+                ).output
+                stateful_tests = output.replace("\n", "").split(
+                    "/functional/queries/1_stateful/"
+                )[1:]
 
             for test in stateful_tests:
                 with Scenario(test):
@@ -84,6 +102,7 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
                         timeout=3600,
                         message="1 tests passed",
                     )
+
 
 if main():
     regression()

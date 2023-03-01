@@ -17,6 +17,7 @@ ffails = {
     ),
 }
 
+
 @TestModule
 @Name("clickhouse")
 @FFails(ffails)

@@ -2055,7 +2055,8 @@ def lost_data_during_mutation(self):
             ORDER BY key
             PARTITION BY (key % 4)
             SETTINGS storage_policy='external'
-            """, settings=[("distributed_ddl_task_timeout ",360)]
+            """,
+                settings=[("distributed_ddl_task_timeout ", 360)],
             )
 
         with And("I insert some data"):

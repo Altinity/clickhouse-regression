@@ -13,6 +13,4 @@ append_path(sys.path, "..")
 def module(self):
     """Check new ReplacingMergeTree modifier."""
 
-
     # Feature(run=load("final.", "feature"))
-

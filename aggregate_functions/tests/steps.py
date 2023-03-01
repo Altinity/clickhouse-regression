@@ -3,7 +3,7 @@ import itertools
 from testflows.core import *
 from testflows.asserts import values, error, snapshot
 
-from helpers.common import check_clickhouse_version, get_snapshot_id
+from helpers.common import check_clickhouse_version, get_snapshot_id, getuid
 
 # exhaustive list of all aggregate functions
 aggregate_functions = [

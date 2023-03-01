@@ -35,33 +35,45 @@ xfails = {
         )
     ],
     "final/modifier": [(Fail, "not implemented")],
-    "final/force/general/with experimental analyzer/simple select group by/*":
-        [(Fail, "group by conflict analyzer")],
+    "final/force/general/with experimental analyzer/simple select group by/*": [
+        (Fail, "group by conflict analyzer")
+    ],
     "final/force/general/with experimental analyzer/simple select count/simple select count/distr_*": [
-        (Fail, "column fail for distributed tables")],
+        (Fail, "column fail for distributed tables")
+    ],
     "final/force/general/with experimental analyzer/simple select as/simple select as/distr_*": [
-        (Fail, "column fail for distributed tables")],
+        (Fail, "column fail for distributed tables")
+    ],
     "final/force/general/with experimental analyzer/simple select limit/simple select limit/distr_*": [
-        (Fail, "column fail for distributed tables")],
+        (Fail, "column fail for distributed tables")
+    ],
     "final/force/general/with experimental analyzer/simple select limit by/simple select limit by/distr_*": [
-        (Fail, "column fail for distributed tables")],
+        (Fail, "column fail for distributed tables")
+    ],
     "final/force/general/with experimental analyzer/simple select distinct/simple select distinct/distr_*": [
-        (Fail, "column fail for distributed tables")],
+        (Fail, "column fail for distributed tables")
+    ],
     "final/force/general/with experimental analyzer/simple select where/simple select where/distr_*": [
-        (Fail, "column fail for distributed tables")],
+        (Fail, "column fail for distributed tables")
+    ],
     "final/force/general/with experimental analyzer/select multiple join clause select/AggregatingMergeTree*": [
-        (Fail, "AggregatingFunction problem with analyzer")],
+        (Fail, "AggregatingFunction problem with analyzer")
+    ],
     "final/force/general/with experimental analyzer/select nested join clause select/AggregatingMergeTree*": [
-        (Fail, "AggregatingFunction problem with analyzer")],
+        (Fail, "AggregatingFunction problem with analyzer")
+    ],
     "final/force/general/with experimental analyzer/select nested subquery/select nested subquery/distr_*": [
-        (Fail, "column fail for distributed tables")],
+        (Fail, "column fail for distributed tables")
+    ],
     "final/force/general/with experimental analyzer/select where subquery/select where subquery/distr_*": [
-        (Fail, "column fail for distributed tables")],
+        (Fail, "column fail for distributed tables")
+    ],
     "final/force/general/with experimental analyzer/select subquery/select subquery/distr_*": [
-        (Fail, "column fail for distributed tables")],
+        (Fail, "column fail for distributed tables")
+    ],
     "final/force/general/with experimental analyzer/select with clause/*": [
-        (Fail, "group by conflict analyzer")],
-
+        (Fail, "group by conflict analyzer")
+    ],
 }
 
 xflags = {}
