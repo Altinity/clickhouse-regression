@@ -17,24 +17,24 @@ def module(self):
         create_and_populate_core_tables()
         create_and_populate_core_tables(duplicate=True)
 
-    # with And("I add system tables"):
-    #     add_system_tables()
-    #
-    # with And("I create and populate distributed tables"):
-    #     create_and_populate_distributed_tables()
-    #
-    # with And("I create normal, materialized, live and window views"):
-    #     create_all_views()
-    #     create_normal_view_with_join()
-    #
-    # with And("I create and populate replicated tables"):
-    #     create_replicated_table_2shards3replicas()
-    #
-    # with And("I create and populate table for subquery tests"):
-    #     create_expression_subquery_table()
-    #
-    # with And("I create table with alias column"):
-    #     create_alias_table()
+    with And("I add system tables"):
+        add_system_tables()
+
+    with And("I create and populate distributed tables"):
+        create_and_populate_distributed_tables()
+
+    with And("I create normal, materialized, live and window views"):
+        create_all_views()
+        create_normal_view_with_join()
+
+    with And("I create and populate replicated tables"):
+        create_replicated_table_2shards3replicas()
+
+    with And("I create and populate table for subquery tests"):
+        create_expression_subquery_table()
+
+    with And("I create table with alias column"):
+        create_alias_table()
 
     Feature(run=load("final.modifier", "feature"))
     Feature(run=load("final.force.feature", "feature"))
