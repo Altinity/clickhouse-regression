@@ -44,7 +44,10 @@ that involves several ClickHouse instances, custom configs, ZooKeeper, etc.
 * [Docker] [install](https://docs.docker.com/engine/install/)
 
 To install all necessary Python modules (including [TestFlows] and [Docker Compose]), execute the following command:
-`pip3 install -r pip_requirements.txt`
+
+```bash
+pip3 install -r pip_requirements.txt
+```
 
 ## Running CI/CD
 
