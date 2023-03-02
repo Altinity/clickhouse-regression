@@ -36,7 +36,7 @@ that involves several ClickHouse instances, custom configs, ZooKeeper, etc.
 
 * [Ubuntu] 20.04
 * [Python 3] >= 3.8
-* [TestFlows] >= 1.9.4
+* [TestFlows] >= 1.9.51
 
 ## Prerequisites
 
