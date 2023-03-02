@@ -54,6 +54,15 @@ xfails = {
     "/aggregate functions/quantileTDigestWeighted/datatypes/permutations/:_date_:": [
         (Fail, "DECIMAL_OVERFLOW error that needs to be investigated")
     ],
+    # 23.2
+    "/aggregate functions/state/singleValueOrNullState/:": [
+        (
+            Fail,
+            "regression",
+            check_clickhouse_version(">=23"),
+            r".*Exception: Nested type [^\n]+ cannot be inside Nullable type.*",
+        )
+    ],
 }
 
 
