@@ -37,14 +37,13 @@ that involves several ClickHouse instances, custom configs, ZooKeeper, etc.
 * [Ubuntu] 22.04
 * [Python 3] >= 3.8
 * [TestFlows] >= 1.9.51
+* [Docker Compose] == 1.29.2
 
 ## Prerequisites
 
 * [Docker] [install](https://docs.docker.com/engine/install/)
-* [Docker Compose] [install](https://docs.docker.com/compose/install/)
-* [TestFlows] [install](https://testflows.com/handbook/#Installation) 
 
-To install all necessary Python modules (incl. [TestFlows]), execute the following command:
+To install all necessary Python modules (including [TestFlows] and [Docker Compose]), execute the following command:
 `pip3 install -r pip_requirements.txt`
 
 ## Running CI/CD
