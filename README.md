@@ -41,7 +41,7 @@ that involves several ClickHouse instances, custom configs, ZooKeeper, etc.
 
 ## Prerequisites
 
-* [Docker] [install](https://docs.docker.com/engine/install/)
+* [Docker](https://docs.docker.com/engine/install/)
 
 To install all necessary Python modules (including [TestFlows] and [Docker Compose]), execute the following command:
 
