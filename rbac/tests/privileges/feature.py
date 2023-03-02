@@ -457,6 +457,11 @@ def feature(self):
                 parallel=True,
                 executor=pool,
             )
+            Feature(
+                run=load("rbac.tests.privileges.orphaned_role", "feature"),
+                parallel=True,
+                executor=pool,
+            )
 
         finally:
             join()

@@ -127,7 +127,10 @@ def to_day_of(self, py_func, ch_func):
                             expected = f"{result}"
                         with And(f"Forming a {ch_func} ClickHouse query"):
                             dt_str = dt.strftime("%Y-%m-%d %H:%M:%S")
-                            query = f"SELECT {ch_func}(toDateTime64('{dt_str}', 0, '{tz1}'), '{tz2}')"
+                            if ch_func == "toDayOfWeek":
+                                query = f"SELECT {ch_func}(toDateTime64('{dt_str}', 0, '{tz1}'), 0, '{tz2}')"
+                            else:
+                                query = f"SELECT {ch_func}(toDateTime64('{dt_str}', 0, '{tz1}'), '{tz2}')"
                         with Then(f"I execute {ch_func} query"):
                             exec_query(request=query, expected=f"{expected}")
 

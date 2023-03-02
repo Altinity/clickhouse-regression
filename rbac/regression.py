@@ -36,6 +36,7 @@ issue_26746 = "https://github.com/ClickHouse/ClickHouse/issues/26746"
 issue_37389 = "https://github.com/ClickHouse/ClickHouse/issues/37389"
 issue_37580 = "https://github.com/ClickHouse/ClickHouse/issues/37580"
 issue_38716 = "https://github.com/ClickHouse/ClickHouse/issues/38716"
+pull_47002 = "https://github.com/ClickHouse/ClickHouse/pull/47002"
 
 xfails = {
     "syntax/show create quota/I show create quota current": [
@@ -194,6 +195,7 @@ xfails = {
     "privileges/system drop replica/:/drop replica/check privilege:/:": [
         (Fail, issue_38716)
     ],
+    "privileges/orphaned role": [(Fail, pull_47002)],
 }
 
 xflags = {
