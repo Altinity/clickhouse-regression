@@ -701,6 +701,7 @@ class Cluster(object):
         docker_compose_file="docker-compose.yml",
         environ=None,
         thread_fuzzer=False,
+        collect_service_logs=False
     ):
 
         self._bash = {}
@@ -714,6 +715,7 @@ class Cluster(object):
         self.docker_compose = docker_compose
         self.thread_fuzzer = thread_fuzzer
         self.running = False
+        self.collect_service_logs = collect_service_logs
 
         frame = inspect.currentframe().f_back
         caller_dir = os.path.dirname(os.path.abspath(frame.f_globals["__file__"]))
@@ -1048,6 +1050,19 @@ class Cluster(object):
     def __exit__(self, type, value, traceback):
         try:
             with Finally("I clean up"):
+                if self.collect_service_logs:
+                    with Finally("collect service logs"):
+                        with Shell() as bash:
+                            bash(f"cd {self.docker_compose_project_dir}", timeout=1000)
+                            for service_list in self.nodes:
+                                for service_node in self.nodes[service_list]:
+                                    with By(f"getting log for {service_node}"):
+                                        log_path = f"../_instances"
+                                        snode = bash(f"docker-compose logs {service_node} "
+                                                     f"> {log_path}/{service_node}.log", timeout=1000)
+                                        if snode.exitcode != 0:
+                                            break
+
                 self.down()
         finally:
             with self.lock:
