@@ -745,6 +745,8 @@ class Cluster(object):
             docker_compose_project_dir, docker_compose_file
         )
 
+        self.docker_compose_project_dir = docker_compose_project_dir
+
         if not os.path.exists(docker_compose_file_path):
             raise TypeError(
                 f"docker compose file '{docker_compose_file_path}' does not exist"
