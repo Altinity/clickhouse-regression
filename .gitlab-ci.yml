@@ -40,6 +40,8 @@ variables:
       - ./*.html
       - ./*/_instances/*/logs/*.log
       - ./*/*/_instances/*/logs/*.log
+      - ./*/_instances/*.log
+      - ./*/*/_instances/*.log
 
 .regression_amd64:
   extends: .regression
