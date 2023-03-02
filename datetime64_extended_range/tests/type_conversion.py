@@ -660,7 +660,7 @@ def force_index_by_date(self):
 
 @TestScenario
 def force_primary_key(self):
-    """Check that when force_primary_key is enabled, ClickHOuse throws an exception if there is primary key in a table, and it is not used."""
+    """Check that when force_primary_key is enabled, ClickHouse throws an exception, prior to version 22.9, if there is primary key in a table, and it is not used."""
     node = self.context.node
     table_name = f"table_{getuid()}"
 
@@ -668,14 +668,14 @@ def force_primary_key(self):
         with Given("I have a table"):
             node.query(
                 f"""
-                create table {table_name}(date_time DateTime64(3), x String) 
-                Engine=MergeTree partition by toDate(date_time) primary key toDate(date_time);
+                CREATE TABLE {table_name}(date_time DateTime64(3), x String) 
+                Engine=MergeTree PARTITION BY toDate(date_time) PRIMARY KEY toDate(date_time);
             """
             )
 
         with And("I insert some data"):
             node.query(
-                f"insert into {table_name} select toDateTime64('2020-01-01 00:00:00.000',3)+number , '' from numbers(1);"
+                f"INSERT INTO {table_name} SELECT toDateTime64('2020-01-01 00:00:00.000',3)+number , '' FROM numbers(1);"
             )
 
         with When("I select from the table"):
@@ -684,12 +684,20 @@ def force_primary_key(self):
             ).output
             assert output == "1", error()
 
-        with Then("I check SELECT throws an exception."):
-            node.query(
-                f"SELECT count() FROM {table_name} WHERE toDateTime64(date_time,3) >= toDateTime64('2020-01-10 00:00:00.000',3) SETTINGS force_primary_key=1;",
-                exitcode=21,
-                message="Exception: Primary key (toDate(date_time)) is not used and setting 'force_primary_key' is set. (INDEX_NOT_USED)",
-            )
+        if check_clickhouse_version("<22.9")(self):
+            with Then("I check SELECT throws an exception."):
+                node.query(
+                    f"SELECT count() FROM {table_name} WHERE toDateTime64(date_time,3) >= toDateTime64('2020-01-10 00:00:00.000',3) SETTINGS force_primary_key=1;",
+                    exitcode=21,
+                    message="Exception: Primary key (toDate(date_time)) is not used and setting 'force_primary_key' is set. (INDEX_NOT_USED)",
+                )
+
+        else:
+            with Then("I check SELECT does not throw an exception."):
+                output = node.query(
+                    f"SELECT count() FROM {table_name} WHERE toDateTime64(date_time,3) >= toDateTime64('2020-01-10 00:00:00.000',3) SETTINGS force_primary_key=1;",
+                ).output
+                assert output == "0", error()
 
     finally:
         with Finally(f"I drop the table {table_name}"):
