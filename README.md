@@ -34,7 +34,7 @@ that involves several ClickHouse instances, custom configs, ZooKeeper, etc.
 
 ## Supported environment
 
-* [Ubuntu] 20.04
+* [Ubuntu] 22.04
 * [Python 3] >= 3.8
 * [TestFlows] >= 1.9.51
 
