@@ -90,9 +90,9 @@ def test_alias_columns_alias_column(self, node=None):
 @Name("user rights")
 def feature(self, node=None):
     """User rights."""
-    if check_clickhouse_version("<22.11")(self):
+    if check_clickhouse_version("<23.2")(self):
         skip(
-            reason="force_select_final is only supported on ClickHouse version >= 22.11"
+            reason="force_select_final is only supported on ClickHouse version >= 23.2"
         )
 
     if node is None:

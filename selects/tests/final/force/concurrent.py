@@ -1006,9 +1006,9 @@ def select_joins_parallel(self):
 @Name("concurrent")
 def feature(self):
     """Parallel queries tests for force select final."""
-    if check_clickhouse_version("<22.11")(self):
+    if check_clickhouse_version("<23.2")(self):
         skip(
-            reason="force_select_final is only supported on ClickHouse version >= 22.11"
+            reason="force_select_final is only supported on ClickHouse version >= 23.2"
         )
 
     with Given("I choose only ReplacingMergeTree and MergeTree tables"):
