@@ -3,6 +3,7 @@ import sys
 from testflows.core import *
 from engines.requirements import *
 from engines.tests.steps import *
+from helpers.common import check_clickhouse_version
 
 
 append_path(sys.path, "..")
@@ -48,6 +49,17 @@ def test_example(self, node=None):
                     ("do_not_merge_across_partitions_select_final", 1),
                 ],
             )
+
+        with And(
+            "I optimize table"
+        ):
+            node.query(
+                f"OPTIMIZE TABLE {name} FINAL;",
+            )
+
+        with Then("I select again all data from the table"):
+            node.query(f"SELECT count(*) FROM {name};", message="2")
+
     finally:
         with Finally("I drop table"):
             node.query(f"DROP TABLE IF EXISTS {name}")
@@ -57,6 +69,10 @@ def test_example(self, node=None):
 @Name("new_replacing_merge_tree")
 def feature(self):
     """Check new ReplacingMergeTree engine."""
+    if check_clickhouse_version("<23.2")(self):
+        skip(
+            reason="--final query setting is only supported on ClickHouse version >= 23.2"
+        )
 
     with Pool(1) as executor:
         try:
