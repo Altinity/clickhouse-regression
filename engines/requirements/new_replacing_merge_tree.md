@@ -69,6 +69,7 @@ Test feature diagram.
 **Pull Requests**
 
 * https://github.com/ClickHouse/ClickHouse/pull/41005
+* https://kb.altinity.com/engines/mergetree-table-engine-family/replacingmergetree/
 
 ## Terminology
 
