@@ -1253,9 +1253,9 @@ def without_experimental_analyzer(self):
 )
 def feature(self):
     """Sanity tests for --final query setting."""
-    if check_clickhouse_version("<22.11")(self):
+    if check_clickhouse_version("<23.2")(self):
         skip(
-            reason="--final query setting is only supported on ClickHouse version >= 22.11"
+            reason="--final query setting is only supported on ClickHouse version >= 23.2"
         )
 
     Feature(run=without_experimental_analyzer)

@@ -129,9 +129,9 @@ def select_query_from_table_1(self, node=None):
 @Name("alias")
 def feature(self):
     """Parallel queries tests for force select final."""
-    if check_clickhouse_version("<22.11")(self):
+    if check_clickhouse_version("<23.2.1.2440")(self):
         skip(
-            reason="force_select_final is only supported on ClickHouse version >= 22.11"
+            reason="force_select_final alias is only supported on ClickHouse version >= 23.2.1.2440"
         )
 
     for scenario in loads(current_module(), Scenario):
