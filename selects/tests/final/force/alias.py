@@ -58,28 +58,32 @@ def select_query_from_table_2(self, node=None):
 
     name = f"table_alias_{getuid()}"
 
-    with Given("I create table form the issue"):
-        node.query(f"CREATE TABLE {name} (id String, device UUID) ENGINE = MergeTree() ORDER BY tuple();")
+    try:
+        with Given("I create table form the issue"):
+            node.query(f"CREATE TABLE {name} (id String, device UUID) ENGINE = MergeTree() ORDER BY tuple();")
 
-    with When("I insert data in this table"):
-        node.query(f"INSERT INTO {name} VALUES ('notEmpty', '417ddc5d-e556-4d27-95dd-a34d84e46a50');")
-        node.query(f"INSERT INTO {name} VALUES ('', '417ddc5d-e556-4d27-95dd-a34d84e46a50');")
-        node.query(f"INSERT INTO {name} VALUES ('', '00000000-0000-0000-0000-000000000000');")
+        with When("I insert data in this table"):
+            node.query(f"INSERT INTO {name} VALUES ('notEmpty', '417ddc5d-e556-4d27-95dd-a34d84e46a50');")
+            node.query(f"INSERT INTO {name} VALUES ('', '417ddc5d-e556-4d27-95dd-a34d84e46a50');")
+            node.query(f"INSERT INTO {name} VALUES ('', '00000000-0000-0000-0000-000000000000');")
 
-    with Then("select result check without and with --final"):
-        assert (
-            node.query(
-                "SELECT if(empty(id), toString(device), id) AS device, multiIf( notEmpty(id),'a', "
-                f"device == '00000000-0000-0000-0000-000000000000', 'b', 'c' ) AS device_id_type, count() FROM {name} "
-                "GROUP BY device, device_id_type ORDER BY device;"
-            ).output.strip()
-            == node.query(
-                "SELECT if(empty(id), toString(device), id) AS device, multiIf( notEmpty(id),'a', "
-                f"device == '00000000-0000-0000-0000-000000000000', 'b', 'c' ) AS device_id_type, count() FROM {name} "
-                "GROUP BY device, device_id_type ORDER BY device;",
-                settings=[("final", 1)],
-            ).output.strip()
-        )
+        with Then("select result check without and with --final"):
+            assert (
+                node.query(
+                    "SELECT if(empty(id), toString(device), id) AS device, multiIf( notEmpty(id),'a', "
+                    f"device == '00000000-0000-0000-0000-000000000000', 'b', 'c' ) AS device_id_type, count() FROM {name} "
+                    "GROUP BY device, device_id_type ORDER BY device;"
+                ).output.strip()
+                == node.query(
+                    "SELECT if(empty(id), toString(device), id) AS device, multiIf( notEmpty(id),'a', "
+                    f"device == '00000000-0000-0000-0000-000000000000', 'b', 'c' ) AS device_id_type, count() FROM {name} "
+                    "GROUP BY device, device_id_type ORDER BY device;",
+                    settings=[("final", 1)],
+                ).output.strip()
+            )
+    finally:
+        with Finally("I drop table"):
+            node.query(f"DROP TABLE IF EXISTS {name}")
 
 
 @TestScenario
@@ -91,37 +95,41 @@ def select_query_from_table_1(self, node=None):
 
     name = f"table_alias_{getuid()}"
 
-    with Given("I create table form the issue"):
-        node.query(f"CREATE TABLE {name}(timestamp DateTime,col1 Float64,col2 Float64,col3 Float64)"
-                   " ENGINE = MergeTree() ORDER BY tuple();")
+    try:
+        with Given("I create table form the issue"):
+            node.query(f"CREATE TABLE {name}(timestamp DateTime,col1 Float64,col2 Float64,col3 Float64)"
+                       " ENGINE = MergeTree() ORDER BY tuple();")
 
-    with When("I insert data in this table"):
-        node.query(f"INSERT INTO {name} VALUES ('2023-02-20 00:00:00', 1, 2, 3);")
+        with When("I insert data in this table"):
+            node.query(f"INSERT INTO {name} VALUES ('2023-02-20 00:00:00', 1, 2, 3);")
 
-    with Then("select result check without and with --final"):
-        assert (
-            node.query(
-                "SELECT argMax(col1, timestamp) AS col1, argMax(col2, timestamp) AS col2, col1 / col2 AS final_col "
-                f"FROM {name} GROUP BY col3 ORDER BY final_col DESC;"
-            ).output.strip()
-            == node.query(
-                "SELECT argMax(col1, timestamp) AS col1, argMax(col2, timestamp) AS col2, col1 / col2 AS final_col "
-                f"FROM {name} GROUP BY col3 ORDER BY final_col DESC;",
-                settings=[("final", 1)],
-            ).output.strip()
-        )
+        with Then("select result check without and with --final"):
+            assert (
+                node.query(
+                    "SELECT argMax(col1, timestamp) AS col1, argMax(col2, timestamp) AS col2, col1 / col2 AS final_col "
+                    f"FROM {name} GROUP BY col3 ORDER BY final_col DESC;"
+                ).output.strip()
+                == node.query(
+                    "SELECT argMax(col1, timestamp) AS col1, argMax(col2, timestamp) AS col2, col1 / col2 AS final_col "
+                    f"FROM {name} GROUP BY col3 ORDER BY final_col DESC;",
+                    settings=[("final", 1)],
+                ).output.strip()
+            )
 
-        assert (
-            node.query(
-                "SELECT argMax(col1, timestamp) AS col1, col1 / 10 AS final_col, final_col + 1 AS final_col2"
-                f" FROM {name} GROUP BY col3;"
-            ).output.strip()
-            == node.query(
-                "SELECT argMax(col1, timestamp) AS col1, col1 / 10 AS final_col, final_col + 1 AS final_col2"
-                f" FROM {name} GROUP BY col3;",
-                settings=[("final", 1)],
-            ).output.strip()
-        )
+            assert (
+                node.query(
+                    "SELECT argMax(col1, timestamp) AS col1, col1 / 10 AS final_col, final_col + 1 AS final_col2"
+                    f" FROM {name} GROUP BY col3;"
+                ).output.strip()
+                == node.query(
+                    "SELECT argMax(col1, timestamp) AS col1, col1 / 10 AS final_col, final_col + 1 AS final_col2"
+                    f" FROM {name} GROUP BY col3;",
+                    settings=[("final", 1)],
+                ).output.strip()
+            )
+    finally:
+        with Finally("I drop table"):
+            node.query(f"DROP TABLE IF EXISTS {name}")
 
 
 @TestFeature
