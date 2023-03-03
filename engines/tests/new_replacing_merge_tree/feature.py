@@ -9,7 +9,7 @@ append_path(sys.path, "..")
 
 
 @TestModule
-@Name("new_ReplacingMergeTree")
+@Name("new_replacing_merge_tree")
 def module(self):
     """Check new ReplacingMergeTree modifier."""
 
