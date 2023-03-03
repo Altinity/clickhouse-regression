@@ -19,6 +19,7 @@ issue_44511 = (
     "https://github.com/ClickHouse/ClickHouse/issues/44511",
     check_clickhouse_version(">=22.6"),
 )
+issue_47142 = "https://github.com/ClickHouse/ClickHouse/issues/47142"
 
 xfails = {
     "/aggregate functions/singleValueOrNull/Map:": [(Fail, issue_43140)],
@@ -58,7 +59,7 @@ xfails = {
     "/aggregate functions/state/singleValueOrNullState/:": [
         (
             Fail,
-            "regression",
+            issue_47142,
             check_clickhouse_version(">=23"),
             r".*Exception: Nested type [^\n]+ cannot be inside Nullable type.*",
         )
