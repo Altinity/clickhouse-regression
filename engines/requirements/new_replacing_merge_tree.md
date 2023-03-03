@@ -12,6 +12,14 @@
   * 5.1 [RQ.SRS-035.ClickHouse.NewReplacingMergeTree](#rqsrs-035clickhousenewreplacingmergetree)
   * 5.2 [ReplacingMergeTree](#replacingmergetree)
     * 5.2.1 [RQ.SRS-035.ClickHouse.NewReplacingMergeTree.ReplacingMergeTree](#rqsrs-035clickhousenewreplacingmergetreereplacingmergetree)
+      * 5.2.1.1 [RQ.SRS-035.ClickHouse.NewReplacingMergeTree.ReplacingMergeTree.General](#rqsrs-035clickhousenewreplacingmergetreereplacingmergetreegeneral)
+      * 5.2.1.2 [RQ.SRS-035.ClickHouse.NewReplacingMergeTree.ReplacingMergeTree.DataDeduplication](#rqsrs-035clickhousenewreplacingmergetreereplacingmergetreedatadeduplication)
+      * 5.2.1.3 [RQ.SRS-035.ClickHouse.NewReplacingMergeTree.ReplacingMergeTree.OptimizeMerge](#rqsrs-035clickhousenewreplacingmergetreereplacingmergetreeoptimizemerge)
+      * 5.2.1.4 [RQ.SRS-035.ClickHouse.NewReplacingMergeTree.ReplacingMergeTree.UniquenessOfRows](#rqsrs-035clickhousenewreplacingmergetreereplacingmergetreeuniquenessofrows)
+      * 5.2.1.5 [RQ.SRS-035.ClickHouse.NewReplacingMergeTree.ReplacingMergeTree.VersionColumn](#rqsrs-035clickhousenewreplacingmergetreereplacingmergetreeversioncolumn)
+      * 5.2.1.6 [RQ.SRS-035.ClickHouse.NewReplacingMergeTree.ReplacingMergeTree.SelectionOfRows](#rqsrs-035clickhousenewreplacingmergetreereplacingmergetreeselectionofrows)
+      * 5.2.1.7 [RQ.SRS-035.ClickHouse.NewReplacingMergeTree.ReplacingMergeTree.SelectionRules](#rqsrs-035clickhousenewreplacingmergetreereplacingmergetreeselectionrules)
+      * 5.2.1.8 [RQ.SRS-035.ClickHouse.NewReplacingMergeTree.ReplacingMergeTree.TableCreation](#rqsrs-035clickhousenewreplacingmergetreereplacingmergetreetablecreation)
   * 5.3 [CollapsingMergeTree](#collapsingmergetree)
     * 5.3.1 [RQ.SRS-035.ClickHouse.NewReplacingMergeTree.CollapsingMergeTree](#rqsrs-035clickhousenewreplacingmergetreecollapsingmergetree)
     * 5.3.2 [Duplicate Insertions](#duplicate-insertions)
@@ -42,6 +50,11 @@
 This software requirements specification covers requirements related to [ClickHouse] support for 
 [NewReplacingMergeTree] which allows for duplicate insertions and combines the capabilities of 
 [ReplacingMergeTree] and [CollapsingMergeTree].
+
+[ReplacingMergeTree] is designed to remove duplicate entries with the same sorting key value (ORDER BY table section,
+not PRIMARY KEY) and is suitable for clearing out duplicate data in the background in order to save space. 
+However, it does not guarantee the absence of duplicates.
+
 
 ## Feature Diagram
 
@@ -78,6 +91,52 @@ column becomes mandatory.
 version: 1.0
 
 [NewReplacingMergeTree] engine shall support all [ReplacingMergeTree] possibilities.
+
+##### RQ.SRS-035.ClickHouse.NewReplacingMergeTree.ReplacingMergeTree.General
+version: 1.0
+
+[ClickHouse] SHALL support [ReplacingMergeTree] engine which allows to  remove duplicate entries with the same sorting 
+key value (`ORDER BY` table section, not `PRIMARY KEY`) during a merge process. The deduplication occurs only during a 
+merge, which occurs in the background at an unknown time, and the system cannot be planned for. 
+However, the `OPTIMIZE` query can be used to run an unscheduled merge.
+
+##### RQ.SRS-035.ClickHouse.NewReplacingMergeTree.ReplacingMergeTree.DataDeduplication
+
+[ReplacingMergeTree] engine shall support remove duplicate entries with the same sorting key value during a 
+merge process.
+
+##### RQ.SRS-035.ClickHouse.NewReplacingMergeTree.ReplacingMergeTree.OptimizeMerge
+
+[ReplacingMergeTree] engine shall support `OPTIMIZE` query which can be used to run an unscheduled merge as merge process 
+must occur in the background at an unknown time, and the system cannot be planned for.
+
+##### RQ.SRS-035.ClickHouse.NewReplacingMergeTree.ReplacingMergeTree.UniquenessOfRows
+
+[ReplacingMergeTree] engine shall support uniqueness of rows determined by the `ORDER BY` table section, 
+not PRIMARY KEY.
+
+##### RQ.SRS-035.ClickHouse.NewReplacingMergeTree.ReplacingMergeTree.VersionColumn
+version: 1.0
+
+[ReplacingMergeTree] engine shall support a version column with a type of UInt*, Date, DateTime, or DateTime64.
+
+##### RQ.SRS-035.ClickHouse.NewReplacingMergeTree.ReplacingMergeTree.SelectionOfRows
+version: 1.0
+
+[ReplacingMergeTree] engine shall support merging, the engine must leave only one row from all the rows with the same 
+sorting key. 
+
+##### RQ.SRS-035.ClickHouse.NewReplacingMergeTree.ReplacingMergeTree.SelectionRules
+version: 1.0
+
+[ReplacingMergeTree] engine shall support selection rules: if a version column is specified, the engine must select the 
+row with the maximum version. If no version column is specified, the engine must select the last row in the selection.
+
+##### RQ.SRS-035.ClickHouse.NewReplacingMergeTree.ReplacingMergeTree.TableCreation
+version: 1.0
+
+[ReplacingMergeTree] engine shall support same clauses as when creating a MergeTree table, with the addition of the 
+ver column.
 
 ### CollapsingMergeTree
 
