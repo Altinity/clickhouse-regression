@@ -55,7 +55,7 @@ jobs:
     container: registry.gitlab.com/altinity-public/container-images/multiarch:1.0
     steps:
       - uses: actions/checkout@v3
-      - run: ls
+      - run: pip install -r pip_requirements.txt
       - run: ./example/regression.py --clickhouse-binary-path ${{ inputs.package }} --output classic --log raw.log --test-to-end
       - run: echo ${{ inputs.package }} > package.log.txt
       - run: echo "https://gitlab.com/altinity-qa/clickhouse/cicd/clickhouse-regression/-/pipelines/$GITHUB_RUN_ID" > pipeline_url.log.txt
