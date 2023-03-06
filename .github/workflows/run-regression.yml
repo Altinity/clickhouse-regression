@@ -63,12 +63,12 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'example' }}
     steps:
       - uses: actions/checkout@v3
-      - name: Remove
-        run: |
-          rm -rf
-            /var/lib/apt/lists/*
-            /var/cache/debconf
-            /tmp/*
+#       - name: Remove
+#         run: |
+#           rm -rf
+#             /var/lib/apt/lists/*
+#             /var/cache/debconf
+#             /tmp/*
             
       - run : apt-get clean
       - run : pip install -r pip_requirements.txt
