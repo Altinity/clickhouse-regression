@@ -102,7 +102,7 @@ jobs:
         
       - name: Pre-processing for docker packages
         run: |
-          if ${{ inputs.package == "docker://"* }};
+          if ${{ $(echo $inputs.package | cut -c1-6) == "docker" }};
             then
               echo "get specific ClickHouse version $version"
               docker_image=$(echo $package | cut -c10-)
