@@ -81,8 +81,8 @@ jobs:
           export GCS_KEY_ID=${{ secrets.GCS_KEY_ID }}
           export GCS_KEY_SECRET=${{ secrets.GCS_KEY_SECRET }}
           export PYTHONIOENCODING=utf-8
-          clickhouse_binary_path=${{ inputs.package }}
-          version=${{ inputs.version }}
+          export clickhouse_binary_path=${{ inputs.package }}
+          export version=${{ inputs.version }}
 
       - run : |
           echo "start dockerd"
