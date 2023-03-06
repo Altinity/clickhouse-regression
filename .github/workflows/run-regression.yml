@@ -114,11 +114,11 @@ jobs:
     
       - name: Set log upload bucket
         run: |
-          if [[ $artifacts == 'internal' ]];
+          if [[ ${{ inputs.artifacts}} == 'internal' ]];
             then
               artifact_s3_bucket_path="altinity-internal-test-reports";
               confidential="--confidential";
-          elif [[ $artifacts == 'public' ]];
+          elif [[ ${{ inputs.artifacts}} == 'public' ]];
             then
               artifact_s3_bucket_path="altinity-test-reports";
               confidential="";
@@ -132,26 +132,26 @@ jobs:
           tfs --debug --no-colors transform nice raw.log nice.log.txt 
           tfs --debug --no-colors transform short raw.log short.log.txt
           tfs --debug --no-colors report coverage - raw.log - $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > coverage.html
-          tfs --debug --no-colors report results -a "https://${{ var.ARTIFACT_S3_BUCKET_PATH }}.s3.amazonaws.com/index.html#clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/" raw.log - $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > report.html
+          tfs --debug --no-colors report results -a "https://${{ vars.ARTIFACT_S3_BUCKET_PATH }}.s3.amazonaws.com/index.html#clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/" raw.log - $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > report.html
           tfs --debug --no-colors report compare results --log compact.log --order-by version $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > compare.html
       
       - name: Upload logs to s3
         run: |
-           export AWS_ACCESS_KEY_ID=$aws_report_key_id
-           export AWS_SECRET_ACCESS_KEY=$aws_report_secret_access_key
-           export AWS_DEFAULT_REGION=$aws_report_region
+           export AWS_ACCESS_KEY_ID=${{ vars.AWS_REPORT_KEY_ID }}
+           export AWS_SECRET_ACCESS_KEY=${{ vars.AWS_REPORT_SECRET_ACCESS_KEY }}
+           export AWS_DEFAULT_REGION=${{ vars.AWS_REPORT_REGION }}
            
-           aws s3 cp pipeline_url.log.txt s3://${{ var.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/pipeline_url.log.txt --content-type "text/plain; charset=utf-8"
-           aws s3 cp version.log.txt s3://${{ var.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/version.log.txt --content-type "text/plain; charset=utf-8"
-           aws s3 cp raw.log s3://${{ var.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/raw.log
-           aws s3 cp compact.log s3://${{ var.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/compact.log
-           aws s3 cp nice.log.txt s3://${{ var.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/nice.log.txt --content-type "text/plain; charset=utf-8"
-           aws s3 cp short.log.txt s3://${{ var.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/short.log.txt --content-type "text/plain; charset=utf-8"
-           aws s3 cp report.html s3://${{ var.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/report.html
-           aws s3 cp compare.html s3://${{ var.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/compare.html
-           aws s3 cp coverage.html s3://${{ var.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/coverage.html
+           aws s3 cp pipeline_url.log.txt s3://${{ vars.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/pipeline_url.log.txt --content-type "text/plain; charset=utf-8"
+           aws s3 cp version.log.txt s3://${{ vars.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/version.log.txt --content-type "text/plain; charset=utf-8"
+           aws s3 cp raw.log s3://${{ vars.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/raw.log
+           aws s3 cp compact.log s3://${{ vars.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/compact.log
+           aws s3 cp nice.log.txt s3://${{ vars.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/nice.log.txt --content-type "text/plain; charset=utf-8"
+           aws s3 cp short.log.txt s3://${{ vars.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/short.log.txt --content-type "text/plain; charset=utf-8"
+           aws s3 cp report.html s3://${{ vars.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/report.html
+           aws s3 cp compare.html s3://${{ vars.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/compare.html
+           aws s3 cp coverage.html s3://${{ vars.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/coverage.html
            rm --recursive --force example/_instances/*/database/;
-           aws s3 cp . s3://${{ var.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/ --recursive --exclude "*" --include "*/_instances/*/logs/*.log" --content-type "text/plain; charset=utf-8"
+           aws s3 cp . s3://${{ vars.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/ --recursive --exclude "*" --include "*/_instances/*/logs/*.log" --content-type "text/plain; charset=utf-8"
         if: ${{ vars.UPLOAD_LOGS == 1 }}  
       
       - uses: actions/upload-artifact@v3
