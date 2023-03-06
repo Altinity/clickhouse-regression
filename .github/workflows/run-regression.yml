@@ -57,7 +57,9 @@ on:
 jobs:
   example:
     runs-on: ubuntu-latest
-    container: registry.gitlab.com/altinity-public/container-images/multiarch:1.0
+    container: 
+      image: registry.gitlab.com/altinity-public/container-images/multiarch:1.0
+      options: --user root
     if: ${{ inputs.suite == 'all' || inputs.suite == 'example' }}
     steps:
       - uses: actions/checkout@v3
