@@ -106,6 +106,8 @@ jobs:
         run: |
           echo "get specific ClickHouse version $version"
           docker_image=$(echo ${{ inputs.package }} | cut -c10-)
+          echo ${{ inputs.version }}
+          echo $clickhouse_binary_path
           echo "getting image from $docker_image:$version"
           docker pull $docker_image:$version
           clickhouse_bin_path=docker://$docker_image:$version
