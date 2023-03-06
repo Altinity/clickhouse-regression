@@ -36,7 +36,7 @@ def argparser(parser):
     )
 
     parser.add_argument(
-        "--collect_service_logs",
+        "--collect-service-logs",
         default=False,
         help="enable docker log collection. for ci/cd use, does not work locally.",
     )
