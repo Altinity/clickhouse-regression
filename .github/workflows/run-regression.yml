@@ -59,7 +59,6 @@ jobs:
     runs-on: self-hosted
     container: 
       image: registry.gitlab.com/altinity-public/container-images/multiarch:1.0
-      options: --user root
     if: ${{ inputs.suite == 'all' || inputs.suite == 'example' }}
     steps:
       - uses: actions/checkout@v3
@@ -82,6 +81,7 @@ jobs:
           export GCS_KEY_ID=${{ secrets.GCS_KEY_ID }}
           export GCS_KEY_SECRET=${{ secrets.GCS_KEY_SECRET }}
           export PYTHONIOENCODING=utf-8
+          clickhouse_binary_path=${{ inputs.package }}
 
       - run : |
           echo "start dockerd"
@@ -92,8 +92,7 @@ jobs:
           docker images
           echo "Login to docker"
           docker login -u "${{ secrets.DOCKER_USER }}" -p "${{ secrets.DOCKER_PASSWORD }}"
-
-      - run : apt-get update
+          apt-get update
           
       - name: Debug pause
         run: |
@@ -101,14 +100,24 @@ jobs:
           sleep 21600
         if: ${{ vars.PAUSE == 1 }}
         
-      - name: Find version if running 'latest' docker image
+      - name: Pre-processing for docker packages
         run: |
-          pid=$(docker run -d $(echo ${{ inputs.package }} | cut -c10-):${{ inputs.version }})
-          echo $pid
-          ./retry.sh 60 2 "docker exec $pid clickhouse-client -q \"SELECT version()\""
-          version=$(docker exec $pid clickhouse-client -q "SELECT version()")
-          docker stop $pid
-        if: ${{ inputs.version == 'latest' }}
+          if ${{ inputs.package == "docker://"* }};
+            then
+              echo "get specific ClickHouse version $version"
+              docker_image=$(echo $package | cut -c10-)
+              echo "getting image from $docker_image"
+              docker pull $docker_image:$version
+              clickhouse_bin_path=docker://$docker_image:$version
+            fi
+          if ${{ inputs.version == 'latest' }};
+            then
+              pid=$(docker run -d $(echo ${{ inputs.package }} | cut -c10-):${{ inputs.version }})
+              echo $pid
+              ./retry.sh 60 2 "docker exec $pid clickhouse-client -q \"SELECT version()\""
+              version=$(docker exec $pid clickhouse-client -q "SELECT version()")
+              docker stop $pid
+            fi
         
       - name: Check env
         run: |
@@ -117,7 +126,7 @@ jobs:
           python3 -c "import platform; print('Platform machine:', platform.machine())"
 
       - name: Run example suite
-        run: python3 -u example/regression.py --test-to-end --local --collect-service-logs --output ${{ vars.OUTPUT }} --clickhouse-binary-path ${{ inputs.package }} --parallel ${{ vars.PARALLEL }} --clickhouse-version ${{ inputs.version }} --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}" --tag altinity-runner --log raw.log
+        run: python3 -u example/regression.py --test-to-end --local --collect-service-logs --output ${{ vars.OUTPUT }} --clickhouse-binary-path $clickhouse-binary-path --parallel ${{ vars.PARALLEL }} --clickhouse-version ${{ inputs.version }} --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}" --tag altinity-runner --log raw.log
     
       - name: Set log upload bucket
         run: |
@@ -132,6 +141,7 @@ jobs:
             fi
 
       - name: Create logs
+        if: always()
         run: |
           echo ${{ inputs.version }} > version.log.txt
           echo "https://gitlab.com/altinity-qa/clickhouse/cicd/clickhouse-regression/-/pipelines/$GITHUB_RUN_ID" > pipeline_url.log.txt
@@ -143,6 +153,7 @@ jobs:
           tfs --debug --no-colors report compare results --log compact.log --order-by version $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > compare.html
       
       - name: Upload logs to s3
+        if: (success() || failure()) && ${{ vars.UPLOAD_LOGS == 1 }}
         run: |
            export AWS_ACCESS_KEY_ID=${{ secrets.AWS_REPORT_KEY_ID }}
            export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
@@ -159,9 +170,9 @@ jobs:
            aws s3 cp coverage.html s3://$artifact_s3_bucket_path/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/coverage.html
            rm --recursive --force example/_instances/*/database/;
            aws s3 cp . s3://${{ secrets.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/ --recursive --exclude "*" --include "*/_instances/*/logs/*.log" --content-type "text/plain; charset=utf-8"
-        if: ${{ vars.UPLOAD_LOGS == 1 }}  
       
       - uses: actions/upload-artifact@v3
+        if: always()
         with:
           name: example-artifact
           path: |
