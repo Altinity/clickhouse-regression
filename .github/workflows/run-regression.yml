@@ -12,7 +12,7 @@ on:
         description: "Expected version. Example: 23.3.1.64"
         required: true
         type: string
-        default: 23.2.2.20
+        default: 22.3.9.19-alpine
       suite:
         description: "Test suite to run (default: all)"
         type: choice
@@ -122,14 +122,14 @@ jobs:
     
       - name: Set log upload bucket
         run: |
-          if [[ ${{ inputs.artifacts }} == 'internal' ]];
+          if ${{ inputs.artifacts == 'internal' }};
             then
-              artifact_s3_bucket_path="altinity-internal-test-reports";
-              confidential="--confidential";
-          elif [[ ${{ inputs.artifacts }} == 'public' ]];
+              artifact_s3_bucket_path="altinity-internal-test-reports"
+              confidential="--confidential"
+          elif ${{ inputs.artifacts == 'public' }};
             then
-              artifact_s3_bucket_path="altinity-test-reports";
-              confidential="";
+              artifact_s3_bucket_path="altinity-test-reports"
+              confidential=""
             fi
 
       - name: Create logs
@@ -140,7 +140,7 @@ jobs:
           tfs --debug --no-colors transform nice raw.log nice.log.txt 
           tfs --debug --no-colors transform short raw.log short.log.txt
           tfs --debug --no-colors report coverage - raw.log - $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > coverage.html
-          tfs --debug --no-colors report results -a "https://${{ vars.ARTIFACT_S3_BUCKET_PATH }}.s3.amazonaws.com/index.html#clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/" raw.log - $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > report.html
+          tfs --debug --no-colors report results -a "https://${{ secrets.ARTIFACT_S3_BUCKET_PATH }}.s3.amazonaws.com/index.html#clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/" raw.log - $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > report.html
           tfs --debug --no-colors report compare results --log compact.log --order-by version $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > compare.html
       
       - name: Upload logs to s3
