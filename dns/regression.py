@@ -25,7 +25,12 @@ ffails = {}
 @FFails(ffails)
 @Name("dns")
 def regression(
-    self, local, clickhouse_binary_path, clickhouse_version=None, stress=None
+    self,
+    local,
+    clickhouse_binary_path,
+    collect_service_logs,
+    clickhouse_version=None,
+    stress=None,
 ):
     """DNS regression."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2")}
@@ -46,6 +51,7 @@ def regression(
     with Cluster(
         local,
         clickhouse_binary_path,
+        collect_service_logs=collect_service_logs,
         nodes=nodes,
         docker_compose_project_dir=os.path.join(current_dir(), env),
     ) as cluster:

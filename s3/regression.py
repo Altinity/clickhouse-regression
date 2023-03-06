@@ -214,7 +214,13 @@ ffails = {
 @TestModule
 @Name("minio")
 def minio_regression(
-    self, uri, root_user, root_password, local, clickhouse_binary_path
+    self,
+    uri,
+    root_user,
+    root_password,
+    local,
+    clickhouse_binary_path,
+    collect_service_logs,
 ):
     """Setup and run minio tests."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -230,6 +236,7 @@ def minio_regression(
     with Cluster(
         local,
         clickhouse_binary_path,
+        collect_service_logs=collect_service_logs,
         nodes=nodes,
         docker_compose_project_dir=os.path.join(current_dir(), env),
         environ={"MINIO_ROOT_PASSWORD": root_password, "MINIO_ROOT_USER": root_user},
@@ -272,7 +279,14 @@ def minio_regression(
 @TestModule
 @Name("aws s3")
 def aws_s3_regression(
-    self, key_id, access_key, bucket, region, local, clickhouse_binary_path
+    self,
+    key_id,
+    access_key,
+    bucket,
+    region,
+    local,
+    clickhouse_binary_path,
+    collect_service_logs,
 ):
     """Setup and run aws s3 tests."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -304,6 +318,7 @@ def aws_s3_regression(
     with Cluster(
         local,
         clickhouse_binary_path,
+        collect_service_logs=collect_service_logs,
         nodes=nodes,
         docker_compose_project_dir=os.path.join(current_dir(), env),
         environ={
@@ -348,7 +363,9 @@ def aws_s3_regression(
 
 @TestModule
 @Name("gcs")
-def gcs_regression(self, uri, key_id, access_key, local, clickhouse_binary_path):
+def gcs_regression(
+    self, uri, key_id, access_key, local, clickhouse_binary_path, collect_service_logs
+):
     """Setup and run gcs tests."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
@@ -373,6 +390,7 @@ def gcs_regression(self, uri, key_id, access_key, local, clickhouse_binary_path)
     with Cluster(
         local,
         clickhouse_binary_path,
+        collect_service_logs=collect_service_logs,
         nodes=nodes,
         docker_compose_project_dir=os.path.join(current_dir(), env),
         environ={"GCS_KEY_SECRET": access_key, "GCS_KEY_ID": key_id},
@@ -411,6 +429,7 @@ def regression(
     local,
     clickhouse_binary_path,
     clickhouse_version,
+    collect_service_logs,
     storages,
     minio_uri,
     gcs_uri,
@@ -438,6 +457,7 @@ def regression(
             root_password=minio_root_password,
             local=local,
             clickhouse_binary_path=clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
         )
 
     if "aws_s3" in storages:
@@ -448,6 +468,7 @@ def regression(
             access_key=aws_s3_access_key,
             local=local,
             clickhouse_binary_path=clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
         )
 
     if "gcs" in storages:
@@ -457,6 +478,7 @@ def regression(
             access_key=gcs_key_secret,
             local=local,
             clickhouse_binary_path=clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
         )
 
 

@@ -15,7 +15,14 @@ xfails = {}
 @ArgumentParser(argparser)
 @XFails(xfails)
 @Name("kafka")
-def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=None):
+def regression(
+    self,
+    local,
+    clickhouse_binary_path,
+    clickhouse_version,
+    collect_service_logs,
+    stress=None,
+):
     """Kafka regression."""
     nodes = {
         "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3"),
@@ -38,6 +45,7 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
     with Cluster(
         local,
         clickhouse_binary_path,
+        collect_service_logs=collect_service_logs,
         nodes=nodes,
         docker_compose_project_dir=os.path.join(current_dir(), env),
     ) as cluster:
