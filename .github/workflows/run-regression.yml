@@ -101,7 +101,7 @@ jobs:
           ./retry.sh 60 2 "docker exec $pid clickhouse-client -q \"SELECT version()\""
           version=$(docker exec $pid clickhouse-client -q "SELECT version()")
           docker stop $pid
-        if: ${{ input.version == 'latest' }}
+        if: ${{ inputs.version == 'latest' }}
         
       - name: Check env
         run: |
