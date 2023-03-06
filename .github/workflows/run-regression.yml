@@ -12,7 +12,7 @@ on:
         description: "Expected version. Example: 23.3.1.64"
         required: true
         type: string
-        default: 22.3.9.19-alpine
+        default: 23.2.2.20
       suite:
         description: "Test suite to run (default: all)"
         type: choice
