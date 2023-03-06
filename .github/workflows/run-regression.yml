@@ -56,7 +56,7 @@ on:
 
 jobs:
   example:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     container: 
       image: registry.gitlab.com/altinity-public/container-images/multiarch:1.0
       options: --user root
