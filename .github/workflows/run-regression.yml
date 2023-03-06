@@ -7,7 +7,12 @@ on:
         description: "Package either 'docker://' or 'https://'. Example: 'https://s3.amazonaws.com/clickhouse-builds/23.3/.../package_release/clickhouse-common-static_23.3.1.64_amd64.deb', or 'docker://clickhouse/clickhouse-server:22.11.6-alpine'"
         required: true
         type: string
-        default: docker://clickhouse/clickhouse-server:23.2.2.20
+        default: docker://clickhouse/clickhouse-server
+      version:
+        description: "Expected version. Example: 23.3.1.64"
+        required: true
+        type: string
+        default: 23.2.2.20
       suite:
         description: "Test suite to run (default: all)"
         type: choice
@@ -55,16 +60,100 @@ jobs:
     container: registry.gitlab.com/altinity-public/container-images/multiarch:1.0
     steps:
       - uses: actions/checkout@v3
-      - run: pip install -r pip_requirements.txt
-      - run: ./example/regression.py --clickhouse-binary-path ${{ inputs.package }} --output classic --log raw.log --test-to-end
-      - run: echo ${{ inputs.package }} > package.log.txt
-      - run: echo "https://gitlab.com/altinity-qa/clickhouse/cicd/clickhouse-regression/-/pipelines/$GITHUB_RUN_ID" > pipeline_url.log.txt
-      - run: tfs --debug --no-colors transform compact raw.log compact.log
-      - run: tfs --debug --no-colors transform nice raw.log nice.log.txt 
-      - run: tfs --debug --no-colors transform short raw.log short.log.txt
-#       - run: tfs --debug --no-colors report coverage - raw.log - $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > coverage.html
-#       - run: tfs --debug --no-colors report results -a "https://$artifact_s3_bucket_path.s3.amazonaws.com/index.html#clickhouse/$version/$CI_PIPELINE_ID/testflows/" raw.log - $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > report.html
-#       - run: tfs --debug --no-colors report compare results --log compact.log --order-by version $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > compare.html
+      - name: Setup
+        run: |
+          rm -rf
+            /var/lib/apt/lists/*
+            /var/cache/debconf
+            /tmp/*
+          apt-get clean
+          pip install -r pip_requirements.txt
+          export PATH=~/local/bin:$PATH
+          echo "start dockerd"
+          dockerd-start.sh
+          echo "check docker is working"
+          docker info
+          echo "List available local docker images"
+          docker images
+          echo "Login to docker"
+          docker login -u "$docker_user" -p "$docker_password"
+          export AWS_ACCESS_KEY_ID=$aws_key_id
+          export AWS_SECRET_ACCESS_KEY=$aws_access_key
+          export S3_AMAZON_BUCKET=$aws_bucket
+          export AWS_DEFAULT_REGION=$aws_region
+          export S3_AMAZON_URI=https://s3.$aws_region.amazonaws.com/$aws_bucket/data/
+          export GCS_URI=$gcs_uri
+          export GCS_KEY_ID=$gcs_key_id
+          export GCS_KEY_SECRET=$gcs_key_secret
+          export PYTHONIOENCODING=utf-8
+          apt-get update
+          
+      - name: Debug pause
+        run: |
+          echo "...debugging mode...sleeping 6 hours..."
+          sleep 21600
+        if: ${{ vars.PAUSE == 1 }}
+        
+      - name: Find version if running 'latest' docker image
+        run: |
+          pid=$(docker run -d $(echo ${{ inputs.package }} | cut -c10-):${{ inputs.version }})
+          echo $pid
+          ./retry.sh 60 2 "docker exec $pid clickhouse-client -q \"SELECT version()\""
+          version=$(docker exec $pid clickhouse-client -q "SELECT version()")
+          docker stop $pid
+        if: ${{ input.version == 'latest' }}
+        
+      - name: Check env
+        run: |
+          env
+          uname -i
+          python3 -c "import platform; print('Platform machine:', platform.machine())"
+
+      - name: Run example suite
+        run: python3 -u example/regression.py --test-to-end --local --collect-service-logs --output ${{ vars.OUTPUT }} --clickhouse-binary-path ${{ inputs.package }} --parallel ${{ vars.PARALLEL }} --clickhouse-version ${{ inputs.version }} --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}" --tag altinity-runner --log raw.log || exitcode=$?
+    
+      - name: Set log upload bucket
+        run: |
+          if [[ $artifacts == 'internal' ]];
+            then
+              artifact_s3_bucket_path="altinity-internal-test-reports";
+              confidential="--confidential";
+          elif [[ $artifacts == 'public' ]];
+            then
+              artifact_s3_bucket_path="altinity-test-reports";
+              confidential="";
+            fi
+
+      - name: Create logs
+        run: |
+          echo ${{ inputs.version }} > version.log.txt
+          echo "https://gitlab.com/altinity-qa/clickhouse/cicd/clickhouse-regression/-/pipelines/$GITHUB_RUN_ID" > pipeline_url.log.txt
+          tfs --debug --no-colors transform compact raw.log compact.log
+          tfs --debug --no-colors transform nice raw.log nice.log.txt 
+          tfs --debug --no-colors transform short raw.log short.log.txt
+          tfs --debug --no-colors report coverage - raw.log - $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > coverage.html
+          tfs --debug --no-colors report results -a "https://${{ var.ARTIFACT_S3_BUCKET_PATH }}.s3.amazonaws.com/index.html#clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/" raw.log - $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > report.html
+          tfs --debug --no-colors report compare results --log compact.log --order-by version $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > compare.html
+      
+      - name: Upload logs to s3
+        run: |
+           export AWS_ACCESS_KEY_ID=$aws_report_key_id
+           export AWS_SECRET_ACCESS_KEY=$aws_report_secret_access_key
+           export AWS_DEFAULT_REGION=$aws_report_region
+           
+           aws s3 cp pipeline_url.log.txt s3://${{ var.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/pipeline_url.log.txt --content-type "text/plain; charset=utf-8"
+           aws s3 cp version.log.txt s3://${{ var.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/version.log.txt --content-type "text/plain; charset=utf-8"
+           aws s3 cp raw.log s3://${{ var.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/raw.log
+           aws s3 cp compact.log s3://${{ var.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/compact.log
+           aws s3 cp nice.log.txt s3://${{ var.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/nice.log.txt --content-type "text/plain; charset=utf-8"
+           aws s3 cp short.log.txt s3://${{ var.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/short.log.txt --content-type "text/plain; charset=utf-8"
+           aws s3 cp report.html s3://${{ var.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/report.html
+           aws s3 cp compare.html s3://${{ var.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/compare.html
+           aws s3 cp coverage.html s3://${{ var.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/coverage.html
+           rm --recursive --force example/_instances/*/database/;
+           aws s3 cp . s3://${{ var.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/ --recursive --exclude "*" --include "*/_instances/*/logs/*.log" --content-type "text/plain; charset=utf-8"
+        if: ${{ vars.UPLOAD_LOGS == 1 }}  
+      
       - uses: actions/upload-artifact@v3
         with:
           name: example-artifact
