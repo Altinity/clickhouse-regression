@@ -63,12 +63,11 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'example' }}
     steps:
       - uses: actions/checkout@v3
-#       - name: Remove
-#         run: |
-#           rm -rf
-#             /var/lib/apt/lists/*
-#             /var/cache/debconf
-#             /tmp/*
+      - name: Remove
+        run: |
+          rm -rf /var/lib/apt/lists/*
+          rm -rf /var/cache/debconf
+          rm -rf /tmp/*
             
       - run : apt-get clean
       - run : pip install -r pip_requirements.txt
@@ -118,7 +117,7 @@ jobs:
           python3 -c "import platform; print('Platform machine:', platform.machine())"
 
       - name: Run example suite
-        run: python3 -u example/regression.py --test-to-end --local --collect-service-logs --output ${{ vars.OUTPUT }} --clickhouse-binary-path ${{ inputs.package }} --parallel ${{ vars.PARALLEL }} --clickhouse-version ${{ inputs.version }} --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}" --tag altinity-runner --log raw.log || exitcode=$?
+        run: python3 -u example/regression.py --test-to-end --local --collect-service-logs --output ${{ vars.OUTPUT }} --clickhouse-binary-path ${{ inputs.package }} --parallel ${{ vars.PARALLEL }} --clickhouse-version ${{ inputs.version }} --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}" --tag altinity-runner --log raw.log
     
       - name: Set log upload bucket
         run: |
@@ -149,15 +148,15 @@ jobs:
            export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
            export AWS_DEFAULT_REGION=${{ secrets.AWS_REPORT_REGION }}
            
-           aws s3 cp pipeline_url.log.txt s3://${{ secrets.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/pipeline_url.log.txt --content-type "text/plain; charset=utf-8"
-           aws s3 cp version.log.txt s3://${{ secrets.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/version.log.txt --content-type "text/plain; charset=utf-8"
-           aws s3 cp raw.log s3://${{ secrets.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/raw.log
-           aws s3 cp compact.log s3://${{ secrets.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/compact.log
-           aws s3 cp nice.log.txt s3://${{ secrets.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/nice.log.txt --content-type "text/plain; charset=utf-8"
-           aws s3 cp short.log.txt s3://${{ secrets.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/short.log.txt --content-type "text/plain; charset=utf-8"
-           aws s3 cp report.html s3://${{ secrets.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/report.html
-           aws s3 cp compare.html s3://${{ secrets.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/compare.html
-           aws s3 cp coverage.html s3://${{ secrets.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/coverage.html
+           aws s3 cp pipeline_url.log.txt s3://$artifact_s3_bucket_path/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/pipeline_url.log.txt --content-type "text/plain; charset=utf-8"
+           aws s3 cp version.log.txt s3://$artifact_s3_bucket_path/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/version.log.txt --content-type "text/plain; charset=utf-8"
+           aws s3 cp raw.log s3://$artifact_s3_bucket_path/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/raw.log
+           aws s3 cp compact.log s3://$artifact_s3_bucket_path/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/compact.log
+           aws s3 cp nice.log.txt s3://$artifact_s3_bucket_path/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/nice.log.txt --content-type "text/plain; charset=utf-8"
+           aws s3 cp short.log.txt s3://$artifact_s3_bucket_path/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/short.log.txt --content-type "text/plain; charset=utf-8"
+           aws s3 cp report.html s3://$artifact_s3_bucket_path/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/report.html
+           aws s3 cp compare.html s3://$artifact_s3_bucket_path/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/compare.html
+           aws s3 cp coverage.html s3://$artifact_s3_bucket_path/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/coverage.html
            rm --recursive --force example/_instances/*/database/;
            aws s3 cp . s3://${{ secrets.ARTIFACT_S3_BUCKET_PATH }}/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/ --recursive --exclude "*" --include "*/_instances/*/logs/*.log" --content-type "text/plain; charset=utf-8"
         if: ${{ vars.UPLOAD_LOGS == 1 }}  
