@@ -58,25 +58,20 @@ jobs:
   example:
     runs-on: ubuntu-latest
     container: registry.gitlab.com/altinity-public/container-images/multiarch:1.0
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'example' }}
     steps:
       - uses: actions/checkout@v3
-      - name: Setup
+      - name: Remove
         run: |
           rm -rf
             /var/lib/apt/lists/*
             /var/cache/debconf
             /tmp/*
-          apt-get clean
-          pip install -r pip_requirements.txt
+            
+      - run : apt-get clean
+      - run : pip install -r pip_requirements.txt
+      - run : |
           export PATH=~/local/bin:$PATH
-          echo "start dockerd"
-          dockerd-start.sh
-          echo "check docker is working"
-          docker info
-          echo "List available local docker images"
-          docker images
-          echo "Login to docker"
-          docker login -u "$docker_user" -p "$docker_password"
           export AWS_ACCESS_KEY_ID=$aws_key_id
           export AWS_SECRET_ACCESS_KEY=$aws_access_key
           export S3_AMAZON_BUCKET=$aws_bucket
@@ -86,7 +81,18 @@ jobs:
           export GCS_KEY_ID=$gcs_key_id
           export GCS_KEY_SECRET=$gcs_key_secret
           export PYTHONIOENCODING=utf-8
-          apt-get update
+
+      - run : |
+          echo "start dockerd"
+          dockerd-start.sh
+          echo "check docker is working"
+          docker info
+          echo "List available local docker images"
+          docker images
+          echo "Login to docker"
+          docker login -u "${{ vars.docker_user }}" -p "${{ vars.docker_password }}"
+
+      - run : apt-get update
           
       - name: Debug pause
         run: |
