@@ -5,7 +5,7 @@ from tests.steps.main_steps import *
 
 
 @TestScenario
-@Name("select_query_1")
+@Name("select_query")
 def select_query_1(self, node=None):
     """Queries that the original PR (https://github.com/ClickHouse/ClickHouse/pull/42827) tried to fix"""
     if node is None:
