@@ -106,7 +106,7 @@ jobs:
         run: |
           echo "get specific ClickHouse version $version"
           docker_image=$(echo ${{ inputs.package }} | cut -c10-)
-          echo "getting image from $docker_image"
+          echo "getting image from $docker_image:$version"
           docker pull $docker_image:$version
           clickhouse_bin_path=docker://$docker_image:$version
           if ${{ inputs.version == 'latest' }};
@@ -140,7 +140,7 @@ jobs:
             fi
 
       - name: Create logs
-        if: always()
+        if: success() || failure()
         run: |
           echo ${{ inputs.version }} > version.log.txt
           echo "https://gitlab.com/altinity-qa/clickhouse/cicd/clickhouse-regression/-/pipelines/$GITHUB_RUN_ID" > pipeline_url.log.txt
