@@ -82,6 +82,7 @@ jobs:
           export GCS_KEY_SECRET=${{ secrets.GCS_KEY_SECRET }}
           export PYTHONIOENCODING=utf-8
           clickhouse_binary_path=${{ inputs.package }}
+          version=${{ inputs.version }}
 
       - run : |
           echo "start dockerd"
@@ -101,18 +102,16 @@ jobs:
         if: ${{ vars.PAUSE == 1 }}
         
       - name: Pre-processing for docker packages
+        if: startsWith( ${{ inputs.package }}, "docker")
         run: |
-          if ${{ $(echo $inputs.package | cut -c1-6) == "docker" }};
-            then
-              echo "get specific ClickHouse version $version"
-              docker_image=$(echo $package | cut -c10-)
-              echo "getting image from $docker_image"
-              docker pull $docker_image:$version
-              clickhouse_bin_path=docker://$docker_image:$version
-            fi
+          echo "get specific ClickHouse version $version"
+          docker_image=$(echo ${{ inputs.package }} | cut -c10-)
+          echo "getting image from $docker_image"
+          docker pull $docker_image:$version
+          clickhouse_bin_path=docker://$docker_image:$version
           if ${{ inputs.version == 'latest' }};
             then
-              pid=$(docker run -d $(echo ${{ inputs.package }} | cut -c10-):${{ inputs.version }})
+              pid=$(docker run -d $(echo ${{ inputs.package }} | cut -c10-):$version)
               echo $pid
               ./retry.sh 60 2 "docker exec $pid clickhouse-client -q \"SELECT version()\""
               version=$(docker exec $pid clickhouse-client -q "SELECT version()")
@@ -126,7 +125,7 @@ jobs:
           python3 -c "import platform; print('Platform machine:', platform.machine())"
 
       - name: Run example suite
-        run: python3 -u example/regression.py --test-to-end --local --collect-service-logs --output ${{ vars.OUTPUT }} --clickhouse-binary-path $clickhouse-binary-path --parallel ${{ vars.PARALLEL }} --clickhouse-version ${{ inputs.version }} --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}" --tag altinity-runner --log raw.log
+        run: python3 -u example/regression.py --test-to-end --local --collect-service-logs --output ${{ vars.OUTPUT }} --clickhouse-binary-path $clickhouse-binary-path --parallel ${{ vars.PARALLEL }} --clickhouse-version $version --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}" --tag altinity-runner --log raw.log
     
       - name: Set log upload bucket
         run: |
