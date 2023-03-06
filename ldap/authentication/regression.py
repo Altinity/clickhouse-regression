@@ -42,7 +42,14 @@ xfails = {
 @Specifications(SRS_007_ClickHouse_Authentication_of_Users_via_LDAP)
 @Requirements(RQ_SRS_007_LDAP_Authentication("1.0"))
 @XFails(xfails)
-def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=None):
+def regression(
+    self,
+    local,
+    clickhouse_binary_path,
+    clickhouse_version,
+    collect_service_logs,
+    stress=None,
+):
     """ClickHouse integration with LDAP regression module."""
     nodes = {
         "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3"),
@@ -64,6 +71,7 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
     with Cluster(
         local,
         clickhouse_binary_path,
+        collect_service_logs=collect_service_logs,
         nodes=nodes,
         docker_compose_project_dir=os.path.join(current_dir(), env),
     ) as cluster:
