@@ -68,6 +68,7 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
   AWS_DEFAULT_REGION: ${{ secrets.AWS_REPORT_REGION }}
   PYTHONIOENCODING: utf-8
+  SUITE: example
   clickhouse_binary_path: ${{ inputs.package }}
   version: ${{ inputs.version }}
   artifacts: ${{ inputs.artifacts }}
@@ -81,26 +82,13 @@ jobs:
 
       - name: Setup
         run: .github/setup.sh
-      
-      - name: Processing docker packages
-        if: startsWith( ${{ inputs.package }}, "docker")
-        run: .github/docker_package_processing.sh
 
-      - name: Run example suite
-        run: |
-          python3 -u example/regression.py --test-to-end --local --collect-service-logs --output ${{ vars.OUTPUT }} --clickhouse-binary-path ${{ env.clickhouse_binary_path }} --parallel ${{ vars.PARALLEL }} --clickhouse-version ${{ env.version }} --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}" --tag altinity-runner --log raw.log
-          sudo chown -R ubuntu:ubuntu example/_instances/ 
+      - name: Run ${{ env.SUITE }} suite
+        run: python3 -u ${{ env.SUITE }}/regression.py --test-to-end --local --collect-service-logs --output ${{ vars.OUTPUT }} --clickhouse-binary-path ${{ env.clickhouse_binary_path }} --parallel ${{ vars.PARALLEL }} --clickhouse-version ${{ env.version }} --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}" --tag altinity-runner --log raw.log
 
-      - name: Set log confidentiality status
-        run: .github/log_confidentiality.sh
-
-      - name: Create logs
+      - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_logs.sh
-
-      - name: Upload logs to s3
-        if: ${{ (success() || failure()) && vars.UPLOAD_LOGS == 1 }}
-        run: .github/upload_logs.sh
+        run: .github/manage_logs.sh
 
       - name: Debug pause
         if: ${{ vars.PAUSE == 1 }}
@@ -111,7 +99,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: example-artifacts
+          name: ${{ env.SUITE }}-artifacts
           path: |
             ./report.html
             ./*.log.txt
