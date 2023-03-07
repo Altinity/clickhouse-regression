@@ -3,7 +3,7 @@
 set -x
 echo "clickhouse_binary_path=$clickhouse_binary_path:$version" >> $GITHUB_ENV
 echo "get specific ClickHouse version $version"
-docker_image=$clickhouse_binary_path
+docker_image=${{ env.clickhouse_binary_path }}
 docker pull $docker_image
 if [[ $version == 'latest' ]]; then
     pid=$(docker run -d $(echo $clickhouse_binary_path))
