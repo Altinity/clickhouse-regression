@@ -82,12 +82,12 @@ jobs:
       - uses: actions/checkout@v3
       - name: Setup
         run: |
-          rm -rf /var/lib/apt/lists/*
-          rm -rf /var/cache/debconf
-          rm -rf /tmp/*
           apt-get clean
           pip install -r pip_requirements.txt
           apt-get update
+#          rm -rf /var/lib/apt/lists/*
+#          rm -rf /var/cache/debconf
+#          rm -rf /tmp/*
 
       - name: Launch docker
         run : |
