@@ -22,7 +22,7 @@ tfs --debug --no-colors report coverage - raw.log - $confidential --copyright "A
 tfs --debug --no-colors report results -a "https://$artifacts_s3_bucket_path.s3.amazonaws.com/index.html#clickhouse/$version/$GITHUB_RUN_ID/testflows/" raw.log - $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > report.html
 tfs --debug --no-colors report compare results --log compact.log --order-by version $confidential --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > compare.html
 
-if [[ $UPLOAD_LOGS == 1 ]];
+if [[ $1 == 1 ]];
 then
     aws s3 cp pipeline_url.log.txt s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/pipeline_url.log.txt --content-type "text/plain; charset=utf-8"
     aws s3 cp version.log.txt s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/$SUITE/version.log.txt --content-type "text/plain; charset=utf-8"
