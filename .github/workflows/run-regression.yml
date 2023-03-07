@@ -79,19 +79,7 @@ jobs:
       
       - name: Processing docker packages
         if: startsWith( ${{ inputs.package }}, "docker")
-        run: |
-          echo "clickhouse_binary_path=${{ inputs.package }}:${{ env.version }}" >> $GITHUB_ENV
-          echo "get specific ClickHouse version ${{ env.version }}"
-          docker_image=$(echo ${{ inputs.package }} | cut -c10-)
-          docker pull $docker_image:${{ env.version }}
-          if ${{ inputs.version == 'latest' }};
-            then
-              pid=$(docker run -d $(echo ${{ inputs.package }} | cut -c10-):$version)
-              echo $pid
-              ./retry.sh 60 2 "docker exec $pid clickhouse-client -q \"SELECT version()\""
-              echo "version=$(docker exec $pid clickhouse-client -q 'SELECT version()')" >> $GITHUB_ENV
-              docker stop $pid
-            fi
+        run: .github/docker_package_processing.sh
 
       - name: Run example suite
         run: |
