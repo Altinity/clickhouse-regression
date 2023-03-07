@@ -70,8 +70,6 @@ env:
 jobs:
   example:
     runs-on: self-hosted
-    container: 
-      image: registry.gitlab.com/altinity-public/container-images/multiarch:1.0
     if: ${{ inputs.suite == 'all' || inputs.suite == 'example' }}
     steps:
       - run: |
@@ -82,24 +80,14 @@ jobs:
       - uses: actions/checkout@v3
       - name: Setup
         run: |
+          who
           rm -rf /var/lib/apt/lists/*
           rm -rf /var/cache/debconf
           rm -rf /tmp/*
           apt-get clean
           pip install -r pip_requirements.txt
           apt-get update
-
-      - name: Launch docker
-        run : |
-          echo "start dockerd"
-          dockerd-start.sh
-          echo "check docker is working"
-          docker info
-          echo "List available local docker images"
-          docker images
-          echo "Login to docker"
-          docker login -u "${{ secrets.DOCKER_USER }}" -p "${{ secrets.DOCKER_PASSWORD }}"
-        
+      
       - name: Processing docker packages
         if: startsWith( ${{ inputs.package }}, "docker")
         run: |
