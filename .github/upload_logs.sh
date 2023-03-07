@@ -12,3 +12,4 @@ aws s3 cp compare.html s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB
 aws s3 cp coverage.html s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/example/coverage.html
 rm --recursive --force example/_instances/*/database/
 aws s3 cp . s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/example/ --recursive --exclude "*" --include "*/_instances/*/logs/*.log" --content-type "text/plain; charset=utf-8"
+aws s3 cp . s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/example/ --recursive --exclude "*" --include "*/_instances/*/*.log" --content-type "text/plain; charset=utf-8"
