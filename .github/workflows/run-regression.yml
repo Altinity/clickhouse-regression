@@ -81,6 +81,7 @@ jobs:
           sudo apt-get clean
           sudo pip install -r pip_requirements.txt
           sudo apt-get update
+          mkdir example/_instances
       
       - name: Processing docker packages
         if: startsWith( ${{ inputs.package }}, "docker")
