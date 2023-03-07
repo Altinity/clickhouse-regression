@@ -107,7 +107,7 @@ jobs:
           echo "get specific ClickHouse version ${{ env.version }}"
           docker_image=$(echo ${{ inputs.package }} | cut -c10-)
           docker pull $docker_image:${{ env.version }}
-          echo "clickhouse_bin_path=docker://$docker_image:${{ env.version }}" >> $GITHUB_ENV
+          echo "clickhouse_bin_path=${{ inputs.package }}:${{ env.version }}" >> $GITHUB_ENV
           if ${{ inputs.version == 'latest' }};
             then
               pid=$(docker run -d $(echo ${{ inputs.package }} | cut -c10-):$version)
