@@ -70,8 +70,8 @@ env:
 jobs:
   example:
     runs-on: self-hosted
-    container: 
-      image: registry.gitlab.com/altinity-public/container-images/multiarch:1.0
+#     container: 
+#       image: registry.gitlab.com/altinity-public/container-images/multiarch:1.0
     if: ${{ inputs.suite == 'all' || inputs.suite == 'example' }}
     steps:
       - run: |
