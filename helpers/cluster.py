@@ -872,6 +872,11 @@ class Cluster(object):
                 )
                 bash(f'docker stop "{docker_container_name}"')
 
+        with And("debug"):
+            with Shell() as bash:
+                bash.timeout = 300
+                bash(f"ls -la {host_clickhouse_binary_path}")
+
         return host_clickhouse_binary_path, host_clickhouse_odbc_bridge_binary_path
 
     @property
