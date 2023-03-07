@@ -72,7 +72,11 @@ jobs:
     runs-on: self-hosted
     if: ${{ inputs.suite == 'all' || inputs.suite == 'example' }}
     steps:
-      - run: who
+      - run: |
+          echo $USER
+          whoami
+          who
+          w
           
       - uses: actions/checkout@v3
       - name: Setup
@@ -156,7 +160,7 @@ jobs:
            aws s3 cp . s3://$artifact_s3_bucket_path/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/ --recursive --exclude "*" --include "*/_instances/*/logs/*.log" --content-type "text/plain; charset=utf-8"
       
       - name: Debug pause
-        if: success() || failure()
+        if: ${{ vars.PAUSE == 1 }}
         run: |
           echo "...debugging mode...sleeping 6 hours..."
           sleep 21600
