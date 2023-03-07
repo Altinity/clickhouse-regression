@@ -1,11 +1,12 @@
 #!/bin/bash
 
-sudo rm -rf /var/lib/apt/lists/* && set -x
-sudo rm -rf /var/cache/debconf && set -x
-sudo rm -rf /tmp/* && set -x
-sudo apt-get clean && set -x
-sudo pip install -r pip_requirements.txt && set -x
-sudo apt-get update && set -x
+set -x
+sudo rm -rf /var/lib/apt/lists/*
+sudo rm -rf /var/cache/debconf
+sudo rm -rf /tmp/*
+sudo apt-get clean
+sudo pip install -r pip_requirements.txt
+sudo apt-get update
 mkdir example/_instances
 env
 uname -i
