@@ -73,6 +73,7 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'example' }}
     steps:
       - uses: actions/checkout@v3
+
       - name: Setup
         run: |
           sudo rm -rf /var/lib/apt/lists/*
@@ -82,6 +83,9 @@ jobs:
           sudo pip install -r pip_requirements.txt
           sudo apt-get update
           mkdir example/_instances
+          env
+          uname -i
+          python3 -c "import platform; print('Platform machine:', platform.machine())"
       
       - name: Processing docker packages
         if: startsWith( ${{ inputs.package }}, "docker")
@@ -98,18 +102,11 @@ jobs:
               echo "version=$(docker exec $pid clickhouse-client -q 'SELECT version()')" >> $GITHUB_ENV
               docker stop $pid
             fi
-        
-      - name: Check env
-        run: |
-          env
-          uname -i
-          python3 -c "import platform; print('Platform machine:', platform.machine())"
 
       - name: Run example suite
-        run: python3 -u example/regression.py --test-to-end --local --collect-service-logs --output ${{ vars.OUTPUT }} --clickhouse-binary-path ${{ env.clickhouse_binary_path }} --parallel ${{ vars.PARALLEL }} --clickhouse-version ${{ env.version }} --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}" --tag altinity-runner --log raw.log
-    
-      - name: Update _instances access
-        run: sudo chown -R ubuntu:ubuntu example/_instances/
+        run: |
+          python3 -u example/regression.py --test-to-end --local --collect-service-logs --output ${{ vars.OUTPUT }} --clickhouse-binary-path ${{ env.clickhouse_binary_path }} --parallel ${{ vars.PARALLEL }} --clickhouse-version ${{ env.version }} --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}" --tag altinity-runner --log raw.log
+          sudo chown -R ubuntu:ubuntu example/_instances/ 
     
       - name: Set log upload bucket
         run: |
