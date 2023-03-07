@@ -165,7 +165,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: example-artifact
+          name: example-artifacts
           path: |
             ./report.html
             ./*.log.txt
