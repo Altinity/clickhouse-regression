@@ -72,21 +72,16 @@ jobs:
     runs-on: self-hosted
     if: ${{ inputs.suite == 'all' || inputs.suite == 'example' }}
     steps:
-      - run: |
-          echo $USER
-          whoami
-          who
-          w
-          
+      - run: cat /etc/environment
       - uses: actions/checkout@v3
       - name: Setup
         run: |
-          rm -rf /var/lib/apt/lists/*
-          rm -rf /var/cache/debconf
-          rm -rf /tmp/*
-          apt-get clean
-          pip install -r pip_requirements.txt
-          apt-get update
+          sudo rm -rf /var/lib/apt/lists/*
+          sudo rm -rf /var/cache/debconf
+          sudo rm -rf /tmp/*
+          sudo apt-get clean
+          sudo pip install -r pip_requirements.txt
+          sudo apt-get update
       
       - name: Processing docker packages
         if: startsWith( ${{ inputs.package }}, "docker")
