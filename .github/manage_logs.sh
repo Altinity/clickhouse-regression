@@ -1,7 +1,6 @@
 #!/bin/bash
 
 set -x
-sudo chown -R ubuntu:ubuntu $SUITE/_instances/ 
 
 if [[ $artifacts == 'internal' ]];
 then
