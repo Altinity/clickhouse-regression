@@ -6,7 +6,7 @@ sudo rm -rf /tmp/* && set -x
 sudo apt-get clean && set -x
 sudo pip install -r pip_requirements.txt && set -x
 sudo apt-get update && set -x
-mkdir example/_instances && set -x
-env && set -x
-uname -i && set -x
-python3 -c "import platform; print('Platform machine:', platform.machine())" && set -x
+mkdir example/_instances
+env
+uname -i
+python3 -c "import platform; print('Platform machine:', platform.machine())"
