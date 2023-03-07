@@ -55,20 +55,10 @@ on:
           - public
 
 env:
-  # Will remove when gcs/s3 tests are added. Keep as notes temporarily.
-  # AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
-  # AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-  # S3_AMAZON_BUCKET: ${{ secrets.AWS_BUCKET }}
-  # AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
-  # S3_AMAZON_URI: https://s3.${{ secrets.AWS_REGION}}.amazonaws.com/${{ secrets.AWS_BUCKET }}/data/
-  # GCS_URI: ${{ secrets.GCS_URI }}
-  # GCS_KEY_ID: ${{ secrets.GCS_KEY_ID }}
-  # GCS_KEY_SECRET: ${{ secrets.GCS_KEY_SECRET }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
   AWS_DEFAULT_REGION: ${{ secrets.AWS_REPORT_REGION }}
   PYTHONIOENCODING: utf-8
-  SUITE: example
   clickhouse_binary_path: ${{ inputs.package }}
   version: ${{ inputs.version }}
   artifacts: ${{ inputs.artifacts }}
@@ -77,6 +67,8 @@ jobs:
   example:
     runs-on: self-hosted
     if: ${{ inputs.suite == 'all' || inputs.suite == 'example' }}
+    env:
+      SUITE: example
     steps:
       - uses: actions/checkout@v3
 
@@ -98,7 +90,7 @@ jobs:
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/manage_logs.sh
+        run: .github/manage_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - name: Debug pause
         if: ${{ vars.PAUSE == 1 }}
