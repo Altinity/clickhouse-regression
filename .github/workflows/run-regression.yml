@@ -90,27 +90,19 @@ jobs:
         run: |
           python3 -u example/regression.py --test-to-end --local --collect-service-logs --output ${{ vars.OUTPUT }} --clickhouse-binary-path ${{ env.clickhouse_binary_path }} --parallel ${{ vars.PARALLEL }} --clickhouse-version ${{ env.version }} --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}" --tag altinity-runner --log raw.log
           sudo chown -R ubuntu:ubuntu example/_instances/ 
-    
+
       - name: Set log confidentiality status
         run: .github/log_confidentiality.sh
 
       - name: Create logs
         if: success() || failure()
-        run: |
-          echo ${{ inputs.version }} > version.log.txt
-          echo "https://gitlab.com/altinity-qa/clickhouse/cicd/clickhouse-regression/-/pipelines/$GITHUB_RUN_ID" > pipeline_url.log.txt
-          tfs --debug --no-colors transform compact raw.log compact.log
-          tfs --debug --no-colors transform nice raw.log nice.log.txt 
-          tfs --debug --no-colors transform short raw.log short.log.txt
-          tfs --debug --no-colors report coverage - raw.log - ${{ env.confidential }} --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > coverage.html
-          tfs --debug --no-colors report results -a "https://${{ env.artifacts_s3_bucket_path }}.s3.amazonaws.com/index.html#clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/" raw.log - ${{ env.confidential }} --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > report.html
-          tfs --debug --no-colors report compare results --log compact.log --order-by version ${{ env.confidential }} --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > compare.html
-      
+        run: .github/create_logs.sh
+
       - name: Upload logs to s3
         if: ${{ (success() || failure()) && vars.UPLOAD_LOGS == 1 }}
         run: |
            artifacts_s3_bucket_path=${{ env.artifacts_s3_bucket_path }}
-           
+
            aws s3 cp pipeline_url.log.txt s3://$artifact_s3_bucket_path/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/pipeline_url.log.txt --content-type "text/plain; charset=utf-8"
            aws s3 cp version.log.txt s3://$artifact_s3_bucket_path/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/version.log.txt --content-type "text/plain; charset=utf-8"
            aws s3 cp raw.log s3://$artifact_s3_bucket_path/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/raw.log
@@ -122,13 +114,13 @@ jobs:
            aws s3 cp coverage.html s3://$artifact_s3_bucket_path/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/coverage.html
            rm --recursive --force example/_instances/*/database/
            aws s3 cp . s3://$artifact_s3_bucket_path/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/ --recursive --exclude "*" --include "*/_instances/*/logs/*.log" --content-type "text/plain; charset=utf-8"
-      
+
       - name: Debug pause
         if: ${{ vars.PAUSE == 1 }}
         run: |
           echo "...debugging mode...sleeping 6 hours..."
           sleep 21600
-      
+
       - uses: actions/upload-artifact@v3
         if: always()
         with:
