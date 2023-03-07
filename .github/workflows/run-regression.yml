@@ -106,9 +106,6 @@ jobs:
         run: |
           echo "get specific ClickHouse version ${{ env.version }}"
           docker_image=$(echo ${{ inputs.package }} | cut -c10-)
-          echo ${{ env.version }}
-          echo ${{ env.clickhouse_binary_path }}
-          echo "getting image from $docker_image:${{ env.version }}"
           docker pull $docker_image:${{ env.version }}
           echo "clickhouse_bin_path=docker://$docker_image:${{ env.version }}" >> $GITHUB_ENV
           if ${{ inputs.version == 'latest' }};
@@ -127,7 +124,7 @@ jobs:
           python3 -c "import platform; print('Platform machine:', platform.machine())"
 
       - name: Run example suite
-        run: python3 -u example/regression.py --test-to-end --local --collect-service-logs --output ${{ vars.OUTPUT }} --clickhouse-binary-path ${{ env.clickhouse-binary-path }} --parallel ${{ vars.PARALLEL }} --clickhouse-version ${{ env.version }} --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}" --tag altinity-runner --log raw.log
+        run: python3 -u example/regression.py --test-to-end --local --collect-service-logs --output ${{ vars.OUTPUT }} --clickhouse-binary-path ${{ env.clickhouse_binary_path }} --parallel ${{ vars.PARALLEL }} --clickhouse-version ${{ env.version }} --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}" --tag altinity-runner --log raw.log
     
       - name: Set log upload bucket
         run: |
