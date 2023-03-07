@@ -131,7 +131,7 @@ jobs:
           tfs --debug --no-colors transform nice raw.log nice.log.txt 
           tfs --debug --no-colors transform short raw.log short.log.txt
           tfs --debug --no-colors report coverage - raw.log - ${{ env.confidential }} --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > coverage.html
-          tfs --debug --no-colors report results -a "https://${{ secrets.ARTIFACT_S3_BUCKET_PATH }}.s3.amazonaws.com/index.html#clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/" raw.log - ${{ env.confidential }} --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > report.html
+          tfs --debug --no-colors report results -a "https://${{ env.artifacts_s3_bucket_path }}.s3.amazonaws.com/index.html#clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/" raw.log - ${{ env.confidential }} --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > report.html
           tfs --debug --no-colors report compare results --log compact.log --order-by version ${{ env.confidential }} --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > compare.html
       
       - name: Upload logs to s3
