@@ -107,6 +107,9 @@ jobs:
       - name: Run example suite
         run: python3 -u example/regression.py --test-to-end --local --collect-service-logs --output ${{ vars.OUTPUT }} --clickhouse-binary-path ${{ env.clickhouse_binary_path }} --parallel ${{ vars.PARALLEL }} --clickhouse-version ${{ env.version }} --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}" --tag altinity-runner --log raw.log
     
+      - name: Update _instances access
+        run: sudo chown -R ubuntu:ubuntu example/_instances/
+    
       - name: Set log upload bucket
         run: |
           if ${{ inputs.artifacts == 'internal' }};
@@ -150,7 +153,7 @@ jobs:
            aws s3 cp report.html s3://$artifact_s3_bucket_path/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/report.html
            aws s3 cp compare.html s3://$artifact_s3_bucket_path/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/compare.html
            aws s3 cp coverage.html s3://$artifact_s3_bucket_path/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/coverage.html
-           sudo rm --recursive --force example/_instances/*/database/
+           rm --recursive --force example/_instances/*/database/
            aws s3 cp . s3://$artifact_s3_bucket_path/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/ --recursive --exclude "*" --include "*/_instances/*/logs/*.log" --content-type "text/plain; charset=utf-8"
       
       - name: Debug pause
