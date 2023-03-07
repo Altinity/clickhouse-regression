@@ -1,0 +1,26 @@
+name: Test workflows functionality
+run-name: ${{ github.actor }} is running some tests
+on: 
+  workflow_dispatch:
+    inputs:
+      string:
+        type: string
+        required: True
+        default: aaaAAa
+        
+env:
+  some_var: bbbbBBBbb
+  input_var: ${{ inputs.string }}
+        
+jobs:
+  example:
+    runs-on: ubuntu-latest
+#     if: ${{ inputs.suite == 'all' || inputs.suite == 'example' }}
+    steps:
+      - run: echo ${{ inputs.string }}
+      - run: echo ${{ env.input_var }}
+      - run: echo "new_env_var=xdddd" >> $GITHUB_ENV
+      - run: echo ${{ env.new_env_var }}
+      - run: echo "foo=${{ inputs.string }}:${{ env.some_var}}" >> $GITHUB_ENV
+      - run: echo ${{ env.foo }}
+      
