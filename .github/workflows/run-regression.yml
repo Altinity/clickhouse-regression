@@ -72,15 +72,11 @@ jobs:
     runs-on: self-hosted
     if: ${{ inputs.suite == 'all' || inputs.suite == 'example' }}
     steps:
-      - run: |
-          ls /tmp/
-          echo "foo" > /tmp/foo
-          cat /tmp/foo
+      - run: who
           
       - uses: actions/checkout@v3
       - name: Setup
         run: |
-          who
           rm -rf /var/lib/apt/lists/*
           rm -rf /var/cache/debconf
           rm -rf /tmp/*
@@ -140,7 +136,7 @@ jobs:
           tfs --debug --no-colors report compare results --log compact.log --order-by version ${{ env.confidential }} --copyright "Altinity Inc." --logo ./altinity.png | tfs --debug --no-colors document convert > compare.html
       
       - name: Upload logs to s3
-        if: (success() || failure()) && ${{ vars.UPLOAD_LOGS == 1 }}
+        if: ${{ (success() || failure()) && vars.UPLOAD_LOGS == 1 }}
         run: |
            export AWS_ACCESS_KEY_ID=${{ secrets.AWS_REPORT_KEY_ID }}
            export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
@@ -160,7 +156,7 @@ jobs:
            aws s3 cp . s3://$artifact_s3_bucket_path/clickhouse/${{ inputs.version }}/$GITHUB_RUN_ID/testflows/example/ --recursive --exclude "*" --include "*/_instances/*/logs/*.log" --content-type "text/plain; charset=utf-8"
       
       - name: Debug pause
-        if: always()
+        if: success() || failure()
         run: |
           echo "...debugging mode...sleeping 6 hours..."
           sleep 21600
