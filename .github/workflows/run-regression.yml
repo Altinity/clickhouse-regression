@@ -74,6 +74,11 @@ jobs:
       image: registry.gitlab.com/altinity-public/container-images/multiarch:1.0
     if: ${{ inputs.suite == 'all' || inputs.suite == 'example' }}
     steps:
+      - run: |
+          ls /tmp/
+          echo "foo" > /tmp/foo
+          cat /tmp/foo
+          
       - uses: actions/checkout@v3
       - name: Setup
         run: |
@@ -125,8 +130,6 @@ jobs:
 
       - name: Run example suite
         run: python3 -u example/regression.py --test-to-end --local --collect-service-logs --output ${{ vars.OUTPUT }} --clickhouse-binary-path ${{ env.clickhouse_binary_path }} --parallel ${{ vars.PARALLEL }} --clickhouse-version ${{ env.version }} --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}" --tag altinity-runner --log raw.log
-    
-      - run: ls /tmp/
     
       - name: Set log upload bucket
         run: |
