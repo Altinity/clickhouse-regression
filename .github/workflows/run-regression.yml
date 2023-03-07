@@ -164,7 +164,7 @@ jobs:
     runs-on: self-hosted
     env:
       SUITE: example
-    if: ${{ inputs.suite == 'all' || inputs.suite == example }}
+    if: ${{ inputs.suite == 'all' || inputs.suite == SUITE }}
     steps:
       - uses: actions/checkout@v3
 
