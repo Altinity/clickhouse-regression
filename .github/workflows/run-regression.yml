@@ -84,19 +84,17 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: |
-          python3 
-            -u ${{ env.SUITE }}/regression.py
-            --test-to-end
-            --local
-            --collect-service-logs 
-            --output ${{ vars.OUTPUT }} 
-            --parallel ${{ vars.PARALLEL }}
-            --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
-            --clickhouse-version ${{ env.version }} 
-            --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}"
-            --log raw.log
-          sudo chown -R ubuntu:ubuntu ${{ env.SUITE}}/_instances/ 
+        run: python3 
+              -u ${{ env.SUITE }}/regression.py
+              --test-to-end
+              --local
+              --collect-service-logs 
+              --output ${{ vars.OUTPUT }} 
+              --parallel ${{ vars.PARALLEL }}
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
+              --clickhouse-version ${{ env.version }} 
+              --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}"
+              --log raw.log
 
       - name: Create and upload logs
         if: success() || failure()
