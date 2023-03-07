@@ -91,19 +91,8 @@ jobs:
           python3 -u example/regression.py --test-to-end --local --collect-service-logs --output ${{ vars.OUTPUT }} --clickhouse-binary-path ${{ env.clickhouse_binary_path }} --parallel ${{ vars.PARALLEL }} --clickhouse-version ${{ env.version }} --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}" --tag altinity-runner --log raw.log
           sudo chown -R ubuntu:ubuntu example/_instances/ 
     
-      - name: Set log upload bucket
-        run: |
-          if ${{ inputs.artifacts == 'internal' }};
-            then
-              artifact_s3_bucket_path="altinity-internal-test-reports"
-              confidential="--confidential"
-          elif ${{ inputs.artifacts == 'public' }};
-            then
-              artifact_s3_bucket_path="altinity-test-reports"
-              confidential=""
-            fi
-          echo "artifact_s3_bucket_path=$artifact_s3_bucket_path" >> $GITHUB_ENV
-          echo "confidential=$confidential" >> $GITHUB_ENV
+      - name: Set log confidentiality status
+        run: .github/log_confidentiality.sh
 
       - name: Create logs
         if: success() || failure()
