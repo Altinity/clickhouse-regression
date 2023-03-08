@@ -425,7 +425,8 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 -u ${{ env.SUITE }}/regression.py
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
               ${{ env.args }}
