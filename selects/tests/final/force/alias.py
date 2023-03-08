@@ -7,7 +7,7 @@ from tests.steps.main_steps import *
 @TestScenario
 @Name("clone_alias_ast_1")
 def clone_alias_ast_1(self, node=None):
-    """Queries that the original PR (https://github.com/ClickHouse/ClickHouse/pull/42827) tried to fix"""
+    """Alias of expression used in aggregate function."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
@@ -27,7 +27,8 @@ def clone_alias_ast_1(self, node=None):
 @TestScenario
 @Name("clone_alias_ast_2")
 def clone_alias_ast_1(self, node=None):
-    """Queries that the original PR (https://github.com/ClickHouse/ClickHouse/pull/42827) tried to fix"""
+    """Alias of aggregrate function from a subquery that contains an alias of expression used in a window function.
+    """
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
@@ -52,7 +53,7 @@ def clone_alias_ast_1(self, node=None):
 @TestScenario
 @Name("select_query_from_table_2")
 def aggregate_function_column_check(self, node=None):
-    """Check that column `id` doesn't provide exception: is not under aggregate function and not in GROUP BY."""
+    """Multiple aliases of expressions used in GROUP BY and ORDER BY where one alias overrides a name of a table column."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
@@ -97,7 +98,8 @@ def aggregate_function_column_check(self, node=None):
 @TestScenario
 @Name("clone_alias_ast__from_table")
 def select_query_from_table_1(self, node=None):
-    """Query that https://github.com/ClickHouse/ClickHouse/pull/42827 broke"""
+    """Multiple aliases of expressions used to reference aggregate function results as well as calculating
+    new alias using an expression that contains other aliases with aliases used in GROUP BY and ORDER BY."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
