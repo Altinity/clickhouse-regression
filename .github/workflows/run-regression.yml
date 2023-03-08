@@ -705,14 +705,13 @@ jobs:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
 
-  s3:
+  s3_minio:
     runs-on: self-hosted
     env:
       SUITE: s3
     if: ${{ inputs.suite == 'all' || inputs.suite == 's3' }}
     steps:
       - uses: actions/checkout@v3
-      - run: pip install minio==7.1.3
 
       - name: Setup
         run: .github/setup.sh
@@ -721,11 +720,67 @@ jobs:
         run: python3 
               -u ${{ env.SUITE }}/regression.py
               --storage minio
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
+
+      - name: Create and upload logs
+        if: success() || failure()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-artifacts
+          path: ${{ env.artifact_paths}}
+
+  s3_aws:
+    runs-on: self-hosted
+    env:
+      SUITE: s3
+    if: ${{ (inputs.suite == 'all' || inputs.suite == 's3') && vars.S3_AWS == 1 }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup
+        run: .github/setup.sh
+
+      - name: Run ${{ env.SUITE }} suite
+        run: python3 
+              -u ${{ env.SUITE }}/regression.py
               --storage aws_s3
               --aws-s3-bucket ${{ secrets.AWS_BUCKET }}
               --aws-s3-region ${{ secrets.AWS_REGION }}
               --aws-s3-key-id ${{ secrets.AWS_KEY_ID }}
               --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
+
+      - name: Create and upload logs
+        if: success() || failure()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-artifacts
+          path: ${{ env.artifact_paths}}
+
+  s3_gcs:
+    runs-on: self-hosted
+    env:
+      SUITE: s3
+    if: ${{ (inputs.suite == 'all' || inputs.suite == 's3') && vars.S3_GCS }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup
+        run: .github/setup.sh
+
+      - name: Run ${{ env.SUITE }} suite
+        run: python3 
+              -u ${{ env.SUITE }}/regression.py
               --storage gcs
               --gcs-uri ${{ secrets.GCS_URI }}
               --gcs-key-id ${{ secrets.GCS_KEY_ID }}
@@ -824,7 +879,7 @@ jobs:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
 
-  tiered_storage:
+  tiered_storage_minio:
     runs-on: self-hosted
     env:
       SUITE: tiered_storage
@@ -839,10 +894,66 @@ jobs:
         run: python3 
               -u ${{ env.SUITE }}/regression.py
               --with-minio
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
+
+      - name: Create and upload logs
+        if: success() || failure()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-artifacts
+          path: ${{ env.artifact_paths}}
+
+  tiered_storage_aws:
+    runs-on: self-hosted
+    env:
+      SUITE: tiered_storage
+    if: ${{ (inputs.suite == 'all' || inputs.suite == 'tiered_storage') && vars.TIERED_STORAGE_AWS == 1 }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup
+        run: .github/setup.sh
+
+      - name: Run ${{ env.SUITE }} suite
+        run: python3 
+              -u ${{ env.SUITE }}/regression.py
               --with-s3amazon
               --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
               --aws-s3-key-id ${{ secrets.AWS_KEY_ID }}
               --aws-s3-uri https://s3.${{ secrets.AWS_REGION}}.amazonaws.com/${{ secrets.AWS_BUCKET }}/data/
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
+
+      - name: Create and upload logs
+        if: success() || failure()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-artifacts
+          path: ${{ env.artifact_paths}}
+
+  tiered_storage_gcs:
+    runs-on: self-hosted
+    env:
+      SUITE: tiered_storage
+    if: ${{ (inputs.suite == 'all' || inputs.suite == 'tiered_storage') && vars.TIERED_STORAGE_GCS }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup
+        run: .github/setup.sh
+
+      - name: Run ${{ env.SUITE }} suite
+        run: python3 
+              -u ${{ env.SUITE }}/regression.py
               --with-s3gcs 
               --gcs-key-id ${{ secrets.GCS_KEY_ID }}
               --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
