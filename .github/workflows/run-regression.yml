@@ -71,7 +71,8 @@ env:
     ./*.log
     ./*.html
     ./*/_instances/*/logs/*.log
-    ./*/_instances/*.log
+    ./*/*/_instances/*/logs/*.log
+    ./*/*/_instances/*.log
 
 jobs:
   aes_encryption:
@@ -485,14 +486,12 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'functional' }}
     steps:
       - uses: actions/checkout@v3
-      - run: cd clickhouse
-
       - name: Setup
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
         run: python3 
-              -u ${{ env.SUITE }}/functional.py
+              -u clickhouse/${{ env.SUITE }}/functional.py
               --test-to-end
               --local
               --collect-service-logs 
@@ -611,14 +610,13 @@ jobs:
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
     steps:
       - uses: actions/checkout@v3
-      - run: cd ldap
 
       - name: Setup
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
         run: python3 
-              -u ${{ env.SUITE }}/regression.py
+              -u ldap/${{ env.SUITE }}/regression.py
               --test-to-end
               --local
               --collect-service-logs 
@@ -661,7 +659,7 @@ jobs:
 
       - name: Run ${{ env.SUITE }} suite
         run: python3 
-              -u ${{ env.SUITE }}/regression.py
+              -u ldap/${{ env.SUITE }}/regression.py
               --test-to-end
               --local
               --collect-service-logs 
@@ -704,7 +702,7 @@ jobs:
 
       - name: Run ${{ env.SUITE }} suite
         run: python3 
-              -u ${{ env.SUITE }}/regression.py
+              -u ldap/${{ env.SUITE }}/regression.py
               --test-to-end
               --local
               --collect-service-logs 
