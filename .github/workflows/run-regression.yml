@@ -87,17 +87,9 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
-              -u ${{ env.SUITE }}/regression.py
-              --test-to-end
-              --local
-              --collect-service-logs 
-              --output ${{ vars.OUTPUT }} 
-              --parallel ${{ vars.PARALLEL }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
-              --clickhouse-version ${{ env.version }} 
-              --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}"
-              --log raw.log
+        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -107,15 +99,7 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
-          path: |
-            ./report.html
-            ./*.log.txt
-            ./*.log
-            ./*.html
-            ./*/_instances/*/logs/*.log
-            ./*/*/_instances/*/logs/*.log
-            ./*/_instances/*.log
-            ./*/*/_instances/*.log
+          path: ${{ env.artifact_paths}}
 
   aggregate_functions:
     runs-on: self-hosted
@@ -129,17 +113,9 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
-              -u ${{ env.SUITE }}/regression.py
-              --test-to-end
-              --local
-              --collect-service-logs 
-              --output ${{ vars.OUTPUT }} 
-              --parallel ${{ vars.PARALLEL }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
-              --clickhouse-version ${{ env.version }} 
-              --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}"
-              --log raw.log
+        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -149,15 +125,7 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
-          path: |
-            ./report.html
-            ./*.log.txt
-            ./*.log
-            ./*.html
-            ./*/_instances/*/logs/*.log
-            ./*/*/_instances/*/logs/*.log
-            ./*/_instances/*.log
-            ./*/*/_instances/*.log
+          path: ${{ env.artifact_paths}}
 
   atomic_insert:
     runs-on: self-hosted
@@ -171,17 +139,9 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
-              -u ${{ env.SUITE }}/regression.py
-              --test-to-end
-              --local
-              --collect-service-logs 
-              --output ${{ vars.OUTPUT }} 
-              --parallel ${{ vars.PARALLEL }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
-              --clickhouse-version ${{ env.version }} 
-              --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}"
-              --log raw.log
+        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -191,15 +151,7 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
-          path: |
-            ./report.html
-            ./*.log.txt
-            ./*.log
-            ./*.html
-            ./*/_instances/*/logs/*.log
-            ./*/*/_instances/*/logs/*.log
-            ./*/_instances/*.log
-            ./*/*/_instances/*.log
+          path: ${{ env.artifact_paths}}
 
   base_58:
     runs-on: self-hosted
@@ -213,17 +165,9 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
-              -u ${{ env.SUITE }}/regression.py
-              --test-to-end
-              --local
-              --collect-service-logs 
-              --output ${{ vars.OUTPUT }} 
-              --parallel ${{ vars.PARALLEL }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
-              --clickhouse-version ${{ env.version }} 
-              --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}"
-              --log raw.log
+        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -233,15 +177,7 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
-          path: |
-            ./report.html
-            ./*.log.txt
-            ./*.log
-            ./*.html
-            ./*/_instances/*/logs/*.log
-            ./*/*/_instances/*/logs/*.log
-            ./*/_instances/*.log
-            ./*/*/_instances/*.log
+          path: ${{ env.artifact_paths}}
 
   clickhouse_keeper:
     runs-on: self-hosted
@@ -255,17 +191,9 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
-              -u ${{ env.SUITE }}/regression.py
-              --test-to-end
-              --local
-              --collect-service-logs 
-              --output ${{ vars.OUTPUT }} 
-              --parallel ${{ vars.PARALLEL }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
-              --clickhouse-version ${{ env.version }} 
-              --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}"
-              --log raw.log
+        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -275,15 +203,7 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
-          path: |
-            ./report.html
-            ./*.log.txt
-            ./*.log
-            ./*.html
-            ./*/_instances/*/logs/*.log
-            ./*/*/_instances/*/logs/*.log
-            ./*/_instances/*.log
-            ./*/*/_instances/*.log
+          path: ${{ env.artifact_paths}}
 
   datetime64_extended_range:
     runs-on: self-hosted
@@ -297,17 +217,9 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
-              -u ${{ env.SUITE }}/regression.py
-              --test-to-end
-              --local
-              --collect-service-logs 
-              --output ${{ vars.OUTPUT }} 
-              --parallel ${{ vars.PARALLEL }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
-              --clickhouse-version ${{ env.version }} 
-              --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}"
-              --log raw.log
+        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -317,15 +229,7 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
-          path: |
-            ./report.html
-            ./*.log.txt
-            ./*.log
-            ./*.html
-            ./*/_instances/*/logs/*.log
-            ./*/*/_instances/*/logs/*.log
-            ./*/_instances/*.log
-            ./*/*/_instances/*.log
+          path: ${{ env.artifact_paths}}
 
   disk_level_encryption:
     runs-on: self-hosted
@@ -339,17 +243,9 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
-              -u ${{ env.SUITE }}/regression.py
-              --test-to-end
-              --local
-              --collect-service-logs 
-              --output ${{ vars.OUTPUT }} 
-              --parallel ${{ vars.PARALLEL }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
-              --clickhouse-version ${{ env.version }} 
-              --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}"
-              --log raw.log
+        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -359,15 +255,7 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
-          path: |
-            ./report.html
-            ./*.log.txt
-            ./*.log
-            ./*.html
-            ./*/_instances/*/logs/*.log
-            ./*/*/_instances/*/logs/*.log
-            ./*/_instances/*.log
-            ./*/*/_instances/*.log
+          path: ${{ env.artifact_paths}}
 
   dns:
     runs-on: self-hosted
@@ -381,17 +269,9 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
-              -u ${{ env.SUITE }}/regression.py
-              --test-to-end
-              --local
-              --collect-service-logs 
-              --output ${{ vars.OUTPUT }} 
-              --parallel ${{ vars.PARALLEL }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
-              --clickhouse-version ${{ env.version }} 
-              --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}"
-              --log raw.log
+        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -401,15 +281,7 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
-          path: |
-            ./report.html
-            ./*.log.txt
-            ./*.log
-            ./*.html
-            ./*/_instances/*/logs/*.log
-            ./*/*/_instances/*/logs/*.log
-            ./*/_instances/*.log
-            ./*/*/_instances/*.log
+          path: ${{ env.artifact_paths}}
 
   example:
     runs-on: self-hosted
@@ -423,9 +295,11 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -449,17 +323,9 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
-              -u ${{ env.SUITE }}/regression.py
-              --test-to-end
-              --local
-              --collect-service-logs 
-              --output ${{ vars.OUTPUT }} 
-              --parallel ${{ vars.PARALLEL }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
-              --clickhouse-version ${{ env.version }} 
-              --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}"
-              --log raw.log
+        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -469,15 +335,7 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
-          path: |
-            ./report.html
-            ./*.log.txt
-            ./*.log
-            ./*.html
-            ./*/_instances/*/logs/*.log
-            ./*/*/_instances/*/logs/*.log
-            ./*/_instances/*.log
-            ./*/*/_instances/*.log
+          path: ${{ env.artifact_paths}}
 
   functional:
     runs-on: self-hosted
@@ -490,17 +348,9 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
-              -u clickhouse/${{ env.SUITE }}/functional.py
-              --test-to-end
-              --local
-              --collect-service-logs 
-              --output ${{ vars.OUTPUT }} 
-              --parallel ${{ vars.PARALLEL }}
+        run: python3 -u clickhouse/${{ env.SUITE }}/functional.py ${{ env.args }}
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
               --clickhouse-version ${{ env.version }} 
-              --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}"
-              --log raw.log
 
       - name: Create and upload logs
         if: success() || failure()
@@ -510,15 +360,7 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
-          path: |
-            ./report.html
-            ./*.log.txt
-            ./*.log
-            ./*.html
-            ./*/_instances/*/logs/*.log
-            ./*/*/_instances/*/logs/*.log
-            ./*/_instances/*.log
-            ./*/*/_instances/*.log
+          path: ${{ env.artifact_paths}}
 
   kafka:
     runs-on: self-hosted
@@ -532,17 +374,9 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
-              -u ${{ env.SUITE }}/regression.py
-              --test-to-end
-              --local
-              --collect-service-logs 
-              --output ${{ vars.OUTPUT }} 
-              --parallel ${{ vars.PARALLEL }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
-              --clickhouse-version ${{ env.version }} 
-              --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}"
-              --log raw.log
+        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -552,15 +386,7 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
-          path: |
-            ./report.html
-            ./*.log.txt
-            ./*.log
-            ./*.html
-            ./*/_instances/*/logs/*.log
-            ./*/*/_instances/*/logs/*.log
-            ./*/_instances/*.log
-            ./*/*/_instances/*.log
+          path: ${{ env.artifact_paths}}
 
   kerberos:
     runs-on: self-hosted
@@ -574,17 +400,9 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
-              -u ${{ env.SUITE }}/regression.py
-              --test-to-end
-              --local
-              --collect-service-logs 
-              --output ${{ vars.OUTPUT }} 
-              --parallel ${{ vars.PARALLEL }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
-              --clickhouse-version ${{ env.version }} 
-              --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}"
-              --log raw.log
+        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -593,15 +411,7 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
-          path: |
-            ./report.html
-            ./*.log.txt
-            ./*.log
-            ./*.html
-            ./*/_instances/*/logs/*.log
-            ./*/*/_instances/*/logs/*.log
-            ./*/_instances/*.log
-            ./*/*/_instances/*.log
+          path: ${{ env.artifact_paths}}
 
   ldap_authentication:
     runs-on: self-hosted
@@ -615,17 +425,9 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
-              -u ldap/${{ env.SUITE }}/regression.py
-              --test-to-end
-              --local
-              --collect-service-logs 
-              --output ${{ vars.OUTPUT }} 
-              --parallel ${{ vars.PARALLEL }}
+        run: python3 -u ldap/${{ env.SUITE }}/regression.py ${{ env.args }}
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
               --clickhouse-version ${{ env.version }} 
-              --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}"
-              --log raw.log
 
       - name: Create and upload logs
         if: success() || failure()
@@ -635,15 +437,7 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
-          path: |
-            ./report.html
-            ./*.log.txt
-            ./*.log
-            ./*.html
-            ./*/_instances/*/logs/*.log
-            ./*/*/_instances/*/logs/*.log
-            ./*/_instances/*.log
-            ./*/*/_instances/*.log
+          path: ${{ env.artifact_paths}}
 
   ldap_external_user_directory:
     runs-on: self-hosted
@@ -658,17 +452,9 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
-              -u ldap/${{ env.SUITE }}/regression.py
-              --test-to-end
-              --local
-              --collect-service-logs 
-              --output ${{ vars.OUTPUT }} 
-              --parallel ${{ vars.PARALLEL }}
+        run: python3 -u ldap/${{ env.SUITE }}/regression.py ${{ env.args }}
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
-              --clickhouse-version ${{ env.version }} 
-              --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}"
-              --log raw.log
+              --clickhouse-version ${{ env.version }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -678,15 +464,7 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
-          path: |
-            ./report.html
-            ./*.log.txt
-            ./*.log
-            ./*.html
-            ./*/_instances/*/logs/*.log
-            ./*/*/_instances/*/logs/*.log
-            ./*/_instances/*.log
-            ./*/*/_instances/*.log
+          path: ${{ env.artifact_paths}}
 
   ldap_role_mapping:
     runs-on: self-hosted
@@ -701,17 +479,9 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
-              -u ldap/${{ env.SUITE }}/regression.py
-              --test-to-end
-              --local
-              --collect-service-logs 
-              --output ${{ vars.OUTPUT }} 
-              --parallel ${{ vars.PARALLEL }}
+        run: python3 -u ldap/${{ env.SUITE }}/regression.py ${{ env.args }}
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
-              --clickhouse-version ${{ env.version }} 
-              --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}"
-              --log raw.log
+              --clickhouse-version ${{ env.version }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -721,15 +491,7 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
-          path: |
-            ./report.html
-            ./*.log.txt
-            ./*.log
-            ./*.html
-            ./*/_instances/*/logs/*.log
-            ./*/*/_instances/*/logs/*.log
-            ./*/_instances/*.log
-            ./*/*/_instances/*.log
+          path: ${{ env.artifact_paths}}
 
   # lightweight_delete:
   #   runs-on: self-hosted
@@ -785,17 +547,9 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
-              -u ${{ env.SUITE }}/regression.py
-              --test-to-end
-              --local
-              --collect-service-logs 
-              --output ${{ vars.OUTPUT }} 
-              --parallel ${{ vars.PARALLEL }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
-              --clickhouse-version ${{ env.version }} 
-              --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}"
-              --log raw.log
+        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -805,15 +559,7 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
-          path: |
-            ./report.html
-            ./*.log.txt
-            ./*.log
-            ./*.html
-            ./*/_instances/*/logs/*.log
-            ./*/*/_instances/*/logs/*.log
-            ./*/_instances/*.log
-            ./*/*/_instances/*.log
+          path: ${{ env.artifact_paths}}
 
   parquet:
     runs-on: self-hosted
@@ -827,17 +573,9 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
-              -u ${{ env.SUITE }}/regression.py
-              --test-to-end
-              --local
-              --collect-service-logs 
-              --output ${{ vars.OUTPUT }} 
-              --parallel ${{ vars.PARALLEL }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
-              --clickhouse-version ${{ env.version }} 
-              --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}"
-              --log raw.log
+        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -847,15 +585,7 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
-          path: |
-            ./report.html
-            ./*.log.txt
-            ./*.log
-            ./*.html
-            ./*/_instances/*/logs/*.log
-            ./*/*/_instances/*/logs/*.log
-            ./*/_instances/*.log
-            ./*/*/_instances/*.log
+          path: ${{ env.artifact_paths}}
 
   part_moves_between_shards:
     runs-on: self-hosted
@@ -869,17 +599,9 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
-              -u ${{ env.SUITE }}/regression.py
-              --test-to-end
-              --local
-              --collect-service-logs 
-              --output ${{ vars.OUTPUT }} 
-              --parallel ${{ vars.PARALLEL }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
-              --clickhouse-version ${{ env.version }} 
-              --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}"
-              --log raw.log
+        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -889,15 +611,7 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
-          path: |
-            ./report.html
-            ./*.log.txt
-            ./*.log
-            ./*.html
-            ./*/_instances/*/logs/*.log
-            ./*/*/_instances/*/logs/*.log
-            ./*/_instances/*.log
-            ./*/*/_instances/*.log
+          path: ${{ env.artifact_paths}}
 
   rbac:
     runs-on: self-hosted
@@ -911,17 +625,9 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
-              -u ${{ env.SUITE }}/regression.py
-              --test-to-end
-              --local
-              --collect-service-logs 
-              --output ${{ vars.OUTPUT }} 
-              --parallel ${{ vars.PARALLEL }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
-              --clickhouse-version ${{ env.version }} 
-              --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}"
-              --log raw.log
+        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -931,15 +637,7 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
-          path: |
-            ./report.html
-            ./*.log.txt
-            ./*.log
-            ./*.html
-            ./*/_instances/*/logs/*.log
-            ./*/*/_instances/*/logs/*.log
-            ./*/_instances/*.log
-            ./*/*/_instances/*.log
+          path: ${{ env.artifact_paths}}
 
   selects:
     runs-on: self-hosted
@@ -953,17 +651,9 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
-              -u ${{ env.SUITE }}/regression.py
-              --test-to-end
-              --local
-              --collect-service-logs 
-              --output ${{ vars.OUTPUT }} 
-              --parallel ${{ vars.PARALLEL }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
-              --clickhouse-version ${{ env.version }} 
-              --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}"
-              --log raw.log
+        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -973,15 +663,7 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
-          path: |
-            ./report.html
-            ./*.log.txt
-            ./*.log
-            ./*.html
-            ./*/_instances/*/logs/*.log
-            ./*/*/_instances/*/logs/*.log
-            ./*/_instances/*.log
-            ./*/*/_instances/*.log
+          path: ${{ env.artifact_paths}}
 
   s3:
     runs-on: self-hosted
@@ -997,7 +679,7 @@ jobs:
 
       - name: Run ${{ env.SUITE }} suite
         run: python3 
-              -u ${{ env.SUITE }}/regression.py
+              -u ${{ env.SUITE }}/regression.py ${{ env.args }}
               --storage minio
               --storage aws_s3
               --aws-s3-bucket ${{ secrets.AWS_BUCKET }}
@@ -1008,15 +690,8 @@ jobs:
               --gcs-uri ${{ secrets.GCS_URI }}
               --gcs-key-id ${{ secrets.GCS_KEY_ID }}
               --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
-              --test-to-end
-              --local
-              --collect-service-logs 
-              --output ${{ vars.OUTPUT }} 
-              --parallel ${{ vars.PARALLEL }}
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
               --clickhouse-version ${{ env.version }} 
-              --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}"
-              --log raw.log
 
       - name: Create and upload logs
         if: success() || failure()
@@ -1026,15 +701,7 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
-          path: |
-            ./report.html
-            ./*.log.txt
-            ./*.log
-            ./*.html
-            ./*/_instances/*/logs/*.log
-            ./*/*/_instances/*/logs/*.log
-            ./*/_instances/*.log
-            ./*/*/_instances/*.log
+          path: ${{ env.artifact_paths}}
 
   # benchmark:
   #   runs-on: self-hosted
@@ -1100,17 +767,9 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
-              -u ${{ env.SUITE }}/regression.py
-              --test-to-end
-              --local
-              --collect-service-logs 
-              --output ${{ vars.OUTPUT }} 
-              --parallel ${{ vars.PARALLEL }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
-              --clickhouse-version ${{ env.version }} 
-              --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}"
-              --log raw.log
+        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -1120,15 +779,7 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
-          path: |
-            ./report.html
-            ./*.log.txt
-            ./*.log
-            ./*.html
-            ./*/_instances/*/logs/*.log
-            ./*/*/_instances/*/logs/*.log
-            ./*/_instances/*.log
-            ./*/*/_instances/*.log
+          path: ${{ env.artifact_paths}}
 
   tiered_storage:
     runs-on: self-hosted
@@ -1143,7 +794,7 @@ jobs:
 
       - name: Run ${{ env.SUITE }} suite
         run: python3 
-              -u ${{ env.SUITE }}/regression.py
+              -u ${{ env.SUITE }}/regression.py ${{ env.args }}
               --with-minio
               --with-s3amazon
               --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
@@ -1153,15 +804,8 @@ jobs:
               --gcs-key-id ${{ secrets.GCS_KEY_ID }}
               --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
               --gcs-uri ${{ secrets.GCS_URI }}
-              --test-to-end
-              --local
-              --collect-service-logs 
-              --output ${{ vars.OUTPUT }} 
-              --parallel ${{ vars.PARALLEL }}
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
-              --clickhouse-version ${{ env.version }} 
-              --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}"
-              --log raw.log
+              --clickhouse-version ${{ env.version }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -1171,15 +815,7 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
-          path: |
-            ./report.html
-            ./*.log.txt
-            ./*.log
-            ./*.html
-            ./*/_instances/*/logs/*.log
-            ./*/*/_instances/*/logs/*.log
-            ./*/_instances/*.log
-            ./*/*/_instances/*.log
+          path: ${{ env.artifact_paths}}
 
   window_functions:
     runs-on: self-hosted
@@ -1193,17 +829,9 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
-              -u ${{ env.SUITE }}/regression.py
-              --test-to-end
-              --local
-              --collect-service-logs 
-              --output ${{ vars.OUTPUT }} 
-              --parallel ${{ vars.PARALLEL }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
-              --clickhouse-version ${{ env.version }} 
-              --attr project="$GITHUB_REPOSITORY" project.id="$GITHUB_REPOSITORY_ID" user.name="$GITHUB_ACTOR" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="$GITHUB_SHA" job.id="$GITHUB_RUN_ID" job.url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" arch="${{ vars.ARCH }}"
-              --log raw.log
+        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -1213,13 +841,5 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-artifacts
-          path: |
-            ./report.html
-            ./*.log.txt
-            ./*.log
-            ./*.html
-            ./*/_instances/*/logs/*.log
-            ./*/*/_instances/*/logs/*.log
-            ./*/_instances/*.log
-            ./*/*/_instances/*.log
+          path: ${{ env.artifact_paths}}
 
