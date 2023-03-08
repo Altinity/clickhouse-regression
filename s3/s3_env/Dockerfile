@@ -1,4 +1,4 @@
-FROM registry.gitlab.com/altinity-public/container-images/test/clickhouse-integration-test:21.12
+FROM registry.gitlab.com/altinity-public/container-images/benchmark/multiarch:22.8
 
 RUN apt-get update
 RUN apt-get -y upgrade
