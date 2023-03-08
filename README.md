@@ -31,6 +31,7 @@ that involves several ClickHouse instances, custom configs, ZooKeeper, etc.
     * 5.5.3 [Running on AWS S3 Storage](#running-on-aws-s3-storage)
     * 5.5.4 [Running on GCS Storage](#running-on-gcs-storage)
     * 5.5.5 [Pausing In Tests](#pausing-in-tests)
+* 6 [Running GitHub Actions](#running-github-actions)
 
 ## Supported environment
 
@@ -438,6 +439,22 @@ def my_scenario(self):
 ```
  This can be used for getting access to [Docker Compose] environment with condition equal to cluster condition on current step by executing standard [Docker Compose] commands ("ps", "exec" etc.) from "*_env" folder. It allows to make some manual checks/changes on dockers and continue test with new manually set conditions.
 
+## Running GitHub Actions
+To run GitHub actions, navigate to `Actions`, select `Run CI/CD regression tests`. Inside `Run workflow` dropdown menu specify the package, version, suite and upload destination of artifacts.
+
+Package: `docker://` or `https://` package specifier to use for tests. For example: 
+* docker://altinity/clickhouse-server
+* docker://clickhouse/clickhouse-server
+* https://s3.amazonaws.com/altinity-build-artifacts/217/acf34c9fc6932aaf9af69425612070b50529f484/package_release/clickhouse-client_22.8.11.17.altinitystable_amd64.deb
+ 
+Version: Version of clickhouse to use for tests. The test verifies that node version matches specified version. When package option uses `docker://` specifier then the version is the image tag. For example:
+ * 22.3.9.19-alpine
+ * 22.3.8.40.altinitystable
+ * latest
+ 
+Suite: Which suite to run. Default runs all suites.
+ 
+Artifacts: Specify whether to upload to internal or public s3 bucket. 'altinity-internal-test-reports' for internal upload, 'altinity-test-reports' for public.
 
 [Python 3]: https://www.python.org/
 [Ubuntu]: https://ubuntu.com/ 
