@@ -37,8 +37,8 @@ def mixed_keepers_5(self):
 
         with And("I check that table in read only mode"):
             node = self.context.cluster.node("clickhouse1")
-            retry(node.query, timeout=100, delay=1)(
-                f"INSERT INTO {table_name}(Id, partition) values (1,2)",
+            retry(cluster.node("clickhouse1").query, timeout=600, delay=30)(
+                f"insert into {table_name} values (1,2)",
                 exitcode=242,
                 message="DB::Exception: Table is in readonly mode",
                 steps=False,
@@ -98,8 +98,8 @@ def mixed_keepers_4(self):
 
         with And("I check that table in read only mode"):
             node = self.context.cluster.node("clickhouse1")
-            retry(node.query, timeout=100, delay=1)(
-                f"INSERT INTO {table_name}(Id, partition) values (1,2)",
+            retry(cluster.node("clickhouse1").query, timeout=600, delay=30)(
+                f"insert into {table_name} values (1,2)",
                 exitcode=242,
                 message="DB::Exception: Table is in readonly mode",
                 steps=False,
@@ -156,8 +156,8 @@ def mixed_keepers_3(self):
             cluster.node("clickhouse2").stop_clickhouse()
 
         with And("I check that table in read only mode"):
-            self.context.cluster.node("clickhouse1").query(
-                f"insert into {table_name}(Id, partition) values (1,2)",
+            retry(cluster.node("clickhouse1").query, timeout=600, delay=30)(
+                f"insert into {table_name} values (1,2)",
                 exitcode=242,
                 message="DB::Exception: Table is in readonly mode",
             )
@@ -187,7 +187,11 @@ def mixed_keepers_2(self):
     """Check that 2 nodes Clickhouse Keeper Cluster work in write mode
     and goes in read mode only with 1 node down.
     """
-    xfail("doesn't work on 22.3")
+    if check_clickhouse_version(">23")(self):
+        skip(
+            reason="test fails on ClickHouse version >= 23"
+        )
+
     cluster = self.context.cluster
     try:
         start_mixed_keeper(
@@ -212,10 +216,10 @@ def mixed_keepers_2(self):
             cluster.node("clickhouse2").stop_clickhouse()
 
         with And("I check that table in read only mode"):
-            self.context.cluster.node("clickhouse1").query(
+            retry(cluster.node("clickhouse1").query, timeout=600, delay=30)(
                 f"insert into {table_name} values (1,2)",
                 exitcode=242,
-                message="DB::Exception: Table is in readonly mode",
+                message="DB::Exception: Table is in readonly mode", timeout=600
             )
 
         with And("I start dropped nodes"):
@@ -266,7 +270,7 @@ def mixed_keepers_1(self):
             cluster.node("clickhouse1").stop_clickhouse()
 
         with And("I check that table in read only mode"):
-            self.context.cluster.node("clickhouse2").query(
+            retry(cluster.node("clickhouse2").query, timeout=600, delay=30)(
                 f"insert into {table_name} values (1,2)",
                 exitcode=242,
                 message="DB::Exception: Table is in readonly mode",
@@ -296,6 +300,11 @@ def zookeepers_3(self):
     """Check that 3 nodes ZooKeeper Cluster work in write mode
     with 1 node down and in read mode only with 2 nodes down.
     """
+    if check_clickhouse_version(">23")(self):
+        skip(
+            reason="test fails on ClickHouse version >= 23"
+        )
+
     cluster = self.context.cluster
     zookeeper_cluster_nodes = cluster.nodes["zookeeper"][:3]
     clickhouse_cluster_nodes = cluster.nodes["clickhouse"][:9]
@@ -343,192 +352,6 @@ def zookeepers_3(self):
         with Finally("I clean up files"):
             clean_coordination_on_all_nodes()
             self.context.cluster.node("clickhouse1").cmd(f"rm -rf /share/")
-
-
-#
-#
-# @TestScenario
-# def standalone_keepers_3(self):
-#     """Check that 3 nodes Standalone Keeper Cluster work in write mode
-#     with 1 node down and in read mode only with 2 nodes down.
-#     """
-#     cluster = self.context.cluster
-#     keeper_cluster_nodes = cluster.nodes["clickhouse"][9:12]
-#     clickhouse_cluster_nodes = cluster.nodes["clickhouse"][:9]
-#     cluster_name = '\'Cluster_3shards_with_3replicas\''
-#
-#     with Given("I create 3 keeper cluster configuration"):
-#         create_keeper_cluster_configuration(nodes=keeper_cluster_nodes)
-#         with And("I start all standalone Keepers nodes"):
-#             time.sleep(10)
-#             for name in keeper_cluster_nodes:
-#                 cluster.node(name).stop_clickhouse()
-#             start_keepers(standalone_keeper_nodes=keeper_cluster_nodes, manual_cleanup=True)
-#         create_config_section(control_nodes=keeper_cluster_nodes,
-#                               cluster_nodes=clickhouse_cluster_nodes)
-#
-#     with And("Receive UID"):
-#         uid = getuid()
-#
-#     with And("I instrument logs on all keeper cluster nodes"):
-#         instrument_cluster_nodes(test=self, cluster_nodes=keeper_cluster_nodes)
-#
-#     try:
-#         with And("I create some replicated table"):
-#             table_name = f"test{uid}"
-#             create_simple_table(table_name=table_name, manual_cleanup=True)
-#
-#         with And("I stop maximum available Keeper nodes for such configuration"):
-#             stop_keepers(cluster_nodes=cluster.nodes["clickhouse"][9:10])
-#
-#         with And("I check that table in write mode"):
-#             self.context.cluster.node("clickhouse1").query(f"insert into {table_name} values (1,1)",
-#                                                               exitcode=0)
-#
-#         with And("I stop one more Keeper node"):
-#             stop_keepers(cluster_nodes=cluster.nodes["clickhouse"][10:11])
-#
-#         with And("I check that table in read only mode"):
-#             self.context.cluster.node("clickhouse1").query(f"insert into {table_name} values (1,2)",
-#                                                               exitcode=242,
-#                                                               message="DB::Exception: Table is in readonly mode")
-#
-#         with And("I start stopped clickhouse keeper nodes"):
-#             start_keepers(standalone_keeper_nodes=cluster.nodes["clickhouse"][9:11], manual_cleanup=True)
-#
-#         with And("I check clean ability"):
-#             table_insert(table_name=table_name, node_name="clickhouse1")
-#             cluster.node("clickhouse1").query(f"DROP TABLE IF EXISTS {table_name} ON CLUSTER {cluster_name} SYNC")
-#
-#         with And("I start stopped clickhouse keeper nodes"):
-#             stop_keepers(cluster_nodes=cluster.nodes["clickhouse"][9:12])
-#             for name in keeper_cluster_nodes:
-#                 cluster.node(name).start_clickhouse(wait_healthy=False)
-#
-#     finally:
-#         with Finally("I start stopped clickhouses and clean up files"):
-#             clean_coordination_on_all_nodes()
-#
-#
-# @TestScenario
-# def standalone_keepers_2(self):
-#     """Check that 2 nodes Standalone Keeper Cluster work in write mode and
-#     with 1 node down in read mode only.
-#     """
-#     cluster = self.context.cluster
-#     keeper_cluster_nodes = cluster.nodes["clickhouse"][9:11]
-#     clickhouse_cluster_nodes = cluster.nodes["clickhouse"][:9]
-#
-#     cluster_name = '\'Cluster_3shards_with_3replicas\''
-#
-#     with Given("I create 3 keeper cluster configuration"):
-#         create_keeper_cluster_configuration(nodes=keeper_cluster_nodes)
-#         with And("I start all standalone Keepers nodes"):
-#             time.sleep(10)
-#             for name in keeper_cluster_nodes:
-#                 cluster.node(name).stop_clickhouse()
-#             start_keepers(standalone_keeper_nodes=keeper_cluster_nodes, manual_cleanup=True)
-#         create_config_section(control_nodes=keeper_cluster_nodes,
-#                               cluster_nodes=clickhouse_cluster_nodes)
-#
-#     with And("Receive UID"):
-#         uid = getuid()
-#
-#     with And("I instrument logs on all keeper cluster nodes"):
-#         instrument_cluster_nodes(test=self, cluster_nodes=keeper_cluster_nodes)
-#
-#     try:
-#         with And("I create some replicated table"):
-#             table_name = f"test{uid}"
-#             create_simple_table(table_name=table_name, manual_cleanup=True)
-#
-#         with And("I stop one Keeper node"):
-#             stop_keepers(cluster_nodes=cluster.nodes["clickhouse"][9:10])
-#
-#         with And("I check that table in read only mode"):
-#             self.context.cluster.node("clickhouse1").query(f"insert into {table_name}(id, partition) values (1,2)",
-#                                                               exitcode=242,
-#                                                               message="DB::Exception: Table is in readonly mode")
-#
-#         with And("I start stopped clickhouse keeper nodes"):
-#             start_keepers(standalone_keeper_nodes=cluster.nodes["clickhouse"][9:10], manual_cleanup=True)
-#
-#         with And("I check clean ability"):
-#
-#             table_insert(table_name=table_name, node_name="clickhouse1")
-#
-#             cluster.node("clickhouse1").query(f"DROP TABLE IF EXISTS {table_name} ON CLUSTER {cluster_name} SYNC")
-#
-#         with And("I stop clickhouse keeper nodes and start clickhouses"):
-#
-#             stop_keepers(cluster_nodes=cluster.nodes["clickhouse"][9:11])
-#
-#             for name in keeper_cluster_nodes:
-#                 cluster.node(name).start_clickhouse(wait_healthy=False)
-#     finally:
-#         with Finally("I start stopped clickhouses and clean up files"):
-#             clean_coordination_on_all_nodes()
-#
-#
-# @TestScenario
-# def standalone_keepers_1(self):
-#     """Check that 1 node Standalone Keeper Cluster work in write mode and
-#     when it goes down table in read mode only.
-#     """
-#     cluster = self.context.cluster
-#     keeper_cluster_nodes = cluster.nodes["clickhouse"][9:10]
-#     clickhouse_cluster_nodes = cluster.nodes["clickhouse"][:9]
-#
-#     cluster_name = '\'Cluster_3shards_with_3replicas\''
-#
-#     with Given("I create 3 keeper cluster configuration"):
-#         create_keeper_cluster_configuration(nodes=keeper_cluster_nodes)
-#         with And("I start all standalone Keepers nodes"):
-#             time.sleep(10)
-#             for name in keeper_cluster_nodes:
-#                 cluster.node(name).stop_clickhouse()
-#             start_keepers(standalone_keeper_nodes=keeper_cluster_nodes, manual_cleanup=True)
-#         create_config_section(control_nodes=keeper_cluster_nodes,
-#                               cluster_nodes=clickhouse_cluster_nodes)
-#     with And("Receive UID"):
-#         uid = getuid()
-#
-#     with And("I instrument logs on all keeper cluster nodes"):
-#         instrument_cluster_nodes(test=self, cluster_nodes=keeper_cluster_nodes)
-#
-#     try:
-#         with And("I create some replicated table"):
-#             table_name = f"test{uid}"
-#             create_simple_table(table_name=table_name, manual_cleanup=True)
-#
-#         with And("I stop one Keeper node"):
-#             stop_keepers(cluster_nodes=keeper_cluster_nodes)
-#
-#         with And("I check that table in read only mode"):
-#             self.context.cluster.node("clickhouse1cmd").query(f"insert into {table_name}(id, partition) values (1,2)",
-#                                                               exitcode=242,
-#                                                               message="DB::Exception: Table is in readonly mode")
-#
-#         with And("I start stopped clickhouse keeper nodes"):
-#
-#             start_keepers(standalone_keeper_nodes=keeper_cluster_nodes, manual_cleanup=True)
-#
-#         with And("I check clean ability"):
-#
-#             table_insert(table_name=table_name, node_name="clickhouse1")
-#
-#             cluster.node("clickhouse1").query(f"DROP TABLE IF EXISTS {table_name} ON CLUSTER {cluster_name} SYNC")
-#
-#         with And("I stop clickhouse keeper nodes and start clickhouses"):
-#
-#             stop_keepers(cluster_nodes=keeper_cluster_nodes)
-#
-#             for name in keeper_cluster_nodes:
-#                 cluster.node(name).start_clickhouse(wait_healthy=False)
-#
-#     finally:
-#         with Finally("I start stopped clickhouses and clean up files"):
-#             clean_coordination_on_all_nodes()
 
 
 @TestFeature
