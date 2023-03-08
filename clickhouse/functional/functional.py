@@ -22,7 +22,7 @@ ffails = {}
 @XFlags(xflags)
 @FFails(ffails)
 @Name("functional")
-def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=None):
+def regression(self, local, clickhouse_binary_path, clickhouse_version, collect_service_logs, stress=None):
     """Run the ClickHouse functional (stateless and stateful) tests."""
     nodes = {"clickhouse": ("clickhouse1",)}
     self.context.clickhouse_version = clickhouse_version
@@ -41,6 +41,7 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
     with Cluster(
         local,
         clickhouse_binary_path,
+        collect_service_logs=collect_service_logs,
         nodes=nodes,
         docker_compose_project_dir=os.path.join(current_dir(), env),
     ) as cluster:
