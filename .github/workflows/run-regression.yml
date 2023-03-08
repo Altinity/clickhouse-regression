@@ -70,6 +70,7 @@ env:
     ./*.log.txt
     ./*.log
     ./*.html
+    ./*/_instances/*.log
     ./*/_instances/*/logs/*.log
     ./*/*/_instances/*/logs/*.log
     ./*/*/_instances/*.log
@@ -95,7 +96,7 @@ jobs:
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -123,7 +124,7 @@ jobs:
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -151,7 +152,7 @@ jobs:
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -179,7 +180,7 @@ jobs:
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -207,7 +208,7 @@ jobs:
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -235,7 +236,7 @@ jobs:
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -263,7 +264,7 @@ jobs:
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -291,7 +292,7 @@ jobs:
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -319,7 +320,7 @@ jobs:
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -347,7 +348,7 @@ jobs:
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -358,23 +359,24 @@ jobs:
   functional:
     runs-on: self-hosted
     env:
-      SUITE: functional
+      SUITE: clickhouse/functional
     if: ${{ inputs.suite == 'all' || inputs.suite == 'functional' }}
     steps:
       - uses: actions/checkout@v3
+
       - name: Setup
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
         run: python3
-              -u clickhouse/${{ env.SUITE }}/functional.py
+              -u ${{ env.SUITE }}/functional.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
               --clickhouse-version ${{ env.version }} 
               ${{ env.args }}
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -402,7 +404,7 @@ jobs:
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -430,7 +432,7 @@ jobs:
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
       - uses: actions/upload-artifact@v3
         if: always()
         with:
@@ -440,7 +442,7 @@ jobs:
   ldap_authentication:
     runs-on: self-hosted
     env:
-      SUITE: authentication
+      SUITE: ldap/authentication
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
     steps:
       - uses: actions/checkout@v3
@@ -449,14 +451,15 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 -u ldap/${{ env.SUITE }}/regression.py
+        run: python3 
+              -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
               ${{ env.args }}
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -467,24 +470,24 @@ jobs:
   ldap_external_user_directory:
     runs-on: self-hosted
     env:
-      SUITE: external_user_directory
+      SUITE: ldap/external_user_directory
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
     steps:
       - uses: actions/checkout@v3
-      - run: cd ldap
 
       - name: Setup
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 -u ldap/${{ env.SUITE }}/regression.py
+        run: python3 
+              -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
               ${{ env.args }}
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -495,24 +498,24 @@ jobs:
   ldap_role_mapping:
     runs-on: self-hosted
     env:
-      SUITE: role_mapping
+      SUITE: ldap/role_mapping
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
     steps:
       - uses: actions/checkout@v3
-      - run: cd ldap
 
       - name: Setup
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 -u ldap/${{ env.SUITE }}/regression.py
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
               ${{ env.args }}
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -546,7 +549,7 @@ jobs:
 
   #     - name: Create and upload logs
   #       if: success() || failure()
-  #       run: .github/create_and_upload.sh ${{ vars.UPLOAD_LOGS }}
+  #       run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
   #     - uses: actions/upload-artifact@v3
   #       if: always()
@@ -582,7 +585,7 @@ jobs:
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -610,7 +613,7 @@ jobs:
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -638,7 +641,7 @@ jobs:
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -666,7 +669,7 @@ jobs:
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -694,7 +697,7 @@ jobs:
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -733,7 +736,7 @@ jobs:
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -777,7 +780,7 @@ jobs:
 
   #     - name: Create and upload logs
   #       if: success() || failure()
-  #       run: .github/create_and_upload.sh ${{ vars.UPLOAD_LOGS }}
+  #       run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
   #     - uses: actions/upload-artifact@v3
   #       if: always()
@@ -813,7 +816,7 @@ jobs:
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -850,7 +853,7 @@ jobs:
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -878,7 +881,7 @@ jobs:
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload.sh ${{ vars.UPLOAD_LOGS }}
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
