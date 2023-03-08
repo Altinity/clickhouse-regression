@@ -436,7 +436,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: ${{ env.SUITE////_ }}-artifacts
+          name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
 
   ldap_authentication:
