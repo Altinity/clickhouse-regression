@@ -381,7 +381,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: ${{ env.SUITE////_ }}-artifacts
+          name: clickhouse-functional-artifacts
           path: ${{ env.artifact_paths}}
 
   kafka:
@@ -464,7 +464,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: ${{ env.SUITE////_ }}-artifacts
+          name: ldap-authentication-artifacts
           path: ${{ env.artifact_paths}}
 
   ldap_external_user_directory:
@@ -492,7 +492,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: ${{ env.SUITE////_ }}-artifacts
+          name: ldap-external_user_directory-artifacts
           path: ${{ env.artifact_paths}}
 
   ldap_role_mapping:
@@ -520,7 +520,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: ${{ env.SUITE }}-artifacts
+          name: ldap-role_mapping-artifacts
           path: ${{ env.artifact_paths}}
 
   # lightweight_delete:
