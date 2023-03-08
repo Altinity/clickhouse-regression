@@ -139,6 +139,7 @@ def feature(
     self,
     local,
     clickhouse_binary_path,
+    collect_service_logs,
     with_minio=False,
     with_s3amazon=False,
     with_s3gcs=False,
@@ -158,6 +159,7 @@ def feature(
     with Cluster(
         local,
         clickhouse_binary_path,
+        collect_service_logs=collect_service_logs,
         nodes=nodes,
         environ=environ,
         docker_compose_project_dir=os.path.join(current_dir(), env),
@@ -324,6 +326,7 @@ def regression(
     local,
     clickhouse_binary_path,
     clickhouse_version,
+    collect_service_logs,
     stress=None,
     with_minio=False,
     with_s3amazon=False,
@@ -384,6 +387,7 @@ def regression(
     Feature(name, test=feature)(
         local=local,
         clickhouse_binary_path=clickhouse_binary_path,
+        collect_service_logs=collect_service_logs,
         with_minio=with_minio,
         with_s3amazon=with_s3amazon,
         with_s3gcs=with_s3gcs,

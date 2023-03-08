@@ -701,7 +701,7 @@ class Cluster(object):
         docker_compose_file="docker-compose.yml",
         environ=None,
         thread_fuzzer=False,
-        collect_service_logs=False
+        collect_service_logs=False,
     ):
 
         self._bash = {}
@@ -871,6 +871,11 @@ class Cluster(object):
                     f'docker cp "{docker_container_name}:{container_clickhouse_odbc_bridge_binary_path}" "{host_clickhouse_odbc_bridge_binary_path}"'
                 )
                 bash(f'docker stop "{docker_container_name}"')
+
+        with And("debug"):
+            with Shell() as bash:
+                bash.timeout = 300
+                bash(f"ls -la {host_clickhouse_binary_path}")
 
         return host_clickhouse_binary_path, host_clickhouse_odbc_bridge_binary_path
 
@@ -1056,13 +1061,18 @@ class Cluster(object):
                     with Finally("collect service logs"):
                         with Shell() as bash:
                             bash(f"cd {self.docker_compose_project_dir}", timeout=1000)
-                            nodes = bash("docker-compose ps --services").output.split("\n")
+                            nodes = bash("docker-compose ps --services").output.split(
+                                "\n"
+                            )
                             debug(nodes)
                             for node in nodes:
                                 with By(f"getting log for {node}"):
                                     log_path = f"../_instances"
-                                    snode = bash(f"docker-compose logs {node} "
-                                                    f"> {log_path}/{node}.log", timeout=1000)
+                                    snode = bash(
+                                        f"docker-compose logs {node} "
+                                        f"> {log_path}/{node}.log",
+                                        timeout=1000,
+                                    )
                                     if snode.exitcode != 0:
                                         break
 
@@ -1293,6 +1303,7 @@ def create_cluster(
     local=False,
     clickhouse_binary_path=None,
     clickhouse_odbc_bridge_binary_path=None,
+    collect_service_logs=False,
     configs_dir=None,
     nodes=None,
     docker_compose="docker-compose",
@@ -1306,6 +1317,7 @@ def create_cluster(
         local=local,
         clickhouse_binary_path=clickhouse_binary_path,
         clickhouse_odbc_bridge_binary_path=clickhouse_odbc_bridge_binary_path,
+        collect_service_logs=collect_service_logs,
         configs_dir=configs_dir,
         nodes=nodes,
         docker_compose=docker_compose,

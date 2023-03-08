@@ -278,7 +278,12 @@ ffails = {
 @Name("rbac")
 @Specifications(SRS_006_ClickHouse_Role_Based_Access_Control)
 def regression(
-    self, local, clickhouse_binary_path, clickhouse_version=None, stress=None
+    self,
+    local,
+    clickhouse_binary_path,
+    clickhouse_version,
+    collect_service_logs,
+    stress=None,
 ):
     """RBAC regression."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -299,6 +304,7 @@ def regression(
     with Cluster(
         local,
         clickhouse_binary_path,
+        collect_service_logs=collect_service_logs,
         nodes=nodes,
         docker_compose_project_dir=os.path.join(current_dir(), env),
     ) as cluster:

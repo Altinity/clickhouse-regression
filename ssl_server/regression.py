@@ -101,7 +101,13 @@ ffails = {
 @Name("ssl server")
 @Specifications(SRS017_ClickHouse_SSL)
 def regression(
-    self, local, clickhouse_binary_path, clickhouse_version, force_fips, stress=None
+    self,
+    local,
+    clickhouse_binary_path,
+    clickhouse_version,
+    collect_service_logs,
+    force_fips,
+    stress=None,
 ):
     """ClickHouse security SSL server regression."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -122,6 +128,7 @@ def regression(
     with Cluster(
         local,
         clickhouse_binary_path,
+        collect_service_logs=collect_service_logs,
         nodes=nodes,
         docker_compose_project_dir=os.path.join(current_dir(), env),
     ) as cluster:
