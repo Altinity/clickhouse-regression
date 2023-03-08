@@ -87,9 +87,11 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -113,9 +115,11 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -139,9 +143,11 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -165,9 +171,11 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -191,9 +199,11 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -217,9 +227,11 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -243,9 +255,11 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -269,9 +283,11 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -323,9 +339,11 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -348,9 +366,11 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 -u clickhouse/${{ env.SUITE }}/functional.py ${{ env.args }}
+        run: python3
+              -u clickhouse/${{ env.SUITE }}/functional.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
               --clickhouse-version ${{ env.version }} 
+              ${{ env.args }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -374,9 +394,11 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -400,9 +422,11 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -425,9 +449,10 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 -u ldap/${{ env.SUITE }}/regression.py ${{ env.args }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
-              --clickhouse-version ${{ env.version }} 
+        run: python3 -u ldap/${{ env.SUITE }}/regression.py
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -452,9 +477,10 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 -u ldap/${{ env.SUITE }}/regression.py ${{ env.args }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
+        run: python3 -u ldap/${{ env.SUITE }}/regression.py
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -479,9 +505,10 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 -u ldap/${{ env.SUITE }}/regression.py ${{ env.args }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
+        run: python3 -u ldap/${{ env.SUITE }}/regression.py
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -547,9 +574,11 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -573,9 +602,11 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -599,9 +630,11 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -625,9 +658,11 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -651,9 +686,11 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -679,7 +716,7 @@ jobs:
 
       - name: Run ${{ env.SUITE }} suite
         run: python3 
-              -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+              -u ${{ env.SUITE }}/regression.py
               --storage minio
               --storage aws_s3
               --aws-s3-bucket ${{ secrets.AWS_BUCKET }}
@@ -690,8 +727,9 @@ jobs:
               --gcs-uri ${{ secrets.GCS_URI }}
               --gcs-key-id ${{ secrets.GCS_KEY_ID }}
               --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
-              --clickhouse-version ${{ env.version }} 
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -767,9 +805,11 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -794,7 +834,7 @@ jobs:
 
       - name: Run ${{ env.SUITE }} suite
         run: python3 
-              -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+              -u ${{ env.SUITE }}/regression.py
               --with-minio
               --with-s3amazon
               --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
@@ -804,8 +844,9 @@ jobs:
               --gcs-key-id ${{ secrets.GCS_KEY_ID }}
               --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
               --gcs-uri ${{ secrets.GCS_URI }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
 
       - name: Create and upload logs
         if: success() || failure()
@@ -829,9 +870,11 @@ jobs:
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 -u ${{ env.SUITE }}/regression.py ${{ env.args }}
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
 
       - name: Create and upload logs
         if: success() || failure()
