@@ -10,12 +10,20 @@ from helpers.argparser import argparser
 @TestModule
 @Name("ldap")
 @ArgumentParser(argparser)
-def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=None):
+def regression(
+    self,
+    local,
+    clickhouse_binary_path,
+    clickhouse_version,
+    collect_service_logs,
+    stress=None,
+):
     """ClickHouse LDAP integration regression module."""
     args = {
         "local": local,
         "clickhouse_binary_path": clickhouse_binary_path,
         "clickhouse_version": clickhouse_version,
+        "collect_service_logs": collect_service_logs,
     }
 
     self.context.clickhouse_version = clickhouse_version

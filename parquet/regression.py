@@ -36,6 +36,7 @@ def regression(
     local,
     clickhouse_version,
     clickhouse_binary_path,
+    collect_service_logs,
     storages,
     stress,
     minio_uri,
@@ -69,9 +70,9 @@ def regression(
     with Cluster(
         local,
         clickhouse_binary_path,
+        collect_service_logs=collect_service_logs,
         nodes=nodes,
         docker_compose_project_dir=os.path.join(current_dir(), env),
-        collect_service_logs=True
     ) as cluster:
 
         with Given("I have a Parquet table definition"):

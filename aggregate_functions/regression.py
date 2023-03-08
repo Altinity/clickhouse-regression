@@ -72,7 +72,14 @@ xfails = {
 @Name("aggregate functions")
 @XFails(xfails)
 @Specifications(SRS_031_ClickHouse_Aggregate_Functions)
-def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=None):
+def regression(
+    self,
+    local,
+    clickhouse_binary_path,
+    clickhouse_version,
+    collect_service_logs,
+    stress=None,
+):
     """Aggregate functions regression suite."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
@@ -85,6 +92,7 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
         cluster = create_cluster(
             local=local,
             clickhouse_binary_path=clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
             nodes=nodes,
             docker_compose_project_dir=os.path.join(
                 current_dir(), os.path.basename(current_dir()) + "_env"

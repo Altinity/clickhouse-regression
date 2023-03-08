@@ -115,7 +115,14 @@ ffails = {
 )
 @XFails(xfails)
 @FFails(ffails)
-def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=False):
+def regression(
+    self,
+    local,
+    clickhouse_binary_path,
+    clickhouse_version,
+    collect_service_logs,
+    stress=False,
+):
     """ClickHouse DateTime64 Extended Range regression module."""
     nodes = {
         "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3"),
@@ -137,6 +144,7 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=F
     with Cluster(
         local,
         clickhouse_binary_path,
+        collect_service_logs=collect_service_logs,
         nodes=nodes,
         docker_compose_project_dir=os.path.join(
             current_dir(), "datetime64_extended_range_env"

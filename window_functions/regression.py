@@ -177,7 +177,14 @@ ffails = {
 @Name("window functions")
 @Specifications(SRS019_ClickHouse_Window_Functions)
 @Requirements(RQ_SRS_019_ClickHouse_WindowFunctions("1.0"))
-def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=None):
+def regression(
+    self,
+    local,
+    clickhouse_binary_path,
+    clickhouse_version,
+    collect_service_logs,
+    stress=None,
+):
     """Window functions regression."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
@@ -189,6 +196,7 @@ def regression(self, local, clickhouse_binary_path, clickhouse_version, stress=N
     with Cluster(
         local,
         clickhouse_binary_path,
+        collect_service_logs=collect_service_logs,
         nodes=nodes,
         docker_compose_project_dir=os.path.join(
             current_dir(), os.path.basename(current_dir()) + "_env"

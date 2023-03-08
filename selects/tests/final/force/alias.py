@@ -60,12 +60,20 @@ def aggregate_function_column_check(self, node=None):
 
     try:
         with Given("I create table form the issue"):
-            node.query(f"CREATE TABLE {name} (id String, device UUID) ENGINE = MergeTree() ORDER BY tuple();")
+            node.query(
+                f"CREATE TABLE {name} (id String, device UUID) ENGINE = MergeTree() ORDER BY tuple();"
+            )
 
         with When("I insert data in this table"):
-            node.query(f"INSERT INTO {name} VALUES ('notEmpty', '417ddc5d-e556-4d27-95dd-a34d84e46a50');")
-            node.query(f"INSERT INTO {name} VALUES ('', '417ddc5d-e556-4d27-95dd-a34d84e46a50');")
-            node.query(f"INSERT INTO {name} VALUES ('', '00000000-0000-0000-0000-000000000000');")
+            node.query(
+                f"INSERT INTO {name} VALUES ('notEmpty', '417ddc5d-e556-4d27-95dd-a34d84e46a50');"
+            )
+            node.query(
+                f"INSERT INTO {name} VALUES ('', '417ddc5d-e556-4d27-95dd-a34d84e46a50');"
+            )
+            node.query(
+                f"INSERT INTO {name} VALUES ('', '00000000-0000-0000-0000-000000000000');"
+            )
 
         with Then("select result check without and with --final"):
             assert (
@@ -97,8 +105,10 @@ def select_query_from_table_1(self, node=None):
 
     try:
         with Given("I create table form the issue"):
-            node.query(f"CREATE TABLE {name}(timestamp DateTime,col1 Float64,col2 Float64,col3 Float64)"
-                       " ENGINE = MergeTree() ORDER BY tuple();")
+            node.query(
+                f"CREATE TABLE {name}(timestamp DateTime,col1 Float64,col2 Float64,col3 Float64)"
+                " ENGINE = MergeTree() ORDER BY tuple();"
+            )
 
         with When("I insert data in this table"):
             node.query(f"INSERT INTO {name} VALUES ('2023-02-20 00:00:00', 1, 2, 3);")

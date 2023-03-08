@@ -34,3 +34,10 @@ def argparser(parser):
         default=False,
         help="enable stress testing (might take a long time)",
     )
+
+    parser.add_argument(
+        "--collect-service-logs",
+        action="store_true",
+        default=False,
+        help="enable docker log collection. for ci/cd use, does not work locally.",
+    )
