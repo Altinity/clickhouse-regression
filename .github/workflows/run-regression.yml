@@ -58,8 +58,7 @@ env:
   clickhouse_binary_path: ${{ inputs.package }}
   version: ${{ inputs.version }}
   artifacts: ${{ inputs.artifacts }}
-  args: |
-    --test-to-end
+  args: --test-to-end
     --local
     --collect-service-logs 
     --output ${{ vars.OUTPUT }} 
