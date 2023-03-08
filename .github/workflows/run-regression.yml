@@ -381,7 +381,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: ${{ env.SUITE }}-artifacts
+          name: ${{ env.SUITE////_ }}-artifacts
           path: ${{ env.artifact_paths}}
 
   kafka:
@@ -436,7 +436,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: ${{ env.SUITE }}-artifacts
+          name: ${{ env.SUITE////_ }}-artifacts
           path: ${{ env.artifact_paths}}
 
   ldap_authentication:
@@ -464,7 +464,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: ${{ env.SUITE }}-artifacts
+          name: ${{ env.SUITE////_ }}-artifacts
           path: ${{ env.artifact_paths}}
 
   ldap_external_user_directory:
@@ -492,7 +492,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: ${{ env.SUITE }}-artifacts
+          name: ${{ env.SUITE////_ }}-artifacts
           path: ${{ env.artifact_paths}}
 
   ldap_role_mapping:
