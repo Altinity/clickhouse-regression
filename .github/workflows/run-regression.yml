@@ -751,7 +751,7 @@ jobs:
       - name: Create and upload logs
         if: success() || failure()
         run: |
-          export SUITE=s3/minio
+          export STORAGE=minio/
           .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
@@ -786,7 +786,7 @@ jobs:
       - name: Create and upload logs
         if: success() || failure()
         run: |
-          export SUITE=s3/aws
+          export STORAGE=aws/
           .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
@@ -820,7 +820,7 @@ jobs:
       - name: Create and upload logs
         if: success() || failure()
         run: |
-          export SUITE=s3/gcs
+          export STORAGE=gcs/
           .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
@@ -907,7 +907,7 @@ jobs:
       - name: Create and upload logs
         if: success() || failure()
         run: |
-          export SUITE=tiered_storage/minio
+          export STORAGE=minio/
           .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
@@ -941,7 +941,7 @@ jobs:
       - name: Create and upload logs
         if: success() || failure()
         run: |
-          export SUITE=tiered_storage/aws
+          export STORAGE=aws/
           .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
@@ -975,7 +975,7 @@ jobs:
       - name: Create and upload logs
         if: success() || failure()
         run: |
-          export SUITE=tiered_storage/gcs
+          export STORAGE=gcs/
           .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
