@@ -188,9 +188,7 @@ def mixed_keepers_2(self):
     and goes in read mode only with 1 node down.
     """
     if check_clickhouse_version(">23")(self):
-        skip(
-            reason="test fails on ClickHouse version >= 23"
-        )
+        skip(reason="test fails on ClickHouse version >= 23")
 
     cluster = self.context.cluster
     try:
@@ -219,7 +217,8 @@ def mixed_keepers_2(self):
             retry(cluster.node("clickhouse1").query, timeout=600, delay=30)(
                 f"insert into {table_name} values (1,2)",
                 exitcode=242,
-                message="DB::Exception: Table is in readonly mode", timeout=600
+                message="DB::Exception: Table is in readonly mode",
+                timeout=600,
             )
 
         with And("I start dropped nodes"):
@@ -301,9 +300,7 @@ def zookeepers_3(self):
     with 1 node down and in read mode only with 2 nodes down.
     """
     if check_clickhouse_version(">23")(self):
-        skip(
-            reason="test fails on ClickHouse version >= 23"
-        )
+        skip(reason="test fails on ClickHouse version >= 23")
 
     cluster = self.context.cluster
     zookeeper_cluster_nodes = cluster.nodes["zookeeper"][:3]
