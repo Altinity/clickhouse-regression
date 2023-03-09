@@ -712,12 +712,14 @@ jobs:
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: |
+          export SUITE=s3/minio
+          .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: ${{ env.SUITE }}-artifacts
+          name: ${{ env.SUITE }}-minio-artifacts
           path: ${{ env.artifact_paths}}
 
   s3_aws:
@@ -745,12 +747,14 @@ jobs:
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: |
+          export SUITE=s3/aws
+          .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: ${{ env.SUITE }}-artifacts
+          name: ${{ env.SUITE }}-aws-artifacts
           path: ${{ env.artifact_paths}}
 
   s3_gcs:
@@ -777,12 +781,14 @@ jobs:
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: |
+          export SUITE=s3/gcs
+          .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: ${{ env.SUITE }}-artifacts
+          name: ${{ env.SUITE }}-gcs-artifacts
           path: ${{ env.artifact_paths}}
 
   benchmark:
@@ -872,12 +878,14 @@ jobs:
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: |
+          export SUITE=tiered_storage/minio
+          .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: ${{ env.SUITE }}-artifacts
+          name: ${{ env.SUITE }}-minio-artifacts
           path: ${{ env.artifact_paths}}
 
   tiered_storage_aws:
@@ -904,12 +912,14 @@ jobs:
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: |
+          export SUITE=tiered_storage/aws
+          .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: ${{ env.SUITE }}-artifacts
+          name: ${{ env.SUITE }}-aws-artifacts
           path: ${{ env.artifact_paths}}
 
   tiered_storage_gcs:
@@ -936,12 +946,14 @@ jobs:
 
       - name: Create and upload logs
         if: success() || failure()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        run: |
+          export SUITE=tiered_storage/gcs
+          .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: ${{ env.SUITE }}-artifacts
+          name: ${{ env.SUITE }}-gcs-artifacts
           path: ${{ env.artifact_paths}}
 
   window_functions:
