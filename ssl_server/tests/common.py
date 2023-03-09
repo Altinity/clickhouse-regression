@@ -317,10 +317,12 @@ def create_rsa_private_key(self, outfile, passphrase, algorithm="aes256", length
                 name="openssl",
                 asynchronous=True,
             ) as cmd:
-                choice = cmd.app.expect(f"(Enter pass phrase for.*?:)|({bash.prompt})")
-                if choice.group(2) is None:
+                choice = cmd.app.expect(
+                    f"(Enter( PEM)? pass phrase( for)?.*?:)|({bash.prompt})"
+                )
+                if choice.group(4) is None:
                     cmd.app.send(passphrase)
-                    cmd.app.expect("Verifying - Enter pass phrase for .*?:")
+                    cmd.app.expect("Verifying - Enter( PEM)? pass phrase( for)?.*?:")
                     cmd.app.send(passphrase)
             stash(outfile)
         finally:
@@ -505,7 +507,7 @@ def sign_certificate(
 
 
 @TestStep(Given)
-def create_dh_params(self, outfile, length=256):
+def create_dh_params(self, outfile, length=512):
     """Generate Diffie-Hellman parameters file for the server."""
     bash = self.context.cluster.bash(node=None)
 
@@ -525,9 +527,12 @@ def create_dh_params(self, outfile, length=256):
 @TestStep(Then)
 def validate_certificate(self, certificate, ca_certificate, node=None):
     """Validate certificate using CA certificate."""
-    bash = self.context.cluster.bash(node=node)
+    if node is None:
+        node = self.context.node
 
-    cmd = bash(f"openssl verify -x509_strict -CAfile {ca_certificate} {certificate}")
+    cmd = node.command(
+        f"openssl verify -x509_strict -CAfile {ca_certificate} {certificate}"
+    )
 
     with By("checking certificate was validated"):
         assert "OK" in cmd.output, error()
@@ -767,14 +772,14 @@ def create_crt_and_key(self, name, node=None, common_name=""):
             ca_passphrase="",
         )
 
-    with And("I validate the certificate"):
-        validate_certificate(
-            certificate=crt, ca_certificate=current().context.my_own_ca_crt
-        )
-
     with And("I copy the certificate and key", description=f"{node}"):
         copy(dest_node=node, src_path=crt, dest_path=f"/{name}.crt")
         copy(dest_node=node, src_path=private_key, dest_path=f"/{name}.key")
+
+    with And("I validate the certificate"):
+        validate_certificate(
+            certificate=f"/{name}.crt", ca_certificate=self.context.node_ca_crt
+        )
 
 
 @TestStep(Given)
