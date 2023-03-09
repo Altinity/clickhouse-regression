@@ -56,7 +56,7 @@ def scenario(self, cluster, node="clickhouse1"):
                     try:
                         now = time.time()
                         wait_expire_1 = 6
-                        wait_expire_2 = 10
+                        wait_expire_2 = 20
                         time_1 = now + wait_expire_1
                         time_2 = now + wait_expire_1 + wait_expire_2
 

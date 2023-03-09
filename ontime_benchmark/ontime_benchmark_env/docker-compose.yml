@@ -1,0 +1,272 @@
+version: '2.3'
+
+volumes:
+  data1-1:
+
+  clickhouse1_jbod1:
+    driver: local
+    driver_opts:
+      o: "size=40m"
+      device: tmpfs
+      type: tmpfs
+
+  clickhouse1_jbod2:
+    driver: local
+    driver_opts:
+      o: "size=40m"
+      device: tmpfs
+      type: tmpfs
+
+  clickhouse1_jbod3:
+    driver: local
+    driver_opts:
+      o: "size=40m"
+      device: tmpfs
+      type: tmpfs
+
+  clickhouse1_jbod4:
+    driver: local
+    driver_opts:
+      o: "size=40m"
+      device: tmpfs
+      type: tmpfs
+
+  clickhouse1_external:
+    driver: local
+    driver_opts:
+      o: "size=200m"
+      device: tmpfs
+      type: tmpfs
+
+  clickhouse1_external2:
+    driver: local
+    driver_opts:
+      o: "size=200m"
+      device: tmpfs
+      type: tmpfs
+
+  clickhouse2_jbod1:
+    driver: local
+    driver_opts:
+      o: "size=40m"
+      device: tmpfs
+      type: tmpfs
+
+  clickhouse2_jbod2:
+    driver: local
+    driver_opts:
+      o: "size=40m"
+      device: tmpfs
+      type: tmpfs
+
+  clickhouse2_jbod3:
+    driver: local
+    driver_opts:
+      o: "size=40m"
+      device: tmpfs
+      type: tmpfs
+
+  clickhouse2_jbod4:
+    driver: local
+    driver_opts:
+      o: "size=40m"
+      device: tmpfs
+      type: tmpfs
+
+  clickhouse2_external:
+    driver: local
+    driver_opts:
+      o: "size=200m"
+      device: tmpfs
+      type: tmpfs
+
+  clickhouse2_external2:
+    driver: local
+    driver_opts:
+      o: "size=200m"
+      device: tmpfs
+      type: tmpfs
+
+  clickhouse3_jbod1:
+    driver: local
+    driver_opts:
+      o: "size=40m"
+      device: tmpfs
+      type: tmpfs
+
+  clickhouse3_jbod2:
+    driver: local
+    driver_opts:
+      o: "size=40m"
+      device: tmpfs
+      type: tmpfs
+
+  clickhouse3_jbod3:
+    driver: local
+    driver_opts:
+      o: "size=40m"
+      device: tmpfs
+      type: tmpfs
+
+  clickhouse3_jbod4:
+    driver: local
+    driver_opts:
+      o: "size=40m"
+      device: tmpfs
+      type: tmpfs
+
+  clickhouse3_external:
+    driver: local
+    driver_opts:
+      o: "size=200m"
+      device: tmpfs
+      type: tmpfs
+
+  clickhouse3_external2:
+    driver: local
+    driver_opts:
+      o: "size=200m"
+      device: tmpfs
+      type: tmpfs
+
+services:
+  minio1:
+    extends:
+      file: minio-service.yml
+      service: minio1
+    depends_on:
+      - proxy1
+      - proxy2
+
+  proxy1:
+    image: registry.gitlab.com/altinity-public/container-images/test/clickhouse-s3-proxy:1.0
+    ports:
+      - "8080"
+      - "80"
+      - "443"
+
+  proxy2:
+    image: registry.gitlab.com/altinity-public/container-images/test/clickhouse-s3-proxy:1.0
+    ports:
+      - "8080"
+      - "80"
+      - "443"
+
+  resolver:
+    image: registry.gitlab.com/altinity-public/container-images/test/clickhouse-python-bottle:1.0
+    ports:
+      - "8080"
+    tty: true
+    depends_on:
+      - proxy1
+      - proxy2
+
+  minio-client:
+    extends:
+      file: minio-client.yml
+      service: minio-client
+    depends_on:
+      minio1:
+        condition: service_healthy
+
+  zookeeper:
+    volumes:
+      - clickhouse1_jbod1:/clickhouse1_jbod1
+      - clickhouse1_jbod2:/clickhouse1_jbod2
+      - clickhouse1_jbod3:/clickhouse1_jbod3
+      - clickhouse1_jbod4:/clickhouse1_jbod4
+      - clickhouse1_external:/clickhouse1_external
+      - clickhouse1_external2:/clickhouse1_external2
+      - clickhouse2_jbod1:/clickhouse2_jbod1
+      - clickhouse2_jbod2:/clickhouse2_jbod2
+      - clickhouse2_jbod3:/clickhouse2_jbod3
+      - clickhouse2_jbod4:/clickhouse2_jbod4
+      - clickhouse2_external:/clickhouse2_external
+      - clickhouse2_external2:/clickhouse2_external2
+      - clickhouse3_jbod1:/clickhouse3_jbod1
+      - clickhouse3_jbod2:/clickhouse3_jbod2
+      - clickhouse3_jbod3:/clickhouse3_jbod3
+      - clickhouse3_jbod4:/clickhouse3_jbod4
+      - clickhouse3_external:/clickhouse3_external
+      - clickhouse3_external2:/clickhouse3_external2
+    extends:
+      file: zookeeper-service.yml
+      service: zookeeper
+
+  clickhouse1:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse1
+    volumes:
+      - clickhouse1_jbod1:/jbod1
+      - clickhouse1_jbod2:/jbod2
+      - clickhouse1_jbod3:/jbod3
+      - clickhouse1_jbod4:/jbod4
+      - clickhouse1_external:/external
+      - clickhouse1_external2:/external2
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+
+  clickhouse2:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse2
+    volumes:
+      - clickhouse1_jbod1:/jbod1
+      - clickhouse1_jbod2:/jbod2
+      - clickhouse1_jbod3:/jbod3
+      - clickhouse1_jbod4:/jbod4
+      - clickhouse1_external:/external
+      - clickhouse1_external2:/external2
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse2/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+
+  clickhouse3:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse3
+    volumes:
+      - clickhouse1_jbod1:/jbod1
+      - clickhouse1_jbod2:/jbod2
+      - clickhouse1_jbod3:/jbod3
+      - clickhouse1_jbod4:/jbod4
+      - clickhouse1_external:/external
+      - clickhouse1_external2:/external2
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+
+  aws:
+    extends:
+      file: aws-client.yml
+      service: aws
+
+  # dummy service which does nothing, but allows to postpone
+  # 'docker-compose up -d' till all dependecies will go healthy
+  all_services_ready:
+    image: hello-world
+    depends_on:
+      clickhouse1:
+        condition: service_healthy
+      clickhouse2:
+        condition: service_healthy
+      clickhouse3:
+        condition: service_healthy
+      zookeeper:
+        condition: service_healthy
+      minio1:
+        condition: service_healthy

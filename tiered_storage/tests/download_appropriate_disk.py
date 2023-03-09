@@ -9,7 +9,7 @@ import time
 
 from tiered_storage.tests.common import get_random_string
 from tiered_storage.tests.common import get_used_disks_for_table
-from testflows.core import TestScenario, Name, Requirements
+from testflows.core import TestScenario, Name, Requirements, retries
 from testflows.core import Given, When, And, Then, Finally
 from testflows.asserts import error
 
@@ -58,14 +58,16 @@ def scenario(self, cluster, nodes=None):
                 except:
                     time.sleep(0.5)
 
-        with When("I check the used disk on other replica"):
-            disks = get_used_disks_for_table(nodes[-1], "replicated_table_for_download")
+        for retry in retries(timeout=60):
+            with retry:
+                with When("I check the used disk on other replica"):
+                    disks = get_used_disks_for_table(nodes[-1], "replicated_table_for_download")
 
-        expected_disks = {
-            "external",
-        }
-        with Then(f"the used disk should match {expected_disks}", format_name=False):
-            assert set(disks) == expected_disks, error()
+                expected_disks = {
+                    "external",
+                }
+                with Then(f"the used disk should match {expected_disks}", format_name=False):
+                    assert set(disks) == expected_disks, error()
 
     finally:
         with Finally("I drop the table on each node"):
