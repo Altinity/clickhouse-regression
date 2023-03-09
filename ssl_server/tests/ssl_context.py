@@ -40,7 +40,7 @@ def enable_ssl(
             outfile=my_own_ca_key, passphrase=my_own_ca_key_passphrase
         )
         debug(f"{my_own_ca_key}")
-        current().context.my_own_ca_key = my_own_ca_key
+        self.context.my_own_ca_key = my_own_ca_key
 
     with And("I create my own CA certificate"):
         my_own_ca_crt = create_ca_certificate(
@@ -49,15 +49,7 @@ def enable_ssl(
             passphrase=my_own_ca_key_passphrase,
             common_name="root",
         )
-        current().context.my_own_ca_crt = my_own_ca_crt
-
-    with And("I install the CA certificate in the trust store"):
-        bash = self.context.cluster.bash(node=None)
-        bash(
-            f"sudo cp {my_own_ca_crt} /usr/local/share/ca-certificates/{my_own_ca_crt.split('/')[-1]}.crt"
-        )
-        bash("sudo update-ca-certificates")
-        debug(my_own_ca_crt)
+        self.context.my_own_ca_crt = my_own_ca_crt
 
     with And("I generate DH parameters"):
         dh_params = create_dh_params(outfile=dh_params)
@@ -84,16 +76,19 @@ def enable_ssl(
             ca_passphrase=my_own_ca_key_passphrase,
         )
 
-    with And("I validate server certificate"):
-        validate_certificate(certificate=server_crt, ca_certificate=my_own_ca_crt)
-
     with And("I add certificate to node"):
-        add_trusted_ca_certificate(node=node, certificate=my_own_ca_crt)
+        node_ca_crt = add_trusted_ca_certificate(node=node, certificate=my_own_ca_crt)
+        self.context.node_ca_crt = node_ca_crt
 
     with And("I copy server certificate, key and dh params", description=f"{node}"):
         copy(dest_node=node, src_path=server_crt, dest_path=node_server_crt)
         copy(dest_node=node, src_path=server_key, dest_path=node_server_key)
         copy(dest_node=node, src_path=dh_params, dest_path=node_dh_params)
+
+    with And("I validate server certificate"):
+        validate_certificate(
+            certificate=node_server_crt, ca_certificate=node_ca_crt, node=node
+        )
 
     with And("I set correct permission on server key file"):
         node.command(f'chmod 600 "{node_server_key}"')
