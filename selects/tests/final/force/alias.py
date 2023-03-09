@@ -62,7 +62,7 @@ def aggregate_function_column_check(self, node=None):
     try:
         with Given("I create table form the issue"):
             node.query(
-                f"CREATE TABLE {name} (id String, device UUID) ENGINE = MergeTree() ORDER BY tuple();"
+                f"CREATE TABLE {name} (id String, device UUID) ENGINE = ReplacingMergeTree() ORDER BY tuple();"
             )
 
         with When("I insert data in this table"):
@@ -81,7 +81,7 @@ def aggregate_function_column_check(self, node=None):
                 node.query(
                     "SELECT if(empty(id), toString(device), id) AS device, multiIf( notEmpty(id),'a', "
                     f"device == '00000000-0000-0000-0000-000000000000', 'b', 'c' ) AS device_id_type, count() FROM {name} "
-                    "GROUP BY device, device_id_type ORDER BY device;"
+                    "FINAL GROUP BY device, device_id_type ORDER BY device;"
                 ).output.strip()
                 == node.query(
                     "SELECT if(empty(id), toString(device), id) AS device, multiIf( notEmpty(id),'a', "
@@ -109,7 +109,7 @@ def select_query_from_table_1(self, node=None):
         with Given("I create table form the issue"):
             node.query(
                 f"CREATE TABLE {name}(timestamp DateTime,col1 Float64,col2 Float64,col3 Float64)"
-                " ENGINE = MergeTree() ORDER BY tuple();"
+                " ENGINE = ReplacingMergeTree() ORDER BY tuple();"
             )
 
         with When("I insert data in this table"):
@@ -119,7 +119,7 @@ def select_query_from_table_1(self, node=None):
             assert (
                 node.query(
                     "SELECT argMax(col1, timestamp) AS col1, argMax(col2, timestamp) AS col2, col1 / col2 AS final_col "
-                    f"FROM {name} GROUP BY col3 ORDER BY final_col DESC;"
+                    f"FROM {name} FINAL GROUP BY col3 ORDER BY final_col DESC;"
                 ).output.strip()
                 == node.query(
                     "SELECT argMax(col1, timestamp) AS col1, argMax(col2, timestamp) AS col2, col1 / col2 AS final_col "
@@ -131,7 +131,7 @@ def select_query_from_table_1(self, node=None):
             assert (
                 node.query(
                     "SELECT argMax(col1, timestamp) AS col1, col1 / 10 AS final_col, final_col + 1 AS final_col2"
-                    f" FROM {name} GROUP BY col3;"
+                    f" FROM {name} FINAL GROUP BY col3;"
                 ).output.strip()
                 == node.query(
                     "SELECT argMax(col1, timestamp) AS col1, col1 / 10 AS final_col, final_col + 1 AS final_col2"
