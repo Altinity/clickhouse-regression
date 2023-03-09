@@ -50,9 +50,7 @@ def test_example(self, node=None):
                 ],
             )
 
-        with And(
-            "I optimize table"
-        ):
+        with And("I optimize table"):
             node.query(
                 f"OPTIMIZE TABLE {name} FINAL;",
             )

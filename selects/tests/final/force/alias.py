@@ -27,8 +27,7 @@ def clone_alias_ast_1(self, node=None):
 @TestScenario
 @Name("clone_alias_ast_2")
 def aggregrate_from_subquery_alias(self, node=None):
-    """Alias of aggregrate function from a subquery that contains an alias of expression used in a window function.
-    """
+    """Alias of aggregrate function from a subquery that contains an alias of expression used in a window function."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 

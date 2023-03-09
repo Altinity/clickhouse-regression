@@ -22,7 +22,14 @@ ffails = {}
 @XFlags(xflags)
 @FFails(ffails)
 @Name("functional")
-def regression(self, local, clickhouse_binary_path, clickhouse_version, collect_service_logs, stress=None):
+def regression(
+    self,
+    local,
+    clickhouse_binary_path,
+    clickhouse_version,
+    collect_service_logs,
+    stress=None,
+):
     """Run the ClickHouse functional (stateless and stateful) tests."""
     nodes = {"clickhouse": ("clickhouse1",)}
     self.context.clickhouse_version = clickhouse_version
