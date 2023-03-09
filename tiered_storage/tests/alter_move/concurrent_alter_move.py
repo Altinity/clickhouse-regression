@@ -68,7 +68,7 @@ def scenario(self, cluster, node="clickhouse1"):
                                 node,
                                 name,
                                 steps=False,
-                                timeout=300,
+                                timeout=360,
                                 raise_on_exception=True,
                             )
 

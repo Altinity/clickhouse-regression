@@ -10,7 +10,6 @@ from helpers.cluster import Cluster
 from s3.regression import argparser as argparser_base
 
 from s3.tests.common import *
-from s3.requirements import *
 
 xfails = {}
 
@@ -38,6 +37,7 @@ def regression(
     local,
     clickhouse_version,
     clickhouse_binary_path,
+    collect_service_logs,
     storages,
     stress,
     minio_uri,
@@ -63,6 +63,9 @@ def regression(
     bucket_path = "data/benchmark"
 
     self.context.clickhouse_version = clickhouse_version
+
+    if storages is None:
+        storages = ["minio"]
 
     for storage in storages:
         nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
@@ -115,6 +118,7 @@ def regression(
             with Cluster(
                 local,
                 clickhouse_binary_path,
+                collect_service_logs=collect_service_logs,
                 nodes=nodes,
                 docker_compose_project_dir=os.path.join(current_dir(), env),
                 environ=environ,
@@ -161,7 +165,7 @@ def regression(
                     }
 
                 with s3_storage(disks, policies):
-                    Feature(test=load("s3.tests.benchmark", "feature"))(format=format)
+                    Feature(test=load("ontime_benchmark.tests.benchmark", "feature"))(format=format)
 
 
 if main():
