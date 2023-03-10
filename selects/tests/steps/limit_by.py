@@ -88,6 +88,29 @@ def limit_by_result_check(self, table, node=None):
         )
 
 
+@TestStep(Then)
+@Name("'LIMIT BY' compare results with expression column as alias")
+def limit_by_result_check_with_alias(self, table, node=None):
+    """Compare results between 'LIMIT BY' query with expression column as alias with `FINAL` clause and
+    'LIMIT BY' query with expression column as alias with --final setting enabled."""
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    with Then("I check that compare results are the same"):
+        assert (
+            node.query(
+                f"SELECT id*10 as id_new FROM  {table.name} {'FINAL' if table.final_modifier_available else ''}"
+                f" ORDER BY id LIMIT 1 BY id FORMAT JSONEachRow;",
+                settings=[("final", 0)],
+            ).output.strip()
+            == node.query(
+                f"SELECT id*10 as id_new FROM  {table.name} "
+                f" ORDER BY id LIMIT 1 BY id FORMAT JSONEachRow;",
+                settings=[("final", 1)],
+            ).output.strip()
+        )
+
+
 @TestStep
 @Name("'LIMIT BY' negative compare results")
 def limit_by_negative_result_check(self, table, node=None):

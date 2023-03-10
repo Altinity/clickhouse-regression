@@ -64,9 +64,31 @@ def distinct_with_final_clause_and_force_final(self, table, node=None):
 
 
 @TestStep(Then)
+@Name("'DISTINCT' with expression column as alias compare results")
+def distinct_result_check_with_alias(self, table, node=None):
+    """Compare results between 'DISTINCT' query with expression column as alias with `FINAL`  clause and
+    'DISTINCT' query with expression column as alias with --final setting enabled."""
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    with Then("I check that compare results are the same"):
+        assert (
+            node.query(
+                f"SELECT DISTINCT id*10 as new_id FROM {table.name} {'FINAL' if table.final_modifier_available else ''} "
+                f"ORDER BY id FORMAT JSONEachRow;",
+                settings=[("final", 0)],
+            ).output.strip()
+            == node.query(
+                f"SELECT DISTINCT id*10 as new_id FROM {table.name} ORDER BY id FORMAT JSONEachRow;",
+                settings=[("final", 1)],
+            ).output.strip()
+        )
+
+
+@TestStep(Then)
 @Name("'DISTINCT' compare results")
 def distinct_result_check(self, table, node=None):
-    """Compare results between 'DISTINCT' query with `FINAL`  clause and
+    """Compare results between 'DISTINCT' with `FINAL` clause and
     'DISTINCT' query with --final setting enabled."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")

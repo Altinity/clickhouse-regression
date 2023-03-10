@@ -7,41 +7,6 @@ import tests.steps as select
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_As("1.0"))
-def simple_select_as(self):
-    """Check `SELECT some_col as new_some_col`."""
-    with Given("I chose tables for testing"):
-        tables = define(
-            "Source set of tables with excluded duplicate, system, auxiliary tables and "
-            "some not supported views by this test",
-            [
-                table
-                for table in self.context.tables
-                if not table.name.endswith("duplicate")
-                if not table.name.endswith("nview")
-                if not table.name.startswith("system")
-                if not table.name.endswith("_wview_final")
-                if not table.name.startswith("expr_subquery")
-            ],
-            encoder=lambda tables: ", ".join([table.name for table in tables]),
-        )
-
-    for table in tables:
-        with Example(f"{table.name}", flags=TE):
-            with Then(
-                "Compare results between `SELECT column as new_column` query with `FINAL` clause "
-                "and `SELECT column as new_column` query with --final setting enabled."
-            ):
-                select.as_result_check(table=table)
-
-            with And(
-                "Compare results between `SELECT column as new_column` query with --final "
-                "and `SELECT column as new_column` query without `FINAL` and without --final."
-            ):
-                select.as_negative_result_check(table=table)
-
-
-@TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Select("1.0"))
 def simple_select_count(self):
     """Check `SELECT count()` clause."""
