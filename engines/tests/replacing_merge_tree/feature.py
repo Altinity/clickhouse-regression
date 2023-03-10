@@ -10,7 +10,7 @@ append_path(sys.path, "..")
 
 
 @TestModule
-@Name("new_replacing_merge_tree")
+@Name("replacing_merge_tree")
 def feature(self):
     """Check new ReplacingMergeTree engine."""
-    Feature(run=load("new_replacing_merge_tree.general", "feature"))
+    Feature(run=load("replacing_merge_tree.general", "feature"))
