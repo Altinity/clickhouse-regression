@@ -474,15 +474,15 @@ jobs:
 
   # functional:
   #       strategy:
-      matrix:
-        include:
-          - version: 22.8.13.21.altinitystable
-            clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 22.3.15.34.altinitystable
-            clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
-            clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: self-hosted
+    #   matrix:
+    #     include:
+    #       - version: 22.8.13.21.altinitystable
+    #         clickhouse_binary_path: docker://altinity/clickhouse-server
+    #       - version: 22.3.15.34.altinitystable
+    #         clickhouse_binary_path: docker://altinity/clickhouse-server
+    #       - version: 23.2.4.12
+    #         clickhouse_binary_path: docker://clickhouse/clickhouse-server
+    # runs-on: self-hosted
   #   env:
   #     SUITE: clickhouse/functional
   #   steps:
