@@ -97,16 +97,17 @@ version: 1.0
 ###### RQ.SRS-036.ClickHouse.CollapsingMergeTree.NonFunctionalRequirements.Performance
 version: 1.0
 
-[NewReplacingMergeTree] engine SHALL allow handle large volumes of data efficiently.
+[CollapsingMergeTree] engine SHALL allow handle large volumes of data efficiently.
 
 ##### Reliability
 
 ###### RQ.SRS-036.ClickHouse.CollapsingMergeTree.NonFunctionalRequirements.Reliability
 version: 1.0
 
-[NewReplacingMergeTree] engine SHALL be reliable and not lose any data.
+[CollapsingMergeTree] engine SHALL be reliable and not lose any data.
 
 [SRS]: #srs
+[ClickHouse]: https://clickhouse.com
 [CollapsingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/collapsingmergetree/
 [Algorithm]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/collapsingmergetree/#table_engine-collapsingmergetree-collapsing-algorithm
 
