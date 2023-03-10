@@ -215,7 +215,7 @@ version: 1.0
 
 
 [SRS]: #srs
-[NewReplacingMergeTree]: https://github.com/ClickHouse/ClickHouse/pull/41005
+[ClickHouse]: https://clickhouse.com
 [ReplacingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/replacingmergetree/
 [CollapsingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/collapsingmergetree/
 
