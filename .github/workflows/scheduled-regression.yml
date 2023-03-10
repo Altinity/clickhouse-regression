@@ -1,6 +1,8 @@
-name: Run CI/CD regression tests
+name: Run scheduled CI/CD regression tests
 run-name: ${{ github.actor }} is running regression tests
-on: 
+on:
+  schedule:
+    - cron: "0 0 * * *"
   workflow_dispatch:
     inputs:
       package:
@@ -13,36 +15,6 @@ on:
         required: true
         type: string
         default: 23.2.2.20
-      suite:
-        description: "Test suite to run (default: all)"
-        type: choice
-        options:
-          - all
-          - aes_encryption
-          - aggregate_functions
-          - atomic_insert
-          - base_58
-          - benchmark
-          - clickhouse_keeper
-          - datetime64_extended_range
-          - disk_level_encryption
-          - dns
-          - example
-          - extended_precision_data_types
-          - functional
-          - kafka
-          - kerberos
-          - ldap
-          - lightweight_delete
-          - map_type
-          - parquet
-          - part_moves_between_shards
-          - rbac
-          - s3
-          - selects
-          - ssl_server
-          - tiered_storage
-          - window_functions
       artifacts:
         description: "Artifact S3 bucket"
         type: choice
@@ -55,8 +27,6 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
   AWS_DEFAULT_REGION: ${{ secrets.AWS_REPORT_REGION }}
   PYTHONIOENCODING: utf-8
-  clickhouse_binary_path: ${{ inputs.package }}
-  version: ${{ inputs.version }}
   artifacts: ${{ inputs.artifacts }}
   args: --test-to-end
     --local
@@ -77,10 +47,20 @@ env:
 
 jobs:
   aes_encryption:
+    strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
       SUITE: aes_encryption
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'aes_encryption' }}
+      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
+      version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -105,10 +85,20 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   aggregate_functions:
+    strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
       SUITE: aggregate_functions
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'aggregate_functions' }}
+      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
+      version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -133,10 +123,20 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   atomic_insert:
+    strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
       SUITE: atomic_insert
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'atomic_insert' }}
+      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
+      version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -161,10 +161,20 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   base_58:
+    strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
       SUITE: base_58
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'base_58' }}
+      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
+      version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -189,10 +199,18 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   # benchmark:
+  #   strategy:
+  #     matrix:
+  #       include:
+  #         - version: 22.8.13.21.altinitystable
+  #           clickhouse_binary_path: docker://altinity/clickhouse-server
+  #         - version: 22.3.15.34.altinitystable
+  #           clickhouse_binary_path: docker://altinity/clickhouse-server
+  #         - version: 23.2.4.12
+  #           clickhouse_binary_path: docker://clickhouse/clickhouse-server
   #   runs-on: self-hosted
   #   env:
   #     SUITE: ontime_benchmark
-  #   if: ${{ inputs.suite == 'all' || inputs.suite == 'benchmark' }}
   #   steps:
   #     - uses: actions/checkout@v3
 
@@ -227,10 +245,20 @@ jobs:
   #         path: ${{ env.artifact_paths}}
 
   clickhouse_keeper:
+    strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
       SUITE: clickhouse_keeper
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
+      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
+      version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -255,10 +283,20 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   datetime64_extended_range:
+    strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
       SUITE: datetime64_extended_range
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'datetime64_extended_range' }}
+      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
+      version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -283,10 +321,20 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   disk_level_encryption:
+    strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
       SUITE: disk_level_encryption
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'disk_level_encryption' }}
+      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
+      version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -311,10 +359,20 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   dns:
+    strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
       SUITE: dns
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'dns' }}
+      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
+      version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -339,10 +397,20 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   example:
+    strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
       SUITE: example
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'example' }}
+      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
+      version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -367,10 +435,20 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   extended_precision_data_types:
+    strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
       SUITE: extended_precision_data_types
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'extended_precision_data_types' }}
+      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
+      version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -395,10 +473,18 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   # functional:
-  #   runs-on: self-hosted
+  #       strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
+    runs-on: self-hosted
   #   env:
   #     SUITE: clickhouse/functional
-  #   if: ${{ inputs.suite == 'all' || inputs.suite == 'functional' }}
   #   steps:
   #     - uses: actions/checkout@v3
 
@@ -423,10 +509,20 @@ jobs:
   #         path: ${{ env.artifact_paths}}
 
   kafka:
+    strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
       SUITE: kafka
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'kafka' }}
+      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
+      version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -451,10 +547,20 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   kerberos:
+    strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
       SUITE: kerberos
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'kerberos' }}
+      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
+      version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -478,10 +584,20 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   ldap_authentication:
+    strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
       SUITE: ldap/authentication
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
+      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
+      version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -506,10 +622,20 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   ldap_external_user_directory:
+    strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
       SUITE: ldap/external_user_directory
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
+      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
+      version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -534,10 +660,20 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   ldap_role_mapping:
+    strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
       SUITE: ldap/role_mapping
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
+      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
+      version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -562,10 +698,20 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   lightweight_delete:
+    strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
       SUITE: lightweight_delete
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'lightweight_delete' }}
+      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
+      version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -590,10 +736,20 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   map_type:
+    strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
       SUITE: map_type
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'map_type' }}
+      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
+      version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -618,10 +774,20 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   parquet:
+    strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
       SUITE: parquet
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet' }}
+      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
+      version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -646,10 +812,20 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   part_moves_between_shards:
+    strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
       SUITE: part_moves_between_shards
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'part_moves_between_shards' }}
+      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
+      version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -674,10 +850,20 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   rbac:
+    strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
       SUITE: rbac
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'rbac' }}
+      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
+      version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -702,10 +888,20 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   selects:
+    strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
       SUITE: selects
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'selects' }}
+      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
+      version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -730,10 +926,20 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   s3_minio:
+    strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
       SUITE: s3
-    if: ${{ inputs.suite == 'all' || inputs.suite == 's3' }}
+      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
+      version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -761,10 +967,20 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   s3_aws:
+    strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
       SUITE: s3
-    if: ${{ (inputs.suite == 'all' || inputs.suite == 's3') && vars.S3_AWS == 1 }}
+      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
+      version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -796,10 +1012,20 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   s3_gcs:
+    strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
       SUITE: s3
-    if: ${{ (inputs.suite == 'all' || inputs.suite == 's3') && vars.S3_GCS }}
+      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
+      version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -830,10 +1056,20 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   ssl_server:
+    strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
       SUITE: ssl_server
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
+      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
+      version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -858,10 +1094,20 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   tiered_storage:
+    strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
       SUITE: tiered_storage
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage' }}
+      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
+      version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -886,10 +1132,20 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   tiered_storage_minio:
+    strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
       SUITE: tiered_storage
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage' }}
+      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
+      version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -917,10 +1173,20 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   tiered_storage_aws:
+    strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
       SUITE: tiered_storage
-    if: ${{ (inputs.suite == 'all' || inputs.suite == 'tiered_storage') && vars.TIERED_STORAGE_AWS == 1 }}
+      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
+      version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -951,10 +1217,20 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   tiered_storage_gcs:
+    strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
       SUITE: tiered_storage
-    if: ${{ (inputs.suite == 'all' || inputs.suite == 'tiered_storage') && vars.TIERED_STORAGE_GCS }}
+      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
+      version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -985,10 +1261,20 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   window_functions:
+    strategy:
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
       SUITE: window_functions
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'window_functions' }}
+      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
+      version: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v3
 
