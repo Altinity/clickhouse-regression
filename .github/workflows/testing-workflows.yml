@@ -12,4 +12,4 @@ jobs:
   manual-test:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "::notice ::Annotation"
+      - run: echo "::notice title=title with spaces::Annotation:)"
