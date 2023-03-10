@@ -1,9 +1,27 @@
-2`# SRS036 ClickHouse CollapsingMergeTree
+# SRS036 ClickHouse CollapsingMergeTree
 # Software Requirements Specification
 
 ## Table of Contents
 
 * 1 [Introduction](#introduction)
+* 2 [Related Resources](#related-resources)
+* 3 [Terminology](#terminology)
+  * 3.1 [SRS](#srs)
+* 4 [Requirements](#requirements)
+  * 4.1 [RQ.SRS-036.ClickHouse.CollapsingMergeTree](#rqsrs-036clickhousecollapsingmergetree)
+    * 4.1.1 [Parameters](#parameters)
+      * 4.1.1.1 [RQ.SRS-036.ClickHouse.CollapsingMergeTree.Parameters](#rqsrs-036clickhousecollapsingmergetreeparameters)
+    * 4.1.2 [Collapsing Data](#collapsing-data)
+      * 4.1.2.1 [RQ.SRS-036.ClickHouse.CollapsingMergeTree.CollapsingData](#rqsrs-036clickhousecollapsingmergetreecollapsingdata)
+    * 4.1.3 [Merge Algorithm](#merge-algorithm)
+      * 4.1.3.1 [RQ.SRS-036.ClickHouse.CollapsingMergeTree.MergeAlgorithm](#rqsrs-036clickhousecollapsingmergetreemergealgorithm)
+    * 4.1.4 [TableCreation](#tablecreation)
+      * 4.1.4.1 [RQ.SRS-036.ClickHouse.CollapsingMergeTree.TableCreation](#rqsrs-036clickhousecollapsingmergetreetablecreation)
+    * 4.1.5 [Non-Functional Requirements](#non-functional-requirements)
+      * 4.1.5.1 [Performance](#performance)
+        * 4.1.5.1.1 [RQ.SRS-036.ClickHouse.CollapsingMergeTree.NonFunctionalRequirements.Performance](#rqsrs-036clickhousecollapsingmergetreenonfunctionalrequirementsperformance)
+      * 4.1.5.2 [Reliability](#reliability)
+        * 4.1.5.2.1 [RQ.SRS-036.ClickHouse.CollapsingMergeTree.NonFunctionalRequirements.Reliability](#rqsrs-036clickhousecollapsingmergetreenonfunctionalrequirementsreliability)
 
 
 ## Introduction
@@ -13,16 +31,6 @@ collapsing to data parts merge algorithm. The engine is designed to asynchronous
 fields in a sorting key (ORDER BY) are equivalent except for the particular field Sign, which can have values of 
 1 and -1. Rows without a pair are kept, leading to a significant reduction in storage volume and improved SELECT query 
 efficiency. 
-
-
-w
-## Feature Diagram
-
-Test feature diagram.
-
-```mermaid
-
-```
 
 ## Related Resources
 
