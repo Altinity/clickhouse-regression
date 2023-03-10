@@ -82,6 +82,27 @@ def count_result_check(self, table, node=None):
         )
 
 
+@TestStep(Then)
+@Name("count() with alias compare results")
+def count_result_check_with_alias(self, table, node=None):
+    """Compare results between count() query with expression column as alias with `FINAL`  clause and count() query
+    with expression column as alias with --final setting enabled."""
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    with Then("I check that compare results are the same"):
+        assert (
+            node.query(
+                f"SELECT count()*10 as new_count FROM {table.name} {'FINAL' if table.final_modifier_available else ''} FORMAT JSONEachRow;",
+                settings=[("final", 0)],
+            ).output.strip()
+            == node.query(
+                f"SELECT count()*10 as new_count FROM {table.name} FORMAT JSONEachRow;",
+                settings=[("final", 1)],
+            ).output.strip()
+        )
+
+
 @TestStep
 @Name("count() negative compare results")
 def count_negative_result_check(self, table, node=None):
