@@ -8,7 +8,7 @@ from tests.steps.main_steps import *
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_As("1.0"))
 def simple_select_as(self):
     """Check `SELECT some_col as new_some_col`."""
-    with Given("I chose tables for testing"):
+    with Given("I choose tables for testing"):
         tables = define(
             "Source set of tables with excluded duplicate, system, auxiliary tables and "
             "some not supported views by this test",
@@ -42,7 +42,7 @@ def simple_select_as(self):
 @TestScenario
 def simple_select_count_with_alias(self):
     """Check `SELECT count()` clause with expression column as alias column."""
-    with Given("I chose tables for testing"):
+    with Given("I choose tables for testing"):
         tables = define(
             "Source set of tables with excluded duplicate, system, auxiliary tables and some not supported views",
             [
@@ -66,7 +66,7 @@ def simple_select_count_with_alias(self):
 @TestScenario
 def simple_select_distinct_with_alias(self):
     """Check SELECT query with `DISTINCT` clause with expression column as alias column."""
-    with Given("I chose tables for testing"):
+    with Given("I choose tables for testing"):
         tables = define(
             "Source set of tables with excluded duplicate, system, auxiliary tables and "
             "some not supported views by this test",
@@ -94,7 +94,7 @@ def simple_select_distinct_with_alias(self):
 @TestScenario
 def simple_select_limit_by_with_alias(self):
     """Check SELECT query with `LIMIT BY` clause with expression column as alias."""
-    with Given("I chose tables for testing"):
+    with Given("I choose tables for testing"):
         tables = define(
             "Source set of tables with excluded duplicate, system, auxiliary tables and "
             "some not supported views by this test",
@@ -122,7 +122,7 @@ def simple_select_limit_by_with_alias(self):
 @TestScenario
 def simple_select_limit_with_alias(self):
     """Check SELECT query with `LIMIT` clause with expression column as alias."""
-    with Given("I chose tables for testing"):
+    with Given("I choose tables for testing"):
         tables = define(
             "Source set of tables with excluded duplicate, system, auxiliary tables and "
             "some not supported views by this test",
