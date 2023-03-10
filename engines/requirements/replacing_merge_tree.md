@@ -6,41 +6,40 @@
 * 1 [Introduction](#introduction)
 * 2 [Related Resources](#related-resources)
 * 3 [Terminology](#terminology)
-  * 3.1 [SRS](#srs)
 * 4 [Requirements](#requirements)
   * 4.1 [RQ.SRS-035.ClickHouse.ReplacingMergeTree](#rqsrs-035clickhousereplacingmergetree)
-  * 4.2 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.OldReplacingMergeTree](#rqsrs-035clickhousereplacingmergetreeoldreplacingmergetree)
-    * 4.2.1 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.General](#rqsrs-035clickhousereplacingmergetreegeneral)
-    * 4.2.2 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.DataDeduplication](#rqsrs-035clickhousereplacingmergetreedatadeduplication)
-    * 4.2.3 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.OptimizeMerge](#rqsrs-035clickhousereplacingmergetreeoptimizemerge)
-    * 4.2.4 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.UniquenessOfRows](#rqsrs-035clickhousereplacingmergetreeuniquenessofrows)
-    * 4.2.5 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.VersionColumn](#rqsrs-035clickhousereplacingmergetreeversioncolumn)
-    * 4.2.6 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.SelectionOfRows](#rqsrs-035clickhousereplacingmergetreeselectionofrows)
-    * 4.2.7 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.SelectionRules](#rqsrs-035clickhousereplacingmergetreeselectionrules)
-    * 4.2.8 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.TableCreation](#rqsrs-035clickhousereplacingmergetreetablecreation)
-  * 4.3 [CollapsingMergeTree](#collapsingmergetree)
-    * 4.3.1 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.CollapsingMergeTree](#rqsrs-035clickhousereplacingmergetreecollapsingmergetree)
-  * 4.4 [Duplicate Insertions](#duplicate-insertions)
-    * 4.4.1 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.DuplicateInsertions](#rqsrs-035clickhousereplacingmergetreeduplicateinsertions)
-  * 4.5 [Update](#update)
-    * 4.5.1 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.Update](#rqsrs-035clickhousereplacingmergetreeupdate)
-  * 4.6 [Delete](#delete)
-    * 4.6.1 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.Delete](#rqsrs-035clickhousereplacingmergetreedelete)
-  * 4.7 [Update Key Columns](#update-key-columns)
-    * 4.7.1 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.UpdateKeyColumns](#rqsrs-035clickhousereplacingmergetreeupdatekeycolumns)
-  * 4.8 [Remove Duplicates](#remove-duplicates)
-    * 4.8.1 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.RemoveDuplicates](#rqsrs-035clickhousereplacingmergetreeremoveduplicates)
-    * 4.8.2 [Backward Compatibility](#backward-compatibility)
-      * 4.8.2.1 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.BackwardCompatibility](#rqsrs-035clickhousereplacingmergetreebackwardcompatibility)
+    * 4.1.1 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.OldReplacingMergeTree](#rqsrs-035clickhousereplacingmergetreeoldreplacingmergetree)
+    * 4.1.2 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.General](#rqsrs-035clickhousereplacingmergetreegeneral)
+    * 4.1.3 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.DataDeduplication](#rqsrs-035clickhousereplacingmergetreedatadeduplication)
+    * 4.1.4 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.OptimizeMerge](#rqsrs-035clickhousereplacingmergetreeoptimizemerge)
+    * 4.1.5 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.UniquenessOfRows](#rqsrs-035clickhousereplacingmergetreeuniquenessofrows)
+    * 4.1.6 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.VersionColumn](#rqsrs-035clickhousereplacingmergetreeversioncolumn)
+    * 4.1.7 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.SelectionOfRows](#rqsrs-035clickhousereplacingmergetreeselectionofrows)
+    * 4.1.8 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.SelectionRules](#rqsrs-035clickhousereplacingmergetreeselectionrules)
+    * 4.1.9 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.TableCreation](#rqsrs-035clickhousereplacingmergetreetablecreation)
+  * 4.2 [CollapsingMergeTree](#collapsingmergetree)
+    * 4.2.1 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.CollapsingMergeTree](#rqsrs-035clickhousereplacingmergetreecollapsingmergetree)
+  * 4.3 [Duplicate Insertions](#duplicate-insertions)
+    * 4.3.1 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.DuplicateInsertions](#rqsrs-035clickhousereplacingmergetreeduplicateinsertions)
+  * 4.4 [Update](#update)
+    * 4.4.1 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.Update](#rqsrs-035clickhousereplacingmergetreeupdate)
+  * 4.5 [Delete](#delete)
+    * 4.5.1 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.Delete](#rqsrs-035clickhousereplacingmergetreedelete)
+  * 4.6 [Update Key Columns](#update-key-columns)
+    * 4.6.1 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.UpdateKeyColumns](#rqsrs-035clickhousereplacingmergetreeupdatekeycolumns)
+  * 4.7 [Remove Duplicates](#remove-duplicates)
+    * 4.7.1 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.RemoveDuplicates](#rqsrs-035clickhousereplacingmergetreeremoveduplicates)
+  * 4.8 [Backward Compatibility](#backward-compatibility)
+    * 4.8.1 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.BackwardCompatibility](#rqsrs-035clickhousereplacingmergetreebackwardcompatibility)
   * 4.9 [Version Number](#version-number)
     * 4.9.1 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.VersionNumber](#rqsrs-035clickhousereplacingmergetreeversionnumber)
-    * 4.9.2 [Handling Deleted Data](#handling-deleted-data)
-      * 4.9.2.1 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.HandlingDeletedData](#rqsrs-035clickhousereplacingmergetreehandlingdeleteddata)
-    * 4.9.3 [Non-Functional Requirements](#non-functional-requirements)
-      * 4.9.3.1 [Performance](#performance)
-      * 4.9.3.2 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.NonFunctionalRequirements.Performance](#rqsrs-035clickhousereplacingmergetreenonfunctionalrequirementsperformance)
-      * 4.9.3.3 [Reliability](#reliability)
-      * 4.9.3.4 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.NonFunctionalRequirements.Reliability](#rqsrs-035clickhousereplacingmergetreenonfunctionalrequirementsreliability)
+  * 4.10 [Handling Deleted Data](#handling-deleted-data)
+    * 4.10.1 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.HandlingDeletedData](#rqsrs-035clickhousereplacingmergetreehandlingdeleteddata)
+  * 4.11 [Non-Functional Requirements](#non-functional-requirements)
+      * 4.11.1.1 [Performance](#performance)
+      * 4.11.1.2 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.NonFunctionalRequirements.Performance](#rqsrs-035clickhousereplacingmergetreenonfunctionalrequirementsperformance)
+      * 4.11.1.3 [Reliability](#reliability)
+      * 4.11.1.4 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.NonFunctionalRequirements.Reliability](#rqsrs-035clickhousereplacingmergetreenonfunctionalrequirementsreliability)
 
 
 ## Introduction
@@ -63,7 +62,7 @@ However, it does not guarantee the absence of duplicates.
 
 ## Terminology
 
-### SRS
+####SRS
 
 Software Requirements Specification
 
@@ -77,7 +76,7 @@ sign column (possible values: -1 / 1) to the ReplacingMergeTree. The sign column
 column becomes mandatory. 
 
 
-### RQ.SRS-035.ClickHouse.ReplacingMergeTree.OldReplacingMergeTree
+#### RQ.SRS-035.ClickHouse.ReplacingMergeTree.OldReplacingMergeTree
 version: 1.0
 
 [ReplacingMergeTree] new engine version SHALL support all old [ReplacingMergeTree] possibilities.
@@ -172,9 +171,9 @@ version: 1.0
 
 [ReplacingMergeTree] engine SHALL allow removing duplicates by using the "Replacing" merge algorithm.
 
-#### Backward Compatibility
+### Backward Compatibility
 
-##### RQ.SRS-035.ClickHouse.ReplacingMergeTree.BackwardCompatibility
+#### RQ.SRS-035.ClickHouse.ReplacingMergeTree.BackwardCompatibility
 version: 1.0
 
 [ReplacingMergeTree] engine SHALL allow backward compatible with previous versions of the [ReplacingMergeTree].
@@ -188,15 +187,15 @@ version: 1.0
 [ReplacingMergeTree] engine SHALL increase version no matter what the operation on the data was made. If two 
 inserted rows have the same version number, the last inserted one is the one kept.
 
-#### Handling Deleted Data
+### Handling Deleted Data
 
-##### RQ.SRS-035.ClickHouse.ReplacingMergeTree.HandlingDeletedData
+#### RQ.SRS-035.ClickHouse.ReplacingMergeTree.HandlingDeletedData
 version: 1.0
 
 [ReplacingMergeTree] engine SHALL allow filter out deleted data when queried but not remove it from disk.
 The information of deleted data is needed for KPIs.
 
-#### Non-Functional Requirements
+### Non-Functional Requirements
 
 ##### Performance
 
