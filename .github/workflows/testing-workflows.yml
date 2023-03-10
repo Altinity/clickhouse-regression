@@ -1,0 +1,15 @@
+
+name: Test
+on: 
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: "Altinity repo to list online runners of, default: ClickHouse"
+        type: str
+        default: ClickHouse
+
+jobs:
+  manual-test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "::notice ::Annotation"
