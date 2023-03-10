@@ -5,52 +5,85 @@ from tests.steps.main_steps import *
 
 
 @TestScenario
-@Name("expression_in_aggregate_alias")
-def clone_alias_ast_1(self, node=None):
+def expression_in_aggregate_alias(self, node=None):
     """Alias of expression used in aggregate function."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
-    with Then("select result check without and with --final"):
-        assert (
+    name = f"local_numbers_{getuid()}"
+
+    try:
+        with Given("I create local numbers table with ReplacingMergeTreeEngine"):
             node.query(
-                "SELECT (number = 1) AND (number = 2) AS value, sum(value) OVER () FROM numbers(1) "
-                "WHERE 1;"
-            ).output.strip()
-            == node.query(
-                "SELECT (number = 1) AND (number = 2) AS value, sum(value) OVER () FROM numbers(1) WHERE 1;",
-                settings=[("final", 1)],
-            ).output.strip()
-        )
+                f"CREATE TABLE {name} (number UInt64) ENGINE = ReplacingMergeTree PRIMARY KEY number"
+            )
+
+        with When("I insert some duplicate data in it"):
+            for i in range(10):
+                node.query(f"INSERT INTO {name} VALUES ({i});")
+                node.query(f"INSERT INTO {name} VALUES ({i});")
+                node.query(f"INSERT INTO {name} VALUES ({i});")
+
+        with Then("select result check without and with --final"):
+            assert (
+                node.query(
+                    f"SELECT (number = 1) AND (number = 2) AS value, sum(value) OVER () FROM {name} FINAL "
+                    "WHERE 1;"
+                ).output.strip()
+                == node.query(
+                    f"SELECT (number = 1) AND (number = 2) AS value, sum(value) OVER () FROM {name} WHERE 1;",
+                    settings=[("final", 1)],
+                ).output.strip()
+            )
+
+    finally:
+        with Finally("I drop table"):
+            node.query(f"DROP TABLE IF EXISTS {name}")
 
 
 @TestScenario
-@Name("clone_alias_ast_2")
 def aggregrate_from_subquery_alias(self, node=None):
     """Alias of aggregrate function from a subquery that contains an alias of expression used in a window function."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
-    with Then("select result check without and with --final"):
-        assert (
+    name = f"local_numbers_{getuid()}"
+
+    try:
+        with Given("I create local numbers table with ReplacingMergeTree engine"):
             node.query(
-                "SELECT time, round(exp_smooth, 10), bar(exp_smooth, -9223372036854775807, 1048575, 50) AS bar FROM "
-                "(SELECT 2 OR (number = 0) OR (number >= 1) AS value, number AS time, "
-                "exponentialTimeDecayedSum(2147483646)(value, time) OVER (RANGE BETWEEN CURRENT ROW AND CURRENT ROW) "
-                "AS exp_smooth FROM numbers(1) WHERE 10) WHERE 25;"
-            ).output.strip()
-            == node.query(
-                "SELECT time, round(exp_smooth, 10), bar(exp_smooth, -9223372036854775807, 1048575, 50) AS bar FROM "
-                "(SELECT 2 OR (number = 0) OR (number >= 1) AS value, number AS time, "
-                "exponentialTimeDecayedSum(2147483646)(value, time) OVER (RANGE BETWEEN CURRENT ROW AND CURRENT ROW) "
-                "AS exp_smooth FROM numbers(1) WHERE 10) WHERE 25;;",
-                settings=[("final", 1)],
-            ).output.strip()
-        )
+                f"CREATE TABLE {name} (number UInt64) ENGINE = ReplacingMergeTree ORDER BY number"
+            )
+
+        with When("I insert some duplicate data in it"):
+            for i in range(20):
+                node.query(f"INSERT INTO {name} VALUES ({i});")
+                node.query(f"INSERT INTO {name} VALUES ({i});")
+                node.query(f"INSERT INTO {name} VALUES ({i});")
+
+        with Then("select result check without and with --final"):
+            assert (
+                node.query(
+                    "SELECT time, round(exp_smooth,10), bar(exp_smooth, -9223372036854775807, 1048575, 50) AS bar FROM "
+                    "(SELECT 2 OR (number = 0) OR (number >= 1) AS value, number AS time, "
+                    "exponentialTimeDecayedSum(2147483646)(value, time) OVER (RANGE BETWEEN CURRENT ROW AND CURRENT ROW) "
+                    f"AS exp_smooth FROM {name} FINAL WHERE 10) WHERE 25"
+                ).output.strip()
+                == node.query(
+                    "SELECT time, round(exp_smooth,10), bar(exp_smooth, -9223372036854775807, 1048575, 50) AS bar FROM "
+                    "(SELECT 2 OR (number = 0) OR (number >= 1) AS value, number AS time, "
+                    "exponentialTimeDecayedSum(2147483646)(value, time) OVER (RANGE BETWEEN CURRENT ROW AND CURRENT ROW) "
+                    f"AS exp_smooth FROM {name} WHERE 10)  WHERE 25",
+                    settings=[("final", 1)],
+                ).output.strip()
+            )
+
+    finally:
+        with Finally("I drop table"):
+            node.query(f"DROP TABLE IF EXISTS {name}")
 
 
 @TestScenario
-@Name("select_query_from_table_2")
 def group_order_by_alias_with_override_column_name(self, node=None):
     """Multiple aliases of expressions used in GROUP BY and ORDER BY where one alias overrides a name of a table column."""
     if node is None:
@@ -95,7 +128,6 @@ def group_order_by_alias_with_override_column_name(self, node=None):
 
 
 @TestScenario
-@Name("clone_alias_ast__from_table")
 def group_order_by_multiple_alias_with_aggregate_new_alias(self, node=None):
     """Multiple aliases of expressions used to reference aggregate function results as well as calculating
     new alias using an expression that contains other aliases with aliases used in GROUP BY and ORDER BY."""
