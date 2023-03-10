@@ -107,7 +107,7 @@ RQ_SRS_036_ClickHouse_CollapsingMergeTree_NonFunctionalRequirements_Performance 
     type=None,
     uid=None,
     description=(
-        '[NewReplacingMergeTree] engine shall allow handle large volumes of data efficiently.\n'
+        '[NewReplacingMergeTree] engine SHALL allow handle large volumes of data efficiently.\n'
         '\n'
     ),
     link=None,
@@ -123,7 +123,7 @@ RQ_SRS_036_ClickHouse_CollapsingMergeTree_NonFunctionalRequirements_Reliability 
     type=None,
     uid=None,
     description=(
-        '[NewReplacingMergeTree] engine shall be reliable and not lose any data.\n'
+        '[NewReplacingMergeTree] engine SHALL be reliable and not lose any data.\n'
         '\n'
         '[SRS]: #srs\n'
         '[CollapsingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/collapsingmergetree/\n'
@@ -284,14 +284,14 @@ version: 1.0
 ###### RQ.SRS-036.ClickHouse.CollapsingMergeTree.NonFunctionalRequirements.Performance
 version: 1.0
 
-[NewReplacingMergeTree] engine shall allow handle large volumes of data efficiently.
+[NewReplacingMergeTree] engine SHALL allow handle large volumes of data efficiently.
 
 ##### Reliability
 
 ###### RQ.SRS-036.ClickHouse.CollapsingMergeTree.NonFunctionalRequirements.Reliability
 version: 1.0
 
-[NewReplacingMergeTree] engine shall be reliable and not lose any data.
+[NewReplacingMergeTree] engine SHALL be reliable and not lose any data.
 
 [SRS]: #srs
 [CollapsingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/collapsingmergetree/
