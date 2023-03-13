@@ -29,9 +29,9 @@ entries_for_tiered_storage = {
 
 @TestScenario
 def lack_of_disk_space(self, node=None):
-    """Check that clickhouse reserve space to avoid breaking in the middle.
-    I fill the disk and delete insert the data in loop until the error and
-    check the state of the table in the end when table stored on the disk.
+    """Check that clickhouse reserves space to avoid breaking in the middle by
+    filling the disk and deleting inserted the data in loop until an error occurs and
+    then check the state of the table stored on the disk.
     """
 
     if node is None:
@@ -55,7 +55,7 @@ def lack_of_disk_space(self, node=None):
             block_size=1450000,
         )
 
-    with And("I check table takes up more than one disk"):
+    with And("I check disks used by the table"):
         r = node.query(
             f"SELECT DISTINCT disk_name FROM system.parts "
             f"WHERE table = '{table_name}'"
@@ -72,7 +72,7 @@ def lack_of_disk_space(self, node=None):
         r = node.query(f"SELECT count(*) FROM {table_name}")
         assert r.output == "7250000", error()
 
-    with Then("I perform delete insert operation in loop"):
+    with Then("I perform delete and insert operation in the loop"):
         with Then("I perform delete operation"):
             i = 0
             while i < 100:
@@ -103,9 +103,9 @@ def lack_of_disk_space(self, node=None):
 
 @TestScenario
 def lack_of_disk_space_tiered_storage(self, node=None):
-    """Check that clickhouse reserve space to avoid breaking in the middle.
-    I fill the disk and delete insert the data in loop until the error and
-    check the state of the table in the end when table stored on two disks.
+    """Check that clickhouse reserves space to avoid breaking in the middle by
+    filling the disk using delete and insert operations in loop until an error and
+    then checking that table data in stored on two disks.
     """
 
     if node is None:
@@ -135,7 +135,7 @@ def lack_of_disk_space_tiered_storage(self, node=None):
             f"WHERE table = '{table_name}'"
         )
 
-        assert r.output == "jbod1\njbod2", error()
+        assert set(r.output.strip().splitlines()) == {"jbod1", "jbod2"}, error()
 
         r = node.query(
             f"SELECT sum(bytes_on_disk)/1024/1024 FROM system.parts "
