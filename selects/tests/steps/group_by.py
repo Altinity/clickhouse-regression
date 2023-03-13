@@ -88,6 +88,98 @@ def group_by_result_check(self, table, node=None):
         )
 
 
+@TestStep(Then)
+@Name("'GROUP BY HAVING' compare results")
+def group_by_result_check_with_having(self, table, node=None):
+    """Compare results between 'GROUP BY HAVING' query with `FINAL`  clause and
+    'GROUP BY HAVING' query with --final setting enabled."""
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    with Then("I check that compare results are the same"):
+        assert (
+            node.query(
+                f"SELECT id, count(x) as cx FROM {table.name} {'FINAL' if table.final_modifier_available else ''}"
+                f" GROUP BY (id, x) HAVING cx > 1 ORDER BY (id, cx) FORMAT JSONEachRow;",
+                settings=[("final", 0)],
+            ).output.strip()
+            == node.query(
+                f"SELECT id, count(x) as cx FROM {table.name}"
+                f" GROUP BY (id, x) HAVING cx > 1 ORDER BY (id, cx) FORMAT JSONEachRow;",
+                settings=[("final", 1)],
+            ).output.strip()
+        )
+
+
+@TestStep(Then)
+@Name("'GROUP BY ROLLUP' compare results")
+def group_by_result_check_with_rollup(self, table, node=None):
+    """Compare results between 'GROUP BY ROLLUP' query with `FINAL`  clause and
+    'GROUP BY ROLLUP' query with --final setting enabled."""
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    with Then("I check that compare results are the same"):
+        assert (
+            node.query(
+                f"SELECT id, count(x) as cx FROM {table.name} {'FINAL' if table.final_modifier_available else ''}"
+                f" GROUP BY ROLLUP(id, x) ORDER BY (id, cx) FORMAT JSONEachRow;",
+                settings=[("final", 0)],
+            ).output.strip()
+            == node.query(
+                f"SELECT id, count(x) as cx FROM {table.name}"
+                f" GROUP BY ROLLUP(id, x) ORDER BY (id, cx) FORMAT JSONEachRow;",
+                settings=[("final", 1)],
+            ).output.strip()
+        )
+
+
+@TestStep(Then)
+@Name("'GROUP BY CUBE' compare results")
+def group_by_result_check_with_cube(self, table, node=None):
+    """Compare results between 'GROUP BY CUBE' query with `FINAL`  clause and
+    'GROUP BY CUBE' query with --final setting enabled."""
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    with Then("I check that compare results are the same"):
+        assert (
+            node.query(
+                f"SELECT id, count(x) as cx FROM {table.name} {'FINAL' if table.final_modifier_available else ''}"
+                f" GROUP BY CUBE(id, x) ORDER BY (id, cx) FORMAT JSONEachRow;",
+                settings=[("final", 0)],
+            ).output.strip()
+            == node.query(
+                f"SELECT id, count(x) as cx FROM {table.name}"
+                f" GROUP BY CUBE(id, x) ORDER BY (id, cx) FORMAT JSONEachRow;",
+                settings=[("final", 1)],
+            ).output.strip()
+        )
+
+
+@TestStep(Then)
+@Name("'GROUP BY WITH TOTALS' compare results")
+def group_by_result_check_with_totals(self, table, node=None):
+    """Compare results between 'GROUP BY WITH TOTALS' query with `FINAL`  clause and
+    'GROUP BY TOTALS' query with --final setting enabled."""
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    with Then("I check that compare results are the same"):
+        assert (
+            node.query(
+                f"SELECT id, count(x) as cx FROM {table.name} {'FINAL' if table.final_modifier_available else ''}"
+                f" GROUP BY id, x WITH TOTALS ORDER BY (id, cx);",
+                settings=[("final", 0)],
+            ).output.strip()
+            == node.query(
+                f"SELECT id, count(x) as cx FROM {table.name}"
+                f" GROUP BY id, x WITH TOTALS ORDER BY (id, cx);",
+                settings=[("final", 1)],
+            ).output.strip()
+        )
+
+
 @TestStep
 @Name("'GROUP BY' negative compare results")
 def group_by_negative_result_check(self, table, node=None):
@@ -130,7 +222,7 @@ def group_by_negative_result_check(self, table, node=None):
 
 @TestStep
 def group_by_all_combinations(self, table):
-    """Step to start all `SELECT GROUP BY` combinations with/without `FINAL` and --final enabled/disabled"""
+    """Step to start all `SELECT GROUP BY` combinations with/without `FINAL` and --final enabled/disabled."""
 
     selects = []
 

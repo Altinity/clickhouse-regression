@@ -145,7 +145,7 @@ def distinct_negative_result_check(self, table, node=None):
 
 @TestStep
 def distinct_all_combinations(self, table):
-    """Step to start all `SELECT DISTINCT` combinations with/without `FINAL` and --final enabled/disabled"""
+    """Step to start all `SELECT DISTINCT` combinations with/without `FINAL` and --final enabled/disabled."""
 
     selects = []
 
