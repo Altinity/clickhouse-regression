@@ -43,7 +43,7 @@ def as_with_alias(self):
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_GroupBy("1.0"))
 def group_by_with_alias(self):
     """Check SELECT query with `GROUP BY` clause."""
-    with Given("I chose tables for testing"):
+    with Given("I choose tables for testing"):
         tables = define(
             "Source set of tables with excluded duplicate, system, auxiliary tables and "
             "some not supported views by this test",
@@ -77,7 +77,7 @@ def group_by_with_alias(self):
 @TestScenario
 def group_by_with_having(self):
     """Check SELECT query with `GROUP BY HAVING` clause."""
-    with Given("I chose tables for testing"):
+    with Given("I choose tables for testing"):
         tables = define(
             "Source set of tables with excluded duplicate, system, auxiliary tables and "
             "some not supported views by this test",
@@ -105,7 +105,7 @@ def group_by_with_having(self):
 @TestScenario
 def group_by_with_rollup(self):
     """Check SELECT query with `GROUP BY ROLLUP` clause."""
-    with Given("I chose tables for testing"):
+    with Given("I choose tables for testing"):
         tables = define(
             "Source set of tables with excluded duplicate, system, auxiliary tables and "
             "some not supported views by this test",
@@ -133,7 +133,7 @@ def group_by_with_rollup(self):
 @TestScenario
 def group_by_with_cube(self):
     """Check SELECT query with `GROUP BY CUBE` clause."""
-    with Given("I chose tables for testing"):
+    with Given("I choose tables for testing"):
         tables = define(
             "Source set of tables with excluded duplicate, system, auxiliary tables and "
             "some not supported views by this test",
@@ -161,7 +161,7 @@ def group_by_with_cube(self):
 @TestScenario
 def group_by_with_totals(self):
     """Check SELECT query with `GROUP BY WITH TOTALS` clause."""
-    with Given("I chose tables for testing"):
+    with Given("I choose tables for testing"):
         tables = define(
             "Source set of tables with excluded duplicate, system, auxiliary tables and "
             "some not supported views by this test",
@@ -189,7 +189,7 @@ def group_by_with_totals(self):
 @TestScenario
 def order_by_with_alias(self):
     """Check SELECT query with `ORDER BY` clause with alias."""
-    with Given("I chose tables for testing"):
+    with Given("I choose tables for testing"):
         tables = define(
             "Source set of tables with excluded duplicate, system, auxiliary tables and "
             "some not supported views by this test",
