@@ -1,0 +1,9 @@
+name: Run scheduled CI/CD regression tests
+run-name: ${{ github.actor }} is running regression tests
+on: workflow_dispatch
+  
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo aaaaa
