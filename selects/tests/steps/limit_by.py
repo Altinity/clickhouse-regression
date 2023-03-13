@@ -151,7 +151,7 @@ def limit_by_negative_result_check(self, table, node=None):
 
 @TestStep
 def limit_by_all_combinations(self, table):
-    """Step to start all `SELECT LIMIT BY` combinations with/without `FINAL` and --final enabled/disabled"""
+    """Step to start all `SELECT LIMIT BY` combinations with/without `FINAL` and --final enabled/disabled."""
 
     selects = []
 
