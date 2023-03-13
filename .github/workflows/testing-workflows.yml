@@ -1,6 +1,10 @@
-name: Run scheduled CI/CD regression tests
-run-name: ${{ github.actor }} is running regression tests
-on: workflow_dispatch
+name: testing
+run-name: ${{ github.actor }} is running !
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+
   
 jobs:
   debug:
