@@ -8,7 +8,7 @@ from tests.steps.main_steps import *
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_As("1.0"))
 def as_with_alias(self):
     """Check `SELECT some_col as new_some_col`."""
-    with Given("I chose tables for testing"):
+    with Given("I choose tables for testing"):
         tables = define(
             "Source set of tables with excluded duplicate, system, auxiliary tables and "
             "some not supported views by this test",
@@ -300,7 +300,7 @@ def order_by_with_alias_with_fill_interpolate(self, node=None):
 @TestScenario
 def count_with_alias(self):
     """Check `SELECT count()` clause with expression column as alias column."""
-    with Given("I chose tables for testing"):
+    with Given("I choose tables for testing"):
         tables = define(
             "Source set of tables with excluded duplicate, system, auxiliary tables and some not supported views",
             [
@@ -324,7 +324,7 @@ def count_with_alias(self):
 @TestScenario
 def distinct_with_alias(self):
     """Check SELECT query with `DISTINCT` clause with expression column as alias column."""
-    with Given("I chose tables for testing"):
+    with Given("I choose tables for testing"):
         tables = define(
             "Source set of tables with excluded duplicate, system, auxiliary tables and "
             "some not supported views by this test",
@@ -352,7 +352,7 @@ def distinct_with_alias(self):
 @TestScenario
 def limit_by_with_alias(self):
     """Check SELECT query with `LIMIT BY` clause with expression column as alias."""
-    with Given("I chose tables for testing"):
+    with Given("I choose tables for testing"):
         tables = define(
             "Source set of tables with excluded duplicate, system, auxiliary tables and "
             "some not supported views by this test",
@@ -380,7 +380,7 @@ def limit_by_with_alias(self):
 @TestScenario
 def limit_with_alias(self):
     """Check SELECT query with `LIMIT` clause with expression column as alias."""
-    with Given("I chose tables for testing"):
+    with Given("I choose tables for testing"):
         tables = define(
             "Source set of tables with excluded duplicate, system, auxiliary tables and "
             "some not supported views by this test",

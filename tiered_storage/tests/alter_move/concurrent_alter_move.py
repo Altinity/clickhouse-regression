@@ -113,4 +113,4 @@ def scenario(self, cluster, node="clickhouse1"):
                         assert r == "500", error()
             finally:
                 with Finally("I drop the table"):
-                    node.query(f"DROP TABLE IF EXISTS {name} SYNC")
+                    node.query(f"DROP TABLE IF EXISTS {name} SYNC", timeout=360)
