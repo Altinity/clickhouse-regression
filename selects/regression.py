@@ -71,9 +71,6 @@ xfails = {
     "final/force/general/with experimental analyzer/select subquery/select subquery/distr_*": [
         (Fail, "column fail for distributed tables")
     ],
-    "final/force/general/with experimental analyzer/select with clause/*": [
-        (Fail, "group by conflict analyzer")
-    ],
 }
 
 xflags = {}
