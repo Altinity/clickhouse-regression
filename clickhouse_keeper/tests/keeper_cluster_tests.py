@@ -1,3 +1,5 @@
+import time
+
 from clickhouse_keeper.requirements import *
 from clickhouse_keeper.tests.steps import *
 from helpers.common import *

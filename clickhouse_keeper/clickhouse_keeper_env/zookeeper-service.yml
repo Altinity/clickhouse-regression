@@ -2,7 +2,7 @@ version: '2.3'
 
 services:
   zookeeper:
-    image: zookeeper:3.7.0
+    image: zookeeper:3.8
     restart: always
     expose:
       - "2181"
