@@ -32,8 +32,8 @@ insert_values = (
 
 @TestScenario
 def final(self, node=None):
-    """Test to check 'FINAL' clause behaviour
-    https://kb.altinity.com/engines/mergetree-table-engine-family/replacingmergetree/"""
+    """Test to check --final setting behaviour with new ReplacingMergeTree engine"""
+
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
@@ -86,8 +86,12 @@ def final(self, node=None):
 
 
 @TestScenario
+@Requirements(RQ_SRS_035_ClickHouse_ReplacingMergeTree_DeleteDisabled("1.0"))
 def without_is_deleted(self, node=None):
-    """Check the behaviour without the is_deleted column"""
+    """Checking that the new ReplacingMergeTree engine without is_deleted parameter and without clean_deleted_rows
+    setting works in the same way as the old ReplacingMergeTree engine, and that it does not conceal rows with
+    is_deleted=1."""
+
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
@@ -106,10 +110,14 @@ def without_is_deleted(self, node=None):
                 settings=[("optimize_on_insert", 0)],
             )
 
-        with Then("I select all data from the table"):
+        with Then(
+            "I select all data from the table and expect to see all inserted data"
+        ):
             node.query(f"SELECT count(*) FROM {name};", message="18")
 
-        with And("I select all data from the table with --final"):
+        with And(
+            "I select all data from the table with --final and expect to see all the latest version data"
+        ):
             node.query(
                 f"SELECT count(*) FROM {name};", message="3", settings=[("final", 1)]
             )
@@ -119,7 +127,9 @@ def without_is_deleted(self, node=None):
                 f"OPTIMIZE TABLE {name} FINAL;",
             )
 
-        with Then("I select again all data from the table"):
+        with Then(
+            "I select again all data from the table and expect to see all the latest version data"
+        ):
             node.query(f"SELECT count(*) FROM {name};", message="3")
 
     finally:
@@ -128,15 +138,20 @@ def without_is_deleted(self, node=None):
 
 
 @TestScenario
+@Requirements(RQ_SRS_035_ClickHouse_ReplacingMergeTree_Settings_CleanDeletedRowsDisabled("1.0"))
 def clean_deleted_rows_without_is_deleted(self, node=None):
-    """Check the behaviour without the is_deleted column and with clean_deleted_rows='Always'"""
+    """Checking that the new ReplacingMergeTree engine without is_deleted parameter and with clean_deleted_rows="Always"
+    setting works in the same way as the old ReplacingMergeTree engine, and that it does not conceal rows with
+     is_deleted=1."""
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
     name = f"clean_deleted_rows_without_is_deleted_{getuid()}"
 
     try:
-        with Given("I create table without is_deleted column and with clean_deleted_rows='Always'"):
+        with Given(
+            "I create table without is_deleted column and with clean_deleted_rows='Always'"
+        ):
             node.query(
                 f"CREATE TABLE IF NOT EXISTS {name} (id String, version UInt32, is_deleted UInt8)"
                 f" ENGINE = ReplacingMergeTree(version) ORDER BY id SETTINGS clean_deleted_rows='Always'"
@@ -148,10 +163,14 @@ def clean_deleted_rows_without_is_deleted(self, node=None):
                 settings=[("optimize_on_insert", 0)],
             )
 
-        with Then("I select all data from the table"):
+        with Then(
+            "I select all data from the table and expect to see all inserted data"
+        ):
             node.query(f"SELECT count(*) FROM {name};", message="18")
 
-        with And("I select all data from the table with --final"):
+        with And(
+            "I select all data from the table with --final and expect to see all the latest version data"
+        ):
             node.query(
                 f"SELECT count(*) FROM {name};", message="3", settings=[("final", 1)]
             )
@@ -161,7 +180,9 @@ def clean_deleted_rows_without_is_deleted(self, node=None):
                 f"OPTIMIZE TABLE {name} FINAL;",
             )
 
-        with Then("I select again all data from the table"):
+        with Then(
+            "I select again all data from the table and expect to see all the latest version data"
+        ):
             node.query(f"SELECT count(*) FROM {name};", message="3")
 
     finally:
@@ -170,8 +191,12 @@ def clean_deleted_rows_without_is_deleted(self, node=None):
 
 
 @TestScenario
+@Requirements(RQ_SRS_035_ClickHouse_ReplacingMergeTree_Delete("1.0"))
 def with_is_deleted(self, node=None):
-    """Check the behaviour with the is_deleted column"""
+    """Checking that the new ReplacingMergeTree engine, which includes the is_deleted parameter and excludes the
+    clean_deleted_rows setting, will conceal all rows with is_deleted=1 and the same rows with is_deleted=0 with
+     --final=1 but `OPTIMIZE TABLE FINAL` doesn't influence result as clean_deleted_rows='Never'."""
+
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
@@ -190,10 +215,15 @@ def with_is_deleted(self, node=None):
                 settings=[("optimize_on_insert", 0)],
             )
 
-        with Then("I select all data from the table"):
+        with Then(
+            "I select all data from the table and expect to see all inserted data"
+        ):
             node.query(f"SELECT count(*) FROM {name};", message="18")
 
-        with And("I select all data from the table with --final"):
+        with And(
+            "I select all data from the table with --final and expect to see all the latest "
+            "version not deleted data"
+        ):
             node.query(
                 f"SELECT count(*) FROM {name};", message="1", settings=[("final", 1)]
             )
@@ -203,7 +233,10 @@ def with_is_deleted(self, node=None):
                 f"OPTIMIZE TABLE {name} FINAL;",
             )
 
-        with Then("I select again all data from the table"):
+        with Then(
+            "I select again all data from the table and expect to see all the latest version data but without"
+            " deletes as clean_deleted_rows='Never'"
+        ):
             node.query(f"SELECT count(*) FROM {name};", message="3")
 
     finally:
@@ -212,8 +245,12 @@ def with_is_deleted(self, node=None):
 
 
 @TestScenario
+@Requirements(RQ_SRS_035_ClickHouse_ReplacingMergeTree_Settings_CleanDeletedRows("1.0"))
 def clean_deleted_rows_with_is_deleted(self, node=None):
-    """Check the behaviour with the is_deleted column and with clean_deleted_rows='Always'"""
+    """Checking that the new ReplacingMergeTree engine, which includes the is_deleted parameter and the
+    clean_deleted_rows setting is'Always', will conceal all rows with is_deleted=1 and the same rows with is_deleted=0
+    with --final=1 or after `OPTIMIZE TABLE FINAL` for all queries."""
+
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
@@ -234,10 +271,15 @@ def clean_deleted_rows_with_is_deleted(self, node=None):
                 settings=[("optimize_on_insert", 0)],
             )
 
-        with Then("I select all data from the table"):
+        with Then(
+            "I select all data from the table and expect to see all inserted data"
+        ):
             node.query(f"SELECT count(*) FROM {name};", message="18")
 
-        with And("I select all data from the table with --final"):
+        with And(
+            "I select all data from the table with --final and expect to see all the latest "
+            "version not deleted data"
+        ):
             node.query(
                 f"SELECT count(*) FROM {name};", message="1", settings=[("final", 1)]
             )
@@ -247,7 +289,9 @@ def clean_deleted_rows_with_is_deleted(self, node=None):
                 f"OPTIMIZE TABLE {name} FINAL;",
             )
 
-        with Then("I select again all data from the table"):
+        with Then(
+            "I select again all data from the table and expect to see all the the latest version not deleted data"
+        ):
             node.query(f"SELECT count(*) FROM {name};", message="1")
 
     finally:
@@ -256,12 +300,12 @@ def clean_deleted_rows_with_is_deleted(self, node=None):
 
 
 @TestModule
-@Name("general")
+@Name("replacing_merge_tree")
 def feature(self):
     """Check new ReplacingMergeTree engine."""
     if check_clickhouse_version("<23.2")(self):
         skip(
-            reason="--final query setting is only supported on ClickHouse version >= 23.2"
+            reason="new ReplacingMergeTree engine is only supported on ClickHouse version >= 23.2"
         )
 
     with Pool(1) as executor:
