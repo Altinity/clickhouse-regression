@@ -114,7 +114,7 @@ def scenario(self, cluster, nodes=None):
                 node.query(f"SYSTEM SYNC REPLICA {name}")
 
         with And("wait for replication and moves to complete"):
-            time.sleep(3)
+            time.sleep(10)
 
         with When("I check used disks on first node"):
             check_used_disks(nodes[0], name, {"external"})
