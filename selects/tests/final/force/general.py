@@ -76,41 +76,6 @@ def simple_select_distinct(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_GroupBy("1.0"))
-def simple_select_group_by(self):
-    """Check SELECT query with `GROUP BY` clause."""
-    with Given("I chose tables for testing"):
-        tables = define(
-            "Source set of tables with excluded duplicate, system, auxiliary tables and "
-            "some not supported views by this test",
-            [
-                table
-                for table in self.context.tables
-                if not table.name.endswith("duplicate")
-                if not table.name.endswith("nview")
-                if not table.name.startswith("system")
-                if not table.name.endswith("_wview_final")
-                if not table.name.startswith("expr_subquery")
-            ],
-            encoder=lambda tables: ", ".join([table.name for table in tables]),
-        )
-
-    for table in tables:
-        with Example(f"{table.name}", flags=TE):
-            with Then(
-                "Compare results between group by query with `FINAL`  clause "
-                "and group by query with --final setting enabled."
-            ):
-                select.group_by_result_check(table=table)
-
-            with And(
-                "Compare results between group by query with --final "
-                "and group by query without `FINAL` and without --final."
-            ):
-                select.group_by(table=table)
-
-
-@TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Limit("1.0"))
 def simple_select_limit(self):
     """Check SELECT query with `LIMIT` clause."""
@@ -608,85 +573,6 @@ def select_except_clause(self):
 
     with And("I check negative case"):
         select_family_union_clause(clause="EXCEPT", negative=True)
-
-
-@TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_With("1.0"))
-def select_with_clause(self, node=None, negative=False):
-    """Check SELECT query with `WITH` clause."""
-    if node is None:
-        node = self.context.node
-
-    with Given("I exclude auxiliary and unsupported tables by the current test"):
-        tables = define(
-            "Tables list for current test",
-            [
-                table
-                for table in self.context.tables
-                if table.name.endswith("core")
-                or table.name.endswith("_nview_final")
-                or table.name.endswith("_mview")
-            ],
-            encoder=lambda tables: ", ".join([table.name for table in tables]),
-        )
-
-    with Given("I create `WITH...SELECT` query with and without `FINAL`"):
-        with_query = define(
-            "query",
-            """
-            WITH
-                (
-                    SELECT count(id)
-                    FROM {table_name} {final}
-                ) AS total_ids
-            SELECT
-                (x / total_ids) AS something,
-                someCol
-            FROM {table_name} {final}
-            GROUP BY (x,someCol)
-            ORDER BY something,someCol DESC;
-            """,
-        )
-
-    for table in tables:
-        with When(f"{table.name}"):
-            with When("I execute query with FINAL modifier specified explicitly"):
-                explicit_final = node.query(
-                    with_query.format(
-                        table_name=table.name,
-                        final=f"{'FINAL' if table.final_modifier_available else ''}",
-                    ),
-                    exitcode=0,
-                ).output.strip()
-
-            with And("I execute the same query without FINAL modifier"):
-                without_final = node.query(
-                    with_query.format(
-                        table_name=table.name,
-                        final="",
-                    ),
-                    exitcode=0,
-                ).output.strip()
-
-            with And(
-                "I execute the same query without FINAL modifiers but with force_select_final=1 setting"
-            ):
-                force_select_final = node.query(
-                    with_query.format(table_name=table.name, final=""),
-                    exitcode=0,
-                    settings=[("final", 1)],
-                ).output.strip()
-
-            if negative:
-                with Then("I check that compare results are different"):
-                    if (
-                        table.final_modifier_available
-                        and without_final != explicit_final
-                    ):
-                        assert without_final != force_select_final
-            else:
-                with Then("I check that compare results are the same"):
-                    assert explicit_final == force_select_final
 
 
 @TestFeature

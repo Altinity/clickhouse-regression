@@ -135,7 +135,7 @@ def count_negative_result_check(self, table, node=None):
 
 @TestStep
 def count_all_combinations(self, table):
-    """Step to start all `SELECT count()` combinations with/without `FINAL` and --final enabled/disabled"""
+    """Step to start all `SELECT count()` combinations with/without `FINAL` and --final enabled/disabled."""
 
     selects = []
 
