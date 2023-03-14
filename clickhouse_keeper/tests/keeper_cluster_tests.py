@@ -37,14 +37,24 @@ def mixed_keepers_5(self):
         with And("I stop one more Keeper node"):
             cluster.node("clickhouse3").stop_clickhouse()
 
-        with And("I check that table in read only mode"):
-            node = self.context.cluster.node("clickhouse1")
-            retry(cluster.node("clickhouse1").query, timeout=600, delay=30)(
-                f"insert into {table_name} values (1,2)",
-                exitcode=242,
-                message="DB::Exception: Table is in readonly mode",
-                steps=False,
-            )
+        if check_clickhouse_version(">23")(self):
+            with And("I check that table in read only mode"):
+                retry(cluster.node("clickhouse1").query, timeout=300, delay=10)(
+                    f"insert into {table_name} values (1,2)",
+                    exitcode=242,
+                    message="DB::Exception: Table is in readonly mode",
+                    steps=False,
+                    settings=[("insert_keeper_max_retries", 0)],
+                )
+
+        else:
+            with And("I check that table in read only mode"):
+                retry(cluster.node("clickhouse1").query, timeout=300, delay=10)(
+                    f"insert into {table_name} values (1,2)",
+                    exitcode=242,
+                    message="DB::Exception: Table is in readonly mode",
+                    steps=False,
+                )
 
         with And("I start dropped nodes"):
             for name in cluster.nodes["clickhouse"][2:5]:
@@ -98,14 +108,24 @@ def mixed_keepers_4(self):
         with And("I stop one more Keeper node"):
             cluster.node("clickhouse3").stop_clickhouse()
 
-        with And("I check that table in read only mode"):
-            node = self.context.cluster.node("clickhouse1")
-            retry(cluster.node("clickhouse1").query, timeout=600, delay=30)(
-                f"insert into {table_name} values (1,2)",
-                exitcode=242,
-                message="DB::Exception: Table is in readonly mode",
-                steps=False,
-            )
+        if check_clickhouse_version(">23")(self):
+            with And("I check that table in read only mode"):
+                retry(cluster.node("clickhouse1").query, timeout=300, delay=10)(
+                    f"insert into {table_name} values (1,2)",
+                    exitcode=242,
+                    message="DB::Exception: Table is in readonly mode",
+                    steps=False,
+                    settings=[("insert_keeper_max_retries", 0)],
+                )
+
+        else:
+            with And("I check that table in read only mode"):
+                retry(cluster.node("clickhouse1").query, timeout=300, delay=10)(
+                    f"insert into {table_name} values (1,2)",
+                    exitcode=242,
+                    message="DB::Exception: Table is in readonly mode",
+                    steps=False,
+                )
 
         with And("I start dropped nodes"):
             for name in cluster.nodes["clickhouse"][2:4]:
@@ -164,6 +184,25 @@ def mixed_keepers_3(self):
                 message="DB::Exception: Table is in readonly mode",
             )
 
+        if check_clickhouse_version(">23")(self):
+            with And("I check that table in read only mode"):
+                retry(cluster.node("clickhouse1").query, timeout=300, delay=10)(
+                    f"insert into {table_name} values (1,2)",
+                    exitcode=242,
+                    message="DB::Exception: Table is in readonly mode",
+                    steps=False,
+                    settings=[("insert_keeper_max_retries", 0)],
+                )
+
+        else:
+            with And("I check that table in read only mode"):
+                retry(cluster.node("clickhouse1").query, timeout=300, delay=10)(
+                    f"insert into {table_name} values (1,2)",
+                    exitcode=242,
+                    message="DB::Exception: Table is in readonly mode",
+                    steps=False,
+                )
+
         with And("I start dropped nodes"):
             for name in cluster.nodes["clickhouse"][1:3]:
                 cluster.node(name).start_clickhouse(wait_healthy=False)
@@ -189,8 +228,6 @@ def mixed_keepers_2(self):
     """Check that 2 nodes Clickhouse Keeper Cluster work in write mode
     and goes in read mode only with 1 node down.
     """
-    if check_clickhouse_version(">23")(self):
-        skip(reason="test fails on ClickHouse version >= 23")
 
     cluster = self.context.cluster
     try:
@@ -215,13 +252,24 @@ def mixed_keepers_2(self):
         with And("I stop one Keeper node"):
             cluster.node("clickhouse2").stop_clickhouse()
 
-        with And("I check that table in read only mode"):
-            retry(cluster.node("clickhouse1").query, timeout=600, delay=30)(
-                f"insert into {table_name} values (1,2)",
-                exitcode=242,
-                message="DB::Exception: Table is in readonly mode",
-                timeout=600,
-            )
+        if check_clickhouse_version(">23")(self):
+            with And("I check that table in read only mode"):
+                retry(cluster.node("clickhouse1").query, timeout=300, delay=10)(
+                    f"insert into {table_name} values (1,2)",
+                    exitcode=242,
+                    message="DB::Exception: Table is in readonly mode",
+                    steps=False,
+                    settings=[("insert_keeper_max_retries", 0)],
+                )
+
+        else:
+            with And("I check that table in read only mode"):
+                retry(cluster.node("clickhouse1").query, timeout=300, delay=10)(
+                    f"insert into {table_name} values (1,2)",
+                    exitcode=242,
+                    message="DB::Exception: Table is in readonly mode",
+                    steps=False,
+                )
 
         with And("I start dropped nodes"):
             cluster.node("clickhouse2").start_clickhouse(wait_healthy=False)
@@ -270,12 +318,24 @@ def mixed_keepers_1(self):
         with And("I stop one Keeper node"):
             cluster.node("clickhouse1").stop_clickhouse()
 
-        with And("I check that table in read only mode"):
-            retry(cluster.node("clickhouse2").query, timeout=600, delay=30)(
-                f"insert into {table_name} values (1,2)",
-                exitcode=242,
-                message="DB::Exception: Table is in readonly mode",
-            )
+        if check_clickhouse_version(">23")(self):
+            with And("I check that table in read only mode"):
+                retry(cluster.node("clickhouse2").query, timeout=300, delay=10)(
+                    f"insert into {table_name} values (1,2)",
+                    exitcode=242,
+                    message="DB::Exception: Table is in readonly mode",
+                    steps=False,
+                    settings=[("insert_keeper_max_retries", 0)],
+                )
+
+        else:
+            with And("I check that table in read only mode"):
+                retry(cluster.node("clickhouse2").query, timeout=300, delay=10)(
+                    f"insert into {table_name} values (1,2)",
+                    exitcode=242,
+                    message="DB::Exception: Table is in readonly mode",
+                    steps=False,
+                )
 
         with And("I start dropped nodes"):
             cluster.node("clickhouse1").start_clickhouse(wait_healthy=False)
@@ -301,8 +361,6 @@ def zookeepers_3(self):
     """Check that 3 nodes ZooKeeper Cluster work in write mode
     with 1 node down and in read mode only with 2 nodes down.
     """
-    if check_clickhouse_version(">23")(self):
-        skip(reason="test fails on ClickHouse version >= 23")
 
     cluster = self.context.cluster
     zookeeper_cluster_nodes = cluster.nodes["zookeeper"][:3]
@@ -333,12 +391,24 @@ def zookeepers_3(self):
         with And("I stop one more ZooKeeper node"):
             self.context.cluster.node("zookeeper2").stop()
 
-        with And("I check that table in read only mode"):
-            self.context.cluster.node("clickhouse1").query(
-                f"insert into {table_name}(Id, partition) values (1,2)",
-                exitcode=242,
-                message="DB::Exception: Table is in readonly mode",
-            )
+        if check_clickhouse_version(">23")(self):
+            with And("I check that table in read only mode"):
+                retry(cluster.node("clickhouse1").query, timeout=300, delay=10)(
+                    f"insert into {table_name} values (1,2)",
+                    exitcode=242,
+                    message="DB::Exception: Table is in readonly mode",
+                    steps=False,
+                    settings=[("insert_keeper_max_retries", 0)],
+                )
+
+        else:
+            with And("I check that table in read only mode"):
+                retry(cluster.node("clickhouse1").query, timeout=300, delay=10)(
+                    f"insert into {table_name} values (1,2)",
+                    exitcode=242,
+                    message="DB::Exception: Table is in readonly mode",
+                    steps=False,
+                )
 
         with And("I start dropped nodes"):
             self.context.cluster.node("zookeeper1").start()
