@@ -1,0 +1,75 @@
+# docker build -t clickhouse/integration-tests-runner .
+FROM ubuntu:20.04
+
+# ARG for quick switch to a given ubuntu mirror
+ARG apt_archive="http://archive.ubuntu.com"
+RUN sed -i "s|http://archive.ubuntu.com|$apt_archive|g" /etc/apt/sources.list
+
+RUN apt-get update \
+    && env DEBIAN_FRONTEND=noninteractive apt-get install --yes \
+    ca-certificates \
+    bash \
+    btrfs-progs \
+    e2fsprogs \
+    iptables \
+    xfsprogs \
+    tar \
+    pigz \
+    wget \
+    git \
+    iproute2 \
+    cgroupfs-mount \
+    python3-pip \
+    tzdata \
+    libicu-dev \
+    bsdutils \
+    curl \
+    python3-pika \
+    liblua5.1-dev \
+    luajit \
+    libssl-dev \
+    libcurl4-openssl-dev \
+    gdb \
+    software-properties-common \
+    libkrb5-dev \
+    krb5-user \
+    g++ \
+    && rm -rf \
+        /var/lib/apt/lists/* \
+        /var/cache/debconf \
+        /tmp/* \
+    && apt-get clean
+
+ENV TZ=Europe/Moscow
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+ENV DOCKER_CHANNEL stable
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+RUN add-apt-repository "deb https://download.docker.com/linux/ubuntu $(lsb_release -c -s) ${DOCKER_CHANNEL}"
+
+RUN apt-get update \
+    && env DEBIAN_FRONTEND=noninteractive apt-get install --yes \
+        docker-ce \
+    && rm -rf \
+        /var/lib/apt/lists/* \
+        /var/cache/debconf \
+        /tmp/* \
+    && apt-get clean
+
+RUN dockerd --version; docker --version
+
+COPY modprobe.sh /usr/local/bin/modprobe
+COPY dockerd-entrypoint.sh /usr/local/bin/
+COPY compose/ /compose/
+COPY misc/ /misc/
+
+RUN set -x \
+  && addgroup --system dockremap \
+    && adduser --system dockremap \
+  && adduser dockremap dockremap \
+  && echo 'dockremap:165536:65536' >> /etc/subuid \
+    && echo 'dockremap:165536:65536' >> /etc/subgid
+
+EXPOSE 2375
+ENTRYPOINT ["dockerd-entrypoint.sh"]
+CMD ["sh", "-c", "pytest $PYTEST_OPTS"]
