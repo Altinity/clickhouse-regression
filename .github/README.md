@@ -27,47 +27,47 @@ Table of which suites rely on what docker images.
 
 | Suite | Utilized image(s) |
 | ------| ----------------- |
-| aes_encryption | registry.gitlab.com/altinity-public/container-images/test/clickhouse-integration-test:21.12 |
+| aes_encryption | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || mysql:5.7.30 |
 || zookeeper:3.6.2 |
-| aggregate_functions | registry.gitlab.com/altinity-public/container-images/test/clickhouse-integration-test:21.12 |
+| aggregate_functions | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || zookeeper:3.6.2 |
-| atomic_insert | registry.gitlab.com/altinity-public/container-images/test/clickhouse-integration-test:21.12 |
+| atomic_insert | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || zookeeper:3.6.2 |
 | base_58 | clickhouse/clickhouse-integration-test:28741 |
 || zookeeper:3.6.2 |
 | clickhouse/functional | registry.gitlab.com/altinity-public/container-images/test/clickhouse-functional-test:1.0 |
 || bitnami/zookeeper:3.7.1-debian-11-r90 |
-| clickhouse_keeper | registry.gitlab.com/altinity-public/container-images/test/clickhouse-integration-test:21.12 |
+| clickhouse_keeper | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || zookeeper:3.7.0 |
 || zookeeper:3.4.12 |
-| datetime64_extended_range | registry.gitlab.com/altinity-public/container-images/test/clickhouse-integration-test:21.12 |
+| datetime64_extended_range | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || zookeeper:3.6.2 |
-| disk_level_encryption | registry.gitlab.com/altinity-public/container-images/test/clickhouse-integration-test:21.12 |
+| disk_level_encryption | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || zookeeper:3.6.2 |
-| dns | registry.gitlab.com/altinity-public/container-images/test/clickhouse-integration-test:21.12 |
-| engines | registry.gitlab.com/altinity-public/container-images/test/clickhouse-integration-test:21.12 |
+| dns | altinityinfra/clickhouse-regression-multiarch:1.0 |
+| engines | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || zookeeper:3.6.2 |
-| example | registry.gitlab.com/altinity-public/container-images/test/clickhouse-integration-test:21.12 |
+| example | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || zookeeper:3.6.2 |
-| extended_precision_data_types | registry.gitlab.com/altinity-public/container-images/test/clickhouse-integration-test:21.12 |
+| extended_precision_data_types | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || mysql:5.7.30 |
-| kafka | registry.gitlab.com/altinity-public/container-images/test/clickhouse-integration-test:21.12 |
+| kafka | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || confluentinc/cp-kafka:5.2.0 |
 || zookeeper:3.4.12 |
-| kerberos | registry.gitlab.com/altinity-public/container-images/test/clickhouse-integration-test:21.12 |
+| kerberos | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || registry.gitlab.com/altinity-public/container-images/docker-krb5-server:2.0 |
 || zookeeper:3.6.2 |
 | key_value | clickhouse/clickhouse-integration-test:28741 |
 || zookeeper:3.6.2 |
-| ldap | registry.gitlab.com/altinity-public/container-images/test/clickhouse-integration-test:21.12 |
+| ldap | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || osixia/openldap:1.4.0 |
 || zookeeper:3.6.2 |
 | lightweight_delete | registry.gitlab.com/altinity-public/container-images/benchmark/multiarch:22.8 |
 || minio/mc:RELEASE.2022-06-11T21-10-36Z |
 || minio/minio:RELEASE.2022-07-17T15-43-14Z |
 || zookeeper:3.6.2 |
-| map_type | registry.gitlab.com/altinity-public/container-images/test/clickhouse-integration-test:21.12 |
+| map_type | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || zookeeper:3.6.2 |
 | ontime_benchmark | registry.gitlab.com/altinity-public/container-images/benchmark/multiarch:22.8 |
 || registry.gitlab.com/altinity-public/container-images/s3-tools:2.0 |
@@ -81,26 +81,26 @@ Table of which suites rely on what docker images.
 || mysql:5.7.30 |
 || postgres:15.0-bullseye |
 || zookeeper:3.6.2 |
-| part_moves_between_shards | registry.gitlab.com/altinity-public/container-images/test/clickhouse-integration-test:21.12 |
+| part_moves_between_shards | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || zookeeper:3.4.12 |
-| rbac | registry.gitlab.com/altinity-public/container-images/test/clickhouse-integration-test:21.12 |
+| rbac | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || mysql:5.7.30 |
 || zookeeper:3.6.2 |
-| s3 | registry.gitlab.com/altinity-public/container-images/test/clickhouse-integration-test:21.12 |
+| s3 | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || registry.gitlab.com/altinity-public/container-images/s3-tools:2.0 |
 || minio/mc:RELEASE.2022-06-11T21-10-36Z |
 || minio/minio:RELEASE.2022-06-11T19-55-32Z |
 || zookeeper:3.6.2 |
-| selects | registry.gitlab.com/altinity-public/container-images/test/clickhouse-integration-test:21.12 |
+| selects | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || zookeeper:3.6.2 |
 | ssl_server | registry.gitlab.com/altinity-public/container-images/test/clickhouse-intergration-test-pyarrow:4.0 |
 || clickhouse/clickhouse-server:22.8.12.45 |
 || zookeeper:3.6.2 |
-| tiered_storage | registry.gitlab.com/altinity-public/container-images/test/clickhouse-integration-test:21.12 |
+| tiered_storage | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || minio/mc:RELEASE.2022-06-11T21-10-36Z |
 || minio/minio:RELEASE.2022-07-17T15-43-14Z |
 || zookeeper:3.6.2 |
-| window_functions | registry.gitlab.com/altinity-public/container-images/test/clickhouse-integration-test:21.12 |
+| window_functions | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || zookeeper:3.6.2 |
 
 
