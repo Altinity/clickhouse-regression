@@ -83,118 +83,6 @@ _aggregate_functions_sparkbar_datatypes_permutations_uint8_lowcardinality_uint16
 {"sparkbar(9)(uint8, lowcardinality_uint16_)":"▁   ▅▃▆▆█"}
 """
 
-_aggregate_functions_sparkbar_datatypes_permutations_uint8_lowcardinality_nullable_uint8__ = r"""
-{"sparkbar(9)(uint8, lowcardinality_nullable_uint8__)":"▃   ▂▁▂▂█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_uint8_lowcardinality_nullable_uint64__ = r"""
-{"sparkbar(9)(uint8, lowcardinality_nullable_uint64__)":"▃   ▇▆▄▁█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_uint8_lowcardinality_nullable_uint32__ = r"""
-{"sparkbar(9)(uint8, lowcardinality_nullable_uint32__)":"▁   ▆▁▂▄█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_uint8_lowcardinality_nullable_uint16__ = r"""
-{"sparkbar(9)(uint8, lowcardinality_nullable_uint16__)":"▂   ▂▁▁▄█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_nullable_uint8__uint8 = r"""
-{"sparkbar(9)(nullable_uint8_, uint8)":"▃▁▇   ▁ █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_nullable_uint8__uint64 = r"""
-{"sparkbar(9)(nullable_uint8_, uint64)":"▆▁█   ▆ ▇"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_nullable_uint8__uint32 = r"""
-{"sparkbar(9)(nullable_uint8_, uint32)":"▅▁█   ▇ ▆"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_nullable_uint8__uint16 = r"""
-{"sparkbar(9)(nullable_uint8_, uint16)":"▁▁▂   ▂ █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_nullable_uint8__nullable_uint8_ = r"""
-{"sparkbar(9)(nullable_uint8_, nullable_uint8_)":"▁▁▃   ▇ █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_nullable_uint8__nullable_uint64_ = r"""
-{"sparkbar(9)(nullable_uint8_, nullable_uint64_)":"▄▁▆   ▆ █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_nullable_uint8__nullable_uint32_ = r"""
-{"sparkbar(9)(nullable_uint8_, nullable_uint32_)":"▄▁▂   ▅ █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_nullable_uint8__nullable_uint16_ = r"""
-{"sparkbar(9)(nullable_uint8_, nullable_uint16_)":"▃▁█   ▄ ▇"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_nullable_uint8__lowcardinality_uint8_ = r"""
-{"sparkbar(9)(nullable_uint8_, lowcardinality_uint8_)":"▄▁█   ▄ ▇"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_nullable_uint8__lowcardinality_uint64_ = r"""
-{"sparkbar(9)(nullable_uint8_, lowcardinality_uint64_)":"▅▁▇   ▂ █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_nullable_uint8__lowcardinality_uint32_ = r"""
-{"sparkbar(9)(nullable_uint8_, lowcardinality_uint32_)":"▁▁▆   ▄ █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_nullable_uint8__lowcardinality_uint16_ = r"""
-{"sparkbar(9)(nullable_uint8_, lowcardinality_uint16_)":"▄▁█   ▃ ▇"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_lowcardinality_uint8__uint8 = r"""
-{"sparkbar(9)(lowcardinality_uint8_, uint8)":"▁    ▃▂▆█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_lowcardinality_uint8__uint64 = r"""
-{"sparkbar(9)(lowcardinality_uint8_, uint64)":"▄    ▁▄▆█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_lowcardinality_uint8__uint32 = r"""
-{"sparkbar(9)(lowcardinality_uint8_, uint32)":"▂    ▁▂▆█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_lowcardinality_uint8__uint16 = r"""
-{"sparkbar(9)(lowcardinality_uint8_, uint16)":"▂    ▃▁▆█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_lowcardinality_uint8__nullable_uint8_ = r"""
-{"sparkbar(9)(lowcardinality_uint8_, nullable_uint8_)":"▄    ▄▁▂█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_lowcardinality_uint8__nullable_uint64_ = r"""
-{"sparkbar(9)(lowcardinality_uint8_, nullable_uint64_)":"▁    ▃▃▄█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_lowcardinality_uint8__nullable_uint32_ = r"""
-{"sparkbar(9)(lowcardinality_uint8_, nullable_uint32_)":"▁    ▃▃▁█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_lowcardinality_uint8__nullable_uint16_ = r"""
-{"sparkbar(9)(lowcardinality_uint8_, nullable_uint16_)":"▃    ▁▁▆█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_lowcardinality_uint8__lowcardinality_uint8_ = r"""
-{"sparkbar(9)(lowcardinality_uint8_, lowcardinality_uint8_)":"▁    ▂▃▅█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_lowcardinality_uint8__lowcardinality_uint64_ = r"""
-{"sparkbar(9)(lowcardinality_uint8_, lowcardinality_uint64_)":"▁    ▄▄▆█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_lowcardinality_uint8__lowcardinality_uint32_ = r"""
-{"sparkbar(9)(lowcardinality_uint8_, lowcardinality_uint32_)":"▄    ▂▁▅█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_lowcardinality_uint8__lowcardinality_uint16_ = r"""
-{"sparkbar(9)(lowcardinality_uint8_, lowcardinality_uint16_)":"▁    ▂▂▄█"}
-"""
-
 _aggregate_functions_sparkbar_datatypes_permutations_datetime_uint8 = r"""
 {"sparkbar(9)(datetime, uint8)":"▁ ▅█    ▄"}
 """
@@ -289,6 +177,22 @@ _aggregate_functions_sparkbar_datatypes_permutations_date_lowcardinality_uint32_
 
 _aggregate_functions_sparkbar_datatypes_permutations_date_lowcardinality_uint16_ = r"""
 {"sparkbar(9)(date, lowcardinality_uint16_)":"▁█▅     ▄"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_uint8_lowcardinality_nullable_uint8__ = r"""
+{"sparkbar(9)(uint8, lowcardinality_nullable_uint8__)":"▃   ▂▁▂▂█"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_uint8_lowcardinality_nullable_uint64__ = r"""
+{"sparkbar(9)(uint8, lowcardinality_nullable_uint64__)":"▃   ▇▆▄▁█"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_uint8_lowcardinality_nullable_uint32__ = r"""
+{"sparkbar(9)(uint8, lowcardinality_nullable_uint32__)":"▁   ▆▁▂▄█"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_uint8_lowcardinality_nullable_uint16__ = r"""
+{"sparkbar(9)(uint8, lowcardinality_nullable_uint16__)":"▂   ▂▁▁▄█"}
 """
 
 _aggregate_functions_sparkbar_datatypes_permutations_datetime_lowcardinality_nullable_uint8__ = r"""

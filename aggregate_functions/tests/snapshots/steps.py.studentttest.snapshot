@@ -1,3 +1,11 @@
+_aggregate_functions_studentTTest_single_value_in_0_population = r"""
+{"studentTTest(sample_data, sample_index)":[0.7284819287927583,0.5066766800832683]}
+"""
+
+_aggregate_functions_studentTTest_single_value_in_1_population = r"""
+{"studentTTest(sample_data, sample_index)":[-0.7284819287927583,0.5066766800832683]}
+"""
+
 _aggregate_functions_studentTTest_constant = r"""
 {"studentTTest(1, 2)":[null,null]}
 """
@@ -1593,13 +1601,5 @@ _aggregate_functions_studentTTest_datatypes_permutations_decimal128_38__lowcardi
 
 _aggregate_functions_studentTTest_datatypes_permutations_decimal128_38__lowcardinality_uint16_ = r"""
 {"studentTTest(decimal128_38_, lowcardinality_uint16_)":[-1.1793615316871027,0.272135918877543]}
-"""
-
-_aggregate_functions_studentTTest_single_value_in_0_population = r"""
-{"studentTTest(sample_data, sample_index)":[0.7284819287927583,0.5066766800832683]}
-"""
-
-_aggregate_functions_studentTTest_single_value_in_1_population = r"""
-{"studentTTest(sample_data, sample_index)":[-0.7284819287927583,0.5066766800832683]}
 """
 

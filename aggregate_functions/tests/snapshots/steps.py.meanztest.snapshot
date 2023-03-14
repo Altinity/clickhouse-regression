@@ -1,3 +1,11 @@
+_aggregate_functions_meanZTest_single_value_in_0_population = r"""
+{"meanZTest(0.7, 0.45, 0.95)(sample_data, sample_index)":[4.725369183889301,0.000002296976642813543,2.457945905447148,5.942054094552852]}
+"""
+
+_aggregate_functions_meanZTest_single_value_in_1_population = r"""
+{"meanZTest(0.7, 0.45, 0.95)(sample_data, sample_index)":[-5.4679342611946025,4.553106736990268e-8,-5.705476902582546,-2.6945230974174548]}
+"""
+
 _aggregate_functions_meanZTest_constant = r"""
 {"meanZTest(0.7, 0.45, 0.95)(1, 2)":[null,0,null,null]}
 """
@@ -1593,13 +1601,5 @@ _aggregate_functions_meanZTest_datatypes_permutations_decimal128_38__lowcardinal
 
 _aggregate_functions_meanZTest_datatypes_permutations_decimal128_38__lowcardinality_uint16_ = r"""
 {"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, lowcardinality_uint16_)":[-0.9384779877066124,0.34799882404194193,-1.8474015219377637,0.6510721288394371]}
-"""
-
-_aggregate_functions_meanZTest_single_value_in_0_population = r"""
-{"meanZTest(0.7, 0.45, 0.95)(sample_data, sample_index)":[4.725369183889301,0.000002296976642813543,2.457945905447148,5.942054094552852]}
-"""
-
-_aggregate_functions_meanZTest_single_value_in_1_population = r"""
-{"meanZTest(0.7, 0.45, 0.95)(sample_data, sample_index)":[-5.4679342611946025,4.553106736990268e-8,-5.705476902582546,-2.6945230974174548]}
 """
 
