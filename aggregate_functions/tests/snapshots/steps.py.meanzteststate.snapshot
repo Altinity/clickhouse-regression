@@ -1,3 +1,11 @@
+_aggregate_functions_state_meanZTestState_single_value_in_0_population = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(sample_data, sample_index))":"000000000000F03F000000000000144000000000000024400000000000003D40"}
+"""
+
+_aggregate_functions_state_meanZTestState_single_value_in_1_population = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(sample_data, sample_index))":"0000000000001440000000000000F03F0000000000003D400000000000002440"}
+"""
+
 _aggregate_functions_state_meanZTestState_constant = r"""
 {"hex(meanZTestState(0.7, 0.45, 0.95)(1, 2))":"0000000000000000000000000000F03F0000000000000000000000000000F03F"}
 """
@@ -1593,13 +1601,5 @@ _aggregate_functions_state_meanZTestState_datatypes_permutations_decimal128_38__
 
 _aggregate_functions_state_meanZTestState_datatypes_permutations_decimal128_38__lowcardinality_uint16_ = r"""
 {"hex(meanZTestState(0.7, 0.45, 0.95)(decimal128_38_, lowcardinality_uint16_))":"00000000000000400000000000002040000000000000F0BF58E84C515221E93F"}
-"""
-
-_aggregate_functions_state_meanZTestState_single_value_in_0_population = r"""
-{"hex(meanZTestState(0.7, 0.45, 0.95)(sample_data, sample_index))":"000000000000F03F000000000000144000000000000024400000000000003D40"}
-"""
-
-_aggregate_functions_state_meanZTestState_single_value_in_1_population = r"""
-{"hex(meanZTestState(0.7, 0.45, 0.95)(sample_data, sample_index))":"0000000000001440000000000000F03F0000000000003D400000000000002440"}
 """
 

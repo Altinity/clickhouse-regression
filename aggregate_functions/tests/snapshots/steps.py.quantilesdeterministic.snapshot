@@ -91,6 +91,14 @@ _aggregate_functions_quantilesDeterministic_Float64 = r"""
 {"quantilesDeterministic(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float64, 1)":[-1.3157922173003988e271,-5.112209912988255e97,8.763420923265374e65,1.7976909999999934e307,9.88730049999998e307,1.6358988100000001e308,1.7815117809999993e308]}
 """
 
+_aggregate_functions_quantilesDeterministic_Date = r"""
+{"quantilesDeterministic(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(date, 1)":["2004-01-10","2006-02-20","2014-11-27","2034-07-02","2091-12-18","2137-12-08","2148-04-12"]}
+"""
+
+_aggregate_functions_quantilesDeterministic_DateTime = r"""
+{"quantilesDeterministic(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(datetime, 1)":["2010-01-09 20:03:06","2016-04-20 21:56:16","2019-11-17 11:38:31","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
 _aggregate_functions_quantilesDeterministic_Nullable_UInt8_ = r"""
 {"quantilesDeterministic(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint8_, 1)":[28,65,197,238.2,246.6,253.32000000000002,254.83200000000002]}
 """
@@ -129,6 +137,14 @@ _aggregate_functions_quantilesDeterministic_Nullable_Float32_ = r"""
 
 _aggregate_functions_quantilesDeterministic_Nullable_Float64_ = r"""
 {"quantilesDeterministic(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_float64_, 1)":[-1.0799483518274516e240,-1.361161047663063e43,1.811436225548946e259,3.5953820005419497e307,1.0786146000270966e308,1.6538757200054192e308,1.7833094720005417e308]}
+"""
+
+_aggregate_functions_quantilesDeterministic_Nullable_Date_ = r"""
+{"quantilesDeterministic(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_date_, 1)":["2005-10-25","2012-02-07","2018-10-13","2047-06-27","2098-06-16","2139-03-27","2148-05-29"]}
+"""
+
+_aggregate_functions_quantilesDeterministic_Nullable_DateTime_ = r"""
+{"quantilesDeterministic(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_datetime_, 1)":["2006-08-10 21:14:26","2014-04-10 09:39:46","2017-06-27 03:09:51","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
 """
 
 _aggregate_functions_quantilesDeterministic_LowCardinality_UInt8_ = r"""
@@ -171,6 +187,14 @@ _aggregate_functions_quantilesDeterministic_LowCardinality_Float64_ = r"""
 {"quantilesDeterministic(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float64_, 1)":[2.264156728547036e64,8.313355866648283e134,1.1348050282111362e217,1.7976909999999934e307,9.88730049999998e307,1.6358988100000001e308,1.7815117809999993e308]}
 """
 
+_aggregate_functions_quantilesDeterministic_LowCardinality_Date_ = r"""
+{"quantilesDeterministic(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_date_, 1)":["2004-05-04","2009-03-09","2018-06-14","2035-02-12","2092-04-09","2137-12-30","2148-04-14"]}
+"""
+
+_aggregate_functions_quantilesDeterministic_LowCardinality_DateTime_ = r"""
+{"quantilesDeterministic(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_datetime_, 1)":["2011-10-22 23:26:49","2015-04-17 13:43:28","2021-01-23 05:26:08","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
 _aggregate_functions_quantilesDeterministic_LowCardinality_Nullable_UInt8__ = r"""
 {"quantilesDeterministic(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_uint8__, 1)":[112,165,202,214.2,234.6,250.92000000000002,254.592]}
 """
@@ -211,35 +235,11 @@ _aggregate_functions_quantilesDeterministic_LowCardinality_Nullable_Float64__ = 
 {"quantilesDeterministic(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_float64__, 1)":[-1.3724029909877588e195,1.7674632094597634e89,3.01733034930727e285,3.595382003545866e307,1.0786146001772924e308,1.6538757200354584e308,1.7833094720035456e308]}
 """
 
-_aggregate_functions_quantilesDeterministic_Date = r"""
-{"quantilesDeterministic(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(date, 1)":["2004-01-10","2006-02-20","2014-11-27","2034-07-02","2091-12-18","2137-12-08","2148-04-12"]}
-"""
-
-_aggregate_functions_quantilesDeterministic_DateTime = r"""
-{"quantilesDeterministic(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(datetime, 1)":["2010-01-09 22:03:06","2016-04-20 22:56:16","2019-11-17 13:38:31","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
-"""
-
-_aggregate_functions_quantilesDeterministic_Nullable_Date_ = r"""
-{"quantilesDeterministic(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_date_, 1)":["2005-10-25","2012-02-07","2018-10-13","2047-06-27","2098-06-16","2139-03-27","2148-05-29"]}
-"""
-
-_aggregate_functions_quantilesDeterministic_Nullable_DateTime_ = r"""
-{"quantilesDeterministic(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_datetime_, 1)":["2006-08-10 23:14:26","2014-04-10 11:39:46","2017-06-27 04:09:51","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
-"""
-
-_aggregate_functions_quantilesDeterministic_LowCardinality_Date_ = r"""
-{"quantilesDeterministic(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_date_, 1)":["2004-05-04","2009-03-10","2018-06-14","2035-02-12","2092-04-09","2137-12-30","2148-04-14"]}
-"""
-
-_aggregate_functions_quantilesDeterministic_LowCardinality_DateTime_ = r"""
-{"quantilesDeterministic(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_datetime_, 1)":["2011-10-23 01:26:49","2015-04-17 14:43:28","2021-01-23 07:26:08","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
-"""
-
 _aggregate_functions_quantilesDeterministic_LowCardinality_Nullable_Date__ = r"""
 {"quantilesDeterministic(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_date__, 1)":["2007-03-04","2013-09-28","2018-12-01","2047-02-27","2098-04-17","2139-03-15","2148-05-28"]}
 """
 
 _aggregate_functions_quantilesDeterministic_LowCardinality_Nullable_DateTime__ = r"""
-{"quantilesDeterministic(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_datetime__, 1)":["2012-08-21 21:37:58","2013-08-28 14:39:09","2020-04-15 16:09:40","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+{"quantilesDeterministic(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_datetime__, 1)":["2012-08-21 19:37:58","2013-08-28 12:39:09","2020-04-15 15:09:40","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
 """
 

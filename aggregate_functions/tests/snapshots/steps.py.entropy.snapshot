@@ -114,7 +114,7 @@ _aggregate_functions_entropy_DateTime = r"""
 """
 
 _aggregate_functions_entropy_DateTime64_3_ = r"""
-{"entropy(datetime64_3_)":3.1219280948873624}
+{"entropy(datetime64_3_)":3.121928094887362}
 """
 
 _aggregate_functions_entropy_Bool = r"""
@@ -194,7 +194,7 @@ _aggregate_functions_entropy_Map_UInt8_DateTime_ = r"""
 """
 
 _aggregate_functions_entropy_Map_UInt8_DateTime64_3__ = r"""
-{"entropy(map_uint8_datetime64_3__)":3.1219280948873624}
+{"entropy(map_uint8_datetime64_3__)":3.121928094887362}
 """
 
 _aggregate_functions_entropy_Map_UInt8_Bool_ = r"""
@@ -365,78 +365,6 @@ _aggregate_functions_entropy_Map_UInt8_LowCardinality_UUID__ = r"""
 {"entropy(map_uint8_lowcardinality_uuid__)":3.1219280948873624}
 """
 
-_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_UInt8___ = r"""
-{"entropy(map_uint8_lowcardinality_nullable_uint8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_UInt16___ = r"""
-{"entropy(map_uint8_lowcardinality_nullable_uint16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_UInt32___ = r"""
-{"entropy(map_uint8_lowcardinality_nullable_uint32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_UInt64___ = r"""
-{"entropy(map_uint8_lowcardinality_nullable_uint64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_UInt128___ = r"""
-{"entropy(map_uint8_lowcardinality_nullable_uint128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_Int8___ = r"""
-{"entropy(map_uint8_lowcardinality_nullable_int8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_Int16___ = r"""
-{"entropy(map_uint8_lowcardinality_nullable_int16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_Int32___ = r"""
-{"entropy(map_uint8_lowcardinality_nullable_int32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_Int64___ = r"""
-{"entropy(map_uint8_lowcardinality_nullable_int64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_Int128___ = r"""
-{"entropy(map_uint8_lowcardinality_nullable_int128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_Float32___ = r"""
-{"entropy(map_uint8_lowcardinality_nullable_float32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_Float64___ = r"""
-{"entropy(map_uint8_lowcardinality_nullable_float64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_Date___ = r"""
-{"entropy(map_uint8_lowcardinality_nullable_date___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_DateTime___ = r"""
-{"entropy(map_uint8_lowcardinality_nullable_datetime___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_Bool___ = r"""
-{"entropy(map_uint8_lowcardinality_nullable_bool___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_String___ = r"""
-{"entropy(map_uint8_lowcardinality_nullable_string___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_FixedString_51____ = r"""
-{"entropy(map_uint8_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_UUID___ = r"""
-{"entropy(map_uint8_lowcardinality_nullable_uuid___)":3.321928094887362}
-"""
-
 _aggregate_functions_entropy_Map_UInt8_Array_String__ = r"""
 {"entropy(map_uint8_array_string__)":3.1219280948873624}
 """
@@ -510,7 +438,7 @@ _aggregate_functions_entropy_Map_UInt16_DateTime_ = r"""
 """
 
 _aggregate_functions_entropy_Map_UInt16_DateTime64_3__ = r"""
-{"entropy(map_uint16_datetime64_3__)":3.1219280948873624}
+{"entropy(map_uint16_datetime64_3__)":3.121928094887362}
 """
 
 _aggregate_functions_entropy_Map_UInt16_Bool_ = r"""
@@ -681,78 +609,6 @@ _aggregate_functions_entropy_Map_UInt16_LowCardinality_UUID__ = r"""
 {"entropy(map_uint16_lowcardinality_uuid__)":3.1219280948873624}
 """
 
-_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_UInt8___ = r"""
-{"entropy(map_uint16_lowcardinality_nullable_uint8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_UInt16___ = r"""
-{"entropy(map_uint16_lowcardinality_nullable_uint16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_UInt32___ = r"""
-{"entropy(map_uint16_lowcardinality_nullable_uint32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_UInt64___ = r"""
-{"entropy(map_uint16_lowcardinality_nullable_uint64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_UInt128___ = r"""
-{"entropy(map_uint16_lowcardinality_nullable_uint128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_Int8___ = r"""
-{"entropy(map_uint16_lowcardinality_nullable_int8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_Int16___ = r"""
-{"entropy(map_uint16_lowcardinality_nullable_int16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_Int32___ = r"""
-{"entropy(map_uint16_lowcardinality_nullable_int32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_Int64___ = r"""
-{"entropy(map_uint16_lowcardinality_nullable_int64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_Int128___ = r"""
-{"entropy(map_uint16_lowcardinality_nullable_int128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_Float32___ = r"""
-{"entropy(map_uint16_lowcardinality_nullable_float32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_Float64___ = r"""
-{"entropy(map_uint16_lowcardinality_nullable_float64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_Date___ = r"""
-{"entropy(map_uint16_lowcardinality_nullable_date___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_DateTime___ = r"""
-{"entropy(map_uint16_lowcardinality_nullable_datetime___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_Bool___ = r"""
-{"entropy(map_uint16_lowcardinality_nullable_bool___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_String___ = r"""
-{"entropy(map_uint16_lowcardinality_nullable_string___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_FixedString_51____ = r"""
-{"entropy(map_uint16_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_UUID___ = r"""
-{"entropy(map_uint16_lowcardinality_nullable_uuid___)":3.321928094887362}
-"""
-
 _aggregate_functions_entropy_Map_UInt16_Array_String__ = r"""
 {"entropy(map_uint16_array_string__)":3.121928094887362}
 """
@@ -826,7 +682,7 @@ _aggregate_functions_entropy_Map_UInt32_DateTime_ = r"""
 """
 
 _aggregate_functions_entropy_Map_UInt32_DateTime64_3__ = r"""
-{"entropy(map_uint32_datetime64_3__)":3.1219280948873624}
+{"entropy(map_uint32_datetime64_3__)":3.121928094887362}
 """
 
 _aggregate_functions_entropy_Map_UInt32_Bool_ = r"""
@@ -995,78 +851,6 @@ _aggregate_functions_entropy_Map_UInt32_LowCardinality_FixedString_51___ = r"""
 
 _aggregate_functions_entropy_Map_UInt32_LowCardinality_UUID__ = r"""
 {"entropy(map_uint32_lowcardinality_uuid__)":3.121928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_UInt8___ = r"""
-{"entropy(map_uint32_lowcardinality_nullable_uint8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_UInt16___ = r"""
-{"entropy(map_uint32_lowcardinality_nullable_uint16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_UInt32___ = r"""
-{"entropy(map_uint32_lowcardinality_nullable_uint32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_UInt64___ = r"""
-{"entropy(map_uint32_lowcardinality_nullable_uint64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_UInt128___ = r"""
-{"entropy(map_uint32_lowcardinality_nullable_uint128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_Int8___ = r"""
-{"entropy(map_uint32_lowcardinality_nullable_int8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_Int16___ = r"""
-{"entropy(map_uint32_lowcardinality_nullable_int16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_Int32___ = r"""
-{"entropy(map_uint32_lowcardinality_nullable_int32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_Int64___ = r"""
-{"entropy(map_uint32_lowcardinality_nullable_int64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_Int128___ = r"""
-{"entropy(map_uint32_lowcardinality_nullable_int128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_Float32___ = r"""
-{"entropy(map_uint32_lowcardinality_nullable_float32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_Float64___ = r"""
-{"entropy(map_uint32_lowcardinality_nullable_float64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_Date___ = r"""
-{"entropy(map_uint32_lowcardinality_nullable_date___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_DateTime___ = r"""
-{"entropy(map_uint32_lowcardinality_nullable_datetime___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_Bool___ = r"""
-{"entropy(map_uint32_lowcardinality_nullable_bool___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_String___ = r"""
-{"entropy(map_uint32_lowcardinality_nullable_string___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_FixedString_51____ = r"""
-{"entropy(map_uint32_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_UUID___ = r"""
-{"entropy(map_uint32_lowcardinality_nullable_uuid___)":3.321928094887362}
 """
 
 _aggregate_functions_entropy_Map_UInt32_Array_String__ = r"""
@@ -1313,78 +1097,6 @@ _aggregate_functions_entropy_Map_UInt64_LowCardinality_UUID__ = r"""
 {"entropy(map_uint64_lowcardinality_uuid__)":3.121928094887362}
 """
 
-_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_UInt8___ = r"""
-{"entropy(map_uint64_lowcardinality_nullable_uint8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_UInt16___ = r"""
-{"entropy(map_uint64_lowcardinality_nullable_uint16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_UInt32___ = r"""
-{"entropy(map_uint64_lowcardinality_nullable_uint32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_UInt64___ = r"""
-{"entropy(map_uint64_lowcardinality_nullable_uint64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_UInt128___ = r"""
-{"entropy(map_uint64_lowcardinality_nullable_uint128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_Int8___ = r"""
-{"entropy(map_uint64_lowcardinality_nullable_int8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_Int16___ = r"""
-{"entropy(map_uint64_lowcardinality_nullable_int16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_Int32___ = r"""
-{"entropy(map_uint64_lowcardinality_nullable_int32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_Int64___ = r"""
-{"entropy(map_uint64_lowcardinality_nullable_int64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_Int128___ = r"""
-{"entropy(map_uint64_lowcardinality_nullable_int128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_Float32___ = r"""
-{"entropy(map_uint64_lowcardinality_nullable_float32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_Float64___ = r"""
-{"entropy(map_uint64_lowcardinality_nullable_float64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_Date___ = r"""
-{"entropy(map_uint64_lowcardinality_nullable_date___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_DateTime___ = r"""
-{"entropy(map_uint64_lowcardinality_nullable_datetime___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_Bool___ = r"""
-{"entropy(map_uint64_lowcardinality_nullable_bool___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_String___ = r"""
-{"entropy(map_uint64_lowcardinality_nullable_string___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_FixedString_51____ = r"""
-{"entropy(map_uint64_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_UUID___ = r"""
-{"entropy(map_uint64_lowcardinality_nullable_uuid___)":3.321928094887362}
-"""
-
 _aggregate_functions_entropy_Map_UInt64_Array_String__ = r"""
 {"entropy(map_uint64_array_string__)":3.1219280948873624}
 """
@@ -1458,7 +1170,7 @@ _aggregate_functions_entropy_Map_UInt128_DateTime_ = r"""
 """
 
 _aggregate_functions_entropy_Map_UInt128_DateTime64_3__ = r"""
-{"entropy(map_uint128_datetime64_3__)":3.1219280948873624}
+{"entropy(map_uint128_datetime64_3__)":3.121928094887362}
 """
 
 _aggregate_functions_entropy_Map_UInt128_Bool_ = r"""
@@ -1627,78 +1339,6 @@ _aggregate_functions_entropy_Map_UInt128_LowCardinality_FixedString_51___ = r"""
 
 _aggregate_functions_entropy_Map_UInt128_LowCardinality_UUID__ = r"""
 {"entropy(map_uint128_lowcardinality_uuid__)":3.121928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_UInt8___ = r"""
-{"entropy(map_uint128_lowcardinality_nullable_uint8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_UInt16___ = r"""
-{"entropy(map_uint128_lowcardinality_nullable_uint16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_UInt32___ = r"""
-{"entropy(map_uint128_lowcardinality_nullable_uint32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_UInt64___ = r"""
-{"entropy(map_uint128_lowcardinality_nullable_uint64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_UInt128___ = r"""
-{"entropy(map_uint128_lowcardinality_nullable_uint128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_Int8___ = r"""
-{"entropy(map_uint128_lowcardinality_nullable_int8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_Int16___ = r"""
-{"entropy(map_uint128_lowcardinality_nullable_int16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_Int32___ = r"""
-{"entropy(map_uint128_lowcardinality_nullable_int32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_Int64___ = r"""
-{"entropy(map_uint128_lowcardinality_nullable_int64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_Int128___ = r"""
-{"entropy(map_uint128_lowcardinality_nullable_int128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_Float32___ = r"""
-{"entropy(map_uint128_lowcardinality_nullable_float32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_Float64___ = r"""
-{"entropy(map_uint128_lowcardinality_nullable_float64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_Date___ = r"""
-{"entropy(map_uint128_lowcardinality_nullable_date___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_DateTime___ = r"""
-{"entropy(map_uint128_lowcardinality_nullable_datetime___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_Bool___ = r"""
-{"entropy(map_uint128_lowcardinality_nullable_bool___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_String___ = r"""
-{"entropy(map_uint128_lowcardinality_nullable_string___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_FixedString_51____ = r"""
-{"entropy(map_uint128_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_UUID___ = r"""
-{"entropy(map_uint128_lowcardinality_nullable_uuid___)":3.321928094887362}
 """
 
 _aggregate_functions_entropy_Map_UInt128_Array_String__ = r"""
@@ -1945,78 +1585,6 @@ _aggregate_functions_entropy_Map_Int8_LowCardinality_UUID__ = r"""
 {"entropy(map_int8_lowcardinality_uuid__)":3.321928094887362}
 """
 
-_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_UInt8___ = r"""
-{"entropy(map_int8_lowcardinality_nullable_uint8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_UInt16___ = r"""
-{"entropy(map_int8_lowcardinality_nullable_uint16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_UInt32___ = r"""
-{"entropy(map_int8_lowcardinality_nullable_uint32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_UInt64___ = r"""
-{"entropy(map_int8_lowcardinality_nullable_uint64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_UInt128___ = r"""
-{"entropy(map_int8_lowcardinality_nullable_uint128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_Int8___ = r"""
-{"entropy(map_int8_lowcardinality_nullable_int8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_Int16___ = r"""
-{"entropy(map_int8_lowcardinality_nullable_int16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_Int32___ = r"""
-{"entropy(map_int8_lowcardinality_nullable_int32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_Int64___ = r"""
-{"entropy(map_int8_lowcardinality_nullable_int64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_Int128___ = r"""
-{"entropy(map_int8_lowcardinality_nullable_int128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_Float32___ = r"""
-{"entropy(map_int8_lowcardinality_nullable_float32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_Float64___ = r"""
-{"entropy(map_int8_lowcardinality_nullable_float64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_Date___ = r"""
-{"entropy(map_int8_lowcardinality_nullable_date___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_DateTime___ = r"""
-{"entropy(map_int8_lowcardinality_nullable_datetime___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_Bool___ = r"""
-{"entropy(map_int8_lowcardinality_nullable_bool___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_String___ = r"""
-{"entropy(map_int8_lowcardinality_nullable_string___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_FixedString_51____ = r"""
-{"entropy(map_int8_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_UUID___ = r"""
-{"entropy(map_int8_lowcardinality_nullable_uuid___)":3.321928094887362}
-"""
-
 _aggregate_functions_entropy_Map_Int8_Array_String__ = r"""
 {"entropy(map_int8_array_string__)":3.321928094887362}
 """
@@ -2259,78 +1827,6 @@ _aggregate_functions_entropy_Map_Int16_LowCardinality_FixedString_51___ = r"""
 
 _aggregate_functions_entropy_Map_Int16_LowCardinality_UUID__ = r"""
 {"entropy(map_int16_lowcardinality_uuid__)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_UInt8___ = r"""
-{"entropy(map_int16_lowcardinality_nullable_uint8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_UInt16___ = r"""
-{"entropy(map_int16_lowcardinality_nullable_uint16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_UInt32___ = r"""
-{"entropy(map_int16_lowcardinality_nullable_uint32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_UInt64___ = r"""
-{"entropy(map_int16_lowcardinality_nullable_uint64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_UInt128___ = r"""
-{"entropy(map_int16_lowcardinality_nullable_uint128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_Int8___ = r"""
-{"entropy(map_int16_lowcardinality_nullable_int8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_Int16___ = r"""
-{"entropy(map_int16_lowcardinality_nullable_int16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_Int32___ = r"""
-{"entropy(map_int16_lowcardinality_nullable_int32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_Int64___ = r"""
-{"entropy(map_int16_lowcardinality_nullable_int64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_Int128___ = r"""
-{"entropy(map_int16_lowcardinality_nullable_int128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_Float32___ = r"""
-{"entropy(map_int16_lowcardinality_nullable_float32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_Float64___ = r"""
-{"entropy(map_int16_lowcardinality_nullable_float64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_Date___ = r"""
-{"entropy(map_int16_lowcardinality_nullable_date___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_DateTime___ = r"""
-{"entropy(map_int16_lowcardinality_nullable_datetime___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_Bool___ = r"""
-{"entropy(map_int16_lowcardinality_nullable_bool___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_String___ = r"""
-{"entropy(map_int16_lowcardinality_nullable_string___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_FixedString_51____ = r"""
-{"entropy(map_int16_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_UUID___ = r"""
-{"entropy(map_int16_lowcardinality_nullable_uuid___)":3.321928094887362}
 """
 
 _aggregate_functions_entropy_Map_Int16_Array_String__ = r"""
@@ -2577,78 +2073,6 @@ _aggregate_functions_entropy_Map_Int32_LowCardinality_UUID__ = r"""
 {"entropy(map_int32_lowcardinality_uuid__)":3.321928094887362}
 """
 
-_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_UInt8___ = r"""
-{"entropy(map_int32_lowcardinality_nullable_uint8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_UInt16___ = r"""
-{"entropy(map_int32_lowcardinality_nullable_uint16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_UInt32___ = r"""
-{"entropy(map_int32_lowcardinality_nullable_uint32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_UInt64___ = r"""
-{"entropy(map_int32_lowcardinality_nullable_uint64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_UInt128___ = r"""
-{"entropy(map_int32_lowcardinality_nullable_uint128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_Int8___ = r"""
-{"entropy(map_int32_lowcardinality_nullable_int8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_Int16___ = r"""
-{"entropy(map_int32_lowcardinality_nullable_int16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_Int32___ = r"""
-{"entropy(map_int32_lowcardinality_nullable_int32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_Int64___ = r"""
-{"entropy(map_int32_lowcardinality_nullable_int64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_Int128___ = r"""
-{"entropy(map_int32_lowcardinality_nullable_int128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_Float32___ = r"""
-{"entropy(map_int32_lowcardinality_nullable_float32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_Float64___ = r"""
-{"entropy(map_int32_lowcardinality_nullable_float64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_Date___ = r"""
-{"entropy(map_int32_lowcardinality_nullable_date___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_DateTime___ = r"""
-{"entropy(map_int32_lowcardinality_nullable_datetime___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_Bool___ = r"""
-{"entropy(map_int32_lowcardinality_nullable_bool___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_String___ = r"""
-{"entropy(map_int32_lowcardinality_nullable_string___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_FixedString_51____ = r"""
-{"entropy(map_int32_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_UUID___ = r"""
-{"entropy(map_int32_lowcardinality_nullable_uuid___)":3.321928094887362}
-"""
-
 _aggregate_functions_entropy_Map_Int32_Array_String__ = r"""
 {"entropy(map_int32_array_string__)":3.321928094887362}
 """
@@ -2891,78 +2315,6 @@ _aggregate_functions_entropy_Map_Int64_LowCardinality_FixedString_51___ = r"""
 
 _aggregate_functions_entropy_Map_Int64_LowCardinality_UUID__ = r"""
 {"entropy(map_int64_lowcardinality_uuid__)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_UInt8___ = r"""
-{"entropy(map_int64_lowcardinality_nullable_uint8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_UInt16___ = r"""
-{"entropy(map_int64_lowcardinality_nullable_uint16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_UInt32___ = r"""
-{"entropy(map_int64_lowcardinality_nullable_uint32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_UInt64___ = r"""
-{"entropy(map_int64_lowcardinality_nullable_uint64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_UInt128___ = r"""
-{"entropy(map_int64_lowcardinality_nullable_uint128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_Int8___ = r"""
-{"entropy(map_int64_lowcardinality_nullable_int8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_Int16___ = r"""
-{"entropy(map_int64_lowcardinality_nullable_int16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_Int32___ = r"""
-{"entropy(map_int64_lowcardinality_nullable_int32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_Int64___ = r"""
-{"entropy(map_int64_lowcardinality_nullable_int64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_Int128___ = r"""
-{"entropy(map_int64_lowcardinality_nullable_int128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_Float32___ = r"""
-{"entropy(map_int64_lowcardinality_nullable_float32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_Float64___ = r"""
-{"entropy(map_int64_lowcardinality_nullable_float64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_Date___ = r"""
-{"entropy(map_int64_lowcardinality_nullable_date___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_DateTime___ = r"""
-{"entropy(map_int64_lowcardinality_nullable_datetime___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_Bool___ = r"""
-{"entropy(map_int64_lowcardinality_nullable_bool___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_String___ = r"""
-{"entropy(map_int64_lowcardinality_nullable_string___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_FixedString_51____ = r"""
-{"entropy(map_int64_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_UUID___ = r"""
-{"entropy(map_int64_lowcardinality_nullable_uuid___)":3.321928094887362}
 """
 
 _aggregate_functions_entropy_Map_Int64_Array_String__ = r"""
@@ -3209,78 +2561,6 @@ _aggregate_functions_entropy_Map_Int128_LowCardinality_UUID__ = r"""
 {"entropy(map_int128_lowcardinality_uuid__)":3.321928094887362}
 """
 
-_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_UInt8___ = r"""
-{"entropy(map_int128_lowcardinality_nullable_uint8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_UInt16___ = r"""
-{"entropy(map_int128_lowcardinality_nullable_uint16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_UInt32___ = r"""
-{"entropy(map_int128_lowcardinality_nullable_uint32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_UInt64___ = r"""
-{"entropy(map_int128_lowcardinality_nullable_uint64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_UInt128___ = r"""
-{"entropy(map_int128_lowcardinality_nullable_uint128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_Int8___ = r"""
-{"entropy(map_int128_lowcardinality_nullable_int8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_Int16___ = r"""
-{"entropy(map_int128_lowcardinality_nullable_int16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_Int32___ = r"""
-{"entropy(map_int128_lowcardinality_nullable_int32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_Int64___ = r"""
-{"entropy(map_int128_lowcardinality_nullable_int64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_Int128___ = r"""
-{"entropy(map_int128_lowcardinality_nullable_int128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_Float32___ = r"""
-{"entropy(map_int128_lowcardinality_nullable_float32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_Float64___ = r"""
-{"entropy(map_int128_lowcardinality_nullable_float64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_Date___ = r"""
-{"entropy(map_int128_lowcardinality_nullable_date___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_DateTime___ = r"""
-{"entropy(map_int128_lowcardinality_nullable_datetime___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_Bool___ = r"""
-{"entropy(map_int128_lowcardinality_nullable_bool___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_String___ = r"""
-{"entropy(map_int128_lowcardinality_nullable_string___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_FixedString_51____ = r"""
-{"entropy(map_int128_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_UUID___ = r"""
-{"entropy(map_int128_lowcardinality_nullable_uuid___)":3.321928094887362}
-"""
-
 _aggregate_functions_entropy_Map_Int128_Array_String__ = r"""
 {"entropy(map_int128_array_string__)":3.321928094887362}
 """
@@ -3354,7 +2634,7 @@ _aggregate_functions_entropy_Map_Date_DateTime_ = r"""
 """
 
 _aggregate_functions_entropy_Map_Date_DateTime64_3__ = r"""
-{"entropy(map_date_datetime64_3__)":3.1219280948873624}
+{"entropy(map_date_datetime64_3__)":3.121928094887362}
 """
 
 _aggregate_functions_entropy_Map_Date_Bool_ = r"""
@@ -3525,78 +2805,6 @@ _aggregate_functions_entropy_Map_Date_LowCardinality_UUID__ = r"""
 {"entropy(map_date_lowcardinality_uuid__)":3.1219280948873624}
 """
 
-_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_UInt8___ = r"""
-{"entropy(map_date_lowcardinality_nullable_uint8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_UInt16___ = r"""
-{"entropy(map_date_lowcardinality_nullable_uint16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_UInt32___ = r"""
-{"entropy(map_date_lowcardinality_nullable_uint32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_UInt64___ = r"""
-{"entropy(map_date_lowcardinality_nullable_uint64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_UInt128___ = r"""
-{"entropy(map_date_lowcardinality_nullable_uint128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_Int8___ = r"""
-{"entropy(map_date_lowcardinality_nullable_int8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_Int16___ = r"""
-{"entropy(map_date_lowcardinality_nullable_int16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_Int32___ = r"""
-{"entropy(map_date_lowcardinality_nullable_int32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_Int64___ = r"""
-{"entropy(map_date_lowcardinality_nullable_int64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_Int128___ = r"""
-{"entropy(map_date_lowcardinality_nullable_int128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_Float32___ = r"""
-{"entropy(map_date_lowcardinality_nullable_float32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_Float64___ = r"""
-{"entropy(map_date_lowcardinality_nullable_float64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_Date___ = r"""
-{"entropy(map_date_lowcardinality_nullable_date___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_DateTime___ = r"""
-{"entropy(map_date_lowcardinality_nullable_datetime___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_Bool___ = r"""
-{"entropy(map_date_lowcardinality_nullable_bool___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_String___ = r"""
-{"entropy(map_date_lowcardinality_nullable_string___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_FixedString_51____ = r"""
-{"entropy(map_date_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_UUID___ = r"""
-{"entropy(map_date_lowcardinality_nullable_uuid___)":3.321928094887362}
-"""
-
 _aggregate_functions_entropy_Map_Date_Array_String__ = r"""
 {"entropy(map_date_array_string__)":3.121928094887362}
 """
@@ -3622,7 +2830,7 @@ _aggregate_functions_entropy_Map_DateTime_UInt32_ = r"""
 """
 
 _aggregate_functions_entropy_Map_DateTime_UInt64_ = r"""
-{"entropy(map_datetime_uint64_)":3.1219280948873624}
+{"entropy(map_datetime_uint64_)":3.121928094887362}
 """
 
 _aggregate_functions_entropy_Map_DateTime_UInt128_ = r"""
@@ -3670,7 +2878,7 @@ _aggregate_functions_entropy_Map_DateTime_DateTime_ = r"""
 """
 
 _aggregate_functions_entropy_Map_DateTime_DateTime64_3__ = r"""
-{"entropy(map_datetime_datetime64_3__)":3.1219280948873624}
+{"entropy(map_datetime_datetime64_3__)":3.121928094887362}
 """
 
 _aggregate_functions_entropy_Map_DateTime_Bool_ = r"""
@@ -3834,83 +3042,11 @@ _aggregate_functions_entropy_Map_DateTime_LowCardinality_String__ = r"""
 """
 
 _aggregate_functions_entropy_Map_DateTime_LowCardinality_FixedString_51___ = r"""
-{"entropy(map_datetime_lowcardinality_fixedstring_51___)":3.121928094887362}
+{"entropy(map_datetime_lowcardinality_fixedstring_51___)":3.1219280948873624}
 """
 
 _aggregate_functions_entropy_Map_DateTime_LowCardinality_UUID__ = r"""
 {"entropy(map_datetime_lowcardinality_uuid__)":3.121928094887362}
-"""
-
-_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_UInt8___ = r"""
-{"entropy(map_datetime_lowcardinality_nullable_uint8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_UInt16___ = r"""
-{"entropy(map_datetime_lowcardinality_nullable_uint16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_UInt32___ = r"""
-{"entropy(map_datetime_lowcardinality_nullable_uint32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_UInt64___ = r"""
-{"entropy(map_datetime_lowcardinality_nullable_uint64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_UInt128___ = r"""
-{"entropy(map_datetime_lowcardinality_nullable_uint128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_Int8___ = r"""
-{"entropy(map_datetime_lowcardinality_nullable_int8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_Int16___ = r"""
-{"entropy(map_datetime_lowcardinality_nullable_int16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_Int32___ = r"""
-{"entropy(map_datetime_lowcardinality_nullable_int32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_Int64___ = r"""
-{"entropy(map_datetime_lowcardinality_nullable_int64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_Int128___ = r"""
-{"entropy(map_datetime_lowcardinality_nullable_int128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_Float32___ = r"""
-{"entropy(map_datetime_lowcardinality_nullable_float32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_Float64___ = r"""
-{"entropy(map_datetime_lowcardinality_nullable_float64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_Date___ = r"""
-{"entropy(map_datetime_lowcardinality_nullable_date___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_DateTime___ = r"""
-{"entropy(map_datetime_lowcardinality_nullable_datetime___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_Bool___ = r"""
-{"entropy(map_datetime_lowcardinality_nullable_bool___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_String___ = r"""
-{"entropy(map_datetime_lowcardinality_nullable_string___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_FixedString_51____ = r"""
-{"entropy(map_datetime_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_UUID___ = r"""
-{"entropy(map_datetime_lowcardinality_nullable_uuid___)":3.321928094887362}
 """
 
 _aggregate_functions_entropy_Map_DateTime_Array_String__ = r"""
@@ -3986,7 +3122,7 @@ _aggregate_functions_entropy_Map_Bool_DateTime_ = r"""
 """
 
 _aggregate_functions_entropy_Map_Bool_DateTime64_3__ = r"""
-{"entropy(map_bool_datetime64_3__)":3.1219280948873624}
+{"entropy(map_bool_datetime64_3__)":3.121928094887362}
 """
 
 _aggregate_functions_entropy_Map_Bool_Bool_ = r"""
@@ -4155,78 +3291,6 @@ _aggregate_functions_entropy_Map_Bool_LowCardinality_FixedString_51___ = r"""
 
 _aggregate_functions_entropy_Map_Bool_LowCardinality_UUID__ = r"""
 {"entropy(map_bool_lowcardinality_uuid__)":3.1219280948873624}
-"""
-
-_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_UInt8___ = r"""
-{"entropy(map_bool_lowcardinality_nullable_uint8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_UInt16___ = r"""
-{"entropy(map_bool_lowcardinality_nullable_uint16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_UInt32___ = r"""
-{"entropy(map_bool_lowcardinality_nullable_uint32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_UInt64___ = r"""
-{"entropy(map_bool_lowcardinality_nullable_uint64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_UInt128___ = r"""
-{"entropy(map_bool_lowcardinality_nullable_uint128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_Int8___ = r"""
-{"entropy(map_bool_lowcardinality_nullable_int8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_Int16___ = r"""
-{"entropy(map_bool_lowcardinality_nullable_int16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_Int32___ = r"""
-{"entropy(map_bool_lowcardinality_nullable_int32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_Int64___ = r"""
-{"entropy(map_bool_lowcardinality_nullable_int64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_Int128___ = r"""
-{"entropy(map_bool_lowcardinality_nullable_int128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_Float32___ = r"""
-{"entropy(map_bool_lowcardinality_nullable_float32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_Float64___ = r"""
-{"entropy(map_bool_lowcardinality_nullable_float64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_Date___ = r"""
-{"entropy(map_bool_lowcardinality_nullable_date___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_DateTime___ = r"""
-{"entropy(map_bool_lowcardinality_nullable_datetime___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_Bool___ = r"""
-{"entropy(map_bool_lowcardinality_nullable_bool___)":1.6854752972273346}
-"""
-
-_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_String___ = r"""
-{"entropy(map_bool_lowcardinality_nullable_string___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_FixedString_51____ = r"""
-{"entropy(map_bool_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_UUID___ = r"""
-{"entropy(map_bool_lowcardinality_nullable_uuid___)":3.321928094887362}
 """
 
 _aggregate_functions_entropy_Map_Bool_Array_String__ = r"""
@@ -4473,78 +3537,6 @@ _aggregate_functions_entropy_Map_String_LowCardinality_UUID__ = r"""
 {"entropy(map_string_lowcardinality_uuid__)":3.1219280948873624}
 """
 
-_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_UInt8___ = r"""
-{"entropy(map_string_lowcardinality_nullable_uint8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_UInt16___ = r"""
-{"entropy(map_string_lowcardinality_nullable_uint16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_UInt32___ = r"""
-{"entropy(map_string_lowcardinality_nullable_uint32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_UInt64___ = r"""
-{"entropy(map_string_lowcardinality_nullable_uint64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_UInt128___ = r"""
-{"entropy(map_string_lowcardinality_nullable_uint128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_Int8___ = r"""
-{"entropy(map_string_lowcardinality_nullable_int8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_Int16___ = r"""
-{"entropy(map_string_lowcardinality_nullable_int16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_Int32___ = r"""
-{"entropy(map_string_lowcardinality_nullable_int32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_Int64___ = r"""
-{"entropy(map_string_lowcardinality_nullable_int64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_Int128___ = r"""
-{"entropy(map_string_lowcardinality_nullable_int128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_Float32___ = r"""
-{"entropy(map_string_lowcardinality_nullable_float32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_Float64___ = r"""
-{"entropy(map_string_lowcardinality_nullable_float64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_Date___ = r"""
-{"entropy(map_string_lowcardinality_nullable_date___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_DateTime___ = r"""
-{"entropy(map_string_lowcardinality_nullable_datetime___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_Bool___ = r"""
-{"entropy(map_string_lowcardinality_nullable_bool___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_String___ = r"""
-{"entropy(map_string_lowcardinality_nullable_string___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_FixedString_51____ = r"""
-{"entropy(map_string_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_UUID___ = r"""
-{"entropy(map_string_lowcardinality_nullable_uuid___)":3.321928094887362}
-"""
-
 _aggregate_functions_entropy_Map_String_Array_String__ = r"""
 {"entropy(map_string_array_string__)":3.1219280948873624}
 """
@@ -4789,78 +3781,6 @@ _aggregate_functions_entropy_Map_FixedString_51__LowCardinality_UUID__ = r"""
 {"entropy(map_fixedstring_51__lowcardinality_uuid__)":3.121928094887362}
 """
 
-_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_UInt8___ = r"""
-{"entropy(map_fixedstring_51__lowcardinality_nullable_uint8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_UInt16___ = r"""
-{"entropy(map_fixedstring_51__lowcardinality_nullable_uint16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_UInt32___ = r"""
-{"entropy(map_fixedstring_51__lowcardinality_nullable_uint32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_UInt64___ = r"""
-{"entropy(map_fixedstring_51__lowcardinality_nullable_uint64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_UInt128___ = r"""
-{"entropy(map_fixedstring_51__lowcardinality_nullable_uint128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_Int8___ = r"""
-{"entropy(map_fixedstring_51__lowcardinality_nullable_int8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_Int16___ = r"""
-{"entropy(map_fixedstring_51__lowcardinality_nullable_int16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_Int32___ = r"""
-{"entropy(map_fixedstring_51__lowcardinality_nullable_int32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_Int64___ = r"""
-{"entropy(map_fixedstring_51__lowcardinality_nullable_int64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_Int128___ = r"""
-{"entropy(map_fixedstring_51__lowcardinality_nullable_int128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_Float32___ = r"""
-{"entropy(map_fixedstring_51__lowcardinality_nullable_float32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_Float64___ = r"""
-{"entropy(map_fixedstring_51__lowcardinality_nullable_float64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_Date___ = r"""
-{"entropy(map_fixedstring_51__lowcardinality_nullable_date___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_DateTime___ = r"""
-{"entropy(map_fixedstring_51__lowcardinality_nullable_datetime___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_Bool___ = r"""
-{"entropy(map_fixedstring_51__lowcardinality_nullable_bool___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_String___ = r"""
-{"entropy(map_fixedstring_51__lowcardinality_nullable_string___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_FixedString_51____ = r"""
-{"entropy(map_fixedstring_51__lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_UUID___ = r"""
-{"entropy(map_fixedstring_51__lowcardinality_nullable_uuid___)":3.321928094887362}
-"""
-
 _aggregate_functions_entropy_Map_FixedString_51__Array_String__ = r"""
 {"entropy(map_fixedstring_51__array_string__)":3.1219280948873624}
 """
@@ -4934,7 +3854,7 @@ _aggregate_functions_entropy_Map_UUID_DateTime_ = r"""
 """
 
 _aggregate_functions_entropy_Map_UUID_DateTime64_3__ = r"""
-{"entropy(map_uuid_datetime64_3__)":3.1219280948873624}
+{"entropy(map_uuid_datetime64_3__)":3.121928094887362}
 """
 
 _aggregate_functions_entropy_Map_UUID_Bool_ = r"""
@@ -5103,78 +4023,6 @@ _aggregate_functions_entropy_Map_UUID_LowCardinality_FixedString_51___ = r"""
 
 _aggregate_functions_entropy_Map_UUID_LowCardinality_UUID__ = r"""
 {"entropy(map_uuid_lowcardinality_uuid__)":3.1219280948873624}
-"""
-
-_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_UInt8___ = r"""
-{"entropy(map_uuid_lowcardinality_nullable_uint8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_UInt16___ = r"""
-{"entropy(map_uuid_lowcardinality_nullable_uint16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_UInt32___ = r"""
-{"entropy(map_uuid_lowcardinality_nullable_uint32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_UInt64___ = r"""
-{"entropy(map_uuid_lowcardinality_nullable_uint64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_UInt128___ = r"""
-{"entropy(map_uuid_lowcardinality_nullable_uint128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_Int8___ = r"""
-{"entropy(map_uuid_lowcardinality_nullable_int8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_Int16___ = r"""
-{"entropy(map_uuid_lowcardinality_nullable_int16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_Int32___ = r"""
-{"entropy(map_uuid_lowcardinality_nullable_int32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_Int64___ = r"""
-{"entropy(map_uuid_lowcardinality_nullable_int64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_Int128___ = r"""
-{"entropy(map_uuid_lowcardinality_nullable_int128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_Float32___ = r"""
-{"entropy(map_uuid_lowcardinality_nullable_float32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_Float64___ = r"""
-{"entropy(map_uuid_lowcardinality_nullable_float64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_Date___ = r"""
-{"entropy(map_uuid_lowcardinality_nullable_date___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_DateTime___ = r"""
-{"entropy(map_uuid_lowcardinality_nullable_datetime___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_Bool___ = r"""
-{"entropy(map_uuid_lowcardinality_nullable_bool___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_String___ = r"""
-{"entropy(map_uuid_lowcardinality_nullable_string___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_FixedString_51____ = r"""
-{"entropy(map_uuid_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_UUID___ = r"""
-{"entropy(map_uuid_lowcardinality_nullable_uuid___)":3.321928094887362}
 """
 
 _aggregate_functions_entropy_Map_UUID_Array_String__ = r"""
@@ -5421,78 +4269,6 @@ _aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_UUID__ = 
 {"entropy(map_lowcardinality_string__lowcardinality_uuid__)":3.1219280948873624}
 """
 
-_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_UInt8___ = r"""
-{"entropy(map_lowcardinality_string__lowcardinality_nullable_uint8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_UInt16___ = r"""
-{"entropy(map_lowcardinality_string__lowcardinality_nullable_uint16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_UInt32___ = r"""
-{"entropy(map_lowcardinality_string__lowcardinality_nullable_uint32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_UInt64___ = r"""
-{"entropy(map_lowcardinality_string__lowcardinality_nullable_uint64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_UInt128___ = r"""
-{"entropy(map_lowcardinality_string__lowcardinality_nullable_uint128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_Int8___ = r"""
-{"entropy(map_lowcardinality_string__lowcardinality_nullable_int8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_Int16___ = r"""
-{"entropy(map_lowcardinality_string__lowcardinality_nullable_int16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_Int32___ = r"""
-{"entropy(map_lowcardinality_string__lowcardinality_nullable_int32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_Int64___ = r"""
-{"entropy(map_lowcardinality_string__lowcardinality_nullable_int64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_Int128___ = r"""
-{"entropy(map_lowcardinality_string__lowcardinality_nullable_int128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_Float32___ = r"""
-{"entropy(map_lowcardinality_string__lowcardinality_nullable_float32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_Float64___ = r"""
-{"entropy(map_lowcardinality_string__lowcardinality_nullable_float64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_Date___ = r"""
-{"entropy(map_lowcardinality_string__lowcardinality_nullable_date___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_DateTime___ = r"""
-{"entropy(map_lowcardinality_string__lowcardinality_nullable_datetime___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_Bool___ = r"""
-{"entropy(map_lowcardinality_string__lowcardinality_nullable_bool___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_String___ = r"""
-{"entropy(map_lowcardinality_string__lowcardinality_nullable_string___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_FixedString_51____ = r"""
-{"entropy(map_lowcardinality_string__lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_UUID___ = r"""
-{"entropy(map_lowcardinality_string__lowcardinality_nullable_uuid___)":3.321928094887362}
-"""
-
 _aggregate_functions_entropy_Map_LowCardinality_String__Array_String__ = r"""
 {"entropy(map_lowcardinality_string__array_string__)":3.1219280948873624}
 """
@@ -5735,78 +4511,6 @@ _aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_
 
 _aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_UUID__ = r"""
 {"entropy(map_lowcardinality_fixedstring_51___lowcardinality_uuid__)":3.1219280948873624}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_UInt8___ = r"""
-{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_uint8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_UInt16___ = r"""
-{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_uint16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_UInt32___ = r"""
-{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_uint32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_UInt64___ = r"""
-{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_uint64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_UInt128___ = r"""
-{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_uint128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_Int8___ = r"""
-{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_int8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_Int16___ = r"""
-{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_int16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_Int32___ = r"""
-{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_int32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_Int64___ = r"""
-{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_int64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_Int128___ = r"""
-{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_int128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_Float32___ = r"""
-{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_float32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_Float64___ = r"""
-{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_float64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_Date___ = r"""
-{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_date___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_DateTime___ = r"""
-{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_datetime___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_Bool___ = r"""
-{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_bool___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_String___ = r"""
-{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_string___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_FixedString_51____ = r"""
-{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_UUID___ = r"""
-{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_uuid___)":3.321928094887362}
 """
 
 _aggregate_functions_entropy_Map_LowCardinality_FixedString_51___Array_String__ = r"""
@@ -6133,78 +4837,6 @@ _aggregate_functions_entropy_Array_LowCardinality_UUID__ = r"""
 {"entropy(array_lowcardinality_uuid__)":3.1219280948873624}
 """
 
-_aggregate_functions_entropy_Array_LowCardinality_Nullable_UInt8___ = r"""
-{"entropy(array_lowcardinality_nullable_uint8___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Array_LowCardinality_Nullable_UInt16___ = r"""
-{"entropy(array_lowcardinality_nullable_uint16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Array_LowCardinality_Nullable_UInt32___ = r"""
-{"entropy(array_lowcardinality_nullable_uint32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Array_LowCardinality_Nullable_UInt64___ = r"""
-{"entropy(array_lowcardinality_nullable_uint64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Array_LowCardinality_Nullable_UInt128___ = r"""
-{"entropy(array_lowcardinality_nullable_uint128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Array_LowCardinality_Nullable_Int8___ = r"""
-{"entropy(array_lowcardinality_nullable_int8___)":3.121928094887362}
-"""
-
-_aggregate_functions_entropy_Array_LowCardinality_Nullable_Int16___ = r"""
-{"entropy(array_lowcardinality_nullable_int16___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Array_LowCardinality_Nullable_Int32___ = r"""
-{"entropy(array_lowcardinality_nullable_int32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Array_LowCardinality_Nullable_Int64___ = r"""
-{"entropy(array_lowcardinality_nullable_int64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Array_LowCardinality_Nullable_Int128___ = r"""
-{"entropy(array_lowcardinality_nullable_int128___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Array_LowCardinality_Nullable_Float32___ = r"""
-{"entropy(array_lowcardinality_nullable_float32___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Array_LowCardinality_Nullable_Float64___ = r"""
-{"entropy(array_lowcardinality_nullable_float64___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Array_LowCardinality_Nullable_Date___ = r"""
-{"entropy(array_lowcardinality_nullable_date___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Array_LowCardinality_Nullable_DateTime___ = r"""
-{"entropy(array_lowcardinality_nullable_datetime___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Array_LowCardinality_Nullable_Bool___ = r"""
-{"entropy(array_lowcardinality_nullable_bool___)":1.360964047443681}
-"""
-
-_aggregate_functions_entropy_Array_LowCardinality_Nullable_String___ = r"""
-{"entropy(array_lowcardinality_nullable_string___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Array_LowCardinality_Nullable_FixedString_51____ = r"""
-{"entropy(array_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Array_LowCardinality_Nullable_UUID___ = r"""
-{"entropy(array_lowcardinality_nullable_uuid___)":3.321928094887362}
-"""
-
 _aggregate_functions_entropy_Array_Array_String__ = r"""
 {"entropy(array_array_string__)":3.121928094887362}
 """
@@ -6289,6 +4921,1538 @@ _aggregate_functions_entropy_LowCardinality_UUID_ = r"""
 {"entropy(lowcardinality_uuid_)":3.121928094887362}
 """
 
+_aggregate_functions_entropy_Tuple_UInt8_UInt16_UInt32_UInt64_UInt128_Int8_Int16_Int32_Int64_Int128_Float32_Float64_Decimal128_38__Date_DateTime_DateTime64_3__Bool_String_FixedString_51__UUID_Nullable_UInt8__Nullable_UInt16__Nullable_UInt32__Nullable_UInt64__Nullable_UInt128__Nullable_Int8__Nullable_Int16__Nullable_Int32__Nullable_Int64__Nullable_Int128__Nullable_Float32__Nullable_Float64__Nullable_Decimal128_38___Nullable_Date__Nullable_DateTime__Nullable_DateTime64_3___Nullable_Bool__Nullable_String__Nullable_FixedString_51___Nullable_UUID__LowCardinality_UInt8__LowCardinality_UInt16__LowCardinality_UInt32__LowCardinality_UInt64__LowCardinality_UInt128__LowCardinality_Int8__LowCardinality_Int16__LowCardinality_Int32__LowCardinality_Int64__LowCardinality_Int128__LowCardinality_Float32__LowCardinality_Float64__LowCardinality_Date__LowCardinality_DateTime__LowCardinality_Bool__LowCardinality_String__LowCardinality_FixedString_51___LowCardinality_UUID__Array_String__Map_String_LowCardinality_Float64___Tuple_String__ = r"""
+{"entropy(tuple_uint8_uint16_uint32_uint64_uint128_int8_int16_int32_int64_int128_float32_float64_decimal128_38__date_datetime_datetime64_3__bool_string_fixedstring_51__uuid_nullable_uint8__nullable_uint16__nullable_uint32__nullable_uint64__nullable_uint128__nullable_int8__nullable_int16__nullable_int32__nullable_int64__nullable_int128__nullable_float32__nullable_float64__nullable_decimal128_38___nullable_date__nullable_datetime__nullable_datetime64_3___nullable_bool__nullable_string__nullable_fixedstring_51___nullable_uuid__lowcardinality_uint8__lowcardinality_uint16__lowcardinality_uint32__lowcardinality_uint64__lowcardinality_uint128__lowcardinality_int8__lowcardinality_int16__lowcardinality_int32__lowcardinality_int64__lowcardinality_int128__lowcardinality_float32__lowcardinality_float64__lowcardinality_date__lowcardinality_datetime__lowcardinality_bool__lowcardinality_string__lowcardinality_fixedstring_51___lowcardinality_uuid__array_string__map_string_lowcardinality_float64___tuple_string__)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_DateTime64_3___22_8 = r"""
+{"entropy(datetime64_3_)":3.121928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt8_DateTime64_3____22_8 = r"""
+{"entropy(map_uint8_datetime64_3__)":3.121928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt8_Nullable_DateTime64_3_____22_8 = r"""
+{"entropy(map_uint8_nullable_datetime64_3___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_UInt8___ = r"""
+{"entropy(map_uint8_lowcardinality_nullable_uint8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_UInt16___ = r"""
+{"entropy(map_uint8_lowcardinality_nullable_uint16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_UInt32___ = r"""
+{"entropy(map_uint8_lowcardinality_nullable_uint32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_UInt64___ = r"""
+{"entropy(map_uint8_lowcardinality_nullable_uint64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_UInt128___ = r"""
+{"entropy(map_uint8_lowcardinality_nullable_uint128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_Int8___ = r"""
+{"entropy(map_uint8_lowcardinality_nullable_int8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_Int16___ = r"""
+{"entropy(map_uint8_lowcardinality_nullable_int16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_Int32___ = r"""
+{"entropy(map_uint8_lowcardinality_nullable_int32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_Int64___ = r"""
+{"entropy(map_uint8_lowcardinality_nullable_int64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_Int128___ = r"""
+{"entropy(map_uint8_lowcardinality_nullable_int128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_Float32___ = r"""
+{"entropy(map_uint8_lowcardinality_nullable_float32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_Float64___ = r"""
+{"entropy(map_uint8_lowcardinality_nullable_float64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_Date___ = r"""
+{"entropy(map_uint8_lowcardinality_nullable_date___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_DateTime___ = r"""
+{"entropy(map_uint8_lowcardinality_nullable_datetime___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_Bool___ = r"""
+{"entropy(map_uint8_lowcardinality_nullable_bool___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_String___ = r"""
+{"entropy(map_uint8_lowcardinality_nullable_string___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_FixedString_51____ = r"""
+{"entropy(map_uint8_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt8_LowCardinality_Nullable_UUID___ = r"""
+{"entropy(map_uint8_lowcardinality_nullable_uuid___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt16_DateTime64_3____22_8 = r"""
+{"entropy(map_uint16_datetime64_3__)":3.1219280948873624}
+"""
+
+_aggregate_functions_entropy_Map_UInt16_Nullable_DateTime64_3_____22_8 = r"""
+{"entropy(map_uint16_nullable_datetime64_3___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_UInt8___ = r"""
+{"entropy(map_uint16_lowcardinality_nullable_uint8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_UInt16___ = r"""
+{"entropy(map_uint16_lowcardinality_nullable_uint16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_UInt32___ = r"""
+{"entropy(map_uint16_lowcardinality_nullable_uint32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_UInt64___ = r"""
+{"entropy(map_uint16_lowcardinality_nullable_uint64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_UInt128___ = r"""
+{"entropy(map_uint16_lowcardinality_nullable_uint128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_Int8___ = r"""
+{"entropy(map_uint16_lowcardinality_nullable_int8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_Int16___ = r"""
+{"entropy(map_uint16_lowcardinality_nullable_int16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_Int32___ = r"""
+{"entropy(map_uint16_lowcardinality_nullable_int32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_Int64___ = r"""
+{"entropy(map_uint16_lowcardinality_nullable_int64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_Int128___ = r"""
+{"entropy(map_uint16_lowcardinality_nullable_int128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_Float32___ = r"""
+{"entropy(map_uint16_lowcardinality_nullable_float32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_Float64___ = r"""
+{"entropy(map_uint16_lowcardinality_nullable_float64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_Date___ = r"""
+{"entropy(map_uint16_lowcardinality_nullable_date___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_DateTime___ = r"""
+{"entropy(map_uint16_lowcardinality_nullable_datetime___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_Bool___ = r"""
+{"entropy(map_uint16_lowcardinality_nullable_bool___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_String___ = r"""
+{"entropy(map_uint16_lowcardinality_nullable_string___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_FixedString_51____ = r"""
+{"entropy(map_uint16_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt16_LowCardinality_Nullable_UUID___ = r"""
+{"entropy(map_uint16_lowcardinality_nullable_uuid___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt32_DateTime64_3____22_8 = r"""
+{"entropy(map_uint32_datetime64_3__)":3.121928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt32_Nullable_DateTime64_3_____22_8 = r"""
+{"entropy(map_uint32_nullable_datetime64_3___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_UInt8___ = r"""
+{"entropy(map_uint32_lowcardinality_nullable_uint8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_UInt16___ = r"""
+{"entropy(map_uint32_lowcardinality_nullable_uint16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_UInt32___ = r"""
+{"entropy(map_uint32_lowcardinality_nullable_uint32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_UInt64___ = r"""
+{"entropy(map_uint32_lowcardinality_nullable_uint64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_UInt128___ = r"""
+{"entropy(map_uint32_lowcardinality_nullable_uint128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_Int8___ = r"""
+{"entropy(map_uint32_lowcardinality_nullable_int8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_Int16___ = r"""
+{"entropy(map_uint32_lowcardinality_nullable_int16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_Int32___ = r"""
+{"entropy(map_uint32_lowcardinality_nullable_int32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_Int64___ = r"""
+{"entropy(map_uint32_lowcardinality_nullable_int64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_Int128___ = r"""
+{"entropy(map_uint32_lowcardinality_nullable_int128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_Float32___ = r"""
+{"entropy(map_uint32_lowcardinality_nullable_float32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_Float64___ = r"""
+{"entropy(map_uint32_lowcardinality_nullable_float64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_Date___ = r"""
+{"entropy(map_uint32_lowcardinality_nullable_date___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_DateTime___ = r"""
+{"entropy(map_uint32_lowcardinality_nullable_datetime___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_Bool___ = r"""
+{"entropy(map_uint32_lowcardinality_nullable_bool___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_String___ = r"""
+{"entropy(map_uint32_lowcardinality_nullable_string___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_FixedString_51____ = r"""
+{"entropy(map_uint32_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt32_LowCardinality_Nullable_UUID___ = r"""
+{"entropy(map_uint32_lowcardinality_nullable_uuid___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt64_DateTime64_3____22_8 = r"""
+{"entropy(map_uint64_datetime64_3__)":3.121928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt64_Nullable_DateTime64_3_____22_8 = r"""
+{"entropy(map_uint64_nullable_datetime64_3___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_UInt8___ = r"""
+{"entropy(map_uint64_lowcardinality_nullable_uint8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_UInt16___ = r"""
+{"entropy(map_uint64_lowcardinality_nullable_uint16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_UInt32___ = r"""
+{"entropy(map_uint64_lowcardinality_nullable_uint32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_UInt64___ = r"""
+{"entropy(map_uint64_lowcardinality_nullable_uint64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_UInt128___ = r"""
+{"entropy(map_uint64_lowcardinality_nullable_uint128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_Int8___ = r"""
+{"entropy(map_uint64_lowcardinality_nullable_int8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_Int16___ = r"""
+{"entropy(map_uint64_lowcardinality_nullable_int16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_Int32___ = r"""
+{"entropy(map_uint64_lowcardinality_nullable_int32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_Int64___ = r"""
+{"entropy(map_uint64_lowcardinality_nullable_int64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_Int128___ = r"""
+{"entropy(map_uint64_lowcardinality_nullable_int128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_Float32___ = r"""
+{"entropy(map_uint64_lowcardinality_nullable_float32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_Float64___ = r"""
+{"entropy(map_uint64_lowcardinality_nullable_float64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_Date___ = r"""
+{"entropy(map_uint64_lowcardinality_nullable_date___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_DateTime___ = r"""
+{"entropy(map_uint64_lowcardinality_nullable_datetime___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_Bool___ = r"""
+{"entropy(map_uint64_lowcardinality_nullable_bool___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_String___ = r"""
+{"entropy(map_uint64_lowcardinality_nullable_string___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_FixedString_51____ = r"""
+{"entropy(map_uint64_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt64_LowCardinality_Nullable_UUID___ = r"""
+{"entropy(map_uint64_lowcardinality_nullable_uuid___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt128_DateTime64_3____22_8 = r"""
+{"entropy(map_uint128_datetime64_3__)":3.1219280948873624}
+"""
+
+_aggregate_functions_entropy_Map_UInt128_Nullable_DateTime64_3_____22_8 = r"""
+{"entropy(map_uint128_nullable_datetime64_3___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_UInt8___ = r"""
+{"entropy(map_uint128_lowcardinality_nullable_uint8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_UInt16___ = r"""
+{"entropy(map_uint128_lowcardinality_nullable_uint16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_UInt32___ = r"""
+{"entropy(map_uint128_lowcardinality_nullable_uint32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_UInt64___ = r"""
+{"entropy(map_uint128_lowcardinality_nullable_uint64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_UInt128___ = r"""
+{"entropy(map_uint128_lowcardinality_nullable_uint128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_Int8___ = r"""
+{"entropy(map_uint128_lowcardinality_nullable_int8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_Int16___ = r"""
+{"entropy(map_uint128_lowcardinality_nullable_int16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_Int32___ = r"""
+{"entropy(map_uint128_lowcardinality_nullable_int32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_Int64___ = r"""
+{"entropy(map_uint128_lowcardinality_nullable_int64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_Int128___ = r"""
+{"entropy(map_uint128_lowcardinality_nullable_int128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_Float32___ = r"""
+{"entropy(map_uint128_lowcardinality_nullable_float32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_Float64___ = r"""
+{"entropy(map_uint128_lowcardinality_nullable_float64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_Date___ = r"""
+{"entropy(map_uint128_lowcardinality_nullable_date___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_DateTime___ = r"""
+{"entropy(map_uint128_lowcardinality_nullable_datetime___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_Bool___ = r"""
+{"entropy(map_uint128_lowcardinality_nullable_bool___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_String___ = r"""
+{"entropy(map_uint128_lowcardinality_nullable_string___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_FixedString_51____ = r"""
+{"entropy(map_uint128_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UInt128_LowCardinality_Nullable_UUID___ = r"""
+{"entropy(map_uint128_lowcardinality_nullable_uuid___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int8_DateTime64_3____22_8 = r"""
+{"entropy(map_int8_datetime64_3__)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int8_Nullable_DateTime64_3_____22_8 = r"""
+{"entropy(map_int8_nullable_datetime64_3___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_UInt8___ = r"""
+{"entropy(map_int8_lowcardinality_nullable_uint8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_UInt16___ = r"""
+{"entropy(map_int8_lowcardinality_nullable_uint16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_UInt32___ = r"""
+{"entropy(map_int8_lowcardinality_nullable_uint32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_UInt64___ = r"""
+{"entropy(map_int8_lowcardinality_nullable_uint64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_UInt128___ = r"""
+{"entropy(map_int8_lowcardinality_nullable_uint128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_Int8___ = r"""
+{"entropy(map_int8_lowcardinality_nullable_int8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_Int16___ = r"""
+{"entropy(map_int8_lowcardinality_nullable_int16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_Int32___ = r"""
+{"entropy(map_int8_lowcardinality_nullable_int32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_Int64___ = r"""
+{"entropy(map_int8_lowcardinality_nullable_int64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_Int128___ = r"""
+{"entropy(map_int8_lowcardinality_nullable_int128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_Float32___ = r"""
+{"entropy(map_int8_lowcardinality_nullable_float32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_Float64___ = r"""
+{"entropy(map_int8_lowcardinality_nullable_float64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_Date___ = r"""
+{"entropy(map_int8_lowcardinality_nullable_date___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_DateTime___ = r"""
+{"entropy(map_int8_lowcardinality_nullable_datetime___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_Bool___ = r"""
+{"entropy(map_int8_lowcardinality_nullable_bool___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_String___ = r"""
+{"entropy(map_int8_lowcardinality_nullable_string___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_FixedString_51____ = r"""
+{"entropy(map_int8_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int8_LowCardinality_Nullable_UUID___ = r"""
+{"entropy(map_int8_lowcardinality_nullable_uuid___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int16_DateTime64_3____22_8 = r"""
+{"entropy(map_int16_datetime64_3__)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int16_Nullable_DateTime64_3_____22_8 = r"""
+{"entropy(map_int16_nullable_datetime64_3___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_UInt8___ = r"""
+{"entropy(map_int16_lowcardinality_nullable_uint8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_UInt16___ = r"""
+{"entropy(map_int16_lowcardinality_nullable_uint16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_UInt32___ = r"""
+{"entropy(map_int16_lowcardinality_nullable_uint32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_UInt64___ = r"""
+{"entropy(map_int16_lowcardinality_nullable_uint64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_UInt128___ = r"""
+{"entropy(map_int16_lowcardinality_nullable_uint128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_Int8___ = r"""
+{"entropy(map_int16_lowcardinality_nullable_int8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_Int16___ = r"""
+{"entropy(map_int16_lowcardinality_nullable_int16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_Int32___ = r"""
+{"entropy(map_int16_lowcardinality_nullable_int32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_Int64___ = r"""
+{"entropy(map_int16_lowcardinality_nullable_int64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_Int128___ = r"""
+{"entropy(map_int16_lowcardinality_nullable_int128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_Float32___ = r"""
+{"entropy(map_int16_lowcardinality_nullable_float32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_Float64___ = r"""
+{"entropy(map_int16_lowcardinality_nullable_float64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_Date___ = r"""
+{"entropy(map_int16_lowcardinality_nullable_date___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_DateTime___ = r"""
+{"entropy(map_int16_lowcardinality_nullable_datetime___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_Bool___ = r"""
+{"entropy(map_int16_lowcardinality_nullable_bool___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_String___ = r"""
+{"entropy(map_int16_lowcardinality_nullable_string___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_FixedString_51____ = r"""
+{"entropy(map_int16_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int16_LowCardinality_Nullable_UUID___ = r"""
+{"entropy(map_int16_lowcardinality_nullable_uuid___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int32_DateTime64_3____22_8 = r"""
+{"entropy(map_int32_datetime64_3__)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int32_Nullable_DateTime64_3_____22_8 = r"""
+{"entropy(map_int32_nullable_datetime64_3___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_UInt8___ = r"""
+{"entropy(map_int32_lowcardinality_nullable_uint8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_UInt16___ = r"""
+{"entropy(map_int32_lowcardinality_nullable_uint16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_UInt32___ = r"""
+{"entropy(map_int32_lowcardinality_nullable_uint32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_UInt64___ = r"""
+{"entropy(map_int32_lowcardinality_nullable_uint64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_UInt128___ = r"""
+{"entropy(map_int32_lowcardinality_nullable_uint128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_Int8___ = r"""
+{"entropy(map_int32_lowcardinality_nullable_int8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_Int16___ = r"""
+{"entropy(map_int32_lowcardinality_nullable_int16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_Int32___ = r"""
+{"entropy(map_int32_lowcardinality_nullable_int32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_Int64___ = r"""
+{"entropy(map_int32_lowcardinality_nullable_int64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_Int128___ = r"""
+{"entropy(map_int32_lowcardinality_nullable_int128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_Float32___ = r"""
+{"entropy(map_int32_lowcardinality_nullable_float32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_Float64___ = r"""
+{"entropy(map_int32_lowcardinality_nullable_float64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_Date___ = r"""
+{"entropy(map_int32_lowcardinality_nullable_date___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_DateTime___ = r"""
+{"entropy(map_int32_lowcardinality_nullable_datetime___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_Bool___ = r"""
+{"entropy(map_int32_lowcardinality_nullable_bool___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_String___ = r"""
+{"entropy(map_int32_lowcardinality_nullable_string___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_FixedString_51____ = r"""
+{"entropy(map_int32_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int32_LowCardinality_Nullable_UUID___ = r"""
+{"entropy(map_int32_lowcardinality_nullable_uuid___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int64_DateTime64_3____22_8 = r"""
+{"entropy(map_int64_datetime64_3__)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int64_Nullable_DateTime64_3_____22_8 = r"""
+{"entropy(map_int64_nullable_datetime64_3___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_UInt8___ = r"""
+{"entropy(map_int64_lowcardinality_nullable_uint8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_UInt16___ = r"""
+{"entropy(map_int64_lowcardinality_nullable_uint16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_UInt32___ = r"""
+{"entropy(map_int64_lowcardinality_nullable_uint32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_UInt64___ = r"""
+{"entropy(map_int64_lowcardinality_nullable_uint64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_UInt128___ = r"""
+{"entropy(map_int64_lowcardinality_nullable_uint128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_Int8___ = r"""
+{"entropy(map_int64_lowcardinality_nullable_int8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_Int16___ = r"""
+{"entropy(map_int64_lowcardinality_nullable_int16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_Int32___ = r"""
+{"entropy(map_int64_lowcardinality_nullable_int32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_Int64___ = r"""
+{"entropy(map_int64_lowcardinality_nullable_int64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_Int128___ = r"""
+{"entropy(map_int64_lowcardinality_nullable_int128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_Float32___ = r"""
+{"entropy(map_int64_lowcardinality_nullable_float32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_Float64___ = r"""
+{"entropy(map_int64_lowcardinality_nullable_float64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_Date___ = r"""
+{"entropy(map_int64_lowcardinality_nullable_date___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_DateTime___ = r"""
+{"entropy(map_int64_lowcardinality_nullable_datetime___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_Bool___ = r"""
+{"entropy(map_int64_lowcardinality_nullable_bool___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_String___ = r"""
+{"entropy(map_int64_lowcardinality_nullable_string___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_FixedString_51____ = r"""
+{"entropy(map_int64_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int64_LowCardinality_Nullable_UUID___ = r"""
+{"entropy(map_int64_lowcardinality_nullable_uuid___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int128_DateTime64_3____22_8 = r"""
+{"entropy(map_int128_datetime64_3__)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int128_Nullable_DateTime64_3_____22_8 = r"""
+{"entropy(map_int128_nullable_datetime64_3___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_UInt8___ = r"""
+{"entropy(map_int128_lowcardinality_nullable_uint8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_UInt16___ = r"""
+{"entropy(map_int128_lowcardinality_nullable_uint16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_UInt32___ = r"""
+{"entropy(map_int128_lowcardinality_nullable_uint32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_UInt64___ = r"""
+{"entropy(map_int128_lowcardinality_nullable_uint64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_UInt128___ = r"""
+{"entropy(map_int128_lowcardinality_nullable_uint128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_Int8___ = r"""
+{"entropy(map_int128_lowcardinality_nullable_int8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_Int16___ = r"""
+{"entropy(map_int128_lowcardinality_nullable_int16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_Int32___ = r"""
+{"entropy(map_int128_lowcardinality_nullable_int32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_Int64___ = r"""
+{"entropy(map_int128_lowcardinality_nullable_int64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_Int128___ = r"""
+{"entropy(map_int128_lowcardinality_nullable_int128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_Float32___ = r"""
+{"entropy(map_int128_lowcardinality_nullable_float32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_Float64___ = r"""
+{"entropy(map_int128_lowcardinality_nullable_float64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_Date___ = r"""
+{"entropy(map_int128_lowcardinality_nullable_date___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_DateTime___ = r"""
+{"entropy(map_int128_lowcardinality_nullable_datetime___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_Bool___ = r"""
+{"entropy(map_int128_lowcardinality_nullable_bool___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_String___ = r"""
+{"entropy(map_int128_lowcardinality_nullable_string___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_FixedString_51____ = r"""
+{"entropy(map_int128_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Int128_LowCardinality_Nullable_UUID___ = r"""
+{"entropy(map_int128_lowcardinality_nullable_uuid___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Date_DateTime64_3____22_8 = r"""
+{"entropy(map_date_datetime64_3__)":3.1219280948873624}
+"""
+
+_aggregate_functions_entropy_Map_Date_Nullable_DateTime64_3_____22_8 = r"""
+{"entropy(map_date_nullable_datetime64_3___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_UInt8___ = r"""
+{"entropy(map_date_lowcardinality_nullable_uint8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_UInt16___ = r"""
+{"entropy(map_date_lowcardinality_nullable_uint16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_UInt32___ = r"""
+{"entropy(map_date_lowcardinality_nullable_uint32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_UInt64___ = r"""
+{"entropy(map_date_lowcardinality_nullable_uint64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_UInt128___ = r"""
+{"entropy(map_date_lowcardinality_nullable_uint128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_Int8___ = r"""
+{"entropy(map_date_lowcardinality_nullable_int8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_Int16___ = r"""
+{"entropy(map_date_lowcardinality_nullable_int16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_Int32___ = r"""
+{"entropy(map_date_lowcardinality_nullable_int32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_Int64___ = r"""
+{"entropy(map_date_lowcardinality_nullable_int64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_Int128___ = r"""
+{"entropy(map_date_lowcardinality_nullable_int128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_Float32___ = r"""
+{"entropy(map_date_lowcardinality_nullable_float32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_Float64___ = r"""
+{"entropy(map_date_lowcardinality_nullable_float64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_Date___ = r"""
+{"entropy(map_date_lowcardinality_nullable_date___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_DateTime___ = r"""
+{"entropy(map_date_lowcardinality_nullable_datetime___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_Bool___ = r"""
+{"entropy(map_date_lowcardinality_nullable_bool___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_String___ = r"""
+{"entropy(map_date_lowcardinality_nullable_string___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_FixedString_51____ = r"""
+{"entropy(map_date_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Date_LowCardinality_Nullable_UUID___ = r"""
+{"entropy(map_date_lowcardinality_nullable_uuid___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_DateTime_DateTime64_3____22_8 = r"""
+{"entropy(map_datetime_datetime64_3__)":3.121928094887362}
+"""
+
+_aggregate_functions_entropy_Map_DateTime_Nullable_DateTime64_3_____22_8 = r"""
+{"entropy(map_datetime_nullable_datetime64_3___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_UInt8___ = r"""
+{"entropy(map_datetime_lowcardinality_nullable_uint8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_UInt16___ = r"""
+{"entropy(map_datetime_lowcardinality_nullable_uint16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_UInt32___ = r"""
+{"entropy(map_datetime_lowcardinality_nullable_uint32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_UInt64___ = r"""
+{"entropy(map_datetime_lowcardinality_nullable_uint64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_UInt128___ = r"""
+{"entropy(map_datetime_lowcardinality_nullable_uint128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_Int8___ = r"""
+{"entropy(map_datetime_lowcardinality_nullable_int8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_Int16___ = r"""
+{"entropy(map_datetime_lowcardinality_nullable_int16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_Int32___ = r"""
+{"entropy(map_datetime_lowcardinality_nullable_int32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_Int64___ = r"""
+{"entropy(map_datetime_lowcardinality_nullable_int64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_Int128___ = r"""
+{"entropy(map_datetime_lowcardinality_nullable_int128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_Float32___ = r"""
+{"entropy(map_datetime_lowcardinality_nullable_float32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_Float64___ = r"""
+{"entropy(map_datetime_lowcardinality_nullable_float64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_Date___ = r"""
+{"entropy(map_datetime_lowcardinality_nullable_date___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_DateTime___ = r"""
+{"entropy(map_datetime_lowcardinality_nullable_datetime___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_Bool___ = r"""
+{"entropy(map_datetime_lowcardinality_nullable_bool___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_String___ = r"""
+{"entropy(map_datetime_lowcardinality_nullable_string___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_FixedString_51____ = r"""
+{"entropy(map_datetime_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_DateTime_LowCardinality_Nullable_UUID___ = r"""
+{"entropy(map_datetime_lowcardinality_nullable_uuid___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Bool_DateTime64_3____22_8 = r"""
+{"entropy(map_bool_datetime64_3__)":3.1219280948873624}
+"""
+
+_aggregate_functions_entropy_Map_Bool_Nullable_DateTime64_3_____22_8 = r"""
+{"entropy(map_bool_nullable_datetime64_3___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_UInt8___ = r"""
+{"entropy(map_bool_lowcardinality_nullable_uint8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_UInt16___ = r"""
+{"entropy(map_bool_lowcardinality_nullable_uint16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_UInt32___ = r"""
+{"entropy(map_bool_lowcardinality_nullable_uint32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_UInt64___ = r"""
+{"entropy(map_bool_lowcardinality_nullable_uint64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_UInt128___ = r"""
+{"entropy(map_bool_lowcardinality_nullable_uint128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_Int8___ = r"""
+{"entropy(map_bool_lowcardinality_nullable_int8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_Int16___ = r"""
+{"entropy(map_bool_lowcardinality_nullable_int16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_Int32___ = r"""
+{"entropy(map_bool_lowcardinality_nullable_int32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_Int64___ = r"""
+{"entropy(map_bool_lowcardinality_nullable_int64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_Int128___ = r"""
+{"entropy(map_bool_lowcardinality_nullable_int128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_Float32___ = r"""
+{"entropy(map_bool_lowcardinality_nullable_float32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_Float64___ = r"""
+{"entropy(map_bool_lowcardinality_nullable_float64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_Date___ = r"""
+{"entropy(map_bool_lowcardinality_nullable_date___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_DateTime___ = r"""
+{"entropy(map_bool_lowcardinality_nullable_datetime___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_Bool___ = r"""
+{"entropy(map_bool_lowcardinality_nullable_bool___)":1.6854752972273346}
+"""
+
+_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_String___ = r"""
+{"entropy(map_bool_lowcardinality_nullable_string___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_FixedString_51____ = r"""
+{"entropy(map_bool_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_UUID___ = r"""
+{"entropy(map_bool_lowcardinality_nullable_uuid___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_String_DateTime64_3____22_8 = r"""
+{"entropy(map_string_datetime64_3__)":3.121928094887362}
+"""
+
+_aggregate_functions_entropy_Map_String_Nullable_DateTime64_3_____22_8 = r"""
+{"entropy(map_string_nullable_datetime64_3___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_UInt8___ = r"""
+{"entropy(map_string_lowcardinality_nullable_uint8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_UInt16___ = r"""
+{"entropy(map_string_lowcardinality_nullable_uint16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_UInt32___ = r"""
+{"entropy(map_string_lowcardinality_nullable_uint32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_UInt64___ = r"""
+{"entropy(map_string_lowcardinality_nullable_uint64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_UInt128___ = r"""
+{"entropy(map_string_lowcardinality_nullable_uint128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_Int8___ = r"""
+{"entropy(map_string_lowcardinality_nullable_int8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_Int16___ = r"""
+{"entropy(map_string_lowcardinality_nullable_int16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_Int32___ = r"""
+{"entropy(map_string_lowcardinality_nullable_int32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_Int64___ = r"""
+{"entropy(map_string_lowcardinality_nullable_int64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_Int128___ = r"""
+{"entropy(map_string_lowcardinality_nullable_int128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_Float32___ = r"""
+{"entropy(map_string_lowcardinality_nullable_float32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_Float64___ = r"""
+{"entropy(map_string_lowcardinality_nullable_float64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_Date___ = r"""
+{"entropy(map_string_lowcardinality_nullable_date___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_DateTime___ = r"""
+{"entropy(map_string_lowcardinality_nullable_datetime___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_Bool___ = r"""
+{"entropy(map_string_lowcardinality_nullable_bool___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_String___ = r"""
+{"entropy(map_string_lowcardinality_nullable_string___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_FixedString_51____ = r"""
+{"entropy(map_string_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_String_LowCardinality_Nullable_UUID___ = r"""
+{"entropy(map_string_lowcardinality_nullable_uuid___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_FixedString_51__DateTime64_3____22_8 = r"""
+{"entropy(map_fixedstring_51__datetime64_3__)":3.121928094887362}
+"""
+
+_aggregate_functions_entropy_Map_FixedString_51__Nullable_DateTime64_3_____22_8 = r"""
+{"entropy(map_fixedstring_51__nullable_datetime64_3___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_UInt8___ = r"""
+{"entropy(map_fixedstring_51__lowcardinality_nullable_uint8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_UInt16___ = r"""
+{"entropy(map_fixedstring_51__lowcardinality_nullable_uint16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_UInt32___ = r"""
+{"entropy(map_fixedstring_51__lowcardinality_nullable_uint32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_UInt64___ = r"""
+{"entropy(map_fixedstring_51__lowcardinality_nullable_uint64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_UInt128___ = r"""
+{"entropy(map_fixedstring_51__lowcardinality_nullable_uint128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_Int8___ = r"""
+{"entropy(map_fixedstring_51__lowcardinality_nullable_int8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_Int16___ = r"""
+{"entropy(map_fixedstring_51__lowcardinality_nullable_int16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_Int32___ = r"""
+{"entropy(map_fixedstring_51__lowcardinality_nullable_int32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_Int64___ = r"""
+{"entropy(map_fixedstring_51__lowcardinality_nullable_int64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_Int128___ = r"""
+{"entropy(map_fixedstring_51__lowcardinality_nullable_int128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_Float32___ = r"""
+{"entropy(map_fixedstring_51__lowcardinality_nullable_float32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_Float64___ = r"""
+{"entropy(map_fixedstring_51__lowcardinality_nullable_float64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_Date___ = r"""
+{"entropy(map_fixedstring_51__lowcardinality_nullable_date___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_DateTime___ = r"""
+{"entropy(map_fixedstring_51__lowcardinality_nullable_datetime___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_Bool___ = r"""
+{"entropy(map_fixedstring_51__lowcardinality_nullable_bool___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_String___ = r"""
+{"entropy(map_fixedstring_51__lowcardinality_nullable_string___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_FixedString_51____ = r"""
+{"entropy(map_fixedstring_51__lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_FixedString_51__LowCardinality_Nullable_UUID___ = r"""
+{"entropy(map_fixedstring_51__lowcardinality_nullable_uuid___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UUID_DateTime64_3____22_8 = r"""
+{"entropy(map_uuid_datetime64_3__)":3.1219280948873624}
+"""
+
+_aggregate_functions_entropy_Map_UUID_Nullable_DateTime64_3_____22_8 = r"""
+{"entropy(map_uuid_nullable_datetime64_3___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_UInt8___ = r"""
+{"entropy(map_uuid_lowcardinality_nullable_uint8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_UInt16___ = r"""
+{"entropy(map_uuid_lowcardinality_nullable_uint16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_UInt32___ = r"""
+{"entropy(map_uuid_lowcardinality_nullable_uint32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_UInt64___ = r"""
+{"entropy(map_uuid_lowcardinality_nullable_uint64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_UInt128___ = r"""
+{"entropy(map_uuid_lowcardinality_nullable_uint128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_Int8___ = r"""
+{"entropy(map_uuid_lowcardinality_nullable_int8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_Int16___ = r"""
+{"entropy(map_uuid_lowcardinality_nullable_int16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_Int32___ = r"""
+{"entropy(map_uuid_lowcardinality_nullable_int32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_Int64___ = r"""
+{"entropy(map_uuid_lowcardinality_nullable_int64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_Int128___ = r"""
+{"entropy(map_uuid_lowcardinality_nullable_int128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_Float32___ = r"""
+{"entropy(map_uuid_lowcardinality_nullable_float32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_Float64___ = r"""
+{"entropy(map_uuid_lowcardinality_nullable_float64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_Date___ = r"""
+{"entropy(map_uuid_lowcardinality_nullable_date___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_DateTime___ = r"""
+{"entropy(map_uuid_lowcardinality_nullable_datetime___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_Bool___ = r"""
+{"entropy(map_uuid_lowcardinality_nullable_bool___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_String___ = r"""
+{"entropy(map_uuid_lowcardinality_nullable_string___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_FixedString_51____ = r"""
+{"entropy(map_uuid_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_UUID_LowCardinality_Nullable_UUID___ = r"""
+{"entropy(map_uuid_lowcardinality_nullable_uuid___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_String__DateTime64_3____22_8 = r"""
+{"entropy(map_lowcardinality_string__datetime64_3__)":3.121928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_String__Nullable_DateTime64_3_____22_8 = r"""
+{"entropy(map_lowcardinality_string__nullable_datetime64_3___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_UInt8___ = r"""
+{"entropy(map_lowcardinality_string__lowcardinality_nullable_uint8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_UInt16___ = r"""
+{"entropy(map_lowcardinality_string__lowcardinality_nullable_uint16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_UInt32___ = r"""
+{"entropy(map_lowcardinality_string__lowcardinality_nullable_uint32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_UInt64___ = r"""
+{"entropy(map_lowcardinality_string__lowcardinality_nullable_uint64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_UInt128___ = r"""
+{"entropy(map_lowcardinality_string__lowcardinality_nullable_uint128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_Int8___ = r"""
+{"entropy(map_lowcardinality_string__lowcardinality_nullable_int8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_Int16___ = r"""
+{"entropy(map_lowcardinality_string__lowcardinality_nullable_int16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_Int32___ = r"""
+{"entropy(map_lowcardinality_string__lowcardinality_nullable_int32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_Int64___ = r"""
+{"entropy(map_lowcardinality_string__lowcardinality_nullable_int64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_Int128___ = r"""
+{"entropy(map_lowcardinality_string__lowcardinality_nullable_int128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_Float32___ = r"""
+{"entropy(map_lowcardinality_string__lowcardinality_nullable_float32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_Float64___ = r"""
+{"entropy(map_lowcardinality_string__lowcardinality_nullable_float64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_Date___ = r"""
+{"entropy(map_lowcardinality_string__lowcardinality_nullable_date___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_DateTime___ = r"""
+{"entropy(map_lowcardinality_string__lowcardinality_nullable_datetime___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_Bool___ = r"""
+{"entropy(map_lowcardinality_string__lowcardinality_nullable_bool___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_String___ = r"""
+{"entropy(map_lowcardinality_string__lowcardinality_nullable_string___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_FixedString_51____ = r"""
+{"entropy(map_lowcardinality_string__lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_String__LowCardinality_Nullable_UUID___ = r"""
+{"entropy(map_lowcardinality_string__lowcardinality_nullable_uuid___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___DateTime64_3____22_8 = r"""
+{"entropy(map_lowcardinality_fixedstring_51___datetime64_3__)":3.121928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___Nullable_DateTime64_3_____22_8 = r"""
+{"entropy(map_lowcardinality_fixedstring_51___nullable_datetime64_3___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_UInt8___ = r"""
+{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_uint8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_UInt16___ = r"""
+{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_uint16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_UInt32___ = r"""
+{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_uint32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_UInt64___ = r"""
+{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_uint64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_UInt128___ = r"""
+{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_uint128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_Int8___ = r"""
+{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_int8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_Int16___ = r"""
+{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_int16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_Int32___ = r"""
+{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_int32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_Int64___ = r"""
+{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_int64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_Int128___ = r"""
+{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_int128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_Float32___ = r"""
+{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_float32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_Float64___ = r"""
+{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_float64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_Date___ = r"""
+{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_date___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_DateTime___ = r"""
+{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_datetime___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_Bool___ = r"""
+{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_bool___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_String___ = r"""
+{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_string___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_FixedString_51____ = r"""
+{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___LowCardinality_Nullable_UUID___ = r"""
+{"entropy(map_lowcardinality_fixedstring_51___lowcardinality_nullable_uuid___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Nullable_DateTime64_3____22_8 = r"""
+{"entropy(nullable_datetime64_3__)":3.169925001442312}
+"""
+
+_aggregate_functions_entropy_Array_DateTime64_3____22_8 = r"""
+{"entropy(array_datetime64_3__)":3.1219280948873624}
+"""
+
+_aggregate_functions_entropy_Array_Nullable_DateTime64_3_____22_8 = r"""
+{"entropy(array_nullable_datetime64_3___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Array_LowCardinality_Nullable_UInt8___ = r"""
+{"entropy(array_lowcardinality_nullable_uint8___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Array_LowCardinality_Nullable_UInt16___ = r"""
+{"entropy(array_lowcardinality_nullable_uint16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Array_LowCardinality_Nullable_UInt32___ = r"""
+{"entropy(array_lowcardinality_nullable_uint32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Array_LowCardinality_Nullable_UInt64___ = r"""
+{"entropy(array_lowcardinality_nullable_uint64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Array_LowCardinality_Nullable_UInt128___ = r"""
+{"entropy(array_lowcardinality_nullable_uint128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Array_LowCardinality_Nullable_Int8___ = r"""
+{"entropy(array_lowcardinality_nullable_int8___)":3.121928094887362}
+"""
+
+_aggregate_functions_entropy_Array_LowCardinality_Nullable_Int16___ = r"""
+{"entropy(array_lowcardinality_nullable_int16___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Array_LowCardinality_Nullable_Int32___ = r"""
+{"entropy(array_lowcardinality_nullable_int32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Array_LowCardinality_Nullable_Int64___ = r"""
+{"entropy(array_lowcardinality_nullable_int64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Array_LowCardinality_Nullable_Int128___ = r"""
+{"entropy(array_lowcardinality_nullable_int128___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Array_LowCardinality_Nullable_Float32___ = r"""
+{"entropy(array_lowcardinality_nullable_float32___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Array_LowCardinality_Nullable_Float64___ = r"""
+{"entropy(array_lowcardinality_nullable_float64___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Array_LowCardinality_Nullable_Date___ = r"""
+{"entropy(array_lowcardinality_nullable_date___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Array_LowCardinality_Nullable_DateTime___ = r"""
+{"entropy(array_lowcardinality_nullable_datetime___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Array_LowCardinality_Nullable_Bool___ = r"""
+{"entropy(array_lowcardinality_nullable_bool___)":1.360964047443681}
+"""
+
+_aggregate_functions_entropy_Array_LowCardinality_Nullable_String___ = r"""
+{"entropy(array_lowcardinality_nullable_string___)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Array_LowCardinality_Nullable_FixedString_51____ = r"""
+{"entropy(array_lowcardinality_nullable_fixedstring_51____)":3.321928094887362}
+"""
+
+_aggregate_functions_entropy_Array_LowCardinality_Nullable_UUID___ = r"""
+{"entropy(array_lowcardinality_nullable_uuid___)":3.321928094887362}
+"""
+
 _aggregate_functions_entropy_LowCardinality_Nullable_UInt8__ = r"""
 {"entropy(lowcardinality_nullable_uint8__)":3.169925001442312}
 """
@@ -6359,174 +6523,6 @@ _aggregate_functions_entropy_LowCardinality_Nullable_FixedString_51___ = r"""
 
 _aggregate_functions_entropy_LowCardinality_Nullable_UUID__ = r"""
 {"entropy(lowcardinality_nullable_uuid__)":3.169925001442312}
-"""
-
-_aggregate_functions_entropy_Tuple_UInt8_UInt16_UInt32_UInt64_UInt128_Int8_Int16_Int32_Int64_Int128_Float32_Float64_Decimal128_38__Date_DateTime_DateTime64_3__Bool_String_FixedString_51__UUID_Nullable_UInt8__Nullable_UInt16__Nullable_UInt32__Nullable_UInt64__Nullable_UInt128__Nullable_Int8__Nullable_Int16__Nullable_Int32__Nullable_Int64__Nullable_Int128__Nullable_Float32__Nullable_Float64__Nullable_Decimal128_38___Nullable_Date__Nullable_DateTime__Nullable_DateTime64_3___Nullable_Bool__Nullable_String__Nullable_FixedString_51___Nullable_UUID__LowCardinality_UInt8__LowCardinality_UInt16__LowCardinality_UInt32__LowCardinality_UInt64__LowCardinality_UInt128__LowCardinality_Int8__LowCardinality_Int16__LowCardinality_Int32__LowCardinality_Int64__LowCardinality_Int128__LowCardinality_Float32__LowCardinality_Float64__LowCardinality_Date__LowCardinality_DateTime__LowCardinality_Bool__LowCardinality_String__LowCardinality_FixedString_51___LowCardinality_UUID__LowCardinality_Nullable_UInt8___LowCardinality_Nullable_UInt16___LowCardinality_Nullable_UInt32___LowCardinality_Nullable_UInt64___LowCardinality_Nullable_UInt128___LowCardinality_Nullable_Int8___LowCardinality_Nullable_Int16___LowCardinality_Nullable_Int32___LowCardinality_Nullable_Int64___LowCardinality_Nullable_Int128___LowCardinality_Nullable_Float32___LowCardinality_Nullable_Float64___LowCardinality_Nullable_Date___LowCardinality_Nullable_DateTime___LowCardinality_Nullable_Bool___LowCardinality_Nullable_String___LowCardinality_Nullable_FixedString_51____LowCardinality_Nullable_UUID___Array_String__Map_String_LowCardinality_Float64___Tuple_String__ = r"""
-{"entropy(tuple_uint8_uint16_uint32_uint64_uint128_int8_int16_int32_int64_int128_float32_float64_decimal128_38__date_datetime_datetime64_3__bool_string_fixedstring_51__uuid_nullable_uint8__nullable_uint16__nullable_uint32__nullable_uint64__nullable_uint128__nullable_int8__nullable_int16__nullable_int32__nullable_int64__nullable_int128__nullable_float32__nullable_float64__nullable_decimal128_38___nullable_date__nullable_datetime__nullable_datetime64_3___nullable_bool__nullable_string__nullable_fixedstring_51___nullable_uuid__lowcardinality_uint8__lowcardinality_uint16__lowcardinality_uint32__lowcardinality_uint64__lowcardinality_uint128__lowcardinality_int8__lowcardinality_int16__lowcardinality_int32__lowcardinality_int64__lowcardinality_int128__lowcardinality_float32__lowcardinality_float64__lowcardinality_date__lowcardinality_datetime__lowcardinality_bool__lowcardinality_string__lowcardinality_fixedstring_51___lowcardinality_uuid__lowcardinality_nullable_uint8___lowcardinality_nullable_uint16___lowcardinality_nullable_uint32___lowcardinality_nullable_uint64___lowcardinality_nullable_uint128___lowcardinality_nullable_int8___lowcardinality_nullable_int16___lowcardinality_nullable_int32___lowcardinality_nullable_int64___lowcardinality_nullable_int128___lowcardinality_nullable_float32___lowcardinality_nullable_float64___lowcardinality_nullable_date___lowcardinality_nullable_datetime___lowcardinality_nullable_bool___lowcardinality_nullable_string___lowcardinality_nullable_fixedstring_51____lowcardinality_nullable_uuid___array_string__map_string_lowcardinality_float64___tuple_string__)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Tuple_UInt8_UInt16_UInt32_UInt64_UInt128_Int8_Int16_Int32_Int64_Int128_Float32_Float64_Decimal128_38__Date_DateTime_DateTime64_3__Bool_String_FixedString_51__UUID_Nullable_UInt8__Nullable_UInt16__Nullable_UInt32__Nullable_UInt64__Nullable_UInt128__Nullable_Int8__Nullable_Int16__Nullable_Int32__Nullable_Int64__Nullable_Int128__Nullable_Float32__Nullable_Float64__Nullable_Decimal128_38___Nullable_Date__Nullable_DateTime__Nullable_DateTime64_3___Nullable_Bool__Nullable_String__Nullable_FixedString_51___Nullable_UUID__LowCardinality_UInt8__LowCardinality_UInt16__LowCardinality_UInt32__LowCardinality_UInt64__LowCardinality_UInt128__LowCardinality_Int8__LowCardinality_Int16__LowCardinality_Int32__LowCardinality_Int64__LowCardinality_Int128__LowCardinality_Float32__LowCardinality_Float64__LowCardinality_Date__LowCardinality_DateTime__LowCardinality_Bool__LowCardinality_String__LowCardinality_FixedString_51___LowCardinality_UUID__Array_String__Map_String_LowCardinality_Float64___Tuple_String__ = r"""
-{"entropy(tuple_uint8_uint16_uint32_uint64_uint128_int8_int16_int32_int64_int128_float32_float64_decimal128_38__date_datetime_datetime64_3__bool_string_fixedstring_51__uuid_nullable_uint8__nullable_uint16__nullable_uint32__nullable_uint64__nullable_uint128__nullable_int8__nullable_int16__nullable_int32__nullable_int64__nullable_int128__nullable_float32__nullable_float64__nullable_decimal128_38___nullable_date__nullable_datetime__nullable_datetime64_3___nullable_bool__nullable_string__nullable_fixedstring_51___nullable_uuid__lowcardinality_uint8__lowcardinality_uint16__lowcardinality_uint32__lowcardinality_uint64__lowcardinality_uint128__lowcardinality_int8__lowcardinality_int16__lowcardinality_int32__lowcardinality_int64__lowcardinality_int128__lowcardinality_float32__lowcardinality_float64__lowcardinality_date__lowcardinality_datetime__lowcardinality_bool__lowcardinality_string__lowcardinality_fixedstring_51___lowcardinality_uuid__array_string__map_string_lowcardinality_float64___tuple_string__)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_DateTime64_3___22_8 = r"""
-{"entropy(datetime64_3_)":3.1219280948873624}
-"""
-
-_aggregate_functions_entropy_Map_UInt8_DateTime64_3____22_8 = r"""
-{"entropy(map_uint8_datetime64_3__)":3.121928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt8_Nullable_DateTime64_3_____22_8 = r"""
-{"entropy(map_uint8_nullable_datetime64_3___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt16_DateTime64_3____22_8 = r"""
-{"entropy(map_uint16_datetime64_3__)":3.121928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt16_Nullable_DateTime64_3_____22_8 = r"""
-{"entropy(map_uint16_nullable_datetime64_3___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt32_DateTime64_3____22_8 = r"""
-{"entropy(map_uint32_datetime64_3__)":3.121928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt32_Nullable_DateTime64_3_____22_8 = r"""
-{"entropy(map_uint32_nullable_datetime64_3___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt64_DateTime64_3____22_8 = r"""
-{"entropy(map_uint64_datetime64_3__)":3.1219280948873624}
-"""
-
-_aggregate_functions_entropy_Map_UInt64_Nullable_DateTime64_3_____22_8 = r"""
-{"entropy(map_uint64_nullable_datetime64_3___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt128_DateTime64_3____22_8 = r"""
-{"entropy(map_uint128_datetime64_3__)":3.121928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UInt128_Nullable_DateTime64_3_____22_8 = r"""
-{"entropy(map_uint128_nullable_datetime64_3___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int8_DateTime64_3____22_8 = r"""
-{"entropy(map_int8_datetime64_3__)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int8_Nullable_DateTime64_3_____22_8 = r"""
-{"entropy(map_int8_nullable_datetime64_3___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int16_DateTime64_3____22_8 = r"""
-{"entropy(map_int16_datetime64_3__)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int16_Nullable_DateTime64_3_____22_8 = r"""
-{"entropy(map_int16_nullable_datetime64_3___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int32_DateTime64_3____22_8 = r"""
-{"entropy(map_int32_datetime64_3__)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int32_Nullable_DateTime64_3_____22_8 = r"""
-{"entropy(map_int32_nullable_datetime64_3___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int64_DateTime64_3____22_8 = r"""
-{"entropy(map_int64_datetime64_3__)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int64_Nullable_DateTime64_3_____22_8 = r"""
-{"entropy(map_int64_nullable_datetime64_3___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int128_DateTime64_3____22_8 = r"""
-{"entropy(map_int128_datetime64_3__)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Int128_Nullable_DateTime64_3_____22_8 = r"""
-{"entropy(map_int128_nullable_datetime64_3___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Date_DateTime64_3____22_8 = r"""
-{"entropy(map_date_datetime64_3__)":3.121928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Date_Nullable_DateTime64_3_____22_8 = r"""
-{"entropy(map_date_nullable_datetime64_3___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_DateTime_DateTime64_3____22_8 = r"""
-{"entropy(map_datetime_datetime64_3__)":3.1219280948873624}
-"""
-
-_aggregate_functions_entropy_Map_DateTime_Nullable_DateTime64_3_____22_8 = r"""
-{"entropy(map_datetime_nullable_datetime64_3___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_Bool_DateTime64_3____22_8 = r"""
-{"entropy(map_bool_datetime64_3__)":3.1219280948873624}
-"""
-
-_aggregate_functions_entropy_Map_Bool_Nullable_DateTime64_3_____22_8 = r"""
-{"entropy(map_bool_nullable_datetime64_3___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_String_DateTime64_3____22_8 = r"""
-{"entropy(map_string_datetime64_3__)":3.1219280948873624}
-"""
-
-_aggregate_functions_entropy_Map_String_Nullable_DateTime64_3_____22_8 = r"""
-{"entropy(map_string_nullable_datetime64_3___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_FixedString_51__DateTime64_3____22_8 = r"""
-{"entropy(map_fixedstring_51__datetime64_3__)":3.121928094887362}
-"""
-
-_aggregate_functions_entropy_Map_FixedString_51__Nullable_DateTime64_3_____22_8 = r"""
-{"entropy(map_fixedstring_51__nullable_datetime64_3___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UUID_DateTime64_3____22_8 = r"""
-{"entropy(map_uuid_datetime64_3__)":3.121928094887362}
-"""
-
-_aggregate_functions_entropy_Map_UUID_Nullable_DateTime64_3_____22_8 = r"""
-{"entropy(map_uuid_nullable_datetime64_3___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_String__DateTime64_3____22_8 = r"""
-{"entropy(map_lowcardinality_string__datetime64_3__)":3.1219280948873624}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_String__Nullable_DateTime64_3_____22_8 = r"""
-{"entropy(map_lowcardinality_string__nullable_datetime64_3___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___DateTime64_3____22_8 = r"""
-{"entropy(map_lowcardinality_fixedstring_51___datetime64_3__)":3.121928094887362}
-"""
-
-_aggregate_functions_entropy_Map_LowCardinality_FixedString_51___Nullable_DateTime64_3_____22_8 = r"""
-{"entropy(map_lowcardinality_fixedstring_51___nullable_datetime64_3___)":3.321928094887362}
-"""
-
-_aggregate_functions_entropy_Nullable_DateTime64_3____22_8 = r"""
-{"entropy(nullable_datetime64_3__)":3.169925001442312}
-"""
-
-_aggregate_functions_entropy_Array_DateTime64_3____22_8 = r"""
-{"entropy(array_datetime64_3__)":3.1219280948873624}
-"""
-
-_aggregate_functions_entropy_Array_Nullable_DateTime64_3_____22_8 = r"""
-{"entropy(array_nullable_datetime64_3___)":3.321928094887362}
 """
 
 _aggregate_functions_entropy_Tuple_UInt8_UInt16_UInt32_UInt64_UInt128_Int8_Int16_Int32_Int64_Int128_Float32_Float64_Decimal128_38__Date_DateTime_DateTime64_3__Bool_String_FixedString_51__UUID_Nullable_UInt8__Nullable_UInt16__Nullable_UInt32__Nullable_UInt64__Nullable_UInt128__Nullable_Int8__Nullable_Int16__Nullable_Int32__Nullable_Int64__Nullable_Int128__Nullable_Float32__Nullable_Float64__Nullable_Decimal128_38___Nullable_Date__Nullable_DateTime__Nullable_DateTime64_3___Nullable_Bool__Nullable_String__Nullable_FixedString_51___Nullable_UUID__LowCardinality_UInt8__LowCardinality_UInt16__LowCardinality_UInt32__LowCardinality_UInt64__LowCardinality_UInt128__LowCardinality_Int8__LowCardinality_Int16__LowCardinality_Int32__LowCardinality_Int64__LowCardinality_Int128__LowCardinality_Float32__LowCardinality_Float64__LowCardinality_Date__LowCardinality_DateTime__LowCardinality_Bool__LowCardinality_String__LowCardinality_FixedString_51___LowCardinality_UUID__LowCardinality_Nullable_UInt8___LowCardinality_Nullable_UInt16___LowCardinality_Nullable_UInt32___LowCardinality_Nullable_UInt64___LowCardinality_Nullable_UInt128___LowCardinality_Nullable_Int8___LowCardinality_Nullable_Int16___LowCardinality_Nullable_Int32___LowCardinality_Nullable_Int64___LowCardinality_Nullable_Int128___LowCardinality_Nullable_Float32___LowCardinality_Nullable_Float64___LowCardinality_Nullable_Date___LowCardinality_Nullable_DateTime___LowCardinality_Nullable_Bool___LowCardinality_Nullable_String___LowCardinality_Nullable_FixedString_51____LowCardinality_Nullable_UUID___Array_String__Map_String_LowCardinality_Float64___Tuple_String____22_8 = r"""

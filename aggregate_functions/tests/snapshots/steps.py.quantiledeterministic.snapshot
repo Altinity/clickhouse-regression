@@ -91,6 +91,14 @@ _aggregate_functions_quantileDeterministic_Float64 = r"""
 {"quantileDeterministic(float64, 1)":-5.112209912988255e97}
 """
 
+_aggregate_functions_quantileDeterministic_Date = r"""
+{"quantileDeterministic(date, 1)":"2006-02-20"}
+"""
+
+_aggregate_functions_quantileDeterministic_DateTime = r"""
+{"quantileDeterministic(datetime, 1)":"2016-04-20 21:56:16"}
+"""
+
 _aggregate_functions_quantileDeterministic_Nullable_UInt8_ = r"""
 {"quantileDeterministic(nullable_uint8_, 1)":65}
 """
@@ -129,6 +137,14 @@ _aggregate_functions_quantileDeterministic_Nullable_Float32_ = r"""
 
 _aggregate_functions_quantileDeterministic_Nullable_Float64_ = r"""
 {"quantileDeterministic(nullable_float64_, 1)":-1.361161047663063e43}
+"""
+
+_aggregate_functions_quantileDeterministic_Nullable_Date_ = r"""
+{"quantileDeterministic(nullable_date_, 1)":"2012-02-07"}
+"""
+
+_aggregate_functions_quantileDeterministic_Nullable_DateTime_ = r"""
+{"quantileDeterministic(nullable_datetime_, 1)":"2014-04-10 09:39:46"}
 """
 
 _aggregate_functions_quantileDeterministic_LowCardinality_UInt8_ = r"""
@@ -171,6 +187,14 @@ _aggregate_functions_quantileDeterministic_LowCardinality_Float64_ = r"""
 {"quantileDeterministic(lowcardinality_float64_, 1)":8.313355866648283e134}
 """
 
+_aggregate_functions_quantileDeterministic_LowCardinality_Date_ = r"""
+{"quantileDeterministic(lowcardinality_date_, 1)":"2009-03-09"}
+"""
+
+_aggregate_functions_quantileDeterministic_LowCardinality_DateTime_ = r"""
+{"quantileDeterministic(lowcardinality_datetime_, 1)":"2015-04-17 13:43:28"}
+"""
+
 _aggregate_functions_quantileDeterministic_LowCardinality_Nullable_UInt8__ = r"""
 {"quantileDeterministic(lowcardinality_nullable_uint8__, 1)":165}
 """
@@ -211,35 +235,11 @@ _aggregate_functions_quantileDeterministic_LowCardinality_Nullable_Float64__ = r
 {"quantileDeterministic(lowcardinality_nullable_float64__, 1)":1.7674632094597634e89}
 """
 
-_aggregate_functions_quantileDeterministic_Date = r"""
-{"quantileDeterministic(date, 1)":"2006-02-20"}
-"""
-
-_aggregate_functions_quantileDeterministic_DateTime = r"""
-{"quantileDeterministic(datetime, 1)":"2016-04-20 22:56:16"}
-"""
-
-_aggregate_functions_quantileDeterministic_Nullable_Date_ = r"""
-{"quantileDeterministic(nullable_date_, 1)":"2012-02-07"}
-"""
-
-_aggregate_functions_quantileDeterministic_Nullable_DateTime_ = r"""
-{"quantileDeterministic(nullable_datetime_, 1)":"2014-04-10 11:39:46"}
-"""
-
-_aggregate_functions_quantileDeterministic_LowCardinality_Date_ = r"""
-{"quantileDeterministic(lowcardinality_date_, 1)":"2009-03-10"}
-"""
-
-_aggregate_functions_quantileDeterministic_LowCardinality_DateTime_ = r"""
-{"quantileDeterministic(lowcardinality_datetime_, 1)":"2015-04-17 14:43:28"}
-"""
-
 _aggregate_functions_quantileDeterministic_LowCardinality_Nullable_Date__ = r"""
 {"quantileDeterministic(lowcardinality_nullable_date__, 1)":"2013-09-28"}
 """
 
 _aggregate_functions_quantileDeterministic_LowCardinality_Nullable_DateTime__ = r"""
-{"quantileDeterministic(lowcardinality_nullable_datetime__, 1)":"2013-08-28 14:39:09"}
+{"quantileDeterministic(lowcardinality_nullable_datetime__, 1)":"2013-08-28 12:39:09"}
 """
 
