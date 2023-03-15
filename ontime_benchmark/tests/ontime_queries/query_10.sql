@@ -1,6 +1,6 @@
 -- Q10.
 SELECT
-   min(Year), max(Year), Carrier, count(*) AS cnt,
+   min(Year), max(Year), IATA_CODE_Reporting_Airline AS Carrier, count(*) AS cnt,
    sum(ArrDelayMinutes>30) AS flights_delayed,
    round(sum(ArrDelayMinutes>30)/count(*),2) AS rate
 FROM ontime
