@@ -47,8 +47,8 @@ on:
         description: "Artifact S3 bucket"
         type: choice
         options:
-          - internal
           - public
+          - internal
 
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}

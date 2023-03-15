@@ -71,16 +71,16 @@ _aggregate_functions_intervalLengthSum_datatypes_permutations_Nullable_UInt64__N
 {"intervalLengthSum(nullable_uint64_, nullable_uint64_)":"0"}
 """
 
+_aggregate_functions_intervalLengthSum_datatypes_permutations_Nullable_Float32__Nullable_Float32_ = r"""
+{"intervalLengthSum(nullable_float32_, nullable_float32_)":0}
+"""
+
 _aggregate_functions_intervalLengthSum_datatypes_permutations_Nullable_Float64__Nullable_Float64_ = r"""
 {"intervalLengthSum(nullable_float64_, nullable_float64_)":0}
 """
 
 _aggregate_functions_intervalLengthSum_datatypes_permutations_Nullable_Int64__Nullable_Int64_ = r"""
 {"intervalLengthSum(nullable_int64_, nullable_int64_)":"0"}
-"""
-
-_aggregate_functions_intervalLengthSum_datatypes_permutations_Nullable_Float32__Nullable_Float32_ = r"""
-{"intervalLengthSum(nullable_float32_, nullable_float32_)":0}
 """
 
 _aggregate_functions_intervalLengthSum_datatypes_permutations_Nullable_DateTime__Nullable_DateTime_ = r"""
@@ -95,6 +95,10 @@ _aggregate_functions_intervalLengthSum_datatypes_permutations_Nullable_Date__Nul
 {"intervalLengthSum(nullable_date_, nullable_date_)":"0"}
 """
 
+_aggregate_functions_intervalLengthSum_datatypes_permutations_LowCardinality_Float32__LowCardinality_Float32_ = r"""
+{"intervalLengthSum(lowcardinality_float32_, lowcardinality_float32_)":0}
+"""
+
 _aggregate_functions_intervalLengthSum_datatypes_permutations_LowCardinality_Int64__LowCardinality_Int64_ = r"""
 {"intervalLengthSum(lowcardinality_int64_, lowcardinality_int64_)":"0"}
 """
@@ -103,28 +107,16 @@ _aggregate_functions_intervalLengthSum_datatypes_permutations_LowCardinality_Flo
 {"intervalLengthSum(lowcardinality_float64_, lowcardinality_float64_)":0}
 """
 
-_aggregate_functions_intervalLengthSum_datatypes_permutations_LowCardinality_Float32__LowCardinality_Float32_ = r"""
-{"intervalLengthSum(lowcardinality_float32_, lowcardinality_float32_)":0}
-"""
-
 _aggregate_functions_intervalLengthSum_datatypes_permutations_LowCardinality_DateTime__LowCardinality_DateTime_ = r"""
 {"intervalLengthSum(lowcardinality_datetime_, lowcardinality_datetime_)":"0"}
-"""
-
-_aggregate_functions_intervalLengthSum_datatypes_permutations_Int64_Int64 = r"""
-{"intervalLengthSum(int64, int64)":"0"}
-"""
-
-_aggregate_functions_intervalLengthSum_datatypes_permutations_Float64_Float64 = r"""
-{"intervalLengthSum(float64, float64)":0}
 """
 
 _aggregate_functions_intervalLengthSum_datatypes_permutations_LowCardinality_Date__LowCardinality_Date_ = r"""
 {"intervalLengthSum(lowcardinality_date_, lowcardinality_date_)":"0"}
 """
 
-_aggregate_functions_intervalLengthSum_datatypes_permutations_Date_Date = r"""
-{"intervalLengthSum(date, date)":"0"}
+_aggregate_functions_intervalLengthSum_datatypes_permutations_Int64_Int64 = r"""
+{"intervalLengthSum(int64, int64)":"0"}
 """
 
 _aggregate_functions_intervalLengthSum_datatypes_permutations_DateTime_DateTime = r"""
@@ -133,5 +125,13 @@ _aggregate_functions_intervalLengthSum_datatypes_permutations_DateTime_DateTime 
 
 _aggregate_functions_intervalLengthSum_datatypes_permutations_Float32_Float32 = r"""
 {"intervalLengthSum(float32, float32)":0}
+"""
+
+_aggregate_functions_intervalLengthSum_datatypes_permutations_Float64_Float64 = r"""
+{"intervalLengthSum(float64, float64)":0}
+"""
+
+_aggregate_functions_intervalLengthSum_datatypes_permutations_Date_Date = r"""
+{"intervalLengthSum(date, date)":"0"}
 """
 

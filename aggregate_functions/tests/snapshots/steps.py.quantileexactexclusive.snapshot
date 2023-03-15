@@ -91,6 +91,14 @@ _aggregate_functions_quantileExactExclusive_Float64 = r"""
 {"quantileExactExclusive(float64)":-5.112209912988255e97}
 """
 
+_aggregate_functions_quantileExactExclusive_Date = r"""
+{"quantileExactExclusive(date)":13199.5}
+"""
+
+_aggregate_functions_quantileExactExclusive_DateTime = r"""
+{"quantileExactExclusive(datetime)":1461182176}
+"""
+
 _aggregate_functions_quantileExactExclusive_Nullable_UInt8_ = r"""
 {"quantileExactExclusive(nullable_uint8_)":65}
 """
@@ -129,6 +137,14 @@ _aggregate_functions_quantileExactExclusive_Nullable_Float32_ = r"""
 
 _aggregate_functions_quantileExactExclusive_Nullable_Float64_ = r"""
 {"quantileExactExclusive(nullable_float64_)":-1.361161047663063e43}
+"""
+
+_aggregate_functions_quantileExactExclusive_Nullable_Date_ = r"""
+{"quantileExactExclusive(nullable_date_)":15377}
+"""
+
+_aggregate_functions_quantileExactExclusive_Nullable_DateTime_ = r"""
+{"quantileExactExclusive(nullable_datetime_)":1397115586}
 """
 
 _aggregate_functions_quantileExactExclusive_LowCardinality_UInt8_ = r"""
@@ -171,6 +187,14 @@ _aggregate_functions_quantileExactExclusive_LowCardinality_Float64_ = r"""
 {"quantileExactExclusive(lowcardinality_float64_)":8.313355866648283e134}
 """
 
+_aggregate_functions_quantileExactExclusive_LowCardinality_Date_ = r"""
+{"quantileExactExclusive(lowcardinality_date_)":14312.5}
+"""
+
+_aggregate_functions_quantileExactExclusive_LowCardinality_DateTime_ = r"""
+{"quantileExactExclusive(lowcardinality_datetime_)":1429271008.5}
+"""
+
 _aggregate_functions_quantileExactExclusive_LowCardinality_Nullable_UInt8__ = r"""
 {"quantileExactExclusive(lowcardinality_nullable_uint8__)":165}
 """
@@ -209,30 +233,6 @@ _aggregate_functions_quantileExactExclusive_LowCardinality_Nullable_Float32__ = 
 
 _aggregate_functions_quantileExactExclusive_LowCardinality_Nullable_Float64__ = r"""
 {"quantileExactExclusive(lowcardinality_nullable_float64__)":1.7674632094597634e89}
-"""
-
-_aggregate_functions_quantileExactExclusive_Date = r"""
-{"quantileExactExclusive(date)":13199.5}
-"""
-
-_aggregate_functions_quantileExactExclusive_DateTime = r"""
-{"quantileExactExclusive(datetime)":1461182176}
-"""
-
-_aggregate_functions_quantileExactExclusive_Nullable_Date_ = r"""
-{"quantileExactExclusive(nullable_date_)":15377}
-"""
-
-_aggregate_functions_quantileExactExclusive_Nullable_DateTime_ = r"""
-{"quantileExactExclusive(nullable_datetime_)":1397115586}
-"""
-
-_aggregate_functions_quantileExactExclusive_LowCardinality_Date_ = r"""
-{"quantileExactExclusive(lowcardinality_date_)":14313}
-"""
-
-_aggregate_functions_quantileExactExclusive_LowCardinality_DateTime_ = r"""
-{"quantileExactExclusive(lowcardinality_datetime_)":1429271008.5}
 """
 
 _aggregate_functions_quantileExactExclusive_LowCardinality_Nullable_Date__ = r"""

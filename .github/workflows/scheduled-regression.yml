@@ -31,6 +31,7 @@ env:
 jobs:
   aes_encryption:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable
@@ -69,6 +70,7 @@ jobs:
 
   aggregate_functions:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable
@@ -107,6 +109,7 @@ jobs:
 
   atomic_insert:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable
@@ -145,6 +148,7 @@ jobs:
 
   base_58:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable
@@ -183,6 +187,7 @@ jobs:
 
   # benchmark:
   #   strategy:
+  #    fail-fast: false
   #     matrix:
   #       include:
   #         - version: 22.8.13.21.altinitystable
@@ -229,6 +234,7 @@ jobs:
 
   clickhouse_keeper:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable
@@ -267,6 +273,7 @@ jobs:
 
   datetime64_extended_range:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable
@@ -305,6 +312,7 @@ jobs:
 
   disk_level_encryption:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable
@@ -343,6 +351,7 @@ jobs:
 
   dns:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable
@@ -381,6 +390,7 @@ jobs:
 
   example:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable
@@ -419,6 +429,7 @@ jobs:
 
   extended_precision_data_types:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable
@@ -457,6 +468,7 @@ jobs:
 
   # functional:
   #       strategy:
+    #  fail-fast: false
     #   matrix:
     #     include:
     #       - version: 22.8.13.21.altinitystable
@@ -493,6 +505,7 @@ jobs:
 
   kafka:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable
@@ -531,6 +544,7 @@ jobs:
 
   kerberos:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable
@@ -568,6 +582,7 @@ jobs:
 
   ldap_authentication:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable
@@ -606,6 +621,7 @@ jobs:
 
   ldap_external_user_directory:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable
@@ -644,6 +660,7 @@ jobs:
 
   ldap_role_mapping:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable
@@ -682,6 +699,7 @@ jobs:
 
   lightweight_delete:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable
@@ -720,6 +738,7 @@ jobs:
 
   map_type:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable
@@ -758,6 +777,7 @@ jobs:
 
   parquet:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable
@@ -796,6 +816,7 @@ jobs:
 
   part_moves_between_shards:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable
@@ -834,6 +855,7 @@ jobs:
 
   rbac:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable
@@ -872,6 +894,7 @@ jobs:
 
   selects:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable
@@ -910,6 +933,7 @@ jobs:
 
   s3_minio:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable
@@ -951,6 +975,7 @@ jobs:
 
   s3_aws:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable
@@ -996,6 +1021,7 @@ jobs:
 
   s3_gcs:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable
@@ -1040,6 +1066,7 @@ jobs:
 
   ssl_server:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable
@@ -1078,6 +1105,7 @@ jobs:
 
   tiered_storage:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable
@@ -1116,6 +1144,7 @@ jobs:
 
   tiered_storage_minio:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable
@@ -1157,6 +1186,7 @@ jobs:
 
   tiered_storage_aws:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable
@@ -1201,6 +1231,7 @@ jobs:
 
   tiered_storage_gcs:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable
@@ -1245,6 +1276,7 @@ jobs:
 
   window_functions:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable

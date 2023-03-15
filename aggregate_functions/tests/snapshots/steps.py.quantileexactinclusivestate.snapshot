@@ -91,6 +91,14 @@ _aggregate_functions_state_quantileExactInclusiveState_Float64 = r"""
 {"hex(quantileExactInclusiveState(float64))":"0A51776F82FDFFEF7F51776F82FDFFEFFF0000000000000000BAE2163EB89725CA1FD01440BEE4B4FF2BC226D2B19A40F8BB39A50FB830A64DFF4BF30BC3C6665162EC6EC407EF47D44F2916E7A954C3E5"}
 """
 
+_aggregate_functions_state_quantileExactInclusiveState_Date = r"""
+{"hex(quantileExactInclusiveState(date))":"0AFFFF000000009C3092344D408D32603FCF498630"}
+"""
+
+_aggregate_functions_state_quantileExactInclusiveState_DateTime = r"""
+{"hex(quantileExactInclusiveState(datetime))":"0AEFF1FFFFF0F1FFFF0000000079446A450BF79055960E854EDE9BC35CB5C69E5807BF344AEAFA2A5E"}
+"""
+
 _aggregate_functions_state_quantileExactInclusiveState_Nullable_UInt8_ = r"""
 {"hex(quantileExactInclusiveState(nullable_uint8_))":"0109FF00EA3F411CC5C30F"}
 """
@@ -129,6 +137,14 @@ _aggregate_functions_state_quantileExactInclusiveState_Nullable_Float32_ = r"""
 
 _aggregate_functions_state_quantileExactInclusiveState_Nullable_Float64_ = r"""
 {"hex(quantileExactInclusiveState(nullable_float64_))":"010951776F82FDFFEF7F51776F82FDFFEFFF66576262AAFFDDDFA8FA9147CA84AB584B7D9AB21D88E3C8A9A290E24A4062FEB74DE1D716BBC4F1AC0F30FDA8D9C275846886D97BB7C47D"}
+"""
+
+_aggregate_functions_state_quantileExactInclusiveState_Nullable_Date_ = r"""
+{"hex(quantileExactInclusiveState(nullable_date_))":"0109FFFF00007132193316431D36113C9945314A"}
+"""
+
+_aggregate_functions_state_quantileExactInclusiveState_Nullable_DateTime_ = r"""
+{"hex(quantileExactInclusiveState(nullable_datetime_))":"0109EFF1FFFFF0F1FFFFC24A46538E4071409285DB440CD5D74376A8214AD5FB80565FB05159"}
 """
 
 _aggregate_functions_state_quantileExactInclusiveState_LowCardinality_UInt8_ = r"""
@@ -171,6 +187,14 @@ _aggregate_functions_state_quantileExactInclusiveState_LowCardinality_Float64_ =
 {"hex(quantileExactInclusiveState(lowcardinality_float64_))":"0A51776F82FDFFEF7F51776F82FDFFEFFF0000000000000000D437298325F2056D8ED1D5B3E04C025C88F42DC79809BF54355D5381CA3CC6D3904B88E2F0846B4D69558A29999EFE753E7209801D456266"}
 """
 
+_aggregate_functions_state_quantileExactInclusiveState_LowCardinality_Date_ = r"""
+{"hex(quantileExactInclusiveState(lowcardinality_date_))":"0AFFFF000000006047C94AEB36E638633E9E302032"}
+"""
+
+_aggregate_functions_state_quantileExactInclusiveState_LowCardinality_DateTime_ = r"""
+{"hex(quantileExactInclusiveState(lowcardinality_datetime_))":"0AEFF1FFFFF0F1FFFF0000000000844561616C014F57CD834E82095E5C95C03A588DA77C442C232752"}
+"""
+
 _aggregate_functions_state_quantileExactInclusiveState_LowCardinality_Nullable_UInt8__ = r"""
 {"hex(quantileExactInclusiveState(lowcardinality_nullable_uint8__))":"0109FF0081C0A5CA4BCC70"}
 """
@@ -211,35 +235,11 @@ _aggregate_functions_state_quantileExactInclusiveState_LowCardinality_Nullable_F
 {"hex(quantileExactInclusiveState(lowcardinality_nullable_float64__))":"010951776F82FDFFEF7F51776F82FDFFEFFF7EA255CA77F1F07D76249E4EF025CE4017B77285DFCC72E8C6210BB4894A347B42DBBE2F506A6D5E58E43AFC52367652C73542D2F3DB7FF9"}
 """
 
-_aggregate_functions_state_quantileExactInclusiveState_Date = r"""
-{"hex(quantileExactInclusiveState(date))":"0AFFFF000000009C3092344D408D32603FCF498630"}
-"""
-
-_aggregate_functions_state_quantileExactInclusiveState_DateTime = r"""
-{"hex(quantileExactInclusiveState(datetime))":"0ACFD5FFFFD0D5FFFF0000000079446A450BF79055960E854EDE9BC35CB5C69E5807BF344AEAFA2A5E"}
-"""
-
-_aggregate_functions_state_quantileExactInclusiveState_Nullable_Date_ = r"""
-{"hex(quantileExactInclusiveState(nullable_date_))":"0109FFFF00007132193316431D36113C9945314A"}
-"""
-
-_aggregate_functions_state_quantileExactInclusiveState_Nullable_DateTime_ = r"""
-{"hex(quantileExactInclusiveState(nullable_datetime_))":"0109CFD5FFFFD0D5FFFFC24A46538E4071409285DB440CD5D74376A8214AD5FB80565FB05159"}
-"""
-
-_aggregate_functions_state_quantileExactInclusiveState_LowCardinality_Date_ = r"""
-{"hex(quantileExactInclusiveState(lowcardinality_date_))":"0AFFFF000000006047C94AEC36E638633E9E302032"}
-"""
-
-_aggregate_functions_state_quantileExactInclusiveState_LowCardinality_DateTime_ = r"""
-{"hex(quantileExactInclusiveState(lowcardinality_datetime_))":"0ACFD5FFFFD0D5FFFF0000000000844561616C014F57CD834E82095E5C95C03A588DA77C442C232752"}
-"""
-
 _aggregate_functions_state_quantileExactInclusiveState_LowCardinality_Nullable_Date__ = r"""
 {"hex(quantileExactInclusiveState(lowcardinality_nullable_date__))":"0109FFFF00009B497232CA4508355E369D41683E"}
 """
 
 _aggregate_functions_state_quantileExactInclusiveState_LowCardinality_Nullable_DateTime__ = r"""
-{"hex(quantileExactInclusiveState(lowcardinality_nullable_datetime__))":"0109CFD5FFFFD0D5FFFF76C733502BF1C84139B385514DD31D529407975E818BB34587619852"}
+{"hex(quantileExactInclusiveState(lowcardinality_nullable_datetime__))":"0109EFF1FFFFF0F1FFFF76C733502BF1C84139B385514DD31D529407975E818BB34587619852"}
 """
 
