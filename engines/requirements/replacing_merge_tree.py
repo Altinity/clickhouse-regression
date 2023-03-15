@@ -330,6 +330,51 @@ RQ_SRS_035_ClickHouse_ReplacingMergeTree_HandlingDeletedData = Requirement(
     num='4.11.1'
 )
 
+RQ_SRS_035_ClickHouse_ReplacingMergeTree_Errors_WrongDataType = Requirement(
+    name='RQ.SRS-035.ClickHouse.ReplacingMergeTree.Errors.WrongDataType',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ReplacingMergeTree] engine SHALL provide exception:\n'
+        '\n'
+        '```CMD\n'
+        'Code: 169. DB::Exception: Received from localhost:9000. DB::Exception: is_deleted column (is_deleted) for \n'
+        'storage ReplacingMergeTree must have type UInt8. Provided column of type String.. (BAD_TYPE_OF_FIELD)\n'
+        '```\n'
+        '\n'
+        'when wrong data type was used for `is_deleted` column.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.12.1'
+)
+
+RQ_SRS_035_ClickHouse_ReplacingMergeTree_Errors_WrongDataValue = Requirement(
+    name='RQ.SRS-035.ClickHouse.ReplacingMergeTree.Errors.WrongDataValue',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ReplacingMergeTree] engine SHALL provide exception:\n'
+        '\n'
+        '```CMD\n'
+        'Code: 169. DB::Exception: Received from localhost:9000. DB::Exception:  (INCORRECT_DATA)\n'
+        '```\n'
+        '\n'
+        'when other than 0 or 1 value was used in `is_deleted` column.\n'
+        '\n'
+    ),
+    link=None,
+    level=3,
+    num='4.12.2'
+)
+
 RQ_SRS_035_ClickHouse_ReplacingMergeTree_NonFunctionalRequirements_Performance = Requirement(
     name='RQ.SRS-035.ClickHouse.ReplacingMergeTree.NonFunctionalRequirements.Performance',
     version='1.0',
@@ -343,7 +388,7 @@ RQ_SRS_035_ClickHouse_ReplacingMergeTree_NonFunctionalRequirements_Performance =
     ),
     link=None,
     level=4,
-    num='4.12.1.2'
+    num='4.13.2.2'
 )
 
 RQ_SRS_035_ClickHouse_ReplacingMergeTree_NonFunctionalRequirements_Reliability = Requirement(
@@ -367,7 +412,7 @@ RQ_SRS_035_ClickHouse_ReplacingMergeTree_NonFunctionalRequirements_Reliability =
     ),
     link=None,
     level=4,
-    num='4.12.1.4'
+    num='4.13.2.4'
 )
 
 SRS035_ClickHouse_ReplacingMergeTree = Specification(
@@ -423,11 +468,14 @@ SRS035_ClickHouse_ReplacingMergeTree = Specification(
         Heading(name='RQ.SRS-035.ClickHouse.ReplacingMergeTree.Settings.CleanDeletedRowsDisabled', level=3, num='4.10.2'),
         Heading(name='Handling Deleted Data', level=2, num='4.11'),
         Heading(name='RQ.SRS-035.ClickHouse.ReplacingMergeTree.HandlingDeletedData', level=3, num='4.11.1'),
-        Heading(name='Non-Functional Requirements', level=2, num='4.12'),
-        Heading(name='Performance', level=4, num='4.12.1.1'),
-        Heading(name='RQ.SRS-035.ClickHouse.ReplacingMergeTree.NonFunctionalRequirements.Performance', level=4, num='4.12.1.2'),
-        Heading(name='Reliability', level=4, num='4.12.1.3'),
-        Heading(name='RQ.SRS-035.ClickHouse.ReplacingMergeTree.NonFunctionalRequirements.Reliability', level=4, num='4.12.1.4'),
+        Heading(name='Errors', level=2, num='4.12'),
+        Heading(name='RQ.SRS-035.ClickHouse.ReplacingMergeTree.Errors.WrongDataType', level=3, num='4.12.1'),
+        Heading(name='RQ.SRS-035.ClickHouse.ReplacingMergeTree.Errors.WrongDataValue', level=3, num='4.12.2'),
+        Heading(name='Non-Functional Requirements', level=2, num='4.13'),
+        Heading(name='Performance', level=4, num='4.13.2.1'),
+        Heading(name='RQ.SRS-035.ClickHouse.ReplacingMergeTree.NonFunctionalRequirements.Performance', level=4, num='4.13.2.2'),
+        Heading(name='Reliability', level=4, num='4.13.2.3'),
+        Heading(name='RQ.SRS-035.ClickHouse.ReplacingMergeTree.NonFunctionalRequirements.Reliability', level=4, num='4.13.2.4'),
         ),
     requirements=(
         RQ_SRS_035_ClickHouse_ReplacingMergeTree,
@@ -449,6 +497,8 @@ SRS035_ClickHouse_ReplacingMergeTree = Specification(
         RQ_SRS_035_ClickHouse_ReplacingMergeTree_Settings_CleanDeletedRows,
         RQ_SRS_035_ClickHouse_ReplacingMergeTree_Settings_CleanDeletedRowsDisabled,
         RQ_SRS_035_ClickHouse_ReplacingMergeTree_HandlingDeletedData,
+        RQ_SRS_035_ClickHouse_ReplacingMergeTree_Errors_WrongDataType,
+        RQ_SRS_035_ClickHouse_ReplacingMergeTree_Errors_WrongDataValue,
         RQ_SRS_035_ClickHouse_ReplacingMergeTree_NonFunctionalRequirements_Performance,
         RQ_SRS_035_ClickHouse_ReplacingMergeTree_NonFunctionalRequirements_Reliability,
         ),
@@ -494,11 +544,14 @@ SRS035_ClickHouse_ReplacingMergeTree = Specification(
     * 4.10.2 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.Settings.CleanDeletedRowsDisabled](#rqsrs-035clickhousereplacingmergetreesettingscleandeletedrowsdisabled)
   * 4.11 [Handling Deleted Data](#handling-deleted-data)
     * 4.11.1 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.HandlingDeletedData](#rqsrs-035clickhousereplacingmergetreehandlingdeleteddata)
-  * 4.12 [Non-Functional Requirements](#non-functional-requirements)
-      * 4.12.1.1 [Performance](#performance)
-      * 4.12.1.2 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.NonFunctionalRequirements.Performance](#rqsrs-035clickhousereplacingmergetreenonfunctionalrequirementsperformance)
-      * 4.12.1.3 [Reliability](#reliability)
-      * 4.12.1.4 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.NonFunctionalRequirements.Reliability](#rqsrs-035clickhousereplacingmergetreenonfunctionalrequirementsreliability)
+  * 4.12 [Errors](#errors)
+    * 4.12.1 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.Errors.WrongDataType](#rqsrs-035clickhousereplacingmergetreeerrorswrongdatatype)
+    * 4.12.2 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.Errors.WrongDataValue](#rqsrs-035clickhousereplacingmergetreeerrorswrongdatavalue)
+  * 4.13 [Non-Functional Requirements](#non-functional-requirements)
+      * 4.13.2.1 [Performance](#performance)
+      * 4.13.2.2 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.NonFunctionalRequirements.Performance](#rqsrs-035clickhousereplacingmergetreenonfunctionalrequirementsperformance)
+      * 4.13.2.3 [Reliability](#reliability)
+      * 4.13.2.4 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.NonFunctionalRequirements.Reliability](#rqsrs-035clickhousereplacingmergetreenonfunctionalrequirementsreliability)
 
 
 ## Introduction
@@ -674,6 +727,31 @@ version: 1.0
 
 [ReplacingMergeTree] engine SHALL allow filter out deleted data when queried but not remove it from disk.
 The information of deleted data is needed for KPIs.
+
+### Errors
+
+#### RQ.SRS-035.ClickHouse.ReplacingMergeTree.Errors.WrongDataType
+version: 1.0
+
+[ReplacingMergeTree] engine SHALL provide exception:
+
+```CMD
+Code: 169. DB::Exception: Received from localhost:9000. DB::Exception: is_deleted column (is_deleted) for 
+storage ReplacingMergeTree must have type UInt8. Provided column of type String.. (BAD_TYPE_OF_FIELD)
+```
+
+when wrong data type was used for `is_deleted` column.
+
+#### RQ.SRS-035.ClickHouse.ReplacingMergeTree.Errors.WrongDataValue
+version: 1.0
+
+[ReplacingMergeTree] engine SHALL provide exception:
+
+```CMD
+Code: 169. DB::Exception: Received from localhost:9000. DB::Exception:  (INCORRECT_DATA)
+```
+
+when other than 0 or 1 value was used in `is_deleted` column.
 
 ### Non-Functional Requirements
 

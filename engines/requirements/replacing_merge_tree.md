@@ -39,11 +39,14 @@
     * 4.10.2 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.Settings.CleanDeletedRowsDisabled](#rqsrs-035clickhousereplacingmergetreesettingscleandeletedrowsdisabled)
   * 4.11 [Handling Deleted Data](#handling-deleted-data)
     * 4.11.1 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.HandlingDeletedData](#rqsrs-035clickhousereplacingmergetreehandlingdeleteddata)
-  * 4.12 [Non-Functional Requirements](#non-functional-requirements)
-      * 4.12.1.1 [Performance](#performance)
-      * 4.12.1.2 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.NonFunctionalRequirements.Performance](#rqsrs-035clickhousereplacingmergetreenonfunctionalrequirementsperformance)
-      * 4.12.1.3 [Reliability](#reliability)
-      * 4.12.1.4 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.NonFunctionalRequirements.Reliability](#rqsrs-035clickhousereplacingmergetreenonfunctionalrequirementsreliability)
+  * 4.12 [Errors](#errors)
+    * 4.12.1 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.Errors.WrongDataType](#rqsrs-035clickhousereplacingmergetreeerrorswrongdatatype)
+    * 4.12.2 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.Errors.WrongDataValue](#rqsrs-035clickhousereplacingmergetreeerrorswrongdatavalue)
+  * 4.13 [Non-Functional Requirements](#non-functional-requirements)
+      * 4.13.2.1 [Performance](#performance)
+      * 4.13.2.2 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.NonFunctionalRequirements.Performance](#rqsrs-035clickhousereplacingmergetreenonfunctionalrequirementsperformance)
+      * 4.13.2.3 [Reliability](#reliability)
+      * 4.13.2.4 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.NonFunctionalRequirements.Reliability](#rqsrs-035clickhousereplacingmergetreenonfunctionalrequirementsreliability)
 
 
 ## Introduction
@@ -219,6 +222,32 @@ version: 1.0
 
 [ReplacingMergeTree] engine SHALL allow filter out deleted data when queried but not remove it from disk.
 The information of deleted data is needed for KPIs.
+
+### Errors
+
+#### RQ.SRS-035.ClickHouse.ReplacingMergeTree.Errors.WrongDataType
+version: 1.0
+
+[ReplacingMergeTree] engine SHALL provide exception:
+
+```CMD
+Code: 169. DB::Exception: Received from localhost:9000. DB::Exception: is_deleted column (is_deleted) for 
+storage ReplacingMergeTree must have type UInt8. Provided column of type String.. (BAD_TYPE_OF_FIELD)
+```
+
+when wrong data type was used for `is_deleted` column.
+
+#### RQ.SRS-035.ClickHouse.ReplacingMergeTree.Errors.WrongDataValue
+version: 1.0
+
+[ReplacingMergeTree] engine SHALL provide exception:
+
+```CMD
+Code: 117. DB::Exception: Received from localhost:9000. DB::Exception: Incorrect data: is_deleted = 6 (must be 1 or 0)..
+ (INCORRECT_DATA)
+```
+
+when other than 0 or 1 value was used in `is_deleted` column.
 
 ### Non-Functional Requirements
 

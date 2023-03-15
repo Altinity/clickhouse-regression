@@ -119,7 +119,11 @@ def without_is_deleted(self, node=None):
             "I select all data from the table with --final and expect to see all the latest version data"
         ):
             node.query(
-                f"SELECT count(*) FROM {name};", message="3", settings=[("final", 1)]
+                f"SELECT * FROM {name} FORMAT JSONEachRow;",
+                message='{"id":"data1","version":3,"is_deleted":0}\n'
+                '{"id":"data2","version":3,"is_deleted":1}\n'
+                '{"id":"data3","version":3,"is_deleted":1}',
+                settings=[("final", 1)],
             )
 
         with And("I optimize table"):
@@ -130,7 +134,12 @@ def without_is_deleted(self, node=None):
         with Then(
             "I select again all data from the table and expect to see all the latest version data"
         ):
-            node.query(f"SELECT count(*) FROM {name};", message="3")
+            node.query(
+                f"SELECT * FROM {name} FORMAT JSONEachRow;",
+                message='{"id":"data1","version":3,"is_deleted":0}\n'
+                '{"id":"data2","version":3,"is_deleted":1}\n'
+                '{"id":"data3","version":3,"is_deleted":1}',
+            )
 
     finally:
         with Finally("I drop table"):
@@ -138,7 +147,9 @@ def without_is_deleted(self, node=None):
 
 
 @TestScenario
-@Requirements(RQ_SRS_035_ClickHouse_ReplacingMergeTree_Settings_CleanDeletedRowsDisabled("1.0"))
+@Requirements(
+    RQ_SRS_035_ClickHouse_ReplacingMergeTree_Settings_CleanDeletedRowsDisabled("1.0")
+)
 def clean_deleted_rows_without_is_deleted(self, node=None):
     """Checking that the new ReplacingMergeTree engine without is_deleted parameter and with clean_deleted_rows="Always"
     setting works in the same way as the old ReplacingMergeTree engine, and that it does not conceal rows with
@@ -172,7 +183,11 @@ def clean_deleted_rows_without_is_deleted(self, node=None):
             "I select all data from the table with --final and expect to see all the latest version data"
         ):
             node.query(
-                f"SELECT count(*) FROM {name};", message="3", settings=[("final", 1)]
+                f"SELECT * FROM {name} FORMAT JSONEachRow;",
+                message='{"id":"data1","version":3,"is_deleted":0}\n'
+                '{"id":"data2","version":3,"is_deleted":1}\n'
+                '{"id":"data3","version":3,"is_deleted":1}',
+                settings=[("final", 1)],
             )
 
         with And("I optimize table"):
@@ -183,7 +198,12 @@ def clean_deleted_rows_without_is_deleted(self, node=None):
         with Then(
             "I select again all data from the table and expect to see all the latest version data"
         ):
-            node.query(f"SELECT count(*) FROM {name};", message="3")
+            node.query(
+                f"SELECT * FROM {name} FORMAT JSONEachRow;",
+                message='{"id":"data1","version":3,"is_deleted":0}\n'
+                '{"id":"data2","version":3,"is_deleted":1}\n'
+                '{"id":"data3","version":3,"is_deleted":1}',
+            )
 
     finally:
         with Finally("I drop table"):
@@ -225,7 +245,9 @@ def with_is_deleted(self, node=None):
             "version not deleted data"
         ):
             node.query(
-                f"SELECT count(*) FROM {name};", message="1", settings=[("final", 1)]
+                f"SELECT * FROM {name} FORMAT JSONEachRow;",
+                message='{"id":"data1","version":3,"is_deleted":0}',
+                settings=[("final", 1)],
             )
 
         with And("I optimize table"):
@@ -237,7 +259,12 @@ def with_is_deleted(self, node=None):
             "I select again all data from the table and expect to see all the latest version data but without"
             " deletes as clean_deleted_rows='Never'"
         ):
-            node.query(f"SELECT count(*) FROM {name};", message="3")
+            node.query(
+                f"SELECT * FROM {name} FORMAT JSONEachRow;",
+                message='{"id":"data1","version":3,"is_deleted":0}\n'
+                '{"id":"data2","version":3,"is_deleted":1}\n'
+                '{"id":"data3","version":3,"is_deleted":1}',
+            )
 
     finally:
         with Finally("I drop table"):
@@ -281,7 +308,9 @@ def clean_deleted_rows_with_is_deleted(self, node=None):
             "version not deleted data"
         ):
             node.query(
-                f"SELECT count(*) FROM {name};", message="1", settings=[("final", 1)]
+                f"SELECT * FROM {name} FORMAT JSONEachRow;",
+                message='{"id":"data1","version":3,"is_deleted":0}',
+                settings=[("final", 1)],
             )
 
         with And("I optimize table"):
@@ -292,7 +321,175 @@ def clean_deleted_rows_with_is_deleted(self, node=None):
         with Then(
             "I select again all data from the table and expect to see all the the latest version not deleted data"
         ):
-            node.query(f"SELECT count(*) FROM {name};", message="1")
+            node.query(
+                f"SELECT * FROM {name} FORMAT JSONEachRow;",
+                message='{"id":"data1","version":3,"is_deleted":0}',
+            )
+
+    finally:
+        with Finally("I drop table"):
+            node.query(f"DROP TABLE IF EXISTS {name}")
+
+
+@TestScenario
+@Requirements(RQ_SRS_035_ClickHouse_ReplacingMergeTree_Update("1.0"))
+def update(self, node=None):
+    """Check for updating a row by inserting a row with (arbitrary) greater version."""
+
+    insert_values = (
+        " ('data1','adsf', 1, 0),"
+        " ('data1','adsf', 2, 0),"
+        " ('data1', 'a', 3, 0),"
+        " ('data1', 'b', 1, 1),"
+        " ('data1', 'c', 2, 1)"
+    )
+
+    insert_values_update = " ('data1', 'a', 3, 1)" " ('data1', 'fdasd', 3, 0),"
+
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    name = f"update_{getuid()}"
+
+    try:
+        with Given(
+            "I create table with is_deleted column and clean_deleted_rows='Always'"
+        ):
+            node.query(
+                f"CREATE TABLE IF NOT EXISTS {name} (id String, some_data String, version UInt32, is_deleted UInt8)"
+                f" ENGINE = ReplacingMergeTree(version, is_deleted) ORDER BY id"
+            )
+
+        with When("I insert data in this table"):
+            node.query(
+                f"INSERT INTO {name} VALUES {insert_values}",
+            )
+
+        with Then(
+            "I select all data from the table with --final and expect to see all the latest "
+            "version not deleted data"
+        ):
+            node.query(
+                f"SELECT * FROM {name} FORMAT JSONEachRow;",
+                message='{"id":"data1","some_data":"a","version":3,"is_deleted":0}',
+                settings=[("final", 1)],
+            )
+
+        with And("I insert data in this table"):
+            node.query(f"INSERT INTO {name} VALUES {insert_values_update}")
+
+        with And("I check data that data has been updated"):
+            node.query(
+                f"SELECT * FROM {name} FORMAT JSONEachRow;",
+                message='{"id":"data1","some_data":"fdasd","version":3,"is_deleted":0}',
+                settings=[("final", 1)],
+            )
+
+    finally:
+        with Finally("I drop table"):
+            node.query(f"DROP TABLE IF EXISTS {name}")
+
+
+@TestScenario
+@Requirements(RQ_SRS_035_ClickHouse_ReplacingMergeTree_Errors_WrongDataValue("1.0"))
+def incorrect_data_insert(self, node=None):
+    """Check for incorrect insert data value into is_deleted column."""
+
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    name = f"incorrect_data_insert_{getuid()}"
+
+    try:
+        with Given(
+            "I create table with is_deleted column and clean_deleted_rows='Always'"
+        ):
+            node.query(
+                f"CREATE TABLE IF NOT EXISTS {name} (id String, version UInt32, is_deleted UInt8)"
+                f" ENGINE = ReplacingMergeTree(version, is_deleted) ORDER BY id"
+            )
+
+        with When("I insert data in this table"):
+            node.query(
+                f"INSERT INTO {name} VALUES ('data1', 1, 6)",
+                message="Received from localhost:9000. DB::Exception: Incorrect data: is_deleted = 6 (must be 1 or 0).."
+                        " (INCORRECT_DATA)",
+                exitcode=117,
+            )
+
+    finally:
+        with Finally("I drop table"):
+            node.query(f"DROP TABLE IF EXISTS {name}")
+
+
+@TestScenario
+@Requirements(RQ_SRS_035_ClickHouse_ReplacingMergeTree_Errors_WrongDataType("1.0"))
+def incorrect_data_type(self, node=None):
+    """Check that incorrect insert data type for is_deleted column provides Exception."""
+
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    name = f"incorrect_data_insert_{getuid()}"
+
+    try:
+        with Given(
+            "I create table with is_deleted column and clean_deleted_rows='Always'"
+        ):
+            node.query(
+                f"CREATE TABLE IF NOT EXISTS {name} (id String, version UInt32, is_deleted String)"
+                f" ENGINE = ReplacingMergeTree(version, is_deleted) ORDER BY id SETTINGS clean_deleted_rows='Always'",
+                message="DB::Exception: Received from localhost:9000. DB::Exception: is_deleted column (is_deleted) for "
+                "storage ReplacingMergeTree must have type UInt8. Provided column of type String.. "
+                "(BAD_TYPE_OF_FIELD)",
+                exitcode=169,
+            )
+
+    finally:
+        with Finally("I drop table"):
+            node.query(f"DROP TABLE IF EXISTS {name}")
+
+
+@TestScenario
+def incorrect_data_insert_with_disabled_optimize_on_insert(self, node=None):
+    """Check for incorrect insert data value into is_deleted column with optimize_on_insert=0."""
+
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    name = f"error_{getuid()}"
+
+    try:
+        with Given(
+            "I create table with is_deleted column and clean_deleted_rows='Always'"
+        ):
+            node.query(
+                f"CREATE TABLE IF NOT EXISTS {name} (id String, version UInt32, is_deleted UInt8)"
+                f" ENGINE = ReplacingMergeTree(version, is_deleted) ORDER BY id"
+            )
+
+        with When("I insert data in this table"):
+            node.query(
+                f"INSERT INTO {name} VALUES ('data1', 1, 6)", settings=[("optimize_on_insert", 0)]
+            )
+
+        with Then(
+            "I select all data from the table with --final and expect to see all the latest "
+            "version not deleted data"
+        ):
+            node.query(
+                f"SELECT * FROM {name} FORMAT JSONEachRow;"
+            )
+
+            with And("I optimize table"):
+                node.query(
+                    f"OPTIMIZE TABLE {name} FINAL;", message="DB::Exception:", exitcode=117
+                )
+
+                node.query(
+                    f"SELECT * FROM {name}  FORMAT JSONEachRow;", message="DB::Exception:", exitcode=117,
+                    settings=[("final", 1)]
+                )
 
     finally:
         with Finally("I drop table"):
