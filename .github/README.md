@@ -63,18 +63,18 @@ Table of which suites rely on what docker images.
 | ldap | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || osixia/openldap:1.4.0 |
 || zookeeper:3.6.2 |
-| lightweight_delete | registry.gitlab.com/altinity-public/container-images/benchmark/multiarch:22.8 |
+| lightweight_delete | altinityinfra/clickhouse-regression-multiarch-ontime:1.0 |
 || minio/mc:RELEASE.2022-06-11T21-10-36Z |
 || minio/minio:RELEASE.2022-07-17T15-43-14Z |
 || zookeeper:3.6.2 |
 | map_type | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || zookeeper:3.6.2 |
-| ontime_benchmark | registry.gitlab.com/altinity-public/container-images/benchmark/multiarch:22.8 |
+| ontime_benchmark | altinityinfra/clickhouse-regression-multiarch-ontime:1.0 |
 || registry.gitlab.com/altinity-public/container-images/s3-tools:2.0 |
 || minio/mc:RELEASE.2022-06-11T21-10-36Z |
 || minio/minio:RELEASE.2022-06-11T19-55-32Z |
 || zookeeper:3.6.2 |
-| parquet | registry.gitlab.com/altinity-public/container-images/test/clickhouse-intergration-test-pyarrow:4.0 |
+| parquet | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || registry.gitlab.com/altinity-public/container-images/s3-tools:2.0 |
 || minio/mc:RELEASE.2022-06-11T21-10-36Z |
 || minio/minio:RELEASE.2022-07-17T15-43-14Z |
@@ -93,7 +93,7 @@ Table of which suites rely on what docker images.
 || zookeeper:3.6.2 |
 | selects | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || zookeeper:3.6.2 |
-| ssl_server | registry.gitlab.com/altinity-public/container-images/test/clickhouse-intergration-test-pyarrow:4.0 |
+| ssl_server | altinityinfra/clickhouse-regression-multiarch:1.0|
 || clickhouse/clickhouse-server:22.8.12.45 |
 || zookeeper:3.6.2 |
 | tiered_storage | altinityinfra/clickhouse-regression-multiarch:1.0 |
