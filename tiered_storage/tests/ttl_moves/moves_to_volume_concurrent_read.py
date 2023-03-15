@@ -110,7 +110,7 @@ def scenario(self, cluster, node="clickhouse1"):
 
                             for task in tasks:
                                 task.result(timeout=60)
-                    
+
                     for retry in retries(timeout=60):
                         with retry:
                             with When("I then again get used disks for the table"):
