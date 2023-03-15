@@ -3,8 +3,7 @@ version: '2.3'
 services:
   clickhouse:
     build:
-      context: .
-      dockerfile: Dockerfile
+      image: altinityinfra/clickhouse-regression-multiarch:1.0
     init: true
     expose:
       - "9000"
