@@ -36,7 +36,7 @@ Table of which suites rely on what docker images.
 || zookeeper:3.6.2 |
 | base_58 | clickhouse/clickhouse-integration-test:28741 |
 || zookeeper:3.6.2 |
-| clickhouse/functional | registry.gitlab.com/altinity-public/container-images/test/clickhouse-functional-test:1.0 |
+| clickhouse/functional | altinityinfra/clickhouse-functional-test:1.0 |
 || bitnami/zookeeper:3.7.1-debian-11-r90 |
 | clickhouse_keeper | altinityinfra/clickhouse-regression-multiarch:1.0 |
 || zookeeper:3.7.0 |
@@ -56,7 +56,7 @@ Table of which suites rely on what docker images.
 || confluentinc/cp-kafka:5.2.0 |
 || zookeeper:3.4.12 |
 | kerberos | altinityinfra/clickhouse-regression-multiarch:1.0 |
-|| registry.gitlab.com/altinity-public/container-images/docker-krb5-server:2.0 |
+|| altinityinfra/docker-krb5-server:1.0 |
 || zookeeper:3.6.2 |
 | key_value | clickhouse/clickhouse-integration-test:28741 |
 || zookeeper:3.6.2 |
@@ -75,7 +75,6 @@ Table of which suites rely on what docker images.
 || minio/minio:RELEASE.2022-06-11T19-55-32Z |
 || zookeeper:3.6.2 |
 | parquet | altinityinfra/clickhouse-regression-multiarch:1.0 |
-|| registry.gitlab.com/altinity-public/container-images/s3-tools:2.0 |
 || minio/mc:RELEASE.2022-06-11T21-10-36Z |
 || minio/minio:RELEASE.2022-07-17T15-43-14Z |
 || mysql:5.7.30 |
@@ -87,7 +86,6 @@ Table of which suites rely on what docker images.
 || mysql:5.7.30 |
 || zookeeper:3.6.2 |
 | s3 | altinityinfra/clickhouse-regression-multiarch:1.0 |
-|| registry.gitlab.com/altinity-public/container-images/s3-tools:2.0 |
 || minio/mc:RELEASE.2022-06-11T21-10-36Z |
 || minio/minio:RELEASE.2022-06-11T19-55-32Z |
 || zookeeper:3.6.2 |
