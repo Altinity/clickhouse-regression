@@ -40,15 +40,23 @@ example_mode_aes_128_ecb_datatype_UUID_key_16_iv_None = r"""'FF9161B222B4A674812
 
 example_mode_aes_128_ecb_datatype_Date_key_16_iv_None = r"""'1E4FBE33752D96D147E890C29A409BFE'"""
 
-example_mode_aes_128_ecb_datatype_DateTime_key_16_iv_None = r"""'384F3D97B78D52C73CD06C0E1B6DE399'"""
+example_mode_aes_128_ecb_datatype_DateTime_key_16_iv_None = r"""'A4846052D03B512BC1A218B23EF22B03'"""
 
-example_mode_aes_128_ecb_datatype_DateTime64_key_16_iv_None = r"""'C7F50A2D0175F3ED280AD42FF01FF5F2'"""
+example_mode_aes_128_ecb_datatype_DateTime64_key_16_iv_None = r"""'E45943591DD169CB63C159C06007A4B4'"""
 
 example_mode_aes_128_ecb_datatype_LowCardinality_key_16_iv_None = r"""'7C51909F95C1E9B886A3487CD3EBED69'"""
 
-example_mode_aes_128_ecb_datatype_Array_key_16_iv_None = r"""'D9152D05CFA9E162983A5A2E883109B4'"""
+example_mode_aes_128_ecb_datatype_LowCardinalityFixedString_key_16_iv_None = r"""'2320D8B0C3FF2AF0C808CE333688FEE4'"""
 
 example_mode_aes_128_ecb_datatype_NULL_key_16_iv_None = r"""'\\N'"""
+
+example_mode_aes_128_ecb_datatype_NullableString_key_16_iv_None = r"""'7C51909F95C1E9B886A3487CD3EBED69'"""
+
+example_mode_aes_128_ecb_datatype_NullableStringNull_key_16_iv_None = r"""'\\N'"""
+
+example_mode_aes_128_ecb_datatype_NullableFixedString_key_16_iv_None = r"""'2320D8B0C3FF2AF0C808CE333688FEE4'"""
+
+example_mode_aes_128_ecb_datatype_NullableFixedStringNull_key_16_iv_None = r"""'\\N'"""
 
 example_mode_aes_128_ecb_datatype_IPv4_key_16_iv_None = r"""'4F32782638C1F33C6A7202CA83F0C12C'"""
 
@@ -100,15 +108,23 @@ example_mode_aes_128_ecb_datatype_UUID_key_24_iv_None = r"""'6FD5580CC0B329922B5
 
 example_mode_aes_128_ecb_datatype_Date_key_24_iv_None = r"""'B0ADFA31B83C5B33B277097C33B06CB4'"""
 
-example_mode_aes_128_ecb_datatype_DateTime_key_24_iv_None = r"""'0632CF6416213B4153D247F4A85EAB19'"""
+example_mode_aes_128_ecb_datatype_DateTime_key_24_iv_None = r"""'A8FCB1270F5C0E65EB6117125C900F5D'"""
 
-example_mode_aes_128_ecb_datatype_DateTime64_key_24_iv_None = r"""'3D1049375E6EA3599E7AC2C753B1AA7F'"""
+example_mode_aes_128_ecb_datatype_DateTime64_key_24_iv_None = r"""'CC6C1DB8F220BF71B8825BD9ADC069FF'"""
 
 example_mode_aes_128_ecb_datatype_LowCardinality_key_24_iv_None = r"""'697175286BC73A26C572DBD9480738F3'"""
 
-example_mode_aes_128_ecb_datatype_Array_key_24_iv_None = r"""'129253539B09D45C2147884BB2B866BD'"""
+example_mode_aes_128_ecb_datatype_LowCardinalityFixedString_key_24_iv_None = r"""'824777897B48FB42AE19EBF2835AE5BA'"""
 
 example_mode_aes_128_ecb_datatype_NULL_key_24_iv_None = r"""'\\N'"""
+
+example_mode_aes_128_ecb_datatype_NullableString_key_24_iv_None = r"""'697175286BC73A26C572DBD9480738F3'"""
+
+example_mode_aes_128_ecb_datatype_NullableStringNull_key_24_iv_None = r"""'\\N'"""
+
+example_mode_aes_128_ecb_datatype_NullableFixedString_key_24_iv_None = r"""'824777897B48FB42AE19EBF2835AE5BA'"""
+
+example_mode_aes_128_ecb_datatype_NullableFixedStringNull_key_24_iv_None = r"""'\\N'"""
 
 example_mode_aes_128_ecb_datatype_IPv4_key_24_iv_None = r"""'B0D8302DB6F6B772E883A9353CDC28F0'"""
 
@@ -160,15 +176,23 @@ example_mode_aes_192_ecb_datatype_UUID_key_24_iv_None = r"""'9FDB738E78D0D2F774C
 
 example_mode_aes_192_ecb_datatype_Date_key_24_iv_None = r"""'2CDD4685168FA3E2A7FA2092E86F44D4'"""
 
-example_mode_aes_192_ecb_datatype_DateTime_key_24_iv_None = r"""'A4BEE097872E44FAD94D6707D6643DF5'"""
+example_mode_aes_192_ecb_datatype_DateTime_key_24_iv_None = r"""'A39E79F7191BB025E2D664B9BD83BEC9'"""
 
-example_mode_aes_192_ecb_datatype_DateTime64_key_24_iv_None = r"""'1798B23C09F783623943560DF142E0F3'"""
+example_mode_aes_192_ecb_datatype_DateTime64_key_24_iv_None = r"""'147A056CFA1EF4174F88DC52793CAD16'"""
 
 example_mode_aes_192_ecb_datatype_LowCardinality_key_24_iv_None = r"""'1AE38A541D466EDFED572EE839B0907F'"""
 
-example_mode_aes_192_ecb_datatype_Array_key_24_iv_None = r"""'7C0B9021CAF2CBBB06DBF589740DCC65'"""
+example_mode_aes_192_ecb_datatype_LowCardinalityFixedString_key_24_iv_None = r"""'145EF1DA49622900B742743B4114C3F8'"""
 
 example_mode_aes_192_ecb_datatype_NULL_key_24_iv_None = r"""'\\N'"""
+
+example_mode_aes_192_ecb_datatype_NullableString_key_24_iv_None = r"""'1AE38A541D466EDFED572EE839B0907F'"""
+
+example_mode_aes_192_ecb_datatype_NullableStringNull_key_24_iv_None = r"""'\\N'"""
+
+example_mode_aes_192_ecb_datatype_NullableFixedString_key_24_iv_None = r"""'145EF1DA49622900B742743B4114C3F8'"""
+
+example_mode_aes_192_ecb_datatype_NullableFixedStringNull_key_24_iv_None = r"""'\\N'"""
 
 example_mode_aes_192_ecb_datatype_IPv4_key_24_iv_None = r"""'B20465C932A0719BA04E2F76371510D8'"""
 
@@ -220,15 +244,23 @@ example_mode_aes_192_ecb_datatype_UUID_key_32_iv_None = r"""'6DDADFA4AD0FEA6DD4A
 
 example_mode_aes_192_ecb_datatype_Date_key_32_iv_None = r"""'D2212BB509C49D9DCBE970F86D34C4BE'"""
 
-example_mode_aes_192_ecb_datatype_DateTime_key_32_iv_None = r"""'C3AB19DCEFE1F61019484A2589D69037'"""
+example_mode_aes_192_ecb_datatype_DateTime_key_32_iv_None = r"""'473396E05614FABD3CDAC92836093EB0'"""
 
-example_mode_aes_192_ecb_datatype_DateTime64_key_32_iv_None = r"""'FB427597072B72E5C3D1D65247DB6A8C'"""
+example_mode_aes_192_ecb_datatype_DateTime64_key_32_iv_None = r"""'ECFC93E8F1783777D6FD59C7E369F221'"""
 
 example_mode_aes_192_ecb_datatype_LowCardinality_key_32_iv_None = r"""'851106E40808E28682DAC1AD840A7E92'"""
 
-example_mode_aes_192_ecb_datatype_Array_key_32_iv_None = r"""'D0FE4D4B34CFA03960FA609F1AA18D79'"""
+example_mode_aes_192_ecb_datatype_LowCardinalityFixedString_key_32_iv_None = r"""'24268978B72821002456FF2204B0F9B9'"""
 
 example_mode_aes_192_ecb_datatype_NULL_key_32_iv_None = r"""'\\N'"""
+
+example_mode_aes_192_ecb_datatype_NullableString_key_32_iv_None = r"""'851106E40808E28682DAC1AD840A7E92'"""
+
+example_mode_aes_192_ecb_datatype_NullableStringNull_key_32_iv_None = r"""'\\N'"""
+
+example_mode_aes_192_ecb_datatype_NullableFixedString_key_32_iv_None = r"""'24268978B72821002456FF2204B0F9B9'"""
+
+example_mode_aes_192_ecb_datatype_NullableFixedStringNull_key_32_iv_None = r"""'\\N'"""
 
 example_mode_aes_192_ecb_datatype_IPv4_key_32_iv_None = r"""'F07B737C70748F1ACDF5DBB874B4D78B'"""
 
@@ -280,15 +312,23 @@ example_mode_aes_256_ecb_datatype_UUID_key_32_iv_None = r"""'6A36D74ACB38B95FA77
 
 example_mode_aes_256_ecb_datatype_Date_key_32_iv_None = r"""'F1CFA361A9B08FC101F3A4707A3E04D2'"""
 
-example_mode_aes_256_ecb_datatype_DateTime_key_32_iv_None = r"""'D58178485CD1AE1C30F68383307B8BC5'"""
+example_mode_aes_256_ecb_datatype_DateTime_key_32_iv_None = r"""'B1D436B8BDD356FB941D48032962D061'"""
 
-example_mode_aes_256_ecb_datatype_DateTime64_key_32_iv_None = r"""'A19B65BCB740B2AF4D421CE1DEC43608'"""
+example_mode_aes_256_ecb_datatype_DateTime64_key_32_iv_None = r"""'CEDD023304C674D9AACFF10F93BCFC5D'"""
 
 example_mode_aes_256_ecb_datatype_LowCardinality_key_32_iv_None = r"""'C91184ED1E67F0CDED89B097D5D3B130'"""
 
-example_mode_aes_256_ecb_datatype_Array_key_32_iv_None = r"""'C4071E4FD44F004347EA9932326B7038'"""
+example_mode_aes_256_ecb_datatype_LowCardinalityFixedString_key_32_iv_None = r"""'BB44E0A5A23B06C6F78D05CF12E4A304'"""
 
 example_mode_aes_256_ecb_datatype_NULL_key_32_iv_None = r"""'\\N'"""
+
+example_mode_aes_256_ecb_datatype_NullableString_key_32_iv_None = r"""'C91184ED1E67F0CDED89B097D5D3B130'"""
+
+example_mode_aes_256_ecb_datatype_NullableStringNull_key_32_iv_None = r"""'\\N'"""
+
+example_mode_aes_256_ecb_datatype_NullableFixedString_key_32_iv_None = r"""'BB44E0A5A23B06C6F78D05CF12E4A304'"""
+
+example_mode_aes_256_ecb_datatype_NullableFixedStringNull_key_32_iv_None = r"""'\\N'"""
 
 example_mode_aes_256_ecb_datatype_IPv4_key_32_iv_None = r"""'6C7950041CB4041D4D8036FCD22E3B06'"""
 
@@ -340,15 +380,23 @@ example_mode_aes_256_ecb_datatype_UUID_key_64_iv_None = r"""'65F2B1003C30A2E7148
 
 example_mode_aes_256_ecb_datatype_Date_key_64_iv_None = r"""'D72724C85F90712153FC49FB33432644'"""
 
-example_mode_aes_256_ecb_datatype_DateTime_key_64_iv_None = r"""'B734143D37365E5C3325E0396BABC2AB'"""
+example_mode_aes_256_ecb_datatype_DateTime_key_64_iv_None = r"""'59DC0EDF91EFA8156ABF2BF0BF8336D6'"""
 
-example_mode_aes_256_ecb_datatype_DateTime64_key_64_iv_None = r"""'78DDC273BE606E8F546538FC02508360'"""
+example_mode_aes_256_ecb_datatype_DateTime64_key_64_iv_None = r"""'CAFECE712418F40DE6ECB55AFD220769'"""
 
 example_mode_aes_256_ecb_datatype_LowCardinality_key_64_iv_None = r"""'7492B9A2D0E86DAF1DBCAEDBAD9E3D7E'"""
 
-example_mode_aes_256_ecb_datatype_Array_key_64_iv_None = r"""'592C364BE5AEBE911096DEB1F6C75AB9'"""
+example_mode_aes_256_ecb_datatype_LowCardinalityFixedString_key_64_iv_None = r"""'F2FACC4703F559D74555D10CA4850F40'"""
 
 example_mode_aes_256_ecb_datatype_NULL_key_64_iv_None = r"""'\\N'"""
+
+example_mode_aes_256_ecb_datatype_NullableString_key_64_iv_None = r"""'7492B9A2D0E86DAF1DBCAEDBAD9E3D7E'"""
+
+example_mode_aes_256_ecb_datatype_NullableStringNull_key_64_iv_None = r"""'\\N'"""
+
+example_mode_aes_256_ecb_datatype_NullableFixedString_key_64_iv_None = r"""'F2FACC4703F559D74555D10CA4850F40'"""
+
+example_mode_aes_256_ecb_datatype_NullableFixedStringNull_key_64_iv_None = r"""'\\N'"""
 
 example_mode_aes_256_ecb_datatype_IPv4_key_64_iv_None = r"""'F5401B3B979784C3FF4C86DD726872F9'"""
 
@@ -400,15 +448,23 @@ example_mode_aes_128_cbc_datatype_UUID_key_16_iv_None = r"""'FF9161B222B4A674812
 
 example_mode_aes_128_cbc_datatype_Date_key_16_iv_None = r"""'1E4FBE33752D96D147E890C29A409BFE'"""
 
-example_mode_aes_128_cbc_datatype_DateTime_key_16_iv_None = r"""'384F3D97B78D52C73CD06C0E1B6DE399'"""
+example_mode_aes_128_cbc_datatype_DateTime_key_16_iv_None = r"""'A4846052D03B512BC1A218B23EF22B03'"""
 
-example_mode_aes_128_cbc_datatype_DateTime64_key_16_iv_None = r"""'C7F50A2D0175F3ED280AD42FF01FF5F2'"""
+example_mode_aes_128_cbc_datatype_DateTime64_key_16_iv_None = r"""'E45943591DD169CB63C159C06007A4B4'"""
 
 example_mode_aes_128_cbc_datatype_LowCardinality_key_16_iv_None = r"""'7C51909F95C1E9B886A3487CD3EBED69'"""
 
-example_mode_aes_128_cbc_datatype_Array_key_16_iv_None = r"""'D9152D05CFA9E162983A5A2E883109B4'"""
+example_mode_aes_128_cbc_datatype_LowCardinalityFixedString_key_16_iv_None = r"""'2320D8B0C3FF2AF0C808CE333688FEE4'"""
 
 example_mode_aes_128_cbc_datatype_NULL_key_16_iv_None = r"""'\\N'"""
+
+example_mode_aes_128_cbc_datatype_NullableString_key_16_iv_None = r"""'7C51909F95C1E9B886A3487CD3EBED69'"""
+
+example_mode_aes_128_cbc_datatype_NullableStringNull_key_16_iv_None = r"""'\\N'"""
+
+example_mode_aes_128_cbc_datatype_NullableFixedString_key_16_iv_None = r"""'2320D8B0C3FF2AF0C808CE333688FEE4'"""
+
+example_mode_aes_128_cbc_datatype_NullableFixedStringNull_key_16_iv_None = r"""'\\N'"""
 
 example_mode_aes_128_cbc_datatype_IPv4_key_16_iv_None = r"""'4F32782638C1F33C6A7202CA83F0C12C'"""
 
@@ -460,15 +516,23 @@ example_mode_aes_192_cbc_datatype_UUID_key_24_iv_None = r"""'9FDB738E78D0D2F774C
 
 example_mode_aes_192_cbc_datatype_Date_key_24_iv_None = r"""'2CDD4685168FA3E2A7FA2092E86F44D4'"""
 
-example_mode_aes_192_cbc_datatype_DateTime_key_24_iv_None = r"""'A4BEE097872E44FAD94D6707D6643DF5'"""
+example_mode_aes_192_cbc_datatype_DateTime_key_24_iv_None = r"""'A39E79F7191BB025E2D664B9BD83BEC9'"""
 
-example_mode_aes_192_cbc_datatype_DateTime64_key_24_iv_None = r"""'1798B23C09F783623943560DF142E0F3'"""
+example_mode_aes_192_cbc_datatype_DateTime64_key_24_iv_None = r"""'147A056CFA1EF4174F88DC52793CAD16'"""
 
 example_mode_aes_192_cbc_datatype_LowCardinality_key_24_iv_None = r"""'1AE38A541D466EDFED572EE839B0907F'"""
 
-example_mode_aes_192_cbc_datatype_Array_key_24_iv_None = r"""'7C0B9021CAF2CBBB06DBF589740DCC65'"""
+example_mode_aes_192_cbc_datatype_LowCardinalityFixedString_key_24_iv_None = r"""'145EF1DA49622900B742743B4114C3F8'"""
 
 example_mode_aes_192_cbc_datatype_NULL_key_24_iv_None = r"""'\\N'"""
+
+example_mode_aes_192_cbc_datatype_NullableString_key_24_iv_None = r"""'1AE38A541D466EDFED572EE839B0907F'"""
+
+example_mode_aes_192_cbc_datatype_NullableStringNull_key_24_iv_None = r"""'\\N'"""
+
+example_mode_aes_192_cbc_datatype_NullableFixedString_key_24_iv_None = r"""'145EF1DA49622900B742743B4114C3F8'"""
+
+example_mode_aes_192_cbc_datatype_NullableFixedStringNull_key_24_iv_None = r"""'\\N'"""
 
 example_mode_aes_192_cbc_datatype_IPv4_key_24_iv_None = r"""'B20465C932A0719BA04E2F76371510D8'"""
 
@@ -520,15 +584,23 @@ example_mode_aes_256_cbc_datatype_UUID_key_32_iv_None = r"""'6A36D74ACB38B95FA77
 
 example_mode_aes_256_cbc_datatype_Date_key_32_iv_None = r"""'F1CFA361A9B08FC101F3A4707A3E04D2'"""
 
-example_mode_aes_256_cbc_datatype_DateTime_key_32_iv_None = r"""'D58178485CD1AE1C30F68383307B8BC5'"""
+example_mode_aes_256_cbc_datatype_DateTime_key_32_iv_None = r"""'B1D436B8BDD356FB941D48032962D061'"""
 
-example_mode_aes_256_cbc_datatype_DateTime64_key_32_iv_None = r"""'A19B65BCB740B2AF4D421CE1DEC43608'"""
+example_mode_aes_256_cbc_datatype_DateTime64_key_32_iv_None = r"""'CEDD023304C674D9AACFF10F93BCFC5D'"""
 
 example_mode_aes_256_cbc_datatype_LowCardinality_key_32_iv_None = r"""'C91184ED1E67F0CDED89B097D5D3B130'"""
 
-example_mode_aes_256_cbc_datatype_Array_key_32_iv_None = r"""'C4071E4FD44F004347EA9932326B7038'"""
+example_mode_aes_256_cbc_datatype_LowCardinalityFixedString_key_32_iv_None = r"""'BB44E0A5A23B06C6F78D05CF12E4A304'"""
 
 example_mode_aes_256_cbc_datatype_NULL_key_32_iv_None = r"""'\\N'"""
+
+example_mode_aes_256_cbc_datatype_NullableString_key_32_iv_None = r"""'C91184ED1E67F0CDED89B097D5D3B130'"""
+
+example_mode_aes_256_cbc_datatype_NullableStringNull_key_32_iv_None = r"""'\\N'"""
+
+example_mode_aes_256_cbc_datatype_NullableFixedString_key_32_iv_None = r"""'BB44E0A5A23B06C6F78D05CF12E4A304'"""
+
+example_mode_aes_256_cbc_datatype_NullableFixedStringNull_key_32_iv_None = r"""'\\N'"""
 
 example_mode_aes_256_cbc_datatype_IPv4_key_32_iv_None = r"""'6C7950041CB4041D4D8036FCD22E3B06'"""
 
@@ -580,15 +652,23 @@ example_mode_aes_128_cbc_datatype_UUID_key_16_iv_16 = r"""'1D909C15BB882E89AD68B
 
 example_mode_aes_128_cbc_datatype_Date_key_16_iv_16 = r"""'24A4F8CE8A9FAE48A0AFEB8A6203EFEA'"""
 
-example_mode_aes_128_cbc_datatype_DateTime_key_16_iv_16 = r"""'0DD5554819E3995B1B6B00362AEE9424'"""
+example_mode_aes_128_cbc_datatype_DateTime_key_16_iv_16 = r"""'3A9F69F7F7C37CEB4AF0F29EE6685A97'"""
 
-example_mode_aes_128_cbc_datatype_DateTime64_key_16_iv_16 = r"""'0E55319903957C9D1FDA4FB65C3871CB'"""
+example_mode_aes_128_cbc_datatype_DateTime64_key_16_iv_16 = r"""'272A68F4C24725EA938B7837FDC76C97'"""
 
 example_mode_aes_128_cbc_datatype_LowCardinality_key_16_iv_16 = r"""'D017D171B3865D6EA347E14167261F41'"""
 
-example_mode_aes_128_cbc_datatype_Array_key_16_iv_16 = r"""'D53C82A5D13256B88DF41C1C1D924E40'"""
+example_mode_aes_128_cbc_datatype_LowCardinalityFixedString_key_16_iv_16 = r"""'ECE42AF0000893B1D1A43993506376A4'"""
 
 example_mode_aes_128_cbc_datatype_NULL_key_16_iv_16 = r"""'\\N'"""
+
+example_mode_aes_128_cbc_datatype_NullableString_key_16_iv_16 = r"""'D017D171B3865D6EA347E14167261F41'"""
+
+example_mode_aes_128_cbc_datatype_NullableStringNull_key_16_iv_16 = r"""'\\N'"""
+
+example_mode_aes_128_cbc_datatype_NullableFixedString_key_16_iv_16 = r"""'ECE42AF0000893B1D1A43993506376A4'"""
+
+example_mode_aes_128_cbc_datatype_NullableFixedStringNull_key_16_iv_16 = r"""'\\N'"""
 
 example_mode_aes_128_cbc_datatype_IPv4_key_16_iv_16 = r"""'C0D81AAB3134EAB5B1F190958C6A29F9'"""
 
@@ -640,15 +720,23 @@ example_mode_aes_128_cbc_datatype_UUID_key_24_iv_24 = r"""'ADF1CF6C8AF83CBD4BB33
 
 example_mode_aes_128_cbc_datatype_Date_key_24_iv_24 = r"""'3127F80211A13ED02CED473BF2BFC28B'"""
 
-example_mode_aes_128_cbc_datatype_DateTime_key_24_iv_24 = r"""'A6B567CCFCE4F693BD6575D2D4DF498B'"""
+example_mode_aes_128_cbc_datatype_DateTime_key_24_iv_24 = r"""'A2E552FF611A43D9AFA360F4083B0356'"""
 
-example_mode_aes_128_cbc_datatype_DateTime64_key_24_iv_24 = r"""'410F1A2A9E39722A1D0B549C3ADF9526'"""
+example_mode_aes_128_cbc_datatype_DateTime64_key_24_iv_24 = r"""'2F28B44CE5C19EA7D87C157884F39E00'"""
 
 example_mode_aes_128_cbc_datatype_LowCardinality_key_24_iv_24 = r"""'73C9874744984892250CCCEC8541D690'"""
 
-example_mode_aes_128_cbc_datatype_Array_key_24_iv_24 = r"""'14A8202D2CACBE584BE9313C72F0478D'"""
+example_mode_aes_128_cbc_datatype_LowCardinalityFixedString_key_24_iv_24 = r"""'C55AC3DA9276DBF066AC408BFCF011DD'"""
 
 example_mode_aes_128_cbc_datatype_NULL_key_24_iv_24 = r"""'\\N'"""
+
+example_mode_aes_128_cbc_datatype_NullableString_key_24_iv_24 = r"""'73C9874744984892250CCCEC8541D690'"""
+
+example_mode_aes_128_cbc_datatype_NullableStringNull_key_24_iv_24 = r"""'\\N'"""
+
+example_mode_aes_128_cbc_datatype_NullableFixedString_key_24_iv_24 = r"""'C55AC3DA9276DBF066AC408BFCF011DD'"""
+
+example_mode_aes_128_cbc_datatype_NullableFixedStringNull_key_24_iv_24 = r"""'\\N'"""
 
 example_mode_aes_128_cbc_datatype_IPv4_key_24_iv_24 = r"""'9C554B2C04C5C9EAC0E7E36F1BD5CB80'"""
 
@@ -700,15 +788,23 @@ example_mode_aes_192_cbc_datatype_UUID_key_24_iv_16 = r"""'D7B2ABC08F67823F61C3E
 
 example_mode_aes_192_cbc_datatype_Date_key_24_iv_16 = r"""'734BBE526E56B280E90E53DDEA7DB69B'"""
 
-example_mode_aes_192_cbc_datatype_DateTime_key_24_iv_16 = r"""'9B9BE7CC20F75DA3F39F688DE3A1ADAA'"""
+example_mode_aes_192_cbc_datatype_DateTime_key_24_iv_16 = r"""'BCC04E396B9907B592ECF04A76A994C8'"""
 
-example_mode_aes_192_cbc_datatype_DateTime64_key_24_iv_16 = r"""'554FCAAF985378A561F7C6ED91E20C89'"""
+example_mode_aes_192_cbc_datatype_DateTime64_key_24_iv_16 = r"""'F13E20C2E293AEB2C824BC4A0166C6FE'"""
 
 example_mode_aes_192_cbc_datatype_LowCardinality_key_24_iv_16 = r"""'A3DB45D129A5C9FDB5ED66E782B28BD2'"""
 
-example_mode_aes_192_cbc_datatype_Array_key_24_iv_16 = r"""'D85AF1078F110329896EFC462340171E'"""
+example_mode_aes_192_cbc_datatype_LowCardinalityFixedString_key_24_iv_16 = r"""'0A8E8BA80EB490740B91937D4A5FF84C'"""
 
 example_mode_aes_192_cbc_datatype_NULL_key_24_iv_16 = r"""'\\N'"""
+
+example_mode_aes_192_cbc_datatype_NullableString_key_24_iv_16 = r"""'A3DB45D129A5C9FDB5ED66E782B28BD2'"""
+
+example_mode_aes_192_cbc_datatype_NullableStringNull_key_24_iv_16 = r"""'\\N'"""
+
+example_mode_aes_192_cbc_datatype_NullableFixedString_key_24_iv_16 = r"""'0A8E8BA80EB490740B91937D4A5FF84C'"""
+
+example_mode_aes_192_cbc_datatype_NullableFixedStringNull_key_24_iv_16 = r"""'\\N'"""
 
 example_mode_aes_192_cbc_datatype_IPv4_key_24_iv_16 = r"""'6AF45078B1E924B6C107D4C0236EA937'"""
 
@@ -760,15 +856,23 @@ example_mode_aes_192_cbc_datatype_UUID_key_32_iv_32 = r"""'B4A04107B9945309227C0
 
 example_mode_aes_192_cbc_datatype_Date_key_32_iv_32 = r"""'60253CED16ECAB1D34A5CC131E55B769'"""
 
-example_mode_aes_192_cbc_datatype_DateTime_key_32_iv_32 = r"""'99C6EE6DF7A06D02FE4D60018784F129'"""
+example_mode_aes_192_cbc_datatype_DateTime_key_32_iv_32 = r"""'957322A5027F6CB9DB6D20904A046904'"""
 
-example_mode_aes_192_cbc_datatype_DateTime64_key_32_iv_32 = r"""'C0329F9CB5CFDDDEA74275618A099FAE'"""
+example_mode_aes_192_cbc_datatype_DateTime64_key_32_iv_32 = r"""'984455D55494A55CFA082A8E1F30FBE3'"""
 
 example_mode_aes_192_cbc_datatype_LowCardinality_key_32_iv_32 = r"""'508551DA505F6538F90DC607423CFAD4'"""
 
-example_mode_aes_192_cbc_datatype_Array_key_32_iv_32 = r"""'53161975B2A33AAFB8379B39B255D45A'"""
+example_mode_aes_192_cbc_datatype_LowCardinalityFixedString_key_32_iv_32 = r"""'723C4EB7399AE6F019109651B376A111'"""
 
 example_mode_aes_192_cbc_datatype_NULL_key_32_iv_32 = r"""'\\N'"""
+
+example_mode_aes_192_cbc_datatype_NullableString_key_32_iv_32 = r"""'508551DA505F6538F90DC607423CFAD4'"""
+
+example_mode_aes_192_cbc_datatype_NullableStringNull_key_32_iv_32 = r"""'\\N'"""
+
+example_mode_aes_192_cbc_datatype_NullableFixedString_key_32_iv_32 = r"""'723C4EB7399AE6F019109651B376A111'"""
+
+example_mode_aes_192_cbc_datatype_NullableFixedStringNull_key_32_iv_32 = r"""'\\N'"""
 
 example_mode_aes_192_cbc_datatype_IPv4_key_32_iv_32 = r"""'2B2ACE9C2914F3F2F9E206D25CD29429'"""
 
@@ -820,15 +924,23 @@ example_mode_aes_256_cbc_datatype_UUID_key_32_iv_16 = r"""'88BA86B14A468DC92084B
 
 example_mode_aes_256_cbc_datatype_Date_key_32_iv_16 = r"""'C67C84B1C6BF4527A7E730499FF39C86'"""
 
-example_mode_aes_256_cbc_datatype_DateTime_key_32_iv_16 = r"""'7FDC1B0797A5F3C04CDA82729A1EA4AA'"""
+example_mode_aes_256_cbc_datatype_DateTime_key_32_iv_16 = r"""'3BE0E9F31AD94A9EBAB357FDAD7E9263'"""
 
-example_mode_aes_256_cbc_datatype_DateTime64_key_32_iv_16 = r"""'B1B7401FB2B65BCB3448C1BE179F6AA6'"""
+example_mode_aes_256_cbc_datatype_DateTime64_key_32_iv_16 = r"""'D1FB4D3AAB1D8C0C7289AA77F0C6F09D'"""
 
 example_mode_aes_256_cbc_datatype_LowCardinality_key_32_iv_16 = r"""'5E22454D9AC4F1A47B04E2FD98A76140'"""
 
-example_mode_aes_256_cbc_datatype_Array_key_32_iv_16 = r"""'6BB1E8429CC612B0AA74282B81D4FE8A'"""
+example_mode_aes_256_cbc_datatype_LowCardinalityFixedString_key_32_iv_16 = r"""'4A3A13D0807C29D4FA9CAEE6B9A67E7D'"""
 
 example_mode_aes_256_cbc_datatype_NULL_key_32_iv_16 = r"""'\\N'"""
+
+example_mode_aes_256_cbc_datatype_NullableString_key_32_iv_16 = r"""'5E22454D9AC4F1A47B04E2FD98A76140'"""
+
+example_mode_aes_256_cbc_datatype_NullableStringNull_key_32_iv_16 = r"""'\\N'"""
+
+example_mode_aes_256_cbc_datatype_NullableFixedString_key_32_iv_16 = r"""'4A3A13D0807C29D4FA9CAEE6B9A67E7D'"""
+
+example_mode_aes_256_cbc_datatype_NullableFixedStringNull_key_32_iv_16 = r"""'\\N'"""
 
 example_mode_aes_256_cbc_datatype_IPv4_key_32_iv_16 = r"""'51364C8DC6882CA1F03CF7FB45117EEF'"""
 
@@ -880,15 +992,23 @@ example_mode_aes_256_cbc_datatype_UUID_key_64_iv_64 = r"""'99588BF38D9D6A2ABBEBD
 
 example_mode_aes_256_cbc_datatype_Date_key_64_iv_64 = r"""'ABEEA4FD2E771A3936EB591F674E4CDA'"""
 
-example_mode_aes_256_cbc_datatype_DateTime_key_64_iv_64 = r"""'C7EC851BCD2FBA03E58AC9F027E06444'"""
+example_mode_aes_256_cbc_datatype_DateTime_key_64_iv_64 = r"""'8451A4F1D146B56266CFDA212AC7B2C9'"""
 
-example_mode_aes_256_cbc_datatype_DateTime64_key_64_iv_64 = r"""'53D42045D02E68F0D565EB8E093C83B8'"""
+example_mode_aes_256_cbc_datatype_DateTime64_key_64_iv_64 = r"""'B5885EAFBA89FBACD13C3C09D7033D2D'"""
 
 example_mode_aes_256_cbc_datatype_LowCardinality_key_64_iv_64 = r"""'4CE9C9AFDC1E1E1EF2D1F4C141CE1874'"""
 
-example_mode_aes_256_cbc_datatype_Array_key_64_iv_64 = r"""'5A3063DCD98C7C59B41068F26DA0CC52'"""
+example_mode_aes_256_cbc_datatype_LowCardinalityFixedString_key_64_iv_64 = r"""'5547B945A6810130CFC689C22530FA26'"""
 
 example_mode_aes_256_cbc_datatype_NULL_key_64_iv_64 = r"""'\\N'"""
+
+example_mode_aes_256_cbc_datatype_NullableString_key_64_iv_64 = r"""'4CE9C9AFDC1E1E1EF2D1F4C141CE1874'"""
+
+example_mode_aes_256_cbc_datatype_NullableStringNull_key_64_iv_64 = r"""'\\N'"""
+
+example_mode_aes_256_cbc_datatype_NullableFixedString_key_64_iv_64 = r"""'5547B945A6810130CFC689C22530FA26'"""
+
+example_mode_aes_256_cbc_datatype_NullableFixedStringNull_key_64_iv_64 = r"""'\\N'"""
 
 example_mode_aes_256_cbc_datatype_IPv4_key_64_iv_64 = r"""'1F12AE92E01133B2BB3F4F5AC6041FC9'"""
 
@@ -940,15 +1060,23 @@ example_mode_aes_128_cfb128_datatype_UUID_key_16_iv_None = r"""'F7CE72E9F2A80D0B
 
 example_mode_aes_128_cfb128_datatype_Date_key_16_iv_None = r"""'4698'"""
 
-example_mode_aes_128_cfb128_datatype_DateTime_key_16_iv_None = r"""'5E0FCDEB'"""
+example_mode_aes_128_cfb128_datatype_DateTime_key_16_iv_None = r"""'7E33CDEB'"""
 
-example_mode_aes_128_cfb128_datatype_DateTime64_key_16_iv_None = r"""'3B6ECCD7996DFD6A'"""
+example_mode_aes_128_cfb128_datatype_DateTime64_key_16_iv_None = r"""'3B51BAD7996DFD6A'"""
 
 example_mode_aes_128_cfb128_datatype_LowCardinality_key_16_iv_None = r"""'21'"""
 
-example_mode_aes_128_cfb128_datatype_Array_key_16_iv_None = r"""'11DD'"""
+example_mode_aes_128_cfb128_datatype_LowCardinalityFixedString_key_16_iv_None = r"""'21DF'"""
 
 example_mode_aes_128_cfb128_datatype_NULL_key_16_iv_None = r"""'\\N'"""
+
+example_mode_aes_128_cfb128_datatype_NullableString_key_16_iv_None = r"""'21'"""
+
+example_mode_aes_128_cfb128_datatype_NullableStringNull_key_16_iv_None = r"""'\\N'"""
+
+example_mode_aes_128_cfb128_datatype_NullableFixedString_key_16_iv_None = r"""'21DF'"""
+
+example_mode_aes_128_cfb128_datatype_NullableFixedStringNull_key_16_iv_None = r"""'\\N'"""
 
 example_mode_aes_128_cfb128_datatype_IPv4_key_16_iv_None = r"""'3D5D201E'"""
 
@@ -1000,15 +1128,23 @@ example_mode_aes_192_cfb128_datatype_UUID_key_24_iv_None = r"""'E0A6AAC139F851FF
 
 example_mode_aes_192_cfb128_datatype_Date_key_24_iv_None = r"""'51F0'"""
 
-example_mode_aes_192_cfb128_datatype_DateTime_key_24_iv_None = r"""'496715C3'"""
+example_mode_aes_192_cfb128_datatype_DateTime_key_24_iv_None = r"""'695B15C3'"""
 
-example_mode_aes_192_cfb128_datatype_DateTime64_key_24_iv_None = r"""'2C0614FF523DA19E'"""
+example_mode_aes_192_cfb128_datatype_DateTime64_key_24_iv_None = r"""'2C3962FF523DA19E'"""
 
 example_mode_aes_192_cfb128_datatype_LowCardinality_key_24_iv_None = r"""'36'"""
 
-example_mode_aes_192_cfb128_datatype_Array_key_24_iv_None = r"""'06B5'"""
+example_mode_aes_192_cfb128_datatype_LowCardinalityFixedString_key_24_iv_None = r"""'36B7'"""
 
 example_mode_aes_192_cfb128_datatype_NULL_key_24_iv_None = r"""'\\N'"""
+
+example_mode_aes_192_cfb128_datatype_NullableString_key_24_iv_None = r"""'36'"""
+
+example_mode_aes_192_cfb128_datatype_NullableStringNull_key_24_iv_None = r"""'\\N'"""
+
+example_mode_aes_192_cfb128_datatype_NullableFixedString_key_24_iv_None = r"""'36B7'"""
+
+example_mode_aes_192_cfb128_datatype_NullableFixedStringNull_key_24_iv_None = r"""'\\N'"""
 
 example_mode_aes_192_cfb128_datatype_IPv4_key_24_iv_None = r"""'2A35F836'"""
 
@@ -1060,15 +1196,23 @@ example_mode_aes_256_cfb128_datatype_UUID_key_32_iv_None = r"""'579F7CC2C32FAF6C
 
 example_mode_aes_256_cfb128_datatype_Date_key_32_iv_None = r"""'E6C9'"""
 
-example_mode_aes_256_cfb128_datatype_DateTime_key_32_iv_None = r"""'FE5EC3C0'"""
+example_mode_aes_256_cfb128_datatype_DateTime_key_32_iv_None = r"""'DE62C3C0'"""
 
-example_mode_aes_256_cfb128_datatype_DateTime64_key_32_iv_None = r"""'9B3FC2FCA8EA5F0D'"""
+example_mode_aes_256_cfb128_datatype_DateTime64_key_32_iv_None = r"""'9B00B4FCA8EA5F0D'"""
 
 example_mode_aes_256_cfb128_datatype_LowCardinality_key_32_iv_None = r"""'81'"""
 
-example_mode_aes_256_cfb128_datatype_Array_key_32_iv_None = r"""'B18C'"""
+example_mode_aes_256_cfb128_datatype_LowCardinalityFixedString_key_32_iv_None = r"""'818E'"""
 
 example_mode_aes_256_cfb128_datatype_NULL_key_32_iv_None = r"""'\\N'"""
+
+example_mode_aes_256_cfb128_datatype_NullableString_key_32_iv_None = r"""'81'"""
+
+example_mode_aes_256_cfb128_datatype_NullableStringNull_key_32_iv_None = r"""'\\N'"""
+
+example_mode_aes_256_cfb128_datatype_NullableFixedString_key_32_iv_None = r"""'818E'"""
+
+example_mode_aes_256_cfb128_datatype_NullableFixedStringNull_key_32_iv_None = r"""'\\N'"""
 
 example_mode_aes_256_cfb128_datatype_IPv4_key_32_iv_None = r"""'9D0C2E35'"""
 
@@ -1120,15 +1264,23 @@ example_mode_aes_128_cfb128_datatype_UUID_key_16_iv_16 = r"""'D5991AD8D9C20F3949
 
 example_mode_aes_128_cfb128_datatype_Date_key_16_iv_16 = r"""'64CF'"""
 
-example_mode_aes_128_cfb128_datatype_DateTime_key_16_iv_16 = r"""'7C58A5DA'"""
+example_mode_aes_128_cfb128_datatype_DateTime_key_16_iv_16 = r"""'5C64A5DA'"""
 
-example_mode_aes_128_cfb128_datatype_DateTime64_key_16_iv_16 = r"""'1939A4E6B207FF58'"""
+example_mode_aes_128_cfb128_datatype_DateTime64_key_16_iv_16 = r"""'1906D2E6B207FF58'"""
 
 example_mode_aes_128_cfb128_datatype_LowCardinality_key_16_iv_16 = r"""'03'"""
 
-example_mode_aes_128_cfb128_datatype_Array_key_16_iv_16 = r"""'338A'"""
+example_mode_aes_128_cfb128_datatype_LowCardinalityFixedString_key_16_iv_16 = r"""'0388'"""
 
 example_mode_aes_128_cfb128_datatype_NULL_key_16_iv_16 = r"""'\\N'"""
+
+example_mode_aes_128_cfb128_datatype_NullableString_key_16_iv_16 = r"""'03'"""
+
+example_mode_aes_128_cfb128_datatype_NullableStringNull_key_16_iv_16 = r"""'\\N'"""
+
+example_mode_aes_128_cfb128_datatype_NullableFixedString_key_16_iv_16 = r"""'0388'"""
+
+example_mode_aes_128_cfb128_datatype_NullableFixedStringNull_key_16_iv_16 = r"""'\\N'"""
 
 example_mode_aes_128_cfb128_datatype_IPv4_key_16_iv_16 = r"""'1F0A482F'"""
 
@@ -1180,15 +1332,23 @@ example_mode_aes_128_cfb128_datatype_UUID_key_24_iv_24 = r"""'BC66B1A9ED747DD69E
 
 example_mode_aes_128_cfb128_datatype_Date_key_24_iv_24 = r"""'0D30'"""
 
-example_mode_aes_128_cfb128_datatype_DateTime_key_24_iv_24 = r"""'15A70EAB'"""
+example_mode_aes_128_cfb128_datatype_DateTime_key_24_iv_24 = r"""'359B0EAB'"""
 
-example_mode_aes_128_cfb128_datatype_DateTime64_key_24_iv_24 = r"""'70C60F9786B18DB7'"""
+example_mode_aes_128_cfb128_datatype_DateTime64_key_24_iv_24 = r"""'70F9799786B18DB7'"""
 
 example_mode_aes_128_cfb128_datatype_LowCardinality_key_24_iv_24 = r"""'6A'"""
 
-example_mode_aes_128_cfb128_datatype_Array_key_24_iv_24 = r"""'5A75'"""
+example_mode_aes_128_cfb128_datatype_LowCardinalityFixedString_key_24_iv_24 = r"""'6A77'"""
 
 example_mode_aes_128_cfb128_datatype_NULL_key_24_iv_24 = r"""'\\N'"""
+
+example_mode_aes_128_cfb128_datatype_NullableString_key_24_iv_24 = r"""'6A'"""
+
+example_mode_aes_128_cfb128_datatype_NullableStringNull_key_24_iv_24 = r"""'\\N'"""
+
+example_mode_aes_128_cfb128_datatype_NullableFixedString_key_24_iv_24 = r"""'6A77'"""
+
+example_mode_aes_128_cfb128_datatype_NullableFixedStringNull_key_24_iv_24 = r"""'\\N'"""
 
 example_mode_aes_128_cfb128_datatype_IPv4_key_24_iv_24 = r"""'76F5E35E'"""
 
@@ -1240,15 +1400,23 @@ example_mode_aes_192_cfb128_datatype_UUID_key_24_iv_16 = r"""'8FD654CEB3D487D024
 
 example_mode_aes_192_cfb128_datatype_Date_key_24_iv_16 = r"""'3E80'"""
 
-example_mode_aes_192_cfb128_datatype_DateTime_key_24_iv_16 = r"""'2617EBCC'"""
+example_mode_aes_192_cfb128_datatype_DateTime_key_24_iv_16 = r"""'062BEBCC'"""
 
-example_mode_aes_192_cfb128_datatype_DateTime64_key_24_iv_16 = r"""'4376EAF0D81177B1'"""
+example_mode_aes_192_cfb128_datatype_DateTime64_key_24_iv_16 = r"""'43499CF0D81177B1'"""
 
 example_mode_aes_192_cfb128_datatype_LowCardinality_key_24_iv_16 = r"""'59'"""
 
-example_mode_aes_192_cfb128_datatype_Array_key_24_iv_16 = r"""'69C5'"""
+example_mode_aes_192_cfb128_datatype_LowCardinalityFixedString_key_24_iv_16 = r"""'59C7'"""
 
 example_mode_aes_192_cfb128_datatype_NULL_key_24_iv_16 = r"""'\\N'"""
+
+example_mode_aes_192_cfb128_datatype_NullableString_key_24_iv_16 = r"""'59'"""
+
+example_mode_aes_192_cfb128_datatype_NullableStringNull_key_24_iv_16 = r"""'\\N'"""
+
+example_mode_aes_192_cfb128_datatype_NullableFixedString_key_24_iv_16 = r"""'59C7'"""
+
+example_mode_aes_192_cfb128_datatype_NullableFixedStringNull_key_24_iv_16 = r"""'\\N'"""
 
 example_mode_aes_192_cfb128_datatype_IPv4_key_24_iv_16 = r"""'45450639'"""
 
@@ -1300,15 +1468,23 @@ example_mode_aes_192_cfb128_datatype_UUID_key_32_iv_32 = r"""'D6B13D28AB6FC0A5E2
 
 example_mode_aes_192_cfb128_datatype_Date_key_32_iv_32 = r"""'67E7'"""
 
-example_mode_aes_192_cfb128_datatype_DateTime_key_32_iv_32 = r"""'7F70822A'"""
+example_mode_aes_192_cfb128_datatype_DateTime_key_32_iv_32 = r"""'5F4C822A'"""
 
-example_mode_aes_192_cfb128_datatype_DateTime64_key_32_iv_32 = r"""'1A118316C0AA30C4'"""
+example_mode_aes_192_cfb128_datatype_DateTime64_key_32_iv_32 = r"""'1A2EF516C0AA30C4'"""
 
 example_mode_aes_192_cfb128_datatype_LowCardinality_key_32_iv_32 = r"""'00'"""
 
-example_mode_aes_192_cfb128_datatype_Array_key_32_iv_32 = r"""'30A2'"""
+example_mode_aes_192_cfb128_datatype_LowCardinalityFixedString_key_32_iv_32 = r"""'00A0'"""
 
 example_mode_aes_192_cfb128_datatype_NULL_key_32_iv_32 = r"""'\\N'"""
+
+example_mode_aes_192_cfb128_datatype_NullableString_key_32_iv_32 = r"""'00'"""
+
+example_mode_aes_192_cfb128_datatype_NullableStringNull_key_32_iv_32 = r"""'\\N'"""
+
+example_mode_aes_192_cfb128_datatype_NullableFixedString_key_32_iv_32 = r"""'00A0'"""
+
+example_mode_aes_192_cfb128_datatype_NullableFixedStringNull_key_32_iv_32 = r"""'\\N'"""
 
 example_mode_aes_192_cfb128_datatype_IPv4_key_32_iv_32 = r"""'1C226FDF'"""
 
@@ -1360,15 +1536,23 @@ example_mode_aes_256_cfb128_datatype_UUID_key_32_iv_16 = r"""'8E493B4B381AB4E9D0
 
 example_mode_aes_256_cfb128_datatype_Date_key_32_iv_16 = r"""'3F1F'"""
 
-example_mode_aes_256_cfb128_datatype_DateTime_key_32_iv_16 = r"""'27888449'"""
+example_mode_aes_256_cfb128_datatype_DateTime_key_32_iv_16 = r"""'07B48449'"""
 
-example_mode_aes_256_cfb128_datatype_DateTime64_key_32_iv_16 = r"""'42E9857553DF4488'"""
+example_mode_aes_256_cfb128_datatype_DateTime64_key_32_iv_16 = r"""'42D6F37553DF4488'"""
 
 example_mode_aes_256_cfb128_datatype_LowCardinality_key_32_iv_16 = r"""'58'"""
 
-example_mode_aes_256_cfb128_datatype_Array_key_32_iv_16 = r"""'685A'"""
+example_mode_aes_256_cfb128_datatype_LowCardinalityFixedString_key_32_iv_16 = r"""'5858'"""
 
 example_mode_aes_256_cfb128_datatype_NULL_key_32_iv_16 = r"""'\\N'"""
+
+example_mode_aes_256_cfb128_datatype_NullableString_key_32_iv_16 = r"""'58'"""
+
+example_mode_aes_256_cfb128_datatype_NullableStringNull_key_32_iv_16 = r"""'\\N'"""
+
+example_mode_aes_256_cfb128_datatype_NullableFixedString_key_32_iv_16 = r"""'5858'"""
+
+example_mode_aes_256_cfb128_datatype_NullableFixedStringNull_key_32_iv_16 = r"""'\\N'"""
 
 example_mode_aes_256_cfb128_datatype_IPv4_key_32_iv_16 = r"""'44DA69BC'"""
 
@@ -1420,15 +1604,23 @@ example_mode_aes_256_cfb128_datatype_UUID_key_64_iv_64 = r"""'34FF7C00BFBDD51C11
 
 example_mode_aes_256_cfb128_datatype_Date_key_64_iv_64 = r"""'85A9'"""
 
-example_mode_aes_256_cfb128_datatype_DateTime_key_64_iv_64 = r"""'9D3EC302'"""
+example_mode_aes_256_cfb128_datatype_DateTime_key_64_iv_64 = r"""'BD02C302'"""
 
-example_mode_aes_256_cfb128_datatype_DateTime64_key_64_iv_64 = r"""'F85FC23ED478257D'"""
+example_mode_aes_256_cfb128_datatype_DateTime64_key_64_iv_64 = r"""'F860B43ED478257D'"""
 
 example_mode_aes_256_cfb128_datatype_LowCardinality_key_64_iv_64 = r"""'E2'"""
 
-example_mode_aes_256_cfb128_datatype_Array_key_64_iv_64 = r"""'D2EC'"""
+example_mode_aes_256_cfb128_datatype_LowCardinalityFixedString_key_64_iv_64 = r"""'E2EE'"""
 
 example_mode_aes_256_cfb128_datatype_NULL_key_64_iv_64 = r"""'\\N'"""
+
+example_mode_aes_256_cfb128_datatype_NullableString_key_64_iv_64 = r"""'E2'"""
+
+example_mode_aes_256_cfb128_datatype_NullableStringNull_key_64_iv_64 = r"""'\\N'"""
+
+example_mode_aes_256_cfb128_datatype_NullableFixedString_key_64_iv_64 = r"""'E2EE'"""
+
+example_mode_aes_256_cfb128_datatype_NullableFixedStringNull_key_64_iv_64 = r"""'\\N'"""
 
 example_mode_aes_256_cfb128_datatype_IPv4_key_64_iv_64 = r"""'FE6C2EF7'"""
 
@@ -1480,15 +1672,23 @@ example_mode_aes_128_ofb_datatype_UUID_key_16_iv_None = r"""'F7CE72E9F2A80D0BBD1
 
 example_mode_aes_128_ofb_datatype_Date_key_16_iv_None = r"""'4698'"""
 
-example_mode_aes_128_ofb_datatype_DateTime_key_16_iv_None = r"""'5E0FCDEB'"""
+example_mode_aes_128_ofb_datatype_DateTime_key_16_iv_None = r"""'7E33CDEB'"""
 
-example_mode_aes_128_ofb_datatype_DateTime64_key_16_iv_None = r"""'3B6ECCD7996DFD6A'"""
+example_mode_aes_128_ofb_datatype_DateTime64_key_16_iv_None = r"""'3B51BAD7996DFD6A'"""
 
 example_mode_aes_128_ofb_datatype_LowCardinality_key_16_iv_None = r"""'21'"""
 
-example_mode_aes_128_ofb_datatype_Array_key_16_iv_None = r"""'11DD'"""
+example_mode_aes_128_ofb_datatype_LowCardinalityFixedString_key_16_iv_None = r"""'21DF'"""
 
 example_mode_aes_128_ofb_datatype_NULL_key_16_iv_None = r"""'\\N'"""
+
+example_mode_aes_128_ofb_datatype_NullableString_key_16_iv_None = r"""'21'"""
+
+example_mode_aes_128_ofb_datatype_NullableStringNull_key_16_iv_None = r"""'\\N'"""
+
+example_mode_aes_128_ofb_datatype_NullableFixedString_key_16_iv_None = r"""'21DF'"""
+
+example_mode_aes_128_ofb_datatype_NullableFixedStringNull_key_16_iv_None = r"""'\\N'"""
 
 example_mode_aes_128_ofb_datatype_IPv4_key_16_iv_None = r"""'3D5D201E'"""
 
@@ -1540,15 +1740,23 @@ example_mode_aes_192_ofb_datatype_UUID_key_24_iv_None = r"""'E0A6AAC139F851FF8C1
 
 example_mode_aes_192_ofb_datatype_Date_key_24_iv_None = r"""'51F0'"""
 
-example_mode_aes_192_ofb_datatype_DateTime_key_24_iv_None = r"""'496715C3'"""
+example_mode_aes_192_ofb_datatype_DateTime_key_24_iv_None = r"""'695B15C3'"""
 
-example_mode_aes_192_ofb_datatype_DateTime64_key_24_iv_None = r"""'2C0614FF523DA19E'"""
+example_mode_aes_192_ofb_datatype_DateTime64_key_24_iv_None = r"""'2C3962FF523DA19E'"""
 
 example_mode_aes_192_ofb_datatype_LowCardinality_key_24_iv_None = r"""'36'"""
 
-example_mode_aes_192_ofb_datatype_Array_key_24_iv_None = r"""'06B5'"""
+example_mode_aes_192_ofb_datatype_LowCardinalityFixedString_key_24_iv_None = r"""'36B7'"""
 
 example_mode_aes_192_ofb_datatype_NULL_key_24_iv_None = r"""'\\N'"""
+
+example_mode_aes_192_ofb_datatype_NullableString_key_24_iv_None = r"""'36'"""
+
+example_mode_aes_192_ofb_datatype_NullableStringNull_key_24_iv_None = r"""'\\N'"""
+
+example_mode_aes_192_ofb_datatype_NullableFixedString_key_24_iv_None = r"""'36B7'"""
+
+example_mode_aes_192_ofb_datatype_NullableFixedStringNull_key_24_iv_None = r"""'\\N'"""
 
 example_mode_aes_192_ofb_datatype_IPv4_key_24_iv_None = r"""'2A35F836'"""
 
@@ -1600,15 +1808,23 @@ example_mode_aes_256_ofb_datatype_UUID_key_32_iv_None = r"""'579F7CC2C32FAF6CDBA
 
 example_mode_aes_256_ofb_datatype_Date_key_32_iv_None = r"""'E6C9'"""
 
-example_mode_aes_256_ofb_datatype_DateTime_key_32_iv_None = r"""'FE5EC3C0'"""
+example_mode_aes_256_ofb_datatype_DateTime_key_32_iv_None = r"""'DE62C3C0'"""
 
-example_mode_aes_256_ofb_datatype_DateTime64_key_32_iv_None = r"""'9B3FC2FCA8EA5F0D'"""
+example_mode_aes_256_ofb_datatype_DateTime64_key_32_iv_None = r"""'9B00B4FCA8EA5F0D'"""
 
 example_mode_aes_256_ofb_datatype_LowCardinality_key_32_iv_None = r"""'81'"""
 
-example_mode_aes_256_ofb_datatype_Array_key_32_iv_None = r"""'B18C'"""
+example_mode_aes_256_ofb_datatype_LowCardinalityFixedString_key_32_iv_None = r"""'818E'"""
 
 example_mode_aes_256_ofb_datatype_NULL_key_32_iv_None = r"""'\\N'"""
+
+example_mode_aes_256_ofb_datatype_NullableString_key_32_iv_None = r"""'81'"""
+
+example_mode_aes_256_ofb_datatype_NullableStringNull_key_32_iv_None = r"""'\\N'"""
+
+example_mode_aes_256_ofb_datatype_NullableFixedString_key_32_iv_None = r"""'818E'"""
+
+example_mode_aes_256_ofb_datatype_NullableFixedStringNull_key_32_iv_None = r"""'\\N'"""
 
 example_mode_aes_256_ofb_datatype_IPv4_key_32_iv_None = r"""'9D0C2E35'"""
 
@@ -1660,15 +1876,23 @@ example_mode_aes_128_ofb_datatype_UUID_key_16_iv_16 = r"""'D5991AD8D9C20F3949E2B
 
 example_mode_aes_128_ofb_datatype_Date_key_16_iv_16 = r"""'64CF'"""
 
-example_mode_aes_128_ofb_datatype_DateTime_key_16_iv_16 = r"""'7C58A5DA'"""
+example_mode_aes_128_ofb_datatype_DateTime_key_16_iv_16 = r"""'5C64A5DA'"""
 
-example_mode_aes_128_ofb_datatype_DateTime64_key_16_iv_16 = r"""'1939A4E6B207FF58'"""
+example_mode_aes_128_ofb_datatype_DateTime64_key_16_iv_16 = r"""'1906D2E6B207FF58'"""
 
 example_mode_aes_128_ofb_datatype_LowCardinality_key_16_iv_16 = r"""'03'"""
 
-example_mode_aes_128_ofb_datatype_Array_key_16_iv_16 = r"""'338A'"""
+example_mode_aes_128_ofb_datatype_LowCardinalityFixedString_key_16_iv_16 = r"""'0388'"""
 
 example_mode_aes_128_ofb_datatype_NULL_key_16_iv_16 = r"""'\\N'"""
+
+example_mode_aes_128_ofb_datatype_NullableString_key_16_iv_16 = r"""'03'"""
+
+example_mode_aes_128_ofb_datatype_NullableStringNull_key_16_iv_16 = r"""'\\N'"""
+
+example_mode_aes_128_ofb_datatype_NullableFixedString_key_16_iv_16 = r"""'0388'"""
+
+example_mode_aes_128_ofb_datatype_NullableFixedStringNull_key_16_iv_16 = r"""'\\N'"""
 
 example_mode_aes_128_ofb_datatype_IPv4_key_16_iv_16 = r"""'1F0A482F'"""
 
@@ -1720,15 +1944,23 @@ example_mode_aes_128_ofb_datatype_UUID_key_24_iv_24 = r"""'BC66B1A9ED747DD69EC07
 
 example_mode_aes_128_ofb_datatype_Date_key_24_iv_24 = r"""'0D30'"""
 
-example_mode_aes_128_ofb_datatype_DateTime_key_24_iv_24 = r"""'15A70EAB'"""
+example_mode_aes_128_ofb_datatype_DateTime_key_24_iv_24 = r"""'359B0EAB'"""
 
-example_mode_aes_128_ofb_datatype_DateTime64_key_24_iv_24 = r"""'70C60F9786B18DB7'"""
+example_mode_aes_128_ofb_datatype_DateTime64_key_24_iv_24 = r"""'70F9799786B18DB7'"""
 
 example_mode_aes_128_ofb_datatype_LowCardinality_key_24_iv_24 = r"""'6A'"""
 
-example_mode_aes_128_ofb_datatype_Array_key_24_iv_24 = r"""'5A75'"""
+example_mode_aes_128_ofb_datatype_LowCardinalityFixedString_key_24_iv_24 = r"""'6A77'"""
 
 example_mode_aes_128_ofb_datatype_NULL_key_24_iv_24 = r"""'\\N'"""
+
+example_mode_aes_128_ofb_datatype_NullableString_key_24_iv_24 = r"""'6A'"""
+
+example_mode_aes_128_ofb_datatype_NullableStringNull_key_24_iv_24 = r"""'\\N'"""
+
+example_mode_aes_128_ofb_datatype_NullableFixedString_key_24_iv_24 = r"""'6A77'"""
+
+example_mode_aes_128_ofb_datatype_NullableFixedStringNull_key_24_iv_24 = r"""'\\N'"""
 
 example_mode_aes_128_ofb_datatype_IPv4_key_24_iv_24 = r"""'76F5E35E'"""
 
@@ -1780,15 +2012,23 @@ example_mode_aes_192_ofb_datatype_UUID_key_24_iv_16 = r"""'8FD654CEB3D487D0249DD
 
 example_mode_aes_192_ofb_datatype_Date_key_24_iv_16 = r"""'3E80'"""
 
-example_mode_aes_192_ofb_datatype_DateTime_key_24_iv_16 = r"""'2617EBCC'"""
+example_mode_aes_192_ofb_datatype_DateTime_key_24_iv_16 = r"""'062BEBCC'"""
 
-example_mode_aes_192_ofb_datatype_DateTime64_key_24_iv_16 = r"""'4376EAF0D81177B1'"""
+example_mode_aes_192_ofb_datatype_DateTime64_key_24_iv_16 = r"""'43499CF0D81177B1'"""
 
 example_mode_aes_192_ofb_datatype_LowCardinality_key_24_iv_16 = r"""'59'"""
 
-example_mode_aes_192_ofb_datatype_Array_key_24_iv_16 = r"""'69C5'"""
+example_mode_aes_192_ofb_datatype_LowCardinalityFixedString_key_24_iv_16 = r"""'59C7'"""
 
 example_mode_aes_192_ofb_datatype_NULL_key_24_iv_16 = r"""'\\N'"""
+
+example_mode_aes_192_ofb_datatype_NullableString_key_24_iv_16 = r"""'59'"""
+
+example_mode_aes_192_ofb_datatype_NullableStringNull_key_24_iv_16 = r"""'\\N'"""
+
+example_mode_aes_192_ofb_datatype_NullableFixedString_key_24_iv_16 = r"""'59C7'"""
+
+example_mode_aes_192_ofb_datatype_NullableFixedStringNull_key_24_iv_16 = r"""'\\N'"""
 
 example_mode_aes_192_ofb_datatype_IPv4_key_24_iv_16 = r"""'45450639'"""
 
@@ -1840,15 +2080,23 @@ example_mode_aes_192_ofb_datatype_UUID_key_32_iv_32 = r"""'D6B13D28AB6FC0A5E2F0B
 
 example_mode_aes_192_ofb_datatype_Date_key_32_iv_32 = r"""'67E7'"""
 
-example_mode_aes_192_ofb_datatype_DateTime_key_32_iv_32 = r"""'7F70822A'"""
+example_mode_aes_192_ofb_datatype_DateTime_key_32_iv_32 = r"""'5F4C822A'"""
 
-example_mode_aes_192_ofb_datatype_DateTime64_key_32_iv_32 = r"""'1A118316C0AA30C4'"""
+example_mode_aes_192_ofb_datatype_DateTime64_key_32_iv_32 = r"""'1A2EF516C0AA30C4'"""
 
 example_mode_aes_192_ofb_datatype_LowCardinality_key_32_iv_32 = r"""'00'"""
 
-example_mode_aes_192_ofb_datatype_Array_key_32_iv_32 = r"""'30A2'"""
+example_mode_aes_192_ofb_datatype_LowCardinalityFixedString_key_32_iv_32 = r"""'00A0'"""
 
 example_mode_aes_192_ofb_datatype_NULL_key_32_iv_32 = r"""'\\N'"""
+
+example_mode_aes_192_ofb_datatype_NullableString_key_32_iv_32 = r"""'00'"""
+
+example_mode_aes_192_ofb_datatype_NullableStringNull_key_32_iv_32 = r"""'\\N'"""
+
+example_mode_aes_192_ofb_datatype_NullableFixedString_key_32_iv_32 = r"""'00A0'"""
+
+example_mode_aes_192_ofb_datatype_NullableFixedStringNull_key_32_iv_32 = r"""'\\N'"""
 
 example_mode_aes_192_ofb_datatype_IPv4_key_32_iv_32 = r"""'1C226FDF'"""
 
@@ -1900,15 +2148,23 @@ example_mode_aes_256_ofb_datatype_UUID_key_32_iv_16 = r"""'8E493B4B381AB4E9D03B9
 
 example_mode_aes_256_ofb_datatype_Date_key_32_iv_16 = r"""'3F1F'"""
 
-example_mode_aes_256_ofb_datatype_DateTime_key_32_iv_16 = r"""'27888449'"""
+example_mode_aes_256_ofb_datatype_DateTime_key_32_iv_16 = r"""'07B48449'"""
 
-example_mode_aes_256_ofb_datatype_DateTime64_key_32_iv_16 = r"""'42E9857553DF4488'"""
+example_mode_aes_256_ofb_datatype_DateTime64_key_32_iv_16 = r"""'42D6F37553DF4488'"""
 
 example_mode_aes_256_ofb_datatype_LowCardinality_key_32_iv_16 = r"""'58'"""
 
-example_mode_aes_256_ofb_datatype_Array_key_32_iv_16 = r"""'685A'"""
+example_mode_aes_256_ofb_datatype_LowCardinalityFixedString_key_32_iv_16 = r"""'5858'"""
 
 example_mode_aes_256_ofb_datatype_NULL_key_32_iv_16 = r"""'\\N'"""
+
+example_mode_aes_256_ofb_datatype_NullableString_key_32_iv_16 = r"""'58'"""
+
+example_mode_aes_256_ofb_datatype_NullableStringNull_key_32_iv_16 = r"""'\\N'"""
+
+example_mode_aes_256_ofb_datatype_NullableFixedString_key_32_iv_16 = r"""'5858'"""
+
+example_mode_aes_256_ofb_datatype_NullableFixedStringNull_key_32_iv_16 = r"""'\\N'"""
 
 example_mode_aes_256_ofb_datatype_IPv4_key_32_iv_16 = r"""'44DA69BC'"""
 
@@ -1960,279 +2216,15 @@ example_mode_aes_256_ofb_datatype_UUID_key_64_iv_64 = r"""'34FF7C00BFBDD51C11F4E
 
 example_mode_aes_256_ofb_datatype_Date_key_64_iv_64 = r"""'85A9'"""
 
-example_mode_aes_256_ofb_datatype_DateTime_key_64_iv_64 = r"""'9D3EC302'"""
+example_mode_aes_256_ofb_datatype_DateTime_key_64_iv_64 = r"""'BD02C302'"""
 
-example_mode_aes_256_ofb_datatype_DateTime64_key_64_iv_64 = r"""'F85FC23ED478257D'"""
+example_mode_aes_256_ofb_datatype_DateTime64_key_64_iv_64 = r"""'F860B43ED478257D'"""
 
 example_mode_aes_256_ofb_datatype_LowCardinality_key_64_iv_64 = r"""'E2'"""
 
-example_mode_aes_256_ofb_datatype_Array_key_64_iv_64 = r"""'D2EC'"""
+example_mode_aes_256_ofb_datatype_LowCardinalityFixedString_key_64_iv_64 = r"""'E2EE'"""
 
 example_mode_aes_256_ofb_datatype_NULL_key_64_iv_64 = r"""'\\N'"""
-
-example_mode_aes_256_ofb_datatype_IPv4_key_64_iv_64 = r"""'FE6C2EF7'"""
-
-example_mode_aes_256_ofb_datatype_IPv6_key_64_iv_64 = r"""'F3EFC2E4BB79A0DEB12F3A90D97E8DD6'"""
-
-example_mode_aes_256_ofb_datatype_Enum8_key_64_iv_64 = r"""'D2'"""
-
-example_mode_aes_256_ofb_datatype_Enum16_key_64_iv_64 = r"""'D2EE'"""
-
-example_mode_aes_128_ecb_datatype_NullableString_key_16_iv_None = r"""'7C51909F95C1E9B886A3487CD3EBED69'"""
-
-example_mode_aes_128_ecb_datatype_NullableStringNull_key_16_iv_None = r"""'\\N'"""
-
-example_mode_aes_128_ecb_datatype_NullableFixedString_key_16_iv_None = r"""'2320D8B0C3FF2AF0C808CE333688FEE4'"""
-
-example_mode_aes_128_ecb_datatype_NullableFixedStringNull_key_16_iv_None = r"""'\\N'"""
-
-example_mode_aes_128_ecb_datatype_NullableString_key_24_iv_None = r"""'697175286BC73A26C572DBD9480738F3'"""
-
-example_mode_aes_128_ecb_datatype_NullableStringNull_key_24_iv_None = r"""'\\N'"""
-
-example_mode_aes_128_ecb_datatype_NullableFixedString_key_24_iv_None = r"""'824777897B48FB42AE19EBF2835AE5BA'"""
-
-example_mode_aes_128_ecb_datatype_NullableFixedStringNull_key_24_iv_None = r"""'\\N'"""
-
-example_mode_aes_192_ecb_datatype_NullableString_key_24_iv_None = r"""'1AE38A541D466EDFED572EE839B0907F'"""
-
-example_mode_aes_192_ecb_datatype_NullableStringNull_key_24_iv_None = r"""'\\N'"""
-
-example_mode_aes_192_ecb_datatype_NullableFixedString_key_24_iv_None = r"""'145EF1DA49622900B742743B4114C3F8'"""
-
-example_mode_aes_192_ecb_datatype_NullableFixedStringNull_key_24_iv_None = r"""'\\N'"""
-
-example_mode_aes_192_ecb_datatype_NullableString_key_32_iv_None = r"""'851106E40808E28682DAC1AD840A7E92'"""
-
-example_mode_aes_192_ecb_datatype_NullableStringNull_key_32_iv_None = r"""'\\N'"""
-
-example_mode_aes_192_ecb_datatype_NullableFixedString_key_32_iv_None = r"""'24268978B72821002456FF2204B0F9B9'"""
-
-example_mode_aes_192_ecb_datatype_NullableFixedStringNull_key_32_iv_None = r"""'\\N'"""
-
-example_mode_aes_256_ecb_datatype_NullableString_key_32_iv_None = r"""'C91184ED1E67F0CDED89B097D5D3B130'"""
-
-example_mode_aes_256_ecb_datatype_NullableStringNull_key_32_iv_None = r"""'\\N'"""
-
-example_mode_aes_256_ecb_datatype_NullableFixedString_key_32_iv_None = r"""'BB44E0A5A23B06C6F78D05CF12E4A304'"""
-
-example_mode_aes_256_ecb_datatype_NullableFixedStringNull_key_32_iv_None = r"""'\\N'"""
-
-example_mode_aes_256_ecb_datatype_NullableString_key_64_iv_None = r"""'7492B9A2D0E86DAF1DBCAEDBAD9E3D7E'"""
-
-example_mode_aes_256_ecb_datatype_NullableStringNull_key_64_iv_None = r"""'\\N'"""
-
-example_mode_aes_256_ecb_datatype_NullableFixedString_key_64_iv_None = r"""'F2FACC4703F559D74555D10CA4850F40'"""
-
-example_mode_aes_256_ecb_datatype_NullableFixedStringNull_key_64_iv_None = r"""'\\N'"""
-
-example_mode_aes_128_cbc_datatype_NullableString_key_16_iv_None = r"""'7C51909F95C1E9B886A3487CD3EBED69'"""
-
-example_mode_aes_128_cbc_datatype_NullableStringNull_key_16_iv_None = r"""'\\N'"""
-
-example_mode_aes_128_cbc_datatype_NullableFixedString_key_16_iv_None = r"""'2320D8B0C3FF2AF0C808CE333688FEE4'"""
-
-example_mode_aes_128_cbc_datatype_NullableFixedStringNull_key_16_iv_None = r"""'\\N'"""
-
-example_mode_aes_192_cbc_datatype_NullableString_key_24_iv_None = r"""'1AE38A541D466EDFED572EE839B0907F'"""
-
-example_mode_aes_192_cbc_datatype_NullableStringNull_key_24_iv_None = r"""'\\N'"""
-
-example_mode_aes_192_cbc_datatype_NullableFixedString_key_24_iv_None = r"""'145EF1DA49622900B742743B4114C3F8'"""
-
-example_mode_aes_192_cbc_datatype_NullableFixedStringNull_key_24_iv_None = r"""'\\N'"""
-
-example_mode_aes_256_cbc_datatype_NullableString_key_32_iv_None = r"""'C91184ED1E67F0CDED89B097D5D3B130'"""
-
-example_mode_aes_256_cbc_datatype_NullableStringNull_key_32_iv_None = r"""'\\N'"""
-
-example_mode_aes_256_cbc_datatype_NullableFixedString_key_32_iv_None = r"""'BB44E0A5A23B06C6F78D05CF12E4A304'"""
-
-example_mode_aes_256_cbc_datatype_NullableFixedStringNull_key_32_iv_None = r"""'\\N'"""
-
-example_mode_aes_128_cbc_datatype_NullableString_key_16_iv_16 = r"""'D017D171B3865D6EA347E14167261F41'"""
-
-example_mode_aes_128_cbc_datatype_NullableStringNull_key_16_iv_16 = r"""'\\N'"""
-
-example_mode_aes_128_cbc_datatype_NullableFixedString_key_16_iv_16 = r"""'ECE42AF0000893B1D1A43993506376A4'"""
-
-example_mode_aes_128_cbc_datatype_NullableFixedStringNull_key_16_iv_16 = r"""'\\N'"""
-
-example_mode_aes_128_cbc_datatype_NullableString_key_24_iv_24 = r"""'73C9874744984892250CCCEC8541D690'"""
-
-example_mode_aes_128_cbc_datatype_NullableStringNull_key_24_iv_24 = r"""'\\N'"""
-
-example_mode_aes_128_cbc_datatype_NullableFixedString_key_24_iv_24 = r"""'C55AC3DA9276DBF066AC408BFCF011DD'"""
-
-example_mode_aes_128_cbc_datatype_NullableFixedStringNull_key_24_iv_24 = r"""'\\N'"""
-
-example_mode_aes_192_cbc_datatype_NullableString_key_24_iv_16 = r"""'A3DB45D129A5C9FDB5ED66E782B28BD2'"""
-
-example_mode_aes_192_cbc_datatype_NullableStringNull_key_24_iv_16 = r"""'\\N'"""
-
-example_mode_aes_192_cbc_datatype_NullableFixedString_key_24_iv_16 = r"""'0A8E8BA80EB490740B91937D4A5FF84C'"""
-
-example_mode_aes_192_cbc_datatype_NullableFixedStringNull_key_24_iv_16 = r"""'\\N'"""
-
-example_mode_aes_192_cbc_datatype_NullableString_key_32_iv_32 = r"""'508551DA505F6538F90DC607423CFAD4'"""
-
-example_mode_aes_192_cbc_datatype_NullableStringNull_key_32_iv_32 = r"""'\\N'"""
-
-example_mode_aes_192_cbc_datatype_NullableFixedString_key_32_iv_32 = r"""'723C4EB7399AE6F019109651B376A111'"""
-
-example_mode_aes_192_cbc_datatype_NullableFixedStringNull_key_32_iv_32 = r"""'\\N'"""
-
-example_mode_aes_256_cbc_datatype_NullableString_key_32_iv_16 = r"""'5E22454D9AC4F1A47B04E2FD98A76140'"""
-
-example_mode_aes_256_cbc_datatype_NullableStringNull_key_32_iv_16 = r"""'\\N'"""
-
-example_mode_aes_256_cbc_datatype_NullableFixedString_key_32_iv_16 = r"""'4A3A13D0807C29D4FA9CAEE6B9A67E7D'"""
-
-example_mode_aes_256_cbc_datatype_NullableFixedStringNull_key_32_iv_16 = r"""'\\N'"""
-
-example_mode_aes_256_cbc_datatype_NullableString_key_64_iv_64 = r"""'4CE9C9AFDC1E1E1EF2D1F4C141CE1874'"""
-
-example_mode_aes_256_cbc_datatype_NullableStringNull_key_64_iv_64 = r"""'\\N'"""
-
-example_mode_aes_256_cbc_datatype_NullableFixedString_key_64_iv_64 = r"""'5547B945A6810130CFC689C22530FA26'"""
-
-example_mode_aes_256_cbc_datatype_NullableFixedStringNull_key_64_iv_64 = r"""'\\N'"""
-
-example_mode_aes_128_cfb128_datatype_NullableString_key_16_iv_None = r"""'21'"""
-
-example_mode_aes_128_cfb128_datatype_NullableStringNull_key_16_iv_None = r"""'\\N'"""
-
-example_mode_aes_128_cfb128_datatype_NullableFixedString_key_16_iv_None = r"""'21DF'"""
-
-example_mode_aes_128_cfb128_datatype_NullableFixedStringNull_key_16_iv_None = r"""'\\N'"""
-
-example_mode_aes_192_cfb128_datatype_NullableString_key_24_iv_None = r"""'36'"""
-
-example_mode_aes_192_cfb128_datatype_NullableStringNull_key_24_iv_None = r"""'\\N'"""
-
-example_mode_aes_192_cfb128_datatype_NullableFixedString_key_24_iv_None = r"""'36B7'"""
-
-example_mode_aes_192_cfb128_datatype_NullableFixedStringNull_key_24_iv_None = r"""'\\N'"""
-
-example_mode_aes_256_cfb128_datatype_NullableString_key_32_iv_None = r"""'81'"""
-
-example_mode_aes_256_cfb128_datatype_NullableStringNull_key_32_iv_None = r"""'\\N'"""
-
-example_mode_aes_256_cfb128_datatype_NullableFixedString_key_32_iv_None = r"""'818E'"""
-
-example_mode_aes_256_cfb128_datatype_NullableFixedStringNull_key_32_iv_None = r"""'\\N'"""
-
-example_mode_aes_128_cfb128_datatype_NullableString_key_16_iv_16 = r"""'03'"""
-
-example_mode_aes_128_cfb128_datatype_NullableStringNull_key_16_iv_16 = r"""'\\N'"""
-
-example_mode_aes_128_cfb128_datatype_NullableFixedString_key_16_iv_16 = r"""'0388'"""
-
-example_mode_aes_128_cfb128_datatype_NullableFixedStringNull_key_16_iv_16 = r"""'\\N'"""
-
-example_mode_aes_128_cfb128_datatype_NullableString_key_24_iv_24 = r"""'6A'"""
-
-example_mode_aes_128_cfb128_datatype_NullableStringNull_key_24_iv_24 = r"""'\\N'"""
-
-example_mode_aes_128_cfb128_datatype_NullableFixedString_key_24_iv_24 = r"""'6A77'"""
-
-example_mode_aes_128_cfb128_datatype_NullableFixedStringNull_key_24_iv_24 = r"""'\\N'"""
-
-example_mode_aes_192_cfb128_datatype_NullableString_key_24_iv_16 = r"""'59'"""
-
-example_mode_aes_192_cfb128_datatype_NullableStringNull_key_24_iv_16 = r"""'\\N'"""
-
-example_mode_aes_192_cfb128_datatype_NullableFixedString_key_24_iv_16 = r"""'59C7'"""
-
-example_mode_aes_192_cfb128_datatype_NullableFixedStringNull_key_24_iv_16 = r"""'\\N'"""
-
-example_mode_aes_192_cfb128_datatype_NullableString_key_32_iv_32 = r"""'00'"""
-
-example_mode_aes_192_cfb128_datatype_NullableStringNull_key_32_iv_32 = r"""'\\N'"""
-
-example_mode_aes_192_cfb128_datatype_NullableFixedString_key_32_iv_32 = r"""'00A0'"""
-
-example_mode_aes_192_cfb128_datatype_NullableFixedStringNull_key_32_iv_32 = r"""'\\N'"""
-
-example_mode_aes_256_cfb128_datatype_NullableString_key_32_iv_16 = r"""'58'"""
-
-example_mode_aes_256_cfb128_datatype_NullableStringNull_key_32_iv_16 = r"""'\\N'"""
-
-example_mode_aes_256_cfb128_datatype_NullableFixedString_key_32_iv_16 = r"""'5858'"""
-
-example_mode_aes_256_cfb128_datatype_NullableFixedStringNull_key_32_iv_16 = r"""'\\N'"""
-
-example_mode_aes_256_cfb128_datatype_NullableString_key_64_iv_64 = r"""'E2'"""
-
-example_mode_aes_256_cfb128_datatype_NullableStringNull_key_64_iv_64 = r"""'\\N'"""
-
-example_mode_aes_256_cfb128_datatype_NullableFixedString_key_64_iv_64 = r"""'E2EE'"""
-
-example_mode_aes_256_cfb128_datatype_NullableFixedStringNull_key_64_iv_64 = r"""'\\N'"""
-
-example_mode_aes_128_ofb_datatype_NullableString_key_16_iv_None = r"""'21'"""
-
-example_mode_aes_128_ofb_datatype_NullableStringNull_key_16_iv_None = r"""'\\N'"""
-
-example_mode_aes_128_ofb_datatype_NullableFixedString_key_16_iv_None = r"""'21DF'"""
-
-example_mode_aes_128_ofb_datatype_NullableFixedStringNull_key_16_iv_None = r"""'\\N'"""
-
-example_mode_aes_192_ofb_datatype_NullableString_key_24_iv_None = r"""'36'"""
-
-example_mode_aes_192_ofb_datatype_NullableStringNull_key_24_iv_None = r"""'\\N'"""
-
-example_mode_aes_192_ofb_datatype_NullableFixedString_key_24_iv_None = r"""'36B7'"""
-
-example_mode_aes_192_ofb_datatype_NullableFixedStringNull_key_24_iv_None = r"""'\\N'"""
-
-example_mode_aes_256_ofb_datatype_NullableString_key_32_iv_None = r"""'81'"""
-
-example_mode_aes_256_ofb_datatype_NullableStringNull_key_32_iv_None = r"""'\\N'"""
-
-example_mode_aes_256_ofb_datatype_NullableFixedString_key_32_iv_None = r"""'818E'"""
-
-example_mode_aes_256_ofb_datatype_NullableFixedStringNull_key_32_iv_None = r"""'\\N'"""
-
-example_mode_aes_128_ofb_datatype_NullableString_key_16_iv_16 = r"""'03'"""
-
-example_mode_aes_128_ofb_datatype_NullableStringNull_key_16_iv_16 = r"""'\\N'"""
-
-example_mode_aes_128_ofb_datatype_NullableFixedString_key_16_iv_16 = r"""'0388'"""
-
-example_mode_aes_128_ofb_datatype_NullableFixedStringNull_key_16_iv_16 = r"""'\\N'"""
-
-example_mode_aes_128_ofb_datatype_NullableString_key_24_iv_24 = r"""'6A'"""
-
-example_mode_aes_128_ofb_datatype_NullableStringNull_key_24_iv_24 = r"""'\\N'"""
-
-example_mode_aes_128_ofb_datatype_NullableFixedString_key_24_iv_24 = r"""'6A77'"""
-
-example_mode_aes_128_ofb_datatype_NullableFixedStringNull_key_24_iv_24 = r"""'\\N'"""
-
-example_mode_aes_192_ofb_datatype_NullableString_key_24_iv_16 = r"""'59'"""
-
-example_mode_aes_192_ofb_datatype_NullableStringNull_key_24_iv_16 = r"""'\\N'"""
-
-example_mode_aes_192_ofb_datatype_NullableFixedString_key_24_iv_16 = r"""'59C7'"""
-
-example_mode_aes_192_ofb_datatype_NullableFixedStringNull_key_24_iv_16 = r"""'\\N'"""
-
-example_mode_aes_192_ofb_datatype_NullableString_key_32_iv_32 = r"""'00'"""
-
-example_mode_aes_192_ofb_datatype_NullableStringNull_key_32_iv_32 = r"""'\\N'"""
-
-example_mode_aes_192_ofb_datatype_NullableFixedString_key_32_iv_32 = r"""'00A0'"""
-
-example_mode_aes_192_ofb_datatype_NullableFixedStringNull_key_32_iv_32 = r"""'\\N'"""
-
-example_mode_aes_256_ofb_datatype_NullableString_key_32_iv_16 = r"""'58'"""
-
-example_mode_aes_256_ofb_datatype_NullableStringNull_key_32_iv_16 = r"""'\\N'"""
-
-example_mode_aes_256_ofb_datatype_NullableFixedString_key_32_iv_16 = r"""'5858'"""
-
-example_mode_aes_256_ofb_datatype_NullableFixedStringNull_key_32_iv_16 = r"""'\\N'"""
 
 example_mode_aes_256_ofb_datatype_NullableString_key_64_iv_64 = r"""'E2'"""
 
@@ -2242,69 +2234,11 @@ example_mode_aes_256_ofb_datatype_NullableFixedString_key_64_iv_64 = r"""'E2EE'"
 
 example_mode_aes_256_ofb_datatype_NullableFixedStringNull_key_64_iv_64 = r"""'\\N'"""
 
-example_mode_aes_128_ecb_datatype_LowCardinalityFixedString_key_16_iv_None = r"""'2320D8B0C3FF2AF0C808CE333688FEE4'"""
+example_mode_aes_256_ofb_datatype_IPv4_key_64_iv_64 = r"""'FE6C2EF7'"""
 
-example_mode_aes_128_ecb_datatype_LowCardinalityFixedString_key_24_iv_None = r"""'824777897B48FB42AE19EBF2835AE5BA'"""
+example_mode_aes_256_ofb_datatype_IPv6_key_64_iv_64 = r"""'F3EFC2E4BB79A0DEB12F3A90D97E8DD6'"""
 
-example_mode_aes_192_ecb_datatype_LowCardinalityFixedString_key_24_iv_None = r"""'145EF1DA49622900B742743B4114C3F8'"""
+example_mode_aes_256_ofb_datatype_Enum8_key_64_iv_64 = r"""'D2'"""
 
-example_mode_aes_192_ecb_datatype_LowCardinalityFixedString_key_32_iv_None = r"""'24268978B72821002456FF2204B0F9B9'"""
-
-example_mode_aes_256_ecb_datatype_LowCardinalityFixedString_key_32_iv_None = r"""'BB44E0A5A23B06C6F78D05CF12E4A304'"""
-
-example_mode_aes_256_ecb_datatype_LowCardinalityFixedString_key_64_iv_None = r"""'F2FACC4703F559D74555D10CA4850F40'"""
-
-example_mode_aes_128_cbc_datatype_LowCardinalityFixedString_key_16_iv_None = r"""'2320D8B0C3FF2AF0C808CE333688FEE4'"""
-
-example_mode_aes_192_cbc_datatype_LowCardinalityFixedString_key_24_iv_None = r"""'145EF1DA49622900B742743B4114C3F8'"""
-
-example_mode_aes_256_cbc_datatype_LowCardinalityFixedString_key_32_iv_None = r"""'BB44E0A5A23B06C6F78D05CF12E4A304'"""
-
-example_mode_aes_128_cbc_datatype_LowCardinalityFixedString_key_16_iv_16 = r"""'ECE42AF0000893B1D1A43993506376A4'"""
-
-example_mode_aes_128_cbc_datatype_LowCardinalityFixedString_key_24_iv_24 = r"""'C55AC3DA9276DBF066AC408BFCF011DD'"""
-
-example_mode_aes_192_cbc_datatype_LowCardinalityFixedString_key_24_iv_16 = r"""'0A8E8BA80EB490740B91937D4A5FF84C'"""
-
-example_mode_aes_192_cbc_datatype_LowCardinalityFixedString_key_32_iv_32 = r"""'723C4EB7399AE6F019109651B376A111'"""
-
-example_mode_aes_256_cbc_datatype_LowCardinalityFixedString_key_32_iv_16 = r"""'4A3A13D0807C29D4FA9CAEE6B9A67E7D'"""
-
-example_mode_aes_256_cbc_datatype_LowCardinalityFixedString_key_64_iv_64 = r"""'5547B945A6810130CFC689C22530FA26'"""
-
-example_mode_aes_128_cfb128_datatype_LowCardinalityFixedString_key_16_iv_None = r"""'21DF'"""
-
-example_mode_aes_192_cfb128_datatype_LowCardinalityFixedString_key_24_iv_None = r"""'36B7'"""
-
-example_mode_aes_256_cfb128_datatype_LowCardinalityFixedString_key_32_iv_None = r"""'818E'"""
-
-example_mode_aes_128_cfb128_datatype_LowCardinalityFixedString_key_16_iv_16 = r"""'0388'"""
-
-example_mode_aes_128_cfb128_datatype_LowCardinalityFixedString_key_24_iv_24 = r"""'6A77'"""
-
-example_mode_aes_192_cfb128_datatype_LowCardinalityFixedString_key_24_iv_16 = r"""'59C7'"""
-
-example_mode_aes_192_cfb128_datatype_LowCardinalityFixedString_key_32_iv_32 = r"""'00A0'"""
-
-example_mode_aes_256_cfb128_datatype_LowCardinalityFixedString_key_32_iv_16 = r"""'5858'"""
-
-example_mode_aes_256_cfb128_datatype_LowCardinalityFixedString_key_64_iv_64 = r"""'E2EE'"""
-
-example_mode_aes_128_ofb_datatype_LowCardinalityFixedString_key_16_iv_None = r"""'21DF'"""
-
-example_mode_aes_192_ofb_datatype_LowCardinalityFixedString_key_24_iv_None = r"""'36B7'"""
-
-example_mode_aes_256_ofb_datatype_LowCardinalityFixedString_key_32_iv_None = r"""'818E'"""
-
-example_mode_aes_128_ofb_datatype_LowCardinalityFixedString_key_16_iv_16 = r"""'0388'"""
-
-example_mode_aes_128_ofb_datatype_LowCardinalityFixedString_key_24_iv_24 = r"""'6A77'"""
-
-example_mode_aes_192_ofb_datatype_LowCardinalityFixedString_key_24_iv_16 = r"""'59C7'"""
-
-example_mode_aes_192_ofb_datatype_LowCardinalityFixedString_key_32_iv_32 = r"""'00A0'"""
-
-example_mode_aes_256_ofb_datatype_LowCardinalityFixedString_key_32_iv_16 = r"""'5858'"""
-
-example_mode_aes_256_ofb_datatype_LowCardinalityFixedString_key_64_iv_64 = r"""'E2EE'"""
+example_mode_aes_256_ofb_datatype_Enum16_key_64_iv_64 = r"""'D2EE'"""
 

@@ -107,22 +107,6 @@ _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint8_lowca
 {"quantileBFloat16Weighted(uint8, lowcardinality_uint16_)":175}
 """
 
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint8_lowcardinality_nullable_uint8__ = r"""
-{"quantileBFloat16Weighted(uint8, lowcardinality_nullable_uint8__)":175}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint8_lowcardinality_nullable_uint64__ = r"""
-{"quantileBFloat16Weighted(uint8, lowcardinality_nullable_uint64__)":163}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint8_lowcardinality_nullable_uint32__ = r"""
-{"quantileBFloat16Weighted(uint8, lowcardinality_nullable_uint32__)":201}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint8_lowcardinality_nullable_uint16__ = r"""
-{"quantileBFloat16Weighted(uint8, lowcardinality_nullable_uint16__)":201}
-"""
-
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint64_uint8 = r"""
 {"quantileBFloat16Weighted(uint64, uint8)":8935141660703064000}
 """
@@ -169,22 +153,6 @@ _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint64_lowc
 
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint64_lowcardinality_uint16_ = r"""
 {"quantileBFloat16Weighted(uint64, lowcardinality_uint16_)":15924728282382074000}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint64_lowcardinality_nullable_uint8__ = r"""
-{"quantileBFloat16Weighted(uint64, lowcardinality_nullable_uint8__)":15924728282382074000}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint64_lowcardinality_nullable_uint64__ = r"""
-{"quantileBFloat16Weighted(uint64, lowcardinality_nullable_uint64__)":8935141660703064000}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint64_lowcardinality_nullable_uint32__ = r"""
-{"quantileBFloat16Weighted(uint64, lowcardinality_nullable_uint32__)":8935141660703064000}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint64_lowcardinality_nullable_uint16__ = r"""
-{"quantileBFloat16Weighted(uint64, lowcardinality_nullable_uint16__)":8935141660703064000}
 """
 
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint32_uint8 = r"""
@@ -235,22 +203,6 @@ _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint32_lowc
 {"quantileBFloat16Weighted(uint32, lowcardinality_uint16_)":2768240640}
 """
 
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint32_lowcardinality_nullable_uint8__ = r"""
-{"quantileBFloat16Weighted(uint32, lowcardinality_nullable_uint8__)":3070230528}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint32_lowcardinality_nullable_uint64__ = r"""
-{"quantileBFloat16Weighted(uint32, lowcardinality_nullable_uint64__)":3070230528}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint32_lowcardinality_nullable_uint32__ = r"""
-{"quantileBFloat16Weighted(uint32, lowcardinality_nullable_uint32__)":3070230528}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint32_lowcardinality_nullable_uint16__ = r"""
-{"quantileBFloat16Weighted(uint32, lowcardinality_nullable_uint16__)":3221225472}
-"""
-
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint16_uint8 = r"""
 {"quantileBFloat16Weighted(uint16, uint8)":36864}
 """
@@ -297,22 +249,6 @@ _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint16_lowc
 
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint16_lowcardinality_uint16_ = r"""
 {"quantileBFloat16Weighted(uint16, lowcardinality_uint16_)":26240}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint16_lowcardinality_nullable_uint8__ = r"""
-{"quantileBFloat16Weighted(uint16, lowcardinality_nullable_uint8__)":27008}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint16_lowcardinality_nullable_uint64__ = r"""
-{"quantileBFloat16Weighted(uint16, lowcardinality_nullable_uint64__)":27008}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint16_lowcardinality_nullable_uint32__ = r"""
-{"quantileBFloat16Weighted(uint16, lowcardinality_nullable_uint32__)":26240}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint16_lowcardinality_nullable_uint16__ = r"""
-{"quantileBFloat16Weighted(uint16, lowcardinality_nullable_uint16__)":36864}
 """
 
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint8__uint8 = r"""
@@ -363,22 +299,6 @@ _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_ui
 {"quantileBFloat16Weighted(nullable_uint8_, lowcardinality_uint16_)":65}
 """
 
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint8__lowcardinality_nullable_uint8__ = r"""
-{"quantileBFloat16Weighted(nullable_uint8_, lowcardinality_nullable_uint8__)":65}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint8__lowcardinality_nullable_uint64__ = r"""
-{"quantileBFloat16Weighted(nullable_uint8_, lowcardinality_nullable_uint64__)":197}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint8__lowcardinality_nullable_uint32__ = r"""
-{"quantileBFloat16Weighted(nullable_uint8_, lowcardinality_nullable_uint32__)":65}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint8__lowcardinality_nullable_uint16__ = r"""
-{"quantileBFloat16Weighted(nullable_uint8_, lowcardinality_nullable_uint16__)":63}
-"""
-
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint64__uint8 = r"""
 {"quantileBFloat16Weighted(nullable_uint64_, uint8)":16861477004875137000}
 """
@@ -425,22 +345,6 @@ _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_ui
 
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint64__lowcardinality_uint16_ = r"""
 {"quantileBFloat16Weighted(nullable_uint64_, lowcardinality_uint16_)":17365880163140633000}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint64__lowcardinality_nullable_uint8__ = r"""
-{"quantileBFloat16Weighted(nullable_uint64_, lowcardinality_nullable_uint8__)":15708555500268290000}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint64__lowcardinality_nullable_uint64__ = r"""
-{"quantileBFloat16Weighted(nullable_uint64_, lowcardinality_nullable_uint64__)":16861477004875137000}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint64__lowcardinality_nullable_uint32__ = r"""
-{"quantileBFloat16Weighted(nullable_uint64_, lowcardinality_nullable_uint32__)":15708555500268290000}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint64__lowcardinality_nullable_uint16__ = r"""
-{"quantileBFloat16Weighted(nullable_uint64_, lowcardinality_nullable_uint16__)":7818248953115181000}
 """
 
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint32__uint8 = r"""
@@ -491,22 +395,6 @@ _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_ui
 {"quantileBFloat16Weighted(nullable_uint32_, lowcardinality_uint16_)":1568669696}
 """
 
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint32__lowcardinality_nullable_uint8__ = r"""
-{"quantileBFloat16Weighted(nullable_uint32_, lowcardinality_nullable_uint8__)":1568669696}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint32__lowcardinality_nullable_uint64__ = r"""
-{"quantileBFloat16Weighted(nullable_uint32_, lowcardinality_nullable_uint64__)":3472883712}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint32__lowcardinality_nullable_uint32__ = r"""
-{"quantileBFloat16Weighted(nullable_uint32_, lowcardinality_nullable_uint32__)":3271557120}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint32__lowcardinality_nullable_uint16__ = r"""
-{"quantileBFloat16Weighted(nullable_uint32_, lowcardinality_nullable_uint16__)":1568669696}
-"""
-
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint16__uint8 = r"""
 {"quantileBFloat16Weighted(nullable_uint16_, uint8)":43520}
 """
@@ -553,22 +441,6 @@ _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_ui
 
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint16__lowcardinality_uint16_ = r"""
 {"quantileBFloat16Weighted(nullable_uint16_, lowcardinality_uint16_)":43520}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint16__lowcardinality_nullable_uint8__ = r"""
-{"quantileBFloat16Weighted(nullable_uint16_, lowcardinality_nullable_uint8__)":43520}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint16__lowcardinality_nullable_uint64__ = r"""
-{"quantileBFloat16Weighted(nullable_uint16_, lowcardinality_nullable_uint64__)":43520}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint16__lowcardinality_nullable_uint32__ = r"""
-{"quantileBFloat16Weighted(nullable_uint16_, lowcardinality_nullable_uint32__)":43520}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint16__lowcardinality_nullable_uint16__ = r"""
-{"quantileBFloat16Weighted(nullable_uint16_, lowcardinality_nullable_uint16__)":43520}
 """
 
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int8__uint8 = r"""
@@ -619,22 +491,6 @@ _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_in
 {"quantileBFloat16Weighted(nullable_int8_, lowcardinality_uint16_)":57}
 """
 
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int8__lowcardinality_nullable_uint8__ = r"""
-{"quantileBFloat16Weighted(nullable_int8_, lowcardinality_nullable_uint8__)":4}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int8__lowcardinality_nullable_uint64__ = r"""
-{"quantileBFloat16Weighted(nullable_int8_, lowcardinality_nullable_uint64__)":57}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int8__lowcardinality_nullable_uint32__ = r"""
-{"quantileBFloat16Weighted(nullable_int8_, lowcardinality_nullable_uint32__)":57}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int8__lowcardinality_nullable_uint16__ = r"""
-{"quantileBFloat16Weighted(nullable_int8_, lowcardinality_nullable_uint16__)":57}
-"""
-
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int64__uint8 = r"""
 {"quantileBFloat16Weighted(nullable_int64_, uint8)":1206964700135293000}
 """
@@ -681,22 +537,6 @@ _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_in
 
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int64__lowcardinality_uint16_ = r"""
 {"quantileBFloat16Weighted(nullable_int64_, lowcardinality_uint16_)":1206964700135293000}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int64__lowcardinality_nullable_uint8__ = r"""
-{"quantileBFloat16Weighted(nullable_int64_, lowcardinality_nullable_uint8__)":1188950301625811000}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int64__lowcardinality_nullable_uint64__ = r"""
-{"quantileBFloat16Weighted(nullable_int64_, lowcardinality_nullable_uint64__)":6989586621679010000}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int64__lowcardinality_nullable_uint32__ = r"""
-{"quantileBFloat16Weighted(nullable_int64_, lowcardinality_nullable_uint32__)":1188950301625811000}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int64__lowcardinality_nullable_uint16__ = r"""
-{"quantileBFloat16Weighted(nullable_int64_, lowcardinality_nullable_uint16__)":-2774217370460225500}
 """
 
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int32__uint8 = r"""
@@ -747,22 +587,6 @@ _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_in
 {"quantileBFloat16Weighted(nullable_int32_, lowcardinality_uint16_)":1434451968}
 """
 
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int32__lowcardinality_nullable_uint8__ = r"""
-{"quantileBFloat16Weighted(nullable_int32_, lowcardinality_nullable_uint8__)":1434451968}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int32__lowcardinality_nullable_uint64__ = r"""
-{"quantileBFloat16Weighted(nullable_int32_, lowcardinality_nullable_uint64__)":1434451968}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int32__lowcardinality_nullable_uint32__ = r"""
-{"quantileBFloat16Weighted(nullable_int32_, lowcardinality_nullable_uint32__)":193986560}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int32__lowcardinality_nullable_uint16__ = r"""
-{"quantileBFloat16Weighted(nullable_int32_, lowcardinality_nullable_uint16__)":193986560}
-"""
-
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int16__uint8 = r"""
 {"quantileBFloat16Weighted(nullable_int16_, uint8)":6880}
 """
@@ -809,22 +633,6 @@ _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_in
 
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int16__lowcardinality_uint16_ = r"""
 {"quantileBFloat16Weighted(nullable_int16_, lowcardinality_uint16_)":6880}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int16__lowcardinality_nullable_uint8__ = r"""
-{"quantileBFloat16Weighted(nullable_int16_, lowcardinality_nullable_uint8__)":3728}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int16__lowcardinality_nullable_uint64__ = r"""
-{"quantileBFloat16Weighted(nullable_int16_, lowcardinality_nullable_uint64__)":6880}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int16__lowcardinality_nullable_uint32__ = r"""
-{"quantileBFloat16Weighted(nullable_int16_, lowcardinality_nullable_uint32__)":6880}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int16__lowcardinality_nullable_uint16__ = r"""
-{"quantileBFloat16Weighted(nullable_int16_, lowcardinality_nullable_uint16__)":3728}
 """
 
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_float64__uint8 = r"""
@@ -875,22 +683,6 @@ _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_fl
 {"quantileBFloat16Weighted(nullable_float64_, lowcardinality_uint16_)":null}
 """
 
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_float64__lowcardinality_nullable_uint8__ = r"""
-{"quantileBFloat16Weighted(nullable_float64_, lowcardinality_nullable_uint8__)":null}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_float64__lowcardinality_nullable_uint64__ = r"""
-{"quantileBFloat16Weighted(nullable_float64_, lowcardinality_nullable_uint64__)":null}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_float64__lowcardinality_nullable_uint32__ = r"""
-{"quantileBFloat16Weighted(nullable_float64_, lowcardinality_nullable_uint32__)":null}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_float64__lowcardinality_nullable_uint16__ = r"""
-{"quantileBFloat16Weighted(nullable_float64_, lowcardinality_nullable_uint16__)":null}
-"""
-
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_float32__uint8 = r"""
 {"quantileBFloat16Weighted(nullable_float32_, uint8)":-1.2760588759535192e38}
 """
@@ -937,22 +729,6 @@ _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_fl
 
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_float32__lowcardinality_uint16_ = r"""
 {"quantileBFloat16Weighted(nullable_float32_, lowcardinality_uint16_)":-4.452913785879468e37}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_float32__lowcardinality_nullable_uint8__ = r"""
-{"quantileBFloat16Weighted(nullable_float32_, lowcardinality_nullable_uint8__)":-1.2760588759535192e38}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_float32__lowcardinality_nullable_uint64__ = r"""
-{"quantileBFloat16Weighted(nullable_float32_, lowcardinality_nullable_uint64__)":-1.9938419936773738e38}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_float32__lowcardinality_nullable_uint32__ = r"""
-{"quantileBFloat16Weighted(nullable_float32_, lowcardinality_nullable_uint32__)":-1.2760588759535192e38}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_float32__lowcardinality_nullable_uint16__ = r"""
-{"quantileBFloat16Weighted(nullable_float32_, lowcardinality_nullable_uint16__)":-1.2760588759535192e38}
 """
 
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint8__uint8 = r"""
@@ -1003,22 +779,6 @@ _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinal
 {"quantileBFloat16Weighted(lowcardinality_uint8_, lowcardinality_uint16_)":216}
 """
 
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint8__lowcardinality_nullable_uint8__ = r"""
-{"quantileBFloat16Weighted(lowcardinality_uint8_, lowcardinality_nullable_uint8__)":225}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint8__lowcardinality_nullable_uint64__ = r"""
-{"quantileBFloat16Weighted(lowcardinality_uint8_, lowcardinality_nullable_uint64__)":228}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint8__lowcardinality_nullable_uint32__ = r"""
-{"quantileBFloat16Weighted(lowcardinality_uint8_, lowcardinality_nullable_uint32__)":228}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint8__lowcardinality_nullable_uint16__ = r"""
-{"quantileBFloat16Weighted(lowcardinality_uint8_, lowcardinality_nullable_uint16__)":228}
-"""
-
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint64__uint8 = r"""
 {"quantileBFloat16Weighted(lowcardinality_uint64_, uint8)":15852670688344146000}
 """
@@ -1065,22 +825,6 @@ _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinal
 
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint64__lowcardinality_uint16_ = r"""
 {"quantileBFloat16Weighted(lowcardinality_uint64_, lowcardinality_uint16_)":17582052945254416000}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint64__lowcardinality_nullable_uint8__ = r"""
-{"quantileBFloat16Weighted(lowcardinality_uint64_, lowcardinality_nullable_uint8__)":9799832789158200000}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint64__lowcardinality_nullable_uint64__ = r"""
-{"quantileBFloat16Weighted(lowcardinality_uint64_, lowcardinality_nullable_uint64__)":15852670688344146000}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint64__lowcardinality_nullable_uint32__ = r"""
-{"quantileBFloat16Weighted(lowcardinality_uint64_, lowcardinality_nullable_uint32__)":9799832789158200000}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint64__lowcardinality_nullable_uint16__ = r"""
-{"quantileBFloat16Weighted(lowcardinality_uint64_, lowcardinality_nullable_uint16__)":9799832789158200000}
 """
 
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint32__uint8 = r"""
@@ -1131,22 +875,6 @@ _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinal
 {"quantileBFloat16Weighted(lowcardinality_uint32_, lowcardinality_uint16_)":2684354560}
 """
 
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint32__lowcardinality_nullable_uint8__ = r"""
-{"quantileBFloat16Weighted(lowcardinality_uint32_, lowcardinality_nullable_uint8__)":2684354560}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint32__lowcardinality_nullable_uint64__ = r"""
-{"quantileBFloat16Weighted(lowcardinality_uint32_, lowcardinality_nullable_uint64__)":1660944384}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint32__lowcardinality_nullable_uint32__ = r"""
-{"quantileBFloat16Weighted(lowcardinality_uint32_, lowcardinality_nullable_uint32__)":2684354560}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint32__lowcardinality_nullable_uint16__ = r"""
-{"quantileBFloat16Weighted(lowcardinality_uint32_, lowcardinality_nullable_uint16__)":3355443200}
-"""
-
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint16__uint8 = r"""
 {"quantileBFloat16Weighted(lowcardinality_uint16_, uint8)":45568}
 """
@@ -1193,6 +921,854 @@ _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinal
 
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint16__lowcardinality_uint16_ = r"""
 {"quantileBFloat16Weighted(lowcardinality_uint16_, lowcardinality_uint16_)":62208}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int8__uint8 = r"""
+{"quantileBFloat16Weighted(lowcardinality_int8_, uint8)":71}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int8__uint64 = r"""
+{"quantileBFloat16Weighted(lowcardinality_int8_, uint64)":71}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int8__uint32 = r"""
+{"quantileBFloat16Weighted(lowcardinality_int8_, uint32)":45}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int8__uint16 = r"""
+{"quantileBFloat16Weighted(lowcardinality_int8_, uint16)":95}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int8__nullable_uint8_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int8_, nullable_uint8_)":71}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int8__nullable_uint64_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int8_, nullable_uint64_)":71}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int8__nullable_uint32_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int8_, nullable_uint32_)":71}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int8__nullable_uint16_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int8_, nullable_uint16_)":45}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int8__lowcardinality_uint8_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int8_, lowcardinality_uint8_)":71}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int8__lowcardinality_uint64_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int8_, lowcardinality_uint64_)":71}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int8__lowcardinality_uint32_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int8_, lowcardinality_uint32_)":71}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int8__lowcardinality_uint16_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int8_, lowcardinality_uint16_)":71}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int64__uint8 = r"""
+{"quantileBFloat16Weighted(lowcardinality_int64_, uint8)":2774217370460225500}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int64__uint64 = r"""
+{"quantileBFloat16Weighted(lowcardinality_int64_, uint64)":4935945191598064000}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int64__uint32 = r"""
+{"quantileBFloat16Weighted(lowcardinality_int64_, uint32)":4935945191598064000}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int64__uint16 = r"""
+{"quantileBFloat16Weighted(lowcardinality_int64_, uint16)":4935945191598064000}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int64__nullable_uint8_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int64_, nullable_uint8_)":4935945191598064000}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int64__nullable_uint64_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int64_, nullable_uint64_)":2702159776422297600}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int64__nullable_uint32_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int64_, nullable_uint32_)":4935945191598064000}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int64__nullable_uint16_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int64_, nullable_uint16_)":4935945191598064000}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int64__lowcardinality_uint8_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int64_, lowcardinality_uint8_)":2774217370460225500}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int64__lowcardinality_uint64_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int64_, lowcardinality_uint64_)":2702159776422297600}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int64__lowcardinality_uint32_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int64_, lowcardinality_uint32_)":4935945191598064000}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int64__lowcardinality_uint16_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int64_, lowcardinality_uint16_)":4935945191598064000}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int32__uint8 = r"""
+{"quantileBFloat16Weighted(lowcardinality_int32_, uint8)":960495616}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int32__uint64 = r"""
+{"quantileBFloat16Weighted(lowcardinality_int32_, uint64)":897581056}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int32__uint32 = r"""
+{"quantileBFloat16Weighted(lowcardinality_int32_, uint32)":897581056}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int32__uint16 = r"""
+{"quantileBFloat16Weighted(lowcardinality_int32_, uint16)":960495616}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int32__nullable_uint8_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int32_, nullable_uint8_)":897581056}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int32__nullable_uint64_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int32_, nullable_uint64_)":-1006632960}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int32__nullable_uint32_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int32_, nullable_uint32_)":-1006632960}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int32__nullable_uint16_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int32_, nullable_uint16_)":960495616}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int32__lowcardinality_uint8_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int32_, lowcardinality_uint8_)":-1006632960}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int32__lowcardinality_uint64_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int32_, lowcardinality_uint64_)":897581056}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int32__lowcardinality_uint32_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int32_, lowcardinality_uint32_)":897581056}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int32__lowcardinality_uint16_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int32_, lowcardinality_uint16_)":897581056}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int16__uint8 = r"""
+{"quantileBFloat16Weighted(lowcardinality_int16_, uint8)":20608}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int16__uint64 = r"""
+{"quantileBFloat16Weighted(lowcardinality_int16_, uint64)":24192}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int16__uint32 = r"""
+{"quantileBFloat16Weighted(lowcardinality_int16_, uint32)":20608}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int16__uint16 = r"""
+{"quantileBFloat16Weighted(lowcardinality_int16_, uint16)":20608}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int16__nullable_uint8_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int16_, nullable_uint8_)":20608}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int16__nullable_uint64_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int16_, nullable_uint64_)":22656}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int16__nullable_uint32_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int16_, nullable_uint32_)":20608}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int16__nullable_uint16_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int16_, nullable_uint16_)":20608}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int16__lowcardinality_uint8_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int16_, lowcardinality_uint8_)":20608}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int16__lowcardinality_uint64_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int16_, lowcardinality_uint64_)":22656}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int16__lowcardinality_uint32_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int16_, lowcardinality_uint32_)":20608}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int16__lowcardinality_uint16_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_int16_, lowcardinality_uint16_)":22656}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float64__uint8 = r"""
+{"quantileBFloat16Weighted(lowcardinality_float64_, uint8)":null}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float64__uint64 = r"""
+{"quantileBFloat16Weighted(lowcardinality_float64_, uint64)":null}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float64__uint32 = r"""
+{"quantileBFloat16Weighted(lowcardinality_float64_, uint32)":null}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float64__uint16 = r"""
+{"quantileBFloat16Weighted(lowcardinality_float64_, uint16)":null}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float64__nullable_uint8_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_float64_, nullable_uint8_)":null}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float64__nullable_uint64_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_float64_, nullable_uint64_)":null}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float64__nullable_uint32_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_float64_, nullable_uint32_)":null}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float64__nullable_uint16_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_float64_, nullable_uint16_)":null}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float64__lowcardinality_uint8_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_float64_, lowcardinality_uint8_)":null}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float64__lowcardinality_uint64_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_float64_, lowcardinality_uint64_)":null}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float64__lowcardinality_uint32_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_float64_, lowcardinality_uint32_)":null}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float64__lowcardinality_uint16_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_float64_, lowcardinality_uint16_)":null}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float32__uint8 = r"""
+{"quantileBFloat16Weighted(lowcardinality_float32_, uint8)":9.902748568597623e37}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float32__uint64 = r"""
+{"quantileBFloat16Weighted(lowcardinality_float32_, uint64)":1.6681811347100694e38}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float32__uint32 = r"""
+{"quantileBFloat16Weighted(lowcardinality_float32_, uint32)":1.6681811347100694e38}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float32__uint16 = r"""
+{"quantileBFloat16Weighted(lowcardinality_float32_, uint16)":9.902748568597623e37}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float32__nullable_uint8_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_float32_, nullable_uint8_)":1.6681811347100694e38}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float32__nullable_uint64_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_float32_, nullable_uint64_)":1.6681811347100694e38}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float32__nullable_uint32_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_float32_, nullable_uint32_)":1.7147041145625415e38}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float32__nullable_uint16_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_float32_, nullable_uint16_)":9.902748568597623e37}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float32__lowcardinality_uint8_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_float32_, lowcardinality_uint8_)":9.902748568597623e37}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float32__lowcardinality_uint64_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_float32_, lowcardinality_uint64_)":9.902748568597623e37}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float32__lowcardinality_uint32_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_float32_, lowcardinality_uint32_)":9.902748568597623e37}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float32__lowcardinality_uint16_ = r"""
+{"quantileBFloat16Weighted(lowcardinality_float32_, lowcardinality_uint16_)":9.902748568597623e37}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int8_uint8 = r"""
+{"quantileBFloat16Weighted(int8, uint8)":83}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int8_uint64 = r"""
+{"quantileBFloat16Weighted(int8, uint64)":-44}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int8_uint32 = r"""
+{"quantileBFloat16Weighted(int8, uint32)":-44}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int8_uint16 = r"""
+{"quantileBFloat16Weighted(int8, uint16)":83}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int8_nullable_uint8_ = r"""
+{"quantileBFloat16Weighted(int8, nullable_uint8_)":83}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int8_nullable_uint64_ = r"""
+{"quantileBFloat16Weighted(int8, nullable_uint64_)":115}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int8_nullable_uint32_ = r"""
+{"quantileBFloat16Weighted(int8, nullable_uint32_)":115}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int8_nullable_uint16_ = r"""
+{"quantileBFloat16Weighted(int8, nullable_uint16_)":-44}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int8_lowcardinality_uint8_ = r"""
+{"quantileBFloat16Weighted(int8, lowcardinality_uint8_)":83}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int8_lowcardinality_uint64_ = r"""
+{"quantileBFloat16Weighted(int8, lowcardinality_uint64_)":115}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int8_lowcardinality_uint32_ = r"""
+{"quantileBFloat16Weighted(int8, lowcardinality_uint32_)":-44}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int8_lowcardinality_uint16_ = r"""
+{"quantileBFloat16Weighted(int8, lowcardinality_uint16_)":-44}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int64_uint8 = r"""
+{"quantileBFloat16Weighted(int64, uint8)":3638908498915361000}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int64_uint64 = r"""
+{"quantileBFloat16Weighted(int64, uint64)":3638908498915361000}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int64_uint32 = r"""
+{"quantileBFloat16Weighted(int64, uint32)":2702159776422297600}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int64_uint16 = r"""
+{"quantileBFloat16Weighted(int64, uint16)":3638908498915361000}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int64_nullable_uint8_ = r"""
+{"quantileBFloat16Weighted(int64, nullable_uint8_)":3638908498915361000}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int64_nullable_uint64_ = r"""
+{"quantileBFloat16Weighted(int64, nullable_uint64_)":4017210867614482400}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int64_nullable_uint32_ = r"""
+{"quantileBFloat16Weighted(int64, nullable_uint32_)":4017210867614482400}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int64_nullable_uint16_ = r"""
+{"quantileBFloat16Weighted(int64, nullable_uint16_)":3638908498915361000}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int64_lowcardinality_uint8_ = r"""
+{"quantileBFloat16Weighted(int64, lowcardinality_uint8_)":3638908498915361000}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int64_lowcardinality_uint64_ = r"""
+{"quantileBFloat16Weighted(int64, lowcardinality_uint64_)":4017210867614482400}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int64_lowcardinality_uint32_ = r"""
+{"quantileBFloat16Weighted(int64, lowcardinality_uint32_)":9570149208162304}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int64_lowcardinality_uint16_ = r"""
+{"quantileBFloat16Weighted(int64, lowcardinality_uint16_)":3638908498915361000}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int32_uint8 = r"""
+{"quantileBFloat16Weighted(int32, uint8)":452984832}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int32_uint64 = r"""
+{"quantileBFloat16Weighted(int32, uint64)":-658505728}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int32_uint32 = r"""
+{"quantileBFloat16Weighted(int32, uint32)":452984832}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int32_uint16 = r"""
+{"quantileBFloat16Weighted(int32, uint16)":452984832}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int32_nullable_uint8_ = r"""
+{"quantileBFloat16Weighted(int32, nullable_uint8_)":452984832}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int32_nullable_uint64_ = r"""
+{"quantileBFloat16Weighted(int32, nullable_uint64_)":-484442112}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int32_nullable_uint32_ = r"""
+{"quantileBFloat16Weighted(int32, nullable_uint32_)":452984832}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int32_nullable_uint16_ = r"""
+{"quantileBFloat16Weighted(int32, nullable_uint16_)":-484442112}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int32_lowcardinality_uint8_ = r"""
+{"quantileBFloat16Weighted(int32, lowcardinality_uint8_)":452984832}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int32_lowcardinality_uint64_ = r"""
+{"quantileBFloat16Weighted(int32, lowcardinality_uint64_)":-484442112}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int32_lowcardinality_uint32_ = r"""
+{"quantileBFloat16Weighted(int32, lowcardinality_uint32_)":452984832}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int32_lowcardinality_uint16_ = r"""
+{"quantileBFloat16Weighted(int32, lowcardinality_uint16_)":-484442112}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int16_uint8 = r"""
+{"quantileBFloat16Weighted(int16, uint8)":1512}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int16_uint64 = r"""
+{"quantileBFloat16Weighted(int16, uint64)":394}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int16_uint32 = r"""
+{"quantileBFloat16Weighted(int16, uint32)":394}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int16_uint16 = r"""
+{"quantileBFloat16Weighted(int16, uint16)":1512}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int16_nullable_uint8_ = r"""
+{"quantileBFloat16Weighted(int16, nullable_uint8_)":1512}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int16_nullable_uint64_ = r"""
+{"quantileBFloat16Weighted(int16, nullable_uint64_)":9536}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int16_nullable_uint32_ = r"""
+{"quantileBFloat16Weighted(int16, nullable_uint32_)":1512}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int16_nullable_uint16_ = r"""
+{"quantileBFloat16Weighted(int16, nullable_uint16_)":1512}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int16_lowcardinality_uint8_ = r"""
+{"quantileBFloat16Weighted(int16, lowcardinality_uint8_)":1512}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int16_lowcardinality_uint64_ = r"""
+{"quantileBFloat16Weighted(int16, lowcardinality_uint64_)":1512}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int16_lowcardinality_uint32_ = r"""
+{"quantileBFloat16Weighted(int16, lowcardinality_uint32_)":394}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int16_lowcardinality_uint16_ = r"""
+{"quantileBFloat16Weighted(int16, lowcardinality_uint16_)":1512}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float64_uint8 = r"""
+{"quantileBFloat16Weighted(float64, uint8)":null}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float64_uint64 = r"""
+{"quantileBFloat16Weighted(float64, uint64)":null}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float64_uint32 = r"""
+{"quantileBFloat16Weighted(float64, uint32)":null}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float64_uint16 = r"""
+{"quantileBFloat16Weighted(float64, uint16)":null}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float64_nullable_uint8_ = r"""
+{"quantileBFloat16Weighted(float64, nullable_uint8_)":null}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float64_nullable_uint64_ = r"""
+{"quantileBFloat16Weighted(float64, nullable_uint64_)":null}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float64_nullable_uint32_ = r"""
+{"quantileBFloat16Weighted(float64, nullable_uint32_)":null}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float64_nullable_uint16_ = r"""
+{"quantileBFloat16Weighted(float64, nullable_uint16_)":null}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float64_lowcardinality_uint8_ = r"""
+{"quantileBFloat16Weighted(float64, lowcardinality_uint8_)":null}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float64_lowcardinality_uint64_ = r"""
+{"quantileBFloat16Weighted(float64, lowcardinality_uint64_)":null}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float64_lowcardinality_uint32_ = r"""
+{"quantileBFloat16Weighted(float64, lowcardinality_uint32_)":null}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float64_lowcardinality_uint16_ = r"""
+{"quantileBFloat16Weighted(float64, lowcardinality_uint16_)":null}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float32_uint8 = r"""
+{"quantileBFloat16Weighted(float32, uint8)":-2.2331030329186587e38}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float32_uint64 = r"""
+{"quantileBFloat16Weighted(float32, uint64)":-1.9938419936773738e38}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float32_uint32 = r"""
+{"quantileBFloat16Weighted(float32, uint32)":-1.9938419936773738e38}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float32_uint16 = r"""
+{"quantileBFloat16Weighted(float32, uint16)":-8.639981972601953e37}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float32_nullable_uint8_ = r"""
+{"quantileBFloat16Weighted(float32, nullable_uint8_)":-2.2331030329186587e38}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float32_nullable_uint64_ = r"""
+{"quantileBFloat16Weighted(float32, nullable_uint64_)":-2.2331030329186587e38}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float32_nullable_uint32_ = r"""
+{"quantileBFloat16Weighted(float32, nullable_uint32_)":-1.9938419936773738e38}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float32_nullable_uint16_ = r"""
+{"quantileBFloat16Weighted(float32, nullable_uint16_)":-1.9938419936773738e38}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float32_lowcardinality_uint8_ = r"""
+{"quantileBFloat16Weighted(float32, lowcardinality_uint8_)":-2.2331030329186587e38}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float32_lowcardinality_uint64_ = r"""
+{"quantileBFloat16Weighted(float32, lowcardinality_uint64_)":-2.2331030329186587e38}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float32_lowcardinality_uint32_ = r"""
+{"quantileBFloat16Weighted(float32, lowcardinality_uint32_)":-1.9938419936773738e38}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float32_lowcardinality_uint16_ = r"""
+{"quantileBFloat16Weighted(float32, lowcardinality_uint16_)":-2.2331030329186587e38}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint8_lowcardinality_nullable_uint8__ = r"""
+{"quantileBFloat16Weighted(uint8, lowcardinality_nullable_uint8__)":175}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint8_lowcardinality_nullable_uint64__ = r"""
+{"quantileBFloat16Weighted(uint8, lowcardinality_nullable_uint64__)":163}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint8_lowcardinality_nullable_uint32__ = r"""
+{"quantileBFloat16Weighted(uint8, lowcardinality_nullable_uint32__)":201}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint8_lowcardinality_nullable_uint16__ = r"""
+{"quantileBFloat16Weighted(uint8, lowcardinality_nullable_uint16__)":201}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint64_lowcardinality_nullable_uint8__ = r"""
+{"quantileBFloat16Weighted(uint64, lowcardinality_nullable_uint8__)":15924728282382074000}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint64_lowcardinality_nullable_uint64__ = r"""
+{"quantileBFloat16Weighted(uint64, lowcardinality_nullable_uint64__)":8935141660703064000}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint64_lowcardinality_nullable_uint32__ = r"""
+{"quantileBFloat16Weighted(uint64, lowcardinality_nullable_uint32__)":8935141660703064000}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint64_lowcardinality_nullable_uint16__ = r"""
+{"quantileBFloat16Weighted(uint64, lowcardinality_nullable_uint16__)":8935141660703064000}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint32_lowcardinality_nullable_uint8__ = r"""
+{"quantileBFloat16Weighted(uint32, lowcardinality_nullable_uint8__)":3070230528}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint32_lowcardinality_nullable_uint64__ = r"""
+{"quantileBFloat16Weighted(uint32, lowcardinality_nullable_uint64__)":3070230528}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint32_lowcardinality_nullable_uint32__ = r"""
+{"quantileBFloat16Weighted(uint32, lowcardinality_nullable_uint32__)":3070230528}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint32_lowcardinality_nullable_uint16__ = r"""
+{"quantileBFloat16Weighted(uint32, lowcardinality_nullable_uint16__)":3221225472}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint16_lowcardinality_nullable_uint8__ = r"""
+{"quantileBFloat16Weighted(uint16, lowcardinality_nullable_uint8__)":27008}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint16_lowcardinality_nullable_uint64__ = r"""
+{"quantileBFloat16Weighted(uint16, lowcardinality_nullable_uint64__)":27008}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint16_lowcardinality_nullable_uint32__ = r"""
+{"quantileBFloat16Weighted(uint16, lowcardinality_nullable_uint32__)":26240}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_uint16_lowcardinality_nullable_uint16__ = r"""
+{"quantileBFloat16Weighted(uint16, lowcardinality_nullable_uint16__)":36864}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint8__lowcardinality_nullable_uint8__ = r"""
+{"quantileBFloat16Weighted(nullable_uint8_, lowcardinality_nullable_uint8__)":65}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint8__lowcardinality_nullable_uint64__ = r"""
+{"quantileBFloat16Weighted(nullable_uint8_, lowcardinality_nullable_uint64__)":197}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint8__lowcardinality_nullable_uint32__ = r"""
+{"quantileBFloat16Weighted(nullable_uint8_, lowcardinality_nullable_uint32__)":65}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint8__lowcardinality_nullable_uint16__ = r"""
+{"quantileBFloat16Weighted(nullable_uint8_, lowcardinality_nullable_uint16__)":63}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint64__lowcardinality_nullable_uint8__ = r"""
+{"quantileBFloat16Weighted(nullable_uint64_, lowcardinality_nullable_uint8__)":15708555500268290000}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint64__lowcardinality_nullable_uint64__ = r"""
+{"quantileBFloat16Weighted(nullable_uint64_, lowcardinality_nullable_uint64__)":16861477004875137000}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint64__lowcardinality_nullable_uint32__ = r"""
+{"quantileBFloat16Weighted(nullable_uint64_, lowcardinality_nullable_uint32__)":15708555500268290000}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint64__lowcardinality_nullable_uint16__ = r"""
+{"quantileBFloat16Weighted(nullable_uint64_, lowcardinality_nullable_uint16__)":7818248953115181000}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint32__lowcardinality_nullable_uint8__ = r"""
+{"quantileBFloat16Weighted(nullable_uint32_, lowcardinality_nullable_uint8__)":1568669696}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint32__lowcardinality_nullable_uint64__ = r"""
+{"quantileBFloat16Weighted(nullable_uint32_, lowcardinality_nullable_uint64__)":3472883712}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint32__lowcardinality_nullable_uint32__ = r"""
+{"quantileBFloat16Weighted(nullable_uint32_, lowcardinality_nullable_uint32__)":3271557120}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint32__lowcardinality_nullable_uint16__ = r"""
+{"quantileBFloat16Weighted(nullable_uint32_, lowcardinality_nullable_uint16__)":1568669696}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint16__lowcardinality_nullable_uint8__ = r"""
+{"quantileBFloat16Weighted(nullable_uint16_, lowcardinality_nullable_uint8__)":43520}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint16__lowcardinality_nullable_uint64__ = r"""
+{"quantileBFloat16Weighted(nullable_uint16_, lowcardinality_nullable_uint64__)":43520}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint16__lowcardinality_nullable_uint32__ = r"""
+{"quantileBFloat16Weighted(nullable_uint16_, lowcardinality_nullable_uint32__)":43520}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_uint16__lowcardinality_nullable_uint16__ = r"""
+{"quantileBFloat16Weighted(nullable_uint16_, lowcardinality_nullable_uint16__)":43520}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int8__lowcardinality_nullable_uint8__ = r"""
+{"quantileBFloat16Weighted(nullable_int8_, lowcardinality_nullable_uint8__)":4}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int8__lowcardinality_nullable_uint64__ = r"""
+{"quantileBFloat16Weighted(nullable_int8_, lowcardinality_nullable_uint64__)":57}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int8__lowcardinality_nullable_uint32__ = r"""
+{"quantileBFloat16Weighted(nullable_int8_, lowcardinality_nullable_uint32__)":57}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int8__lowcardinality_nullable_uint16__ = r"""
+{"quantileBFloat16Weighted(nullable_int8_, lowcardinality_nullable_uint16__)":57}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int64__lowcardinality_nullable_uint8__ = r"""
+{"quantileBFloat16Weighted(nullable_int64_, lowcardinality_nullable_uint8__)":1188950301625811000}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int64__lowcardinality_nullable_uint64__ = r"""
+{"quantileBFloat16Weighted(nullable_int64_, lowcardinality_nullable_uint64__)":6989586621679010000}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int64__lowcardinality_nullable_uint32__ = r"""
+{"quantileBFloat16Weighted(nullable_int64_, lowcardinality_nullable_uint32__)":1188950301625811000}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int64__lowcardinality_nullable_uint16__ = r"""
+{"quantileBFloat16Weighted(nullable_int64_, lowcardinality_nullable_uint16__)":-2774217370460225500}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int32__lowcardinality_nullable_uint8__ = r"""
+{"quantileBFloat16Weighted(nullable_int32_, lowcardinality_nullable_uint8__)":1434451968}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int32__lowcardinality_nullable_uint64__ = r"""
+{"quantileBFloat16Weighted(nullable_int32_, lowcardinality_nullable_uint64__)":1434451968}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int32__lowcardinality_nullable_uint32__ = r"""
+{"quantileBFloat16Weighted(nullable_int32_, lowcardinality_nullable_uint32__)":193986560}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int32__lowcardinality_nullable_uint16__ = r"""
+{"quantileBFloat16Weighted(nullable_int32_, lowcardinality_nullable_uint16__)":193986560}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int16__lowcardinality_nullable_uint8__ = r"""
+{"quantileBFloat16Weighted(nullable_int16_, lowcardinality_nullable_uint8__)":3728}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int16__lowcardinality_nullable_uint64__ = r"""
+{"quantileBFloat16Weighted(nullable_int16_, lowcardinality_nullable_uint64__)":6880}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int16__lowcardinality_nullable_uint32__ = r"""
+{"quantileBFloat16Weighted(nullable_int16_, lowcardinality_nullable_uint32__)":6880}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_int16__lowcardinality_nullable_uint16__ = r"""
+{"quantileBFloat16Weighted(nullable_int16_, lowcardinality_nullable_uint16__)":3728}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_float64__lowcardinality_nullable_uint8__ = r"""
+{"quantileBFloat16Weighted(nullable_float64_, lowcardinality_nullable_uint8__)":null}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_float64__lowcardinality_nullable_uint64__ = r"""
+{"quantileBFloat16Weighted(nullable_float64_, lowcardinality_nullable_uint64__)":null}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_float64__lowcardinality_nullable_uint32__ = r"""
+{"quantileBFloat16Weighted(nullable_float64_, lowcardinality_nullable_uint32__)":null}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_float64__lowcardinality_nullable_uint16__ = r"""
+{"quantileBFloat16Weighted(nullable_float64_, lowcardinality_nullable_uint16__)":null}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_float32__lowcardinality_nullable_uint8__ = r"""
+{"quantileBFloat16Weighted(nullable_float32_, lowcardinality_nullable_uint8__)":-1.2760588759535192e38}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_float32__lowcardinality_nullable_uint64__ = r"""
+{"quantileBFloat16Weighted(nullable_float32_, lowcardinality_nullable_uint64__)":-1.9938419936773738e38}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_float32__lowcardinality_nullable_uint32__ = r"""
+{"quantileBFloat16Weighted(nullable_float32_, lowcardinality_nullable_uint32__)":-1.2760588759535192e38}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_nullable_float32__lowcardinality_nullable_uint16__ = r"""
+{"quantileBFloat16Weighted(nullable_float32_, lowcardinality_nullable_uint16__)":-1.2760588759535192e38}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint8__lowcardinality_nullable_uint8__ = r"""
+{"quantileBFloat16Weighted(lowcardinality_uint8_, lowcardinality_nullable_uint8__)":225}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint8__lowcardinality_nullable_uint64__ = r"""
+{"quantileBFloat16Weighted(lowcardinality_uint8_, lowcardinality_nullable_uint64__)":228}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint8__lowcardinality_nullable_uint32__ = r"""
+{"quantileBFloat16Weighted(lowcardinality_uint8_, lowcardinality_nullable_uint32__)":228}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint8__lowcardinality_nullable_uint16__ = r"""
+{"quantileBFloat16Weighted(lowcardinality_uint8_, lowcardinality_nullable_uint16__)":228}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint64__lowcardinality_nullable_uint8__ = r"""
+{"quantileBFloat16Weighted(lowcardinality_uint64_, lowcardinality_nullable_uint8__)":9799832789158200000}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint64__lowcardinality_nullable_uint64__ = r"""
+{"quantileBFloat16Weighted(lowcardinality_uint64_, lowcardinality_nullable_uint64__)":15852670688344146000}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint64__lowcardinality_nullable_uint32__ = r"""
+{"quantileBFloat16Weighted(lowcardinality_uint64_, lowcardinality_nullable_uint32__)":9799832789158200000}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint64__lowcardinality_nullable_uint16__ = r"""
+{"quantileBFloat16Weighted(lowcardinality_uint64_, lowcardinality_nullable_uint16__)":9799832789158200000}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint32__lowcardinality_nullable_uint8__ = r"""
+{"quantileBFloat16Weighted(lowcardinality_uint32_, lowcardinality_nullable_uint8__)":2684354560}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint32__lowcardinality_nullable_uint64__ = r"""
+{"quantileBFloat16Weighted(lowcardinality_uint32_, lowcardinality_nullable_uint64__)":1660944384}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint32__lowcardinality_nullable_uint32__ = r"""
+{"quantileBFloat16Weighted(lowcardinality_uint32_, lowcardinality_nullable_uint32__)":2684354560}
+"""
+
+_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint32__lowcardinality_nullable_uint16__ = r"""
+{"quantileBFloat16Weighted(lowcardinality_uint32_, lowcardinality_nullable_uint16__)":3355443200}
 """
 
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_uint16__lowcardinality_nullable_uint8__ = r"""
@@ -1851,54 +2427,6 @@ _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinal
 {"quantileBFloat16Weighted(lowcardinality_nullable_float32__, lowcardinality_nullable_uint16__)":-5.416604082823532e37}
 """
 
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int8__uint8 = r"""
-{"quantileBFloat16Weighted(lowcardinality_int8_, uint8)":71}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int8__uint64 = r"""
-{"quantileBFloat16Weighted(lowcardinality_int8_, uint64)":71}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int8__uint32 = r"""
-{"quantileBFloat16Weighted(lowcardinality_int8_, uint32)":45}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int8__uint16 = r"""
-{"quantileBFloat16Weighted(lowcardinality_int8_, uint16)":95}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int8__nullable_uint8_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int8_, nullable_uint8_)":71}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int8__nullable_uint64_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int8_, nullable_uint64_)":71}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int8__nullable_uint32_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int8_, nullable_uint32_)":71}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int8__nullable_uint16_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int8_, nullable_uint16_)":45}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int8__lowcardinality_uint8_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int8_, lowcardinality_uint8_)":71}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int8__lowcardinality_uint64_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int8_, lowcardinality_uint64_)":71}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int8__lowcardinality_uint32_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int8_, lowcardinality_uint32_)":71}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int8__lowcardinality_uint16_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int8_, lowcardinality_uint16_)":71}
-"""
-
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int8__lowcardinality_nullable_uint8__ = r"""
 {"quantileBFloat16Weighted(lowcardinality_int8_, lowcardinality_nullable_uint8__)":71}
 """
@@ -1913,54 +2441,6 @@ _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinal
 
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int8__lowcardinality_nullable_uint16__ = r"""
 {"quantileBFloat16Weighted(lowcardinality_int8_, lowcardinality_nullable_uint16__)":95}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int64__uint8 = r"""
-{"quantileBFloat16Weighted(lowcardinality_int64_, uint8)":2774217370460225500}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int64__uint64 = r"""
-{"quantileBFloat16Weighted(lowcardinality_int64_, uint64)":4935945191598064000}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int64__uint32 = r"""
-{"quantileBFloat16Weighted(lowcardinality_int64_, uint32)":4935945191598064000}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int64__uint16 = r"""
-{"quantileBFloat16Weighted(lowcardinality_int64_, uint16)":4935945191598064000}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int64__nullable_uint8_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int64_, nullable_uint8_)":4935945191598064000}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int64__nullable_uint64_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int64_, nullable_uint64_)":2702159776422297600}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int64__nullable_uint32_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int64_, nullable_uint32_)":4935945191598064000}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int64__nullable_uint16_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int64_, nullable_uint16_)":4935945191598064000}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int64__lowcardinality_uint8_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int64_, lowcardinality_uint8_)":2774217370460225500}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int64__lowcardinality_uint64_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int64_, lowcardinality_uint64_)":2702159776422297600}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int64__lowcardinality_uint32_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int64_, lowcardinality_uint32_)":4935945191598064000}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int64__lowcardinality_uint16_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int64_, lowcardinality_uint16_)":4935945191598064000}
 """
 
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int64__lowcardinality_nullable_uint8__ = r"""
@@ -1979,54 +2459,6 @@ _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinal
 {"quantileBFloat16Weighted(lowcardinality_int64_, lowcardinality_nullable_uint16__)":7530018576963469000}
 """
 
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int32__uint8 = r"""
-{"quantileBFloat16Weighted(lowcardinality_int32_, uint8)":960495616}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int32__uint64 = r"""
-{"quantileBFloat16Weighted(lowcardinality_int32_, uint64)":897581056}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int32__uint32 = r"""
-{"quantileBFloat16Weighted(lowcardinality_int32_, uint32)":897581056}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int32__uint16 = r"""
-{"quantileBFloat16Weighted(lowcardinality_int32_, uint16)":960495616}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int32__nullable_uint8_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int32_, nullable_uint8_)":897581056}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int32__nullable_uint64_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int32_, nullable_uint64_)":-1006632960}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int32__nullable_uint32_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int32_, nullable_uint32_)":-1006632960}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int32__nullable_uint16_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int32_, nullable_uint16_)":960495616}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int32__lowcardinality_uint8_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int32_, lowcardinality_uint8_)":-1006632960}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int32__lowcardinality_uint64_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int32_, lowcardinality_uint64_)":897581056}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int32__lowcardinality_uint32_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int32_, lowcardinality_uint32_)":897581056}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int32__lowcardinality_uint16_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int32_, lowcardinality_uint16_)":897581056}
-"""
-
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int32__lowcardinality_nullable_uint8__ = r"""
 {"quantileBFloat16Weighted(lowcardinality_int32_, lowcardinality_nullable_uint8__)":897581056}
 """
@@ -2041,54 +2473,6 @@ _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinal
 
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int32__lowcardinality_nullable_uint16__ = r"""
 {"quantileBFloat16Weighted(lowcardinality_int32_, lowcardinality_nullable_uint16__)":960495616}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int16__uint8 = r"""
-{"quantileBFloat16Weighted(lowcardinality_int16_, uint8)":20608}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int16__uint64 = r"""
-{"quantileBFloat16Weighted(lowcardinality_int16_, uint64)":24192}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int16__uint32 = r"""
-{"quantileBFloat16Weighted(lowcardinality_int16_, uint32)":20608}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int16__uint16 = r"""
-{"quantileBFloat16Weighted(lowcardinality_int16_, uint16)":20608}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int16__nullable_uint8_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int16_, nullable_uint8_)":20608}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int16__nullable_uint64_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int16_, nullable_uint64_)":22656}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int16__nullable_uint32_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int16_, nullable_uint32_)":20608}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int16__nullable_uint16_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int16_, nullable_uint16_)":20608}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int16__lowcardinality_uint8_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int16_, lowcardinality_uint8_)":20608}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int16__lowcardinality_uint64_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int16_, lowcardinality_uint64_)":22656}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int16__lowcardinality_uint32_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int16_, lowcardinality_uint32_)":20608}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int16__lowcardinality_uint16_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_int16_, lowcardinality_uint16_)":22656}
 """
 
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_int16__lowcardinality_nullable_uint8__ = r"""
@@ -2107,54 +2491,6 @@ _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinal
 {"quantileBFloat16Weighted(lowcardinality_int16_, lowcardinality_nullable_uint16__)":22656}
 """
 
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float64__uint8 = r"""
-{"quantileBFloat16Weighted(lowcardinality_float64_, uint8)":null}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float64__uint64 = r"""
-{"quantileBFloat16Weighted(lowcardinality_float64_, uint64)":null}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float64__uint32 = r"""
-{"quantileBFloat16Weighted(lowcardinality_float64_, uint32)":null}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float64__uint16 = r"""
-{"quantileBFloat16Weighted(lowcardinality_float64_, uint16)":null}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float64__nullable_uint8_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_float64_, nullable_uint8_)":null}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float64__nullable_uint64_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_float64_, nullable_uint64_)":null}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float64__nullable_uint32_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_float64_, nullable_uint32_)":null}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float64__nullable_uint16_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_float64_, nullable_uint16_)":null}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float64__lowcardinality_uint8_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_float64_, lowcardinality_uint8_)":null}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float64__lowcardinality_uint64_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_float64_, lowcardinality_uint64_)":null}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float64__lowcardinality_uint32_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_float64_, lowcardinality_uint32_)":null}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float64__lowcardinality_uint16_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_float64_, lowcardinality_uint16_)":null}
-"""
-
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float64__lowcardinality_nullable_uint8__ = r"""
 {"quantileBFloat16Weighted(lowcardinality_float64_, lowcardinality_nullable_uint8__)":null}
 """
@@ -2169,54 +2505,6 @@ _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinal
 
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float64__lowcardinality_nullable_uint16__ = r"""
 {"quantileBFloat16Weighted(lowcardinality_float64_, lowcardinality_nullable_uint16__)":null}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float32__uint8 = r"""
-{"quantileBFloat16Weighted(lowcardinality_float32_, uint8)":9.902748568597623e37}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float32__uint64 = r"""
-{"quantileBFloat16Weighted(lowcardinality_float32_, uint64)":1.6681811347100694e38}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float32__uint32 = r"""
-{"quantileBFloat16Weighted(lowcardinality_float32_, uint32)":1.6681811347100694e38}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float32__uint16 = r"""
-{"quantileBFloat16Weighted(lowcardinality_float32_, uint16)":9.902748568597623e37}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float32__nullable_uint8_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_float32_, nullable_uint8_)":1.6681811347100694e38}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float32__nullable_uint64_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_float32_, nullable_uint64_)":1.6681811347100694e38}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float32__nullable_uint32_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_float32_, nullable_uint32_)":1.7147041145625415e38}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float32__nullable_uint16_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_float32_, nullable_uint16_)":9.902748568597623e37}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float32__lowcardinality_uint8_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_float32_, lowcardinality_uint8_)":9.902748568597623e37}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float32__lowcardinality_uint64_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_float32_, lowcardinality_uint64_)":9.902748568597623e37}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float32__lowcardinality_uint32_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_float32_, lowcardinality_uint32_)":9.902748568597623e37}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float32__lowcardinality_uint16_ = r"""
-{"quantileBFloat16Weighted(lowcardinality_float32_, lowcardinality_uint16_)":9.902748568597623e37}
 """
 
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinality_float32__lowcardinality_nullable_uint8__ = r"""
@@ -2235,54 +2523,6 @@ _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_lowcardinal
 {"quantileBFloat16Weighted(lowcardinality_float32_, lowcardinality_nullable_uint16__)":2.2763029427816684e37}
 """
 
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int8_uint8 = r"""
-{"quantileBFloat16Weighted(int8, uint8)":83}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int8_uint64 = r"""
-{"quantileBFloat16Weighted(int8, uint64)":-44}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int8_uint32 = r"""
-{"quantileBFloat16Weighted(int8, uint32)":-44}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int8_uint16 = r"""
-{"quantileBFloat16Weighted(int8, uint16)":83}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int8_nullable_uint8_ = r"""
-{"quantileBFloat16Weighted(int8, nullable_uint8_)":83}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int8_nullable_uint64_ = r"""
-{"quantileBFloat16Weighted(int8, nullable_uint64_)":115}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int8_nullable_uint32_ = r"""
-{"quantileBFloat16Weighted(int8, nullable_uint32_)":115}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int8_nullable_uint16_ = r"""
-{"quantileBFloat16Weighted(int8, nullable_uint16_)":-44}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int8_lowcardinality_uint8_ = r"""
-{"quantileBFloat16Weighted(int8, lowcardinality_uint8_)":83}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int8_lowcardinality_uint64_ = r"""
-{"quantileBFloat16Weighted(int8, lowcardinality_uint64_)":115}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int8_lowcardinality_uint32_ = r"""
-{"quantileBFloat16Weighted(int8, lowcardinality_uint32_)":-44}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int8_lowcardinality_uint16_ = r"""
-{"quantileBFloat16Weighted(int8, lowcardinality_uint16_)":-44}
-"""
-
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int8_lowcardinality_nullable_uint8__ = r"""
 {"quantileBFloat16Weighted(int8, lowcardinality_nullable_uint8__)":-44}
 """
@@ -2297,54 +2537,6 @@ _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int8_lowcar
 
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int8_lowcardinality_nullable_uint16__ = r"""
 {"quantileBFloat16Weighted(int8, lowcardinality_nullable_uint16__)":-44}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int64_uint8 = r"""
-{"quantileBFloat16Weighted(int64, uint8)":3638908498915361000}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int64_uint64 = r"""
-{"quantileBFloat16Weighted(int64, uint64)":3638908498915361000}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int64_uint32 = r"""
-{"quantileBFloat16Weighted(int64, uint32)":2702159776422297600}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int64_uint16 = r"""
-{"quantileBFloat16Weighted(int64, uint16)":3638908498915361000}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int64_nullable_uint8_ = r"""
-{"quantileBFloat16Weighted(int64, nullable_uint8_)":3638908498915361000}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int64_nullable_uint64_ = r"""
-{"quantileBFloat16Weighted(int64, nullable_uint64_)":4017210867614482400}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int64_nullable_uint32_ = r"""
-{"quantileBFloat16Weighted(int64, nullable_uint32_)":4017210867614482400}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int64_nullable_uint16_ = r"""
-{"quantileBFloat16Weighted(int64, nullable_uint16_)":3638908498915361000}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int64_lowcardinality_uint8_ = r"""
-{"quantileBFloat16Weighted(int64, lowcardinality_uint8_)":3638908498915361000}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int64_lowcardinality_uint64_ = r"""
-{"quantileBFloat16Weighted(int64, lowcardinality_uint64_)":4017210867614482400}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int64_lowcardinality_uint32_ = r"""
-{"quantileBFloat16Weighted(int64, lowcardinality_uint32_)":9570149208162304}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int64_lowcardinality_uint16_ = r"""
-{"quantileBFloat16Weighted(int64, lowcardinality_uint16_)":3638908498915361000}
 """
 
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int64_lowcardinality_nullable_uint8__ = r"""
@@ -2363,54 +2555,6 @@ _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int64_lowca
 {"quantileBFloat16Weighted(int64, lowcardinality_nullable_uint16__)":9570149208162304}
 """
 
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int32_uint8 = r"""
-{"quantileBFloat16Weighted(int32, uint8)":452984832}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int32_uint64 = r"""
-{"quantileBFloat16Weighted(int32, uint64)":-658505728}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int32_uint32 = r"""
-{"quantileBFloat16Weighted(int32, uint32)":452984832}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int32_uint16 = r"""
-{"quantileBFloat16Weighted(int32, uint16)":452984832}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int32_nullable_uint8_ = r"""
-{"quantileBFloat16Weighted(int32, nullable_uint8_)":452984832}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int32_nullable_uint64_ = r"""
-{"quantileBFloat16Weighted(int32, nullable_uint64_)":-484442112}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int32_nullable_uint32_ = r"""
-{"quantileBFloat16Weighted(int32, nullable_uint32_)":452984832}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int32_nullable_uint16_ = r"""
-{"quantileBFloat16Weighted(int32, nullable_uint16_)":-484442112}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int32_lowcardinality_uint8_ = r"""
-{"quantileBFloat16Weighted(int32, lowcardinality_uint8_)":452984832}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int32_lowcardinality_uint64_ = r"""
-{"quantileBFloat16Weighted(int32, lowcardinality_uint64_)":-484442112}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int32_lowcardinality_uint32_ = r"""
-{"quantileBFloat16Weighted(int32, lowcardinality_uint32_)":452984832}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int32_lowcardinality_uint16_ = r"""
-{"quantileBFloat16Weighted(int32, lowcardinality_uint16_)":-484442112}
-"""
-
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int32_lowcardinality_nullable_uint8__ = r"""
 {"quantileBFloat16Weighted(int32, lowcardinality_nullable_uint8__)":452984832}
 """
@@ -2425,54 +2569,6 @@ _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int32_lowca
 
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int32_lowcardinality_nullable_uint16__ = r"""
 {"quantileBFloat16Weighted(int32, lowcardinality_nullable_uint16__)":1870659584}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int16_uint8 = r"""
-{"quantileBFloat16Weighted(int16, uint8)":1512}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int16_uint64 = r"""
-{"quantileBFloat16Weighted(int16, uint64)":394}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int16_uint32 = r"""
-{"quantileBFloat16Weighted(int16, uint32)":394}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int16_uint16 = r"""
-{"quantileBFloat16Weighted(int16, uint16)":1512}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int16_nullable_uint8_ = r"""
-{"quantileBFloat16Weighted(int16, nullable_uint8_)":1512}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int16_nullable_uint64_ = r"""
-{"quantileBFloat16Weighted(int16, nullable_uint64_)":9536}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int16_nullable_uint32_ = r"""
-{"quantileBFloat16Weighted(int16, nullable_uint32_)":1512}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int16_nullable_uint16_ = r"""
-{"quantileBFloat16Weighted(int16, nullable_uint16_)":1512}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int16_lowcardinality_uint8_ = r"""
-{"quantileBFloat16Weighted(int16, lowcardinality_uint8_)":1512}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int16_lowcardinality_uint64_ = r"""
-{"quantileBFloat16Weighted(int16, lowcardinality_uint64_)":1512}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int16_lowcardinality_uint32_ = r"""
-{"quantileBFloat16Weighted(int16, lowcardinality_uint32_)":394}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int16_lowcardinality_uint16_ = r"""
-{"quantileBFloat16Weighted(int16, lowcardinality_uint16_)":1512}
 """
 
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int16_lowcardinality_nullable_uint8__ = r"""
@@ -2491,54 +2587,6 @@ _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_int16_lowca
 {"quantileBFloat16Weighted(int16, lowcardinality_nullable_uint16__)":394}
 """
 
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float64_uint8 = r"""
-{"quantileBFloat16Weighted(float64, uint8)":null}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float64_uint64 = r"""
-{"quantileBFloat16Weighted(float64, uint64)":null}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float64_uint32 = r"""
-{"quantileBFloat16Weighted(float64, uint32)":null}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float64_uint16 = r"""
-{"quantileBFloat16Weighted(float64, uint16)":null}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float64_nullable_uint8_ = r"""
-{"quantileBFloat16Weighted(float64, nullable_uint8_)":null}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float64_nullable_uint64_ = r"""
-{"quantileBFloat16Weighted(float64, nullable_uint64_)":null}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float64_nullable_uint32_ = r"""
-{"quantileBFloat16Weighted(float64, nullable_uint32_)":null}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float64_nullable_uint16_ = r"""
-{"quantileBFloat16Weighted(float64, nullable_uint16_)":null}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float64_lowcardinality_uint8_ = r"""
-{"quantileBFloat16Weighted(float64, lowcardinality_uint8_)":null}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float64_lowcardinality_uint64_ = r"""
-{"quantileBFloat16Weighted(float64, lowcardinality_uint64_)":null}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float64_lowcardinality_uint32_ = r"""
-{"quantileBFloat16Weighted(float64, lowcardinality_uint32_)":null}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float64_lowcardinality_uint16_ = r"""
-{"quantileBFloat16Weighted(float64, lowcardinality_uint16_)":null}
-"""
-
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float64_lowcardinality_nullable_uint8__ = r"""
 {"quantileBFloat16Weighted(float64, lowcardinality_nullable_uint8__)":null}
 """
@@ -2553,54 +2601,6 @@ _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float64_low
 
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float64_lowcardinality_nullable_uint16__ = r"""
 {"quantileBFloat16Weighted(float64, lowcardinality_nullable_uint16__)":null}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float32_uint8 = r"""
-{"quantileBFloat16Weighted(float32, uint8)":-2.2331030329186587e38}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float32_uint64 = r"""
-{"quantileBFloat16Weighted(float32, uint64)":-1.9938419936773738e38}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float32_uint32 = r"""
-{"quantileBFloat16Weighted(float32, uint32)":-1.9938419936773738e38}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float32_uint16 = r"""
-{"quantileBFloat16Weighted(float32, uint16)":-8.639981972601953e37}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float32_nullable_uint8_ = r"""
-{"quantileBFloat16Weighted(float32, nullable_uint8_)":-2.2331030329186587e38}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float32_nullable_uint64_ = r"""
-{"quantileBFloat16Weighted(float32, nullable_uint64_)":-2.2331030329186587e38}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float32_nullable_uint32_ = r"""
-{"quantileBFloat16Weighted(float32, nullable_uint32_)":-1.9938419936773738e38}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float32_nullable_uint16_ = r"""
-{"quantileBFloat16Weighted(float32, nullable_uint16_)":-1.9938419936773738e38}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float32_lowcardinality_uint8_ = r"""
-{"quantileBFloat16Weighted(float32, lowcardinality_uint8_)":-2.2331030329186587e38}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float32_lowcardinality_uint64_ = r"""
-{"quantileBFloat16Weighted(float32, lowcardinality_uint64_)":-2.2331030329186587e38}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float32_lowcardinality_uint32_ = r"""
-{"quantileBFloat16Weighted(float32, lowcardinality_uint32_)":-1.9938419936773738e38}
-"""
-
-_aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float32_lowcardinality_uint16_ = r"""
-{"quantileBFloat16Weighted(float32, lowcardinality_uint16_)":-2.2331030329186587e38}
 """
 
 _aggregate_functions_quantileBFloat16Weighted_datatypes_permutations_float32_lowcardinality_nullable_uint8__ = r"""

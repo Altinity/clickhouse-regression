@@ -9,28 +9,28 @@ from testflows.core import Requirement
 Heading = Specification.Heading
 
 RQ_SRS_036_ClickHouse_CollapsingMergeTree = Requirement(
-    name='RQ.SRS-036.ClickHouse.CollapsingMergeTree',
-    version='1.0',
+    name="RQ.SRS-036.ClickHouse.CollapsingMergeTree",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support [CollapsingMergeTree] an engine that inherits from MergeTree and adds the logic of rows\n'
-        'collapsing to data parts merge algorithm. The engine is designed to asynchronously delete pairs of rows if all of the \n'
-        'fields in a sorting key (ORDER BY) are equivalent except for the particular field Sign, which can have values of 1 and \n'
-        '-1. Rows without a pair are kept, leading to a significant reduction in storage volume and improved SELECT query\n'
-        'efficiency.\n'
-        '\n'
+        "[ClickHouse] SHALL support [CollapsingMergeTree] an engine that inherits from MergeTree and adds the logic of rows\n"
+        "collapsing to data parts merge algorithm. The engine is designed to asynchronously delete pairs of rows if all of the \n"
+        "fields in a sorting key (ORDER BY) are equivalent except for the particular field Sign, which can have values of 1 and \n"
+        "-1. Rows without a pair are kept, leading to a significant reduction in storage volume and improved SELECT query\n"
+        "efficiency.\n"
+        "\n"
     ),
     link=None,
     level=2,
-    num='4.1'
+    num="4.1",
 )
 
 RQ_SRS_036_ClickHouse_CollapsingMergeTree_Parameters = Requirement(
-    name='RQ.SRS-036.ClickHouse.CollapsingMergeTree.Parameters',
-    version='1.0',
+    name="RQ.SRS-036.ClickHouse.CollapsingMergeTree.Parameters",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
@@ -38,109 +38,109 @@ RQ_SRS_036_ClickHouse_CollapsingMergeTree_Parameters = Requirement(
     description=(
         '[CollapsingMergeTree] engine SHALL support `Sign` column with the type of row: 1 is a "state" row,\n'
         '-1 is a "cancel" row.\n'
-        '\n'
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.2.1'
+    num="4.2.1",
 )
 
 RQ_SRS_036_ClickHouse_CollapsingMergeTree_CollapsingData = Requirement(
-    name='RQ.SRS-036.ClickHouse.CollapsingMergeTree.CollapsingData',
-    version='1.0',
+    name="RQ.SRS-036.ClickHouse.CollapsingMergeTree.CollapsingData",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[CollapsingMergeTree] engine SHALL support writing the changes of an object sequentially using the particular column Sign.\n'
-        'If Sign = 1, it means that the row is a state of an object, while Sign = -1 means the cancellation of the state of an\n'
-        'object with the same attributes.\n'
-        '\n'
+        "[CollapsingMergeTree] engine SHALL support writing the changes of an object sequentially using the particular column Sign.\n"
+        "If Sign = 1, it means that the row is a state of an object, while Sign = -1 means the cancellation of the state of an\n"
+        "object with the same attributes.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.3.1'
+    num="4.3.1",
 )
 
 RQ_SRS_036_ClickHouse_CollapsingMergeTree_MergeAlgorithm = Requirement(
-    name='RQ.SRS-036.ClickHouse.CollapsingMergeTree.MergeAlgorithm',
-    version='1.0',
+    name="RQ.SRS-036.ClickHouse.CollapsingMergeTree.MergeAlgorithm",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[CollapsingMergeTree] engine SHALL support adding of the logic of rows collapsing to data parts merge [Algorithm], \n'
-        'which asynchronously deletes pairs of rows if all of the fields in a sorting key (ORDER BY) are equivalent except for \n'
-        'the Sign column. Rows without a pair are kept. The engine significantly reduces the volume of storage and increases \n'
-        'the efficiency of SELECT query.\n'
-        '\n'
+        "[CollapsingMergeTree] engine SHALL support adding of the logic of rows collapsing to data parts merge [Algorithm], \n"
+        "which asynchronously deletes pairs of rows if all of the fields in a sorting key (ORDER BY) are equivalent except for \n"
+        "the Sign column. Rows without a pair are kept. The engine significantly reduces the volume of storage and increases \n"
+        "the efficiency of SELECT query.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.4.1'
+    num="4.4.1",
 )
 
 RQ_SRS_036_ClickHouse_CollapsingMergeTree_TableCreation = Requirement(
-    name='RQ.SRS-036.ClickHouse.CollapsingMergeTree.TableCreation',
-    version='1.0',
+    name="RQ.SRS-036.ClickHouse.CollapsingMergeTree.TableCreation",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[CollapsingMergeTree] engine SHALL support same clauses as when creating a MergeTree table, with the addition of the \n'
-        '`Sign` column.\n'
-        '\n'
+        "[CollapsingMergeTree] engine SHALL support same clauses as when creating a MergeTree table, with the addition of the \n"
+        "`Sign` column.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.5.1'
+    num="4.5.1",
 )
 
 RQ_SRS_036_ClickHouse_CollapsingMergeTree_NonFunctionalRequirements_Performance = Requirement(
-    name='RQ.SRS-036.ClickHouse.CollapsingMergeTree.NonFunctionalRequirements.Performance',
-    version='1.0',
+    name="RQ.SRS-036.ClickHouse.CollapsingMergeTree.NonFunctionalRequirements.Performance",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[CollapsingMergeTree] engine SHALL allow handle large volumes of data efficiently.\n'
-        '\n'
+        "[CollapsingMergeTree] engine SHALL allow handle large volumes of data efficiently.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.6.2'
+    num="4.6.2",
 )
 
 RQ_SRS_036_ClickHouse_CollapsingMergeTree_NonFunctionalRequirements_Reliability = Requirement(
-    name='RQ.SRS-036.ClickHouse.CollapsingMergeTree.NonFunctionalRequirements.Reliability',
-    version='1.0',
+    name="RQ.SRS-036.ClickHouse.CollapsingMergeTree.NonFunctionalRequirements.Reliability",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[CollapsingMergeTree] engine SHALL be reliable and not lose any data.\n'
-        '\n'
-        '[SRS]: #srs\n'
-        '[ClickHouse]: https://clickhouse.com\n'
-        '[CollapsingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/collapsingmergetree/\n'
-        '[Algorithm]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/collapsingmergetree/#table_engine-collapsingmergetree-collapsing-algorithm\n'
-        '\n'
-        '\n'
-        '\n'
-        '\n'
+        "[CollapsingMergeTree] engine SHALL be reliable and not lose any data.\n"
+        "\n"
+        "[SRS]: #srs\n"
+        "[ClickHouse]: https://clickhouse.com\n"
+        "[CollapsingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/collapsingmergetree/\n"
+        "[Algorithm]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/collapsingmergetree/#table_engine-collapsingmergetree-collapsing-algorithm\n"
+        "\n"
+        "\n"
+        "\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.6.4'
+    num="4.6.4",
 )
 
 SRS036_ClickHouse_CollapsingMergeTree = Specification(
-    name='SRS036 ClickHouse CollapsingMergeTree',
+    name="SRS036 ClickHouse CollapsingMergeTree",
     description=None,
     author=None,
     date=None,
@@ -156,26 +156,50 @@ SRS036_ClickHouse_CollapsingMergeTree = Specification(
     parent=None,
     children=None,
     headings=(
-        Heading(name='Introduction', level=1, num='1'),
-        Heading(name='Related Resources', level=1, num='2'),
-        Heading(name='Terminology', level=1, num='3'),
-        Heading(name='SRS', level=2, num='3.1'),
-        Heading(name='Requirements', level=1, num='4'),
-        Heading(name='RQ.SRS-036.ClickHouse.CollapsingMergeTree', level=2, num='4.1'),
-        Heading(name='Parameters', level=2, num='4.2'),
-        Heading(name='RQ.SRS-036.ClickHouse.CollapsingMergeTree.Parameters', level=3, num='4.2.1'),
-        Heading(name='Collapsing Data', level=2, num='4.3'),
-        Heading(name='RQ.SRS-036.ClickHouse.CollapsingMergeTree.CollapsingData', level=3, num='4.3.1'),
-        Heading(name='Merge Algorithm', level=2, num='4.4'),
-        Heading(name='RQ.SRS-036.ClickHouse.CollapsingMergeTree.MergeAlgorithm', level=3, num='4.4.1'),
-        Heading(name='TableCreation', level=2, num='4.5'),
-        Heading(name='RQ.SRS-036.ClickHouse.CollapsingMergeTree.TableCreation', level=3, num='4.5.1'),
-        Heading(name='Non-Functional Requirements', level=2, num='4.6'),
-        Heading(name='Performance', level=3, num='4.6.1'),
-        Heading(name='RQ.SRS-036.ClickHouse.CollapsingMergeTree.NonFunctionalRequirements.Performance', level=3, num='4.6.2'),
-        Heading(name='Reliability', level=3, num='4.6.3'),
-        Heading(name='RQ.SRS-036.ClickHouse.CollapsingMergeTree.NonFunctionalRequirements.Reliability', level=3, num='4.6.4'),
+        Heading(name="Introduction", level=1, num="1"),
+        Heading(name="Related Resources", level=1, num="2"),
+        Heading(name="Terminology", level=1, num="3"),
+        Heading(name="SRS", level=2, num="3.1"),
+        Heading(name="Requirements", level=1, num="4"),
+        Heading(name="RQ.SRS-036.ClickHouse.CollapsingMergeTree", level=2, num="4.1"),
+        Heading(name="Parameters", level=2, num="4.2"),
+        Heading(
+            name="RQ.SRS-036.ClickHouse.CollapsingMergeTree.Parameters",
+            level=3,
+            num="4.2.1",
         ),
+        Heading(name="Collapsing Data", level=2, num="4.3"),
+        Heading(
+            name="RQ.SRS-036.ClickHouse.CollapsingMergeTree.CollapsingData",
+            level=3,
+            num="4.3.1",
+        ),
+        Heading(name="Merge Algorithm", level=2, num="4.4"),
+        Heading(
+            name="RQ.SRS-036.ClickHouse.CollapsingMergeTree.MergeAlgorithm",
+            level=3,
+            num="4.4.1",
+        ),
+        Heading(name="TableCreation", level=2, num="4.5"),
+        Heading(
+            name="RQ.SRS-036.ClickHouse.CollapsingMergeTree.TableCreation",
+            level=3,
+            num="4.5.1",
+        ),
+        Heading(name="Non-Functional Requirements", level=2, num="4.6"),
+        Heading(name="Performance", level=3, num="4.6.1"),
+        Heading(
+            name="RQ.SRS-036.ClickHouse.CollapsingMergeTree.NonFunctionalRequirements.Performance",
+            level=3,
+            num="4.6.2",
+        ),
+        Heading(name="Reliability", level=3, num="4.6.3"),
+        Heading(
+            name="RQ.SRS-036.ClickHouse.CollapsingMergeTree.NonFunctionalRequirements.Reliability",
+            level=3,
+            num="4.6.4",
+        ),
+    ),
     requirements=(
         RQ_SRS_036_ClickHouse_CollapsingMergeTree,
         RQ_SRS_036_ClickHouse_CollapsingMergeTree_Parameters,
@@ -184,8 +208,8 @@ SRS036_ClickHouse_CollapsingMergeTree = Specification(
         RQ_SRS_036_ClickHouse_CollapsingMergeTree_TableCreation,
         RQ_SRS_036_ClickHouse_CollapsingMergeTree_NonFunctionalRequirements_Performance,
         RQ_SRS_036_ClickHouse_CollapsingMergeTree_NonFunctionalRequirements_Reliability,
-        ),
-    content='''
+    ),
+    content="""
 # SRS036 ClickHouse CollapsingMergeTree
 # Software Requirements Specification
 
@@ -298,5 +322,5 @@ version: 1.0
 [ClickHouse]: https://clickhouse.com
 [CollapsingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/collapsingmergetree/
 [Algorithm]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/collapsingmergetree/#table_engine-collapsingmergetree-collapsing-algorithm
-'''
+""",
 )

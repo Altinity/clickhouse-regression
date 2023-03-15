@@ -107,22 +107,6 @@ _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint8_lowcar
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint8, lowcardinality_uint16_)":[163,175,201,255,255,255,255]}
 """
 
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint8_lowcardinality_nullable_uint8__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint8, lowcardinality_nullable_uint8__)":[126,175,230,255,255,255,255]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint8_lowcardinality_nullable_uint64__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint8, lowcardinality_nullable_uint64__)":[24,24,24,24,24,24,24]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint8_lowcardinality_nullable_uint32__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint8, lowcardinality_nullable_uint32__)":[126,201,230,255,255,255,255]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint8_lowcardinality_nullable_uint16__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint8, lowcardinality_nullable_uint16__)":[175,201,255,255,255,255,255]}
-"""
-
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint64_uint8 = r"""
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint64, uint8)":[30000,30000,30000,30000,30000,30000,30000]}
 """
@@ -169,22 +153,6 @@ _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint64_lowca
 
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint64_lowcardinality_uint16_ = r"""
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint64, lowcardinality_uint16_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint64_lowcardinality_nullable_uint8__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint64, lowcardinality_nullable_uint8__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint64_lowcardinality_nullable_uint64__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint64, lowcardinality_nullable_uint64__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint64_lowcardinality_nullable_uint32__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint64, lowcardinality_nullable_uint32__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint64_lowcardinality_nullable_uint16__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint64, lowcardinality_nullable_uint16__)":[30000,30000,30000,30000,30000,30000,30000]}
 """
 
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint32_uint8 = r"""
@@ -235,22 +203,6 @@ _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint32_lowca
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint32, lowcardinality_uint16_)":[30000,30000,30000,30000,30000,30000,30000]}
 """
 
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint32_lowcardinality_nullable_uint8__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint32, lowcardinality_nullable_uint8__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint32_lowcardinality_nullable_uint64__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint32, lowcardinality_nullable_uint64__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint32_lowcardinality_nullable_uint32__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint32, lowcardinality_nullable_uint32__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint32_lowcardinality_nullable_uint16__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint32, lowcardinality_nullable_uint16__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint16_uint8 = r"""
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint16, uint8)":[18428,30000,30000,30000,30000,30000,30000]}
 """
@@ -297,22 +249,6 @@ _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint16_lowca
 
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint16_lowcardinality_uint16_ = r"""
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint16, lowcardinality_uint16_)":[18428,26244,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint16_lowcardinality_nullable_uint8__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint16, lowcardinality_nullable_uint8__)":[18428,27009,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint16_lowcardinality_nullable_uint64__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint16, lowcardinality_nullable_uint64__)":[16899,16899,16899,16899,16899,16899,16899]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint16_lowcardinality_nullable_uint32__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint16, lowcardinality_nullable_uint32__)":[16899,26244,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint16_lowcardinality_nullable_uint16__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint16, lowcardinality_nullable_uint16__)":[26244,30000,30000,30000,30000,30000,30000]}
 """
 
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint8__uint8 = r"""
@@ -363,22 +299,6 @@ _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uin
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint8_, lowcardinality_uint16_)":[63,65,234,255,255,255,255]}
 """
 
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint8__lowcardinality_nullable_uint8__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint8_, lowcardinality_nullable_uint8__)":[63,65,234,255,255,255,255]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint8__lowcardinality_nullable_uint64__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint8_, lowcardinality_nullable_uint64__)":[28,28,28,63,63,63,63]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint8__lowcardinality_nullable_uint32__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint8_, lowcardinality_nullable_uint32__)":[28,65,197,255,255,255,255]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint8__lowcardinality_nullable_uint16__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint8_, lowcardinality_nullable_uint16__)":[28,63,255,255,255,255,255]}
-"""
-
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint64__uint8 = r"""
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint64_, uint8)":[30000,30000,30000,30000,30000,30000,30000]}
 """
@@ -425,22 +345,6 @@ _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uin
 
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint64__lowcardinality_uint16_ = r"""
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint64_, lowcardinality_uint16_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint64__lowcardinality_nullable_uint8__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint64_, lowcardinality_nullable_uint8__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint64__lowcardinality_nullable_uint64__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint64_, lowcardinality_nullable_uint64__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint64__lowcardinality_nullable_uint32__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint64_, lowcardinality_nullable_uint32__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint64__lowcardinality_nullable_uint16__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint64_, lowcardinality_nullable_uint16__)":[30000,30000,30000,30000,30000,30000,30000]}
 """
 
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint32__uint8 = r"""
@@ -491,22 +395,6 @@ _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uin
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint32_, lowcardinality_uint16_)":[30000,30000,30000,30000,30000,30000,30000]}
 """
 
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint32__lowcardinality_nullable_uint8__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint32_, lowcardinality_nullable_uint8__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint32__lowcardinality_nullable_uint64__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint32_, lowcardinality_nullable_uint64__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint32__lowcardinality_nullable_uint32__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint32_, lowcardinality_nullable_uint32__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint32__lowcardinality_nullable_uint16__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint32_, lowcardinality_nullable_uint16__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint16__uint8 = r"""
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint16_, uint8)":[25900,30000,30000,30000,30000,30000,30000]}
 """
@@ -553,22 +441,6 @@ _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uin
 
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint16__lowcardinality_uint16_ = r"""
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint16_, lowcardinality_uint16_)":[25900,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint16__lowcardinality_nullable_uint8__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint16_, lowcardinality_nullable_uint8__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint16__lowcardinality_nullable_uint64__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint16_, lowcardinality_nullable_uint64__)":[4445,4445,4445,4445,4445,4445,4445]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint16__lowcardinality_nullable_uint32__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint16_, lowcardinality_nullable_uint32__)":[24081,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint16__lowcardinality_nullable_uint16__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint16_, lowcardinality_nullable_uint16__)":[30000,30000,30000,30000,30000,30000,30000]}
 """
 
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int8__uint8 = r"""
@@ -619,22 +491,6 @@ _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int8_, lowcardinality_uint16_)":[57,57,127,127,127,127,127]}
 """
 
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int8__lowcardinality_nullable_uint8__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int8_, lowcardinality_nullable_uint8__)":[57,72,127,127,127,127,127]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int8__lowcardinality_nullable_uint64__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int8_, lowcardinality_nullable_uint64__)":[4,4,4,57,57,57,57]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int8__lowcardinality_nullable_uint32__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int8_, lowcardinality_nullable_uint32__)":[57,72,127,127,127,127,127]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int8__lowcardinality_nullable_uint16__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int8_, lowcardinality_nullable_uint16__)":[57,93,127,127,127,127,127]}
-"""
-
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int64__uint8 = r"""
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int64_, uint8)":[30000,30000,30000,30000,30000,30000,30000]}
 """
@@ -681,22 +537,6 @@ _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int
 
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int64__lowcardinality_uint16_ = r"""
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int64_, lowcardinality_uint16_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int64__lowcardinality_nullable_uint8__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int64_, lowcardinality_nullable_uint8__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int64__lowcardinality_nullable_uint64__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int64_, lowcardinality_nullable_uint64__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int64__lowcardinality_nullable_uint32__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int64_, lowcardinality_nullable_uint32__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int64__lowcardinality_nullable_uint16__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int64_, lowcardinality_nullable_uint16__)":[30000,30000,30000,30000,30000,30000,30000]}
 """
 
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int32__uint8 = r"""
@@ -747,22 +587,6 @@ _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int32_, lowcardinality_uint16_)":[30000,30000,30000,30000,30000,30000,30000]}
 """
 
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int32__lowcardinality_nullable_uint8__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int32_, lowcardinality_nullable_uint8__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int32__lowcardinality_nullable_uint64__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int32_, lowcardinality_nullable_uint64__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int32__lowcardinality_nullable_uint32__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int32_, lowcardinality_nullable_uint32__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int32__lowcardinality_nullable_uint16__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int32_, lowcardinality_nullable_uint16__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int16__uint8 = r"""
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int16_, uint8)":[3728,11479,30000,30000,30000,30000,30000]}
 """
@@ -809,22 +633,6 @@ _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int
 
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int16__lowcardinality_uint16_ = r"""
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int16_, lowcardinality_uint16_)":[6898,13241,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int16__lowcardinality_nullable_uint8__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int16_, lowcardinality_nullable_uint8__)":[6898,11479,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int16__lowcardinality_nullable_uint64__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int16_, lowcardinality_nullable_uint64__)":[6898,6898,6898,6898,6898,6898,6898]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int16__lowcardinality_nullable_uint32__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int16_, lowcardinality_nullable_uint32__)":[6898,11479,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int16__lowcardinality_nullable_uint16__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int16_, lowcardinality_nullable_uint16__)":[3728,13241,30000,30000,30000,30000,30000]}
 """
 
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_float64__uint8 = r"""
@@ -875,22 +683,6 @@ _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_flo
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_float64_, lowcardinality_uint16_)":[null,null,null,null,null,null,null]}
 """
 
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_float64__lowcardinality_nullable_uint8__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_float64_, lowcardinality_nullable_uint8__)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_float64__lowcardinality_nullable_uint64__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_float64_, lowcardinality_nullable_uint64__)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_float64__lowcardinality_nullable_uint32__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_float64_, lowcardinality_nullable_uint32__)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_float64__lowcardinality_nullable_uint16__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_float64_, lowcardinality_nullable_uint16__)":[null,null,null,null,null,null,null]}
-"""
-
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_float32__uint8 = r"""
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_float32_, uint8)":[null,null,null,null,null,null,null]}
 """
@@ -937,22 +729,6 @@ _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_flo
 
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_float32__lowcardinality_uint16_ = r"""
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_float32_, lowcardinality_uint16_)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_float32__lowcardinality_nullable_uint8__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_float32_, lowcardinality_nullable_uint8__)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_float32__lowcardinality_nullable_uint64__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_float32_, lowcardinality_nullable_uint64__)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_float32__lowcardinality_nullable_uint32__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_float32_, lowcardinality_nullable_uint32__)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_float32__lowcardinality_nullable_uint16__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_float32_, lowcardinality_nullable_uint16__)":[null,null,null,null,null,null,null]}
 """
 
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint8__uint8 = r"""
@@ -1003,22 +779,6 @@ _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinali
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint8_, lowcardinality_uint16_)":[172,216,228,255,255,255,255]}
 """
 
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint8__lowcardinality_nullable_uint8__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint8_, lowcardinality_nullable_uint8__)":[172,225,228,255,255,255,255]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint8__lowcardinality_nullable_uint64__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint8_, lowcardinality_nullable_uint64__)":[16,16,16,16,16,16,16]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint8__lowcardinality_nullable_uint32__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint8_, lowcardinality_nullable_uint32__)":[216,228,239,255,255,255,255]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint8__lowcardinality_nullable_uint16__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint8_, lowcardinality_nullable_uint16__)":[225,228,255,255,255,255,255]}
-"""
-
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint64__uint8 = r"""
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint64_, uint8)":[30000,30000,30000,30000,30000,30000,30000]}
 """
@@ -1065,22 +825,6 @@ _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinali
 
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint64__lowcardinality_uint16_ = r"""
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint64_, lowcardinality_uint16_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint64__lowcardinality_nullable_uint8__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint64_, lowcardinality_nullable_uint8__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint64__lowcardinality_nullable_uint64__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint64_, lowcardinality_nullable_uint64__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint64__lowcardinality_nullable_uint32__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint64_, lowcardinality_nullable_uint32__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint64__lowcardinality_nullable_uint16__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint64_, lowcardinality_nullable_uint16__)":[30000,30000,30000,30000,30000,30000,30000]}
 """
 
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint32__uint8 = r"""
@@ -1131,22 +875,6 @@ _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinali
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint32_, lowcardinality_uint16_)":[30000,30000,30000,30000,30000,30000,30000]}
 """
 
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint32__lowcardinality_nullable_uint8__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint32_, lowcardinality_nullable_uint8__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint32__lowcardinality_nullable_uint64__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint32_, lowcardinality_nullable_uint64__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint32__lowcardinality_nullable_uint32__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint32_, lowcardinality_nullable_uint32__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint32__lowcardinality_nullable_uint16__ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint32_, lowcardinality_nullable_uint16__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint16__uint8 = r"""
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint16_, uint8)":[15375,30000,30000,30000,30000,30000,30000]}
 """
@@ -1193,6 +921,854 @@ _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinali
 
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint16__lowcardinality_uint16_ = r"""
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint16_, lowcardinality_uint16_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int8__uint8 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int8_, uint8)":[95,119,127,127,127,127,127]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int8__uint64 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int8_, uint64)":[45,45,45,45,45,45,45]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int8__uint32 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int8_, uint32)":[95,119,127,127,127,127,127]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int8__uint16 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int8_, uint16)":[71,119,127,127,127,127,127]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int8__nullable_uint8_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int8_, nullable_uint8_)":[45,71,127,127,127,127,127]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int8__nullable_uint64_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int8_, nullable_uint64_)":[45,45,45,45,45,45,45]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int8__nullable_uint32_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int8_, nullable_uint32_)":[71,95,127,127,127,127,127]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int8__nullable_uint16_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int8_, nullable_uint16_)":[45,95,127,127,127,127,127]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int8__lowcardinality_uint8_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int8_, lowcardinality_uint8_)":[95,119,127,127,127,127,127]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int8__lowcardinality_uint64_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int8_, lowcardinality_uint64_)":[45,45,45,45,71,71,71]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int8__lowcardinality_uint32_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int8_, lowcardinality_uint32_)":[45,119,127,127,127,127,127]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int8__lowcardinality_uint16_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int8_, lowcardinality_uint16_)":[71,95,127,127,127,127,127]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int64__uint8 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int64_, uint8)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int64__uint64 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int64_, uint64)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int64__uint32 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int64_, uint32)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int64__uint16 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int64_, uint16)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int64__nullable_uint8_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int64_, nullable_uint8_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int64__nullable_uint64_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int64_, nullable_uint64_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int64__nullable_uint32_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int64_, nullable_uint32_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int64__nullable_uint16_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int64_, nullable_uint16_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int64__lowcardinality_uint8_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int64_, lowcardinality_uint8_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int64__lowcardinality_uint64_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int64_, lowcardinality_uint64_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int64__lowcardinality_uint32_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int64_, lowcardinality_uint32_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int64__lowcardinality_uint16_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int64_, lowcardinality_uint16_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int32__uint8 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int32_, uint8)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int32__uint64 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int32_, uint64)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int32__uint32 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int32_, uint32)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int32__uint16 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int32_, uint16)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int32__nullable_uint8_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int32_, nullable_uint8_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int32__nullable_uint64_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int32_, nullable_uint64_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int32__nullable_uint32_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int32_, nullable_uint32_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int32__nullable_uint16_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int32_, nullable_uint16_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int32__lowcardinality_uint8_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int32_, lowcardinality_uint8_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int32__lowcardinality_uint64_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int32_, lowcardinality_uint64_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int32__lowcardinality_uint32_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int32_, lowcardinality_uint32_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int32__lowcardinality_uint16_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int32_, lowcardinality_uint16_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int16__uint8 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int16_, uint8)":[20644,22674,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int16__uint64 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int16_, uint64)":[20644,20644,20644,20644,20644,20644,20644]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int16__uint32 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int16_, uint32)":[20644,22674,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int16__uint16 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int16_, uint16)":[20644,24260,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int16__nullable_uint8_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int16_, nullable_uint8_)":[20644,22674,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int16__nullable_uint64_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int16_, nullable_uint64_)":[20644,20644,22674,22674,22674,22674,22674]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int16__nullable_uint32_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int16_, nullable_uint32_)":[22674,24260,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int16__nullable_uint16_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int16_, nullable_uint16_)":[20644,22674,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int16__lowcardinality_uint8_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int16_, lowcardinality_uint8_)":[20644,22674,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int16__lowcardinality_uint64_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int16_, lowcardinality_uint64_)":[20644,22674,22674,22674,22674,22674,22674]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int16__lowcardinality_uint32_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int16_, lowcardinality_uint32_)":[20644,22674,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int16__lowcardinality_uint16_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int16_, lowcardinality_uint16_)":[20644,22674,24260,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float64__uint8 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float64_, uint8)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float64__uint64 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float64_, uint64)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float64__uint32 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float64_, uint32)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float64__uint16 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float64_, uint16)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float64__nullable_uint8_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float64_, nullable_uint8_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float64__nullable_uint64_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float64_, nullable_uint64_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float64__nullable_uint32_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float64_, nullable_uint32_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float64__nullable_uint16_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float64_, nullable_uint16_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float64__lowcardinality_uint8_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float64_, lowcardinality_uint8_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float64__lowcardinality_uint64_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float64_, lowcardinality_uint64_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float64__lowcardinality_uint32_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float64_, lowcardinality_uint32_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float64__lowcardinality_uint16_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float64_, lowcardinality_uint16_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float32__uint8 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float32_, uint8)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float32__uint64 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float32_, uint64)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float32__uint32 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float32_, uint32)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float32__uint16 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float32_, uint16)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float32__nullable_uint8_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float32_, nullable_uint8_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float32__nullable_uint64_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float32_, nullable_uint64_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float32__nullable_uint32_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float32_, nullable_uint32_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float32__nullable_uint16_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float32_, nullable_uint16_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float32__lowcardinality_uint8_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float32_, lowcardinality_uint8_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float32__lowcardinality_uint64_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float32_, lowcardinality_uint64_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float32__lowcardinality_uint32_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float32_, lowcardinality_uint32_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float32__lowcardinality_uint16_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float32_, lowcardinality_uint16_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int8_uint8 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int8, uint8)":[115,124,127,127,127,127,127]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int8_uint64 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int8, uint64)":[83,83,115,115,115,115,115]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int8_uint32 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int8, uint32)":[83,124,127,127,127,127,127]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int8_uint16 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int8, uint16)":[115,127,127,127,127,127,127]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int8_nullable_uint8_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int8, nullable_uint8_)":[83,115,127,127,127,127,127]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int8_nullable_uint64_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int8, nullable_uint64_)":[83,83,83,83,83,83,83]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int8_nullable_uint32_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int8, nullable_uint32_)":[115,124,127,127,127,127,127]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int8_nullable_uint16_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int8, nullable_uint16_)":[115,127,127,127,127,127,127]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int8_lowcardinality_uint8_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int8, lowcardinality_uint8_)":[83,124,127,127,127,127,127]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int8_lowcardinality_uint64_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int8, lowcardinality_uint64_)":[115,115,115,115,115,115,115]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int8_lowcardinality_uint32_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int8, lowcardinality_uint32_)":[115,127,127,127,127,127,127]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int8_lowcardinality_uint16_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int8, lowcardinality_uint16_)":[115,124,127,127,127,127,127]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int64_uint8 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int64, uint8)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int64_uint64 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int64, uint64)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int64_uint32 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int64, uint32)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int64_uint16 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int64, uint16)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int64_nullable_uint8_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int64, nullable_uint8_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int64_nullable_uint64_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int64, nullable_uint64_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int64_nullable_uint32_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int64, nullable_uint32_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int64_nullable_uint16_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int64, nullable_uint16_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int64_lowcardinality_uint8_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int64, lowcardinality_uint8_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int64_lowcardinality_uint64_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int64, lowcardinality_uint64_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int64_lowcardinality_uint32_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int64, lowcardinality_uint32_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int64_lowcardinality_uint16_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int64, lowcardinality_uint16_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int32_uint8 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int32, uint8)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int32_uint64 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int32, uint64)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int32_uint32 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int32, uint32)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int32_uint16 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int32, uint16)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int32_nullable_uint8_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int32, nullable_uint8_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int32_nullable_uint64_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int32, nullable_uint64_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int32_nullable_uint32_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int32, nullable_uint32_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int32_nullable_uint16_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int32, nullable_uint16_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int32_lowcardinality_uint8_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int32, lowcardinality_uint8_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int32_lowcardinality_uint64_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int32, lowcardinality_uint64_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int32_lowcardinality_uint32_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int32, lowcardinality_uint32_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int32_lowcardinality_uint16_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int32, lowcardinality_uint16_)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int16_uint8 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int16, uint8)":[1499,9582,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int16_uint64 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int16, uint64)":[395,395,1499,1499,1499,9582,9582]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int16_uint32 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int16, uint32)":[1499,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int16_uint16 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int16, uint16)":[1499,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int16_nullable_uint8_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int16, nullable_uint8_)":[1499,9582,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int16_nullable_uint64_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int16, nullable_uint64_)":[395,395,395,395,395,395,395]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int16_nullable_uint32_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int16, nullable_uint32_)":[1499,9582,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int16_nullable_uint16_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int16, nullable_uint16_)":[1499,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int16_lowcardinality_uint8_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int16, lowcardinality_uint8_)":[1499,9582,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int16_lowcardinality_uint64_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int16, lowcardinality_uint64_)":[395,395,395,395,395,395,395]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int16_lowcardinality_uint32_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int16, lowcardinality_uint32_)":[395,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int16_lowcardinality_uint16_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int16, lowcardinality_uint16_)":[395,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float64_uint8 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float64, uint8)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float64_uint64 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float64, uint64)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float64_uint32 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float64, uint32)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float64_uint16 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float64, uint16)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float64_nullable_uint8_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float64, nullable_uint8_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float64_nullable_uint64_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float64, nullable_uint64_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float64_nullable_uint32_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float64, nullable_uint32_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float64_nullable_uint16_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float64, nullable_uint16_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float64_lowcardinality_uint8_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float64, lowcardinality_uint8_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float64_lowcardinality_uint64_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float64, lowcardinality_uint64_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float64_lowcardinality_uint32_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float64, lowcardinality_uint32_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float64_lowcardinality_uint16_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float64, lowcardinality_uint16_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float32_uint8 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float32, uint8)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float32_uint64 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float32, uint64)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float32_uint32 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float32, uint32)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float32_uint16 = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float32, uint16)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float32_nullable_uint8_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float32, nullable_uint8_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float32_nullable_uint64_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float32, nullable_uint64_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float32_nullable_uint32_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float32, nullable_uint32_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float32_nullable_uint16_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float32, nullable_uint16_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float32_lowcardinality_uint8_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float32, lowcardinality_uint8_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float32_lowcardinality_uint64_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float32, lowcardinality_uint64_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float32_lowcardinality_uint32_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float32, lowcardinality_uint32_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float32_lowcardinality_uint16_ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float32, lowcardinality_uint16_)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint8_lowcardinality_nullable_uint8__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint8, lowcardinality_nullable_uint8__)":[126,175,230,255,255,255,255]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint8_lowcardinality_nullable_uint64__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint8, lowcardinality_nullable_uint64__)":[24,24,24,24,24,24,24]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint8_lowcardinality_nullable_uint32__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint8, lowcardinality_nullable_uint32__)":[126,201,230,255,255,255,255]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint8_lowcardinality_nullable_uint16__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint8, lowcardinality_nullable_uint16__)":[175,201,255,255,255,255,255]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint64_lowcardinality_nullable_uint8__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint64, lowcardinality_nullable_uint8__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint64_lowcardinality_nullable_uint64__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint64, lowcardinality_nullable_uint64__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint64_lowcardinality_nullable_uint32__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint64, lowcardinality_nullable_uint32__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint64_lowcardinality_nullable_uint16__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint64, lowcardinality_nullable_uint16__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint32_lowcardinality_nullable_uint8__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint32, lowcardinality_nullable_uint8__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint32_lowcardinality_nullable_uint64__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint32, lowcardinality_nullable_uint64__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint32_lowcardinality_nullable_uint32__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint32, lowcardinality_nullable_uint32__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint32_lowcardinality_nullable_uint16__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint32, lowcardinality_nullable_uint16__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint16_lowcardinality_nullable_uint8__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint16, lowcardinality_nullable_uint8__)":[18428,27009,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint16_lowcardinality_nullable_uint64__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint16, lowcardinality_nullable_uint64__)":[16899,16899,16899,16899,16899,16899,16899]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint16_lowcardinality_nullable_uint32__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint16, lowcardinality_nullable_uint32__)":[16899,26244,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_uint16_lowcardinality_nullable_uint16__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint16, lowcardinality_nullable_uint16__)":[26244,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint8__lowcardinality_nullable_uint8__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint8_, lowcardinality_nullable_uint8__)":[63,65,234,255,255,255,255]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint8__lowcardinality_nullable_uint64__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint8_, lowcardinality_nullable_uint64__)":[28,28,28,63,63,63,63]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint8__lowcardinality_nullable_uint32__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint8_, lowcardinality_nullable_uint32__)":[28,65,197,255,255,255,255]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint8__lowcardinality_nullable_uint16__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint8_, lowcardinality_nullable_uint16__)":[28,63,255,255,255,255,255]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint64__lowcardinality_nullable_uint8__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint64_, lowcardinality_nullable_uint8__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint64__lowcardinality_nullable_uint64__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint64_, lowcardinality_nullable_uint64__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint64__lowcardinality_nullable_uint32__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint64_, lowcardinality_nullable_uint32__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint64__lowcardinality_nullable_uint16__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint64_, lowcardinality_nullable_uint16__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint32__lowcardinality_nullable_uint8__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint32_, lowcardinality_nullable_uint8__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint32__lowcardinality_nullable_uint64__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint32_, lowcardinality_nullable_uint64__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint32__lowcardinality_nullable_uint32__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint32_, lowcardinality_nullable_uint32__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint32__lowcardinality_nullable_uint16__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint32_, lowcardinality_nullable_uint16__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint16__lowcardinality_nullable_uint8__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint16_, lowcardinality_nullable_uint8__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint16__lowcardinality_nullable_uint64__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint16_, lowcardinality_nullable_uint64__)":[4445,4445,4445,4445,4445,4445,4445]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint16__lowcardinality_nullable_uint32__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint16_, lowcardinality_nullable_uint32__)":[24081,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_uint16__lowcardinality_nullable_uint16__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint16_, lowcardinality_nullable_uint16__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int8__lowcardinality_nullable_uint8__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int8_, lowcardinality_nullable_uint8__)":[57,72,127,127,127,127,127]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int8__lowcardinality_nullable_uint64__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int8_, lowcardinality_nullable_uint64__)":[4,4,4,57,57,57,57]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int8__lowcardinality_nullable_uint32__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int8_, lowcardinality_nullable_uint32__)":[57,72,127,127,127,127,127]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int8__lowcardinality_nullable_uint16__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int8_, lowcardinality_nullable_uint16__)":[57,93,127,127,127,127,127]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int64__lowcardinality_nullable_uint8__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int64_, lowcardinality_nullable_uint8__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int64__lowcardinality_nullable_uint64__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int64_, lowcardinality_nullable_uint64__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int64__lowcardinality_nullable_uint32__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int64_, lowcardinality_nullable_uint32__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int64__lowcardinality_nullable_uint16__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int64_, lowcardinality_nullable_uint16__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int32__lowcardinality_nullable_uint8__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int32_, lowcardinality_nullable_uint8__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int32__lowcardinality_nullable_uint64__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int32_, lowcardinality_nullable_uint64__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int32__lowcardinality_nullable_uint32__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int32_, lowcardinality_nullable_uint32__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int32__lowcardinality_nullable_uint16__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int32_, lowcardinality_nullable_uint16__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int16__lowcardinality_nullable_uint8__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int16_, lowcardinality_nullable_uint8__)":[6898,11479,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int16__lowcardinality_nullable_uint64__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int16_, lowcardinality_nullable_uint64__)":[6898,6898,6898,6898,6898,6898,6898]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int16__lowcardinality_nullable_uint32__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int16_, lowcardinality_nullable_uint32__)":[6898,11479,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_int16__lowcardinality_nullable_uint16__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int16_, lowcardinality_nullable_uint16__)":[3728,13241,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_float64__lowcardinality_nullable_uint8__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_float64_, lowcardinality_nullable_uint8__)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_float64__lowcardinality_nullable_uint64__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_float64_, lowcardinality_nullable_uint64__)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_float64__lowcardinality_nullable_uint32__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_float64_, lowcardinality_nullable_uint32__)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_float64__lowcardinality_nullable_uint16__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_float64_, lowcardinality_nullable_uint16__)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_float32__lowcardinality_nullable_uint8__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_float32_, lowcardinality_nullable_uint8__)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_float32__lowcardinality_nullable_uint64__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_float32_, lowcardinality_nullable_uint64__)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_float32__lowcardinality_nullable_uint32__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_float32_, lowcardinality_nullable_uint32__)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_nullable_float32__lowcardinality_nullable_uint16__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_float32_, lowcardinality_nullable_uint16__)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint8__lowcardinality_nullable_uint8__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint8_, lowcardinality_nullable_uint8__)":[172,225,228,255,255,255,255]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint8__lowcardinality_nullable_uint64__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint8_, lowcardinality_nullable_uint64__)":[16,16,16,16,16,16,16]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint8__lowcardinality_nullable_uint32__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint8_, lowcardinality_nullable_uint32__)":[216,228,239,255,255,255,255]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint8__lowcardinality_nullable_uint16__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint8_, lowcardinality_nullable_uint16__)":[225,228,255,255,255,255,255]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint64__lowcardinality_nullable_uint8__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint64_, lowcardinality_nullable_uint8__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint64__lowcardinality_nullable_uint64__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint64_, lowcardinality_nullable_uint64__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint64__lowcardinality_nullable_uint32__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint64_, lowcardinality_nullable_uint32__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint64__lowcardinality_nullable_uint16__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint64_, lowcardinality_nullable_uint16__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint32__lowcardinality_nullable_uint8__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint32_, lowcardinality_nullable_uint8__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint32__lowcardinality_nullable_uint64__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint32_, lowcardinality_nullable_uint64__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint32__lowcardinality_nullable_uint32__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint32_, lowcardinality_nullable_uint32__)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint32__lowcardinality_nullable_uint16__ = r"""
+{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint32_, lowcardinality_nullable_uint16__)":[30000,30000,30000,30000,30000,30000,30000]}
 """
 
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_uint16__lowcardinality_nullable_uint8__ = r"""
@@ -1851,54 +2427,6 @@ _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinali
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_float32__, lowcardinality_nullable_uint16__)":[null,null,null,null,null,null,null]}
 """
 
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int8__uint8 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int8_, uint8)":[95,119,127,127,127,127,127]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int8__uint64 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int8_, uint64)":[45,45,45,45,45,45,45]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int8__uint32 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int8_, uint32)":[95,119,127,127,127,127,127]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int8__uint16 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int8_, uint16)":[71,119,127,127,127,127,127]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int8__nullable_uint8_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int8_, nullable_uint8_)":[45,71,127,127,127,127,127]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int8__nullable_uint64_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int8_, nullable_uint64_)":[45,45,45,45,45,45,45]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int8__nullable_uint32_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int8_, nullable_uint32_)":[71,95,127,127,127,127,127]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int8__nullable_uint16_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int8_, nullable_uint16_)":[45,95,127,127,127,127,127]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int8__lowcardinality_uint8_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int8_, lowcardinality_uint8_)":[95,119,127,127,127,127,127]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int8__lowcardinality_uint64_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int8_, lowcardinality_uint64_)":[45,45,45,45,71,71,71]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int8__lowcardinality_uint32_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int8_, lowcardinality_uint32_)":[45,119,127,127,127,127,127]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int8__lowcardinality_uint16_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int8_, lowcardinality_uint16_)":[71,95,127,127,127,127,127]}
-"""
-
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int8__lowcardinality_nullable_uint8__ = r"""
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int8_, lowcardinality_nullable_uint8__)":[71,119,127,127,127,127,127]}
 """
@@ -1913,54 +2441,6 @@ _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinali
 
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int8__lowcardinality_nullable_uint16__ = r"""
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int8_, lowcardinality_nullable_uint16__)":[95,119,127,127,127,127,127]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int64__uint8 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int64_, uint8)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int64__uint64 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int64_, uint64)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int64__uint32 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int64_, uint32)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int64__uint16 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int64_, uint16)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int64__nullable_uint8_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int64_, nullable_uint8_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int64__nullable_uint64_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int64_, nullable_uint64_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int64__nullable_uint32_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int64_, nullable_uint32_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int64__nullable_uint16_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int64_, nullable_uint16_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int64__lowcardinality_uint8_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int64_, lowcardinality_uint8_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int64__lowcardinality_uint64_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int64_, lowcardinality_uint64_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int64__lowcardinality_uint32_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int64_, lowcardinality_uint32_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int64__lowcardinality_uint16_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int64_, lowcardinality_uint16_)":[30000,30000,30000,30000,30000,30000,30000]}
 """
 
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int64__lowcardinality_nullable_uint8__ = r"""
@@ -1979,54 +2459,6 @@ _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinali
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int64_, lowcardinality_nullable_uint16__)":[30000,30000,30000,30000,30000,30000,30000]}
 """
 
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int32__uint8 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int32_, uint8)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int32__uint64 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int32_, uint64)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int32__uint32 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int32_, uint32)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int32__uint16 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int32_, uint16)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int32__nullable_uint8_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int32_, nullable_uint8_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int32__nullable_uint64_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int32_, nullable_uint64_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int32__nullable_uint32_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int32_, nullable_uint32_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int32__nullable_uint16_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int32_, nullable_uint16_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int32__lowcardinality_uint8_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int32_, lowcardinality_uint8_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int32__lowcardinality_uint64_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int32_, lowcardinality_uint64_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int32__lowcardinality_uint32_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int32_, lowcardinality_uint32_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int32__lowcardinality_uint16_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int32_, lowcardinality_uint16_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int32__lowcardinality_nullable_uint8__ = r"""
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int32_, lowcardinality_nullable_uint8__)":[30000,30000,30000,30000,30000,30000,30000]}
 """
@@ -2041,54 +2473,6 @@ _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinali
 
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int32__lowcardinality_nullable_uint16__ = r"""
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int32_, lowcardinality_nullable_uint16__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int16__uint8 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int16_, uint8)":[20644,22674,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int16__uint64 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int16_, uint64)":[20644,20644,20644,20644,20644,20644,20644]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int16__uint32 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int16_, uint32)":[20644,22674,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int16__uint16 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int16_, uint16)":[20644,24260,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int16__nullable_uint8_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int16_, nullable_uint8_)":[20644,22674,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int16__nullable_uint64_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int16_, nullable_uint64_)":[20644,20644,22674,22674,22674,22674,22674]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int16__nullable_uint32_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int16_, nullable_uint32_)":[22674,24260,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int16__nullable_uint16_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int16_, nullable_uint16_)":[20644,22674,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int16__lowcardinality_uint8_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int16_, lowcardinality_uint8_)":[20644,22674,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int16__lowcardinality_uint64_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int16_, lowcardinality_uint64_)":[20644,22674,22674,22674,22674,22674,22674]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int16__lowcardinality_uint32_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int16_, lowcardinality_uint32_)":[20644,22674,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int16__lowcardinality_uint16_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int16_, lowcardinality_uint16_)":[20644,22674,24260,30000,30000,30000,30000]}
 """
 
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_int16__lowcardinality_nullable_uint8__ = r"""
@@ -2107,54 +2491,6 @@ _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinali
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int16_, lowcardinality_nullable_uint16__)":[22674,22674,30000,30000,30000,30000,30000]}
 """
 
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float64__uint8 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float64_, uint8)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float64__uint64 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float64_, uint64)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float64__uint32 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float64_, uint32)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float64__uint16 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float64_, uint16)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float64__nullable_uint8_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float64_, nullable_uint8_)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float64__nullable_uint64_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float64_, nullable_uint64_)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float64__nullable_uint32_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float64_, nullable_uint32_)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float64__nullable_uint16_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float64_, nullable_uint16_)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float64__lowcardinality_uint8_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float64_, lowcardinality_uint8_)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float64__lowcardinality_uint64_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float64_, lowcardinality_uint64_)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float64__lowcardinality_uint32_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float64_, lowcardinality_uint32_)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float64__lowcardinality_uint16_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float64_, lowcardinality_uint16_)":[null,null,null,null,null,null,null]}
-"""
-
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float64__lowcardinality_nullable_uint8__ = r"""
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float64_, lowcardinality_nullable_uint8__)":[null,null,null,null,null,null,null]}
 """
@@ -2169,54 +2505,6 @@ _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinali
 
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float64__lowcardinality_nullable_uint16__ = r"""
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float64_, lowcardinality_nullable_uint16__)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float32__uint8 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float32_, uint8)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float32__uint64 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float32_, uint64)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float32__uint32 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float32_, uint32)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float32__uint16 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float32_, uint16)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float32__nullable_uint8_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float32_, nullable_uint8_)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float32__nullable_uint64_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float32_, nullable_uint64_)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float32__nullable_uint32_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float32_, nullable_uint32_)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float32__nullable_uint16_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float32_, nullable_uint16_)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float32__lowcardinality_uint8_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float32_, lowcardinality_uint8_)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float32__lowcardinality_uint64_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float32_, lowcardinality_uint64_)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float32__lowcardinality_uint32_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float32_, lowcardinality_uint32_)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float32__lowcardinality_uint16_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float32_, lowcardinality_uint16_)":[null,null,null,null,null,null,null]}
 """
 
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinality_float32__lowcardinality_nullable_uint8__ = r"""
@@ -2235,54 +2523,6 @@ _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_lowcardinali
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float32_, lowcardinality_nullable_uint16__)":[null,null,null,null,null,null,null]}
 """
 
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int8_uint8 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int8, uint8)":[115,124,127,127,127,127,127]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int8_uint64 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int8, uint64)":[83,83,115,115,115,115,115]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int8_uint32 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int8, uint32)":[83,124,127,127,127,127,127]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int8_uint16 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int8, uint16)":[115,127,127,127,127,127,127]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int8_nullable_uint8_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int8, nullable_uint8_)":[83,115,127,127,127,127,127]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int8_nullable_uint64_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int8, nullable_uint64_)":[83,83,83,83,83,83,83]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int8_nullable_uint32_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int8, nullable_uint32_)":[115,124,127,127,127,127,127]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int8_nullable_uint16_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int8, nullable_uint16_)":[115,127,127,127,127,127,127]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int8_lowcardinality_uint8_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int8, lowcardinality_uint8_)":[83,124,127,127,127,127,127]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int8_lowcardinality_uint64_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int8, lowcardinality_uint64_)":[115,115,115,115,115,115,115]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int8_lowcardinality_uint32_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int8, lowcardinality_uint32_)":[115,127,127,127,127,127,127]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int8_lowcardinality_uint16_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int8, lowcardinality_uint16_)":[115,124,127,127,127,127,127]}
-"""
-
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int8_lowcardinality_nullable_uint8__ = r"""
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int8, lowcardinality_nullable_uint8__)":[115,124,127,127,127,127,127]}
 """
@@ -2297,54 +2537,6 @@ _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int8_lowcard
 
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int8_lowcardinality_nullable_uint16__ = r"""
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int8, lowcardinality_nullable_uint16__)":[124,127,127,127,127,127,127]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int64_uint8 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int64, uint8)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int64_uint64 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int64, uint64)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int64_uint32 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int64, uint32)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int64_uint16 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int64, uint16)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int64_nullable_uint8_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int64, nullable_uint8_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int64_nullable_uint64_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int64, nullable_uint64_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int64_nullable_uint32_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int64, nullable_uint32_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int64_nullable_uint16_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int64, nullable_uint16_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int64_lowcardinality_uint8_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int64, lowcardinality_uint8_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int64_lowcardinality_uint64_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int64, lowcardinality_uint64_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int64_lowcardinality_uint32_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int64, lowcardinality_uint32_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int64_lowcardinality_uint16_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int64, lowcardinality_uint16_)":[30000,30000,30000,30000,30000,30000,30000]}
 """
 
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int64_lowcardinality_nullable_uint8__ = r"""
@@ -2363,54 +2555,6 @@ _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int64_lowcar
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int64, lowcardinality_nullable_uint16__)":[30000,30000,30000,30000,30000,30000,30000]}
 """
 
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int32_uint8 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int32, uint8)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int32_uint64 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int32, uint64)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int32_uint32 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int32, uint32)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int32_uint16 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int32, uint16)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int32_nullable_uint8_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int32, nullable_uint8_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int32_nullable_uint64_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int32, nullable_uint64_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int32_nullable_uint32_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int32, nullable_uint32_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int32_nullable_uint16_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int32, nullable_uint16_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int32_lowcardinality_uint8_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int32, lowcardinality_uint8_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int32_lowcardinality_uint64_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int32, lowcardinality_uint64_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int32_lowcardinality_uint32_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int32, lowcardinality_uint32_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int32_lowcardinality_uint16_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int32, lowcardinality_uint16_)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int32_lowcardinality_nullable_uint8__ = r"""
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int32, lowcardinality_nullable_uint8__)":[30000,30000,30000,30000,30000,30000,30000]}
 """
@@ -2425,54 +2569,6 @@ _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int32_lowcar
 
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int32_lowcardinality_nullable_uint16__ = r"""
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int32, lowcardinality_nullable_uint16__)":[30000,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int16_uint8 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int16, uint8)":[1499,9582,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int16_uint64 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int16, uint64)":[395,395,1499,1499,1499,9582,9582]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int16_uint32 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int16, uint32)":[1499,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int16_uint16 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int16, uint16)":[1499,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int16_nullable_uint8_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int16, nullable_uint8_)":[1499,9582,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int16_nullable_uint64_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int16, nullable_uint64_)":[395,395,395,395,395,395,395]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int16_nullable_uint32_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int16, nullable_uint32_)":[1499,9582,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int16_nullable_uint16_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int16, nullable_uint16_)":[1499,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int16_lowcardinality_uint8_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int16, lowcardinality_uint8_)":[1499,9582,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int16_lowcardinality_uint64_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int16, lowcardinality_uint64_)":[395,395,395,395,395,395,395]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int16_lowcardinality_uint32_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int16, lowcardinality_uint32_)":[395,30000,30000,30000,30000,30000,30000]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int16_lowcardinality_uint16_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int16, lowcardinality_uint16_)":[395,30000,30000,30000,30000,30000,30000]}
 """
 
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int16_lowcardinality_nullable_uint8__ = r"""
@@ -2491,54 +2587,6 @@ _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_int16_lowcar
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int16, lowcardinality_nullable_uint16__)":[395,9582,30000,30000,30000,30000,30000]}
 """
 
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float64_uint8 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float64, uint8)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float64_uint64 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float64, uint64)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float64_uint32 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float64, uint32)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float64_uint16 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float64, uint16)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float64_nullable_uint8_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float64, nullable_uint8_)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float64_nullable_uint64_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float64, nullable_uint64_)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float64_nullable_uint32_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float64, nullable_uint32_)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float64_nullable_uint16_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float64, nullable_uint16_)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float64_lowcardinality_uint8_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float64, lowcardinality_uint8_)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float64_lowcardinality_uint64_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float64, lowcardinality_uint64_)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float64_lowcardinality_uint32_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float64, lowcardinality_uint32_)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float64_lowcardinality_uint16_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float64, lowcardinality_uint16_)":[null,null,null,null,null,null,null]}
-"""
-
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float64_lowcardinality_nullable_uint8__ = r"""
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float64, lowcardinality_nullable_uint8__)":[null,null,null,null,null,null,null]}
 """
@@ -2553,54 +2601,6 @@ _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float64_lowc
 
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float64_lowcardinality_nullable_uint16__ = r"""
 {"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float64, lowcardinality_nullable_uint16__)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float32_uint8 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float32, uint8)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float32_uint64 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float32, uint64)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float32_uint32 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float32, uint32)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float32_uint16 = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float32, uint16)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float32_nullable_uint8_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float32, nullable_uint8_)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float32_nullable_uint64_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float32, nullable_uint64_)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float32_nullable_uint32_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float32, nullable_uint32_)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float32_nullable_uint16_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float32, nullable_uint16_)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float32_lowcardinality_uint8_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float32, lowcardinality_uint8_)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float32_lowcardinality_uint64_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float32, lowcardinality_uint64_)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float32_lowcardinality_uint32_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float32, lowcardinality_uint32_)":[null,null,null,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float32_lowcardinality_uint16_ = r"""
-{"quantilesTimingWeighted(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float32, lowcardinality_uint16_)":[null,null,null,null,null,null,null]}
 """
 
 _aggregate_functions_quantilesTimingWeighted_datatypes_permutations_float32_lowcardinality_nullable_uint8__ = r"""

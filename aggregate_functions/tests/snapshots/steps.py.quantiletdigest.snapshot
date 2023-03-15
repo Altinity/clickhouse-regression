@@ -91,6 +91,14 @@ _aggregate_functions_quantileTDigest_Float64 = r"""
 {"quantileTDigest(float64)":null}
 """
 
+_aggregate_functions_quantileTDigest_Date = r"""
+{"quantileTDigest(date)":"2005-06-07"}
+"""
+
+_aggregate_functions_quantileTDigest_DateTime = r"""
+{"quantileTDigest(datetime)":"2015-06-29 09:42:56"}
+"""
+
 _aggregate_functions_quantileTDigest_Nullable_UInt8_ = r"""
 {"quantileTDigest(nullable_uint8_)":65}
 """
@@ -129,6 +137,14 @@ _aggregate_functions_quantileTDigest_Nullable_Float32_ = r"""
 
 _aggregate_functions_quantileTDigest_Nullable_Float64_ = r"""
 {"quantileTDigest(nullable_float64_)":null}
+"""
+
+_aggregate_functions_quantileTDigest_Nullable_Date_ = r"""
+{"quantileTDigest(nullable_date_)":"2012-02-07"}
+"""
+
+_aggregate_functions_quantileTDigest_Nullable_DateTime_ = r"""
+{"quantileTDigest(nullable_datetime_)":"2014-04-10 09:40:48"}
 """
 
 _aggregate_functions_quantileTDigest_LowCardinality_UInt8_ = r"""
@@ -171,6 +187,14 @@ _aggregate_functions_quantileTDigest_LowCardinality_Float64_ = r"""
 {"quantileTDigest(lowcardinality_float64_)":null}
 """
 
+_aggregate_functions_quantileTDigest_LowCardinality_Date_ = r"""
+{"quantileTDigest(lowcardinality_date_)":"2008-06-29"}
+"""
+
+_aggregate_functions_quantileTDigest_LowCardinality_DateTime_ = r"""
+{"quantileTDigest(lowcardinality_datetime_)":"2013-09-04 14:09:36"}
+"""
+
 _aggregate_functions_quantileTDigest_LowCardinality_Nullable_UInt8__ = r"""
 {"quantileTDigest(lowcardinality_nullable_uint8__)":165}
 """
@@ -211,35 +235,11 @@ _aggregate_functions_quantileTDigest_LowCardinality_Nullable_Float64__ = r"""
 {"quantileTDigest(lowcardinality_nullable_float64__)":null}
 """
 
-_aggregate_functions_quantileTDigest_Date = r"""
-{"quantileTDigest(date)":"2005-06-07"}
-"""
-
-_aggregate_functions_quantileTDigest_DateTime = r"""
-{"quantileTDigest(datetime)":"2015-06-29 10:42:56"}
-"""
-
-_aggregate_functions_quantileTDigest_Nullable_Date_ = r"""
-{"quantileTDigest(nullable_date_)":"2012-02-07"}
-"""
-
-_aggregate_functions_quantileTDigest_Nullable_DateTime_ = r"""
-{"quantileTDigest(nullable_datetime_)":"2014-04-10 11:40:48"}
-"""
-
-_aggregate_functions_quantileTDigest_LowCardinality_Date_ = r"""
-{"quantileTDigest(lowcardinality_date_)":"2008-06-30"}
-"""
-
-_aggregate_functions_quantileTDigest_LowCardinality_DateTime_ = r"""
-{"quantileTDigest(lowcardinality_datetime_)":"2013-09-04 16:09:36"}
-"""
-
 _aggregate_functions_quantileTDigest_LowCardinality_Nullable_Date__ = r"""
 {"quantileTDigest(lowcardinality_nullable_date__)":"2013-09-28"}
 """
 
 _aggregate_functions_quantileTDigest_LowCardinality_Nullable_DateTime__ = r"""
-{"quantileTDigest(lowcardinality_nullable_datetime__)":"2013-08-28 14:40:00"}
+{"quantileTDigest(lowcardinality_nullable_datetime__)":"2013-08-28 12:40:00"}
 """
 

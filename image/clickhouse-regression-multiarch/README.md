@@ -1,0 +1,1 @@
+docker buildx build --push -t altinityinfra/clickhouse-regression-multiarch:1.0 --platform=linux/amd64,linux/arm64 .

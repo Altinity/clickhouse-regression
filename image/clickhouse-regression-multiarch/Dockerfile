@@ -46,7 +46,7 @@ ENV TZ=Europe/Berlin
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN pip install pytz
-RUN pip install pytest docker-compose docker dicttoxml kazoo PyMySQL pymongo tzlocal protobuf redis 
+RUN pip install pytest docker-compose docker dicttoxml kazoo PyMySQL pymongo tzlocal protobuf redis pandas parquet-tools flask
 RUN pip install pytest-timeout boto3 minio pyarrow
 
 ENV DOCKER_CHANNEL stable
@@ -65,9 +65,17 @@ RUN set -eux; ARCH=$(uname -i); \
 	; \
 	rm docker.tgz
 
+
 RUN mkdir -p /etc/apt/sources.list.d \
     && apt-key adv --keyserver keyserver.ubuntu.com --recv E0C56BD4 \
     && apt-get update
+
+RUN apt install -y postgresql postgresql-contrib \
+    && rm -rf \
+        /var/lib/apt/lists/* \
+        /var/cache/debconf \
+        /tmp/* \
+    && apt-get clean
 
 COPY dockerd-start.sh /usr/local/bin/
 COPY *.dockerimage /var/lib/docker/

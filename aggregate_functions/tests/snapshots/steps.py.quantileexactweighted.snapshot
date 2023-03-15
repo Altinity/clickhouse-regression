@@ -731,6 +731,150 @@ _aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_float
 {"quantileExactWeighted(nullable_float32_, lowcardinality_uint16_)":-4.4773587e37}
 """
 
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_decimal128_38___uint8 = r"""
+{"quantileExactWeighted(nullable_decimal128_38__, uint8)":0.65697712332615408263088906649485612544}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_decimal128_38___uint64 = r"""
+{"quantileExactWeighted(nullable_decimal128_38__, uint64)":0.36692398073045674254112472665458117632}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_decimal128_38___uint32 = r"""
+{"quantileExactWeighted(nullable_decimal128_38__, uint32)":0.45865411970120442299973825669148102144}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_decimal128_38___uint16 = r"""
+{"quantileExactWeighted(nullable_decimal128_38__, uint16)":0.65697712332615408263088906649485612544}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_decimal128_38___nullable_uint8_ = r"""
+{"quantileExactWeighted(nullable_decimal128_38__, nullable_uint8_)":0.45865411970120442299973825669148102144}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_decimal128_38___nullable_uint64_ = r"""
+{"quantileExactWeighted(nullable_decimal128_38__, nullable_uint64_)":0.45865411970120442299973825669148102144}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_decimal128_38___nullable_uint32_ = r"""
+{"quantileExactWeighted(nullable_decimal128_38__, nullable_uint32_)":0.36692398073045674254112472665458117632}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_decimal128_38___nullable_uint16_ = r"""
+{"quantileExactWeighted(nullable_decimal128_38__, nullable_uint16_)":0.65697712332615408263088906649485612544}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_decimal128_38___lowcardinality_uint8_ = r"""
+{"quantileExactWeighted(nullable_decimal128_38__, lowcardinality_uint8_)":0.45865411970120442299973825669148102144}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_decimal128_38___lowcardinality_uint64_ = r"""
+{"quantileExactWeighted(nullable_decimal128_38__, lowcardinality_uint64_)":0.45865411970120442299973825669148102144}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_decimal128_38___lowcardinality_uint32_ = r"""
+{"quantileExactWeighted(nullable_decimal128_38__, lowcardinality_uint32_)":0.45865411970120442299973825669148102144}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_decimal128_38___lowcardinality_uint16_ = r"""
+{"quantileExactWeighted(nullable_decimal128_38__, lowcardinality_uint16_)":0.45865411970120442299973825669148102144}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__uint8 = r"""
+{"quantileExactWeighted(nullable_datetime_, uint8)":"2009-05-30 23:43:18"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__uint64 = r"""
+{"quantileExactWeighted(nullable_datetime_, uint64)":"2015-12-28 10:07:33"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__uint32 = r"""
+{"quantileExactWeighted(nullable_datetime_, uint32)":"2009-05-30 23:43:18"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__uint16 = r"""
+{"quantileExactWeighted(nullable_datetime_, uint16)":"2014-04-10 09:39:46"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__nullable_uint8_ = r"""
+{"quantileExactWeighted(nullable_datetime_, nullable_uint8_)":"2014-04-10 09:39:46"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__nullable_uint64_ = r"""
+{"quantileExactWeighted(nullable_datetime_, nullable_uint64_)":"2014-04-10 09:39:46"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__nullable_uint32_ = r"""
+{"quantileExactWeighted(nullable_datetime_, nullable_uint32_)":"2014-04-10 09:39:46"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__nullable_uint16_ = r"""
+{"quantileExactWeighted(nullable_datetime_, nullable_uint16_)":"2014-04-10 09:39:46"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__lowcardinality_uint8_ = r"""
+{"quantileExactWeighted(nullable_datetime_, lowcardinality_uint8_)":"2009-05-30 23:43:18"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__lowcardinality_uint64_ = r"""
+{"quantileExactWeighted(nullable_datetime_, lowcardinality_uint64_)":"2014-04-10 09:39:46"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__lowcardinality_uint32_ = r"""
+{"quantileExactWeighted(nullable_datetime_, lowcardinality_uint32_)":"2014-04-10 09:39:46"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__lowcardinality_uint16_ = r"""
+{"quantileExactWeighted(nullable_datetime_, lowcardinality_uint16_)":"2014-04-10 09:39:46"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__uint8 = r"""
+{"quantileExactWeighted(nullable_date_, uint8)":"2012-02-07"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__uint64 = r"""
+{"quantileExactWeighted(nullable_date_, uint64)":"2018-10-13"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__uint32 = r"""
+{"quantileExactWeighted(nullable_date_, uint32)":"2017-01-08"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__uint16 = r"""
+{"quantileExactWeighted(nullable_date_, uint16)":"2012-02-07"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__nullable_uint8_ = r"""
+{"quantileExactWeighted(nullable_date_, nullable_uint8_)":"2017-01-08"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__nullable_uint64_ = r"""
+{"quantileExactWeighted(nullable_date_, nullable_uint64_)":"2017-01-08"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__nullable_uint32_ = r"""
+{"quantileExactWeighted(nullable_date_, nullable_uint32_)":"2012-02-07"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__nullable_uint16_ = r"""
+{"quantileExactWeighted(nullable_date_, nullable_uint16_)":"2017-01-08"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__lowcardinality_uint8_ = r"""
+{"quantileExactWeighted(nullable_date_, lowcardinality_uint8_)":"2012-02-07"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__lowcardinality_uint64_ = r"""
+{"quantileExactWeighted(nullable_date_, lowcardinality_uint64_)":"2017-01-08"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__lowcardinality_uint32_ = r"""
+{"quantileExactWeighted(nullable_date_, lowcardinality_uint32_)":"2017-01-08"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__lowcardinality_uint16_ = r"""
+{"quantileExactWeighted(nullable_date_, lowcardinality_uint16_)":"2017-01-08"}
+"""
+
 _aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_uint8__uint8 = r"""
 {"quantileExactWeighted(lowcardinality_uint8_, uint8)":225}
 """
@@ -1211,6 +1355,102 @@ _aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality
 {"quantileExactWeighted(lowcardinality_float32_, lowcardinality_uint16_)":9.913279e37}
 """
 
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__uint8 = r"""
+{"quantileExactWeighted(lowcardinality_datetime_, uint8)":"2019-02-08 23:58:10"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__uint64 = r"""
+{"quantileExactWeighted(lowcardinality_datetime_, uint64)":"2013-09-04 14:10:20"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__uint32 = r"""
+{"quantileExactWeighted(lowcardinality_datetime_, uint32)":"2016-11-27 12:16:37"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__uint16 = r"""
+{"quantileExactWeighted(lowcardinality_datetime_, uint16)":"2019-02-08 23:58:10"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__nullable_uint8_ = r"""
+{"quantileExactWeighted(lowcardinality_datetime_, nullable_uint8_)":"2016-11-27 12:16:37"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__nullable_uint64_ = r"""
+{"quantileExactWeighted(lowcardinality_datetime_, nullable_uint64_)":"2016-11-27 12:16:37"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__nullable_uint32_ = r"""
+{"quantileExactWeighted(lowcardinality_datetime_, nullable_uint32_)":"2016-11-27 12:16:37"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__nullable_uint16_ = r"""
+{"quantileExactWeighted(lowcardinality_datetime_, nullable_uint16_)":"2012-01-02 09:35:45"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_uint8_ = r"""
+{"quantileExactWeighted(lowcardinality_datetime_, lowcardinality_uint8_)":"2016-11-27 12:16:37"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_uint64_ = r"""
+{"quantileExactWeighted(lowcardinality_datetime_, lowcardinality_uint64_)":"2013-09-04 14:10:20"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_uint32_ = r"""
+{"quantileExactWeighted(lowcardinality_datetime_, lowcardinality_uint32_)":"2019-02-08 23:58:10"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_uint16_ = r"""
+{"quantileExactWeighted(lowcardinality_datetime_, lowcardinality_uint16_)":"2013-09-04 14:10:20"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__uint8 = r"""
+{"quantileExactWeighted(lowcardinality_date_, uint8)":"2013-09-23"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__uint64 = r"""
+{"quantileExactWeighted(lowcardinality_date_, uint64)":"2008-06-29"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__uint32 = r"""
+{"quantileExactWeighted(lowcardinality_date_, uint32)":"2009-11-18"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__uint16 = r"""
+{"quantileExactWeighted(lowcardinality_date_, uint16)":"2020-01-11"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__nullable_uint8_ = r"""
+{"quantileExactWeighted(lowcardinality_date_, nullable_uint8_)":"2020-01-11"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__nullable_uint64_ = r"""
+{"quantileExactWeighted(lowcardinality_date_, nullable_uint64_)":"2013-09-23"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__nullable_uint32_ = r"""
+{"quantileExactWeighted(lowcardinality_date_, nullable_uint32_)":"2020-01-11"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__nullable_uint16_ = r"""
+{"quantileExactWeighted(lowcardinality_date_, nullable_uint16_)":"2009-11-18"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__lowcardinality_uint8_ = r"""
+{"quantileExactWeighted(lowcardinality_date_, lowcardinality_uint8_)":"2013-09-23"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__lowcardinality_uint64_ = r"""
+{"quantileExactWeighted(lowcardinality_date_, lowcardinality_uint64_)":"2013-09-23"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__lowcardinality_uint32_ = r"""
+{"quantileExactWeighted(lowcardinality_date_, lowcardinality_uint32_)":"2020-01-11"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__lowcardinality_uint16_ = r"""
+{"quantileExactWeighted(lowcardinality_date_, lowcardinality_uint16_)":"2020-01-11"}
+"""
+
 _aggregate_functions_quantileExactWeighted_datatypes_permutations_int8_uint8 = r"""
 {"quantileExactWeighted(int8, uint8)":83}
 """
@@ -1499,54 +1739,6 @@ _aggregate_functions_quantileExactWeighted_datatypes_permutations_float32_lowcar
 {"quantileExactWeighted(float32, lowcardinality_uint16_)":-2.2393902e38}
 """
 
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_decimal128_38___uint8 = r"""
-{"quantileExactWeighted(nullable_decimal128_38__, uint8)":0.65697712332615408263088906649485612544}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_decimal128_38___uint64 = r"""
-{"quantileExactWeighted(nullable_decimal128_38__, uint64)":0.36692398073045674254112472665458117632}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_decimal128_38___uint32 = r"""
-{"quantileExactWeighted(nullable_decimal128_38__, uint32)":0.45865411970120442299973825669148102144}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_decimal128_38___uint16 = r"""
-{"quantileExactWeighted(nullable_decimal128_38__, uint16)":0.65697712332615408263088906649485612544}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_decimal128_38___nullable_uint8_ = r"""
-{"quantileExactWeighted(nullable_decimal128_38__, nullable_uint8_)":0.45865411970120442299973825669148102144}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_decimal128_38___nullable_uint64_ = r"""
-{"quantileExactWeighted(nullable_decimal128_38__, nullable_uint64_)":0.45865411970120442299973825669148102144}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_decimal128_38___nullable_uint32_ = r"""
-{"quantileExactWeighted(nullable_decimal128_38__, nullable_uint32_)":0.36692398073045674254112472665458117632}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_decimal128_38___nullable_uint16_ = r"""
-{"quantileExactWeighted(nullable_decimal128_38__, nullable_uint16_)":0.65697712332615408263088906649485612544}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_decimal128_38___lowcardinality_uint8_ = r"""
-{"quantileExactWeighted(nullable_decimal128_38__, lowcardinality_uint8_)":0.45865411970120442299973825669148102144}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_decimal128_38___lowcardinality_uint64_ = r"""
-{"quantileExactWeighted(nullable_decimal128_38__, lowcardinality_uint64_)":0.45865411970120442299973825669148102144}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_decimal128_38___lowcardinality_uint32_ = r"""
-{"quantileExactWeighted(nullable_decimal128_38__, lowcardinality_uint32_)":0.45865411970120442299973825669148102144}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_decimal128_38___lowcardinality_uint16_ = r"""
-{"quantileExactWeighted(nullable_decimal128_38__, lowcardinality_uint16_)":0.45865411970120442299973825669148102144}
-"""
-
 _aggregate_functions_quantileExactWeighted_datatypes_permutations_decimal128_38__uint8 = r"""
 {"quantileExactWeighted(decimal128_38_, uint8)":0.35781566593334310386900970995740493312}
 """
@@ -1593,6 +1785,102 @@ _aggregate_functions_quantileExactWeighted_datatypes_permutations_decimal128_38_
 
 _aggregate_functions_quantileExactWeighted_datatypes_permutations_decimal128_38__lowcardinality_uint16_ = r"""
 {"quantileExactWeighted(decimal128_38_, lowcardinality_uint16_)":-0.28048959731347512779180930061646479872}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_datetime_uint8 = r"""
+{"quantileExactWeighted(datetime, uint8)":"2017-02-11 09:09:25"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_datetime_uint64 = r"""
+{"quantileExactWeighted(datetime, uint64)":"2015-06-29 09:43:07"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_datetime_uint32 = r"""
+{"quantileExactWeighted(datetime, uint32)":"2017-02-11 09:09:25"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_datetime_uint16 = r"""
+{"quantileExactWeighted(datetime, uint16)":"2019-04-27 02:01:34"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_datetime_nullable_uint8_ = r"""
+{"quantileExactWeighted(datetime, nullable_uint8_)":"2015-06-29 09:43:07"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_datetime_nullable_uint64_ = r"""
+{"quantileExactWeighted(datetime, nullable_uint64_)":"2017-02-11 09:09:25"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_datetime_nullable_uint32_ = r"""
+{"quantileExactWeighted(datetime, nullable_uint32_)":"2017-02-11 09:09:25"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_datetime_nullable_uint16_ = r"""
+{"quantileExactWeighted(datetime, nullable_uint16_)":"2015-06-29 09:43:07"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_datetime_lowcardinality_uint8_ = r"""
+{"quantileExactWeighted(datetime, lowcardinality_uint8_)":"2017-02-11 09:09:25"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_datetime_lowcardinality_uint64_ = r"""
+{"quantileExactWeighted(datetime, lowcardinality_uint64_)":"2015-06-29 09:43:07"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_datetime_lowcardinality_uint32_ = r"""
+{"quantileExactWeighted(datetime, lowcardinality_uint32_)":"2015-06-29 09:43:07"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_datetime_lowcardinality_uint16_ = r"""
+{"quantileExactWeighted(datetime, lowcardinality_uint16_)":"2015-06-29 09:43:07"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_date_uint8 = r"""
+{"quantileExactWeighted(date, uint8)":"2006-11-06"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_date_uint64 = r"""
+{"quantileExactWeighted(date, uint64)":"2015-01-26"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_date_uint32 = r"""
+{"quantileExactWeighted(date, uint32)":"2014-06-03"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_date_uint16 = r"""
+{"quantileExactWeighted(date, uint16)":"2014-06-03"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_date_nullable_uint8_ = r"""
+{"quantileExactWeighted(date, nullable_uint8_)":"2014-06-03"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_date_nullable_uint64_ = r"""
+{"quantileExactWeighted(date, nullable_uint64_)":"2014-06-03"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_date_nullable_uint32_ = r"""
+{"quantileExactWeighted(date, nullable_uint32_)":"2006-11-06"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_date_nullable_uint16_ = r"""
+{"quantileExactWeighted(date, nullable_uint16_)":"2015-01-26"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_date_lowcardinality_uint8_ = r"""
+{"quantileExactWeighted(date, lowcardinality_uint8_)":"2006-11-06"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_date_lowcardinality_uint64_ = r"""
+{"quantileExactWeighted(date, lowcardinality_uint64_)":"2006-11-06"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_date_lowcardinality_uint32_ = r"""
+{"quantileExactWeighted(date, lowcardinality_uint32_)":"2015-01-26"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_date_lowcardinality_uint16_ = r"""
+{"quantileExactWeighted(date, lowcardinality_uint16_)":"2014-06-03"}
 """
 
 _aggregate_functions_quantileExactWeighted_datatypes_permutations_uint8_lowcardinality_nullable_uint8__ = r"""
@@ -1833,6 +2121,38 @@ _aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_decim
 
 _aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_decimal128_38___lowcardinality_nullable_uint16__ = r"""
 {"quantileExactWeighted(nullable_decimal128_38__, lowcardinality_nullable_uint16__)":0.65697712332615408263088906649485612544}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__lowcardinality_nullable_uint8__ = r"""
+{"quantileExactWeighted(nullable_datetime_, lowcardinality_nullable_uint8__)":"2014-04-10 09:39:46"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__lowcardinality_nullable_uint64__ = r"""
+{"quantileExactWeighted(nullable_datetime_, lowcardinality_nullable_uint64__)":"2014-04-10 09:39:46"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__lowcardinality_nullable_uint32__ = r"""
+{"quantileExactWeighted(nullable_datetime_, lowcardinality_nullable_uint32__)":"2009-05-30 23:43:18"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__lowcardinality_nullable_uint16__ = r"""
+{"quantileExactWeighted(nullable_datetime_, lowcardinality_nullable_uint16__)":"2006-08-10 21:14:26"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__lowcardinality_nullable_uint8__ = r"""
+{"quantileExactWeighted(nullable_date_, lowcardinality_nullable_uint8__)":"2017-01-08"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__lowcardinality_nullable_uint64__ = r"""
+{"quantileExactWeighted(nullable_date_, lowcardinality_nullable_uint64__)":"2012-02-07"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__lowcardinality_nullable_uint32__ = r"""
+{"quantileExactWeighted(nullable_date_, lowcardinality_nullable_uint32__)":"2012-02-07"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__lowcardinality_nullable_uint16__ = r"""
+{"quantileExactWeighted(nullable_date_, lowcardinality_nullable_uint16__)":"2007-12-06"}
 """
 
 _aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_uint8__lowcardinality_nullable_uint8__ = r"""
@@ -2539,6 +2859,134 @@ _aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality
 {"quantileExactWeighted(lowcardinality_nullable_float32__, lowcardinality_nullable_uint16__)":-5.4225925e37}
 """
 
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___uint8 = r"""
+{"quantileExactWeighted(lowcardinality_nullable_datetime__, uint8)":"2013-08-28 12:39:09"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___uint64 = r"""
+{"quantileExactWeighted(lowcardinality_nullable_datetime__, uint64)":"2013-05-05 03:17:45"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___uint32 = r"""
+{"quantileExactWeighted(lowcardinality_nullable_datetime__, uint32)":"2013-08-28 12:39:09"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___uint16 = r"""
+{"quantileExactWeighted(lowcardinality_nullable_datetime__, uint16)":"2013-08-28 12:39:09"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___nullable_uint8_ = r"""
+{"quantileExactWeighted(lowcardinality_nullable_datetime__, nullable_uint8_)":"2013-05-05 03:17:45"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___nullable_uint64_ = r"""
+{"quantileExactWeighted(lowcardinality_nullable_datetime__, nullable_uint64_)":"2013-08-28 12:39:09"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___nullable_uint32_ = r"""
+{"quantileExactWeighted(lowcardinality_nullable_datetime__, nullable_uint32_)":"2013-11-29 10:42:31"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___nullable_uint16_ = r"""
+{"quantileExactWeighted(lowcardinality_nullable_datetime__, nullable_uint16_)":"2013-05-05 03:17:45"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_uint8_ = r"""
+{"quantileExactWeighted(lowcardinality_nullable_datetime__, lowcardinality_uint8_)":"2013-08-28 12:39:09"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_uint64_ = r"""
+{"quantileExactWeighted(lowcardinality_nullable_datetime__, lowcardinality_uint64_)":"2013-05-05 03:17:45"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_uint32_ = r"""
+{"quantileExactWeighted(lowcardinality_nullable_datetime__, lowcardinality_uint32_)":"2013-05-05 03:17:45"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_uint16_ = r"""
+{"quantileExactWeighted(lowcardinality_nullable_datetime__, lowcardinality_uint16_)":"2013-05-05 03:17:45"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_nullable_uint8__ = r"""
+{"quantileExactWeighted(lowcardinality_nullable_datetime__, lowcardinality_nullable_uint8__)":"2013-05-05 03:17:45"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_nullable_uint64__ = r"""
+{"quantileExactWeighted(lowcardinality_nullable_datetime__, lowcardinality_nullable_uint64__)":"2013-08-28 12:39:09"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_nullable_uint32__ = r"""
+{"quantileExactWeighted(lowcardinality_nullable_datetime__, lowcardinality_nullable_uint32__)":"2013-08-28 12:39:09"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_nullable_uint16__ = r"""
+{"quantileExactWeighted(lowcardinality_nullable_datetime__, lowcardinality_nullable_uint16__)":"2013-08-28 12:39:09"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___uint8 = r"""
+{"quantileExactWeighted(lowcardinality_nullable_date__, uint8)":"2013-09-28"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___uint64 = r"""
+{"quantileExactWeighted(lowcardinality_nullable_date__, uint64)":"2015-12-28"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___uint32 = r"""
+{"quantileExactWeighted(lowcardinality_nullable_date__, uint32)":"2013-09-28"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___uint16 = r"""
+{"quantileExactWeighted(lowcardinality_nullable_date__, uint16)":"2015-12-28"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___nullable_uint8_ = r"""
+{"quantileExactWeighted(lowcardinality_nullable_date__, nullable_uint8_)":"2018-12-01"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___nullable_uint64_ = r"""
+{"quantileExactWeighted(lowcardinality_nullable_date__, nullable_uint64_)":"2018-12-01"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___nullable_uint32_ = r"""
+{"quantileExactWeighted(lowcardinality_nullable_date__, nullable_uint32_)":"2015-12-28"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___nullable_uint16_ = r"""
+{"quantileExactWeighted(lowcardinality_nullable_date__, nullable_uint16_)":"2015-12-28"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___lowcardinality_uint8_ = r"""
+{"quantileExactWeighted(lowcardinality_nullable_date__, lowcardinality_uint8_)":"2013-09-28"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___lowcardinality_uint64_ = r"""
+{"quantileExactWeighted(lowcardinality_nullable_date__, lowcardinality_uint64_)":"2018-12-01"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___lowcardinality_uint32_ = r"""
+{"quantileExactWeighted(lowcardinality_nullable_date__, lowcardinality_uint32_)":"2015-12-28"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___lowcardinality_uint16_ = r"""
+{"quantileExactWeighted(lowcardinality_nullable_date__, lowcardinality_uint16_)":"2018-12-01"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___lowcardinality_nullable_uint8__ = r"""
+{"quantileExactWeighted(lowcardinality_nullable_date__, lowcardinality_nullable_uint8__)":"2015-12-28"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___lowcardinality_nullable_uint64__ = r"""
+{"quantileExactWeighted(lowcardinality_nullable_date__, lowcardinality_nullable_uint64__)":"2018-12-01"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___lowcardinality_nullable_uint32__ = r"""
+{"quantileExactWeighted(lowcardinality_nullable_date__, lowcardinality_nullable_uint32__)":"2013-09-28"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___lowcardinality_nullable_uint16__ = r"""
+{"quantileExactWeighted(lowcardinality_nullable_date__, lowcardinality_nullable_uint16__)":"2008-02-09"}
+"""
+
 _aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_int8__lowcardinality_nullable_uint8__ = r"""
 {"quantileExactWeighted(lowcardinality_int8_, lowcardinality_nullable_uint8__)":71}
 """
@@ -2633,6 +3081,38 @@ _aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality
 
 _aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_float32__lowcardinality_nullable_uint16__ = r"""
 {"quantileExactWeighted(lowcardinality_float32_, lowcardinality_nullable_uint16__)":2.2767175e37}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_nullable_uint8__ = r"""
+{"quantileExactWeighted(lowcardinality_datetime_, lowcardinality_nullable_uint8__)":"2013-09-04 14:10:20"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_nullable_uint64__ = r"""
+{"quantileExactWeighted(lowcardinality_datetime_, lowcardinality_nullable_uint64__)":"2016-11-27 12:16:37"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_nullable_uint32__ = r"""
+{"quantileExactWeighted(lowcardinality_datetime_, lowcardinality_nullable_uint32__)":"2016-11-27 12:16:37"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_nullable_uint16__ = r"""
+{"quantileExactWeighted(lowcardinality_datetime_, lowcardinality_nullable_uint16__)":"2019-02-08 23:58:10"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__lowcardinality_nullable_uint8__ = r"""
+{"quantileExactWeighted(lowcardinality_date_, lowcardinality_nullable_uint8__)":"2009-11-18"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__lowcardinality_nullable_uint64__ = r"""
+{"quantileExactWeighted(lowcardinality_date_, lowcardinality_nullable_uint64__)":"2013-09-23"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__lowcardinality_nullable_uint32__ = r"""
+{"quantileExactWeighted(lowcardinality_date_, lowcardinality_nullable_uint32__)":"2013-09-23"}
+"""
+
+_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__lowcardinality_nullable_uint16__ = r"""
+{"quantileExactWeighted(lowcardinality_date_, lowcardinality_nullable_uint16__)":"2022-06-02"}
 """
 
 _aggregate_functions_quantileExactWeighted_datatypes_permutations_int8_lowcardinality_nullable_uint8__ = r"""
@@ -2747,500 +3227,20 @@ _aggregate_functions_quantileExactWeighted_datatypes_permutations_decimal128_38_
 {"quantileExactWeighted(decimal128_38_, lowcardinality_nullable_uint16__)":0.58989463244210612148403810068212452864}
 """
 
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__uint8 = r"""
-{"quantileExactWeighted(nullable_datetime_, uint8)":"2009-05-31 01:43:18"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__uint64 = r"""
-{"quantileExactWeighted(nullable_datetime_, uint64)":"2015-12-28 12:07:33"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__uint32 = r"""
-{"quantileExactWeighted(nullable_datetime_, uint32)":"2009-05-31 01:43:18"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__uint16 = r"""
-{"quantileExactWeighted(nullable_datetime_, uint16)":"2014-04-10 11:39:46"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__nullable_uint8_ = r"""
-{"quantileExactWeighted(nullable_datetime_, nullable_uint8_)":"2014-04-10 11:39:46"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__nullable_uint64_ = r"""
-{"quantileExactWeighted(nullable_datetime_, nullable_uint64_)":"2014-04-10 11:39:46"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__nullable_uint32_ = r"""
-{"quantileExactWeighted(nullable_datetime_, nullable_uint32_)":"2014-04-10 11:39:46"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__nullable_uint16_ = r"""
-{"quantileExactWeighted(nullable_datetime_, nullable_uint16_)":"2014-04-10 11:39:46"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__lowcardinality_uint8_ = r"""
-{"quantileExactWeighted(nullable_datetime_, lowcardinality_uint8_)":"2009-05-31 01:43:18"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__lowcardinality_uint64_ = r"""
-{"quantileExactWeighted(nullable_datetime_, lowcardinality_uint64_)":"2014-04-10 11:39:46"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__lowcardinality_uint32_ = r"""
-{"quantileExactWeighted(nullable_datetime_, lowcardinality_uint32_)":"2014-04-10 11:39:46"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__lowcardinality_uint16_ = r"""
-{"quantileExactWeighted(nullable_datetime_, lowcardinality_uint16_)":"2014-04-10 11:39:46"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__lowcardinality_nullable_uint8__ = r"""
-{"quantileExactWeighted(nullable_datetime_, lowcardinality_nullable_uint8__)":"2014-04-10 11:39:46"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__lowcardinality_nullable_uint64__ = r"""
-{"quantileExactWeighted(nullable_datetime_, lowcardinality_nullable_uint64__)":"2014-04-10 11:39:46"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__lowcardinality_nullable_uint32__ = r"""
-{"quantileExactWeighted(nullable_datetime_, lowcardinality_nullable_uint32__)":"2009-05-31 01:43:18"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_datetime__lowcardinality_nullable_uint16__ = r"""
-{"quantileExactWeighted(nullable_datetime_, lowcardinality_nullable_uint16__)":"2006-08-10 23:14:26"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__uint8 = r"""
-{"quantileExactWeighted(nullable_date_, uint8)":"2012-02-07"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__uint64 = r"""
-{"quantileExactWeighted(nullable_date_, uint64)":"2018-10-13"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__uint32 = r"""
-{"quantileExactWeighted(nullable_date_, uint32)":"2017-01-08"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__uint16 = r"""
-{"quantileExactWeighted(nullable_date_, uint16)":"2012-02-07"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__nullable_uint8_ = r"""
-{"quantileExactWeighted(nullable_date_, nullable_uint8_)":"2017-01-08"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__nullable_uint64_ = r"""
-{"quantileExactWeighted(nullable_date_, nullable_uint64_)":"2017-01-08"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__nullable_uint32_ = r"""
-{"quantileExactWeighted(nullable_date_, nullable_uint32_)":"2012-02-07"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__nullable_uint16_ = r"""
-{"quantileExactWeighted(nullable_date_, nullable_uint16_)":"2017-01-08"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__lowcardinality_uint8_ = r"""
-{"quantileExactWeighted(nullable_date_, lowcardinality_uint8_)":"2012-02-07"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__lowcardinality_uint64_ = r"""
-{"quantileExactWeighted(nullable_date_, lowcardinality_uint64_)":"2017-01-08"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__lowcardinality_uint32_ = r"""
-{"quantileExactWeighted(nullable_date_, lowcardinality_uint32_)":"2017-01-08"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__lowcardinality_uint16_ = r"""
-{"quantileExactWeighted(nullable_date_, lowcardinality_uint16_)":"2017-01-08"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__lowcardinality_nullable_uint8__ = r"""
-{"quantileExactWeighted(nullable_date_, lowcardinality_nullable_uint8__)":"2017-01-08"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__lowcardinality_nullable_uint64__ = r"""
-{"quantileExactWeighted(nullable_date_, lowcardinality_nullable_uint64__)":"2012-02-07"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__lowcardinality_nullable_uint32__ = r"""
-{"quantileExactWeighted(nullable_date_, lowcardinality_nullable_uint32__)":"2012-02-07"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_nullable_date__lowcardinality_nullable_uint16__ = r"""
-{"quantileExactWeighted(nullable_date_, lowcardinality_nullable_uint16__)":"2007-12-06"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___uint8 = r"""
-{"quantileExactWeighted(lowcardinality_nullable_datetime__, uint8)":"2013-08-28 14:39:09"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___uint64 = r"""
-{"quantileExactWeighted(lowcardinality_nullable_datetime__, uint64)":"2013-05-05 05:17:45"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___uint32 = r"""
-{"quantileExactWeighted(lowcardinality_nullable_datetime__, uint32)":"2013-08-28 14:39:09"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___uint16 = r"""
-{"quantileExactWeighted(lowcardinality_nullable_datetime__, uint16)":"2013-08-28 14:39:09"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___nullable_uint8_ = r"""
-{"quantileExactWeighted(lowcardinality_nullable_datetime__, nullable_uint8_)":"2013-05-05 05:17:45"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___nullable_uint64_ = r"""
-{"quantileExactWeighted(lowcardinality_nullable_datetime__, nullable_uint64_)":"2013-08-28 14:39:09"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___nullable_uint32_ = r"""
-{"quantileExactWeighted(lowcardinality_nullable_datetime__, nullable_uint32_)":"2013-11-29 13:42:31"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___nullable_uint16_ = r"""
-{"quantileExactWeighted(lowcardinality_nullable_datetime__, nullable_uint16_)":"2013-05-05 05:17:45"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_uint8_ = r"""
-{"quantileExactWeighted(lowcardinality_nullable_datetime__, lowcardinality_uint8_)":"2013-08-28 14:39:09"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_uint64_ = r"""
-{"quantileExactWeighted(lowcardinality_nullable_datetime__, lowcardinality_uint64_)":"2013-05-05 05:17:45"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_uint32_ = r"""
-{"quantileExactWeighted(lowcardinality_nullable_datetime__, lowcardinality_uint32_)":"2013-05-05 05:17:45"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_uint16_ = r"""
-{"quantileExactWeighted(lowcardinality_nullable_datetime__, lowcardinality_uint16_)":"2013-05-05 05:17:45"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_nullable_uint8__ = r"""
-{"quantileExactWeighted(lowcardinality_nullable_datetime__, lowcardinality_nullable_uint8__)":"2013-05-05 05:17:45"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_nullable_uint64__ = r"""
-{"quantileExactWeighted(lowcardinality_nullable_datetime__, lowcardinality_nullable_uint64__)":"2013-08-28 14:39:09"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_nullable_uint32__ = r"""
-{"quantileExactWeighted(lowcardinality_nullable_datetime__, lowcardinality_nullable_uint32__)":"2013-08-28 14:39:09"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_datetime___lowcardinality_nullable_uint16__ = r"""
-{"quantileExactWeighted(lowcardinality_nullable_datetime__, lowcardinality_nullable_uint16__)":"2013-08-28 14:39:09"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___uint8 = r"""
-{"quantileExactWeighted(lowcardinality_nullable_date__, uint8)":"2013-09-28"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___uint64 = r"""
-{"quantileExactWeighted(lowcardinality_nullable_date__, uint64)":"2015-12-28"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___uint32 = r"""
-{"quantileExactWeighted(lowcardinality_nullable_date__, uint32)":"2013-09-28"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___uint16 = r"""
-{"quantileExactWeighted(lowcardinality_nullable_date__, uint16)":"2015-12-28"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___nullable_uint8_ = r"""
-{"quantileExactWeighted(lowcardinality_nullable_date__, nullable_uint8_)":"2018-12-01"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___nullable_uint64_ = r"""
-{"quantileExactWeighted(lowcardinality_nullable_date__, nullable_uint64_)":"2018-12-01"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___nullable_uint32_ = r"""
-{"quantileExactWeighted(lowcardinality_nullable_date__, nullable_uint32_)":"2015-12-28"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___nullable_uint16_ = r"""
-{"quantileExactWeighted(lowcardinality_nullable_date__, nullable_uint16_)":"2015-12-28"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___lowcardinality_uint8_ = r"""
-{"quantileExactWeighted(lowcardinality_nullable_date__, lowcardinality_uint8_)":"2013-09-28"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___lowcardinality_uint64_ = r"""
-{"quantileExactWeighted(lowcardinality_nullable_date__, lowcardinality_uint64_)":"2018-12-01"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___lowcardinality_uint32_ = r"""
-{"quantileExactWeighted(lowcardinality_nullable_date__, lowcardinality_uint32_)":"2015-12-28"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___lowcardinality_uint16_ = r"""
-{"quantileExactWeighted(lowcardinality_nullable_date__, lowcardinality_uint16_)":"2018-12-01"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___lowcardinality_nullable_uint8__ = r"""
-{"quantileExactWeighted(lowcardinality_nullable_date__, lowcardinality_nullable_uint8__)":"2015-12-28"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___lowcardinality_nullable_uint64__ = r"""
-{"quantileExactWeighted(lowcardinality_nullable_date__, lowcardinality_nullable_uint64__)":"2018-12-01"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___lowcardinality_nullable_uint32__ = r"""
-{"quantileExactWeighted(lowcardinality_nullable_date__, lowcardinality_nullable_uint32__)":"2013-09-28"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_nullable_date___lowcardinality_nullable_uint16__ = r"""
-{"quantileExactWeighted(lowcardinality_nullable_date__, lowcardinality_nullable_uint16__)":"2008-02-09"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__uint8 = r"""
-{"quantileExactWeighted(lowcardinality_datetime_, uint8)":"2019-02-09 01:58:10"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__uint64 = r"""
-{"quantileExactWeighted(lowcardinality_datetime_, uint64)":"2013-09-04 16:10:20"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__uint32 = r"""
-{"quantileExactWeighted(lowcardinality_datetime_, uint32)":"2016-11-27 14:16:37"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__uint16 = r"""
-{"quantileExactWeighted(lowcardinality_datetime_, uint16)":"2019-02-09 01:58:10"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__nullable_uint8_ = r"""
-{"quantileExactWeighted(lowcardinality_datetime_, nullable_uint8_)":"2016-11-27 14:16:37"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__nullable_uint64_ = r"""
-{"quantileExactWeighted(lowcardinality_datetime_, nullable_uint64_)":"2016-11-27 14:16:37"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__nullable_uint32_ = r"""
-{"quantileExactWeighted(lowcardinality_datetime_, nullable_uint32_)":"2016-11-27 14:16:37"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__nullable_uint16_ = r"""
-{"quantileExactWeighted(lowcardinality_datetime_, nullable_uint16_)":"2012-01-02 12:35:45"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_uint8_ = r"""
-{"quantileExactWeighted(lowcardinality_datetime_, lowcardinality_uint8_)":"2016-11-27 14:16:37"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_uint64_ = r"""
-{"quantileExactWeighted(lowcardinality_datetime_, lowcardinality_uint64_)":"2013-09-04 16:10:20"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_uint32_ = r"""
-{"quantileExactWeighted(lowcardinality_datetime_, lowcardinality_uint32_)":"2019-02-09 01:58:10"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_uint16_ = r"""
-{"quantileExactWeighted(lowcardinality_datetime_, lowcardinality_uint16_)":"2013-09-04 16:10:20"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_nullable_uint8__ = r"""
-{"quantileExactWeighted(lowcardinality_datetime_, lowcardinality_nullable_uint8__)":"2013-09-04 16:10:20"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_nullable_uint64__ = r"""
-{"quantileExactWeighted(lowcardinality_datetime_, lowcardinality_nullable_uint64__)":"2016-11-27 14:16:37"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_nullable_uint32__ = r"""
-{"quantileExactWeighted(lowcardinality_datetime_, lowcardinality_nullable_uint32__)":"2016-11-27 14:16:37"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_datetime__lowcardinality_nullable_uint16__ = r"""
-{"quantileExactWeighted(lowcardinality_datetime_, lowcardinality_nullable_uint16__)":"2019-02-09 01:58:10"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__uint8 = r"""
-{"quantileExactWeighted(lowcardinality_date_, uint8)":"2013-09-23"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__uint64 = r"""
-{"quantileExactWeighted(lowcardinality_date_, uint64)":"2008-06-30"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__uint32 = r"""
-{"quantileExactWeighted(lowcardinality_date_, uint32)":"2009-11-18"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__uint16 = r"""
-{"quantileExactWeighted(lowcardinality_date_, uint16)":"2020-01-11"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__nullable_uint8_ = r"""
-{"quantileExactWeighted(lowcardinality_date_, nullable_uint8_)":"2020-01-11"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__nullable_uint64_ = r"""
-{"quantileExactWeighted(lowcardinality_date_, nullable_uint64_)":"2013-09-23"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__nullable_uint32_ = r"""
-{"quantileExactWeighted(lowcardinality_date_, nullable_uint32_)":"2020-01-11"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__nullable_uint16_ = r"""
-{"quantileExactWeighted(lowcardinality_date_, nullable_uint16_)":"2009-11-18"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__lowcardinality_uint8_ = r"""
-{"quantileExactWeighted(lowcardinality_date_, lowcardinality_uint8_)":"2013-09-23"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__lowcardinality_uint64_ = r"""
-{"quantileExactWeighted(lowcardinality_date_, lowcardinality_uint64_)":"2013-09-23"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__lowcardinality_uint32_ = r"""
-{"quantileExactWeighted(lowcardinality_date_, lowcardinality_uint32_)":"2020-01-11"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__lowcardinality_uint16_ = r"""
-{"quantileExactWeighted(lowcardinality_date_, lowcardinality_uint16_)":"2020-01-11"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__lowcardinality_nullable_uint8__ = r"""
-{"quantileExactWeighted(lowcardinality_date_, lowcardinality_nullable_uint8__)":"2009-11-18"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__lowcardinality_nullable_uint64__ = r"""
-{"quantileExactWeighted(lowcardinality_date_, lowcardinality_nullable_uint64__)":"2013-09-23"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__lowcardinality_nullable_uint32__ = r"""
-{"quantileExactWeighted(lowcardinality_date_, lowcardinality_nullable_uint32__)":"2013-09-23"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_lowcardinality_date__lowcardinality_nullable_uint16__ = r"""
-{"quantileExactWeighted(lowcardinality_date_, lowcardinality_nullable_uint16__)":"2022-06-02"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_datetime_uint8 = r"""
-{"quantileExactWeighted(datetime, uint8)":"2017-02-11 11:09:25"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_datetime_uint64 = r"""
-{"quantileExactWeighted(datetime, uint64)":"2015-06-29 10:43:07"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_datetime_uint32 = r"""
-{"quantileExactWeighted(datetime, uint32)":"2017-02-11 11:09:25"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_datetime_uint16 = r"""
-{"quantileExactWeighted(datetime, uint16)":"2019-04-27 03:01:34"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_datetime_nullable_uint8_ = r"""
-{"quantileExactWeighted(datetime, nullable_uint8_)":"2015-06-29 10:43:07"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_datetime_nullable_uint64_ = r"""
-{"quantileExactWeighted(datetime, nullable_uint64_)":"2017-02-11 11:09:25"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_datetime_nullable_uint32_ = r"""
-{"quantileExactWeighted(datetime, nullable_uint32_)":"2017-02-11 11:09:25"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_datetime_nullable_uint16_ = r"""
-{"quantileExactWeighted(datetime, nullable_uint16_)":"2015-06-29 10:43:07"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_datetime_lowcardinality_uint8_ = r"""
-{"quantileExactWeighted(datetime, lowcardinality_uint8_)":"2017-02-11 11:09:25"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_datetime_lowcardinality_uint64_ = r"""
-{"quantileExactWeighted(datetime, lowcardinality_uint64_)":"2015-06-29 10:43:07"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_datetime_lowcardinality_uint32_ = r"""
-{"quantileExactWeighted(datetime, lowcardinality_uint32_)":"2015-06-29 10:43:07"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_datetime_lowcardinality_uint16_ = r"""
-{"quantileExactWeighted(datetime, lowcardinality_uint16_)":"2015-06-29 10:43:07"}
-"""
-
 _aggregate_functions_quantileExactWeighted_datatypes_permutations_datetime_lowcardinality_nullable_uint8__ = r"""
-{"quantileExactWeighted(datetime, lowcardinality_nullable_uint8__)":"2015-06-29 10:43:07"}
+{"quantileExactWeighted(datetime, lowcardinality_nullable_uint8__)":"2015-06-29 09:43:07"}
 """
 
 _aggregate_functions_quantileExactWeighted_datatypes_permutations_datetime_lowcardinality_nullable_uint64__ = r"""
-{"quantileExactWeighted(datetime, lowcardinality_nullable_uint64__)":"2017-02-11 11:09:25"}
+{"quantileExactWeighted(datetime, lowcardinality_nullable_uint64__)":"2017-02-11 09:09:25"}
 """
 
 _aggregate_functions_quantileExactWeighted_datatypes_permutations_datetime_lowcardinality_nullable_uint32__ = r"""
-{"quantileExactWeighted(datetime, lowcardinality_nullable_uint32__)":"2017-02-11 11:09:25"}
+{"quantileExactWeighted(datetime, lowcardinality_nullable_uint32__)":"2017-02-11 09:09:25"}
 """
 
 _aggregate_functions_quantileExactWeighted_datatypes_permutations_datetime_lowcardinality_nullable_uint16__ = r"""
-{"quantileExactWeighted(datetime, lowcardinality_nullable_uint16__)":"2019-04-27 03:01:34"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_date_uint8 = r"""
-{"quantileExactWeighted(date, uint8)":"2006-11-06"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_date_uint64 = r"""
-{"quantileExactWeighted(date, uint64)":"2015-01-26"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_date_uint32 = r"""
-{"quantileExactWeighted(date, uint32)":"2014-06-03"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_date_uint16 = r"""
-{"quantileExactWeighted(date, uint16)":"2014-06-03"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_date_nullable_uint8_ = r"""
-{"quantileExactWeighted(date, nullable_uint8_)":"2014-06-03"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_date_nullable_uint64_ = r"""
-{"quantileExactWeighted(date, nullable_uint64_)":"2014-06-03"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_date_nullable_uint32_ = r"""
-{"quantileExactWeighted(date, nullable_uint32_)":"2006-11-06"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_date_nullable_uint16_ = r"""
-{"quantileExactWeighted(date, nullable_uint16_)":"2015-01-26"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_date_lowcardinality_uint8_ = r"""
-{"quantileExactWeighted(date, lowcardinality_uint8_)":"2006-11-06"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_date_lowcardinality_uint64_ = r"""
-{"quantileExactWeighted(date, lowcardinality_uint64_)":"2006-11-06"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_date_lowcardinality_uint32_ = r"""
-{"quantileExactWeighted(date, lowcardinality_uint32_)":"2015-01-26"}
-"""
-
-_aggregate_functions_quantileExactWeighted_datatypes_permutations_date_lowcardinality_uint16_ = r"""
-{"quantileExactWeighted(date, lowcardinality_uint16_)":"2014-06-03"}
+{"quantileExactWeighted(datetime, lowcardinality_nullable_uint16__)":"2019-04-27 02:01:34"}
 """
 
 _aggregate_functions_quantileExactWeighted_datatypes_permutations_date_lowcardinality_nullable_uint8__ = r"""

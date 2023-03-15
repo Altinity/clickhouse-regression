@@ -297,6 +297,7 @@ def order_by_with_alias_with_fill_interpolate(self, node=None):
         with Finally("I drop table"):
             node.query(f"DROP TABLE IF EXISTS {name}")
 
+
 @TestScenario
 def count_with_alias(self):
     """Check `SELECT count()` clause with expression column as alias column."""
@@ -619,7 +620,6 @@ def select_nested_subquery_with_alias(self, node=None):
                 assert explicit_final == force_select_final
 
 
-
 @TestOutline
 def select_prewhere_where_subquery_with_alias(self, node=None, clause=None):
     """Check SELECT query with `PREWHERE`/`WHERE' with subquery with expression column as alias in select and in subquery."""
@@ -917,6 +917,7 @@ def select_with_clause(self, node=None, negative=False):
             else:
                 with Then("I check that compare results are the same"):
                     assert explicit_final == force_select_final
+
 
 @TestFeature
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_TableSchema_Alias("1.0"))
