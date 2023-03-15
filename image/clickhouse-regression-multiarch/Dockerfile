@@ -1,12 +1,8 @@
-# docker build -t clickhouse/integration-tests-runner .
 FROM ubuntu:20.04
 
-# ARG for quick switch to a given ubuntu mirror
-ARG apt_archive="http://archive.ubuntu.com"
-RUN sed -i "s|http://archive.ubuntu.com|$apt_archive|g" /etc/apt/sources.list
-
-RUN apt-get update \
-    && env DEBIAN_FRONTEND=noninteractive apt-get install --yes \
+RUN apt-get update
+RUN apt-get -y upgrade
+RUN env DEBIAN_FRONTEND=noninteractive apt-get install --yes \
     ca-certificates \
     bash \
     btrfs-progs \
@@ -15,61 +11,71 @@ RUN apt-get update \
     xfsprogs \
     tar \
     pigz \
+    vim \
     wget \
     git \
     iproute2 \
     cgroupfs-mount \
     python3-pip \
     tzdata \
+    libreadline-dev \
     libicu-dev \
     bsdutils \
-    curl \
-    python3-pika \
     liblua5.1-dev \
     luajit \
     libssl-dev \
-    libcurl4-openssl-dev \
-    gdb \
-    software-properties-common \
-    libkrb5-dev \
-    krb5-user \
-    g++ \
+    libgcc-7-dev \
+    apt-transport-https \
+    dirmngr \
+    gnupg \
+    locales \
+    curl \
+    unzip \
     && rm -rf \
         /var/lib/apt/lists/* \
         /var/cache/debconf \
         /tmp/* \
     && apt-get clean
+
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.0.30.zip" -o "awscliv2.zip"
+RUN unzip awscliv2.zip
+RUN ./aws/install
+RUN rm -f awscliv2.zip
 
 ENV TZ=Europe/Berlin
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-ENV DOCKER_CHANNEL stable
-RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-RUN add-apt-repository "deb https://download.docker.com/linux/ubuntu $(lsb_release -c -s) ${DOCKER_CHANNEL}"
+RUN pip install pytz
+RUN pip install pytest docker-compose docker dicttoxml kazoo PyMySQL pymongo tzlocal protobuf redis pandas parquet-tools flask
+RUN pip install pytest-timeout boto3 minio pyarrow
 
-RUN apt-get update \
-    && env DEBIAN_FRONTEND=noninteractive apt-get install --yes \
-        docker-ce \
+ENV DOCKER_CHANNEL stable
+ENV DOCKER_VERSION 20.10.9
+
+RUN set -eux; ARCH=$(uname -i); \
+	if ! wget -O docker.tgz "https://download.docker.com/linux/static/${DOCKER_CHANNEL}/${ARCH}/docker-${DOCKER_VERSION}.tgz"; then \
+		echo >&2 "error: failed to download 'docker-${DOCKER_VERSION}' from '${DOCKER_CHANNEL}' for '${ARCH}'"; \
+		exit 1; \
+	fi; \
+	\
+	tar --extract \
+		--file docker.tgz \
+		--strip-components 1 \
+		--directory /usr/local/bin/ \
+	; \
+	rm docker.tgz
+
+
+RUN mkdir -p /etc/apt/sources.list.d \
+    && apt-key adv --keyserver keyserver.ubuntu.com --recv E0C56BD4 \
+    && apt-get update
+
+RUN apt install -y postgresql postgresql-contrib \
     && rm -rf \
         /var/lib/apt/lists/* \
         /var/cache/debconf \
         /tmp/* \
     && apt-get clean
 
-RUN dockerd --version; docker --version
-
-COPY modprobe.sh /usr/local/bin/modprobe
-COPY dockerd-entrypoint.sh /usr/local/bin/
-COPY compose/ /compose/
-COPY misc/ /misc/
-
-RUN set -x \
-  && addgroup --system dockremap \
-    && adduser --system dockremap \
-  && adduser dockremap dockremap \
-  && echo 'dockremap:165536:65536' >> /etc/subuid \
-    && echo 'dockremap:165536:65536' >> /etc/subgid
-
-EXPOSE 2375
-ENTRYPOINT ["dockerd-entrypoint.sh"]
-CMD ["sh", "-c", "pytest $PYTEST_OPTS"]
+COPY dockerd-start.sh /usr/local/bin/
+COPY *.dockerimage /var/lib/docker/
