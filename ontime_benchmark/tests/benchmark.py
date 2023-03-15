@@ -7,6 +7,18 @@ import textwrap
 import datetime
 
 
+@TestStep(Given)
+def insert_ontime_data(self, year, node=None):
+    """Insert data into ontime table from s3 disk with specified year"""
+
+    if node is None:
+        node = self.context.node
+
+    node.query(
+        f"INSERT INTO ontime SELECT * FROM s3('https://clickhouse-public-datasets.s3.amazonaws.com/ontime/csv_by_year/{year}.csv.gz', CSVWithNames) SETTINGS max_insert_threads = 40;"
+    )
+
+
 @TestOutline
 def benchmark(self, table_name, table_settings, nodes=None, format=None):
     """Outline to run benchmark queries for the ontime dataset."""
@@ -25,14 +37,18 @@ def benchmark(self, table_name, table_settings, nodes=None, format=None):
             f"SELECT DayOfWeek, count(*) AS c FROM {table_name} WHERE Year>=2000 AND Year<=2008 GROUP BY DayOfWeek ORDER BY c DESC",
             f"SELECT DayOfWeek, count(*) AS c FROM {table_name} WHERE DepDelay>10 AND Year>=2000 AND Year<=2008 GROUP BY DayOfWeek ORDER BY c DESC",
             f"SELECT Origin, count(*) AS c FROM {table_name} WHERE DepDelay>10 AND Year>=2000 AND Year<=2008 GROUP BY Origin ORDER BY c DESC LIMIT 10",
-            f"SELECT Carrier, count(*) FROM {table_name} WHERE DepDelay>10 AND Year=2007 GROUP BY Carrier ORDER BY count(*) DESC",
-            f"SET joined_subquery_requires_alias = 0; SELECT Carrier, c, c2, c*100/c2 as c3 FROM ( SELECT Carrier, count(*) AS c FROM {table_name} WHERE DepDelay>10 AND Year=2007 GROUP BY Carrier) JOIN ( SELECT Carrier, count(*) AS c2 FROM {table_name} WHERE Year=2007 GROUP BY Carrier) USING Carrier ORDER BY c3 DESC;",
-            f"SET joined_subquery_requires_alias = 0; SELECT Carrier, c, c2, c*100/c2 as c3 FROM ( SELECT Carrier, count(*) AS c FROM {table_name} WHERE DepDelay>10 AND Year>=2000 AND Year<=2008 GROUP BY Carrier) JOIN ( SELECT Carrier, count(*) AS c2 FROM {table_name} WHERE Year>=2000 AND Year<=2008 GROUP BY Carrier) USING Carrier ORDER BY c3 DESC;",
-            f"SET joined_subquery_requires_alias = 0; SELECT Year, c1/c2 FROM ( select Year, count(*)*100 as c1 from {table_name} WHERE DepDelay>10 GROUP BY Year) JOIN ( select Year, count(*) as c2 from {table_name} GROUP BY Year) USING (Year) ORDER BY Year;",
+            f"SELECT IATA_CODE_Reporting_Airline AS Carrier, count(*) FROM {table_name} WHERE DepDelay>10 AND Year=2007 GROUP BY Carrier ORDER BY count(*) DESC",
+            f"SET joined_subquery_requires_alias = 0; SELECT IATA_CODE_Reporting_Airline AS Carrier, avg(DepDelay>10)*100 AS c3 FROM {table_name} WHERE Year=2007 GROUP BY Carrier ORDER BY c3 DESC;",
+            f"SET joined_subquery_requires_alias = 0; SELECT IATA_CODE_Reporting_Airline AS Carrier, avg(DepDelay>10)*100 AS c3 FROM {table_name} WHERE Year>=2000 AND Year<=2008 GROUP BY Carrier ORDER BY c3 DESC;",
+            f"SET joined_subquery_requires_alias = 0; SELECT Year, avg(DepDelay>10)*100 FROM {table_name} GROUP BY Year ORDER BY Year;",
             f"SELECT DestCityName, uniqExact(OriginCityName) AS u FROM {table_name} WHERE Year >= 2000 and Year <= 2010 GROUP BY DestCityName ORDER BY u DESC LIMIT 10",
             f"SELECT Year, count(*) AS c1 FROM {table_name} GROUP BY Year;",
-            f"SELECT min(Year), max(Year), Carrier, count(*) AS cnt, sum(ArrDelayMinutes>30) AS flights_delayed, round(sum(ArrDelayMinutes>30)/count(*),2) AS rate FROM {table_name} WHERE DayOfWeek NOT IN (6,7) AND OriginState NOT IN ('AK', 'HI', 'PR', 'VI') AND DestState NOT IN ('AK', 'HI', 'PR', 'VI') AND FlightDate < '2010-01-01' GROUP by Carrier HAVING cnt>100000 and max(Year)>1990 ORDER by rate DESC LIMIT 1000"
-            # f"SELECT count() FROM hard_disk WHERE NOT ignore(*)"
+            f"SELECT min(Year), max(Year), IATA_CODE_Reporting_Airline AS Carrier, count(*) AS cnt, sum(ArrDelayMinutes>30) AS flights_delayed, round(sum(ArrDelayMinutes>30)/count(*),2) AS rate FROM {table_name} WHERE DayOfWeek NOT IN (6,7) AND OriginState NOT IN ('AK', 'HI', 'PR', 'VI') AND DestState NOT IN ('AK', 'HI', 'PR', 'VI') AND FlightDate < '2010-01-01' GROUP by Carrier HAVING cnt>100000 and max(Year)>1990 ORDER by rate DESC LIMIT 1000;",
+            f"SELECT avg(cnt) FROM (SELECT Year, Month, count(*) AS cnt FROM {table_name} WHERE DepDel15=1 GROUP BY Year, Month);",
+            f"SELECT avg(c1) FROM (SELECT Year, Month, count(*) AS c1 FROM {table_name} GROUP BY Year, Month);",
+            f"SELECT DestCityName, uniqExact(OriginCityName) AS u FROM {table_name} GROUP BY DestCityName ORDER BY u DESC LIMIT 10;",
+            f"SELECT OriginCityName, DestCityName, count() AS c FROM {table_name} GROUP BY OriginCityName, DestCityName ORDER BY c DESC LIMIT 10;",
+            f"SELECT OriginCityName, count() AS c FROM {table_name} GROUP BY OriginCityName ORDER BY c DESC LIMIT 10;",
         ]
 
     try:
@@ -44,124 +60,135 @@ def benchmark(self, table_name, table_settings, nodes=None, format=None):
                     node.query(
                         textwrap.dedent(
                             f"""
-                        CREATE TABLE {table_name} (
-                          Year UInt16,
-                          Quarter UInt8,
-                          Month UInt8,
-                          DayofMonth UInt8,
-                          DayOfWeek UInt8,
-                          FlightDate Date,
-                          UniqueCarrier FixedString(7),
-                          AirlineID Int32,
-                          Carrier FixedString(2),
-                          TailNum String,
-                          FlightNum String,
-                          OriginAirportID Int32,
-                          OriginAirportSeqID Int32,
-                          OriginCityMarketID Int32,
-                          Origin FixedString(5),
-                          OriginCityName String,
-                          OriginState FixedString(2),
-                          OriginStateFips String,
-                          OriginStateName String,
-                          OriginWac Int32,
-                          DestAirportID Int32,
-                          DestAirportSeqID Int32,
-                          DestCityMarketID Int32,
-                          Dest FixedString(5),
-                          DestCityName String,
-                          DestState FixedString(2),
-                          DestStateFips String,
-                          DestStateName String,
-                          DestWac Int32,
-                          CRSDepTime Int32,
-                          DepTime Int32,
-                          DepDelay Int32,
-                          DepDelayMinutes Int32,
-                          DepDel15 Int32,
-                          DepartureDelayGroups String,
-                          DepTimeBlk String,
-                          TaxiOut Int32,
-                          WheelsOff Int32,
-                          WheelsOn Int32,
-                          TaxiIn Int32,
-                          CRSArrTime Int32,
-                          ArrTime Int32,
-                          ArrDelay Int32,
-                          ArrDelayMinutes Int32,
-                          ArrDel15 Int32,
-                          ArrivalDelayGroups Int32,
-                          ArrTimeBlk String,
-                          Cancelled UInt8,
-                          CancellationCode FixedString(1),
-                          Diverted UInt8,
-                          CRSElapsedTime Int32,
-                          ActualElapsedTime Int32,
-                          AirTime Int32,
-                          Flights Int32,
-                          Distance Int32,
-                          DistanceGroup UInt8,
-                          CarrierDelay Int32,
-                          WeatherDelay Int32,
-                          NASDelay Int32,
-                          SecurityDelay Int32,
-                          LateAircraftDelay Int32,
-                          FirstDepTime String,
-                          TotalAddGTime String,
-                          LongestAddGTime String,
-                          DivAirportLandings String,
-                          DivReachedDest String,
-                          DivActualElapsedTime String,
-                          DivArrDelay String,
-                          DivDistance String,
-                          Div1Airport String,
-                          Div1AirportID Int32,
-                          Div1AirportSeqID Int32,
-                          Div1WheelsOn String,
-                          Div1TotalGTime String,
-                          Div1LongestGTime String,
-                          Div1WheelsOff String,
-                          Div1TailNum String,
-                          Div2Airport String,
-                          Div2AirportID Int32,
-                          Div2AirportSeqID Int32,
-                          Div2WheelsOn String,
-                          Div2TotalGTime String,
-                          Div2LongestGTime String,
-                          Div2WheelsOff String,
-                          Div2TailNum String,
-                          Div3Airport String,
-                          Div3AirportID Int32,
-                          Div3AirportSeqID Int32,
-                          Div3WheelsOn String,
-                          Div3TotalGTime String,
-                          Div3LongestGTime String,
-                          Div3WheelsOff String,
-                          Div3TailNum String,
-                          Div4Airport String,
-                          Div4AirportID Int32,
-                          Div4AirportSeqID Int32,
-                          Div4WheelsOn String,
-                          Div4TotalGTime String,
-                          Div4LongestGTime String,
-                          Div4WheelsOff String,
-                          Div4TailNum String,
-                          Div5Airport String,
-                          Div5AirportID Int32,
-                          Div5AirportSeqID Int32,
-                          Div5WheelsOn String,
-                          Div5TotalGTime String,
-                          Div5LongestGTime String,
-                          Div5WheelsOff String,
-                          Div5TailNum String
+                        CREATE TABLE {table_name}
+                        (
+                            `Year`                            UInt16,
+                            `Quarter`                         UInt8,
+                            `Month`                           UInt8,
+                            `DayofMonth`                      UInt8,
+                            `DayOfWeek`                       UInt8,
+                            `FlightDate`                      Date,
+                            `Reporting_Airline`               LowCardinality(String),
+                            `DOT_ID_Reporting_Airline`        Int32,
+                            `IATA_CODE_Reporting_Airline`     LowCardinality(String),
+                            `Tail_Number`                     LowCardinality(String),
+                            `Flight_Number_Reporting_Airline` LowCardinality(String),
+                            `OriginAirportID`                 Int32,
+                            `OriginAirportSeqID`              Int32,
+                            `OriginCityMarketID`              Int32,
+                            `Origin`                          FixedString(5),
+                            `OriginCityName`                  LowCardinality(String),
+                            `OriginState`                     FixedString(2),
+                            `OriginStateFips`                 FixedString(2),
+                            `OriginStateName`                 LowCardinality(String),
+                            `OriginWac`                       Int32,
+                            `DestAirportID`                   Int32,
+                            `DestAirportSeqID`                Int32,
+                            `DestCityMarketID`                Int32,
+                            `Dest`                            FixedString(5),
+                            `DestCityName`                    LowCardinality(String),
+                            `DestState`                       FixedString(2),
+                            `DestStateFips`                   FixedString(2),
+                            `DestStateName`                   LowCardinality(String),
+                            `DestWac`                         Int32,
+                            `CRSDepTime`                      Int32,
+                            `DepTime`                         Int32,
+                            `DepDelay`                        Int32,
+                            `DepDelayMinutes`                 Int32,
+                            `DepDel15`                        Int32,
+                            `DepartureDelayGroups`            LowCardinality(String),
+                            `DepTimeBlk`                      LowCardinality(String),
+                            `TaxiOut`                         Int32,
+                            `WheelsOff`                       LowCardinality(String),
+                            `WheelsOn`                        LowCardinality(String),
+                            `TaxiIn`                          Int32,
+                            `CRSArrTime`                      Int32,
+                            `ArrTime`                         Int32,
+                            `ArrDelay`                        Int32,
+                            `ArrDelayMinutes`                 Int32,
+                            `ArrDel15`                        Int32,
+                            `ArrivalDelayGroups`              LowCardinality(String),
+                            `ArrTimeBlk`                      LowCardinality(String),
+                            `Cancelled`                       Int8,
+                            `CancellationCode`                FixedString(1),
+                            `Diverted`                        Int8,
+                            `CRSElapsedTime`                  Int32,
+                            `ActualElapsedTime`               Int32,
+                            `AirTime`                         Int32,
+                            `Flights`                         Int32,
+                            `Distance`                        Int32,
+                            `DistanceGroup`                   Int8,
+                            `CarrierDelay`                    Int32,
+                            `WeatherDelay`                    Int32,
+                            `NASDelay`                        Int32,
+                            `SecurityDelay`                   Int32,
+                            `LateAircraftDelay`               Int32,
+                            `FirstDepTime`                    Int16,
+                            `TotalAddGTime`                   Int16,
+                            `LongestAddGTime`                 Int16,
+                            `DivAirportLandings`              Int8,
+                            `DivReachedDest`                  Int8,
+                            `DivActualElapsedTime`            Int16,
+                            `DivArrDelay`                     Int16,
+                            `DivDistance`                     Int16,
+                            `Div1Airport`                     LowCardinality(String),
+                            `Div1AirportID`                   Int32,
+                            `Div1AirportSeqID`                Int32,
+                            `Div1WheelsOn`                    Int16,
+                            `Div1TotalGTime`                  Int16,
+                            `Div1LongestGTime`                Int16,
+                            `Div1WheelsOff`                   Int16,
+                            `Div1TailNum`                     LowCardinality(String),
+                            `Div2Airport`                     LowCardinality(String),
+                            `Div2AirportID`                   Int32,
+                            `Div2AirportSeqID`                Int32,
+                            `Div2WheelsOn`                    Int16,
+                            `Div2TotalGTime`                  Int16,
+                            `Div2LongestGTime`                Int16,
+                            `Div2WheelsOff`                   Int16,
+                            `Div2TailNum`                     LowCardinality(String),
+                            `Div3Airport`                     LowCardinality(String),
+                            `Div3AirportID`                   Int32,
+                            `Div3AirportSeqID`                Int32,
+                            `Div3WheelsOn`                    Int16,
+                            `Div3TotalGTime`                  Int16,
+                            `Div3LongestGTime`                Int16,
+                            `Div3WheelsOff`                   Int16,
+                            `Div3TailNum`                     LowCardinality(String),
+                            `Div4Airport`                     LowCardinality(String),
+                            `Div4AirportID`                   Int32,
+                            `Div4AirportSeqID`                Int32,
+                            `Div4WheelsOn`                    Int16,
+                            `Div4TotalGTime`                  Int16,
+                            `Div4LongestGTime`                Int16,
+                            `Div4WheelsOff`                   Int16,
+                            `Div4TailNum`                     LowCardinality(String),
+                            `Div5Airport`                     LowCardinality(String),
+                            `Div5AirportID`                   Int32,
+                            `Div5AirportSeqID`                Int32,
+                            `Div5WheelsOn`                    Int16,
+                            `Div5TotalGTime`                  Int16,
+                            `Div5LongestGTime`                Int16,
+                            `Div5WheelsOff`                   Int16,
+                            `Div5TailNum`                     LowCardinality(String)
                         ) {table_settings};
-                    """
+                        """
                         )
                     )
 
+        with When("I insert data into the ontime table in parallel"):
+            for year in range(1987, 2022):
+                Step(
+                    name="insert 1 year into ontime table",
+                    test=insert_ontime_data,
+                    parallel=True,
+                )(year=year)
+
+            join()
+
         start_time = time.time()
 
-        for i in range(2006, 2018):
+        for i in range(1987, 2022):
             with Scenario(f"loading year {i}"):
                 if format:
                     filename = f"/tmp/ontime_{i}.{format.lower()}"
@@ -214,7 +241,7 @@ def default(self, format=None):
     table_settings = """
     ENGINE = MergeTree()
     PARTITION BY Year
-    ORDER BY (Carrier, FlightDate)
+    ORDER BY (Year, Quarter, Month, DayofMonth, FlightDate, IATA_CODE_Reporting_Airline);
     SETTINGS index_granularity = 8192, storage_policy='default';
     """
     benchmark(table_name="hard_disk", table_settings=table_settings, format=format)
@@ -226,7 +253,7 @@ def s3(self, format=None):
     table_settings = """
     ENGINE = MergeTree()
     PARTITION BY Year
-    ORDER BY (Carrier, FlightDate)
+    ORDER BY (Year, Quarter, Month, DayofMonth, FlightDate, IATA_CODE_Reporting_Airline);
     SETTINGS index_granularity = 8192, storage_policy='external';
     """
     benchmark(table_name="s3", table_settings=table_settings, format=format)
@@ -239,7 +266,7 @@ def s3_tiered(self, format=None):
     table_settings = """
     ENGINE = MergeTree()
     PARTITION BY Year
-    ORDER BY (Carrier, FlightDate)
+    ORDER BY (Year, Quarter, Month, DayofMonth, FlightDate, IATA_CODE_Reporting_Airline);
     TTL toStartOfYear(FlightDate) + interval 3 year to volume 'external'
     SETTINGS index_granularity = 8192, storage_policy='tiered';
     """
@@ -254,7 +281,7 @@ def zero_copy_replication(self, format=None):
     table_settings = """
         ENGINE = ReplicatedMergeTree('/clickhouse/zero_copy_replication_ontime', '{shard2}')
         PARTITION BY Year
-        ORDER BY (Carrier, FlightDate)
+        ORDER BY (Year, Quarter, Month, DayofMonth, FlightDate, IATA_CODE_Reporting_Airline);
         SETTINGS index_granularity = 8192, storage_policy='external';
         """
 
