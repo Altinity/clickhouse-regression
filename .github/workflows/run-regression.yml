@@ -203,7 +203,7 @@ jobs:
         run: python3 
               -u ${{ env.SUITE }}/benchmark.py
               --storage minio
-              --storage s3_amazon
+              --storage aws_s3
               --aws-s3-bucket ${{ secrets.AWS_BUCKET }}
               --aws-s3-region ${{ secrets.AWS_REGION }}
               --aws-s3-key-id ${{ secrets.AWS_KEY_ID }}

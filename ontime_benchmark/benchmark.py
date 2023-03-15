@@ -70,7 +70,7 @@ def regression(
     for storage in storages:
         nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
         with Feature(f"{storage.lower()}"):
-            if "s3_amazon" == storage.lower():
+            if "aws_s3" == storage.lower():
                 with Given("I make sure the S3 credentials are set"):
                     if aws_s3_access_key == None:
                         fail("AWS S3 access key needs to be set")
