@@ -138,7 +138,9 @@ def without_is_deleted(self, node=None):
 
 
 @TestScenario
-@Requirements(RQ_SRS_035_ClickHouse_ReplacingMergeTree_Settings_CleanDeletedRowsDisabled("1.0"))
+@Requirements(
+    RQ_SRS_035_ClickHouse_ReplacingMergeTree_Settings_CleanDeletedRowsDisabled("1.0")
+)
 def clean_deleted_rows_without_is_deleted(self, node=None):
     """Checking that the new ReplacingMergeTree engine without is_deleted parameter and with clean_deleted_rows="Always"
     setting works in the same way as the old ReplacingMergeTree engine, and that it does not conceal rows with

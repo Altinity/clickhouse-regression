@@ -165,7 +165,9 @@ def regression(
                     }
 
                 with s3_storage(disks, policies):
-                    Feature(test=load("ontime_benchmark.tests.benchmark", "feature"))(format=format)
+                    Feature(test=load("ontime_benchmark.tests.benchmark", "feature"))(
+                        format=format
+                    )
 
 
 if main():

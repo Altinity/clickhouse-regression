@@ -61,12 +61,16 @@ def scenario(self, cluster, nodes=None):
         for retry in retries(timeout=60):
             with retry:
                 with When("I check the used disk on other replica"):
-                    disks = get_used_disks_for_table(nodes[-1], "replicated_table_for_download")
+                    disks = get_used_disks_for_table(
+                        nodes[-1], "replicated_table_for_download"
+                    )
 
                 expected_disks = {
                     "external",
                 }
-                with Then(f"the used disk should match {expected_disks}", format_name=False):
+                with Then(
+                    f"the used disk should match {expected_disks}", format_name=False
+                ):
                     assert set(disks) == expected_disks, error()
 
     finally:
