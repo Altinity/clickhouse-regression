@@ -413,7 +413,7 @@ def incorrect_data_insert(self, node=None):
             node.query(
                 f"INSERT INTO {name} VALUES ('data1', 1, 6)",
                 message="Received from localhost:9000. DB::Exception: Incorrect data: is_deleted = 6 (must be 1 or 0).."
-                        " (INCORRECT_DATA)",
+                " (INCORRECT_DATA)",
                 exitcode=117,
             )
 
@@ -470,25 +470,28 @@ def incorrect_data_insert_with_disabled_optimize_on_insert(self, node=None):
 
         with When("I insert data in this table"):
             node.query(
-                f"INSERT INTO {name} VALUES ('data1', 1, 6)", settings=[("optimize_on_insert", 0)]
+                f"INSERT INTO {name} VALUES ('data1', 1, 6)",
+                settings=[("optimize_on_insert", 0)],
             )
 
         with Then(
             "I select all data from the table with --final and expect to see all the latest "
             "version not deleted data"
         ):
-            node.query(
-                f"SELECT * FROM {name} FORMAT JSONEachRow;"
-            )
+            node.query(f"SELECT * FROM {name} FORMAT JSONEachRow;")
 
             with And("I optimize table"):
                 node.query(
-                    f"OPTIMIZE TABLE {name} FINAL;", message="DB::Exception:", exitcode=117
+                    f"OPTIMIZE TABLE {name} FINAL;",
+                    message="DB::Exception:",
+                    exitcode=117,
                 )
 
                 node.query(
-                    f"SELECT * FROM {name}  FORMAT JSONEachRow;", message="DB::Exception:", exitcode=117,
-                    settings=[("final", 1)]
+                    f"SELECT * FROM {name}  FORMAT JSONEachRow;",
+                    message="DB::Exception:",
+                    exitcode=117,
+                    settings=[("final", 1)],
                 )
 
     finally:
