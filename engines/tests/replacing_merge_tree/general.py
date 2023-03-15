@@ -334,7 +334,7 @@ def clean_deleted_rows_with_is_deleted(self, node=None):
 @TestScenario
 @Requirements(RQ_SRS_035_ClickHouse_ReplacingMergeTree_Update("1.0"))
 def update(self, node=None):
-    """Check for updating a row by inserting a row with (arbitrary) greater version."""
+    """Check updating a row by inserting a row with (arbitrary) greater version or delete old one."""
 
     insert_values = (
         " ('data1','adsf', 1, 0),"
