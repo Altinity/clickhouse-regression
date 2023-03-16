@@ -177,7 +177,7 @@ def benchmark(self, table_name, table_settings, nodes=None, format=None):
                     )
 
         with When("I insert data into the ontime table in parallel"):
-            for year in range(1987, 2022):
+            for year in range(1987, 2023):
                 Step(
                     name="insert 1 year into ontime table",
                     test=insert_ontime_data,
@@ -224,7 +224,7 @@ def benchmark(self, table_name, table_settings, nodes=None, format=None):
         end_time = time.time()
         metric("Insert time", units="seconds", value=end_time - start_time)
 
-        for i in range(17):
+        for i in range(15):
             with Scenario(f"query {i}"):
                 metric(f"Query {i} time", units="seconds", value=run_benchmark(i))
 
