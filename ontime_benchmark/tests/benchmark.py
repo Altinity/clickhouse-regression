@@ -54,7 +54,7 @@ def benchmark(self, table_name, table_settings, nodes=None, format=None):
     try:
         with When("I create a table for the ontime dataset"):
             for i, node in enumerate(nodes):
-                with By(f"on {node}"):
+                with By(f"on {node.name}"):
                     node.restart()
                     node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
                     node.query(
@@ -241,7 +241,7 @@ def default(self, format=None):
     table_settings = """
     ENGINE = MergeTree()
     PARTITION BY Year
-    ORDER BY (Year, Quarter, Month, DayofMonth, FlightDate, IATA_CODE_Reporting_Airline);
+    ORDER BY (Year, Quarter, Month, DayofMonth, FlightDate, IATA_CODE_Reporting_Airline)
     SETTINGS index_granularity = 8192, storage_policy='default';
     """
     benchmark(table_name="hard_disk", table_settings=table_settings, format=format)
@@ -253,7 +253,7 @@ def s3(self, format=None):
     table_settings = """
     ENGINE = MergeTree()
     PARTITION BY Year
-    ORDER BY (Year, Quarter, Month, DayofMonth, FlightDate, IATA_CODE_Reporting_Airline);
+    ORDER BY (Year, Quarter, Month, DayofMonth, FlightDate, IATA_CODE_Reporting_Airline)
     SETTINGS index_granularity = 8192, storage_policy='external';
     """
     benchmark(table_name="s3", table_settings=table_settings, format=format)
@@ -266,7 +266,7 @@ def s3_tiered(self, format=None):
     table_settings = """
     ENGINE = MergeTree()
     PARTITION BY Year
-    ORDER BY (Year, Quarter, Month, DayofMonth, FlightDate, IATA_CODE_Reporting_Airline);
+    ORDER BY (Year, Quarter, Month, DayofMonth, FlightDate, IATA_CODE_Reporting_Airline)
     TTL toStartOfYear(FlightDate) + interval 3 year to volume 'external'
     SETTINGS index_granularity = 8192, storage_policy='tiered';
     """
@@ -281,7 +281,7 @@ def zero_copy_replication(self, format=None):
     table_settings = """
         ENGINE = ReplicatedMergeTree('/clickhouse/zero_copy_replication_ontime', '{shard2}')
         PARTITION BY Year
-        ORDER BY (Year, Quarter, Month, DayofMonth, FlightDate, IATA_CODE_Reporting_Airline);
+        ORDER BY (Year, Quarter, Month, DayofMonth, FlightDate, IATA_CODE_Reporting_Airline)
         SETTINGS index_granularity = 8192, storage_policy='external';
         """
 
