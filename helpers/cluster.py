@@ -173,6 +173,82 @@ class Node(object):
         return r
 
 
+class ZooKeeperNode(Node):
+    """Node with ZooKeeper server."""
+
+    def wait_zookeeper_healthy(self, timeout=300):
+        with By(f"waiting until ZooKeeper server on {self.name} is healthy"):
+            for attempt in retries(timeout=timeout, delay=1):
+                with attempt:
+                    if (
+                        self.command(
+                            "zkServer.sh status", no_checks=1, steps=False
+                        ).exitcode
+                        != 0
+                    ):
+                        fail("ZooKeeper server is not healthy")
+
+    def zookeeper_pid(self):
+        """Return ZooKeeper server pid if present otherwise return None."""
+        if self.command("ls /data/zookeeper_server.pid").exitcode == 0:
+            return self.command("cat /data/zookeeper_server.pid").output.strip()
+        return None
+
+    def stop_zookeeper(self, timeout=300):
+        """Stop ZooKeeper server."""
+
+        with By(f"stopping {self.name}"):
+            self.command(f"zkServer.sh stop", exitcode=0, steps=False)
+
+    def start_zookeeper(self, timeout=300):
+        """Start ZooKeeper server."""
+
+        with By(f"starting {self.name}"):
+            self.command(f"zkServer.sh start", exitcode=0, steps=False)
+
+    def restart_clickhouse(self, timeout=300):
+        """Restart ZooKeeper server."""
+
+        with By(f"restarting {self.name}"):
+            self.command(f"zkServer.sh restart", exitcode=0, steps=False)
+
+    def stop(self, timeout=300, retry_count=5):
+        """Stop node."""
+        if self.zookeeper_pid():
+            self.stop_zookeeper(timeout=timeout)
+
+        return super(ZooKeeperNode, self).stop(timeout=timeout, retry_count=retry_count)
+
+    def start(
+        self,
+        timeout=300,
+        start_zookeeper=True,
+        retry_count=5,
+    ):
+        """Start node."""
+        super(ZooKeeperNode, self).start(timeout=timeout, retry_count=retry_count)
+
+        if start_zookeeper:
+            self.start_zookeeper(
+                timeout=timeout,
+            )
+
+    def restart(
+        self,
+        timeout=300,
+        start_zookeeper=True,
+        retry_count=5,
+    ):
+        """Restart node."""
+        if self.zookeeper_pid():
+            self.stop_zookeeper(timeout=timeout)
+
+        super(ZooKeeperNode, self).restart(timeout=timeout, retry_count=retry_count)
+
+        if start_zookeeper:
+            self.start_zookeeper(timeout=timeout)
+
+
 class ClickHouseNode(Node):
     """Node with ClickHouse server."""
 
@@ -702,6 +778,7 @@ class Cluster(object):
         environ=None,
         thread_fuzzer=False,
         collect_service_logs=False,
+        use_zookeeper_nodes=False,
     ):
 
         self._bash = {}
@@ -716,6 +793,7 @@ class Cluster(object):
         self.thread_fuzzer = thread_fuzzer
         self.running = False
         self.collect_service_logs = collect_service_logs
+        self.use_zookeeper_nodes = use_zookeeper_nodes
 
         frame = inspect.currentframe().f_back
         caller_dir = os.path.dirname(os.path.abspath(frame.f_globals["__file__"]))
@@ -1086,6 +1164,9 @@ class Cluster(object):
         """Get object with node bound methods.
         :param name: name of service name
         """
+        if self.use_zookeeper_nodes:
+            if name.startswith("zookeeper"):
+                return ZooKeeperNode(self, name)
         if name.startswith("clickhouse"):
             return ClickHouseNode(self, name)
         return Node(self, name)
@@ -1227,6 +1308,12 @@ class Cluster(object):
                 fail("could not bring up docker-compose cluster")
 
         with Then("wait all nodes report healthy"):
+            if use_zookeeper_nodes:
+                for name in self.nodes["zookeeper"]:
+                    self.node(name).wait_healthy()
+                    if name.startswith("zookeeper"):
+                        self.node(name).start_zookeeper()
+
             for name in self.nodes["clickhouse"]:
                 self.node(name).wait_healthy()
                 if name.startswith("clickhouse"):
