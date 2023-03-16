@@ -188,13 +188,13 @@ def benchmark(self, table_name, table_settings, nodes=None, format=None):
 
         start_time = time.time()
 
-        for i in range(1987, 2022):
+        for i in range(1987, 2023):
             with Scenario(f"loading year {i}"):
                 if format:
                     filename = f"/tmp/ontime_{i}.{format.lower()}"
                     query_start_time = time.time()
                     nodes[0].command(
-                        f"""clickhouse client --query="SELECT * FROM datasets.ontime WHERE Year={i} FORMAT {format}" > {filename}"""
+                        f"""clickhouse client --query="SELECT * FROM {table_name} WHERE Year={i} FORMAT {format}" > {filename}"""
                     )
                     metric(
                         f"Select time {i}",
@@ -213,7 +213,7 @@ def benchmark(self, table_name, table_settings, nodes=None, format=None):
                 else:
                     query_start_time = time.time()
                     nodes[0].query(
-                        f"INSERT INTO {table_name} SELECT * FROM datasets.ontime WHERE Year={i}"
+                        f"INSERT INTO {table_name} SELECT * FROM {table_name} WHERE Year={i}"
                     )
                     metric(
                         f"Insert time {i}",
@@ -224,7 +224,7 @@ def benchmark(self, table_name, table_settings, nodes=None, format=None):
         end_time = time.time()
         metric("Insert time", units="seconds", value=end_time - start_time)
 
-        for i in range(11):
+        for i in range(17):
             with Scenario(f"query {i}"):
                 metric(f"Query {i} time", units="seconds", value=run_benchmark(i))
 
