@@ -110,7 +110,10 @@ def regression(
     stress=None,
 ):
     """ClickHouse security SSL server regression."""
-    nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
+    nodes = {
+        "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3"),
+        "zookeeper": ("zookeeper",),
+    }
     self.context.clickhouse_version = clickhouse_version
     self.context.fips_mode = False
 
@@ -131,6 +134,7 @@ def regression(
         collect_service_logs=collect_service_logs,
         nodes=nodes,
         docker_compose_project_dir=os.path.join(current_dir(), env),
+        use_zookeeper_nodes=True,
     ) as cluster:
         self.context.cluster = cluster
 
@@ -146,6 +150,7 @@ def regression(
         Feature(run=load("ssl_server.tests.url_table_function", "feature"))
         Feature(run=load("ssl_server.tests.dictionary", "feature"))
         Feature(run=load("ssl_server.tests.fips", "feature"))
+        Feature(run=load("ssl_server.tests.zookeeper", "feature"))
 
 
 if main():

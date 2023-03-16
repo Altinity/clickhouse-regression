@@ -482,13 +482,16 @@ def sign_certificate(
     type="x509",
     hash="sha256",
     days="365",
+    node=None,
+    use_stash=True,
 ):
     """Sign certificate using CA certificate."""
-    bash = self.context.cluster.bash(node=None)
+    bash = self.context.cluster.bash(node=node)
 
     with stashed.filepath(
         outfile,
         id=stashed.hash(csr, ca_certificate, ca_key, ca_passphrase, type, hash, days),
+        use_stash=use_stash,
     ) as stash:
         try:
             with bash(
@@ -502,7 +505,8 @@ def sign_certificate(
                     cmd.app.send(ca_passphrase)
             stash(outfile)
         finally:
-            bash(f'rm -rf "{outfile}"')
+            if stash.is_used:
+                bash(f'rm -rf "{outfile}"')
     yield stash.value
 
 
@@ -747,10 +751,13 @@ def clickhouse_server_verification_mode(self, mode):
 
 
 @TestStep(Given)
-def create_crt_and_key(self, name, node=None, common_name=""):
+def create_crt_and_key(self, name, node=None, common_name="", node_ca_crt=None):
     """Create certificate and private key with specified name."""
     if node is None:
         node = self.context.node
+
+    if node_ca_crt is None:
+        node_ca_crt = self.context.node_ca_crt
 
     with Given("I generate private key"):
         private_key = create_rsa_private_key(outfile=f"{name}.key", passphrase="")
@@ -778,7 +785,7 @@ def create_crt_and_key(self, name, node=None, common_name=""):
 
     with And("I validate the certificate"):
         validate_certificate(
-            certificate=f"/{name}.crt", ca_certificate=self.context.node_ca_crt
+            certificate=f"/{name}.crt", ca_certificate=node_ca_crt, node=node
         )
 
 
