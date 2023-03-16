@@ -1308,7 +1308,7 @@ class Cluster(object):
                 fail("could not bring up docker-compose cluster")
 
         with Then("wait all nodes report healthy"):
-            if use_zookeeper_nodes:
+            if self.use_zookeeper_nodes:
                 for name in self.nodes["zookeeper"]:
                     self.node(name).wait_healthy()
                     if name.startswith("zookeeper"):
