@@ -8,14 +8,14 @@ import datetime
 
 
 @TestStep(Given)
-def insert_ontime_data(self, year, node=None):
+def insert_ontime_data(self, year, table_name, node=None):
     """Insert data into ontime table from s3 disk with specified year"""
 
     if node is None:
         node = self.context.node
 
     node.query(
-        f"INSERT INTO ontime SELECT * FROM s3('https://clickhouse-public-datasets.s3.amazonaws.com/ontime/csv_by_year/{year}.csv.gz', CSVWithNames) SETTINGS max_insert_threads = 40;"
+        f"INSERT INTO {table_name} SELECT * FROM s3('https://clickhouse-public-datasets.s3.amazonaws.com/ontime/csv_by_year/{year}.csv.gz', CSVWithNames) SETTINGS max_insert_threads = 40;"
     )
 
 
@@ -182,7 +182,7 @@ def benchmark(self, table_name, table_settings, nodes=None, format=None):
                     name="insert 1 year into ontime table",
                     test=insert_ontime_data,
                     parallel=True,
-                )(year=year)
+                )(year=year, table_name=table_name)
 
             join()
 
