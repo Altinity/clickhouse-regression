@@ -150,7 +150,7 @@ def regression(
         Feature(run=load("ssl_server.tests.url_table_function", "feature"))
         Feature(run=load("ssl_server.tests.dictionary", "feature"))
         Feature(run=load("ssl_server.tests.fips", "feature"))
-        Feature(run=load("ssl_server.tests.zookeeper", "feature"))
+        Feature(run=load("ssl_server.tests.zookeeper.feature", "feature"))
 
 
 if main():
