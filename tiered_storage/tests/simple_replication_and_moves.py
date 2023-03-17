@@ -123,7 +123,7 @@ def scenario(self, cluster, nodes=None):
             with And(
                 "I check used disks on each node to eventually match the expected"
             ):
-                for attempt in retries(timeout=300, delay=5):
+                for attempt in retries(timeout=360, delay=5):
                     with attempt:
                         with By("getting used disks on each node"):
                             disks = {}

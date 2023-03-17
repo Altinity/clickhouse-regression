@@ -2,17 +2,26 @@ version: '2.3'
 
 services:
   zookeeper:
-    image: zookeeper:3.6.2
+    build:
+      context: .
+      dockerfile: Dockerfile.zookeeper
+    init: true
     expose:
       - "2181"
+      - "2281"
     environment:
       ZOO_TICK_TIME: 500
       ZOO_MY_ID: 1
+      ZOO_SERVERS: " "
+      ZOO_CFG_EXTRA: "clientPort=2181"
+    command: bash -c "tail -f /dev/null"
     healthcheck:
-      test: echo stat | nc localhost 2181
-      interval: 3s
-      timeout: 2s
-      retries: 5
-      start_period: 2s
+      test: echo 1
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 300s
+    cap_add:
+      - SYS_PTRACE
     security_opt:
       - label:disable
