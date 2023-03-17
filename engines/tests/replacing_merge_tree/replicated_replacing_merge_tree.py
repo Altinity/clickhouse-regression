@@ -205,7 +205,7 @@ def with_is_deleted_distributed(self):
 @Name("replicated_replacing_merge_tree")
 def feature(self):
     """Check new ReplicatedReplacingMergeTree engine and Distributed engine on it."""
-    # xfail("in progress, coming soon")
+    xfail("in progress, coming soon")
     if check_clickhouse_version("<23.2")(self):
         skip(
             reason="new ReplacingMergeTree engine is only supported on ClickHouse version >= 23.2"
