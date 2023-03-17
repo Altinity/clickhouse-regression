@@ -206,7 +206,7 @@ class ZooKeeperNode(Node):
         with By(f"starting {self.name}"):
             self.command(f"zkServer.sh start", exitcode=0, steps=False)
 
-    def restart_clickhouse(self, timeout=300):
+    def restart_zookeeper(self, timeout=300):
         """Restart ZooKeeper server."""
 
         with By(f"restarting {self.name}"):
