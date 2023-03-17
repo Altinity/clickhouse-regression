@@ -11,15 +11,11 @@ append_path(sys.path, "..")
 
 @TestScenario
 def without_is_deleted(self):
-    """Checking that the new ReplicateReplacingMergeTree engine on 2 shard cluster with one shard on 2 replicas
-     without is_deleted parameter and without clean_deleted_rows
-    setting works in the same way as the old ReplacingMergeTree engine, and that it does not conceal rows with
-    is_deleted=1."""
-
+    """Checking that engine created without `is_deleted` and `clean_deleted_rows` parameters
+    setting works in the same way as the old ReplacingMergeTree engine, and that it does
+    not hide rows with is_deleted=1."""
     node1 = self.context.cluster.node("clickhouse1")
-
     name = f"without_is_deleted_{getuid()}"
-
     cluster_name = "sharded_replicated_cluster"
 
     try:
@@ -200,10 +196,13 @@ def with_is_deleted_distributed(self):
 
 
 @TestScenario
-def update_distributed(self):
+def update_distributed(self, cluster_name=None):
     """Check updating a row by inserting a row with (arbitrary) greater version or delete old one for the new
     ReplicateReplacingMergeTree engine on 2 shard cluster with one shard on 2 replicas and distributed table on it."""
 
+    if cluster_name is None:
+        cluster_name = self.context.cluster_name
+    
     insert_values_local = (
         " ('data1','adsf', 1, 0),"
         " ('data1','adsf', 2, 0),"
@@ -213,12 +212,8 @@ def update_distributed(self):
     )
 
     insert_values_update = " ('data1', 'a', 3, 1)" " ('data1', 'fdasd', 3, 0),"
-
     node1 = self.context.cluster.node("clickhouse1")
-
     name = f"update_{getuid()}"
-
-    cluster_name = "sharded_replicated_cluster"
 
     try:
         with Given(
@@ -276,7 +271,12 @@ def update_distributed(self):
               RQ_SRS_035_ClickHouse_ReplicatedReplacingMergeTree_Distributed("1.0"))
 @Name("replicated_replacing_merge_tree")
 def feature(self):
-    """Check new ReplicatedReplacingMergeTree engine and Distributed engine on it."""
+    """Check new ReplicatedReplacingMergeTree engine and Distributed engine on it
+    on 2-shard cluster where one shard has 2 replicas and the other shard has only 1 replica.
+    """
+    self.context.cluster_name = "sharded_replicated_cluster"
+    self.context.nodes = {f"{name}": self.context.cluster.node(name) for name in self.context.cluster.nodes["clickhouse]}                                                                                                          
+                                                                                                                                                                                                          
     xfail("in progress, coming soon")
     if check_clickhouse_version("<23.2")(self):
         skip(
