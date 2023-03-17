@@ -187,7 +187,7 @@ jobs:
 
   benchmark:
     strategy:
-     fail-fast: false
+      fail-fast: false
       matrix:
         include:
           - version: 22.8.13.21.altinitystable
