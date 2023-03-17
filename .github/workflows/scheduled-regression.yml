@@ -185,52 +185,52 @@ jobs:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
 
-  # benchmark:
-  #   strategy:
-  #    fail-fast: false
-  #     matrix:
-  #       include:
-  #         - version: 22.8.13.21.altinitystable
-  #           clickhouse_binary_path: docker://altinity/clickhouse-server
-  #         - version: 22.3.15.34.altinitystable
-  #           clickhouse_binary_path: docker://altinity/clickhouse-server
-  #         - version: 23.2.4.12
-  #           clickhouse_binary_path: docker://clickhouse/clickhouse-server
-  #   runs-on: self-hosted
-  #   env:
-  #     SUITE: ontime_benchmark
-  #   steps:
-  #     - uses: actions/checkout@v3
+  benchmark:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - version: 22.8.13.21.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 22.3.15.34.altinitystable
+            clickhouse_binary_path: docker://altinity/clickhouse-server
+          - version: 23.2.4.12
+            clickhouse_binary_path: docker://clickhouse/clickhouse-server
+    runs-on: self-hosted
+    env:
+      SUITE: ontime_benchmark
+    steps:
+      - uses: actions/checkout@v3
 
-  #     - name: Setup
-  #       run: .github/setup.sh
+      - name: Setup
+        run: .github/setup.sh
 
-  #     - name: Run ${{ env.SUITE }} suite
-  #       run: python3 
-  #             -u ${{ env.SUITE }}/benchmark.py
-  #             --storage minio
-  #             --storage aws_s3
-  #             --aws-s3-bucket ${{ secrets.AWS_BUCKET }}
-  #             --aws-s3-region ${{ secrets.AWS_REGION }}
-  #             --aws-s3-key-id ${{ secrets.AWS_KEY_ID }}
-  #             --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
-  #             --storage gcs
-  #             --gcs-uri ${{ secrets.GCS_URI }}
-  #             --gcs-key-id ${{ secrets.GCS_KEY_ID }}
-  #             --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
-  #             --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-  #             --clickhouse-version ${{ env.version }}
-  #             ${{ env.args }}
+      - name: Run ${{ env.SUITE }} suite
+        run: python3 
+              -u ${{ env.SUITE }}/benchmark.py
+              --storage minio
+              --storage aws_s3
+              --aws-s3-bucket ${{ secrets.AWS_BUCKET }}
+              --aws-s3-region ${{ secrets.AWS_REGION }}
+              --aws-s3-key-id ${{ secrets.AWS_KEY_ID }}
+              --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
+              --storage gcs
+              --gcs-uri ${{ secrets.GCS_URI }}
+              --gcs-key-id ${{ secrets.GCS_KEY_ID }}
+              --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
 
-  #     - name: Create and upload logs
-  #       if: success() || failure()
-  #       run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+      - name: Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-  #     - uses: actions/upload-artifact@v3
-  #       if: always()
-  #       with:
-  #         name: benchmark-artifacts
-  #         path: ${{ env.artifact_paths}}
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: benchmark-artifacts
+          path: ${{ env.artifact_paths}}
 
   clickhouse_keeper:
     strategy:

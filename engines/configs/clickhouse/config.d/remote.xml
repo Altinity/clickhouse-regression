@@ -65,5 +65,17 @@
                 </replica>
             </shard>
         </sharded_replicated_cluster>
+        <cluster_1S_2R>
+            <shard>
+                <replica>
+                    <host>clickhouse1</host>
+                    <port>9000</port>
+                </replica>
+                <replica>
+                    <host>clickhouse2</host>
+                    <port>9000</port>
+                </replica>
+            </shard>
+        </cluster_1S_2R>
     </remote_servers>
 </clickhouse>
