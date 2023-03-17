@@ -1,4 +1,4 @@
-testflows==1.9.51
+testflows==1.9.53
 pytz==2020.1
 python-dateutil==2.8.1
 minio==7.1.3
