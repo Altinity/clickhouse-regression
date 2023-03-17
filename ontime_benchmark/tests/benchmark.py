@@ -232,7 +232,7 @@ def benchmark(self, table_name, table_settings, nodes=None, format=None):
         with Finally("I drop the table"):
             for node in nodes:
                 with When(f"on {node}", flags=TE):
-                    node.query(f"DROP TABLE IF EXISTS {table_name} SYNC")
+                    node.query(f"DROP TABLE IF EXISTS {table_name} SYNC", timeout=420)
 
 
 @TestScenario
