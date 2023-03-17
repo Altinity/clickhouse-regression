@@ -70,7 +70,7 @@ def regression(
     for storage in storages:
         nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
         with Feature(f"{storage.lower()}"):
-            if "s3_amazon" == storage.lower():
+            if "aws_s3" == storage.lower():
                 with Given("I make sure the S3 credentials are set"):
                     if aws_s3_access_key == None:
                         fail("AWS S3 access key needs to be set")
@@ -126,9 +126,6 @@ def regression(
                 self.context.cluster = cluster
                 self.context.node = self.context.cluster.node(node)
                 self.context.clickhouse_version = current().context.clickhouse_version
-
-                if check_clickhouse_version(">=22.8")(self):
-                    skip(reason="Test not implemented for 22.8")
 
                 with And("I set the nodes to use with replicated tables"):
                     nodes = cluster.nodes["clickhouse"][:2]

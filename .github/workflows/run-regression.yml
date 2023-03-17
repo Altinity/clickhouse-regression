@@ -95,7 +95,7 @@ jobs:
               ${{ env.args }}
 
       - name: Create and upload logs
-        if: success() || failure()
+        if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
@@ -123,7 +123,7 @@ jobs:
               ${{ env.args }}
 
       - name: Create and upload logs
-        if: success() || failure()
+        if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
@@ -151,7 +151,7 @@ jobs:
               ${{ env.args }}
 
       - name: Create and upload logs
-        if: success() || failure()
+        if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
@@ -179,7 +179,7 @@ jobs:
               ${{ env.args }}
 
       - name: Create and upload logs
-        if: success() || failure()
+        if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
@@ -188,43 +188,43 @@ jobs:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
 
-  # benchmark:
-  #   runs-on: self-hosted
-  #   env:
-  #     SUITE: ontime_benchmark
-  #   if: ${{ inputs.suite == 'all' || inputs.suite == 'benchmark' }}
-  #   steps:
-  #     - uses: actions/checkout@v3
+  benchmark:
+    runs-on: self-hosted
+    env:
+      SUITE: ontime_benchmark
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'benchmark' }}
+    steps:
+      - uses: actions/checkout@v3
 
-  #     - name: Setup
-  #       run: .github/setup.sh
+      - name: Setup
+        run: .github/setup.sh
 
-  #     - name: Run ${{ env.SUITE }} suite
-  #       run: python3 
-  #             -u ${{ env.SUITE }}/benchmark.py
-  #             --storage minio
-  #             --storage aws_s3
-  #             --aws-s3-bucket ${{ secrets.AWS_BUCKET }}
-  #             --aws-s3-region ${{ secrets.AWS_REGION }}
-  #             --aws-s3-key-id ${{ secrets.AWS_KEY_ID }}
-  #             --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
-  #             --storage gcs
-  #             --gcs-uri ${{ secrets.GCS_URI }}
-  #             --gcs-key-id ${{ secrets.GCS_KEY_ID }}
-  #             --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
-  #             --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-  #             --clickhouse-version ${{ env.version }}
-  #             ${{ env.args }}
+      - name: Run ${{ env.SUITE }} suite
+        run: python3 
+              -u ${{ env.SUITE }}/benchmark.py
+              --storage minio
+              --storage aws_s3
+              --aws-s3-bucket ${{ secrets.AWS_BUCKET }}
+              --aws-s3-region ${{ secrets.AWS_REGION }}
+              --aws-s3-key-id ${{ secrets.AWS_KEY_ID }}
+              --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
+              --storage gcs
+              --gcs-uri ${{ secrets.GCS_URI }}
+              --gcs-key-id ${{ secrets.GCS_KEY_ID }}
+              --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
 
-  #     - name: Create and upload logs
-  #       if: success() || failure()
-  #       run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+      - name: Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
-  #     - uses: actions/upload-artifact@v3
-  #       if: always()
-  #       with:
-  #         name: benchmark-artifacts
-  #         path: ${{ env.artifact_paths}}
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: benchmark-artifacts
+          path: ${{ env.artifact_paths}}
 
   clickhouse_keeper:
     runs-on: self-hosted
@@ -245,7 +245,7 @@ jobs:
               ${{ env.args }}
 
       - name: Create and upload logs
-        if: success() || failure()
+        if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
@@ -273,7 +273,7 @@ jobs:
               ${{ env.args }}
 
       - name: Create and upload logs
-        if: success() || failure()
+        if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
@@ -301,7 +301,7 @@ jobs:
               ${{ env.args }}
 
       - name: Create and upload logs
-        if: success() || failure()
+        if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
@@ -329,7 +329,7 @@ jobs:
               ${{ env.args }}
 
       - name: Create and upload logs
-        if: success() || failure()
+        if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
@@ -357,7 +357,7 @@ jobs:
               ${{ env.args }}
 
       - name: Create and upload logs
-        if: success() || failure()
+        if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
@@ -385,7 +385,7 @@ jobs:
               ${{ env.args }}
 
       - name: Create and upload logs
-        if: success() || failure()
+        if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
@@ -413,7 +413,7 @@ jobs:
   #             ${{ env.args }}
 
   #     - name: Create and upload logs
-  #       if: success() || failure()
+  #       if: always()
   #       run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
   #     - uses: actions/upload-artifact@v3
@@ -441,7 +441,7 @@ jobs:
               ${{ env.args }}
 
       - name: Create and upload logs
-        if: success() || failure()
+        if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
@@ -469,7 +469,7 @@ jobs:
               ${{ env.args }}
 
       - name: Create and upload logs
-        if: success() || failure()
+        if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
       - uses: actions/upload-artifact@v3
         if: always()
@@ -496,7 +496,7 @@ jobs:
               ${{ env.args }}
 
       - name: Create and upload logs
-        if: success() || failure()
+        if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
@@ -524,7 +524,7 @@ jobs:
               ${{ env.args }}
 
       - name: Create and upload logs
-        if: success() || failure()
+        if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
@@ -552,7 +552,7 @@ jobs:
               ${{ env.args }}
 
       - name: Create and upload logs
-        if: success() || failure()
+        if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
@@ -580,7 +580,7 @@ jobs:
               ${{ env.args }}
 
       - name: Create and upload logs
-        if: success() || failure()
+        if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
@@ -608,7 +608,7 @@ jobs:
               ${{ env.args }}
 
       - name: Create and upload logs
-        if: success() || failure()
+        if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
@@ -636,7 +636,7 @@ jobs:
               ${{ env.args }}
 
       - name: Create and upload logs
-        if: success() || failure()
+        if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
@@ -664,7 +664,7 @@ jobs:
               ${{ env.args }}
 
       - name: Create and upload logs
-        if: success() || failure()
+        if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
@@ -692,7 +692,7 @@ jobs:
               ${{ env.args }}
 
       - name: Create and upload logs
-        if: success() || failure()
+        if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
@@ -720,7 +720,7 @@ jobs:
               ${{ env.args }}
 
       - name: Create and upload logs
-        if: success() || failure()
+        if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
@@ -733,6 +733,7 @@ jobs:
     runs-on: self-hosted
     env:
       SUITE: s3
+      STORAGE: /minio
     if: ${{ inputs.suite == 'all' || inputs.suite == 's3' }}
     steps:
       - uses: actions/checkout@v3
@@ -749,10 +750,8 @@ jobs:
               ${{ env.args }}
 
       - name: Create and upload logs
-        if: success() || failure()
-        run: |
-          export STORAGE=/minio
-          .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -764,6 +763,7 @@ jobs:
     runs-on: self-hosted
     env:
       SUITE: s3
+      STORAGE: /aws
     if: ${{ (inputs.suite == 'all' || inputs.suite == 's3') && vars.S3_AWS == 1 }}
     steps:
       - uses: actions/checkout@v3
@@ -784,10 +784,8 @@ jobs:
               ${{ env.args }}
 
       - name: Create and upload logs
-        if: success() || failure()
-        run: |
-          export STORAGE=/aws
-          .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -799,6 +797,7 @@ jobs:
     runs-on: self-hosted
     env:
       SUITE: s3
+      STORAGE: /gcs
     if: ${{ (inputs.suite == 'all' || inputs.suite == 's3') && vars.S3_GCS }}
     steps:
       - uses: actions/checkout@v3
@@ -818,10 +817,8 @@ jobs:
               ${{ env.args }}
 
       - name: Create and upload logs
-        if: success() || failure()
-        run: |
-          export STORAGE=/gcs
-          .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -848,7 +845,7 @@ jobs:
               ${{ env.args }}
 
       - name: Create and upload logs
-        if: success() || failure()
+        if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
@@ -876,7 +873,7 @@ jobs:
               ${{ env.args }}
 
       - name: Create and upload logs
-        if: success() || failure()
+        if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
@@ -889,6 +886,7 @@ jobs:
     runs-on: self-hosted
     env:
       SUITE: tiered_storage
+      STORAGE: /minio
     if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage' }}
     steps:
       - uses: actions/checkout@v3
@@ -905,10 +903,8 @@ jobs:
               ${{ env.args }}
 
       - name: Create and upload logs
-        if: success() || failure()
-        run: |
-          export STORAGE=/minio
-          .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -920,6 +916,7 @@ jobs:
     runs-on: self-hosted
     env:
       SUITE: tiered_storage
+      STORAGE: /aws
     if: ${{ (inputs.suite == 'all' || inputs.suite == 'tiered_storage') && vars.TIERED_STORAGE_AWS == 1 }}
     steps:
       - uses: actions/checkout@v3
@@ -939,10 +936,8 @@ jobs:
               ${{ env.args }}
 
       - name: Create and upload logs
-        if: success() || failure()
-        run: |
-          export STORAGE=/aws
-          .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -954,6 +949,7 @@ jobs:
     runs-on: self-hosted
     env:
       SUITE: tiered_storage
+      STORAGE: /gcs
     if: ${{ (inputs.suite == 'all' || inputs.suite == 'tiered_storage') && vars.TIERED_STORAGE_GCS }}
     steps:
       - uses: actions/checkout@v3
@@ -973,10 +969,8 @@ jobs:
               ${{ env.args }}
 
       - name: Create and upload logs
-        if: success() || failure()
-        run: |
-          export STORAGE=/gcs
-          .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -1003,7 +997,7 @@ jobs:
               ${{ env.args }}
 
       - name: Create and upload logs
-        if: success() || failure()
+        if: always()
         run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
 
       - uses: actions/upload-artifact@v3
