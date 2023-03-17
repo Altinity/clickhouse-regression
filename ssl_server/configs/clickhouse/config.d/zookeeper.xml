@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <yandex>
     <zookeeper>
-	    <node index="1">
+	    <node>
 		    <host>zookeeper</host>
 		    <port>2181</port>
 	    </node>
