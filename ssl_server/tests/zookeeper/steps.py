@@ -35,7 +35,7 @@ def delete_certificate_from_zookeeper_truststore(
     storepass="truststore",
     node=None,
 ):
-    """Remove certificate to ZooKeeper's truststore."""
+    """Delete certificate from ZooKeeper's truststore."""
     if node is None:
         node = self.context.zookeeper_node
 
@@ -139,7 +139,7 @@ class ZooKeeperConfig:
 
 @TestStep(Given)
 def create_zookeeper_config_content(self, entries, config_file, config_dir, node):
-    """Crate ZooKeeper configuration file."""
+    """Create ZooKeeper configuration file content."""
     uid = getuid()
     path = os.path.join(config_dir, config_file)
     name = config_file
@@ -164,7 +164,7 @@ def create_zookeeper_config_content(self, entries, config_file, config_dir, node
 
 @TestStep(Given)
 def add_zookeeper_config(self, config, timeout, restart, node):
-    """Add ZooKeeper configuration file."""
+    """Add ZooKeeper config."""
     try:
         with When("I add the config", description=config.path):
             command = f"cat <<HEREDOC > {config.path}\n{config.content}\nHEREDOC"
@@ -189,7 +189,7 @@ def add_zookeeper_config(self, config, timeout, restart, node):
 
 
 @TestStep(Given)
-def add_zookeeper_configuration_file(
+def add_zookeeper_config_file(
     self,
     entries,
     config=None,
@@ -214,7 +214,7 @@ def add_zookeeper_configuration_file(
 
 
 @TestStep(Given)
-def add_secure_zookeeper_configuration_file(
+def add_to_clickhouse_secure_zookeeper_config_file(
     self,
     port="2281",
     config=None,
