@@ -31,10 +31,10 @@ def secure_connection(self):
             "ssl.trustStore.location": "/truststore.jks",
             "ssl.trustStore.password": "truststore",
         }
-        add_zookeeper_configuration_file(entries=entries)
+        add_zookeeper_config_file(entries=entries)
 
-    with And("I add secure zookeeper configuration"):
-        add_secure_zookeeper_configuration_file(restart=True)
+    with And("I add to ClickHouse secure zookeeper configuration"):
+        add_to_clickhouse_secure_zookeeper_config_file(restart=True)
 
     with Then("I check ClickHouse connection to zookeeper"):
         check_clickhouse_connection_to_zookeeper()
@@ -70,10 +70,10 @@ def secure_connection_without_client_certificate(self):
             "ssl.trustStore.location": "/truststore.jks",
             "ssl.trustStore.password": "truststore",
         }
-        add_zookeeper_configuration_file(entries=entries)
+        add_zookeeper_config_file(entries=entries)
 
-    with And("I add secure zookeeper configuration"):
-        add_secure_zookeeper_configuration_file(restart=True)
+    with And("I add to ClickHouse secure zookeeper configuration"):
+        add_to_clickhouse_secure_zookeeper_config_file(restart=True)
 
     with Then(
         "I check ClickHouse connection to zookeeper fails with bad certificate error"
@@ -116,10 +116,10 @@ def secure_connection_with_unsigned_client_certificate(self):
             "ssl.trustStore.location": "/truststore.jks",
             "ssl.trustStore.password": "truststore",
         }
-        add_zookeeper_configuration_file(entries=entries)
+        add_zookeeper_config_file(entries=entries)
 
     with And("I add secure zookeeper configuration"):
-        add_secure_zookeeper_configuration_file(restart=True)
+        add_to_clickhouse_secure_zookeeper_config_file(restart=True)
 
     with Then(
         "I check ClickHouse connection to zookeeper fails with unknown certificate error"
@@ -165,7 +165,9 @@ def secure_connection_with_empty_truststore(self):
                 alias="dummy", keystore="/empty_truststore.jks", storepass="truststore"
             )
 
-    with And("I update zookeeper configuration to use encryption"):
+    with And(
+        "I update zookeeper configuration to use encryption but with empty truststore"
+    ):
         entries = {
             "clientPort": None,
             "secureClientPort": "2281",
@@ -175,12 +177,14 @@ def secure_connection_with_empty_truststore(self):
             "ssl.trustStore.location": "/empty_truststore.jks",
             "ssl.trustStore.password": "truststore",
         }
-        add_zookeeper_configuration_file(entries=entries)
+        add_zookeeper_config_file(entries=entries)
 
-    with And("I add secure zookeeper configuration"):
-        add_secure_zookeeper_configuration_file(restart=True)
+    with And("I add to ClickHouse secure zookeeper configuration"):
+        add_to_clickhouse_secure_zookeeper_config_file(restart=True)
 
-    with Then("I check ClickHouse connection to zookeeper"):
+    with Then(
+        "I check ClickHouse connection to zookeeper fails with all connection tries failed"
+    ):
         check_clickhouse_connection_to_zookeeper(
             message="Exception: All connection tries failed while connecting to ZooKeeper"
         )
@@ -213,12 +217,12 @@ def secure_connection_to_invalid_zookeeper_port(self):
             "ssl.trustStore.location": "/truststore.jks",
             "ssl.trustStore.password": "truststore",
         }
-        add_zookeeper_configuration_file(entries=entries)
+        add_zookeeper_config_file(entries=entries)
 
     with And(
-        "I add ClickHouse secure zookeeper configuration that uses invalid zookeeper port"
+        "I add to ClickHouse secure zookeeper configuration that uses invalid zookeeper port"
     ):
-        add_secure_zookeeper_configuration_file(port=2280, restart=True)
+        add_to_clickhouse_secure_zookeeper_config_file(port=2280, restart=True)
 
     with Then("I check ClickHouse connection to zookeeper fails"):
         check_clickhouse_connection_to_zookeeper(
