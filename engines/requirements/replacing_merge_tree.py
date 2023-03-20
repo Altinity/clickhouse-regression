@@ -204,10 +204,28 @@ RQ_SRS_035_ClickHouse_ReplacingMergeTree_Update = Requirement(
         '[ReplacingMergeTree] engine SHALL allow updating a row by inserting a row with (arbitrary) greater version. \n'
         'The replacing merge algorithm collapses all rows with the same key into one row with the greatest version.\n'
         '\n'
+        '\n'
     ),
     link=None,
     level=3,
     num='4.6.1'
+)
+
+RQ_SRS_035_ClickHouse_ReplacingMergeTree_Update_Distributed = Requirement(
+    name='RQ.SRS-035.ClickHouse.ReplacingMergeTree.Update.Distributed',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ReplacingMergeTree] engine SHALL allow updating a row by inserting a row with (arbitrary) greater version for \n'
+        '[Distributed] table on it. The replacing merge algorithm collapses all rows with the same key into one row with the greatest version.\n'
+        '\n'
+    ),
+    link=None,
+    level=4,
+    num='4.6.1.1'
 )
 
 RQ_SRS_035_ClickHouse_ReplacingMergeTree_Delete = Requirement(
@@ -438,6 +456,7 @@ RQ_SRS_035_ClickHouse_ReplacingMergeTree_NonFunctionalRequirements_Reliability =
         '\n'
         '[SRS]: #srs\n'
         '[ClickHouse]: https://clickhouse.com\n'
+        '[Distributed]: https://clickhouse.com/docs/en/engines/table-engines/special/distributed\n'
         '[ReplacingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/replacingmergetree/\n'
         '[ReplicatedReplacingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/replication\n'
         '[CollapsingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/collapsingmergetree/\n'
@@ -488,6 +507,7 @@ SRS035_ClickHouse_ReplacingMergeTree = Specification(
         Heading(name='RQ.SRS-035.ClickHouse.ReplacingMergeTree.DuplicateInsertions', level=3, num='4.5.1'),
         Heading(name='Update', level=2, num='4.6'),
         Heading(name='RQ.SRS-035.ClickHouse.ReplacingMergeTree.Update', level=3, num='4.6.1'),
+        Heading(name='RQ.SRS-035.ClickHouse.ReplacingMergeTree.Update.Distributed', level=4, num='4.6.1.1'),
         Heading(name='Delete', level=2, num='4.7'),
         Heading(name='RQ.SRS-035.ClickHouse.ReplacingMergeTree.Delete', level=3, num='4.7.1'),
         Heading(name='RQ.SRS-035.ClickHouse.ReplacingMergeTree.DeleteDisabled', level=3, num='4.7.2'),
@@ -526,6 +546,7 @@ SRS035_ClickHouse_ReplacingMergeTree = Specification(
         RQ_SRS_035_ClickHouse_ReplacingMergeTree_CollapsingMergeTree,
         RQ_SRS_035_ClickHouse_ReplacingMergeTree_DuplicateInsertions,
         RQ_SRS_035_ClickHouse_ReplacingMergeTree_Update,
+        RQ_SRS_035_ClickHouse_ReplacingMergeTree_Update_Distributed,
         RQ_SRS_035_ClickHouse_ReplacingMergeTree_Delete,
         RQ_SRS_035_ClickHouse_ReplacingMergeTree_DeleteDisabled,
         RQ_SRS_035_ClickHouse_ReplacingMergeTree_UpdateKeyColumns,
@@ -568,6 +589,7 @@ SRS035_ClickHouse_ReplacingMergeTree = Specification(
     * 4.5.1 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.DuplicateInsertions](#rqsrs-035clickhousereplacingmergetreeduplicateinsertions)
   * 4.6 [Update](#update)
     * 4.6.1 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.Update](#rqsrs-035clickhousereplacingmergetreeupdate)
+      * 4.6.1.1 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.Update.Distributed](#rqsrs-035clickhousereplacingmergetreeupdatedistributed)
   * 4.7 [Delete](#delete)
     * 4.7.1 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.Delete](#rqsrs-035clickhousereplacingmergetreedelete)
     * 4.7.2 [RQ.SRS-035.ClickHouse.ReplacingMergeTree.DeleteDisabled](#rqsrs-035clickhousereplacingmergetreedeletedisabled)
@@ -711,6 +733,13 @@ version: 1.0
 [ReplacingMergeTree] engine SHALL allow updating a row by inserting a row with (arbitrary) greater version. 
 The replacing merge algorithm collapses all rows with the same key into one row with the greatest version.
 
+
+##### RQ.SRS-035.ClickHouse.ReplacingMergeTree.Update.Distributed
+version: 1.0
+
+[ReplacingMergeTree] engine SHALL allow updating a row by inserting a row with (arbitrary) greater version for 
+[Distributed] table on it. The replacing merge algorithm collapses all rows with the same key into one row with the greatest version.
+
 ### Delete
 
 #### RQ.SRS-035.ClickHouse.ReplacingMergeTree.Delete
@@ -824,6 +853,7 @@ version: 1.0
 
 [SRS]: #srs
 [ClickHouse]: https://clickhouse.com
+[Distributed]: https://clickhouse.com/docs/en/engines/table-engines/special/distributed
 [ReplacingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/replacingmergetree/
 [ReplicatedReplacingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/replication
 [CollapsingMergeTree]: https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/collapsingmergetree/
