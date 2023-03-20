@@ -1,3 +1,4 @@
+from ssl_server.tests.common import fips_compatible_tlsv1_2_cipher_suites
 from ssl_server.tests.zookeeper.steps import *
 
 
@@ -230,6 +231,62 @@ def secure_connection_to_invalid_zookeeper_port(self):
         )
 
 
+@TestOutline
+def fips_connection(self, cipher_list):
+    """Check secure connection from ClickHouse when ClickHouse wants to use only specific FIPS
+    compatible ciphers.
+    """
+    with Given(
+        "ClickHouse is configured to connect to ZooKeeper only using FIPS compatible connections",
+    ):
+        entries = {
+            "certificateFile": "/client.crt",
+            "privateKeyFile": "/client.key",
+            "loadDefaultCAFile": "true",
+            "cacheSessions": "false",
+            "verificationMode": "strict",
+            "invalidCertificateHandler": {"name": "RejectCertificateHandler"},
+            "cipherList": cipher_list,
+            "preferServerCiphers": "false",
+            "requireTLSv1_2": "true",
+            "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3",
+        }
+        add_ssl_client_configuration_file(entries=entries)
+
+    with And("I update zookeeper configuration to use encryption"):
+        entries = {
+            "clientPort": None,
+            "secureClientPort": "2281",
+            "serverCnxnFactory": "org.apache.zookeeper.server.NettyServerCnxnFactory",
+            "ssl.keyStore.location": "/keystore.jks",
+            "ssl.keyStore.password": "keystore",
+            "ssl.trustStore.location": "/truststore.jks",
+            "ssl.trustStore.password": "truststore",
+        }
+        add_zookeeper_config_file(entries=entries)
+
+    with And("I add to ClickHouse secure zookeeper configuration"):
+        add_to_clickhouse_secure_zookeeper_config_file(restart=True)
+
+    with Then("I check ClickHouse connection to zookeeper works"):
+        check_clickhouse_connection_to_zookeeper()
+
+
+@TestFeature
+def fips(self):
+    """Check secure connection from ClickHouse when ClickHouse wants
+    to use any or only some specific FIPS compatible ciphers."""
+
+    for cipher_suite in fips_compatible_tlsv1_2_cipher_suites:
+        with Feature(f"{cipher_suite}"):
+            fips_connection(cipher_list=cipher_suite)
+
+    with Feature("any compatible"):
+        fips_connection(
+            cipher_list=":".join([v for v in fips_compatible_tlsv1_2_cipher_suites])
+        )
+
+
 @TestFeature
 @Name("zookeeper")
 def feature(self, node="clickhouse1", zookeeper_node="zookeeper"):
@@ -271,3 +328,5 @@ def feature(self, node="clickhouse1", zookeeper_node="zookeeper"):
 
     for scenario in loads(current_module(), Scenario):
         scenario()
+
+    Feature(run=fips)
