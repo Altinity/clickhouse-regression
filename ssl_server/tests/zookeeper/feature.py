@@ -199,6 +199,8 @@ def secure_connection_to_invalid_zookeeper_port(self):
         "I add ClickHouse server openSSL client configuration without client certificate"
     ):
         entries = {
+            "certificateFile": "/client.crt",
+            "privateKeyFile": "/client.key",
             "loadDefaultCAFile": "true",
             "cacheSessions": "false",
             "disableProtocols": "sslv2,sslv3",
