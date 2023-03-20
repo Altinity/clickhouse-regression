@@ -84,6 +84,8 @@ def enable_ssl(
         copy(dest_node=node, src_path=server_crt, dest_path=node_server_crt)
         copy(dest_node=node, src_path=server_key, dest_path=node_server_key)
         copy(dest_node=node, src_path=dh_params, dest_path=node_dh_params)
+        self.context.node_server_crt = node_server_crt
+        self.context.node_server_key = node_server_key
 
     with And("I validate server certificate"):
         validate_certificate(
