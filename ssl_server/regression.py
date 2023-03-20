@@ -75,6 +75,39 @@ xfails = {
     "fips/:/:/connection with at least one FIPS compatible cipher should work, ciphers: ECDHE-ECDSA-AES128-GCM-SHA256 :": [
         (Fail, "not supported by SSL library")
     ],
+    # zookeeper ssl
+    "zookeeper/fips/ECDHE-ECDSA-AES128-GCM-SHA256": [
+        (
+            Fail,
+            "SSLV3_ALERT_HANDSHAKE_FAILURE",
+            None,
+            r".*SSLV3_ALERT_HANDSHAKE_FAILURE.*",
+        )
+    ],
+    "zookeeper/fips/ECDHE-ECDSA-AES256-GCM-SHA384": [
+        (
+            Fail,
+            "SSLV3_ALERT_HANDSHAKE_FAILURE",
+            None,
+            r".*SSLV3_ALERT_HANDSHAKE_FAILURE.*",
+        )
+    ],
+    "zookeeper/fips/AES128-GCM-SHA256": [
+        (
+            Fail,
+            "SSLV3_ALERT_HANDSHAKE_FAILURE",
+            None,
+            r".*SSLV3_ALERT_HANDSHAKE_FAILURE.*",
+        )
+    ],
+    "zookeeper/fips/AES256-GCM-SHA384": [
+        (
+            Fail,
+            "SSLV3_ALERT_HANDSHAKE_FAILURE",
+            None,
+            r".*SSLV3_ALERT_HANDSHAKE_FAILURE.*",
+        )
+    ],
 }
 
 xflags = {}
