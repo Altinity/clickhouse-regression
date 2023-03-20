@@ -494,9 +494,19 @@ def sign_certificate(
         use_stash=use_stash,
     ) as stash:
         try:
+            if ca_certificate is not None:
+                command = (
+                    f"openssl {type} -{hash} -req -in {csr} -CA {ca_certificate} "
+                    f"-CAkey {ca_key} -CAcreateserial -out {outfile} -days {days}"
+                )
+            else:
+                command = (
+                    f"openssl {type} -{hash} -req -in {csr} "
+                    f"-signkey {ca_key} -out {outfile} -days {days}"
+                )
+
             with bash(
-                f"openssl {type} -{hash} -req -in {csr} -CA {ca_certificate} "
-                f"-CAkey {ca_key} -CAcreateserial -out {outfile} -days {days}",
+                command,
                 name="openssl",
                 asynchronous=True,
             ) as cmd:
@@ -751,7 +761,9 @@ def clickhouse_server_verification_mode(self, mode):
 
 
 @TestStep(Given)
-def create_crt_and_key(self, name, node=None, common_name="", node_ca_crt=None):
+def create_crt_and_key(
+    self, name, node=None, common_name="", node_ca_crt=None, signed=True
+):
     """Create certificate and private key with specified name."""
     if node is None:
         node = self.context.node
@@ -774,8 +786,8 @@ def create_crt_and_key(self, name, node=None, common_name="", node_ca_crt=None):
         crt = sign_certificate(
             outfile=f"{name}.crt",
             csr=csr,
-            ca_certificate=current().context.my_own_ca_crt,
-            ca_key=current().context.my_own_ca_key,
+            ca_certificate=current().context.my_own_ca_crt if signed else None,
+            ca_key=current().context.my_own_ca_key if signed else private_key,
             ca_passphrase="",
         )
 
@@ -783,10 +795,11 @@ def create_crt_and_key(self, name, node=None, common_name="", node_ca_crt=None):
         copy(dest_node=node, src_path=crt, dest_path=f"/{name}.crt")
         copy(dest_node=node, src_path=private_key, dest_path=f"/{name}.key")
 
-    with And("I validate the certificate"):
-        validate_certificate(
-            certificate=f"/{name}.crt", ca_certificate=node_ca_crt, node=node
-        )
+    if signed:
+        with And("I validate the certificate"):
+            validate_certificate(
+                certificate=f"/{name}.crt", ca_certificate=node_ca_crt, node=node
+            )
 
 
 @TestStep(Given)

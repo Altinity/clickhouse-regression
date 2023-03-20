@@ -370,6 +370,79 @@ def update(self, node=None):
 
 
 @TestScenario
+@Requirements(RQ_SRS_035_ClickHouse_ReplacingMergeTree_Update_Distributed("1.0"))
+def update_distributed(self, node=None):
+    """Check updating a row by inserting a row with (arbitrary) greater version or delete old one."""
+
+    insert_values = (
+        " ('data1','adsf', 1, 0),"
+        " ('data1','adsf', 2, 0),"
+        " ('data1', 'a', 3, 0),"
+        " ('data1', 'b', 1, 1),"
+        " ('data1', 'c', 2, 1)"
+    )
+
+    cluster_name = "sharded_replicated_cluster"
+
+    insert_values_update = " ('data1', 'a', 3, 1)" " ('data1', 'fdasd', 3, 0),"
+
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    name = f"update_{getuid()}"
+
+    try:
+        with Given("I create table with is_deleted column aon all nodes"):
+            for node_local in self.context.cluster.nodes["clickhouse"]:
+                self.context.cluster.node(node_local).query(
+                    f"CREATE TABLE IF NOT EXISTS {name} (id String, some_data String, version UInt32, is_deleted UInt8)"
+                    f" ENGINE = ReplacingMergeTree(version, is_deleted) ORDER BY id"
+                )
+
+        with And("I create distributed table"):
+            node.query(
+                f"CREATE TABLE IF NOT EXISTS distr_{name} ON CLUSTER '{cluster_name}'"
+                f"(id String, some_data String, version UInt32, is_deleted UInt8)"
+                f" ENGINE = Distributed('{cluster_name}','default','{name}')",
+            )
+
+        with When("I insert data in this table"):
+            for node_local in self.context.cluster.nodes["clickhouse"][0:2]:
+                self.context.cluster.node(node_local).query(
+                    f"INSERT INTO {name} VALUES {insert_values}"
+                )
+
+        with Then(
+            "I select all data from the table with --final and expect to see all the latest "
+            "version not deleted data"
+        ):
+            for node_local in self.context.cluster.nodes["clickhouse"][0:2]:
+                self.context.cluster.node(node_local).query(
+                    f"SELECT * FROM distr_{name} FORMAT JSONEachRow;",
+                    message='{"id":"data1","some_data":"a","version":3,"is_deleted":0}',
+                    settings=[("final", 1)],
+                )
+
+        with And("I insert data in this table"):
+            for node_local in self.context.cluster.nodes["clickhouse"][0:2]:
+                self.context.cluster.node(node_local).query(
+                    f"INSERT INTO {name} VALUES {insert_values_update}"
+                )
+
+        with And("I check data that data has been updated"):
+            for node_local in self.context.cluster.nodes["clickhouse"][0:2]:
+                self.context.cluster.node(node_local).query(
+                    f"SELECT * FROM distr_{name} FORMAT JSONEachRow;",
+                    message='{"id":"data1","some_data":"fdasd","version":3,"is_deleted":0}',
+                    settings=[("final", 1)],
+                )
+
+    finally:
+        with Finally("I drop table"):
+            node.query(f"DROP TABLE IF EXISTS {name}")
+
+
+@TestScenario
 @Requirements(RQ_SRS_035_ClickHouse_ReplacingMergeTree_Errors_WrongDataValue("1.0"))
 def incorrect_data_insert(self, node=None):
     """Check for incorrect insert data value into is_deleted column."""
