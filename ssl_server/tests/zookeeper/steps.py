@@ -28,6 +28,27 @@ def add_certificate_to_zookeeper_truststore(
 
 
 @TestStep(Given)
+def delete_certificate_from_zookeeper_truststore(
+    self,
+    alias,
+    keystore="/truststore.jks",
+    storepass="truststore",
+    node=None,
+):
+    """Remove certificate to ZooKeeper's truststore."""
+    if node is None:
+        node = self.context.zookeeper_node
+
+    node.command(
+        f"keytool -delete -alias {alias} "
+        f"-keystore {keystore} "
+        f"-storepass {storepass} "
+        f"-storetype JKS -noprompt",
+        exitcode=0,
+    )
+
+
+@TestStep(Given)
 def create_zookeeper_crt_and_key(
     self,
     name,
@@ -37,6 +58,7 @@ def create_zookeeper_crt_and_key(
     keysize=2048,
     storepass="keystore",
     keypass=None,
+    signed=True,
 ):
     """Create zookeeper certificate and key. Key is stored in the keystore."""
     if node is None:
@@ -57,52 +79,53 @@ def create_zookeeper_crt_and_key(
 
         node.command(command, exitcode=0)
 
-    csr = f"/{name}.csr"
+    if signed:
+        csr = f"/{name}.csr"
 
-    with And("generating certificate signing request"):
-        command = (
-            f"keytool -certreq -alias {name} "
-            f"-keystore {keystore} "
-            f"-file {csr} -storepass {storepass}"
-        )
+        with And("generating certificate signing request"):
+            command = (
+                f"keytool -certreq -alias {name} "
+                f"-keystore {keystore} "
+                f"-file {csr} -storepass {storepass}"
+            )
 
-        if keypass is not None:
-            command += f" -keypass {keypass}"
+            if keypass is not None:
+                command += f" -keypass {keypass}"
 
-        node.command(command, exitcode=0)
+            node.command(command, exitcode=0)
 
-    crt = f"/{name}.crt"
+        crt = f"/{name}.crt"
 
-    with And("signing the certificate with CA"):
-        crt = sign_certificate(
-            outfile=crt,
-            csr=csr,
-            ca_certificate=self.context.zookeeper_node_ca_crt,
-            ca_key=self.context.zookeeper_node_ca_key,
-            ca_passphrase="",
-            node=node.name,
-            use_stash=False,
-        )
+        with And("signing the certificate with CA"):
+            crt = sign_certificate(
+                outfile=crt,
+                csr=csr,
+                ca_certificate=self.context.zookeeper_node_ca_crt,
+                ca_key=self.context.zookeeper_node_ca_key,
+                ca_passphrase="",
+                node=node.name,
+                use_stash=False,
+            )
 
-    with And("validating the certificate"):
-        validate_certificate(
-            certificate=crt,
-            ca_certificate=self.context.zookeeper_node_ca_crt,
-            node=node,
-        )
+        with And("validating the certificate"):
+            validate_certificate(
+                certificate=crt,
+                ca_certificate=self.context.zookeeper_node_ca_crt,
+                node=node,
+            )
 
-    with And("adding CA certificate to keystore"):
-        add_certificate_to_zookeeper_truststore(
-            alias="ca",
-            certificate=self.context.zookeeper_node_ca_crt,
-            keystore=keystore,
-            storepass=storepass,
-        )
+        with And("adding CA certificate to keystore"):
+            add_certificate_to_zookeeper_truststore(
+                alias="ca",
+                certificate=self.context.zookeeper_node_ca_crt,
+                keystore=keystore,
+                storepass=storepass,
+            )
 
-    with And("adding signed certificate to keystore"):
-        add_certificate_to_zookeeper_truststore(
-            alias="server", certificate=crt, keystore=keystore, storepass=storepass
-        )
+        with And("adding signed certificate to keystore"):
+            add_certificate_to_zookeeper_truststore(
+                alias="server", certificate=crt, keystore=keystore, storepass=storepass
+            )
 
 
 class ZooKeeperConfig:
@@ -220,10 +243,12 @@ def add_secure_zookeeper_configuration_file(
 
 
 @TestStep(When)
-def check_clickhouse_connection_to_zookeeper(self, node=None):
+def check_clickhouse_connection_to_zookeeper(self, node=None, message=None):
     """Check ClickHouse connection to ZooKeeper."""
 
     if node is None:
         node = self.context.node
 
-    node.query("SELECT * FROM system.zookeeper WHERE path = '/' FORMAT JSON")
+    node.query(
+        "SELECT * FROM system.zookeeper WHERE path = '/' FORMAT JSON", message=message
+    )
