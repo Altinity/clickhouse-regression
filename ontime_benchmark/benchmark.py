@@ -68,6 +68,7 @@ def regression(
         storages = ["minio"]
 
     for storage in storages:
+        environ = {}
         nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
         with Feature(f"{storage.lower()}"):
             if "aws_s3" == storage.lower():
@@ -135,7 +136,6 @@ def regression(
                     self.context.nodes = nodes
 
                 with And("I have two S3 disks configured"):
-                    uri_tiered = self.context.uri + "tiered/"
                     disks = {
                         "default": {"keep_free_space_bytes": "1024"},
                         "external": {
