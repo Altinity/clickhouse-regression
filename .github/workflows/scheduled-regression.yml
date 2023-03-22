@@ -208,6 +208,8 @@ jobs:
       - name: Run ${{ env.SUITE }} suite
         run: python3 
               -u ${{ env.SUITE }}/benchmark.py
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
               --storage minio
               --storage aws_s3
               --aws-s3-bucket ${{ secrets.AWS_BUCKET }}
@@ -218,8 +220,6 @@ jobs:
               --gcs-uri ${{ secrets.GCS_URI }}
               --gcs-key-id ${{ secrets.GCS_KEY_ID }}
               --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }}
               ${{ env.args }}
 
       - name: Create and upload logs
