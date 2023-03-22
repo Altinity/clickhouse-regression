@@ -309,9 +309,8 @@ services:
         condition: service_healthy
 
   bash-tools:
-    container_name: bash-tools
     image: registry.gitlab.com/altinity-public/container-images/test/bash-tools:3.0
-    hostname: "bash-tools"
+    hostname: bash-tools
     restart: "no"
     entrypoint:
       - /bin/sleep

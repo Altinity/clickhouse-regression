@@ -177,13 +177,6 @@ def mixed_keepers_3(self):
         with And("I stop one more Keeper node"):
             cluster.node("clickhouse2").stop_clickhouse()
 
-        with And("I check that table in read only mode"):
-            retry(cluster.node("clickhouse1").query, timeout=600, delay=30)(
-                f"insert into {table_name} values (1,2)",
-                exitcode=242,
-                message="DB::Exception: Table is in readonly mode",
-            )
-
         if check_clickhouse_version(">23")(self):
             with And("I check that table in read only mode"):
                 retry(cluster.node("clickhouse1").query, timeout=300, delay=10)(
