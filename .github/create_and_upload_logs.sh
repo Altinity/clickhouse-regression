@@ -35,7 +35,7 @@ then
     aws s3 cp report.html s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/$SUITE$STORAGE/report.html
     aws s3 cp compare.html s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/$SUITE$STORAGE/compare.html
     aws s3 cp coverage.html s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/$SUITE$STORAGE/coverage.html
-    rm --recursive --force $SUITE/_instances/*/database/
+    sudo rm --recursive --force $SUITE/_instances/*/database/
     aws s3 cp . s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/$SUITE$STORAGE/ --recursive --exclude "*" --include "*/_instances/*/logs/*.log" --content-type "text/plain; charset=utf-8"
     aws s3 cp . s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/$SUITE$STORAGE/ --recursive --exclude "*" --include "*/_instances/*.log" --content-type "text/plain; charset=utf-8"
 fi
