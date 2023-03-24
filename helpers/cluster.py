@@ -1164,11 +1164,12 @@ class Cluster(object):
         """Get object with node bound methods.
         :param name: name of service name
         """
-        if self.use_zookeeper_nodes:
-            if name.startswith("zookeeper"):
-                return ZooKeeperNode(self, name)
-        if name.startswith("clickhouse"):
-            return ClickHouseNode(self, name)
+        if name is not None:
+            if self.use_zookeeper_nodes:
+                if name.startswith("zookeeper"):
+                    return ZooKeeperNode(self, name)
+            if name.startswith("clickhouse"):
+                return ClickHouseNode(self, name)
         return Node(self, name)
 
     def down(self, timeout=300):
