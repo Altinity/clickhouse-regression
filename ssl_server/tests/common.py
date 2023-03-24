@@ -1,5 +1,7 @@
 import os
-import ssl
+import tempfile
+import textwrap
+
 from testflows.core import *
 from testflows.asserts import error
 from testflows.stash import stashed
@@ -296,7 +298,9 @@ def add_ssl_clickhouse_client_configuration_file(
 
 
 @TestStep(Given)
-def create_rsa_private_key(self, outfile, passphrase, algorithm="aes256", length=2048):
+def create_rsa_private_key(
+    self, outfile, passphrase, algorithm="aes256", length=2048, use_stash=True
+):
     """Generate RSA private key."""
     bash = self.context.cluster.bash(node=None)
 
@@ -309,7 +313,7 @@ def create_rsa_private_key(self, outfile, passphrase, algorithm="aes256", length
         algorithm = ""
 
     with stashed.filepath(
-        outfile, id=stashed.hash(algorithm, length, passphrase)
+        outfile, id=stashed.hash(algorithm, length, passphrase), use_stash=use_stash
     ) as stash:
         try:
             with bash(
@@ -326,8 +330,159 @@ def create_rsa_private_key(self, outfile, passphrase, algorithm="aes256", length
                     cmd.app.send(passphrase)
             stash(outfile)
         finally:
-            bash(f'rm -rf "{outfile}"')
+            if stash.is_used:
+                bash(f'rm -rf "{outfile}"')
     yield stash.value
+
+
+@TestStep(Given)
+def create_local_tmpdir(self):
+    """Create local (host) temporary directory."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        try:
+            with By("creating temporary directory", description=f"{tmpdir}"):
+                yield tmpdir
+        finally:
+            with Finally("deleting temporary directory", description=f"{tmpdir}"):
+                pass
+
+
+@TestStep(Given)
+def create_ca_store_dir(self, path, name, config=None):
+    """Create certificate authority store folder."""
+
+    if config is None:
+        config = textwrap.dedent(
+        f"""
+        [ ca ]
+        default_ca = ca_default
+
+        [ ca_default ]
+        dir = {path}/{name}
+        certs = \\$dir
+        new_certs_dir = \\$dir/certs
+        database = \\$dir/index
+        serial = \\$dir/serial
+        certificate = \\$dir/ca.crt
+        private_key = \\$dir/ca.key
+        default_days = 365
+        default_crl_days = 30
+        default_md = md5
+        preserve = no
+        policy = generic_policy
+
+        [ generic_policy ]
+        countryName = optional
+        stateOrProvinceName = optional
+        localityName = optional
+        organizationName = optional
+        organizationalUnitName = optional
+        commonName = supplied
+        emailAddress = optional
+
+        [ v3_intermediate_ca ]
+        subjectKeyIdentifier = hash
+        authorityKeyIdentifier = keyid:always,issuer
+        basicConstraints = critical, CA:true, pathlen:1
+        keyUsage = critical, digitalSignature, cRLSign, keyCertSign
+        """
+        )
+
+    bash = self.context.cluster.bash(node=None)
+
+    with By("creating CA store directory"):
+        store_dir = define("store directory", os.path.join(path, name))
+        cmd = bash(f"mkdir {store_dir}")
+        assert cmd.exitcode == 0, error()
+
+    with And("creating store configuration file"):
+        cmd = bash(
+            f"cat <<HEREDOC > {os.path.join(store_dir, 'ca.cnf')}\n{config}\nHEREDOC"
+        )
+        assert cmd.exitcode == 0, error()
+
+    with And("creating certs subdirectory"):
+        cmd = bash(f"mkdir {os.path.join(store_dir, 'certs')}")
+        assert cmd.exitcode == 0, error()
+
+    with And("creating index file"):
+        cmd = bash(f"touch {os.path.join(store_dir, 'index')}")
+        assert cmd.exitcode == 0, error()
+
+    with And("creating serial file"):
+        cmd = bash(f"echo 01 > {os.path.join(store_dir, 'serial')}")
+        assert cmd.exitcode == 0, error()
+
+    with And("creating serial file"):
+        cmd = bash(f"echo 01 > {os.path.join(store_dir, 'crlnumber')}")
+        assert cmd.exitcode == 0, error()
+
+    with And("listing store directory contents"):
+        cmd = bash(f"ls -la {store_dir}")
+        assert cmd.exitcode == 0, error()
+
+    return store_dir
+
+
+@TestStep(Given)
+def create_root_ca_store(self, path, name="root", passphrase=""):
+    """Create root CA store at the given path."""
+    with By("create store directory"):
+        store_dir = create_ca_store_dir(path=path, name=name)
+
+    with And("creating CA key"):
+        create_rsa_private_key(
+            outfile=os.path.join(store_dir, "ca.key"),
+            passphrase=passphrase,
+            use_stash=False,
+        )
+
+    with And("creating self-signed CA certificate"):
+        create_ca_certificate(
+            outfile=os.path.join(store_dir, "ca.crt"),
+            key=os.path.join(store_dir, "ca.key"),
+            passphrase=passphrase,
+            common_name=name,
+            use_stash=False,
+        )
+
+    return store_dir
+
+
+@TestStep(Given)
+def create_intermediate_ca_store(
+    self, path, name, root_store, root_store_passphrase="", passphrase=""
+):
+    """Create intermediate CA store at the given path signed using the key of the specified root store."""
+    with By("create store directory"):
+        store_dir = create_ca_store_dir(path=path, name=name)
+
+    with And("creating intermediate CA key"):
+        create_rsa_private_key(
+            outfile=os.path.join(store_dir, "ca.key"),
+            passphrase=passphrase,
+            use_stash=False,
+        )
+
+    with And("creating intermediate CA certificate signing request"):
+        create_certificate_signing_request(
+            outfile=os.path.join(store_dir, "ca.csr"),
+            key=os.path.join(store_dir, "ca.key"),
+            passphrase=passphrase,
+            common_name=name,
+            use_stash=False,
+        )
+
+    with And("signing intermediate CA certificate using root store"):
+        sign_intermediate_ca_certificate(
+            outfile=os.path.join(store_dir, "ca.crt"),
+            csr=os.path.join(store_dir, "ca.csr"),
+            ca_config=os.path.join(root_store, "ca.cnf"),
+            ca_passphrase=root_store_passphrase,
+            use_stash=False
+        )
+
+    return store_dir
 
 
 @TestStep(Given)
@@ -347,6 +502,7 @@ def create_ca_certificate(
     organization_name="",
     organization_unit_name="",
     email_address="",
+    use_stash=True,
 ):
     """Generate CA certificate."""
     bash = self.context.cluster.bash(node=None)
@@ -368,6 +524,7 @@ def create_ca_certificate(
             organization_unit_name,
             email_address,
         ),
+        use_stash=use_stash,
     ) as stash:
         try:
             with bash(
@@ -395,7 +552,8 @@ def create_ca_certificate(
                 cmd.app.send(email_address)
             stash(outfile)
         finally:
-            bash(f'rm -rf "{outfile}"')
+            if stash.is_used:
+                bash(f'rm -rf "{outfile}"')
     yield stash.value
 
 
@@ -415,6 +573,7 @@ def create_certificate_signing_request(
     email_address="",
     challenge_password="",
     company_name="",
+    use_stash=True,
 ):
     """Generate certificate signing request."""
     bash = self.context.cluster.bash(node=None)
@@ -435,6 +594,7 @@ def create_certificate_signing_request(
             challenge_password,
             company_name,
         ),
+        use_stash=use_stash,
     ) as stash:
         try:
             with bash(
@@ -467,7 +627,56 @@ def create_certificate_signing_request(
                 cmd.app.send(company_name)
             stash(outfile)
         finally:
-            bash(f'rm -rf "{outfile}"')
+            if stash.is_used:
+                bash(f'rm -rf "{outfile}"')
+    yield stash.value
+
+
+@TestStep(Given)
+def sign_intermediate_ca_certificate(
+    self,
+    outfile,
+    csr,
+    ca_config,
+    ca_passphrase,
+    type="ca",
+    days="365",
+    extensions="v3_intermediate_ca",
+    node=None,
+    use_stash=True,
+):
+    """Sign intermediate CA certificate."""
+    bash = self.context.cluster.bash(node=node)
+
+    with stashed.filepath(
+        outfile,
+        id=stashed.hash(csr, ca_config, ca_passphrase, type, hash, days),
+        use_stash=use_stash,
+    ) as stash:
+        try:
+            command = (
+                f"openssl {type} -config {ca_config} -extensions {extensions} "
+                f"-in {csr} -out {outfile} -days {days}"
+            )
+
+            with bash(
+                command,
+                name="openssl",
+                asynchronous=True,
+            ) as cmd:
+                if ca_passphrase:
+                    cmd.app.expect("Enter pass phrase for.*?:")
+                    cmd.app.send(ca_passphrase)
+                cmd.app.expect("Sign the certificate\?")
+                cmd.app.send("y")
+                cmd.app.expect("certificate requests certified, commit\?")
+                cmd.app.send("y")
+                cmd.app.expect("Data Base Updated")
+            assert cmd.exitcode == 0, error()
+            stash(outfile)
+        finally:
+            if stash.is_used:
+                bash(f'rm -rf "{outfile}"')
     yield stash.value
 
 
@@ -513,6 +722,7 @@ def sign_certificate(
                 if ca_passphrase:
                     cmd.app.expect("Enter pass phrase for.*?:")
                     cmd.app.send(ca_passphrase)
+            assert cmd.exitcode == 0, error()
             stash(outfile)
         finally:
             if stash.is_used:
@@ -539,13 +749,13 @@ def create_dh_params(self, outfile, length=512):
 
 
 @TestStep(Then)
-def validate_certificate(self, certificate, ca_certificate, node=None):
+def validate_certificate(self, certificate, ca_certificate, option="-x509_strict", node=None):
     """Validate certificate using CA certificate."""
     if node is None:
         node = self.context.node
 
     cmd = node.command(
-        f"openssl verify -x509_strict -CAfile {ca_certificate} {certificate}"
+        f"openssl verify {option} -CAfile {ca_certificate} {certificate}"
     )
 
     with By("checking certificate was validated"):
