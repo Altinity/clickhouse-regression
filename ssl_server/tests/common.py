@@ -353,7 +353,7 @@ def create_ca_store_dir(self, path, name, config=None):
 
     if config is None:
         config = textwrap.dedent(
-        f"""
+            f"""
         [ ca ]
         default_ca = ca_default
 
@@ -479,10 +479,22 @@ def create_intermediate_ca_store(
             csr=os.path.join(store_dir, "ca.csr"),
             ca_config=os.path.join(root_store, "ca.cnf"),
             ca_passphrase=root_store_passphrase,
-            use_stash=False
+            use_stash=False,
         )
 
     return store_dir
+
+
+@TestStep(Given)
+def create_ca_chain_certificate(self, outfile, cas):
+    """Create CA chain certificate file."""
+    bash = self.context.cluster.bash(node=None)
+
+    with By("creating chain file"):
+        cmd = bash(f"cat {' '.join(cas)}  > {outfile}")
+        assert cmd.exitcode == 0, error()
+
+    return outfile
 
 
 @TestStep(Given)
@@ -656,7 +668,7 @@ def sign_intermediate_ca_certificate(
         try:
             command = (
                 f"openssl {type} -config {ca_config} -extensions {extensions} "
-                f"-in {csr} -out {outfile} -days {days}"
+                f"-in {csr} -out {outfile} -days {days} -notext"
             )
 
             with bash(
@@ -731,11 +743,13 @@ def sign_certificate(
 
 
 @TestStep(Given)
-def create_dh_params(self, outfile, length=512):
+def create_dh_params(self, outfile, length=512, use_stash=True):
     """Generate Diffie-Hellman parameters file for the server."""
     bash = self.context.cluster.bash(node=None)
 
-    with stashed.filepath(outfile, id=stashed.hash(length)) as stash:
+    with stashed.filepath(
+        outfile, id=stashed.hash(length), use_stash=use_stash
+    ) as stash:
         try:
             cmd = bash(f"openssl dhparam -out {outfile} {length}")
 
@@ -744,12 +758,16 @@ def create_dh_params(self, outfile, length=512):
 
             stash(outfile)
         finally:
-            bash(f'rm -rf "{outfile}"')
+            if stash.is_used:
+                bash(f'rm -rf "{outfile}"')
+
     yield stash.value
 
 
 @TestStep(Then)
-def validate_certificate(self, certificate, ca_certificate, option="-x509_strict", node=None):
+def validate_certificate(
+    self, certificate, ca_certificate, option="-x509_strict", node=None
+):
     """Validate certificate using CA certificate."""
     if node is None:
         node = self.context.node

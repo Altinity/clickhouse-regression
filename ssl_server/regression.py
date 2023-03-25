@@ -184,6 +184,7 @@ def regression(
         Feature(run=load("ssl_server.tests.dictionary", "feature"))
         Feature(run=load("ssl_server.tests.fips", "feature"))
         Feature(run=load("ssl_server.tests.zookeeper.feature", "feature"))
+        Feature(run=load("ssl_server.tests.ca_chain", "feature"))
 
 
 if main():
