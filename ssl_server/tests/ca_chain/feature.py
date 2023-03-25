@@ -13,7 +13,7 @@ def check_using_ca_chain(self, ca_store, cas, nodes=None):
         )
 
     for node_name in nodes:
-        with Given("I create and add server certificate to {node_name}"):
+        with Given(f"I create and add server certificate to {node_name}"):
             create_node_server_certificate_and_dh_params(
                 node=self.context.cluster.node(node_name),
                 name=node_name,
@@ -25,7 +25,7 @@ def check_using_ca_chain(self, ca_store, cas, nodes=None):
             )
 
     for node_name in nodes:
-        with And("I add SSL configuration to {node_name}"):
+        with And(f"I add SSL configuration to {node_name}"):
             add_ssl_configuration(
                 node=self.context.cluster.node(node_name),
                 server_key=f"/{node_name}.key",
