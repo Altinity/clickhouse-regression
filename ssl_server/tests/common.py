@@ -788,6 +788,7 @@ def add_trusted_ca_certificate(
     self,
     node,
     certificate,
+    name=None,
     path=None,
     directory="/usr/local/share/ca-certificates/",
     eof="EOF",
@@ -797,7 +798,9 @@ def add_trusted_ca_certificate(
     bash = self.context.cluster.bash(node=certificate_node)
 
     if path is None:
-        path = os.path.join(directory, os.path.basename(certificate))
+        if name is None:
+            name = os.path.basename(certificate)
+        path = os.path.join(directory, name)
 
     if not path.endswith(".crt"):
         path += ".crt"
