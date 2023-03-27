@@ -1,5 +1,12 @@
 from ssl_server.tests.common import *
 
+error_certificate_verify_failed = (
+    "Exception: error:1000007d:SSL routines:OPENSSL_internal:CERTIFICATE_VERIFY_FAILED"
+)
+error_tlsv1_alert_unknown_ca = (
+    "Exception: error:10000418:SSL routines:OPENSSL_internal:TLSV1_ALERT_UNKNOWN_CA"
+)
+
 
 @TestStep(Given)
 def create_node_server_certificate_and_dh_params(
@@ -92,14 +99,17 @@ def create_node_server_certificate_and_dh_params(
 
 
 @TestStep(Then)
-def check_secure_connection(self, from_node, to_node):
+def check_secure_connection(self, from_node, to_node, message=None):
     """Check secure connection."""
 
     with When("I execute query using secure connection"):
-        r = from_node.query("SELECT 1", secure=True, settings=[("host", to_node.name)])
+        r = from_node.query(
+            "SELECT 1", message=message, secure=True, settings=[("host", to_node.name)]
+        )
 
-    with Then("it should work"):
-        assert r.output == "1", error()
+    if message is None:
+        with Then("it should work"):
+            assert r.output == "1", error()
 
 
 @TestStep(Given)
