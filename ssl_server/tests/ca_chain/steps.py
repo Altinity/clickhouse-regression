@@ -81,7 +81,11 @@ def create_node_server_certificate_and_dh_params(
     if trusted_cas is not None:
         with And("I add trusted CA certificates to the node"):
             for trusted_ca in trusted_cas:
-                add_trusted_ca_certificate(node=node, certificate=trusted_ca)
+                name = "_".join(trusted_ca.split(os.path.sep)[-2:])
+                with By(f"adding {name}"):
+                    add_trusted_ca_certificate(
+                        node=node, certificate=trusted_ca, name=name
+                    )
 
     with And("I set correct permission on server key file"):
         node.command(f'chmod 600 "/{name}.key"')
@@ -159,3 +163,34 @@ def add_ssl_configuration(
             }
 
         add_ssl_clickhouse_client_configuration_file(node=node, entries=entries)
+
+
+@TestStep(Given)
+def add_custom_ssl_configuration(
+    self,
+    node,
+    server_entries=None,
+    client_entries=None,
+    clickhouse_client_entries=None,
+):
+    """Add custom SSL configuration for server, client (server acting as client), and clickhouse client
+    to specified ClickHouse node."""
+
+    if server_entries is not None:
+        with By("adding SSL server configuration file"):
+            add_ssl_server_configuration_file(node=node, entries=server_entries)
+
+    if client_entries is not None:
+        with By("adding SSL server configuration file"):
+            add_ssl_client_configuration_file(node=node, entries=server_entries)
+
+    with By("adding SSL ports configuration file, then restarting the server"):
+        add_secure_ports_configuration_file(node=node, restart=True, timeout=300)
+
+    if clickhouse_client_entries is not None:
+        with By(
+            "adding clickhouse client SSL configuration that uses servers certificate"
+        ):
+            add_ssl_clickhouse_client_configuration_file(
+                node=node, entries=clickhouse_client_entries
+            )
