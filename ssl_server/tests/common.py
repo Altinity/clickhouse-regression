@@ -491,7 +491,10 @@ def create_ca_chain_certificate(self, outfile, cas):
     bash = self.context.cluster.bash(node=None)
 
     with By("creating chain file"):
-        cmd = bash(f"cat {' '.join(cas)}  > {outfile}")
+        if not cas:
+            cmd = bash(f"touch {outfile}")
+        else:
+            cmd = bash(f"cat {' '.join(cas)}  > {outfile}")
         assert cmd.exitcode == 0, error()
 
     return outfile
