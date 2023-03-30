@@ -3,7 +3,7 @@ on:
   workflow_dispatch
 jobs:
   aes_encryption:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     env:
       SUITE: aes_encryption
     if: ${{ inputs.suite == 'all' || inputs.suite == 'aes_encryption' }}
