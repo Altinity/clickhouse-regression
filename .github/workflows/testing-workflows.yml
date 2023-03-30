@@ -1,0 +1,13 @@
+name: testing
+on: 
+  workflow_dispatch
+jobs:
+  aes_encryption:
+    runs-on: self-hosted
+    env:
+      SUITE: aes_encryption
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'aes_encryption' }}
+    steps:
+      - run: ls
+      - uses: actions/checkout@v3
+      - run: ls
