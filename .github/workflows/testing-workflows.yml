@@ -2,11 +2,8 @@ name: testing
 on: 
   workflow_dispatch
 jobs:
-  aes_encryption:
+  check:
     runs-on: ubuntu-latest
-    env:
-      SUITE: aes_encryption
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'aes_encryption' }}
     steps:
       - run: ls
       - uses: actions/checkout@v3
