@@ -684,6 +684,16 @@ def use_second_intermediate_ca(self):
                 use_ca_config=True,
             )
 
+        with Feature("without caconfig"):
+
+            Scenario("all certificates present", test=server_certificate_with_chain)(
+                ca_store=ca_store,
+                ca_intermediate_chain_crt=ca_intermediate_chain_crt,
+                ca_root_crt=os.path.join(self.context.root_store, "ca.crt"),
+                trusted_cas=[os.path.join(self.context.root_store, "ca.crt")],
+                use_ca_config=False,
+            )
+
     with Feature("server certificate without chain"):
 
         with Feature(
