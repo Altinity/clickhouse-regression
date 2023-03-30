@@ -22,6 +22,7 @@ def create_node_server_certificate_and_dh_params(
     ca_passphrase="",
     tmpdir=None,
     use_stash=False,
+    validate_certificate_using_ca=True,
 ):
     """Create signed server certificate and dh params and copy them to the node."""
 
@@ -73,17 +74,20 @@ def create_node_server_certificate_and_dh_params(
         with And("I copy CA chain certificate to the node", description=f"{node}"):
             copy(dest_node=node, src_path=ca_chain_crt, dest_path=f"/ca_chain.crt")
 
-    if ca_chain_crt is not None:
-        with And("I validate server certificate against CA chain certificate"):
-            validate_certificate(
-                certificate=f"/{name}.crt", ca_certificate=f"/ca_chain.crt", node=node
-            )
+    if validate_certificate_using_ca:
+        if ca_chain_crt is not None:
+            with And("I validate server certificate against CA chain certificate"):
+                validate_certificate(
+                    certificate=f"/{name}.crt",
+                    ca_certificate=f"/ca_chain.crt",
+                    node=node,
+                )
 
-    else:
-        with And("I validate server certificate against CA"):
-            validate_certificate(
-                certificate=f"/{name}.crt", ca_certificate=f"/ca.crt", node=node
-            )
+        else:
+            with And("I validate server certificate against CA"):
+                validate_certificate(
+                    certificate=f"/{name}.crt", ca_certificate=f"/ca.crt", node=node
+                )
 
     if trusted_cas is not None:
         with And("I add trusted CA certificates to the node"):
