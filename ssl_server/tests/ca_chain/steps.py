@@ -9,6 +9,96 @@ error_tlsv1_alert_unknown_ca = (
 
 
 @TestStep(Given)
+def create_node_server_certificate_with_chain_and_dh_params(
+    self,
+    node,
+    name,
+    common_name,
+    ca_key,
+    ca_crt,
+    ca_chain_crt,
+    ca_root_crt,
+    trusted_cas=None,
+    passphrase="",
+    ca_passphrase="",
+    tmpdir=None,
+    use_stash=False,
+    validate=True,
+):
+    """Create signed server certificate and dh params and copy them to the node."""
+
+    if tmpdir is None:
+        with Given(
+            "I create temporary directory to create server certificate and dh parameters"
+        ):
+            tmpdir = create_local_tmpdir()
+
+    common_path = define("common path", os.path.join(tmpdir, name))
+
+    with Given("I generate DH parameters"):
+        dh_params = create_dh_params(outfile=f"{common_path}.dh", use_stash=use_stash)
+
+    with And("I generate server key"):
+        server_key = create_rsa_private_key(
+            outfile=f"{common_path}.key", passphrase=passphrase, use_stash=use_stash
+        )
+
+    with And("I generate server certificate signing request"):
+        server_csr = create_certificate_signing_request(
+            outfile=f"{common_path}.csr",
+            common_name=common_name,
+            key=server_key,
+            passphrase=passphrase,
+            use_stash=use_stash,
+        )
+
+    with And("I sign server certificate with CA"):
+        server_crt = sign_certificate(
+            outfile=f"{common_path}.crt",
+            csr=server_csr,
+            ca_certificate=ca_crt,
+            ca_key=ca_key,
+            ca_passphrase=ca_passphrase,
+            use_stash=use_stash,
+        )
+
+    with And("I create server certificate with chain"):
+        server_chain_crt = create_chain_certificate(
+            outfile=f"{os.path.join(self.context.tmpdir, f'{name}_chain.crt')}",
+            certificates=[server_crt, ca_chain_crt],
+        )
+
+    with And(
+        "I copy server certificate with chain, key, dh params and root CA certificate to the node",
+        description=f"{node}",
+    ):
+        copy(dest_node=node, src_path=server_chain_crt, dest_path=f"/{name}_chain.crt")
+        copy(dest_node=node, src_path=server_key, dest_path=f"/{name}.key")
+        copy(dest_node=node, src_path=dh_params, dest_path=f"/{name}.dh")
+        copy(dest_node=node, src_path=ca_root_crt, dest_path=f"/ca_root.crt")
+
+    if validate:
+        with And("I validate server certificate with chain against root CA"):
+            validate_certificate(
+                certificate=f"/{name}_chain.crt",
+                ca_certificate=f"/ca_root.crt",
+                node=node,
+            )
+
+    if trusted_cas is not None:
+        with And("I add trusted CA certificates to the node"):
+            for trusted_ca in trusted_cas:
+                name = "_".join(trusted_ca.split(os.path.sep)[-2:])
+                with By(f"adding {name}"):
+                    add_trusted_ca_certificate(
+                        node=node, certificate=trusted_ca, name=name
+                    )
+
+    with And("I set correct permission on server key file"):
+        node.command(f'chmod 600 "/{name}.key"')
+
+
+@TestStep(Given)
 def create_node_server_certificate_and_dh_params(
     self,
     node,
