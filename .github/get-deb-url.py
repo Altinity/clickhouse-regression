@@ -50,5 +50,6 @@ if __name__ == "__main__":
         if "clickhouse-common-static" in url and "deb" in url:
             with open(github_env, "a") as f:
                 f.write("version=" + url.split("/")[-1].split("_")[1])
+                f.write("clickhouse_binary_path="+url)
             sys.stdout.write(url)
             sys.exit(0)
