@@ -3,6 +3,7 @@ from ssl_server.tests.common import *
 error_certificate_verify_failed = (
     "Exception: error:1000007d:SSL routines:OPENSSL_internal:CERTIFICATE_VERIFY_FAILED"
 )
+
 error_tlsv1_alert_unknown_ca = (
     "Exception: error:10000418:SSL routines:OPENSSL_internal:TLSV1_ALERT_UNKNOWN_CA"
 )

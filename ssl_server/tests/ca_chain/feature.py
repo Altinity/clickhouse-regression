@@ -541,6 +541,98 @@ def server_certificate_with_chain(
                     )
 
 
+@TestOutline
+def server_certificate_with_chain_missing_ca(
+    self,
+    ca_store,
+    ca_root_crt,
+    nodes_ca_intermediate_chain_crt,
+    nodes_message,
+    trusted_cas=None,
+    use_ca_config=False,
+    nodes=None,
+):
+    """Check secure connection using when server certificate is signed by a specified CA
+    and server certificate contains the chain upto but not including the root but
+    missing some intermediate CA."""
+    if nodes is None:
+        nodes = self.context.cluster.nodes["clickhouse"]
+
+    for node_name in nodes:
+        with Given(f"I create and add server certificate with chain to {node_name}"):
+            create_node_server_certificate_with_chain_and_dh_params(
+                node=self.context.cluster.node(node_name),
+                name=node_name,
+                common_name=node_name,
+                ca_key=f"{os.path.join(ca_store, 'ca.key')}",
+                ca_crt=f"{os.path.join(ca_store, 'ca.crt')}",
+                ca_chain_crt=nodes_ca_intermediate_chain_crt[node_name],
+                ca_root_crt=ca_root_crt,
+                tmpdir=self.context.tmpdir,
+                trusted_cas=trusted_cas,
+                validate=False,
+            )
+
+    for node_name in nodes:
+        with And(f"I add SSL configuration to {node_name}"):
+            add_ssl_configuration(
+                node=self.context.cluster.node(node_name),
+                server_key=f"/{node_name}.key",
+                server_crt=f"/{node_name}_chain.crt",
+                dh_params=f"/{node_name}.dh",
+                ca_config=f"/ca_root.crt" if use_ca_config else None,
+            )
+
+    with Then("check secure connection from each clickhouse server to the other"):
+        for from_name in nodes:
+            for to_name in nodes:
+                with Then(f"from {from_name} to {to_name}"):
+                    check_secure_connection(
+                        from_node=self.context.cluster.node(from_name),
+                        to_node=self.context.cluster.node(to_name),
+                        message=nodes_message[(from_name, to_name)],
+                    )
+
+
+@TestScenario
+def server_certificate_with_chain_missing_ca_on_one_node(
+    self,
+    ca_store,
+    ca_intermediate_chain_crt,
+    ca_intermediate_chain_missing_crt,
+    ca_root_crt,
+    trusted_cas,
+    use_ca_config,
+):
+    """Check when clickhouse1 node is missing CA in the intermediate chain certificate.
+    We will check that connections from clickhouse1 to any other node including itself
+    fails with certificate verify error and connections from any nodes other than
+    clickhouse1 to clickhouse1 fails as well with unknown CA error."""
+
+    server_certificate_with_chain_missing_ca(
+        ca_store=ca_store,
+        ca_root_crt=ca_root_crt,
+        nodes_ca_intermediate_chain_crt={
+            "clickhouse1": ca_intermediate_chain_missing_crt,
+            "clickhouse2": ca_intermediate_chain_crt,
+            "clickhouse3": ca_intermediate_chain_crt,
+        },
+        nodes_message={
+            ("clickhouse1", "clickhouse1"): error_certificate_verify_failed,
+            ("clickhouse1", "clickhouse2"): error_tlsv1_alert_unknown_ca,
+            ("clickhouse1", "clickhouse3"): error_tlsv1_alert_unknown_ca,
+            ("clickhouse2", "clickhouse1"): error_certificate_verify_failed,
+            ("clickhouse2", "clickhouse2"): None,
+            ("clickhouse2", "clickhouse3"): None,
+            ("clickhouse3", "clickhouse1"): error_certificate_verify_failed,
+            ("clickhouse3", "clickhouse2"): None,
+            ("clickhouse3", "clickhouse3"): None,
+        },
+        trusted_cas=trusted_cas,
+        use_ca_config=use_ca_config,
+    )
+
+
 @TestFeature
 def use_root_ca(self):
     """Check using root CA to sign server certificate."""
@@ -672,6 +764,24 @@ def use_second_intermediate_ca(self):
             certificates=cas[:-1],
         )
 
+    with And("I create intermediate CA chain missing first certificate"):
+        ca_intermediate_missing_first_chain_crt = create_chain_certificate(
+            outfile=f"{os.path.join(self.context.tmpdir, 'ca_intermediate_missing_first_chain.crt')}",
+            certificates=cas[1:-1],
+        )
+
+    with And("I create intermediate CA chain missing last certificate"):
+        ca_intermediate_missing_last_chain_crt = create_chain_certificate(
+            outfile=f"{os.path.join(self.context.tmpdir, 'ca_intermediate_missing_last_chain.crt')}",
+            certificates=cas[:-2],
+        )
+
+    with And("I create intermediate CA chain missing all certificates"):
+        ca_intermediate_missing_all_chain_crt = create_chain_certificate(
+            outfile=f"{os.path.join(self.context.tmpdir, 'ca_intermediate_missing_all_chain.crt')}",
+            certificates=[],
+        )
+
     with Feature("server certificate with chain"):
 
         with Feature("with caconfig"):
@@ -679,6 +789,39 @@ def use_second_intermediate_ca(self):
             Scenario("all certificates present", test=server_certificate_with_chain)(
                 ca_store=ca_store,
                 ca_intermediate_chain_crt=ca_intermediate_chain_crt,
+                ca_root_crt=os.path.join(self.context.root_store, "ca.crt"),
+                trusted_cas=None,
+                use_ca_config=True,
+            )
+            Scenario(
+                "missing first CA in chain on one node",
+                test=server_certificate_with_chain_missing_ca_on_one_node,
+            )(
+                ca_store=ca_store,
+                ca_intermediate_chain_crt=ca_intermediate_chain_crt,
+                ca_intermediate_chain_missing_crt=ca_intermediate_missing_first_chain_crt,
+                ca_root_crt=os.path.join(self.context.root_store, "ca.crt"),
+                trusted_cas=None,
+                use_ca_config=True,
+            )
+            Scenario(
+                "missing last CA in chain on one node",
+                test=server_certificate_with_chain_missing_ca_on_one_node,
+            )(
+                ca_store=ca_store,
+                ca_intermediate_chain_crt=ca_intermediate_chain_crt,
+                ca_intermediate_chain_missing_crt=ca_intermediate_missing_last_chain_crt,
+                ca_root_crt=os.path.join(self.context.root_store, "ca.crt"),
+                trusted_cas=None,
+                use_ca_config=True,
+            )
+            Scenario(
+                "missing all CA in chain on one node",
+                test=server_certificate_with_chain_missing_ca_on_one_node,
+            )(
+                ca_store=ca_store,
+                ca_intermediate_chain_crt=ca_intermediate_chain_crt,
+                ca_intermediate_chain_missing_crt=ca_intermediate_missing_all_chain_crt,
                 ca_root_crt=os.path.join(self.context.root_store, "ca.crt"),
                 trusted_cas=None,
                 use_ca_config=True,
