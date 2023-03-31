@@ -47,7 +47,7 @@ if __name__ == "__main__":
         build_report = json.load(file_handler)
 
     for url in build_report["build_urls"]:
-        if "clickhouse-common-static" in url and "deb" in url:
+        if "clickhouse-common-static_" in url and "deb" in url:
             with open(github_env, "a") as f:
                 f.write("version=" + url.split("/")[-1].split("_")[1]+"\n")
                 f.write("clickhouse_binary_path="+url+"\n")
