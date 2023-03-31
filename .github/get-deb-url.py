@@ -40,8 +40,8 @@ if __name__ == "__main__":
     assert args.report_path is not None, "report path must be set"
     assert args.github_env is not None, "github env must be set"
 
-    report_path = os.getenv("REPORT_PATH")
-    github_env = os.getenv("GITHUB_ENV")
+    report_path = args.report_path 
+    github_env = args.github_env
 
     with open(os.path.join(report_path, "build_urls_package_release"), "r", encoding="utf-8") as file_handler:
         build_report = json.load(file_handler)
