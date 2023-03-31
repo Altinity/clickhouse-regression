@@ -18,7 +18,7 @@ def argparser():
     )
 
     parser.add_argument(
-        "--report-path",
+        "--reports-path",
         type=str,
         help="Specify the report path where build_urls_package_release.json is located, default: /home/ubuntu/actions-runner/_work/_temp/reports_dir",
         default="/home/ubuntu/actions-runner/_work/_temp/reports_dir",
@@ -37,13 +37,13 @@ def argparser():
 if __name__ == "__main__":
     args = argparser().parse_args()
 
-    assert args.report_path is not None, "report path must be set"
+    assert args.reports_path is not None, "reports path must be set"
     assert args.github_env is not None, "github env must be set"
 
-    report_path = args.report_path 
+    reports_path = args.reports_path 
     github_env = args.github_env
 
-    with open(os.path.join(report_path, "build_urls_package_release/build_urls_package_release.json"), "r", encoding="utf-8") as file_handler:
+    with open(os.path.join(reports_path, "build_urls_package_release/build_urls_package_release.json"), "r", encoding="utf-8") as file_handler:
         build_report = json.load(file_handler)
 
     for url in build_report["build_urls"]:
