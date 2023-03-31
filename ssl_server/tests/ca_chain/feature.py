@@ -836,6 +836,39 @@ def use_second_intermediate_ca(self):
                 trusted_cas=[os.path.join(self.context.root_store, "ca.crt")],
                 use_ca_config=False,
             )
+            Scenario(
+                "missing first CA in chain on one node",
+                test=server_certificate_with_chain_missing_ca_on_one_node,
+            )(
+                ca_store=ca_store,
+                ca_intermediate_chain_crt=ca_intermediate_chain_crt,
+                ca_intermediate_chain_missing_crt=ca_intermediate_missing_first_chain_crt,
+                ca_root_crt=os.path.join(self.context.root_store, "ca.crt"),
+                trusted_cas=[os.path.join(self.context.root_store, "ca.crt")],
+                use_ca_config=False,
+            )
+            Scenario(
+                "missing last CA in chain on one node",
+                test=server_certificate_with_chain_missing_ca_on_one_node,
+            )(
+                ca_store=ca_store,
+                ca_intermediate_chain_crt=ca_intermediate_chain_crt,
+                ca_intermediate_chain_missing_crt=ca_intermediate_missing_last_chain_crt,
+                ca_root_crt=os.path.join(self.context.root_store, "ca.crt"),
+                trusted_cas=[os.path.join(self.context.root_store, "ca.crt")],
+                use_ca_config=False,
+            )
+            Scenario(
+                "missing all CA in chain on one node",
+                test=server_certificate_with_chain_missing_ca_on_one_node,
+            )(
+                ca_store=ca_store,
+                ca_intermediate_chain_crt=ca_intermediate_chain_crt,
+                ca_intermediate_chain_missing_crt=ca_intermediate_missing_all_chain_crt,
+                ca_root_crt=os.path.join(self.context.root_store, "ca.crt"),
+                trusted_cas=[os.path.join(self.context.root_store, "ca.crt")],
+                use_ca_config=False,
+            )
 
     with Feature("server certificate without chain"):
 
