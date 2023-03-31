@@ -486,15 +486,15 @@ def create_intermediate_ca_store(
 
 
 @TestStep(Given)
-def create_ca_chain_certificate(self, outfile, cas):
-    """Create CA chain certificate file."""
+def create_chain_certificate(self, outfile, certificates):
+    """Create chain certificate file."""
     bash = self.context.cluster.bash(node=None)
 
     with By("creating chain file"):
-        if not cas:
+        if not certificates:
             cmd = bash(f"touch {outfile}")
         else:
-            cmd = bash(f"cat {' '.join(cas)}  > {outfile}")
+            cmd = bash(f"cat {' '.join(certificates)}  > {outfile}")
         assert cmd.exitcode == 0, error()
 
     return outfile

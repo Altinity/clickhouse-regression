@@ -106,9 +106,9 @@ def with_caconfig_missing_first_ca_in_chain_on_one_node(
     with Given(
         "I create CA chain certificate that missing first certificate in the chain"
     ):
-        missing_ca_chain_crt = create_ca_chain_certificate(
+        missing_ca_chain_crt = create_chain_certificate(
             outfile=f"{os.path.join(self.context.tmpdir, 'missing_ca_chain.crt')}",
-            cas=cas[1:],
+            certificates=cas[1:],
         )
 
     with_caconfig_missing_ca_in_chain(
@@ -145,9 +145,9 @@ def with_caconfig_missing_last_ca_in_chain_on_one_node(
     with Given(
         "I create CA chain certificate that missing last certificate in the chain"
     ):
-        missing_ca_chain_crt = create_ca_chain_certificate(
+        missing_ca_chain_crt = create_chain_certificate(
             outfile=f"{os.path.join(self.context.tmpdir, 'missing_ca_chain.crt')}",
-            cas=cas[:-1],
+            certificates=cas[:-1],
         )
 
     with_caconfig_missing_ca_in_chain(
@@ -184,9 +184,9 @@ def with_caconfig_missing_middle_ca_in_chain_on_one_node(
     with Given(
         "I create CA chain certificate that missing middle certificate in the chain"
     ):
-        missing_ca_chain_crt = create_ca_chain_certificate(
+        missing_ca_chain_crt = create_chain_certificate(
             outfile=f"{os.path.join(self.context.tmpdir, 'missing_ca_chain.crt')}",
-            cas=(cas[:-2] + cas[2:]),
+            certificates=(cas[:-2] + cas[2:]),
         )
 
     with_caconfig_missing_ca_in_chain(
@@ -220,25 +220,25 @@ def with_caconfig_missing_ca_in_chain_on_all_nodes(self, ca_store, ca_chain_crt,
     with Given(
         "I create CA chain certificate that missing first certificate in the chain"
     ):
-        missing_first_ca_chain_crt = create_ca_chain_certificate(
+        missing_first_ca_chain_crt = create_chain_certificate(
             outfile=f"{os.path.join(self.context.tmpdir, 'missing_first_ca_chain.crt')}",
-            cas=cas[1:],
+            certificates=cas[1:],
         )
 
     with And(
         "I create CA chain certificate that missing first certificate in the chain"
     ):
-        missing_middle_ca_chain_crt = create_ca_chain_certificate(
+        missing_middle_ca_chain_crt = create_chain_certificate(
             outfile=f"{os.path.join(self.context.tmpdir, 'missing_middle_ca_chain.crt')}",
-            cas=(cas[:-2] + cas[2:]),
+            certificates=(cas[:-2] + cas[2:]),
         )
 
     with And(
         "I create CA chain certificate that missing last certificate in the chain"
     ):
-        missing_last_ca_chain_crt = create_ca_chain_certificate(
+        missing_last_ca_chain_crt = create_chain_certificate(
             outfile=f"{os.path.join(self.context.tmpdir, 'missing_last_ca_chain.crt')}",
-            cas=cas[:-1],
+            certificates=cas[:-1],
         )
 
     with_caconfig_missing_ca_in_chain(
@@ -488,6 +488,151 @@ def without_caconfig_missing_trusted_ca_on_all_nodes(self, ca_store, ca_chain_cr
     )
 
 
+@TestOutline
+def server_certificate_with_chain(
+    self,
+    ca_store,
+    ca_intermediate_chain_crt,
+    ca_root_crt,
+    trusted_cas=None,
+    use_ca_config=False,
+    nodes=None,
+    message=None,
+    validate=False,
+):
+    """Check secure connection using when server certificate is signed by a specified CA
+    and server certificate contains the chain upto but not including the root."""
+    if nodes is None:
+        nodes = self.context.cluster.nodes["clickhouse"]
+
+    for node_name in nodes:
+        with Given(f"I create and add server certificate with chain to {node_name}"):
+            create_node_server_certificate_with_chain_and_dh_params(
+                node=self.context.cluster.node(node_name),
+                name=node_name,
+                common_name=node_name,
+                ca_key=f"{os.path.join(ca_store, 'ca.key')}",
+                ca_crt=f"{os.path.join(ca_store, 'ca.crt')}",
+                ca_chain_crt=ca_intermediate_chain_crt,
+                ca_root_crt=ca_root_crt,
+                tmpdir=self.context.tmpdir,
+                trusted_cas=trusted_cas,
+                validate=validate,
+            )
+
+    for node_name in nodes:
+        with And(f"I add SSL configuration to {node_name}"):
+            add_ssl_configuration(
+                node=self.context.cluster.node(node_name),
+                server_key=f"/{node_name}.key",
+                server_crt=f"/{node_name}_chain.crt",
+                dh_params=f"/{node_name}.dh",
+                ca_config=f"/ca_root.crt" if use_ca_config else None,
+            )
+
+    with Then("check secure connection from each clickhouse server to the other"):
+        for from_name in nodes:
+            for to_name in nodes:
+                with Then(f"from {from_name} to {to_name}"):
+                    check_secure_connection(
+                        from_node=self.context.cluster.node(from_name),
+                        to_node=self.context.cluster.node(to_name),
+                        message=message,
+                    )
+
+
+@TestOutline
+def server_certificate_with_chain_missing_ca(
+    self,
+    ca_store,
+    ca_root_crt,
+    nodes_ca_intermediate_chain_crt,
+    nodes_message,
+    trusted_cas=None,
+    use_ca_config=False,
+    nodes=None,
+):
+    """Check secure connection using when server certificate is signed by a specified CA
+    and server certificate contains the chain upto but not including the root but
+    missing some intermediate CA."""
+    if nodes is None:
+        nodes = self.context.cluster.nodes["clickhouse"]
+
+    for node_name in nodes:
+        with Given(f"I create and add server certificate with chain to {node_name}"):
+            create_node_server_certificate_with_chain_and_dh_params(
+                node=self.context.cluster.node(node_name),
+                name=node_name,
+                common_name=node_name,
+                ca_key=f"{os.path.join(ca_store, 'ca.key')}",
+                ca_crt=f"{os.path.join(ca_store, 'ca.crt')}",
+                ca_chain_crt=nodes_ca_intermediate_chain_crt[node_name],
+                ca_root_crt=ca_root_crt,
+                tmpdir=self.context.tmpdir,
+                trusted_cas=trusted_cas,
+                validate=False,
+            )
+
+    for node_name in nodes:
+        with And(f"I add SSL configuration to {node_name}"):
+            add_ssl_configuration(
+                node=self.context.cluster.node(node_name),
+                server_key=f"/{node_name}.key",
+                server_crt=f"/{node_name}_chain.crt",
+                dh_params=f"/{node_name}.dh",
+                ca_config=f"/ca_root.crt" if use_ca_config else None,
+            )
+
+    with Then("check secure connection from each clickhouse server to the other"):
+        for from_name in nodes:
+            for to_name in nodes:
+                with Then(f"from {from_name} to {to_name}"):
+                    check_secure_connection(
+                        from_node=self.context.cluster.node(from_name),
+                        to_node=self.context.cluster.node(to_name),
+                        message=nodes_message[(from_name, to_name)],
+                    )
+
+
+@TestScenario
+def server_certificate_with_chain_missing_ca_on_one_node(
+    self,
+    ca_store,
+    ca_intermediate_chain_crt,
+    ca_intermediate_chain_missing_crt,
+    ca_root_crt,
+    trusted_cas,
+    use_ca_config,
+):
+    """Check when clickhouse1 node is missing CA in the intermediate chain certificate.
+    We will check that connections from clickhouse1 to any other node including itself
+    fails with certificate verify error and connections from any nodes other than
+    clickhouse1 to clickhouse1 fails as well with unknown CA error."""
+
+    server_certificate_with_chain_missing_ca(
+        ca_store=ca_store,
+        ca_root_crt=ca_root_crt,
+        nodes_ca_intermediate_chain_crt={
+            "clickhouse1": ca_intermediate_chain_missing_crt,
+            "clickhouse2": ca_intermediate_chain_crt,
+            "clickhouse3": ca_intermediate_chain_crt,
+        },
+        nodes_message={
+            ("clickhouse1", "clickhouse1"): error_certificate_verify_failed,
+            ("clickhouse1", "clickhouse2"): error_tlsv1_alert_unknown_ca,
+            ("clickhouse1", "clickhouse3"): error_tlsv1_alert_unknown_ca,
+            ("clickhouse2", "clickhouse1"): error_certificate_verify_failed,
+            ("clickhouse2", "clickhouse2"): None,
+            ("clickhouse2", "clickhouse3"): None,
+            ("clickhouse3", "clickhouse1"): error_certificate_verify_failed,
+            ("clickhouse3", "clickhouse2"): None,
+            ("clickhouse3", "clickhouse3"): None,
+        },
+        trusted_cas=trusted_cas,
+        use_ca_config=use_ca_config,
+    )
+
+
 @TestFeature
 def use_root_ca(self):
     """Check using root CA to sign server certificate."""
@@ -501,8 +646,9 @@ def use_root_ca(self):
     )
 
     with Given("I create CA chain certificate"):
-        ca_chain_crt = create_ca_chain_certificate(
-            outfile=f"{os.path.join(self.context.tmpdir, 'ca_chain.crt')}", cas=cas
+        ca_chain_crt = create_chain_certificate(
+            outfile=f"{os.path.join(self.context.tmpdir, 'ca_chain.crt')}",
+            certificates=cas,
         )
 
     with Feature(
@@ -551,8 +697,9 @@ def use_first_intermediate_ca(self):
     )
 
     with Given("I create CA chain certificate"):
-        ca_chain_crt = create_ca_chain_certificate(
-            outfile=f"{os.path.join(self.context.tmpdir, 'ca_chain.crt')}", cas=cas
+        ca_chain_crt = create_chain_certificate(
+            outfile=f"{os.path.join(self.context.tmpdir, 'ca_chain.crt')}",
+            certificates=cas,
         )
 
     with Feature(
@@ -595,6 +742,7 @@ def use_second_intermediate_ca(self):
     """Check using second intermediate CA to sign server certificate."""
 
     ca_store = define("CA store", self.context.sub2_store)
+
     cas = define(
         "CAs",
         [
@@ -605,57 +753,174 @@ def use_second_intermediate_ca(self):
     )
 
     with Given("I create CA chain certificate"):
-        ca_chain_crt = create_ca_chain_certificate(
-            outfile=f"{os.path.join(self.context.tmpdir, 'ca_chain.crt')}", cas=cas
+        ca_chain_crt = create_chain_certificate(
+            outfile=f"{os.path.join(self.context.tmpdir, 'ca_chain.crt')}",
+            certificates=cas,
         )
 
-    with Feature(
-        "with caconfig",
-        description="Check secure connection when caConfig parameter is set.",
-    ):
-        Scenario("all certificates in chain", test=with_caconfig)(
-            ca_store=ca_store, ca_chain_crt=ca_chain_crt
+    with And("I create intermediate CA chain certificate"):
+        ca_intermediate_chain_crt = create_chain_certificate(
+            outfile=f"{os.path.join(self.context.tmpdir, 'ca_intermediate_chain.crt')}",
+            certificates=cas[:-1],
         )
-        Scenario(
-            "missing first CA in chain on one node",
-            test=with_caconfig_missing_first_ca_in_chain_on_one_node,
-        )(ca_store=ca_store, ca_chain_crt=ca_chain_crt, cas=cas)
-        Scenario(
-            "missing middle CA in chain on one node",
-            test=with_caconfig_missing_middle_ca_in_chain_on_one_node,
-        )(ca_store=ca_store, ca_chain_crt=ca_chain_crt, cas=cas)
-        Scenario(
-            "missing last CA in chain on one node",
-            test=with_caconfig_missing_last_ca_in_chain_on_one_node,
-        )(ca_store=ca_store, ca_chain_crt=ca_chain_crt, cas=cas)
-        Scenario(
-            "missing some CA in chain on all nodes",
-            test=with_caconfig_missing_ca_in_chain_on_all_nodes,
-        )(ca_store=ca_store, ca_chain_crt=ca_chain_crt, cas=cas)
 
-    with Feature(
-        "without caconfig",
-        description="Check secure connection when caConfig parameter is not set",
-    ):
-        Scenario(test=without_caconfig)(
-            ca_store=ca_store, ca_chain_crt=ca_chain_crt, trusted_cas=cas
+    with And("I create intermediate CA chain missing first certificate"):
+        ca_intermediate_missing_first_chain_crt = create_chain_certificate(
+            outfile=f"{os.path.join(self.context.tmpdir, 'ca_intermediate_missing_first_chain.crt')}",
+            certificates=cas[1:-1],
         )
-        Scenario(
-            "missing first trusted CA on one node",
-            test=without_caconfig_missing_first_trusted_ca_on_one_node,
-        )(ca_store=ca_store, ca_chain_crt=ca_chain_crt, cas=cas)
-        Scenario(
-            "missing middle trusted CA on one node",
-            test=without_caconfig_missing_middle_trusted_ca_on_one_node,
-        )(ca_store=ca_store, ca_chain_crt=ca_chain_crt, cas=cas)
-        Scenario(
-            "missing last trusted CA on one node",
-            test=without_caconfig_missing_first_trusted_ca_on_one_node,
-        )(ca_store=ca_store, ca_chain_crt=ca_chain_crt, cas=cas)
-        Scenario(
-            "missing trusted CA on all nodes",
-            test=without_caconfig_missing_trusted_ca_on_all_nodes,
-        )(ca_store=ca_store, ca_chain_crt=ca_chain_crt, cas=cas)
+
+    with And("I create intermediate CA chain missing last certificate"):
+        ca_intermediate_missing_last_chain_crt = create_chain_certificate(
+            outfile=f"{os.path.join(self.context.tmpdir, 'ca_intermediate_missing_last_chain.crt')}",
+            certificates=cas[:-2],
+        )
+
+    with And("I create intermediate CA chain missing all certificates"):
+        ca_intermediate_missing_all_chain_crt = create_chain_certificate(
+            outfile=f"{os.path.join(self.context.tmpdir, 'ca_intermediate_missing_all_chain.crt')}",
+            certificates=[],
+        )
+
+    with Feature("server certificate with chain"):
+
+        with Feature("with caconfig"):
+
+            Scenario("all certificates present", test=server_certificate_with_chain)(
+                ca_store=ca_store,
+                ca_intermediate_chain_crt=ca_intermediate_chain_crt,
+                ca_root_crt=os.path.join(self.context.root_store, "ca.crt"),
+                trusted_cas=None,
+                use_ca_config=True,
+            )
+            Scenario(
+                "missing first CA in chain on one node",
+                test=server_certificate_with_chain_missing_ca_on_one_node,
+            )(
+                ca_store=ca_store,
+                ca_intermediate_chain_crt=ca_intermediate_chain_crt,
+                ca_intermediate_chain_missing_crt=ca_intermediate_missing_first_chain_crt,
+                ca_root_crt=os.path.join(self.context.root_store, "ca.crt"),
+                trusted_cas=None,
+                use_ca_config=True,
+            )
+            Scenario(
+                "missing last CA in chain on one node",
+                test=server_certificate_with_chain_missing_ca_on_one_node,
+            )(
+                ca_store=ca_store,
+                ca_intermediate_chain_crt=ca_intermediate_chain_crt,
+                ca_intermediate_chain_missing_crt=ca_intermediate_missing_last_chain_crt,
+                ca_root_crt=os.path.join(self.context.root_store, "ca.crt"),
+                trusted_cas=None,
+                use_ca_config=True,
+            )
+            Scenario(
+                "missing all CA in chain on one node",
+                test=server_certificate_with_chain_missing_ca_on_one_node,
+            )(
+                ca_store=ca_store,
+                ca_intermediate_chain_crt=ca_intermediate_chain_crt,
+                ca_intermediate_chain_missing_crt=ca_intermediate_missing_all_chain_crt,
+                ca_root_crt=os.path.join(self.context.root_store, "ca.crt"),
+                trusted_cas=None,
+                use_ca_config=True,
+            )
+
+        with Feature("without caconfig"):
+
+            Scenario("all certificates present", test=server_certificate_with_chain)(
+                ca_store=ca_store,
+                ca_intermediate_chain_crt=ca_intermediate_chain_crt,
+                ca_root_crt=os.path.join(self.context.root_store, "ca.crt"),
+                trusted_cas=[os.path.join(self.context.root_store, "ca.crt")],
+                use_ca_config=False,
+            )
+            Scenario(
+                "missing first CA in chain on one node",
+                test=server_certificate_with_chain_missing_ca_on_one_node,
+            )(
+                ca_store=ca_store,
+                ca_intermediate_chain_crt=ca_intermediate_chain_crt,
+                ca_intermediate_chain_missing_crt=ca_intermediate_missing_first_chain_crt,
+                ca_root_crt=os.path.join(self.context.root_store, "ca.crt"),
+                trusted_cas=[os.path.join(self.context.root_store, "ca.crt")],
+                use_ca_config=False,
+            )
+            Scenario(
+                "missing last CA in chain on one node",
+                test=server_certificate_with_chain_missing_ca_on_one_node,
+            )(
+                ca_store=ca_store,
+                ca_intermediate_chain_crt=ca_intermediate_chain_crt,
+                ca_intermediate_chain_missing_crt=ca_intermediate_missing_last_chain_crt,
+                ca_root_crt=os.path.join(self.context.root_store, "ca.crt"),
+                trusted_cas=[os.path.join(self.context.root_store, "ca.crt")],
+                use_ca_config=False,
+            )
+            Scenario(
+                "missing all CA in chain on one node",
+                test=server_certificate_with_chain_missing_ca_on_one_node,
+            )(
+                ca_store=ca_store,
+                ca_intermediate_chain_crt=ca_intermediate_chain_crt,
+                ca_intermediate_chain_missing_crt=ca_intermediate_missing_all_chain_crt,
+                ca_root_crt=os.path.join(self.context.root_store, "ca.crt"),
+                trusted_cas=[os.path.join(self.context.root_store, "ca.crt")],
+                use_ca_config=False,
+            )
+
+    with Feature("server certificate without chain"):
+
+        with Feature(
+            "with caconfig",
+            description="Check secure connection when caConfig parameter is set.",
+        ):
+
+            Scenario("all certificates present", test=with_caconfig)(
+                ca_store=ca_store, ca_chain_crt=ca_chain_crt
+            )
+            Scenario(
+                "missing first CA in chain on one node",
+                test=with_caconfig_missing_first_ca_in_chain_on_one_node,
+            )(ca_store=ca_store, ca_chain_crt=ca_chain_crt, cas=cas)
+            Scenario(
+                "missing middle CA in chain on one node",
+                test=with_caconfig_missing_middle_ca_in_chain_on_one_node,
+            )(ca_store=ca_store, ca_chain_crt=ca_chain_crt, cas=cas)
+            Scenario(
+                "missing last CA in chain on one node",
+                test=with_caconfig_missing_last_ca_in_chain_on_one_node,
+            )(ca_store=ca_store, ca_chain_crt=ca_chain_crt, cas=cas)
+            Scenario(
+                "missing some CA in chain on all nodes",
+                test=with_caconfig_missing_ca_in_chain_on_all_nodes,
+            )(ca_store=ca_store, ca_chain_crt=ca_chain_crt, cas=cas)
+
+        with Feature(
+            "without caconfig",
+            description="Check secure connection when caConfig parameter is not set",
+        ):
+
+            Scenario("all certificates present", test=without_caconfig)(
+                ca_store=ca_store, ca_chain_crt=ca_chain_crt, trusted_cas=cas
+            )
+            Scenario(
+                "missing first trusted CA on one node",
+                test=without_caconfig_missing_first_trusted_ca_on_one_node,
+            )(ca_store=ca_store, ca_chain_crt=ca_chain_crt, cas=cas)
+            Scenario(
+                "missing middle trusted CA on one node",
+                test=without_caconfig_missing_middle_trusted_ca_on_one_node,
+            )(ca_store=ca_store, ca_chain_crt=ca_chain_crt, cas=cas)
+            Scenario(
+                "missing last trusted CA on one node",
+                test=without_caconfig_missing_first_trusted_ca_on_one_node,
+            )(ca_store=ca_store, ca_chain_crt=ca_chain_crt, cas=cas)
+            Scenario(
+                "missing trusted CA on all nodes",
+                test=without_caconfig_missing_trusted_ca_on_all_nodes,
+            )(ca_store=ca_store, ca_chain_crt=ca_chain_crt, cas=cas)
 
 
 @TestFeature
