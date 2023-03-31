@@ -224,7 +224,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: benchmark-artifacts
+          name: benchmark-minio-artifacts
           path: ${{ env.artifact_paths}}
 
   benchmark_aws:
@@ -270,7 +270,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: benchmark-artifacts
+          name: benchmark-aws-artifacts
           path: ${{ env.artifact_paths}}  
 
   benchmark_gcs:
@@ -315,7 +315,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: benchmark-artifacts
+          name: benchmark-gcs-artifacts
           path: ${{ env.artifact_paths}}
 
   clickhouse_keeper:
