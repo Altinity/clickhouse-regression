@@ -146,6 +146,7 @@ def regression(
     nodes = {
         "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3"),
         "zookeeper": ("zookeeper",),
+        "zookeeper-fips": ("zookeeper-fips",),
     }
     self.context.clickhouse_version = clickhouse_version
     self.context.fips_mode = False
