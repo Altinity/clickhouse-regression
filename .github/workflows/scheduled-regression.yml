@@ -888,6 +888,16 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
+              --storage minio
+              --storage aws_s3
+              --aws-s3-bucket ${{ secrets.AWS_BUCKET }}
+              --aws-s3-region ${{ secrets.AWS_REGION }}
+              --aws-s3-key-id ${{ secrets.AWS_KEY_ID }}
+              --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
+              --storage gcs
+              --gcs-uri ${{ secrets.GCS_URI }}
+              --gcs-key-id ${{ secrets.GCS_KEY_ID }}
+              --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
               ${{ env.args }}
 
       - name: Create and upload logs
