@@ -59,6 +59,8 @@ def create_zookeeper_crt_and_key(
     storepass="keystore",
     keypass=None,
     signed=True,
+    validate=True,
+    validate_option="-x509_strict",
 ):
     """Create zookeeper certificate and key. Key is stored in the keystore."""
     if node is None:
@@ -107,12 +109,14 @@ def create_zookeeper_crt_and_key(
                 use_stash=False,
             )
 
-        with And("validating the certificate"):
-            validate_certificate(
-                certificate=crt,
-                ca_certificate=self.context.zookeeper_node_ca_crt,
-                node=node,
-            )
+        if validate:
+            with And("validating the certificate"):
+                validate_certificate(
+                    certificate=crt,
+                    ca_certificate=self.context.zookeeper_node_ca_crt,
+                    node=node,
+                    option=validate_option,
+                )
 
         with And("adding CA certificate to keystore"):
             add_certificate_to_zookeeper_truststore(
@@ -223,13 +227,16 @@ def add_to_clickhouse_secure_zookeeper_config_file(
     timeout=300,
     restart=False,
     node=None,
+    zookeeper_node=None,
 ):
     """Add secure ZooKeeper configuration to config.xml."""
     self.context.secure_zookeeper_port = port
+    if zookeeper_node is None:
+        zookeeper_node = self.context.zookeeper_node
 
     entries = {
         "zookeeper": {
-            "node": {"host": "zookeeper", "port": f"{port}", "secure": "1"},
+            "node": {"host": zookeeper_node.name, "port": f"{port}", "secure": "1"},
             "session_timeout_ms": "15000",
         }
     }
