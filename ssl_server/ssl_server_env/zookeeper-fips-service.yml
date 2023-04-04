@@ -1,0 +1,25 @@
+version: '2.3'
+
+services:
+  zookeeper-fips:
+    image: altinity/zookeeper-fips:3.7.1-1
+    init: true
+    expose:
+      - "2181"
+      - "2281"
+    environment:
+      ZOO_TICK_TIME: 500
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: " "
+      ZOO_CFG_EXTRA: "clientPort=2181"
+    command: bash -c "tail -f /dev/null"
+    healthcheck:
+      test: echo 1
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 300s
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - label:disable
