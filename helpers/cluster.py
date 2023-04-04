@@ -1152,7 +1152,9 @@ class Cluster(object):
                                         timeout=1000,
                                     )
                                     if snode.exitcode != 0:
-                                        break
+                                        xfail(
+                                            f"failed to get service log - exitcode {snode.exitcode}"
+                                        )
 
                 self.down()
         finally:
