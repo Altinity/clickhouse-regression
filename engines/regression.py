@@ -69,8 +69,17 @@ def regression(
         self.context.cluster = cluster
         self.context.node = cluster.node("clickhouse1")
 
-        Feature(run=load("engines.tests.replacing_merge_tree.replacing_merge_tree", "feature"))
-        Feature(run=load("engines.tests.replacing_merge_tree.replicated_replacing_merge_tree", "feature"))
+        Feature(
+            run=load(
+                "engines.tests.replacing_merge_tree.replacing_merge_tree", "feature"
+            )
+        )
+        Feature(
+            run=load(
+                "engines.tests.replacing_merge_tree.replicated_replacing_merge_tree",
+                "feature",
+            )
+        )
 
 
 if main():

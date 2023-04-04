@@ -40,16 +40,22 @@ if __name__ == "__main__":
     assert args.reports_path is not None, "reports path must be set"
     assert args.github_env is not None, "github env must be set"
 
-    reports_path = args.reports_path 
+    reports_path = args.reports_path
     github_env = args.github_env
 
-    with open(os.path.join(reports_path, "build_urls_package_release/build_urls_package_release.json"), "r", encoding="utf-8") as file_handler:
+    with open(
+        os.path.join(
+            reports_path, "build_urls_package_release/build_urls_package_release.json"
+        ),
+        "r",
+        encoding="utf-8",
+    ) as file_handler:
         build_report = json.load(file_handler)
 
     for url in build_report["build_urls"]:
         if "clickhouse-common-static_" in url and "deb" in url:
             with open(github_env, "a") as f:
-                f.write("version=" + url.split("/")[-1].split("_")[1]+"\n")
-                f.write("clickhouse_binary_path="+url+"\n")
+                f.write("version=" + url.split("/")[-1].split("_")[1] + "\n")
+                f.write("clickhouse_binary_path=" + url + "\n")
             sys.stdout.write(url)
             sys.exit(0)
