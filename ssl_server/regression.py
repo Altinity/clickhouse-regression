@@ -76,7 +76,7 @@ xfails = {
         (Fail, "not supported by SSL library")
     ],
     # zookeeper ssl
-    "zookeeper/fips/ECDHE-ECDSA-AES128-GCM-SHA256": [
+    "zookeepe:/fips/ECDHE-ECDSA-AES128-GCM-SHA256": [
         (
             Fail,
             "SSLV3_ALERT_HANDSHAKE_FAILURE",
@@ -84,7 +84,7 @@ xfails = {
             r".*SSLV3_ALERT_HANDSHAKE_FAILURE.*",
         )
     ],
-    "zookeeper/fips/ECDHE-ECDSA-AES256-GCM-SHA384": [
+    "zookeepe:/fips/ECDHE-ECDSA-AES256-GCM-SHA384": [
         (
             Fail,
             "SSLV3_ALERT_HANDSHAKE_FAILURE",
@@ -92,7 +92,7 @@ xfails = {
             r".*SSLV3_ALERT_HANDSHAKE_FAILURE.*",
         )
     ],
-    "zookeeper/fips/AES128-GCM-SHA256": [
+    "zookeepe:/fips/AES128-GCM-SHA256": [
         (
             Fail,
             "SSLV3_ALERT_HANDSHAKE_FAILURE",
@@ -100,7 +100,7 @@ xfails = {
             r".*SSLV3_ALERT_HANDSHAKE_FAILURE.*",
         )
     ],
-    "zookeeper/fips/AES256-GCM-SHA384": [
+    "zookeepe:/fips/AES256-GCM-SHA384": [
         (
             Fail,
             "SSLV3_ALERT_HANDSHAKE_FAILURE",
@@ -145,8 +145,7 @@ def regression(
     """ClickHouse security SSL server regression."""
     nodes = {
         "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3"),
-        "zookeeper": ("zookeeper",),
-        "zookeeper-fips": ("zookeeper-fips",),
+        "zookeeper": ("zookeeper", "zookeeper-fips"),
     }
     self.context.clickhouse_version = clickhouse_version
     self.context.fips_mode = False
@@ -185,6 +184,7 @@ def regression(
         Feature(run=load("ssl_server.tests.dictionary", "feature"))
         Feature(run=load("ssl_server.tests.fips", "feature"))
         Feature(run=load("ssl_server.tests.zookeeper.feature", "feature"))
+        Feature(run=load("ssl_server.tests.zookeeper_fips.feature", "feature"))
         Feature(run=load("ssl_server.tests.ca_chain.feature", "feature"))
 
 

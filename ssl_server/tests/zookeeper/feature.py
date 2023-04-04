@@ -42,11 +42,13 @@ def secure_connection(self):
 
 
 @TestScenario
-def secure_connection_without_client_certificate(self):
+def secure_connection_without_client_certificate(self, message=None):
     """Check secure ZooKeeper connection without using client certificate.
     Connection is expected to fail with bad certificate error as ZooKeeper
     is expecting the client to present a valid certificate.
     """
+    if message is None:
+        message = "Exception: error:10000412:SSL routines:OPENSSL_internal:SSLV3_ALERT_BAD_CERTIFICATE"
 
     with Given(
         "I add ClickHouse server openSSL client configuration without client certificate"
@@ -79,9 +81,7 @@ def secure_connection_without_client_certificate(self):
     with Then(
         "I check ClickHouse connection to zookeeper fails with bad certificate error"
     ):
-        check_clickhouse_connection_to_zookeeper(
-            message="Exception: error:10000412:SSL routines:OPENSSL_internal:SSLV3_ALERT_BAD_CERTIFICATE"
-        )
+        check_clickhouse_connection_to_zookeeper(message=message)
 
 
 @TestScenario
