@@ -6,6 +6,11 @@ services:
       file: zookeeper-service.yml
       service: zookeeper
 
+  zookeeper-fips:
+    extends:
+      file: zookeeper-fips-service.yml
+      service: zookeeper-fips
+
   clickhouse1:
     extends:
       file: clickhouse-service.yml
@@ -75,4 +80,6 @@ services:
       non_fips_clickhouse:
         condition: service_healthy
       zookeeper:
+        condition: service_healthy
+      zookeeper-fips:
         condition: service_healthy
