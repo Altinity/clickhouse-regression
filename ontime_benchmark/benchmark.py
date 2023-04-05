@@ -98,7 +98,7 @@ def regression(
                     "MINIO_ROOT_USER": "minio",
                 }
 
-            elif "s3_gcs" == storage.lower():
+            elif "gcs" == storage.lower():
                 uri = gcs_uri.value
                 access_key_id = gcs_key_id.value
                 secret_access_key = gcs_key_secret.value
