@@ -8,12 +8,12 @@ def noise_before(self, scenario):
     with Given("I specify input, expected output and parameters"):
         input = define(
             "input string, that contains noise before key value pair",
-            f"'{parsed_noise_without_quotation_mark} {ascii_alpha}{ascii_num}:{ascii_num}'",
+            f"'{noise} {ascii_alpha}{ascii_num}:{ascii_num}'",
         )
         output = define(
             "expected output", "{" + f"'{ascii_alpha}{ascii_num}':'{ascii_num}'" + "}"
         )
-        params = define("function parameters", f"'\\\\\\\\', ':', ',', '\\\"'")
+        params = define("function parameters", f"':', ' ,', '\\\"'")
 
     scenario(input=input, output=output, params=params)
 
@@ -25,12 +25,12 @@ def noise_after(self, scenario):
     with Given("I specify input, expected output and parameters"):
         input = define(
             "input string, that contains noise after key value pair",
-            f"'{ascii_alpha}{ascii_num}:{ascii_num} {parsed_noise}'",
+            f"'{ascii_alpha}{ascii_num}:{ascii_num} {noise}'",
         )
         output = define(
             "expected output", "{" + f"'{ascii_alpha}{ascii_num}':'{ascii_num}'" + "}"
         )
-        params = define("function parameters", f"'\\\\\\\\', ':', ',', '\\\"'")
+        params = define("function parameters", f"':', ' ,', '\\\"'")
 
     scenario(input=input, output=output, params=params)
 
@@ -41,7 +41,7 @@ def noise_between(self, scenario):
     with Given("I specify input, expected output and parameters"):
         input = define(
             "input string, that contains noise between key value pair",
-            f"'{ascii_alpha}{ascii_num}:{ascii_num} {parsed_noise}, {parsed_noise} {ascii_alpha}:{ascii_num}'",
+            f"'{ascii_alpha}{ascii_num}:{ascii_num} {noise}, {noise} {ascii_alpha}:{ascii_num}'",
         )
         output = define(
             "expected output",
@@ -49,7 +49,7 @@ def noise_between(self, scenario):
             + f"'{ascii_alpha}{ascii_num}':'{ascii_num}','{ascii_alpha}':'{ascii_num}'"
             + "}",
         )
-        params = define("function parameters", f"'\\\\\\\\', ':', ',', '\\\"'")
+        params = define("function parameters", f"':', ' ,', '\\\"'")
 
     scenario(input=input, output=output, params=params)
 
@@ -71,46 +71,45 @@ def properly_defined_key(self, scenario):
     with Given("I specify input, expected output and parameters"):
         input = define(
             "input string, that contains properly defined key",
-            f'\'"{ascii_alpha}{ascii_num}{parsed_noise_without_quotation_mark}":'
-            f"{ascii_num}, {ascii_alpha}{ascii_num}\\::{ascii_num}'",
+            f'\'"{ascii_alpha}{ascii_num}\\n":{ascii_num}\''
         )
         output = define(
             "expected output",
             "{"
-            + f"'{ascii_alpha}{ascii_num}{noise_without_quotation_mark}':'{ascii_num}',"
-            f"'{ascii_alpha}{ascii_num}:':'{ascii_num}'" + "}",
+            + f"'{ascii_alpha}{ascii_num}\\n':'{ascii_num}'"
+            + "}",
         )
-        params = define("function parameters", f"'\\\\\\\\', ':', ',', '\\\"'")
+        params = define("function parameters", f"':', ' ,', '\\\"'")
 
     scenario(input=input, output=output, params=params)
 
 
-@TestCheck
-def key_first_symbol(self, scenario):
-    """Check that the key is recognized only if it starts with alphabet symbol."""
-
-    with Given("I specify input, expected output and parameters"):
-        input = define(
-            "input string with key, that starts with number",
-            f"'{ascii_num}{ascii_alpha}:{ascii_num}'",
-        )
-        output = define("expected output", "{" + f"'{ascii_alpha}':'{ascii_num}'" + "}")
-        params = define("function parameters", f"'\\\\\\\\', ':', ',', '\\\"'")
-
-    scenario(input=input, output=output, params=params)
+# @TestCheck
+# def key_first_symbol(self, scenario):
+#     """Check that the key is recognized only if it starts with alphabet symbol."""
+#
+#     with Given("I specify input, expected output and parameters"):
+#         input = define(
+#             "input string with key, that starts with number",
+#             f"'{ascii_num}{ascii_alpha}:{ascii_num}'",
+#         )
+#         output = define("expected output", "{" + f"'{ascii_alpha}':'{ascii_num}'" + "}")
+#         params = define("function parameters", f"':', ' ,', '\\\"'")
+#
+#     scenario(input=input, output=output, params=params)
 
 
 @TestCheck
 def key_symbols(self, scenario):
-    """Check that the key is recognized only if it contains alphabet symbols, underscores and numbers."""
+    """Check that the key is recognized only if it contains non-control symbols."""
 
     with Given("I specify input, expected output and parameters"):
         input = define(
-            "input string with key, that contains punctuation marks",
-            f"'{ascii_alpha}{parsed_noise_without_quotation_mark}{ascii_alpha}:{ascii_num}'",
+            "input string with key, that contains control symbols",
+            f"'{ascii_alpha}{noise}{ascii_alpha}:{ascii_num}'",
         )
-        output = define("expected output", "{" + f"'{ascii_alpha}':'{ascii_num}'" + "}")
-        params = define("function parameters", f"'\\\\\\\\', ':', ',', '\\\"'")
+        output = define("expected output", "{" + f"'{ascii_alpha}{out_noise}{ascii_alpha}':'{ascii_num}'" + "}")
+        params = define("function parameters", f"':', ' ,', '\\\"'")
 
     scenario(input=input, output=output, params=params)
 
@@ -122,7 +121,7 @@ def key_empty_string(self, scenario):
     with Given("I specify input, expected output and parameters"):
         input = define("input string, that contains empty key", f"':{ascii_num}'")
         output = define("expected output", "{}")
-        params = define("function parameters", f"'\\\\\\\\', ':', ',', '\\\"'")
+        params = define("function parameters", f"':', ' ,', '\\\"'")
 
     scenario(input=input, output=output, params=params)
 
@@ -134,7 +133,7 @@ def key_format_checks(self, scenario):
     """Check that valid keys are recognized, and invalid are not."""
 
     properly_defined_key(scenario=scenario)
-    key_first_symbol(scenario=scenario)
+    # key_first_symbol(scenario=scenario)
     key_symbols(scenario=scenario)
     key_empty_string(scenario=scenario)
 
@@ -146,31 +145,31 @@ def properly_defined_value(self, scenario):
     with Given("I specify input, expected output and parameters"):
         input = define(
             "input string, that contains properly defined value",
-            f'\'{ascii_alpha}{ascii_num}:"{ascii_num}{parsed_noise_without_quotation_mark}",'
-            f" {ascii_alpha}:{ascii_num}\\:'",
+            f'\'{ascii_alpha}{ascii_num}:"{ascii_num}{parsed_noise}",' +
+            f"{ascii_alpha}:{ascii_num}'",
         )
         output = define(
             "expected output",
             "{"
-            + f"'{ascii_alpha}{ascii_num}':'{ascii_num}{noise_without_quotation_mark}',"
-            f"'{ascii_alpha}':'{ascii_num}:'" + "}",
+            + f"'{ascii_alpha}{ascii_num}':'{ascii_num}{parsed_noise}',"
+            f"'{ascii_alpha}':'{ascii_num}'" + "}",
         )
-        params = define("function parameters", f"'\\\\\\\\', ':', ',', '\\\"'")
+        params = define("function parameters", f"':', ' ,', '\\\"'")
 
     scenario(input=input, output=output, params=params)
 
 
 @TestCheck
 def value_symbols(self, scenario):
-    """Check that the value is recognized only if it contains alphabet symbols, underscores and numbers."""
+    """Check that the value is recognized only if it contains non-control symbols."""
 
     with Given("I specify input, expected output and parameters"):
         input = define(
             "input string with value that contains punctuation marks",
             f"'{ascii_alpha}:{ascii_num}{parsed_noise}{ascii_alpha}'",
         )
-        output = define("expected output", "{" + f"'{ascii_alpha}':'{ascii_num}'" + "}")
-        params = define("function parameters", f"'\\\\\\\\', ':', ',', '\\\"'")
+        output = define("expected output", "{" + f"'{ascii_alpha}':'{ascii_num}{parsed_noise}{ascii_alpha}'" + "}")
+        params = define("function parameters", f"':', ' ,', '\\\"'")
 
     scenario(input=input, output=output, params=params)
 
@@ -182,7 +181,7 @@ def value_empty_string(self, scenario):
     with Given("I specify input, expected output and parameters"):
         input = define("input string with empty value", f"'{ascii_alpha}:'")
         output = define("expected output", "{" + f"'{ascii_alpha}':''" + "}")
-        params = define("function parameters", f"'\\\\\\\\', ':', ',', '\\\"'")
+        params = define("function parameters", f"':', ' ,', '\\\"'")
 
     scenario(input=input, output=output, params=params)
 
@@ -200,29 +199,29 @@ def value_format_checks(self, scenario):
 
 @TestCheck
 @Requirements(
-    RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_ParametersSpecifying_ValueSpecialCharactersAllowList(
+    RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_ParametersSpecifying_EscapeSequencesSupport(
         "1.0"
     )
 )
-def specifying_value_special_characters_allow_list(self, scenario):
-    """Check that clickhouse extractKeyValuePairs function support specifying value special characters allow list."""
+def specifying_escape_sequences_support(self, scenario):
+    """Check that clickhouse extractKeyValuePairs function support specifying escape sequences support."""
 
     with Given("I specify input, expected output and parameters"):
         input = define(
-            "input string, that contains symbols from value_special_characters_allow_list",
-            f"'{ascii_alpha}:.{ascii_alpha}.]['",
+            "input string, that contains non-alphabet non-numeric symbols",
+            f"'{ascii_alpha}:{ascii_alpha}{noise}\\x0A'",
         )
         output = define(
-            "expected output", "{" + f"'{ascii_alpha}':'.{ascii_alpha}.]['" + "}"
+            "expected output", "{" + f"'{ascii_alpha}':'{ascii_alpha}{out_noise}\\n'" + "}"
         )
-        params = define("function parameters", "'\\\\', ':', ',', '\\\"', '.][q'")
+        params = define("function parameters", "':', ' ,', '\\\"', 1")
 
     scenario(input=input, output=output, params=params)
 
 
 @TestCheck
 @Requirements(
-    RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_ParametersSpecifying_EnclosingCharacter(
+    RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_ParametersSpecifying_QuotingCharacter(
         "1.0"
     )
 )
@@ -233,17 +232,17 @@ def specifying_enclosing_character_non_alpha(self, scenario):
     with Given("I specify input, expected output and parameters"):
         input = define(
             "input string, that contains `-`",
-            f"'{ascii_alpha}:-{ascii_alpha}{parsed_noise_without_quotation_mark.replace('-', '')}-'",
+            f"'{ascii_alpha}:-{ascii_alpha}{parsed_noise}-'",
         )
         output = define(
             "expected output",
             "{"
-            + f"'{ascii_alpha}':'{ascii_alpha}{noise_without_quotation_mark.replace('-', '')}'"
+            + f"'{ascii_alpha}':'{ascii_alpha}{parsed_noise.replace('-', '')}'"
             + "}",
         )
         params = define(
             "function parameters with enclosing character as `-`",
-            "'\\\\', ':', ',', '-'",
+            "':', ' ,', '-'",
         )
 
     scenario(input=input, output=output, params=params)
@@ -251,7 +250,7 @@ def specifying_enclosing_character_non_alpha(self, scenario):
 
 @TestCheck
 @Requirements(
-    RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_ParametersSpecifying_EnclosingCharacter(
+    RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_ParametersSpecifying_QuotingCharacter(
         "1.0"
     )
 )
@@ -262,17 +261,17 @@ def specifying_enclosing_character_alpha(self, scenario):
     with Given("I specify input, expected output and parameters"):
         input = define(
             "input string, that contains `q`",
-            f"'{ascii_alpha.replace('q', '')}:q{parsed_noise_without_quotation_mark}q'",
+            f"'{ascii_alpha.replace('q', '')}:q{parsed_noise}:,q'",
         )
         output = define(
             "expected output",
             "{"
-            + f"'{ascii_alpha.replace('q', '')}':'{noise_without_quotation_mark}"
+            + f"'{ascii_alpha.replace('q', '')}':'{parsed_noise}:,'"
             + "}",
         )
         params = define(
             "function parameters with enclosing character as `q`",
-            "'\\\\', ':', ',', 'q'",
+            "':', ' ,', 'q'",
         )
 
     scenario(input=input, output=output, params=params)
@@ -280,10 +279,10 @@ def specifying_enclosing_character_alpha(self, scenario):
 
 @TestCheck
 @Requirements(
-    RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_ParametersSpecifying_ItemDelimiter("1.0")
+    RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_ParametersSpecifying_PairDelimiter("1.0")
 )
-def specifying_item_delimiter_non_alpha(self, scenario):
-    """Check that clickhouse extractKeyValuePairs function support specifying item delimiter
+def specifying_pair_delimiter_non_alpha(self, scenario):
+    """Check that clickhouse extractKeyValuePairs function support specifying pair delimiter
     using a non-alphabet symbol."""
 
     with Given("I specify input, expected output and parameters"):
@@ -298,7 +297,7 @@ def specifying_item_delimiter_non_alpha(self, scenario):
             + "}",
         )
         params = define(
-            "function parameters with item delimiter as `-`", "'\\\\', ':', '-'"
+            "function parameters with item delimiter as `-`", "':', '-'"
         )
 
     scenario(input=input, output=output, params=params)
@@ -306,10 +305,10 @@ def specifying_item_delimiter_non_alpha(self, scenario):
 
 @TestCheck
 @Requirements(
-    RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_ParametersSpecifying_ItemDelimiter("1.0")
+    RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_ParametersSpecifying_PairDelimiter("1.0")
 )
-def specifying_item_delimiter_alpha(self, scenario):
-    """Check that clickhouse extractKeyValuePairs function support specifying item delimiter
+def specifying_pair_delimiter_alpha(self, scenario):
+    """Check that clickhouse extractKeyValuePairs function support specifying pair delimiter
     using an alphabet symbol."""
 
     with Given("I specify input, expected output and parameters"):
@@ -325,7 +324,7 @@ def specifying_item_delimiter_alpha(self, scenario):
             + "}",
         )
         params = define(
-            "function parameters with item delimiter as `q`", "'\\\\', ':', 'q'"
+            "function parameters with item delimiter as `q`", "':', 'q'"
         )
 
     scenario(input=input, output=output, params=params)
@@ -349,7 +348,7 @@ def specifying_key_value_pair_delimiter_non_alpha(self, scenario):
             "expected output", "{" + f"'{ascii_alpha}':'{ascii_alpha}'" + "}"
         )
         params = define(
-            "function parameters with key value pair delimiter as `-`", "'\\\\', '-'"
+            "function parameters with key value pair delimiter as `-`", "'-'"
         )
 
     scenario(input=input, output=output, params=params)
@@ -375,50 +374,50 @@ def specifying_key_value_pair_delimiter_alpha(self, scenario):
             "{" + f"'{ascii_alpha.replace('q', '')}':'{ascii_num}'" + "}",
         )
         params = define(
-            "function parameters with key value pair delimiter as `q`", "'\\\\', 'q'"
+            "function parameters with key value pair delimiter as `q`", "'q'"
         )
 
     scenario(input=input, output=output, params=params)
 
 
-@TestCheck
-@Requirements(
-    RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_ParametersSpecifying_EscapeCharacter(
-        "1.0"
-    )
-)
-def specifying_escape_character_non_alpha(self, scenario):
-    """Check that clickhouse extractKeyValuePairs function support specifying escape character
-    using a non-alphabet symbol."""
-
-    with Given("I specify input, expected output and parameters"):
-        input = define("input string, that contains `-`", f"'{ascii_alpha},-)'")
-        output = define("expected output", "{" + f"'{ascii_alpha}':')'" + "}")
-        params = define("function parameters with escape character as `-`", "'-'")
-
-    scenario(input=input, output=output, params=params)
-
-
-@TestCheck
-@Requirements(
-    RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_ParametersSpecifying_EscapeCharacter(
-        "1.0"
-    )
-)
-def specifying_escape_character_alpha(self, scenario):
-    """Check that clickhouse extractKeyValuePairs function support specifying escape character
-    using an alphabet symbol."""
-
-    with Given("I specify input, expected output and parameters"):
-        input = define(
-            "input string, that contains `q`", f"'{ascii_alpha.replace('q', '')},q)'"
-        )
-        output = define(
-            "expected output", "{" + f"'{ascii_alpha.replace('q', '')}':')'" + "}"
-        )
-        params = define("function parameters with escape character as `q`", "'q'")
-
-    scenario(input=input, output=output, params=params)
+# @TestCheck
+# @Requirements(
+#     RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_ParametersSpecifying_EscapeCharacter(
+#         "1.0"
+#     )
+# )
+# def specifying_escape_character_non_alpha(self, scenario):
+#     """Check that clickhouse extractKeyValuePairs function support specifying escape character
+#     using a non-alphabet symbol."""
+#
+#     with Given("I specify input, expected output and parameters"):
+#         input = define("input string, that contains `-`", f"'{ascii_alpha},-)'")
+#         output = define("expected output", "{" + f"'{ascii_alpha}':')'" + "}")
+#         params = define("function parameters with escape character as `-`", "'-'")
+#
+#     scenario(input=input, output=output, params=params)
+#
+#
+# @TestCheck
+# @Requirements(
+#     RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_ParametersSpecifying_EscapeCharacter(
+#         "1.0"
+#     )
+# )
+# def specifying_escape_character_alpha(self, scenario):
+#     """Check that clickhouse extractKeyValuePairs function support specifying escape character
+#     using an alphabet symbol."""
+#
+#     with Given("I specify input, expected output and parameters"):
+#         input = define(
+#             "input string, that contains `q`", f"'{ascii_alpha.replace('q', '')},q)'"
+#         )
+#         output = define(
+#             "expected output", "{" + f"'{ascii_alpha.replace('q', '')}':')'" + "}"
+#         )
+#         params = define("function parameters with escape character as `q`", "'q'")
+#
+#     scenario(input=input, output=output, params=params)
 
 
 @TestFeature
@@ -426,57 +425,56 @@ def specifying_escape_character_alpha(self, scenario):
 @Name("specifying special symbols")
 def custom_special_symbols_checks(self, scenario):
     """Check that clickhouse extractKeyValuePairs function support specifying following parameters:
-    `escape_character`, `key_value_pair_delimiter`, `item_delimiter`, `enclosing_character`,
-     `value_special_characters_allow_list`."""
+    ``key_value_pair_delimiter`, `pair_delimiters`, `quoting_character`, `escape_sequences_support`."""
 
-    specifying_value_special_characters_allow_list(scenario=scenario)
+    specifying_escape_sequences_support(scenario=scenario)
     specifying_enclosing_character_non_alpha(scenario=scenario)
     specifying_enclosing_character_alpha(scenario=scenario)
-    specifying_item_delimiter_non_alpha(scenario=scenario)
-    specifying_item_delimiter_alpha(scenario=scenario)
+    specifying_pair_delimiter_non_alpha(scenario=scenario)
+    specifying_pair_delimiter_alpha(scenario=scenario)
     specifying_key_value_pair_delimiter_non_alpha(scenario=scenario)
     specifying_key_value_pair_delimiter_alpha(scenario=scenario)
-    specifying_escape_character_non_alpha(scenario=scenario)
-    specifying_escape_character_alpha(scenario=scenario)
+    # specifying_escape_character_non_alpha(scenario=scenario)
+    # specifying_escape_character_alpha(scenario=scenario)
 
 
 @TestCheck
-@Name("special characters default values")
+@Name("escape sequences support")
 @Requirements(
-    RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Default_ValueSpecialCharactersAllowList(
+    RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Default_EscapeSequencesSupport(
         "1.0"
     )
 )
-def value_special_characters_allow_list_default_value(self, scenario):
-    """Check that default value for value_special_characters_allow_list is empty string."""
+def escape_sequences_support_default_value(self, scenario):
+    """Check that default value for escape_sequences_support is OFF."""
 
     with Given("I specify input, expected output and parameters"):
         input = define(
             "input string that contains all ascii symbols",
             f"'{ascii_alpha}:{parsed_noise}{ascii_num}'",
         )
-        output = define("expected output", "{" + f"'{ascii_alpha}':''" + "}")
+        output = define("expected output", "{" + f"'{ascii_alpha}':'{parsed_noise}{ascii_num}'" + "}")
         params = define("function parameters", "")
 
     scenario(input=input, output=output, params=params)
 
 
 @TestCheck
-@Name("enclosing character default value")
+@Name("quoting character default value")
 @Requirements(
-    RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Default_EnclosingCharacter("1.0")
+    RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Default_QuotingCharacter("1.0")
 )
-def enclosing_character_default_value(self, scenario):
-    """Check that default value for enclosing_character is not defined."""
+def quoting_character_default_value(self, scenario):
+    """Check that default value for quoting_character is `"`."""
 
     with Given("I specify input, expected output and parameters"):
         input = define(
             'input string that contains `"`',
-            f"'{ascii_alpha}:{parsed_noise_without_quotation_mark}{parsed_noise_without_quotation_mark}'",
+            f"'{ascii_alpha}:\"{parsed_noise}\"'",
         )
         output = define(
             "expected output",
-            "{" + f"'{ascii_alpha}':''" + "}",
+            "{" + f"'{ascii_alpha}':'{parsed_noise}'" + "}",
         )
         params = define("function parameters", "")
 
@@ -484,10 +482,10 @@ def enclosing_character_default_value(self, scenario):
 
 
 @TestCheck
-@Name("item delimiter default value")
-@Requirements(RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Default_ItemDelimiter("1.0"))
-def item_delimiter_default_value(self, scenario):
-    """Check that default value for item_delimiter is `:`."""
+@Name("pair delimiter default value")
+@Requirements(RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Default_PairDelimiters("1.0"))
+def pair_delimiter_default_value(self, scenario):
+    """Check that default value for pair_delimiter is `:`."""
 
     with Given("I specify input, expected output and parameters"):
         input = define(
@@ -507,54 +505,56 @@ def item_delimiter_default_value(self, scenario):
     RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Default_KeyValuePairDelimiter("1.0")
 )
 def key_value_pair_delimiter_default_value(self, scenario):
-    """Check that default value for key_value_pair_delimiter is `,`."""
+    """Check that default value for key_value_pair_delimiter is `,;`."""
 
     with Given("I specify input, expected output and parameters"):
         input = define(
             "input string that contains `,`",
-            f"'{ascii_alpha}:{ascii_alpha}, {ascii_alpha}{ascii_num}:{ascii_alpha}'",
+            f"'{ascii_alpha}:{ascii_alpha}, {ascii_alpha}{ascii_num}:{ascii_alpha};" +
+            f"{ascii_alpha}:{ascii_alpha} {ascii_alpha}:{ascii_alpha}'",
         )
         output = define(
             "expected output",
             "{"
-            + f"'{ascii_alpha}':'{ascii_alpha}','{ascii_alpha}{ascii_num}':'{ascii_alpha}'"
+            + f"'{ascii_alpha}':'{ascii_alpha}','{ascii_alpha}{ascii_num}':'{ascii_alpha}',"
+              f"'{ascii_alpha}':'{ascii_alpha}','{ascii_alpha}':'{ascii_alpha}'"
             + "}",
         )
         params = define("function parameters", "")
 
     scenario(input=input, output=output, params=params)
 
-
-@TestCheck
-@Name("escape character default value")
-@Requirements(RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Default_EscapeCharacter("1.0"))
-def escape_character_default_value(self, scenario):
-    """Check that default value for escape_character is `\\`."""
-
-    with Given("I specify input, expected output and parameters"):
-        input = define(
-            "input string that contains `\\`", f"'{ascii_alpha}\\::{ascii_alpha}'"
-        )
-        output = define(
-            "expected output", "{" + f"'{ascii_alpha}:':'{ascii_alpha}'" + "}"
-        )
-        params = define("function parameters", "")
-
-    scenario(input=input, output=output, params=params)
+#
+# @TestCheck
+# @Name("escape character default value")
+# @Requirements(RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Default_EscapeCharacter("1.0"))
+# def escape_character_default_value(self, scenario):
+#     """Check that default value for escape_character is `\\`."""
+#
+#     with Given("I specify input, expected output and parameters"):
+#         input = define(
+#             "input string that contains `\\`", f"'{ascii_alpha}\\::{ascii_alpha}'"
+#         )
+#         output = define(
+#             "expected output", "{" + f"'{ascii_alpha}:':'{ascii_alpha}'" + "}"
+#         )
+#         params = define("function parameters", "")
+#
+#     scenario(input=input, output=output, params=params)
 
 
 @TestFeature
 @Name("default parameters values")
 def default_parameters_values_checks(self, scenario):
     """Check that clickhouse extractKeyValuePairs default values for special symbols are
-    `\\` - for escape_character, `:` - for key_value_pair_delimiter, `,` for item_delimeter
-    `"` for enclosing_character, empty string for value_special_characters_allow_list."""
+    `:` - for key_value_pair_delimiter, `,;` for pair_delimeter
+    `"` for quoting_character, OFF for escape_sequences_support."""
 
-    value_special_characters_allow_list_default_value(scenario=scenario)
-    enclosing_character_default_value(scenario=scenario)
-    item_delimiter_default_value(scenario=scenario)
+    escape_sequences_support_default_value(scenario=scenario)
+    quoting_character_default_value(scenario=scenario)
+    pair_delimiter_default_value(scenario=scenario)
     key_value_pair_delimiter_default_value(scenario=scenario)
-    escape_character_default_value(scenario=scenario)
+    # escape_character_default_value(scenario=scenario)
 
 
 @TestCheck
@@ -568,7 +568,7 @@ def input_format(self, scenario):
             f"'{ascii_alpha}{ascii_num}{parsed_noise}'",
         )
         output = define("expected output", "{}")
-        params = define("function parameters", f"'\\\\\\\\', ':', ',', '\\\"'")
+        params = define("function parameters", f"':', ' ,', '\\\"'")
 
     scenario(input=input, output=output, params=params)
 
@@ -583,7 +583,7 @@ def input_format_checks(self, scenario):
 @TestCheck
 @Requirements(RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parsing_IdenticalKeys("1.0"))
 def same_key_with_different_values(self, scenario):
-    """Check that extractKeyValuePairs function returns the last key value pair
+    """Check that extractKeyValuePairs function returns every key value pair even
     if key for different pairs are the same."""
 
     with When("I specify input, expected output and parameters"):
@@ -591,8 +591,8 @@ def same_key_with_different_values(self, scenario):
             "input string key value pairs with the same key",
             f"'{ascii_alpha}:{ascii_alpha},{ascii_alpha}:{ascii_num}'",
         )
-        output = define("expected output", "{" + f"'{ascii_alpha}':'{ascii_num}'" + "}")
-        params = define("function parameters", f"'\\\\\\\\', ':', ',', '\\\"'")
+        output = define("expected output", "{" + f"'{ascii_alpha}':'{ascii_alpha}'," + f"'{ascii_alpha}':'{ascii_num}'"+"}")
+        params = define("function parameters", f"':', ' ,', '\\\"'")
 
     scenario(input=input, output=output, params=params)
 

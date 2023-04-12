@@ -26,24 +26,26 @@
     * 3.6.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Value.Format](#rqsrs-033clickhouseextractkeyvaluepairsvalueformat)
   * 3.7 [Parameters specifying](#parameters-specifying)
     * 3.7.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ParametersSpecifying](#rqsrs-033clickhouseextractkeyvaluepairsparametersspecifying)
-    * 3.7.2 [Escape Character](#escape-character)
-      * 3.7.2.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ParametersSpecifying.EscapeCharacter](#rqsrs-033clickhouseextractkeyvaluepairsparametersspecifyingescapecharacter)
-    * 3.7.3 [Key Value Delimiter](#key-value-delimiter)
-      * 3.7.3.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ParametersSpecifying.KeyValuePairDelimiter](#rqsrs-033clickhouseextractkeyvaluepairsparametersspecifyingkeyvaluepairdelimiter)
-    * 3.7.4 [Item Delimiter](#item-delimiter)
-      * 3.7.4.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ParametersSpecifying.ItemDelimiter](#rqsrs-033clickhouseextractkeyvaluepairsparametersspecifyingitemdelimiter)
-    * 3.7.5 [Enclosing Character](#enclosing-character)
-      * 3.7.5.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ParametersSpecifying.EnclosingCharacter](#rqsrs-033clickhouseextractkeyvaluepairsparametersspecifyingenclosingcharacter)
-    * 3.7.6 [Value Special Characters Allow List](#value-special-characters-allow-list)
-      * 3.7.6.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ParametersSpecifying.ValueSpecialCharactersAllowList](#rqsrs-033clickhouseextractkeyvaluepairsparametersspecifyingvaluespecialcharactersallowlist)
-    * 3.7.7 [Special Characters Conflict](#special-characters-conflict)
-      * 3.7.7.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ParametersSpecifying.SpecialCharactersConflict](#rqsrs-033clickhouseextractkeyvaluepairsparametersspecifyingspecialcharactersconflict)
+    * 3.7.2 [Key Value Pair Delimiter](#key-value-pair-delimiter)
+      * 3.7.2.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ParametersSpecifying.KeyValuePairDelimiter](#rqsrs-033clickhouseextractkeyvaluepairsparametersspecifyingkeyvaluepairdelimiter)
+      * 3.7.2.2 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ParametersSpecifying.KeyValuePairDelimiter.Format](#rqsrs-033clickhouseextractkeyvaluepairsparametersspecifyingkeyvaluepairdelimiterformat)
+    * 3.7.3 [Pair Delimiter](#pair-delimiter)
+      * 3.7.3.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ParametersSpecifying.PairDelimiter](#rqsrs-033clickhouseextractkeyvaluepairsparametersspecifyingpairdelimiter)
+      * 3.7.3.2 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ParametersSpecifying.PairDelimiter.Format](#rqsrs-033clickhouseextractkeyvaluepairsparametersspecifyingpairdelimiterformat)
+    * 3.7.4 [Quoting Character](#quoting-character)
+      * 3.7.4.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ParametersSpecifying.QuotingCharacter](#rqsrs-033clickhouseextractkeyvaluepairsparametersspecifyingquotingcharacter)
+      * 3.7.4.2 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ParametersSpecifying.QuotingCharacter.Format](#rqsrs-033clickhouseextractkeyvaluepairsparametersspecifyingquotingcharacterformat)
+    * 3.7.5 [Escape Sequences Support](#escape-sequences-support)
+      * 3.7.5.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ParametersSpecifying.EscapeSequencesSupport](#rqsrs-033clickhouseextractkeyvaluepairsparametersspecifyingescapesequencessupport)
+      * 3.7.5.2 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ParametersSpecifying.EscapeSequencesSupport.extractKeyValuePairsWithEscaping](#rqsrs-033clickhouseextractkeyvaluepairsparametersspecifyingescapesequencessupportextractkeyvaluepairswithescaping)
+      * 3.7.5.3 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ParametersSpecifying.EscapeSequencesSupport.Format](#rqsrs-033clickhouseextractkeyvaluepairsparametersspecifyingescapesequencessupportformat)
+    * 3.7.6 [Special Characters Conflict](#special-characters-conflict)
+      * 3.7.6.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ParametersSpecifying.SpecialCharactersConflict](#rqsrs-033clickhouseextractkeyvaluepairsparametersspecifyingspecialcharactersconflict)
   * 3.8 [Default Parameters Values](#default-parameters-values)
-    * 3.8.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.EscapeCharacter](#rqsrs-033clickhouseextractkeyvaluepairsdefaultescapecharacter)
-  * 3.9 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.KeyValuePairDelimiter](#rqsrs-033clickhouseextractkeyvaluepairsdefaultkeyvaluepairdelimiter)
-    * 3.9.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.ItemDelimiter](#rqsrs-033clickhouseextractkeyvaluepairsdefaultitemdelimiter)
-    * 3.9.2 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.EnclosingCharacter](#rqsrs-033clickhouseextractkeyvaluepairsdefaultenclosingcharacter)
-    * 3.9.3 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.ValueSpecialCharactersAllowList](#rqsrs-033clickhouseextractkeyvaluepairsdefaultvaluespecialcharactersallowlist)
+    * 3.8.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.KeyValuePairDelimiter](#rqsrs-033clickhouseextractkeyvaluepairsdefaultkeyvaluepairdelimiter)
+  * 3.9 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.PairDelimiters](#rqsrs-033clickhouseextractkeyvaluepairsdefaultpairdelimiters)
+    * 3.9.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.QuotingCharacter](#rqsrs-033clickhouseextractkeyvaluepairsdefaultquotingcharacter)
+    * 3.9.2 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.EscapeSequencesSupport](#rqsrs-033clickhouseextractkeyvaluepairsdefaultescapesequencessupport)
 
 ## Introduction
 
@@ -65,7 +67,7 @@ flowchart LR
         subgraph E1[input format]
             direction LR
             E11[Any string]
-            E12["extractKeyValuePairs(string[, escape_character[, key_value_pair_delimiter[, item_delimiter[, enclosing_character[, value_special_characters_allow_list]]]]])"]
+            E12["extractKeyValuePairs(string[, key_value_pair_delimiter[, pair_delimiters[, quoting_character[, escape_sequences_support]]]]])"]
         end
         subgraph E2[output format]
             direction LR 
@@ -76,26 +78,24 @@ flowchart LR
         direction TB
         subgraph Z1[Key]
             direction LR
-            Z11[must start with the symbol]
-            Z12[contain only letters, numbers, and underscores]
+            Z12[can't contain control symbols]
             Z13[can't be an empty string]
             Z14[it accepts anything if it is between the enclosing character]
         end
         subgraph Z2[Value]
             direction LR
-            Z21[can start with any non-space character]
+            Z21[can start with any non-space character or escape_sequences_support is ON]
             Z22[can be empty]
-            Z23[contain only letters, numbers, and underscores]
-            Z24[it accepts anything if it is between the enclosing character]
+            Z23[can't contain control symbols]
+            Z24[it accepts anything if it is between the enclosing character or escape_sequences_support is ON]
         end
     end
     subgraph Q[Сontrol сharacters]
         direction TB
-        Q1[item_delimiter, default ',']
-        Q2[key_value_delimiter, default ':']
-        Q3[escape_character, default '\']
-        Q4[enclosing_character, not specified by default]
-        Q5[value_special_characters_allow_list, default empty string]
+        Q1[key_value_pair_delimiter, default ':']
+        Q2[pair_delimiters, default ' ,;']
+        Q3[quoting_character, default '\"']
+        Q5[escape_sequences_support, default OFF]
     end
   end
 ```
@@ -111,7 +111,7 @@ version: 1.0
 
 
 ```sql
-extractKeyValuePairs(<column_name>|<constant>|<function_return_value>|<alias>[, escape_character[, key_value_pair_delimiter[, item_delimiter[, enclosing_character[, value_special_characters_allow_list]]]]])
+extractKeyValuePairs(<column_name>|<constant>|<function_return_value>|<alias>[, key_value_pair_delimiter[, pair_delimiters[, quoting_character[, escape_sequences_support]]]]])
 ```
 
 For example, 
@@ -200,7 +200,7 @@ if it satisfies the following conditions:
 * Key starts with the alphabet symbol.
 * Only alphabet symbols, numbers, and underscore are used in the key.
 * Key can't be an empty string.
-* If not supported symbols are escaped or a value is enclosed, the key can be any string. 
+* If escape_sequences_support is ON, key can contain any non-control symbols.
 
 ### Value
 
@@ -213,7 +213,8 @@ if it satisfies the following conditions:
 * Value starts with any non-space symbol.
 * Only symbols, numbers, and underscore are used in the value.
 * Value can be an empty string.
-* If not supported symbols are escaped or a value is enclosed, value can be any string. 
+* If a value is enclosed, value can contain any non-control symbols.
+* If escape_sequences_support is ON, value can contain any non-control symbols.
 
 ### Parameters specifying
 
@@ -221,18 +222,9 @@ if it satisfies the following conditions:
 version: 1.0
 
 [ClickHouse]'s [extractKeyValuePairs] function SHALL support specifying following parameters:
-`escape_character`, `key_value_pair_delimiter`, `item_delimiter`, `enclosing_character`,
-`value_special_characters_allow_list`.
+`key_value_pair_delimiter`, `pair_delimiters`, `quoting_character`, `escape_sequences_support`.
 
-#### Escape Character
-
-##### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ParametersSpecifying.EscapeCharacter
-version: 1.0
-
-[ClickHouse]'s [extractKeyValuePairs] function SHALL support specifying `escape_character`
-which SHALL escape symbols which allows you to use unsupported characters in a key or value.
-
-#### Key Value Delimiter
+#### Key Value Pair Delimiter
 
 ##### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ParametersSpecifying.KeyValuePairDelimiter
 version: 1.0
@@ -240,30 +232,68 @@ version: 1.0
 [ClickHouse]'s [extractKeyValuePairs] function SHALL support specifying `key_value_pair_delimiter`
 which SHALL divide key value pairs among themselves.
 
-#### Item Delimiter
-
-##### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ParametersSpecifying.ItemDelimiter
+##### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ParametersSpecifying.KeyValuePairDelimiter.Format
 version: 1.0
 
-[ClickHouse]'s [extractKeyValuePairs] function SHALL support specifying `item_delimiter`
+[ClickHouse]'s [extractKeyValuePairs] function SHALL return an error if `key_value_pair_delimiter` 
+parameter specified with non-string value or string value with more than one symbol.
+
+#### Pair Delimiter
+
+##### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ParametersSpecifying.PairDelimiter
+version: 1.0
+
+[ClickHouse]'s [extractKeyValuePairs] function SHALL support specifying `pair_delimiters`
 which SHALL divide key value pairs in input string.
 
-#### Enclosing Character
-
-##### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ParametersSpecifying.EnclosingCharacter
+##### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ParametersSpecifying.PairDelimiter.Format
 version: 1.0
 
-[ClickHouse]'s [extractKeyValuePairs] function SHALL support specifying `enclosing_character`
+[ClickHouse]'s [extractKeyValuePairs] function SHALL return an error if `pair_delimiters` 
+parameter specified with non-string value.
+
+#### Quoting Character
+
+##### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ParametersSpecifying.QuotingCharacter
+version: 1.0
+
+[ClickHouse]'s [extractKeyValuePairs] function SHALL support specifying `quoting_character`
 which SHALL enclose symbols which allows you to use unsupported characters in a key or value.
 
-#### Value Special Characters Allow List
+##### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ParametersSpecifying.QuotingCharacter.Format
+version: 1.0
 
-##### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ParametersSpecifying.ValueSpecialCharactersAllowList
+[ClickHouse]'s [extractKeyValuePairs] function SHALL return an error if `quoting_character` 
+parameter specified with non-string value or string value with more than one symbol.
+
+#### Escape Sequences Support
+
+##### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ParametersSpecifying.EscapeSequencesSupport
 version: 1.0
 
 [ClickHouse]'s [extractKeyValuePairs] function SHALL support specifying 
-`value_special_characters_allow_list` which SHALL specify symbols,
-that can be used in value without escaping or enclosing.
+`escape_sequences_support` which SHALL allow using non-control symbols in keys and values
+and allow specifying symbols in hexadecimal format.
+
+For example:
+
+`SELECT extractKeyValuePairs('a:\\x0A', ':', ',', '"', '1')`
+
+SHALL return
+
+`{'a':'\n'}`
+
+##### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ParametersSpecifying.EscapeSequencesSupport.extractKeyValuePairsWithEscaping
+version: 1.0
+
+[ClickHouse] SHALL support `extractKeyValuePairsWithEscaping` function that SHALL return the same result as 
+`extractKeyValuePairs` function with `escape_sequences_support` enabled.
+
+##### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.ParametersSpecifying.EscapeSequencesSupport.Format
+version: 1.0
+
+[ClickHouse]'s [extractKeyValuePairs] function SHALL return an error if `escape_sequences_support` 
+parameter specified with non-boolean value.
 
 #### Special Characters Conflict
 
@@ -271,44 +301,38 @@ that can be used in value without escaping or enclosing.
 version: 1.0
 
 [ClickHouse]'s [extractKeyValuePairs] function SHALL return an error if any of the following 
-parameters are specified with the same symbol: `escape_character`, `key_value_pair_delimiter`, 
-`item_delimiter`, `enclosing_character`, `value_special_characters_allow_list`.
+parameters are specified with the same symbol: `key_value_pair_delimiter`, `pair_delimiters`,
+`quoting_character`.
 
 For example:
 
-`SELECT extractKeyValuePairs('a=a', '=', '=', '=', '=')`
+`SELECT extractKeyValuePairs('a=a', '=', '=', '=')`
 
 ### Default Parameters Values
 
-#### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.EscapeCharacter
+#### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.KeyValuePairDelimiter
 version: 1.0
 
 By default, [ClickHouse]'s [extractKeyValuePairs] function SHALL 
-specify `escape_character` using \ .
+specify `key_value_pair_delimiter` using `':'`.
 
-### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.KeyValuePairDelimiter
+### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.PairDelimiters
 version: 1.0
 
 By default, [ClickHouse]'s [extractKeyValuePairs] function SHALL 
-specify `key_value_pair_delimiter` using `:`.
+specify `pair_delimiters` using `' ,;'`.
 
-#### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.ItemDelimiter
+#### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.QuotingCharacter
 version: 1.0
 
-By default, [ClickHouse]'s [extractKeyValuePairs] function SHALL 
-specify `item_delimiter` using `,`.
+By default, [ClickHouse]'s [extractKeyValuePairs] function SHALL
+specify `quoting_character` using `'"'`.
 
-#### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.EnclosingCharacter
+#### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.EscapeSequencesSupport
 version: 1.0
 
-By default, [ClickHouse]'s [extractKeyValuePairs] function SHALL not
-specify `enclosing_character`.
-
-#### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.ValueSpecialCharactersAllowList
-version: 1.0
-
-By default, [ClickHouse]'s [extractKeyValuePairs] function SHALL 
-specify `value_special_characters_allow_list` using empty string.
+By default, [ClickHouse]'s [extractKeyValuePairs] function SHALL
+specify `escape_sequences_support` using `OFF`.
 
 [String]: https://clickhouse.com/docs/en/sql-reference/data-types/string
 [FixedString]: https://clickhouse.com/docs/en/sql-reference/data-types/fixedstring

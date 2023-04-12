@@ -7,25 +7,24 @@ from key_value.requirements.requirements import *
 
 ascii_alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 ascii_num = "0123456789"
-ascii_punctuation_marks = "!\"#$%&'()*+,-./:;>=<?@[\\]^_`{|}~"
+ascii_punctuation_marks = "!#$%&()*+-./:>=<?@[]^_`{|}~"
 
-noise = ascii_punctuation_marks + ascii_num
+word = ascii_alpha+ascii_num+ascii_punctuation_marks
+
+noise = ''.join([f"\\x{hex(i)[2]}{hex(j)[2]}"for i in range(2) for j in range(1,16)])
 
 parsed_noise = (
-    ascii_punctuation_marks.replace("\\", "\\\\")
-    .replace('"', '\\"')
-    .replace("`", "\\`")
-    .replace("'", "\\'")
+    noise.replace("\\", "\\\\")
 )
 
-noise_without_quotation_mark = noise.replace('"', "")
-
-parsed_noise_without_quotation_mark = (
-    noise_without_quotation_mark.replace("\\", "\\\\")
-    .replace('"', '\\"')
-    .replace("`", "\\`")
-    .replace("'", "\\'")
-)
+out_noise = "\x01\x02\x03\x04\x05\x06\x07\\b\\t\\n\x0b\\f\\r\x0e\x0f\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f"
+# noise_without_quotation_mark = noise.replace('"', "")
+# parsed_noise_without_quotation_mark = (
+#     noise_without_quotation_mark.replace("\\", "\\\\")
+#     .replace('"', '\\"')
+#     .replace("`", "\\`")
+#     .replace("'", "\\'")
+# )
 
 
 @TestStep(Given)
@@ -60,12 +59,12 @@ def create_partitioned_table(
 
 
 @TestStep(When)
-def insert(self, table_name, x, y, node=None, use_file=True):
+def insert(self, table_name, x, node=None, use_file=True):
     """Insert data into the table"""
     if node is None:
         node = self.context.node
 
-    node.query(f"INSERT INTO {table_name} VALUES ({x}, '{y}')", use_file=use_file)
+    node.query(f"INSERT INTO {table_name} VALUES ({x})", use_file=use_file)
 
 
 @TestStep(When)
@@ -97,6 +96,7 @@ def check_constant_input(self, input, output=None, params="", exitcode=0, node=N
                 f"SELECT extractKeyValuePairs({input}{params})",
                 use_file=True,
                 exitcode=exitcode,
+                ignore_exception=True,
             )
         else:
             r = node.query(
