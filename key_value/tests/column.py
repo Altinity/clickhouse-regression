@@ -22,7 +22,9 @@ def column_input(self, input, output, params, node=None):
         expected_output = output.replace("\\", "\\\\").replace("'", "\\'")
 
     with Then("I check extractKeyValuePairs function returns correct value"):
-        r = node.query(f"""select toString(extractKeyValuePairs(x{params})) from {table_name}""")
+        r = node.query(
+            f"""select toString(extractKeyValuePairs(x{params})) from {table_name}"""
+        )
         assert r.output == expected_output, error()
 
 
