@@ -71,13 +71,11 @@ def properly_defined_key(self, scenario):
     with Given("I specify input, expected output and parameters"):
         input = define(
             "input string, that contains properly defined key",
-            f'\'"{ascii_alpha}{ascii_num}\\n":{ascii_num}\''
+            f"'\"{ascii_alpha}{ascii_num}\\n\":{ascii_num}'",
         )
         output = define(
             "expected output",
-            "{"
-            + f"'{ascii_alpha}{ascii_num}\\n':'{ascii_num}'"
-            + "}",
+            "{" + f"'{ascii_alpha}{ascii_num}\\n':'{ascii_num}'" + "}",
         )
         params = define("function parameters", f"':', ' ,', '\\\"'")
 
@@ -108,7 +106,10 @@ def key_symbols(self, scenario):
             "input string with key, that contains control symbols",
             f"'{ascii_alpha}{noise}{ascii_alpha}:{ascii_num}'",
         )
-        output = define("expected output", "{" + f"'{ascii_alpha}{out_noise}{ascii_alpha}':'{ascii_num}'" + "}")
+        output = define(
+            "expected output",
+            "{" + f"'{ascii_alpha}{out_noise}{ascii_alpha}':'{ascii_num}'" + "}",
+        )
         params = define("function parameters", f"':', ' ,', '\\\"'")
 
     scenario(input=input, output=output, params=params)
@@ -145,13 +146,12 @@ def properly_defined_value(self, scenario):
     with Given("I specify input, expected output and parameters"):
         input = define(
             "input string, that contains properly defined value",
-            f'\'{ascii_alpha}{ascii_num}:"{ascii_num}{parsed_noise}",' +
-            f"{ascii_alpha}:{ascii_num}'",
+            f'\'{ascii_alpha}{ascii_num}:"{ascii_num}{parsed_noise}",'
+            + f"{ascii_alpha}:{ascii_num}'",
         )
         output = define(
             "expected output",
-            "{"
-            + f"'{ascii_alpha}{ascii_num}':'{ascii_num}{parsed_noise}',"
+            "{" + f"'{ascii_alpha}{ascii_num}':'{ascii_num}{parsed_noise}',"
             f"'{ascii_alpha}':'{ascii_num}'" + "}",
         )
         params = define("function parameters", f"':', ' ,', '\\\"'")
@@ -168,7 +168,10 @@ def value_symbols(self, scenario):
             "input string with value that contains punctuation marks",
             f"'{ascii_alpha}:{ascii_num}{parsed_noise}{ascii_alpha}'",
         )
-        output = define("expected output", "{" + f"'{ascii_alpha}':'{ascii_num}{parsed_noise}{ascii_alpha}'" + "}")
+        output = define(
+            "expected output",
+            "{" + f"'{ascii_alpha}':'{ascii_num}{parsed_noise}{ascii_alpha}'" + "}",
+        )
         params = define("function parameters", f"':', ' ,', '\\\"'")
 
     scenario(input=input, output=output, params=params)
@@ -212,7 +215,8 @@ def specifying_escape_sequences_support(self, scenario):
             f"'{ascii_alpha}:{ascii_alpha}{noise}\\x0A'",
         )
         output = define(
-            "expected output", "{" + f"'{ascii_alpha}':'{ascii_alpha}{out_noise}\\n'" + "}"
+            "expected output",
+            "{" + f"'{ascii_alpha}':'{ascii_alpha}{out_noise}\\n'" + "}",
         )
         params = define("function parameters", "':', ' ,', '\\\"', 1")
 
@@ -265,9 +269,7 @@ def specifying_enclosing_character_alpha(self, scenario):
         )
         output = define(
             "expected output",
-            "{"
-            + f"'{ascii_alpha.replace('q', '')}':'{parsed_noise}:,'"
-            + "}",
+            "{" + f"'{ascii_alpha.replace('q', '')}':'{parsed_noise}:,'" + "}",
         )
         params = define(
             "function parameters with enclosing character as `q`",
@@ -296,9 +298,7 @@ def specifying_pair_delimiter_non_alpha(self, scenario):
             + f"'{ascii_alpha}':'{ascii_alpha}','{ascii_alpha}{ascii_num}':'{ascii_alpha}'"
             + "}",
         )
-        params = define(
-            "function parameters with item delimiter as `-`", "':', '-'"
-        )
+        params = define("function parameters with item delimiter as `-`", "':', '-'")
 
     scenario(input=input, output=output, params=params)
 
@@ -323,9 +323,7 @@ def specifying_pair_delimiter_alpha(self, scenario):
             f"'{ascii_num}','{ascii_alpha.replace('q', '')}{ascii_num}':'{ascii_num}'"
             + "}",
         )
-        params = define(
-            "function parameters with item delimiter as `q`", "':', 'q'"
-        )
+        params = define("function parameters with item delimiter as `q`", "':', 'q'")
 
     scenario(input=input, output=output, params=params)
 
@@ -441,9 +439,7 @@ def custom_special_symbols_checks(self, scenario):
 @TestCheck
 @Name("escape sequences support")
 @Requirements(
-    RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Default_EscapeSequencesSupport(
-        "1.0"
-    )
+    RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Default_EscapeSequencesSupport("1.0")
 )
 def escape_sequences_support_default_value(self, scenario):
     """Check that default value for escape_sequences_support is OFF."""
@@ -453,7 +449,10 @@ def escape_sequences_support_default_value(self, scenario):
             "input string that contains all ascii symbols",
             f"'{ascii_alpha}:{parsed_noise}{ascii_num}'",
         )
-        output = define("expected output", "{" + f"'{ascii_alpha}':'{parsed_noise}{ascii_num}'" + "}")
+        output = define(
+            "expected output",
+            "{" + f"'{ascii_alpha}':'{parsed_noise}{ascii_num}'" + "}",
+        )
         params = define("function parameters", "")
 
     scenario(input=input, output=output, params=params)
@@ -510,19 +509,19 @@ def key_value_pair_delimiter_default_value(self, scenario):
     with Given("I specify input, expected output and parameters"):
         input = define(
             "input string that contains `,`",
-            f"'{ascii_alpha}:{ascii_alpha}, {ascii_alpha}{ascii_num}:{ascii_alpha};" +
-            f"{ascii_alpha}:{ascii_alpha} {ascii_alpha}:{ascii_alpha}'",
+            f"'{ascii_alpha}:{ascii_alpha}, {ascii_alpha}{ascii_num}:{ascii_alpha};"
+            + f"{ascii_alpha}:{ascii_alpha} {ascii_alpha}:{ascii_alpha}'",
         )
         output = define(
             "expected output",
             "{"
             + f"'{ascii_alpha}':'{ascii_alpha}','{ascii_alpha}{ascii_num}':'{ascii_alpha}',"
-              f"'{ascii_alpha}':'{ascii_alpha}','{ascii_alpha}':'{ascii_alpha}'"
-            + "}",
+            f"'{ascii_alpha}':'{ascii_alpha}','{ascii_alpha}':'{ascii_alpha}'" + "}",
         )
         params = define("function parameters", "")
 
     scenario(input=input, output=output, params=params)
+
 
 #
 # @TestCheck
@@ -591,7 +590,13 @@ def same_key_with_different_values(self, scenario):
             "input string key value pairs with the same key",
             f"'{ascii_alpha}:{ascii_alpha},{ascii_alpha}:{ascii_num}'",
         )
-        output = define("expected output", "{" + f"'{ascii_alpha}':'{ascii_alpha}'," + f"'{ascii_alpha}':'{ascii_num}'"+"}")
+        output = define(
+            "expected output",
+            "{"
+            + f"'{ascii_alpha}':'{ascii_alpha}',"
+            + f"'{ascii_alpha}':'{ascii_num}'"
+            + "}",
+        )
         params = define("function parameters", f"':', ' ,', '\\\"'")
 
     scenario(input=input, output=output, params=params)

@@ -19,9 +19,7 @@ def special_symbols_conflict(self, node=None, i=0, j=0):
 
     with Then("I check extractKeyValuePairs function returns an error."):
         for i, input_string in enumerate(input_strings):
-            check_constant_input(
-                input=input_string, exitcode=36
-            )
+            check_constant_input(input=input_string, exitcode=36)
 
 
 @TestModule
@@ -33,14 +31,14 @@ def special_symbols_conflict(self, node=None, i=0, j=0):
 @Name("special symbols conflict")
 def feature(self, node="clickhouse1"):
     """Check that clickhouse extractKeyValuePairs function returns an error any of the:
-     `key_value_pair_delimiter`, `pair_delimeter`, `quoting_character` specified with the same symbol."""
+    `key_value_pair_delimiter`, `pair_delimeter`, `quoting_character` specified with the same symbol."""
 
     self.context.node = self.context.cluster.node(node)
 
     parameter_names = [
         "key_value_pair_delimiter",
         "pair_delimiters",
-        "quoting_character"
+        "quoting_character",
     ]
 
     for i in range(3):
