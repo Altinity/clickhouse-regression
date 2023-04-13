@@ -28,8 +28,11 @@ def add_certificate_to_zookeeper_truststore(
         f"-file {certificate} "
         f"-keystore {keystore} "
         f"-storepass {storepass} "
-        f"-storetype {storetype} -noprompt"
+        "-noprompt"
     )
+
+    if storetype is not None:
+        command += f" -storetype {storetype}"
 
     if keypass is not None:
         command += f" -keypass {keypass}"
@@ -71,8 +74,11 @@ def delete_certificate_from_zookeeper_truststore(
         f"keytool -delete -alias {alias} "
         f"-keystore {keystore} "
         f"-storepass {storepass} "
-        f"-storetype {storetype} -noprompt"
+        f"-noprompt"
     )
+
+    if storetype is not None:
+        command += f" -storetype {storetype}"
 
     if keypass is not None:
         command += f" -keypass {keypass}"
@@ -158,12 +164,10 @@ def list_zookeeper_truststore(
     if node is None:
         node = self.context.zookeeper_node
 
-    command = (
-        f"keytool -list "
-        f"-keystore {keystore} "
-        f"-storepass {storepass} "
-        f"-storetype {storetype}"
-    )
+    command = f"keytool -list " f"-keystore {keystore} " f"-storepass {storepass} "
+
+    if storetype is not None:
+        command += f" -storetype {storetype}"
 
     if storeprovidername is not None:
         command += f" -providername {storeprovidername}"
@@ -192,7 +196,7 @@ def create_zookeeper_crt_and_key(
     keyalg="RSA",
     keysize=2048,
     storepass="keystore",
-    storetype="JKS",
+    storetype=None,
     keypass=None,
     signed=True,
     validate=True,
@@ -211,11 +215,13 @@ def create_zookeeper_crt_and_key(
             f"keytool -genkeypair -alias {name} "
             f"-keyalg {keyalg} "
             f"-keystore {keystore} "
-            f"-storetype {storetype} "
             f"-keysize {keysize} "
             f'-dname "CN=$(hostname -f),OU=QA,O=Altintiy,L=Ottawa,ST=ON,C=CA" '
             f"-storepass {storepass} "
         )
+
+        if storetype is not None:
+            command += f" -storetype {storetype} "
 
         if keypass is not None:
             command += f" -keypass {keypass}"
@@ -241,8 +247,11 @@ def create_zookeeper_crt_and_key(
             command = (
                 f"keytool -certreq -alias {name} "
                 f"-keystore {keystore} "
-                f"-file {csr} -storepass {storepass} -storetype {storetype}"
+                f"-file {csr} -storepass {storepass}"
             )
+
+            if storetype is not None:
+                command += f" -storetype {storetype}"
 
             if keypass is not None:
                 command += f" -keypass {keypass}"
@@ -287,19 +296,6 @@ def create_zookeeper_crt_and_key(
             add_certificate_to_zookeeper_truststore(
                 alias="ca",
                 certificate=self.context.zookeeper_node_ca_crt,
-                keystore=keystore,
-                keypass=keypass,
-                storepass=storepass,
-                storetype=storetype,
-                storeoptions=storeoptions,
-                storeprovidername=storeprovidername,
-                storeproviderclass=storeproviderclass,
-                storeproviderpath=storeproviderpath,
-            )
-
-        with And("deleting old self-signed server certificate"):
-            delete_certificate_from_zookeeper_truststore(
-                alias=name,
                 keystore=keystore,
                 keypass=keypass,
                 storepass=storepass,
