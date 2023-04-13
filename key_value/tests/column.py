@@ -15,18 +15,15 @@ def column_input(self, input, output, params, node=None):
         params = ", " + params
 
     with Given("I have a table"):
-        create_partitioned_table(table_name=table_name, extra_table_col=",y String")
+        create_partitioned_table(table_name=table_name, extra_table_col="")
 
     with When("I insert values into the table"):
-        insert(table_name=table_name, x=input, y=output.replace("'", "\\'"))
+        insert(table_name=table_name, x=input)
+        expected_output = output.replace("\\", "\\\\").replace("'", "\\'")
 
     with Then("I check extractKeyValuePairs function returns correct value"):
-
-        r = node.query(
-            f"""select toString(extractKeyValuePairs(x{params})) == y from {table_name}""",
-            use_file=True,
-        )
-        assert r.output == "1", error()
+        r = node.query(f"""select toString(extractKeyValuePairs(x{params})) from {table_name}""")
+        assert r.output == expected_output, error()
 
 
 @TestFeature
