@@ -12,6 +12,8 @@ services:
       ZOO_MY_ID: 1
       ZOO_SERVERS: " "
       ZOO_CFG_EXTRA: "clientPort=2181"
+      ZOOKEEPER_HOME: "/apache-zookeeper-3.7.1-bin"
+      SERVER_JVMFLAGS: "-Dfips.enabled=true -Dorg.bouncycastle.fips.approved_only=true -Djava.security.properties=/conf/fips.java.security"
     command: bash -c "tail -f /dev/null"
     healthcheck:
       test: echo 1

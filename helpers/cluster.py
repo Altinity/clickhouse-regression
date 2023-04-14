@@ -176,13 +176,17 @@ class Node(object):
 class ZooKeeperNode(Node):
     """Node with ZooKeeper server."""
 
+    SERVER_ENV = ""
+
     def wait_zookeeper_healthy(self, timeout=300):
         with By(f"waiting until ZooKeeper server on {self.name} is healthy"):
             for attempt in retries(timeout=timeout, delay=1):
                 with attempt:
                     if (
                         self.command(
-                            "zkServer.sh status", no_checks=1, steps=False
+                            f"{self.SERVER_ENV}zkServer.sh status",
+                            no_checks=1,
+                            steps=False,
                         ).exitcode
                         != 0
                     ):
@@ -198,19 +202,21 @@ class ZooKeeperNode(Node):
         """Stop ZooKeeper server."""
 
         with By(f"stopping {self.name}"):
-            self.command(f"zkServer.sh stop", exitcode=0, steps=False)
+            self.command(f"{self.SERVER_ENV}zkServer.sh stop", exitcode=0, steps=False)
 
     def start_zookeeper(self, timeout=300):
         """Start ZooKeeper server."""
 
         with By(f"starting {self.name}"):
-            self.command(f"zkServer.sh start", exitcode=0, steps=False)
+            self.command(f"{self.SERVER_ENV}zkServer.sh start", exitcode=0, steps=False)
 
     def restart_zookeeper(self, timeout=300):
         """Restart ZooKeeper server."""
 
         with By(f"restarting {self.name}"):
-            self.command(f"zkServer.sh restart", exitcode=0, steps=False)
+            self.command(
+                f"{self.SERVER_ENV}zkServer.sh restart", exitcode=0, steps=False
+            )
 
     def stop(self, timeout=300, retry_count=5):
         """Stop node."""

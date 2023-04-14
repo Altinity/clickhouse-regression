@@ -10,21 +10,46 @@ def add_certificate_to_zookeeper_truststore(
     alias,
     certificate,
     keystore="/truststore.jks",
+    keypass=None,
     storepass="truststore",
+    storetype="JKS",
+    storeoptions="",
+    storeprovidername=None,
+    storeproviderclass=None,
+    storeproviderpath=None,
     node=None,
 ):
     """Add certificate to ZooKeeper's truststore."""
     if node is None:
         node = self.context.zookeeper_node
 
-    node.command(
+    command = (
         f"keytool -importcert -alias {alias} "
         f"-file {certificate} "
         f"-keystore {keystore} "
         f"-storepass {storepass} "
-        f"-storetype JKS -noprompt",
-        exitcode=0,
+        "-noprompt"
     )
+
+    if storetype is not None:
+        command += f" -storetype {storetype}"
+
+    if keypass is not None:
+        command += f" -keypass {keypass}"
+
+    if storeprovidername is not None:
+        command += f" -providername {storeprovidername}"
+
+    if storeproviderclass is not None:
+        command += f" -providerclass {storeproviderclass}"
+
+    if storeproviderpath is not None:
+        command += f" -providerpath {storeproviderpath}"
+
+    if storeoptions is not None:
+        command += f" {storeoptions}"
+
+    node.command(command, exitcode=0)
 
 
 @TestStep(Given)
@@ -32,18 +57,132 @@ def delete_certificate_from_zookeeper_truststore(
     self,
     alias,
     keystore="/truststore.jks",
+    keypass=None,
     storepass="truststore",
+    storetype="JKS",
+    storeoptions=None,
+    storeprovidername=None,
+    storeproviderclass=None,
+    storeproviderpath=None,
     node=None,
 ):
     """Delete certificate from ZooKeeper's truststore."""
     if node is None:
         node = self.context.zookeeper_node
 
-    node.command(
+    command = (
         f"keytool -delete -alias {alias} "
         f"-keystore {keystore} "
         f"-storepass {storepass} "
-        f"-storetype JKS -noprompt",
+        f"-noprompt"
+    )
+
+    if storetype is not None:
+        command += f" -storetype {storetype}"
+
+    if keypass is not None:
+        command += f" -keypass {keypass}"
+
+    if storeprovidername is not None:
+        command += f" -providername {storeprovidername}"
+
+    if storeproviderclass is not None:
+        command += f" -providerclass {storeproviderclass}"
+
+    if storeproviderpath is not None:
+        command += f" -providerpath {storeproviderpath}"
+
+    if storeoptions is not None:
+        command += f" {storeoptions}"
+
+    node.command(
+        command,
+        exitcode=0,
+    )
+
+
+@TestStep(Given)
+def convert_zookeeper_truststore(
+    self,
+    srckeystore,
+    srcstorepass,
+    srcstoretype,
+    destkeystore,
+    deststoretype,
+    deststorepass,
+    storeoptions=None,
+    storeprovidername=None,
+    storeproviderclass=None,
+    storeproviderpath=None,
+    node=None,
+):
+    """Convert ZooKeeper's truststore from one store type to another."""
+    if node is None:
+        node = self.context.zookeeper_node
+
+    command = (
+        f"keytool -importkeystore -v "
+        f"-srckeystore {srckeystore} "
+        f"-srcstorepass {srcstorepass} "
+        f"-srcstoretype {srcstoretype} "
+        f"-destkeystore {destkeystore} "
+        f"-deststoretype {deststoretype} "
+        f"-deststorepass {deststorepass}"
+    )
+
+    if storeprovidername is not None:
+        command += f" -providername {storeprovidername}"
+
+    if storeproviderclass is not None:
+        command += f" -providerclass {storeproviderclass}"
+
+    if storeproviderpath is not None:
+        command += f" -providerpath {storeproviderpath}"
+
+    if storeoptions is not None:
+        command += f" {storeoptions}"
+
+    node.command(
+        command,
+        exitcode=0,
+    )
+
+
+@TestStep(Given)
+def list_zookeeper_truststore(
+    self,
+    keystore="/truststore.jks",
+    storepass="truststore",
+    storetype="JKS",
+    storeoptions=None,
+    storeprovidername=None,
+    storeproviderclass=None,
+    storeproviderpath=None,
+    node=None,
+):
+    """Delete certificate from ZooKeeper's truststore."""
+    if node is None:
+        node = self.context.zookeeper_node
+
+    command = f"keytool -list " f"-keystore {keystore} " f"-storepass {storepass} "
+
+    if storetype is not None:
+        command += f" -storetype {storetype}"
+
+    if storeprovidername is not None:
+        command += f" -providername {storeprovidername}"
+
+    if storeproviderclass is not None:
+        command += f" -providerclass {storeproviderclass}"
+
+    if storeproviderpath is not None:
+        command += f" -providerpath {storeproviderpath}"
+
+    if storeoptions is not None:
+        command += f" {storeoptions}"
+
+    node.command(
+        command,
         exitcode=0,
     )
 
@@ -57,10 +196,15 @@ def create_zookeeper_crt_and_key(
     keyalg="RSA",
     keysize=2048,
     storepass="keystore",
+    storetype=None,
     keypass=None,
     signed=True,
     validate=True,
     validate_option="-x509_strict",
+    storeoptions="",
+    storeprovidername=None,
+    storeproviderclass=None,
+    storeproviderpath=None,
 ):
     """Create zookeeper certificate and key. Key is stored in the keystore."""
     if node is None:
@@ -72,12 +216,27 @@ def create_zookeeper_crt_and_key(
             f"-keyalg {keyalg} "
             f"-keystore {keystore} "
             f"-keysize {keysize} "
-            f'-dname "CN=$(hostname -f),OU=Dept,O=Example.com,L=City,ST=State,C=US" '
-            f"-storepass {storepass}"
+            f'-dname "CN=$(hostname -f),OU=QA,O=Altintiy,L=Ottawa,ST=ON,C=CA" '
+            f"-storepass {storepass} "
         )
+
+        if storetype is not None:
+            command += f" -storetype {storetype} "
 
         if keypass is not None:
             command += f" -keypass {keypass}"
+
+        if storeprovidername is not None:
+            command += f" -providername {storeprovidername}"
+
+        if storeproviderclass is not None:
+            command += f" -providerclass {storeproviderclass}"
+
+        if storeproviderpath is not None:
+            command += f" -providerpath {storeproviderpath}"
+
+        if storeoptions is not None:
+            command += f" {storeoptions}"
 
         node.command(command, exitcode=0)
 
@@ -91,8 +250,23 @@ def create_zookeeper_crt_and_key(
                 f"-file {csr} -storepass {storepass}"
             )
 
+            if storetype is not None:
+                command += f" -storetype {storetype}"
+
             if keypass is not None:
                 command += f" -keypass {keypass}"
+
+            if storeprovidername is not None:
+                command += f" -providername {storeprovidername}"
+
+            if storeproviderclass is not None:
+                command += f" -providerclass {storeproviderclass}"
+
+            if storeproviderpath is not None:
+                command += f" -providerpath {storeproviderpath}"
+
+            if storeoptions is not None:
+                command += f" {storeoptions}"
 
             node.command(command, exitcode=0)
 
@@ -123,12 +297,27 @@ def create_zookeeper_crt_and_key(
                 alias="ca",
                 certificate=self.context.zookeeper_node_ca_crt,
                 keystore=keystore,
+                keypass=keypass,
                 storepass=storepass,
+                storetype=storetype,
+                storeoptions=storeoptions,
+                storeprovidername=storeprovidername,
+                storeproviderclass=storeproviderclass,
+                storeproviderpath=storeproviderpath,
             )
 
         with And("adding signed certificate to keystore"):
             add_certificate_to_zookeeper_truststore(
-                alias="server", certificate=crt, keystore=keystore, storepass=storepass
+                alias=name,
+                certificate=crt,
+                keystore=keystore,
+                keypass=keypass,
+                storepass=storepass,
+                storetype=storetype,
+                storeoptions=storeoptions,
+                storeprovidername=storeprovidername,
+                storeproviderclass=storeproviderclass,
+                storeproviderpath=storeproviderpath,
             )
 
 
