@@ -202,7 +202,6 @@ jobs:
       STORAGE: /minio
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
       version: ${{ matrix.version }}
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'benchmark' }}
     steps:
       - uses: actions/checkout@v3
 
@@ -244,7 +243,6 @@ jobs:
       STORAGE: /aws
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
       version: ${{ matrix.version }}
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'benchmark' }}
     steps:
       - uses: actions/checkout@v3
 
@@ -290,7 +288,6 @@ jobs:
       STORAGE: /gcs
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
       version: ${{ matrix.version }}
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'benchmark' }}
     steps:
       - uses: actions/checkout@v3
 
