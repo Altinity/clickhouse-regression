@@ -3,8 +3,9 @@ from key_value.tests.steps import *
 
 @TestScenario
 def special_symbols_conflict(self, node=None, i=0, j=0):
-    """Check that clickhouse extractKeyValuePairs function returns an error for any of the:
-    `key_value_pair_delimiter`, `pair_delimiter`, `quoting_character` are specified with the same symbol."""
+    """Check that ClickHouse's extractKeyValuePairs function returns an error if
+    either `key_value_pair_delimiter`, `pair_delimiter`, or `quoting_character`
+    parameters use the same symbol."""
 
     if node is None:
         node = self.context.node
