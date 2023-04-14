@@ -65,6 +65,7 @@ def regression(
         Feature(run=load("key_value.tests.special_symbols_conflict", "feature"))
         Feature(run=load("key_value.tests.supported_data_types", "feature"))
         Feature(run=load("key_value.tests.unsupported_data_types", "feature"))
+        Feature(run=load("key_value.tests.parameters_format", "feature"))
 
 
 if main():
