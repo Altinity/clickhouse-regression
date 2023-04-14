@@ -83,9 +83,10 @@ def optimize_table(self, table_name, final=True, node=None):
 
 
 @TestStep(Then)
-def check_constant_input(self, input, output=None, params="", exitcode=0, node=None):
+def check_constant_input(self, input, output=None, params="", function=None, exitcode=0, node=None):
     """Check that clickhouse parseKeyValue function support constant input."""
-
+    if function is None:
+        function = "extractKeyValuePairs"
     if node is None:
         node = self.context.node
     if params != "":
@@ -93,13 +94,13 @@ def check_constant_input(self, input, output=None, params="", exitcode=0, node=N
     with Then("I check parseKeyValue function returns correct value"):
         if exitcode != 0:
             node.query(
-                f"SELECT extractKeyValuePairs({input}{params})",
+                f"SELECT {function}({input}{params})",
                 use_file=True,
                 exitcode=exitcode,
                 ignore_exception=True,
             )
         else:
             r = node.query(
-                f"SELECT extractKeyValuePairs({input}{params})", use_file=True
+                f"SELECT {function}({input}{params})", use_file=True
             )
             assert r.output == output, error()
