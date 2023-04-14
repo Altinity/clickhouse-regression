@@ -37,14 +37,20 @@ def map_column_input(self, input, output, params, node=None, function=None):
         params = ", " + params
 
     with Given("I have a table"):
-        create_partitioned_table(table_name=table_name, extra_table_col="", column_type="map(String, String)")
+        create_partitioned_table(
+            table_name=table_name, extra_table_col="", column_type="Map(String, String)"
+        )
 
     with When("I insert values into the table"):
         insert(table_name=table_name, x=f"map({input}, {input})")
         expected_output = output.replace("\\", "\\\\").replace("'", "\\'")
 
     with Then("I check extractKeyValuePairs function returns correct value"):
-        r = node.query(f"""select toString({function}(x['{input}']{params})) from {table_name}""")
+        r = node.query(f"""select x[{input}] from {table_name}""", use_file=True)
+        r = node.query(
+            f"""select toString({function}(x[{input}]{params})) from {table_name}""",
+            use_file=True,
+        )
         assert r.output == expected_output, error()
 
 

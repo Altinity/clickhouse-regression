@@ -4,7 +4,7 @@ from key_value.tests.steps import *
 @TestScenario
 def special_symbols_conflict(self, node=None, i=0, j=0):
     """Check that clickhouse extractKeyValuePairs function returns an error for any of the:
-    `key_value_pair_delimiter`, `pair_delimeter`, `quoting_character` specified with the same symbol."""
+    `key_value_pair_delimiter`, `pair_delimiter`, `quoting_character` are specified with the same symbol."""
 
     if node is None:
         node = self.context.node
@@ -18,28 +18,26 @@ def special_symbols_conflict(self, node=None, i=0, j=0):
 
     with Then("I check extractKeyValuePairs function returns an error."):
         for i, input_string in enumerate(input_strings):
-            check_constant_input(
-                input=input_string, exitcode=36
-            )
+            check_constant_input(input=input_string, exitcode=36)
 
 
 @TestModule
 @Requirements(
-    RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_ParametersSpecifying_SpecialCharactersConflict(
+    RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parameters_SpecialCharactersConflict(
         "1.0"
     )
 )
 @Name("special symbols conflict")
 def feature(self, node="clickhouse1"):
-    """Check that clickhouse extractKeyValuePairs function returns an error any of the following parameters:
-     `key_value_pair_delimiter`, `pair_delimeter`, `quoting_character` when it use the same symbol.""" # todo gramarly
+    """Check that clickhouse extractKeyValuePairs function returns an error if any of the following parameters:
+    `key_value_pair_delimiter`, `pair_delimiter`, `quoting_character` when it use the same symbol."""  # todo gramarly
 
     self.context.node = self.context.cluster.node(node)
 
     parameter_names = [
         "key_value_pair_delimiter",
         "pair_delimiters",
-        "quoting_character"
+        "quoting_character",
     ]
 
     for i in range(3):

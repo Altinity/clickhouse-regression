@@ -16,9 +16,7 @@ def array_input(self, input, output, params, node=None, function=None):
         params = ", " + params
 
     with Then("I check parseKeyValue function returns correct value"):
-        r = node.query(
-            f"SELECT {function}([{input}][1]{params})", use_file=True
-        )
+        r = node.query(f"SELECT {function}([{input}][1]{params})", use_file=True)
         assert r.output == output, error()
 
 
@@ -37,14 +35,19 @@ def array_column_input(self, input, output, params, node=None, function=None):
         params = ", " + params
 
     with Given("I have a table"):
-        create_partitioned_table(table_name=table_name, extra_table_col="", column_type="Array(String)")
+        create_partitioned_table(
+            table_name=table_name, extra_table_col="", column_type="Array(String)"
+        )
 
     with When("I insert values into the table"):
         insert(table_name=table_name, x=f"[{input}]")
         expected_output = output.replace("\\", "\\\\").replace("'", "\\'")
 
     with Then("I check extractKeyValuePairs function returns correct value"):
-        r = node.query(f"""select toString({function}(x[0]{params})) from {table_name}""")
+        r = node.query(
+            f"""select toString({function}(x[1]{params})) from {table_name}""",
+            use_file=True,
+        )
         assert r.output == expected_output, error()
 
 

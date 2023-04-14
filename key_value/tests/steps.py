@@ -81,7 +81,16 @@ def optimize_table(self, table_name, final=True, node=None):
 
 
 @TestStep(Then)
-def check_constant_input(self, input, output=None, params="", function=None, exitcode=0, node=None):
+def check_constant_input(
+    self,
+    input,
+    output=None,
+    params="",
+    function=None,
+    exitcode=0,
+    node=None,
+    alias=False,
+):
     """Check that clickhouse parseKeyValue function support constant input."""
     if function is None:
         function = "extractKeyValuePairs"
@@ -89,16 +98,27 @@ def check_constant_input(self, input, output=None, params="", function=None, exi
         node = self.context.node
     if params != "":
         params = ", " + params
-    with Then("I check parseKeyValue function returns correct value"):
-        if exitcode != 0:
-            node.query(
-                f"SELECT {function}({input}{params})",
-                use_file=True,
-                exitcode=exitcode,
-                ignore_exception=True,
-            )
-        else:
-            r = node.query(
-                f"SELECT {function}({input}{params})", use_file=True
-            )
-            assert r.output == output, error()
+    if alias:
+        with Then("I check parseKeyValue function returns correct value"):
+            if exitcode != 0:
+                node.query(
+                    f"with {input} as q SELECT {function}(q{params})",
+                    use_file=True,
+                    exitcode=exitcode,
+                    ignore_exception=True,
+                )
+            else:
+                r = node.query(f"SELECT {function}({input}{params})", use_file=True)
+                assert r.output == output, error()
+    else:
+        with Then("I check parseKeyValue function returns correct value"):
+            if exitcode != 0:
+                node.query(
+                    f"SELECT {function}({input}{params})",
+                    use_file=True,
+                    exitcode=exitcode,
+                    ignore_exception=True,
+                )
+            else:
+                r = node.query(f"SELECT {function}({input}{params})", use_file=True)
+                assert r.output == output, error()
