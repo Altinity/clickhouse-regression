@@ -93,8 +93,8 @@ flowchart LR
     subgraph Q[Parameters]
         direction TB
         Q1[key_value_pair_delimiter, default ':']
-        Q2[pair_delimiters, default ' ,;']
-        Q3[quoting_character, default '\"']
+        Q2["pair_delimiters, default ' ,;'"]
+        Q3[quoting_character, default double quotes]
         Q5[escape_sequences_support, default OFF]
     end
   end
