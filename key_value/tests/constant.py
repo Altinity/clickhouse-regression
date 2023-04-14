@@ -3,7 +3,7 @@ from key_value.tests.checks import *
 
 
 @TestOutline
-def constant_input(self, input, output, params, node=None):
+def constant_input(self, input, output, params, node=None, function=None):
     """Check that clickhouse extractKeyValuePairs function support constant input string."""
 
     if node is None:
@@ -12,7 +12,7 @@ def constant_input(self, input, output, params, node=None):
     with Then(
         "I check extractKeyValuePairs function returns correct value for constant input"
     ):
-        check_constant_input(input=input, output=output, params=params)
+        check_constant_input(input=input, output=output, params=params, function=function)
 
 
 @TestFeature

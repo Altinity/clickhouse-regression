@@ -3,9 +3,8 @@ from key_value.tests.steps import *
 
 @TestScenario
 def special_symbols_conflict(self, node=None, i=0, j=0):
-    """Check that clickhouse extractKeyValuePairs function returns an error any of the:
-    `escape_character`, `key_value_pair_delimiter`, `item_delimiter`, `enclosing_character`,
-    `value_special_characters_allow_list` specified with the same symbol."""
+    """Check that clickhouse extractKeyValuePairs function returns an error for any of the:
+    `key_value_pair_delimiter`, `pair_delimeter`, `quoting_character` specified with the same symbol."""
 
     if node is None:
         node = self.context.node
@@ -32,8 +31,8 @@ def special_symbols_conflict(self, node=None, i=0, j=0):
 )
 @Name("special symbols conflict")
 def feature(self, node="clickhouse1"):
-    """Check that clickhouse extractKeyValuePairs function returns an error any of the:
-     `key_value_pair_delimiter`, `pair_delimeter`, `quoting_character` specified with the same symbol."""
+    """Check that clickhouse extractKeyValuePairs function returns an error any of the following parameters:
+     `key_value_pair_delimiter`, `pair_delimeter`, `quoting_character` when it use the same symbol.""" # todo gramarly
 
     self.context.node = self.context.cluster.node(node)
 

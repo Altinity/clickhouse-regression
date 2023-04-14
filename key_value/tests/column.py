@@ -3,8 +3,11 @@ from key_value.tests.checks import *
 
 
 @TestOutline
-def column_input(self, input, output, params, node=None):
+def column_input(self, input, output, params, node=None, function=None):
     """Check that clickhouse extractKeyValuePairs function supports column input."""
+
+    if function is None:
+        function = "extractKeyValuePairs"
 
     if node is None:
         node = self.context.node
@@ -22,7 +25,7 @@ def column_input(self, input, output, params, node=None):
         expected_output = output.replace("\\", "\\\\").replace("'", "\\'")
 
     with Then("I check extractKeyValuePairs function returns correct value"):
-        r = node.query(f"""select toString(extractKeyValuePairs(x{params})) from {table_name}""")
+        r = node.query(f"""select toString({function}(x{params})) from {table_name}""")
         assert r.output == expected_output, error()
 
 
