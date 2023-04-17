@@ -91,8 +91,8 @@ def key_value_pair_delimiter_format(self, node=None):
 @TestModule
 @Name("parameters formats")
 def feature(self, node="clickhouse1"):
-    """Check that clickhouse extractKeyValuePairs function accept specifying parameters
-    and returns an error if parameter specified wrong."""
+    """Check that ClickHouse's extractKeyValuePairs function accepts specifying parameters
+    and returns an error if a parameter is specified incorrectly."""
 
     self.context.node = self.context.cluster.node(node)
 

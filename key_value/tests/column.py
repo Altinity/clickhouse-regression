@@ -4,7 +4,7 @@ from key_value.tests.checks import *
 
 @TestOutline
 def column_input(self, input, output, params, node=None, function=None):
-    """Check that clickhouse extractKeyValuePairs function supports column input."""
+    """Check that ClickHouse's extractKeyValuePairs function supports column input."""
 
     if function is None:
         function = "extractKeyValuePairs"
@@ -20,7 +20,7 @@ def column_input(self, input, output, params, node=None, function=None):
     with Given("I have a table"):
         create_partitioned_table(table_name=table_name, extra_table_col="")
 
-    with When("I insert values into the table"):
+    with When("I insert values into the table and compute expected output"):
         insert(table_name=table_name, x=input)
         expected_output = output.replace("\\", "\\\\").replace("'", "\\'")
 
@@ -31,7 +31,7 @@ def column_input(self, input, output, params, node=None, function=None):
 
 @TestOutline
 def column_input_alias(self, input, output, params, node=None, function=None):
-    """Check that clickhouse extractKeyValuePairs function supports column input with alias."""
+    """Check that ClickHouse's extractKeyValuePairs function supports column input with alias."""
 
     if function is None:
         function = "extractKeyValuePairs"
@@ -47,7 +47,7 @@ def column_input_alias(self, input, output, params, node=None, function=None):
     with Given("I have a table"):
         create_partitioned_table(table_name=table_name, extra_table_col="")
 
-    with When("I insert values into the table"):
+    with When("I insert values into the table and compute expected output"):
         insert(table_name=table_name, x=input)
         expected_output = output.replace("\\", "\\\\").replace("'", "\\'")
 
@@ -65,7 +65,7 @@ def column_input_alias(self, input, output, params, node=None, function=None):
     RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_InputDataSource_Alias("1.0"),
 )
 def feature(self, node="clickhouse1"):
-    """Check that clickhouse extractKeyValuePairs function support column input."""
+    """Check that ClickHouse's extractKeyValuePairs function support column input."""
 
     self.context.node = self.context.cluster.node(node)
 

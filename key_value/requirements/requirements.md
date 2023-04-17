@@ -65,8 +65,8 @@ flowchart LR
             direction LR
             E11[Any string]
             E12["extractKeyValuePairs(string[, key_value_pair_delimiter[, pair_delimiters[, quoting_character]]])"]
-        end
-        subgraph E2[output format]
+        endutput forma
+        subgraph E2[ot]
             direction LR 
             E21["String in format {'key': 'value', ...}"]
         end
@@ -81,8 +81,7 @@ flowchart LR
         end
         subgraph Z2[Value]
             direction LR
-            Z21[can start with any character]
-            Z22[can be empty]
+            Z22[can be empty string]
             Z23[can't contain control symbols]
             Z24[it accepts anything if it is between the enclosing character]
         end
@@ -108,7 +107,7 @@ version: 1.0
 
 
 ```sql
-extractKeyValuePairs(<column_name>|<constant>|<function_return_value>|<alias>[, key_value_pair_delimiter[, pair_delimiters[, quoting_character[, escape_sequences_support]]]]])
+extractKeyValuePairs(<column_name>|<constant>|<function_return_value>|<alias>[, key_value_pair_delimiter[, pair_delimiters[, quoting_character]]]])
 ```
 
 For example, 
@@ -143,7 +142,7 @@ Nullable types are not supported.
 #### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.InputDataSource.Constant
 version: 1.0
 
-[ClickHouse]'s [extractKeyValuePairs] function SHALL accept input as a string constant.
+[ClickHouse]'s [extractKeyValuePairs] function SHALL accept input as a constant string.
 
 #### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.InputDataSource.Column
 version: 1.0
@@ -153,7 +152,7 @@ version: 1.0
 #### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.InputDataSource.Array
 version: 1.0
 
-[ClickHouse]'s [extractKeyValuePairs] function SHALL accept input as the value 
+[ClickHouse]'s [extractKeyValuePairs] function SHALL accept input as the value that
 returned from the array.
 
 #### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.InputDataSource.Map
@@ -177,8 +176,8 @@ version: 1.0
 #### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parsing.IdenticalKeys
 version: 1.0
 
-[ClickHouse]'s [extractKeyValuePairs] function SHALL return the last key value pair 
-for all key value pairs with the same key.
+[ClickHouse]'s [extractKeyValuePairs] function SHALL return the all key value pairs
+for key value pairs with the same key.
 
 For example:
 
@@ -199,10 +198,10 @@ version: 1.0
 [ClickHouse]'s [extractKeyValuePairs] function SHALL recognize the key in the input string
 if it satisfies the following conditions:
 
-* Key starts with the alphabet symbol.
-* Only alphabet symbols, numbers, and underscore are used in the key.
+* Key can't contain symbols that defined in parameters.
 * Key can't be an empty string.
-* If escape_sequences_support is ON, key can contain any non-control symbols.
+* If a key is enclosed, value can contain any symbols.
+* If `extractKeyValuePairsWithEscaping` is used, key shall accept control symbols.
 
 ### Value
 
@@ -212,11 +211,10 @@ version: 1.0
 [ClickHouse]'s [extractKeyValuePairs] function SHALL recognize the value in the input string
 if it satisfies the following conditions:
 
-* Value starts with any non-space symbol.
-* Only symbols, numbers, and underscore are used in the value.
+* Value can't contain symbols that defined in parameters.
 * Value can be an empty string.
-* If a value is enclosed, value can contain any non-control symbols.
-* If escape_sequences_support is ON, value can contain any non-control symbols.
+* If a value is enclosed, value can contain any symbols.
+* If `extractKeyValuePairsWithEscaping` is used, value shall accept control symbols.
 
 ### Parameters
 
@@ -224,7 +222,7 @@ if it satisfies the following conditions:
 version: 1.0
 
 [ClickHouse]'s [extractKeyValuePairs] function SHALL support specifying following parameters:
-`key_value_pair_delimiter`, `pair_delimiters`, `quoting_character`, `escape_sequences_support`.
+`key_value_pair_delimiter`, `pair_delimiters`, `quoting_character`.
 
 #### Key Value Pair Delimiter
 
@@ -259,8 +257,8 @@ parameter specified with non-string value.
 ##### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parameters.QuotingCharacter
 version: 1.0
 
-[ClickHouse]'s [extractKeyValuePairs] function SHALL support specifying `quoting_character`
-which SHALL enclose symbols which allows you to use unsupported characters in a key or value.
+[ClickHouse]'s [extractKeyValuePairs] function SHALL support specifying `quoting_character`,
+which allows using unsupported characters in a key or value if they are enclosed.
 
 ##### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parameters.QuotingCharacter.Format
 version: 1.0
@@ -272,12 +270,11 @@ parameter specified with non-string value or string value with more than one sym
 version: 1.0
 
 [ClickHouse] SHALL support `extractKeyValuePairsWithEscaping` function that SHALL
-allow using non-control symbols in keys and values
-and allow specifying symbols in hexadecimal format.
+allow using control symbols in keys and values and allow specifying symbols in hexadecimal format.
 
 For example:
 
-`SELECT extractKeyValuePairsWithEscaping('a:\\x0A', ':', ',', '"')`
+`SELECT extractKeyValuePairsWithEscaping('a:\\x0A', ':', ',', '\"')`
 
 SHALL return
 
@@ -288,9 +285,9 @@ SHALL return
 ##### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parameters.SpecialCharactersConflict
 version: 1.0
 
-[ClickHouse]'s [extractKeyValuePairs] function SHALL return an error if any of the following 
-parameters are specified with the same symbol: `key_value_pair_delimiter`, `pair_delimiters`,
-`quoting_character`.
+[ClickHouse]'s [extractKeyValuePairs] function SHALL return an error if
+either `key_value_pair_delimiter`, `pair_delimiter`, or `quoting_character`
+parameters use the same symbol.
 
 For example:
 

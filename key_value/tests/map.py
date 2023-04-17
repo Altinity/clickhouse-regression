@@ -4,7 +4,7 @@ from key_value.tests.checks import *
 
 @TestOutline
 def map_input(self, input, output, params, node=None, function=None):
-    """Check that clickhouse extractKeyValuePairs function support input as the value from the map."""
+    """Check that ClickHouse's extractKeyValuePairs function support input as the value from the map."""
 
     if function is None:
         function = "extractKeyValuePairs"
@@ -24,7 +24,7 @@ def map_input(self, input, output, params, node=None, function=None):
 
 @TestOutline
 def map_column_input(self, input, output, params, node=None, function=None):
-    """Check that clickhouse extractKeyValuePairs function support input as the value from the map from the table."""
+    """Check that ClickHouse's extractKeyValuePairs function support input as the value from the map from the table."""
 
     if function is None:
         function = "extractKeyValuePairs"
@@ -41,7 +41,7 @@ def map_column_input(self, input, output, params, node=None, function=None):
             table_name=table_name, extra_table_col="", column_type="Map(String, String)"
         )
 
-    with When("I insert values into the table"):
+    with When("I insert values into the table and compute expected output"):
         insert(table_name=table_name, x=f"map({input}, {input})")
         expected_output = output.replace("\\", "\\\\").replace("'", "\\'")
 
@@ -58,7 +58,7 @@ def map_column_input(self, input, output, params, node=None, function=None):
 @Name("map")
 @Requirements(RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_InputDataSource_Map("1.0"))
 def feature(self, node="clickhouse1"):
-    """Check that clickhouse extractKeyValuePairs function support input as value from a map."""
+    """Check that ClickHouse's extractKeyValuePairs function support input as value from a map."""
 
     self.context.node = self.context.cluster.node(node)
     for check in checks:
