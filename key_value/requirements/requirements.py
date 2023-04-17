@@ -20,7 +20,7 @@ RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Function = Requirement(
         "\n"
         "\n"
         "```sql\n"
-        "extractKeyValuePairs(<column_name>|<constant>|<function_return_value>|<alias>[, key_value_pair_delimiter[, pair_delimiters[, quoting_character[, escape_sequences_support]]]]])\n"
+        "extractKeyValuePairs(<column_name>|<constant>|<function_return_value>|<alias>[, key_value_pair_delimiter[, pair_delimiters[, quoting_character]]]])\n"
         "```\n"
         "\n"
         "For example, \n"
@@ -86,7 +86,7 @@ RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_InputDataSource_Constant = Requiremen
     type=None,
     uid=None,
     description=(
-        "[ClickHouse]'s [extractKeyValuePairs] function SHALL accept input as a string constant.\n"
+        "[ClickHouse]'s [extractKeyValuePairs] function SHALL accept input as a constant string.\n"
         "\n"
     ),
     link=None,
@@ -118,7 +118,7 @@ RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_InputDataSource_Array = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse]'s [extractKeyValuePairs] function SHALL accept input as the value \n"
+        "[ClickHouse]'s [extractKeyValuePairs] function SHALL accept input as the value that\n"
         "returned from the array.\n"
         "\n"
     ),
@@ -184,8 +184,8 @@ RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parsing_IdenticalKeys = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse]'s [extractKeyValuePairs] function SHALL return the last key value pair \n"
-        "for all key value pairs with the same key.\n"
+        "[ClickHouse]'s [extractKeyValuePairs] function SHALL return the all key value pairs\n"
+        "for key value pairs with the same key.\n"
         "\n"
         "For example:\n"
         "\n"
@@ -224,10 +224,10 @@ RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Key_Format = Requirement(
         "[ClickHouse]'s [extractKeyValuePairs] function SHALL recognize the key in the input string\n"
         "if it satisfies the following conditions:\n"
         "\n"
-        "* Key starts with the alphabet symbol.\n"
-        "* Only alphabet symbols, numbers, and underscore are used in the key.\n"
+        "* Key can't contain symbols that defined in parameters.\n"
         "* Key can't be an empty string.\n"
-        "* If escape_sequences_support is ON, key can contain any non-control symbols.\n"
+        "* If a key is enclosed, value can contain any symbols.\n"
+        "* If `extractKeyValuePairsWithEscaping` is used, key shall accept control symbols.\n"
         "\n"
     ),
     link=None,
@@ -246,11 +246,10 @@ RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Value_Format = Requirement(
         "[ClickHouse]'s [extractKeyValuePairs] function SHALL recognize the value in the input string\n"
         "if it satisfies the following conditions:\n"
         "\n"
-        "* Value starts with any non-space symbol.\n"
-        "* Only symbols, numbers, and underscore are used in the value.\n"
+        "* Value can't contain symbols that defined in parameters.\n"
         "* Value can be an empty string.\n"
-        "* If a value is enclosed, value can contain any non-control symbols.\n"
-        "* If escape_sequences_support is ON, value can contain any non-control symbols.\n"
+        "* If a value is enclosed, value can contain any symbols.\n"
+        "* If `extractKeyValuePairsWithEscaping` is used, value shall accept control symbols.\n"
         "\n"
     ),
     link=None,
@@ -267,7 +266,7 @@ RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parameters = Requirement(
     uid=None,
     description=(
         "[ClickHouse]'s [extractKeyValuePairs] function SHALL support specifying following parameters:\n"
-        "`key_value_pair_delimiter`, `pair_delimiters`, `quoting_character`, `escape_sequences_support`.\n"
+        "`key_value_pair_delimiter`, `pair_delimiters`, `quoting_character`.\n"
         "\n"
     ),
     link=None,
@@ -351,8 +350,8 @@ RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parameters_QuotingCharacter = Require
     type=None,
     uid=None,
     description=(
-        "[ClickHouse]'s [extractKeyValuePairs] function SHALL support specifying `quoting_character`\n"
-        "which SHALL enclose symbols which allows you to use unsupported characters in a key or value.\n"
+        "[ClickHouse]'s [extractKeyValuePairs] function SHALL support specifying `quoting_character`,\n"
+        "which allows using unsupported characters in a key or value if they are enclosed.\n"
         "\n"
     ),
     link=None,
@@ -377,21 +376,20 @@ RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parameters_QuotingCharacter_Format = 
     num="3.7.4.2",
 )
 
-RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parameters_EscapeSequencesSupport = Requirement(
-    name="RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parameters.EscapeSequencesSupport",
+RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parameters_ExtractKeyValuePairsWithEscaping = Requirement(
+    name="RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parameters.ExtractKeyValuePairsWithEscaping",
     version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse]'s [extractKeyValuePairs] function SHALL support specifying \n"
-        "`escape_sequences_support` which SHALL allow using non-control symbols in keys and values\n"
-        "and allow specifying symbols in hexadecimal format.\n"
+        "[ClickHouse] SHALL support `extractKeyValuePairsWithEscaping` function that SHALL\n"
+        "allow using control symbols in keys and values and allow specifying symbols in hexadecimal format.\n"
         "\n"
         "For example:\n"
         "\n"
-        "`SELECT extractKeyValuePairs('a:\\\\x0A', ':', ',', '\"', '1')`\n"
+        "`SELECT extractKeyValuePairsWithEscaping('a:\\\\x0A', ':', ',', '\\\"')`\n"
         "\n"
         "SHALL return\n"
         "\n"
@@ -400,41 +398,7 @@ RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parameters_EscapeSequencesSupport = R
     ),
     link=None,
     level=4,
-    num="3.7.5.1",
-)
-
-RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parameters_EscapeSequencesSupport_extractKeyValuePairsWithEscaping = Requirement(
-    name="RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parameters.EscapeSequencesSupport.extractKeyValuePairsWithEscaping",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL support `extractKeyValuePairsWithEscaping` function that SHALL return the same result as \n"
-        "`extractKeyValuePairs` function with `escape_sequences_support` enabled.\n"
-        "\n"
-    ),
-    link=None,
-    level=4,
-    num="3.7.5.2",
-)
-
-RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parameters_EscapeSequencesSupport_Format = Requirement(
-    name="RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parameters.EscapeSequencesSupport.Format",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse]'s [extractKeyValuePairs] function SHALL return an error if `escape_sequences_support` \n"
-        "parameter specified with non-boolean value.\n"
-        "\n"
-    ),
-    link=None,
-    level=4,
-    num="3.7.5.3",
+    num="3.7.4.3",
 )
 
 RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parameters_SpecialCharactersConflict = Requirement(
@@ -445,9 +409,9 @@ RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parameters_SpecialCharactersConflict 
     type=None,
     uid=None,
     description=(
-        "[ClickHouse]'s [extractKeyValuePairs] function SHALL return an error if any of the following \n"
-        "parameters are specified with the same symbol: `key_value_pair_delimiter`, `pair_delimiters`,\n"
-        "`quoting_character`.\n"
+        "[ClickHouse]'s [extractKeyValuePairs] function SHALL return an error if\n"
+        "either `key_value_pair_delimiter`, `pair_delimiter`, or `quoting_character`\n"
+        "parameters use the same symbol.\n"
         "\n"
         "For example:\n"
         "\n"
@@ -456,7 +420,7 @@ RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parameters_SpecialCharactersConflict 
     ),
     link=None,
     level=4,
-    num="3.7.6.1",
+    num="3.7.5.1",
 )
 
 RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Default_KeyValuePairDelimiter = Requirement(
@@ -504,22 +468,6 @@ RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Default_QuotingCharacter = Requiremen
         "By default, [ClickHouse]'s [extractKeyValuePairs] function SHALL\n"
         "specify `quoting_character` using `'\"'`.\n"
         "\n"
-    ),
-    link=None,
-    level=3,
-    num="3.9.1",
-)
-
-RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Default_EscapeSequencesSupport = Requirement(
-    name="RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.EscapeSequencesSupport",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "By default, [ClickHouse]'s [extractKeyValuePairs] function SHALL\n"
-        "specify `escape_sequences_support` using `OFF`.\n"
         "\n"
         "[String]: https://clickhouse.com/docs/en/sql-reference/data-types/string\n"
         "[FixedString]: https://clickhouse.com/docs/en/sql-reference/data-types/fixedstring\n"
@@ -529,7 +477,7 @@ RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Default_EscapeSequencesSupport = Requ
     ),
     link=None,
     level=3,
-    num="3.9.2",
+    num="3.9.1",
 )
 
 SRS033_ClickHouse_Key_Value_Function = Specification(
@@ -662,27 +610,16 @@ SRS033_ClickHouse_Key_Value_Function = Specification(
             level=4,
             num="3.7.4.2",
         ),
-        Heading(name="Escape Sequences Support", level=3, num="3.7.5"),
         Heading(
-            name="RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parameters.EscapeSequencesSupport",
+            name="RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parameters.ExtractKeyValuePairsWithEscaping",
             level=4,
-            num="3.7.5.1",
+            num="3.7.4.3",
         ),
-        Heading(
-            name="RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parameters.EscapeSequencesSupport.extractKeyValuePairsWithEscaping",
-            level=4,
-            num="3.7.5.2",
-        ),
-        Heading(
-            name="RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parameters.EscapeSequencesSupport.Format",
-            level=4,
-            num="3.7.5.3",
-        ),
-        Heading(name="Special Characters Conflict", level=3, num="3.7.6"),
+        Heading(name="Special Characters Conflict", level=3, num="3.7.5"),
         Heading(
             name="RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parameters.SpecialCharactersConflict",
             level=4,
-            num="3.7.6.1",
+            num="3.7.5.1",
         ),
         Heading(name="Default Parameters Values", level=2, num="3.8"),
         Heading(
@@ -699,11 +636,6 @@ SRS033_ClickHouse_Key_Value_Function = Specification(
             name="RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.QuotingCharacter",
             level=3,
             num="3.9.1",
-        ),
-        Heading(
-            name="RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.EscapeSequencesSupport",
-            level=3,
-            num="3.9.2",
         ),
     ),
     requirements=(
@@ -727,14 +659,11 @@ SRS033_ClickHouse_Key_Value_Function = Specification(
         RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parameters_PairDelimiters_Format,
         RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parameters_QuotingCharacter,
         RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parameters_QuotingCharacter_Format,
-        RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parameters_EscapeSequencesSupport,
-        RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parameters_EscapeSequencesSupport_extractKeyValuePairsWithEscaping,
-        RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parameters_EscapeSequencesSupport_Format,
+        RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parameters_ExtractKeyValuePairsWithEscaping,
         RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Parameters_SpecialCharactersConflict,
         RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Default_KeyValuePairDelimiter,
         RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Default_PairDelimiters,
         RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Default_QuotingCharacter,
-        RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_Default_EscapeSequencesSupport,
     ),
     content="""
 # SRS033 ClickHouse Key Value Function
@@ -775,17 +704,13 @@ SRS033_ClickHouse_Key_Value_Function = Specification(
     * 3.7.4 [Quoting Character](#quoting-character)
       * 3.7.4.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parameters.QuotingCharacter](#rqsrs-033clickhouseextractkeyvaluepairsparametersquotingcharacter)
       * 3.7.4.2 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parameters.QuotingCharacter.Format](#rqsrs-033clickhouseextractkeyvaluepairsparametersquotingcharacterformat)
-    * 3.7.5 [Escape Sequences Support](#escape-sequences-support)
-      * 3.7.5.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parameters.EscapeSequencesSupport](#rqsrs-033clickhouseextractkeyvaluepairsparametersescapesequencessupport)
-      * 3.7.5.2 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parameters.EscapeSequencesSupport.extractKeyValuePairsWithEscaping](#rqsrs-033clickhouseextractkeyvaluepairsparametersescapesequencessupportextractkeyvaluepairswithescaping)
-      * 3.7.5.3 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parameters.EscapeSequencesSupport.Format](#rqsrs-033clickhouseextractkeyvaluepairsparametersescapesequencessupportformat)
-    * 3.7.6 [Special Characters Conflict](#special-characters-conflict)
-      * 3.7.6.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parameters.SpecialCharactersConflict](#rqsrs-033clickhouseextractkeyvaluepairsparametersspecialcharactersconflict)
+      * 3.7.4.3 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parameters.ExtractKeyValuePairsWithEscaping](#rqsrs-033clickhouseextractkeyvaluepairsparametersextractkeyvaluepairswithescaping)
+    * 3.7.5 [Special Characters Conflict](#special-characters-conflict)
+      * 3.7.5.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parameters.SpecialCharactersConflict](#rqsrs-033clickhouseextractkeyvaluepairsparametersspecialcharactersconflict)
   * 3.8 [Default Parameters Values](#default-parameters-values)
     * 3.8.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.KeyValuePairDelimiter](#rqsrs-033clickhouseextractkeyvaluepairsdefaultkeyvaluepairdelimiter)
   * 3.9 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.PairDelimiters](#rqsrs-033clickhouseextractkeyvaluepairsdefaultpairdelimiters)
     * 3.9.1 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.QuotingCharacter](#rqsrs-033clickhouseextractkeyvaluepairsdefaultquotingcharacter)
-    * 3.9.2 [RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.EscapeSequencesSupport](#rqsrs-033clickhouseextractkeyvaluepairsdefaultescapesequencessupport)
 
 ## Introduction
 
@@ -807,9 +732,9 @@ flowchart LR
         subgraph E1[input format]
             direction LR
             E11[Any string]
-            E12["extractKeyValuePairs(string[, key_value_pair_delimiter[, pair_delimiters[, quoting_character[, escape_sequences_support]]]]])"]
-        end
-        subgraph E2[output format]
+            E12["extractKeyValuePairs(string[, key_value_pair_delimiter[, pair_delimiters[, quoting_character]]])"]
+        endutput forma
+        subgraph E2[ot]
             direction LR 
             E21["String in format {'key': 'value', ...}"]
         end
@@ -824,10 +749,9 @@ flowchart LR
         end
         subgraph Z2[Value]
             direction LR
-            Z21[can start with any non-space character or escape_sequences_support is ON]
-            Z22[can be empty]
+            Z22[can be empty string]
             Z23[can't contain control symbols]
-            Z24[it accepts anything if it is between the enclosing character or escape_sequences_support is ON]
+            Z24[it accepts anything if it is between the enclosing character]
         end
     end
     subgraph Q[Parameters]
@@ -835,7 +759,7 @@ flowchart LR
         Q1[key_value_pair_delimiter, default ':']
         Q2["pair_delimiters, default ' ,;'"]
         Q3[quoting_character, default double quotes]
-        Q5[escape_sequences_support, default OFF]
+        Q5[extractKeyValuePairsWithEscaping]
     end
   end
 ```
@@ -851,7 +775,7 @@ version: 1.0
 
 
 ```sql
-extractKeyValuePairs(<column_name>|<constant>|<function_return_value>|<alias>[, key_value_pair_delimiter[, pair_delimiters[, quoting_character[, escape_sequences_support]]]]])
+extractKeyValuePairs(<column_name>|<constant>|<function_return_value>|<alias>[, key_value_pair_delimiter[, pair_delimiters[, quoting_character]]]])
 ```
 
 For example, 
@@ -886,7 +810,7 @@ Nullable types are not supported.
 #### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.InputDataSource.Constant
 version: 1.0
 
-[ClickHouse]'s [extractKeyValuePairs] function SHALL accept input as a string constant.
+[ClickHouse]'s [extractKeyValuePairs] function SHALL accept input as a constant string.
 
 #### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.InputDataSource.Column
 version: 1.0
@@ -896,7 +820,7 @@ version: 1.0
 #### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.InputDataSource.Array
 version: 1.0
 
-[ClickHouse]'s [extractKeyValuePairs] function SHALL accept input as the value 
+[ClickHouse]'s [extractKeyValuePairs] function SHALL accept input as the value that
 returned from the array.
 
 #### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.InputDataSource.Map
@@ -920,8 +844,8 @@ version: 1.0
 #### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parsing.IdenticalKeys
 version: 1.0
 
-[ClickHouse]'s [extractKeyValuePairs] function SHALL return the last key value pair 
-for all key value pairs with the same key.
+[ClickHouse]'s [extractKeyValuePairs] function SHALL return the all key value pairs
+for key value pairs with the same key.
 
 For example:
 
@@ -942,10 +866,10 @@ version: 1.0
 [ClickHouse]'s [extractKeyValuePairs] function SHALL recognize the key in the input string
 if it satisfies the following conditions:
 
-* Key starts with the alphabet symbol.
-* Only alphabet symbols, numbers, and underscore are used in the key.
+* Key can't contain symbols that defined in parameters.
 * Key can't be an empty string.
-* If escape_sequences_support is ON, key can contain any non-control symbols.
+* If a key is enclosed, value can contain any symbols.
+* If `extractKeyValuePairsWithEscaping` is used, key shall accept control symbols.
 
 ### Value
 
@@ -955,11 +879,10 @@ version: 1.0
 [ClickHouse]'s [extractKeyValuePairs] function SHALL recognize the value in the input string
 if it satisfies the following conditions:
 
-* Value starts with any non-space symbol.
-* Only symbols, numbers, and underscore are used in the value.
+* Value can't contain symbols that defined in parameters.
 * Value can be an empty string.
-* If a value is enclosed, value can contain any non-control symbols.
-* If escape_sequences_support is ON, value can contain any non-control symbols.
+* If a value is enclosed, value can contain any symbols.
+* If `extractKeyValuePairsWithEscaping` is used, value shall accept control symbols.
 
 ### Parameters
 
@@ -967,7 +890,7 @@ if it satisfies the following conditions:
 version: 1.0
 
 [ClickHouse]'s [extractKeyValuePairs] function SHALL support specifying following parameters:
-`key_value_pair_delimiter`, `pair_delimiters`, `quoting_character`, `escape_sequences_support`.
+`key_value_pair_delimiter`, `pair_delimiters`, `quoting_character`.
 
 #### Key Value Pair Delimiter
 
@@ -1002,8 +925,8 @@ parameter specified with non-string value.
 ##### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parameters.QuotingCharacter
 version: 1.0
 
-[ClickHouse]'s [extractKeyValuePairs] function SHALL support specifying `quoting_character`
-which SHALL enclose symbols which allows you to use unsupported characters in a key or value.
+[ClickHouse]'s [extractKeyValuePairs] function SHALL support specifying `quoting_character`,
+which allows using unsupported characters in a key or value if they are enclosed.
 
 ##### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parameters.QuotingCharacter.Format
 version: 1.0
@@ -1011,43 +934,28 @@ version: 1.0
 [ClickHouse]'s [extractKeyValuePairs] function SHALL return an error if `quoting_character` 
 parameter specified with non-string value or string value with more than one symbol.
 
-#### Escape Sequences Support
-
-##### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parameters.EscapeSequencesSupport
+##### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parameters.ExtractKeyValuePairsWithEscaping
 version: 1.0
 
-[ClickHouse]'s [extractKeyValuePairs] function SHALL support specifying 
-`escape_sequences_support` which SHALL allow using non-control symbols in keys and values
-and allow specifying symbols in hexadecimal format.
+[ClickHouse] SHALL support `extractKeyValuePairsWithEscaping` function that SHALL
+allow using control symbols in keys and values and allow specifying symbols in hexadecimal format.
 
 For example:
 
-`SELECT extractKeyValuePairs('a:\\x0A', ':', ',', '"', '1')`
+`SELECT extractKeyValuePairsWithEscaping('a:\\x0A', ':', ',', '\"')`
 
 SHALL return
 
 `{'a':'\n'}`
-
-##### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parameters.EscapeSequencesSupport.extractKeyValuePairsWithEscaping
-version: 1.0
-
-[ClickHouse] SHALL support `extractKeyValuePairsWithEscaping` function that SHALL return the same result as 
-`extractKeyValuePairs` function with `escape_sequences_support` enabled.
-
-##### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parameters.EscapeSequencesSupport.Format
-version: 1.0
-
-[ClickHouse]'s [extractKeyValuePairs] function SHALL return an error if `escape_sequences_support` 
-parameter specified with non-boolean value.
 
 #### Special Characters Conflict
 
 ##### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Parameters.SpecialCharactersConflict
 version: 1.0
 
-[ClickHouse]'s [extractKeyValuePairs] function SHALL return an error if any of the following 
-parameters are specified with the same symbol: `key_value_pair_delimiter`, `pair_delimiters`,
-`quoting_character`.
+[ClickHouse]'s [extractKeyValuePairs] function SHALL return an error if
+either `key_value_pair_delimiter`, `pair_delimiter`, or `quoting_character`
+parameters use the same symbol.
 
 For example:
 
@@ -1073,11 +981,6 @@ version: 1.0
 By default, [ClickHouse]'s [extractKeyValuePairs] function SHALL
 specify `quoting_character` using `'"'`.
 
-#### RQ.SRS-033.ClickHouse.ExtractKeyValuePairs.Default.EscapeSequencesSupport
-version: 1.0
-
-By default, [ClickHouse]'s [extractKeyValuePairs] function SHALL
-specify `escape_sequences_support` using `OFF`.
 
 [String]: https://clickhouse.com/docs/en/sql-reference/data-types/string
 [FixedString]: https://clickhouse.com/docs/en/sql-reference/data-types/fixedstring

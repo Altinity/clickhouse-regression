@@ -3,7 +3,7 @@ from key_value.tests.steps import *
 
 @TestScenario
 def unsupported_types(self, constant_type="Int64", nullable=False, node=None):
-    """Check that clickhouse extractKeyValuePairs function returns an error if data type is not supported."""
+    """Check that ClickHouse's extractKeyValuePairs function returns an error if data type is not supported."""
     if node is None:
         node = self.context.node
 
@@ -128,7 +128,7 @@ def unsupported_types(self, constant_type="Int64", nullable=False, node=None):
 )
 @Name("unsupported types constant")
 def feature(self, node="clickhouse1"):
-    """Check that clickhouse extractKeyValuePairs function returns an error if data type is not supported."""
+    """Check that ClickHouse's extractKeyValuePairs function returns an error if data type is not supported."""
 
     self.context.node = self.context.cluster.node(node)
 

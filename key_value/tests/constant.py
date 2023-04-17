@@ -4,7 +4,7 @@ from key_value.tests.checks import *
 
 @TestOutline
 def constant_input(self, input, output, params, node=None, function=None):
-    """Check that clickhouse extractKeyValuePairs function support constant input string."""
+    """Check that ClickHouse's extractKeyValuePairs function support constant input string."""
 
     if node is None:
         node = self.context.node
@@ -19,7 +19,7 @@ def constant_input(self, input, output, params, node=None, function=None):
 
 @TestOutline
 def constant_input_alias(self, input, output, params, node=None, function=None):
-    """Check that clickhouse extractKeyValuePairs function support constant input string with alias."""
+    """Check that ClickHouse's extractKeyValuePairs function support constant input string with alias."""
 
     if node is None:
         node = self.context.node
@@ -39,7 +39,7 @@ def constant_input_alias(self, input, output, params, node=None, function=None):
 )
 @Name("constant")
 def feature(self, node="clickhouse1"):
-    """Check that clickhouse extractKeyValuePairs function support constant input string."""
+    """Check that ClickHouse's extractKeyValuePairs function support constant input string."""
 
     self.context.node = self.context.cluster.node(node)
 

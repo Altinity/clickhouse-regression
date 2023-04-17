@@ -3,7 +3,7 @@ from key_value.tests.steps import *
 
 @TestScenario
 def supported_types(self, constant_type="String", nullable=False, node=None):
-    """Check that clickhouse extractKeyValuePairs function supports String types."""
+    """Check that ClickHouse's extractKeyValuePairs function supports String types."""
     if node is None:
         node = self.context.node
 
@@ -42,7 +42,7 @@ def supported_types(self, constant_type="String", nullable=False, node=None):
 )
 @Name("supported types")
 def feature(self, node="clickhouse1"):
-    """Check that clickhouse extractKeyValuePairs function supports String types."""
+    """Check that ClickHouse's extractKeyValuePairs function supports String types."""
 
     self.context.node = self.context.cluster.node(node)
 

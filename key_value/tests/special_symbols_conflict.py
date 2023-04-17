@@ -30,8 +30,9 @@ def special_symbols_conflict(self, node=None, i=0, j=0):
 )
 @Name("special symbols conflict")
 def feature(self, node="clickhouse1"):
-    """Check that clickhouse extractKeyValuePairs function returns an error if any of the following parameters:
-    `key_value_pair_delimiter`, `pair_delimiter`, `quoting_character` when it use the same symbol."""  # todo gramarly
+    """Check that ClickHouse's extractKeyValuePairs function returns an error if
+    either `key_value_pair_delimiter`, `pair_delimiter`, or `quoting_character`
+    parameters use the same symbol."""
 
     self.context.node = self.context.cluster.node(node)
 

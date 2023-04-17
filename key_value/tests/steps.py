@@ -16,13 +16,6 @@ noise = "".join([f"\\x{hex(i)[2]}{hex(j)[2]}" for i in range(2) for j in range(1
 parsed_noise = noise.replace("\\", "\\\\")
 
 out_noise = "\x01\x02\x03\x04\x05\x06\x07\\b\\t\\n\x0b\\f\\r\x0e\x0f\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f"
-# noise_without_quotation_mark = noise.replace('"', "")
-# parsed_noise_without_quotation_mark = (
-#     noise_without_quotation_mark.replace("\\", "\\\\")
-#     .replace('"', '\\"')
-#     .replace("`", "\\`")
-#     .replace("'", "\\'")
-# )
 
 
 @TestStep(Given)
@@ -91,7 +84,7 @@ def check_constant_input(
     node=None,
     alias=False,
 ):
-    """Check that clickhouse parseKeyValue function support constant input."""
+    """Check that ClickHouse's extractKeyValuePairs function support constant input."""
     if function is None:
         function = "extractKeyValuePairs"
     if node is None:

@@ -5,7 +5,7 @@ from key_value.tests.checks import *
 @TestOutline
 @Requirements(RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_InputDataSource_Array("1.0"))
 def array_input(self, input, output, params, node=None, function=None):
-    """Check that clickhouse extractKeyValuePairs function support input as the value from the array."""
+    """Check that ClickHouse extractKeyValuePairs function support input as the value from the array."""
 
     if function is None:
         function = "extractKeyValuePairs"
@@ -22,7 +22,7 @@ def array_input(self, input, output, params, node=None, function=None):
 
 @TestOutline
 def array_column_input(self, input, output, params, node=None, function=None):
-    """Check that clickhouse extractKeyValuePairs function support input as the value from the array from the table."""
+    """Check that ClickHouse extractKeyValuePairs function support input as the value from the array from the table."""
 
     if function is None:
         function = "extractKeyValuePairs"
@@ -39,7 +39,7 @@ def array_column_input(self, input, output, params, node=None, function=None):
             table_name=table_name, extra_table_col="", column_type="Array(String)"
         )
 
-    with When("I insert values into the table"):
+    with When("I insert values into the table and compute expected output"):
         insert(table_name=table_name, x=f"[{input}]")
         expected_output = output.replace("\\", "\\\\").replace("'", "\\'")
 
@@ -55,7 +55,7 @@ def array_column_input(self, input, output, params, node=None, function=None):
 @Name("array")
 @Requirements(RQ_SRS_033_ClickHouse_ExtractKeyValuePairs_InputDataSource_Array("1.0"))
 def feature(self, node="clickhouse1"):
-    """Check that clickhouse extractKeyValuePairs function support input as value from an array."""
+    """Check that clickhouse extractKeyValuePairs function support input as value from the array."""
 
     self.context.node = self.context.cluster.node(node)
     for check in checks:
