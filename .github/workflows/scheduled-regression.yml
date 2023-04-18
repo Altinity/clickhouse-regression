@@ -34,11 +34,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -73,11 +73,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -112,11 +112,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -151,11 +151,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -190,11 +190,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -231,11 +231,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -276,11 +276,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -320,11 +320,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -359,11 +359,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -398,11 +398,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -437,11 +437,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -476,11 +476,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -515,11 +515,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -554,11 +554,11 @@ jobs:
     #  fail-fast: false
     #   matrix:
     #     include:
-    #       - version: 22.8.13.21.altinitystable
+    #       - version: 22.8.15.25.altinitystable
     #         clickhouse_binary_path: docker://altinity/clickhouse-server
     #       - version: 22.3.15.34.altinitystable
     #         clickhouse_binary_path: docker://altinity/clickhouse-server
-    #       - version: 23.2.4.12
+    #       - version: 23.3.1.2823
     #         clickhouse_binary_path: docker://clickhouse/clickhouse-server
     # runs-on: self-hosted
   #   env:
@@ -591,11 +591,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -630,11 +630,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -668,11 +668,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -707,11 +707,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -746,11 +746,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -785,11 +785,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -824,11 +824,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -863,11 +863,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -912,11 +912,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -951,11 +951,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -990,11 +990,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -1029,11 +1029,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -1072,11 +1072,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -1119,11 +1119,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -1165,11 +1165,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -1204,11 +1204,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -1243,11 +1243,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -1286,11 +1286,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -1332,11 +1332,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
@@ -1378,11 +1378,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.13.21.altinitystable
+          - version: 22.8.15.25.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.2.4.12
+          - version: 23.3.1.2823
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: self-hosted
     env:
