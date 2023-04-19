@@ -5,6 +5,7 @@ from aggregate_functions.requirements import (
 )
 
 from helpers.tables import is_numeric, is_unsigned_integer
+from helpers.common import check_clickhouse_version
 
 from aggregate_functions.tests.steps import (
     get_snapshot_id,
@@ -18,7 +19,8 @@ from aggregate_functions.tests.steps import (
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_MannWhitneyUTest("1.0"))
 def feature(self, func="mannWhitneyUTest({params})", table=None, snapshot_id=None):
     """Check mannWhitneyUTest aggregate function by using the same tests as for welchTTest."""
-    self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=22.6")
+    clickhouse_version = ">=22.6" if check_clickhouse_version("<23.2")(self) else ">=23.2"
+    self.context.snapshot_id = get_snapshot_id(clickhouse_version=clickhouse_version)
 
     if table is None:
         table = self.context.table
@@ -70,9 +72,14 @@ def feature(self, func="mannWhitneyUTest({params})", table=None, snapshot_id=Non
         )
 
     with Check("weight NULL value handling"):
-        execute_query(
-            f"SELECT {func.format(params='x,w')}  FROM values('x Int8, w Nullable(UInt8)', (1,0), (1,1), (2,NULL), (3,3), (0,4), (1, 5))"
-        )
+        if check_clickhouse_version("<23.2")(self):
+            execute_query(
+                f"SELECT {func.format(params='x,w')}  FROM values('x Int8, w Nullable(UInt8)', (1,0), (1,1), (2,NULL), (3,3), (0,4), (1, 5))"
+            )
+        else:
+            execute_query(
+                f"SELECT {func.format(params='x,w')}  FROM values('x Int8, w Nullable(UInt8)', (10,0), (11,0), (12,NULL), (1,1), (2,1), (3,1))"
+            )
 
     with Check("single NULL value"):
         execute_query(

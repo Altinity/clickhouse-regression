@@ -24,7 +24,7 @@ def datatype(self, func, table, col1_name, col2_name):
 )
 def feature(self, func="groupArrayInsertAt({params})", table=None):
     """Check topKWeighted aggregate function."""
-    self.context.snapshot_id = get_snapshot_id()
+    self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=23.2")
 
     if table is None:
         table = self.context.table
