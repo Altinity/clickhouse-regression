@@ -1,0 +1,2757 @@
+_aggregate_functions_state_meanZTestState_single_value_in_0_population = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(sample_data, sample_index))":"000000000000F03F000000000000144000000000000024400000000000003D40"}
+"""
+
+_aggregate_functions_state_meanZTestState_single_value_in_1_population = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(sample_data, sample_index))":"0000000000001440000000000000F03F0000000000003D400000000000002440"}
+"""
+
+_aggregate_functions_state_meanZTestState_constant = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(1, 2))":"0000000000000000000000000000F03F0000000000000000000000000000F03F"}
+"""
+
+_aggregate_functions_state_meanZTestState_zero_rows = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(number, toUInt64(plus(number, 1))))":"0000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_meanZTestState_single_row = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(number, toUInt64(number)))":"000000000000F03F000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_meanZTestState_single_row_with_zero_weight = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(number, toUInt64(minus(number, 1))))":"0000000000000000000000000000F03F00000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_meanZTestState_with_group_by = r"""
+{"even":0,"hex(meanZTestState(0.7, 0.45, 0.95)(number, toUInt64(number)))":"000000000000F03F000000000000104000000000000000000000000000003440"}
+{"even":1,"hex(meanZTestState(0.7, 0.45, 0.95)(number, toUInt64(number)))":"0000000000000000000000000000144000000000000000000000000000003940"}
+"""
+
+_aggregate_functions_state_meanZTestState_some_negative_values = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(minus(number, 5), toUInt64(number)))":"0000000000000000000000000000244000000000000000000000000000001440"}
+"""
+
+_aggregate_functions_state_meanZTestState_NULL_value_handling = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(x, 1))":"010000000000000000000000000000144000000000000000000000000000002A40"}
+"""
+
+_aggregate_functions_state_meanZTestState_weight_NULL_value_handling = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(x, w))":"01000000000000F03F0000000000001040000000000000F03F0000000000001440"}
+"""
+
+_aggregate_functions_state_meanZTestState_single_NULL_value = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(x, w))":"010000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_meanZTestState_return_type = r"""
+{"toTypeName(hex(meanZTestState(0.7, 0.45, 0.95)(number, toUInt64(number))))":"String"}
+"""
+
+_aggregate_functions_state_meanZTestState_doc_example = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(x, 1))":"0000000000000000000000000000184000000000000000000000000000002E40"}
+"""
+
+_aggregate_functions_state_meanZTestState_inf = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(x, 1))":"000000000000000000000000000018400000000000000000000000000000F07F"}
+"""
+
+_aggregate_functions_state_meanZTestState__inf = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(x, 1))":"000000000000000000000000000018400000000000000000000000000000F0FF"}
+"""
+
+_aggregate_functions_state_meanZTestState_nan = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(x, 1))":"000000000000000000000000000018400000000000000000000000000000F87F"}
+"""
+
+_aggregate_functions_state_meanZTestState_inf___inf__nan = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(x, 1))":"000000000000000000000000000018400000000000000000000000000000F87F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint8_uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint8, uint8))":"0000000000000040000000000000204000000000000000000000000000349440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint8_uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint8, uint64))":"0000000000000040000000000000204000000000000000000000000000349440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint8_uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint8, uint32))":"0000000000000040000000000000204000000000000000000000000000349440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint8_uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint8, uint16))":"0000000000000040000000000000204000000000000000000000000000349440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint8_nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint8, nullable_uint8_))":"01000000000000F03F000000000000204000000000000000000000000000349440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint8_nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint8, nullable_uint64_))":"01000000000000F03F000000000000204000000000000000000000000000349440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint8_nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint8, nullable_uint32_))":"01000000000000F03F000000000000204000000000000000000000000000349440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint8_nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint8, nullable_uint16_))":"01000000000000F03F000000000000204000000000000000000000000000349440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint8_lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint8, lowcardinality_uint8_))":"0000000000000040000000000000204000000000000000000000000000349440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint8_lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint8, lowcardinality_uint64_))":"0000000000000040000000000000204000000000000000000000000000349440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint8_lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint8, lowcardinality_uint32_))":"0000000000000040000000000000204000000000000000000000000000349440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint8_lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint8, lowcardinality_uint16_))":"0000000000000040000000000000204000000000000000000000000000349440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint8_lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint8, lowcardinality_nullable_uint8__))":"01000000000000F03F000000000000204000000000000000000000000000349440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint8_lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint8, lowcardinality_nullable_uint64__))":"01000000000000F03F000000000000204000000000000000000000000000349440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint8_lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint8, lowcardinality_nullable_uint32__))":"01000000000000F03F000000000000204000000000000000000000000000349440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint8_lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint8, lowcardinality_nullable_uint16__))":"01000000000000F03F000000000000204000000000000000000000000000349440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint64_uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint64, uint8))":"000000000000004000000000000020400000000000000000826D1DBA536A1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint64_uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint64, uint64))":"000000000000004000000000000020400000000000000000826D1DBA536A1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint64_uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint64, uint32))":"000000000000004000000000000020400000000000000000826D1DBA536A1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint64_uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint64, uint16))":"000000000000004000000000000020400000000000000000826D1DBA536A1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint64_nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint64, nullable_uint8_))":"01000000000000F03F00000000000020400000000000000000826D1DBA536A1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint64_nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint64, nullable_uint64_))":"01000000000000F03F00000000000020400000000000000000826D1DBA536A1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint64_nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint64, nullable_uint32_))":"01000000000000F03F00000000000020400000000000000000826D1DBA536A1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint64_nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint64, nullable_uint16_))":"01000000000000F03F00000000000020400000000000000000826D1DBA536A1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint64_lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint64, lowcardinality_uint8_))":"000000000000004000000000000020400000000000000000826D1DBA536A1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint64_lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint64, lowcardinality_uint64_))":"000000000000004000000000000020400000000000000000826D1DBA536A1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint64_lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint64, lowcardinality_uint32_))":"000000000000004000000000000020400000000000000000826D1DBA536A1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint64_lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint64, lowcardinality_uint16_))":"000000000000004000000000000020400000000000000000826D1DBA536A1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint64_lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint64, lowcardinality_nullable_uint8__))":"01000000000000F03F00000000000020400000000000000000826D1DBA536A1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint64_lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint64, lowcardinality_nullable_uint64__))":"01000000000000F03F00000000000020400000000000000000826D1DBA536A1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint64_lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint64, lowcardinality_nullable_uint32__))":"01000000000000F03F00000000000020400000000000000000826D1DBA536A1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint64_lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint64, lowcardinality_nullable_uint16__))":"01000000000000F03F00000000000020400000000000000000826D1DBA536A1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint32_uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint32, uint8))":"00000000000000400000000000002040000000000000000000003CE81CB21542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint32_uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint32, uint64))":"00000000000000400000000000002040000000000000000000003CE81CB21542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint32_uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint32, uint32))":"00000000000000400000000000002040000000000000000000003CE81CB21542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint32_uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint32, uint16))":"00000000000000400000000000002040000000000000000000003CE81CB21542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint32_nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint32, nullable_uint8_))":"01000000000000F03F0000000000002040000000000000000000003CE81CB21542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint32_nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint32, nullable_uint64_))":"01000000000000F03F0000000000002040000000000000000000003CE81CB21542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint32_nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint32, nullable_uint32_))":"01000000000000F03F0000000000002040000000000000000000003CE81CB21542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint32_nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint32, nullable_uint16_))":"01000000000000F03F0000000000002040000000000000000000003CE81CB21542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint32_lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint32, lowcardinality_uint8_))":"00000000000000400000000000002040000000000000000000003CE81CB21542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint32_lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint32, lowcardinality_uint64_))":"00000000000000400000000000002040000000000000000000003CE81CB21542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint32_lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint32, lowcardinality_uint32_))":"00000000000000400000000000002040000000000000000000003CE81CB21542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint32_lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint32, lowcardinality_uint16_))":"00000000000000400000000000002040000000000000000000003CE81CB21542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint32_lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint32, lowcardinality_nullable_uint8__))":"01000000000000F03F0000000000002040000000000000000000003CE81CB21542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint32_lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint32, lowcardinality_nullable_uint64__))":"01000000000000F03F0000000000002040000000000000000000003CE81CB21542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint32_lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint32, lowcardinality_nullable_uint32__))":"01000000000000F03F0000000000002040000000000000000000003CE81CB21542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint32_lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint32, lowcardinality_nullable_uint16__))":"01000000000000F03F0000000000002040000000000000000000003CE81CB21542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint16_uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint16, uint8))":"00000000000000400000000000002040000000000000000000000000D8F30E41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint16_uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint16, uint64))":"00000000000000400000000000002040000000000000000000000000D8F30E41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint16_uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint16, uint32))":"00000000000000400000000000002040000000000000000000000000D8F30E41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint16_uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint16, uint16))":"00000000000000400000000000002040000000000000000000000000D8F30E41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint16_nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint16, nullable_uint8_))":"01000000000000F03F0000000000002040000000000000000000000000D8F30E41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint16_nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint16, nullable_uint64_))":"01000000000000F03F0000000000002040000000000000000000000000D8F30E41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint16_nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint16, nullable_uint32_))":"01000000000000F03F0000000000002040000000000000000000000000D8F30E41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint16_nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint16, nullable_uint16_))":"01000000000000F03F0000000000002040000000000000000000000000D8F30E41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint16_lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint16, lowcardinality_uint8_))":"00000000000000400000000000002040000000000000000000000000D8F30E41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint16_lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint16, lowcardinality_uint64_))":"00000000000000400000000000002040000000000000000000000000D8F30E41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint16_lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint16, lowcardinality_uint32_))":"00000000000000400000000000002040000000000000000000000000D8F30E41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint16_lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint16, lowcardinality_uint16_))":"00000000000000400000000000002040000000000000000000000000D8F30E41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint16_lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint16, lowcardinality_nullable_uint8__))":"01000000000000F03F0000000000002040000000000000000000000000D8F30E41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint16_lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint16, lowcardinality_nullable_uint64__))":"01000000000000F03F0000000000002040000000000000000000000000D8F30E41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint16_lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint16, lowcardinality_nullable_uint32__))":"01000000000000F03F0000000000002040000000000000000000000000D8F30E41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_uint16_lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(uint16, lowcardinality_nullable_uint16__))":"01000000000000F03F0000000000002040000000000000000000000000D8F30E41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint8__uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint8_, uint8))":"01000000000000F03F000000000000204000000000000000000000000000709040"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint8__uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint8_, uint64))":"01000000000000F03F000000000000204000000000000000000000000000709040"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint8__uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint8_, uint32))":"01000000000000F03F000000000000204000000000000000000000000000709040"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint8__uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint8_, uint16))":"01000000000000F03F000000000000204000000000000000000000000000709040"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint8__nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint8_, nullable_uint8_))":"01000000000000F03F000000000000204000000000000000000000000000709040"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint8__nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint8_, nullable_uint64_))":"01000000000000F03F000000000000204000000000000000000000000000709040"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint8__nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint8_, nullable_uint32_))":"01000000000000F03F000000000000204000000000000000000000000000709040"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint8__nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint8_, nullable_uint16_))":"01000000000000F03F000000000000204000000000000000000000000000709040"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint8__lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint8_, lowcardinality_uint8_))":"01000000000000F03F000000000000204000000000000000000000000000709040"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint8__lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint8_, lowcardinality_uint64_))":"01000000000000F03F000000000000204000000000000000000000000000709040"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint8__lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint8_, lowcardinality_uint32_))":"01000000000000F03F000000000000204000000000000000000000000000709040"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint8__lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint8_, lowcardinality_uint16_))":"01000000000000F03F000000000000204000000000000000000000000000709040"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint8__lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint8_, lowcardinality_nullable_uint8__))":"01000000000000F03F000000000000204000000000000000000000000000709040"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint8__lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint8_, lowcardinality_nullable_uint64__))":"01000000000000F03F000000000000204000000000000000000000000000709040"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint8__lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint8_, lowcardinality_nullable_uint32__))":"01000000000000F03F000000000000204000000000000000000000000000709040"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint8__lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint8_, lowcardinality_nullable_uint16__))":"01000000000000F03F000000000000204000000000000000000000000000709040"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint64__uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint64_, uint8))":"01000000000000F03F00000000000020400000000000000000AFCD1921F8671644"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint64__uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint64_, uint64))":"01000000000000F03F00000000000020400000000000000000AFCD1921F8671644"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint64__uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint64_, uint32))":"01000000000000F03F00000000000020400000000000000000AFCD1921F8671644"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint64__uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint64_, uint16))":"01000000000000F03F00000000000020400000000000000000AFCD1921F8671644"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint64__nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint64_, nullable_uint8_))":"01000000000000F03F00000000000020400000000000000000AFCD1921F8671644"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint64__nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint64_, nullable_uint64_))":"01000000000000F03F00000000000020400000000000000000AFCD1921F8671644"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint64__nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint64_, nullable_uint32_))":"01000000000000F03F00000000000020400000000000000000AFCD1921F8671644"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint64__nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint64_, nullable_uint16_))":"01000000000000F03F00000000000020400000000000000000AFCD1921F8671644"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint64__lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint64_, lowcardinality_uint8_))":"01000000000000F03F00000000000020400000000000000000AFCD1921F8671644"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint64__lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint64_, lowcardinality_uint64_))":"01000000000000F03F00000000000020400000000000000000AFCD1921F8671644"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint64__lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint64_, lowcardinality_uint32_))":"01000000000000F03F00000000000020400000000000000000AFCD1921F8671644"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint64__lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint64_, lowcardinality_uint16_))":"01000000000000F03F00000000000020400000000000000000AFCD1921F8671644"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint64__lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint64_, lowcardinality_nullable_uint8__))":"01000000000000F03F00000000000020400000000000000000AFCD1921F8671644"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint64__lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint64_, lowcardinality_nullable_uint64__))":"01000000000000F03F00000000000020400000000000000000AFCD1921F8671644"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint64__lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint64_, lowcardinality_nullable_uint32__))":"01000000000000F03F00000000000020400000000000000000AFCD1921F8671644"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint64__lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint64_, lowcardinality_nullable_uint16__))":"01000000000000F03F00000000000020400000000000000000AFCD1921F8671644"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint32__uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint32_, uint8))":"01000000000000F03F00000000000020400000000000000000000038495CF31142"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint32__uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint32_, uint64))":"01000000000000F03F00000000000020400000000000000000000038495CF31142"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint32__uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint32_, uint32))":"01000000000000F03F00000000000020400000000000000000000038495CF31142"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint32__uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint32_, uint16))":"01000000000000F03F00000000000020400000000000000000000038495CF31142"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint32__nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint32_, nullable_uint8_))":"01000000000000F03F00000000000020400000000000000000000038495CF31142"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint32__nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint32_, nullable_uint64_))":"01000000000000F03F00000000000020400000000000000000000038495CF31142"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint32__nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint32_, nullable_uint32_))":"01000000000000F03F00000000000020400000000000000000000038495CF31142"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint32__nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint32_, nullable_uint16_))":"01000000000000F03F00000000000020400000000000000000000038495CF31142"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint32__lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint32_, lowcardinality_uint8_))":"01000000000000F03F00000000000020400000000000000000000038495CF31142"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint32__lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint32_, lowcardinality_uint64_))":"01000000000000F03F00000000000020400000000000000000000038495CF31142"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint32__lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint32_, lowcardinality_uint32_))":"01000000000000F03F00000000000020400000000000000000000038495CF31142"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint32__lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint32_, lowcardinality_uint16_))":"01000000000000F03F00000000000020400000000000000000000038495CF31142"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint32__lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint32_, lowcardinality_nullable_uint8__))":"01000000000000F03F00000000000020400000000000000000000038495CF31142"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint32__lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint32_, lowcardinality_nullable_uint64__))":"01000000000000F03F00000000000020400000000000000000000038495CF31142"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint32__lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint32_, lowcardinality_nullable_uint32__))":"01000000000000F03F00000000000020400000000000000000000038495CF31142"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint32__lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint32_, lowcardinality_nullable_uint16__))":"01000000000000F03F00000000000020400000000000000000000038495CF31142"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint16__uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint16_, uint8))":"01000000000000F03F0000000000002040000000000000000000000000909B1241"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint16__uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint16_, uint64))":"01000000000000F03F0000000000002040000000000000000000000000909B1241"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint16__uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint16_, uint32))":"01000000000000F03F0000000000002040000000000000000000000000909B1241"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint16__uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint16_, uint16))":"01000000000000F03F0000000000002040000000000000000000000000909B1241"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint16__nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint16_, nullable_uint8_))":"01000000000000F03F0000000000002040000000000000000000000000909B1241"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint16__nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint16_, nullable_uint64_))":"01000000000000F03F0000000000002040000000000000000000000000909B1241"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint16__nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint16_, nullable_uint32_))":"01000000000000F03F0000000000002040000000000000000000000000909B1241"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint16__nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint16_, nullable_uint16_))":"01000000000000F03F0000000000002040000000000000000000000000909B1241"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint16__lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint16_, lowcardinality_uint8_))":"01000000000000F03F0000000000002040000000000000000000000000909B1241"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint16__lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint16_, lowcardinality_uint64_))":"01000000000000F03F0000000000002040000000000000000000000000909B1241"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint16__lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint16_, lowcardinality_uint32_))":"01000000000000F03F0000000000002040000000000000000000000000909B1241"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint16__lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint16_, lowcardinality_uint16_))":"01000000000000F03F0000000000002040000000000000000000000000909B1241"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint16__lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint16_, lowcardinality_nullable_uint8__))":"01000000000000F03F0000000000002040000000000000000000000000909B1241"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint16__lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint16_, lowcardinality_nullable_uint64__))":"01000000000000F03F0000000000002040000000000000000000000000909B1241"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint16__lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint16_, lowcardinality_nullable_uint32__))":"01000000000000F03F0000000000002040000000000000000000000000909B1241"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_uint16__lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_uint16_, lowcardinality_nullable_uint16__))":"01000000000000F03F0000000000002040000000000000000000000000909B1241"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int8__uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int8_, uint8))":"01000000000000F03F000000000000204000000000000060C00000000000206240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int8__uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int8_, uint64))":"01000000000000F03F000000000000204000000000000060C00000000000206240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int8__uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int8_, uint32))":"01000000000000F03F000000000000204000000000000060C00000000000206240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int8__uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int8_, uint16))":"01000000000000F03F000000000000204000000000000060C00000000000206240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int8__nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int8_, nullable_uint8_))":"01000000000000F03F000000000000204000000000000060C00000000000206240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int8__nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int8_, nullable_uint64_))":"01000000000000F03F000000000000204000000000000060C00000000000206240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int8__nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int8_, nullable_uint32_))":"01000000000000F03F000000000000204000000000000060C00000000000206240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int8__nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int8_, nullable_uint16_))":"01000000000000F03F000000000000204000000000000060C00000000000206240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int8__lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int8_, lowcardinality_uint8_))":"01000000000000F03F000000000000204000000000000060C00000000000206240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int8__lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int8_, lowcardinality_uint64_))":"01000000000000F03F000000000000204000000000000060C00000000000206240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int8__lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int8_, lowcardinality_uint32_))":"01000000000000F03F000000000000204000000000000060C00000000000206240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int8__lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int8_, lowcardinality_uint16_))":"01000000000000F03F000000000000204000000000000060C00000000000206240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int8__lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int8_, lowcardinality_nullable_uint8__))":"01000000000000F03F000000000000204000000000000060C00000000000206240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int8__lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int8_, lowcardinality_nullable_uint64__))":"01000000000000F03F000000000000204000000000000060C00000000000206240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int8__lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int8_, lowcardinality_nullable_uint32__))":"01000000000000F03F000000000000204000000000000060C00000000000206240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int8__lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int8_, lowcardinality_nullable_uint16__))":"01000000000000F03F000000000000204000000000000060C00000000000206240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int64__uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int64_, uint8))":"01000000000000F03F0000000000002040000000000000E0C337668255AEE3E643"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int64__uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int64_, uint64))":"01000000000000F03F0000000000002040000000000000E0C337668255AEE3E643"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int64__uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int64_, uint32))":"01000000000000F03F0000000000002040000000000000E0C337668255AEE3E643"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int64__uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int64_, uint16))":"01000000000000F03F0000000000002040000000000000E0C337668255AEE3E643"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int64__nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int64_, nullable_uint8_))":"01000000000000F03F0000000000002040000000000000E0C337668255AEE3E643"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int64__nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int64_, nullable_uint64_))":"01000000000000F03F0000000000002040000000000000E0C337668255AEE3E643"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int64__nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int64_, nullable_uint32_))":"01000000000000F03F0000000000002040000000000000E0C337668255AEE3E643"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int64__nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int64_, nullable_uint16_))":"01000000000000F03F0000000000002040000000000000E0C337668255AEE3E643"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int64__lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int64_, lowcardinality_uint8_))":"01000000000000F03F0000000000002040000000000000E0C337668255AEE3E643"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int64__lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int64_, lowcardinality_uint64_))":"01000000000000F03F0000000000002040000000000000E0C337668255AEE3E643"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int64__lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int64_, lowcardinality_uint32_))":"01000000000000F03F0000000000002040000000000000E0C337668255AEE3E643"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int64__lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int64_, lowcardinality_uint16_))":"01000000000000F03F0000000000002040000000000000E0C337668255AEE3E643"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int64__lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int64_, lowcardinality_nullable_uint8__))":"01000000000000F03F0000000000002040000000000000E0C337668255AEE3E643"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int64__lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int64_, lowcardinality_nullable_uint64__))":"01000000000000F03F0000000000002040000000000000E0C337668255AEE3E643"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int64__lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int64_, lowcardinality_nullable_uint32__))":"01000000000000F03F0000000000002040000000000000E0C337668255AEE3E643"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int64__lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int64_, lowcardinality_nullable_uint16__))":"01000000000000F03F0000000000002040000000000000E0C337668255AEE3E643"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int32__uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int32_, uint8))":"01000000000000F03F0000000000002040000000000000E0C10000F0147541F841"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int32__uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int32_, uint64))":"01000000000000F03F0000000000002040000000000000E0C10000F0147541F841"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int32__uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int32_, uint32))":"01000000000000F03F0000000000002040000000000000E0C10000F0147541F841"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int32__uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int32_, uint16))":"01000000000000F03F0000000000002040000000000000E0C10000F0147541F841"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int32__nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int32_, nullable_uint8_))":"01000000000000F03F0000000000002040000000000000E0C10000F0147541F841"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int32__nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int32_, nullable_uint64_))":"01000000000000F03F0000000000002040000000000000E0C10000F0147541F841"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int32__nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int32_, nullable_uint32_))":"01000000000000F03F0000000000002040000000000000E0C10000F0147541F841"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int32__nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int32_, nullable_uint16_))":"01000000000000F03F0000000000002040000000000000E0C10000F0147541F841"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int32__lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int32_, lowcardinality_uint8_))":"01000000000000F03F0000000000002040000000000000E0C10000F0147541F841"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int32__lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int32_, lowcardinality_uint64_))":"01000000000000F03F0000000000002040000000000000E0C10000F0147541F841"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int32__lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int32_, lowcardinality_uint32_))":"01000000000000F03F0000000000002040000000000000E0C10000F0147541F841"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int32__lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int32_, lowcardinality_uint16_))":"01000000000000F03F0000000000002040000000000000E0C10000F0147541F841"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int32__lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int32_, lowcardinality_nullable_uint8__))":"01000000000000F03F0000000000002040000000000000E0C10000F0147541F841"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int32__lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int32_, lowcardinality_nullable_uint64__))":"01000000000000F03F0000000000002040000000000000E0C10000F0147541F841"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int32__lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int32_, lowcardinality_nullable_uint32__))":"01000000000000F03F0000000000002040000000000000E0C10000F0147541F841"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int32__lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int32_, lowcardinality_nullable_uint16__))":"01000000000000F03F0000000000002040000000000000E0C10000F0147541F841"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int16__uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int16_, uint8))":"01000000000000F03F0000000000002040000000000000E0C00000000000F9B740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int16__uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int16_, uint64))":"01000000000000F03F0000000000002040000000000000E0C00000000000F9B740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int16__uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int16_, uint32))":"01000000000000F03F0000000000002040000000000000E0C00000000000F9B740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int16__uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int16_, uint16))":"01000000000000F03F0000000000002040000000000000E0C00000000000F9B740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int16__nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int16_, nullable_uint8_))":"01000000000000F03F0000000000002040000000000000E0C00000000000F9B740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int16__nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int16_, nullable_uint64_))":"01000000000000F03F0000000000002040000000000000E0C00000000000F9B740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int16__nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int16_, nullable_uint32_))":"01000000000000F03F0000000000002040000000000000E0C00000000000F9B740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int16__nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int16_, nullable_uint16_))":"01000000000000F03F0000000000002040000000000000E0C00000000000F9B740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int16__lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int16_, lowcardinality_uint8_))":"01000000000000F03F0000000000002040000000000000E0C00000000000F9B740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int16__lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int16_, lowcardinality_uint64_))":"01000000000000F03F0000000000002040000000000000E0C00000000000F9B740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int16__lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int16_, lowcardinality_uint32_))":"01000000000000F03F0000000000002040000000000000E0C00000000000F9B740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int16__lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int16_, lowcardinality_uint16_))":"01000000000000F03F0000000000002040000000000000E0C00000000000F9B740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int16__lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int16_, lowcardinality_nullable_uint8__))":"01000000000000F03F0000000000002040000000000000E0C00000000000F9B740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int16__lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int16_, lowcardinality_nullable_uint64__))":"01000000000000F03F0000000000002040000000000000E0C00000000000F9B740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int16__lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int16_, lowcardinality_nullable_uint32__))":"01000000000000F03F0000000000002040000000000000E0C00000000000F9B740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_int16__lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_int16_, lowcardinality_nullable_uint16__))":"01000000000000F03F0000000000002040000000000000E0C00000000000F9B740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float64__uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float64_, uint8))":"01000000000000F03F000000000000204051776F82FDFFEFFF4D5A3470FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float64__uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float64_, uint64))":"01000000000000F03F000000000000204051776F82FDFFEFFF4D5A3470FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float64__uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float64_, uint32))":"01000000000000F03F000000000000204051776F82FDFFEFFF4D5A3470FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float64__uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float64_, uint16))":"01000000000000F03F000000000000204051776F82FDFFEFFF4D5A3470FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float64__nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float64_, nullable_uint8_))":"01000000000000F03F000000000000204051776F82FDFFEFFF4D5A3470FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float64__nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float64_, nullable_uint64_))":"01000000000000F03F000000000000204051776F82FDFFEFFF4D5A3470FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float64__nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float64_, nullable_uint32_))":"01000000000000F03F000000000000204051776F82FDFFEFFF4D5A3470FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float64__nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float64_, nullable_uint16_))":"01000000000000F03F000000000000204051776F82FDFFEFFF4D5A3470FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float64__lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float64_, lowcardinality_uint8_))":"01000000000000F03F000000000000204051776F82FDFFEFFF4D5A3470FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float64__lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float64_, lowcardinality_uint64_))":"01000000000000F03F000000000000204051776F82FDFFEFFF4D5A3470FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float64__lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float64_, lowcardinality_uint32_))":"01000000000000F03F000000000000204051776F82FDFFEFFF4D5A3470FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float64__lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float64_, lowcardinality_uint16_))":"01000000000000F03F000000000000204051776F82FDFFEFFF4D5A3470FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float64__lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float64_, lowcardinality_nullable_uint8__))":"01000000000000F03F000000000000204051776F82FDFFEFFF4D5A3470FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float64__lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float64_, lowcardinality_nullable_uint64__))":"01000000000000F03F000000000000204051776F82FDFFEFFF4D5A3470FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float64__lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float64_, lowcardinality_nullable_uint32__))":"01000000000000F03F000000000000204051776F82FDFFEFFF4D5A3470FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float64__lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float64_, lowcardinality_nullable_uint16__))":"01000000000000F03F000000000000204051776F82FDFFEFFF4D5A3470FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float32__uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float32_, uint8))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000ACEFB7FFC7"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float32__uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float32_, uint64))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000ACEFB7FFC7"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float32__uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float32_, uint32))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000ACEFB7FFC7"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float32__uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float32_, uint16))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000ACEFB7FFC7"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float32__nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float32_, nullable_uint8_))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000ACEFB7FFC7"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float32__nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float32_, nullable_uint64_))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000ACEFB7FFC7"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float32__nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float32_, nullable_uint32_))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000ACEFB7FFC7"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float32__nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float32_, nullable_uint16_))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000ACEFB7FFC7"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float32__lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float32_, lowcardinality_uint8_))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000ACEFB7FFC7"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float32__lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float32_, lowcardinality_uint64_))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000ACEFB7FFC7"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float32__lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float32_, lowcardinality_uint32_))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000ACEFB7FFC7"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float32__lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float32_, lowcardinality_uint16_))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000ACEFB7FFC7"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float32__lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float32_, lowcardinality_nullable_uint8__))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000ACEFB7FFC7"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float32__lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float32_, lowcardinality_nullable_uint64__))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000ACEFB7FFC7"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float32__lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float32_, lowcardinality_nullable_uint32__))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000ACEFB7FFC7"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_float32__lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_float32_, lowcardinality_nullable_uint16__))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000ACEFB7FFC7"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_decimal128_38___uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_decimal128_38__, uint8))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_decimal128_38___uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_decimal128_38__, uint64))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_decimal128_38___uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_decimal128_38__, uint32))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_decimal128_38___uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_decimal128_38__, uint16))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_decimal128_38___nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_decimal128_38__, nullable_uint8_))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_decimal128_38___nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_decimal128_38__, nullable_uint64_))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_decimal128_38___nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_decimal128_38__, nullable_uint32_))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_decimal128_38___nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_decimal128_38__, nullable_uint16_))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_decimal128_38___lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_decimal128_38__, lowcardinality_uint8_))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_decimal128_38___lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_decimal128_38__, lowcardinality_uint64_))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_decimal128_38___lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_decimal128_38__, lowcardinality_uint32_))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_decimal128_38___lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_decimal128_38__, lowcardinality_uint16_))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_decimal128_38___lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_decimal128_38__, lowcardinality_nullable_uint8__))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_decimal128_38___lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_decimal128_38__, lowcardinality_nullable_uint64__))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_decimal128_38___lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_decimal128_38__, lowcardinality_nullable_uint32__))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_nullable_decimal128_38___lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(nullable_decimal128_38__, lowcardinality_nullable_uint16__))":"01000000000000F03F0000000000002040000000000000F0BF58F5990ED2D50240"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint8__uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint8_, uint8))":"0000000000000040000000000000204000000000000000000000000000B49740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint8__uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint8_, uint64))":"0000000000000040000000000000204000000000000000000000000000B49740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint8__uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint8_, uint32))":"0000000000000040000000000000204000000000000000000000000000B49740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint8__uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint8_, uint16))":"0000000000000040000000000000204000000000000000000000000000B49740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint8__nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint8_, nullable_uint8_))":"01000000000000F03F000000000000204000000000000000000000000000B49740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint8__nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint8_, nullable_uint64_))":"01000000000000F03F000000000000204000000000000000000000000000B49740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint8__nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint8_, nullable_uint32_))":"01000000000000F03F000000000000204000000000000000000000000000B49740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint8__nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint8_, nullable_uint16_))":"01000000000000F03F000000000000204000000000000000000000000000B49740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint8__lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint8_, lowcardinality_uint8_))":"0000000000000040000000000000204000000000000000000000000000B49740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint8__lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint8_, lowcardinality_uint64_))":"0000000000000040000000000000204000000000000000000000000000B49740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint8__lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint8_, lowcardinality_uint32_))":"0000000000000040000000000000204000000000000000000000000000B49740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint8__lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint8_, lowcardinality_uint16_))":"0000000000000040000000000000204000000000000000000000000000B49740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint8__lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint8_, lowcardinality_nullable_uint8__))":"01000000000000F03F000000000000204000000000000000000000000000B49740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint8__lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint8_, lowcardinality_nullable_uint64__))":"01000000000000F03F000000000000204000000000000000000000000000B49740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint8__lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint8_, lowcardinality_nullable_uint32__))":"01000000000000F03F000000000000204000000000000000000000000000B49740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint8__lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint8_, lowcardinality_nullable_uint16__))":"01000000000000F03F000000000000204000000000000000000000000000B49740"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint64__uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint64_, uint8))":"00000000000000400000000000002040000000000000000080C7575EA1AF1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint64__uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint64_, uint64))":"00000000000000400000000000002040000000000000000080C7575EA1AF1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint64__uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint64_, uint32))":"00000000000000400000000000002040000000000000000080C7575EA1AF1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint64__uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint64_, uint16))":"00000000000000400000000000002040000000000000000080C7575EA1AF1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint64__nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint64_, nullable_uint8_))":"01000000000000F03F0000000000002040000000000000000080C7575EA1AF1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint64__nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint64_, nullable_uint64_))":"01000000000000F03F0000000000002040000000000000000080C7575EA1AF1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint64__nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint64_, nullable_uint32_))":"01000000000000F03F0000000000002040000000000000000080C7575EA1AF1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint64__nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint64_, nullable_uint16_))":"01000000000000F03F0000000000002040000000000000000080C7575EA1AF1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint64__lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint64_, lowcardinality_uint8_))":"00000000000000400000000000002040000000000000000080C7575EA1AF1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint64__lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint64_, lowcardinality_uint64_))":"00000000000000400000000000002040000000000000000080C7575EA1AF1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint64__lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint64_, lowcardinality_uint32_))":"00000000000000400000000000002040000000000000000080C7575EA1AF1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint64__lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint64_, lowcardinality_uint16_))":"00000000000000400000000000002040000000000000000080C7575EA1AF1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint64__lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint64_, lowcardinality_nullable_uint8__))":"01000000000000F03F0000000000002040000000000000000080C7575EA1AF1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint64__lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint64_, lowcardinality_nullable_uint64__))":"01000000000000F03F0000000000002040000000000000000080C7575EA1AF1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint64__lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint64_, lowcardinality_nullable_uint32__))":"01000000000000F03F0000000000002040000000000000000080C7575EA1AF1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint64__lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint64_, lowcardinality_nullable_uint16__))":"01000000000000F03F0000000000002040000000000000000080C7575EA1AF1344"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint32__uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint32_, uint8))":"000000000000004000000000000020400000000000000000000070D60C820F42"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint32__uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint32_, uint64))":"000000000000004000000000000020400000000000000000000070D60C820F42"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint32__uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint32_, uint32))":"000000000000004000000000000020400000000000000000000070D60C820F42"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint32__uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint32_, uint16))":"000000000000004000000000000020400000000000000000000070D60C820F42"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint32__nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint32_, nullable_uint8_))":"01000000000000F03F00000000000020400000000000000000000070D60C820F42"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint32__nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint32_, nullable_uint64_))":"01000000000000F03F00000000000020400000000000000000000070D60C820F42"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint32__nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint32_, nullable_uint32_))":"01000000000000F03F00000000000020400000000000000000000070D60C820F42"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint32__nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint32_, nullable_uint16_))":"01000000000000F03F00000000000020400000000000000000000070D60C820F42"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint32__lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint32_, lowcardinality_uint8_))":"000000000000004000000000000020400000000000000000000070D60C820F42"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint32__lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint32_, lowcardinality_uint64_))":"000000000000004000000000000020400000000000000000000070D60C820F42"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint32__lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint32_, lowcardinality_uint32_))":"000000000000004000000000000020400000000000000000000070D60C820F42"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint32__lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint32_, lowcardinality_uint16_))":"000000000000004000000000000020400000000000000000000070D60C820F42"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint32__lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint32_, lowcardinality_nullable_uint8__))":"01000000000000F03F00000000000020400000000000000000000070D60C820F42"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint32__lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint32_, lowcardinality_nullable_uint64__))":"01000000000000F03F00000000000020400000000000000000000070D60C820F42"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint32__lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint32_, lowcardinality_nullable_uint32__))":"01000000000000F03F00000000000020400000000000000000000070D60C820F42"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint32__lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint32_, lowcardinality_nullable_uint16__))":"01000000000000F03F00000000000020400000000000000000000070D60C820F42"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint16__uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint16_, uint8))":"0000000000000040000000000000204000000000000000000000000080F61341"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint16__uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint16_, uint64))":"0000000000000040000000000000204000000000000000000000000080F61341"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint16__uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint16_, uint32))":"0000000000000040000000000000204000000000000000000000000080F61341"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint16__uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint16_, uint16))":"0000000000000040000000000000204000000000000000000000000080F61341"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint16__nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint16_, nullable_uint8_))":"01000000000000F03F000000000000204000000000000000000000000080F61341"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint16__nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint16_, nullable_uint64_))":"01000000000000F03F000000000000204000000000000000000000000080F61341"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint16__nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint16_, nullable_uint32_))":"01000000000000F03F000000000000204000000000000000000000000080F61341"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint16__nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint16_, nullable_uint16_))":"01000000000000F03F000000000000204000000000000000000000000080F61341"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint16__lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint16_, lowcardinality_uint8_))":"0000000000000040000000000000204000000000000000000000000080F61341"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint16__lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint16_, lowcardinality_uint64_))":"0000000000000040000000000000204000000000000000000000000080F61341"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint16__lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint16_, lowcardinality_uint32_))":"0000000000000040000000000000204000000000000000000000000080F61341"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint16__lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint16_, lowcardinality_uint16_))":"0000000000000040000000000000204000000000000000000000000080F61341"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint16__lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint16_, lowcardinality_nullable_uint8__))":"01000000000000F03F000000000000204000000000000000000000000080F61341"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint16__lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint16_, lowcardinality_nullable_uint64__))":"01000000000000F03F000000000000204000000000000000000000000080F61341"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint16__lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint16_, lowcardinality_nullable_uint32__))":"01000000000000F03F000000000000204000000000000000000000000080F61341"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_uint16__lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_uint16_, lowcardinality_nullable_uint16__))":"01000000000000F03F000000000000204000000000000000000000000080F61341"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint8___uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint8__, uint8))":"01000000000000F03F000000000000204000000000000000000000000000D89440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint8___uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint8__, uint64))":"01000000000000F03F000000000000204000000000000000000000000000D89440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint8___uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint8__, uint32))":"01000000000000F03F000000000000204000000000000000000000000000D89440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint8___uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint8__, uint16))":"01000000000000F03F000000000000204000000000000000000000000000D89440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint8___nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint8__, nullable_uint8_))":"01000000000000F03F000000000000204000000000000000000000000000D89440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint8___nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint8__, nullable_uint64_))":"01000000000000F03F000000000000204000000000000000000000000000D89440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint8___nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint8__, nullable_uint32_))":"01000000000000F03F000000000000204000000000000000000000000000D89440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint8___nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint8__, nullable_uint16_))":"01000000000000F03F000000000000204000000000000000000000000000D89440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint8___lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint8__, lowcardinality_uint8_))":"01000000000000F03F000000000000204000000000000000000000000000D89440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint8___lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint8__, lowcardinality_uint64_))":"01000000000000F03F000000000000204000000000000000000000000000D89440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint8___lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint8__, lowcardinality_uint32_))":"01000000000000F03F000000000000204000000000000000000000000000D89440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint8___lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint8__, lowcardinality_uint16_))":"01000000000000F03F000000000000204000000000000000000000000000D89440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint8___lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint8__, lowcardinality_nullable_uint8__))":"01000000000000F03F000000000000204000000000000000000000000000D89440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint8___lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint8__, lowcardinality_nullable_uint64__))":"01000000000000F03F000000000000204000000000000000000000000000D89440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint8___lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint8__, lowcardinality_nullable_uint32__))":"01000000000000F03F000000000000204000000000000000000000000000D89440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint8___lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint8__, lowcardinality_nullable_uint16__))":"01000000000000F03F000000000000204000000000000000000000000000D89440"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint64___uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint64__, uint8))":"01000000000000F03F000000000000204000000000000000006111118E70FB1044"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint64___uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint64__, uint64))":"01000000000000F03F000000000000204000000000000000006111118E70FB1044"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint64___uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint64__, uint32))":"01000000000000F03F000000000000204000000000000000006111118E70FB1044"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint64___uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint64__, uint16))":"01000000000000F03F000000000000204000000000000000006111118E70FB1044"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint64___nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint64__, nullable_uint8_))":"01000000000000F03F000000000000204000000000000000006111118E70FB1044"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint64___nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint64__, nullable_uint64_))":"01000000000000F03F000000000000204000000000000000006111118E70FB1044"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint64___nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint64__, nullable_uint32_))":"01000000000000F03F000000000000204000000000000000006111118E70FB1044"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint64___nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint64__, nullable_uint16_))":"01000000000000F03F000000000000204000000000000000006111118E70FB1044"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint64___lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint64__, lowcardinality_uint8_))":"01000000000000F03F000000000000204000000000000000006111118E70FB1044"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint64___lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint64__, lowcardinality_uint64_))":"01000000000000F03F000000000000204000000000000000006111118E70FB1044"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint64___lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint64__, lowcardinality_uint32_))":"01000000000000F03F000000000000204000000000000000006111118E70FB1044"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint64___lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint64__, lowcardinality_uint16_))":"01000000000000F03F000000000000204000000000000000006111118E70FB1044"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint64___lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint64__, lowcardinality_nullable_uint8__))":"01000000000000F03F000000000000204000000000000000006111118E70FB1044"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint64___lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint64__, lowcardinality_nullable_uint64__))":"01000000000000F03F000000000000204000000000000000006111118E70FB1044"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint64___lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint64__, lowcardinality_nullable_uint32__))":"01000000000000F03F000000000000204000000000000000006111118E70FB1044"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint64___lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint64__, lowcardinality_nullable_uint16__))":"01000000000000F03F000000000000204000000000000000006111118E70FB1044"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint32___uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint32__, uint8))":"01000000000000F03F000000000000204000000000000000000000400731781542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint32___uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint32__, uint64))":"01000000000000F03F000000000000204000000000000000000000400731781542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint32___uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint32__, uint32))":"01000000000000F03F000000000000204000000000000000000000400731781542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint32___uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint32__, uint16))":"01000000000000F03F000000000000204000000000000000000000400731781542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint32___nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint32__, nullable_uint8_))":"01000000000000F03F000000000000204000000000000000000000400731781542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint32___nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint32__, nullable_uint64_))":"01000000000000F03F000000000000204000000000000000000000400731781542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint32___nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint32__, nullable_uint32_))":"01000000000000F03F000000000000204000000000000000000000400731781542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint32___nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint32__, nullable_uint16_))":"01000000000000F03F000000000000204000000000000000000000400731781542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint32___lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint32__, lowcardinality_uint8_))":"01000000000000F03F000000000000204000000000000000000000400731781542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint32___lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint32__, lowcardinality_uint64_))":"01000000000000F03F000000000000204000000000000000000000400731781542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint32___lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint32__, lowcardinality_uint32_))":"01000000000000F03F000000000000204000000000000000000000400731781542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint32___lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint32__, lowcardinality_uint16_))":"01000000000000F03F000000000000204000000000000000000000400731781542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint32___lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint32__, lowcardinality_nullable_uint8__))":"01000000000000F03F000000000000204000000000000000000000400731781542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint32___lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint32__, lowcardinality_nullable_uint64__))":"01000000000000F03F000000000000204000000000000000000000400731781542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint32___lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint32__, lowcardinality_nullable_uint32__))":"01000000000000F03F000000000000204000000000000000000000400731781542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint32___lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint32__, lowcardinality_nullable_uint16__))":"01000000000000F03F000000000000204000000000000000000000400731781542"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint16___uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint16__, uint8))":"01000000000000F03F0000000000002040000000000000000000000000A0D50D41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint16___uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint16__, uint64))":"01000000000000F03F0000000000002040000000000000000000000000A0D50D41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint16___uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint16__, uint32))":"01000000000000F03F0000000000002040000000000000000000000000A0D50D41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint16___uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint16__, uint16))":"01000000000000F03F0000000000002040000000000000000000000000A0D50D41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint16___nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint16__, nullable_uint8_))":"01000000000000F03F0000000000002040000000000000000000000000A0D50D41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint16___nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint16__, nullable_uint64_))":"01000000000000F03F0000000000002040000000000000000000000000A0D50D41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint16___nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint16__, nullable_uint32_))":"01000000000000F03F0000000000002040000000000000000000000000A0D50D41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint16___nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint16__, nullable_uint16_))":"01000000000000F03F0000000000002040000000000000000000000000A0D50D41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint16___lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint16__, lowcardinality_uint8_))":"01000000000000F03F0000000000002040000000000000000000000000A0D50D41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint16___lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint16__, lowcardinality_uint64_))":"01000000000000F03F0000000000002040000000000000000000000000A0D50D41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint16___lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint16__, lowcardinality_uint32_))":"01000000000000F03F0000000000002040000000000000000000000000A0D50D41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint16___lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint16__, lowcardinality_uint16_))":"01000000000000F03F0000000000002040000000000000000000000000A0D50D41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint16___lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint16__, lowcardinality_nullable_uint8__))":"01000000000000F03F0000000000002040000000000000000000000000A0D50D41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint16___lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint16__, lowcardinality_nullable_uint64__))":"01000000000000F03F0000000000002040000000000000000000000000A0D50D41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint16___lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint16__, lowcardinality_nullable_uint32__))":"01000000000000F03F0000000000002040000000000000000000000000A0D50D41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_uint16___lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_uint16__, lowcardinality_nullable_uint16__))":"01000000000000F03F0000000000002040000000000000000000000000A0D50D41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int8___uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int8__, uint8))":"01000000000000F03F000000000000204000000000000060C00000000000006C40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int8___uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int8__, uint64))":"01000000000000F03F000000000000204000000000000060C00000000000006C40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int8___uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int8__, uint32))":"01000000000000F03F000000000000204000000000000060C00000000000006C40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int8___uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int8__, uint16))":"01000000000000F03F000000000000204000000000000060C00000000000006C40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int8___nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int8__, nullable_uint8_))":"01000000000000F03F000000000000204000000000000060C00000000000006C40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int8___nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int8__, nullable_uint64_))":"01000000000000F03F000000000000204000000000000060C00000000000006C40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int8___nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int8__, nullable_uint32_))":"01000000000000F03F000000000000204000000000000060C00000000000006C40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int8___nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int8__, nullable_uint16_))":"01000000000000F03F000000000000204000000000000060C00000000000006C40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int8___lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int8__, lowcardinality_uint8_))":"01000000000000F03F000000000000204000000000000060C00000000000006C40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int8___lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int8__, lowcardinality_uint64_))":"01000000000000F03F000000000000204000000000000060C00000000000006C40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int8___lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int8__, lowcardinality_uint32_))":"01000000000000F03F000000000000204000000000000060C00000000000006C40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int8___lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int8__, lowcardinality_uint16_))":"01000000000000F03F000000000000204000000000000060C00000000000006C40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int8___lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int8__, lowcardinality_nullable_uint8__))":"01000000000000F03F000000000000204000000000000060C00000000000006C40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int8___lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int8__, lowcardinality_nullable_uint64__))":"01000000000000F03F000000000000204000000000000060C00000000000006C40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int8___lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int8__, lowcardinality_nullable_uint32__))":"01000000000000F03F000000000000204000000000000060C00000000000006C40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int8___lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int8__, lowcardinality_nullable_uint16__))":"01000000000000F03F000000000000204000000000000060C00000000000006C40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int64___uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int64__, uint8))":"01000000000000F03F0000000000002040000000000000E0C3F42E0083637BF443"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int64___uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int64__, uint64))":"01000000000000F03F0000000000002040000000000000E0C3F42E0083637BF443"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int64___uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int64__, uint32))":"01000000000000F03F0000000000002040000000000000E0C3F42E0083637BF443"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int64___uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int64__, uint16))":"01000000000000F03F0000000000002040000000000000E0C3F42E0083637BF443"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int64___nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int64__, nullable_uint8_))":"01000000000000F03F0000000000002040000000000000E0C3F42E0083637BF443"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int64___nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int64__, nullable_uint64_))":"01000000000000F03F0000000000002040000000000000E0C3F42E0083637BF443"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int64___nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int64__, nullable_uint32_))":"01000000000000F03F0000000000002040000000000000E0C3F42E0083637BF443"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int64___nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int64__, nullable_uint16_))":"01000000000000F03F0000000000002040000000000000E0C3F42E0083637BF443"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int64___lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int64__, lowcardinality_uint8_))":"01000000000000F03F0000000000002040000000000000E0C3F42E0083637BF443"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int64___lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int64__, lowcardinality_uint64_))":"01000000000000F03F0000000000002040000000000000E0C3F42E0083637BF443"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int64___lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int64__, lowcardinality_uint32_))":"01000000000000F03F0000000000002040000000000000E0C3F42E0083637BF443"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int64___lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int64__, lowcardinality_uint16_))":"01000000000000F03F0000000000002040000000000000E0C3F42E0083637BF443"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int64___lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int64__, lowcardinality_nullable_uint8__))":"01000000000000F03F0000000000002040000000000000E0C3F42E0083637BF443"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int64___lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int64__, lowcardinality_nullable_uint64__))":"01000000000000F03F0000000000002040000000000000E0C3F42E0083637BF443"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int64___lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int64__, lowcardinality_nullable_uint32__))":"01000000000000F03F0000000000002040000000000000E0C3F42E0083637BF443"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int64___lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int64__, lowcardinality_nullable_uint16__))":"01000000000000F03F0000000000002040000000000000E0C3F42E0083637BF443"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int32___uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int32__, uint8))":"01000000000000F03F0000000000002040000000000000E0C10000807E477FD741"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int32___uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int32__, uint64))":"01000000000000F03F0000000000002040000000000000E0C10000807E477FD741"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int32___uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int32__, uint32))":"01000000000000F03F0000000000002040000000000000E0C10000807E477FD741"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int32___uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int32__, uint16))":"01000000000000F03F0000000000002040000000000000E0C10000807E477FD741"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int32___nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int32__, nullable_uint8_))":"01000000000000F03F0000000000002040000000000000E0C10000807E477FD741"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int32___nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int32__, nullable_uint64_))":"01000000000000F03F0000000000002040000000000000E0C10000807E477FD741"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int32___nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int32__, nullable_uint32_))":"01000000000000F03F0000000000002040000000000000E0C10000807E477FD741"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int32___nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int32__, nullable_uint16_))":"01000000000000F03F0000000000002040000000000000E0C10000807E477FD741"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int32___lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int32__, lowcardinality_uint8_))":"01000000000000F03F0000000000002040000000000000E0C10000807E477FD741"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int32___lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int32__, lowcardinality_uint64_))":"01000000000000F03F0000000000002040000000000000E0C10000807E477FD741"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int32___lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int32__, lowcardinality_uint32_))":"01000000000000F03F0000000000002040000000000000E0C10000807E477FD741"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int32___lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int32__, lowcardinality_uint16_))":"01000000000000F03F0000000000002040000000000000E0C10000807E477FD741"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int32___lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int32__, lowcardinality_nullable_uint8__))":"01000000000000F03F0000000000002040000000000000E0C10000807E477FD741"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int32___lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int32__, lowcardinality_nullable_uint64__))":"01000000000000F03F0000000000002040000000000000E0C10000807E477FD741"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int32___lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int32__, lowcardinality_nullable_uint32__))":"01000000000000F03F0000000000002040000000000000E0C10000807E477FD741"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int32___lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int32__, lowcardinality_nullable_uint16__))":"01000000000000F03F0000000000002040000000000000E0C10000807E477FD741"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int16___uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int16__, uint8))":"01000000000000F03F0000000000002040000000000000E0C000000000001AADC0"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int16___uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int16__, uint64))":"01000000000000F03F0000000000002040000000000000E0C000000000001AADC0"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int16___uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int16__, uint32))":"01000000000000F03F0000000000002040000000000000E0C000000000001AADC0"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int16___uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int16__, uint16))":"01000000000000F03F0000000000002040000000000000E0C000000000001AADC0"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int16___nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int16__, nullable_uint8_))":"01000000000000F03F0000000000002040000000000000E0C000000000001AADC0"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int16___nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int16__, nullable_uint64_))":"01000000000000F03F0000000000002040000000000000E0C000000000001AADC0"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int16___nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int16__, nullable_uint32_))":"01000000000000F03F0000000000002040000000000000E0C000000000001AADC0"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int16___nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int16__, nullable_uint16_))":"01000000000000F03F0000000000002040000000000000E0C000000000001AADC0"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int16___lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int16__, lowcardinality_uint8_))":"01000000000000F03F0000000000002040000000000000E0C000000000001AADC0"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int16___lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int16__, lowcardinality_uint64_))":"01000000000000F03F0000000000002040000000000000E0C000000000001AADC0"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int16___lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int16__, lowcardinality_uint32_))":"01000000000000F03F0000000000002040000000000000E0C000000000001AADC0"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int16___lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int16__, lowcardinality_uint16_))":"01000000000000F03F0000000000002040000000000000E0C000000000001AADC0"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int16___lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int16__, lowcardinality_nullable_uint8__))":"01000000000000F03F0000000000002040000000000000E0C000000000001AADC0"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int16___lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int16__, lowcardinality_nullable_uint64__))":"01000000000000F03F0000000000002040000000000000E0C000000000001AADC0"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int16___lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int16__, lowcardinality_nullable_uint32__))":"01000000000000F03F0000000000002040000000000000E0C000000000001AADC0"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_int16___lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_int16__, lowcardinality_nullable_uint16__))":"01000000000000F03F0000000000002040000000000000E0C000000000001AADC0"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float64___uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float64__, uint8))":"01000000000000F03F000000000000204051776F82FDFFEFFF415A9182FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float64___uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float64__, uint64))":"01000000000000F03F000000000000204051776F82FDFFEFFF415A9182FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float64___uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float64__, uint32))":"01000000000000F03F000000000000204051776F82FDFFEFFF415A9182FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float64___uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float64__, uint16))":"01000000000000F03F000000000000204051776F82FDFFEFFF415A9182FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float64___nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float64__, nullable_uint8_))":"01000000000000F03F000000000000204051776F82FDFFEFFF415A9182FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float64___nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float64__, nullable_uint64_))":"01000000000000F03F000000000000204051776F82FDFFEFFF415A9182FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float64___nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float64__, nullable_uint32_))":"01000000000000F03F000000000000204051776F82FDFFEFFF415A9182FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float64___nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float64__, nullable_uint16_))":"01000000000000F03F000000000000204051776F82FDFFEFFF415A9182FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float64___lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float64__, lowcardinality_uint8_))":"01000000000000F03F000000000000204051776F82FDFFEFFF415A9182FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float64___lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float64__, lowcardinality_uint64_))":"01000000000000F03F000000000000204051776F82FDFFEFFF415A9182FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float64___lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float64__, lowcardinality_uint32_))":"01000000000000F03F000000000000204051776F82FDFFEFFF415A9182FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float64___lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float64__, lowcardinality_uint16_))":"01000000000000F03F000000000000204051776F82FDFFEFFF415A9182FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float64___lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float64__, lowcardinality_nullable_uint8__))":"01000000000000F03F000000000000204051776F82FDFFEFFF415A9182FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float64___lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float64__, lowcardinality_nullable_uint64__))":"01000000000000F03F000000000000204051776F82FDFFEFFF415A9182FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float64___lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float64__, lowcardinality_nullable_uint32__))":"01000000000000F03F000000000000204051776F82FDFFEFFF415A9182FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float64___lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float64__, lowcardinality_nullable_uint16__))":"01000000000000F03F000000000000204051776F82FDFFEFFF415A9182FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float32___uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float32__, uint8))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000F0C21CFB47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float32___uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float32__, uint64))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000F0C21CFB47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float32___uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float32__, uint32))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000F0C21CFB47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float32___uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float32__, uint16))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000F0C21CFB47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float32___nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float32__, nullable_uint8_))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000F0C21CFB47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float32___nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float32__, nullable_uint64_))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000F0C21CFB47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float32___nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float32__, nullable_uint32_))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000F0C21CFB47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float32___nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float32__, nullable_uint16_))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000F0C21CFB47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float32___lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float32__, lowcardinality_uint8_))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000F0C21CFB47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float32___lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float32__, lowcardinality_uint64_))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000F0C21CFB47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float32___lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float32__, lowcardinality_uint32_))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000F0C21CFB47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float32___lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float32__, lowcardinality_uint16_))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000F0C21CFB47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float32___lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float32__, lowcardinality_nullable_uint8__))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000F0C21CFB47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float32___lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float32__, lowcardinality_nullable_uint64__))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000F0C21CFB47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float32___lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float32__, lowcardinality_nullable_uint32__))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000F0C21CFB47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_nullable_float32___lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_nullable_float32__, lowcardinality_nullable_uint16__))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000F0C21CFB47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int8__uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int8_, uint8))":"0000000000000040000000000000204000000000000060C00000000000F07340"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int8__uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int8_, uint64))":"0000000000000040000000000000204000000000000060C00000000000F07340"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int8__uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int8_, uint32))":"0000000000000040000000000000204000000000000060C00000000000F07340"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int8__uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int8_, uint16))":"0000000000000040000000000000204000000000000060C00000000000F07340"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int8__nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int8_, nullable_uint8_))":"01000000000000F03F000000000000204000000000000060C00000000000F07340"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int8__nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int8_, nullable_uint64_))":"01000000000000F03F000000000000204000000000000060C00000000000F07340"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int8__nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int8_, nullable_uint32_))":"01000000000000F03F000000000000204000000000000060C00000000000F07340"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int8__nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int8_, nullable_uint16_))":"01000000000000F03F000000000000204000000000000060C00000000000F07340"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int8__lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int8_, lowcardinality_uint8_))":"0000000000000040000000000000204000000000000060C00000000000F07340"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int8__lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int8_, lowcardinality_uint64_))":"0000000000000040000000000000204000000000000060C00000000000F07340"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int8__lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int8_, lowcardinality_uint32_))":"0000000000000040000000000000204000000000000060C00000000000F07340"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int8__lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int8_, lowcardinality_uint16_))":"0000000000000040000000000000204000000000000060C00000000000F07340"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int8__lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int8_, lowcardinality_nullable_uint8__))":"01000000000000F03F000000000000204000000000000060C00000000000F07340"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int8__lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int8_, lowcardinality_nullable_uint64__))":"01000000000000F03F000000000000204000000000000060C00000000000F07340"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int8__lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int8_, lowcardinality_nullable_uint32__))":"01000000000000F03F000000000000204000000000000060C00000000000F07340"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int8__lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int8_, lowcardinality_nullable_uint16__))":"01000000000000F03F000000000000204000000000000060C00000000000F07340"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int64__uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int64_, uint8))":"00000000000000400000000000002040000000000000E0C3A14A511B65F9F543"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int64__uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int64_, uint64))":"00000000000000400000000000002040000000000000E0C3A14A511B65F9F543"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int64__uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int64_, uint32))":"00000000000000400000000000002040000000000000E0C3A14A511B65F9F543"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int64__uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int64_, uint16))":"00000000000000400000000000002040000000000000E0C3A14A511B65F9F543"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int64__nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int64_, nullable_uint8_))":"01000000000000F03F0000000000002040000000000000E0C3A14A511B65F9F543"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int64__nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int64_, nullable_uint64_))":"01000000000000F03F0000000000002040000000000000E0C3A14A511B65F9F543"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int64__nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int64_, nullable_uint32_))":"01000000000000F03F0000000000002040000000000000E0C3A14A511B65F9F543"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int64__nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int64_, nullable_uint16_))":"01000000000000F03F0000000000002040000000000000E0C3A14A511B65F9F543"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int64__lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int64_, lowcardinality_uint8_))":"00000000000000400000000000002040000000000000E0C3A14A511B65F9F543"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int64__lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int64_, lowcardinality_uint64_))":"00000000000000400000000000002040000000000000E0C3A14A511B65F9F543"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int64__lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int64_, lowcardinality_uint32_))":"00000000000000400000000000002040000000000000E0C3A14A511B65F9F543"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int64__lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int64_, lowcardinality_uint16_))":"00000000000000400000000000002040000000000000E0C3A14A511B65F9F543"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int64__lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int64_, lowcardinality_nullable_uint8__))":"01000000000000F03F0000000000002040000000000000E0C3A14A511B65F9F543"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int64__lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int64_, lowcardinality_nullable_uint64__))":"01000000000000F03F0000000000002040000000000000E0C3A14A511B65F9F543"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int64__lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int64_, lowcardinality_nullable_uint32__))":"01000000000000F03F0000000000002040000000000000E0C3A14A511B65F9F543"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int64__lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int64_, lowcardinality_nullable_uint16__))":"01000000000000F03F0000000000002040000000000000E0C3A14A511B65F9F543"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int32__uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int32_, uint8))":"00000000000000400000000000002040000000000000E0C1000000ED9A89C041"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int32__uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int32_, uint64))":"00000000000000400000000000002040000000000000E0C1000000ED9A89C041"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int32__uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int32_, uint32))":"00000000000000400000000000002040000000000000E0C1000000ED9A89C041"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int32__uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int32_, uint16))":"00000000000000400000000000002040000000000000E0C1000000ED9A89C041"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int32__nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int32_, nullable_uint8_))":"01000000000000F03F0000000000002040000000000000E0C1000000ED9A89C041"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int32__nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int32_, nullable_uint64_))":"01000000000000F03F0000000000002040000000000000E0C1000000ED9A89C041"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int32__nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int32_, nullable_uint32_))":"01000000000000F03F0000000000002040000000000000E0C1000000ED9A89C041"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int32__nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int32_, nullable_uint16_))":"01000000000000F03F0000000000002040000000000000E0C1000000ED9A89C041"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int32__lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int32_, lowcardinality_uint8_))":"00000000000000400000000000002040000000000000E0C1000000ED9A89C041"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int32__lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int32_, lowcardinality_uint64_))":"00000000000000400000000000002040000000000000E0C1000000ED9A89C041"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int32__lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int32_, lowcardinality_uint32_))":"00000000000000400000000000002040000000000000E0C1000000ED9A89C041"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int32__lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int32_, lowcardinality_uint16_))":"00000000000000400000000000002040000000000000E0C1000000ED9A89C041"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int32__lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int32_, lowcardinality_nullable_uint8__))":"01000000000000F03F0000000000002040000000000000E0C1000000ED9A89C041"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int32__lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int32_, lowcardinality_nullable_uint64__))":"01000000000000F03F0000000000002040000000000000E0C1000000ED9A89C041"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int32__lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int32_, lowcardinality_nullable_uint32__))":"01000000000000F03F0000000000002040000000000000E0C1000000ED9A89C041"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int32__lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int32_, lowcardinality_nullable_uint16__))":"01000000000000F03F0000000000002040000000000000E0C1000000ED9A89C041"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int16__uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int16_, uint8))":"00000000000000400000000000002040000000000000E0C000000000A083E840"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int16__uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int16_, uint64))":"00000000000000400000000000002040000000000000E0C000000000A083E840"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int16__uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int16_, uint32))":"00000000000000400000000000002040000000000000E0C000000000A083E840"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int16__uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int16_, uint16))":"00000000000000400000000000002040000000000000E0C000000000A083E840"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int16__nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int16_, nullable_uint8_))":"01000000000000F03F0000000000002040000000000000E0C000000000A083E840"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int16__nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int16_, nullable_uint64_))":"01000000000000F03F0000000000002040000000000000E0C000000000A083E840"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int16__nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int16_, nullable_uint32_))":"01000000000000F03F0000000000002040000000000000E0C000000000A083E840"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int16__nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int16_, nullable_uint16_))":"01000000000000F03F0000000000002040000000000000E0C000000000A083E840"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int16__lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int16_, lowcardinality_uint8_))":"00000000000000400000000000002040000000000000E0C000000000A083E840"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int16__lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int16_, lowcardinality_uint64_))":"00000000000000400000000000002040000000000000E0C000000000A083E840"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int16__lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int16_, lowcardinality_uint32_))":"00000000000000400000000000002040000000000000E0C000000000A083E840"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int16__lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int16_, lowcardinality_uint16_))":"00000000000000400000000000002040000000000000E0C000000000A083E840"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int16__lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int16_, lowcardinality_nullable_uint8__))":"01000000000000F03F0000000000002040000000000000E0C000000000A083E840"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int16__lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int16_, lowcardinality_nullable_uint64__))":"01000000000000F03F0000000000002040000000000000E0C000000000A083E840"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int16__lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int16_, lowcardinality_nullable_uint32__))":"01000000000000F03F0000000000002040000000000000E0C000000000A083E840"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_int16__lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_int16_, lowcardinality_nullable_uint16__))":"01000000000000F03F0000000000002040000000000000E0C000000000A083E840"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float64__uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float64_, uint8))":"0000000000000040000000000000204051776F82FDFFEFFF51776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float64__uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float64_, uint64))":"0000000000000040000000000000204051776F82FDFFEFFF51776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float64__uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float64_, uint32))":"0000000000000040000000000000204051776F82FDFFEFFF51776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float64__uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float64_, uint16))":"0000000000000040000000000000204051776F82FDFFEFFF51776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float64__nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float64_, nullable_uint8_))":"01000000000000F03F000000000000204051776F82FDFFEFFF51776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float64__nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float64_, nullable_uint64_))":"01000000000000F03F000000000000204051776F82FDFFEFFF51776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float64__nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float64_, nullable_uint32_))":"01000000000000F03F000000000000204051776F82FDFFEFFF51776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float64__nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float64_, nullable_uint16_))":"01000000000000F03F000000000000204051776F82FDFFEFFF51776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float64__lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float64_, lowcardinality_uint8_))":"0000000000000040000000000000204051776F82FDFFEFFF51776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float64__lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float64_, lowcardinality_uint64_))":"0000000000000040000000000000204051776F82FDFFEFFF51776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float64__lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float64_, lowcardinality_uint32_))":"0000000000000040000000000000204051776F82FDFFEFFF51776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float64__lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float64_, lowcardinality_uint16_))":"0000000000000040000000000000204051776F82FDFFEFFF51776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float64__lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float64_, lowcardinality_nullable_uint8__))":"01000000000000F03F000000000000204051776F82FDFFEFFF51776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float64__lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float64_, lowcardinality_nullable_uint64__))":"01000000000000F03F000000000000204051776F82FDFFEFFF51776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float64__lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float64_, lowcardinality_nullable_uint32__))":"01000000000000F03F000000000000204051776F82FDFFEFFF51776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float64__lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float64_, lowcardinality_nullable_uint16__))":"01000000000000F03F000000000000204051776F82FDFFEFFF51776F82FDFFEF7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float32__uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float32_, uint8))":"00000000000000400000000000002040000000E0FFFFEFC70000004616DBFE47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float32__uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float32_, uint64))":"00000000000000400000000000002040000000E0FFFFEFC70000004616DBFE47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float32__uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float32_, uint32))":"00000000000000400000000000002040000000E0FFFFEFC70000004616DBFE47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float32__uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float32_, uint16))":"00000000000000400000000000002040000000E0FFFFEFC70000004616DBFE47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float32__nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float32_, nullable_uint8_))":"01000000000000F03F0000000000002040000000E0FFFFEFC70000004616DBFE47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float32__nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float32_, nullable_uint64_))":"01000000000000F03F0000000000002040000000E0FFFFEFC70000004616DBFE47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float32__nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float32_, nullable_uint32_))":"01000000000000F03F0000000000002040000000E0FFFFEFC70000004616DBFE47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float32__nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float32_, nullable_uint16_))":"01000000000000F03F0000000000002040000000E0FFFFEFC70000004616DBFE47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float32__lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float32_, lowcardinality_uint8_))":"00000000000000400000000000002040000000E0FFFFEFC70000004616DBFE47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float32__lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float32_, lowcardinality_uint64_))":"00000000000000400000000000002040000000E0FFFFEFC70000004616DBFE47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float32__lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float32_, lowcardinality_uint32_))":"00000000000000400000000000002040000000E0FFFFEFC70000004616DBFE47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float32__lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float32_, lowcardinality_uint16_))":"00000000000000400000000000002040000000E0FFFFEFC70000004616DBFE47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float32__lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float32_, lowcardinality_nullable_uint8__))":"01000000000000F03F0000000000002040000000E0FFFFEFC70000004616DBFE47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float32__lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float32_, lowcardinality_nullable_uint64__))":"01000000000000F03F0000000000002040000000E0FFFFEFC70000004616DBFE47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float32__lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float32_, lowcardinality_nullable_uint32__))":"01000000000000F03F0000000000002040000000E0FFFFEFC70000004616DBFE47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_lowcardinality_float32__lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(lowcardinality_float32_, lowcardinality_nullable_uint16__))":"01000000000000F03F0000000000002040000000E0FFFFEFC70000004616DBFE47"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int8_uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int8, uint8))":"0000000000000040000000000000204000000000000060C00000000000606640"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int8_uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int8, uint64))":"0000000000000040000000000000204000000000000060C00000000000606640"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int8_uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int8, uint32))":"0000000000000040000000000000204000000000000060C00000000000606640"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int8_uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int8, uint16))":"0000000000000040000000000000204000000000000060C00000000000606640"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int8_nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int8, nullable_uint8_))":"01000000000000F03F000000000000204000000000000060C00000000000606640"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int8_nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int8, nullable_uint64_))":"01000000000000F03F000000000000204000000000000060C00000000000606640"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int8_nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int8, nullable_uint32_))":"01000000000000F03F000000000000204000000000000060C00000000000606640"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int8_nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int8, nullable_uint16_))":"01000000000000F03F000000000000204000000000000060C00000000000606640"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int8_lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int8, lowcardinality_uint8_))":"0000000000000040000000000000204000000000000060C00000000000606640"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int8_lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int8, lowcardinality_uint64_))":"0000000000000040000000000000204000000000000060C00000000000606640"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int8_lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int8, lowcardinality_uint32_))":"0000000000000040000000000000204000000000000060C00000000000606640"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int8_lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int8, lowcardinality_uint16_))":"0000000000000040000000000000204000000000000060C00000000000606640"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int8_lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int8, lowcardinality_nullable_uint8__))":"01000000000000F03F000000000000204000000000000060C00000000000606640"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int8_lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int8, lowcardinality_nullable_uint64__))":"01000000000000F03F000000000000204000000000000060C00000000000606640"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int8_lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int8, lowcardinality_nullable_uint32__))":"01000000000000F03F000000000000204000000000000060C00000000000606640"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int8_lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int8, lowcardinality_nullable_uint16__))":"01000000000000F03F000000000000204000000000000060C00000000000606640"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int64_uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int64, uint8))":"00000000000000400000000000002040000000000000E0C35243E3A62F5EF043"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int64_uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int64, uint64))":"00000000000000400000000000002040000000000000E0C35243E3A62F5EF043"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int64_uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int64, uint32))":"00000000000000400000000000002040000000000000E0C35243E3A62F5EF043"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int64_uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int64, uint16))":"00000000000000400000000000002040000000000000E0C35243E3A62F5EF043"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int64_nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int64, nullable_uint8_))":"01000000000000F03F0000000000002040000000000000E0C35243E3A62F5EF043"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int64_nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int64, nullable_uint64_))":"01000000000000F03F0000000000002040000000000000E0C35243E3A62F5EF043"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int64_nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int64, nullable_uint32_))":"01000000000000F03F0000000000002040000000000000E0C35243E3A62F5EF043"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int64_nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int64, nullable_uint16_))":"01000000000000F03F0000000000002040000000000000E0C35243E3A62F5EF043"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int64_lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int64, lowcardinality_uint8_))":"00000000000000400000000000002040000000000000E0C35243E3A62F5EF043"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int64_lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int64, lowcardinality_uint64_))":"00000000000000400000000000002040000000000000E0C35243E3A62F5EF043"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int64_lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int64, lowcardinality_uint32_))":"00000000000000400000000000002040000000000000E0C35243E3A62F5EF043"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int64_lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int64, lowcardinality_uint16_))":"00000000000000400000000000002040000000000000E0C35243E3A62F5EF043"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int64_lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int64, lowcardinality_nullable_uint8__))":"01000000000000F03F0000000000002040000000000000E0C35243E3A62F5EF043"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int64_lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int64, lowcardinality_nullable_uint64__))":"01000000000000F03F0000000000002040000000000000E0C35243E3A62F5EF043"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int64_lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int64, lowcardinality_nullable_uint32__))":"01000000000000F03F0000000000002040000000000000E0C35243E3A62F5EF043"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int64_lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int64, lowcardinality_nullable_uint16__))":"01000000000000F03F0000000000002040000000000000E0C35243E3A62F5EF043"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int32_uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int32, uint8))":"00000000000000400000000000002040000000000000E0C1000040032E51DD41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int32_uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int32, uint64))":"00000000000000400000000000002040000000000000E0C1000040032E51DD41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int32_uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int32, uint32))":"00000000000000400000000000002040000000000000E0C1000040032E51DD41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int32_uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int32, uint16))":"00000000000000400000000000002040000000000000E0C1000040032E51DD41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int32_nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int32, nullable_uint8_))":"01000000000000F03F0000000000002040000000000000E0C1000040032E51DD41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int32_nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int32, nullable_uint64_))":"01000000000000F03F0000000000002040000000000000E0C1000040032E51DD41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int32_nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int32, nullable_uint32_))":"01000000000000F03F0000000000002040000000000000E0C1000040032E51DD41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int32_nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int32, nullable_uint16_))":"01000000000000F03F0000000000002040000000000000E0C1000040032E51DD41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int32_lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int32, lowcardinality_uint8_))":"00000000000000400000000000002040000000000000E0C1000040032E51DD41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int32_lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int32, lowcardinality_uint64_))":"00000000000000400000000000002040000000000000E0C1000040032E51DD41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int32_lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int32, lowcardinality_uint32_))":"00000000000000400000000000002040000000000000E0C1000040032E51DD41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int32_lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int32, lowcardinality_uint16_))":"00000000000000400000000000002040000000000000E0C1000040032E51DD41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int32_lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int32, lowcardinality_nullable_uint8__))":"01000000000000F03F0000000000002040000000000000E0C1000040032E51DD41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int32_lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int32, lowcardinality_nullable_uint64__))":"01000000000000F03F0000000000002040000000000000E0C1000040032E51DD41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int32_lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int32, lowcardinality_nullable_uint32__))":"01000000000000F03F0000000000002040000000000000E0C1000040032E51DD41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int32_lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int32, lowcardinality_nullable_uint16__))":"01000000000000F03F0000000000002040000000000000E0C1000040032E51DD41"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int16_uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int16, uint8))":"00000000000000400000000000002040000000000000E0C0000000000098DD40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int16_uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int16, uint64))":"00000000000000400000000000002040000000000000E0C0000000000098DD40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int16_uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int16, uint32))":"00000000000000400000000000002040000000000000E0C0000000000098DD40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int16_uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int16, uint16))":"00000000000000400000000000002040000000000000E0C0000000000098DD40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int16_nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int16, nullable_uint8_))":"01000000000000F03F0000000000002040000000000000E0C0000000000098DD40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int16_nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int16, nullable_uint64_))":"01000000000000F03F0000000000002040000000000000E0C0000000000098DD40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int16_nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int16, nullable_uint32_))":"01000000000000F03F0000000000002040000000000000E0C0000000000098DD40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int16_nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int16, nullable_uint16_))":"01000000000000F03F0000000000002040000000000000E0C0000000000098DD40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int16_lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int16, lowcardinality_uint8_))":"00000000000000400000000000002040000000000000E0C0000000000098DD40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int16_lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int16, lowcardinality_uint64_))":"00000000000000400000000000002040000000000000E0C0000000000098DD40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int16_lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int16, lowcardinality_uint32_))":"00000000000000400000000000002040000000000000E0C0000000000098DD40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int16_lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int16, lowcardinality_uint16_))":"00000000000000400000000000002040000000000000E0C0000000000098DD40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int16_lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int16, lowcardinality_nullable_uint8__))":"01000000000000F03F0000000000002040000000000000E0C0000000000098DD40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int16_lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int16, lowcardinality_nullable_uint64__))":"01000000000000F03F0000000000002040000000000000E0C0000000000098DD40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int16_lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int16, lowcardinality_nullable_uint32__))":"01000000000000F03F0000000000002040000000000000E0C0000000000098DD40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_int16_lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(int16, lowcardinality_nullable_uint16__))":"01000000000000F03F0000000000002040000000000000E0C0000000000098DD40"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float64_uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float64, uint8))":"0000000000000040000000000000204051776F82FDFFEFFF4DDD6CBA6563ED7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float64_uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float64, uint64))":"0000000000000040000000000000204051776F82FDFFEFFF4DDD6CBA6563ED7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float64_uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float64, uint32))":"0000000000000040000000000000204051776F82FDFFEFFF4DDD6CBA6563ED7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float64_uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float64, uint16))":"0000000000000040000000000000204051776F82FDFFEFFF4DDD6CBA6563ED7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float64_nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float64, nullable_uint8_))":"01000000000000F03F000000000000204051776F82FDFFEFFF4DDD6CBA6563ED7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float64_nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float64, nullable_uint64_))":"01000000000000F03F000000000000204051776F82FDFFEFFF4DDD6CBA6563ED7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float64_nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float64, nullable_uint32_))":"01000000000000F03F000000000000204051776F82FDFFEFFF4DDD6CBA6563ED7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float64_nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float64, nullable_uint16_))":"01000000000000F03F000000000000204051776F82FDFFEFFF4DDD6CBA6563ED7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float64_lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float64, lowcardinality_uint8_))":"0000000000000040000000000000204051776F82FDFFEFFF4DDD6CBA6563ED7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float64_lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float64, lowcardinality_uint64_))":"0000000000000040000000000000204051776F82FDFFEFFF4DDD6CBA6563ED7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float64_lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float64, lowcardinality_uint32_))":"0000000000000040000000000000204051776F82FDFFEFFF4DDD6CBA6563ED7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float64_lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float64, lowcardinality_uint16_))":"0000000000000040000000000000204051776F82FDFFEFFF4DDD6CBA6563ED7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float64_lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float64, lowcardinality_nullable_uint8__))":"01000000000000F03F000000000000204051776F82FDFFEFFF4DDD6CBA6563ED7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float64_lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float64, lowcardinality_nullable_uint64__))":"01000000000000F03F000000000000204051776F82FDFFEFFF4DDD6CBA6563ED7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float64_lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float64, lowcardinality_nullable_uint32__))":"01000000000000F03F000000000000204051776F82FDFFEFFF4DDD6CBA6563ED7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float64_lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float64, lowcardinality_nullable_uint16__))":"01000000000000F03F000000000000204051776F82FDFFEFFF4DDD6CBA6563ED7F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float32_uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float32, uint8))":"00000000000000400000000000002040000000E0FFFFEFC7000000CCE13208C8"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float32_uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float32, uint64))":"00000000000000400000000000002040000000E0FFFFEFC7000000CCE13208C8"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float32_uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float32, uint32))":"00000000000000400000000000002040000000E0FFFFEFC7000000CCE13208C8"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float32_uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float32, uint16))":"00000000000000400000000000002040000000E0FFFFEFC7000000CCE13208C8"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float32_nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float32, nullable_uint8_))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000CCE13208C8"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float32_nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float32, nullable_uint64_))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000CCE13208C8"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float32_nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float32, nullable_uint32_))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000CCE13208C8"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float32_nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float32, nullable_uint16_))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000CCE13208C8"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float32_lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float32, lowcardinality_uint8_))":"00000000000000400000000000002040000000E0FFFFEFC7000000CCE13208C8"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float32_lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float32, lowcardinality_uint64_))":"00000000000000400000000000002040000000E0FFFFEFC7000000CCE13208C8"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float32_lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float32, lowcardinality_uint32_))":"00000000000000400000000000002040000000E0FFFFEFC7000000CCE13208C8"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float32_lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float32, lowcardinality_uint16_))":"00000000000000400000000000002040000000E0FFFFEFC7000000CCE13208C8"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float32_lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float32, lowcardinality_nullable_uint8__))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000CCE13208C8"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float32_lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float32, lowcardinality_nullable_uint64__))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000CCE13208C8"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float32_lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float32, lowcardinality_nullable_uint32__))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000CCE13208C8"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_float32_lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(float32, lowcardinality_nullable_uint16__))":"01000000000000F03F0000000000002040000000E0FFFFEFC7000000CCE13208C8"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_decimal128_38__uint8 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(decimal128_38_, uint8))":"00000000000000400000000000002040000000000000F0BF58E84C515221E93F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_decimal128_38__uint64 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(decimal128_38_, uint64))":"00000000000000400000000000002040000000000000F0BF58E84C515221E93F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_decimal128_38__uint32 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(decimal128_38_, uint32))":"00000000000000400000000000002040000000000000F0BF58E84C515221E93F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_decimal128_38__uint16 = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(decimal128_38_, uint16))":"00000000000000400000000000002040000000000000F0BF58E84C515221E93F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_decimal128_38__nullable_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(decimal128_38_, nullable_uint8_))":"01000000000000F03F0000000000002040000000000000F0BF58E84C515221E93F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_decimal128_38__nullable_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(decimal128_38_, nullable_uint64_))":"01000000000000F03F0000000000002040000000000000F0BF58E84C515221E93F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_decimal128_38__nullable_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(decimal128_38_, nullable_uint32_))":"01000000000000F03F0000000000002040000000000000F0BF58E84C515221E93F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_decimal128_38__nullable_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(decimal128_38_, nullable_uint16_))":"01000000000000F03F0000000000002040000000000000F0BF58E84C515221E93F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_decimal128_38__lowcardinality_uint8_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(decimal128_38_, lowcardinality_uint8_))":"00000000000000400000000000002040000000000000F0BF58E84C515221E93F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_decimal128_38__lowcardinality_uint64_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(decimal128_38_, lowcardinality_uint64_))":"00000000000000400000000000002040000000000000F0BF58E84C515221E93F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_decimal128_38__lowcardinality_uint32_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(decimal128_38_, lowcardinality_uint32_))":"00000000000000400000000000002040000000000000F0BF58E84C515221E93F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_decimal128_38__lowcardinality_uint16_ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(decimal128_38_, lowcardinality_uint16_))":"00000000000000400000000000002040000000000000F0BF58E84C515221E93F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_decimal128_38__lowcardinality_nullable_uint8__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(decimal128_38_, lowcardinality_nullable_uint8__))":"01000000000000F03F0000000000002040000000000000F0BF58E84C515221E93F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_decimal128_38__lowcardinality_nullable_uint64__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(decimal128_38_, lowcardinality_nullable_uint64__))":"01000000000000F03F0000000000002040000000000000F0BF58E84C515221E93F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_decimal128_38__lowcardinality_nullable_uint32__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(decimal128_38_, lowcardinality_nullable_uint32__))":"01000000000000F03F0000000000002040000000000000F0BF58E84C515221E93F"}
+"""
+
+_aggregate_functions_state_meanZTestState_datatypes_permutations_decimal128_38__lowcardinality_nullable_uint16__ = r"""
+{"hex(meanZTestState(0.7, 0.45, 0.95)(decimal128_38_, lowcardinality_nullable_uint16__))":"01000000000000F03F0000000000002040000000000000F0BF58E84C515221E93F"}
+"""
+

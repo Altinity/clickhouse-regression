@@ -233,8 +233,8 @@ def benchmark(self, table_name, table_settings, nodes=None, format=None):
             for node in nodes:
                 with When(f"on {node}", flags=TE):
                     node.query(
-                        f"DROP TABLE IF EXISTS {table_name} SETTINGS receive_timeout=1200",
-                        timeout=1200,
+                        f"DROP TABLE IF EXISTS {table_name} SETTINGS receive_timeout=1500",
+                        timeout=1500,
                     )
 
 

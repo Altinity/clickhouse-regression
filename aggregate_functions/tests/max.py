@@ -9,7 +9,7 @@ from aggregate_functions.requirements import (
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Max("1.0"))
 def feature(self, func="max({params})", table=None):
     """Check max aggregate function."""
-    self.context.snapshot_id = get_snapshot_id()
+    self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=23.2")
 
     if table is None:
         table = self.context.table

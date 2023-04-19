@@ -19,7 +19,7 @@ def feature(
     extended_precision=False,
 ):
     """Check avg aggregate function."""
-    self.context.snapshot_id = get_snapshot_id()
+    self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=23.2")
 
     if table is None:
         table = self.context.table

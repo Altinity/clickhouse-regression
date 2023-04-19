@@ -16,7 +16,7 @@ def feature(
     snapshot_id=None,
 ):
     """Checks for quantile Weighted aggregate functions."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id)
+    self.context.snapshot_id = get_snapshot_id(snapshot_id, clickhouse_version=">=23.2")
 
     if table is None:
         table = self.context.table

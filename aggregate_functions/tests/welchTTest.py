@@ -1,4 +1,5 @@
 from testflows.core import *
+from helpers.common import check_clickhouse_version
 
 from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_WelchTTest,
@@ -21,7 +22,8 @@ def feature(
     datetime=False,
 ):
     """Check welchTTest aggregate function by using the same tests as for quantileWeighted."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id, clickhouse_version=">=22.6")
+    clickhouse_version = ">=22.6" if check_clickhouse_version("<23.2")(self) else ">=23.2"
+    self.context.snapshot_id = get_snapshot_id(snapshot_id, clickhouse_version=clickhouse_version)
 
     if table is None:
         table = self.context.table

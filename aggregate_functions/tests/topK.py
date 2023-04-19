@@ -14,7 +14,7 @@ from aggregate_functions.tests.any import feature as checks
 def feature(self, func="topK({params})", table=None):
     """Check topK aggregate function by using the same checks as for any
     as well as functions specific checks."""
-    self.context.snapshot_id = get_snapshot_id()
+    self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=23.2")
 
     if table is None:
         table = self.context.table
