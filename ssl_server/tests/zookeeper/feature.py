@@ -22,7 +22,7 @@ def secure_connection(self):
         }
         add_ssl_client_configuration_file(entries=entries)
 
-    with And("I update zookeeper configuration to use encryption"):
+    with And("I update zookeeper configuration to use secure connection"):
         entries = {
             "clientPort": None,
             "secureClientPort": "2281",
@@ -42,14 +42,11 @@ def secure_connection(self):
 
 
 @TestScenario
-def secure_connection_without_client_certificate(self, message=None):
+def secure_connection_without_client_certificate(self):
     """Check secure ZooKeeper connection without using client certificate.
     Connection is expected to fail with bad certificate error as ZooKeeper
     is expecting the client to present a valid certificate.
     """
-    if message is None:
-        message = "Exception: error:10000412:SSL routines:OPENSSL_internal:SSLV3_ALERT_BAD_CERTIFICATE"
-
     with Given(
         "I add ClickHouse server openSSL client configuration without client certificate"
     ):
@@ -63,7 +60,7 @@ def secure_connection_without_client_certificate(self, message=None):
         }
         add_ssl_client_configuration_file(entries=entries)
 
-    with And("I update zookeeper configuration to use encryption"):
+    with And("I update zookeeper configuration to use secure connection"):
         entries = {
             "clientPort": None,
             "secureClientPort": "2281",
@@ -81,7 +78,9 @@ def secure_connection_without_client_certificate(self, message=None):
     with Then(
         "I check ClickHouse connection to zookeeper fails with bad certificate error"
     ):
-        check_clickhouse_connection_to_zookeeper(message=message)
+        check_clickhouse_connection_to_zookeeper(
+            message="Exception: error:10000412:SSL routines:OPENSSL_internal:SSLV3_ALERT_BAD_CERTIFICATE"
+        )
 
 
 @TestScenario
@@ -107,7 +106,7 @@ def secure_connection_with_unsigned_client_certificate(self):
         }
         add_ssl_client_configuration_file(entries=entries)
 
-    with And("I update zookeeper configuration to use encryption"):
+    with And("I update zookeeper configuration to use secure connection"):
         entries = {
             "clientPort": None,
             "secureClientPort": "2281",
@@ -126,7 +125,7 @@ def secure_connection_with_unsigned_client_certificate(self):
         "I check ClickHouse connection to zookeeper fails with unknown certificate error"
     ):
         check_clickhouse_connection_to_zookeeper(
-            message="Exception: error:10000416:SSL routines:OPENSSL_internal:SSLV3_ALERT_CERTIFICATE_UNKNOWN"
+            message="Exception: error:10000416:SSL routines:OPENSSL_internal:SSLV3_ALERT_CERTIFICATE_UNKNOWN",
         )
 
 
@@ -167,7 +166,7 @@ def secure_connection_with_empty_truststore(self):
             )
 
     with And(
-        "I update zookeeper configuration to use encryption but with empty truststore"
+        "I update zookeeper configuration to use secure connection but with empty truststore"
     ):
         entries = {
             "clientPort": None,
@@ -210,7 +209,7 @@ def secure_connection_to_invalid_zookeeper_port(self):
         }
         add_ssl_client_configuration_file(entries=entries)
 
-    with And("I update zookeeper configuration to use encryption"):
+    with And("I update zookeeper configuration to use secure connection"):
         entries = {
             "clientPort": None,
             "secureClientPort": "2281",
@@ -255,7 +254,7 @@ def fips_connection(self, cipher_list):
         }
         add_ssl_client_configuration_file(entries=entries)
 
-    with And("I update zookeeper configuration to use encryption"):
+    with And("I update zookeeper configuration to use secure connection"):
         entries = {
             "clientPort": None,
             "secureClientPort": "2281",
