@@ -24,7 +24,7 @@ def secure_connection(self):
         }
         add_ssl_client_configuration_file(entries=entries)
 
-    with And("I update zookeeper configuration to use encryption"):
+    with And("I update zookeeper configuration to use secure connection"):
         entries = {
             "clientPort": None,
             "secureClientPort": "2281",
@@ -45,52 +45,287 @@ def secure_connection(self):
         check_clickhouse_connection_to_zookeeper()
 
 
-# @TestScenario
-# def secure_connection_without_client_certificate(self):
-#     """Check secure ZooKeeper connection without using client certificate.
-#     Connection is expected to fail with bad certificate error as ZooKeeper
-#     is expecting the client to present a valid certificate.
-#     """
-#     ssl_server.tests.zookeeper.feature.secure_connection_without_client_certificate(
-#         message="Exception: error:10000410:SSL routines:OPENSSL_internal:SSLV3_ALERT_HANDSHAKE_FAILURE"
-#     )
+@TestScenario
+def secure_connection_without_client_certificate(self):
+    """Check secure ZooKeeper connection without using client certificate.
+    Connection is expected to fail with bad certificate error as ZooKeeper
+    is expecting the client to present a valid certificate.
+    """
+    with Given(
+        "I add ClickHouse server openSSL client configuration without client certificate"
+    ):
+        entries = {
+            "loadDefaultCAFile": "true",
+            "cacheSessions": "false",
+            "disableProtocols": "sslv2,sslv3",
+            "preferServerCiphers": "true",
+            "verificationMode": "strict",
+            "invalidCertificateHandler": {"name": "RejectCertificateHandler"},
+        }
+        add_ssl_client_configuration_file(entries=entries)
+
+    with And("I update zookeeper configuration to use secure connection"):
+        entries = {
+            "clientPort": None,
+            "secureClientPort": "2281",
+            "serverCnxnFactory": "org.apache.zookeeper.server.NettyServerCnxnFactory",
+            "ssl.keyStore.location": "/keystore.bcfks",
+            "ssl.keyStore.password": "keystore",
+            "ssl.keyStore.type": "BCFKS",
+            "ssl.trustStore.location": "/truststore.bcfks",
+            "ssl.trustStore.password": "truststore",
+            "ssl.trustStore.type": "BCFKS",
+        }
+        add_zookeeper_config_file(entries=entries)
+
+    with And("I add to ClickHouse secure zookeeper configuration"):
+        add_to_clickhouse_secure_zookeeper_config_file(restart=True)
+
+    with Then("I check ClickHouse connection to zookeeper fails with an error"):
+        check_clickhouse_connection_to_zookeeper(
+            # message="Exception: error:10000412:SSL routines:OPENSSL_internal:SSLV3_ALERT_BAD_CERTIFICATE"
+            message="Exception: error:10000410:SSL routines:OPENSSL_internal:SSLV3_ALERT_HANDSHAKE_FAILURE"
+        )
 
 
-# @TestScenario
-# def secure_connection_with_unsigned_client_certificate(self):
-#     """Check secure ZooKeeper connection using unsigned client certificate.
-#     Connection is expected to fail with unknown certificate error."""
-#     ssl_server.tests.zookeeper.feature.secure_connection_with_unsigned_client_certificate()
+@TestScenario
+def secure_connection_with_unsigned_client_certificate(self):
+    """Check secure ZooKeeper connection using unsigned client certificate.
+    Connection is expected to fail with unknown certificate error."""
+
+    with Given("I generate new clickhouse client private key and unsigned certificate"):
+        create_crt_and_key(name="unsigned_client", node=self.context.node, signed=False)
+
+    with And(
+        "I add ClickHouse server openSSL client configuration that uses unsigned client certificate"
+    ):
+        entries = {
+            "certificateFile": "/unsigned_client.crt",
+            "privateKeyFile": "/unsigned_client.key",
+            "loadDefaultCAFile": "true",
+            "cacheSessions": "false",
+            "disableProtocols": "sslv2,sslv3",
+            "preferServerCiphers": "true",
+            "verificationMode": "strict",
+            "invalidCertificateHandler": {"name": "RejectCertificateHandler"},
+        }
+        add_ssl_client_configuration_file(entries=entries)
+
+    with And("I update zookeeper configuration to use secure connection"):
+        entries = {
+            "clientPort": None,
+            "secureClientPort": "2281",
+            "serverCnxnFactory": "org.apache.zookeeper.server.NettyServerCnxnFactory",
+            "ssl.keyStore.location": "/keystore.bcfks",
+            "ssl.keyStore.password": "keystore",
+            "ssl.keyStore.type": "BCFKS",
+            "ssl.trustStore.location": "/truststore.bcfks",
+            "ssl.trustStore.password": "truststore",
+            "ssl.trustStore.type": "BCFKS",
+        }
+        add_zookeeper_config_file(entries=entries)
+
+    with And("I add secure zookeeper configuration"):
+        add_to_clickhouse_secure_zookeeper_config_file(restart=True)
+
+    with Then(
+        "I check ClickHouse connection to zookeeper fails with unknown certificate error"
+    ):
+        check_clickhouse_connection_to_zookeeper(
+            message="Exception: error:10000416:SSL routines:OPENSSL_internal:SSLV3_ALERT_CERTIFICATE_UNKNOWN",
+        )
 
 
-# @TestScenario
-# def secure_connection_with_empty_truststore(self):
-#     """Check secure ZooKeeper connection when ClickHouse uses client certificate and
-#     strict verification mode but ZooKeeper truststore is empty and does not contain CA.
-#     Connection is expected to fail with all connection tries failed error.
-#     """
-#     ssl_server.tests.zookeeper.feature.secure_connection_with_empty_truststore()
+@TestScenario
+def secure_connection_with_empty_truststore(self):
+    """Check secure ZooKeeper connection when ClickHouse uses client certificate and
+    strict verification mode but ZooKeeper truststore is empty and does not contain CA.
+    Connection is expected to fail with all connection tries failed error.
+    """
+
+    with Given(
+        "I add ClickHouse server openSSL client configuration that uses client certificate"
+    ):
+        entries = {
+            "certificateFile": "/client.crt",
+            "privateKeyFile": "/client.key",
+            "loadDefaultCAFile": "true",
+            "cacheSessions": "false",
+            "disableProtocols": "sslv2,sslv3",
+            "preferServerCiphers": "true",
+            "verificationMode": "strict",
+            "invalidCertificateHandler": {"name": "RejectCertificateHandler"},
+        }
+        add_ssl_client_configuration_file(entries=entries)
+
+    with And("I create empty zookeeper truststore"):
+        with By("creating truststore with dummy certificate"):
+            add_certificate_to_zookeeper_truststore(
+                alias="dummy",
+                certificate=self.context.zookeeper_node_ca_crt,
+                keystore="/empty_truststore.pkcs12",
+                storepass="truststore",
+                storetype="PKCS12",
+            )
+
+        with And("then deleting the dummy certificate from that truststore"):
+            delete_certificate_from_zookeeper_truststore(
+                alias="dummy",
+                keystore="/empty_truststore.pkcs12",
+                storepass="truststore",
+                storetype="PKCS12",
+            )
+
+        with And("I convert empty truststore from PKCS12 type to BCFKS"):
+            convert_zookeeper_truststore(
+                srckeystore="/empty_truststore.pkcs12",
+                srcstorepass="truststore",
+                srcstoretype="PKCS12",
+                destkeystore="/empty_truststore.bcfks",
+                deststoretype=self.context.storetype,
+                deststorepass="truststore",
+                storeprovidername=self.context.providername,
+                storeproviderclass=self.context.providerclass,
+                storeproviderpath=self.context.providerpath,
+            )
+
+        with And("I list truststore contents"):
+            list_zookeeper_truststore(
+                keystore="/empty_truststore.bcfks",
+                storepass="truststore",
+                storetype=self.context.storetype,
+                storeprovidername=self.context.providername,
+                storeproviderclass=self.context.providerclass,
+                storeproviderpath=self.context.providerpath,
+            )
+
+    with And(
+        "I update zookeeper configuration to use secure connection but with empty truststore"
+    ):
+        entries = {
+            "clientPort": None,
+            "secureClientPort": "2281",
+            "serverCnxnFactory": "org.apache.zookeeper.server.NettyServerCnxnFactory",
+            "ssl.keyStore.location": "/keystore.bcfks",
+            "ssl.keyStore.password": "keystore",
+            "ssl.keyStore.type": "BCFKS",
+            "ssl.trustStore.location": "/empty_truststore.bcfks",
+            "ssl.trustStore.password": "truststore",
+            "ssl.trustStore.type": "BCFKS",
+        }
+        add_zookeeper_config_file(entries=entries)
+
+    with And("I add to ClickHouse secure zookeeper configuration"):
+        add_to_clickhouse_secure_zookeeper_config_file(restart=True)
+
+    with Then(
+        "I check ClickHouse connection to zookeeper fails with all connection tries failed"
+    ):
+        check_clickhouse_connection_to_zookeeper(
+            message="Exception: All connection tries failed while connecting to ZooKeeper"
+        )
 
 
-# @TestScenario
-# def secure_connection_to_invalid_zookeeper_port(self):
-#     """Check that secure ZooKeeper connection fails when trying to connect to invalid zookeeper port."""
-#     ssl_server.tests.zookeeper.feature.secure_connection_to_invalid_zookeeper_port()
+@TestScenario
+def secure_connection_to_invalid_zookeeper_port(self):
+    """Check that secure ZooKeeper connection fails when trying to connect to invalid zookeeper port."""
+
+    with Given(
+        "I add ClickHouse server openSSL client configuration without client certificate"
+    ):
+        entries = {
+            "certificateFile": "/client.crt",
+            "privateKeyFile": "/client.key",
+            "loadDefaultCAFile": "true",
+            "cacheSessions": "false",
+            "disableProtocols": "sslv2,sslv3",
+            "preferServerCiphers": "true",
+            "verificationMode": "strict",
+            "invalidCertificateHandler": {"name": "RejectCertificateHandler"},
+        }
+        add_ssl_client_configuration_file(entries=entries)
+
+    with And("I update zookeeper configuration to use secure connection"):
+        entries = {
+            "clientPort": None,
+            "secureClientPort": "2281",
+            "serverCnxnFactory": "org.apache.zookeeper.server.NettyServerCnxnFactory",
+            "ssl.keyStore.location": "/keystore.bcfks",
+            "ssl.keyStore.password": "keystore",
+            "ssl.keyStore.type": "BCFKS",
+            "ssl.trustStore.location": "/truststore.bcfks",
+            "ssl.trustStore.password": "truststore",
+            "ssl.trustStore.type": "BCFKS",
+        }
+        add_zookeeper_config_file(entries=entries)
+
+    with And(
+        "I add to ClickHouse secure zookeeper configuration that uses invalid zookeeper port"
+    ):
+        add_to_clickhouse_secure_zookeeper_config_file(port=2280, restart=True)
+
+    with Then("I check ClickHouse connection to zookeeper fails"):
+        check_clickhouse_connection_to_zookeeper(
+            message="Exception: All connection tries failed while connecting to ZooKeeper"
+        )
 
 
-# @TestOutline
-# def fips_connection(self, cipher_list):
-#     """Check secure connection from ClickHouse when ClickHouse wants to use only specific FIPS
-#     compatible ciphers.
-#     """
-#     ssl_server.tests.zookeeper.feature.fips_connection()
+@TestOutline
+def fips_connection(self, cipher_list):
+    """Check secure connection from ClickHouse when ClickHouse wants to use only specific FIPS
+    compatible ciphers.
+    """
+    with Given(
+        "ClickHouse is configured to connect to ZooKeeper only using FIPS compatible connections",
+    ):
+        entries = {
+            "certificateFile": "/client.crt",
+            "privateKeyFile": "/client.key",
+            "loadDefaultCAFile": "true",
+            "cacheSessions": "false",
+            "verificationMode": "strict",
+            "invalidCertificateHandler": {"name": "RejectCertificateHandler"},
+            "cipherList": cipher_list,
+            "preferServerCiphers": "false",
+            "requireTLSv1_2": "true",
+            "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3",
+        }
+        add_ssl_client_configuration_file(entries=entries)
+
+    with And("I update zookeeper configuration to use secure connection"):
+        entries = {
+            "clientPort": None,
+            "secureClientPort": "2281",
+            "serverCnxnFactory": "org.apache.zookeeper.server.NettyServerCnxnFactory",
+            "ssl.keyStore.location": "/keystore.bcfks",
+            "ssl.keyStore.password": "keystore",
+            "ssl.keyStore.type": "BCFKS",
+            "ssl.trustStore.location": "/truststore.bcfks",
+            "ssl.trustStore.password": "truststore",
+            "ssl.trustStore.type": "BCFKS",
+        }
+        add_zookeeper_config_file(entries=entries)
+
+    with And("I add to ClickHouse secure zookeeper configuration"):
+        add_to_clickhouse_secure_zookeeper_config_file(restart=True)
+
+    with Then("I check ClickHouse connection to zookeeper works"):
+        check_clickhouse_connection_to_zookeeper()
 
 
-# @TestFeature
-# def fips(self):
-#     """Check secure connection from ClickHouse when ClickHouse wants
-#     to use any or only some specific FIPS compatible ciphers."""
-#     ssl_server.tests.zookeeper.feature.fips()
+@TestFeature
+def fips(self):
+    """Check secure connection from ClickHouse when ClickHouse wants
+    to use any or only some specific FIPS compatible ciphers."""
+
+    for cipher_suite in fips_compatible_tlsv1_2_cipher_suites:
+        with Feature(f"{cipher_suite}"):
+            fips_connection(cipher_list=cipher_suite)
+
+    with Feature("any compatible"):
+        fips_connection(
+            cipher_list=":".join([v for v in fips_compatible_tlsv1_2_cipher_suites])
+        )
 
 
 @TestFeature
@@ -200,4 +435,4 @@ def feature(self, node="clickhouse1", zookeeper_node="zookeeper-fips"):
     for scenario in loads(current_module(), Scenario):
         scenario()
 
-    # Feature(run=fips)
+    Feature(run=fips)
