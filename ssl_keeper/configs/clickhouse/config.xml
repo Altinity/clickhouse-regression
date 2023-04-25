@@ -19,7 +19,7 @@
     <!-- For HTTPS and SSL over native protocol. -->
 
     <https_port>8443</https_port>
-    <tcp_port_secure>9440</tcp_port_secure>
+    <tcp_port_secure>9000</tcp_port_secure>
 
 
     <!-- Used with https_port and tcp_port_secure. Full ssl options list: https://github.com/ClickHouse-Extras/poco/blob/master/NetSSL_OpenSSL/include/Poco/Net/SSLManager.h#L71 -->

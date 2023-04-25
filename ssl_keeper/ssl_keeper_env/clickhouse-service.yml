@@ -6,11 +6,10 @@ services:
     init: true
     expose:
       - "9000"
-      - "9181"
-      - "9009"
-      - "9234"
+      - "9281"
+      - "9010"
       - "8443"
-      - "8123"
+      - "9444"
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/remote.xml:/etc/clickhouse-server/config.d/remote.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/ssl_conf.xml:/etc/clickhouse-server/config.d/ssl_conf.xml"

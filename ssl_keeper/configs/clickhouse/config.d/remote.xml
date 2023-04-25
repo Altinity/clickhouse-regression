@@ -5,7 +5,7 @@
             <shard>
                 <replica>
                     <host>clickhouse1</host>
-                    <port>9440</port>
+                    <port>9000</port>
                     <secure>1</secure>
                 </replica>
             </shard>
