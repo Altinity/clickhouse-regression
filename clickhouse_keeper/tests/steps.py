@@ -224,6 +224,8 @@ def create_keeper_cluster_configuration(
     :param config_file: name of config file
     :param nodes: nodes which are used as Keeper nodes (standalone or mixed)
     """
+    tcp_port_secure = self.context.tcp_port_secure
+
     nodes = self.context.cluster.nodes["clickhouse"][0:3] if nodes is None else nodes
     id2 = 0
     if tcp_port_secure:
@@ -334,6 +336,8 @@ def create_config_section(
     :param control_nodes: nodes which are using for Zookeeper or Keeper
     :param cluster_nodes: nodes which will be controlled by control_nodes cluster
     """
+    secure = self.context.secure
+
     control_nodes = (
         self.context.cluster.nodes["clickhouse"][0:3]
         if control_nodes is None
