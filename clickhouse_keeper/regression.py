@@ -63,6 +63,9 @@ def regression(
     if stress is not None:
         self.context.stress = stress
 
+    self.context.tcp_port_secure = False
+    self.context.secure = 0
+
     from platform import processor as current_cpu
 
     folder_name = os.path.basename(current_dir())
