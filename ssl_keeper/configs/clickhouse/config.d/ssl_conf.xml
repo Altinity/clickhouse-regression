@@ -3,7 +3,7 @@
         <server>
             <certificateFile>/etc/clickhouse-server/config.d/server.crt</certificateFile>
             <privateKeyFile>/etc/clickhouse-server/config.d/server.key</privateKeyFile>
-<!--            <dhParamsFile>/etc/clickhouse-server/config.d/dhparam.pem</dhParamsFile>-->
+            <dhParamsFile>/etc/clickhouse-server/config.d/dhparam.pem</dhParamsFile>
             <verificationMode>none</verificationMode>
             <loadDefaultCAFile>True</loadDefaultCAFile>
             <cacheSessions>true</cacheSessions>

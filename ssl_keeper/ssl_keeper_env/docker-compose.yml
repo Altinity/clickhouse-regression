@@ -15,6 +15,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/client_ssl.xml:/etc/clickhouse-client/config.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d/enable_secure_keeper1.xml:/etc/clickhouse-server/config.d/enable_secure_keeper1.xml"
 #    depends_on:
 #      zookeeper:

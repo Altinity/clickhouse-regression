@@ -1,0 +1,11 @@
+<config>
+    <secure>true</secure>
+    <openSSL>
+      <client>
+          <verificationMode>none</verificationMode>
+          <invalidCertificateHandler>
+              <name>AcceptCertificateHandler</name>
+          </invalidCertificateHandler>
+      </client>
+    </openSSL>
+</config>
