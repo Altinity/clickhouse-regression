@@ -9,7 +9,6 @@ append_path(sys.path, "..")
 from helpers.cluster import Cluster
 from helpers.argparser import argparser as base_argparser
 from helpers.common import check_clickhouse_version
-from atomic_insert.requirements import *
 from platform import processor as current_cpu
 
 
@@ -34,8 +33,6 @@ xflags = {}
 @XFails(xfails)
 @XFlags(xflags)
 @Name("ssl keeper")
-@Requirements(RQ_SRS_028_ClickHouse_AtomicInserts("1.0"))
-@Specifications(SRS028_ClickHouse_Atomic_Inserts)
 def regression(
     self,
     local,
@@ -47,7 +44,8 @@ def regression(
 ):
     """ClickHouse ssl ClickHouse Keeper regression."""
     nodes = {
-        "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")
+        "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3"),
+        "bash_tools": ("bash_tools"),
     }
 
     self.context.clickhouse_version = clickhouse_version
@@ -73,6 +71,7 @@ def regression(
             skip(reason="only supported on ClickHouse version >= 22.4")
 
         Feature(run=load("ssl_keeper.tests.sanity", "feature"))
+        Feature(run=load("ssl_keeper.tests.keeper_ssl_cluster", "feature"))
 
 
 if main():
