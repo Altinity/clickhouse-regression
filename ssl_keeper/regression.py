@@ -45,11 +45,9 @@ def regression(
     stress=None,
     thread_fuzzer=None,
 ):
-    """ClickHouse atomic inserts regression."""
+    """ClickHouse ssl ClickHouse Keeper regression."""
     nodes = {
-        # "zookeeper": ("zookeeper",),
-        # "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3", "clickhouse4"),
-        "clickhouse": ("clickhouse1",),
+        "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")
     }
 
     self.context.clickhouse_version = clickhouse_version
