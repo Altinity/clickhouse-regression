@@ -6,7 +6,7 @@ from testflows.core import *
 
 append_path(sys.path, "..")
 
-from helpers.cluster import Cluster
+from ssl_keeper.helpers.cluster import Cluster
 from helpers.argparser import argparser as base_argparser
 from helpers.common import check_clickhouse_version
 from platform import processor as current_cpu
