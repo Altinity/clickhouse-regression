@@ -34,6 +34,15 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/config.d/enable_secure_keeper.xml:/etc/clickhouse-server/config.d/enable_secure_keeper.xml"
 
+  bash-tools:
+    image: registry.gitlab.com/altinity-public/container-images/test/bash-tools:3.0
+    hostname: bash-tools
+    restart: "no"
+    entrypoint:
+      - /bin/sleep
+    command:
+      - infinity
+
 #   dummy service which does nothing, but allows to postpone
 #   'docker-compose up -d' till all dependecies will go healthy
   all_services_ready:

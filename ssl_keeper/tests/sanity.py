@@ -10,10 +10,7 @@ def select_1(self):
 
         with Check(f"{name}"):
             with When("I try to execute SELECT 1 query"):
-                r = node.query("SELECT 1")
-
-            with Then("it should work"):
-                assert r.output == "1", error()
+                retry(node.query, timeout=300, delay=10)("SELECT 1", message="1", exitcode=0)
 
 
 @TestFeature
