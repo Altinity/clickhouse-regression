@@ -690,7 +690,7 @@ def start_mixed_keeper(
         with And(f"I check that ruok returns imok"):
             for name in control_nodes:
                 retry(cluster.node("bash-tools").cmd, timeout=100, delay=1)(
-                    f"echo ruok | nc {name} 2181",
+                    f"echo ruok | nc {name} {self.context.port}",
                     exitcode=0,
                     message="imok",
                 )

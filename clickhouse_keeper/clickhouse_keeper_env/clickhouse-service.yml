@@ -10,6 +10,10 @@ services:
       - "8123"
       - "2181"
       - "44444"
+      - "9281"
+      - "9010"
+      - "8443"
+      - "9444"
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.xml:/etc/clickhouse-server/config.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.xml:/etc/clickhouse-server/users.xml"
@@ -18,6 +22,8 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/server.key:/etc/clickhouse-server/config.d/server.key"
       - "${CLICKHOUSE_TESTS_SERVER_BIN_PATH:-/usr/bin/clickhouse}:/usr/bin/clickhouse"
       - "${CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH:-/usr/bin/clickhouse-odbc-bridge}:/usr/bin/clickhouse-odbc-bridge"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse-client/:/etc/clickhouse-client"
+
     entrypoint: bash -c "tail -f /dev/null"
     healthcheck:
       test: echo 1
