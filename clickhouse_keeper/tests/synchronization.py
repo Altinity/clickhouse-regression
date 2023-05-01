@@ -264,7 +264,7 @@ def detach(self):
 def feature(self):
     """Check data synchronization between replicas for different DDL queries."""
     with Given("I create remote config"):
-        if self.context.ssl == "true":
+        if self.context.ssl == "false":
             entries = {
                 "Cluster_3shards_with_3replicas": [
                     {
