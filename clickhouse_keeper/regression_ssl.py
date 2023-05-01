@@ -99,6 +99,7 @@ def regression(
         Feature(
             run=load("clickhouse_keeper.tests.alter_partition_distributed", "feature")
         )
+        Feature(run=load("clickhouse_keeper.tests.keeper_cluster_tests_ssl", "feature"))
 
 
 if main():

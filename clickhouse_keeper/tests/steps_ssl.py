@@ -312,8 +312,6 @@ def create_config_section_ssl(
                 f"rm -rf {config_d_dir}{config_file} "
             )
 
-
-
 @TestStep(When)
 def create_keeper_cluster_configuration_ssl(
     self,
@@ -506,3 +504,113 @@ def clean_coordination_on_all_nodes1(self, cluster_nodes=None):
             f"rm -rf /var/lib/clickhouse/coordination/snapshots "
             f"&& rm -rf /var/lib/clickhouse/coordination/log "
         )
+
+
+@TestStep(Given)
+def start_keepers_ssl(self, standalone_keeper_nodes=None, manual_cleanup=False):
+    """Start Keeper services.
+
+    :param standalone_keeper_nodes: nodes which will be used for standalone Keeper cluster
+    """
+    standalone_keeper_nodes = (
+        self.context.cluster.nodes["clickhouse"][9:12]
+        if standalone_keeper_nodes is None
+        else standalone_keeper_nodes
+    )
+    try:
+        for name in standalone_keeper_nodes:
+            node = self.context.cluster.node(name)
+            with When(f"I start {name}"):
+                with By("starting keeper process"):
+                    node.cmd("rm -rf /tmp/clickhouse-keeper.pid")
+                    node.cmd(
+                        "clickhouse keeper --config /etc/clickhouse-server/config.xml"
+                        " --pidfile=/tmp/clickhouse-keeper.pid --daemon",
+                        exitcode=0,
+                    )
+
+                with And("checking that keeper pid file was created"):
+                    node.cmd(
+                        "ls /tmp/clickhouse-keeper.pid",
+                        exitcode=0,
+                        message="/tmp/clickhouse-keeper.pid",
+                    )
+        yield
+    finally:
+        with Given("I stop all keepers"):
+            if manual_cleanup is False:
+                for name in standalone_keeper_nodes:
+                    node = self.context.cluster.node(name)
+                    with When(f"I stop {name}"):
+                        with By("sending kill -TERM to keeper process"):
+                            if node.cmd("ls /tmp/clickhouse-keeper.pid", exitcode=0):
+                                pid = node.cmd(
+                                    "cat /tmp/clickhouse-keeper.pid"
+                                ).output.strip()
+                                node.cmd(f"kill -TERM {pid}", exitcode=0)
+                        with And("checking pid does not exist"):
+                            retry(node.cmd, timeout=100, delay=1)(
+                                f"ps {pid}", exitcode=1, steps=False
+                            )
+
+
+@TestStep(Given)
+def stop_keepers_ssl(self, cluster_nodes=None):
+    """Stop ClickHouses group.
+
+    :param cluster_nodes: Clickhouse server nodes
+    """
+    cluster_nodes = (
+        self.context.cluster.nodes["clickhouse"][:9]
+        if cluster_nodes is None
+        else cluster_nodes
+    )
+    for name in cluster_nodes:
+        node = self.context.cluster.node(name)
+        with When(f"I stop {name}"):
+            with By("sending kill -TERM to keeper process"):
+                if node.cmd("ls /tmp/clickhouse-keeper.pid", exitcode=0):
+                    pid = node.cmd("cat /tmp/clickhouse-keeper.pid").output.strip()
+                    node.cmd(f"kill -TERM {pid}", exitcode=0)
+            with And("checking pid does not exist"):
+                retry(node.cmd, timeout=100, delay=1)(
+                    f"ps {pid}", exitcode=1, steps=False
+                )
+
+
+@TestStep(Given)
+def start_stand_alone_keeper_ssl(self):
+    """Start 9 nodes ClickHouse server and standalone 3 nodes Keeper."""
+    cluster = self.context.cluster
+    try:
+        with Given("I start standalone 3 nodes Keeper server"):
+            time.sleep(10)
+            create_keeper_cluster_configuration_ssl(nodes=cluster.nodes["clickhouse"][9:12])
+
+        with Given("I start all standalone Keepers nodes"):
+            time.sleep(10)
+            for name in cluster.nodes["clickhouse"][9:12]:
+                cluster.node(name).stop_clickhouse()
+            start_keepers_ssl(standalone_keeper_nodes=cluster.nodes["clickhouse"][9:12])
+
+        with And("I add Keeper server configuration file"):
+            time.sleep(3)
+            create_config_section_ssl(
+                control_nodes=cluster.nodes["clickhouse"][9:12],
+                cluster_nodes=cluster.nodes["clickhouse"][:12],
+            )
+
+        with And("I start ClickHouse server"):
+            time.sleep(3)
+            for name in cluster.nodes["clickhouse"][:9]:
+                cluster.node(name).restart_clickhouse()
+        yield
+    finally:
+        with Finally("I clean up"):
+            with By("I start clickhouse servers", flags=TE):
+                stop_keepers_ssl(cluster_nodes=cluster.nodes["clickhouse"][9:12])
+                for name in cluster.nodes["clickhouse"][9:12]:
+                    self.context.cluster.node(name).start_clickhouse(wait_healthy=False)
+                    time.sleep(5)
+
+            clean_coordination_on_all_nodes1()

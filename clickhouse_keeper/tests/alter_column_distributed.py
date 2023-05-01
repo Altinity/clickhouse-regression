@@ -316,7 +316,7 @@ def alter_modify_column_remove(self):
 def feature(self):
     """Check data synchronization between replicas for different ALTER column DDL queries."""
     with Given("I start mixed ClickHouse cluster"):
-        if self.context.ssl == "true":
+        if self.context.ssl == "false":
             start_mixed_keeper()
         else:
             start_mixed_keeper_ssl()
