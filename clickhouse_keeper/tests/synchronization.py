@@ -1,6 +1,6 @@
 from clickhouse_keeper.requirements import *
 from clickhouse_keeper.tests.steps import *
-
+from clickhouse_keeper.tests.steps_ssl import *
 
 @TestScenario
 @Requirements(RQ_SRS_024_ClickHouse_Keeper_ClickHouseOperation_Insert("1.0"))
@@ -264,36 +264,122 @@ def detach(self):
 def feature(self):
     """Check data synchronization between replicas for different DDL queries."""
     with Given("I create remote config"):
-        entries = {
-            "Cluster_3shards_with_3replicas": [
-                {
-                    "shard": [
-                        {"replica": {"host": "clickhouse1", "port": "9000"}},
-                        {"replica": {"host": "clickhouse2", "port": "9000"}},
-                        {"replica": {"host": "clickhouse3", "port": "9000"}},
-                    ]
-                },
-                {
-                    "shard": [
-                        {"replica": {"host": "clickhouse4", "port": "9000"}},
-                        {"replica": {"host": "clickhouse5", "port": "9000"}},
-                        {"replica": {"host": "clickhouse6", "port": "9000"}},
-                    ]
-                },
-                {
-                    "shard": [
-                        {"replica": {"host": "clickhouse7", "port": "9000"}},
-                        {"replica": {"host": "clickhouse8", "port": "9000"}},
-                        {"replica": {"host": "clickhouse9", "port": "9000"}},
-                    ]
-                },
-            ]
-        }
+        if self.context.ssl == "true":
+            entries = {
+                "Cluster_3shards_with_3replicas": [
+                    {
+                        "shard": [
+                            {"replica": {"host": "clickhouse1", "port": "9000"}},
+                            {"replica": {"host": "clickhouse2", "port": "9000"}},
+                            {"replica": {"host": "clickhouse3", "port": "9000"}},
+                        ]
+                    },
+                    {
+                        "shard": [
+                            {"replica": {"host": "clickhouse4", "port": "9000"}},
+                            {"replica": {"host": "clickhouse5", "port": "9000"}},
+                            {"replica": {"host": "clickhouse6", "port": "9000"}},
+                        ]
+                    },
+                    {
+                        "shard": [
+                            {"replica": {"host": "clickhouse7", "port": "9000"}},
+                            {"replica": {"host": "clickhouse8", "port": "9000"}},
+                            {"replica": {"host": "clickhouse9", "port": "9000"}},
+                        ]
+                    },
+                ]
+            }
 
-        create_remote_configuration(entries=entries, modify=True)
+            create_remote_configuration(entries=entries, modify=True)
 
-    with Given("I start mixed ClickHouse cluster"):
-        start_mixed_keeper()
+            with Given("I start mixed ClickHouse cluster"):
+                start_mixed_keeper()
+        else:
+            entries = {
+                "Cluster_3shards_with_3replicas": [
+                    {
+                        "shard": [
+                            {
+                                "replica": {
+                                    "host": "clickhouse1",
+                                    "port": "9440",
+                                    "secure": "1",
+                                }
+                            },
+                            {
+                                "replica": {
+                                    "host": "clickhouse2",
+                                    "port": "9440",
+                                    "secure": "1",
+                                }
+                            },
+                            {
+                                "replica": {
+                                    "host": "clickhouse3",
+                                    "port": "9440",
+                                    "secure": "1",
+                                }
+                            },
+                        ]
+                    },
+                    {
+                        "shard": [
+                            {
+                                "replica": {
+                                    "host": "clickhouse4",
+                                    "port": "9440",
+                                    "secure": "1",
+                                }
+                            },
+                            {
+                                "replica": {
+                                    "host": "clickhouse5",
+                                    "port": "9440",
+                                    "secure": "1",
+                                }
+                            },
+                            {
+                                "replica": {
+                                    "host": "clickhouse6",
+                                    "port": "9440",
+                                    "secure": "1",
+                                }
+                            },
+                        ]
+                    },
+                    {
+                        "shard": [
+                            {
+                                "replica": {
+                                    "host": "clickhouse7",
+                                    "port": "9440",
+                                    "secure": "1",
+                                }
+                            },
+                            {
+                                "replica": {
+                                    "host": "clickhouse8",
+                                    "port": "9440",
+                                    "secure": "1",
+                                }
+                            },
+                            {
+                                "replica": {
+                                    "host": "clickhouse9",
+                                    "port": "9440",
+                                    "secure": "1",
+                                }
+                            },
+                        ]
+                    },
+                ]
+            }
+
+            create_configuration_ssl(entries=entries, modify=True)
+
+            with Given("I start mixed ClickHouse cluster"):
+                start_mixed_keeper_ssl()
 
     for scenario in loads(current_module(), Scenario):
         scenario()
