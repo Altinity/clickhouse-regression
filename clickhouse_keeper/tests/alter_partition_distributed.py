@@ -1,5 +1,6 @@
 from clickhouse_keeper.requirements import *
 from clickhouse_keeper.tests.steps import *
+from clickhouse_keeper.tests.steps_ssl import *
 
 
 @TestOutline
@@ -640,7 +641,10 @@ def alter_delete_in_partition(self):
 def feature(self):
     """Check data synchronization between replicas for different ALTER  partition DDL queries."""
     with Given("I start mixed ClickHouse cluster"):
-        start_mixed_keeper()
+        if self.context.ssl == "false":
+            start_mixed_keeper()
+        else:
+            start_mixed_keeper_ssl()
 
     for scenario in loads(current_module(), Scenario):
         scenario()
