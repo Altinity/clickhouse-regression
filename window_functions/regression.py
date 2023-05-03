@@ -135,6 +135,20 @@ xfails = {
     "tests/:/non-negative derivative func/check over windows/:": [
         (Fail, "bug, LOGICAL_ERROR that needs to be investigated")
     ],
+    "tests/:/funcs/last value/partition by window/using last_value": [
+        (
+            Fail,
+            "23.2 fail https://github.com/ClickHouse/ClickHouse/issues/49461",
+            check_clickhouse_version(">=23.2"),
+        )
+    ],
+    "tests/:/funcs/last value/partition by window/using anyLast:": [
+        (
+            Fail,
+            "23.2 fail https://github.com/ClickHouse/ClickHouse/issues/49461",
+            check_clickhouse_version(">=23.2"),
+        )
+    ],
 }
 
 xflags = {}

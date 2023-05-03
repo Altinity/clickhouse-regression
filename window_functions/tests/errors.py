@@ -23,9 +23,9 @@ def error_using_non_window_function(self):
 def error_order_by_another_window_function(self):
     """Check that trying to order by another window function returns an error."""
     exitcode = 184
-    message = "DB::Exception: Window function rank() OVER (ORDER BY random() ASC) is found inside window definition in query"
+    message = "DB::Exception: Window function rank() OVER (ORDER BY rand() ASC) is found inside window definition in query"
 
-    sql = "SELECT rank() OVER (ORDER BY rank() OVER (ORDER BY random()))"
+    sql = "SELECT rank() OVER (ORDER BY rank() OVER (ORDER BY rand()))"
 
     with When("I execute query", description=sql):
         r = current().context.node.query(sql, exitcode=exitcode, message=message)
@@ -94,7 +94,7 @@ def error_select_from_window(self):
     exitcode = 46
     message = "DB::Exception: Unknown table function rank"
 
-    sql = "SELECT * FROM rank() OVER (ORDER BY random())"
+    sql = "SELECT * FROM rank() OVER (ORDER BY rand())"
 
     with When("I execute query", description=sql):
         r = current().context.node.query(sql, exitcode=exitcode, message=message)
@@ -106,11 +106,14 @@ def error_window_function_in_alter_delete_where(self):
     if self.context.distributed:
         exitcode = 48
         message = "Exception: Table engine Distributed doesn't support mutations"
+    elif check_clickhouse_version(">=23.1")(self):
+        exitcode = 47
+        message = "Exception: Unknown identifier: rank() OVER (ORDER BY rand() ASC)"
     else:
         exitcode = 184
-        message = "DB::Exception: Window function rank() OVER (ORDER BY random() ASC) is found in WHERE in query"
+        message = "DB::Exception: Window function rank() OVER (ORDER BY rand() ASC) is found in WHERE in query"
 
-    sql = "ALTER TABLE empsalary DELETE WHERE (rank() OVER (ORDER BY random())) > 10"
+    sql = "ALTER TABLE empsalary DELETE WHERE (rank() OVER (ORDER BY rand())) > 10"
 
     with When("I execute query", description=sql):
         r = current().context.node.query(sql, exitcode=exitcode, message=message)
