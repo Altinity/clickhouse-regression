@@ -386,13 +386,27 @@ def custom_special_symbols_checks(self, scenario):
     """Check that ClickHouse's extractKeyValuePairs function support specifying following parameters:
     ``key_value_pair_delimiter`, `pair_delimiters`, `quoting_character`."""
 
-    Check(test=extract_key_value_with_escaping, format_description=True)(scenario=scenario)
-    Check(test=specifying_quoting_character_non_alpha, format_description=True)(scenario=scenario)
-    Check(test=specifying_quoting_character_alpha, format_description=True)(scenario=scenario)
-    Check(test=specifying_pair_delimiter_non_alpha, format_description=True)(scenario=scenario)
-    Check(test=specifying_pair_delimiter_alpha, format_description=True)(scenario=scenario)
-    Check(test=specifying_key_value_pair_delimiter_non_alpha, format_description=True)(scenario=scenario)
-    Check(test=specifying_key_value_pair_delimiter_alpha, format_description=True)(scenario=scenario)
+    Check(test=extract_key_value_with_escaping, format_description=True)(
+        scenario=scenario
+    )
+    Check(test=specifying_quoting_character_non_alpha, format_description=True)(
+        scenario=scenario
+    )
+    Check(test=specifying_quoting_character_alpha, format_description=True)(
+        scenario=scenario
+    )
+    Check(test=specifying_pair_delimiter_non_alpha, format_description=True)(
+        scenario=scenario
+    )
+    Check(test=specifying_pair_delimiter_alpha, format_description=True)(
+        scenario=scenario
+    )
+    Check(test=specifying_key_value_pair_delimiter_non_alpha, format_description=True)(
+        scenario=scenario
+    )
+    Check(test=specifying_key_value_pair_delimiter_alpha, format_description=True)(
+        scenario=scenario
+    )
 
 
 @TestCheck
@@ -467,9 +481,13 @@ def default_parameters_values_checks(self, scenario):
     `:` - for key_value_pair_delimiter, ` ,;` for pair_delimiter,
     `"` for quoting_character."""
 
-    Check(test=quoting_character_default_value, format_description=True)(scenario=scenario)
+    Check(test=quoting_character_default_value, format_description=True)(
+        scenario=scenario
+    )
     Check(test=pair_delimiter_default_value, format_description=True)(scenario=scenario)
-    Check(test=key_value_pair_delimiter_default_value, format_description=True)(scenario=scenario)
+    Check(test=key_value_pair_delimiter_default_value, format_description=True)(
+        scenario=scenario
+    )
 
 
 @TestCheck
@@ -522,7 +540,9 @@ def same_key_with_different_values(self, scenario):
 def key_value_pairs_order(self, scenario):
     """Check that order of key value pairs affect result properly."""
 
-    Check(test=same_key_with_different_values, format_description=True)(scenario=scenario)
+    Check(test=same_key_with_different_values, format_description=True)(
+        scenario=scenario
+    )
 
 
 checks = [
@@ -534,6 +554,3 @@ checks = [
     custom_special_symbols_checks,
     key_value_pairs_order,
 ]
-
-
-
