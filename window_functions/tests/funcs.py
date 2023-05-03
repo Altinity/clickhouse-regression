@@ -101,6 +101,9 @@ def last_value(self):
         )
 
         with Check("using last_value"):
+            self.context.node.query(
+                "SELECT ten, four, unique2 FROM tenk1 WHERE unique2 < 10 FORMAT SQLInsert"
+            )
             execute_query(
                 """SELECT last_value(ten) OVER (PARTITION BY four) AS last_value, ten, four FROM
                 (SELECT * FROM tenk1 WHERE unique2 < 10 ORDER BY four, ten)
