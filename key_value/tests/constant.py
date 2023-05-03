@@ -44,4 +44,6 @@ def feature(self, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
 
     for check in checks:
-        Feature(test=check, format_name=True)(scenario=constant_input)
+        with Feature(f"{check.name}"):
+            Feature(test=check, name=constant_input.name)(scenario=constant_input)
+            Feature(test=check, name=constant_input_alias.name)(scenario=constant_input_alias)

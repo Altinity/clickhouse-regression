@@ -1,4 +1,6 @@
 from key_value.tests.steps import *
+from testflows.core import *
+from key_value.tests.constant import *
 
 
 @TestCheck
@@ -61,9 +63,9 @@ def noise_between(self, scenario):
 def noise_checks(self, scenario):
     """Check noise characters in input string are ignored."""
 
-    noise_before(scenario=scenario)
-    noise_after(scenario=scenario)
-    noise_between(scenario=scenario)
+    Check(test=noise_before, format_description=True)(scenario=scenario)
+    Check(test=noise_after, format_description=True)(scenario=scenario)
+    Check(test=noise_between, format_description=True)(scenario=scenario)
 
 
 @TestCheck
@@ -94,7 +96,7 @@ def key_first_symbol(self, scenario):
             f"'\\\\nn:\\\\nn'",
         )
         output = define("expected output", "{" + f"'\\\\nn':'\\\\nn'" + "}")
-        params = define("function parameters", f"':', ' ,', '\\\"', 1")
+        params = define("function parameters", f"':', ' ,', '\\\"'")
 
     scenario(input=input, output=output, params=params)
 
@@ -135,10 +137,10 @@ def key_empty_string(self, scenario):
 def key_format_checks(self, scenario):
     """Check that valid keys are recognized, and invalid are not."""
 
-    properly_defined_key(scenario=scenario)
-    key_first_symbol(scenario=scenario)
-    key_symbols(scenario=scenario)
-    key_empty_string(scenario=scenario)
+    Check(test=properly_defined_key, format_description=True)(scenario=scenario)
+    Check(test=key_first_symbol, format_description=True)(scenario=scenario)
+    Check(test=key_symbols, format_description=True)(scenario=scenario)
+    Check(test=key_empty_string, format_description=True)(scenario=scenario)
 
 
 @TestCheck
@@ -197,9 +199,9 @@ def value_empty_string(self, scenario):
 def value_format_checks(self, scenario):
     """Check that valid values are recognized, and invalid are not."""
 
-    properly_defined_value(scenario=scenario)
-    value_symbols(scenario=scenario)
-    value_empty_string(scenario=scenario)
+    Check(test=properly_defined_value, format_description=True)(scenario=scenario)
+    Check(test=value_symbols, format_description=True)(scenario=scenario)
+    Check(test=value_empty_string, format_description=True)(scenario=scenario)
 
 
 @TestCheck
@@ -384,13 +386,13 @@ def custom_special_symbols_checks(self, scenario):
     """Check that ClickHouse's extractKeyValuePairs function support specifying following parameters:
     ``key_value_pair_delimiter`, `pair_delimiters`, `quoting_character`."""
 
-    extract_key_value_with_escaping(scenario=scenario)
-    specifying_quoting_character_non_alpha(scenario=scenario)
-    specifying_quoting_character_alpha(scenario=scenario)
-    specifying_pair_delimiter_non_alpha(scenario=scenario)
-    specifying_pair_delimiter_alpha(scenario=scenario)
-    specifying_key_value_pair_delimiter_non_alpha(scenario=scenario)
-    specifying_key_value_pair_delimiter_alpha(scenario=scenario)
+    Check(test=extract_key_value_with_escaping, format_description=True)(scenario=scenario)
+    Check(test=specifying_quoting_character_non_alpha, format_description=True)(scenario=scenario)
+    Check(test=specifying_quoting_character_alpha, format_description=True)(scenario=scenario)
+    Check(test=specifying_pair_delimiter_non_alpha, format_description=True)(scenario=scenario)
+    Check(test=specifying_pair_delimiter_alpha, format_description=True)(scenario=scenario)
+    Check(test=specifying_key_value_pair_delimiter_non_alpha, format_description=True)(scenario=scenario)
+    Check(test=specifying_key_value_pair_delimiter_alpha, format_description=True)(scenario=scenario)
 
 
 @TestCheck
@@ -465,9 +467,9 @@ def default_parameters_values_checks(self, scenario):
     `:` - for key_value_pair_delimiter, ` ,;` for pair_delimiter,
     `"` for quoting_character."""
 
-    quoting_character_default_value(scenario=scenario)
-    pair_delimiter_default_value(scenario=scenario)
-    key_value_pair_delimiter_default_value(scenario=scenario)
+    Check(test=quoting_character_default_value, format_description=True)(scenario=scenario)
+    Check(test=pair_delimiter_default_value, format_description=True)(scenario=scenario)
+    Check(test=key_value_pair_delimiter_default_value, format_description=True)(scenario=scenario)
 
 
 @TestCheck
@@ -490,7 +492,7 @@ def input_format(self, scenario):
 def input_format_checks(self, scenario):
     """Check that ClickHouse's extractKeyValuePairs function can accept any string as input."""
 
-    input_format(scenario=scenario)
+    Check(test=input_format, format_description=True)(scenario=scenario)
 
 
 @TestCheck
@@ -520,7 +522,7 @@ def same_key_with_different_values(self, scenario):
 def key_value_pairs_order(self, scenario):
     """Check that order of key value pairs affect result properly."""
 
-    same_key_with_different_values(scenario=scenario)
+    Check(test=same_key_with_different_values, format_description=True)(scenario=scenario)
 
 
 checks = [
@@ -532,3 +534,6 @@ checks = [
     custom_special_symbols_checks,
     key_value_pairs_order,
 ]
+
+
+
