@@ -70,5 +70,6 @@ def feature(self, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
 
     for check in checks:
-        Feature(test=check, format_name=True)(scenario=column_input)
-        Feature(test=check, format_name=True)(scenario=column_input_alias)
+        with Feature(f"{check.name}"):
+            Feature(test=check, name=column_input.name)(scenario=column_input)
+            Feature(test=check, name=column_input_alias.name)(scenario=column_input_alias)
