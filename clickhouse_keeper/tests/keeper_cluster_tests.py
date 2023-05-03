@@ -2,6 +2,7 @@ import time
 
 from clickhouse_keeper.requirements import *
 from clickhouse_keeper.tests.steps import *
+from clickhouse_keeper.tests.steps_ssl import *
 from helpers.common import *
 
 
@@ -12,11 +13,18 @@ def mixed_keepers_5(self):
     """
     cluster = self.context.cluster
     try:
-        start_mixed_keeper(
-            cluster_nodes=cluster.nodes["clickhouse"][:9],
-            control_nodes=cluster.nodes["clickhouse"][0:5],
-            rest_cluster_nodes=cluster.nodes["clickhouse"][5:9],
-        )
+        if self.context.ssl == "true":
+            start_mixed_keeper_ssl(
+                cluster_nodes=cluster.nodes["clickhouse"][:9],
+                control_nodes=cluster.nodes["clickhouse"][0:5],
+                rest_cluster_nodes=cluster.nodes["clickhouse"][5:9],
+            )
+        else:
+            start_mixed_keeper(
+                cluster_nodes=cluster.nodes["clickhouse"][:9],
+                control_nodes=cluster.nodes["clickhouse"][0:5],
+                rest_cluster_nodes=cluster.nodes["clickhouse"][5:9],
+            )
 
         with Given("Receive UID"):
             uid = getuid()
@@ -63,9 +71,9 @@ def mixed_keepers_5(self):
         with And(f"I check that ruok returns imok"):
             for name in cluster.nodes["clickhouse"][0:5]:
                 retry(cluster.node("bash-tools").cmd, timeout=500, delay=1)(
-                    f"echo ruok | nc {name} 2181",
+                    f"echo ruok | nc {name} {self.context.port}",
                     exitcode=0,
-                    message="imok",
+                    message="F" if self.context.ssl == "true" else "imok",
                 )
 
         with And("I check clean ability"):
@@ -84,11 +92,18 @@ def mixed_keepers_4(self):
 
     cluster = self.context.cluster
     try:
-        start_mixed_keeper(
-            cluster_nodes=cluster.nodes["clickhouse"][:9],
-            control_nodes=cluster.nodes["clickhouse"][0:4],
-            rest_cluster_nodes=cluster.nodes["clickhouse"][4:9],
-        )
+        if self.context.ssl == "true":
+            start_mixed_keeper_ssl(
+                cluster_nodes=cluster.nodes["clickhouse"][:9],
+                control_nodes=cluster.nodes["clickhouse"][0:4],
+                rest_cluster_nodes=cluster.nodes["clickhouse"][4:9],
+            )
+        else:
+            start_mixed_keeper(
+                cluster_nodes=cluster.nodes["clickhouse"][:9],
+                control_nodes=cluster.nodes["clickhouse"][0:4],
+                rest_cluster_nodes=cluster.nodes["clickhouse"][4:9],
+            )
 
         with Given("Receive UID"):
             uid = getuid()
@@ -134,9 +149,9 @@ def mixed_keepers_4(self):
         with And(f"I check that ruok returns imok"):
             for name in cluster.nodes["clickhouse"][0:4]:
                 retry(cluster.node("bash-tools").cmd, timeout=100, delay=1)(
-                    f"echo ruok | nc {name} 2181",
+                    f"echo ruok | nc {name} {self.context.port}",
                     exitcode=0,
-                    message="imok",
+                    message="F" if self.context.ssl == "true" else "imok",
                 )
 
         with And("I check clean ability"):
@@ -153,11 +168,18 @@ def mixed_keepers_3(self):
     """
     cluster = self.context.cluster
     try:
-        start_mixed_keeper(
-            cluster_nodes=cluster.nodes["clickhouse"][:9],
-            control_nodes=cluster.nodes["clickhouse"][0:3],
-            rest_cluster_nodes=cluster.nodes["clickhouse"][3:9],
-        )
+        if self.context.ssl == "true":
+            start_mixed_keeper_ssl(
+                cluster_nodes=cluster.nodes["clickhouse"][:9],
+                control_nodes=cluster.nodes["clickhouse"][0:3],
+                rest_cluster_nodes=cluster.nodes["clickhouse"][3:9],
+            )
+        else:
+            start_mixed_keeper(
+                cluster_nodes=cluster.nodes["clickhouse"][:9],
+                control_nodes=cluster.nodes["clickhouse"][0:3],
+                rest_cluster_nodes=cluster.nodes["clickhouse"][3:9],
+            )
 
         with Given("Receive UID"):
             uid = getuid()
@@ -203,9 +225,9 @@ def mixed_keepers_3(self):
         with And(f"I check that ruok returns imok"):
             for name in cluster.nodes["clickhouse"][0:3]:
                 retry(cluster.node("bash-tools").cmd, timeout=500, delay=1)(
-                    f"echo ruok | nc {name} 2181",
+                    f"echo ruok | nc {name} {self.context.port}",
                     exitcode=0,
-                    message="imok",
+                    message="F" if self.context.ssl == "true" else "imok",
                 )
 
         with And("I check clean ability"):
@@ -224,11 +246,18 @@ def mixed_keepers_2(self):
 
     cluster = self.context.cluster
     try:
-        start_mixed_keeper(
-            cluster_nodes=cluster.nodes["clickhouse"][:9],
-            control_nodes=cluster.nodes["clickhouse"][0:2],
-            rest_cluster_nodes=cluster.nodes["clickhouse"][2:9],
-        )
+        if self.context.ssl == "true":
+            start_mixed_keeper_ssl(
+                cluster_nodes=cluster.nodes["clickhouse"][:9],
+                control_nodes=cluster.nodes["clickhouse"][0:2],
+                rest_cluster_nodes=cluster.nodes["clickhouse"][2:9],
+            )
+        else:
+            start_mixed_keeper(
+                cluster_nodes=cluster.nodes["clickhouse"][:9],
+                control_nodes=cluster.nodes["clickhouse"][0:2],
+                rest_cluster_nodes=cluster.nodes["clickhouse"][2:9],
+            )
 
         with Given("Receive UID"):
             uid = getuid()
@@ -270,9 +299,9 @@ def mixed_keepers_2(self):
         with And(f"I check that ruok returns imok"):
             for name in cluster.nodes["clickhouse"][0:2]:
                 retry(cluster.node("bash-tools").cmd, timeout=500, delay=1)(
-                    f"echo ruok | nc {name} 2181",
+                    f"echo ruok | nc {name} {self.context.port}",
                     exitcode=0,
-                    message="imok",
+                    message="F" if self.context.ssl == "true" else "imok",
                 )
 
         with And("I check clean ability"):
@@ -290,11 +319,18 @@ def mixed_keepers_1(self):
     """
     cluster = self.context.cluster
     try:
-        start_mixed_keeper(
-            cluster_nodes=cluster.nodes["clickhouse"][:9],
-            control_nodes=cluster.nodes["clickhouse"][0:1],
-            rest_cluster_nodes=cluster.nodes["clickhouse"][1:9],
-        )
+        if self.context.ssl == "true":
+            start_mixed_keeper_ssl(
+                cluster_nodes=cluster.nodes["clickhouse"][:9],
+                control_nodes=cluster.nodes["clickhouse"][0:1],
+                rest_cluster_nodes=cluster.nodes["clickhouse"][1:9],
+            )
+        else:
+            start_mixed_keeper(
+                cluster_nodes=cluster.nodes["clickhouse"][:9],
+                control_nodes=cluster.nodes["clickhouse"][0:1],
+                rest_cluster_nodes=cluster.nodes["clickhouse"][1:9],
+            )
 
         with Given("Receive UID"):
             uid = getuid()
@@ -336,9 +372,9 @@ def mixed_keepers_1(self):
         with And(f"I check that ruok returns imok"):
             for name in cluster.nodes["clickhouse"][0:1]:
                 retry(cluster.node("bash-tools").cmd, timeout=100, delay=1)(
-                    f"echo ruok | nc {name} 2181",
+                    f"echo ruok | nc {name} {self.context.port}",
                     exitcode=0,
-                    message="imok",
+                    message="F" if self.context.ssl == "true" else "imok",
                 )
 
         with And("I check clean ability"):
@@ -358,6 +394,9 @@ def zookeepers_3(self):
     cluster = self.context.cluster
     zookeeper_cluster_nodes = cluster.nodes["zookeeper"][:3]
     clickhouse_cluster_nodes = cluster.nodes["clickhouse"][:9]
+
+    if self.context.ssl == "true":
+        xfail("zookeeper ssl doesn't integrated")
 
     with Given("I add ZooKeeper server configuration file to ClickHouse servers"):
         create_config_section(

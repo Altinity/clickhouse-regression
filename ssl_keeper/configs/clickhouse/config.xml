@@ -21,31 +21,33 @@
     <https_port>8443</https_port>
     <tcp_port_secure>9440</tcp_port_secure>
 
+
     <!-- Used with https_port and tcp_port_secure. Full ssl options list: https://github.com/ClickHouse-Extras/poco/blob/master/NetSSL_OpenSSL/include/Poco/Net/SSLManager.h#L71 -->
-    <openSSL>
-        <server>
-            <certificateFile>/etc/clickhouse-server/config.d/server.crt</certificateFile>
-            <privateKeyFile>/etc/clickhouse-server/config.d/server.key</privateKeyFile>
-            <dhParamsFile>/etc/clickhouse-server/config.d/dhparam.pem</dhParamsFile>
-            <verificationMode>none</verificationMode>
-            <loadDefaultCAFile>True</loadDefaultCAFile>
-            <cacheSessions>true</cacheSessions>
-            <disableProtocols>sslv2,sslv3</disableProtocols>
-            <preferServerCiphers>true</preferServerCiphers>
-        </server>
-        <client>
-            <certificateFile>/etc/clickhouse-server/config.d/server.crt</certificateFile>
-            <privateKeyFile>/etc/clickhouse-server/config.d/server.key</privateKeyFile>
-            <loadDefaultCAFile>True</loadDefaultCAFile>
-            <cacheSessions>true</cacheSessions>
-            <disableProtocols>sslv2,sslv3</disableProtocols>
-            <preferServerCiphers>true</preferServerCiphers>
-            <verificationMode>none</verificationMode>
-            <invalidCertificateHandler>
-                <name>AcceptCertificateHandler</name>
-            </invalidCertificateHandler>
-        </client>
-    </openSSL>
+<!--    <openSSL>-->
+<!--        <server> &lt;!&ndash; Used for https server AND secure tcp port &ndash;&gt;-->
+<!--            <certificateFile>/etc/clickhouse-server/config.d/server.crt</certificateFile>-->
+<!--            <privateKeyFile>/etc/clickhouse-server/config.d/server.key</privateKeyFile>-->
+<!--            <caConfig>/etc/clickhouse-server/config.d/rootCA.pem</caConfig>-->
+<!--            <loadDefaultCAFile>true</loadDefaultCAFile>-->
+<!--            <verificationMode>none</verificationMode>-->
+<!--            <cacheSessions>true</cacheSessions>-->
+<!--            <disableProtocols>sslv2,sslv3</disableProtocols>-->
+<!--            <preferServerCiphers>true</preferServerCiphers>-->
+<!--        </server>-->
+
+<!--        <client> &lt;!&ndash; Used for connecting to https dictionary source &ndash;&gt;-->
+<!--            <certificateFile>/etc/clickhouse-server/config.d/server.crt</certificateFile>-->
+<!--            <privateKeyFile>/etc/clickhouse-server/config.d/server.key</privateKeyFile>-->
+<!--            <loadDefaultCAFile>true</loadDefaultCAFile>-->
+<!--            <cacheSessions>true</cacheSessions>-->
+<!--            <disableProtocols>sslv2,sslv3</disableProtocols>-->
+<!--            <preferServerCiphers>true</preferServerCiphers>-->
+<!--            <verificationMode>none</verificationMode>-->
+<!--            <invalidCertificateHandler>-->
+<!--                <name>RejectCertificateHandler</name>-->
+<!--            </invalidCertificateHandler>-->
+<!--        </client>-->
+<!--    </openSSL>-->
 
     <!-- Default root page on http[s] server. For example load UI from https://tabix.io/ when opening http://localhost:8123 -->
     <!--
@@ -54,6 +56,7 @@
 
     <!-- Port for communication between replicas. Used for data exchange. -->
     <interserver_http_port>9009</interserver_http_port>
+<!--    <interserver_https_port>9010</interserver_https_port>-->
 
     <!-- Hostname that is used by other replicas to request this server.
          If not specified, than it is determined analoguous to 'hostname -f' command.
@@ -358,18 +361,6 @@
 
     <!-- Example of parameters for GraphiteMergeTree table engine -->
     <graphite_rollup_example>
-        <pattern>
-            <regexp>click_cost</regexp>
-            <function>any</function>
-            <retention>
-                <age>0</age>
-                <precision>3600</precision>
-            </retention>
-            <retention>
-                <age>86400</age>
-                <precision>60</precision>
-            </retention>
-        </pattern>
         <default>
             <function>max</function>
             <retention>

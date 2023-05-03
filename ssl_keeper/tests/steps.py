@@ -518,7 +518,7 @@ def create_simple_table(
     self,
     node=None,
     table_name="test",
-    cluster_name="'Cluster_3shards_with_3replicas'",
+    cluster_name="'simple_replication_cluster'",
     values="Id Int32, partition Int32",
     manual_cleanup=False,
 ):
@@ -690,7 +690,7 @@ def start_mixed_keeper(
         with And(f"I check that ruok returns imok"):
             for name in control_nodes:
                 retry(cluster.node("bash-tools").cmd, timeout=100, delay=1)(
-                    f"echo ruok | nc {name} {self.context.port}",
+                    f"echo ruok | nc {name} 2181",
                     exitcode=0,
                     message="imok",
                 )

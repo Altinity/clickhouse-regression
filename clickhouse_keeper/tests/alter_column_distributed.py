@@ -1,5 +1,6 @@
 from clickhouse_keeper.requirements import *
 from clickhouse_keeper.tests.steps import *
+from clickhouse_keeper.tests.steps_ssl import *
 
 
 @TestScenario
@@ -315,7 +316,10 @@ def alter_modify_column_remove(self):
 def feature(self):
     """Check data synchronization between replicas for different ALTER column DDL queries."""
     with Given("I start mixed ClickHouse cluster"):
-        start_mixed_keeper()
+        if self.context.ssl == "false":
+            start_mixed_keeper()
+        else:
+            start_mixed_keeper_ssl()
 
     for scenario in loads(current_module(), Scenario):
         scenario()

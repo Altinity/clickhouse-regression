@@ -11,7 +11,7 @@ from helpers.argparser import argparser
 from helpers.common import check_clickhouse_version
 from clickhouse_keeper.requirements import *
 from clickhouse_keeper.tests.steps import *
-
+from clickhouse_keeper.tests.steps_ssl import *
 
 xfails = {}
 
@@ -63,10 +63,10 @@ def regression(
     if stress is not None:
         self.context.stress = stress
 
-    self.context.tcp_port_secure = False
-    self.context.secure = 0
-    self.context.ssl = "false"
-    self.context.port = "2181"
+    self.context.tcp_port_secure = True
+    self.context.secure = 1
+    self.context.port = "9281"
+    self.context.ssl = "true"
 
     from platform import processor as current_cpu
 
@@ -88,13 +88,9 @@ def regression(
         if check_clickhouse_version("<21.4")(self):
             skip(reason="only supported on ClickHouse version >= 21.4")
 
-        create_3_3_cluster_config()
+        create_3_3_cluster_config_ssl()
         Feature(run=load("clickhouse_keeper.tests.sanity", "feature"))
-        Feature(run=load("clickhouse_keeper.tests.migration", "feature"))
         Feature(run=load("clickhouse_keeper.tests.synchronization", "feature"))
-        Feature(run=load("clickhouse_keeper.tests.cli", "feature"))
-        Feature(run=load("clickhouse_keeper.tests.servers_start_up", "feature"))
-        Feature(run=load("clickhouse_keeper.tests.cli_converter", "feature"))
         Feature(
             run=load("clickhouse_keeper.tests.non_distributed_ddl_queries", "feature")
         )
@@ -103,10 +99,7 @@ def regression(
         Feature(
             run=load("clickhouse_keeper.tests.alter_partition_distributed", "feature")
         )
-        Feature(
-            run=load("clickhouse_keeper.tests.four_letter_word_commands", "feature")
-        )
-        Feature(run=load("clickhouse_keeper.tests.coordination_settings", "feature"))
+        Feature(run=load("clickhouse_keeper.tests.keeper_cluster_tests_ssl", "feature"))
 
 
 if main():

@@ -329,7 +329,7 @@ def tcp_port_conf(
         with Given("I clean ClickHouse Keeper server nodes"):
             clean_coordination_on_all_nodes()
 
-        #     create_ssl_configuration(nodes=cluster_nodes, check_preprocessed=False, restart=False, modify=False)
+            # create_ssl_configuration(nodes=cluster_nodes, check_preprocessed=False, restart=False, modify=False)
 
         with And("I create server Keeper config"):
             create_config_section(
