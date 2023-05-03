@@ -149,6 +149,9 @@ xfails = {
             check_clickhouse_version(">=23.2"),
         )
     ],
+    "/window functions/tests/:/time decayed funcs/exponentialTimeDecayed:/:/:": [
+        (Fail, "not working correctly on 22.3", check_clickhouse_version("<22.8"))
+    ],
 }
 
 xflags = {}
