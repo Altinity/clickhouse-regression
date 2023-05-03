@@ -42,12 +42,14 @@ _entries_client_ssl = {
             "verificationMode": "none",
             "invalidCertificateHandler": {"name": "AcceptCertificateHandler"},
         }
-    }
+    },
 }
 
 
 @TestStep(Given)
-def create_client_ssl(self, config_d_dir="/etc/clickhouse-client/", config_file="config.xml"):
+def create_client_ssl(
+    self, config_d_dir="/etc/clickhouse-client/", config_file="config.xml"
+):
     try:
         with Given("I create remote config"):
             create_configuration_ssl(
@@ -64,13 +66,13 @@ def create_client_ssl(self, config_d_dir="/etc/clickhouse-client/", config_file=
     finally:
         for name in self.context.cluster.nodes["clickhouse"][:13]:
             node = self.context.cluster.node(name)
-            node.cmd(
-                f"rm -rf {config_d_dir}{config_file} "
-            )
+            node.cmd(f"rm -rf {config_d_dir}{config_file} ")
 
 
 @TestStep(Given)
-def create_open_ssl(self, config_d_dir="/etc/clickhouse-server/config.d/", config_file="ssl_conf.xml"):
+def create_open_ssl(
+    self, config_d_dir="/etc/clickhouse-server/config.d/", config_file="ssl_conf.xml"
+):
     with Given("I create remote config"):
         try:
             create_configuration_ssl(
@@ -87,9 +89,7 @@ def create_open_ssl(self, config_d_dir="/etc/clickhouse-server/config.d/", confi
         finally:
             for name in self.context.cluster.nodes["clickhouse"][:13]:
                 node = self.context.cluster.node(name)
-                node.cmd(
-                    f"rm -rf {config_d_dir}{config_file} "
-                )
+                node.cmd(f"rm -rf {config_d_dir}{config_file} ")
 
 
 @TestStep(Given)
@@ -225,7 +225,6 @@ def create_configuration_ssl(
             )
 
 
-
 @TestStep(Given)
 def add_config_section_ssl(
     self,
@@ -308,9 +307,8 @@ def create_config_section_ssl(
     finally:
         for name in self.context.cluster.nodes["clickhouse"][:13]:
             node = self.context.cluster.node(name)
-            node.cmd(
-                f"rm -rf {config_d_dir}{config_file} "
-            )
+            node.cmd(f"rm -rf {config_d_dir}{config_file} ")
+
 
 @TestStep(When)
 def create_keeper_cluster_configuration_ssl(
@@ -335,7 +333,9 @@ def create_keeper_cluster_configuration_ssl(
     try:
         tcp_port_secure = self.context.tcp_port_secure
 
-        nodes = self.context.cluster.nodes["clickhouse"][0:3] if nodes is None else nodes
+        nodes = (
+            self.context.cluster.nodes["clickhouse"][0:3] if nodes is None else nodes
+        )
         id2 = 0
         if tcp_port_secure:
             port = "tcp_port_secure"
@@ -345,9 +345,7 @@ def create_keeper_cluster_configuration_ssl(
         for name in nodes:
             id2 = id2 + 1
             node = self.context.cluster.node(name)
-            server_part = [{
-                    "secure": self.context.ssl
-                }]
+            server_part = [{"secure": self.context.ssl}]
             id = 0
             for name1 in nodes:
                 id = id + 1
@@ -398,9 +396,7 @@ def create_keeper_cluster_configuration_ssl(
     finally:
         for name in self.context.cluster.nodes["clickhouse"][:13]:
             node = self.context.cluster.node(name)
-            node.cmd(
-                f"rm -rf {config_d_dir}{config_file} "
-            )
+            node.cmd(f"rm -rf {config_d_dir}{config_file} ")
 
 
 @TestStep(Given)
@@ -585,7 +581,9 @@ def start_stand_alone_keeper_ssl(self):
     try:
         with Given("I start standalone 3 nodes Keeper server"):
             time.sleep(10)
-            create_keeper_cluster_configuration_ssl(nodes=cluster.nodes["clickhouse"][9:12])
+            create_keeper_cluster_configuration_ssl(
+                nodes=cluster.nodes["clickhouse"][9:12]
+            )
 
         with Given("I start all standalone Keepers nodes"):
             time.sleep(10)

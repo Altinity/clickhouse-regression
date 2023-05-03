@@ -2,6 +2,7 @@ from clickhouse_keeper.requirements import *
 from clickhouse_keeper.tests.steps import *
 from clickhouse_keeper.tests.steps_ssl import *
 
+
 @TestScenario
 @Requirements(RQ_SRS_024_ClickHouse_Keeper_ClickHouseOperation_Insert("1.0"))
 def insert(self):
