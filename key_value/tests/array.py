@@ -61,4 +61,6 @@ def feature(self, node="clickhouse1"):
     for check in checks:
         with Feature(f"{check.name}"):
             Feature(test=check, name=array_input.name)(scenario=array_input)
-            Feature(test=check, name=array_column_input.name)(scenario=array_column_input)
+            Feature(test=check, name=array_column_input.name)(
+                scenario=array_column_input
+            )
