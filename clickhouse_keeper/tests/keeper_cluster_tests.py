@@ -396,7 +396,7 @@ def zookeepers_3(self):
     clickhouse_cluster_nodes = cluster.nodes["clickhouse"][:9]
 
     if self.context.ssl == "true":
-        xfail("zookeeper ssl doesn't integrated")
+        xfail("zookeeper ssl is not supported by tests")
 
     with Given("I add ZooKeeper server configuration file to ClickHouse servers"):
         create_config_section(
