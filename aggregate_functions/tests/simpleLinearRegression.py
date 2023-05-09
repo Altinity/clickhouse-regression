@@ -16,7 +16,9 @@ from aggregate_functions.tests.covarPop import feature as checks
 )
 def feature(self, func="simpleLinearRegression({params})", table=None):
     """Check simpleLinearRegression aggregate function by using the same tests as for covarPop."""
-    clickhouse_version = ">=22.6" if check_clickhouse_version("<23.2")(self) else ">=23.2"
+    clickhouse_version = (
+        ">=22.6" if check_clickhouse_version("<23.2")(self) else ">=23.2"
+    )
     snapshot_id = get_snapshot_id(clickhouse_version=clickhouse_version)
 
     if table is None:

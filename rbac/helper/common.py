@@ -8,7 +8,12 @@ from testflows.core.name import basename, parentname
 from testflows._core.testtype import TestSubType
 from testflows.core import *
 
-from helpers.common import instrument_clickhouse_server_log
+from helpers.common import (
+    create_xml_config_content,
+    add_config,
+    instrument_clickhouse_server_log,
+    check_clickhouse_version,
+)
 from rbac.helper.tables import table_types
 
 
@@ -128,3 +133,40 @@ def grant_select_on_table(node, grants, target_name, *table_names):
                 node.query(
                     f"REVOKE SELECT ON {table_names[table_number]} FROM {target_name}"
                 )
+
+
+@TestStep(Given)
+def add_rbac_config_file(
+    self,
+    config_d_dir="/etc/clickhouse-server/users.d",
+    config_file="rbac.xml",
+    timeout=300,
+    restart=False,
+    node=None,
+):
+    """Add config to give `default` user ALL and ACCESS MANAGEMENT privileges."""
+    entries = {
+        "users": {
+            "default": {
+                "named_collection_control": "1",
+                "show_named_collections": "1",
+                "show_named_collections_secrets": "1",
+            }
+        }
+    }
+
+    node.command(f"mkdir {config_d_dir}")
+
+    config = create_xml_config_content(
+        entries, config_file=config_file, config_d_dir=config_d_dir, root="clickhouse"
+    )
+
+    return add_config(
+        config,
+        timeout=timeout,
+        restart=restart,
+        node=node,
+        check_preprocessed=False,
+        wait_healthy=False,
+        modify=True,
+    )

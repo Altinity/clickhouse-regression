@@ -22,7 +22,7 @@ issue_44511 = (
 issue_47142 = "https://github.com/ClickHouse/ClickHouse/issues/47142"
 issue_48917 = (
     "https://github.com/ClickHouse/ClickHouse/issues/48917",
-    check_clickhouse_version(">=23.2")
+    check_clickhouse_version(">=23.2"),
 )
 
 xfails = {
@@ -68,9 +68,6 @@ xfails = {
             r".*Exception: Nested type [^\n]+ cannot be inside Nullable type.*",
         )
     ],
-    # "/aggregate functions/mannWhitneyUTest/weight NULL value handling" : [
-    #     (Fail, *issue_48917)
-    # ]
 }
 
 

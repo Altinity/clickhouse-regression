@@ -19,7 +19,9 @@ from aggregate_functions.tests.steps import (
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_MannWhitneyUTest("1.0"))
 def feature(self, func="mannWhitneyUTest({params})", table=None, snapshot_id=None):
     """Check mannWhitneyUTest aggregate function by using the same tests as for welchTTest."""
-    clickhouse_version = ">=22.6" if check_clickhouse_version("<23.2")(self) else ">=23.2"
+    clickhouse_version = (
+        ">=22.6" if check_clickhouse_version("<23.2")(self) else ">=23.2"
+    )
     self.context.snapshot_id = get_snapshot_id(clickhouse_version=clickhouse_version)
 
     if table is None:

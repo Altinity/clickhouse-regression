@@ -42,6 +42,8 @@ def privileges_granted_via_role(self, node=None):
 def role_admin(self, grant_target_name, user_name, node=None):
     """Check that user is able to execute to grant roles if and only if they have `ROLE ADMIN`."""
     exitcode, message = errors.not_enough_privileges(name=user_name)
+    if check_clickhouse_version(">=23.2")(self):
+        message = "Exception: Not enough privileges"
 
     if node is None:
         node = self.context.node
