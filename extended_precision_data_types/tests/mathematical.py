@@ -171,6 +171,9 @@ def math_dec_table(self, func, expected_result, exitcode, node=None):
     min = Decimal256_min_max[0]
     max = Decimal256_min_max[1]
 
+    if check_clickhouse_version(">=23.2")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=23.2")
+
     if node is None:
         node = self.context.node
 

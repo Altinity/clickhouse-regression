@@ -114,12 +114,18 @@ def regression(
             Feature(run=load("clickhouse_keeper.tests.cli", "feature"))
             Feature(run=load("clickhouse_keeper.tests.synchronization", "feature"))
             Feature(
-                run=load("clickhouse_keeper.tests.non_distributed_ddl_queries", "feature")
+                run=load(
+                    "clickhouse_keeper.tests.non_distributed_ddl_queries", "feature"
+                )
             )
             Feature(run=load("clickhouse_keeper.tests.keeper_cluster_tests", "feature"))
-            Feature(run=load("clickhouse_keeper.tests.alter_column_distributed", "feature"))
             Feature(
-                run=load("clickhouse_keeper.tests.alter_partition_distributed", "feature")
+                run=load("clickhouse_keeper.tests.alter_column_distributed", "feature")
+            )
+            Feature(
+                run=load(
+                    "clickhouse_keeper.tests.alter_partition_distributed", "feature"
+                )
             )
             Feature(run=load("clickhouse_keeper.tests.servers_start_up", "feature"))
         else:
@@ -131,17 +137,25 @@ def regression(
             Feature(run=load("clickhouse_keeper.tests.servers_start_up", "feature"))
             Feature(run=load("clickhouse_keeper.tests.cli_converter", "feature"))
             Feature(
-                run=load("clickhouse_keeper.tests.non_distributed_ddl_queries", "feature")
+                run=load(
+                    "clickhouse_keeper.tests.non_distributed_ddl_queries", "feature"
+                )
             )
             Feature(run=load("clickhouse_keeper.tests.keeper_cluster_tests", "feature"))
-            Feature(run=load("clickhouse_keeper.tests.alter_column_distributed", "feature"))
             Feature(
-                run=load("clickhouse_keeper.tests.alter_partition_distributed", "feature")
+                run=load("clickhouse_keeper.tests.alter_column_distributed", "feature")
+            )
+            Feature(
+                run=load(
+                    "clickhouse_keeper.tests.alter_partition_distributed", "feature"
+                )
             )
             Feature(
                 run=load("clickhouse_keeper.tests.four_letter_word_commands", "feature")
             )
-            Feature(run=load("clickhouse_keeper.tests.coordination_settings", "feature"))
+            Feature(
+                run=load("clickhouse_keeper.tests.coordination_settings", "feature")
+            )
 
 
 if main():

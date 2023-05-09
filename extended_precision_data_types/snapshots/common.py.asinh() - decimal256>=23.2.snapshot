@@ -1,0 +1,7 @@
+I_check_the_outputs_of_asinh__with_Decimal256 = r"""
+a
+-173
+0
+173
+"""
+

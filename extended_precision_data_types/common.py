@@ -60,7 +60,10 @@ def allow_experimental_map_type(self):
 
 
 def execute_query(
-    sql, expected=None, format="TabSeparatedWithNames", compare_func=None
+    sql,
+    expected=None,
+    format="TabSeparatedWithNames",
+    compare_func=None,
 ):
     """Execute SQL query and compare the output to the snapshot."""
     name = basename(current().name)
@@ -78,17 +81,22 @@ def execute_query(
                 assert compare_func(r.output.strip(), expected), error()
 
     else:
+        if "snapshot_id" in current().context:
+            snapshot_id = current().context.snapshot_id
+        else:
+            snapshot_id = (
+                "tests.pre22.3"
+                if check_clickhouse_version("<22.3")(current())
+                else "tests.post22.3"
+            )
+
         with Then("I check output against snapshot"):
             with values() as that:
-                snapshot_name = (
-                    "tests.pre22.3"
-                    if check_clickhouse_version("<22.3")(current())
-                    else "tests.post22.3"
-                )
+
                 assert that(
                     snapshot(
                         "\n" + r.output.strip() + "\n",
-                        snapshot_name,
+                        id=snapshot_id,
                         name=name,
                         encoder=str,
                     )
