@@ -33,8 +33,8 @@ _aggregate_functions_uniqCombined_with_another_aggregate_function = r"""
 
 _aggregate_functions_uniqCombined_with_another_aggregate_function_and_group_by = r"""
 {"uniqCombined(x)":"1","y":null}
-{"uniqCombined(x)":"1","y":"you"}
 {"uniqCombined(x)":"1","y":"hello"}
+{"uniqCombined(x)":"1","y":"you"}
 """
 
 _aggregate_functions_uniqCombined_string_that_ends_with__0 = r"""

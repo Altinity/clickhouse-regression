@@ -50,7 +50,7 @@ def feature(self, func="any({params})", table=None):
 
     with Check("with another aggregate function and group by"):
         execute_query(
-            f"SELECT {func.format(params='x')}, max(y) FROM values('x Nullable(Int8), y Nullable(String)', (1, NULL), (NULL, 'hello'), (3, 'hello'), (NULL, NULL), (5, 'you')) GROUP BY x"
+            f"SELECT {func.format(params='x')}, max(y) FROM values('x Nullable(Int8), y Nullable(String)', (1, NULL), (NULL, 'hello'), (3, 'hello'), (NULL, NULL), (5, 'you')) GROUP BY y"
         )
 
     with Check("string that ends with \\0"):

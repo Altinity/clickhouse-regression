@@ -33,8 +33,8 @@ _aggregate_functions_uniqExact_with_another_aggregate_function = r"""
 
 _aggregate_functions_uniqExact_with_another_aggregate_function_and_group_by = r"""
 {"uniqExact(x)":"1","y":null}
-{"uniqExact(x)":"1","y":"you"}
 {"uniqExact(x)":"1","y":"hello"}
+{"uniqExact(x)":"1","y":"you"}
 """
 
 _aggregate_functions_uniqExact_string_that_ends_with__0 = r"""

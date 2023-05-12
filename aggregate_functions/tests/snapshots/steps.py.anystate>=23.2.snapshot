@@ -33,8 +33,8 @@ _aggregate_functions_state_anyState_with_another_aggregate_function = r"""
 
 _aggregate_functions_state_anyState_with_another_aggregate_function_and_group_by = r"""
 {"hex(anyState(x))":"010101","y":null}
-{"hex(anyState(x))":"010105","y":"you"}
 {"hex(anyState(x))":"010103","y":"hello"}
+{"hex(anyState(x))":"010105","y":"you"}
 """
 
 _aggregate_functions_state_anyState_string_that_ends_with__0 = r"""

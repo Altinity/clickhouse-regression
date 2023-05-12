@@ -33,8 +33,8 @@ _aggregate_functions_state_uniqCombinedState_with_another_aggregate_function = r
 
 _aggregate_functions_state_uniqCombinedState_with_another_aggregate_function_and_group_by = r"""
 {"hex(uniqCombinedState(x))":"0101012CCBC234","y":null}
-{"hex(uniqCombinedState(x))":"01010175554CD5","y":"you"}
 {"hex(uniqCombinedState(x))":"010101CED8F809","y":"hello"}
+{"hex(uniqCombinedState(x))":"01010175554CD5","y":"you"}
 """
 
 _aggregate_functions_state_uniqCombinedState_string_that_ends_with__0 = r"""
