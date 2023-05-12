@@ -33,8 +33,8 @@ _aggregate_functions_any_with_another_aggregate_function = r"""
 
 _aggregate_functions_any_with_another_aggregate_function_and_group_by = r"""
 {"any(x)":1,"y":null}
-{"any(x)":5,"y":"you"}
 {"any(x)":3,"y":"hello"}
+{"any(x)":5,"y":"you"}
 """
 
 _aggregate_functions_any_string_that_ends_with__0 = r"""
