@@ -18,6 +18,8 @@ def get_table_name():
 )
 def array_func(self, data_type, node=None):
     """Check array functions with extended precision data types."""
+    if check_clickhouse_version(">=23.2")(self):
+        self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=23.2")
 
     if node is None:
         node = self.context.node
@@ -128,12 +130,17 @@ def array_func(self, data_type, node=None):
             "arraySum(",
             "arrayAvg(",
         ] and data_type in ["Decimal256(0)"]:
+            exitcode = 44
+            message = "Exception:"
+            if check_clickhouse_version(">=23.2")(self):
+                exitcode = 0
+                message = ""
 
             with Scenario(f"Inline - {data_type} - {func})"):
                 node.query(
                     f"SELECT {func}array({to_data_type(data_type,3)}, {to_data_type(data_type,2)}, {to_data_type(data_type,1)}))",
-                    exitcode=44,
-                    message="Exception:",
+                    exitcode=exitcode,
+                    message=message,
                 )
 
             with Scenario(f"Table - {data_type} - {func})"):
@@ -145,8 +152,8 @@ def array_func(self, data_type, node=None):
                     node.query(
                         f"INSERT INTO {table_name} SELECT {func}array({to_data_type(data_type,3)},"
                         f"{to_data_type(data_type,2)}, {to_data_type(data_type,1)}))",
-                        exitcode=44,
-                        message="Exception:",
+                        exitcode=exitcode,
+                        message=message,
                     )
 
                 execute_query(f"SELECT * FROM {table_name} ORDER BY a ASC")
@@ -179,15 +186,31 @@ def array_func(self, data_type, node=None):
         else:
             exitcode = 43
 
+        message = "Exception:"
+        if check_clickhouse_version(">=23.2")(self) and data_type in ["Decimal256(0)"]:
+            exitcode = 0
+            message = ""
+
         with Scenario(f"Inline - {data_type} - {func})"):
+            if check_clickhouse_version(">=23.2")(self) and data_type in [
+                "Decimal256(0)"
+            ]:
+                exitcode = 0
+                message = ""
+
             node.query(
                 f"SELECT {func}array({to_data_type(data_type,3)}, {to_data_type(data_type,2)}, {to_data_type(data_type,1)}))",
                 exitcode=exitcode,
-                message="Exception:",
+                message=message,
             )
 
         with Scenario(f"Table - {data_type} - {func})"):
             table_name = get_table_name()
+            message = "Exception:"
+            if check_clickhouse_version(">=23.2")(self) and data_type in [
+                "Decimal256(0)"
+            ]:
+                exitcode = 70
 
             table(name=table_name, data_type=data_type)
 
@@ -196,7 +219,7 @@ def array_func(self, data_type, node=None):
                     f"INSERT INTO {table_name} SELECT {func}array({to_data_type(data_type,3)},"
                     f"{to_data_type(data_type,2)}, {to_data_type(data_type,1)}))",
                     exitcode=exitcode,
-                    message="Exception:",
+                    message=message,
                 )
 
             execute_query(f"SELECT * FROM {table_name} ORDER BY a ASC")

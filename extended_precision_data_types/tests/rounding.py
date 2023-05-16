@@ -136,12 +136,18 @@ def round_dec_inline(self, func, expected_result, supported, node=None):
     if func == "roundDown":
 
         with When(f"I check roundDown with Decimal256"):
+            exitcode = 44
+            message = "Exception: Illegal column Decimal256 of first argument of function roundDown"
+            if check_clickhouse_version(">=23.2")(self):
+                exitcode = 0
+                message = ""
+
             node.query(
                 f"""SELECT roundDown(toDecimal256(1,0), [toDecimal256(0,0),toDecimal256(2,0)]),
                 roundDown(toDecimal256(\'{max}\',0), [toDecimal256(0,0),toDecimal256(2,0)]),
                 roundDown(toDecimal256(\'{min}\',0), [toDecimal256(0,0),toDecimal256(2,0)])""",
-                exitcode=44,
-                message=f"Exception: Illegal column Decimal256 of first argument of function roundDown",
+                exitcode=exitcode,
+                message=message,
             )
 
     elif func not in ["roundDuration", "roundAge", "roundToExp2"]:
@@ -183,14 +189,19 @@ def round_dec_table(self, func, expected_result, supported, node=None):
         table(name=table_name, data_type="Decimal256(0)")
 
     if func == "roundDown":
+        exitcode = 44
+        message = "Exception: Illegal column Decimal256 of first argument of function roundDown"
+        if check_clickhouse_version(">=23.2")(self):
+            exitcode = 0
+            message = ""
 
         for value in [1, max, min]:
 
             with When(f"I check roundDown with Decimal256 and {value}"):
                 node.query(
                     f"INSERT INTO {table_name} SELECT roundDown(toDecimal256('{value}',0), [toDecimal256(0,0),toDecimal256(2,0)])",
-                    exitcode=44,
-                    message=f"Exception: Illegal column Decimal256 of first argument of function roundDown",
+                    exitcode=exitcode,
+                    message=message,
                 )
 
     elif func not in ["roundDuration", "roundAge", "roundToExp2"]:
