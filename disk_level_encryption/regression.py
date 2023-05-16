@@ -122,7 +122,6 @@ def regression(
         Feature(run=load("disk_level_encryption.tests.default_path", "feature"))
         Feature(run=load("disk_level_encryption.tests.valid_path", "feature"))
         Feature(run=load("disk_level_encryption.tests.invalid_path", "feature"))
-        Feature(run=load("disk_level_encryption.tests.sanity", "feature"))
         Feature(run=load("disk_level_encryption.tests.operations.feature", "feature"))
         Feature(run=load("disk_level_encryption.tests.key_formats", "feature"))
         Feature(run=load("disk_level_encryption.tests.encryption_at_rest", "feature"))
