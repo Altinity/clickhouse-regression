@@ -503,7 +503,7 @@ def create_graphite_merge_tree_table(
 
     create_partitioned_table(
         table_name=table_name,
-        extra_table_col=" ,Path String, Time DateTime, Value Int64, Timestamp Int64",
+        extra_table_col=" ,Path String, Time DateTime, Value Float64, Timestamp Int64",
         engine="GraphiteMergeTree('graphite_rollup_example')",
         node=node,
         settings=settings,
@@ -712,7 +712,7 @@ def insert(
 
         elif table_engine == "GraphiteMergeTree":
             values = ",".join(
-                f"({x},{y}, '1', toDateTime(10), 10, 10)"
+                f"({x}, {y}, '1', toDateTime(10), 10.0, 10)"
                 for x in range(partitions)
                 for y in range(block_size * parts_per_partition)
             )
@@ -798,7 +798,6 @@ def delete(
         if delay:
             time.sleep(delay)
         return r
-    # FIXME: change to DELETE when there is actual implementation
     if multiple:
         command = ";".join([f"DELETE FROM {table_name} WHERE {i}" for i in condition])
     else:

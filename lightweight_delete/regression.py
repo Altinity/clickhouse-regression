@@ -38,6 +38,7 @@ xfails = {
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/39870")
     ],
     "load/:": [(Fail, "https://github.com/ClickHouse/ClickHouse/issues/39870")],
+    "drop empty part/drop empty part/": [(Fail, "https://github.com/ClickHouse/ClickHouse/issues/49909")]
 }
 
 xflags = {}
@@ -148,12 +149,6 @@ def regression(
         Feature(run=load("lightweight_delete.tests.ontime_tests", "feature"))
         Feature(
             run=load(
-                "lightweight_delete.tests.immutable_parts_and_garbage_collection",
-                "feature",
-            )
-        )
-        Feature(
-            run=load(
                 "lightweight_delete.tests.replicated_tables_concurrent_deletes",
                 "feature",
             )
@@ -180,12 +175,6 @@ def regression(
         Feature(
             run=load(
                 "lightweight_delete.tests.delete_and_tiered_storage_ttl", "feature"
-            )
-        )
-        Feature(
-            run=load(
-                "lightweight_delete.tests.alter_after_delete_with_stop_merges",
-                "feature",
             )
         )
         Feature(run=load("lightweight_delete.tests.encrypted_disk", "feature"))

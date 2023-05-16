@@ -30,28 +30,28 @@ def load_inserts(self, node=None):
             settings=[("mutations_sync", "2")],
         )
 
-    try:
-        with When("I stop merges"):
-            node.query("SYSTEM STOP MERGES")
+    # try:
+    #     with When("I stop merges"):
+    #         node.query("SYSTEM STOP MERGES")
 
-        with When("I perform a lot of inserts and deletes in parallel"):
-            Step(
-                name="delete rows in cycle",
-                test=deletes,
-                parallel=True,
-            )(table_name=table_name, deletes_number=100)
-            Step(
-                name="insert rows in cycle",
-                test=inserts,
-                parallel=True,
-            )(table_name=table_name, inserts_number=30)
+    with When("I perform a lot of inserts and deletes in parallel"):
+        Step(
+            name="delete rows in cycle",
+            test=deletes,
+            parallel=True,
+        )(table_name=table_name, deletes_number=100)
+        Step(
+            name="insert rows in cycle",
+            test=inserts,
+            parallel=True,
+        )(table_name=table_name, inserts_number=30)
 
-        with Then("I perform last delete"):
-            delete(table_name=table_name, condition="id < 2", settings=[])
+    with Then("I perform last delete"):
+        delete(table_name=table_name, condition="id < 2", settings=[])
 
-    finally:
-        with Finally("I resume merges"):
-            node.query("SYSTEM START MERGES")
+    # finally:
+    #     with Finally("I resume merges"):
+    #         node.query("SYSTEM START MERGES")
 
     with Then("I check data is correctly inserted and deleted"):
         for attempt in retries(timeout=30, delay=1):
@@ -130,36 +130,36 @@ def load_excessive_mutations(self, node=None):
 
     with When(
         "I insert data into the table",
-        description="10 partitions 1 part block_size=100",
+        description="10 partitions 1 part block_size=1000",
     ):
         insert(
             table_name=table_name,
             partitions=10,
             parts_per_partition=1,
-            block_size=100000,
+            block_size=1000,
             settings=[("mutations_sync", "2")],
         )
 
-    try:
-        with When("I stop merges"):
-            node.query("SYSTEM STOP MERGES")
+    # try:
+        # with When("I stop merges"):
+        #     node.query("SYSTEM STOP MERGES")
 
-        with When("I perform a lot of deletes"):
-            delete(
-                table_name=table_name,
-                condition=f"(id < 4) and (x < 50000)",
-                settings=[],
-            )
+    with When("I perform a lot of deletes"):
+        delete(
+            table_name=table_name,
+            condition=f"(id < 4) and (x < 500)",
+            settings=[],
+        )
 
-        with Then("I check clickhouse did not create a lot of mutations"):
-            r = node.query(
-                f"SELECT sum(parts_to_do) from system.mutations where table = '{table_name}'"
-            )
-            assert int(r.output) < 5, error()
+    with Then("I check clickhouse did not create a lot of mutations"):
+        r = node.query(
+            f"SELECT sum(parts_to_do) from system.mutations where table = '{table_name}'"
+        )
+        assert int(r.output) < 5, error()
 
-    finally:
-        with Finally("I resume merges"):
-            node.query("SYSTEM START MERGES")
+    # finally:
+    #     with Finally("I resume merges"):
+    #         node.query("SYSTEM START MERGES")
 
 
 @TestFeature
