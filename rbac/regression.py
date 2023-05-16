@@ -9,8 +9,9 @@ append_path(sys.path, "..")
 
 from helpers.cluster import Cluster
 from helpers.argparser import argparser
-from rbac.requirements import SRS_006_ClickHouse_Role_Based_Access_Control
 from helpers.common import check_clickhouse_version
+from rbac.requirements import SRS_006_ClickHouse_Role_Based_Access_Control
+from rbac.helper.common import add_rbac_config_file
 
 issue_14091 = "https://github.com/ClickHouse/ClickHouse/issues/14091"
 issue_14149 = "https://github.com/ClickHouse/ClickHouse/issues/14149"
@@ -267,6 +268,11 @@ ffails = {
         "Does not work on clickhouse 22.8 https://github.com/ClickHouse/ClickHouse/issues/40956",
         (lambda test: check_clickhouse_version(">=22.8")(test)),
     ),
+    "/rbac/privileges/system restart disk": (
+        Skip,
+        "No longer supported",
+        (lambda test: check_clickhouse_version(">=23.2")(test)),
+    ),
 }
 
 
@@ -309,6 +315,10 @@ def regression(
         docker_compose_project_dir=os.path.join(current_dir(), env),
     ) as cluster:
         self.context.cluster = cluster
+
+        if check_clickhouse_version(">=23.2")(self):
+            for node in nodes["clickhouse"]:
+                add_rbac_config_file(node=cluster.node(node))
 
         Feature(run=load("rbac.tests.syntax.feature", "feature"))
         Feature(run=load("rbac.tests.privileges.feature", "feature"))

@@ -33,8 +33,8 @@ _aggregate_functions_entropy_with_another_aggregate_function = r"""
 
 _aggregate_functions_entropy_with_another_aggregate_function_and_group_by = r"""
 {"entropy(x)":0,"y":null}
-{"entropy(x)":0,"y":"you"}
 {"entropy(x)":0,"y":"hello"}
+{"entropy(x)":0,"y":"you"}
 """
 
 _aggregate_functions_entropy_string_that_ends_with__0 = r"""

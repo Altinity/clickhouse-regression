@@ -33,8 +33,8 @@ _aggregate_functions_state_uniqThetaState_with_another_aggregate_function = r"""
 
 _aggregate_functions_state_uniqThetaState_with_another_aggregate_function_and_group_by = r"""
 {"hex(uniqThetaState(x))":"011001030300001ACC93649F00331E40E803","y":null}
-{"hex(uniqThetaState(x))":"011001030300001ACC93C4933435D2C62213","y":"you"}
 {"hex(uniqThetaState(x))":"011001030300001ACC93C4CDC1C707A1C004","y":"hello"}
+{"hex(uniqThetaState(x))":"011001030300001ACC93C4933435D2C62213","y":"you"}
 """
 
 _aggregate_functions_state_uniqThetaState_string_that_ends_with__0 = r"""

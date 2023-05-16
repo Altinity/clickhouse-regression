@@ -33,8 +33,8 @@ _aggregate_functions_groupUniqArray_with_another_aggregate_function = r"""
 
 _aggregate_functions_groupUniqArray_with_another_aggregate_function_and_group_by = r"""
 {"groupUniqArray(x)":[1],"y":null}
-{"groupUniqArray(x)":[5],"y":"you"}
 {"groupUniqArray(x)":[3],"y":"hello"}
+{"groupUniqArray(x)":[5],"y":"you"}
 """
 
 _aggregate_functions_groupUniqArray_string_that_ends_with__0 = r"""
