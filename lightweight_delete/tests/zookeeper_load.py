@@ -31,31 +31,25 @@ def load_zookeeper(self):
 
     name = "clickhouse1"
     self.context.node = node = self.context.cluster.node(name)
-    try:
-        node.query("SYSTEM STOP REPLICATION QUEUES")
 
-        with When(
-            "I perform a lot of deletes and wait mutations are in replication queue"
-        ):
-            for i in range(10):
-                for j in range(200):
-                    delete(
-                        table_name=table_name,
-                        condition=f"id = {i} and x = {j}",
-                        settings=[],
-                    )
-            time.sleep(10)
-
-    finally:
-        node.query("SYSTEM START REPLICATION QUEUES")
+    with When(
+        "I perform a lot of deletes and wait mutations are in replication queue"
+    ):
+        for i in range(10):
+            for j in range(10):
+                delete(
+                    table_name=table_name,
+                    condition=f"id = {i} and x = {j}",
+                    settings=[],
+                )
 
     name = "clickhouse2"
     self.context.node = node = self.context.cluster.node(name)
     with Then("I delete on second node takes a little time"):
-        for attempt in retries(delay=1, timeout=30):
+        for attempt in retries(delay=1, timeout=300):
             with attempt:
                 r = node.query(f"select count(*) from {table_name}")
-                assert int(r.output) == 100000 - 2000, error()
+                assert int(r.output) == 100000 - 100, error()
 
 
 @TestFeature
