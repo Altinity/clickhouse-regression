@@ -40,7 +40,7 @@ def invalid_host(self):
             "password": "user1",
             "login": True,
             "exitcode": 4,
-            "message": "DB::Exception: user1: Authentication failed: password is incorrect or there is no user with such name",
+            "message": "DB::Exception: user1: Authentication failed: password is incorrect",
         }
     ]
     login(servers, *users)
@@ -63,7 +63,7 @@ def empty_host(self):
             "password": "user1",
             "login": True,
             "exitcode": 4,
-            "message": "DB::Exception: user1: Authentication failed: password is incorrect or there is no user with such name",
+            "message": "DB::Exception: user1: Authentication failed: password is incorrect",
         }
     ]
     login(servers, *users)
@@ -86,7 +86,7 @@ def missing_host(self):
             "password": "user1",
             "login": True,
             "exitcode": 4,
-            "message": "DB::Exception: user1: Authentication failed: password is incorrect or there is no user with such name",
+            "message": "DB::Exception: user1: Authentication failed: password is incorrect",
         }
     ]
     login(servers, *users)
@@ -106,7 +106,7 @@ def invalid_port(self):
             "password": "user1",
             "login": True,
             "exitcode": 4,
-            "message": "DB::Exception: user1: Authentication failed: password is incorrect or there is no user with such name",
+            "message": "DB::Exception: user1: Authentication failed: password is incorrect",
         }
     ]
     login(servers, *users)
@@ -134,7 +134,7 @@ def invalid_auth_dn_prefix(self):
             "password": "user1",
             "login": True,
             "exitcode": 4,
-            "message": "DB::Exception: user1: Authentication failed: password is incorrect or there is no user with such name",
+            "message": "DB::Exception: user1: Authentication failed: password is incorrect",
         }
     ]
     login(servers, *users)
@@ -162,7 +162,7 @@ def invalid_auth_dn_suffix(self):
             "password": "user1",
             "login": True,
             "exitcode": 4,
-            "message": "DB::Exception: user1: Authentication failed: password is incorrect or there is no user with such name",
+            "message": "DB::Exception: user1: Authentication failed: password is incorrect",
         }
     ]
     login(servers, *users)
@@ -190,7 +190,7 @@ def invalid_enable_tls_value(self):
             "password": "user1",
             "login": True,
             "exitcode": 4,
-            "message": "DB::Exception: user1: Authentication failed: password is incorrect or there is no user with such name",
+            "message": "DB::Exception: user1: Authentication failed: password is incorrect",
         }
     ]
     login(servers, *users)
@@ -221,7 +221,7 @@ def invalid_tls_require_cert_value(self):
             "password": "user2",
             "login": True,
             "exitcode": 4,
-            "message": "DB::Exception: user2: Authentication failed: password is incorrect or there is no user with such name",
+            "message": "DB::Exception: user2: Authentication failed: password is incorrect",
         }
     ]
     login(servers, *users)
@@ -250,7 +250,7 @@ def empty_ca_cert_dir(self):
             "password": "user2",
             "login": True,
             "exitcode": 4,
-            "message": "DB::Exception: user2: Authentication failed: password is incorrect or there is no user with such name",
+            "message": "DB::Exception: user2: Authentication failed: password is incorrect",
         }
     ]
     login(servers, *users)
@@ -279,7 +279,7 @@ def empty_ca_cert_file(self):
             "password": "user2",
             "login": True,
             "exitcode": 4,
-            "message": "DB::Exception: user2: Authentication failed: password is incorrect or there is no user with such name",
+            "message": "DB::Exception: user2: Authentication failed: password is incorrect",
         }
     ]
     login(servers, *users)
