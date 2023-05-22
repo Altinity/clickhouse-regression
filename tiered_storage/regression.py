@@ -110,6 +110,12 @@ xfails = {
     ":/ttl moves/alter column in ttl/*": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/39808")
     ],
+    ":/ttl moves/delete" : [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/50060")
+    ],
+    ":/ttl moves/defaults to delete" : [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/50060")
+    ]
     # "/tiered storage/with s3amazon/alter move/concurrent/concurrent alter move and select": [
     #    (Error, "unstable test")
     # ],

@@ -84,7 +84,7 @@ def scenario(self, cluster, node="clickhouse1"):
 
                 with When("I try to move invalid part 'xxxx' to valid disk"):
                     exitcode = 233
-                    message = "Exception: Unexpected part name: xxxx."
+                    message = "Exception: Unexpected part name: xxxx"
                     sql = "ALTER TABLE table_with_normal_policy MOVE PART 'xxxx' TO DISK 'jbod1'"
                     node.query(sql, message, exitcode)
 
