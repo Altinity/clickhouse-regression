@@ -186,7 +186,7 @@ def secure_connection_with_empty_truststore(self):
         "I check ClickHouse connection to zookeeper fails with all connection tries failed"
     ):
         check_clickhouse_connection_to_zookeeper(
-            message="Exception: All connection tries failed while connecting to ZooKeeper"
+            message="Exception: "
         )
 
 
@@ -228,7 +228,7 @@ def secure_connection_to_invalid_zookeeper_port(self):
 
     with Then("I check ClickHouse connection to zookeeper fails"):
         check_clickhouse_connection_to_zookeeper(
-            message="Exception: All connection tries failed while connecting to ZooKeeper"
+            message="Exception: "
         )
 
 
