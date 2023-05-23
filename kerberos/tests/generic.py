@@ -275,8 +275,8 @@ def invalid_user(self):
 
     with Then(f"I expect default"):
         assert (
-            "Authentication failed: password is incorrect, or there is no user with such name"
-            in r.output
+                ("Authentication failed: password is incorrect"
+                 in r.output) and ("or there is no user with such name" in r.output)
         ), error()
 
 
@@ -303,8 +303,8 @@ def user_deleted(self):
 
     with Then(f"I expect error"):
         assert (
-            "Authentication failed: password is incorrect, or there is no user with such name"
-            in r.output
+            ("Authentication failed: password is incorrect"
+            in r.output) and ("or there is no user with such name" in r.output)
         ), error()
 
 
