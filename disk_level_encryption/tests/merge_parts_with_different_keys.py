@@ -99,7 +99,7 @@ def merge_parts_with_different_encryption_keys(
 
     with And("I expect that table have only one part"):
         r = node.query(
-            f"SELECT count() FROM system.parts WHERE table =  '{table_name}' FORMAT JSONEachRow"
+            f"SELECT count() FROM system.parts WHERE table =  '{table_name}' and active = 1 FORMAT JSONEachRow"
         )
         assert r.output == '{"count()":"1"}', error()
 

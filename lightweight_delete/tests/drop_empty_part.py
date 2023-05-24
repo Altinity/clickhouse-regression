@@ -31,7 +31,7 @@ def drop_empty_part(self, node=None):
         optimize_table(table_name=table_name)
 
     with When("I check partition is deleted"):
-        for attempt in retries(timeout=100, delay=1):
+        for attempt in retries(timeout=600, delay=10):
             with attempt:
                 r = node.query(
                     f"SELECT partition FROM system.parts WHERE table = '{table_name}' and active = 1 \

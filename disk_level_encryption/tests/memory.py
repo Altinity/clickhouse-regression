@@ -49,19 +49,22 @@ def memory_disk(self, node=None):
             "key"
         ] = "secondsecondseco"
 
-    with And("I add storage configuration that uses encrypted disk"):
-        add_encrypted_disk_configuration(entries=entries_in_this_test, restart=True)
+    try:
+        with And("I add storage configuration that uses encrypted disk"):
+            add_encrypted_disk_configuration(entries=entries_in_this_test, restart=True)
 
-    with And("I create a table that uses encrypted disk"):
-        table_name = create_table(policy="local_encrypted")
+        with And("I create a table that uses encrypted disk"):
+            table_name = create_table(policy="local_encrypted")
 
-    with When("I insert data into the table"):
-        values = "(1, 'hello'),(2, 'there')"
-        insert_into_table(name=table_name, values=values)
+        with When("I insert data into the table"):
+            values = "(1, 'hello'),(2, 'there')"
+            insert_into_table(name=table_name, values=values)
 
-    with Then("I expect data is successfully inserted"):
-        r = node.query(f"SELECT * FROM {table_name} ORDER BY Id FORMAT JSONEachRow")
-        assert r.output == expected_output, error()
+        with Then("I expect data is successfully inserted"):
+            r = node.query(f"SELECT * FROM {table_name} ORDER BY Id FORMAT JSONEachRow")
+            assert r.output == expected_output, error()
+    finally:
+        node.restart()
 
 
 @TestFeature
