@@ -53,7 +53,7 @@ def empty_server_name(self, timeout=300):
             "password": "user1",
             "login": True,
             "errorcode": 4,
-            "message": "DB::Exception: user1: Authentication failed: password is incorrect or there is no user with such name",
+            "message": "DB::Exception: user1: Authentication failed: password is incorrect",
         }
     ]
     config = create_ldap_users_config_content(*users)
@@ -83,7 +83,7 @@ def empty_server_not_defined(self):
             "password": "user1",
             "login": True,
             "errorcode": 4,
-            "message": "DB::Exception: user1: Authentication failed: password is incorrect or there is no user with such name",
+            "message": "DB::Exception: user1: Authentication failed: password is incorrect",
         }
     ]
     login(servers, *users)
@@ -182,7 +182,7 @@ def ldap_and_password(self):
         "password": "user1",
         "login": True,
         "errorcode": 4,
-        "message": "DB::Exception: user1: Authentication failed: password is incorrect or there is no user with such name",
+        "message": "DB::Exception: user1: Authentication failed: password is incorrect",
     }
 
     with When("I first create regular user configuration file"):

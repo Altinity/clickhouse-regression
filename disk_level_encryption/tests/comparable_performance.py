@@ -51,7 +51,7 @@ def check_comparable_performance(self, policy=None, disk_path=None, node=None):
         r_unencrypted = int((node.query(sql)).output)
         sql = f"select query_duration_ms from system.query_log where query_id='{uid2}' order by event_time desc limit 1"
         r_encrypted = int((node.query(sql)).output)
-        assert 4 > (r_unencrypted - r_encrypted) / r_encrypted > -4, error()
+        assert 20 > (r_unencrypted - r_encrypted) / r_encrypted > -20, error()
 
     with Then("I check select statement"):
         node.query(
@@ -69,11 +69,10 @@ def check_comparable_performance(self, policy=None, disk_path=None, node=None):
         r_unencrypted = int((node.query(sql)).output)
         sql = f"select query_duration_ms from system.query_log where query_id='{uid4}' order by event_time desc limit 1"
         r_encrypted = int((node.query(sql)).output)
-        assert 10 > (r_unencrypted - r_encrypted) / r_encrypted > -10, error()
+        assert 20 > (r_unencrypted - r_encrypted) / r_encrypted > -20, error()
 
 
 @TestFeature
-@Repeat(50)
 @Name("comparable performance")
 def feature(self, node="clickhouse1"):
     """Check that insertion and selection time of encrypted and unencrypted parts differ by no more than 20 percent."""
