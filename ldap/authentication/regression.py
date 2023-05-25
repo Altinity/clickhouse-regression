@@ -7,6 +7,7 @@ append_path(sys.path, "..", "..")
 
 from helpers.cluster import Cluster
 from helpers.argparser import argparser
+from helpers.common import check_clickhouse_version
 from ldap.authentication.requirements import *
 
 # Cross-outs of known fails
@@ -33,6 +34,10 @@ xfails = {
         )
     ],
     "connection protocols/tls cipher suite": [(Fail, "can't get it to work")],
+    # 23.3
+    "user authentications/:/verification cooldown/:": [
+        (Fail, "changes in behaviour in 23.3", check_clickhouse_version(">=23"))
+    ]
 }
 
 
