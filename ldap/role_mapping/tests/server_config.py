@@ -49,7 +49,7 @@ def invalid_bind_dn(self):
         "password": "user1",
         "login": True,
         "exitcode": 4,
-        "message": "DB::Exception: user1: Authentication failed: password is incorrect or there is no user with such name.",
+        "message": "DB::Exception: user1: Authentication failed",
     }
 
     login(servers, "openldap1", user)

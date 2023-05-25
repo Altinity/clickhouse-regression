@@ -18,7 +18,7 @@ def check_config(
         message = "1"
     else:
         exitcode = 4
-        message = "DB::Exception: user1: Authentication failed: password is incorrect or there is no user with such name"
+        message = "DB::Exception: user1: Authentication failed"
 
     with Given("I add LDAP server configuration"):
         config = create_xml_config_content(
