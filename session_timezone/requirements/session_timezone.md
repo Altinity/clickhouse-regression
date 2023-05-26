@@ -6,6 +6,11 @@
 
 * 1 [Introduction](#introduction)
 * 2 [Feature Diagram](#feature-diagram)
+* 3 [Related Resources](#related-resources)
+* 4 [Terminology](#terminology)
+  * 4.1 [SRS](#srs)
+* 5 [Requirements](#requirements)
+  * 5.1 [RQ.SRS-037.ClickHouse.SessionTimezone](#rqsrs-037clickhousesessiontimezone)
 
 ## Introduction
 
@@ -32,6 +37,25 @@ flowchart TB;
 
   end
 ```
+## Related Resources
+
+**Pull Requests**
+
+* https://github.com/ClickHouse/ClickHouse/pull/44149
+
+## Terminology
+
+### SRS
+
+Software Requirements Specification
+
+## Requirements
+
+### RQ.SRS-037.ClickHouse.SessionTimezone
+version: 1.0
+
+[ClickHouse] SHALL support `session_timezone` setting.
+
 
 [SRS]: #srs
 [session_timezone]: https://github.com/ClickHouse/ClickHouse/pull/44149
