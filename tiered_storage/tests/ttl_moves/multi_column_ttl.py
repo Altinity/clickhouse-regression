@@ -96,7 +96,7 @@ def scenario(self, cluster, node="clickhouse1"):
                             with Then("checking the expected data is there"):
                                 assert r == ["fast", "medium", "slow"], error()
 
-            with And(
+            with When(
                 "I check that disks that should be used according to TTL expressions"
             ):
                 with By("getting disks name from system.parts"):
