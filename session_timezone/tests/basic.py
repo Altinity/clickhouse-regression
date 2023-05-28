@@ -1,8 +1,10 @@
 from testflows.core import *
+from session_timezone.requirements import *
 from testflows.asserts import error
 
 
 @TestScenario
+@Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_WrongSettingValue("1.0"))
 def bad_arguments(self):
     """Check behavior with bad arguments."""
     node = self.context.cluster.node("clickhouse1")
@@ -16,6 +18,7 @@ def bad_arguments(self):
 
 
 @TestScenario
+@Requirements()
 def set_timezone(self):
     """Check behavior of `toDateTime64` with `SET session_timezone`."""
 
