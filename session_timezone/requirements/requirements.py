@@ -323,7 +323,7 @@ flowchart TB;
   
   subgraph O["'Session Timezone' Test Feature Diagram"]
   
-  A-->"SETTING"-->D
+  A--"SETTING"-->D
 
   1A---2A---3A---4A
   1D---2D---3D---4D
