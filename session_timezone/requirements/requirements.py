@@ -326,7 +326,7 @@ flowchart TB;
   A--"SETTING"-->D
 
   1A---2A---3A---4A
-  1D---2D---3D---4D
+  1D---2D---3D---4D---5D
   
     subgraph A["SELECT"]
 
@@ -342,6 +342,7 @@ flowchart TB;
         2D["wrong"]:::green
         3D["Europe/Berlin"]:::red
         4D["Zulu"]:::red
+        5D["Europe/Berlin"]:::red
     end
   end
 ```
