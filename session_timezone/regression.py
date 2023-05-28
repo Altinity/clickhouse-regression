@@ -7,7 +7,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import Cluster
 from helpers.argparser import argparser
-# from session_timezone.requirements import *
+from session_timezone.requirements import *
 from session_timezone.common import *
 
 
@@ -22,9 +22,8 @@ ffails = {
 @TestModule
 @Name("session timezone")
 @ArgumentParser(argparser)
-@Specifications()
-@Requirements(
-)
+@Specifications(SRS037_ClickHouse_Session_Timezone)
+@Requirements(RQ_SRS_037_ClickHouse_SessionTimezone("1.0"))
 @XFails(xfails)
 @FFails(ffails)
 def regression(
