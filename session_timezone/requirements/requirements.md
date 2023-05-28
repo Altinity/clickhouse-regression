@@ -43,10 +43,27 @@ flowchart TB;
   classDef blue fill:blue,stroke:#323,stroke-width:4px,color:white;
   
   subgraph O["'Session Timezone' Test Feature Diagram"]
+  
+  A-->"SETTING"-->D
 
+  1A---2A---3A---4A
+  1D---2D---3D---4D
+  
+    subgraph A["SELECT"]
 
+        1A["timeZone()"]:::green
+        2A["serverTimezone()"]:::green
+        3A["DateTime"]:::green
+        4A["DateTime64"]:::green
+        
+    end
     
-
+    subgraph D["Session Timezone"]
+        1D["default"]:::green
+        2D["wrong"]:::green
+        3D["Europe/Berlin"]:::red
+        4D["Zulu"]:::red
+    end
   end
 ```
 ## Related Resources
