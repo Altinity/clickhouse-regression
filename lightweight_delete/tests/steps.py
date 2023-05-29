@@ -1680,7 +1680,7 @@ def add_drop_column_in_loop(
 
 @TestStep
 def attach_detach_in_loop(
-    self, table_name, partition_expr, iterations=10, delay=0.6, node=None, quote=True
+    self, table_name, partition_expr, iterations=10, delay=2, node=None, quote=True
 ):
     """Run detach attach statements in a loop for given partition expression."""
     for i in range(iterations):
