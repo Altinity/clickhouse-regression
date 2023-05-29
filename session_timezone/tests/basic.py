@@ -9,7 +9,7 @@ def bad_arguments(self):
     """Check behavior with bad arguments."""
     node = self.context.cluster.node("clickhouse1")
 
-    with When("I try that timezone provides exception with bad arguments"):
+    with When("I check that attempting to use the timezone with incorrect or invalid arguments lead to an exception"):
         node.query(
             "select timezoneOf(now()) SETTINGS session_timezone = 'fasdf' format TSV;",
             exitcode=36,
@@ -18,13 +18,39 @@ def bad_arguments(self):
 
 
 @TestScenario
-@Requirements()
+@Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_ServerDefault("1.0"))
+def timezone_default(self):
+    """Verify that the session_timezone is set to the default value if it is not explicitly defined."""
+    node = self.context.cluster.node("clickhouse1")
+
+    with When("I check timezone(), timezoneOf(now()) without session_timezone setting"):
+        node.query(
+            "SELECT timezone(), timezoneOf(now()) FORMAT TSV;",
+            message="Europe/Berlin	Europe/Berlin",
+        )
+
+
+@TestScenario
+@Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_DefaultValue("1.0"))
+def timezone_default_value(self):
+    """Verify that the session_timezone is set to the default value if it is set to an empty string."""
+    node = self.context.cluster.node("clickhouse1")
+
+    with When("I check timezone(), timezoneOf(now()) with session_timezone is set to an empty string"):
+        node.query(
+            "SELECT timezone(), timezoneOf(now()) SETTINGS session_timezone = '' FORMAT TSV;",
+            message="Europe/Berlin	Europe/Berlin",
+        )
+
+
+@TestScenario
+@Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_DateTime("1.0"))
 def set_timezone(self):
     """Check behavior of `toDateTime64` with `SET session_timezone`."""
 
     node = self.context.cluster.node("clickhouse1")
 
-    with When("I try that timezone is changing when `SET session_timezone` is applied"):
+    with When("I check that timezone is changing when `SET session_timezone` is applied"):
         node.query(
             ("SET session_timezone = 'Asia/Novosibirsk';")
             + (
@@ -42,7 +68,8 @@ def set_timezone_with_the_same_continent(self):
     node = self.context.cluster.node("clickhouse1")
 
     with When(
-        "I try that timezone is changing when `SET session_timezone` with the same continent is applied"
+        "I verify that the timezone changes when the SET session_timezone command is applied with a continent value that"
+        " is the same as the current timezone."
     ):
         node.query(
             ("SET session_timezone = 'Asia/Manila';")
@@ -55,14 +82,14 @@ def set_timezone_with_the_same_continent(self):
 
 
 @TestScenario
+@Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_SettingsPriority("1.0"))
 def set_and_setting_timezone(self):
     """Check behavior of `toDateTime64` with `SET session_timezone`and `SETTING timezone."""
 
     node = self.context.cluster.node("clickhouse1")
 
     with When(
-        "I try that timezone is changing when `SET session_timezone` is not influence on query with "
-        "`SETTINGS session_timezone`"
+        "I check that `SET session_timezone` is not influence on query with `SETTINGS session_timezone`"
     ):
         node.query(
             ("SET session_timezone = 'Asia/Novosibirsk';")
@@ -76,6 +103,7 @@ def set_and_setting_timezone(self):
 
 
 @TestScenario
+@Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_ServerSession("1.0"))
 def timezone_and_timezone_of_now(self):
     """Check that session_timezone is changing timezone() and timezoneOf(now())."""
     node = self.context.cluster.node("clickhouse1")
@@ -92,29 +120,39 @@ def timezone_and_timezone_of_now(self):
 
 
 @TestScenario
+@Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_ParsingOfDateOrDateTimeTypes("1.0"))
 def date_datetime_column_types(self):
     """Check the way session_timezone setting affects parsing of Date or DateTime types."""
-    xfail("need to finish")
+    # xfail("need to finish")
     node = self.context.cluster.node("clickhouse1")
 
-    with Given("I create table with DateTime('UTC') datatype"):
-        node.query(
-            "CREATE TABLE test_tz (d DateTime('UTC')) ENGINE = Memory AS SELECT "
-            "toDateTime('2000-01-01 00:00:00', 'UTC');"
-        )
+    try:
+        with Given("I create table with DateTime('UTC') datatype"):
+            node.query(
+                "CREATE TABLE IF NOT EXISTS test_tz (d DateTime('UTC')) ENGINE = Memory AS SELECT "
+                "toDateTime('2000-01-01 00:00:00', 'UTC');"
+            )
 
-    with Then(
-        "I check the way session_timezone setting affects parsing of Date or DateTime types"
-    ):
-        node.query(
-            "SELECT *, timezone() FROM test_tz WHERE d = toDateTime('2000-01-01 00:00:00') "
-            "SETTINGS session_timezone = 'Asia/Novosibirsk'"
-        )
-        node.query(
-            "SELECT *, timezone() FROM test_tz WHERE d = '2000-01-01 00:00:00' "
-            "SETTINGS session_timezone = 'Asia/Novosibirsk' FORMAT TSV;",
-            message="2000-01-01 00:00:00   Asia/Novosibirsk"
-        )
+        with Then(
+            "I check the way session_timezone setting affects parsing of Date or DateTime types"
+        ):
+            node.query(
+                "SELECT *, timezone() FROM test_tz WHERE d = toDateTime('2000-01-01 00:00:00') "
+                "SETTINGS session_timezone = 'Asia/Novosibirsk'"
+            )
+            node.query(
+                "SELECT *, timezone() FROM test_tz WHERE d = '2000-01-01 00:00:00' "
+                "SETTINGS session_timezone = 'Asia/Novosibirsk' FORMAT TSV;",
+                message="2000-01-01 00:00:00   Asia/Novosibirsk"
+            )
+    finally:
+        with Finally(
+            "I drop test_tz table"
+        ):
+            node.query(
+                "DROP IF EXISTS test_tz table"
+            )
+
 
 
 @TestFeature

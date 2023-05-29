@@ -76,6 +76,23 @@ RQ_SRS_037_ClickHouse_SessionTimezone_ServerSession = Requirement(
     num='6.3'
 )
 
+RQ_SRS_037_ClickHouse_SessionTimezone_SettingsPriority = Requirement(
+    name='RQ.SRS-037.ClickHouse.SessionTimezone.SettingsPriority',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL support prioritizing queries with the `SETTINGS session_timezone` clause \n'
+        'over `SET session_timezone` queries.\n'
+        '\n'
+    ),
+    link=None,
+    level=2,
+    num='6.4'
+)
+
 RQ_SRS_037_ClickHouse_SessionTimezone_DateTime = Requirement(
     name='RQ.SRS-037.ClickHouse.SessionTimezone.DateTime',
     version='1.0',
@@ -97,7 +114,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_DateTime = Requirement(
     ),
     link=None,
     level=2,
-    num='6.4'
+    num='6.5'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_ParsingOfDateOrDateTimeTypes = Requirement(
@@ -129,7 +146,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_ParsingOfDateOrDateTimeTypes = Requirement
     ),
     link=None,
     level=2,
-    num='6.5'
+    num='6.6'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_PossibleValues = Requirement(
@@ -148,7 +165,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_PossibleValues = Requirement(
     ),
     link=None,
     level=2,
-    num='6.6'
+    num='6.7'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_DefaultValue = Requirement(
@@ -164,7 +181,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_DefaultValue = Requirement(
     ),
     link=None,
     level=2,
-    num='6.7'
+    num='6.8'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_WrongSettingValue = Requirement(
@@ -184,7 +201,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_WrongSettingValue = Requirement(
     ),
     link=None,
     level=2,
-    num='6.8'
+    num='6.9'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_Performance = Requirement(
@@ -200,7 +217,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_Performance = Requirement(
     ),
     link=None,
     level=3,
-    num='6.9.2'
+    num='6.10.2'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_Reliability = Requirement(
@@ -222,7 +239,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_Reliability = Requirement(
     ),
     link=None,
     level=3,
-    num='6.9.4'
+    num='6.10.4'
 )
 
 SRS037_ClickHouse_Session_Timezone = Specification(
@@ -253,21 +270,23 @@ SRS037_ClickHouse_Session_Timezone = Specification(
         Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone', level=2, num='6.1'),
         Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.ServerDefault', level=2, num='6.2'),
         Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.ServerSession', level=2, num='6.3'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateTime', level=2, num='6.4'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.ParsingOfDateOrDateTimeTypes', level=2, num='6.5'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues', level=2, num='6.6'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DefaultValue', level=2, num='6.7'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue', level=2, num='6.8'),
-        Heading(name='Non-Functional Requirements', level=2, num='6.9'),
-        Heading(name='Performance', level=3, num='6.9.1'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.Performance', level=3, num='6.9.2'),
-        Heading(name='Reliability', level=3, num='6.9.3'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.Reliability', level=3, num='6.9.4'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.SettingsPriority', level=2, num='6.4'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateTime', level=2, num='6.5'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.ParsingOfDateOrDateTimeTypes', level=2, num='6.6'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues', level=2, num='6.7'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DefaultValue', level=2, num='6.8'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue', level=2, num='6.9'),
+        Heading(name='Non-Functional Requirements', level=2, num='6.10'),
+        Heading(name='Performance', level=3, num='6.10.1'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.Performance', level=3, num='6.10.2'),
+        Heading(name='Reliability', level=3, num='6.10.3'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.Reliability', level=3, num='6.10.4'),
         ),
     requirements=(
         RQ_SRS_037_ClickHouse_SessionTimezone,
         RQ_SRS_037_ClickHouse_SessionTimezone_ServerDefault,
         RQ_SRS_037_ClickHouse_SessionTimezone_ServerSession,
+        RQ_SRS_037_ClickHouse_SessionTimezone_SettingsPriority,
         RQ_SRS_037_ClickHouse_SessionTimezone_DateTime,
         RQ_SRS_037_ClickHouse_SessionTimezone_ParsingOfDateOrDateTimeTypes,
         RQ_SRS_037_ClickHouse_SessionTimezone_PossibleValues,
@@ -292,16 +311,17 @@ SRS037_ClickHouse_Session_Timezone = Specification(
   * 5.1 [RQ.SRS-037.ClickHouse.SessionTimezone](#rqsrs-037clickhousesessiontimezone)
   * 5.2 [RQ.SRS-037.ClickHouse.SessionTimezone.ServerDefault](#rqsrs-037clickhousesessiontimezoneserverdefault)
   * 5.3 [RQ.SRS-037.ClickHouse.SessionTimezone.ServerSession](#rqsrs-037clickhousesessiontimezoneserversession)
-  * 5.4 [RQ.SRS-037.ClickHouse.SessionTimezone.DateTime](#rqsrs-037clickhousesessiontimezonedatetime)
-  * 5.5 [RQ.SRS-037.ClickHouse.SessionTimezone.ParsingOfDateOrDateTimeTypes](#rqsrs-037clickhousesessiontimezoneparsingofdateordatetimetypes)
-  * 5.6 [RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues](#rqsrs-037clickhousesessiontimezonepossiblevalues)
-  * 5.7 [RQ.SRS-037.ClickHouse.SessionTimezone.DefaultValue](#rqsrs-037clickhousesessiontimezonedefaultvalue)
-  * 5.8 [RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue](#rqsrs-037clickhousesessiontimezonewrongsettingvalue)
-  * 5.9 [Non-Functional Requirements](#non-functional-requirements)
-    * 5.9.1 [Performance](#performance)
-    * 5.9.2 [RQ.SRS-037.ClickHouse.SessionTimezone.Performance](#rqsrs-037clickhousesessiontimezoneperformance)
-    * 5.9.3 [Reliability](#reliability)
-    * 5.9.4 [RQ.SRS-037.ClickHouse.SessionTimezone.Reliability](#rqsrs-037clickhousesessiontimezonereliability)
+  * 5.4 [RQ.SRS-037.ClickHouse.SessionTimezone.SettingsPriority](#rqsrs-037clickhousesessiontimezonesettingspriority)
+  * 5.5 [RQ.SRS-037.ClickHouse.SessionTimezone.DateTime](#rqsrs-037clickhousesessiontimezonedatetime)
+  * 5.6 [RQ.SRS-037.ClickHouse.SessionTimezone.ParsingOfDateOrDateTimeTypes](#rqsrs-037clickhousesessiontimezoneparsingofdateordatetimetypes)
+  * 5.7 [RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues](#rqsrs-037clickhousesessiontimezonepossiblevalues)
+  * 5.8 [RQ.SRS-037.ClickHouse.SessionTimezone.DefaultValue](#rqsrs-037clickhousesessiontimezonedefaultvalue)
+  * 5.9 [RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue](#rqsrs-037clickhousesessiontimezonewrongsettingvalue)
+  * 5.10 [Non-Functional Requirements](#non-functional-requirements)
+    * 5.10.1 [Performance](#performance)
+    * 5.10.2 [RQ.SRS-037.ClickHouse.SessionTimezone.Performance](#rqsrs-037clickhousesessiontimezoneperformance)
+    * 5.10.3 [Reliability](#reliability)
+    * 5.10.4 [RQ.SRS-037.ClickHouse.SessionTimezone.Reliability](#rqsrs-037clickhousesessiontimezonereliability)
 
 ## Introduction
 
@@ -394,6 +414,12 @@ Example:
 
 > Asia/Novosibirsk	Europe/Berlin
 ```
+
+### RQ.SRS-037.ClickHouse.SessionTimezone.SettingsPriority
+version: 1.0
+
+[ClickHouse] SHALL support prioritizing queries with the `SETTINGS session_timezone` clause 
+over `SET session_timezone` queries.
 
 ### RQ.SRS-037.ClickHouse.SessionTimezone.DateTime
 version: 1.0
