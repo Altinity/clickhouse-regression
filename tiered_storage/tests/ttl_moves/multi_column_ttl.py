@@ -77,24 +77,26 @@ def scenario(self, cluster, node="clickhouse1"):
             with And("I run optimize tablt to trigger delete"):
                 node.query(f"OPTIMIZE TABLE {name} FINAL")
 
-            with And("I read data from the table"):
-                with By("reading number of rows"):
-                    r = node.query(f"SELECT count() FROM {name}").output.strip()
-                    with Then(
-                        "checking that the rows that fall into TTL delete expression not to be present"
-                    ):
-                        assert r == "3", error()
+            for retry in retries(timeout=60, delay=1):
+                with retry:
+                    with When("I read data from the table"):
+                        with By("reading number of rows"):
+                            r = node.query(f"SELECT count() FROM {name}").output.strip()
+                            with Then(
+                                "checking that the rows that fall into TTL delete expression not to be present"
+                            ):
+                                assert r == "3", error()
 
-                with By("reading actual data"):
-                    r = (
-                        node.query(f"SELECT value FROM {name} ORDER BY value")
-                        .output.strip()
-                        .splitlines()
-                    )
-                    with Then("checking the expected data is there"):
-                        assert r == ["fast", "medium", "slow"], error()
+                        with By("reading actual data"):
+                            r = (
+                                node.query(f"SELECT value FROM {name} ORDER BY value")
+                                .output.strip()
+                                .splitlines()
+                            )
+                            with Then("checking the expected data is there"):
+                                assert r == ["fast", "medium", "slow"], error()
 
-            with And(
+            with When(
                 "I check that disks that should be used according to TTL expressions"
             ):
                 with By("getting disks name from system.parts"):
