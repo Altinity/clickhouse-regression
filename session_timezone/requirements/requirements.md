@@ -127,7 +127,7 @@ over `SET session_timezone` queries.
 version: 1.0
 
 [ClickHouse] SHALL support the `session_timezone` setting affects the conversion of DateTime values, 
-resulting in the output being adjusted according to the specified session timezone.
+resulting in the result being adjusted according to the specified session timezone.
 
 ```sql
 > SELECT toDateTime64(toDateTime64('1999-12-12 23:23:23.123', 3), 3, 'Europe/Zurich') SETTINGS 
@@ -160,7 +160,7 @@ The parsing behavior differs based on the approach used:
 ### RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues
 version: 1.0
 
-[ClickHouse] SHALL support the possible values for the `session_timezone` setting:
+[ClickHouse] SHALL support any value from `system.time_zones`:
   * Europe/Berlin
   * UTC
   * Zulu
@@ -173,7 +173,7 @@ version: 1.0
 ### RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue
 version: 1.0
 
-[ClickHouse] SHALL provide exception with wrong `session_timezone` setting value:
+Exception is thrown when attempting to apply invalid setting:
 
 ```CMD
 Code: 36. DB::Exception: Received from localhost:9000. DB::Exception: Exception: Invalid time zone...
