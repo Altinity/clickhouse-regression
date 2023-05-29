@@ -46,7 +46,7 @@ def invalid_host(self):
             "password": "user1",
             "login": True,
             "exitcode": 4,
-            "message": "DB::Exception: user1: Authentication failed: password is incorrect or there is no user with such name.",
+            "message": "DB::Exception: user1: Authentication failed",
         }
     ]
     login(servers, "foo", *users)
@@ -127,7 +127,7 @@ def invalid_port(self):
             "password": "user1",
             "login": True,
             "exitcode": 4,
-            "message": "DB::Exception: user1: Authentication failed: password is incorrect or there is no user with such name.",
+            "message": "DB::Exception: user1: Authentication failed",
         }
     ]
     login(servers, "openldap1", *users)
@@ -158,7 +158,7 @@ def invalid_auth_dn_prefix(self):
             "password": "user1",
             "login": True,
             "exitcode": 4,
-            "message": "DB::Exception: user1: Authentication failed: password is incorrect or there is no user with such name.",
+            "message": "DB::Exception: user1: Authentication failed",
         }
     ]
     login(servers, "openldap1", *users)
@@ -189,7 +189,7 @@ def invalid_auth_dn_suffix(self):
             "password": "user1",
             "login": True,
             "exitcode": 4,
-            "message": "DB::Exception: user1: Authentication failed: password is incorrect or there is no user with such name.",
+            "message": "DB::Exception: user1: Authentication failed",
         }
     ]
     login(servers, "openldap1", *users)
@@ -245,7 +245,7 @@ def invalid_tls_require_cert_value(self):
             "password": "user2",
             "login": True,
             "exitcode": 4,
-            "message": "DB::Exception: user2: Authentication failed: password is incorrect or there is no user with such name.",
+            "message": "DB::Exception: user2: Authentication failed",
         }
     ]
     login(servers, "openldap2", *users)
@@ -277,7 +277,7 @@ def empty_ca_cert_dir(self):
             "password": "user2",
             "login": True,
             "exitcode": 4,
-            "message": "DB::Exception: user2: Authentication failed: password is incorrect or there is no user with such name",
+            "message": "DB::Exception: user2: Authentication failed",
         }
     ]
     login(servers, "openldap2", *users)
@@ -309,7 +309,7 @@ def empty_ca_cert_file(self):
             "password": "user2",
             "login": True,
             "exitcode": 4,
-            "message": "DB::Exception: user2: Authentication failed: password is incorrect or there is no user with such name.",
+            "message": "DB::Exception: user2: Authentication failed",
         }
     ]
     login(servers, "openldap2", *users)
@@ -367,7 +367,7 @@ def invalid_verification_cooldown_value(self, invalid_value, timeout=300):
     verification cooldown parameter is invalid.
     """
 
-    error_message = f" Syntax error: Not a valid unsigned integer{': ' + invalid_value if invalid_value else invalid_value}"
+    error_message = f" Syntax error: Not a valid unsigned integer"
 
     with Given(
         "LDAP server configuration that uses a negative integer for the verification_cooldown parameter"

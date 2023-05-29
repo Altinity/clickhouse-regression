@@ -217,7 +217,7 @@ def invalid_server(self):
                             ("password", user["password"]),
                         ],
                         exitcode=4,
-                        message="DB::Exception: user1: Authentication failed: password is incorrect or there is no user with such name.",
+                        message="DB::Exception: user1: Authentication failed",
                     )
 
 

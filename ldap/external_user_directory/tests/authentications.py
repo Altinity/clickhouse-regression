@@ -70,7 +70,7 @@ def login_with_valid_username_and_invalid_password(users, i, iterations=10):
                 username=random_user["cn"],
                 password=(random_user["userpassword"] + randomword(1)),
                 exitcode=4,
-                message=f"DB::Exception: {random_user['cn']}: Authentication failed: password is incorrect or there is no user with such name",
+                message=f"DB::Exception: {random_user['cn']}: Authentication failed",
                 steps=False,
             )
 
@@ -85,7 +85,7 @@ def login_with_invalid_username_and_valid_password(users, i, iterations=10):
                 username=random_user["cn"],
                 password=random_user["userpassword"],
                 exitcode=4,
-                message=f"DB::Exception: {random_user['cn']}: Authentication failed: password is incorrect or there is no user with such name",
+                message=f"DB::Exception: {random_user['cn']}: Authentication failed",
                 steps=False,
             )
 
@@ -236,7 +236,7 @@ def login_after_ldap_external_user_directory_is_removed(self, server):
 
     with And("I attempt to login after LDAP external user directory is removed"):
         exitcode = 4
-        message = f"DB::Exception: user2: Authentication failed: password is incorrect or there is no user with such name"
+        message = f"DB::Exception: user2: Authentication failed"
         login_and_execute_query(
             username="user2", password="user2", exitcode=exitcode, message=message
         )
@@ -584,7 +584,7 @@ def login_after_user_is_deleted_from_ldap(self, server):
                 username=user["cn"],
                 password=user["userpassword"],
                 exitcode=4,
-                message=f"DB::Exception: {user['cn']}: Authentication failed: password is incorrect or there is no user with such name",
+                message=f"DB::Exception: {user['cn']}: Authentication failed",
             )
     finally:
         with Finally("I make sure LDAP user is deleted"):
@@ -617,7 +617,7 @@ def login_after_user_password_changed_in_ldap(self, server):
                 username=user["cn"],
                 password=user["userpassword"],
                 exitcode=4,
-                message=f"DB::Exception: {user['cn']}: Authentication failed: password is incorrect or there is no user with such name",
+                message=f"DB::Exception: {user['cn']}: Authentication failed",
             )
 
         with And("when I try to login with the new password it should work"):
@@ -655,7 +655,7 @@ def login_after_user_cn_changed_in_ldap(self, server):
                 username=user["cn"],
                 password=user["userpassword"],
                 exitcode=4,
-                message=f"DB::Exception: {user['cn']}: Authentication failed: password is incorrect or there is no user with such name",
+                message=f"DB::Exception: {user['cn']}: Authentication failed",
             )
     finally:
         with Finally("I make sure LDAP user is deleted"):
@@ -750,7 +750,7 @@ def valid_username_with_valid_empty_password(self, server):
     """Check that we can't login using valid username that has empty password."""
     user = {"cn": "empty_password", "userpassword": ""}
     exitcode = 4
-    message = f"DB::Exception: {user['cn']}: Authentication failed: password is incorrect or there is no user with such name"
+    message = f"DB::Exception: {user['cn']}: Authentication failed"
 
     add_user_to_ldap_and_login(
         user=user, exitcode=exitcode, message=message, server=server
@@ -769,7 +769,7 @@ def valid_username_and_invalid_empty_password(self, server):
     login = {"password": ""}
 
     exitcode = 4
-    message = f"DB::Exception: {username}: Authentication failed: password is incorrect or there is no user with such name"
+    message = f"DB::Exception: {username}: Authentication failed"
 
     add_user_to_ldap_and_login(
         user=user, login=login, exitcode=exitcode, message=message, server=server
@@ -796,7 +796,7 @@ def valid_username_and_password_invalid_server(self, server=None):
     self.context.ldap_node = self.context.cluster.node("openldap1")
 
     exitcode = 4
-    message = f"DB::Exception: user2: Authentication failed: password is incorrect or there is no user with such name"
+    message = f"DB::Exception: user2: Authentication failed"
 
     login_and_execute_query(
         username="user2", password="user2", exitcode=exitcode, message=message
@@ -825,7 +825,7 @@ def invalid_long_username_and_valid_short_password(self, server):
     login = {"username": f"{username}?"}
 
     exitcode = 4
-    message = f"DB::Exception: {login['username']}: Authentication failed: password is incorrect or there is no user with such name"
+    message = f"DB::Exception: {login['username']}: Authentication failed"
 
     add_user_to_ldap_and_login(
         user=user, login=login, exitcode=exitcode, message=message, server=server
@@ -860,7 +860,7 @@ def valid_short_username_and_invalid_long_password(self, server):
     login = {"password": user["userpassword"] + "1"}
 
     exitcode = 4
-    message = f"DB::Exception: {username}: Authentication failed: password is incorrect or there is no user with such name"
+    message = f"DB::Exception: {username}: Authentication failed"
 
     add_user_to_ldap_and_login(
         user=user, login=login, exitcode=exitcode, message=message, server=server
@@ -876,7 +876,7 @@ def valid_username_and_invalid_password(self, server):
     login = {"password": user["userpassword"] + "1"}
 
     exitcode = 4
-    message = f"DB::Exception: {username}: Authentication failed: password is incorrect or there is no user with such name"
+    message = f"DB::Exception: {username}: Authentication failed"
 
     add_user_to_ldap_and_login(
         user=user, login=login, exitcode=exitcode, message=message, server=server
@@ -892,7 +892,7 @@ def invalid_username_and_valid_password(self, server):
     login = {"username": user["cn"] + "1"}
 
     exitcode = 4
-    message = f"DB::Exception: {login['username']}: Authentication failed: password is incorrect or there is no user with such name"
+    message = f"DB::Exception: {login['username']}: Authentication failed"
 
     add_user_to_ldap_and_login(
         user=user, login=login, exitcode=exitcode, message=message, server=server
@@ -946,7 +946,7 @@ def default_verification_cooldown_value(self, server, rbac=False):
     authentication request.
     """
 
-    error_message = "DB::Exception: testVCD: Authentication failed: password is incorrect or there is no user with such name"
+    error_message = "DB::Exception: testVCD: Authentication failed"
     error_exitcode = 4
     user = None
 
@@ -1012,7 +1012,7 @@ def valid_verification_cooldown_value_cn_change(self, server, rbac=False):
     is set and the user cn is changed.
     """
 
-    error_message = "DB::Exception: testVCD: Authentication failed: password is incorrect or there is no user with such name"
+    error_message = "DB::Exception: testVCD: Authentication failed"
     error_exitcode = 4
     user = None
     new_user = None
@@ -1088,7 +1088,7 @@ def valid_verification_cooldown_value_password_change(self, server, rbac=False):
     is set and the user password is changed.
     """
 
-    error_message = "DB::Exception: testVCD: Authentication failed: password is incorrect or there is no user with such name"
+    error_message = "DB::Exception: testVCD: Authentication failed"
     error_exitcode = 4
     user = None
 
@@ -1163,7 +1163,7 @@ def valid_verification_cooldown_value_ldap_unavailable(self, server, rbac=False)
     is set, even when the LDAP server is offline.
     """
 
-    error_message = "DB::Exception: testVCD: Authentication failed: password is incorrect or there is no user with such name"
+    error_message = "DB::Exception: testVCD: Authentication failed"
     error_exitcode = 4
     user = None
 
@@ -1317,7 +1317,7 @@ def check_verification_cooldown_reset_on_core_server_parameter_change(
     """
     config_d_dir = "/etc/clickhouse-server/config.d"
     config_file = "ldap_servers.xml"
-    error_message = "DB::Exception: {user}: Authentication failed: password is incorrect or there is no user with such name"
+    error_message = "DB::Exception: {user}: Authentication failed"
     error_exitcode = 4
     user = None
     config = None
@@ -1489,7 +1489,7 @@ def scenario(self, server, rbac=False):
     """
     user = None
     error_exitcode = 4
-    error_message = "DB::Exception: testVCD: Authentication failed: password is incorrect or there is no user with such name"
+    error_message = "DB::Exception: testVCD: Authentication failed"
 
     with Given(
         "I have an LDAP configuration that sets verification_cooldown parameter to 600 sec"
@@ -1573,7 +1573,7 @@ def user_lookup_priority(self, server):
     """
     self.context.ldap_node = self.context.cluster.node(server)
 
-    message = "DB::Exception: {username}: Authentication failed: password is incorrect or there is no user with such name"
+    message = "DB::Exception: {username}: Authentication failed"
     exitcode = 4
 
     users = {

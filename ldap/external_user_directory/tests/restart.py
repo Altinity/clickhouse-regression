@@ -276,7 +276,7 @@ def parallel_login(self, server=None, user_count=10, timeout=300):
                     username=random_user["cn"],
                     password=(random_user["userpassword"] + randomword(1)),
                     exitcode=4,
-                    message=f"DB::Exception: {random_user['cn']}: Authentication failed: password is incorrect or there is no user with such name",
+                    message=f"DB::Exception: {random_user['cn']}: Authentication failed",
                     steps=False,
                 )
 
@@ -297,7 +297,7 @@ def parallel_login(self, server=None, user_count=10, timeout=300):
                     username=random_user["cn"],
                     password=random_user["userpassword"],
                     exitcode=4,
-                    message=f"DB::Exception: {random_user['cn']}: Authentication failed: password is incorrect or there is no user with such name",
+                    message=f"DB::Exception: {random_user['cn']}: Authentication failed",
                     steps=False,
                 )
 

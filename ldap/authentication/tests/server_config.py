@@ -333,7 +333,7 @@ def invalid_verification_cooldown_value(self, invalid_value, timeout=300):
     verification cooldown parameter is invalid.
     """
 
-    error_message = f" Syntax error: Not a valid unsigned integer{': ' + invalid_value if invalid_value else invalid_value}"
+    error_message = f" Syntax error: Not a valid unsigned integer"
 
     with Given(
         "LDAP server configuration that uses a negative integer for the verification_cooldown parameter"

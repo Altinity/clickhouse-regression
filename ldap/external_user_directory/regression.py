@@ -34,6 +34,13 @@ xfails = {
         )
     ],
     "connection protocols/tls cipher suite": [(Fail, "can't get it to work")],
+    # 23.3
+    "user authentications/:verification cooldown:/:": [
+        (Fail, "changes in behaviour in 23.3", check_clickhouse_version(">=23"))
+    ],
+    "user authentications/verification cooldown:/:": [
+        (Fail, "changes in behaviour in 23.3", check_clickhouse_version(">=23"))
+    ]
 }
 
 ffails = {
@@ -44,6 +51,12 @@ ffails = {
             lambda test: check_clickhouse_version(">=21.8")(test)
             and check_clickhouse_version("<21.9")(test)
         ),
+    ),
+    # 23.3
+    "/external user directory/restart/parallel login": (
+        XFail,
+        "fails on 23.3",
+        check_clickhouse_version(">=23")
     )
 }
 

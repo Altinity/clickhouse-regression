@@ -1185,7 +1185,7 @@ def scenario(self, server, rbac=False):
                 ):
                     login_and_execute_query(
                         username=user["cn"],
-                        password="incorrect",
+                        password=user["userpassword"],
                         exitcode=error_exitcode,
                         message=error_message,
                     )
