@@ -123,7 +123,7 @@ def timezone_and_timezone_of_now(self):
 @Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_ParsingOfDateOrDateTimeTypes("1.0"))
 def date_datetime_column_types(self):
     """Check the way session_timezone setting affects parsing of Date or DateTime types."""
-    # xfail("need to finish")
+    xfail("need to finish")
     node = self.context.cluster.node("clickhouse1")
 
     try:
@@ -152,7 +152,6 @@ def date_datetime_column_types(self):
             node.query(
                 "DROP IF EXISTS test_tz table"
             )
-
 
 
 @TestFeature
