@@ -126,8 +126,8 @@ over `SET session_timezone` queries.
 ### RQ.SRS-037.ClickHouse.SessionTimezone.DateTime
 version: 1.0
 
-[ClickHouse] SHALL support the `session_timezone` setting affects the conversion of DateTime values, 
-resulting in the result being adjusted according to the specified session timezone.
+[ClickHouse] SHALL support the `session_timezone` setting affects the conversion of DateTime values.
+A result being adjusted according to the specified session timezone.
 
 ```sql
 > SELECT toDateTime64(toDateTime64('1999-12-12 23:23:23.123', 3), 3, 'Europe/Zurich') SETTINGS 
