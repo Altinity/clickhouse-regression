@@ -211,10 +211,17 @@ version: 1.0
 [ClickHouse]'s [extractKeyValuePairs] function SHALL recognize the value in the input string
 if it satisfies the following conditions:
 
-* Value can't contain symbols that defined in parameters.
+* Value can't contain symbols that defined in parameters except `key_value_pair_delimiter`.
 * Value can be an empty string.
 * If a value is enclosed, value can contain any symbols.
 * If `extractKeyValuePairsWithEscaping` is used, value shall accept control symbols.
+* Value can contain `key_value_pair_delimiter`, For example:
+
+`SELECT extractKeyValuePairs('a:a:a', ':', ';')`
+
+returns
+
+`{'a':'a:a'}`
 
 ### Parameters
 
