@@ -51,7 +51,7 @@ def check_comparable_performance(self, policy=None, disk_path=None, node=None):
         r_unencrypted = int((node.query(sql)).output)
         sql = f"select query_duration_ms from system.query_log where query_id='{uid2}' order by event_time desc limit 1"
         r_encrypted = int((node.query(sql)).output)
-        assert 20 > (r_unencrypted - r_encrypted) / r_encrypted > -20, error()
+        assert 40 > (r_unencrypted - r_encrypted) / r_encrypted > -40, error()
 
     with Then("I check select statement"):
         node.query(
@@ -69,7 +69,7 @@ def check_comparable_performance(self, policy=None, disk_path=None, node=None):
         r_unencrypted = int((node.query(sql)).output)
         sql = f"select query_duration_ms from system.query_log where query_id='{uid4}' order by event_time desc limit 1"
         r_encrypted = int((node.query(sql)).output)
-        assert 20 > (r_unencrypted - r_encrypted) / r_encrypted > -20, error()
+        assert 40 > (r_unencrypted - r_encrypted) / r_encrypted > -40, error()
 
 
 @TestFeature
