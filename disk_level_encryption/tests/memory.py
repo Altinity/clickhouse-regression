@@ -1,7 +1,7 @@
 from testflows.asserts import error
 from disk_level_encryption.requirements.requirements import *
 from disk_level_encryption.tests.steps import *
-from helpers.common import KeyWithAttributes
+from helpers.common import KeyWithAttributes, check_clickhouse_version
 
 entries = {
     "storage_configuration": {
@@ -29,6 +29,10 @@ expected_output = '{"Id":1,"Value":"hello"}\n{"Id":2,"Value":"there"}'
 @Requirements(RQ_SRS_025_ClickHouse_DiskLevelEncryption_Disk_Memory("1.0"))
 def memory_disk(self, node=None):
     """Check that ClickHouse supports disk level encryption for memory disk."""
+
+    if check_clickhouse_version(">=23.3")(self):
+        skip(reason="memory disk not implemented")
+
     disk_local = "/disk_local"
 
     if node is None:
