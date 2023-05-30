@@ -9,7 +9,9 @@ def bad_arguments(self):
     """Check behavior with bad arguments."""
     node = self.context.cluster.node("clickhouse1")
 
-    with When("I check that attempting to use the timezone with incorrect or invalid arguments lead to an exception"):
+    with When(
+        "I check that attempting to use the timezone with incorrect or invalid arguments lead to an exception"
+    ):
         node.query(
             "select timezoneOf(now()) SETTINGS session_timezone = 'fasdf' format TSV;",
             exitcode=36,
@@ -36,7 +38,9 @@ def timezone_default_value(self):
     """Verify that the session_timezone is set to the default value if it is set to an empty string."""
     node = self.context.cluster.node("clickhouse1")
 
-    with When("I check timezone(), timezoneOf(now()) with session_timezone is set to an empty string"):
+    with When(
+        "I check timezone(), timezoneOf(now()) with session_timezone is set to an empty string"
+    ):
         node.query(
             "SELECT timezone(), timezoneOf(now()) SETTINGS session_timezone = '' FORMAT TSV;",
             message="Europe/Berlin	Europe/Berlin",
@@ -50,7 +54,9 @@ def set_timezone(self):
 
     node = self.context.cluster.node("clickhouse1")
 
-    with When("I check that timezone is changing when `SET session_timezone` is applied"):
+    with When(
+        "I check that timezone is changing when `SET session_timezone` is applied"
+    ):
         node.query(
             ("SET session_timezone = 'Asia/Novosibirsk';")
             + (
@@ -123,7 +129,6 @@ def timezone_and_timezone_of_now(self):
 @Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_ParsingOfDateOrDateTimeTypes("1.0"))
 def date_datetime_column_types(self):
     """Check the way session_timezone setting affects parsing of Date or DateTime types."""
-    xfail("need to finish")
     node = self.context.cluster.node("clickhouse1")
 
     try:
@@ -142,16 +147,38 @@ def date_datetime_column_types(self):
             )
             node.query(
                 "SELECT *, timezone() FROM test_tz WHERE d = '2000-01-01 00:00:00' "
-                "SETTINGS session_timezone = 'Asia/Novosibirsk' FORMAT TSV;",
-                message="2000-01-01 00:00:00   Asia/Novosibirsk"
+                "SETTINGS session_timezone = 'Asia/Novosibirsk';",
+                message="2000-01-01 00:00:00\tAsia/Novosibirsk",
             )
+
     finally:
-        with Finally(
-            "I drop test_tz table"
-        ):
-            node.query(
-                "DROP IF EXISTS test_tz table"
-            )
+        with Finally("I drop test_tz table"):
+            node.query("DROP TABLE IF EXISTS test_tz ")
+
+
+@TestScenario
+def clickhouse_local(self):
+    """"""
+    node = self.context.cluster.node("clickhouse1")
+
+    with When("I try clickhouse local"):
+        node.cmd(
+            "TZ=UTC clickhouse local -q 'select timezone()'",
+            message="UTC",
+        )
+        node.cmd(
+            "TZ=Zulu clickhouse local -q 'select timezone()'",
+            message="Zulu",
+        )
+        node.cmd(
+            "TZ=UTC clickhouse local -q \"create table test_tz (d DateTime) Engine=Memory as select toDateTime('2000-01-01 00:00:00', 'UTC'); select *, timezone() from test_tz where d = toDateTime('2000-01-01 00:00:00') settings session_timezone ='Asia/Novosibirsk' FORMAT TSV;\"",
+            message="",
+        )
+
+        node.cmd(
+            "TZ=UTC clickhouse local -q \"create table test_tz (d DateTime) Engine=Memory as select toDateTime('2000-01-01 00:00:00', 'UTC'); select *, timezone() from test_tz where d = '2000-01-01 00:00:00' settings session_timezone ='Asia/Novosibirsk' FORMAT TSV;\"",
+            message="2000-01-01 00:00:00\tAsia/Novosibirsk",
+        )
 
 
 @TestFeature
