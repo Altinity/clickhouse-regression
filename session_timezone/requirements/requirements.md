@@ -19,11 +19,12 @@
   * 5.7 [RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues](#rqsrs-037clickhousesessiontimezonepossiblevalues)
   * 5.8 [RQ.SRS-037.ClickHouse.SessionTimezone.DefaultValue](#rqsrs-037clickhousesessiontimezonedefaultvalue)
   * 5.9 [RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue](#rqsrs-037clickhousesessiontimezonewrongsettingvalue)
-  * 5.10 [Non-Functional Requirements](#non-functional-requirements)
-    * 5.10.1 [Performance](#performance)
-    * 5.10.2 [RQ.SRS-037.ClickHouse.SessionTimezone.Performance](#rqsrs-037clickhousesessiontimezoneperformance)
-    * 5.10.3 [Reliability](#reliability)
-    * 5.10.4 [RQ.SRS-037.ClickHouse.SessionTimezone.Reliability](#rqsrs-037clickhousesessiontimezonereliability)
+  * 5.10 [RQ.SRS-037.ClickHouse.SessionTimezone.ClickhouseLocal](#rqsrs-037clickhousesessiontimezoneclickhouselocal)
+  * 5.11 [Non-Functional Requirements](#non-functional-requirements)
+    * 5.11.1 [Performance](#performance)
+    * 5.11.2 [RQ.SRS-037.ClickHouse.SessionTimezone.Performance](#rqsrs-037clickhousesessiontimezoneperformance)
+    * 5.11.3 [Reliability](#reliability)
+    * 5.11.4 [RQ.SRS-037.ClickHouse.SessionTimezone.Reliability](#rqsrs-037clickhousesessiontimezonereliability)
 
 ## Introduction
 
@@ -45,10 +46,17 @@ flowchart TB;
   
   subgraph O["'Session Timezone' Test Feature Diagram"]
   
-  A--"SETTING"-->D
+  C--A--"SETTING"-->D
 
   1A---2A---3A---4A
   1D---2D---3D---4D---5D
+  
+    subgraph C["Environment"]
+
+        1C["clickhouse client"]:::green
+        2C["TZ="UTC" clickhouse local"]:::green
+ 
+    end
   
     subgraph A["SELECT"]
 
@@ -179,6 +187,12 @@ Exception is thrown when attempting to apply invalid setting:
 Code: 36. DB::Exception: Received from localhost:9000. DB::Exception: Exception: Invalid time zone...
 ```
 
+### RQ.SRS-037.ClickHouse.SessionTimezone.ClickhouseLocal
+version: 1.0
+
+[ClickHouse] SHALL support the `session_timezone` setting for [clickhouse local] in the same way as 
+for `clickhouse client`.
+
 ### Non-Functional Requirements
 
 #### Performance
@@ -201,3 +215,4 @@ version: 1.0
 [session_timezone]: https://github.com/ClickHouse/ClickHouse/pull/44149
 [ClickHouse]: https://clickhouse.com
 [timezone]:https://clickhouse.com/docs/en/operations/server-configuration-parameters/settings#server_configuration_parameters-timezone
+[clickhouse local]:https://clickhouse.com/docs/en/operations/utilities/clickhouse-local
