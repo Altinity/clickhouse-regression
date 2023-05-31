@@ -51,10 +51,10 @@ flowchart TB;
   1A---2A---3A---4A
   1D---2D---3D---4D---5D
   
-    subgraph C["Environment"]
+    subgraph C["Clickhouse"]
 
-        1C["clickhouse client"]:::green
-        2C["TZ="UTC" clickhouse local"]:::green
+        1C["client"]:::green
+        2C["local"]:::green
  
     end
   
