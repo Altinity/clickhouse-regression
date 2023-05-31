@@ -101,8 +101,8 @@ RQ_SRS_037_ClickHouse_SessionTimezone_DateTime = Requirement(
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support the `session_timezone` setting affects the conversion of DateTime values, \n'
-        'resulting in the output being adjusted according to the specified session timezone.\n'
+        '[ClickHouse] SHALL support the `session_timezone` setting affects the conversion of DateTime values.\n'
+        'A result being adjusted according to the specified session timezone.\n'
         '\n'
         '```sql\n'
         "> SELECT toDateTime64(toDateTime64('1999-12-12 23:23:23.123', 3), 3, 'Europe/Zurich') SETTINGS \n"
@@ -157,7 +157,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_PossibleValues = Requirement(
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support the possible values for the `session_timezone` setting:\n'
+        '[ClickHouse] SHALL support any value from `system.time_zones`:\n'
         '  * Europe/Berlin\n'
         '  * UTC\n'
         '  * Zulu\n'
@@ -192,7 +192,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_WrongSettingValue = Requirement(
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL provide exception with wrong `session_timezone` setting value:\n'
+        'Exception is thrown when attempting to apply invalid setting:\n'
         '\n'
         '```CMD\n'
         'Code: 36. DB::Exception: Received from localhost:9000. DB::Exception: Exception: Invalid time zone...\n'
@@ -202,6 +202,23 @@ RQ_SRS_037_ClickHouse_SessionTimezone_WrongSettingValue = Requirement(
     link=None,
     level=2,
     num='6.9'
+)
+
+RQ_SRS_037_ClickHouse_SessionTimezone_ClickhouseLocal = Requirement(
+    name='RQ.SRS-037.ClickHouse.SessionTimezone.ClickhouseLocal',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL support the `session_timezone` setting for [clickhouse local] in the same way as \n'
+        'for `clickhouse client`.\n'
+        '\n'
+    ),
+    link=None,
+    level=2,
+    num='6.10'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_Performance = Requirement(
@@ -217,7 +234,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_Performance = Requirement(
     ),
     link=None,
     level=3,
-    num='6.10.2'
+    num='6.11.2'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_Reliability = Requirement(
@@ -236,10 +253,11 @@ RQ_SRS_037_ClickHouse_SessionTimezone_Reliability = Requirement(
         '[session_timezone]: https://github.com/ClickHouse/ClickHouse/pull/44149\n'
         '[ClickHouse]: https://clickhouse.com\n'
         '[timezone]:https://clickhouse.com/docs/en/operations/server-configuration-parameters/settings#server_configuration_parameters-timezone\n'
+        '[clickhouse local]:https://clickhouse.com/docs/en/operations/utilities/clickhouse-local\n'
     ),
     link=None,
     level=3,
-    num='6.10.4'
+    num='6.11.4'
 )
 
 SRS037_ClickHouse_Session_Timezone = Specification(
@@ -276,11 +294,12 @@ SRS037_ClickHouse_Session_Timezone = Specification(
         Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues', level=2, num='6.7'),
         Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DefaultValue', level=2, num='6.8'),
         Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue', level=2, num='6.9'),
-        Heading(name='Non-Functional Requirements', level=2, num='6.10'),
-        Heading(name='Performance', level=3, num='6.10.1'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.Performance', level=3, num='6.10.2'),
-        Heading(name='Reliability', level=3, num='6.10.3'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.Reliability', level=3, num='6.10.4'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.ClickhouseLocal', level=2, num='6.10'),
+        Heading(name='Non-Functional Requirements', level=2, num='6.11'),
+        Heading(name='Performance', level=3, num='6.11.1'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.Performance', level=3, num='6.11.2'),
+        Heading(name='Reliability', level=3, num='6.11.3'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.Reliability', level=3, num='6.11.4'),
         ),
     requirements=(
         RQ_SRS_037_ClickHouse_SessionTimezone,
@@ -292,6 +311,7 @@ SRS037_ClickHouse_Session_Timezone = Specification(
         RQ_SRS_037_ClickHouse_SessionTimezone_PossibleValues,
         RQ_SRS_037_ClickHouse_SessionTimezone_DefaultValue,
         RQ_SRS_037_ClickHouse_SessionTimezone_WrongSettingValue,
+        RQ_SRS_037_ClickHouse_SessionTimezone_ClickhouseLocal,
         RQ_SRS_037_ClickHouse_SessionTimezone_Performance,
         RQ_SRS_037_ClickHouse_SessionTimezone_Reliability,
         ),
@@ -317,11 +337,12 @@ SRS037_ClickHouse_Session_Timezone = Specification(
   * 5.7 [RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues](#rqsrs-037clickhousesessiontimezonepossiblevalues)
   * 5.8 [RQ.SRS-037.ClickHouse.SessionTimezone.DefaultValue](#rqsrs-037clickhousesessiontimezonedefaultvalue)
   * 5.9 [RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue](#rqsrs-037clickhousesessiontimezonewrongsettingvalue)
-  * 5.10 [Non-Functional Requirements](#non-functional-requirements)
-    * 5.10.1 [Performance](#performance)
-    * 5.10.2 [RQ.SRS-037.ClickHouse.SessionTimezone.Performance](#rqsrs-037clickhousesessiontimezoneperformance)
-    * 5.10.3 [Reliability](#reliability)
-    * 5.10.4 [RQ.SRS-037.ClickHouse.SessionTimezone.Reliability](#rqsrs-037clickhousesessiontimezonereliability)
+  * 5.10 [RQ.SRS-037.ClickHouse.SessionTimezone.ClickhouseLocal](#rqsrs-037clickhousesessiontimezoneclickhouselocal)
+  * 5.11 [Non-Functional Requirements](#non-functional-requirements)
+    * 5.11.1 [Performance](#performance)
+    * 5.11.2 [RQ.SRS-037.ClickHouse.SessionTimezone.Performance](#rqsrs-037clickhousesessiontimezoneperformance)
+    * 5.11.3 [Reliability](#reliability)
+    * 5.11.4 [RQ.SRS-037.ClickHouse.SessionTimezone.Reliability](#rqsrs-037clickhousesessiontimezonereliability)
 
 ## Introduction
 
@@ -343,10 +364,17 @@ flowchart TB;
   
   subgraph O["'Session Timezone' Test Feature Diagram"]
   
-  A--"SETTING"-->D
+  C--A--"SETTING"-->D
 
   1A---2A---3A---4A
   1D---2D---3D---4D---5D
+  
+    subgraph C["Environment"]
+
+        1C["clickhouse client"]:::green
+        2C["TZ="UTC" clickhouse local"]:::green
+ 
+    end
   
     subgraph A["SELECT"]
 
@@ -424,8 +452,8 @@ over `SET session_timezone` queries.
 ### RQ.SRS-037.ClickHouse.SessionTimezone.DateTime
 version: 1.0
 
-[ClickHouse] SHALL support the `session_timezone` setting affects the conversion of DateTime values, 
-resulting in the output being adjusted according to the specified session timezone.
+[ClickHouse] SHALL support the `session_timezone` setting affects the conversion of DateTime values.
+A result being adjusted according to the specified session timezone.
 
 ```sql
 > SELECT toDateTime64(toDateTime64('1999-12-12 23:23:23.123', 3), 3, 'Europe/Zurich') SETTINGS 
@@ -458,7 +486,7 @@ The parsing behavior differs based on the approach used:
 ### RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues
 version: 1.0
 
-[ClickHouse] SHALL support the possible values for the `session_timezone` setting:
+[ClickHouse] SHALL support any value from `system.time_zones`:
   * Europe/Berlin
   * UTC
   * Zulu
@@ -471,11 +499,17 @@ version: 1.0
 ### RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue
 version: 1.0
 
-[ClickHouse] SHALL provide exception with wrong `session_timezone` setting value:
+Exception is thrown when attempting to apply invalid setting:
 
 ```CMD
 Code: 36. DB::Exception: Received from localhost:9000. DB::Exception: Exception: Invalid time zone...
 ```
+
+### RQ.SRS-037.ClickHouse.SessionTimezone.ClickhouseLocal
+version: 1.0
+
+[ClickHouse] SHALL support the `session_timezone` setting for [clickhouse local] in the same way as 
+for `clickhouse client`.
 
 ### Non-Functional Requirements
 
@@ -499,5 +533,6 @@ version: 1.0
 [session_timezone]: https://github.com/ClickHouse/ClickHouse/pull/44149
 [ClickHouse]: https://clickhouse.com
 [timezone]:https://clickhouse.com/docs/en/operations/server-configuration-parameters/settings#server_configuration_parameters-timezone
+[clickhouse local]:https://clickhouse.com/docs/en/operations/utilities/clickhouse-local
 '''
 )
