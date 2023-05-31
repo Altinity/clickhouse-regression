@@ -98,16 +98,15 @@ Software Requirements Specification
 ### RQ.SRS-037.ClickHouse.SessionTimezone
 version: 1.0
 
-[ClickHouse] SHALL support the `session_timezone` setting in ClickHouse. The `session_timezone` setting allows the 
+[ClickHouse] SHALL support the `session_timezone` setting in ClickHouse. The `session_timezone` setting SHALL allow the 
 specification of an implicit timezone, which overrides the default timezone for all DateTime/DateTime64 values and 
-function results that do not have an explicit timezone specified. An empty string ('') as the value configures the 
-session timezone to the server's default timezone.
+function results that do not have an explicit timezone specified. An empty string as the value SHALL configure the 
+session timezone to be set to the server's default timezone.
 
 ### RQ.SRS-037.ClickHouse.SessionTimezone.ServerDefault
 version: 1.0
 
-[ClickHouse] SHALL support  the `session_timezone` setting is not specified, and the default timezones are used for the 
-session and server.
+[ClickHouse] SHALL use the default server timezone when `session_timezone` setting is not specified. 
 
 Example:
 ```sql
@@ -119,8 +118,8 @@ Example:
 ### RQ.SRS-037.ClickHouse.SessionTimezone.ServerSession
 version: 1.0
 
-[ClickHouse] SHALL support the `session_timezone` setting overriding the default session timezone while keeping the server
-timezone unchanged.
+[ClickHouse] SHALL override the default session timezone when `session_timezone` setting is specified while
+keeping the server timezone unchanged.
 
 Example:
 
@@ -133,14 +132,12 @@ Example:
 ### RQ.SRS-037.ClickHouse.SessionTimezone.SettingsPriority
 version: 1.0
 
-[ClickHouse] SHALL support prioritizing queries with the `SETTINGS session_timezone` clause 
-over `SET session_timezone` queries.
+[ClickHouse] SHALL override session's `session_timezone` setting value when `SETTINGS session_timezone` inline clause is specified for a given query.
 
 ### RQ.SRS-037.ClickHouse.SessionTimezone.DateTime
 version: 1.0
 
-[ClickHouse] SHALL support the `session_timezone` setting affects the conversion of DateTime values.
-A result being adjusted according to the specified session timezone.
+[ClickHouse] SHALL use the timezone specified by the `session_timezone` setting for all `DateTime` or `DateTime64` value conversions.
 
 ```sql
 > SELECT toDateTime64(toDateTime64('1999-12-12 23:23:23.123', 3), 3, 'Europe/Zurich') SETTINGS 
@@ -152,7 +149,7 @@ session_timezone = 'America/Denver' FORMAT TSV
 ### RQ.SRS-037.ClickHouse.SessionTimezone.ParsingOfDateOrDateTimeTypes
 version: 1.0
 
-[ClickHouse] SHALL support the `session_timezone` setting on the parsing of Date or DateTime types, 
+[ClickHouse] SHALL use timezone specified by the `session_timezone` setting when parsing of DateTime or DateTime64 types, 
 as illustrated in the following example:
 
 ```sql
@@ -178,7 +175,8 @@ version: 1.0
 ### RQ.SRS-037.ClickHouse.SessionTimezone.DefaultValue
 version: 1.0
 
-[ClickHouse] SHALL support an empty string ('') as the `session_timezone` setting default value.
+[ClickHouse] SHALL support an empty string `''` as the `session_timezone` setting default value which SHALL
+cause the server to use the default timezone for the server.
 
 ### RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue
 version: 1.0
