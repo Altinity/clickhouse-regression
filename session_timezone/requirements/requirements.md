@@ -49,7 +49,7 @@ flowchart TB;
   C-->A--"SETTING"-->D
 
   1A---2A---3A---4A
-  1D---2D---3D---4D---5D
+  1D---2D---3D
   
     subgraph C["Clickhouse"]
 
