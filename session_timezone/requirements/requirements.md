@@ -54,7 +54,7 @@ flowchart TB;
   
     subgraph E["SET"]
 
-        1C["session_timezone"]:::green
+        1E["session_timezone"]:::green
  
     end
   
@@ -74,7 +74,7 @@ flowchart TB;
         
     end
     
-    subgraph D["Session Timezone"]
+    subgraph D["session_timezone"]
         1D["default"]:::green
         2D["wrong"]:::green
         3D["any timezone"]:::green
