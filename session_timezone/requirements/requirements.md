@@ -46,7 +46,7 @@ flowchart TB;
   
   subgraph O["'Session Timezone' Test Feature Diagram"]
   
-  C--A--"SETTING"-->D
+  C-->A--"SETTING"-->D
 
   1A---2A---3A---4A
   1D---2D---3D---4D---5D
@@ -168,10 +168,7 @@ The parsing behavior differs based on the approach used:
 ### RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues
 version: 1.0
 
-[ClickHouse] SHALL support any value from `system.time_zones`:
-  * Europe/Berlin
-  * UTC
-  * Zulu
+[ClickHouse] SHALL support any value from `system.time_zones`.
 
 ### RQ.SRS-037.ClickHouse.SessionTimezone.DefaultValue
 version: 1.0
