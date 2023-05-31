@@ -46,10 +46,17 @@ flowchart TB;
   
   subgraph O["'Session Timezone' Test Feature Diagram"]
   
-  C-->A--"SETTING"-->D
+  C-->E-->A--"SETTING"-->D
+  C-->A
 
   1A---2A---3A---4A
   1D---2D---3D
+  
+    subgraph C["SET"]
+
+        1C["session_timezone"]:::green
+ 
+    end
   
     subgraph C["Clickhouse"]
 
