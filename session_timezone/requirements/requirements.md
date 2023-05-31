@@ -70,9 +70,7 @@ flowchart TB;
     subgraph D["Session Timezone"]
         1D["default"]:::green
         2D["wrong"]:::green
-        3D["Europe/Berlin"]:::red
-        4D["Zulu"]:::red
-        5D["Europe/Berlin"]:::red
+        3D["any timezone"]:::green
     end
   end
 ```
