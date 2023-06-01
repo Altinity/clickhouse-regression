@@ -4,37 +4,51 @@ from testflows.core import *
 from helpers.common import create_xml_config_content, add_config
 from helpers.common import getuid, instrument_clickhouse_server_log
 
-ssl_entries = {
-    "server": {
-        "certificateFile": "/etc/clickhouse-server/config.d/server.crt",
-        "privateKeyFile": "/etc/clickhouse-server/config.d/server.key",
-        "dhParamsFile": "/etc/clickhouse-server/config.d/dhparam.pem",
-        "verificationMode": "none",
-        "loadDefaultCAFile": "true",
-        "cacheSessions": "true",
-        "disableProtocols": "sslv2,sslv3",
-        "preferServerCiphers": "true",
+transactions = {
+    "allow_experimental_transactions": "42",
+    "merge_tree": {
+        "old_parts_lifetime": "100500",
+        "remove_rolled_back_parts_immediately": "0"
     },
-    "client": {
-        "certificateFile": "/etc/clickhouse-server/config.d/server.crt",
-        "privateKeyFile": "/etc/clickhouse-server/config.d/server.key",
-        "loadDefaultCAFile": "true",
-        "cacheSessions": "true",
-        "disableProtocols": "sslv2,sslv3",
-        "preferServerCiphers": "true",
-        "verificationMode": "none",
-        "invalidCertificateHandler": {"name": "RejectCertificateHandler"},
+    "transactions_info_log": {
+        "database": "system",
+        "table": "transactions_info_log",
+        "flush_interval_milliseconds": "7500"
     },
 }
 
 
 @TestStep(Given)
-def create_ssl_configuration(
+def add_config_section(
+    self,
+    config,
+    timeout=300,
+    restart=False,
+    modify=False,
+    node=None,
+    user=None,
+    wait_healthy=True,
+    check_preprocessed=True,
+):
+    """Add config on cluster nodes."""
+    return add_config(
+        config=config,
+        restart=restart,
+        modify=modify,
+        user=user,
+        node=node,
+        wait_healthy=wait_healthy,
+        check_preprocessed=check_preprocessed,
+    )
+
+
+@TestStep(Given)
+def create_transactions_configuration(
     self,
     config_d_dir="/etc/clickhouse-server/config.d/",
-    config_file="ssl_conf.xml",
+    config_file="transactions.xml",
     nodes=None,
-    entries=ssl_entries,
+    entries=transactions,
 ):
     """Create ClickHouse SSL servers configuration.
 
@@ -44,19 +58,19 @@ def create_ssl_configuration(
     :param entries: inside config information
     """
 
-    nodes = self.context.cluster.nodes["clickhouse"][0:13] if nodes is None else nodes
+    nodes = self.context.cluster.nodes["clickhouse"][0:3] if nodes is None else nodes
 
     for name in nodes:
         node = self.context.cluster.node(name)
-        _entries = {"openSSL": entries}
+        _entries = entries
         with Then("I converting config file content to xml"):
             config = create_xml_config_content(
-                _entries, config_file=config_file, config_d_dir=config_d_dir
+                _entries, config_file=config_file, config_d_dir=config_d_dir, root="clickhouse"
             )
 
         with And(f"I add config to {name}"):
             add_config_section(
-                config=config, restart=True, modify=False, user=None, node=node
+                config=config, restart=True, modify=True, user=None, node=node
             )
 
 
