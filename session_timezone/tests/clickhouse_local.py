@@ -144,7 +144,9 @@ def all_possible_values_of_timezones(self):
     with Check("I check all possible timezones from system.time_zones table"):
         for i in range(0, int(number_of_timezones)):
             time_zone = node.query(
-                f"SELECT time_zone FROM system.time_zones LIMIT 1 OFFSET {i}"
+                f"select time_zone from "
+                f"(select *,ROW_NUMBER() OVER (ORDER BY time_zone) as order_number from system.time_zones)"
+                f" WHERE order_number = {i+1}"
             ).output.strip()
             with Step(
                 f"I check that `session_timezone` is changing timezone to {time_zone}"

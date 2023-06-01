@@ -12,6 +12,8 @@ from helpers.common import check_clickhouse_version
 from atomic_insert.requirements import *
 from platform import processor as current_cpu
 
+from atomic_insert.tests.steps import *
+
 
 def argparser(parser):
     """Custom argperser that add --thread-fuzzer option."""
@@ -37,13 +39,13 @@ xflags = {}
 @Requirements(RQ_SRS_028_ClickHouse_AtomicInserts("1.0"))
 @Specifications(SRS028_ClickHouse_Atomic_Inserts)
 def regression(
-    self,
-    local,
-    clickhouse_binary_path,
-    clickhouse_version,
-    collect_service_logs,
-    stress=None,
-    thread_fuzzer=None,
+        self,
+        local,
+        clickhouse_binary_path,
+        clickhouse_version,
+        collect_service_logs,
+        stress=None,
+        thread_fuzzer=None,
 ):
     """ClickHouse atomic inserts regression."""
     nodes = {
@@ -64,17 +66,19 @@ def regression(
         env = "atomic_insert_env"
 
     with Cluster(
-        local,
-        clickhouse_binary_path,
-        collect_service_logs=collect_service_logs,
-        thread_fuzzer=thread_fuzzer,
-        nodes=nodes,
-        docker_compose_project_dir=os.path.join(current_dir(), env),
+            local,
+            clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
+            thread_fuzzer=thread_fuzzer,
+            nodes=nodes,
+            docker_compose_project_dir=os.path.join(current_dir(), env),
     ) as cluster:
         self.context.cluster = cluster
 
         if check_clickhouse_version("<22.4")(self):
             skip(reason="only supported on ClickHouse version >= 22.4")
+
+        create_transactions_configuration()
 
         Feature(run=load("atomic_insert.tests.sanity", "feature"))
         Feature(run=load("atomic_insert.tests.dependent_tables", "feature"))
