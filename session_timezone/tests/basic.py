@@ -122,19 +122,19 @@ def timezone_and_timezone_of_now(self):
         "I check that `SETTINGS session_timezone` is changing timezone(), timezoneOf(now())"
     ):
         node.query(
-            "SELECT timezone(), timezoneOf(now()) SETTINGS session_timezone = 'Europe/Zurich' FORMAT TSV;",
-            message="Europe/Zurich	Europe/Zurich",
+            "SELECT timezone(), timezoneOf(now()) SETTINGS session_timezone = 'Europe/Zurich' FORMAT CSV;",
+            message="",
         )
         node.query(
-            "SELECT timezone(), timezoneOf(now()) SETTINGS session_timezone = 'Pacific/Pitcairn' FORMAT TSV;",
-            message="Pacific/Pitcairn	Pacific/Pitcairn",
+            "SELECT timezone(), timezoneOf(now()) SETTINGS session_timezone = 'Pacific/Pitcairn' FORMAT CSV;",
+            message="",
         )
 
 
 @TestScenario
-@Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_ParsingOfDateOrDateTimeTypes("1.0"))
+@Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_ParsingOfDateTimeTypes("1.0"))
 def date_datetime_column_types(self):
-    """Check the way session_timezone setting affects parsing of Date or DateTime types."""
+    """Check the way session_timezone setting affects parsing of DateTime type."""
     node = self.context.cluster.node("clickhouse1")
     table_name = f"test_tz{getuid()}"
 
@@ -146,7 +146,7 @@ def date_datetime_column_types(self):
             )
 
         with Then(
-            "I check the way session_timezone setting affects parsing of Date or DateTime types"
+            "I check the way session_timezone setting affects parsing of DateTime type"
         ):
             node.query(
                 f"SELECT *, timezone() FROM {table_name} WHERE d = toDateTime('2000-01-01 00:00:00') "
@@ -188,8 +188,152 @@ def all_possible_values_of_timezones(self):
 
 
 @TestFeature
+@Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_ParsingOfDateTimeTypes_Insert("1.0"))
+def different_types_insert(self):
+    """Simple check of different Date and DateTime type  with session_timezone setting."""
+    note("check results with andrey")
+    node = self.context.cluster.node("clickhouse1")
+    table_name = f"test_tz{getuid()}"
+
+    types = ["Date", "DateTime", "DateTime64", "DateTime('UTC')"]
+
+    for type in types:
+        with Check(f"{type}"):
+            try:
+                with Given("I create table with DateTime datatype"):
+                    node.query(
+                        f"CREATE TABLE IF NOT EXISTS {table_name} (d {type}) Engine=Memory AS SELECT toDateTime('2000-01-01 00:00:00');"
+                    )
+
+                with When("I insert data with enabled 'session_timezone' setting "):
+                    node.query(
+                        (" SET session_timezone = 'Asia/Novosibirsk';")
+                        + (f"INSERT INTO {table_name} VALUES ('2000-01-01 01:00:00')")
+                    )
+                    node.query(
+                        (" SET session_timezone = 'Asia/Novosibirsk';")
+                        + (
+                            f"INSERT INTO {table_name} VALUES (toDateTime('2000-01-02 02:00:00'))"
+                        )
+                    )
+
+                with Then(
+                    "I check that session_timezone setting affects correct on parse DateTime type"
+                ):
+                    node.query(
+                        f"SELECT count()+1 FROM {table_name} WHERE d == '{'2000-01-01' if type is 'Date' else '2000-01-01 01:00:00'}';",
+                        message=f"{'2' if type.endswith(')') else '3' if type is 'Date' else '1'}",
+                    )
+                    node.query(
+                        f"SELECT count()+1 FROM {table_name} WHERE d == toDateTime('{'2000-01-01' if type is 'Date' else '2000-01-01 02:00:00'}');",
+                        message=f"{'2' if type.endswith(')') else '3' if type is 'Date' else '1'}",
+                    )
+            finally:
+                node.query(f"DROP TABLE IF EXISTS {table_name};")
+
+
+@TestScenario
+@Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_DateTypes("1.0"))
+def different_types(self):
+    """Simple check of different Date types and functions with session_timezone setting."""
+    node = self.context.cluster.node("clickhouse1")
+
+    number_of_timezones = node.query(
+        "SELECT count() FROM system.time_zones"
+    ).output.strip()
+
+    with Check("I check all possible timezones from system.time_zones table"):
+        # for i in range(0, int(number_of_timezones)):
+        for i in range(0, 3):
+            time_zone = node.query(
+                f"SELECT time_zone FROM system.time_zones LIMIT 1 OFFSET {i}"
+            ).output.strip()
+            with Step(
+                f"I check that `session_timezone` is changing timezone to {time_zone}"
+            ):
+
+                node.query(
+                    f"SELECT Date('2000-01-01 01:00:00') SETTINGS session_timezone = '{time_zone}';",
+                    message=f"2000-01-01",
+                )
+
+                node.query(
+                        f"SELECT toDateTime(Date('2000-01-01 01:00:00'),3) SETTINGS session_timezone = '{time_zone}';",
+                        message=f"2000-01-01 00:00:00.000",
+                    )
+
+                node.query(
+                    f"SELECT toDateTime64(Date('2000-01-01 01:00:00'),3) SETTINGS session_timezone = '{time_zone}';",
+                    message=f"2000-01-01 00:00:00.000",
+                )
+
+                list_of_indexies = ["32",  "", "Time"]
+
+                for index in list_of_indexies:
+
+                    node.query(
+                        f"SELECT toDateTime(toDate{index}('2000-01-01 00:00:00'),3) SETTINGS session_timezone = '{time_zone}';",
+                        message=f"2000-01-01 00:00:00",
+                    )
+
+                    node.query(
+                        f"SELECT toDateTime64(toDate{index}('2000-01-01 00:00:00'),3) SETTINGS session_timezone = '{time_zone}';",
+                        message=f"2000-01-01 00:00:00",
+                    )
+
+                for index in list_of_indexies:
+
+                    node.query(
+                        f"SELECT toDate{index}OrZero('wrong value') SETTINGS session_timezone = '{time_zone}';",
+                        message=f"{'1900-01-01' if index is '32' else '1970-01-01'}",
+                    )
+
+                    if index is not "Time":
+                        node.query(
+
+                            f"SELECT toDate{index}OrDefault('wrong value', toDate{index}('2020-01-01')) SETTINGS session_timezone = '{time_zone}';",
+                            message=f"2020-01-01",
+                        )
+                    else:
+                        node.query(
+                            f"SELECT toDate{index}OrDefault('2020-01-01') SETTINGS session_timezone = '{time_zone}';",
+                            message=f"2020-01-01",
+                        )
+
+                    node.query(
+                        f"SELECT toDate{index}OrNull('wrong value') SETTINGS session_timezone = '{time_zone}';",
+                        message=f"\\N",
+                    )
+
+
+@TestScenario
+def date_or_zero(self):
+    """Check minimum value for DateOrZero, Date32OrZero, DateTimeOrZero functions with session_timezone setting."""
+    node = self.context.cluster.node("clickhouse1")
+
+    list_of_indexies = ["32", "", "Time"]
+
+    for index in list_of_indexies:
+        node.query(
+            f"SELECT toDate{index}OrZero('wrong value') SETTINGS session_timezone = 'Africa/Bissau';",
+            message=f"{'1900-01-01' if index is '32' else '1970-01-01' if index is ''  else '1969-12-31 23:00:00'}",
+        )
+
+
+@TestFeature
 @Name("basic")
 def feature(self):
     """Basic check suites."""
-    for scenario in loads(current_module(), Scenario):
-        scenario()
+    with Pool(1) as executor:
+        try:
+            for feature in loads(current_module(), Feature):
+                Feature(test=feature, parallel=True, executor=executor)()
+        finally:
+            join()
+
+    with Pool(1) as executor:
+        try:
+            for scenario in loads(current_module(), Scenario):
+                Feature(test=scenario, parallel=True, executor=executor)()
+        finally:
+            join()

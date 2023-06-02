@@ -15,16 +15,18 @@
   * 5.3 [RQ.SRS-037.ClickHouse.SessionTimezone.ServerSession](#rqsrs-037clickhousesessiontimezoneserversession)
   * 5.4 [RQ.SRS-037.ClickHouse.SessionTimezone.SettingsPriority](#rqsrs-037clickhousesessiontimezonesettingspriority)
   * 5.5 [RQ.SRS-037.ClickHouse.SessionTimezone.DateTime](#rqsrs-037clickhousesessiontimezonedatetime)
-  * 5.6 [RQ.SRS-037.ClickHouse.SessionTimezone.ParsingOfDateOrDateTimeTypes](#rqsrs-037clickhousesessiontimezoneparsingofdateordatetimetypes)
-  * 5.7 [RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues](#rqsrs-037clickhousesessiontimezonepossiblevalues)
-  * 5.8 [RQ.SRS-037.ClickHouse.SessionTimezone.DefaultValue](#rqsrs-037clickhousesessiontimezonedefaultvalue)
-  * 5.9 [RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue](#rqsrs-037clickhousesessiontimezonewrongsettingvalue)
-  * 5.10 [RQ.SRS-037.ClickHouse.SessionTimezone.ClickhouseLocal](#rqsrs-037clickhousesessiontimezoneclickhouselocal)
-  * 5.11 [Non-Functional Requirements](#non-functional-requirements)
-    * 5.11.1 [Performance](#performance)
-    * 5.11.2 [RQ.SRS-037.ClickHouse.SessionTimezone.Performance](#rqsrs-037clickhousesessiontimezoneperformance)
-    * 5.11.3 [Reliability](#reliability)
-    * 5.11.4 [RQ.SRS-037.ClickHouse.SessionTimezone.Reliability](#rqsrs-037clickhousesessiontimezonereliability)
+  * 5.6 [RQ.SRS-037.ClickHouse.SessionTimezone.ParsingOfDateTimeTypes](#rqsrs-037clickhousesessiontimezoneparsingofdatetimetypes)
+    * 5.6.1 [RQ.SRS-037.ClickHouse.SessionTimezone.ParsingOfDateTimeTypes.Insert](#rqsrs-037clickhousesessiontimezoneparsingofdatetimetypesinsert)
+  * 5.7 [RQ.SRS-037.ClickHouse.SessionTimezone.DateTypes](#rqsrs-037clickhousesessiontimezonedatetypes)
+  * 5.8 [RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues](#rqsrs-037clickhousesessiontimezonepossiblevalues)
+  * 5.9 [RQ.SRS-037.ClickHouse.SessionTimezone.DefaultValue](#rqsrs-037clickhousesessiontimezonedefaultvalue)
+  * 5.10 [RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue](#rqsrs-037clickhousesessiontimezonewrongsettingvalue)
+  * 5.11 [RQ.SRS-037.ClickHouse.SessionTimezone.ClickhouseLocal](#rqsrs-037clickhousesessiontimezoneclickhouselocal)
+  * 5.12 [Non-Functional Requirements](#non-functional-requirements)
+    * 5.12.1 [Performance](#performance)
+    * 5.12.2 [RQ.SRS-037.ClickHouse.SessionTimezone.Performance](#rqsrs-037clickhousesessiontimezoneperformance)
+    * 5.12.3 [Reliability](#reliability)
+    * 5.12.4 [RQ.SRS-037.ClickHouse.SessionTimezone.Reliability](#rqsrs-037clickhousesessiontimezonereliability)
 
 ## Introduction
 
@@ -146,7 +148,7 @@ session_timezone = 'America/Denver' FORMAT TSV
 > 1999-12-13 07:23:23.123
 ```
 
-### RQ.SRS-037.ClickHouse.SessionTimezone.ParsingOfDateOrDateTimeTypes
+### RQ.SRS-037.ClickHouse.SessionTimezone.ParsingOfDateTimeTypes
 version: 1.0
 
 [ClickHouse] SHALL use timezone specified by the `session_timezone` setting when parsing of DateTime or DateTime64 types, 
@@ -167,6 +169,16 @@ The parsing behavior differs based on the approach used:
   * '2000-01-01 00:00:00' is parsed based on the DateTime column's inherited type, including its timezone.
   The `session_timezone` setting does not affect this value.
 
+#### RQ.SRS-037.ClickHouse.SessionTimezone.ParsingOfDateTimeTypes.Insert
+version: 1.0
+
+[ClickHouse] SHALL insert data with timezone specified by the `session_timezone` setting into DateTime type column.
+
+### RQ.SRS-037.ClickHouse.SessionTimezone.DateTypes
+version: 1.0
+
+[ClickHouse] SHALL support all Date types and functions with `session_timezone` setting.
+
 ### RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues
 version: 1.0
 
@@ -175,13 +187,12 @@ version: 1.0
 ### RQ.SRS-037.ClickHouse.SessionTimezone.DefaultValue
 version: 1.0
 
-[ClickHouse] SHALL support an empty string `''` as the `session_timezone` setting default value which SHALL
-cause the server to use the default timezone for the server.
+[ClickHouse] SHALL use default server timezone if the `session_timezone` value is an empty string `''`.
 
 ### RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue
 version: 1.0
 
-Exception is thrown when attempting to apply invalid setting:
+ClickHouse] SHALL throw an exception when invalid setting is applied:
 
 ```CMD
 Code: 36. DB::Exception: Received from localhost:9000. DB::Exception: Exception: Invalid time zone...
@@ -208,6 +219,8 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL be reliable and not lose any data with the `session_timezone` setting.
+
+
 
 
 
