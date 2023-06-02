@@ -313,11 +313,12 @@ def date_or_zero(self):
 
     list_of_indexies = ["32", "", "Time"]
 
-    for index in list_of_indexies:
-        node.query(
-            f"SELECT toDate{index}OrZero('wrong value') SETTINGS session_timezone = 'Africa/Bissau';",
-            message=f"{'1900-01-01' if index is '32' else '1970-01-01' if index is ''  else '1969-12-31 23:00:00'}",
-        )
+    with Check("I check minimum values for all `OrZero` functions"):
+        for index in list_of_indexies:
+            node.query(
+                f"SELECT toDate{index}OrZero('wrong value') SETTINGS session_timezone = 'Africa/Bissau';",
+                message=f"{'1900-01-01' if index is '32' else '1970-01-01' if index is ''  else '1969-12-31 23:00:00'}",
+            )
 
 
 @TestFeature
