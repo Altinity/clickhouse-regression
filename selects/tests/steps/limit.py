@@ -74,12 +74,12 @@ def limit_result_check(self, table, node=None):
     with Then("I check that compare results are the same"):
         assert (
             node.query(
-                f"SELECT * FROM  {table.name} {'FINAL' if table.final_modifier_available else ''}"
+                f"SELECT * FROM  {table.name} {'FINAL' if table.final_modifier_available else ''} ORDER BY (id,x)"
                 f" LIMIT 1 FORMAT JSONEachRow;",
                 settings=[("final", 0)],
             ).output.strip()
             == node.query(
-                f"SELECT * FROM  {table.name} LIMIT 1 FORMAT JSONEachRow;",
+                f"SELECT * FROM  {table.name} ORDER BY (id,x) LIMIT 1 FORMAT JSONEachRow;",
                 settings=[("final", 1)],
             ).output.strip()
         )

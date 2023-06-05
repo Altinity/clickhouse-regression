@@ -378,7 +378,6 @@ def tcp_port_conf(
 
 
 @TestScenario
-@Repeat(10)
 @Requirements(RQ_SRS_024_ClickHouse_Keeper_Config_TCPPort("1.0"))
 def valid_tcp_port(self):
     """I check behavior of ClickHouse server and ClickHouse Keeper with valid tcp_port."""
