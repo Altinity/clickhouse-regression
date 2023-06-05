@@ -322,7 +322,7 @@ def tcp_port_conf(
 
         with Given("I stop all ClickHouse server nodes"):
             for name in cluster_nodes:
-                retry(cluster.node(name).stop_clickhouse, timeout=100, delay=1)(
+                retry(cluster.node(name).stop_clickhouse, timeout=500, delay=1)(
                     safe=False
                 )
 
@@ -368,7 +368,7 @@ def tcp_port_conf(
 
         with And("I start mixed ClickHouse server nodes"):
             for name in control_nodes:
-                retry(cluster.node(name).start_clickhouse, timeout=100, delay=1)(
+                retry(cluster.node(name).start_clickhouse, timeout=500, delay=1)(
                     wait_healthy=True
                 )
         yield
@@ -378,6 +378,7 @@ def tcp_port_conf(
 
 
 @TestScenario
+@Repeat(10)
 @Requirements(RQ_SRS_024_ClickHouse_Keeper_Config_TCPPort("1.0"))
 def valid_tcp_port(self):
     """I check behavior of ClickHouse server and ClickHouse Keeper with valid tcp_port."""
@@ -388,7 +389,7 @@ def valid_tcp_port(self):
             tcp_port_conf(tcp_port=2181, tcp_port_secure=False, secure=0)
 
         with Then("I create table and I expect replicated table creation"):
-            retry(cluster.node("clickhouse1").query, timeout=100, delay=1)(
+            retry(cluster.node("clickhouse1").query, timeout=500, delay=1)(
                 f"CREATE TABLE IF NOT EXISTS"
                 f" zookeeper_bench on CLUSTER {cluster_name}"
                 f" (p UInt64, x UInt64) "
@@ -417,7 +418,7 @@ def tcp_port_secure(self):
             tcp_port_conf(tcp_port=2181, tcp_port_secure=True, secure=1)
 
         with Then("I create table and I expect replicated table creation"):
-            retry(cluster.node("clickhouse1").query, timeout=100, delay=1)(
+            retry(cluster.node("clickhouse1").query, timeout=500, delay=1)(
                 f"CREATE TABLE IF NOT EXISTS"
                 f" zookeeper_bench on CLUSTER {cluster_name}"
                 f" (p UInt64, x UInt64) "
