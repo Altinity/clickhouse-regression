@@ -76,6 +76,7 @@ def simple_select_distinct(self):
 
 
 @TestScenario
+@Repeat(100)
 @Requirements(RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Limit("1.0"))
 def simple_select_limit(self):
     """Check SELECT query with `LIMIT` clause."""
