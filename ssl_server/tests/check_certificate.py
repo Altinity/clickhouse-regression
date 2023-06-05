@@ -12,7 +12,7 @@ def system_certificates(self):
     """Check that the added ssl certificate is in the system.certificates table."""
     node = self.context.node
 
-    for retry in retries(timeout=60):
+    for retry in retries(timeout=60, delay=1):
         with retry:
             with When("I get the serial number of my certificate"):
                 serial_number = node.command(
