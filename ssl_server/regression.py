@@ -113,6 +113,16 @@ xfails = {
 xflags = {}
 
 ffails = {
+    "check certificate/system certificates": (
+        Skip,
+        "supported on >=22.8",
+        check_clickhouse_version("<22.8"),
+    ),
+    "check certificate/show certificate": (
+        Skip,
+        "supported on >=22.8",
+        check_clickhouse_version("<22.8"),
+    ),
     "ssl context/enable ssl no server key passphrase dynamically": (
         Skip,
         "supported on >=22.3",

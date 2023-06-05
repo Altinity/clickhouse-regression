@@ -20,18 +20,20 @@
   * 5.7 [Date Types](#date-types)
   * 5.8 [RQ.SRS-037.ClickHouse.SessionTimezone.DateTypes](#rqsrs-037clickhousesessiontimezonedatetypes)
   * 5.9 [Date Functions](#date-functions)
-  * 5.10 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions](#rqsrs-037clickhousesessiontimezonedatefunctions)
-  * 5.11 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDate](#rqsrs-037clickhousesessiontimezonedatefunctionstodate)
-  * 5.12 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrDefault](#rqsrs-037clickhousesessiontimezonedatefunctionstodateordefault)
-  * 5.13 [RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues](#rqsrs-037clickhousesessiontimezonepossiblevalues)
-  * 5.14 [RQ.SRS-037.ClickHouse.SessionTimezone.DefaultValue](#rqsrs-037clickhousesessiontimezonedefaultvalue)
-  * 5.15 [RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue](#rqsrs-037clickhousesessiontimezonewrongsettingvalue)
-  * 5.16 [RQ.SRS-037.ClickHouse.SessionTimezone.ClickhouseLocal](#rqsrs-037clickhousesessiontimezoneclickhouselocal)
-  * 5.17 [Non-Functional Requirements](#non-functional-requirements)
-    * 5.17.1 [Performance](#performance)
-    * 5.17.2 [RQ.SRS-037.ClickHouse.SessionTimezone.Performance](#rqsrs-037clickhousesessiontimezoneperformance)
-    * 5.17.3 [Reliability](#reliability)
-    * 5.17.4 [RQ.SRS-037.ClickHouse.SessionTimezone.Reliability](#rqsrs-037clickhousesessiontimezonereliability)
+    * 5.9.1 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions](#rqsrs-037clickhousesessiontimezonedatefunctions)
+      * 5.9.1.1 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDate](#rqsrs-037clickhousesessiontimezonedatefunctionstodate)
+      * 5.9.1.2 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrDefault](#rqsrs-037clickhousesessiontimezonedatefunctionstodateordefault)
+      * 5.9.1.3 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrNull](#rqsrs-037clickhousesessiontimezonedatefunctionstodateornull)
+      * 5.9.1.4 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrZero](#rqsrs-037clickhousesessiontimezonedatefunctionstodateorzero)
+  * 5.10 [RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues](#rqsrs-037clickhousesessiontimezonepossiblevalues)
+  * 5.11 [RQ.SRS-037.ClickHouse.SessionTimezone.DefaultValue](#rqsrs-037clickhousesessiontimezonedefaultvalue)
+  * 5.12 [RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue](#rqsrs-037clickhousesessiontimezonewrongsettingvalue)
+  * 5.13 [RQ.SRS-037.ClickHouse.SessionTimezone.ClickhouseLocal](#rqsrs-037clickhousesessiontimezoneclickhouselocal)
+  * 5.14 [Non-Functional Requirements](#non-functional-requirements)
+    * 5.14.1 [Performance](#performance)
+    * 5.14.2 [RQ.SRS-037.ClickHouse.SessionTimezone.Performance](#rqsrs-037clickhousesessiontimezoneperformance)
+    * 5.14.3 [Reliability](#reliability)
+    * 5.14.4 [RQ.SRS-037.ClickHouse.SessionTimezone.Reliability](#rqsrs-037clickhousesessiontimezonereliability)
 
 ## Introduction
 
@@ -41,14 +43,6 @@ default timezone with [session_timezone] setting.
 ## Feature Diagram
 
 Test feature diagram.
-
-[//]: # (        5A["TYPES"]:::yellow)
-
-[//]: # (        6A["Date"]:::green)
-
-[//]: # (        7A["DateTime"]:::green)
-
-[//]: # (        8A["DateTime64"]:::green)
 
 ```mermaid
 flowchart TB;
@@ -65,6 +59,7 @@ flowchart TB;
   C-->A
 
   1A---2A---3A---4A---5A---6A---7A---8A---9A---10A---11A---12A
+  13A---14A---15A---16A---17A---18A---19A---20A---21A
   1D---2D---3D
   
     subgraph E["SET"]
@@ -86,14 +81,24 @@ flowchart TB;
         2A["timeZone()"]:::green
         3A["serverTimezone()"]:::green
         4A["now()"]:::green
-        5A["toDate()""]:::green
-        6A["toDate32()""]:::green
-        7A["toDateTime()""]:::green
-        8A["toDateTime64()""]:::green
-        9A["toDateOrDefault()""]:::green
-        10A["toDate32OrDefault()""]:::green
-        11A["toDateTimeOrDefault()""]:::green
-        12A["toDateTime64OrDefault()""]:::green
+        5A["toDate()"]:::green
+        6A["toDate32()"]:::green
+        7A["toDateTime()"]:::green
+        8A["toDateTime64()"]:::green
+        9A["toDateOrDefault()"]:::green
+        10A["toDate32OrDefault()"]:::green
+        11A["toDateTimeOrDefault()"]:::green
+        12A["toDateTime64OrDefault()"]:::green
+        
+        13A["FUNCTIONS"]:::yellow
+        14A["toDateOrNull()"]:::green
+        15A["toDate32OrNull()"]:::green
+        16A["toDateTimeOrNull()"]:::green
+        17A["toDateTime64OrNull()"]:::green
+        18A["toDateOrZero()"]:::green
+        19A["toDate32OrZero()"]:::green
+        20A["toDateTimeOrZerol()"]:::green
+        21A["toDateTime64OrZero()"]:::green
         
     end
     
@@ -212,12 +217,12 @@ version: 1.0
 
 ### Date Functions
 
-### RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions
+#### RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions
 version: 1.0
 
 [ClickHouse] SHALL support all Date functions with `session_timezone` setting.
 
-### RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDate
+##### RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDate
 version: 1.0
 
 [ClickHouse] SHALL support all `toDate` functions with `session_timezone` setting and return correct values.
@@ -227,7 +232,7 @@ version: 1.0
 * toDateTime
 * toDateTime64
 
-### RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrDefault
+##### RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrDefault
 version: 1.0
 
 [ClickHouse] SHALL support all `toDateOrDefault` functions with `session_timezone` setting and return correct default
@@ -237,6 +242,27 @@ values.
 * toDate32OrDefault
 * toDateTimeOrDefault
 * toDateTime64OrDefault
+
+##### RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrNull
+version: 1.0
+
+[ClickHouse] SHALL support all `toDateOrNull` functions with `session_timezone` setting and return null value.
+
+* toDateOrNull
+* toDate32OrNull
+* toDateTimeOrNull
+* toDateTime64OrNull
+
+##### RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrZero
+version: 1.0
+
+[ClickHouse] SHALL support all `toDateOrZero` functions with `session_timezone` setting and return minimum possible
+value.
+
+* toDateOrZero
+* toDate32OrZero
+* toDateTimeOrZero
+* toDateTime64OrZero
 
 ### RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues
 version: 1.0
