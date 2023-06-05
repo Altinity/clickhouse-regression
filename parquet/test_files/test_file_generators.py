@@ -197,7 +197,7 @@ def generate_parquet_test_files():
         + "])"
     )
 
-    with open("C:\\Users\\myros\\Altinity\\clickhouse_table_def.txt", "w") as f:
+    with open("clickhouse_table_def.txt", "w") as f:
         f.write(".".join(ch_table_def))
 
     table = pa.table(value_dict, schema=pa.schema(schema))
@@ -205,7 +205,7 @@ def generate_parquet_test_files():
     for compression in ["NONE", "SNAPPY", "GZIP", "BROTLI", "LZ4", "ZSTD"]:
         pq.write_table(
             table,
-            f"C:\\Users\\myros\\Altinity\\data_{compression}.Parquet",
+            f"data_{compression}.Parquet",
             compression=compression,
         )
 
