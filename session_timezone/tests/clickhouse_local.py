@@ -25,8 +25,8 @@ def timezone_default(self):
         "I check timezone(), timezoneOf(now()) without session_timezone setting"
     ):
         clickhouse_local(
-            query="SELECT timezone(), timezoneOf(now()) FORMAT TSV;",
-            message="UTC	UTC",
+            query="SELECT timezone(), timezoneOf(now()) FORMAT CSV;",
+            message="\"UTC\",\"UTC\"",
         )
 
 
@@ -37,8 +37,8 @@ def timezone_default_value(self):
         "I check timezone(), timezoneOf(now()) with session_timezone is set to an empty string"
     ):
         clickhouse_local(
-            query="SELECT timezone(), timezoneOf(now()) SETTINGS session_timezone = '' FORMAT TSV;",
-            message="UTC	UTC",
+            query="SELECT timezone(), timezoneOf(now()) SETTINGS session_timezone = '' FORMAT CSV;",
+            message="\"UTC\",\"UTC\"",
         )
 
 
@@ -98,12 +98,12 @@ def timezone_and_timezone_of_now(self):
     ):
         clickhouse_local(
             query="SELECT timezone(), timezoneOf(now()) SETTINGS session_timezone = 'Europe/Zurich' "
-            "FORMAT TSV;",
-            message="Europe/Zurich	Europe/Zurich",
+            "FORMAT CSV;",
+            message="\"Europe/Zurich\",\"Europe/Zurich\"",
         )
         clickhouse_local(
-            query="SELECT timezone(), timezoneOf(now()) SETTINGS session_timezone = 'Pacific/Pitcairn' FORMAT TSV;",
-            message="Pacific/Pitcairn	Pacific/Pitcairn",
+            query="SELECT timezone(), timezoneOf(now()) SETTINGS session_timezone = 'Pacific/Pitcairn' FORMAT CSV;",
+            message="\"Pacific/Pitcairn\",\"Pacific/Pitcairn\"",
         )
 
 
