@@ -15,9 +15,7 @@ from helpers.tables import Column, generate_all_column_types
 from helpers.datatypes import *
 from parquet.tests.common import start_minio, parquet_test_columns
 
-xfails = {
-    "chunked array" : [(Fail, "Not supported")]
-}
+xfails = {"chunked array": [(Fail, "Not supported")]}
 
 xflags = {}
 
