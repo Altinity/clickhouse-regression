@@ -8,8 +8,7 @@ from helpers.common import *
 
 @TestScenario
 def mixed_keepers_3(self, number_of_tables=100):
-    """Check Clickhouse Keeper Cluster performance in case of insert into significant number of replicated tables.
-    """
+    """Check Clickhouse Keeper Cluster performance in case of insert into significant number of replicated tables."""
     cluster = self.context.cluster
 
     if self.context.ssl == "true":
@@ -50,8 +49,7 @@ def mixed_keepers_3(self, number_of_tables=100):
 
 @TestScenario
 def zookeepers_3(self, number_of_tables=100):
-    """Check ZooKeeper Cluster performance in case of insert into significant number of replicated tables.
-    """
+    """Check ZooKeeper Cluster performance in case of insert into significant number of replicated tables."""
 
     cluster = self.context.cluster
     zookeeper_cluster_nodes = cluster.nodes["zookeeper"][:3]
@@ -91,7 +89,6 @@ def zookeepers_3(self, number_of_tables=100):
 @TestFeature
 @Name("significant number of replicated tables")
 def feature(self):
-    """Check ZK/Clickhouse Keeper performance in case of insert into significant number of replicated tables.
-    """
+    """Check ZK/Clickhouse Keeper performance in case of insert into significant number of replicated tables."""
     for scenario in loads(current_module(), Scenario):
         scenario()

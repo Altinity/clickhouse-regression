@@ -28,7 +28,11 @@ ffails = {
         XError,
         "https://github.com/ClickHouse/ClickHouse/issues/29072",
     ),
-    "memory disk": (Skip, "not implemented in versions >= 23", check_clickhouse_version(">=23")),
+    "memory disk": (
+        Skip,
+        "not implemented in versions >= 23",
+        check_clickhouse_version(">=23"),
+    ),
 }
 
 xflags = {}

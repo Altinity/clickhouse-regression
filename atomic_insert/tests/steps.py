@@ -8,12 +8,12 @@ transactions = {
     "allow_experimental_transactions": "42",
     "merge_tree": {
         "old_parts_lifetime": "100500",
-        "remove_rolled_back_parts_immediately": "0"
+        "remove_rolled_back_parts_immediately": "0",
     },
     "transactions_info_log": {
         "database": "system",
         "table": "transactions_info_log",
-        "flush_interval_milliseconds": "7500"
+        "flush_interval_milliseconds": "7500",
     },
 }
 
@@ -65,7 +65,10 @@ def create_transactions_configuration(
         _entries = entries
         with Then("I converting config file content to xml"):
             config = create_xml_config_content(
-                _entries, config_file=config_file, config_d_dir=config_d_dir, root="clickhouse"
+                _entries,
+                config_file=config_file,
+                config_d_dir=config_d_dir,
+                root="clickhouse",
             )
 
         with And(f"I add config to {name}"):
