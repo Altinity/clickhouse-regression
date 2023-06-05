@@ -288,6 +288,40 @@ RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ToDateOrZero = Requirement(
     num='6.9.1.4'
 )
 
+RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_SnowflakeToDateTime = Requirement(
+    name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.SnowflakeToDateTime',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL extract time from Snowflake ID as DateTime and Datetime64 by using `snowflakeToDateTime` and\n'
+        '`snowflakeToDateTime64` format with `session_timezone` setting.\n'
+        '\n'
+    ),
+    link=None,
+    level=4,
+    num='6.9.1.5'
+)
+
+RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_DateTimeToSnowflake = Requirement(
+    name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.DateTimeToSnowflake',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL convert DateTime, DateTime64 value to the first Snowflake ID at the giving time by using\n'
+        '`dateTimeToSnowflake` and `dateTime64ToSnowflake` format with `session_timezone` setting.\n'
+        '\n'
+    ),
+    link=None,
+    level=4,
+    num='6.9.1.6'
+)
+
 RQ_SRS_037_ClickHouse_SessionTimezone_PossibleValues = Requirement(
     name='RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues',
     version='1.0',
@@ -438,6 +472,8 @@ SRS037_ClickHouse_Session_Timezone = Specification(
         Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrDefault', level=4, num='6.9.1.2'),
         Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrNull', level=4, num='6.9.1.3'),
         Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrZero', level=4, num='6.9.1.4'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.SnowflakeToDateTime', level=4, num='6.9.1.5'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.DateTimeToSnowflake', level=4, num='6.9.1.6'),
         Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues', level=2, num='6.10'),
         Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DefaultValue', level=2, num='6.11'),
         Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue', level=2, num='6.12'),
@@ -462,6 +498,8 @@ SRS037_ClickHouse_Session_Timezone = Specification(
         RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ToDateOrDefault,
         RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ToDateOrNull,
         RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ToDateOrZero,
+        RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_SnowflakeToDateTime,
+        RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_DateTimeToSnowflake,
         RQ_SRS_037_ClickHouse_SessionTimezone_PossibleValues,
         RQ_SRS_037_ClickHouse_SessionTimezone_DefaultValue,
         RQ_SRS_037_ClickHouse_SessionTimezone_WrongSettingValue,
@@ -497,6 +535,8 @@ SRS037_ClickHouse_Session_Timezone = Specification(
       * 5.9.1.2 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrDefault](#rqsrs-037clickhousesessiontimezonedatefunctionstodateordefault)
       * 5.9.1.3 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrNull](#rqsrs-037clickhousesessiontimezonedatefunctionstodateornull)
       * 5.9.1.4 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrZero](#rqsrs-037clickhousesessiontimezonedatefunctionstodateorzero)
+      * 5.9.1.5 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.SnowflakeToDateTime](#rqsrs-037clickhousesessiontimezonedatefunctionssnowflaketodatetime)
+      * 5.9.1.6 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.DateTimeToSnowflake](#rqsrs-037clickhousesessiontimezonedatefunctionsdatetimetosnowflake)
   * 5.10 [RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues](#rqsrs-037clickhousesessiontimezonepossiblevalues)
   * 5.11 [RQ.SRS-037.ClickHouse.SessionTimezone.DefaultValue](#rqsrs-037clickhousesessiontimezonedefaultvalue)
   * 5.12 [RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue](#rqsrs-037clickhousesessiontimezonewrongsettingvalue)
@@ -531,7 +571,7 @@ flowchart TB;
   C-->A
 
   1A---2A---3A---4A---5A---6A---7A---8A---9A---10A---11A---12A
-  13
+  13A---14A---15A---16A---17A---18A---19A---20A---21A
   1D---2D---3D
   
     subgraph E["SET"]
@@ -735,6 +775,18 @@ value.
 * toDate32OrZero
 * toDateTimeOrZero
 * toDateTime64OrZero
+
+##### RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.SnowflakeToDateTime
+version: 1.0
+
+[ClickHouse] SHALL extract time from Snowflake ID as DateTime and Datetime64 by using `snowflakeToDateTime` and
+`snowflakeToDateTime64` format with `session_timezone` setting.
+
+##### RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.DateTimeToSnowflake
+version: 1.0
+
+[ClickHouse] SHALL convert DateTime, DateTime64 value to the first Snowflake ID at the giving time by using
+`dateTimeToSnowflake` and `dateTime64ToSnowflake` format with `session_timezone` setting.
 
 ### RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues
 version: 1.0
