@@ -42,14 +42,6 @@ default timezone with [session_timezone] setting.
 
 Test feature diagram.
 
-[//]: # (        5A["TYPES"]:::yellow)
-
-[//]: # (        6A["Date"]:::green)
-
-[//]: # (        7A["DateTime"]:::green)
-
-[//]: # (        8A["DateTime64"]:::green)
-
 ```mermaid
 flowchart TB;
 
@@ -86,14 +78,14 @@ flowchart TB;
         2A["timeZone()"]:::green
         3A["serverTimezone()"]:::green
         4A["now()"]:::green
-        5A["toDate()""]:::green
-        6A["toDate32()""]:::green
-        7A["toDateTime()""]:::green
-        8A["toDateTime64()""]:::green
-        9A["toDateOrDefault()""]:::green
-        10A["toDate32OrDefault()""]:::green
-        11A["toDateTimeOrDefault()""]:::green
-        12A["toDateTime64OrDefault()""]:::green
+        5A["toDate()"]:::green
+        6A["toDate32()"]:::green
+        7A["toDateTime()"]:::green
+        8A["toDateTime64()"]:::green
+        9A["toDateOrDefault()"]:::green
+        10A["toDate32OrDefault()"]:::green
+        11A["toDateTimeOrDefault()"]:::green
+        12A["toDateTime64OrDefault()"]:::green
         
     end
     
