@@ -11,12 +11,13 @@ append_path(sys.path, "..")
 from helpers.cluster import Cluster
 from s3.regression import argparser
 from parquet.requirements import *
-from helpers.common import check_clickhouse_version
 from helpers.tables import Column, generate_all_column_types
 from helpers.datatypes import *
 from parquet.tests.common import start_minio, parquet_test_columns
 
-xfails = {}
+xfails = {
+    "chunked array" : [(Fail, "Not supported")]
+}
 
 xflags = {}
 
@@ -151,6 +152,11 @@ def regression(
             )
             Feature(
                 run=load("parquet.tests.remote", "feature"),
+                parallel=True,
+                executor=executor,
+            )
+            Feature(
+                run=load("parquet.tests.chunked_array", "feature"),
                 parallel=True,
                 executor=executor,
             )
