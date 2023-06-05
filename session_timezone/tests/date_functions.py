@@ -63,15 +63,16 @@ def date_default(self):
 @TestFeature
 @Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ToDateOrNull("1.0"))
 def date_null(self):
-    """Check NULL value for toDate32OrNull, toDateOrNull, toDateTimeOrNull
-    functions with session_timezone setting."""
+    """Verify that null values are returning for the `toDateOrNull`, `toDate32OrNull`, `toDateTimeOrNull` and
+     `toDateTime64OrNull` functions when the `session_timezone` setting is applied."""
+
     node = self.context.cluster.node("clickhouse1")
 
     list_of_functions = ["toDate32OrNull",  "toDateOrNull", "toDateTimeOrNull", "toDateTime64OrNull"]
 
     for function in list_of_functions:
         with Check(function):
-            with Then("I check default values for all simple `toDateOrDefault` functions"):
+            with Then("I check null values for all simple `toDateOrNull` functions"):
                 if function == "toDateTime64":
                     node.query(
                         f"SELECT {function}('wrong value',3) SETTINGS session_timezone = 'UTC';",
@@ -87,7 +88,8 @@ def date_null(self):
 @TestFeature
 @Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ToDateOrZero("1.0"))
 def date_zero(self):
-    """Check minimum value for DateOrZero, Date32OrZero, DateTimeOrZero functions with session_timezone setting."""
+    """Verify that minimum values are returning for the `toDateOrZero`, `toDate32OrZero`, `toDateTimeOrZero` and
+     `toDateTime64OrZero` functions when the `session_timezone` setting is applied."""
     node = self.context.cluster.node("clickhouse1")
 
     list_of_functions = ["toDate32OrZero", "toDateOrZero", "toDateTimeOrZero", "toDateTime64OrZero"]
