@@ -119,8 +119,6 @@ def enable_ssl(
     with When("I execute query using secure connection"):
         r = node.query("SELECT 1", secure=True)
 
-    pause()
-
     with Then("it should work"):
         assert r.output == "1", error()
 
