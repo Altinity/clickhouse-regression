@@ -29,9 +29,10 @@ def to_date(self):
 
 
 @TestFeature
+@Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ToDateOrDefault("1.0"))
 def date_default(self):
-    """Verify the default values of the `toDate`, `toDate32`, `toDateTime`, `toDateTime32` and `toDateTime64` functions
-    when the `session_timezone` setting is applied."""
+    """Verify the default values of the `toDateOrDefault`, `toDate32OrDefault`, `toDateTimeOrDefault` and
+     `toDateTime64OrDefault` functions when the `session_timezone` setting is applied."""
     node = self.context.cluster.node("clickhouse1")
 
     list_of_functions = ["toDate32OrDefault",  "toDateOrDefault", "toDateTimeOrDefault", "toDateTime64OrDefault"]
