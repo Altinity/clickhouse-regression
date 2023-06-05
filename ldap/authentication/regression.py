@@ -37,7 +37,7 @@ xfails = {
     # 23.3
     "user authentications/:/verification cooldown/:": [
         (Fail, "changes in behaviour in 23.3", check_clickhouse_version(">=23"))
-    ]
+    ],
 }
 
 

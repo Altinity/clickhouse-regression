@@ -2,6 +2,7 @@ from clickhouse_keeper.tests.operations.large_insert import *
 from clickhouse_keeper.tests.steps import *
 from clickhouse_keeper.tests.steps_ssl import *
 
+
 @TestScenario
 def iops_check_standalone_keeper(self):
     """
