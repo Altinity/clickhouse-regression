@@ -52,6 +52,7 @@ flowchart TB;
   C-->A
 
   1A---2A---3A---4A
+  5A---6A---7A---8A
   1D---2D---3D
   
     subgraph E["SET"]
@@ -69,10 +70,15 @@ flowchart TB;
   
     subgraph A["SELECT"]
 
-        1A["timeZone()"]:::green
-        2A["serverTimezone()"]:::green
-        3A["DateTime"]:::green
-        4A["DateTime64"]:::green
+        1A["FUNCTIONS"]:::yellow
+        2A["timeZone()"]:::green
+        3A["serverTimezone()"]:::green
+        4A["now()"]:::green
+        
+        5A["TYPES"]:::yellow
+        6A["Date"]:::green
+        7A["DateTime"]:::green
+        8A["DateTime64"]:::green
         
     end
     
@@ -192,7 +198,7 @@ version: 1.0
 ### RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue
 version: 1.0
 
-ClickHouse] SHALL throw an exception when invalid setting is applied:
+[ClickHouse] SHALL throw an exception when invalid setting is applied:
 
 ```CMD
 Code: 36. DB::Exception: Received from localhost:9000. DB::Exception: Exception: Invalid time zone...
