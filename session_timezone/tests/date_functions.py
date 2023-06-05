@@ -61,35 +61,43 @@ def date_default(self):
 
 
 @TestFeature
+@Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ToDateOrNull("1.0"))
 def date_null(self):
     """Check NULL value for toDate32OrNull, toDateOrNull, toDateTimeOrNull
     functions with session_timezone setting."""
     node = self.context.cluster.node("clickhouse1")
 
-    list_of_functions = ["toDate32OrNull",  "toDateOrNull", "toDateTimeOrNull"]
+    list_of_functions = ["toDate32OrNull",  "toDateOrNull", "toDateTimeOrNull", "toDateTime64OrNull"]
 
     for function in list_of_functions:
         with Check(function):
             with Then("I check default values for all simple `toDateOrDefault` functions"):
-                node.query(
-                    f"SELECT {function}('wrong value') SETTINGS session_timezone = 'UTC';",
-                    message=f"\\N",
-                )
+                if function == "toDateTime64":
+                    node.query(
+                        f"SELECT {function}('wrong value',3) SETTINGS session_timezone = 'UTC';",
+                        message=f"\\N",
+                    )
+                else:
+                    node.query(
+                        f"SELECT {function}('wrong value') SETTINGS session_timezone = 'UTC';",
+                        message=f"\\N",
+                    )
 
 
 @TestFeature
-def date_or_zero(self):
+@Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ToDateOrZero("1.0"))
+def date_zero(self):
     """Check minimum value for DateOrZero, Date32OrZero, DateTimeOrZero functions with session_timezone setting."""
     node = self.context.cluster.node("clickhouse1")
 
-    list_of_functions = ["toDate32OrZero", "toDateOrZero", "toDateTimeOrZero"]
+    list_of_functions = ["toDate32OrZero", "toDateOrZero", "toDateTimeOrZero", "toDateTime64OrZero"]
 
     for function in list_of_functions:
         with Check(function):
             with Then("I check minimum values for all `OrZero` functions"):
                 node.query(
-                    f"SELECT {function}('wrong value') SETTINGS session_timezone = 'Africa/Bissau';",
-                    message=f"{'1900-01-01' if function is 'toDate32OrZero' else '1970-01-01' if function is 'toDateOrZero'  else '1969-12-31 23:00:00'}",
+                    f"SELECT {function}('wrong value'{',3' if function == 'toDateTime64OrZero' else ''}) SETTINGS session_timezone = 'Africa/Bissau';",
+                    message=f"{'1900-01-01' if function is 'toDate32OrZero' else '1970-01-01' if function is 'toDateOrZero' else '1969-12-31 23:00:00' if function is 'toDateTimeOrZero' else '1969-12-31 23:00:00.000'}",
                 )
 
 
