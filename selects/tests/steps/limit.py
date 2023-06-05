@@ -124,7 +124,7 @@ def limit_negative_result_check(self, table, node=None):
                 f"SELECT * FROM {table.name} ORDER BY (id,x) LIMIT 1 FORMAT JSONEachRow"
             ).output.strip()
             != node.query(
-                f"SELECT * FROM {table.name} ORDER BY (id,x) FINAL LIMIT 1 FORMAT JSONEachRow"
+                f"SELECT * FROM {table.name} FINAL ORDER BY (id,x) LIMIT 1 FORMAT JSONEachRow"
             ).output.strip()
         ):
             assert (
