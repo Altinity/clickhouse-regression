@@ -11,7 +11,13 @@ def to_date(self):
     when the `session_timezone` setting is applied."""
     node = self.context.cluster.node("clickhouse1")
 
-    list_of_functions = ["toDate32",  "toDate", "toDateTime", "toDateTime32", "toDateTime64"]
+    list_of_functions = [
+        "toDate32",
+        "toDate",
+        "toDateTime",
+        "toDateTime32",
+        "toDateTime64",
+    ]
 
     for function in list_of_functions:
         with Check(function):
@@ -29,17 +35,26 @@ def to_date(self):
 
 
 @TestFeature
-@Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ToDateOrDefault("1.0"))
+@Requirements(
+    RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ToDateOrDefault("1.0")
+)
 def date_default(self):
     """Verify the default values of the `toDateOrDefault`, `toDate32OrDefault`, `toDateTimeOrDefault` and
-     `toDateTime64OrDefault` functions when the `session_timezone` setting is applied."""
+    `toDateTime64OrDefault` functions when the `session_timezone` setting is applied."""
     node = self.context.cluster.node("clickhouse1")
 
-    list_of_functions = ["toDate32OrDefault",  "toDateOrDefault", "toDateTimeOrDefault", "toDateTime64OrDefault"]
+    list_of_functions = [
+        "toDate32OrDefault",
+        "toDateOrDefault",
+        "toDateTimeOrDefault",
+        "toDateTime64OrDefault",
+    ]
 
     for function in list_of_functions:
         with Check(function):
-            with Then("I check default values for all simple `toDateOrDefault` functions"):
+            with Then(
+                "I check default values for all simple `toDateOrDefault` functions"
+            ):
                 if function == "toDateTimeOrDefault":
                     node.query(
                         f"SELECT {function}('2020-01-01') SETTINGS session_timezone = 'UTC';",
@@ -54,7 +69,6 @@ def date_default(self):
                     )
                 else:
                     node.query(
-
                         f"SELECT {function}('wrong value', {function}('2020-01-01')) SETTINGS session_timezone = 'UTC';",
                         message=f"2020-01-01",
                     )
@@ -64,11 +78,16 @@ def date_default(self):
 @Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ToDateOrNull("1.0"))
 def date_null(self):
     """Verify that null values are returning for the `toDateOrNull`, `toDate32OrNull`, `toDateTimeOrNull` and
-     `toDateTime64OrNull` functions when the `session_timezone` setting is applied."""
+    `toDateTime64OrNull` functions when the `session_timezone` setting is applied."""
 
     node = self.context.cluster.node("clickhouse1")
 
-    list_of_functions = ["toDate32OrNull",  "toDateOrNull", "toDateTimeOrNull", "toDateTime64OrNull"]
+    list_of_functions = [
+        "toDate32OrNull",
+        "toDateOrNull",
+        "toDateTimeOrNull",
+        "toDateTime64OrNull",
+    ]
 
     for function in list_of_functions:
         with Check(function):
@@ -89,10 +108,15 @@ def date_null(self):
 @Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ToDateOrZero("1.0"))
 def date_zero(self):
     """Verify that minimum values are returning for the `toDateOrZero`, `toDate32OrZero`, `toDateTimeOrZero` and
-     `toDateTime64OrZero` functions when the `session_timezone` setting is applied."""
+    `toDateTime64OrZero` functions when the `session_timezone` setting is applied."""
     node = self.context.cluster.node("clickhouse1")
 
-    list_of_functions = ["toDate32OrZero", "toDateOrZero", "toDateTimeOrZero", "toDateTime64OrZero"]
+    list_of_functions = [
+        "toDate32OrZero",
+        "toDateOrZero",
+        "toDateTimeOrZero",
+        "toDateTime64OrZero",
+    ]
 
     for function in list_of_functions:
         with Check(function):
@@ -104,7 +128,9 @@ def date_zero(self):
 
 
 @TestFeature
-@Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_SnowflakeToDateTime("1.0"))
+@Requirements(
+    RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_SnowflakeToDateTime("1.0")
+)
 def snowflake_to_datetime(self):
     """Verify the data values of the `snowflakeToDateTime` and `snowflakeToDateTime64` functions
     when the `session_timezone` setting is applied."""
@@ -122,7 +148,9 @@ def snowflake_to_datetime(self):
 
 
 @TestFeature
-@Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_DateTimeToSnowflake("1.0"))
+@Requirements(
+    RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_DateTimeToSnowflake("1.0")
+)
 def datetime_to_snowflake(self):
     """Verify the data values of the `dateTime64ToSnowflake` and `dateTime64ToSnowflake64` functions
     when the `session_timezone` setting is applied."""
@@ -149,9 +177,7 @@ def feature(self):
 
         try:
             for feature in loads(current_module(), Feature):
-                if not feature.name.endswith(
-                    "date functions"
-                ):
+                if not feature.name.endswith("date functions"):
                     Feature(test=feature, parallel=True, executor=executor)()
         finally:
             join()
