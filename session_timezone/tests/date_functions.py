@@ -104,6 +104,43 @@ def date_zero(self):
 
 
 @TestFeature
+@Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_SnowflakeToDateTime("1.0"))
+def snowflake_to_datetime(self):
+    """Verify the data values of the `snowflakeToDateTime` and `snowflakeToDateTime64` functions
+    when the `session_timezone` setting is applied."""
+    node = self.context.cluster.node("clickhouse1")
+
+    node.query(
+        f"SELECT snowflakeToDateTime(CAST('1426860802823350272', 'Int64')) SETTINGS session_timezone = 'UTC';",
+        message=f"2021-08-15 10:58:19",
+    )
+
+    node.query(
+        f"SELECT snowflakeToDateTime64(CAST('1426860802823350272', 'Int64')) SETTINGS session_timezone = 'UTC';",
+        message=f"2021-08-15 10:58:19.841",
+    )
+
+
+@TestFeature
+@Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_DateTimeToSnowflake("1.0"))
+def datetime_to_snowflake(self):
+    """Verify the data values of the `dateTime64ToSnowflake` and `dateTime64ToSnowflake64` functions
+    when the `session_timezone` setting is applied."""
+    node = self.context.cluster.node("clickhouse1")
+
+    node.query(
+        f"WITH toDateTime64('2021-08-15 18:57:56.492', 3) AS dt64 SELECT dateTime64ToSnowflake(dt64) "
+        f"SETTINGS session_timezone = 'Asia/Shanghai';",
+        message=f"1426860704886947840",
+    )
+
+    node.query(
+        f"WITH toDateTime('2021-08-15 18:57:56') AS dt SELECT dateTimeToSnowflake(dt) SETTINGS session_timezone = 'Asia/Shanghai';",
+        message=f"1426860702823350272",
+    )
+
+
+@TestFeature
 @Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions("1.0"))
 @Name("date functions")
 def feature(self):

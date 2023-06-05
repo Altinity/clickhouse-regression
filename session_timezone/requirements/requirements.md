@@ -25,6 +25,8 @@
       * 5.9.1.2 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrDefault](#rqsrs-037clickhousesessiontimezonedatefunctionstodateordefault)
       * 5.9.1.3 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrNull](#rqsrs-037clickhousesessiontimezonedatefunctionstodateornull)
       * 5.9.1.4 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrZero](#rqsrs-037clickhousesessiontimezonedatefunctionstodateorzero)
+      * 5.9.1.5 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.SnowflakeToDateTime](#rqsrs-037clickhousesessiontimezonedatefunctionssnowflaketodatetime)
+      * 5.9.1.6 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.DateTimeToSnowflake](#rqsrs-037clickhousesessiontimezonedatefunctionsdatetimetosnowflake)
   * 5.10 [RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues](#rqsrs-037clickhousesessiontimezonepossiblevalues)
   * 5.11 [RQ.SRS-037.ClickHouse.SessionTimezone.DefaultValue](#rqsrs-037clickhousesessiontimezonedefaultvalue)
   * 5.12 [RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue](#rqsrs-037clickhousesessiontimezonewrongsettingvalue)
@@ -59,7 +61,7 @@ flowchart TB;
   C-->A
 
   1A---2A---3A---4A---5A---6A---7A---8A---9A---10A---11A---12A
-  13A---14A---15A---16A---17A---18A---19A---20A---21A
+  13A---14A---15A---16A---17A---18A---19A---20A---21A---22A---23A---24A---25A
   1D---2D---3D
   
     subgraph E["SET"]
@@ -99,6 +101,10 @@ flowchart TB;
         19A["toDate32OrZero()"]:::green
         20A["toDateTimeOrZerol()"]:::green
         21A["toDateTime64OrZero()"]:::green
+        22A["dateTimeToSnowflake()"]:::green
+        23A["dateTime64ToSnowflake()"]:::green
+        24A["snowflakeToDateTime()"]:::green
+        25A["snowflakeToDateTime64()"]:::green
         
     end
     
@@ -263,6 +269,18 @@ value.
 * toDate32OrZero
 * toDateTimeOrZero
 * toDateTime64OrZero
+
+##### RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.SnowflakeToDateTime
+version: 1.0
+
+[ClickHouse] SHALL extract time from Snowflake ID as DateTime and Datetime64 by using `snowflakeToDateTime` and
+`snowflakeToDateTime64` format with `session_timezone` setting.
+
+##### RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.DateTimeToSnowflake
+version: 1.0
+
+[ClickHouse] SHALL convert DateTime, DateTime64 value to the first Snowflake ID at the giving time by using
+`dateTimeToSnowflake` and `dateTime64ToSnowflake` format with `session_timezone` setting.
 
 ### RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues
 version: 1.0
