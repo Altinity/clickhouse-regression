@@ -188,9 +188,7 @@ def all_possible_values_of_timezones(self):
 
 
 @TestFeature
-@Requirements(
-    RQ_SRS_037_ClickHouse_SessionTimezone_ParsingOfDateTimeTypes_Insert("1.0")
-)
+@Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_ParsingOfDateTimeTypes_Insert("1.0"))
 def different_types_insert(self):
     """Simple check of different Date and DateTime type  with session_timezone setting."""
     note("check results with andrey")
@@ -260,16 +258,16 @@ def different_types(self):
                 )
 
                 node.query(
-                    f"SELECT toDateTime(Date('2000-01-01 01:00:00'),3) SETTINGS session_timezone = '{time_zone}';",
-                    message=f"2000-01-01 00:00:00.000",
-                )
+                        f"SELECT toDateTime(Date('2000-01-01 01:00:00'),3) SETTINGS session_timezone = '{time_zone}';",
+                        message=f"2000-01-01 00:00:00.000",
+                    )
 
                 node.query(
                     f"SELECT toDateTime64(Date('2000-01-01 01:00:00'),3) SETTINGS session_timezone = '{time_zone}';",
                     message=f"2000-01-01 00:00:00.000",
                 )
 
-                list_of_indexies = ["32", "", "Time"]
+                list_of_indexies = ["32",  "", "Time"]
 
                 for index in list_of_indexies:
 
@@ -292,6 +290,7 @@ def different_types(self):
 
                     if index is not "Time":
                         node.query(
+
                             f"SELECT toDate{index}OrDefault('wrong value', toDate{index}('2020-01-01')) SETTINGS session_timezone = '{time_zone}';",
                             message=f"2020-01-01",
                         )
