@@ -26,7 +26,7 @@ def timezone_default(self):
     ):
         clickhouse_local(
             query="SELECT timezone(), timezoneOf(now()) FORMAT CSV;",
-            message="\"UTC\",\"UTC\"",
+            message='"UTC","UTC"',
         )
 
 
@@ -38,7 +38,7 @@ def timezone_default_value(self):
     ):
         clickhouse_local(
             query="SELECT timezone(), timezoneOf(now()) SETTINGS session_timezone = '' FORMAT CSV;",
-            message="\"UTC\",\"UTC\"",
+            message='"UTC","UTC"',
         )
 
 
@@ -99,11 +99,11 @@ def timezone_and_timezone_of_now(self):
         clickhouse_local(
             query="SELECT timezone(), timezoneOf(now()) SETTINGS session_timezone = 'Europe/Zurich' "
             "FORMAT CSV;",
-            message="\"Europe/Zurich\",\"Europe/Zurich\"",
+            message='"Europe/Zurich","Europe/Zurich"',
         )
         clickhouse_local(
             query="SELECT timezone(), timezoneOf(now()) SETTINGS session_timezone = 'Pacific/Pitcairn' FORMAT CSV;",
-            message="\"Pacific/Pitcairn\",\"Pacific/Pitcairn\"",
+            message='"Pacific/Pitcairn","Pacific/Pitcairn"',
         )
 
 
