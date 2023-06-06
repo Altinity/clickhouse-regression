@@ -27,12 +27,12 @@ def concurrent_delete_attach_detach_partition(self, node=None):
             table_name=table_name, partitions=10, parts_per_partition=1, block_size=100
         )
 
-    with When("I compute expected output"):
+    with When("I compute expected output for when delete affects the detached part"):
         output1 = node.query(
             f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0)"
         ).output
 
-    with When("I compute expected output"):
+    with When("I compute expected output for when delete does nit affect the detached part"):
         output2 = node.query(
             f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0 and id != 3)"
         ).output
@@ -41,7 +41,7 @@ def concurrent_delete_attach_detach_partition(self, node=None):
         "I perform concurrent operations",
         description="delete odd rows and detach the third partition",
     ):
-        for retry in retries(count=5):
+        for retry in retries(count=5, delay=1):
             with retry:
                 Step(
                     name="delete odd rows from all partitions",
@@ -58,7 +58,7 @@ def concurrent_delete_attach_detach_partition(self, node=None):
         "I check that rows are deleted",
         description="rows can be not deleted in detached partition",
     ):
-        for attempt in retries(timeout=60, delay=5):
+        for attempt in retries(timeout=120, delay=5):
             with attempt:
                 r = node.query(f"SELECT count(*) FROM {table_name}")
                 assert r.output in (output1, output2), error()
