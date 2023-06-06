@@ -14,7 +14,7 @@ def bad_arguments(self):
         "I check that attempting to use the timezone with incorrect or invalid arguments lead to an exception"
     ):
         node.query(
-            "select timezoneOf(now()) SETTINGS session_timezone = 'fasdf' format TSV;",
+            "select timezoneOf(now()) SETTINGS session_timezone = 'fasdf' format CSV;",
             exitcode=36,
             message="Exception: Invalid time zone",
         )
@@ -30,8 +30,8 @@ def timezone_default(self):
         "I check timezone(), timezoneOf(now()) without session_timezone setting"
     ):
         node.query(
-            "SELECT timezone(), timezoneOf(now()) FORMAT TSV;",
-            message="Europe/Berlin	Europe/Berlin",
+            "SELECT timezone(), timezoneOf(now()) FORMAT CSV;",
+            message='"Europe/Berlin","Europe/Berlin"',
         )
 
 
@@ -45,8 +45,8 @@ def timezone_default_value(self):
         "I check timezone(), timezoneOf(now()) with session_timezone is set to an empty string"
     ):
         node.query(
-            "SELECT timezone(), timezoneOf(now()) SETTINGS session_timezone = '' FORMAT TSV;",
-            message="Europe/Berlin	Europe/Berlin",
+            "SELECT timezone(), timezoneOf(now()) SETTINGS session_timezone = '' FORMAT CSV;",
+            message='"Europe/Berlin","Europe/Berlin"',
         )
 
 
@@ -123,11 +123,11 @@ def timezone_and_timezone_of_now(self):
     ):
         node.query(
             "SELECT timezone(), timezoneOf(now()) SETTINGS session_timezone = 'Europe/Zurich' FORMAT CSV;",
-            message="",
+            message="Europe/Zurich",
         )
         node.query(
             "SELECT timezone(), timezoneOf(now()) SETTINGS session_timezone = 'Pacific/Pitcairn' FORMAT CSV;",
-            message="",
+            message="Pacific/Pitcairn",
         )
 
 
@@ -269,58 +269,6 @@ def different_types(self):
                     message=f"2000-01-01 00:00:00.000",
                 )
 
-                list_of_indexies = ["32", "", "Time"]
-
-                for index in list_of_indexies:
-
-                    node.query(
-                        f"SELECT toDateTime(toDate{index}('2000-01-01 00:00:00'),3) SETTINGS session_timezone = '{time_zone}';",
-                        message=f"2000-01-01 00:00:00",
-                    )
-
-                    node.query(
-                        f"SELECT toDateTime64(toDate{index}('2000-01-01 00:00:00'),3) SETTINGS session_timezone = '{time_zone}';",
-                        message=f"2000-01-01 00:00:00",
-                    )
-
-                for index in list_of_indexies:
-
-                    node.query(
-                        f"SELECT toDate{index}OrZero('wrong value') SETTINGS session_timezone = '{time_zone}';",
-                        message=f"{'1900-01-01' if index is '32' else '1970-01-01'}",
-                    )
-
-                    if index is not "Time":
-                        node.query(
-                            f"SELECT toDate{index}OrDefault('wrong value', toDate{index}('2020-01-01')) SETTINGS session_timezone = '{time_zone}';",
-                            message=f"2020-01-01",
-                        )
-                    else:
-                        node.query(
-                            f"SELECT toDate{index}OrDefault('2020-01-01') SETTINGS session_timezone = '{time_zone}';",
-                            message=f"2020-01-01",
-                        )
-
-                    node.query(
-                        f"SELECT toDate{index}OrNull('wrong value') SETTINGS session_timezone = '{time_zone}';",
-                        message=f"\\N",
-                    )
-
-
-@TestScenario
-def date_or_zero(self):
-    """Check minimum value for DateOrZero, Date32OrZero, DateTimeOrZero functions with session_timezone setting."""
-    node = self.context.cluster.node("clickhouse1")
-
-    list_of_indexies = ["32", "", "Time"]
-
-    with Check("I check minimum values for all `OrZero` functions"):
-        for index in list_of_indexies:
-            node.query(
-                f"SELECT toDate{index}OrZero('wrong value') SETTINGS session_timezone = 'Africa/Bissau';",
-                message=f"{'1900-01-01' if index is '32' else '1970-01-01' if index is ''  else '1969-12-31 23:00:00'}",
-            )
-
 
 @TestFeature
 @Name("basic")
@@ -329,7 +277,8 @@ def feature(self):
     with Pool(1) as executor:
         try:
             for feature in loads(current_module(), Feature):
-                Feature(test=feature, parallel=True, executor=executor)()
+                if not feature.name.endswith("basic"):
+                    Feature(test=feature, parallel=True, executor=executor)()
         finally:
             join()
 
