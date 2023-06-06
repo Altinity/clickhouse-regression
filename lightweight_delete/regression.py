@@ -38,7 +38,9 @@ xfails = {
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/39870")
     ],
     "load/:": [(Fail, "https://github.com/ClickHouse/ClickHouse/issues/39870")],
-    "drop empty part/drop empty part/": [(Fail, "https://github.com/ClickHouse/ClickHouse/issues/49909")]
+    "drop empty part/drop empty part/": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/49909")
+    ],
 }
 
 xflags = {}

@@ -198,8 +198,14 @@ def accept_non_alpha_key_value_pair_delimiter_as_value_part(self, scenario):
     """Check that key_value_pair_delimiter can be part of value."""
 
     with Given("I specify input, expected output and parameters"):
-        input = define("input string with key_value_pair_delimiter in value", f"'{ascii_alpha}:{ascii_alpha}:{ascii_alpha}'")
-        output = define("expected output", "{" + f"'{ascii_alpha}':'{ascii_alpha}:{ascii_alpha}'" + "}")
+        input = define(
+            "input string with key_value_pair_delimiter in value",
+            f"'{ascii_alpha}:{ascii_alpha}:{ascii_alpha}'",
+        )
+        output = define(
+            "expected output",
+            "{" + f"'{ascii_alpha}':'{ascii_alpha}:{ascii_alpha}'" + "}",
+        )
         params = define("function parameters", f"':', ' ,', '\\\"'")
 
     scenario(input=input, output=output, params=params)
@@ -210,8 +216,13 @@ def accept_alpha_key_value_pair_delimiter_as_value_part(self, scenario):
     """Check that key_value_pair_delimiter can be part of value."""
 
     with Given("I specify input, expected output and parameters"):
-        input = define("input string with key_value_pair_delimiter in value", f"'{ascii_num}q{ascii_num}q{ascii_num}'")
-        output = define("expected output", "{" + f"'{ascii_num}':'{ascii_num}q{ascii_num}'" + "}")
+        input = define(
+            "input string with key_value_pair_delimiter in value",
+            f"'{ascii_num}q{ascii_num}q{ascii_num}'",
+        )
+        output = define(
+            "expected output", "{" + f"'{ascii_num}':'{ascii_num}q{ascii_num}'" + "}"
+        )
         params = define("function parameters", f"'q', ' ,', '\\\"'")
 
     scenario(input=input, output=output, params=params)
@@ -226,8 +237,14 @@ def value_format_checks(self, scenario):
     Check(test=properly_defined_value, format_description=True)(scenario=scenario)
     Check(test=value_symbols, format_description=True)(scenario=scenario)
     Check(test=value_empty_string, format_description=True)(scenario=scenario)
-    Check(test=accept_non_alpha_key_value_pair_delimiter_as_value_part, format_description=True)(scenario=scenario)
-    Check(test=accept_alpha_key_value_pair_delimiter_as_value_part, format_description=True)(scenario=scenario)
+    Check(
+        test=accept_non_alpha_key_value_pair_delimiter_as_value_part,
+        format_description=True,
+    )(scenario=scenario)
+    Check(
+        test=accept_alpha_key_value_pair_delimiter_as_value_part,
+        format_description=True,
+    )(scenario=scenario)
 
 
 @TestCheck

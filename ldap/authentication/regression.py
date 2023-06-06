@@ -34,10 +34,14 @@ xfails = {
         )
     ],
     "connection protocols/tls cipher suite": [(Fail, "can't get it to work")],
+    # bug
+    "user authentications/:/verification cooldown/verification cooldown reset when invalid password is provided": [
+        (Fail, "bug, cache is not cleared on invalid password")
+    ],
     # 23.3
     "user authentications/:/verification cooldown/:": [
         (Fail, "changes in behaviour in 23.3", check_clickhouse_version(">=23"))
-    ]
+    ],
 }
 
 

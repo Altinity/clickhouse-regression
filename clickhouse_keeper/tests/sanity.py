@@ -3,12 +3,6 @@ from testflows.asserts import error
 
 
 @TestScenario
-def select_2(self):
-    """Check that SELECT 1 works on all nodes."""
-    pass
-
-
-@TestScenario
 def select_1(self):
     """Check that SELECT 1 works on all nodes."""
     for name in self.context.cluster.nodes["clickhouse"]:

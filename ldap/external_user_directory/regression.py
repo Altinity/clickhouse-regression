@@ -40,7 +40,7 @@ xfails = {
     ],
     "user authentications/verification cooldown:/:": [
         (Fail, "changes in behaviour in 23.3", check_clickhouse_version(">=23"))
-    ]
+    ],
 }
 
 ffails = {
@@ -56,8 +56,8 @@ ffails = {
     "/external user directory/restart/parallel login": (
         XFail,
         "fails on 23.3",
-        check_clickhouse_version(">=23")
-    )
+        check_clickhouse_version(">=23"),
+    ),
 }
 
 

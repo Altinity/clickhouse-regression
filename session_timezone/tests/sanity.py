@@ -8,8 +8,8 @@ def select_timezone_of_now(self):
     for name in self.context.cluster.nodes["clickhouse"]:
         node = self.context.cluster.node(name)
 
-        with Check(f"{name}"):
-            with When("I try that timezone changes on all nodes"):
+        with Check(f"on node {name}"):
+            with When("I check that session_timezone is changing timezone"):
                 node.query("select timezoneOf(now());", message="Europe/Berlin")
                 node.query(
                     "select timezoneOf(now()) SETTINGS session_timezone = 'Asia/Novosibirsk' format TSV;",

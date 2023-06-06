@@ -11,12 +11,9 @@ from session_timezone.requirements import *
 from session_timezone.common import *
 
 
-xfails = {
+xfails = {}
 
-}
-
-ffails = {
-}
+ffails = {}
 
 
 @TestModule
@@ -57,9 +54,7 @@ def regression(
         clickhouse_binary_path,
         collect_service_logs=collect_service_logs,
         nodes=nodes,
-        docker_compose_project_dir=os.path.join(
-            current_dir(), "session_timezone_env"
-        ),
+        docker_compose_project_dir=os.path.join(current_dir(), "session_timezone_env"),
     ) as cluster:
         self.context.cluster = cluster
 
@@ -68,6 +63,8 @@ def regression(
 
         Feature(run=load("session_timezone.tests.sanity", "feature"))
         Feature(run=load("session_timezone.tests.basic", "feature"))
+        Feature(run=load("session_timezone.tests.clickhouse_local", "feature"))
+        Feature(run=load("session_timezone.tests.date_functions", "feature"))
 
 
 if main():

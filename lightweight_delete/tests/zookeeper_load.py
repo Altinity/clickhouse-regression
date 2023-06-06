@@ -32,9 +32,7 @@ def load_zookeeper(self):
     name = "clickhouse1"
     self.context.node = node = self.context.cluster.node(name)
 
-    with When(
-        "I perform a lot of deletes and wait mutations are in replication queue"
-    ):
+    with When("I perform a lot of deletes and wait mutations are in replication queue"):
         for i in range(10):
             for j in range(10):
                 delete(
