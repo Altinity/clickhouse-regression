@@ -520,6 +520,8 @@ def create_simple_table(
     table_name="test",
     cluster_name="'Cluster_3shards_with_3replicas'",
     values="Id Int32, partition Int32",
+    order_by="ORDER BY Id ",
+    partition_by="PARTITION BY Id",
     manual_cleanup=False,
 ):
     """Create simple table with timeout option.
@@ -538,7 +540,8 @@ def create_simple_table(
             "ENGINE = ReplicatedMergeTree('/clickhouse/tables/replicated/{shard}"
             f"/{table_name}'"
             ", '{replica}') "
-            "ORDER BY Id PARTITION BY Id",
+            f"{order_by}"
+            f"{partition_by}",
             steps=False,
         )
         yield table_name

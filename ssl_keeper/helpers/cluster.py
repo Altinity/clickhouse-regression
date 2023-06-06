@@ -1326,7 +1326,9 @@ class Cluster(object):
             for name in self.nodes["clickhouse"]:
                 self.node(name).wait_healthy()
                 if name.startswith("clickhouse"):
-                    self.node(name).start_clickhouse(wait_healthy=False, thread_fuzzer=self.thread_fuzzer)
+                    self.node(name).start_clickhouse(
+                        wait_healthy=False, thread_fuzzer=self.thread_fuzzer
+                    )
 
         self.running = True
 

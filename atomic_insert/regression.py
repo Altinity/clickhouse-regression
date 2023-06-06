@@ -12,6 +12,8 @@ from helpers.common import check_clickhouse_version
 from atomic_insert.requirements import *
 from platform import processor as current_cpu
 
+from atomic_insert.tests.steps import *
+
 
 def argparser(parser):
     """Custom argperser that add --thread-fuzzer option."""
@@ -75,6 +77,8 @@ def regression(
 
         if check_clickhouse_version("<22.4")(self):
             skip(reason="only supported on ClickHouse version >= 22.4")
+
+        create_transactions_configuration()
 
         Feature(run=load("atomic_insert.tests.sanity", "feature"))
         Feature(run=load("atomic_insert.tests.dependent_tables", "feature"))

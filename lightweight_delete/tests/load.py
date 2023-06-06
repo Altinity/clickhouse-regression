@@ -141,8 +141,8 @@ def load_excessive_mutations(self, node=None):
         )
 
     # try:
-        # with When("I stop merges"):
-        #     node.query("SYSTEM STOP MERGES")
+    # with When("I stop merges"):
+    #     node.query("SYSTEM STOP MERGES")
 
     with When("I perform a lot of deletes"):
         delete(

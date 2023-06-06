@@ -13,16 +13,29 @@
   * 5.1 [RQ.SRS-037.ClickHouse.SessionTimezone](#rqsrs-037clickhousesessiontimezone)
   * 5.2 [RQ.SRS-037.ClickHouse.SessionTimezone.ServerDefault](#rqsrs-037clickhousesessiontimezoneserverdefault)
   * 5.3 [RQ.SRS-037.ClickHouse.SessionTimezone.ServerSession](#rqsrs-037clickhousesessiontimezoneserversession)
-  * 5.4 [RQ.SRS-037.ClickHouse.SessionTimezone.DateTime](#rqsrs-037clickhousesessiontimezonedatetime)
-  * 5.5 [RQ.SRS-037.ClickHouse.SessionTimezone.ParsingOfDateOrDateTimeTypes](#rqsrs-037clickhousesessiontimezoneparsingofdateordatetimetypes)
-  * 5.6 [RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues](#rqsrs-037clickhousesessiontimezonepossiblevalues)
-  * 5.7 [RQ.SRS-037.ClickHouse.SessionTimezone.DefaultValue](#rqsrs-037clickhousesessiontimezonedefaultvalue)
-  * 5.8 [RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue](#rqsrs-037clickhousesessiontimezonewrongsettingvalue)
-  * 5.9 [Non-Functional Requirements](#non-functional-requirements)
-    * 5.9.1 [Performance](#performance)
-    * 5.9.2 [RQ.SRS-037.ClickHouse.SessionTimezone.Performance](#rqsrs-037clickhousesessiontimezoneperformance)
-    * 5.9.3 [Reliability](#reliability)
-    * 5.9.4 [RQ.SRS-037.ClickHouse.SessionTimezone.Reliability](#rqsrs-037clickhousesessiontimezonereliability)
+  * 5.4 [RQ.SRS-037.ClickHouse.SessionTimezone.SettingsPriority](#rqsrs-037clickhousesessiontimezonesettingspriority)
+  * 5.5 [RQ.SRS-037.ClickHouse.SessionTimezone.DateTime](#rqsrs-037clickhousesessiontimezonedatetime)
+  * 5.6 [RQ.SRS-037.ClickHouse.SessionTimezone.ParsingOfDateTimeTypes](#rqsrs-037clickhousesessiontimezoneparsingofdatetimetypes)
+    * 5.6.1 [RQ.SRS-037.ClickHouse.SessionTimezone.ParsingOfDateTimeTypes.Insert](#rqsrs-037clickhousesessiontimezoneparsingofdatetimetypesinsert)
+  * 5.7 [Date Types](#date-types)
+  * 5.8 [RQ.SRS-037.ClickHouse.SessionTimezone.DateTypes](#rqsrs-037clickhousesessiontimezonedatetypes)
+  * 5.9 [Date Functions](#date-functions)
+    * 5.9.1 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions](#rqsrs-037clickhousesessiontimezonedatefunctions)
+      * 5.9.1.1 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDate](#rqsrs-037clickhousesessiontimezonedatefunctionstodate)
+      * 5.9.1.2 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrDefault](#rqsrs-037clickhousesessiontimezonedatefunctionstodateordefault)
+      * 5.9.1.3 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrNull](#rqsrs-037clickhousesessiontimezonedatefunctionstodateornull)
+      * 5.9.1.4 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrZero](#rqsrs-037clickhousesessiontimezonedatefunctionstodateorzero)
+      * 5.9.1.5 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.SnowflakeToDateTime](#rqsrs-037clickhousesessiontimezonedatefunctionssnowflaketodatetime)
+      * 5.9.1.6 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.DateTimeToSnowflake](#rqsrs-037clickhousesessiontimezonedatefunctionsdatetimetosnowflake)
+  * 5.10 [RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues](#rqsrs-037clickhousesessiontimezonepossiblevalues)
+  * 5.11 [RQ.SRS-037.ClickHouse.SessionTimezone.DefaultValue](#rqsrs-037clickhousesessiontimezonedefaultvalue)
+  * 5.12 [RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue](#rqsrs-037clickhousesessiontimezonewrongsettingvalue)
+  * 5.13 [RQ.SRS-037.ClickHouse.SessionTimezone.ClickhouseLocal](#rqsrs-037clickhousesessiontimezoneclickhouselocal)
+  * 5.14 [Non-Functional Requirements](#non-functional-requirements)
+    * 5.14.1 [Performance](#performance)
+    * 5.14.2 [RQ.SRS-037.ClickHouse.SessionTimezone.Performance](#rqsrs-037clickhousesessiontimezoneperformance)
+    * 5.14.3 [Reliability](#reliability)
+    * 5.14.4 [RQ.SRS-037.ClickHouse.SessionTimezone.Reliability](#rqsrs-037clickhousesessiontimezonereliability)
 
 ## Introduction
 
@@ -44,26 +57,61 @@ flowchart TB;
   
   subgraph O["'Session Timezone' Test Feature Diagram"]
   
-  A--"SETTING"-->D
+  C-->E-->A--"SETTING"-->D
+  C-->A
 
-  1A---2A---3A---4A
-  1D---2D---3D---4D---5D
+  1A---2A---3A---4A---5A---6A---7A---8A---9A---10A---11A---12A
+  13A---14A---15A---16A---17A---18A---19A---20A---21A---22A---23A---24A---25A
+  1D---2D---3D
+  
+    subgraph E["SET"]
+
+        1E["session_timezone"]:::green
+ 
+    end
+  
+    subgraph C["Clickhouse"]
+
+        1C["client"]:::green
+        2C["local"]:::green
+ 
+    end
   
     subgraph A["SELECT"]
 
-        1A["timeZone()"]:::green
-        2A["serverTimezone()"]:::green
-        3A["DateTime"]:::green
-        4A["DateTime64"]:::green
+        1A["FUNCTIONS"]:::yellow
+        2A["timeZone()"]:::green
+        3A["serverTimezone()"]:::green
+        4A["now()"]:::green
+        5A["toDate()"]:::green
+        6A["toDate32()"]:::green
+        7A["toDateTime()"]:::green
+        8A["toDateTime64()"]:::green
+        9A["toDateOrDefault()"]:::green
+        10A["toDate32OrDefault()"]:::green
+        11A["toDateTimeOrDefault()"]:::green
+        12A["toDateTime64OrDefault()"]:::green
+        
+        13A["FUNCTIONS"]:::yellow
+        14A["toDateOrNull()"]:::green
+        15A["toDate32OrNull()"]:::green
+        16A["toDateTimeOrNull()"]:::green
+        17A["toDateTime64OrNull()"]:::green
+        18A["toDateOrZero()"]:::green
+        19A["toDate32OrZero()"]:::green
+        20A["toDateTimeOrZerol()"]:::green
+        21A["toDateTime64OrZero()"]:::green
+        22A["dateTimeToSnowflake()"]:::green
+        23A["dateTime64ToSnowflake()"]:::green
+        24A["snowflakeToDateTime()"]:::green
+        25A["snowflakeToDateTime64()"]:::green
         
     end
     
-    subgraph D["Session Timezone"]
+    subgraph D["session_timezone"]
         1D["default"]:::green
         2D["wrong"]:::green
-        3D["Europe/Berlin"]:::red
-        4D["Zulu"]:::red
-        5D["Europe/Berlin"]:::red
+        3D["any timezone"]:::green
     end
   end
 ```
@@ -84,16 +132,15 @@ Software Requirements Specification
 ### RQ.SRS-037.ClickHouse.SessionTimezone
 version: 1.0
 
-[ClickHouse] SHALL support the `session_timezone` setting in ClickHouse. The `session_timezone` setting allows the 
+[ClickHouse] SHALL support the `session_timezone` setting in ClickHouse. The `session_timezone` setting SHALL allow the 
 specification of an implicit timezone, which overrides the default timezone for all DateTime/DateTime64 values and 
-function results that do not have an explicit timezone specified. An empty string ('') as the value configures the 
-session timezone to the server's default timezone.
+function results that do not have an explicit timezone specified. An empty string as the value SHALL configure the 
+session timezone to be set to the server's default timezone.
 
 ### RQ.SRS-037.ClickHouse.SessionTimezone.ServerDefault
 version: 1.0
 
-[ClickHouse] SHALL support  the `session_timezone` setting is not specified, and the default timezones are used for the 
-session and server.
+[ClickHouse] SHALL use the default server timezone when `session_timezone` setting is not specified. 
 
 Example:
 ```sql
@@ -105,8 +152,8 @@ Example:
 ### RQ.SRS-037.ClickHouse.SessionTimezone.ServerSession
 version: 1.0
 
-[ClickHouse] SHALL support the `session_timezone` setting overriding the default session timezone while keeping the server
-timezone unchanged.
+[ClickHouse] SHALL override the default session timezone when `session_timezone` setting is specified while
+keeping the server timezone unchanged.
 
 Example:
 
@@ -116,11 +163,15 @@ Example:
 > Asia/Novosibirsk	Europe/Berlin
 ```
 
+### RQ.SRS-037.ClickHouse.SessionTimezone.SettingsPriority
+version: 1.0
+
+[ClickHouse] SHALL override session's `session_timezone` setting value when `SETTINGS session_timezone` inline clause is specified for a given query.
+
 ### RQ.SRS-037.ClickHouse.SessionTimezone.DateTime
 version: 1.0
 
-[ClickHouse] SHALL support the `session_timezone` setting affects the conversion of DateTime values, 
-resulting in the output being adjusted according to the specified session timezone.
+[ClickHouse] SHALL use the timezone specified by the `session_timezone` setting for all `DateTime` or `DateTime64` value conversions.
 
 ```sql
 > SELECT toDateTime64(toDateTime64('1999-12-12 23:23:23.123', 3), 3, 'Europe/Zurich') SETTINGS 
@@ -129,10 +180,10 @@ session_timezone = 'America/Denver' FORMAT TSV
 > 1999-12-13 07:23:23.123
 ```
 
-### RQ.SRS-037.ClickHouse.SessionTimezone.ParsingOfDateOrDateTimeTypes
+### RQ.SRS-037.ClickHouse.SessionTimezone.ParsingOfDateTimeTypes
 version: 1.0
 
-[ClickHouse] SHALL support the `session_timezone` setting on the parsing of Date or DateTime types, 
+[ClickHouse] SHALL use timezone specified by the `session_timezone` setting when parsing of DateTime or DateTime64 types, 
 as illustrated in the following example:
 
 ```sql
@@ -150,27 +201,111 @@ The parsing behavior differs based on the approach used:
   * '2000-01-01 00:00:00' is parsed based on the DateTime column's inherited type, including its timezone.
   The `session_timezone` setting does not affect this value.
 
+#### RQ.SRS-037.ClickHouse.SessionTimezone.ParsingOfDateTimeTypes.Insert
+version: 1.0
+
+[ClickHouse] SHALL insert data with timezone specified by the `session_timezone` setting into DateTime type column.
+
+* Date
+* DateTime
+* DateTime64
+
+### Date Types
+
+### RQ.SRS-037.ClickHouse.SessionTimezone.DateTypes
+version: 1.0
+
+[ClickHouse] SHALL support all Date types with `session_timezone` setting.
+
+* Date
+* DateTime
+* DateTime64
+
+### Date Functions
+
+#### RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions
+version: 1.0
+
+[ClickHouse] SHALL support all Date functions with `session_timezone` setting.
+
+##### RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDate
+version: 1.0
+
+[ClickHouse] SHALL support all `toDate` functions with `session_timezone` setting and return correct values.
+
+* toDate
+* toDate32
+* toDateTime
+* toDateTime64
+
+##### RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrDefault
+version: 1.0
+
+[ClickHouse] SHALL support all `toDateOrDefault` functions with `session_timezone` setting and return correct default
+values.
+
+* toDateOrDefault
+* toDate32OrDefault
+* toDateTimeOrDefault
+* toDateTime64OrDefault
+
+##### RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrNull
+version: 1.0
+
+[ClickHouse] SHALL support all `toDateOrNull` functions with `session_timezone` setting and return null value.
+
+* toDateOrNull
+* toDate32OrNull
+* toDateTimeOrNull
+* toDateTime64OrNull
+
+##### RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrZero
+version: 1.0
+
+[ClickHouse] SHALL support all `toDateOrZero` functions with `session_timezone` setting and return minimum possible
+value.
+
+* toDateOrZero
+* toDate32OrZero
+* toDateTimeOrZero
+* toDateTime64OrZero
+
+##### RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.SnowflakeToDateTime
+version: 1.0
+
+[ClickHouse] SHALL extract time from Snowflake ID as DateTime and Datetime64 by using `snowflakeToDateTime` and
+`snowflakeToDateTime64` format with `session_timezone` setting.
+
+##### RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.DateTimeToSnowflake
+version: 1.0
+
+[ClickHouse] SHALL convert DateTime, DateTime64 value to the first Snowflake ID at the giving time by using
+`dateTimeToSnowflake` and `dateTime64ToSnowflake` format with `session_timezone` setting.
+
 ### RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues
 version: 1.0
 
-[ClickHouse] SHALL support the possible values for the `session_timezone` setting:
-  * Europe/Berlin
-  * UTC
-  * Zulu
+[ClickHouse] SHALL support any value from `system.time_zones`.
 
 ### RQ.SRS-037.ClickHouse.SessionTimezone.DefaultValue
 version: 1.0
 
-[ClickHouse] SHALL support an empty string ('') as the `session_timezone` setting default value.
+[ClickHouse] SHALL use default server timezone if the `session_timezone` value is an empty string `''`.
 
 ### RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue
 version: 1.0
 
-[ClickHouse] SHALL provide exception with wrong `session_timezone` setting value:
+[ClickHouse] SHALL throw an exception when invalid setting is applied:
 
 ```CMD
 Code: 36. DB::Exception: Received from localhost:9000. DB::Exception: Exception: Invalid time zone...
 ```
+
+### RQ.SRS-037.ClickHouse.SessionTimezone.ClickhouseLocal
+version: 1.0
+
+[ClickHouse] SHALL support the `session_timezone` setting for [clickhouse local] in the same way as 
+for `clickhouse client`.
 
 ### Non-Functional Requirements
 
@@ -190,7 +325,10 @@ version: 1.0
 
 
 
+
+
 [SRS]: #srs
 [session_timezone]: https://github.com/ClickHouse/ClickHouse/pull/44149
 [ClickHouse]: https://clickhouse.com
 [timezone]:https://clickhouse.com/docs/en/operations/server-configuration-parameters/settings#server_configuration_parameters-timezone
+[clickhouse local]:https://clickhouse.com/docs/en/operations/utilities/clickhouse-local

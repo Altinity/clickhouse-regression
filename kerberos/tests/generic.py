@@ -274,9 +274,8 @@ def invalid_user(self):
         r = ch_nodes[2].cmd(test_select_query(node=ch_nodes[0]), no_checks=True)
 
     with Then(f"I expect default"):
-        assert (
-                ("Authentication failed: password is incorrect"
-                 in r.output) and ("or there is no user with such name" in r.output)
+        assert ("Authentication failed: password is incorrect" in r.output) and (
+            "or there is no user with such name" in r.output
         ), error()
 
 
@@ -302,9 +301,8 @@ def user_deleted(self):
         r = ch_nodes[2].cmd(test_select_query(node=ch_nodes[0]), no_checks=True)
 
     with Then(f"I expect error"):
-        assert (
-            ("Authentication failed: password is incorrect"
-            in r.output) and ("or there is no user with such name" in r.output)
+        assert ("Authentication failed: password is incorrect" in r.output) and (
+            "or there is no user with such name" in r.output
         ), error()
 
 
