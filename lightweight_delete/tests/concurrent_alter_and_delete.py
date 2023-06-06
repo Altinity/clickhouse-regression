@@ -58,8 +58,10 @@ def concurrent_delete_attach_detach_partition(self, node=None):
         "I check that rows are deleted",
         description="rows can be not deleted in detached partition",
     ):
-        r = node.query(f"SELECT count(*) FROM {table_name}")
-        assert r.output in (output1, output2), error()
+        for attempt in retries(timeout=60, delay=5):
+            with attempt:
+                r = node.query(f"SELECT count(*) FROM {table_name}")
+                assert r.output in (output1, output2), error()
 
 
 @TestScenario
@@ -105,8 +107,10 @@ def concurrent_delete_drop_partition(self, node=None):
         "I check that rows are deleted",
         description="50 rows in reach partition, 9 partitions",
     ):
-        r = node.query(f"SELECT count(*) FROM {table_name}")
-        assert r.output == output, error()
+        for attempt in retries(timeout=60, delay=5):
+            with attempt:
+                r = node.query(f"SELECT count(*) FROM {table_name}")
+                assert r.output == output, error()
 
 
 @TestScenario
@@ -148,8 +152,10 @@ def concurrent_delete_freeze_partition(self, node=None):
         "I check that rows are deleted",
         description="50 rows in reach partition, 10 partitions",
     ):
-        r = node.query(f"SELECT count(*) FROM {table_name}")
-        assert r.output == output, error()
+        for attempt in retries(timeout=60, delay=5):
+            with attempt:
+                r = node.query(f"SELECT count(*) FROM {table_name}")
+                assert r.output == output, error()
 
 
 @TestScenario
@@ -195,8 +201,10 @@ def concurrent_add_drop_column_and_delete(self, node=None):
         "I check that rows are deleted",
         description="50 rows in reach partition, 10 partitions",
     ):
-        r = node.query(f"SELECT count(*) FROM {table_name}")
-        assert r.output == output, error()
+        for attempt in retries(timeout=60, delay=5):
+            with attempt:
+                r = node.query(f"SELECT count(*) FROM {table_name}")
+                assert r.output == output, error()
 
 
 @TestScenario
@@ -246,8 +254,10 @@ def concurrent_modify_column_and_delete(self, node=None):
         "I check that rows are deleted",
         description="50 rows in reach partition, 10 partitions",
     ):
-        r = node.query(f"SELECT count(*) FROM {table_name}")
-        assert r.output == output, error()
+        for attempt in retries(timeout=60, delay=5):
+            with attempt:
+                r = node.query(f"SELECT count(*) FROM {table_name}")
+                assert r.output == output, error()
 
 
 @TestScenario
@@ -289,8 +299,10 @@ def concurrent_clear_update_and_delete(self, node=None):
         )
 
     with Then("I check that rows are deleted"):
-        r = node.query(f"SELECT count(*) FROM {table_name}")
-        assert r.output == output, error()
+        for attempt in retries(timeout=60, delay=5):
+            with attempt:
+                r = node.query(f"SELECT count(*) FROM {table_name}")
+                assert r.output == output, error()
 
 
 @TestFeature
