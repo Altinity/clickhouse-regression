@@ -7,7 +7,7 @@ from session_timezone.tests.steps import *
 @TestFeature
 @Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ToDate("1.0"))
 def to_date(self):
-    """Verify the results of the `toDate`, `toDate32`, `toDateTime`, `toDateTime32` and `toDateTime64` functions
+    """Check conversation to Date types with the `toDate`, `toDate32`, `toDateTime`, `toDateTime32` and `toDateTime64` functions
     when the `session_timezone` setting is applied."""
     node = self.context.cluster.node("clickhouse1")
 
@@ -75,8 +75,8 @@ def date_default(self):
 @TestFeature
 @Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ToDateOrNull("1.0"))
 def date_null(self):
-    """Verify that null values are returning for the `toDateOrNull`, `toDate32OrNull`, `toDateTimeOrNull` and
-    `toDateTime64OrNull` functions when the `session_timezone` setting is applied."""
+    """Verify that `toDateOrNull`, `toDate32OrNull`, `toDateTimeOrNull` and `toDateTime64OrNull` functions are
+    returning the null values when the `session_timezone` setting is applied."""
 
     node = self.context.cluster.node("clickhouse1")
 
@@ -105,8 +105,8 @@ def date_null(self):
 @TestFeature
 @Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ToDateOrZero("1.0"))
 def date_zero(self):
-    """Verify that minimum values are returning for the `toDateOrZero`, `toDate32OrZero`, `toDateTimeOrZero` and
-    `toDateTime64OrZero` functions when the `session_timezone` setting is applied."""
+    """Verify that `toDateOrZero`, `toDate32OrZero`, `toDateTimeOrZero` and `toDateTime64OrZero` functions are returning
+     the minimum values when the `session_timezone` setting is applied."""
     node = self.context.cluster.node("clickhouse1")
 
     list_of_functions = [
@@ -176,7 +176,7 @@ def datetime_to_snowflake(self):
     RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ParseDateTime64BestEffort("1.0")
 )
 def parce_best_effort64(self):
-    """Verify that parce the best effort 64 functions are returning correct values when
+    """Verify that `parseDateTime64BestEffort` functions are returning correct values when
     the `session_timezone` setting is applied."""
     node = self.context.cluster.node("clickhouse1")
 
@@ -191,7 +191,7 @@ def parce_best_effort64(self):
 
     for function in list_of_functions:
         with Check(function):
-            with Then("I check value for parce the best effort 64 function"):
+            with Then(f"I check result for `{function}` function"):
                 node.query(
                     f"SELECT {function}('2021-01-01') SETTINGS session_timezone = 'Africa/Bissau';",
                     message=f"2021-01-01 00:00:00.000",
@@ -203,7 +203,7 @@ def parce_best_effort64(self):
     RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ParseDateTimeBestEffort("1.0")
 )
 def parce_best_effort(self):
-    """Verify that parce the best effort functions are returning correct values when
+    """Verify that parce `parseDateTimeBestEffort` functions are returning correct values when
     the `session_timezone` setting is applied."""
     node = self.context.cluster.node("clickhouse1")
 
@@ -218,7 +218,7 @@ def parce_best_effort(self):
 
     for function in list_of_functions:
         with Check(function):
-            with Then("I check value for parce the best effort function"):
+            with Then(f"I check result for {function} function"):
                 node.query(
                     f"SELECT {function}('2021-01-01') SETTINGS session_timezone = 'Africa/Bissau';",
                     message=f"2021-01-01 00:00:00",
@@ -230,7 +230,7 @@ def parce_best_effort(self):
     RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ParseDateTime32BestEffort("1.0")
 )
 def parce_best_effort32(self):
-    """Verify that parce the best effort 32 functions are returning correct values when
+    """Verify that parce `parseDateTime32BestEffort` functions are returning correct values when
     the `session_timezone` setting is applied."""
     node = self.context.cluster.node("clickhouse1")
 
@@ -242,7 +242,7 @@ def parce_best_effort32(self):
 
     for function in list_of_functions:
         with Check(function):
-            with Then("I check value for parce the best effort 32 function"):
+            with Then(f"I check value for {function} function"):
                 node.query(
                     f"SELECT {function}('2021-01-01') SETTINGS session_timezone = 'Africa/Bissau';",
                     message=f"2021-01-01 00:00:00",
@@ -252,7 +252,7 @@ def parce_best_effort32(self):
 @TestFeature
 @Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ParseDateTime("1.0"))
 def parce_date_time(self):
-    """Verify that parce date time functions are returning correct values when
+    """Verify that `parseDateTime` functions are returning correct values when
     the `session_timezone` setting is applied."""
     node = self.context.cluster.node("clickhouse1")
 
@@ -267,7 +267,7 @@ def parce_date_time(self):
 
     for function in list_of_functions:
         with Check(function):
-            with Then("I check values for parce date time function"):
+            with Then(f"I check values for {function} function"):
                 if function.startswith("parseDateTimeInJodaSyntax"):
                     node.query(
                         f"SELECT {function}('2023-02-24 14:53:31', 'yyyy-MM-dd HH:mm:ss') SETTINGS session_timezone = 'Europe/Minsk';",
@@ -296,7 +296,7 @@ def make_date(self):
 
     for function in list_of_functions:
         with Check(function):
-            with Then("I check value for simple `makeDate` function"):
+            with Then(f"I check result for {function} function"):
                 if function == "makeDateTime64" or function == "makeDateTime":
                     node.query(
                         f"SELECT {function}(2023, 2, 28, 17, 12, 33) SETTINGS session_timezone = 'UTC';",

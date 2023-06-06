@@ -285,7 +285,8 @@ version: 1.0
 ##### RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDate
 version: 1.0
 
-[ClickHouse] SHALL support all `toDate` functions with `session_timezone` setting and return correct values.
+[ClickHouse] SHALL support all `toDate` functions with `session_timezone` setting and return correct value and data
+type.
 
 * toDate
 * toDate32
@@ -295,7 +296,8 @@ version: 1.0
 ##### RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.MakeDate
 version: 1.0
 
-[ClickHouse] SHALL support all `makeDate` functions with `session_timezone` setting and return correct values.
+[ClickHouse] SHALL support all `makeDate` functions with `session_timezone` setting and return correct value and data
+type.
 
 * makeDate
 * makeDate32
@@ -343,7 +345,7 @@ version: 1.0
 ##### RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.DateTimeToSnowflake
 version: 1.0
 
-[ClickHouse] SHALL convert DateTime, DateTime64 value to the  Snowflake ID at the giving time by using
+[ClickHouse] SHALL convert DateTime, DateTime64 value to the Snowflake ID at the giving time by using
 `dateTimeToSnowflake` and `dateTime64ToSnowflake` format with `session_timezone` setting.
 
 ##### RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ParseDateTime64BestEffort
@@ -361,7 +363,8 @@ version: 1.0
 ##### RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ParseDateTimeBestEffort
 version: 1.0
 
-[ClickHouse] SHALL support all `parseDateTimeBestEffort` functions with `session_timezone` setting.
+[ClickHouse] SHALL support all `parseDateTimeBestEffort` functions with `session_timezone` setting and return correct
+value and data type.
 
 * parseDateTimeBestEffort
 * parseDateTimeBestEffortOrZero
@@ -373,7 +376,8 @@ version: 1.0
 ##### RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ParseDateTime32BestEffort
 version: 1.0
 
-[ClickHouse] SHALL support all `parseDateTime32BestEffort` functions with `session_timezone` setting.
+[ClickHouse] SHALL support all `parseDateTime32BestEffort` functions with `session_timezone` setting and return correct
+value and data type.
 
 * parseDateTime32BestEffort
 * parseDateTime32BestEffortOrNull
@@ -382,7 +386,8 @@ version: 1.0
 ##### RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ParseDateTime
 version: 1.0
 
-[ClickHouse] SHALL support all `parseDateTime` functions with `session_timezone` setting.
+[ClickHouse] SHALL support all `parseDateTime` functions with `session_timezone`  setting and return correct value and 
+data type.
 
 * parseDateTime
 * parseDateTimeInJodaSyntaxOrZero
@@ -408,7 +413,8 @@ with enabled `session_timezone` setting.
 ##### RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ULIDStringToDateTime
 version: 1.0
 
-[ClickHouse] SHALL extract the timestamp from a ULID by using `ULIDStringToDateTime` with enabled `session_timezone` setting.
+[ClickHouse] SHALL extract the timestamp from a ULID by using `ULIDStringToDateTime` with enabled `session_timezone`
+setting.
 
 
 ### RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues
