@@ -361,7 +361,7 @@ def ulid_date(self):
 @Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions("1.0"))
 @Name("date functions")
 def feature(self):
-    """Basic check suites."""
+    """Check Date functions."""
     with Pool(1) as executor:
 
         try:
