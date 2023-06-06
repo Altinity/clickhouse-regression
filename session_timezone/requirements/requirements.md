@@ -73,6 +73,7 @@ flowchart TB;
   26A---27A---28A---29A---30A---31A---32A---33A---34A---35A---36A---37A---38A
   39A---40A---41A---42A---43A---44A---45A---46A---47A---48A---49A
   52A---60A---61A---62A---63A---64A---65A---67A---68A
+  70A---71A---72A---73A
   1D---2D---3D
   
     subgraph E["SET"]
@@ -152,6 +153,11 @@ flowchart TB;
         65A["reinterpretAsDateTime()"]:::red
         67A["emptyArrayDateTime()"]:::red
         68A["dictGetDateOrDefault()"]:::red
+        
+        70A["TYPES"]:::yellow
+        71A["Date"]:::green
+        72A["DateTime"]:::green
+        73A["DateTime64"]:::green
 
         
     end
