@@ -66,5 +66,6 @@ def regression(
         Feature(run=load("session_timezone.tests.clickhouse_local", "feature"))
         Feature(run=load("session_timezone.tests.date_functions", "feature"))
 
+
 if main():
     regression()
