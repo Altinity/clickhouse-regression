@@ -546,6 +546,39 @@ RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_EmptyArrayDate = Requirement
     num='6.9.1.17'
 )
 
+RQ_SRS_037_ClickHouse_SessionTimezone_AggregateMergeTree = Requirement(
+    name='RQ.SRS-037.ClickHouse.SessionTimezone.AggregateMergeTree',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL support aggregation of Date, DateTime, and DateTime64 columns using a simple AggregateMergeTree when\n'
+        'different inserts and selects involve different `session_timezone` values.\n'
+        '\n'
+    ),
+    link=None,
+    level=2,
+    num='6.10'
+)
+
+RQ_SRS_037_ClickHouse_SessionTimezone_MaterializedView = Requirement(
+    name='RQ.SRS-037.ClickHouse.SessionTimezone.MaterializedView',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL support simple MaterializedView with `session_timezone` setting.\n'
+        '\n'
+    ),
+    link=None,
+    level=2,
+    num='6.11'
+)
+
 RQ_SRS_037_ClickHouse_SessionTimezone_PossibleValues = Requirement(
     name='RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues',
     version='1.0',
@@ -559,7 +592,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_PossibleValues = Requirement(
     ),
     link=None,
     level=2,
-    num='6.10'
+    num='6.12'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_DefaultValue = Requirement(
@@ -575,7 +608,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_DefaultValue = Requirement(
     ),
     link=None,
     level=2,
-    num='6.11'
+    num='6.13'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_WrongSettingValue = Requirement(
@@ -595,7 +628,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_WrongSettingValue = Requirement(
     ),
     link=None,
     level=2,
-    num='6.12'
+    num='6.14'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_ClickhouseLocal = Requirement(
@@ -612,7 +645,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_ClickhouseLocal = Requirement(
     ),
     link=None,
     level=2,
-    num='6.13'
+    num='6.15'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_Performance = Requirement(
@@ -628,7 +661,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_Performance = Requirement(
     ),
     link=None,
     level=3,
-    num='6.14.2'
+    num='6.16.2'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_Reliability = Requirement(
@@ -653,7 +686,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_Reliability = Requirement(
     ),
     link=None,
     level=3,
-    num='6.14.4'
+    num='6.16.4'
 )
 
 SRS037_ClickHouse_Session_Timezone = Specification(
@@ -709,15 +742,17 @@ SRS037_ClickHouse_Session_Timezone = Specification(
         Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.DictGetDate', level=4, num='6.9.1.15'),
         Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ReinterpretAsDate', level=4, num='6.9.1.16'),
         Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.EmptyArrayDate', level=4, num='6.9.1.17'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues', level=2, num='6.10'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DefaultValue', level=2, num='6.11'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue', level=2, num='6.12'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.ClickhouseLocal', level=2, num='6.13'),
-        Heading(name='Non-Functional Requirements', level=2, num='6.14'),
-        Heading(name='Performance', level=3, num='6.14.1'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.Performance', level=3, num='6.14.2'),
-        Heading(name='Reliability', level=3, num='6.14.3'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.Reliability', level=3, num='6.14.4'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.AggregateMergeTree', level=2, num='6.10'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.MaterializedView', level=2, num='6.11'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues', level=2, num='6.12'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DefaultValue', level=2, num='6.13'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue', level=2, num='6.14'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.ClickhouseLocal', level=2, num='6.15'),
+        Heading(name='Non-Functional Requirements', level=2, num='6.16'),
+        Heading(name='Performance', level=3, num='6.16.1'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.Performance', level=3, num='6.16.2'),
+        Heading(name='Reliability', level=3, num='6.16.3'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.Reliability', level=3, num='6.16.4'),
         ),
     requirements=(
         RQ_SRS_037_ClickHouse_SessionTimezone,
@@ -746,6 +781,8 @@ SRS037_ClickHouse_Session_Timezone = Specification(
         RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_DictGetDate,
         RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ReinterpretAsDate,
         RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_EmptyArrayDate,
+        RQ_SRS_037_ClickHouse_SessionTimezone_AggregateMergeTree,
+        RQ_SRS_037_ClickHouse_SessionTimezone_MaterializedView,
         RQ_SRS_037_ClickHouse_SessionTimezone_PossibleValues,
         RQ_SRS_037_ClickHouse_SessionTimezone_DefaultValue,
         RQ_SRS_037_ClickHouse_SessionTimezone_WrongSettingValue,
@@ -794,15 +831,17 @@ SRS037_ClickHouse_Session_Timezone = Specification(
       * 5.9.1.15 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.DictGetDate](#rqsrs-037clickhousesessiontimezonedatefunctionsdictgetdate)
       * 5.9.1.16 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ReinterpretAsDate](#rqsrs-037clickhousesessiontimezonedatefunctionsreinterpretasdate)
       * 5.9.1.17 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.EmptyArrayDate](#rqsrs-037clickhousesessiontimezonedatefunctionsemptyarraydate)
-  * 5.10 [RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues](#rqsrs-037clickhousesessiontimezonepossiblevalues)
-  * 5.11 [RQ.SRS-037.ClickHouse.SessionTimezone.DefaultValue](#rqsrs-037clickhousesessiontimezonedefaultvalue)
-  * 5.12 [RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue](#rqsrs-037clickhousesessiontimezonewrongsettingvalue)
-  * 5.13 [RQ.SRS-037.ClickHouse.SessionTimezone.ClickhouseLocal](#rqsrs-037clickhousesessiontimezoneclickhouselocal)
-  * 5.14 [Non-Functional Requirements](#non-functional-requirements)
-    * 5.14.1 [Performance](#performance)
-    * 5.14.2 [RQ.SRS-037.ClickHouse.SessionTimezone.Performance](#rqsrs-037clickhousesessiontimezoneperformance)
-    * 5.14.3 [Reliability](#reliability)
-    * 5.14.4 [RQ.SRS-037.ClickHouse.SessionTimezone.Reliability](#rqsrs-037clickhousesessiontimezonereliability)
+  * 5.10 [RQ.SRS-037.ClickHouse.SessionTimezone.AggregateMergeTree](#rqsrs-037clickhousesessiontimezoneaggregatemergetree)
+  * 5.11 [RQ.SRS-037.ClickHouse.SessionTimezone.MaterializedView](#rqsrs-037clickhousesessiontimezonematerializedview)
+  * 5.12 [RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues](#rqsrs-037clickhousesessiontimezonepossiblevalues)
+  * 5.13 [RQ.SRS-037.ClickHouse.SessionTimezone.DefaultValue](#rqsrs-037clickhousesessiontimezonedefaultvalue)
+  * 5.14 [RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue](#rqsrs-037clickhousesessiontimezonewrongsettingvalue)
+  * 5.15 [RQ.SRS-037.ClickHouse.SessionTimezone.ClickhouseLocal](#rqsrs-037clickhousesessiontimezoneclickhouselocal)
+  * 5.16 [Non-Functional Requirements](#non-functional-requirements)
+    * 5.16.1 [Performance](#performance)
+    * 5.16.2 [RQ.SRS-037.ClickHouse.SessionTimezone.Performance](#rqsrs-037clickhousesessiontimezoneperformance)
+    * 5.16.3 [Reliability](#reliability)
+    * 5.16.4 [RQ.SRS-037.ClickHouse.SessionTimezone.Reliability](#rqsrs-037clickhousesessiontimezonereliability)
 
 ## Introduction
 
@@ -1197,6 +1236,17 @@ version: 1.0
 
 [ClickHouse] SHALL support all `emptyArrayDate` and `emptyArrayDateTime` functions with `session_timezone`  
 setting and return correct value and data type.
+
+### RQ.SRS-037.ClickHouse.SessionTimezone.AggregateMergeTree
+version: 1.0
+
+[ClickHouse] SHALL support aggregation of Date, DateTime, and DateTime64 columns using a simple AggregateMergeTree when
+different inserts and selects involve different `session_timezone` values.
+
+### RQ.SRS-037.ClickHouse.SessionTimezone.MaterializedView
+version: 1.0
+
+[ClickHouse] SHALL support simple MaterializedView with `session_timezone` setting.
 
 ### RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues
 version: 1.0
