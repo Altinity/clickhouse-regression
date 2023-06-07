@@ -22,7 +22,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/test_files/data_SNAPPY.Parquet:/var/lib/test_files/data_SNAPPY.Parquet"
       - "${CLICKHOUSE_TESTS_DIR}/test_files/data_ZSTD.Parquet:/var/lib/test_files/data_ZSTD.Parquet"
       - "${CLICKHOUSE_TESTS_DIR}/test_files/data_LZ4.Parquet:/var/lib/test_files/data_LZ4.Parquet"
-      - "${CLICKHOUSE_TESTS_DIR}/test_files/chunked_array_test_file.parquet:/var/lib/test_files/chunked_array_test_file.parquet"
+      - "${CLICKHOUSE_TESTS_DIR}/test_files/generate_chunked_file.py:/var/lib/test_files/generate_chunked_file.py"
       - "${CLICKHOUSE_TESTS_DIR}/test_files/int-list-zero-based-chunked-array.parquet:/var/lib/test_files/int-list-zero-based-chunked-array.parquet"
       - "${CLICKHOUSE_TESTS_DIR}/test_files/list_monotonically_increasing_offsets.parquet:/var/lib/test_files/list_monotonically_increasing_offsets.parquet"
       - "${CLICKHOUSE_TESTS_DIR}/test_files/local_app.py:/var/lib/test_files/local_app.py"
