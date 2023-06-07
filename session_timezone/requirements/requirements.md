@@ -35,6 +35,9 @@
       * 5.9.1.12 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.FormatDateTime](#rqsrs-037clickhousesessiontimezonedatefunctionsformatdatetime)
       * 5.9.1.13 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.FormatDateTimeInJodaSyntax](#rqsrs-037clickhousesessiontimezonedatefunctionsformatdatetimeinjodasyntax)
       * 5.9.1.14 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ULIDStringToDateTime](#rqsrs-037clickhousesessiontimezonedatefunctionsulidstringtodatetime)
+      * 5.9.1.15 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.DictGetDate](#rqsrs-037clickhousesessiontimezonedatefunctionsdictgetdate)
+      * 5.9.1.16 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ReinterpretAsDate](#rqsrs-037clickhousesessiontimezonedatefunctionsreinterpretasdate)
+      * 5.9.1.17 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.EmptyArrayDate](#rqsrs-037clickhousesessiontimezonedatefunctionsemptyarraydate)
   * 5.10 [RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues](#rqsrs-037clickhousesessiontimezonepossiblevalues)
   * 5.11 [RQ.SRS-037.ClickHouse.SessionTimezone.DefaultValue](#rqsrs-037clickhousesessiontimezonedefaultvalue)
   * 5.12 [RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue](#rqsrs-037clickhousesessiontimezonewrongsettingvalue)
@@ -416,6 +419,28 @@ version: 1.0
 [ClickHouse] SHALL extract the timestamp from a ULID by using `ULIDStringToDateTime` with enabled `session_timezone`
 setting.
 
+##### RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.DictGetDate
+version: 1.0
+
+[ClickHouse] SHALL support all `dictGetDateT` functions with `session_timezone`  setting and return correct value and 
+data type.
+
+* dictGetDateTimeOrDefault
+* dictGetDate
+* dictGetDateTime
+* dictGetDateOrDefault
+
+##### RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ReinterpretAsDate
+version: 1.0
+
+[ClickHouse] SHALL support all `reinterpretAsDate` and `reinterpretAsDateTime` functions with `session_timezone`  
+setting and return correct value and data type.
+
+##### RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.EmptyArrayDate
+version: 1.0
+
+[ClickHouse] SHALL support all `emptyArrayDate` and `emptyArrayDateTime` functions with `session_timezone`  
+setting and return correct value and data type.
 
 ### RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues
 version: 1.0
