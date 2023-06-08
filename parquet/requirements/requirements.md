@@ -323,6 +323,28 @@ version: 1.0
 [ClickHouse] SHALL support specifying `output_format_parquet_string_as_string` to use Parquet String type instead of Binary.
 Default: `false`
 
+##### RQ.SRS-032.ClickHouse.Parquet.Select.Settings.StringAsFixedByteArray
+version: 1.0
+
+[ClickHouse] SHALL support specifying `output_format_parquet_fixed_string_as_fixed_byte_array` to Use Parquet FIXED_LENGTH_BYTE_ARRAY type instead of Binary/String for FixedString columns.
+Default: `true`
+
+##### RQ.SRS-032.ClickHouse.Parquet.Select.Settings.ParquetVersion
+version: 1.0
+
+[ClickHouse] SHALL support specifying `output_format_parquet_version` see the version of Parquet format used in output format.
+
+Supported versions: `1.0`, `2.4`, `2.6` and `2.latest`. \
+Default: `2.latest`
+
+##### RQ.SRS-032.ClickHouse.Parquet.Select.Settings.CompressionMethod
+version: 1.0
+
+[ClickHouse] SHALL support specifying `output_format_parquet_compression_method` see the compression method used in output Parquet format.
+
+Supported codecs:: `snappy`, `lz4`, `brotli`, `zstd`, `gzip`, `none`. \
+Default: `lz4`
+
 ### Table Functions
 
 #### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.URL
