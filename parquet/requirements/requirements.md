@@ -110,6 +110,11 @@ version: 1.0
 
 [ClickHouse] SHALL support `Parquet` data format.
 
+#### RQ.SRS-032.ClickHouse.Parquet.ClickHouseLocal
+version: 1.0
+
+[ClickHouse] SHALL support the usage of `clickhouse-local`.
+
 #### RQ.SRS-032.ClickHouse.Parquet.Encryption
 version: 1.0
 
@@ -292,6 +297,21 @@ version: 1.0
 ```bash
 clickhouse-client --query="SELECT * FROM {some_table} FORMAT Parquet" > {some_file.pq}
 ```
+OR
+```bash
+clickhouse-local --query="SELECT * FROM {some_table} FORMAT Parquet" > {some_file.pq}
+```
+#### RQ.SRS-032.ClickHouse.Parquet.Select.Outfile
+version: 1.0
+
+[ClickHouse] SHALL support exporting query results to an external file using `OUTFILE`.
+
+```sql
+SELECT *
+FROM sometable
+INTO OUTFILE 'export.parquet'
+FORMAT Parquet
+```
 
 #### RQ.SRS-032.ClickHouse.Parquet.Select.Join
 version: 1.0
@@ -337,16 +357,12 @@ Default: `true`
 version: 1.0
 
 [ClickHouse] SHALL support specifying `output_format_parquet_version` to see the version of Parquet format used in output format.
-
-Supported versions: `1.0`, `2.4`, `2.6` and `2.latest`. \
 Default: `2.latest`
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Select.Settings.CompressionMethod
 version: 1.0
 
 [ClickHouse] SHALL support specifying `output_format_parquet_compression_method` to see the compression method used in output Parquet format.
-
-Supported codecs:: `snappy`, `lz4`, `brotli`, `zstd`, `gzip`, `none`. \
 Default: `lz4`
 
 ### Table Functions
