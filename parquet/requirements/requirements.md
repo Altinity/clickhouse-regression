@@ -264,7 +264,7 @@ Example: parquet string with date values would be converted to `Date` type.
 version: 1.0
 
 [ClickHouse] SHALL support specifying `input_format_parquet_import_nested` to allow inserting arrays of
-nested structs into Nested tables.
+nested structs into Nested tables.\
 Default: `0`
 
 - `0` — Data can not be inserted into Nested columns as an array of structs.
@@ -274,20 +274,20 @@ Default: `0`
 version: 1.0
 
 [ClickHouse] SHALL support specifying `input_format_parquet_case_insensitive_column_matching` to ignore matching
-Parquet and ClickHouse columns.
+Parquet and ClickHouse columns.\
 Default: `false`
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.AllowMissingColumns
 version: 1.0
 
-[ClickHouse] SHALL support specifying `input_format_parquet_allow_missing_columns` to allow missing columns.
+[ClickHouse] SHALL support specifying `input_format_parquet_allow_missing_columns` to allow missing columns.\
 Default: `false`
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.SkipColumnsWithUnsupportedTypesInSchemaInference
 version: 1.0
 
 [ClickHouse] SHALL support specifying `input_format_parquet_skip_columns_with_unsupported_types_in_schema_inference`
-to allow skipping unsupported types.
+to allow skipping unsupported types.\
 Default: `false`
 
 ### SELECT
