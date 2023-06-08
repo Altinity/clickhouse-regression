@@ -241,6 +241,12 @@ version: 1.0
 
 [ClickHouse] SHALL support inserting parquet data into a table that has a projection on it.
 
+#### RQ.SRS-032.ClickHouse.Parquet.Insert.AutoTypecast
+version: 1.0
+
+[ClickHouse] SHALL automatically typecast parquet datatype based on the types in the target table.
+Example: parquet string with date values would be converted to `Date` type.
+
 #### INSERT Settings
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.ImportNested
@@ -248,7 +254,10 @@ version: 1.0
 
 [ClickHouse] SHALL support specifying `input_format_parquet_import_nested` to allow inserting arrays of
 nested structs into Nested tables.
-Default: `false`
+Default: `0`
+
+- `0` — Data can not be inserted into Nested columns as an array of structs.
+- `1` — Data can be inserted into Nested columns as an array of structs.
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.CaseInsensitiveColumnMatching
 version: 1.0
