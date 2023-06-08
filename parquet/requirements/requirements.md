@@ -85,6 +85,11 @@
       * 4.7.3.3 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Dictionary](#rqsrs-032clickhouseparquettableenginesspecialdictionary)
       * 4.7.3.4 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.File](#rqsrs-032clickhouseparquettableenginesspecialfile)
       * 4.7.3.5 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.URL](#rqsrs-032clickhouseparquettableenginesspecialurl)
+  * 4.8 [Metadata](#metadata)
+      * 4.8.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata](#rqsrs-032clickhouseparquetmetadataparquetmetadata)
+      * 4.8.3.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.File](#rqsrs-032clickhouseparquetmetadatafile)
+      * 4.8.3.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Column](#rqsrs-032clickhouseparquetmetadatacolumn)
+      * 4.8.3.4 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Header](#rqsrs-032clickhouseparquetmetadataheader)
 
 
 ## Revision History
@@ -531,6 +536,28 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL support Parquet format being writen into and read from a `URL` table engine.
+
+### Metadata
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata
+version: 1.0
+[ClickHouse] SHALL be accessed via `ParquetMetadata` argument
+```sql
+SELECT * FROM file(data.parquet, ParquetMetadata) format PrettyJSONEachRow
+```
+
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.File
+version: 1.0
+[ClickHouse] SHALL support accessing parquet `file metadata`
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Column
+version: 1.0
+[ClickHouse] SHALL support accessing parquet `column (chunk) metadata`
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Header
+version: 1.0
+[ClickHouse] SHALL support accessing parquet `page header metadata`
 
 [ClickHouse]: https://clickhouse.com
 [GitHub Repository]: https://github.com/ClickHouse/ClickHouse/blob/master/tests/testflows/parquet/requirements/requirements.md 
