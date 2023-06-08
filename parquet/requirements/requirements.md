@@ -255,7 +255,7 @@ version: 1.0
 #### RQ.SRS-032.ClickHouse.Parquet.Insert.AutoTypecast
 version: 1.0
 
-[ClickHouse] SHALL automatically typecast parquet datatype based on the types in the target table.
+[ClickHouse] SHALL automatically typecast parquet datatype based on the types in the target table.\
 Example: parquet string with date values would be converted to `Date` type.
 
 #### INSERT Settings
