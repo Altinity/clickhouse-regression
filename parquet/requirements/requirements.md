@@ -219,6 +219,8 @@ Parquet Decimal is currently not tested.
 - Struct
 - Map
 
+Arrays can be nested and can have a value of the `Nullable` type as an argument.
+
 #### RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write
 version:1.0
 
@@ -243,6 +245,8 @@ version:1.0
 - Map
 - Nullable
 - LowCardinality
+
+Arrays can be nested and can have a value of the `Nullable` type as an argument.
 
 ### Unsupported Parquet Types
 
