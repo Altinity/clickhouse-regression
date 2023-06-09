@@ -94,6 +94,8 @@
     * 4.8.4 [Error Recovery](#error-recovery)
       * 4.8.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptFile](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptfile)
       * 4.8.4.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumn](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumn)
+      * 4.8.4.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptPageHeader](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptpageheader)
+      * 4.8.4.4 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptPageData](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptpagedata)
   * 4.9 [Encoding](#encoding)
       * 4.9.4.1 [RQ.SRS-032.ClickHouse.Parquet.Encoding.Plain](#rqsrs-032clickhouseparquetencodingplain)
       * 4.9.4.2 [RQ.SRS-032.ClickHouse.Parquet.Encoding.RunLength](#rqsrs-032clickhouseparquetencodingrunlength)
@@ -580,11 +582,19 @@ version: 1.0
 #### Error Recovery
 ##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptFile
 version: 1.0
-[ClickHouse] SHALL output an error when trying to access the corrupt file's metadata. In this case the file metadata is corrupt, the file is lost
+[ClickHouse] SHALL output an error when trying to access the corrupt `file` metadata. In this case the file metadata is corrupt, the file is lost
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumn
 version: 1.0
-[ClickHouse] SHALL output an error when trying to access the corrupt column metadata.In this case that column chunk is lost (but column chunks for this column in other row groups are okay).
+[ClickHouse] SHALL output an error when trying to access the corrupt `column` metadata.In this case that column chunk is lost (but column chunks for this column in other row groups are okay).
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptPageHeader
+version: 1.0
+[ClickHouse] SHALL output an error when trying to access the corrupt `Page Header`. In this case the remaining pages in that chunk are lost.
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptPageData
+version: 1.0
+[ClickHouse] SHALL output an error when trying to access the corrupt `Page Data`. In this case that page is lost.
 
 
 ### Encoding
