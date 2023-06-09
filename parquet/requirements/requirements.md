@@ -205,27 +205,32 @@ version:1.0
 [ClickHouse] SHALL support reading the following Parquet data types:
 Parquet Decimal is currently not tested.
 
-- Bool
-- UInt8
-- Int8
-- UInt16
-- UInt32
-- UInt64
-- Int16
-- Int32
-- Int64
-- Float
-- Half_Float
-- Double
-- Date32
-- Date64
-- Timestamp
-- String
-- Binary
-- Decimal
-- List
-- Struct
-- Map
+
+| Parquet data type (SELECT) | ClickHouse data type          |
+|----------------------------|-------------------------------|
+| BOOL                       | Bool                          |
+| UINT8                      | UInt8                         |
+| INT8                       | Int8/Enum8                    |
+| UINT16                     | UInt16                        |
+| INT16                      | 	Int16/Enum16                 |
+| UINT32                     | 	UInt32                       |
+| INT32                      | 	Int32                        |
+| UINT64                     | 	UInt64                       |
+| INT64                      | Int64                         |
+| FLOAT                      | 	Float32                      |
+| DOUBLE                     | 	Float64                      |
+| DATE                       | Date32                        |
+| UINT32                     | 	DateTime                     |
+| TIMESTAMP                  | 	DateTime64                   |
+| BINARY                     | 	String                       |
+| FIXED_LENGTH_BYTE_ARRAY    | FixedString                   |
+| DECIMAL                    | 	Decimal                      |
+| LIST                       | 	Array                        |
+| STRUCT                     | Tuple                         |
+| MAP                        | Map                           |
+| UINT32                     | IPv4                          |
+| FIXED_LENGTH_BYTE_ARRAY    | 	IPv6                         |
+| FIXED_LENGTH_BYTE_ARRAY    | Int128/UInt128/Int256/UInt256 |
 
 #### RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNested
 version:1.0
@@ -236,6 +241,36 @@ version:1.0
 version:1.0
 
 [ClickHouse] SHALL support writing the following datatypes to Parquet:
+
+
+| Parquet data type (INSERT)              | ClickHouse data type          |
+|-----------------------------------------|-------------------------------|
+| BOOL                                    | Bool                          |
+| UINT8, BOOL                             | UInt8                         |
+| INT8                                    | 	Int8/Enum8                   |
+| UINT16                                  | UInt16                        |
+| INT16                                   | Int16/Enum16                  |
+| UINT32                                  | UInt32                        |
+| INT32                                   | 	Int32                        |
+| UINT64                                  | UInt64                        |
+| INT64                                   | 	Int64                        |
+| FLOAT                                   | Float32                       |
+| DOUBLE                                  | 	Float64                      |
+| DATE                                    | 	Date32                       |
+| TIME (ms)                               | 	DateTime                     |
+| TIMESTAMP, TIME (us, ns)                | DateTime64                    |
+| STRING, BINARY                          | String                        |
+| STRING, BINARY, FIXED_LENGTH_BYTE_ARRAY | FixedString                   |
+| DECIMAL                                 | 	Decimal                      |
+| LIST                                    | Array                         |
+| STRUCT                                  | Tuple                         |
+| MAP                                     | Map                           |
+| UINT32                                  | 	IPv4                         |
+| FIXED_LENGTH_BYTE_ARRAY, BINARY         | IPv6                          |
+| FIXED_LENGTH_BYTE_ARRAY, BINARY         | Int128/UInt128/Int256/UInt256 |
+
+
+
 
 - UInt8
 - Int8
@@ -404,7 +439,7 @@ clickhouse-local --query="SELECT * FROM {some_table} FORMAT Parquet" > {some_fil
 #### RQ.SRS-032.ClickHouse.Parquet.Select.Outfile
 version: 1.0
 
-[ClickHouse] SHALL support exporting query results to an external parquet file using `OUTFILE` clause.
+[ClickHouse] SHALL support writing output of `SELECT` query into a Parquet file using `OUTFILE` clause.
 
 ```sql
 SELECT *
