@@ -134,6 +134,11 @@ version: 1.0
 
 [ClickHouse] MAY not support reading encrypted Parquet files.
 
+#### RQ.SRS-032.ClickHouse.Parquet.Chunks
+version: 1.0
+
+[ClickHouse] SHALL support chunked `Parquet` files.
+
 #### Compression
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Compression.None
@@ -546,6 +551,7 @@ version: 1.0
 
 ### Metadata
 
+
 ##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata
 version: 1.0
 [ClickHouse] SHALL be accessed via `ParquetMetadata` argument
@@ -565,6 +571,17 @@ version: 1.0
 ##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Header
 version: 1.0
 [ClickHouse] SHALL support accessing parquet `page header metadata`
+
+
+#### Error Recovery
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptFile
+version: 1.0
+[ClickHouse] SHALL output an error when trying to access the corrupt file's metadata. In this case the file metadata is corrupt, the file is lost
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumn
+version: 1.0
+[ClickHouse] SHALL output an error when trying to access the corrupt column metadata.In this case that column chunk is lost (but column chunks for this column in other row groups are okay).
+
 
 ### Encoding
 ##### RQ.SRS-032.ClickHouse.Parquet.Encoding.Plain
