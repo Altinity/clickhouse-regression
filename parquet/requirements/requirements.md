@@ -117,6 +117,12 @@ All the updates are tracked using the [Revision History].
 
 This software requirements specification covers requirements for `Parquet` data format in [ClickHouse].
 
+The documentation used:
+- https://clickhouse.com/docs/en/operations/settings/formats#parquet-format-settings
+- https://clickhouse.com/docs/en/interfaces/formats#data-format-parquet
+- https://clickhouse.com/docs/en/integrations/data-formats/parquet#importing-from-parquet
+- https://parquet.apache.org/docs/
+
 ## Feature Diagram
 
 ![Generated using code in flowchart_code.md](parquet_flowchart.jpg)
@@ -135,7 +141,7 @@ version: 1.0
 #### RQ.SRS-032.ClickHouse.Parquet.ClickHouseLocal
 version: 1.0
 
-[ClickHouse] SHALL support the usage of `clickhouse-local`.
+[ClickHouse] SHALL support the usage of `clickhouse-local` with `Parquet` data format.
 
 #### RQ.SRS-032.ClickHouse.Parquet.Encryption
 version: 1.0
