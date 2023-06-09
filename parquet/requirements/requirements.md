@@ -290,8 +290,11 @@ version: 1.0
 #### RQ.SRS-032.ClickHouse.Parquet.Insert.AutoTypecast
 version: 1.0
 
+
 [ClickHouse] SHALL automatically typecast parquet datatype based on the types in the target table.\
 Example: parquet string with date values would be converted to `Date` type.
+
+ADD EXAMPLE
 
 #### INSERT Settings
 
@@ -338,10 +341,11 @@ OR
 ```bash
 clickhouse-local --query="SELECT * FROM {some_table} FORMAT Parquet" > {some_file.pq}
 ```
+
 #### RQ.SRS-032.ClickHouse.Parquet.Select.Outfile
 version: 1.0
 
-[ClickHouse] SHALL support exporting query results to an external file using `OUTFILE`.
+[ClickHouse] SHALL support exporting query results to an external parquet file using `OUTFILE` clause.
 
 ```sql
 SELECT *
@@ -572,7 +576,8 @@ version: 1.0
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata
 version: 1.0
-[ClickHouse] SHALL be accessed via `ParquetMetadata` argument
+
+[ClickHouse] SHALL be accessed via `ParquetMetadata` argument.
 ```sql
 SELECT * FROM file(data.parquet, ParquetMetadata) format PrettyJSONEachRow
 ```
@@ -580,59 +585,72 @@ SELECT * FROM file(data.parquet, ParquetMetadata) format PrettyJSONEachRow
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Metadata.File
 version: 1.0
-[ClickHouse] SHALL support accessing parquet `file metadata`
+
+[ClickHouse] SHALL support accessing parquet `file metadata`.
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Column
 version: 1.0
-[ClickHouse] SHALL support accessing parquet `column (chunk) metadata`
+
+[ClickHouse] SHALL support accessing parquet `column (chunk) metadata`.
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Header
 version: 1.0
-[ClickHouse] SHALL support accessing parquet `page header metadata`
+
+[ClickHouse] SHALL support accessing parquet `page header metadata`.
 
 
 #### Error Recovery
 ##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptFile
 version: 1.0
-[ClickHouse] SHALL output an error when trying to access the corrupt `file` metadata. In this case the file metadata is corrupt, the file is lost
+
+[ClickHouse] SHALL output an error when trying to access the corrupt `file` metadata. In this case the file metadata is corrupt, the file is lost.
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumn
 version: 1.0
+
 [ClickHouse] SHALL output an error when trying to access the corrupt `column` metadata.In this case that column chunk is lost (but column chunks for this column in other row groups are okay).
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptPageHeader
 version: 1.0
+
 [ClickHouse] SHALL output an error when trying to access the corrupt `Page Header`. In this case the remaining pages in that chunk are lost.
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptPageData
 version: 1.0
+
 [ClickHouse] SHALL output an error when trying to access the corrupt `Page Data`. In this case that page is lost.
 
 
 ### Encoding
 ##### RQ.SRS-032.ClickHouse.Parquet.Encoding.Plain
 version: 1.0
-[ClickHouse] SHALL support `Plain` encoded parquet files
+
+[ClickHouse] SHALL support `Plain` encoded parquet files.
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Encoding.RunLength
 version: 1.0
-[ClickHouse] SHALL support `Run Length Encoding / Bit-Packing Hybrid` encoded parquet files
+
+[ClickHouse] SHALL support `Run Length Encoding / Bit-Packing Hybrid` encoded parquet files.
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Encoding.Delta
 version: 1.0
-[ClickHouse] SHALL support `Delta Encoding` encoded parquet files
+
+[ClickHouse] SHALL support `Delta Encoding` encoded parquet files.
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Encoding.DeltaLengthByteArray
 version: 1.0
-[ClickHouse] SHALL support `Delta-length byte array` encoded parquet files
+
+[ClickHouse] SHALL support `Delta-length byte array` encoded parquet files.
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Encoding.DeltaStrings
 version: 1.0
-[ClickHouse] SHALL support `Delta Strings` encoded parquet files
+
+[ClickHouse] SHALL support `Delta Strings` encoded parquet files.
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Encoding.ByteStreamSplit
 version: 1.0
-[ClickHouse] SHALL support `Byte Stream Split` encoded parquet files
+
+[ClickHouse] SHALL support `Byte Stream Split` encoded parquet files.
 
 [ClickHouse]: https://clickhouse.com
 [GitHub Repository]: https://github.com/ClickHouse/ClickHouse/blob/master/tests/testflows/parquet/requirements/requirements.md 
