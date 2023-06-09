@@ -90,6 +90,13 @@
       * 4.8.3.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.File](#rqsrs-032clickhouseparquetmetadatafile)
       * 4.8.3.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Column](#rqsrs-032clickhouseparquetmetadatacolumn)
       * 4.8.3.4 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Header](#rqsrs-032clickhouseparquetmetadataheader)
+  * 4.9 [Encoding](#encoding)
+      * 4.9.3.1 [RQ.SRS-032.ClickHouse.Parquet.Encoding.Plain](#rqsrs-032clickhouseparquetencodingplain)
+      * 4.9.3.2 [RQ.SRS-032.ClickHouse.Parquet.Encoding.RunLength](#rqsrs-032clickhouseparquetencodingrunlength)
+      * 4.9.3.3 [RQ.SRS-032.ClickHouse.Parquet.Encoding.Delta](#rqsrs-032clickhouseparquetencodingdelta)
+      * 4.9.3.4 [RQ.SRS-032.ClickHouse.Parquet.Encoding.DeltaLengthByteArray](#rqsrs-032clickhouseparquetencodingdeltalengthbytearray)
+      * 4.9.3.5 [RQ.SRS-032.ClickHouse.Parquet.Encoding.DeltaStrings](#rqsrs-032clickhouseparquetencodingdeltastrings)
+      * 4.9.3.6 [RQ.SRS-032.ClickHouse.Parquet.Encoding.ByteStreamSplit](#rqsrs-032clickhouseparquetencodingbytestreamsplit)
 
 
 ## Revision History
@@ -558,6 +565,31 @@ version: 1.0
 ##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Header
 version: 1.0
 [ClickHouse] SHALL support accessing parquet `page header metadata`
+
+### Encoding
+##### RQ.SRS-032.ClickHouse.Parquet.Encoding.Plain
+version: 1.0
+[ClickHouse] SHALL support `Plain` encoded parquet files
+
+##### RQ.SRS-032.ClickHouse.Parquet.Encoding.RunLength
+version: 1.0
+[ClickHouse] SHALL support `Run Length Encoding / Bit-Packing Hybrid` encoded parquet files
+
+##### RQ.SRS-032.ClickHouse.Parquet.Encoding.Delta
+version: 1.0
+[ClickHouse] SHALL support `Delta Encoding` encoded parquet files
+
+##### RQ.SRS-032.ClickHouse.Parquet.Encoding.DeltaLengthByteArray
+version: 1.0
+[ClickHouse] SHALL support `Delta-length byte array` encoded parquet files
+
+##### RQ.SRS-032.ClickHouse.Parquet.Encoding.DeltaStrings
+version: 1.0
+[ClickHouse] SHALL support `Delta Strings` encoded parquet files
+
+##### RQ.SRS-032.ClickHouse.Parquet.Encoding.ByteStreamSplit
+version: 1.0
+[ClickHouse] SHALL support `Byte Stream Split` encoded parquet files
 
 [ClickHouse]: https://clickhouse.com
 [GitHub Repository]: https://github.com/ClickHouse/ClickHouse/blob/master/tests/testflows/parquet/requirements/requirements.md 
