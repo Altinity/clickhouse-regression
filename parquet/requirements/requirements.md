@@ -298,9 +298,62 @@ version: 1.0
 
 
 [ClickHouse] SHALL automatically typecast parquet datatype based on the types in the target table.\
-Example: parquet string with date values would be converted to `Date` type.
 
-ADD EXAMPLE
+Example:
+
+If we take the following parquet file:
+
+```
+┌─path────────────────────────────────────────────────────────────┬─date───────┬──hits─┐
+│ Akiba_Hebrew_Academy                                            │ 2017-08-01 │   241 │
+│ 1980_Rugby_League_State_of_Origin_match                         │ 2017-07-01 │     2 │
+│ Column_of_Santa_Felicita,_Florence                              │ 2017-06-01 │    14 │
+└─────────────────────────────────────────────────────────────────┴────────────┴───────┘
+```
+
+```
+┌─name─┬─type─────────────┬─default_type─┬─default_expression─┬─comment─┬─codec_expression─┬─ttl_expression─┐
+│ path │ Nullable(String) │              │                    │         │                  │                │
+│ date │ Nullable(String) │              │                    │         │                  │                │
+│ hits │ Nullable(Int64)  │              │                    │         │                  │                │
+└──────┴──────────────────┴──────────────┴────────────────────┴─────────┴──────────────────┴────────────────┘
+```
+
+
+Then create a table to import parquet data to:
+```sql
+CREATE TABLE sometable
+(
+    `path` String,
+    `date` Date,
+    `hits` UInt32
+)
+ENGINE = MergeTree
+ORDER BY (date, path)
+```
+
+Now we can import data using a FROM INFILE clause:
+
+
+```sql
+INSERT INTO sometable
+FROM INFILE 'data.parquet' FORMAT Parquet;
+```
+
+As a result we can see that ClickHouse automatically converted parquet `strings` (in the `date` column) to the `Date` type.
+
+
+```sql
+DESCRIBE TABLE sometable
+```
+
+```
+┌─name─┬─type───┬─default_type─┬─default_expression─┬─comment─┬─codec_expression─┬─ttl_expression─┐
+│ path │ String │              │                    │         │                  │                │
+│ date │ Date   │              │                    │         │                  │                │
+│ hits │ UInt32 │              │                    │         │                  │                │
+└──────┴────────┴──────────────┴────────────────────┴─────────┴──────────────────┴────────────────┘
+```
 
 #### INSERT Settings
 
@@ -385,31 +438,31 @@ version: 1.0
 ##### RQ.SRS-032.ClickHouse.Parquet.Select.Settings.RowGroupSize
 version: 1.0
 
-[ClickHouse] SHALL support specifying `output_format_parquet_row_group_size` row group size by row count.
+[ClickHouse] SHALL support specifying `output_format_parquet_row_group_size` row group size by row count.\
 Default: `1000000`
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Select.Settings.StringAsString
 version: 1.0
 
-[ClickHouse] SHALL support specifying `output_format_parquet_string_as_string` to use Parquet String type instead of Binary.
+[ClickHouse] SHALL support specifying `output_format_parquet_string_as_string` to use Parquet String type instead of Binary.\
 Default: `false`
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Select.Settings.StringAsFixedByteArray
 version: 1.0
 
-[ClickHouse] SHALL support specifying `output_format_parquet_fixed_string_as_fixed_byte_array` to use Parquet FIXED_LENGTH_BYTE_ARRAY type instead of Binary/String for FixedString columns.
+[ClickHouse] SHALL support specifying `output_format_parquet_fixed_string_as_fixed_byte_array` to use Parquet FIXED_LENGTH_BYTE_ARRAY type instead of Binary/String for FixedString columns.\
 Default: `true`
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Select.Settings.ParquetVersion
 version: 1.0
 
-[ClickHouse] SHALL support specifying `output_format_parquet_version` to see the version of Parquet format used in output format.
+[ClickHouse] SHALL support specifying `output_format_parquet_version` to see the version of Parquet format used in output format.\
 Default: `2.latest`
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Select.Settings.CompressionMethod
 version: 1.0
 
-[ClickHouse] SHALL support specifying `output_format_parquet_compression_method` to see the compression method used in output Parquet format.
+[ClickHouse] SHALL support specifying `output_format_parquet_compression_method` to see the compression method used in output Parquet format.\
 Default: `lz4`
 
 ### Table Functions
