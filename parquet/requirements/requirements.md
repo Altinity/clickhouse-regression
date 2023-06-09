@@ -24,7 +24,9 @@
       * 4.1.6.3 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Zstd](#rqsrs-032clickhouseparquetunsupportedcompressionzstd)
   * 4.2 [Data Types](#data-types)
     * 4.2.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Read](#rqsrs-032clickhouseparquetdatatypesread)
-    * 4.2.2 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write](#rqsrs-032clickhouseparquetdatatypeswrite)
+    * 4.2.2 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNested](#rqsrs-032clickhouseparquetdatatypesreadnested)
+    * 4.2.3 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write](#rqsrs-032clickhouseparquetdatatypeswrite)
+    * 4.2.4 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNested](#rqsrs-032clickhouseparquetdatatypeswritenested)
   * 4.3 [Unsupported Parquet Types](#unsupported-parquet-types)
     * 4.3.1 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes](#rqsrs-032clickhouseparquetunsupportedparquettypes)
     * 4.3.2 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.ChunkedArray](#rqsrs-032clickhouseparquetunsupportedparquettypeschunkedarray)
@@ -219,7 +221,10 @@ Parquet Decimal is currently not tested.
 - Struct
 - Map
 
-Arrays can be nested and can have a value of the `Nullable` type as an argument.
+#### RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNested
+version:1.0
+
+[ClickHouse] SHALL support reading nested arrays in parquet files, they also can have a value of the `Nullable` type as an argument
 
 #### RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write
 version:1.0
@@ -246,7 +251,10 @@ version:1.0
 - Nullable
 - LowCardinality
 
-Arrays can be nested and can have a value of the `Nullable` type as an argument.
+#### RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNested
+version:1.0
+
+[ClickHouse] SHALL support writing nested arrays in parquet files, they also can have a value of the `Nullable` type as an argument
 
 ### Unsupported Parquet Types
 
