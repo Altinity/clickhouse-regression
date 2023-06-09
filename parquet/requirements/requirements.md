@@ -9,51 +9,49 @@
 * 4 [Requirements](#requirements)
   * 4.1 [General](#general)
     * 4.1.1 [RQ.SRS-032.ClickHouse.Parquet](#rqsrs-032clickhouseparquet)
-    * 4.1.2 [RQ.SRS-032.ClickHouse.Parquet.Null](#rqsrs-032clickhouseparquetnull)
-      * 4.1.2.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption](#rqsrs-032clickhouseparquetencryption)
-  * 4.2 [INSERT](#insert)
-    * 4.2.1 [RQ.SRS-032.ClickHouse.Parquet.Insert](#rqsrs-032clickhouseparquetinsert)
-    * 4.2.2 [RQ.SRS-032.ClickHouse.Parquet.Insert.Projections](#rqsrs-032clickhouseparquetinsertprojections)
-    * 4.2.3 [Compression](#compression)
-      * 4.2.3.1 [RQ.SRS-032.ClickHouse.Parquet.Insert.Compression.None](#rqsrs-032clickhouseparquetinsertcompressionnone)
-      * 4.2.3.2 [RQ.SRS-032.ClickHouse.Parquet.Insert.Compression.Gzip](#rqsrs-032clickhouseparquetinsertcompressiongzip)
-      * 4.2.3.3 [RQ.SRS-032.ClickHouse.Parquet.Insert.Compression.Brotli](#rqsrs-032clickhouseparquetinsertcompressionbrotli)
-      * 4.2.3.4 [RQ.SRS-032.ClickHouse.Parquet.Insert.Compression.Lz4](#rqsrs-032clickhouseparquetinsertcompressionlz4)
-      * 4.2.3.5 [RQ.SRS-032.ClickHouse.Parquet.Insert.Compression.Lz4Raw](#rqsrs-032clickhouseparquetinsertcompressionlz4raw)
-    * 4.2.4 [Unsupported Compression](#unsupported-compression)
-      * 4.2.4.1 [RQ.SRS-032.ClickHouse.Parquet.Insert.UnsupportedCompression.Snappy](#rqsrs-032clickhouseparquetinsertunsupportedcompressionsnappy)
-      * 4.2.4.2 [RQ.SRS-032.ClickHouse.Parquet.Insert.UnsupportedCompression.Lzo](#rqsrs-032clickhouseparquetinsertunsupportedcompressionlzo)
-      * 4.2.4.3 [RQ.SRS-032.ClickHouse.Parquet.Insert.UnsupportedCompression.Zstd](#rqsrs-032clickhouseparquetinsertunsupportedcompressionzstd)
-    * 4.2.5 [INSERT Settings](#insert-settings)
-      * 4.2.5.1 [RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.ImportNested](#rqsrs-032clickhouseparquetinsertsettingsimportnested)
-      * 4.2.5.2 [RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.CaseInsensitiveColumnMatching](#rqsrs-032clickhouseparquetinsertsettingscaseinsensitivecolumnmatching)
-      * 4.2.5.3 [RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.AllowMissingColumns](#rqsrs-032clickhouseparquetinsertsettingsallowmissingcolumns)
-      * 4.2.5.4 [RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.SkipColumnsWithUnsupportedTypesInSchemaInference](#rqsrs-032clickhouseparquetinsertsettingsskipcolumnswithunsupportedtypesinschemainference)
-    * 4.2.6 [INSERT Conversions](#insert-conversions)
-      * 4.2.6.1 [RQ.SRS-032.ClickHouse.Parquet.InsertConversions](#rqsrs-032clickhouseparquetinsertconversions)
-  * 4.3 [SELECT](#select)
-    * 4.3.1 [RQ.SRS-032.ClickHouse.Parquet.Select](#rqsrs-032clickhouseparquetselect)
-    * 4.3.2 [RQ.SRS-032.ClickHouse.Parquet.Select.Join](#rqsrs-032clickhouseparquetselectjoin)
-    * 4.3.3 [RQ.SRS-032.ClickHouse.Parquet.Select.Union](#rqsrs-032clickhouseparquetselectunion)
-    * 4.3.4 [RQ.SRS-032.ClickHouse.Parquet.Select.View](#rqsrs-032clickhouseparquetselectview)
-    * 4.3.5 [RQ.SRS-032.ClickHouse.Parquet.Select.MaterializedView](#rqsrs-032clickhouseparquetselectmaterializedview)
-    * 4.3.6 [SELECT Settings](#select-settings)
-      * 4.3.6.1 [RQ.SRS-032.ClickHouse.Parquet.Select.Settings.RowGroupSize](#rqsrs-032clickhouseparquetselectsettingsrowgroupsize)
-      * 4.3.6.2 [RQ.SRS-032.ClickHouse.Parquet.Select.Settings.StringAsString](#rqsrs-032clickhouseparquetselectsettingsstringasstring)
-    * 4.3.7 [SELECT Conversions](#select-conversions)
-      * 4.3.7.1 [RQ.SRS-032.ClickHouse.Parquet.SelectConversions](#rqsrs-032clickhouseparquetselectconversions)
-  * 4.4 [Nested Types](#nested-types)
-    * 4.4.1 [RQ.SRS-032.ClickHouse.Parquet.NestedTypes.Arrays](#rqsrs-032clickhouseparquetnestedtypesarrays)
-    * 4.4.2 [RQ.SRS-032.ClickHouse.Parquet.NestedTypes.Tuple](#rqsrs-032clickhouseparquetnestedtypestuple)
-    * 4.4.3 [RQ.SRS-032.ClickHouse.Parquet.NestedTypes.Map](#rqsrs-032clickhouseparquetnestedtypesmap)
-    * 4.4.4 [RQ.SRS-032.ClickHouse.Parquet.NestedTypes.LowCardinalityNullable](#rqsrs-032clickhouseparquetnestedtypeslowcardinalitynullable)
-  * 4.5 [Unsupported Parquet Types](#unsupported-parquet-types)
-    * 4.5.1 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.Time32](#rqsrs-032clickhouseparquetunsupportedparquettypestime32)
-    * 4.5.2 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.FixedSizeBinary](#rqsrs-032clickhouseparquetunsupportedparquettypesfixedsizebinary)
-    * 4.5.3 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.JSON](#rqsrs-032clickhouseparquetunsupportedparquettypesjson)
-    * 4.5.4 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.UUID](#rqsrs-032clickhouseparquetunsupportedparquettypesuuid)
-    * 4.5.5 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.ENUM](#rqsrs-032clickhouseparquetunsupportedparquettypesenum)
-    * 4.5.6 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.ChunkedArray](#rqsrs-032clickhouseparquetunsupportedparquettypeschunkedarray)
+    * 4.1.2 [RQ.SRS-032.ClickHouse.Parquet.ClickHouseLocal](#rqsrs-032clickhouseparquetclickhouselocal)
+    * 4.1.3 [RQ.SRS-032.ClickHouse.Parquet.Encryption](#rqsrs-032clickhouseparquetencryption)
+    * 4.1.4 [RQ.SRS-032.ClickHouse.Parquet.Chunks](#rqsrs-032clickhouseparquetchunks)
+    * 4.1.5 [Compression](#compression)
+      * 4.1.5.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.None](#rqsrs-032clickhouseparquetcompressionnone)
+      * 4.1.5.2 [RQ.SRS-032.ClickHouse.Parquet.Compression.Gzip](#rqsrs-032clickhouseparquetcompressiongzip)
+      * 4.1.5.3 [RQ.SRS-032.ClickHouse.Parquet.Compression.Brotli](#rqsrs-032clickhouseparquetcompressionbrotli)
+      * 4.1.5.4 [RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4](#rqsrs-032clickhouseparquetcompressionlz4)
+      * 4.1.5.5 [RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4Raw](#rqsrs-032clickhouseparquetcompressionlz4raw)
+    * 4.1.6 [Unsupported Compression](#unsupported-compression)
+      * 4.1.6.1 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Snappy](#rqsrs-032clickhouseparquetunsupportedcompressionsnappy)
+      * 4.1.6.2 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Lzo](#rqsrs-032clickhouseparquetunsupportedcompressionlzo)
+      * 4.1.6.3 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Zstd](#rqsrs-032clickhouseparquetunsupportedcompressionzstd)
+  * 4.2 [Data Types](#data-types)
+    * 4.2.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Read](#rqsrs-032clickhouseparquetdatatypesread)
+    * 4.2.2 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNested](#rqsrs-032clickhouseparquetdatatypesreadnested)
+    * 4.2.3 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write](#rqsrs-032clickhouseparquetdatatypeswrite)
+    * 4.2.4 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNested](#rqsrs-032clickhouseparquetdatatypeswritenested)
+  * 4.3 [Unsupported Parquet Types](#unsupported-parquet-types)
+    * 4.3.1 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes](#rqsrs-032clickhouseparquetunsupportedparquettypes)
+    * 4.3.2 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.ChunkedArray](#rqsrs-032clickhouseparquetunsupportedparquettypeschunkedarray)
+  * 4.4 [INSERT](#insert)
+    * 4.4.1 [RQ.SRS-032.ClickHouse.Parquet.Insert](#rqsrs-032clickhouseparquetinsert)
+    * 4.4.2 [RQ.SRS-032.ClickHouse.Parquet.Insert.Projections](#rqsrs-032clickhouseparquetinsertprojections)
+    * 4.4.3 [RQ.SRS-032.ClickHouse.Parquet.Insert.AutoTypecast](#rqsrs-032clickhouseparquetinsertautotypecast)
+    * 4.4.4 [INSERT Settings](#insert-settings)
+      * 4.4.4.1 [RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.ImportNested](#rqsrs-032clickhouseparquetinsertsettingsimportnested)
+      * 4.4.4.2 [RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.CaseInsensitiveColumnMatching](#rqsrs-032clickhouseparquetinsertsettingscaseinsensitivecolumnmatching)
+      * 4.4.4.3 [RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.AllowMissingColumns](#rqsrs-032clickhouseparquetinsertsettingsallowmissingcolumns)
+      * 4.4.4.4 [RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.SkipColumnsWithUnsupportedTypesInSchemaInference](#rqsrs-032clickhouseparquetinsertsettingsskipcolumnswithunsupportedtypesinschemainference)
+  * 4.5 [SELECT](#select)
+    * 4.5.1 [RQ.SRS-032.ClickHouse.Parquet.Select](#rqsrs-032clickhouseparquetselect)
+    * 4.5.2 [RQ.SRS-032.ClickHouse.Parquet.Select.Outfile](#rqsrs-032clickhouseparquetselectoutfile)
+    * 4.5.3 [RQ.SRS-032.ClickHouse.Parquet.Select.Join](#rqsrs-032clickhouseparquetselectjoin)
+    * 4.5.4 [RQ.SRS-032.ClickHouse.Parquet.Select.Union](#rqsrs-032clickhouseparquetselectunion)
+    * 4.5.5 [RQ.SRS-032.ClickHouse.Parquet.Select.View](#rqsrs-032clickhouseparquetselectview)
+    * 4.5.6 [RQ.SRS-032.ClickHouse.Parquet.Select.MaterializedView](#rqsrs-032clickhouseparquetselectmaterializedview)
+    * 4.5.7 [SELECT Settings](#select-settings)
+      * 4.5.7.1 [RQ.SRS-032.ClickHouse.Parquet.Select.Settings.RowGroupSize](#rqsrs-032clickhouseparquetselectsettingsrowgroupsize)
+      * 4.5.7.2 [RQ.SRS-032.ClickHouse.Parquet.Select.Settings.StringAsString](#rqsrs-032clickhouseparquetselectsettingsstringasstring)
+      * 4.5.7.3 [RQ.SRS-032.ClickHouse.Parquet.Select.Settings.StringAsFixedByteArray](#rqsrs-032clickhouseparquetselectsettingsstringasfixedbytearray)
+      * 4.5.7.4 [RQ.SRS-032.ClickHouse.Parquet.Select.Settings.ParquetVersion](#rqsrs-032clickhouseparquetselectsettingsparquetversion)
+      * 4.5.7.5 [RQ.SRS-032.ClickHouse.Parquet.Select.Settings.CompressionMethod](#rqsrs-032clickhouseparquetselectsettingscompressionmethod)
   * 4.6 [Table Functions](#table-functions)
     * 4.6.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.URL](#rqsrs-032clickhouseparquettablefunctionsurl)
     * 4.6.2 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.File](#rqsrs-032clickhouseparquettablefunctionsfile)
@@ -90,6 +88,23 @@
       * 4.7.3.3 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Dictionary](#rqsrs-032clickhouseparquettableenginesspecialdictionary)
       * 4.7.3.4 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.File](#rqsrs-032clickhouseparquettableenginesspecialfile)
       * 4.7.3.5 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.URL](#rqsrs-032clickhouseparquettableenginesspecialurl)
+  * 4.8 [Metadata](#metadata)
+      * 4.8.3.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata](#rqsrs-032clickhouseparquetmetadataparquetmetadata)
+      * 4.8.3.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.File](#rqsrs-032clickhouseparquetmetadatafile)
+      * 4.8.3.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Column](#rqsrs-032clickhouseparquetmetadatacolumn)
+      * 4.8.3.4 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Header](#rqsrs-032clickhouseparquetmetadataheader)
+    * 4.8.4 [Error Recovery](#error-recovery)
+      * 4.8.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptFile](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptfile)
+      * 4.8.4.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumn](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumn)
+      * 4.8.4.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptPageHeader](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptpageheader)
+      * 4.8.4.4 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptPageData](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptpagedata)
+  * 4.9 [Encoding](#encoding)
+      * 4.9.4.1 [RQ.SRS-032.ClickHouse.Parquet.Encoding.Plain](#rqsrs-032clickhouseparquetencodingplain)
+      * 4.9.4.2 [RQ.SRS-032.ClickHouse.Parquet.Encoding.RunLength](#rqsrs-032clickhouseparquetencodingrunlength)
+      * 4.9.4.3 [RQ.SRS-032.ClickHouse.Parquet.Encoding.Delta](#rqsrs-032clickhouseparquetencodingdelta)
+      * 4.9.4.4 [RQ.SRS-032.ClickHouse.Parquet.Encoding.DeltaLengthByteArray](#rqsrs-032clickhouseparquetencodingdeltalengthbytearray)
+      * 4.9.4.5 [RQ.SRS-032.ClickHouse.Parquet.Encoding.DeltaStrings](#rqsrs-032clickhouseparquetencodingdeltastrings)
+      * 4.9.4.6 [RQ.SRS-032.ClickHouse.Parquet.Encoding.ByteStreamSplit](#rqsrs-032clickhouseparquetencodingbytestreamsplit)
 
 
 ## Revision History
@@ -117,10 +132,20 @@ version: 1.0
 
 [ClickHouse] SHALL support `Parquet` data format.
 
+#### RQ.SRS-032.ClickHouse.Parquet.ClickHouseLocal
+version: 1.0
+
+[ClickHouse] SHALL support the usage of `clickhouse-local`.
+
 #### RQ.SRS-032.ClickHouse.Parquet.Encryption
 version: 1.0
 
 [ClickHouse] MAY not support reading encrypted Parquet files.
+
+#### RQ.SRS-032.ClickHouse.Parquet.Chunks
+version: 1.0
+
+[ClickHouse] SHALL support chunked `Parquet` files.
 
 #### Compression
 
@@ -196,6 +221,11 @@ Parquet Decimal is currently not tested.
 - Struct
 - Map
 
+#### RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNested
+version:1.0
+
+[ClickHouse] SHALL support reading nested arrays in parquet files, they also can have a value of the `Nullable` type as an argument
+
 #### RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write
 version:1.0
 
@@ -220,6 +250,11 @@ version:1.0
 - Map
 - Nullable
 - LowCardinality
+
+#### RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNested
+version:1.0
+
+[ClickHouse] SHALL support writing nested arrays in parquet files, they also can have a value of the `Nullable` type as an argument
 
 ### Unsupported Parquet Types
 
@@ -252,33 +287,42 @@ version: 1.0
 
 [ClickHouse] SHALL support inserting parquet data into a table that has a projection on it.
 
+#### RQ.SRS-032.ClickHouse.Parquet.Insert.AutoTypecast
+version: 1.0
+
+[ClickHouse] SHALL automatically typecast parquet datatype based on the types in the target table.\
+Example: parquet string with date values would be converted to `Date` type.
+
 #### INSERT Settings
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.ImportNested
 version: 1.0
 
 [ClickHouse] SHALL support specifying `input_format_parquet_import_nested` to allow inserting arrays of
-nested structs into Nested tables.
-Default: `false`
+nested structs into Nested tables.\
+Default: `0`
+
+- `0` — Data can not be inserted into Nested columns as an array of structs.
+- `1` — Data can be inserted into Nested columns as an array of structs.
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.CaseInsensitiveColumnMatching
 version: 1.0
 
 [ClickHouse] SHALL support specifying `input_format_parquet_case_insensitive_column_matching` to ignore matching
-Parquet and ClickHouse columns.
+Parquet and ClickHouse columns.\
 Default: `false`
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.AllowMissingColumns
 version: 1.0
 
-[ClickHouse] SHALL support specifying `input_format_parquet_allow_missing_columns` to allow missing columns.
+[ClickHouse] SHALL support specifying `input_format_parquet_allow_missing_columns` to allow missing columns.\
 Default: `false`
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.SkipColumnsWithUnsupportedTypesInSchemaInference
 version: 1.0
 
 [ClickHouse] SHALL support specifying `input_format_parquet_skip_columns_with_unsupported_types_in_schema_inference`
-to allow skipping unsupported types.
+to allow skipping unsupported types.\
 Default: `false`
 
 ### SELECT
@@ -289,6 +333,21 @@ version: 1.0
 [ClickHouse] SHALL support writing output of `SELECT` query into a Parquet file.
 ```bash
 clickhouse-client --query="SELECT * FROM {some_table} FORMAT Parquet" > {some_file.pq}
+```
+OR
+```bash
+clickhouse-local --query="SELECT * FROM {some_table} FORMAT Parquet" > {some_file.pq}
+```
+#### RQ.SRS-032.ClickHouse.Parquet.Select.Outfile
+version: 1.0
+
+[ClickHouse] SHALL support exporting query results to an external file using `OUTFILE`.
+
+```sql
+SELECT *
+FROM sometable
+INTO OUTFILE 'export.parquet'
+FORMAT Parquet
 ```
 
 #### RQ.SRS-032.ClickHouse.Parquet.Select.Join
@@ -324,6 +383,24 @@ version: 1.0
 
 [ClickHouse] SHALL support specifying `output_format_parquet_string_as_string` to use Parquet String type instead of Binary.
 Default: `false`
+
+##### RQ.SRS-032.ClickHouse.Parquet.Select.Settings.StringAsFixedByteArray
+version: 1.0
+
+[ClickHouse] SHALL support specifying `output_format_parquet_fixed_string_as_fixed_byte_array` to use Parquet FIXED_LENGTH_BYTE_ARRAY type instead of Binary/String for FixedString columns.
+Default: `true`
+
+##### RQ.SRS-032.ClickHouse.Parquet.Select.Settings.ParquetVersion
+version: 1.0
+
+[ClickHouse] SHALL support specifying `output_format_parquet_version` to see the version of Parquet format used in output format.
+Default: `2.latest`
+
+##### RQ.SRS-032.ClickHouse.Parquet.Select.Settings.CompressionMethod
+version: 1.0
+
+[ClickHouse] SHALL support specifying `output_format_parquet_compression_method` to see the compression method used in output Parquet format.
+Default: `lz4`
 
 ### Table Functions
 
@@ -489,6 +566,73 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL support Parquet format being writen into and read from a `URL` table engine.
+
+### Metadata
+
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata
+version: 1.0
+[ClickHouse] SHALL be accessed via `ParquetMetadata` argument
+```sql
+SELECT * FROM file(data.parquet, ParquetMetadata) format PrettyJSONEachRow
+```
+
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.File
+version: 1.0
+[ClickHouse] SHALL support accessing parquet `file metadata`
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Column
+version: 1.0
+[ClickHouse] SHALL support accessing parquet `column (chunk) metadata`
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Header
+version: 1.0
+[ClickHouse] SHALL support accessing parquet `page header metadata`
+
+
+#### Error Recovery
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptFile
+version: 1.0
+[ClickHouse] SHALL output an error when trying to access the corrupt `file` metadata. In this case the file metadata is corrupt, the file is lost
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumn
+version: 1.0
+[ClickHouse] SHALL output an error when trying to access the corrupt `column` metadata.In this case that column chunk is lost (but column chunks for this column in other row groups are okay).
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptPageHeader
+version: 1.0
+[ClickHouse] SHALL output an error when trying to access the corrupt `Page Header`. In this case the remaining pages in that chunk are lost.
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptPageData
+version: 1.0
+[ClickHouse] SHALL output an error when trying to access the corrupt `Page Data`. In this case that page is lost.
+
+
+### Encoding
+##### RQ.SRS-032.ClickHouse.Parquet.Encoding.Plain
+version: 1.0
+[ClickHouse] SHALL support `Plain` encoded parquet files
+
+##### RQ.SRS-032.ClickHouse.Parquet.Encoding.RunLength
+version: 1.0
+[ClickHouse] SHALL support `Run Length Encoding / Bit-Packing Hybrid` encoded parquet files
+
+##### RQ.SRS-032.ClickHouse.Parquet.Encoding.Delta
+version: 1.0
+[ClickHouse] SHALL support `Delta Encoding` encoded parquet files
+
+##### RQ.SRS-032.ClickHouse.Parquet.Encoding.DeltaLengthByteArray
+version: 1.0
+[ClickHouse] SHALL support `Delta-length byte array` encoded parquet files
+
+##### RQ.SRS-032.ClickHouse.Parquet.Encoding.DeltaStrings
+version: 1.0
+[ClickHouse] SHALL support `Delta Strings` encoded parquet files
+
+##### RQ.SRS-032.ClickHouse.Parquet.Encoding.ByteStreamSplit
+version: 1.0
+[ClickHouse] SHALL support `Byte Stream Split` encoded parquet files
 
 [ClickHouse]: https://clickhouse.com
 [GitHub Repository]: https://github.com/ClickHouse/ClickHouse/blob/master/tests/testflows/parquet/requirements/requirements.md 
