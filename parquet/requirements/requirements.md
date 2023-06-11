@@ -25,20 +25,23 @@
   * 4.2 [Data Types](#data-types)
     * 4.2.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Read](#rqsrs-032clickhouseparquetdatatypesread)
     * 4.2.2 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNested](#rqsrs-032clickhouseparquetdatatypesreadnested)
-    * 4.2.3 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write](#rqsrs-032clickhouseparquetdatatypeswrite)
-    * 4.2.4 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNested](#rqsrs-032clickhouseparquetdatatypeswritenested)
+    * 4.2.3 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNullable](#rqsrs-032clickhouseparquetdatatypesreadnullable)
+    * 4.2.4 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write](#rqsrs-032clickhouseparquetdatatypeswrite)
+    * 4.2.5 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNested](#rqsrs-032clickhouseparquetdatatypeswritenested)
   * 4.3 [Unsupported Parquet Types](#unsupported-parquet-types)
     * 4.3.1 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes](#rqsrs-032clickhouseparquetunsupportedparquettypes)
     * 4.3.2 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.ChunkedArray](#rqsrs-032clickhouseparquetunsupportedparquettypeschunkedarray)
   * 4.4 [INSERT](#insert)
     * 4.4.1 [RQ.SRS-032.ClickHouse.Parquet.Insert](#rqsrs-032clickhouseparquetinsert)
     * 4.4.2 [RQ.SRS-032.ClickHouse.Parquet.Insert.Projections](#rqsrs-032clickhouseparquetinsertprojections)
-    * 4.4.3 [RQ.SRS-032.ClickHouse.Parquet.Insert.AutoTypecast](#rqsrs-032clickhouseparquetinsertautotypecast)
-    * 4.4.4 [INSERT Settings](#insert-settings)
-      * 4.4.4.1 [RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.ImportNested](#rqsrs-032clickhouseparquetinsertsettingsimportnested)
-      * 4.4.4.2 [RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.CaseInsensitiveColumnMatching](#rqsrs-032clickhouseparquetinsertsettingscaseinsensitivecolumnmatching)
-      * 4.4.4.3 [RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.AllowMissingColumns](#rqsrs-032clickhouseparquetinsertsettingsallowmissingcolumns)
-      * 4.4.4.4 [RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.SkipColumnsWithUnsupportedTypesInSchemaInference](#rqsrs-032clickhouseparquetinsertsettingsskipcolumnswithunsupportedtypesinschemainference)
+    * 4.4.3 [RQ.SRS-032.ClickHouse.Parquet.Insert.SkipColumns](#rqsrs-032clickhouseparquetinsertskipcolumns)
+    * 4.4.4 [RQ.SRS-032.ClickHouse.Parquet.Insert.SkipValues](#rqsrs-032clickhouseparquetinsertskipvalues)
+    * 4.4.5 [RQ.SRS-032.ClickHouse.Parquet.Insert.AutoTypecast](#rqsrs-032clickhouseparquetinsertautotypecast)
+    * 4.4.6 [INSERT Settings](#insert-settings)
+      * 4.4.6.1 [RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.ImportNested](#rqsrs-032clickhouseparquetinsertsettingsimportnested)
+      * 4.4.6.2 [RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.CaseInsensitiveColumnMatching](#rqsrs-032clickhouseparquetinsertsettingscaseinsensitivecolumnmatching)
+      * 4.4.6.3 [RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.AllowMissingColumns](#rqsrs-032clickhouseparquetinsertsettingsallowmissingcolumns)
+      * 4.4.6.4 [RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.SkipColumnsWithUnsupportedTypesInSchemaInference](#rqsrs-032clickhouseparquetinsertsettingsskipcolumnswithunsupportedtypesinschemainference)
   * 4.5 [SELECT](#select)
     * 4.5.1 [RQ.SRS-032.ClickHouse.Parquet.Select](#rqsrs-032clickhouseparquetselect)
     * 4.5.2 [RQ.SRS-032.ClickHouse.Parquet.Select.Outfile](#rqsrs-032clickhouseparquetselectoutfile)
@@ -238,6 +241,12 @@ version:1.0
 
 [ClickHouse]  SHALL support reading nested: `Array`, `Tuple` and `Map` datatypes in parquet files.
 
+
+#### RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNullable
+version:1.0
+
+[ClickHouse] SHALL support reading `Nullable` datatypes in parquet files.
+
 #### RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write
 version:1.0
 
@@ -307,6 +316,16 @@ version: 1.0
 
 [ClickHouse] SHALL support inserting parquet data into a table that has a projection on it.
 
+#### RQ.SRS-032.ClickHouse.Parquet.Insert.SkipColumns
+version: 1.0
+
+[ClickHouse] SHALL support skipping unexistent columns when reading from parquet files.
+
+#### RQ.SRS-032.ClickHouse.Parquet.Insert.SkipValues
+version: 1.0
+
+[ClickHouse] SHALL support skipping unexistent values when reading from parquet files.
+
 #### RQ.SRS-032.ClickHouse.Parquet.Insert.AutoTypecast
 version: 1.0
 
@@ -346,7 +365,7 @@ ENGINE = MergeTree
 ORDER BY (date, path)
 ```
 
-Now we can import data using a FROM INFILE clause:
+Then import data using a FROM INFILE clause:
 
 
 ```sql
@@ -354,7 +373,7 @@ INSERT INTO sometable
 FROM INFILE 'data.parquet' FORMAT Parquet;
 ```
 
-As a result we can see that ClickHouse automatically converted parquet `strings` (in the `date` column) to the `Date` type.
+As a result ClickHouse automatically converted parquet `strings` (in the `date` column) to the `Date` type.
 
 
 ```sql
@@ -491,10 +510,21 @@ version: 1.0
 
 [ClickHouse] SHALL support `file` table function reading and writing Parquet format.
 
+Example:
+```sql
+SELECT * FROM file('data.parquet', Parquet)
+```
+
+
 #### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3
 version: 1.0
 
 [ClickHouse] SHALL support `s3` table function reading and writing Parquet format.
+
+```sql
+SELECT *
+FROM gcs('https://storage.googleapis.com/my-test-bucket-768/data.parquet', Parquet)
+```
 
 #### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.JDBC
 version: 1.0
