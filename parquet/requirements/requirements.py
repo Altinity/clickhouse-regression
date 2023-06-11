@@ -917,9 +917,18 @@ RQ_SRS_032_ClickHouse_Parquet_TableFunctions_MySQL = Requirement(
         '\n'
         'Example:\n'
         '\n'
-        'Given we have a [ClickHouse] table with a `mysql` engine, we can write to a parquet file format with:\n'
+        'Given we have a [ClickHouse] table with a `mysql` engine:\n'
         '```sql\n'
-        'SELECT * FROM testTable INTO OUTFILE testTable.parquet FORMAT Parquet\n'
+        'CREATE TABLE mysql_table1 (\n'
+        '  id UInt64,\n'
+        '  column1 String\n'
+        ')\n'
+        "ENGINE = MySQL('mysql-host.domain.com','db1','table1','mysql_clickhouse','Password123!')\n"
+        '```\n'
+        'We can write to a parquet file format with:\n'
+        '\n'
+        '```sql\n'
+        'SELECT * FROM mysql_table1 INTO OUTFILE testTable.parquet FORMAT Parquet\n'
         '```\n'
         '\n'
     ),
@@ -2329,9 +2338,18 @@ version: 1.0
 
 Example:
 
-Given we have a [ClickHouse] table with a `mysql` engine, we can write to a parquet file format with:
+Given we have a [ClickHouse] table with a `mysql` engine:
 ```sql
-SELECT * FROM testTable INTO OUTFILE testTable.parquet FORMAT Parquet
+CREATE TABLE mysql_table1 (
+  id UInt64,
+  column1 String
+)
+ENGINE = MySQL('mysql-host.domain.com','db1','table1','mysql_clickhouse','Password123!')
+```
+We can write to a parquet file format with:
+
+```sql
+SELECT * FROM mysql_table1 INTO OUTFILE testTable.parquet FORMAT Parquet
 ```
 
 #### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.PostgreSQL
