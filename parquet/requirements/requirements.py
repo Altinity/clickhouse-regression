@@ -9,1569 +9,1552 @@ from testflows.core import Requirement
 Heading = Specification.Heading
 
 RQ_SRS_032_ClickHouse_Parquet = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
-    description=(
-        '[ClickHouse] SHALL support `Parquet` data format.\n'
-        '\n'
-    ),
+    description=("[ClickHouse] SHALL support `Parquet` data format.\n" "\n"),
     link=None,
     level=3,
-    num='4.1.1'
+    num="4.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ClickHouseLocal = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.ClickHouseLocal',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.ClickHouseLocal",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support the usage of `clickhouse-local` with `Parquet` data format.\n'
-        '\n'
+        "[ClickHouse] SHALL support the usage of `clickhouse-local` with `Parquet` data format.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.1.2'
+    num="4.1.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Encryption = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Encryption',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Encryption",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] MAY not support reading encrypted Parquet files.\n'
-        '\n'
+        "[ClickHouse] MAY not support reading encrypted Parquet files.\n" "\n"
     ),
     link=None,
     level=3,
-    num='4.1.3'
+    num="4.1.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Chunks = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Chunks',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Chunks",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
-    description=(
-        '[ClickHouse] SHALL support chunked `Parquet` files.\n'
-        '\n'
-    ),
+    description=("[ClickHouse] SHALL support chunked `Parquet` files.\n" "\n"),
     link=None,
     level=3,
-    num='4.1.4'
+    num="4.1.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Compression_None = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Compression.None',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Compression.None",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support reading or writing uncompressed Parquet files.\n'
-        '\n'
+        "[ClickHouse] SHALL support reading or writing uncompressed Parquet files.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.1.5.1'
+    num="4.1.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Compression.Gzip',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Compression.Gzip",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support reading or writing Parquet files compressed using gzip.\n'
-        '\n'
+        "[ClickHouse] SHALL support reading or writing Parquet files compressed using gzip.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.1.5.2'
+    num="4.1.5.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Compression_Brotli = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Compression.Brotli',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Compression.Brotli",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support reading or writing Parquet files compressed using brotli.\n'
-        '\n'
+        "[ClickHouse] SHALL support reading or writing Parquet files compressed using brotli.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.1.5.3'
+    num="4.1.5.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4 = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support reading or writing Parquet files compressed using lz4.\n'
-        '\n'
+        "[ClickHouse] SHALL support reading or writing Parquet files compressed using lz4.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.1.5.4'
+    num="4.1.5.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4Raw = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4Raw',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4Raw",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support reading or writing Parquet files compressed using lz4_raw.\n'
-        '\n'
+        "[ClickHouse] SHALL support reading or writing Parquet files compressed using lz4_raw.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.1.5.5'
+    num="4.1.5.5",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Snappy = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Snappy',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Snappy",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] MAY not support reading or writing Parquet files compressed using snapy.\n'
-        '\n'
+        "[ClickHouse] MAY not support reading or writing Parquet files compressed using snapy.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.1.6.1'
+    num="4.1.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Lzo = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Lzo',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Lzo",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] MAY not support reading or writing Parquet files compressed using lzo.\n'
-        '\n'
+        "[ClickHouse] MAY not support reading or writing Parquet files compressed using lzo.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.1.6.2'
+    num="4.1.6.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Zstd = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Zstd',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Zstd",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] MAY not support reading or writing Parquet files compressed using zstd.\n'
-        '\n'
+        "[ClickHouse] MAY not support reading or writing Parquet files compressed using zstd.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.1.6.3'
+    num="4.1.6.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_Read = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.DataTypes.Read',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.Read",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support reading the following Parquet data types:\n'
-        'Parquet Decimal is currently not tested.\n'
-        '\n'
-        '\n'
-        '| Parquet data type (INSERT)                    | ClickHouse data type                  |\n'
-        '|-----------------------------------------------|---------------------------------------|\n'
-        '| `BOOL`                                        | `Bool`                                |\n'
-        '| `UINT8`, `BOOL`                               | `UInt8`                               |\n'
-        '| `INT8`                                        | \t`Int8`/`Enum8`                       |\n'
-        '| `UINT16`                                      | `UInt16`                              |\n'
-        '| `INT16`                                       | `Int16`/`Enum16`                      |\n'
-        '| `UINT32`                                      | `UInt32`                              |\n'
-        '| `INT32`                                       | \t`Int32`                              |\n'
-        '| `UINT64`                                      | `UInt64`                              |\n'
-        '| `INT64`                                       | \t`Int64`                              |\n'
-        '| `FLOAT`                                       | `Float32`                             |\n'
-        '| `DOUBLE`                                      | \t`Float64`                            |\n'
-        '| `DATE`                                        | \t`Date32`                             |\n'
-        '| `TIME (ms)`                                   | \t`DateTime`                           |\n'
-        '| `TIMESTAMP`, `TIME (us, ns)`                  | `DateTime64`                          |\n'
-        '| `STRING`, `BINARY`                            | `String`                              |\n'
-        '| `STRING`, `BINARY`, `FIXED_LENGTH_BYTE_ARRAY` | `FixedString`                         |\n'
-        '| `DECIMAL`                                     | \t`Decimal`                            |\n'
-        '| `LIST`                                        | `Array`                               |\n'
-        '| `STRUCT`                                      | `Tuple`                               |\n'
-        '| `MAP`                                         | `Map`                                 |\n'
-        '| `UINT32`                                      | \t`IPv4`                               |\n'
-        '| `FIXED_LENGTH_BYTE_ARRAY`, `BINARY`           | `IPv6`                                |\n'
-        '| `FIXED_LENGTH_BYTE_ARRAY`, `BINARY`           | `Int128`/`UInt128`/`Int256`/`UInt256` |\n'
-        '\n'
-        '\n'
+        "[ClickHouse] SHALL support reading the following Parquet data types:\n"
+        "Parquet Decimal is currently not tested.\n"
+        "\n"
+        "\n"
+        "| Parquet data type (INSERT)                    | ClickHouse data type                  |\n"
+        "|-----------------------------------------------|---------------------------------------|\n"
+        "| `BOOL`                                        | `Bool`                                |\n"
+        "| `UINT8`, `BOOL`                               | `UInt8`                               |\n"
+        "| `INT8`                                        | \t`Int8`/`Enum8`                       |\n"
+        "| `UINT16`                                      | `UInt16`                              |\n"
+        "| `INT16`                                       | `Int16`/`Enum16`                      |\n"
+        "| `UINT32`                                      | `UInt32`                              |\n"
+        "| `INT32`                                       | \t`Int32`                              |\n"
+        "| `UINT64`                                      | `UInt64`                              |\n"
+        "| `INT64`                                       | \t`Int64`                              |\n"
+        "| `FLOAT`                                       | `Float32`                             |\n"
+        "| `DOUBLE`                                      | \t`Float64`                            |\n"
+        "| `DATE`                                        | \t`Date32`                             |\n"
+        "| `TIME (ms)`                                   | \t`DateTime`                           |\n"
+        "| `TIMESTAMP`, `TIME (us, ns)`                  | `DateTime64`                          |\n"
+        "| `STRING`, `BINARY`                            | `String`                              |\n"
+        "| `STRING`, `BINARY`, `FIXED_LENGTH_BYTE_ARRAY` | `FixedString`                         |\n"
+        "| `DECIMAL`                                     | \t`Decimal`                            |\n"
+        "| `LIST`                                        | `Array`                               |\n"
+        "| `STRUCT`                                      | `Tuple`                               |\n"
+        "| `MAP`                                         | `Map`                                 |\n"
+        "| `UINT32`                                      | \t`IPv4`                               |\n"
+        "| `FIXED_LENGTH_BYTE_ARRAY`, `BINARY`           | `IPv6`                                |\n"
+        "| `FIXED_LENGTH_BYTE_ARRAY`, `BINARY`           | `Int128`/`UInt128`/`Int256`/`UInt256` |\n"
+        "\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.2.1'
+    num="4.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadNested = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNested',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNested",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse]  SHALL support reading nested: `Array`, `Tuple` and `Map` datatypes in parquet files.\n'
-        '\n'
-        '\n'
+        "[ClickHouse]  SHALL support reading nested: `Array`, `Tuple` and `Map` datatypes in parquet files.\n"
+        "\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.2.2'
+    num="4.2.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadNullable = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNullable',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNullable",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support reading `Nullable` datatypes in parquet files.\n'
-        '\n'
+        "[ClickHouse] SHALL support reading `Nullable` datatypes in parquet files.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.2.3'
+    num="4.2.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_Write = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support writing the following datatypes to Parquet:\n'
-        '\n'
-        '\n'
-        '| Parquet data type (SELECT) | ClickHouse data type                  |\n'
-        '|----------------------------|---------------------------------------|\n'
-        '| `BOOL`                     | `Bool`                                |\n'
-        '| `UINT8`                    | `UInt8`                               |\n'
-        '| `INT8`                     | `Int8`/`Enum8`                        |\n'
-        '| `UINT16`                   | `UInt16`                              |\n'
-        '| `INT16`                    | \t`Int16`/`Enum16`                     |\n'
-        '| `UINT32`                   | \t`UInt32`                             |\n'
-        '| `INT32`                    | \t`Int32`                              |\n'
-        '| `UINT64`                   | \t`UInt64`                             |\n'
-        '| `INT64`                    | `Int64`                               |\n'
-        '| `FLOAT`                    | \t`Float32`                            |\n'
-        '| `DOUBLE`                   | \t`Float64`                            |\n'
-        '| `DATE`                     | `Date32`                              |\n'
-        '| `UINT32`                   | \t`DateTime`                           |\n'
-        '| `TIMESTAMP`                | \t`DateTime64`                         |\n'
-        '| `BINARY`                   | \t`String`                             |\n'
-        '| `FIXED_LENGTH_BYTE_ARRAY`  | `FixedString`                         |\n'
-        '| `DECIMAL`                  | \t`Decimal`                            |\n'
-        '| `LIST`                     | \t`Array`                              |\n'
-        '| `STRUCT`                   | `Tuple`                               |\n'
-        '| `MAP`                      | `Map`                                 |\n'
-        '| `UINT32`                   | `IPv4`                                |\n'
-        '| `FIXED_LENGTH_BYTE_ARRAY`  | \t`IPv6`                               |\n'
-        '| `FIXED_LENGTH_BYTE_ARRAY`  | `Int128`/`UInt128`/`Int256`/`UInt256` |\n'
-        '\n'
-        '\n'
+        "[ClickHouse] SHALL support writing the following datatypes to Parquet:\n"
+        "\n"
+        "\n"
+        "| Parquet data type (SELECT) | ClickHouse data type                  |\n"
+        "|----------------------------|---------------------------------------|\n"
+        "| `BOOL`                     | `Bool`                                |\n"
+        "| `UINT8`                    | `UInt8`                               |\n"
+        "| `INT8`                     | `Int8`/`Enum8`                        |\n"
+        "| `UINT16`                   | `UInt16`                              |\n"
+        "| `INT16`                    | \t`Int16`/`Enum16`                     |\n"
+        "| `UINT32`                   | \t`UInt32`                             |\n"
+        "| `INT32`                    | \t`Int32`                              |\n"
+        "| `UINT64`                   | \t`UInt64`                             |\n"
+        "| `INT64`                    | `Int64`                               |\n"
+        "| `FLOAT`                    | \t`Float32`                            |\n"
+        "| `DOUBLE`                   | \t`Float64`                            |\n"
+        "| `DATE`                     | `Date32`                              |\n"
+        "| `UINT32`                   | \t`DateTime`                           |\n"
+        "| `TIMESTAMP`                | \t`DateTime64`                         |\n"
+        "| `BINARY`                   | \t`String`                             |\n"
+        "| `FIXED_LENGTH_BYTE_ARRAY`  | `FixedString`                         |\n"
+        "| `DECIMAL`                  | \t`Decimal`                            |\n"
+        "| `LIST`                     | \t`Array`                              |\n"
+        "| `STRUCT`                   | `Tuple`                               |\n"
+        "| `MAP`                      | `Map`                                 |\n"
+        "| `UINT32`                   | `IPv4`                                |\n"
+        "| `FIXED_LENGTH_BYTE_ARRAY`  | \t`IPv6`                               |\n"
+        "| `FIXED_LENGTH_BYTE_ARRAY`  | `Int128`/`UInt128`/`Int256`/`UInt256` |\n"
+        "\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.2.4'
+    num="4.2.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_WriteNested = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNested',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNested",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support writings nested: `Array`, `Tuple` and `Map` datatypes in parquet files.\n'
-        '\n'
+        "[ClickHouse] SHALL support writings nested: `Array`, `Tuple` and `Map` datatypes in parquet files.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.2.5'
+    num="4.2.5",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_UnsupportedParquetTypes = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] MAY not support the following Parquet types:\n'
-        '\n'
-        '- `Time32`\n'
-        '- `Fixed_Size_Binary`\n'
-        '- `JSON`\n'
-        '- `UUID`\n'
-        '- `ENUM`\n'
-        '\n'
+        "[ClickHouse] MAY not support the following Parquet types:\n"
+        "\n"
+        "- `Time32`\n"
+        "- `Fixed_Size_Binary`\n"
+        "- `JSON`\n"
+        "- `UUID`\n"
+        "- `ENUM`\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.3.1'
+    num="4.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_UnsupportedParquetTypes_ChunkedArray = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.ChunkedArray',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.ChunkedArray",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
-    description=(
-        '[ClickHouse] MAY not support Parquet chunked arrays.\n'
-        '\n'
-    ),
+    description=("[ClickHouse] MAY not support Parquet chunked arrays.\n" "\n"),
     link=None,
     level=3,
-    num='4.3.2'
+    num="4.3.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Insert = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Insert',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Insert",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support using `INSERT` query with `FROM INFILE {file_name}` and `FORMAT Parquet` clauses to\n'
-        'read data from Parquet files and insert data into tables or table functions.\n'
-        '\n'
+        "[ClickHouse] SHALL support using `INSERT` query with `FROM INFILE {file_name}` and `FORMAT Parquet` clauses to\n"
+        "read data from Parquet files and insert data into tables or table functions.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.4.1'
+    num="4.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Insert_Projections = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Insert.Projections',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Insert.Projections",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support inserting parquet data into a table that has a projection on it.\n'
-        '\n'
+        "[ClickHouse] SHALL support inserting parquet data into a table that has a projection on it.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.4.2'
+    num="4.4.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Insert_SkipColumns = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Insert.SkipColumns',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Insert.SkipColumns",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support skipping unexistent columns when reading from parquet files.\n'
-        '\n'
+        "[ClickHouse] SHALL support skipping unexistent columns when reading from parquet files.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.4.3'
+    num="4.4.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Insert_SkipValues = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Insert.SkipValues',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Insert.SkipValues",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support skipping unexistent values when reading from parquet files.\n'
-        '\n'
+        "[ClickHouse] SHALL support skipping unexistent values when reading from parquet files.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.4.4'
+    num="4.4.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Insert_AutoTypecast = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Insert.AutoTypecast',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Insert.AutoTypecast",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL automatically typecast parquet datatype based on the types in the target table.\\\n'
-        '\n'
-        'Example:\n'
-        '\n'
-        'When we take the following parquet file:\n'
-        '\n'
-        '```\n'
-        '┌─path────────────────────────────────────────────────────────────┬─date───────┬──hits─┐\n'
-        '│ Akiba_Hebrew_Academy                                            │ 2017-08-01 │   241 │\n'
-        '│ 1980_Rugby_League_State_of_Origin_match                         │ 2017-07-01 │     2 │\n'
-        '│ Column_of_Santa_Felicita,_Florence                              │ 2017-06-01 │    14 │\n'
-        '└─────────────────────────────────────────────────────────────────┴────────────┴───────┘\n'
-        '```\n'
-        '\n'
-        '```\n'
-        '┌─name─┬─type─────────────┬─default_type─┬─default_expression─┬─comment─┬─codec_expression─┬─ttl_expression─┐\n'
-        '│ path │ Nullable(String) │              │                    │         │                  │                │\n'
-        '│ date │ Nullable(String) │              │                    │         │                  │                │\n'
-        '│ hits │ Nullable(Int64)  │              │                    │         │                  │                │\n'
-        '└──────┴──────────────────┴──────────────┴────────────────────┴─────────┴──────────────────┴────────────────┘\n'
-        '```\n'
-        '\n'
-        '\n'
-        'Then create a table to import parquet data to:\n'
-        '```sql\n'
-        'CREATE TABLE sometable\n'
-        '(\n'
-        '    `path` String,\n'
-        '    `date` Date,\n'
-        '    `hits` UInt32\n'
-        ')\n'
-        'ENGINE = MergeTree\n'
-        'ORDER BY (date, path)\n'
-        '```\n'
-        '\n'
-        'Then import data using a FROM INFILE clause:\n'
-        '\n'
-        '\n'
-        '```sql\n'
-        'INSERT INTO sometable\n'
+        "[ClickHouse] SHALL automatically typecast parquet datatype based on the types in the target table.\\\n"
+        "\n"
+        "Example:\n"
+        "\n"
+        "When we take the following parquet file:\n"
+        "\n"
+        "```\n"
+        "┌─path────────────────────────────────────────────────────────────┬─date───────┬──hits─┐\n"
+        "│ Akiba_Hebrew_Academy                                            │ 2017-08-01 │   241 │\n"
+        "│ 1980_Rugby_League_State_of_Origin_match                         │ 2017-07-01 │     2 │\n"
+        "│ Column_of_Santa_Felicita,_Florence                              │ 2017-06-01 │    14 │\n"
+        "└─────────────────────────────────────────────────────────────────┴────────────┴───────┘\n"
+        "```\n"
+        "\n"
+        "```\n"
+        "┌─name─┬─type─────────────┬─default_type─┬─default_expression─┬─comment─┬─codec_expression─┬─ttl_expression─┐\n"
+        "│ path │ Nullable(String) │              │                    │         │                  │                │\n"
+        "│ date │ Nullable(String) │              │                    │         │                  │                │\n"
+        "│ hits │ Nullable(Int64)  │              │                    │         │                  │                │\n"
+        "└──────┴──────────────────┴──────────────┴────────────────────┴─────────┴──────────────────┴────────────────┘\n"
+        "```\n"
+        "\n"
+        "\n"
+        "Then create a table to import parquet data to:\n"
+        "```sql\n"
+        "CREATE TABLE sometable\n"
+        "(\n"
+        "    `path` String,\n"
+        "    `date` Date,\n"
+        "    `hits` UInt32\n"
+        ")\n"
+        "ENGINE = MergeTree\n"
+        "ORDER BY (date, path)\n"
+        "```\n"
+        "\n"
+        "Then import data using a FROM INFILE clause:\n"
+        "\n"
+        "\n"
+        "```sql\n"
+        "INSERT INTO sometable\n"
         "FROM INFILE 'data.parquet' FORMAT Parquet;\n"
-        '```\n'
-        '\n'
-        'As a result ClickHouse automatically converted parquet `strings` (in the `date` column) to the `Date` type.\n'
-        '\n'
-        '\n'
-        '```sql\n'
-        'DESCRIBE TABLE sometable\n'
-        '```\n'
-        '\n'
-        '```\n'
-        '┌─name─┬─type───┬─default_type─┬─default_expression─┬─comment─┬─codec_expression─┬─ttl_expression─┐\n'
-        '│ path │ String │              │                    │         │                  │                │\n'
-        '│ date │ Date   │              │                    │         │                  │                │\n'
-        '│ hits │ UInt32 │              │                    │         │                  │                │\n'
-        '└──────┴────────┴──────────────┴────────────────────┴─────────┴──────────────────┴────────────────┘\n'
-        '```\n'
-        '\n'
+        "```\n"
+        "\n"
+        "As a result ClickHouse automatically converted parquet `strings` (in the `date` column) to the `Date` type.\n"
+        "\n"
+        "\n"
+        "```sql\n"
+        "DESCRIBE TABLE sometable\n"
+        "```\n"
+        "\n"
+        "```\n"
+        "┌─name─┬─type───┬─default_type─┬─default_expression─┬─comment─┬─codec_expression─┬─ttl_expression─┐\n"
+        "│ path │ String │              │                    │         │                  │                │\n"
+        "│ date │ Date   │              │                    │         │                  │                │\n"
+        "│ hits │ UInt32 │              │                    │         │                  │                │\n"
+        "└──────┴────────┴──────────────┴────────────────────┴─────────┴──────────────────┴────────────────┘\n"
+        "```\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.4.5'
+    num="4.4.5",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Insert_Settings_ImportNested = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.ImportNested',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.ImportNested",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support specifying `input_format_parquet_import_nested` to allow inserting arrays of\n'
-        'nested structs into Nested tables.\\\n'
-        'Default: `0`\n'
-        '\n'
-        '- `0` — Data can not be inserted into Nested columns as an array of structs.\n'
-        '- `1` — Data can be inserted into Nested columns as an array of structs.\n'
-        '\n'
+        "[ClickHouse] SHALL support specifying `input_format_parquet_import_nested` to allow inserting arrays of\n"
+        "nested structs into Nested tables.\\\n"
+        "Default: `0`\n"
+        "\n"
+        "- `0` — Data can not be inserted into Nested columns as an array of structs.\n"
+        "- `1` — Data can be inserted into Nested columns as an array of structs.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.6.1'
+    num="4.4.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Insert_Settings_CaseInsensitiveColumnMatching = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.CaseInsensitiveColumnMatching',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.CaseInsensitiveColumnMatching",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support specifying `input_format_parquet_case_insensitive_column_matching` to ignore matching\n'
-        'Parquet and ClickHouse columns.\\\n'
-        'Default: `false`\n'
-        '\n'
+        "[ClickHouse] SHALL support specifying `input_format_parquet_case_insensitive_column_matching` to ignore matching\n"
+        "Parquet and ClickHouse columns.\\\n"
+        "Default: `false`\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.6.2'
+    num="4.4.6.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Insert_Settings_AllowMissingColumns = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.AllowMissingColumns',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.AllowMissingColumns",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support specifying `input_format_parquet_allow_missing_columns` to allow missing columns.\\\n'
-        'Default: `false`\n'
-        '\n'
+        "[ClickHouse] SHALL support specifying `input_format_parquet_allow_missing_columns` to allow missing columns.\\\n"
+        "Default: `false`\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.6.3'
+    num="4.4.6.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Insert_Settings_SkipColumnsWithUnsupportedTypesInSchemaInference = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.SkipColumnsWithUnsupportedTypesInSchemaInference',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.SkipColumnsWithUnsupportedTypesInSchemaInference",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support specifying `input_format_parquet_skip_columns_with_unsupported_types_in_schema_inference`\n'
-        'to allow skipping unsupported types.\\\n'
-        'Default: `false`\n'
-        '\n'
+        "[ClickHouse] SHALL support specifying `input_format_parquet_skip_columns_with_unsupported_types_in_schema_inference`\n"
+        "to allow skipping unsupported types.\\\n"
+        "Default: `false`\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.6.4'
+    num="4.4.6.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Select = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Select',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Select",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support writing output of `SELECT` query into a Parquet file.\n'
-        '```bash\n'
+        "[ClickHouse] SHALL support writing output of `SELECT` query into a Parquet file.\n"
+        "```bash\n"
         'clickhouse-client --query="SELECT * FROM {some_table} FORMAT Parquet" > {some_file.pq}\n'
-        '```\n'
-        'OR\n'
-        '```bash\n'
+        "```\n"
+        "OR\n"
+        "```bash\n"
         'clickhouse-local --query="SELECT * FROM {some_table} FORMAT Parquet" > {some_file.pq}\n'
-        '```\n'
-        '\n'
+        "```\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.5.1'
+    num="4.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Select_Outfile = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Select.Outfile',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Select.Outfile",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support writing output of `SELECT` query into a Parquet file using `OUTFILE` clause.\n'
-        '\n'
-        '```sql\n'
-        'SELECT *\n'
-        'FROM sometable\n'
+        "[ClickHouse] SHALL support writing output of `SELECT` query into a Parquet file using `OUTFILE` clause.\n"
+        "\n"
+        "```sql\n"
+        "SELECT *\n"
+        "FROM sometable\n"
         "INTO OUTFILE 'export.parquet'\n"
-        'FORMAT Parquet\n'
-        '```\n'
-        '\n'
+        "FORMAT Parquet\n"
+        "```\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.5.2'
+    num="4.5.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Select_Join = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Select.Join',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Select.Join",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support writing output of `SELECT` query with a `JOIN` clause into a Parquet file.\n'
-        '\n'
+        "[ClickHouse] SHALL support writing output of `SELECT` query with a `JOIN` clause into a Parquet file.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.5.3'
+    num="4.5.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Select_Union = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Select.Union',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Select.Union",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support writing output of `SELECT` query with a `UNION` clause into a Parquet file.\n'
-        '\n'
+        "[ClickHouse] SHALL support writing output of `SELECT` query with a `UNION` clause into a Parquet file.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.5.4'
+    num="4.5.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Select_View = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Select.View',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Select.View",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support writing output of `SELECT * FROM {view_name}` query into a Parquet file.\n'
-        '\n'
+        "[ClickHouse] SHALL support writing output of `SELECT * FROM {view_name}` query into a Parquet file.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.5.5'
+    num="4.5.5",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Select_MaterializedView = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Select.MaterializedView',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Select.MaterializedView",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support writing output of `SELECT * FROM {mat_view_name}` query into a Parquet file.\n'
-        '\n'
+        "[ClickHouse] SHALL support writing output of `SELECT * FROM {mat_view_name}` query into a Parquet file.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.5.6'
+    num="4.5.6",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Select_Settings_RowGroupSize = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Select.Settings.RowGroupSize',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Select.Settings.RowGroupSize",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support specifying `output_format_parquet_row_group_size` row group size by row count.\\\n'
-        'Default: `1000000`\n'
-        '\n'
+        "[ClickHouse] SHALL support specifying `output_format_parquet_row_group_size` row group size by row count.\\\n"
+        "Default: `1000000`\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.5.7.1'
+    num="4.5.7.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Select_Settings_StringAsString = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Select.Settings.StringAsString',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Select.Settings.StringAsString",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support specifying `output_format_parquet_string_as_string` to use Parquet String type instead of Binary.\\\n'
-        'Default: `false`\n'
-        '\n'
+        "[ClickHouse] SHALL support specifying `output_format_parquet_string_as_string` to use Parquet String type instead of Binary.\\\n"
+        "Default: `false`\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.5.7.2'
+    num="4.5.7.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Select_Settings_StringAsFixedByteArray = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Select.Settings.StringAsFixedByteArray',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Select.Settings.StringAsFixedByteArray",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support specifying `output_format_parquet_fixed_string_as_fixed_byte_array` to use Parquet FIXED_LENGTH_BYTE_ARRAY type instead of Binary/String for FixedString columns.\\\n'
-        'Default: `true`\n'
-        '\n'
+        "[ClickHouse] SHALL support specifying `output_format_parquet_fixed_string_as_fixed_byte_array` to use Parquet FIXED_LENGTH_BYTE_ARRAY type instead of Binary/String for FixedString columns.\\\n"
+        "Default: `true`\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.5.7.3'
+    num="4.5.7.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Select_Settings_ParquetVersion = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Select.Settings.ParquetVersion',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Select.Settings.ParquetVersion",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support specifying `output_format_parquet_version` to see the version of Parquet format used in output format.\\\n'
-        'Default: `2.latest`\n'
-        '\n'
+        "[ClickHouse] SHALL support specifying `output_format_parquet_version` to see the version of Parquet format used in output format.\\\n"
+        "Default: `2.latest`\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.5.7.4'
+    num="4.5.7.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Select_Settings_CompressionMethod = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Select.Settings.CompressionMethod',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Select.Settings.CompressionMethod",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support specifying `output_format_parquet_compression_method` to see the compression method used in output Parquet format.\\\n'
-        'Default: `lz4`\n'
-        '\n'
+        "[ClickHouse] SHALL support specifying `output_format_parquet_compression_method` to see the compression method used in output Parquet format.\\\n"
+        "Default: `lz4`\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.5.7.5'
+    num="4.5.7.5",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableFunctions_URL = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableFunctions.URL',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.URL",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support `url` table function reading and writing Parquet format.\n'
-        '\n'
+        "[ClickHouse] SHALL support `url` table function reading and writing Parquet format.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.6.1'
+    num="4.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableFunctions_File = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableFunctions.File',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.File",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support `file` table function reading and writing Parquet format.\n'
-        '\n'
-        'Example:\n'
-        '```sql\n'
+        "[ClickHouse] SHALL support `file` table function reading and writing Parquet format.\n"
+        "\n"
+        "Example:\n"
+        "```sql\n"
         "SELECT * FROM file('data.parquet', Parquet)\n"
-        '```\n'
-        '\n'
-        '\n'
+        "```\n"
+        "\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.6.2'
+    num="4.6.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableFunctions_S3 = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support `s3` table function reading and writing Parquet format.\n'
-        '\n'
-        '```sql\n'
-        'SELECT *\n'
+        "[ClickHouse] SHALL support `s3` table function reading and writing Parquet format.\n"
+        "\n"
+        "```sql\n"
+        "SELECT *\n"
         "FROM gcs('https://storage.googleapis.com/my-test-bucket-768/data.parquet', Parquet)\n"
-        '```\n'
-        '\n'
+        "```\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.6.3'
+    num="4.6.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableFunctions_JDBC = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableFunctions.JDBC',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.JDBC",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support `jdbc` table function reading and writing Parquet format.\n'
-        '\n'
+        "[ClickHouse] SHALL support `jdbc` table function reading and writing Parquet format.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.6.4'
+    num="4.6.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableFunctions_ODBC = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableFunctions.ODBC',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.ODBC",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support `odbc` table function reading and writing Parquet format.\n'
-        '\n'
+        "[ClickHouse] SHALL support `odbc` table function reading and writing Parquet format.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.6.5'
+    num="4.6.5",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableFunctions_HDFS = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableFunctions.HDFS',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.HDFS",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support `hdfs` table function reading and writing Parquet format.\n'
-        '\n'
+        "[ClickHouse] SHALL support `hdfs` table function reading and writing Parquet format.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.6.6'
+    num="4.6.6",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableFunctions_Remote = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableFunctions.Remote',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.Remote",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support `remote` table function reading and writing Parquet format.\n'
-        '\n'
+        "[ClickHouse] SHALL support `remote` table function reading and writing Parquet format.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.6.7'
+    num="4.6.7",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableFunctions_MySQL = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableFunctions.MySQL',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.MySQL",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support `mysql` table function reading and writing Parquet format.\n'
-        '\n'
-        'Example:\n'
-        '\n'
-        'Given we have a [ClickHouse] table with a `mysql` engine:\n'
-        '```sql\n'
-        'CREATE TABLE mysql_table1 (\n'
-        '  id UInt64,\n'
-        '  column1 String\n'
-        ')\n'
+        "[ClickHouse] SHALL support `mysql` table function reading and writing Parquet format.\n"
+        "\n"
+        "Example:\n"
+        "\n"
+        "Given we have a [ClickHouse] table with a `mysql` engine:\n"
+        "```sql\n"
+        "CREATE TABLE mysql_table1 (\n"
+        "  id UInt64,\n"
+        "  column1 String\n"
+        ")\n"
         "ENGINE = MySQL('mysql-host.domain.com','db1','table1','mysql_clickhouse','Password123!')\n"
-        '```\n'
-        'We can write to a parquet file format with:\n'
-        '\n'
-        '```sql\n'
-        'SELECT * FROM mysql_table1 INTO OUTFILE testTable.parquet FORMAT Parquet\n'
-        '```\n'
-        '\n'
+        "```\n"
+        "We can write to a parquet file format with:\n"
+        "\n"
+        "```sql\n"
+        "SELECT * FROM mysql_table1 INTO OUTFILE testTable.parquet FORMAT Parquet\n"
+        "```\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.6.8'
+    num="4.6.8",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableFunctions_PostgreSQL = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableFunctions.PostgreSQL',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.PostgreSQL",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support `postgresql` table function reading and writing Parquet format.\n'
-        '\n'
+        "[ClickHouse] SHALL support `postgresql` table function reading and writing Parquet format.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.6.9'
+    num="4.6.9",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_MergeTree = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.MergeTree',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.MergeTree",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support Parquet format being writen into and read from a `MergeTree` table engine.\n'
-        '\n'
+        "[ClickHouse] SHALL support Parquet format being writen into and read from a `MergeTree` table engine.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.7.1.1'
+    num="4.7.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_ReplicatedMergeTree = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplicatedMergeTree',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplicatedMergeTree",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support Parquet format being writen into and read from a `ReplicatedMergeTree` table engine.\n'
-        '\n'
+        "[ClickHouse] SHALL support Parquet format being writen into and read from a `ReplicatedMergeTree` table engine.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.7.1.2'
+    num="4.7.1.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_ReplacingMergeTree = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplacingMergeTree',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplacingMergeTree",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support Parquet format being writen into and read from a `ReplacingMergeTree` table engine.\n'
-        '\n'
+        "[ClickHouse] SHALL support Parquet format being writen into and read from a `ReplacingMergeTree` table engine.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.7.1.3'
+    num="4.7.1.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_SummingMergeTree = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.SummingMergeTree',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.SummingMergeTree",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support Parquet format being writen into and read from a `SummingMergeTree` table engine.\n'
-        '\n'
+        "[ClickHouse] SHALL support Parquet format being writen into and read from a `SummingMergeTree` table engine.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.7.1.4'
+    num="4.7.1.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_AggregatingMergeTree = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.AggregatingMergeTree',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.AggregatingMergeTree",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support Parquet format being writen into and read from a `AggregatingMergeTree` table engine.\n'
-        '\n'
+        "[ClickHouse] SHALL support Parquet format being writen into and read from a `AggregatingMergeTree` table engine.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.7.1.5'
+    num="4.7.1.5",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_CollapsingMergeTree = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.CollapsingMergeTree',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.CollapsingMergeTree",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support Parquet format being writen into and read from a `CollapsingMergeTree` table engine.\n'
-        '\n'
+        "[ClickHouse] SHALL support Parquet format being writen into and read from a `CollapsingMergeTree` table engine.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.7.1.6'
+    num="4.7.1.6",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_VersionedCollapsingMergeTree = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.VersionedCollapsingMergeTree',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.VersionedCollapsingMergeTree",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support Parquet format being writen into and read from a `VersionedCollapsingMergeTree` table engine.\n'
-        '\n'
+        "[ClickHouse] SHALL support Parquet format being writen into and read from a `VersionedCollapsingMergeTree` table engine.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.7.1.7'
+    num="4.7.1.7",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_GraphiteMergeTree = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.GraphiteMergeTree',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.GraphiteMergeTree",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support Parquet format being writen into and read from a `GraphiteMergeTree` table engine.\n'
-        '\n'
+        "[ClickHouse] SHALL support Parquet format being writen into and read from a `GraphiteMergeTree` table engine.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.7.1.8'
+    num="4.7.1.8",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_ODBC = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.ODBC',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.ODBC",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support Parquet format being writen into and read from an `ODBC` table engine.\n'
-        '\n'
+        "[ClickHouse] SHALL support Parquet format being writen into and read from an `ODBC` table engine.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.7.2.1'
+    num="4.7.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_JDBC = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.JDBC',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.JDBC",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support Parquet format being writen into and read from a `JDBC` table engine.\n'
-        '\n'
+        "[ClickHouse] SHALL support Parquet format being writen into and read from a `JDBC` table engine.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.7.2.2'
+    num="4.7.2.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_MySQL = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MySQL',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MySQL",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support Parquet format being writen into and read from a `MySQL` table engine.\n'
-        '\n'
+        "[ClickHouse] SHALL support Parquet format being writen into and read from a `MySQL` table engine.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.7.2.3'
+    num="4.7.2.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_MongoDB = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MongoDB',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MongoDB",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support Parquet format being writen into and read from a `MongoDB` table engine.\n'
-        '\n'
+        "[ClickHouse] SHALL support Parquet format being writen into and read from a `MongoDB` table engine.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.7.2.4'
+    num="4.7.2.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_HDFS = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.HDFS',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.HDFS",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support Parquet format being writen into and read from a `HDFS` table engine.\n'
-        '\n'
+        "[ClickHouse] SHALL support Parquet format being writen into and read from a `HDFS` table engine.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.7.2.5'
+    num="4.7.2.5",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_S3 = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.S3',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.S3",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support Parquet format being writen into and read from an `S3` table engine.\n'
-        '\n'
+        "[ClickHouse] SHALL support Parquet format being writen into and read from an `S3` table engine.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.7.2.6'
+    num="4.7.2.6",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_Kafka = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.Kafka',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.Kafka",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support Parquet format being writen into and read from a `Kafka` table engine.\n'
-        '\n'
+        "[ClickHouse] SHALL support Parquet format being writen into and read from a `Kafka` table engine.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.7.2.7'
+    num="4.7.2.7",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_EmbeddedRocksDB = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.EmbeddedRocksDB',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.EmbeddedRocksDB",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support Parquet format being writen into and read from an `EmbeddedRocksDB` table engine.\n'
-        '\n'
+        "[ClickHouse] SHALL support Parquet format being writen into and read from an `EmbeddedRocksDB` table engine.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.7.2.8'
+    num="4.7.2.8",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_PostgreSQL = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.PostgreSQL',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.PostgreSQL",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support Parquet format being writen into and read from a `PostgreSQL` table engine.\n'
-        '\n'
+        "[ClickHouse] SHALL support Parquet format being writen into and read from a `PostgreSQL` table engine.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.7.2.9'
+    num="4.7.2.9",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_Memory = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Memory',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Memory",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support Parquet format being writen into and read from a `Memory` table engine.\n'
-        '\n'
+        "[ClickHouse] SHALL support Parquet format being writen into and read from a `Memory` table engine.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.7.3.1'
+    num="4.7.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_Distributed = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Distributed',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Distributed",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support Parquet format being writen into and read from a `Distributed` table engine.\n'
-        '\n'
+        "[ClickHouse] SHALL support Parquet format being writen into and read from a `Distributed` table engine.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.7.3.2'
+    num="4.7.3.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_Dictionary = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Dictionary',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Dictionary",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support Parquet format being writen into and read from a `Dictionary` table engine.\n'
-        '\n'
+        "[ClickHouse] SHALL support Parquet format being writen into and read from a `Dictionary` table engine.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.7.3.3'
+    num="4.7.3.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_File = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.File',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.File",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support Parquet format being writen into and read from a `File` table engine.\n'
-        '\n'
+        "[ClickHouse] SHALL support Parquet format being writen into and read from a `File` table engine.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.7.3.4'
+    num="4.7.3.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_URL = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.URL',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.URL",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support Parquet format being writen into and read from a `URL` table engine.\n'
-        '\n'
+        "[ClickHouse] SHALL support Parquet format being writen into and read from a `URL` table engine.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.7.3.5'
+    num="4.7.3.5",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL be accessed via `ParquetMetadata` argument.\n'
-        '```sql\n'
-        'SELECT * FROM file(data.parquet, ParquetMetadata) format PrettyJSONEachRow\n'
-        '```\n'
-        '\n'
-        '\n'
+        "[ClickHouse] SHALL be accessed via `ParquetMetadata` argument.\n"
+        "```sql\n"
+        "SELECT * FROM file(data.parquet, ParquetMetadata) format PrettyJSONEachRow\n"
+        "```\n"
+        "\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.8.3.1'
+    num="4.8.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_File = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Metadata.File',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.File",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support accessing parquet `file metadata`.\n'
-        '\n'
+        "[ClickHouse] SHALL support accessing parquet `file metadata`.\n" "\n"
     ),
     link=None,
     level=4,
-    num='4.8.3.2'
+    num="4.8.3.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Column = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Metadata.Column',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Column",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support accessing parquet `column (chunk) metadata`.\n'
-        '\n'
+        "[ClickHouse] SHALL support accessing parquet `column (chunk) metadata`.\n" "\n"
     ),
     link=None,
     level=4,
-    num='4.8.3.3'
+    num="4.8.3.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_Header = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Metadata.Header',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Header",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support accessing parquet `page header metadata`.\n'
-        '\n'
-        '\n'
+        "[ClickHouse] SHALL support accessing parquet `page header metadata`.\n"
+        "\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.8.3.4'
+    num="4.8.3.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_MissingMagicNumber = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.MissingMagicNumber',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.MissingMagicNumber",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
         '[ClickHouse] SHALL output an error if the 4-byte magic number "PAR1" is missing from the parquet metadata.\n'
-        '\n'
-        'Example:\n'
-        '\n'
+        "\n"
+        "Example:\n"
+        "\n"
         'When using hexeditor on the parquet file we alter the values of "PAR1" and change it to "PARQ".\n'
-        '\n'
-        'Then try to read that parquet file in [ClickHouse].\n'
-        '\n'
-        'We get an exception:  \n'
-        '```\n'
-        'exception. Code: 1001, type: parquet::ParquetInvalidOrCorruptedFileException, \n'
-        'e.what() = Invalid: Parquet magic bytes not found in footer. \n'
-        'Either the file is corrupted or this is not a parquet file.\n'
-        '```\n'
-        '\n'
-        '\n'
+        "\n"
+        "Then try to read that parquet file in [ClickHouse].\n"
+        "\n"
+        "We get an exception:  \n"
+        "```\n"
+        "exception. Code: 1001, type: parquet::ParquetInvalidOrCorruptedFileException, \n"
+        "e.what() = Invalid: Parquet magic bytes not found in footer. \n"
+        "Either the file is corrupted or this is not a parquet file.\n"
+        "```\n"
+        "\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.8.4.1'
+    num="4.8.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptFile = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptFile',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptFile",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL output an error when trying to access the corrupt `file` metadata. In this case the file metadata is corrupt, the file is lost.\n'
-        '\n'
+        "[ClickHouse] SHALL output an error when trying to access the corrupt `file` metadata. In this case the file metadata is corrupt, the file is lost.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.8.4.2'
+    num="4.8.4.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumn = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumn',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumn",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL output an error when trying to access the corrupt `column` metadata.In this case that column chunk is lost (but column chunks for this column in other row groups are okay).\n'
-        '\n'
+        "[ClickHouse] SHALL output an error when trying to access the corrupt `column` metadata.In this case that column chunk is lost (but column chunks for this column in other row groups are okay).\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.8.4.3'
+    num="4.8.4.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptPageHeader = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptPageHeader',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptPageHeader",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL output an error when trying to access the corrupt `Page Header`. In this case the remaining pages in that chunk are lost.\n'
-        '\n'
+        "[ClickHouse] SHALL output an error when trying to access the corrupt `Page Header`. In this case the remaining pages in that chunk are lost.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.8.4.4'
+    num="4.8.4.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptPageData = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptPageData',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptPageData",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL output an error when trying to access the corrupt `Page Data`. In this case that page is lost.\n'
-        '\n'
-        '\n'
+        "[ClickHouse] SHALL output an error when trying to access the corrupt `Page Data`. In this case that page is lost.\n"
+        "\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.8.4.5'
+    num="4.8.4.5",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Encoding_Plain = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Encoding.Plain',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Encoding.Plain",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
-    description=(
-        '[ClickHouse] SHALL support `Plain` encoded parquet files.\n'
-        '\n'
-    ),
+    description=("[ClickHouse] SHALL support `Plain` encoded parquet files.\n" "\n"),
     link=None,
     level=4,
-    num='4.9.4.1'
+    num="4.9.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Encoding_RunLength = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Encoding.RunLength',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Encoding.RunLength",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support `Run Length Encoding / Bit-Packing Hybrid` encoded parquet files.\n'
-        '\n'
+        "[ClickHouse] SHALL support `Run Length Encoding / Bit-Packing Hybrid` encoded parquet files.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.9.4.2'
+    num="4.9.4.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Encoding_Delta = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Encoding.Delta',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Encoding.Delta",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support `Delta Encoding` encoded parquet files.\n'
-        '\n'
+        "[ClickHouse] SHALL support `Delta Encoding` encoded parquet files.\n" "\n"
     ),
     link=None,
     level=4,
-    num='4.9.4.3'
+    num="4.9.4.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Encoding_DeltaLengthByteArray = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Encoding.DeltaLengthByteArray',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Encoding.DeltaLengthByteArray",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support `Delta-length byte array` encoded parquet files.\n'
-        '\n'
+        "[ClickHouse] SHALL support `Delta-length byte array` encoded parquet files.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.9.4.4'
+    num="4.9.4.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Encoding_DeltaStrings = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Encoding.DeltaStrings',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Encoding.DeltaStrings",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support `Delta Strings` encoded parquet files.\n'
-        '\n'
+        "[ClickHouse] SHALL support `Delta Strings` encoded parquet files.\n" "\n"
     ),
     link=None,
     level=4,
-    num='4.9.4.5'
+    num="4.9.4.5",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Encoding_ByteStreamSplit = Requirement(
-    name='RQ.SRS-032.ClickHouse.Parquet.Encoding.ByteStreamSplit',
-    version='1.0',
+    name="RQ.SRS-032.ClickHouse.Parquet.Encoding.ByteStreamSplit",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support `Byte Stream Split` encoded parquet files.\n'
-        '\n'
-        '[ClickHouse]: https://clickhouse.com\n'
-        '[GitHub Repository]: https://github.com/ClickHouse/ClickHouse/blob/master/tests/testflows/parquet/requirements/requirements.md \n'
-        '[Revision History]: https://github.com/ClickHouse/ClickHouse/commits/master/tests/testflows/parquet/requirements/requirements.md\n'
-        '[Git]: https://git-scm.com/\n'
-        '[GitHub]: https://github.com\n'
+        "[ClickHouse] SHALL support `Byte Stream Split` encoded parquet files.\n"
+        "\n"
+        "[ClickHouse]: https://clickhouse.com\n"
+        "[GitHub Repository]: https://github.com/ClickHouse/ClickHouse/blob/master/tests/testflows/parquet/requirements/requirements.md \n"
+        "[Revision History]: https://github.com/ClickHouse/ClickHouse/commits/master/tests/testflows/parquet/requirements/requirements.md\n"
+        "[Git]: https://git-scm.com/\n"
+        "[GitHub]: https://github.com\n"
     ),
     link=None,
     level=4,
-    num='4.9.4.6'
+    num="4.9.4.6",
 )
 
 SRS032_ClickHouse_Parquet_Data_Format = Specification(
-    name='SRS032 ClickHouse Parquet Data Format',
+    name="SRS032 ClickHouse Parquet Data Format",
     description=None,
     author=None,
     date=None,
@@ -1587,113 +1570,399 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
     parent=None,
     children=None,
     headings=(
-        Heading(name='Revision History', level=1, num='1'),
-        Heading(name='Introduction', level=1, num='2'),
-        Heading(name='Feature Diagram', level=1, num='3'),
-        Heading(name='Requirements', level=1, num='4'),
-        Heading(name='General', level=2, num='4.1'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet', level=3, num='4.1.1'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.ClickHouseLocal', level=3, num='4.1.2'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Encryption', level=3, num='4.1.3'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Chunks', level=3, num='4.1.4'),
-        Heading(name='Compression', level=3, num='4.1.5'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Compression.None', level=4, num='4.1.5.1'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Compression.Gzip', level=4, num='4.1.5.2'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Compression.Brotli', level=4, num='4.1.5.3'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4', level=4, num='4.1.5.4'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4Raw', level=4, num='4.1.5.5'),
-        Heading(name='Unsupported Compression', level=3, num='4.1.6'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Snappy', level=4, num='4.1.6.1'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Lzo', level=4, num='4.1.6.2'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Zstd', level=4, num='4.1.6.3'),
-        Heading(name='Data Types', level=2, num='4.2'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.DataTypes.Read', level=3, num='4.2.1'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNested', level=3, num='4.2.2'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNullable', level=3, num='4.2.3'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write', level=3, num='4.2.4'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNested', level=3, num='4.2.5'),
-        Heading(name='Unsupported Parquet Types', level=2, num='4.3'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes', level=3, num='4.3.1'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.ChunkedArray', level=3, num='4.3.2'),
-        Heading(name='INSERT', level=2, num='4.4'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Insert', level=3, num='4.4.1'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Insert.Projections', level=3, num='4.4.2'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Insert.SkipColumns', level=3, num='4.4.3'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Insert.SkipValues', level=3, num='4.4.4'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Insert.AutoTypecast', level=3, num='4.4.5'),
-        Heading(name='INSERT Settings', level=3, num='4.4.6'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.ImportNested', level=4, num='4.4.6.1'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.CaseInsensitiveColumnMatching', level=4, num='4.4.6.2'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.AllowMissingColumns', level=4, num='4.4.6.3'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.SkipColumnsWithUnsupportedTypesInSchemaInference', level=4, num='4.4.6.4'),
-        Heading(name='SELECT', level=2, num='4.5'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Select', level=3, num='4.5.1'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Select.Outfile', level=3, num='4.5.2'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Select.Join', level=3, num='4.5.3'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Select.Union', level=3, num='4.5.4'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Select.View', level=3, num='4.5.5'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Select.MaterializedView', level=3, num='4.5.6'),
-        Heading(name='SELECT Settings', level=3, num='4.5.7'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Select.Settings.RowGroupSize', level=4, num='4.5.7.1'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Select.Settings.StringAsString', level=4, num='4.5.7.2'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Select.Settings.StringAsFixedByteArray', level=4, num='4.5.7.3'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Select.Settings.ParquetVersion', level=4, num='4.5.7.4'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Select.Settings.CompressionMethod', level=4, num='4.5.7.5'),
-        Heading(name='Table Functions', level=2, num='4.6'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableFunctions.URL', level=3, num='4.6.1'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableFunctions.File', level=3, num='4.6.2'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3', level=3, num='4.6.3'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableFunctions.JDBC', level=3, num='4.6.4'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableFunctions.ODBC', level=3, num='4.6.5'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableFunctions.HDFS', level=3, num='4.6.6'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableFunctions.Remote', level=3, num='4.6.7'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableFunctions.MySQL', level=3, num='4.6.8'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableFunctions.PostgreSQL', level=3, num='4.6.9'),
-        Heading(name='Table Engines', level=2, num='4.7'),
-        Heading(name='MergeTree', level=3, num='4.7.1'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.MergeTree', level=4, num='4.7.1.1'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplicatedMergeTree', level=4, num='4.7.1.2'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplacingMergeTree', level=4, num='4.7.1.3'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.SummingMergeTree', level=4, num='4.7.1.4'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.AggregatingMergeTree', level=4, num='4.7.1.5'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.CollapsingMergeTree', level=4, num='4.7.1.6'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.VersionedCollapsingMergeTree', level=4, num='4.7.1.7'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.GraphiteMergeTree', level=4, num='4.7.1.8'),
-        Heading(name='Integration Engines', level=3, num='4.7.2'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.ODBC', level=4, num='4.7.2.1'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.JDBC', level=4, num='4.7.2.2'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MySQL', level=4, num='4.7.2.3'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MongoDB', level=4, num='4.7.2.4'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.HDFS', level=4, num='4.7.2.5'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.S3', level=4, num='4.7.2.6'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.Kafka', level=4, num='4.7.2.7'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.EmbeddedRocksDB', level=4, num='4.7.2.8'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.PostgreSQL', level=4, num='4.7.2.9'),
-        Heading(name='Special Engines', level=3, num='4.7.3'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Memory', level=4, num='4.7.3.1'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Distributed', level=4, num='4.7.3.2'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Dictionary', level=4, num='4.7.3.3'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.File', level=4, num='4.7.3.4'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.URL', level=4, num='4.7.3.5'),
-        Heading(name='Metadata', level=2, num='4.8'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata', level=4, num='4.8.3.1'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Metadata.File', level=4, num='4.8.3.2'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Metadata.Column', level=4, num='4.8.3.3'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Metadata.Header', level=4, num='4.8.3.4'),
-        Heading(name='Error Recovery', level=3, num='4.8.4'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.MissingMagicNumber', level=4, num='4.8.4.1'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptFile', level=4, num='4.8.4.2'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumn', level=4, num='4.8.4.3'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptPageHeader', level=4, num='4.8.4.4'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptPageData', level=4, num='4.8.4.5'),
-        Heading(name='Encoding', level=2, num='4.9'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Encoding.Plain', level=4, num='4.9.4.1'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Encoding.RunLength', level=4, num='4.9.4.2'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Encoding.Delta', level=4, num='4.9.4.3'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Encoding.DeltaLengthByteArray', level=4, num='4.9.4.4'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Encoding.DeltaStrings', level=4, num='4.9.4.5'),
-        Heading(name='RQ.SRS-032.ClickHouse.Parquet.Encoding.ByteStreamSplit', level=4, num='4.9.4.6'),
+        Heading(name="Revision History", level=1, num="1"),
+        Heading(name="Introduction", level=1, num="2"),
+        Heading(name="Feature Diagram", level=1, num="3"),
+        Heading(name="Requirements", level=1, num="4"),
+        Heading(name="General", level=2, num="4.1"),
+        Heading(name="RQ.SRS-032.ClickHouse.Parquet", level=3, num="4.1.1"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.ClickHouseLocal", level=3, num="4.1.2"
         ),
+        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Encryption", level=3, num="4.1.3"),
+        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Chunks", level=3, num="4.1.4"),
+        Heading(name="Compression", level=3, num="4.1.5"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Compression.None",
+            level=4,
+            num="4.1.5.1",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Compression.Gzip",
+            level=4,
+            num="4.1.5.2",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Compression.Brotli",
+            level=4,
+            num="4.1.5.3",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4", level=4, num="4.1.5.4"
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4Raw",
+            level=4,
+            num="4.1.5.5",
+        ),
+        Heading(name="Unsupported Compression", level=3, num="4.1.6"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Snappy",
+            level=4,
+            num="4.1.6.1",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Lzo",
+            level=4,
+            num="4.1.6.2",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Zstd",
+            level=4,
+            num="4.1.6.3",
+        ),
+        Heading(name="Data Types", level=2, num="4.2"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.Read", level=3, num="4.2.1"
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNested",
+            level=3,
+            num="4.2.2",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNullable",
+            level=3,
+            num="4.2.3",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write", level=3, num="4.2.4"
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNested",
+            level=3,
+            num="4.2.5",
+        ),
+        Heading(name="Unsupported Parquet Types", level=2, num="4.3"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes",
+            level=3,
+            num="4.3.1",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.ChunkedArray",
+            level=3,
+            num="4.3.2",
+        ),
+        Heading(name="INSERT", level=2, num="4.4"),
+        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Insert", level=3, num="4.4.1"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Insert.Projections",
+            level=3,
+            num="4.4.2",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Insert.SkipColumns",
+            level=3,
+            num="4.4.3",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Insert.SkipValues", level=3, num="4.4.4"
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Insert.AutoTypecast",
+            level=3,
+            num="4.4.5",
+        ),
+        Heading(name="INSERT Settings", level=3, num="4.4.6"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.ImportNested",
+            level=4,
+            num="4.4.6.1",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.CaseInsensitiveColumnMatching",
+            level=4,
+            num="4.4.6.2",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.AllowMissingColumns",
+            level=4,
+            num="4.4.6.3",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.SkipColumnsWithUnsupportedTypesInSchemaInference",
+            level=4,
+            num="4.4.6.4",
+        ),
+        Heading(name="SELECT", level=2, num="4.5"),
+        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Select", level=3, num="4.5.1"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Select.Outfile", level=3, num="4.5.2"
+        ),
+        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Select.Join", level=3, num="4.5.3"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Select.Union", level=3, num="4.5.4"
+        ),
+        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Select.View", level=3, num="4.5.5"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Select.MaterializedView",
+            level=3,
+            num="4.5.6",
+        ),
+        Heading(name="SELECT Settings", level=3, num="4.5.7"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Select.Settings.RowGroupSize",
+            level=4,
+            num="4.5.7.1",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Select.Settings.StringAsString",
+            level=4,
+            num="4.5.7.2",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Select.Settings.StringAsFixedByteArray",
+            level=4,
+            num="4.5.7.3",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Select.Settings.ParquetVersion",
+            level=4,
+            num="4.5.7.4",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Select.Settings.CompressionMethod",
+            level=4,
+            num="4.5.7.5",
+        ),
+        Heading(name="Table Functions", level=2, num="4.6"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.URL",
+            level=3,
+            num="4.6.1",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.File",
+            level=3,
+            num="4.6.2",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3", level=3, num="4.6.3"
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.JDBC",
+            level=3,
+            num="4.6.4",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.ODBC",
+            level=3,
+            num="4.6.5",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.HDFS",
+            level=3,
+            num="4.6.6",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.Remote",
+            level=3,
+            num="4.6.7",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.MySQL",
+            level=3,
+            num="4.6.8",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.PostgreSQL",
+            level=3,
+            num="4.6.9",
+        ),
+        Heading(name="Table Engines", level=2, num="4.7"),
+        Heading(name="MergeTree", level=3, num="4.7.1"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.MergeTree",
+            level=4,
+            num="4.7.1.1",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplicatedMergeTree",
+            level=4,
+            num="4.7.1.2",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplacingMergeTree",
+            level=4,
+            num="4.7.1.3",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.SummingMergeTree",
+            level=4,
+            num="4.7.1.4",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.AggregatingMergeTree",
+            level=4,
+            num="4.7.1.5",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.CollapsingMergeTree",
+            level=4,
+            num="4.7.1.6",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.VersionedCollapsingMergeTree",
+            level=4,
+            num="4.7.1.7",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.GraphiteMergeTree",
+            level=4,
+            num="4.7.1.8",
+        ),
+        Heading(name="Integration Engines", level=3, num="4.7.2"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.ODBC",
+            level=4,
+            num="4.7.2.1",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.JDBC",
+            level=4,
+            num="4.7.2.2",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MySQL",
+            level=4,
+            num="4.7.2.3",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MongoDB",
+            level=4,
+            num="4.7.2.4",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.HDFS",
+            level=4,
+            num="4.7.2.5",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.S3",
+            level=4,
+            num="4.7.2.6",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.Kafka",
+            level=4,
+            num="4.7.2.7",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.EmbeddedRocksDB",
+            level=4,
+            num="4.7.2.8",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.PostgreSQL",
+            level=4,
+            num="4.7.2.9",
+        ),
+        Heading(name="Special Engines", level=3, num="4.7.3"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Memory",
+            level=4,
+            num="4.7.3.1",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Distributed",
+            level=4,
+            num="4.7.3.2",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Dictionary",
+            level=4,
+            num="4.7.3.3",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.File",
+            level=4,
+            num="4.7.3.4",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.URL",
+            level=4,
+            num="4.7.3.5",
+        ),
+        Heading(name="Metadata", level=2, num="4.8"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata",
+            level=4,
+            num="4.8.3.1",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.File", level=4, num="4.8.3.2"
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Column", level=4, num="4.8.3.3"
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.Header", level=4, num="4.8.3.4"
+        ),
+        Heading(name="Error Recovery", level=3, num="4.8.4"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.MissingMagicNumber",
+            level=4,
+            num="4.8.4.1",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptFile",
+            level=4,
+            num="4.8.4.2",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumn",
+            level=4,
+            num="4.8.4.3",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptPageHeader",
+            level=4,
+            num="4.8.4.4",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptPageData",
+            level=4,
+            num="4.8.4.5",
+        ),
+        Heading(name="Encoding", level=2, num="4.9"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Encoding.Plain", level=4, num="4.9.4.1"
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Encoding.RunLength",
+            level=4,
+            num="4.9.4.2",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Encoding.Delta", level=4, num="4.9.4.3"
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Encoding.DeltaLengthByteArray",
+            level=4,
+            num="4.9.4.4",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Encoding.DeltaStrings",
+            level=4,
+            num="4.9.4.5",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Encoding.ByteStreamSplit",
+            level=4,
+            num="4.9.4.6",
+        ),
+    ),
     requirements=(
         RQ_SRS_032_ClickHouse_Parquet,
         RQ_SRS_032_ClickHouse_Parquet_ClickHouseLocal,
@@ -1780,8 +2049,8 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_Encoding_DeltaLengthByteArray,
         RQ_SRS_032_ClickHouse_Parquet_Encoding_DeltaStrings,
         RQ_SRS_032_ClickHouse_Parquet_Encoding_ByteStreamSplit,
-        ),
-    content='''
+    ),
+    content="""
 # SRS032 ClickHouse Parquet Data Format
 # Software Requirements Specification
 
@@ -2580,5 +2849,5 @@ version: 1.0
 [Revision History]: https://github.com/ClickHouse/ClickHouse/commits/master/tests/testflows/parquet/requirements/requirements.md
 [Git]: https://git-scm.com/
 [GitHub]: https://github.com
-'''
+""",
 )
