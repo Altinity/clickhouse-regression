@@ -491,13 +491,13 @@ Default: `true`
 ##### RQ.SRS-032.ClickHouse.Parquet.Select.Settings.ParquetVersion
 version: 1.0
 
-[ClickHouse] SHALL support specifying `output_format_parquet_version` to see the version of Parquet format used in output format.\
+[ClickHouse] SHALL support specifying `output_format_parquet_version` to set the version of Parquet used in the output file.\
 Default: `2.latest`
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Select.Settings.CompressionMethod
 version: 1.0
 
-[ClickHouse] SHALL support specifying `output_format_parquet_compression_method` to see the compression method used in output Parquet format.\
+[ClickHouse] SHALL support specifying `output_format_parquet_compression_method` to set the compression method used in the Parquet file.\
 Default: `lz4`
 
 ### Table Functions

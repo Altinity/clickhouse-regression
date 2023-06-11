@@ -746,7 +746,7 @@ RQ_SRS_032_ClickHouse_Parquet_Select_Settings_ParquetVersion = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support specifying `output_format_parquet_version` to see the version of Parquet format used in output format.\\\n"
+        "[ClickHouse] SHALL support specifying `output_format_parquet_version` to set the version of Parquet used in the output file.\\\n"
         "Default: `2.latest`\n"
         "\n"
     ),
@@ -763,7 +763,7 @@ RQ_SRS_032_ClickHouse_Parquet_Select_Settings_CompressionMethod = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support specifying `output_format_parquet_compression_method` to see the compression method used in output Parquet format.\\\n"
+        "[ClickHouse] SHALL support specifying `output_format_parquet_compression_method` to set the compression method used in the Parquet file.\\\n"
         "Default: `lz4`\n"
         "\n"
     ),
@@ -2690,13 +2690,13 @@ Default: `true`
 ##### RQ.SRS-032.ClickHouse.Parquet.Select.Settings.ParquetVersion
 version: 1.0
 
-[ClickHouse] SHALL support specifying `output_format_parquet_version` to see the version of Parquet format used in output format.\
+[ClickHouse] SHALL support specifying `output_format_parquet_version` to set the version of Parquet used in the output file.\
 Default: `2.latest`
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Select.Settings.CompressionMethod
 version: 1.0
 
-[ClickHouse] SHALL support specifying `output_format_parquet_compression_method` to see the compression method used in output Parquet format.\
+[ClickHouse] SHALL support specifying `output_format_parquet_compression_method` to set the compression method used in the Parquet file.\
 Default: `lz4`
 
 ### Table Functions
