@@ -236,7 +236,7 @@ Parquet Decimal is currently not tested.
 #### RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNested
 version:1.0
 
-[ClickHouse] SHALL support reading nested arrays in parquet files, they also can have a value of the `Nullable` type as an argument
+[ClickHouse]  SHALL support reading nested: `Array`, `Tuple` and `Map` datatypes in parquet files.
 
 #### RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write
 version:1.0
@@ -274,7 +274,7 @@ version:1.0
 #### RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNested
 version:1.0
 
-[ClickHouse] SHALL support writing nested arrays in parquet files, they also can have a value of the `Nullable` type as an argument
+[ClickHouse] SHALL support writings nested: `Array`, `Tuple` and `Map` datatypes in parquet files.
 
 ### Unsupported Parquet Types
 
