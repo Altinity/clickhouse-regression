@@ -97,10 +97,11 @@
       * 4.8.3.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Column](#rqsrs-032clickhouseparquetmetadatacolumn)
       * 4.8.3.4 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Header](#rqsrs-032clickhouseparquetmetadataheader)
     * 4.8.4 [Error Recovery](#error-recovery)
-      * 4.8.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptFile](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptfile)
-      * 4.8.4.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumn](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumn)
-      * 4.8.4.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptPageHeader](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptpageheader)
-      * 4.8.4.4 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptPageData](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptpagedata)
+      * 4.8.4.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.MissingMagicNumber](#rqsrs-032clickhouseparquetmetadataerrorrecoverymissingmagicnumber)
+      * 4.8.4.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptFile](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptfile)
+      * 4.8.4.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumn](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumn)
+      * 4.8.4.4 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptPageHeader](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptpageheader)
+      * 4.8.4.5 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptPageData](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptpagedata)
   * 4.9 [Encoding](#encoding)
       * 4.9.4.1 [RQ.SRS-032.ClickHouse.Parquet.Encoding.Plain](#rqsrs-032clickhouseparquetencodingplain)
       * 4.9.4.2 [RQ.SRS-032.ClickHouse.Parquet.Encoding.RunLength](#rqsrs-032clickhouseparquetencodingrunlength)
@@ -334,7 +335,7 @@ version: 1.0
 
 Example:
 
-If we take the following parquet file:
+When we take the following parquet file:
 
 ```
 ┌─path────────────────────────────────────────────────────────────┬─date───────┬──hits─┐
@@ -551,6 +552,13 @@ version: 1.0
 
 [ClickHouse] SHALL support `mysql` table function reading and writing Parquet format.
 
+Example:
+
+Given we have a [ClickHouse] table with a `mysql` engine, we can write to a parquet file format with:
+```sql
+SELECT * FROM testTable INTO OUTFILE testTable.parquet FORMAT Parquet
+```
+
 #### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.PostgreSQL
 version: 1.0
 
@@ -703,6 +711,25 @@ version: 1.0
 
 
 #### Error Recovery
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.MissingMagicNumber
+version: 1.0
+
+[ClickHouse] SHALL output an error if the 4-byte magic number "PAR1" is missing from the parquet metadata.
+
+Example:
+
+When using hexeditor on the parquet file we alter the values of "PAR1" and change it to "PARQ".
+
+Then try to read that parquet file in [ClickHouse].
+
+We get an exception:  
+```
+exception. Code: 1001, type: parquet::ParquetInvalidOrCorruptedFileException, 
+e.what() = Invalid: Parquet magic bytes not found in footer. 
+Either the file is corrupted or this is not a parquet file.
+```
+
+
 ##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptFile
 version: 1.0
 
