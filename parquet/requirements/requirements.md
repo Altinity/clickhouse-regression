@@ -241,13 +241,13 @@ Parquet Decimal is currently not tested.
 #### RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNested
 version:1.0
 
-[ClickHouse]  SHALL support reading nested: `Array`, `Tuple` and `Map` datatypes in parquet files.
+[ClickHouse] SHALL support reading nested: `Array`, `Tuple` and `Map` datatypes in Parquet files.
 
 
 #### RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNullable
 version:1.0
 
-[ClickHouse] SHALL support reading `Nullable` datatypes in parquet files.
+[ClickHouse] SHALL support reading `Nullable` datatypes in Parquet files.
 
 #### RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write
 version:1.0
@@ -261,31 +261,31 @@ version:1.0
 | `UINT8`                    | `UInt8`                               |
 | `INT8`                     | `Int8`/`Enum8`                        |
 | `UINT16`                   | `UInt16`                              |
-| `INT16`                    | 	`Int16`/`Enum16`                     |
-| `UINT32`                   | 	`UInt32`                             |
-| `INT32`                    | 	`Int32`                              |
-| `UINT64`                   | 	`UInt64`                             |
+| `INT16`                    | `Int16`/`Enum16`                      |
+| `UINT32`                   | `UInt32`                              |
+| `INT32`                    | `Int32`                               |
+| `UINT64`                   | `UInt64`                              |
 | `INT64`                    | `Int64`                               |
-| `FLOAT`                    | 	`Float32`                            |
-| `DOUBLE`                   | 	`Float64`                            |
+| `FLOAT`                    | `Float32`                             |
+| `DOUBLE`                   | `Float64`                             |
 | `DATE`                     | `Date32`                              |
-| `UINT32`                   | 	`DateTime`                           |
-| `TIMESTAMP`                | 	`DateTime64`                         |
-| `BINARY`                   | 	`String`                             |
+| `UINT32`                   | `DateTime`                            |
+| `TIMESTAMP`                | `DateTime64`                          |
+| `BINARY`                   | `String`                              |
 | `FIXED_LENGTH_BYTE_ARRAY`  | `FixedString`                         |
-| `DECIMAL`                  | 	`Decimal`                            |
-| `LIST`                     | 	`Array`                              |
+| `DECIMAL`                  | `Decimal`                             |
+| `LIST`                     | `Array`                               |
 | `STRUCT`                   | `Tuple`                               |
 | `MAP`                      | `Map`                                 |
 | `UINT32`                   | `IPv4`                                |
-| `FIXED_LENGTH_BYTE_ARRAY`  | 	`IPv6`                               |
+| `FIXED_LENGTH_BYTE_ARRAY`  | `IPv6`                                |
 | `FIXED_LENGTH_BYTE_ARRAY`  | `Int128`/`UInt128`/`Int256`/`UInt256` |
 
 
 #### RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNested
 version:1.0
 
-[ClickHouse] SHALL support writings nested: `Array`, `Tuple` and `Map` datatypes in parquet files.
+[ClickHouse] SHALL support writings nested: `Array`, `Tuple` and `Map` datatypes in Parquet files.
 
 ### Unsupported Parquet Types
 
@@ -321,74 +321,73 @@ version: 1.0
 #### RQ.SRS-032.ClickHouse.Parquet.Insert.SkipColumns
 version: 1.0
 
-[ClickHouse] SHALL support skipping unexistent columns when reading from parquet files.
+[ClickHouse] SHALL support skipping unexistent columns when reading from Parquet files.
 
 #### RQ.SRS-032.ClickHouse.Parquet.Insert.SkipValues
 version: 1.0
 
-[ClickHouse] SHALL support skipping unexistent values when reading from parquet files.
+[ClickHouse] SHALL support skipping unsupported values when reading from Parquet files.
 
 #### RQ.SRS-032.ClickHouse.Parquet.Insert.AutoTypecast
 version: 1.0
 
+[ClickHouse] SHALL automatically typecast parquet datatype based on the types in the target table.
 
-[ClickHouse] SHALL automatically typecast parquet datatype based on the types in the target table.\
+For example,
 
-Example:
-
-When we take the following parquet file:
-
-```
-┌─path────────────────────────────────────────────────────────────┬─date───────┬──hits─┐
-│ Akiba_Hebrew_Academy                                            │ 2017-08-01 │   241 │
-│ 1980_Rugby_League_State_of_Origin_match                         │ 2017-07-01 │     2 │
-│ Column_of_Santa_Felicita,_Florence                              │ 2017-06-01 │    14 │
-└─────────────────────────────────────────────────────────────────┴────────────┴───────┘
-```
-
-```
-┌─name─┬─type─────────────┬─default_type─┬─default_expression─┬─comment─┬─codec_expression─┬─ttl_expression─┐
-│ path │ Nullable(String) │              │                    │         │                  │                │
-│ date │ Nullable(String) │              │                    │         │                  │                │
-│ hits │ Nullable(Int64)  │              │                    │         │                  │                │
-└──────┴──────────────────┴──────────────┴────────────────────┴─────────┴──────────────────┴────────────────┘
-```
-
-
-Then create a table to import parquet data to:
-```sql
-CREATE TABLE sometable
-(
-    `path` String,
-    `date` Date,
-    `hits` UInt32
-)
-ENGINE = MergeTree
-ORDER BY (date, path)
-```
-
-Then import data using a FROM INFILE clause:
-
-
-```sql
-INSERT INTO sometable
-FROM INFILE 'data.parquet' FORMAT Parquet;
-```
-
-As a result ClickHouse automatically converted parquet `strings` (in the `date` column) to the `Date` type.
-
-
-```sql
-DESCRIBE TABLE sometable
-```
-
-```
-┌─name─┬─type───┬─default_type─┬─default_expression─┬─comment─┬─codec_expression─┬─ttl_expression─┐
-│ path │ String │              │                    │         │                  │                │
-│ date │ Date   │              │                    │         │                  │                │
-│ hits │ UInt32 │              │                    │         │                  │                │
-└──────┴────────┴──────────────┴────────────────────┴─────────┴──────────────────┴────────────────┘
-```
+> When we take the following Parquet file:
+> 
+> ```
+> ┌─path────────────────────────────────────────────────────────────┬─date───────┬──hits─┐
+> │ Akiba_Hebrew_Academy                                            │ 2017-08-01 │   241 │
+> │ 1980_Rugby_League_State_of_Origin_match                         │ 2017-07-01 │     2 │
+> │ Column_of_Santa_Felicita,_Florence                              │ 2017-06-01 │    14 │
+> └─────────────────────────────────────────────────────────────────┴────────────┴───────┘
+> ```
+> 
+> ```
+> ┌─name─┬─type─────────────┬─default_type─┬─default_expression─┬─comment─┬─codec_expression─┬─ttl_expression─┐
+> │ path │ Nullable(String) │              │                    │         │                  │                │
+> │ date │ Nullable(String) │              │                    │         │                  │                │
+> │ hits │ Nullable(Int64)  │              │                    │         │                  │                │
+> └──────┴──────────────────┴──────────────┴────────────────────┴─────────┴──────────────────┴────────────────┘
+> ```
+> 
+> 
+> Then create a table to import parquet data to:
+> ```sql
+> CREATE TABLE sometable
+> (
+>     `path` String,
+>     `date` Date,
+>     `hits` UInt32
+> )
+> ENGINE = MergeTree
+> ORDER BY (date, path)
+> ```
+> 
+> Then import data using a FROM INFILE clause:
+> 
+> 
+> ```sql
+> INSERT INTO sometable
+> FROM INFILE 'data.parquet' FORMAT Parquet;
+> ```
+> 
+> As a result ClickHouse automatically converted parquet `strings` (in the `date` column) to the `Date` type.
+> 
+> 
+> ```sql
+> DESCRIBE TABLE sometable
+> ```
+> 
+> ```
+> ┌─name─┬─type───┬─default_type─┬─default_expression─┬─comment─┬─codec_expression─┬─ttl_expression─┐
+> │ path │ String │              │                    │         │                  │                │
+> │ date │ Date   │              │                    │         │                  │                │
+> │ hits │ UInt32 │              │                    │         │                  │                │
+> └──────┴────────┴──────────────┴────────────────────┴─────────┴──────────────────┴────────────────┘
+> ```
 
 #### INSERT Settings
 
@@ -396,8 +395,7 @@ DESCRIBE TABLE sometable
 version: 1.0
 
 [ClickHouse] SHALL support specifying `input_format_parquet_import_nested` to allow inserting arrays of
-nested structs into Nested tables.\
-Default: `0`
+nested structs into Nested tables. The default value SHALL be `0`.
 
 - `0` — Data can not be inserted into Nested columns as an array of structs.
 - `1` — Data can be inserted into Nested columns as an array of structs.
@@ -406,21 +404,19 @@ Default: `0`
 version: 1.0
 
 [ClickHouse] SHALL support specifying `input_format_parquet_case_insensitive_column_matching` to ignore matching
-Parquet and ClickHouse columns.\
-Default: `false`
+Parquet and ClickHouse columns. The default value SHALL be `0`.
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.AllowMissingColumns
 version: 1.0
 
-[ClickHouse] SHALL support specifying `input_format_parquet_allow_missing_columns` to allow missing columns.\
-Default: `false`
+[ClickHouse] SHALL support specifying `input_format_parquet_allow_missing_columns` to allow missing columns.
+The default value SHALL be `0`.
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.SkipColumnsWithUnsupportedTypesInSchemaInference
 version: 1.0
 
 [ClickHouse] SHALL support specifying `input_format_parquet_skip_columns_with_unsupported_types_in_schema_inference`
-to allow skipping unsupported types.\
-Default: `false`
+to allow skipping unsupported types. The default value SHALL be `0`.
 
 ### SELECT
 
@@ -428,18 +424,19 @@ Default: `false`
 version: 1.0
 
 [ClickHouse] SHALL support writing output of `SELECT` query into a Parquet file.
+
+For example,
+
 ```bash
 clickhouse-client --query="SELECT * FROM {some_table} FORMAT Parquet" > {some_file.pq}
-```
-OR
-```bash
-clickhouse-local --query="SELECT * FROM {some_table} FORMAT Parquet" > {some_file.pq}
 ```
 
 #### RQ.SRS-032.ClickHouse.Parquet.Select.Outfile
 version: 1.0
 
 [ClickHouse] SHALL support writing output of `SELECT` query into a Parquet file using `OUTFILE` clause.
+
+For example,
 
 ```sql
 SELECT *
@@ -473,32 +470,31 @@ version: 1.0
 ##### RQ.SRS-032.ClickHouse.Parquet.Select.Settings.RowGroupSize
 version: 1.0
 
-[ClickHouse] SHALL support specifying `output_format_parquet_row_group_size` row group size by row count.\
-Default: `1000000`
+[ClickHouse] SHALL support specifying `output_format_parquet_row_group_size` row group size by row count.
+The default value SHALL be `1000000`.
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Select.Settings.StringAsString
 version: 1.0
 
-[ClickHouse] SHALL support specifying `output_format_parquet_string_as_string` to use Parquet String type instead of Binary.\
-Default: `false`
+[ClickHouse] SHALL support specifying `output_format_parquet_string_as_string` to use Parquet String type instead of Binary.
+The deafult value SHALL be `0`.
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Select.Settings.StringAsFixedByteArray
 version: 1.0
 
-[ClickHouse] SHALL support specifying `output_format_parquet_fixed_string_as_fixed_byte_array` to use Parquet FIXED_LENGTH_BYTE_ARRAY type instead of Binary/String for FixedString columns.\
-Default: `true`
+[ClickHouse] SHALL support specifying `output_format_parquet_fixed_string_as_fixed_byte_array` to use Parquet FIXED_LENGTH_BYTE_ARRAY type instead of Binary/String for FixedString columns. The default value SHALL be `1`.
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Select.Settings.ParquetVersion
 version: 1.0
 
-[ClickHouse] SHALL support specifying `output_format_parquet_version` to set the version of Parquet used in the output file.\
-Default: `2.latest`
+[ClickHouse] SHALL support specifying `output_format_parquet_version` to set the version of Parquet used in the output file.
+The default value SHALL be `2.latest`.
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Select.Settings.CompressionMethod
 version: 1.0
 
-[ClickHouse] SHALL support specifying `output_format_parquet_compression_method` to set the compression method used in the Parquet file.\
-Default: `lz4`
+[ClickHouse] SHALL support specifying `output_format_parquet_compression_method` to set the compression method used in the Parquet file.
+The default value SHALL be `lz4`.
 
 ### Table Functions
 
@@ -512,7 +508,8 @@ version: 1.0
 
 [ClickHouse] SHALL support `file` table function reading and writing Parquet format.
 
-Example:
+For example,
+
 ```sql
 SELECT * FROM file('data.parquet', Parquet)
 ```
@@ -521,7 +518,9 @@ SELECT * FROM file('data.parquet', Parquet)
 #### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3
 version: 1.0
 
-[ClickHouse] SHALL support `s3` table function reading and writing Parquet format.
+[ClickHouse] SHALL support `s3` table function for reading and writing Parquet format.
+
+For example,
 
 ```sql
 SELECT *
@@ -531,43 +530,45 @@ FROM gcs('https://storage.googleapis.com/my-test-bucket-768/data.parquet', Parqu
 #### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.JDBC
 version: 1.0
 
-[ClickHouse] SHALL support `jdbc` table function reading and writing Parquet format.
+[ClickHouse] SHALL support `jdbc` table function for reading and writing Parquet format.
 
 #### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.ODBC
 version: 1.0
 
-[ClickHouse] SHALL support `odbc` table function reading and writing Parquet format.
+[ClickHouse] SHALL support `odbc` table function for reading and writing Parquet format.
 
 #### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.HDFS
 version: 1.0
 
-[ClickHouse] SHALL support `hdfs` table function reading and writing Parquet format.
+[ClickHouse] SHALL support `hdfs` table function for reading and writing Parquet format.
 
 #### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.Remote
 version: 1.0
 
-[ClickHouse] SHALL support `remote` table function reading and writing Parquet format.
+[ClickHouse] SHALL support `remote` table function for reading and writing Parquet format.
 
 #### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.MySQL
 version: 1.0
 
-[ClickHouse] SHALL support `mysql` table function reading and writing Parquet format.
+[ClickHouse] SHALL support `mysql` table function for reading and writing Parquet format.
 
-Example:
+For example,
 
-Given we have a [ClickHouse] table with a `mysql` engine:
-```sql
-CREATE TABLE mysql_table1 (
-  id UInt64,
-  column1 String
-)
-ENGINE = MySQL('mysql-host.domain.com','db1','table1','mysql_clickhouse','Password123!')
-```
-We can write to a parquet file format with:
-
-```sql
-SELECT * FROM mysql_table1 INTO OUTFILE testTable.parquet FORMAT Parquet
-```
+> Given we have a table with a `mysql` engine:
+> 
+> ```sql
+> CREATE TABLE mysql_table1 (
+>   id UInt64,
+>   column1 String
+> )
+> ENGINE = MySQL('mysql-host.domain.com','db1','table1','mysql_clickhouse','Password123!')
+> ```
+> 
+> We can write to a Parquet file format with:
+> 
+> ```sql
+> SELECT * FROM mysql_table1 INTO OUTFILE testTable.parquet FORMAT Parquet
+> ```
 
 #### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.PostgreSQL
 version: 1.0
@@ -694,235 +695,268 @@ version: 1.0
 
 ### Metadata
 
+Parquet files have three types of metadata
 
-##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata
+- file metadata
+- column (chunk) metadata
+- page header metadata
+
+as described in https://parquet.apache.org/docs/file-format/metadata/.
+
+#### ParquetFormat
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat
 version: 1.0
 
-[ClickHouse] SHALL be accessed via `ParquetMetadata` argument.
+[ClickHouse] SHALL support `ParquetMetadata` format to read metadata from Parquet files.
+
+For example,
+
 ```sql
 SELECT * FROM file(data.parquet, ParquetMetadata) format PrettyJSONEachRow
 ```
 
-##### RQ.SRS-032.ClickHouse.Parquet.Metadata.MetadataContent
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat.Output
 version: 1.0
 
-[ClickHouse] SHALL output the parquet metadata in the following structure:
+[ClickHouse] SHALL not support `ParquetMetadata` format as an output format and the `FORMAT_IS_NOT_SUITABLE_FOR_OUTPUT` 
+error SHALL be returned.
 
-    • num_columns - the number of columns
-    • num_rows - the total number of rows
-    • num_row_groups - the total number of row groups
-    • format_version - parquet format version, always 1.0 or 2.6
-    • total_uncompressed_size - total uncompressed bytes size of the data, calculated as the sum of total_byte_size from all row groups
-    • total_compressed_size - total compressed bytes size of the data, calculated as the sum of total_compressed_size from all row groups
-    • columns - the list of columns metadata with the next structure:
-        • name - column name
-        • path - column path (differs from name for nested column)
-        • max_definition_level - maximum definition level
-        • max_repetition_level - maximum repetition level
-        • physical_type - column physical type
-        • logical_type - column logical type
-        • compression - compression used for this column
-        • total_uncompressed_size - total uncompressed bytes size of the column, calculated as the sum of total_uncompressed_size of the column from all row groups
-        • total_compressed_size - total compressed bytes size of the column, calculated as the sum of total_compressed_size of the column from all row groups
-        • space_saved - percent of space saved by compression, calculated as (1 - total_compressed_size/total_uncompressed_size).
-        • encodings - the list of encodings used for this column
-    • row_groups - the list of row groups metadata with the next structure:
-        • num_columns - the number of columns in the row group
-        • num_rows - the number of rows in the row group
-        • total_uncompressed_size - total uncompressed bytes size of the row group
-        • total_compressed_size - total compressed bytes size of the row group
-        • columns - the list of column chunks metadata with the next structure:
-            • name - column name
-            • path - column path
-            • total_compressed_size - total compressed bytes size of the column
-            • total_uncompressed_size - total uncompressed bytes size of the row group
-            • have_statistics - boolean flag that indicates if column chunk metadata contains column statistics
-            • statistics - column chunk statistics (all fields are NULL if have_statistics = false) with the next structure:
-                • num_values - the number of non-null values in the column chunk
-                • null_count - the number of NULL values in the column chunk
-                • distinct_count - the number of distinct values in the column chunk
-                • min - the minimum value of the column chunk
-                • max - the maximum column of the column chunk
+For example,
 
-Example:
+```sql
+SELECT *
+FROM file('writing_nullable_int8.parquet', 'ParquetMetadata')
+FORMAT ParquetMetadata
 
-```json
-{
-    "num_columns": "2",
-    "num_rows": "100000",
-    "num_row_groups": "2",
-    "format_version": "2.6",
-    "metadata_size": "577",
-    "total_uncompressed_size": "282436",
-    "total_compressed_size": "26633",
-    "columns": [
-        {
-            "name": "number",
-            "path": "number",
-            "max_definition_level": "0",
-            "max_repetition_level": "0",
-            "physical_type": "INT32",
-            "logical_type": "Int(bitWidth=16, isSigned=false)",
-            "compression": "LZ4",
-            "total_uncompressed_size": "133321",
-            "total_compressed_size": "13293",
-            "space_saved": "90.03%",
-            "encodings": [
-                "RLE_DICTIONARY",
-                "PLAIN",
-                "RLE"
-            ]
-        },
-        {
-            "name": "concat('Hello', toString(modulo(number, 1000)))",
-            "path": "concat('Hello', toString(modulo(number, 1000)))",
-            "max_definition_level": "0",
-            "max_repetition_level": "0",
-            "physical_type": "BYTE_ARRAY",
-            "logical_type": "None",
-            "compression": "LZ4",
-            "total_uncompressed_size": "149115",
-            "total_compressed_size": "13340",
-            "space_saved": "91.05%",
-            "encodings": [
-                "RLE_DICTIONARY",
-                "PLAIN",
-                "RLE"
-            ]
-        }
-    ],
-    "row_groups": [
-        {
-            "num_columns": "2",
-            "num_rows": "65409",
-            "total_uncompressed_size": "179809",
-            "total_compressed_size": "14163",
-            "columns": [
-                {
-                    "name": "number",
-                    "path": "number",
-                    "total_compressed_size": "7070",
-                    "total_uncompressed_size": "85956",
-                    "have_statistics": true,
-                    "statistics": {
-                        "num_values": "65409",
-                        "null_count": "0",
-                        "distinct_count": null,
-                        "min": "0",
-                        "max": "999"
-                    }
-                },
-                {
-                    "name": "concat('Hello', toString(modulo(number, 1000)))",
-                    "path": "concat('Hello', toString(modulo(number, 1000)))",
-                    "total_compressed_size": "7093",
-                    "total_uncompressed_size": "93853",
-                    "have_statistics": true,
-                    "statistics": {
-                        "num_values": "65409",
-                        "null_count": "0",
-                        "distinct_count": null,
-                        "min": "Hello0",
-                        "max": "Hello999"
-                    }
-                }
-            ]
-        }
-
-    ]
-}
+Exception on client:
+Code: 399. DB::Exception: Code: 399. DB::Exception: Format ParquetMetadata is not suitable for output. (FORMAT_IS_NOT_SUITABLE_FOR_OUTPUT) (version 23.5.1.2890 (official build)). (FORMAT_IS_NOT_SUITABLE_FOR_OUTPUT)
 ```
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.PerquetMetadata.Content
+version: 1.0
+
+[ClickHouse]'s ParquetMetadata format SHALL output the Parquet metadata in the following structure:
+
+> - num_columns - the number of columns
+> - num_rows - the total number of rows
+> - num_row_groups - the total number of row groups
+> - format_version - parquet format version, always 1.0 or 2.6
+> - total_uncompressed_size - total uncompressed bytes size of the data, calculated as the sum of total_byte_size from all row groups
+> - total_compressed_size - total compressed bytes size of the data, calculated as the sum of total_compressed_size from all row groups
+> - columns - the list of columns metadata with the next structure:
+>     - name - column name
+>     - path - column path (differs from name for nested column)
+>     - max_definition_level - maximum definition level
+>     - max_repetition_level - maximum repetition level
+>     - physical_type - column physical type
+>     - logical_type - column logical type
+>     - compression - compression used for this column
+>     - total_uncompressed_size - total uncompressed bytes size of the column, calculated as the sum of total_uncompressed_size of the column from all row groups
+>     - total_compressed_size - total compressed bytes size of the column, calculated as the sum of total_compressed_size of the column from all row groups
+>     - space_saved - percent of space saved by compression, calculated as (1 - total_compressed_size/total_uncompressed_size).
+>     - encodings - the list of encodings used for this column
+> - row_groups - the list of row groups metadata with the next structure:
+>     - num_columns - the number of columns in the row group
+>     - num_rows - the number of rows in the row group
+>     - total_uncompressed_size - total uncompressed bytes size of the row group
+>     - total_compressed_size - total compressed bytes size of the row group
+>     - columns - the list of column chunks metadata with the next structure:
+>        - name - column name
+>        - path - column path
+>        - total_compressed_size - total compressed bytes size of the column
+>        - total_uncompressed_size - total uncompressed bytes size of the row group
+>        - have_statistics - boolean flag that indicates if column chunk metadata contains column statistics
+>        - statistics - column chunk statistics (all fields are NULL if have_statistics = false) with the next structure:
+>            - num_values - the number of non-null values in the column chunk
+>            - null_count - the number of NULL values in the column chunk
+>            - distinct_count - the number of distinct values in the column chunk
+>            - min - the minimum value of the column chunk
+>            - max - the maximum column of the column chunk
+
+For example,
+
+> ```json
+> {
+>     "num_columns": "2",
+>     "num_rows": "100000",
+>     "num_row_groups": "2",
+>     "format_version": "2.6",
+>     "metadata_size": "577",
+>     "total_uncompressed_size": "282436",
+>     "total_compressed_size": "26633",
+>     "columns": [
+>         {
+>             "name": "number",
+>             "path": "number",
+>             "max_definition_level": "0",
+>             "max_repetition_level": "0",
+>             "physical_type": "INT32",
+>             "logical_type": "Int(bitWidth=16, isSigned=false)",
+>             "compression": "LZ4",
+>             "total_uncompressed_size": "133321",
+>             "total_compressed_size": "13293",
+>             "space_saved": "90.03%",
+>             "encodings": [
+>                 "RLE_DICTIONARY",
+>                 "PLAIN",
+>                 "RLE"
+>             ]
+>         },
+>         {
+>             "name": "concat('Hello', toString(modulo(number, 1000)))",
+>             "path": "concat('Hello', toString(modulo(number, 1000)))",
+>             "max_definition_level": "0",
+>             "max_repetition_level": "0",
+>             "physical_type": "BYTE_ARRAY",
+>             "logical_type": "None",
+>             "compression": "LZ4",
+>             "total_uncompressed_size": "149115",
+>             "total_compressed_size": "13340",
+>             "space_saved": "91.05%",
+>             "encodings": [
+>                 "RLE_DICTIONARY",
+>                 "PLAIN",
+>                 "RLE"
+>             ]
+>         }
+>     ],
+>     "row_groups": [
+>         {
+>             "num_columns": "2",
+>             "num_rows": "65409",
+>             "total_uncompressed_size": "179809",
+>             "total_compressed_size": "14163",
+>             "columns": [
+>                 {
+>                     "name": "number",
+>                     "path": "number",
+>                     "total_compressed_size": "7070",
+>                     "total_uncompressed_size": "85956",
+>                     "have_statistics": true,
+>                     "statistics": {
+>                         "num_values": "65409",
+>                         "null_count": "0",
+>                         "distinct_count": null,
+>                         "min": "0",
+>                         "max": "999"
+>                     }
+>                 },
+>                 {
+>                     "name": "concat('Hello', toString(modulo(number, 1000)))",
+>                     "path": "concat('Hello', toString(modulo(number, 1000)))",
+>                     "total_compressed_size": "7093",
+>                     "total_uncompressed_size": "93853",
+>                     "have_statistics": true,
+>                     "statistics": {
+>                         "num_values": "65409",
+>                         "null_count": "0",
+>                         "distinct_count": null,
+>                         "min": "Hello0",
+>                         "max": "Hello999"
+>                     }
+>                 }
+>             ]
+>         }
+> 
+>     ]
+> }
+> ```
+
+#### Metadata Types
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Metadata.File
 version: 1.0
 
-[ClickHouse] SHALL support accessing parquet `file metadata`.
+[ClickHouse] SHALL support accessing `File Metadata` in Parquet files.
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Column
 version: 1.0
 
-[ClickHouse] SHALL support accessing parquet `column (chunk) metadata`.
+[ClickHouse] SHALL support accessing `Column (Chunk) Metadata` in Parquet files.
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Metadata.Header
 version: 1.0
 
-[ClickHouse] SHALL support accessing parquet `page header metadata`.
+[ClickHouse] SHALL support accessing `Page Header Metadata` in Parquet files.
 
 
-#### Error Recovery
-##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.MissingMagicNumber
+### Error Recovery
+
+#### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.MissingMagicNumber
 version: 1.0
 
-[ClickHouse] SHALL output an error if the 4-byte magic number "PAR1" is missing from the parquet metadata.
+[ClickHouse] SHALL output an error if the 4-byte magic number "PAR1" is missing from the Parquet metadata.
 
-Example:
+For example:
 
-When using hexeditor on the parquet file we alter the values of "PAR1" and change it to "PARQ".
+When using hexeditor on the Parquet file we alter the values of "PAR1" and change it to "PARQ".
+then when we try to read that Parquet file in [ClickHouse] we SHALL get an exception:
 
-Then try to read that parquet file in [ClickHouse].
-
-We get an exception:
 ```
 exception. Code: 1001, type: parquet::ParquetInvalidOrCorruptedFileException,
 e.what() = Invalid: Parquet magic bytes not found in footer.
-Either the file is corrupted or this is not a parquet file.
+Either the file is corrupted or this is not a Parquet file.
 ```
 
-
-##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptFile
+#### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptFile
 version: 1.0
 
-[ClickHouse] SHALL output an error when trying to access the corrupt `file` metadata. In this case the file metadata is corrupt, the file is lost.
+[ClickHouse] SHALL output an error when trying to access the corrupt `file` metadata.
+In this case the file metadata is corrupt, the file is lost.
 
-##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumn
+#### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumn
 version: 1.0
 
-[ClickHouse] SHALL output an error when trying to access the corrupt `column` metadata.In this case that column chunk is lost (but column chunks for this column in other row groups are okay).
+[ClickHouse] SHALL output an error when trying to access the corrupt `column` metadata.
+In this case that column chunk MAY be lost but column chunks for this column in other row groups SHALL be okay.
 
-##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptPageHeader
+#### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptPageHeader
 version: 1.0
 
-[ClickHouse] SHALL output an error when trying to access the corrupt `Page Header`. In this case the remaining pages in that chunk are lost.
+[ClickHouse] SHALL output an error when trying to access the corrupt `Page Header`.
+In this case the remaining pages in that chunk SHALL be lost.
 
-##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptPageData
+#### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptPageData
 version: 1.0
 
-[ClickHouse] SHALL output an error when trying to access the corrupt `Page Data`. In this case that page is lost.
-
+[ClickHouse] SHALL output an error when trying to access the corrupt `Page Data`.
+In this case that page SHALL be lost.
 
 ### Encoding
+
 ##### RQ.SRS-032.ClickHouse.Parquet.Encoding.Plain
 version: 1.0
 
-[ClickHouse] SHALL support `Plain` encoded parquet files.
+[ClickHouse] SHALL support `Plain` encoded Parquet files.
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Encoding.RunLength
 version: 1.0
 
-[ClickHouse] SHALL support `Run Length Encoding / Bit-Packing Hybrid` encoded parquet files.
+[ClickHouse] SHALL support `Run Length Encoding / Bit-Packing Hybrid` encoded Parquet files.
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Encoding.Delta
 version: 1.0
 
-[ClickHouse] SHALL support `Delta Encoding` encoded parquet files.
+[ClickHouse] SHALL support `Delta Encoding` encoded Parquet files.
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Encoding.DeltaLengthByteArray
 version: 1.0
 
-[ClickHouse] SHALL support `Delta-length byte array` encoded parquet files.
+[ClickHouse] SHALL support `Delta-length byte array` encoded Parquet files.
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Encoding.DeltaStrings
 version: 1.0
 
-[ClickHouse] SHALL support `Delta Strings` encoded parquet files.
+[ClickHouse] SHALL support `Delta Strings` encoded Parquet files.
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Encoding.ByteStreamSplit
 version: 1.0
 
-[ClickHouse] SHALL support `Byte Stream Split` encoded parquet files.
+[ClickHouse] SHALL support `Byte Stream Split` encoded Parquet files.
 
 [ClickHouse]: https://clickhouse.com
-[GitHub Repository]: https://github.com/ClickHouse/ClickHouse/blob/master/tests/testflows/parquet/requirements/requirements.md
-[Revision History]: https://github.com/ClickHouse/ClickHouse/commits/master/tests/testflows/parquet/requirements/requirements.md
+[GitHub Repository]: https://github.com/Altinity/clickhouse-regression/blob/main/parquet/requirements/requirements.md
+[Revision History]: https://github.com/Altinity/clickhouse-regression/commits/main/parquet/requirements/requirements.md
 [Git]: https://git-scm.com/
 [GitHub]: https://github.com
