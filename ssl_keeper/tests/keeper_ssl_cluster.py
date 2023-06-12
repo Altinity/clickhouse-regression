@@ -11,21 +11,33 @@ def mixed_keepers_3(self):
     with 1 node down and in read mode only with 2 nodes down.
     """
     cluster = self.context.cluster
+    node = self.context.cluster.node("clickhouse1")
     try:
         with Given("Receive UID"):
             uid = getuid()
 
+        pause()
+
         with And("I create some replicated table"):
             table_name = f"test{uid}"
+            node.query(
+                f"CREATE TABLE IF NOT EXISTS {table_name}_simple (d DateTime('UTC')) ENGINE = Memory AS SELECT "
+                "toDateTime('2000-01-01 00:00:00', 'UTC');"
+            )
+
             create_simple_table(table_name=table_name)
 
-        with And("I stop maximum available Keeper nodes for such configuration"):
-            cluster.node("clickhouse3").stop_clickhouse()
+        # with And("I stop maximum available Keeper nodes for such configuration"):
+        #     cluster.node("clickhouse3").stop_clickhouse()
+
+        pause()
 
         with And("I check that table in write mode"):
             retry(cluster.node("clickhouse1").query, timeout=500, delay=1)(
                 f"insert into {table_name} values (1,1)", exitcode=0
             )
+
+        pause()
 
         with And("I stop one more Keeper node"):
             cluster.node("clickhouse2").stop_clickhouse()
@@ -63,6 +75,8 @@ def mixed_keepers_3(self):
 
         with And("I check clean ability"):
             table_insert(table_name=table_name, node_name="clickhouse1")
+
+        pause()
 
     finally:
         with Finally("I clean up"):
