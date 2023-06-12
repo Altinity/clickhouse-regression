@@ -922,7 +922,7 @@ version: 1.0
 [ClickHouse] SHALL support `Byte Stream Split` encoded parquet files.
 
 [ClickHouse]: https://clickhouse.com
-[GitHub Repository]: https://github.com/Selfeer/clickhouse-regression/blob/main/parquet/requirements/requirements.md
-[Revision History]: https://github.com/Selfeer/clickhouse-regression/blob/main/parquet/requirements/requirements.md#revision-history
+[GitHub Repository]: https://github.com/Altinity/clickhouse-regression/tree/main
+[Revision History]: https://github.com/Altinity/clickhouse-regression/blob/main/parquet/requirements/requirements.md#revision-history
 [Git]: https://git-scm.com/
 [GitHub]: https://github.com
