@@ -12,7 +12,7 @@
         </coordination_settings>
 
         <raft_configuration>
-            <secure>true</secure>
+<!--            <secure>true</secure>-->
             <server>
                 <id>1</id>
                 <hostname>clickhouse1</hostname>
