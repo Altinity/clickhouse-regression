@@ -326,13 +326,13 @@ version: 1.0
 #### RQ.SRS-032.ClickHouse.Parquet.Insert.SkipValues
 version: 1.0
 
-[ClickHouse] SHALL support skipping unexistent values when reading from parquet files.
+[ClickHouse] SHALL support skipping unsupported values when reading from parquet files.
 
 #### RQ.SRS-032.ClickHouse.Parquet.Insert.AutoTypecast
 version: 1.0
 
 
-[ClickHouse] SHALL automatically typecast parquet datatype based on the types in the target table.\
+[ClickHouse] SHALL automatically typecast parquet datatype based on the types in the target table.
 
 Example:
 
@@ -922,7 +922,7 @@ version: 1.0
 [ClickHouse] SHALL support `Byte Stream Split` encoded parquet files.
 
 [ClickHouse]: https://clickhouse.com
-[GitHub Repository]: https://github.com/ClickHouse/ClickHouse/blob/master/tests/testflows/parquet/requirements/requirements.md 
-[Revision History]: https://github.com/ClickHouse/ClickHouse/commits/master/tests/testflows/parquet/requirements/requirements.md
+[GitHub Repository]: https://github.com/Selfeer/clickhouse-regression/blob/main/parquet/requirements/requirements.md
+[Revision History]: https://github.com/Selfeer/clickhouse-regression/blob/main/parquet/requirements/requirements.md#revision-history
 [Git]: https://git-scm.com/
 [GitHub]: https://github.com
