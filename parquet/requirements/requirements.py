@@ -323,12 +323,29 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_WriteNested = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support writings nested: `Array`, `Tuple` and `Map` datatypes in Parquet files.\n"
+        "[ClickHouse] SHALL support writing nested: `Array`, `Tuple` and `Map` datatypes in Parquet files.\n"
         "\n"
     ),
     link=None,
     level=3,
     num="4.4.5",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_DataTypes_WriteNullable = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNullable",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support writing `Nullable` datatypes in Parquet files.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.4.6",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_UnsupportedParquetTypes = Requirement(
@@ -1813,6 +1830,11 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             level=3,
             num="4.4.5",
         ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNullable",
+            level=3,
+            num="4.4.6",
+        ),
         Heading(name="Unsupported Parquet Types", level=2, num="4.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes",
@@ -2167,6 +2189,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadNullable,
         RQ_SRS_032_ClickHouse_Parquet_DataTypes_Write,
         RQ_SRS_032_ClickHouse_Parquet_DataTypes_WriteNested,
+        RQ_SRS_032_ClickHouse_Parquet_DataTypes_WriteNullable,
         RQ_SRS_032_ClickHouse_Parquet_UnsupportedParquetTypes,
         RQ_SRS_032_ClickHouse_Parquet_UnsupportedParquetTypes_ChunkedArray,
         RQ_SRS_032_ClickHouse_Parquet_Insert,
@@ -2269,6 +2292,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
     * 4.4.3 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNullable](#rqsrs-032clickhouseparquetdatatypesreadnullable)
     * 4.4.4 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write](#rqsrs-032clickhouseparquetdatatypeswrite)
     * 4.4.5 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNested](#rqsrs-032clickhouseparquetdatatypeswritenested)
+    * 4.4.6 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNullable](#rqsrs-032clickhouseparquetdatatypeswritenullable)
   * 4.5 [Unsupported Parquet Types](#unsupported-parquet-types)
     * 4.5.1 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes](#rqsrs-032clickhouseparquetunsupportedparquettypes)
     * 4.5.2 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.ChunkedArray](#rqsrs-032clickhouseparquetunsupportedparquettypeschunkedarray)
@@ -2525,11 +2549,15 @@ version:1.0
 | `FIXED_LENGTH_BYTE_ARRAY`  | `IPv6`                                |
 | `FIXED_LENGTH_BYTE_ARRAY`  | `Int128`/`UInt128`/`Int256`/`UInt256` |
 
-
 #### RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNested
 version:1.0
 
-[ClickHouse] SHALL support writings nested: `Array`, `Tuple` and `Map` datatypes in Parquet files.
+[ClickHouse] SHALL support writing nested: `Array`, `Tuple` and `Map` datatypes in Parquet files.
+
+#### RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNullable
+version:1.0
+
+[ClickHouse] SHALL support writing `Nullable` datatypes in Parquet files.
 
 ### Unsupported Parquet Types
 
