@@ -534,10 +534,30 @@ version:1.0
 
 [ClickHouse] SHALL support reading nested: `Array`, `Tuple` and `Map` datatypes in Parquet files.
 
-#### RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNullable
+#### RQ.SRS-032.ClickHouse.Parquet.DataTypes.NullValues
 version:1.0
 
-[ClickHouse] SHALL support reading `Nullable` datatypes in Parquet files.
+[ClickHouse] SHALL support reading columns that have `Null` values in Parquet files. If the target [ClickHouse] column is not `Nullable` then the `Null` value should be converted to the default values for the target column datatype.
+
+For example, if the target column has `Int32`, then the `Null` value will be replaced with `0`.
+
+#### RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Nullable
+version:1.0
+
+[ClickHouse] SHALL support reading Parquet files into target table's `Nullable` datatype columns.
+
+
+#### RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.LowCardinality
+version:1.0
+
+[ClickHouse] SHALL support reading Parquet files into target table's `LowCardinality` datatype columns.
+
+
+#### RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Nested
+version:1.0
+
+[ClickHouse] SHALL support reading Parquet files into target table's `Nested` datatype columns.
+
 
 #### RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write
 version:1.0
