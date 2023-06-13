@@ -11,20 +11,21 @@ def feature(self, node="clickhouse1"):
     """Run checks that clickhouse successfully read and writes Parquet chunked array datatype."""
     self.context.snapshot_id = get_snapshot_id()
     self.context.node = self.context.cluster.node(node)
+    node = self.context.node
     table_name = f"table_{getuid()}"
 
     with Given("I have a table"):
         create_table(
             engine="Memory",
-            columns=[Column(name="arr", datatype=Array(UInt64()))],
+            columns=[Column(name="arr", datatype=Array(Map(String(), UInt32())))],
             name=table_name,
         )
 
+    with And("I have a parquet file with a chunked array"):
+        node.command("python3 /var/lib/test_files/generate_chunked_file.py")
+
     with When("I insert data from a parquet file"):
-        self.context.node.command(
-            "cp /var/lib/test_files/chunked_array_test_file.parquet /var/lib/clickhouse/user_files/chunked_array_test_file.parquet"
-        )
-        self.context.node.query(
+        node.query(
             f"INSERT INTO {table_name} FROM INFILE '/var/lib/clickhouse/user_files/chunked_array_test_file.parquet' FORMAT Parquet"
         )
 
