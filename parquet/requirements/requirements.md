@@ -1202,7 +1202,7 @@ version: 1.0
 
 [ClickHouse] SHALL output an error if the 4-byte magic number "PAR1" is missing from the Parquet metadata.
 
-For example:
+For example,
 
 When using hexeditor on the Parquet file we alter the values of "PAR1" and change it to "PARQ".
 then when we try to read that Parquet file in [ClickHouse] we SHALL get an exception:
