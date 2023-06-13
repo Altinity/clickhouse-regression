@@ -45,7 +45,8 @@ RQ_SRS_032_ClickHouse_Parquet_Encryption = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] MAY not support reading encrypted Parquet files.\n" "\n"
+        "[ClickHouse] MAY not support reading or writnig encrypted Parquet files.\n"
+        "\n"
     ),
     link=None,
     level=3,
@@ -204,7 +205,6 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_Read = Requirement(
         "[ClickHouse] SHALL support reading the following Parquet data types:\n"
         "Parquet Decimal is currently not tested.\n"
         "\n"
-        "\n"
         "| Parquet data type (INSERT)                    | ClickHouse data type                  |\n"
         "|-----------------------------------------------|---------------------------------------|\n"
         "| `BOOL`                                        | `Bool`                                |\n"
@@ -231,7 +231,6 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_Read = Requirement(
         "| `FIXED_LENGTH_BYTE_ARRAY`, `BINARY`           | `IPv6`                                |\n"
         "| `FIXED_LENGTH_BYTE_ARRAY`, `BINARY`           | `Int128`/`UInt128`/`Int256`/`UInt256` |\n"
         "\n"
-        "\n"
     ),
     link=None,
     level=3,
@@ -248,27 +247,79 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadNested = Requirement(
     description=(
         "[ClickHouse] SHALL support reading nested: `Array`, `Tuple` and `Map` datatypes in Parquet files.\n"
         "\n"
-        "\n"
     ),
     link=None,
     level=3,
     num="4.4.2",
 )
 
-RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadNullable = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNullable",
+RQ_SRS_032_ClickHouse_Parquet_DataTypes_NullValues = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.NullValues",
     version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support reading `Nullable` datatypes in Parquet files.\n"
+        "[ClickHouse] SHALL support reading columns that have `Null` values in Parquet files. If the target [ClickHouse] column is not `Nullable` then the `Null` value should be converted to the default values for the target column datatype.\n"
+        "\n"
+        "For example, if the target column has `Int32`, then the `Null` value will be replaced with `0`.\n"
         "\n"
     ),
     link=None,
     level=3,
     num="4.4.3",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadInto_Nullable = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Nullable",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support reading Parquet files into target table's `Nullable` datatype columns.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.4.4",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadInto_LowCardinality = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.LowCardinality",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support reading Parquet files into target table's `LowCardinality` datatype columns.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.4.5",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadInto_Nested = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Nested",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support reading Parquet files into target table's `Nested` datatype columns.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.4.6",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_Write = Requirement(
@@ -280,7 +331,6 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_Write = Requirement(
     uid=None,
     description=(
         "[ClickHouse] SHALL support writing the following datatypes to Parquet:\n"
-        "\n"
         "\n"
         "| Parquet data type (SELECT) | ClickHouse data type                  |\n"
         "|----------------------------|---------------------------------------|\n"
@@ -308,11 +358,10 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_Write = Requirement(
         "| `FIXED_LENGTH_BYTE_ARRAY`  | `IPv6`                                |\n"
         "| `FIXED_LENGTH_BYTE_ARRAY`  | `Int128`/`UInt128`/`Int256`/`UInt256` |\n"
         "\n"
-        "\n"
     ),
     link=None,
     level=3,
-    num="4.4.4",
+    num="4.4.7",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_WriteNested = Requirement(
@@ -328,7 +377,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_WriteNested = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.5",
+    num="4.4.8",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_WriteNullable = Requirement(
@@ -341,11 +390,10 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_WriteNullable = Requirement(
     description=(
         "[ClickHouse] SHALL support writing `Nullable` datatypes in Parquet files.\n"
         "\n"
-        "\n"
     ),
     link=None,
     level=3,
-    num="4.4.6",
+    num="4.4.9",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_UnsupportedParquetTypes = Requirement(
@@ -1685,7 +1733,7 @@ RQ_SRS_032_ClickHouse_Parquet_Encoding_Delta = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support `Delta Encoding` encoded Parquet files.\n" "\n"
+        "[ClickHouse] SHALL support `Delta Encoding` encoded Parquet files.\n" "\n" "\n"
     ),
     link=None,
     level=4,
@@ -1818,22 +1866,37 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             num="4.4.2",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNullable",
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.NullValues",
             level=3,
             num="4.4.3",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write", level=3, num="4.4.4"
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Nullable",
+            level=3,
+            num="4.4.4",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNested",
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.LowCardinality",
             level=3,
             num="4.4.5",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNullable",
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Nested",
             level=3,
             num="4.4.6",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write", level=3, num="4.4.7"
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNested",
+            level=3,
+            num="4.4.8",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNullable",
+            level=3,
+            num="4.4.9",
         ),
         Heading(name="Unsupported Parquet Types", level=2, num="4.5"),
         Heading(
@@ -2186,7 +2249,10 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Zstd,
         RQ_SRS_032_ClickHouse_Parquet_DataTypes_Read,
         RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadNested,
-        RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadNullable,
+        RQ_SRS_032_ClickHouse_Parquet_DataTypes_NullValues,
+        RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadInto_Nullable,
+        RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadInto_LowCardinality,
+        RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadInto_Nested,
         RQ_SRS_032_ClickHouse_Parquet_DataTypes_Write,
         RQ_SRS_032_ClickHouse_Parquet_DataTypes_WriteNested,
         RQ_SRS_032_ClickHouse_Parquet_DataTypes_WriteNullable,
@@ -2289,10 +2355,13 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
   * 4.4 [Data Types](#data-types)
     * 4.4.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Read](#rqsrs-032clickhouseparquetdatatypesread)
     * 4.4.2 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNested](#rqsrs-032clickhouseparquetdatatypesreadnested)
-    * 4.4.3 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNullable](#rqsrs-032clickhouseparquetdatatypesreadnullable)
-    * 4.4.4 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write](#rqsrs-032clickhouseparquetdatatypeswrite)
-    * 4.4.5 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNested](#rqsrs-032clickhouseparquetdatatypeswritenested)
-    * 4.4.6 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNullable](#rqsrs-032clickhouseparquetdatatypeswritenullable)
+    * 4.4.3 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.NullValues](#rqsrs-032clickhouseparquetdatatypesnullvalues)
+    * 4.4.4 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Nullable](#rqsrs-032clickhouseparquetdatatypesreadintonullable)
+    * 4.4.5 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.LowCardinality](#rqsrs-032clickhouseparquetdatatypesreadintolowcardinality)
+    * 4.4.6 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Nested](#rqsrs-032clickhouseparquetdatatypesreadintonested)
+    * 4.4.7 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write](#rqsrs-032clickhouseparquetdatatypeswrite)
+    * 4.4.8 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNested](#rqsrs-032clickhouseparquetdatatypeswritenested)
+    * 4.4.9 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNullable](#rqsrs-032clickhouseparquetdatatypeswritenullable)
   * 4.5 [Unsupported Parquet Types](#unsupported-parquet-types)
     * 4.5.1 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes](#rqsrs-032clickhouseparquetunsupportedparquettypes)
     * 4.5.2 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.ChunkedArray](#rqsrs-032clickhouseparquetunsupportedparquettypeschunkedarray)
@@ -2398,7 +2467,296 @@ The documentation used:
 
 ## Feature Diagram
 
-![Generated using code in flowchart_code.md](parquet_flowchart.jpg)
+```mermaid
+flowchart TB;
+    subgraph Overhead[Parquet]
+        direction TB;
+        subgraph Sources[Source of data]
+            direction TB;   
+            MySQL
+
+            subgraph Libraries[Parquet Libraries]
+                direction LR;
+                parquet-tools
+                pyarrow
+                parquet-cpp
+                parquet-mr
+                fastparquet
+                pyspark
+            end
+
+            subgraph ClickHouse_source[ClickHouse]
+                style ClickHouse_source fill:#fcbb30
+                direction TB;   
+                subgraph Select_query[SELECT]
+                    style Select_query fill:#d9ead3
+                    direction LR;
+                    subgraph Select_sources[Sources]
+                        direction TB;
+                        subgraph Funcs_sel[Functions]
+                            direction LR;
+                            URL_func_sel[URL]
+                            File_func_sel[FILE]
+                            Query_func_sel[Query]
+                            S3_func_sel[S3]
+                            jdbc_func_sel[JDBC]
+                            odbc_func_sel[ODBC]
+                            hdfs_func_sel[HDFS]
+                            remote_func_sel[Remote]
+                            mysql_func_sel[MySQL]
+                            postgresql_func_sel[PostgreSQL]
+                        end
+
+                        subgraph Integration_Engines_sel[Integration Engines]
+                            direction LR;
+                            ODBC_eng_sel[ODBC]
+                            jdbc_eng_sel[JDBC]
+                            mysql_eng_sel[MySQL]
+                            mongodb_eng_sel[MongoDB]
+                            hdfs_eng_sel[HDFS]
+                            s3_eng_sel[S3]
+                            kafka_eng_sel[Kafka]
+                            embeddedrocksDB_eng_sel[EmbeddedRocksDB]
+                            RabbitMQ_eng_sel[RabbitMQ]
+                            PostgreSQL_eng_sel[PostgreSQL]
+                        end
+
+                        subgraph Special_Engines_sel[Special Engines]
+                            direction LR;
+                            distributed_eng_sel[Distributed]
+                            dictionary_eng_sel[Dictionary]
+                            file_eng_sel[File]
+                            url_eng_sel[URL]
+                            mat_view_sel[Materialized View]
+                            merge_sel[Merge]
+                            join_sel[Join]
+                            view_sel[View]
+                            memory_sel[Memory]
+                            buffer_sel[Buffer]
+                        end
+                    end
+
+                    subgraph Select_opt[Clauses]
+                        JOIN_clause[JOIN]
+                        Union_clause[UNION]
+                    end
+                end
+
+                subgraph ClickHouse_write_direct[Writing into file directly]
+                    direction LR;
+                    s3_tb_write[S3 table function]
+                    s3_en_write[S3 engine]
+                    file_tb_write[File table function]
+                    file_en_write[File engine]
+                    hdfs_tb_write[HDFS table function]
+                    hdfs_en_write[HDFS engine]
+                    url_tb_write[URL table function]
+                    url_en_write[URL engine]
+                end
+            end
+        end
+
+        subgraph Input_settings[Input settings]
+            direction LR
+            input_format_parquet_import_nested
+            input_format_parquet_case_insensitive_column_matching
+            input_format_parquet_allow_missing_columns
+            input_format_parquet_skip_columns_with_unsupported_types_in_schema_inference 
+        end
+
+        subgraph Output_settings[Output settings]
+            direction LR
+            output_format_parquet_row_group_size
+            output_format_parquet_string_as_string
+            output_format_parquet_fixed_string_as_fixed_byte_array
+            output_format_parquet_version
+            output_format_parquet_compression_method
+        end
+
+        subgraph Compression
+            direction TB
+            Uncompressed
+            Snappy
+            Gzip
+            LZO
+            Brotli
+            LZ4
+            ZSTD
+            LZ4_RAW
+        end
+
+        subgraph Encryption
+            direction LR
+            AesGcmV1
+            AesGcmCtrV1
+        end
+      
+        subgraph ClickHouse[ClickHouse]
+            style ClickHouse fill:#fcbb30
+            direction TB;
+            subgraph Insert_query[INSERT Targets]
+                style Insert_query fill:#ffb5b5
+                direction TB;
+                subgraph Funcs[Functions]
+                    URL_func_in[URL]
+                    File_func_in[FILE]
+                    Query_func_in[Query]
+                    S3_func_in[S3]
+                    jdbc_func_in[JDBC]
+                    odbc_func_in[ODBC]
+                    hdfs_func_in[HDFS]
+                    remote_func_in[Remote]
+                    mysql_func_in[MySQL]
+                    postgresql_func_in[PostgreSQL]
+                end
+
+                subgraph Integration_Engines[Integration Engines]
+                    ODBC_eng[ODBC]
+                    jdbc_eng[JDBC]
+                    mysql_eng[MySQL]
+                    mongodb_eng[MongoDB]
+                    hdfs_eng[HDFS]
+                    s3_eng[S3]
+                    kafka_eng[Kafka]
+                    embeddedrocksDB_eng[EmbeddedRocksDB]
+                    RabbitMQ_eng[RabbitMQ]
+                    PostgreSQL_eng[PostgreSQL]
+                end
+
+                subgraph Special_Engines[Special Engines]
+                    distributed_eng[Distributed]
+                    dictionary_eng[Dictionary]
+                    file_eng[File]
+                    url_eng[URL]
+                    merge[Merge]
+                    join[Join]
+                    memory[Memory]
+                    buffer[Buffer]
+                end
+
+            end
+            subgraph ClickHouse_read_direct[Reading from file directly]
+                s3_tb_read[S3 table function]
+                s3_en_read[S3 engine]
+                file_tb_read[File table function]
+                file_en_read[File engine]
+                hdfs_tb_read[HDFS table function]
+                hdfs_en_read[HDFS engine]
+                url_tb_read[URL table function]
+                url_en_read[URL engine]
+            end
+        end
+
+    Parquet_File_in[Parquet File]
+    Parquet_File_out[Parquet File]
+
+        subgraph TypeConversion[Parquet type > ClickHouse type > Parquet type]
+            direction LR;
+            subgraph Insert_types[Parquet]
+                UInt8_in[UInt8]
+                Bool_in[Bool]
+                Int8_in[Int8]
+                UInt16_in[UInt16]
+                Int16_in[Int16]
+                UInt32_in[UInt32]
+                Int32_in[Int32]
+                UInt64_in[UInt64]
+                Int64_in[Int64]
+                Float_in[Float]
+                Half_Float_in[Half Float]
+                Double_in[Double]
+                Date32_in[Date32]
+                Date64_in[Date62]
+                Timestamp_in[Timestamp]
+                String_in[String]
+                Binary_in[Binary]
+                Decimal_in[Decimal]
+                List_in[List]
+                Struct_in[Struct]
+                Map_in[Map]
+            end
+
+            subgraph CH_types[ClickHouse]
+                UInt8_ch[UInt8]
+                Int8_ch[Int8]
+                UInt16_ch[UInt16]
+                Int16_ch[Int16]
+                UInt32_ch[UInt32]
+                Int32_ch[Int32]
+                UInt64_ch[UInt64]
+                Int64_ch[Int64]
+                Float32_ch[Float32]
+                Float64_ch[Float64]
+                Date_ch[Date]
+                DateTime_ch[DateTime]
+                String_ch[String]
+                FixedString_ch[FixedString]
+                Decimal128_ch[Decimal128]
+                Array_ch[Array]
+                Tuple_ch[Tuple]
+                Map_ch[Map]
+            end
+
+            subgraph Select_types[Parquet]
+                UInt8_out[UInt8]
+                Int8_out[Int8]
+                UInt16_out[UInt16]
+                Int16_out[Int16]
+                UInt32_out[UInt32]
+                Int32_out[Int32]
+                UInt64_out[UInt64]
+                Int64_out[Int64]
+                Float_out[Float]
+                Double_out[Double]
+                Binary_out[Binary]
+                Decimal_out[Decimal]
+                List_out[List]
+                Struct_out[Struct]
+                Map_out[Map]
+            end
+
+            subgraph Modifiers[Supported Modifiers]
+                direction LR
+                Nullable
+                LowCardinality
+            end
+        end
+        subgraph Not_supported_by_ch[Parquet Types not supported by ClickHouse]
+            direction LR
+            Time32
+            FIXED_SIZE_BINARY
+            JSON
+            UUID
+            ENUM
+            Chunked_arr[Chunked Array]
+        end
+    end
+
+Sources --> Compression --> Encryption --> Parquet_File_in --Insert into ClickHouse--> Input_settings --> ClickHouse -- Read From ClickHouse --> Output_settings --> Parquet_File_out
+
+UInt8_in --> UInt8_ch --> UInt8_out
+Bool_in --> UInt8_ch
+Int8_in --> Int8_ch --> Int8_out
+UInt16_in --> UInt16_ch --> UInt16_out
+UInt32_in --> UInt32_ch --> UInt32_out
+UInt64_in --> UInt64_ch --> UInt64_out
+Int16_in --> Int16_ch --> Int16_out
+Int32_in --> Int32_ch --> Int32_out
+Int64_in --> Int64_ch --> Int64_out
+Float_in --> Float32_ch --> Float_out
+Half_Float_in --> Float32_ch
+Double_in --> Float64_ch --> Double_out
+Date32_in --> Date_ch --> UInt16_out
+Date64_in --> DateTime_ch --> UInt32_out
+Timestamp_in --> DateTime_ch
+String_in --> String_ch --> Binary_out
+Binary_in --> String_ch
+Decimal_in --> Decimal128_ch --> Decimal_out
+List_in --> Array_ch --> List_out
+Struct_in --> Tuple_ch --> Struct_out
+Map_in --> Map_ch --> Map_out
+FixedString_ch --> Binary_out
+```
 
 Generated using code in flowchart_code.txt
 
@@ -2419,7 +2777,7 @@ version: 1.0
 #### RQ.SRS-032.ClickHouse.Parquet.Encryption
 version: 1.0
 
-[ClickHouse] MAY not support reading encrypted Parquet files.
+[ClickHouse] MAY not support reading or writnig encrypted Parquet files.
 
 #### RQ.SRS-032.ClickHouse.Parquet.Chunks
 version: 1.0
@@ -2478,7 +2836,6 @@ version:1.0
 [ClickHouse] SHALL support reading the following Parquet data types:
 Parquet Decimal is currently not tested.
 
-
 | Parquet data type (INSERT)                    | ClickHouse data type                  |
 |-----------------------------------------------|---------------------------------------|
 | `BOOL`                                        | `Bool`                                |
@@ -2505,23 +2862,40 @@ Parquet Decimal is currently not tested.
 | `FIXED_LENGTH_BYTE_ARRAY`, `BINARY`           | `IPv6`                                |
 | `FIXED_LENGTH_BYTE_ARRAY`, `BINARY`           | `Int128`/`UInt128`/`Int256`/`UInt256` |
 
-
 #### RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNested
 version:1.0
 
 [ClickHouse] SHALL support reading nested: `Array`, `Tuple` and `Map` datatypes in Parquet files.
 
-
-#### RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNullable
+#### RQ.SRS-032.ClickHouse.Parquet.DataTypes.NullValues
 version:1.0
 
-[ClickHouse] SHALL support reading `Nullable` datatypes in Parquet files.
+[ClickHouse] SHALL support reading columns that have `Null` values in Parquet files. If the target [ClickHouse] column is not `Nullable` then the `Null` value should be converted to the default values for the target column datatype.
+
+For example, if the target column has `Int32`, then the `Null` value will be replaced with `0`.
+
+#### RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Nullable
+version:1.0
+
+[ClickHouse] SHALL support reading Parquet files into target table's `Nullable` datatype columns.
+
+
+#### RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.LowCardinality
+version:1.0
+
+[ClickHouse] SHALL support reading Parquet files into target table's `LowCardinality` datatype columns.
+
+
+#### RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Nested
+version:1.0
+
+[ClickHouse] SHALL support reading Parquet files into target table's `Nested` datatype columns.
+
 
 #### RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write
 version:1.0
 
 [ClickHouse] SHALL support writing the following datatypes to Parquet:
-
 
 | Parquet data type (SELECT) | ClickHouse data type                  |
 |----------------------------|---------------------------------------|
@@ -3211,6 +3585,7 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL support `Delta Encoding` encoded Parquet files.
+
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Encoding.DeltaLengthByteArray
 version: 1.0
