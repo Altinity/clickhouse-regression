@@ -428,8 +428,6 @@ Map_in --> Map_ch --> Map_out
 FixedString_ch --> Binary_out
 ```
 
-Generated using code in flowchart_code.txt
-
 ## Requirements
 
 ### General
