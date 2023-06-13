@@ -225,16 +225,19 @@ flowchart TB;
 
         subgraph Input_settings[Input settings]
             direction LR
-            import_nested
-            case_insensitive_column_matching
-            allow_missing_columns
-            skip_columns_with_unsupported_types_in_schema_inference 
+            input_format_parquet_import_nested
+            input_format_parquet_case_insensitive_column_matching
+            input_format_parquet_allow_missing_columns
+            input_format_parquet_skip_columns_with_unsupported_types_in_schema_inference 
         end
 
         subgraph Output_settings[Output settings]
             direction LR
-            row_group_size
-            string_as_string
+            output_format_parquet_row_group_size
+            output_format_parquet_string_as_string
+            output_format_parquet_fixed_string_as_fixed_byte_array
+            output_format_parquet_version
+            output_format_parquet_compression_method
         end
 
         subgraph Compression
