@@ -444,7 +444,7 @@ version: 1.0
 #### RQ.SRS-032.ClickHouse.Parquet.Encryption
 version: 1.0
 
-[ClickHouse] MAY not support reading encrypted Parquet files.
+[ClickHouse] MAY not support reading or writnig encrypted Parquet files.
 
 #### RQ.SRS-032.ClickHouse.Parquet.Chunks
 version: 1.0
