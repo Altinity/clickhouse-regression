@@ -214,7 +214,6 @@ version:1.0
 [ClickHouse] SHALL support reading the following Parquet data types:
 Parquet Decimal is currently not tested.
 
-
 | Parquet data type (INSERT)                    | ClickHouse data type                  |
 |-----------------------------------------------|---------------------------------------|
 | `BOOL`                                        | `Bool`                                |
@@ -241,12 +240,10 @@ Parquet Decimal is currently not tested.
 | `FIXED_LENGTH_BYTE_ARRAY`, `BINARY`           | `IPv6`                                |
 | `FIXED_LENGTH_BYTE_ARRAY`, `BINARY`           | `Int128`/`UInt128`/`Int256`/`UInt256` |
 
-
 #### RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNested
 version:1.0
 
 [ClickHouse] SHALL support reading nested: `Array`, `Tuple` and `Map` datatypes in Parquet files.
-
 
 #### RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNullable
 version:1.0
@@ -257,7 +254,6 @@ version:1.0
 version:1.0
 
 [ClickHouse] SHALL support writing the following datatypes to Parquet:
-
 
 | Parquet data type (SELECT) | ClickHouse data type                  |
 |----------------------------|---------------------------------------|
@@ -285,18 +281,15 @@ version:1.0
 | `FIXED_LENGTH_BYTE_ARRAY`  | `IPv6`                                |
 | `FIXED_LENGTH_BYTE_ARRAY`  | `Int128`/`UInt128`/`Int256`/`UInt256` |
 
-
 #### RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNested
 version:1.0
 
 [ClickHouse] SHALL support writing nested: `Array`, `Tuple` and `Map` datatypes in Parquet files.
 
-
 #### RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNullable
 version:1.0
 
 [ClickHouse] SHALL support writing `Nullable` datatypes in Parquet files.
-
 
 ### Unsupported Parquet Types
 
@@ -950,6 +943,7 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL support `Delta Encoding` encoded Parquet files.
+
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Encoding.DeltaLengthByteArray
 version: 1.0

@@ -325,7 +325,6 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_WriteNested = Requirement(
     description=(
         "[ClickHouse] SHALL support writing nested: `Array`, `Tuple` and `Map` datatypes in Parquet files.\n"
         "\n"
-        "\n"
     ),
     link=None,
     level=3,
@@ -2550,18 +2549,15 @@ version:1.0
 | `FIXED_LENGTH_BYTE_ARRAY`  | `IPv6`                                |
 | `FIXED_LENGTH_BYTE_ARRAY`  | `Int128`/`UInt128`/`Int256`/`UInt256` |
 
-
 #### RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNested
 version:1.0
 
 [ClickHouse] SHALL support writing nested: `Array`, `Tuple` and `Map` datatypes in Parquet files.
 
-
 #### RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNullable
 version:1.0
 
 [ClickHouse] SHALL support writing `Nullable` datatypes in Parquet files.
-
 
 ### Unsupported Parquet Types
 
