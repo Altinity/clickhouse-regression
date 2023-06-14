@@ -1,10 +1,11 @@
-# Configuration of SSL-FIPS
+# Configuring ClickHouse Keeper for SSL in FIPS Compatible Mode
 
 ## Prerequisites for FIPS-Compatible Operation
+
 The minimal requirements for FIPS-compatible operation are: 
 
-Install FIPS-compatible Altinity Stable build. 
-Apply FIPS-compatible configuration settings to set allowed ports, TLS version, and ciphers. 
+* install FIPS-compatible Altinity Stable build
+* apply FIPS-compatible configuration settings to set allowed ports, TLS version, and ciphers 
 
 ## FIPS-compatible configuration settings
 
