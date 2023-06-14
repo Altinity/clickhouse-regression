@@ -33,13 +33,13 @@
     * 4.4.7 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write](#rqsrs-032clickhouseparquetdatatypeswrite)
     * 4.4.8 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNested](#rqsrs-032clickhouseparquetdatatypeswritenested)
     * 4.4.9 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNullable](#rqsrs-032clickhouseparquetdatatypeswritenullable)
-    * 4.4.10 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Conversion](#rqsrs-032clickhouseparquetdatatypesconversion)
+    * 4.4.10 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.TypeConversionFunction](#rqsrs-032clickhouseparquetdatatypestypeconversionfunction)
   * 4.5 [Unsupported Parquet Types](#unsupported-parquet-types)
     * 4.5.1 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes](#rqsrs-032clickhouseparquetunsupportedparquettypes)
     * 4.5.2 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.ChunkedArray](#rqsrs-032clickhouseparquetunsupportedparquettypeschunkedarray)
   * 4.6 [INSERT](#insert)
     * 4.6.1 [RQ.SRS-032.ClickHouse.Parquet.Insert](#rqsrs-032clickhouseparquetinsert)
-    * 4.6.2 [RQ.SRS-032.ClickHouse.Parquet.Insert.AutoDetect](#rqsrs-032clickhouseparquetinsertautodetect)
+    * 4.6.2 [RQ.SRS-032.ClickHouse.Parquet.Insert.AutoDetectParquetFileFormat](#rqsrs-032clickhouseparquetinsertautodetectparquetfileformat)
     * 4.6.3 [RQ.SRS-032.ClickHouse.Parquet.Insert.Projections](#rqsrs-032clickhouseparquetinsertprojections)
     * 4.6.4 [RQ.SRS-032.ClickHouse.Parquet.Insert.SkipColumns](#rqsrs-032clickhouseparquetinsertskipcolumns)
     * 4.6.5 [RQ.SRS-032.ClickHouse.Parquet.Insert.SkipValues](#rqsrs-032clickhouseparquetinsertskipvalues)
@@ -55,25 +55,24 @@
     * 4.7.3 [RQ.SRS-032.ClickHouse.Parquet.Nested.ArrayIntoNotNested](#rqsrs-032clickhouseparquetnestedarrayintonotnested)
     * 4.7.4 [RQ.SRS-032.ClickHouse.Parquet.Nested.NonArrayIntoNested](#rqsrs-032clickhouseparquetnestednonarrayintonested)
   * 4.8 [SELECT](#select)
-    * 4.8.1 [RQ.SRS-032.ClickHouse.Parquet.Select](#rqsrs-032clickhouseparquetselect)
-    * 4.8.2 [RQ.SRS-032.ClickHouse.Parquet.Select.Outfile](#rqsrs-032clickhouseparquetselectoutfile)
-    * 4.8.3 [RQ.SRS-032.ClickHouse.Parquet.Select.AutoDetect](#rqsrs-032clickhouseparquetselectautodetect)
-    * 4.8.4 [RQ.SRS-032.ClickHouse.Parquet.Select.Join](#rqsrs-032clickhouseparquetselectjoin)
-    * 4.8.5 [RQ.SRS-032.ClickHouse.Parquet.Select.Union](#rqsrs-032clickhouseparquetselectunion)
-    * 4.8.6 [RQ.SRS-032.ClickHouse.Parquet.Select.View](#rqsrs-032clickhouseparquetselectview)
-    * 4.8.7 [RQ.SRS-032.ClickHouse.Parquet.Select.MaterializedView](#rqsrs-032clickhouseparquetselectmaterializedview)
-    * 4.8.8 [SELECT Settings](#select-settings)
-      * 4.8.8.1 [RQ.SRS-032.ClickHouse.Parquet.Select.Settings.RowGroupSize](#rqsrs-032clickhouseparquetselectsettingsrowgroupsize)
-      * 4.8.8.2 [RQ.SRS-032.ClickHouse.Parquet.Select.Settings.StringAsString](#rqsrs-032clickhouseparquetselectsettingsstringasstring)
-      * 4.8.8.3 [RQ.SRS-032.ClickHouse.Parquet.Select.Settings.StringAsFixedByteArray](#rqsrs-032clickhouseparquetselectsettingsstringasfixedbytearray)
-      * 4.8.8.4 [RQ.SRS-032.ClickHouse.Parquet.Select.Settings.ParquetVersion](#rqsrs-032clickhouseparquetselectsettingsparquetversion)
-      * 4.8.8.5 [RQ.SRS-032.ClickHouse.Parquet.Select.Settings.CompressionMethod](#rqsrs-032clickhouseparquetselectsettingscompressionmethod)
+    * 4.8.1 [RQ.SRS-032.ClickHouse.Parquet.Select.Outfile](#rqsrs-032clickhouseparquetselectoutfile)
+    * 4.8.2 [RQ.SRS-032.ClickHouse.Parquet.Select.AutoDetectParquetFileFormat](#rqsrs-032clickhouseparquetselectautodetectparquetfileformat)
+    * 4.8.3 [RQ.SRS-032.ClickHouse.Parquet.Select.Join](#rqsrs-032clickhouseparquetselectjoin)
+    * 4.8.4 [RQ.SRS-032.ClickHouse.Parquet.Select.Union](#rqsrs-032clickhouseparquetselectunion)
+    * 4.8.5 [RQ.SRS-032.ClickHouse.Parquet.Select.View](#rqsrs-032clickhouseparquetselectview)
+    * 4.8.6 [RQ.SRS-032.ClickHouse.Parquet.Select.MaterializedView](#rqsrs-032clickhouseparquetselectmaterializedview)
+    * 4.8.7 [SELECT Settings](#select-settings)
+      * 4.8.7.1 [RQ.SRS-032.ClickHouse.Parquet.Select.Settings.RowGroupSize](#rqsrs-032clickhouseparquetselectsettingsrowgroupsize)
+      * 4.8.7.2 [RQ.SRS-032.ClickHouse.Parquet.Select.Settings.StringAsString](#rqsrs-032clickhouseparquetselectsettingsstringasstring)
+      * 4.8.7.3 [RQ.SRS-032.ClickHouse.Parquet.Select.Settings.StringAsFixedByteArray](#rqsrs-032clickhouseparquetselectsettingsstringasfixedbytearray)
+      * 4.8.7.4 [RQ.SRS-032.ClickHouse.Parquet.Select.Settings.ParquetVersion](#rqsrs-032clickhouseparquetselectsettingsparquetversion)
+      * 4.8.7.5 [RQ.SRS-032.ClickHouse.Parquet.Select.Settings.CompressionMethod](#rqsrs-032clickhouseparquetselectsettingscompressionmethod)
   * 4.9 [CREATE](#create)
-      * 4.9.8.1 [RQ.SRS-032.ClickHouse.Parquet.Create.NewTable](#rqsrs-032clickhouseparquetcreatenewtable)
+      * 4.9.7.1 [RQ.SRS-032.ClickHouse.Parquet.Create.NewTable](#rqsrs-032clickhouseparquetcreatenewtable)
   * 4.10 [Table Functions](#table-functions)
     * 4.10.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.URL](#rqsrs-032clickhouseparquettablefunctionsurl)
     * 4.10.2 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.File](#rqsrs-032clickhouseparquettablefunctionsfile)
-      * 4.10.2.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.File.AutoDetect](#rqsrs-032clickhouseparquettablefunctionsfileautodetect)
+      * 4.10.2.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.File.AutoDetectParquetFileFormat](#rqsrs-032clickhouseparquettablefunctionsfileautodetectparquetfileformat)
     * 4.10.3 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3](#rqsrs-032clickhouseparquettablefunctionss3)
     * 4.10.4 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.JDBC](#rqsrs-032clickhouseparquettablefunctionsjdbc)
     * 4.10.5 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.ODBC](#rqsrs-032clickhouseparquettablefunctionsodbc)
@@ -467,7 +466,7 @@ version: 1.0
 #### RQ.SRS-032.ClickHouse.Parquet.Structure
 version: 1.0
 
-[ClickHouse] SHALL support using `DESCRIBE` clause on the Parquet files so the user can get the file structure.
+[ClickHouse] SHALL support using `DESCRIBE TABLE` statement on the Parquet to read the file structure.
 
 For example,
 
@@ -625,7 +624,7 @@ version:1.0
 [ClickHouse] SHALL support writing `Nullable` datatypes in Parquet files.
 
 
-#### RQ.SRS-032.ClickHouse.Parquet.DataTypes.Conversion
+#### RQ.SRS-032.ClickHouse.Parquet.DataTypes.TypeConversionFunction
 version:1.0
 
 [ClickHouse] SHALL support using type conversion functions on the Parquet files.
@@ -671,7 +670,7 @@ INSERT INTO sometable
 FROM INFILE 'data.parquet' FORMAT Parquet;
 ```
 
-#### RQ.SRS-032.ClickHouse.Parquet.Insert.AutoDetect
+#### RQ.SRS-032.ClickHouse.Parquet.Insert.AutoDetectParquetFileFormat
 version: 1.0
 
 
@@ -815,17 +814,6 @@ version: 1.0
 
 ### SELECT
 
-#### RQ.SRS-032.ClickHouse.Parquet.Select
-version: 1.0
-
-[ClickHouse] SHALL support writing output of `SELECT` query into a Parquet file.
-
-For example,
-
-```bash
-clickhouse-client --query="SELECT * FROM {some_table} FORMAT Parquet" > {some_file.pq}
-```
-
 #### RQ.SRS-032.ClickHouse.Parquet.Select.Outfile
 version: 1.0
 
@@ -841,7 +829,7 @@ FORMAT Parquet
 ```
 
 
-#### RQ.SRS-032.ClickHouse.Parquet.Select.AutoDetect
+#### RQ.SRS-032.ClickHouse.Parquet.Select.AutoDetectParquetFileFormat
 version: 1.0
 
 
@@ -909,7 +897,7 @@ The default value SHALL be `lz4`.
 ##### RQ.SRS-032.ClickHouse.Parquet.Create.NewTable
 version: 1.0
 
-[ClickHouse] SHALL support creating tables from the Parquet files.
+[ClickHouse] SHALL support creating tables from the Parquet files with auto conversion of datatypes based on the file schema.
 
 For example,
 
@@ -954,7 +942,7 @@ For example,
 SELECT * FROM file('data.parquet', Parquet)
 ```
 
-##### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.File.AutoDetect
+##### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.File.AutoDetectParquetFileFormat
 version: 1.0
 
 
