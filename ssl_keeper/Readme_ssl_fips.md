@@ -8,7 +8,7 @@ Apply FIPS-compatible configuration settings to set allowed ports, TLS version, 
 
 ## FIPS-compatible configuration settings
 
-## ClickHouse Server Configuration
+##№ ClickHouse Server Configuration
 
 Required server configuration changes including the following. These settings are by convention stored in /etc/clickhouse-server/config.xml /etc/clickhouse-server/config.d/. 
 Disable all ports not in the FIPS-Compatible Network Protocol list, including the following. Comment them out and ensure they are not present in preprocessed_config.xml. 
@@ -166,7 +166,7 @@ Finally, provide your cluster schema in the file /etc/clickhouse-server/config.d
 </clickhouse>
 ```
 
-## ClickHouse Client Configuration
+### ClickHouse Client Configuration
 
 Make the required changes in the clickhouse-client configuration files /etc/clickhouse-client/config.xml and /etc/clickhouse-client/config.d/.
 Configure the openSSL section in the config.xml file to restrict TLS to TLSv1.2 and FIPS 140.2-approved ciphers. Copy the values for the changes from the server fips.xml file and place them in /etc/clickhouse-client/config.d/fips.xml
