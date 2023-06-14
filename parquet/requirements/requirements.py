@@ -427,17 +427,16 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_TypeConversionFunction = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support using type conversion functions on the Parquet files.\n"
+        "[ClickHouse] SHALL support using type conversion functions when reading Parquet files.\n"
         "\n"
         "For example,\n"
         "\n"
         "```sql\n"
         "SELECT\n"
         "    n,\n"
-        "    toDateTime(time)                 <--- int to time\n"
+        "    toDateTime(time)\n"
         "FROM file('time.parquet', Parquet);\n"
         "```\n"
-        "\n"
         "\n"
     ),
     link=None,
@@ -510,7 +509,8 @@ RQ_SRS_032_ClickHouse_Parquet_Insert_AutoDetectParquetFileFormat = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support automatically detecting Parquet file format based on file extension when using INFILE clause without explicitly specifying the format setting.\n"
+        "[ClickHouse] SHALL support automatically detecting Parquet file format based on \n"
+        "when using INFILE clause without explicitly specifying the format setting.\n"
         "\n"
         "```sql\n"
         "INSERT INTO sometable\n"
@@ -563,7 +563,41 @@ RQ_SRS_032_ClickHouse_Parquet_Insert_SkipValues = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support skipping unsupported values when reading from Parquet files.\n"
+        "[ClickHouse] SHALL support skipping unsupported values when reading from Parquet files. When the values are being skipped, the inserted values SHALL be the default value for the corresponding column's datatype.\n"
+        "\n"
+        "For example, trying to insert `Null` values into the non-`Nullable` column.\n"
+        "\n"
+        "```sql\n"
+        "CREATE TABLE TestTable\n"
+        "(\n"
+        "    `path` String,\n"
+        "    `date` Date,\n"
+        "    `hits` UInt32\n"
+        ")\n"
+        "ENGINE = MergeTree\n"
+        "ORDER BY (date, path);\n"
+        "\n"
+        "SELECT *\n"
+        "FROM file(output.parquet);\n"
+        "\n"
+        "┌─path───┬─date───────┬─hits─┐\n"
+        "│ /path1 │ 2021-06-01 │   10 │\n"
+        "│ /path2 │ 2021-06-02 │    5 │\n"
+        "│ ᴺᵁᴸᴸ   │ 2021-06-03 │    8 │\n"
+        "└────────┴────────────┴──────┘\n"
+        "\n"
+        "INSERT INTO TestTable\n"
+        "FROM INFILE 'output.parquet' FORMAT Parquet;\n"
+        "\n"
+        "SELECT *\n"
+        "FROM TestTable;\n"
+        "\n"
+        "┌─path───┬───────date─┬─hits─┐\n"
+        "│ /path1 │ 2021-06-01 │   10 │\n"
+        "│ /path2 │ 2021-06-02 │    5 │\n"
+        "│        │ 2021-06-03 │    8 │\n"
+        "└────────┴────────────┴──────┘\n"
+        "```\n"
         "\n"
     ),
     link=None,
@@ -722,8 +756,7 @@ RQ_SRS_032_ClickHouse_Parquet_Nested_ArrayIntoNested_ImportNested = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support inserting arrays of nested structs from Parquet files into [ClickHouse] Nested tables when `input_format_parquet_import_nested` setting is set to `1`.\n"
-        "\n"
+        "[ClickHouse] SHALL support inserting arrays of nested structs from Parquet files into [ClickHouse] Nested columns when `input_format_parquet_import_nested` setting is set to `1`.\n"
         "\n"
     ),
     link=None,
@@ -739,8 +772,8 @@ RQ_SRS_032_ClickHouse_Parquet_Nested_ArrayIntoNested_NotImportNested = Requireme
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] MAY not support inserting arrays of nested structs from Parquet files into [ClickHouse] Nested tables when `input_format_parquet_import_nested` setting is set to `0`.\n"
-        "\n"
+        "[ClickHouse] SHALL retrun an error when trying to insert arrays of nested structs from Parquet files into [ClickHouse] Nested columns when\n"
+        "`input_format_parquet_import_nested` setting is set to `0`.\n"
         "\n"
     ),
     link=None,
@@ -756,8 +789,7 @@ RQ_SRS_032_ClickHouse_Parquet_Nested_ArrayIntoNotNested = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] MAY not support inserting arrays of nested structs from Parquet files into [ClickHouse] not Nested tables.\n"
-        "\n"
+        "[ClickHouse] SHALL return an error when trying to insert arrays of nested structs from Parquet files into [ClickHouse] not Nested columns.\n"
         "\n"
     ),
     link=None,
@@ -773,8 +805,7 @@ RQ_SRS_032_ClickHouse_Parquet_Nested_NonArrayIntoNested = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] MAY not support inserting datatypes other than arrays of nested structs from Parquet files into [ClickHouse] Nested tables.\n"
-        "\n"
+        "[ClickHouse] SHALL return an error when trying to insert datatypes other than arrays of nested structs from Parquet files into [ClickHouse] Nested columns.\n"
         "\n"
     ),
     link=None,
@@ -782,15 +813,16 @@ RQ_SRS_032_ClickHouse_Parquet_Nested_NonArrayIntoNested = Requirement(
     num="4.7.4",
 )
 
-RQ_SRS_032_ClickHouse_Parquet_Select_Outfile = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.Select.Outfile",
+RQ_SRS_032_ClickHouse_Parquet_Select = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Select",
     version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support writing output of `SELECT` query into a Parquet file using `OUTFILE` clause.\n"
+        "[ClickHouse] SHALL support using `SELECT` query with either the `INTO OUTFILE {file_name}` or just `FORMAT Parquet` clauses to\n"
+        "to write Parquet files. \n"
         "\n"
         "For example,\n"
         "\n"
@@ -801,6 +833,13 @@ RQ_SRS_032_ClickHouse_Parquet_Select_Outfile = Requirement(
         "FORMAT Parquet\n"
         "```\n"
         "\n"
+        "or\n"
+        "\n"
+        "```sql\n"
+        "SELECT *\n"
+        "FROM sometable\n"
+        "FORMAT Parquet\n"
+        "```\n"
         "\n"
     ),
     link=None,
@@ -808,8 +847,8 @@ RQ_SRS_032_ClickHouse_Parquet_Select_Outfile = Requirement(
     num="4.8.1",
 )
 
-RQ_SRS_032_ClickHouse_Parquet_Select_AutoDetectParquetFileFormat = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.Select.AutoDetectParquetFileFormat",
+RQ_SRS_032_ClickHouse_Parquet_Select_Outfile_AutoDetectParquetFileFormat = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Select.Outfile.AutoDetectParquetFileFormat",
     version="1.0",
     priority=None,
     group=None,
@@ -986,7 +1025,8 @@ RQ_SRS_032_ClickHouse_Parquet_Create_NewTable = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support creating tables from the Parquet files with auto conversion of datatypes based on the file schema.\n"
+        "[ClickHouse] SHALL support creating and populating tables directly from the Parquet files with table schema being auto detected\n"
+        "from file's structure.\n"
         "\n"
         "For example,\n"
         "\n"
@@ -1070,8 +1110,6 @@ RQ_SRS_032_ClickHouse_Parquet_TableFunctions_File_AutoDetectParquetFileFormat = 
         "```sql\n"
         "SELECT * FROM file('data.parquet')\n"
         "```\n"
-        "\n"
-        "\n"
         "\n"
     ),
     link=None,
@@ -2167,7 +2205,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             level=4,
             num="4.6.7.4",
         ),
-        Heading(name="Working with nested types", level=2, num="4.7"),
+        Heading(name="Working With Nested Types", level=2, num="4.7"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Nested.ArrayIntoNested.ImportNested",
             level=3,
@@ -2189,11 +2227,9 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             num="4.7.4",
         ),
         Heading(name="SELECT", level=2, num="4.8"),
+        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Select", level=3, num="4.8.1"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Select.Outfile", level=3, num="4.8.1"
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Select.AutoDetectParquetFileFormat",
+            name="RQ.SRS-032.ClickHouse.Parquet.Select.Outfile.AutoDetectParquetFileFormat",
             level=3,
             num="4.8.2",
         ),
@@ -2527,8 +2563,8 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_Nested_ArrayIntoNested_NotImportNested,
         RQ_SRS_032_ClickHouse_Parquet_Nested_ArrayIntoNotNested,
         RQ_SRS_032_ClickHouse_Parquet_Nested_NonArrayIntoNested,
-        RQ_SRS_032_ClickHouse_Parquet_Select_Outfile,
-        RQ_SRS_032_ClickHouse_Parquet_Select_AutoDetectParquetFileFormat,
+        RQ_SRS_032_ClickHouse_Parquet_Select,
+        RQ_SRS_032_ClickHouse_Parquet_Select_Outfile_AutoDetectParquetFileFormat,
         RQ_SRS_032_ClickHouse_Parquet_Select_Join,
         RQ_SRS_032_ClickHouse_Parquet_Select_Union,
         RQ_SRS_032_ClickHouse_Parquet_Select_View,
@@ -2641,14 +2677,14 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
       * 4.6.7.2 [RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.CaseInsensitiveColumnMatching](#rqsrs-032clickhouseparquetinsertsettingscaseinsensitivecolumnmatching)
       * 4.6.7.3 [RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.AllowMissingColumns](#rqsrs-032clickhouseparquetinsertsettingsallowmissingcolumns)
       * 4.6.7.4 [RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.SkipColumnsWithUnsupportedTypesInSchemaInference](#rqsrs-032clickhouseparquetinsertsettingsskipcolumnswithunsupportedtypesinschemainference)
-  * 4.7 [Working with nested types](#working-with-nested-types)
+  * 4.7 [Working With Nested Types](#working-with-nested-types)
     * 4.7.1 [RQ.SRS-032.ClickHouse.Parquet.Nested.ArrayIntoNested.ImportNested](#rqsrs-032clickhouseparquetnestedarrayintonestedimportnested)
     * 4.7.2 [RQ.SRS-032.ClickHouse.Parquet.Nested.ArrayIntoNested.NotImportNested](#rqsrs-032clickhouseparquetnestedarrayintonestednotimportnested)
     * 4.7.3 [RQ.SRS-032.ClickHouse.Parquet.Nested.ArrayIntoNotNested](#rqsrs-032clickhouseparquetnestedarrayintonotnested)
     * 4.7.4 [RQ.SRS-032.ClickHouse.Parquet.Nested.NonArrayIntoNested](#rqsrs-032clickhouseparquetnestednonarrayintonested)
   * 4.8 [SELECT](#select)
-    * 4.8.1 [RQ.SRS-032.ClickHouse.Parquet.Select.Outfile](#rqsrs-032clickhouseparquetselectoutfile)
-    * 4.8.2 [RQ.SRS-032.ClickHouse.Parquet.Select.AutoDetectParquetFileFormat](#rqsrs-032clickhouseparquetselectautodetectparquetfileformat)
+    * 4.8.1 [RQ.SRS-032.ClickHouse.Parquet.Select](#rqsrs-032clickhouseparquetselect)
+    * 4.8.2 [RQ.SRS-032.ClickHouse.Parquet.Select.Outfile.AutoDetectParquetFileFormat](#rqsrs-032clickhouseparquetselectoutfileautodetectparquetfileformat)
     * 4.8.3 [RQ.SRS-032.ClickHouse.Parquet.Select.Join](#rqsrs-032clickhouseparquetselectjoin)
     * 4.8.4 [RQ.SRS-032.ClickHouse.Parquet.Select.Union](#rqsrs-032clickhouseparquetselectunion)
     * 4.8.5 [RQ.SRS-032.ClickHouse.Parquet.Select.View](#rqsrs-032clickhouseparquetselectview)
@@ -3219,17 +3255,16 @@ version:1.0
 #### RQ.SRS-032.ClickHouse.Parquet.DataTypes.TypeConversionFunction
 version:1.0
 
-[ClickHouse] SHALL support using type conversion functions on the Parquet files.
+[ClickHouse] SHALL support using type conversion functions when reading Parquet files.
 
 For example,
 
 ```sql
 SELECT
     n,
-    toDateTime(time)                 <--- int to time
+    toDateTime(time)
 FROM file('time.parquet', Parquet);
 ```
-
 
 ### Unsupported Parquet Types
 
@@ -3265,8 +3300,8 @@ FROM INFILE 'data.parquet' FORMAT Parquet;
 #### RQ.SRS-032.ClickHouse.Parquet.Insert.AutoDetectParquetFileFormat
 version: 1.0
 
-
-[ClickHouse] SHALL support automatically detecting Parquet file format based on file extension when using INFILE clause without explicitly specifying the format setting.
+[ClickHouse] SHALL support automatically detecting Parquet file format based on 
+when using INFILE clause without explicitly specifying the format setting.
 
 ```sql
 INSERT INTO sometable
@@ -3286,7 +3321,41 @@ version: 1.0
 #### RQ.SRS-032.ClickHouse.Parquet.Insert.SkipValues
 version: 1.0
 
-[ClickHouse] SHALL support skipping unsupported values when reading from Parquet files.
+[ClickHouse] SHALL support skipping unsupported values when reading from Parquet files. When the values are being skipped, the inserted values SHALL be the default value for the corresponding column's datatype.
+
+For example, trying to insert `Null` values into the non-`Nullable` column.
+
+```sql
+CREATE TABLE TestTable
+(
+    `path` String,
+    `date` Date,
+    `hits` UInt32
+)
+ENGINE = MergeTree
+ORDER BY (date, path);
+
+SELECT *
+FROM file(output.parquet);
+
+┌─path───┬─date───────┬─hits─┐
+│ /path1 │ 2021-06-01 │   10 │
+│ /path2 │ 2021-06-02 │    5 │
+│ ᴺᵁᴸᴸ   │ 2021-06-03 │    8 │
+└────────┴────────────┴──────┘
+
+INSERT INTO TestTable
+FROM INFILE 'output.parquet' FORMAT Parquet;
+
+SELECT *
+FROM TestTable;
+
+┌─path───┬───────date─┬─hits─┐
+│ /path1 │ 2021-06-01 │   10 │
+│ /path2 │ 2021-06-02 │    5 │
+│        │ 2021-06-03 │    8 │
+└────────┴────────────┴──────┘
+```
 
 #### RQ.SRS-032.ClickHouse.Parquet.Insert.AutoTypecast
 version: 1.0
@@ -3378,38 +3447,36 @@ version: 1.0
 [ClickHouse] SHALL support specifying `input_format_parquet_skip_columns_with_unsupported_types_in_schema_inference`
 to allow skipping unsupported types. The default value SHALL be `0`.
 
-### Working with nested types
+### Working With Nested Types
 
 #### RQ.SRS-032.ClickHouse.Parquet.Nested.ArrayIntoNested.ImportNested
 version: 1.0
 
-[ClickHouse] SHALL support inserting arrays of nested structs from Parquet files into [ClickHouse] Nested tables when `input_format_parquet_import_nested` setting is set to `1`.
-
+[ClickHouse] SHALL support inserting arrays of nested structs from Parquet files into [ClickHouse] Nested columns when `input_format_parquet_import_nested` setting is set to `1`.
 
 #### RQ.SRS-032.ClickHouse.Parquet.Nested.ArrayIntoNested.NotImportNested
 version: 1.0
 
-[ClickHouse] MAY not support inserting arrays of nested structs from Parquet files into [ClickHouse] Nested tables when `input_format_parquet_import_nested` setting is set to `0`.
-
+[ClickHouse] SHALL retrun an error when trying to insert arrays of nested structs from Parquet files into [ClickHouse] Nested columns when
+`input_format_parquet_import_nested` setting is set to `0`.
 
 #### RQ.SRS-032.ClickHouse.Parquet.Nested.ArrayIntoNotNested
 version: 1.0
 
-[ClickHouse] MAY not support inserting arrays of nested structs from Parquet files into [ClickHouse] not Nested tables.
-
+[ClickHouse] SHALL return an error when trying to insert arrays of nested structs from Parquet files into [ClickHouse] not Nested columns.
 
 #### RQ.SRS-032.ClickHouse.Parquet.Nested.NonArrayIntoNested
 version: 1.0
 
-[ClickHouse] MAY not support inserting datatypes other than arrays of nested structs from Parquet files into [ClickHouse] Nested tables.
-
+[ClickHouse] SHALL return an error when trying to insert datatypes other than arrays of nested structs from Parquet files into [ClickHouse] Nested columns.
 
 ### SELECT
 
-#### RQ.SRS-032.ClickHouse.Parquet.Select.Outfile
+#### RQ.SRS-032.ClickHouse.Parquet.Select
 version: 1.0
 
-[ClickHouse] SHALL support writing output of `SELECT` query into a Parquet file using `OUTFILE` clause.
+[ClickHouse] SHALL support using `SELECT` query with either the `INTO OUTFILE {file_name}` or just `FORMAT Parquet` clauses to
+to write Parquet files. 
 
 For example,
 
@@ -3420,8 +3487,15 @@ INTO OUTFILE 'export.parquet'
 FORMAT Parquet
 ```
 
+or
 
-#### RQ.SRS-032.ClickHouse.Parquet.Select.AutoDetectParquetFileFormat
+```sql
+SELECT *
+FROM sometable
+FORMAT Parquet
+```
+
+#### RQ.SRS-032.ClickHouse.Parquet.Select.Outfile.AutoDetectParquetFileFormat
 version: 1.0
 
 
@@ -3489,7 +3563,8 @@ The default value SHALL be `lz4`.
 ##### RQ.SRS-032.ClickHouse.Parquet.Create.NewTable
 version: 1.0
 
-[ClickHouse] SHALL support creating tables from the Parquet files with auto conversion of datatypes based on the file schema.
+[ClickHouse] SHALL support creating and populating tables directly from the Parquet files with table schema being auto detected
+from file's structure.
 
 For example,
 
@@ -3537,14 +3612,11 @@ SELECT * FROM file('data.parquet', Parquet)
 ##### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.File.AutoDetectParquetFileFormat
 version: 1.0
 
-
 [ClickHouse] SHALL support automatically detecting Parquet file format based on file extension when using `file()` function without explicitly specifying the format setting.
 
 ```sql
 SELECT * FROM file('data.parquet')
 ```
-
-
 
 #### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3
 version: 1.0
