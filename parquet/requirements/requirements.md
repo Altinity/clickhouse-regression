@@ -693,7 +693,41 @@ version: 1.0
 #### RQ.SRS-032.ClickHouse.Parquet.Insert.SkipValues
 version: 1.0
 
-[ClickHouse] SHALL support skipping unsupported values when reading from Parquet files.
+[ClickHouse] SHALL support skipping unsupported values when reading from Parquet files. When the values are being skipped, the inserted values SHALL be the default value for the corresponding column's datatype.
+
+For example, trying to insert `Null` values into the non-`Nullable` column.
+
+```sql
+CREATE TABLE TestTable
+(
+    `path` String,
+    `date` Date,
+    `hits` UInt32
+)
+ENGINE = MergeTree
+ORDER BY (date, path);
+
+SELECT *
+FROM file(output.parquet);
+
+┌─path───┬─date───────┬─hits─┐
+│ /path1 │ 2021-06-01 │   10 │
+│ /path2 │ 2021-06-02 │    5 │
+│ ᴺᵁᴸᴸ   │ 2021-06-03 │    8 │
+└────────┴────────────┴──────┘
+
+INSERT INTO TestTable
+FROM INFILE 'output.parquet' FORMAT Parquet;
+
+SELECT *
+FROM TestTable;
+
+┌─path───┬───────date─┬─hits─┐
+│ /path1 │ 2021-06-01 │   10 │
+│ /path2 │ 2021-06-02 │    5 │
+│        │ 2021-06-03 │    8 │
+└────────┴────────────┴──────┘
+```
 
 #### RQ.SRS-032.ClickHouse.Parquet.Insert.AutoTypecast
 version: 1.0
