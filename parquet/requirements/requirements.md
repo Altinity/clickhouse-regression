@@ -627,17 +627,16 @@ version:1.0
 #### RQ.SRS-032.ClickHouse.Parquet.DataTypes.TypeConversionFunction
 version:1.0
 
-[ClickHouse] SHALL support using type conversion functions on the Parquet files.
+[ClickHouse] SHALL support using type conversion functions when reading Parquet files.
 
 For example,
 
 ```sql
 SELECT
     n,
-    toDateTime(time)                 <--- int to time
+    toDateTime(time)
 FROM file('time.parquet', Parquet);
 ```
-
 
 ### Unsupported Parquet Types
 
@@ -673,8 +672,8 @@ FROM INFILE 'data.parquet' FORMAT Parquet;
 #### RQ.SRS-032.ClickHouse.Parquet.Insert.AutoDetectParquetFileFormat
 version: 1.0
 
-
-[ClickHouse] SHALL support automatically detecting Parquet file format based on file extension when using INFILE clause without explicitly specifying the format setting.
+[ClickHouse] SHALL support automatically detecting Parquet file format based on 
+when using INFILE clause without explicitly specifying the format setting.
 
 ```sql
 INSERT INTO sometable
@@ -786,38 +785,36 @@ version: 1.0
 [ClickHouse] SHALL support specifying `input_format_parquet_skip_columns_with_unsupported_types_in_schema_inference`
 to allow skipping unsupported types. The default value SHALL be `0`.
 
-### Working with nested types
+### Working With Nested Types
 
 #### RQ.SRS-032.ClickHouse.Parquet.Nested.ArrayIntoNested.ImportNested
 version: 1.0
 
-[ClickHouse] SHALL support inserting arrays of nested structs from Parquet files into [ClickHouse] Nested tables when `input_format_parquet_import_nested` setting is set to `1`.
-
+[ClickHouse] SHALL support inserting arrays of nested structs from Parquet files into [ClickHouse] Nested columns when `input_format_parquet_import_nested` setting is set to `1`.
 
 #### RQ.SRS-032.ClickHouse.Parquet.Nested.ArrayIntoNested.NotImportNested
 version: 1.0
 
-[ClickHouse] MAY not support inserting arrays of nested structs from Parquet files into [ClickHouse] Nested tables when `input_format_parquet_import_nested` setting is set to `0`.
-
+[ClickHouse] SHALL retrun an error when trying to insert arrays of nested structs from Parquet files into [ClickHouse] Nested columns when
+`input_format_parquet_import_nested` setting is set to `0`.
 
 #### RQ.SRS-032.ClickHouse.Parquet.Nested.ArrayIntoNotNested
 version: 1.0
 
-[ClickHouse] MAY not support inserting arrays of nested structs from Parquet files into [ClickHouse] not Nested tables.
-
+[ClickHouse] SHALL return an error when trying to insert arrays of nested structs from Parquet files into [ClickHouse] not Nested columns.
 
 #### RQ.SRS-032.ClickHouse.Parquet.Nested.NonArrayIntoNested
 version: 1.0
 
-[ClickHouse] MAY not support inserting datatypes other than arrays of nested structs from Parquet files into [ClickHouse] Nested tables.
-
+[ClickHouse] SHALL return an error when trying to insert datatypes other than arrays of nested structs from Parquet files into [ClickHouse] Nested columns.
 
 ### SELECT
 
-#### RQ.SRS-032.ClickHouse.Parquet.Select.Outfile
+#### RQ.SRS-032.ClickHouse.Parquet.Select
 version: 1.0
 
-[ClickHouse] SHALL support writing output of `SELECT` query into a Parquet file using `OUTFILE` clause.
+[ClickHouse] SHALL support using `SELECT` query with either the `INTO OUTFILE {file_name}` or just `FORMAT Parquet` clauses to
+to write Parquet files. 
 
 For example,
 
@@ -828,8 +825,15 @@ INTO OUTFILE 'export.parquet'
 FORMAT Parquet
 ```
 
+or
 
-#### RQ.SRS-032.ClickHouse.Parquet.Select.AutoDetectParquetFileFormat
+```sql
+SELECT *
+FROM sometable
+FORMAT Parquet
+```
+
+#### RQ.SRS-032.ClickHouse.Parquet.Select.Outfile.AutoDetectParquetFileFormat
 version: 1.0
 
 
@@ -897,7 +901,8 @@ The default value SHALL be `lz4`.
 ##### RQ.SRS-032.ClickHouse.Parquet.Create.NewTable
 version: 1.0
 
-[ClickHouse] SHALL support creating tables from the Parquet files with auto conversion of datatypes based on the file schema.
+[ClickHouse] SHALL support creating and populating tables directly from the Parquet files with table schema being auto detected
+from file's structure.
 
 For example,
 
@@ -945,14 +950,11 @@ SELECT * FROM file('data.parquet', Parquet)
 ##### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.File.AutoDetectParquetFileFormat
 version: 1.0
 
-
 [ClickHouse] SHALL support automatically detecting Parquet file format based on file extension when using `file()` function without explicitly specifying the format setting.
 
 ```sql
 SELECT * FROM file('data.parquet')
 ```
-
-
 
 #### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3
 version: 1.0
