@@ -29,9 +29,10 @@ Place the configuration changes in the file /etc/clickhouse-server/config.d/fips
 
 	<openSSL>
     	<server>
-        	<certificateFile>/etc/clickhouse-server/config.d/server.crt</certificateFile>
-        	<privateKeyFile>/etc/clickhouse-server/config.d/server.key</privateKeyFile>
-        	<dhParamsFile>/etc/clickhouse-server/config.d/dhparam.pem</dhParamsFile>
+            <certificateFile>${CERT_PATH}/server.crt</certificateFile>
+            <privateKeyFile>${CERT_PATH}/server.key</privateKeyFile>
+            <dhParamsFile>${CERT_PATH}/dhparams.pem</dhParamsFile>
+
         	<verificationMode>none</verificationMode>
         	<loadDefaultCAFile>True</loadDefaultCAFile>
         	<cipherList>ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-GCM-SHA384</cipherList>
@@ -42,8 +43,11 @@ Place the configuration changes in the file /etc/clickhouse-server/config.d/fips
         	<preferServerCiphers>true</preferServerCiphers>
     	</server>
     	<client>
-        	<certificateFile>/etc/clickhouse-server/config.d/server.crt</certificateFile>
-        	<privateKeyFile>/etc/clickhouse-server/config.d/server.key</privateKeyFile>
+            <certificateFile>${CERT_PATH}/server.crt</certificateFile>
+            <privateKeyFile>${CERT_PATH}/server.key</privateKeyFile>
+            <!-- in case of private CA, otherwise set `loadDefaultCAFile` to `true` and remove `caConfig` -->
+            <loadDefaultCAFile>false</loadDefaultCAFile>
+            <caConfig>${CA_PATH}/CA.crt</caConfig>
         	<loadDefaultCAFile>True</loadDefaultCAFile>
         	<cacheSessions>true</cacheSessions>
         	<requireTLSv1_2>true</requireTLSv1_2>
