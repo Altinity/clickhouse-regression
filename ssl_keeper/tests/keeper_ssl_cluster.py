@@ -71,6 +71,8 @@ def mixed_keepers_3(self):
         with And("I check clean ability"):
             table_insert(table_name=table_name, node_name="clickhouse1")
 
+        pause()
+
     finally:
         with Finally("I clean up"):
             clean_coordination_on_all_nodes()

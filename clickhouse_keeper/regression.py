@@ -128,6 +128,10 @@ def regression(
                 )
             )
             Feature(run=load("clickhouse_keeper.tests.servers_start_up", "feature"))
+            Feature(
+                run=load("clickhouse_keeper.tests.bench", "feature")
+            )
+
         else:
             create_3_3_cluster_config()
             Feature(run=load("clickhouse_keeper.tests.sanity", "feature"))
@@ -155,6 +159,15 @@ def regression(
             )
             Feature(
                 run=load("clickhouse_keeper.tests.coordination_settings", "feature")
+            )
+            # Feature(
+            #     run=load("clickhouse_keeper.tests.iops_tests", "feature")
+            # )
+            Feature(
+                run=load("clickhouse_keeper.tests.bench", "feature")
+            )
+            Feature(
+                run=load("clickhouse_keeper.tests.significant_number_of_replicated_tables", "feature")
             )
 
 
