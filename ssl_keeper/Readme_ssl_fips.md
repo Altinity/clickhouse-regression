@@ -29,42 +29,41 @@ Here is an example of the file contents:
 
 ```xml
 <clickhouse>
-	<https_port>8443</https_port>
-	<tcp_port_secure>9440</tcp_port_secure>
-	<interserver_https_port>9010</interserver_https_port>
-
-	<openSSL>
-    	<server>
+    <https_port>8443</https_port>
+    <tcp_port_secure>9440</tcp_port_secure>
+    <interserver_https_port>9010</interserver_https_port>
+    
+    <openSSL>
+        <server>
             <certificateFile>${CERT_PATH}/server.crt</certificateFile>
             <privateKeyFile>${CERT_PATH}/server.key</privateKeyFile>
             <dhParamsFile>${CERT_PATH}/dhparams.pem</dhParamsFile>
-
-        	<verificationMode>none</verificationMode>
-        	<loadDefaultCAFile>True</loadDefaultCAFile>
-        	<cipherList>ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-GCM-SHA384</cipherList>
-        	<requireTLSv1_2>true</requireTLSv1_2>
-        	<disableProtocols>sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3</disableProtocols>
-        	<cacheSessions>true</cacheSessions>
-        	<disableProtocols>sslv2,sslv3</disableProtocols>
-        	<preferServerCiphers>true</preferServerCiphers>
-    	</server>
-    	<client>
+            <verificationMode>none</verificationMode>
+            <loadDefaultCAFile>True</loadDefaultCAFile>
+            <cipherList>ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-GCM-SHA384</cipherList>
+            <requireTLSv1_2>true</requireTLSv1_2>
+            <disableProtocols>sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3</disableProtocols>
+            <cacheSessions>true</cacheSessions>
+            <disableProtocols>sslv2,sslv3</disableProtocols>
+            <preferServerCiphers>true</preferServerCiphers>
+        </server>
+        <client>
             <certificateFile>${CERT_PATH}/server.crt</certificateFile>
             <privateKeyFile>${CERT_PATH}/server.key</privateKeyFile>
             <!-- in case of private CA, otherwise set `loadDefaultCAFile` to `true` and remove `caConfig` -->
             <loadDefaultCAFile>false</loadDefaultCAFile>
             <caConfig>${CA_PATH}/CA.crt</caConfig>
-        	<loadDefaultCAFile>True</loadDefaultCAFile>
-        	<cacheSessions>true</cacheSessions>
-        	<requireTLSv1_2>true</requireTLSv1_2>
-        	<disableProtocols>sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3</disableProtocols>
-        	<preferServerCiphers>true</preferServerCiphers>
-        	<verificationMode>none</verificationMode>
-        	<invalidCertificateHandler>
-            	<name>AcceptCertificateHandler</name>
-        	</invalidCertificateHandler>
-    	</client>
-	</openSSL>
+            <loadDefaultCAFile>True</loadDefaultCAFile>
+            <cacheSessions>true</cacheSessions>
+            <requireTLSv1_2>true</requireTLSv1_2>
+            <disableProtocols>sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3</disableProtocols>
+            <preferServerCiphers>true</preferServerCiphers>
+            <verificationMode>none</verificationMode>
+            <invalidCertificateHandler>
+                <name>AcceptCertificateHandler</name>
+            </invalidCertificateHandler>
+        </client>
+    </openSSL>
 </clickhouse>
 ```
 
@@ -77,23 +76,23 @@ cluster:
 
 ```xml
 <clickhouse>
-	<zookeeper>
+    <zookeeper>
+        <node>
+            <host>clickhouse1</host>
+            <port>9281</port>
+            <secure>1</secure>
+   	</node>
+   	<node>
+      	    <host>clickhouse2</host>
+            <port>9281</port>
+            <secure>1</secure>
+   	</node>
     	<node>
-        	<host>clickhouse1</host>
-        	<port>9281</port>
-        	<secure>1</secure>
-    	</node>
-    	<node>
-        	<host>clickhouse2</host>
-        	<port>9281</port>
-        	<secure>1</secure>
-    	</node>
-    	<node>
-        	<host>clickhouse3</host>
-        	<port>9281</port>
-        	<secure>1</secure>
-    	</node>
-	</zookeeper>
+       	    <host>clickhouse3</host>
+            <port>9281</port>
+            <secure>1</secure>
+   	</node>
+    </zookeeper>
 </clickhouse>
 ```
 
@@ -106,35 +105,35 @@ Also `<server_id>` setting should be unique for every node.
 ```xml
 <clickhouse>
     <keeper_server>
-    <tcp_port_secure>9281</tcp_port_secure>
-    <server_id>1</server_id>
-    <log_storage_path>/var/lib/clickhouse/coordination/log</log_storage_path>
-    <snapshot_storage_path>/var/lib/clickhouse/coordination/snapshots</snapshot_storage_path>
+        <tcp_port_secure>9281</tcp_port_secure>
+        <server_id>1</server_id>
+        <log_storage_path>/var/lib/clickhouse/coordination/log</log_storage_path>
+        <snapshot_storage_path>/var/lib/clickhouse/coordination/snapshots</snapshot_storage_path>
 
-    <coordination_settings>
-       	<operation_timeout_ms>10000</operation_timeout_ms>
-       	<session_timeout_ms>30000</session_timeout_ms>
-       	<raft_logs_level>trace</raft_logs_level>
-    </coordination_settings>
+        <coordination_settings>
+            <operation_timeout_ms>10000</operation_timeout_ms>
+            <session_timeout_ms>30000</session_timeout_ms>
+            <raft_logs_level>trace</raft_logs_level>
+        </coordination_settings>
 
-    <raft_configuration>
-        <secure>true</secure>
-        <server>
-            <id>1</id>
-            <hostname>clickhouse1</hostname>
-            <port>9444</port>
-        </server>
-        <server>
-            <id>2</id>
-            <hostname>clickhouse2</hostname>
-            <port>9444</port>
-        </server>
-        <server>
-            <id>3</id>
-            <hostname>clickhouse3</hostname>
-            <port>9444</port>
-        </server>
-    </raft_configuration>
+        <raft_configuration>
+            <secure>true</secure>
+            <server>
+                <id>1</id>
+                <hostname>clickhouse1</hostname>
+                <port>9444</port>
+            </server>
+            <server>
+                <id>2</id>
+                <hostname>clickhouse2</hostname>
+                <port>9444</port>
+            </server>
+            <server>
+                <id>3</id>
+                <hostname>clickhouse3</hostname>
+                <port>9444</port>
+            </server>
+        </raft_configuration>
     </keeper_server>
 </clickhouse>
 ```
@@ -142,10 +141,10 @@ Also `<server_id>` setting should be unique for every node.
 Define macros values on all nodes to be able to create a ReplicatedMergeTree table for testing.
 ```xml
 <clickhouse>
-	<macros>
-    	<replica>clickhouse1</replica>
-    	<shard>01</shard>
-	</macros>
+    <macros>
+        <replica>clickhouse1</replica>
+        <shard>01</shard>
+    </macros>
 </clickhouse>
 ```
 
