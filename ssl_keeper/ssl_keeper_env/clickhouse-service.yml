@@ -12,8 +12,8 @@ services:
       - "9444"
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/remote.xml:/etc/clickhouse-server/config.d/remote.xml"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/ssl_conf.xml:/etc/clickhouse-server/config.d/ssl_conf.xml"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/use_secure_keeper.xml:/etc/clickhouse-server/config.d/use_secure_keeper.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/fips.xml:/etc/clickhouse-server/config.d/fips.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/secure_keeper.xml:/etc/clickhouse-server/config.d/secure_keeper.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/dhparam.pem:/etc/clickhouse-server/config.d/dhparam.pem"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/server.crt:/etc/clickhouse-server/config.d/server.crt"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/server.key:/etc/clickhouse-server/config.d/server.key"
@@ -21,7 +21,8 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.xml:/etc/clickhouse-server/users.xml"
       - "${CLICKHOUSE_TESTS_SERVER_BIN_PATH:-/usr/bin/clickhouse}:/usr/bin/clickhouse"
       - "${CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH:-/usr/bin/clickhouse-odbc-bridge}:/usr/bin/clickhouse-odbc-bridge"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/client_ssl.xml:/etc/clickhouse-client/config.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/client_fips.xml:/etc/clickhouse-client/config.d/fips.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/config.xml:/etc/clickhouse-client/config.xml"
     entrypoint: bash -c "tail -f /dev/null"
     healthcheck:
       test: echo 1

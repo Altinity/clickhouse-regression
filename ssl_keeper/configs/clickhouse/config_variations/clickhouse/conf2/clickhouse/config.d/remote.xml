@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<clickhouse>
+    <remote_servers>
+        <simple_replication_cluster>
+            <shard>
+                <replica>
+                    <host>clickhouse1</host>
+                    <port>9440</port>
+                    <secure>1</secure>
+                </replica>
+                <replica>
+                    <host>clickhouse2</host>
+                    <port>9440</port>
+                    <secure>1</secure>
+                </replica>
+                <replica>
+                    <host>clickhouse3</host>
+                    <port>9440</port>
+                    <secure>1</secure>
+                </replica>
+            </shard>
+        </simple_replication_cluster>
+    </remote_servers>
+</clickhouse>

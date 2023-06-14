@@ -1,0 +1,20 @@
+<clickhouse>
+	<zookeeper>
+    	<node>
+        	<host>clickhouse1</host>
+        	<port>9281</port>
+        	<secure>1</secure>
+    	</node>
+    	<node>
+        	<host>clickhouse2</host>
+        	<port>9281</port>
+        	<secure>1</secure>
+    	</node>
+    	<node>
+        	<host>clickhouse3</host>
+        	<port>9281</port>
+        	<secure>1</secure>
+    	</node>
+	</zookeeper>
+</clickhouse>
+

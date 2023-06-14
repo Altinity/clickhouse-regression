@@ -16,8 +16,6 @@ def mixed_keepers_3(self):
         with Given("Receive UID"):
             uid = getuid()
 
-        pause()
-
         with And("I create some replicated table"):
             table_name = f"test{uid}"
             node.query(
@@ -27,17 +25,14 @@ def mixed_keepers_3(self):
 
             create_simple_table(table_name=table_name)
 
-        # with And("I stop maximum available Keeper nodes for such configuration"):
-        #     cluster.node("clickhouse3").stop_clickhouse()
+        with And("I stop maximum available Keeper nodes for such configuration"):
+            cluster.node("clickhouse3").stop_clickhouse()
 
-        pause()
 
         with And("I check that table in write mode"):
             retry(cluster.node("clickhouse1").query, timeout=500, delay=1)(
                 f"insert into {table_name} values (1,1)", exitcode=0
             )
-
-        pause()
 
         with And("I stop one more Keeper node"):
             cluster.node("clickhouse2").stop_clickhouse()
