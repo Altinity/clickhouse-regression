@@ -14,7 +14,7 @@ Required server configuration changes including the following. These settings ar
 Disable all ports not in the FIPS-Compatible Network Protocol list, including the following. Comment them out and ensure they are not present in preprocessed_config.xml. 
 * ClickHouse HTTP port
 * ClickHouse TCP port
-* Interserver http port
+* Interserver HTTP port
 * Additional non-FIPS client protocols: MySQL, PostgreSQL, gRPC, etc. 
 
 To properly configure ClickHouse with the SSL-FIPS settings, follow these instructions:
