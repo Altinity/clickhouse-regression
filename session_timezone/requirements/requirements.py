@@ -27,6 +27,40 @@ RQ_SRS_037_ClickHouse_SessionTimezone = Requirement(
     num='6.1'
 )
 
+RQ_SRS_037_ClickHouse_SessionTimezone_ClickhouseClient = Requirement(
+    name='RQ.SRS-037.ClickHouse.SessionTimezone.ClickhouseClient',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL support the `session_timezone` setting for `clickhouse client`.\n'
+        '\n'
+    ),
+    link=None,
+    level=2,
+    num='6.2'
+)
+
+RQ_SRS_037_ClickHouse_SessionTimezone_ClickhouseLocal = Requirement(
+    name='RQ.SRS-037.ClickHouse.SessionTimezone.ClickhouseLocal',
+    version='1.0',
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        '[ClickHouse] SHALL support the `session_timezone` setting for [clickhouse local] in the same way as \n'
+        'for `clickhouse client`.\n'
+        '\n'
+        '\n'
+    ),
+    link=None,
+    level=2,
+    num='6.3'
+)
+
 RQ_SRS_037_ClickHouse_SessionTimezone_ServerDefault = Requirement(
     name='RQ.SRS-037.ClickHouse.SessionTimezone.ServerDefault',
     version='1.0',
@@ -47,7 +81,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_ServerDefault = Requirement(
     ),
     link=None,
     level=2,
-    num='6.2'
+    num='6.4'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_ServerSession = Requirement(
@@ -72,7 +106,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_ServerSession = Requirement(
     ),
     link=None,
     level=2,
-    num='6.3'
+    num='6.5'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_SettingsPriority = Requirement(
@@ -88,7 +122,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_SettingsPriority = Requirement(
     ),
     link=None,
     level=2,
-    num='6.4'
+    num='6.6'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_DateTime = Requirement(
@@ -111,7 +145,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_DateTime = Requirement(
     ),
     link=None,
     level=2,
-    num='6.5'
+    num='6.7'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_ParsingOfDateTimeTypes = Requirement(
@@ -143,7 +177,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_ParsingOfDateTimeTypes = Requirement(
     ),
     link=None,
     level=2,
-    num='6.6'
+    num='6.8'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_ParsingOfDateTimeTypes_Insert = Requirement(
@@ -163,7 +197,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_ParsingOfDateTimeTypes_Insert = Requiremen
     ),
     link=None,
     level=3,
-    num='6.6.1'
+    num='6.8.1'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_DateTypes = Requirement(
@@ -183,7 +217,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_DateTypes = Requirement(
     ),
     link=None,
     level=2,
-    num='6.8'
+    num='6.10'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions = Requirement(
@@ -199,7 +233,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions = Requirement(
     ),
     link=None,
     level=3,
-    num='6.9.1'
+    num='6.11.1'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ToDate = Requirement(
@@ -221,7 +255,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ToDate = Requirement(
     ),
     link=None,
     level=4,
-    num='6.9.1.1'
+    num='6.11.1.1'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_MakeDate = Requirement(
@@ -243,7 +277,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_MakeDate = Requirement(
     ),
     link=None,
     level=4,
-    num='6.9.1.2'
+    num='6.11.1.2'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ToDateOrDefault = Requirement(
@@ -265,7 +299,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ToDateOrDefault = Requiremen
     ),
     link=None,
     level=4,
-    num='6.9.1.3'
+    num='6.11.1.3'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ToDateOrNull = Requirement(
@@ -286,7 +320,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ToDateOrNull = Requirement(
     ),
     link=None,
     level=4,
-    num='6.9.1.4'
+    num='6.11.1.4'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ToDateOrZero = Requirement(
@@ -308,7 +342,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ToDateOrZero = Requirement(
     ),
     link=None,
     level=4,
-    num='6.9.1.5'
+    num='6.11.1.5'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_SnowflakeToDateTime = Requirement(
@@ -325,7 +359,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_SnowflakeToDateTime = Requir
     ),
     link=None,
     level=4,
-    num='6.9.1.6'
+    num='6.11.1.6'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_DateTimeToSnowflake = Requirement(
@@ -342,7 +376,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_DateTimeToSnowflake = Requir
     ),
     link=None,
     level=4,
-    num='6.9.1.7'
+    num='6.11.1.7'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ParseDateTime64BestEffort = Requirement(
@@ -365,7 +399,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ParseDateTime64BestEffort = 
     ),
     link=None,
     level=4,
-    num='6.9.1.8'
+    num='6.11.1.8'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ParseDateTimeBestEffort = Requirement(
@@ -389,7 +423,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ParseDateTimeBestEffort = Re
     ),
     link=None,
     level=4,
-    num='6.9.1.9'
+    num='6.11.1.9'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ParseDateTime32BestEffort = Requirement(
@@ -410,7 +444,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ParseDateTime32BestEffort = 
     ),
     link=None,
     level=4,
-    num='6.9.1.10'
+    num='6.11.1.10'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ParseDateTime = Requirement(
@@ -435,7 +469,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ParseDateTime = Requirement(
     ),
     link=None,
     level=4,
-    num='6.9.1.11'
+    num='6.11.1.11'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_FormatDateTime = Requirement(
@@ -452,7 +486,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_FormatDateTime = Requirement
     ),
     link=None,
     level=4,
-    num='6.9.1.12'
+    num='6.11.1.12'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_FormatDateTimeInJodaSyntax = Requirement(
@@ -470,7 +504,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_FormatDateTimeInJodaSyntax =
     ),
     link=None,
     level=4,
-    num='6.9.1.13'
+    num='6.11.1.13'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ULIDStringToDateTime = Requirement(
@@ -487,7 +521,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ULIDStringToDateTime = Requi
     ),
     link=None,
     level=4,
-    num='6.9.1.14'
+    num='6.11.1.14'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_DictGetDate = Requirement(
@@ -509,7 +543,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_DictGetDate = Requirement(
     ),
     link=None,
     level=4,
-    num='6.9.1.15'
+    num='6.11.1.15'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ReinterpretAsDate = Requirement(
@@ -526,7 +560,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ReinterpretAsDate = Requirem
     ),
     link=None,
     level=4,
-    num='6.9.1.16'
+    num='6.11.1.16'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_EmptyArrayDate = Requirement(
@@ -543,7 +577,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_EmptyArrayDate = Requirement
     ),
     link=None,
     level=4,
-    num='6.9.1.17'
+    num='6.11.1.17'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_AggregateMergeTree = Requirement(
@@ -560,7 +594,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_AggregateMergeTree = Requirement(
     ),
     link=None,
     level=2,
-    num='6.10'
+    num='6.12'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_MaterializedView = Requirement(
@@ -576,7 +610,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_MaterializedView = Requirement(
     ),
     link=None,
     level=2,
-    num='6.11'
+    num='6.13'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_PossibleValues = Requirement(
@@ -592,7 +626,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_PossibleValues = Requirement(
     ),
     link=None,
     level=2,
-    num='6.12'
+    num='6.14'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_DefaultValue = Requirement(
@@ -608,7 +642,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_DefaultValue = Requirement(
     ),
     link=None,
     level=2,
-    num='6.13'
+    num='6.15'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_WrongSettingValue = Requirement(
@@ -628,24 +662,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_WrongSettingValue = Requirement(
     ),
     link=None,
     level=2,
-    num='6.14'
-)
-
-RQ_SRS_037_ClickHouse_SessionTimezone_ClickhouseLocal = Requirement(
-    name='RQ.SRS-037.ClickHouse.SessionTimezone.ClickhouseLocal',
-    version='1.0',
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        '[ClickHouse] SHALL support the `session_timezone` setting for [clickhouse local] in the same way as \n'
-        'for `clickhouse client`.\n'
-        '\n'
-    ),
-    link=None,
-    level=2,
-    num='6.15'
+    num='6.16'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_Performance = Requirement(
@@ -661,7 +678,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_Performance = Requirement(
     ),
     link=None,
     level=3,
-    num='6.16.2'
+    num='6.17.2'
 )
 
 RQ_SRS_037_ClickHouse_SessionTimezone_Reliability = Requirement(
@@ -675,9 +692,6 @@ RQ_SRS_037_ClickHouse_SessionTimezone_Reliability = Requirement(
         '[ClickHouse] SHALL be reliable and not lose any data with the `session_timezone` setting.\n'
         '\n'
         '\n'
-        '\n'
-        '\n'
-        '\n'
         '[SRS]: #srs\n'
         '[session_timezone]: https://github.com/ClickHouse/ClickHouse/pull/44149\n'
         '[ClickHouse]: https://clickhouse.com\n'
@@ -686,7 +700,7 @@ RQ_SRS_037_ClickHouse_SessionTimezone_Reliability = Requirement(
     ),
     link=None,
     level=3,
-    num='6.16.4'
+    num='6.17.4'
 )
 
 SRS037_ClickHouse_Session_Timezone = Specification(
@@ -715,47 +729,50 @@ SRS037_ClickHouse_Session_Timezone = Specification(
         Heading(name='SRS', level=2, num='5.1'),
         Heading(name='Requirements', level=1, num='6'),
         Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone', level=2, num='6.1'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.ServerDefault', level=2, num='6.2'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.ServerSession', level=2, num='6.3'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.SettingsPriority', level=2, num='6.4'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateTime', level=2, num='6.5'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.ParsingOfDateTimeTypes', level=2, num='6.6'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.ParsingOfDateTimeTypes.Insert', level=3, num='6.6.1'),
-        Heading(name='Date Types', level=2, num='6.7'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateTypes', level=2, num='6.8'),
-        Heading(name='Date Functions', level=2, num='6.9'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions', level=3, num='6.9.1'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDate', level=4, num='6.9.1.1'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.MakeDate', level=4, num='6.9.1.2'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrDefault', level=4, num='6.9.1.3'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrNull', level=4, num='6.9.1.4'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrZero', level=4, num='6.9.1.5'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.SnowflakeToDateTime', level=4, num='6.9.1.6'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.DateTimeToSnowflake', level=4, num='6.9.1.7'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ParseDateTime64BestEffort', level=4, num='6.9.1.8'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ParseDateTimeBestEffort', level=4, num='6.9.1.9'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ParseDateTime32BestEffort', level=4, num='6.9.1.10'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ParseDateTime', level=4, num='6.9.1.11'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.FormatDateTime', level=4, num='6.9.1.12'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.FormatDateTimeInJodaSyntax', level=4, num='6.9.1.13'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ULIDStringToDateTime', level=4, num='6.9.1.14'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.DictGetDate', level=4, num='6.9.1.15'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ReinterpretAsDate', level=4, num='6.9.1.16'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.EmptyArrayDate', level=4, num='6.9.1.17'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.AggregateMergeTree', level=2, num='6.10'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.MaterializedView', level=2, num='6.11'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues', level=2, num='6.12'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DefaultValue', level=2, num='6.13'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue', level=2, num='6.14'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.ClickhouseLocal', level=2, num='6.15'),
-        Heading(name='Non-Functional Requirements', level=2, num='6.16'),
-        Heading(name='Performance', level=3, num='6.16.1'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.Performance', level=3, num='6.16.2'),
-        Heading(name='Reliability', level=3, num='6.16.3'),
-        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.Reliability', level=3, num='6.16.4'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.ClickhouseClient', level=2, num='6.2'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.ClickhouseLocal', level=2, num='6.3'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.ServerDefault', level=2, num='6.4'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.ServerSession', level=2, num='6.5'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.SettingsPriority', level=2, num='6.6'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateTime', level=2, num='6.7'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.ParsingOfDateTimeTypes', level=2, num='6.8'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.ParsingOfDateTimeTypes.Insert', level=3, num='6.8.1'),
+        Heading(name='Date Types', level=2, num='6.9'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateTypes', level=2, num='6.10'),
+        Heading(name='Date Functions', level=2, num='6.11'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions', level=3, num='6.11.1'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDate', level=4, num='6.11.1.1'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.MakeDate', level=4, num='6.11.1.2'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrDefault', level=4, num='6.11.1.3'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrNull', level=4, num='6.11.1.4'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrZero', level=4, num='6.11.1.5'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.SnowflakeToDateTime', level=4, num='6.11.1.6'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.DateTimeToSnowflake', level=4, num='6.11.1.7'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ParseDateTime64BestEffort', level=4, num='6.11.1.8'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ParseDateTimeBestEffort', level=4, num='6.11.1.9'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ParseDateTime32BestEffort', level=4, num='6.11.1.10'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ParseDateTime', level=4, num='6.11.1.11'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.FormatDateTime', level=4, num='6.11.1.12'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.FormatDateTimeInJodaSyntax', level=4, num='6.11.1.13'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ULIDStringToDateTime', level=4, num='6.11.1.14'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.DictGetDate', level=4, num='6.11.1.15'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ReinterpretAsDate', level=4, num='6.11.1.16'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.EmptyArrayDate', level=4, num='6.11.1.17'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.AggregateMergeTree', level=2, num='6.12'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.MaterializedView', level=2, num='6.13'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues', level=2, num='6.14'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.DefaultValue', level=2, num='6.15'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue', level=2, num='6.16'),
+        Heading(name='Non-Functional Requirements', level=2, num='6.17'),
+        Heading(name='Performance', level=3, num='6.17.1'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.Performance', level=3, num='6.17.2'),
+        Heading(name='Reliability', level=3, num='6.17.3'),
+        Heading(name='RQ.SRS-037.ClickHouse.SessionTimezone.Reliability', level=3, num='6.17.4'),
         ),
     requirements=(
         RQ_SRS_037_ClickHouse_SessionTimezone,
+        RQ_SRS_037_ClickHouse_SessionTimezone_ClickhouseClient,
+        RQ_SRS_037_ClickHouse_SessionTimezone_ClickhouseLocal,
         RQ_SRS_037_ClickHouse_SessionTimezone_ServerDefault,
         RQ_SRS_037_ClickHouse_SessionTimezone_ServerSession,
         RQ_SRS_037_ClickHouse_SessionTimezone_SettingsPriority,
@@ -786,7 +803,6 @@ SRS037_ClickHouse_Session_Timezone = Specification(
         RQ_SRS_037_ClickHouse_SessionTimezone_PossibleValues,
         RQ_SRS_037_ClickHouse_SessionTimezone_DefaultValue,
         RQ_SRS_037_ClickHouse_SessionTimezone_WrongSettingValue,
-        RQ_SRS_037_ClickHouse_SessionTimezone_ClickhouseLocal,
         RQ_SRS_037_ClickHouse_SessionTimezone_Performance,
         RQ_SRS_037_ClickHouse_SessionTimezone_Reliability,
         ),
@@ -804,44 +820,45 @@ SRS037_ClickHouse_Session_Timezone = Specification(
   * 4.1 [SRS](#srs)
 * 5 [Requirements](#requirements)
   * 5.1 [RQ.SRS-037.ClickHouse.SessionTimezone](#rqsrs-037clickhousesessiontimezone)
-  * 5.2 [RQ.SRS-037.ClickHouse.SessionTimezone.ServerDefault](#rqsrs-037clickhousesessiontimezoneserverdefault)
-  * 5.3 [RQ.SRS-037.ClickHouse.SessionTimezone.ServerSession](#rqsrs-037clickhousesessiontimezoneserversession)
-  * 5.4 [RQ.SRS-037.ClickHouse.SessionTimezone.SettingsPriority](#rqsrs-037clickhousesessiontimezonesettingspriority)
-  * 5.5 [RQ.SRS-037.ClickHouse.SessionTimezone.DateTime](#rqsrs-037clickhousesessiontimezonedatetime)
-  * 5.6 [RQ.SRS-037.ClickHouse.SessionTimezone.ParsingOfDateTimeTypes](#rqsrs-037clickhousesessiontimezoneparsingofdatetimetypes)
-    * 5.6.1 [RQ.SRS-037.ClickHouse.SessionTimezone.ParsingOfDateTimeTypes.Insert](#rqsrs-037clickhousesessiontimezoneparsingofdatetimetypesinsert)
-  * 5.7 [Date Types](#date-types)
-  * 5.8 [RQ.SRS-037.ClickHouse.SessionTimezone.DateTypes](#rqsrs-037clickhousesessiontimezonedatetypes)
-  * 5.9 [Date Functions](#date-functions)
-    * 5.9.1 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions](#rqsrs-037clickhousesessiontimezonedatefunctions)
-      * 5.9.1.1 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDate](#rqsrs-037clickhousesessiontimezonedatefunctionstodate)
-      * 5.9.1.2 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.MakeDate](#rqsrs-037clickhousesessiontimezonedatefunctionsmakedate)
-      * 5.9.1.3 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrDefault](#rqsrs-037clickhousesessiontimezonedatefunctionstodateordefault)
-      * 5.9.1.4 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrNull](#rqsrs-037clickhousesessiontimezonedatefunctionstodateornull)
-      * 5.9.1.5 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrZero](#rqsrs-037clickhousesessiontimezonedatefunctionstodateorzero)
-      * 5.9.1.6 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.SnowflakeToDateTime](#rqsrs-037clickhousesessiontimezonedatefunctionssnowflaketodatetime)
-      * 5.9.1.7 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.DateTimeToSnowflake](#rqsrs-037clickhousesessiontimezonedatefunctionsdatetimetosnowflake)
-      * 5.9.1.8 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ParseDateTime64BestEffort](#rqsrs-037clickhousesessiontimezonedatefunctionsparsedatetime64besteffort)
-      * 5.9.1.9 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ParseDateTimeBestEffort](#rqsrs-037clickhousesessiontimezonedatefunctionsparsedatetimebesteffort)
-      * 5.9.1.10 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ParseDateTime32BestEffort](#rqsrs-037clickhousesessiontimezonedatefunctionsparsedatetime32besteffort)
-      * 5.9.1.11 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ParseDateTime](#rqsrs-037clickhousesessiontimezonedatefunctionsparsedatetime)
-      * 5.9.1.12 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.FormatDateTime](#rqsrs-037clickhousesessiontimezonedatefunctionsformatdatetime)
-      * 5.9.1.13 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.FormatDateTimeInJodaSyntax](#rqsrs-037clickhousesessiontimezonedatefunctionsformatdatetimeinjodasyntax)
-      * 5.9.1.14 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ULIDStringToDateTime](#rqsrs-037clickhousesessiontimezonedatefunctionsulidstringtodatetime)
-      * 5.9.1.15 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.DictGetDate](#rqsrs-037clickhousesessiontimezonedatefunctionsdictgetdate)
-      * 5.9.1.16 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ReinterpretAsDate](#rqsrs-037clickhousesessiontimezonedatefunctionsreinterpretasdate)
-      * 5.9.1.17 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.EmptyArrayDate](#rqsrs-037clickhousesessiontimezonedatefunctionsemptyarraydate)
-  * 5.10 [RQ.SRS-037.ClickHouse.SessionTimezone.AggregateMergeTree](#rqsrs-037clickhousesessiontimezoneaggregatemergetree)
-  * 5.11 [RQ.SRS-037.ClickHouse.SessionTimezone.MaterializedView](#rqsrs-037clickhousesessiontimezonematerializedview)
-  * 5.12 [RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues](#rqsrs-037clickhousesessiontimezonepossiblevalues)
-  * 5.13 [RQ.SRS-037.ClickHouse.SessionTimezone.DefaultValue](#rqsrs-037clickhousesessiontimezonedefaultvalue)
-  * 5.14 [RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue](#rqsrs-037clickhousesessiontimezonewrongsettingvalue)
-  * 5.15 [RQ.SRS-037.ClickHouse.SessionTimezone.ClickhouseLocal](#rqsrs-037clickhousesessiontimezoneclickhouselocal)
-  * 5.16 [Non-Functional Requirements](#non-functional-requirements)
-    * 5.16.1 [Performance](#performance)
-    * 5.16.2 [RQ.SRS-037.ClickHouse.SessionTimezone.Performance](#rqsrs-037clickhousesessiontimezoneperformance)
-    * 5.16.3 [Reliability](#reliability)
-    * 5.16.4 [RQ.SRS-037.ClickHouse.SessionTimezone.Reliability](#rqsrs-037clickhousesessiontimezonereliability)
+  * 5.2 [RQ.SRS-037.ClickHouse.SessionTimezone.ClickhouseClient](#rqsrs-037clickhousesessiontimezoneclickhouseclient)
+  * 5.3 [RQ.SRS-037.ClickHouse.SessionTimezone.ClickhouseLocal](#rqsrs-037clickhousesessiontimezoneclickhouselocal)
+  * 5.4 [RQ.SRS-037.ClickHouse.SessionTimezone.ServerDefault](#rqsrs-037clickhousesessiontimezoneserverdefault)
+  * 5.5 [RQ.SRS-037.ClickHouse.SessionTimezone.ServerSession](#rqsrs-037clickhousesessiontimezoneserversession)
+  * 5.6 [RQ.SRS-037.ClickHouse.SessionTimezone.SettingsPriority](#rqsrs-037clickhousesessiontimezonesettingspriority)
+  * 5.7 [RQ.SRS-037.ClickHouse.SessionTimezone.DateTime](#rqsrs-037clickhousesessiontimezonedatetime)
+  * 5.8 [RQ.SRS-037.ClickHouse.SessionTimezone.ParsingOfDateTimeTypes](#rqsrs-037clickhousesessiontimezoneparsingofdatetimetypes)
+    * 5.8.1 [RQ.SRS-037.ClickHouse.SessionTimezone.ParsingOfDateTimeTypes.Insert](#rqsrs-037clickhousesessiontimezoneparsingofdatetimetypesinsert)
+  * 5.9 [Date Types](#date-types)
+  * 5.10 [RQ.SRS-037.ClickHouse.SessionTimezone.DateTypes](#rqsrs-037clickhousesessiontimezonedatetypes)
+  * 5.11 [Date Functions](#date-functions)
+    * 5.11.1 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions](#rqsrs-037clickhousesessiontimezonedatefunctions)
+      * 5.11.1.1 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDate](#rqsrs-037clickhousesessiontimezonedatefunctionstodate)
+      * 5.11.1.2 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.MakeDate](#rqsrs-037clickhousesessiontimezonedatefunctionsmakedate)
+      * 5.11.1.3 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrDefault](#rqsrs-037clickhousesessiontimezonedatefunctionstodateordefault)
+      * 5.11.1.4 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrNull](#rqsrs-037clickhousesessiontimezonedatefunctionstodateornull)
+      * 5.11.1.5 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ToDateOrZero](#rqsrs-037clickhousesessiontimezonedatefunctionstodateorzero)
+      * 5.11.1.6 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.SnowflakeToDateTime](#rqsrs-037clickhousesessiontimezonedatefunctionssnowflaketodatetime)
+      * 5.11.1.7 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.DateTimeToSnowflake](#rqsrs-037clickhousesessiontimezonedatefunctionsdatetimetosnowflake)
+      * 5.11.1.8 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ParseDateTime64BestEffort](#rqsrs-037clickhousesessiontimezonedatefunctionsparsedatetime64besteffort)
+      * 5.11.1.9 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ParseDateTimeBestEffort](#rqsrs-037clickhousesessiontimezonedatefunctionsparsedatetimebesteffort)
+      * 5.11.1.10 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ParseDateTime32BestEffort](#rqsrs-037clickhousesessiontimezonedatefunctionsparsedatetime32besteffort)
+      * 5.11.1.11 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ParseDateTime](#rqsrs-037clickhousesessiontimezonedatefunctionsparsedatetime)
+      * 5.11.1.12 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.FormatDateTime](#rqsrs-037clickhousesessiontimezonedatefunctionsformatdatetime)
+      * 5.11.1.13 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.FormatDateTimeInJodaSyntax](#rqsrs-037clickhousesessiontimezonedatefunctionsformatdatetimeinjodasyntax)
+      * 5.11.1.14 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ULIDStringToDateTime](#rqsrs-037clickhousesessiontimezonedatefunctionsulidstringtodatetime)
+      * 5.11.1.15 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.DictGetDate](#rqsrs-037clickhousesessiontimezonedatefunctionsdictgetdate)
+      * 5.11.1.16 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.ReinterpretAsDate](#rqsrs-037clickhousesessiontimezonedatefunctionsreinterpretasdate)
+      * 5.11.1.17 [RQ.SRS-037.ClickHouse.SessionTimezone.DateFunctions.EmptyArrayDate](#rqsrs-037clickhousesessiontimezonedatefunctionsemptyarraydate)
+  * 5.12 [RQ.SRS-037.ClickHouse.SessionTimezone.AggregateMergeTree](#rqsrs-037clickhousesessiontimezoneaggregatemergetree)
+  * 5.13 [RQ.SRS-037.ClickHouse.SessionTimezone.MaterializedView](#rqsrs-037clickhousesessiontimezonematerializedview)
+  * 5.14 [RQ.SRS-037.ClickHouse.SessionTimezone.PossibleValues](#rqsrs-037clickhousesessiontimezonepossiblevalues)
+  * 5.15 [RQ.SRS-037.ClickHouse.SessionTimezone.DefaultValue](#rqsrs-037clickhousesessiontimezonedefaultvalue)
+  * 5.16 [RQ.SRS-037.ClickHouse.SessionTimezone.WrongSettingValue](#rqsrs-037clickhousesessiontimezonewrongsettingvalue)
+  * 5.17 [Non-Functional Requirements](#non-functional-requirements)
+    * 5.17.1 [Performance](#performance)
+    * 5.17.2 [RQ.SRS-037.ClickHouse.SessionTimezone.Performance](#rqsrs-037clickhousesessiontimezoneperformance)
+    * 5.17.3 [Reliability](#reliability)
+    * 5.17.4 [RQ.SRS-037.ClickHouse.SessionTimezone.Reliability](#rqsrs-037clickhousesessiontimezonereliability)
 
 ## Introduction
 
@@ -988,6 +1005,18 @@ version: 1.0
 specification of an implicit timezone, which overrides the default timezone for all DateTime/DateTime64 values and 
 function results that do not have an explicit timezone specified. An empty string as the value SHALL configure the 
 session timezone to be set to the server's default timezone.
+
+### RQ.SRS-037.ClickHouse.SessionTimezone.ClickhouseClient
+version: 1.0
+
+[ClickHouse] SHALL support the `session_timezone` setting for `clickhouse client`.
+
+### RQ.SRS-037.ClickHouse.SessionTimezone.ClickhouseLocal
+version: 1.0
+
+[ClickHouse] SHALL support the `session_timezone` setting for [clickhouse local] in the same way as 
+for `clickhouse client`.
+
 
 ### RQ.SRS-037.ClickHouse.SessionTimezone.ServerDefault
 version: 1.0
@@ -1267,12 +1296,6 @@ version: 1.0
 Code: 36. DB::Exception: Received from localhost:9000. DB::Exception: Exception: Invalid time zone...
 ```
 
-### RQ.SRS-037.ClickHouse.SessionTimezone.ClickhouseLocal
-version: 1.0
-
-[ClickHouse] SHALL support the `session_timezone` setting for [clickhouse local] in the same way as 
-for `clickhouse client`.
-
 ### Non-Functional Requirements
 
 #### Performance
@@ -1288,9 +1311,6 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL be reliable and not lose any data with the `session_timezone` setting.
-
-
-
 
 
 [SRS]: #srs

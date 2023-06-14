@@ -10,6 +10,7 @@ services:
       - "9010"
       - "8443"
       - "9444"
+      - "9234"
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/remote.xml:/etc/clickhouse-server/config.d/remote.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/fips.xml:/etc/clickhouse-server/config.d/fips.xml"
