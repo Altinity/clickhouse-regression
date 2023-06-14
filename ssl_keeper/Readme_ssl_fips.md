@@ -8,7 +8,7 @@ Apply FIPS-compatible configuration settings to set allowed ports, TLS version, 
 
 ## FIPS-compatible configuration settings
 
-##№ ClickHouse Server Configuration
+### ClickHouse Server Configuration
 
 Required server configuration changes including the following. These settings are by convention stored in /etc/clickhouse-server/config.xml /etc/clickhouse-server/config.d/. 
 Disable all ports not in the FIPS-Compatible Network Protocol list, including the following. Comment them out and ensure they are not present in preprocessed_config.xml. 
