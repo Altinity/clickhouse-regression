@@ -8,6 +8,156 @@ from testflows.core import Requirement
 
 Heading = Specification.Heading
 
+RQ_SRS_032_ClickHouse_SupportedDatatypes = Requirement(
+    name="RQ.SRS-032.ClickHouse.SupportedDatatypes",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support all the following datatypes:\n"
+        "\n"
+        "| name                              | case_insensitive | alias_to data type |\n"
+        "|-----------------------------------|------------------|--------------------|\n"
+        "| `JSON`                            | 1                |                    |\n"
+        "| `Polygon`                         | 0                |                    |\n"
+        "| `Ring`                            | 0                |                    |\n"
+        "| `Point`                           | 0                |                    |\n"
+        "| `SimpleAggregateFunction`         | 0                |                    |\n"
+        "| `IntervalQuarter`                 | 0                |                    |\n"
+        "| `IntervalMonth`                   | 0                |                    |\n"
+        "| `Int64`                           | 0                |                    |\n"
+        "| `IntervalDay`                     | 0                |                    |\n"
+        "| `IntervalHour`                    | 0                |                    |\n"
+        "| `IPv4`                            | 0                |                    |\n"
+        "| `IntervalSecond`                  | 0                |                    |\n"
+        "| `LowCardinality`                  | 0                |                    |\n"
+        "| `Int16`                           | 0                |                    |\n"
+        "| `UInt256`                         | 0                |                    |\n"
+        "| `AggregateFunction`               | 0                |                    |\n"
+        "| `MultiPolygon`                    | 0                |                    |\n"
+        "| `IPv6`                            | 0                |                    |\n"
+        "| `Nothing`                         | 0                |                    |\n"
+        "| `Decimal256`                      | 1                |                    |\n"
+        "| `Tuple`                           | 0                |                    |\n"
+        "| `Array`                           | 0                |                    |\n"
+        "| `IntervalMicrosecond`             | 0                |                    |\n"
+        "| `Bool`                            | 1                |                    |\n"
+        "| `Enum16`                          | 0                |                    |\n"
+        "| `IntervalMinute`                  | 0                |                    |\n"
+        "| `FixedString`                     | 0                |                    |\n"
+        "| `String`                          | 0                |                    |\n"
+        "| `DateTime`                        | 1                |                    |\n"
+        "| `Object`                          | 0                |                    |\n"
+        "| `Map`                             | 0                |                    |\n"
+        "| `UUID`                            | 0                |                    |\n"
+        "| `Decimal64`                       | 1                |                    |\n"
+        "| `Nullable`                        | 0                |                    |\n"
+        "| `Enum`                            | 1                |                    |\n"
+        "| `Int32`                           | 0                |                    |\n"
+        "| `UInt8`                           | 0                |                    |\n"
+        "| `Date`                            | 1                |                    |\n"
+        "| `Decimal32`                       | 1                |                    |\n"
+        "| `UInt128`                         | 0                |                    |\n"
+        "| `Float64`                         | 0                |                    |\n"
+        "| `Nested`                          | 0                |                    |\n"
+        "| `UInt16`                          | 0                |                    |\n"
+        "| `IntervalMillisecond`             | 0                |                    |\n"
+        "| `Int128`                          | 0                |                    |\n"
+        "| `Decimal128`                      | 1                |                    |\n"
+        "| `Int8`                            | 0                |                    |\n"
+        "| `Decimal`                         | 1                |                    |\n"
+        "| `Int256`                          | 0                |                    |\n"
+        "| `DateTime64`                      | 1                |                    |\n"
+        "| `Enum8`                           | 0                |                    |\n"
+        "| `DateTime32`                      | 1                |                    |\n"
+        "| `Date32`                          | 1                |                    |\n"
+        "| `IntervalWeek`                    | 0                |                    |\n"
+        "| `UInt64`                          | 0                |                    |\n"
+        "| `IntervalNanosecond`              | 0                |                    |\n"
+        "| `IntervalYear`                    | 0                |                    |\n"
+        "| `UInt32`                          | 0                |                    |\n"
+        "| `Float32`                         | 0                |                    |\n"
+        "| `bool`                            | 1                | `Bool`             |\n"
+        "| `INET6`                           | 1                | `IPv6`             |\n"
+        "| `INET4`                           | 1                | `IPv4`             |\n"
+        "| `ENUM`                            | 1                | `Enum`             |\n"
+        "| `BINARY`                          | 1                | `FixedString`      |\n"
+        "| `GEOMETRY`                        | 1                | `String`           |\n"
+        "| `NATIONAL CHAR VARYING`           | 1                | `String`           |\n"
+        "| `BINARY VARYING`                  | 1                | `String`           |\n"
+        "| `NCHAR LARGE OBJECT`              | 1                | `String`           |\n"
+        "| `NATIONAL CHARACTER VARYING`      | 1                | `String`           |\n"
+        "| `boolean`                         | 1                | `Bool`             |\n"
+        "| `NATIONAL CHARACTER LARGE OBJECT` | 1                | `String`           |\n"
+        "| `NATIONAL CHARACTER`              | 1                | `String`           |\n"
+        "| `NATIONAL CHAR`                   | 1                | `String`           |\n"
+        "| `CHARACTER VARYING`               | 1                | `String`           |\n"
+        "| `LONGBLOB`                        | 1                | `String`           |\n"
+        "| `TINYBLOB`                        | 1                | `String`           |\n"
+        "| `MEDIUMTEXT`                      | 1                | `String`           |\n"
+        "| `TEXT`                            | 1                | `String`           |\n"
+        "| `VARCHAR2`                        | 1                | `String`           |\n"
+        "| `CHARACTER LARGE OBJECT`          | 1                | `String`           |\n"
+        "| `DOUBLE PRECISION`                | 1                | `Float64`          |\n"
+        "| `LONGTEXT`                        | 1                | `String`           |\n"
+        "| `NVARCHAR`                        | 1                | `String`           |\n"
+        "| `INT1 UNSIGNED`                   | 1                | `UInt8`            |\n"
+        "| `VARCHAR`                         | 1                | `String`           |\n"
+        "| `CHAR VARYING`                    | 1                | `String`           |\n"
+        "| `MEDIUMBLOB`                      | 1                | `String`           |\n"
+        "| `NCHAR`                           | 1                | `String`           |\n"
+        "| `VARBINARY`                       | 1                | `String`           |\n"
+        "| `CHAR`                            | 1                | `String`           |\n"
+        "| `SMALLINT UNSIGNED`               | 1                | `UInt16`           |\n"
+        "| `TIMESTAMP`                       | 1                | `DateTime`         |\n"
+        "| `FIXED`                           | 1                | `Decimal`          |\n"
+        "| `TINYTEXT`                        | 1                | `String`           |\n"
+        "| `NUMERIC`                         | 1                | `Decimal`          |\n"
+        "| `DEC`                             | 1                | `Decimal`          |\n"
+        "| `TIME`                            | 1                | `Int64`            |\n"
+        "| `FLOAT`                           | 1                | `Float32`          |\n"
+        "| `SET`                             | 1                | `UInt64`           |\n"
+        "| `TINYINT UNSIGNED`                | 1                | `UInt8`            |\n"
+        "| `INTEGER UNSIGNED`                | 1                | `UInt32`           |\n"
+        "| `INT UNSIGNED`                    | 1                | `UInt32`           |\n"
+        "| `CLOB`                            | 1                | `String`           |\n"
+        "| `MEDIUMINT UNSIGNED`              | 1                | `UInt32`           |\n"
+        "| `BLOB`                            | 1                | `String`           |\n"
+        "| `REAL`                            | 1                | `Float32`          |\n"
+        "| `SMALLINT`                        | 1                | `Int16`            |\n"
+        "| `INTEGER SIGNED`                  | 1                | `Int32`            |\n"
+        "| `NCHAR VARYING`                   | 1                | `String`           |\n"
+        "| `INT SIGNED`                      | 1                | `Int32`            |\n"
+        "| `TINYINT SIGNED`                  | 1                | `Int8`             |\n"
+        "| `BIGINT SIGNED`                   | 1                | `Int64`            |\n"
+        "| `BINARY LARGE OBJECT`             | 1                | `String`           |\n"
+        "| `SMALLINT SIGNED`                 | 1                | `Int16`            |\n"
+        "| `YEAR`                            | 1                | `UInt16`           |\n"
+        "| `MEDIUMINT`                       | 1                | `Int32`            |\n"
+        "| `INTEGER`                         | 1                | `Int32`            |\n"
+        "| `INT1 SIGNED`                     | 1                | `Int8`             |\n"
+        "| `BIT`                             | 1                | `UInt64`           |\n"
+        "| `BIGINT UNSIGNED`                 | 1                | `UInt64`           |\n"
+        "| `BYTEA`                           | 1                | `String`           |\n"
+        "| `INT`                             | 1                | `Int32`            |\n"
+        "| `SINGLE`                          | 1                | `Float32`          |\n"
+        "| `MEDIUMINT SIGNED`                | 1                | `Int32`            |\n"
+        "| `DOUBLE`                          | 1                | `Float64`          |\n"
+        "| `INT1`                            | 1                | `Int8`             |\n"
+        "| `CHAR LARGE OBJECT`               | 1                | `String`           |\n"
+        "| `TINYINT`                         | 1                | `Int8`             |\n"
+        "| `BIGINT`                          | 1                | `Int64`            |\n"
+        "| `CHARACTER`                       | 1                | `String`           |\n"
+        "| `BYTE`                            | 1                | `Int8`             |\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.1.1",
+)
+
 RQ_SRS_032_ClickHouse_Parquet = Requirement(
     name="RQ.SRS-032.ClickHouse.Parquet",
     version="1.0",
@@ -18,7 +168,7 @@ RQ_SRS_032_ClickHouse_Parquet = Requirement(
     description=("[ClickHouse] SHALL support `Parquet` data format.\n" "\n"),
     link=None,
     level=3,
-    num="4.1.1",
+    num="4.1.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ClickHouseLocal = Requirement(
@@ -34,7 +184,7 @@ RQ_SRS_032_ClickHouse_Parquet_ClickHouseLocal = Requirement(
     ),
     link=None,
     level=3,
-    num="4.1.2",
+    num="4.1.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Encryption = Requirement(
@@ -50,7 +200,7 @@ RQ_SRS_032_ClickHouse_Parquet_Encryption = Requirement(
     ),
     link=None,
     level=3,
-    num="4.1.3",
+    num="4.1.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Chunks = Requirement(
@@ -63,7 +213,7 @@ RQ_SRS_032_ClickHouse_Parquet_Chunks = Requirement(
     description=("[ClickHouse] SHALL support chunked `Parquet` files.\n" "\n"),
     link=None,
     level=3,
-    num="4.1.4",
+    num="4.1.5",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Structure = Requirement(
@@ -85,7 +235,7 @@ RQ_SRS_032_ClickHouse_Parquet_Structure = Requirement(
     ),
     link=None,
     level=3,
-    num="4.1.5",
+    num="4.1.6",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_ReadChunkedColumns = Requirement(
@@ -101,7 +251,7 @@ RQ_SRS_032_ClickHouse_Parquet_ReadChunkedColumns = Requirement(
     ),
     link=None,
     level=3,
-    num="4.1.6",
+    num="4.1.7",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_WriteChunkedColumns = Requirement(
@@ -117,7 +267,7 @@ RQ_SRS_032_ClickHouse_Parquet_WriteChunkedColumns = Requirement(
     ),
     link=None,
     level=3,
-    num="4.1.7",
+    num="4.1.8",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_SupportedVersions = Requirement(
@@ -133,7 +283,7 @@ RQ_SRS_032_ClickHouse_Parquet_SupportedVersions = Requirement(
     ),
     link=None,
     level=3,
-    num="4.1.8",
+    num="4.1.9",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Compression_None = Requirement(
@@ -290,7 +440,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_Read = Requirement(
         "| `DOUBLE`                                      | `Float64`                             |\n"
         "| `DATE`                                        | `Date32`                              |\n"
         "| `TIME (ms)`                                   | `DateTime`                            |\n"
-        "| `TIMESTAMP`, `TIME (us, ns)`                  | `DateTime64`                          |\n"
+        "| `TIMESTAMP (ms, ns, us)`, `TIME (us, ns)`     | `DateTime64`                          |\n"
         "| `STRING`, `BINARY`                            | `String`                              |\n"
         "| `STRING`, `BINARY`, `FIXED_LENGTH_BYTE_ARRAY` | `FixedString`                         |\n"
         "| `DECIMAL`                                     | `Decimal`                             |\n"
@@ -385,11 +535,32 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadInto_Nested = Requirement(
     description=(
         "[ClickHouse] SHALL support reading Parquet files into target table's `Nested` datatype columns.\n"
         "\n"
-        "\n"
     ),
     link=None,
     level=3,
     num="4.4.6",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadInto_Unknown = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Unknown",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support reading Parquet files with `UNKNOWN` logical type.\n"
+        "\n"
+        "The example as to why the Parquet might have an `UNKNOWN` types is as follows,\n"
+        "\n"
+        "> Sometimes, when discovering the schema of existing data, values are always null and there's no type information. \n"
+        "> The UNKNOWN type can be used to annotate a column that is always null. (Similar to Null type in Avro and Arrow)\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.4.7",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_Write = Requirement(
@@ -431,7 +602,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_Write = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.7",
+    num="4.4.8",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_WriteNested = Requirement(
@@ -447,7 +618,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_WriteNested = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.8",
+    num="4.4.9",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_WriteNullable = Requirement(
@@ -458,13 +629,13 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_WriteNullable = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support writing `Nullable` datatypes in Parquet files.\n"
+        "[ClickHouse] SHALL support writing `Nullable` datatypes in Parquet files and `Nullable` datatypes that consist only of `Null`.\n"
         "\n"
         "\n"
     ),
     link=None,
     level=3,
-    num="4.4.9",
+    num="4.4.10",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_TypeConversionFunction = Requirement(
@@ -486,10 +657,16 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_TypeConversionFunction = Requirement(
         "FROM file('time.parquet', Parquet);\n"
         "```\n"
         "\n"
+        "The conversion MAY not be possible between some datatypes.\n"
+        "\n"
+        "For example,\n"
+        "\n"
+        "Bool -> IPv6\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num="4.4.10",
+    num="4.4.11",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_UnsupportedParquetTypes = Requirement(
@@ -2074,6 +2251,39 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptPageData = Requireme
     num="4.13.5",
 )
 
+RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL output an error when trying to access the corrupt column values.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.13.6",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptChecksum = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptChecksum",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL output an error if the Parquet file's checksum is corrupted.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.13.7",
+)
+
 RQ_SRS_032_ClickHouse_Parquet_Encoding_Plain = Requirement(
     name="RQ.SRS-032.ClickHouse.Parquet.Encoding.Plain",
     version="1.0",
@@ -2084,7 +2294,7 @@ RQ_SRS_032_ClickHouse_Parquet_Encoding_Plain = Requirement(
     description=("[ClickHouse] SHALL support `Plain` encoded Parquet files.\n" "\n"),
     link=None,
     level=4,
-    num="4.14.5.1",
+    num="4.14.7.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Encoding_RunLength = Requirement(
@@ -2100,7 +2310,7 @@ RQ_SRS_032_ClickHouse_Parquet_Encoding_RunLength = Requirement(
     ),
     link=None,
     level=4,
-    num="4.14.5.2",
+    num="4.14.7.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Encoding_Delta = Requirement(
@@ -2115,7 +2325,7 @@ RQ_SRS_032_ClickHouse_Parquet_Encoding_Delta = Requirement(
     ),
     link=None,
     level=4,
-    num="4.14.5.3",
+    num="4.14.7.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Encoding_DeltaLengthByteArray = Requirement(
@@ -2131,7 +2341,7 @@ RQ_SRS_032_ClickHouse_Parquet_Encoding_DeltaLengthByteArray = Requirement(
     ),
     link=None,
     level=4,
-    num="4.14.5.4",
+    num="4.14.7.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Encoding_DeltaStrings = Requirement(
@@ -2146,7 +2356,7 @@ RQ_SRS_032_ClickHouse_Parquet_Encoding_DeltaStrings = Requirement(
     ),
     link=None,
     level=4,
-    num="4.14.5.5",
+    num="4.14.7.5",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Encoding_ByteStreamSplit = Requirement(
@@ -2167,7 +2377,7 @@ RQ_SRS_032_ClickHouse_Parquet_Encoding_ByteStreamSplit = Requirement(
     ),
     link=None,
     level=4,
-    num="4.14.5.6",
+    num="4.14.7.6",
 )
 
 SRS032_ClickHouse_Parquet_Data_Format = Specification(
@@ -2192,25 +2402,26 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         Heading(name="Feature Diagram", level=1, num="3"),
         Heading(name="Requirements", level=1, num="4"),
         Heading(name="General", level=2, num="4.1"),
-        Heading(name="RQ.SRS-032.ClickHouse.Parquet", level=3, num="4.1.1"),
+        Heading(name="RQ.SRS-032.ClickHouse.SupportedDatatypes", level=3, num="4.1.1"),
+        Heading(name="RQ.SRS-032.ClickHouse.Parquet", level=3, num="4.1.2"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.ClickHouseLocal", level=3, num="4.1.2"
+            name="RQ.SRS-032.ClickHouse.Parquet.ClickHouseLocal", level=3, num="4.1.3"
         ),
-        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Encryption", level=3, num="4.1.3"),
-        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Chunks", level=3, num="4.1.4"),
-        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Structure", level=3, num="4.1.5"),
+        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Encryption", level=3, num="4.1.4"),
+        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Chunks", level=3, num="4.1.5"),
+        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Structure", level=3, num="4.1.6"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.ReadChunkedColumns",
-            level=3,
-            num="4.1.6",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.WriteChunkedColumns",
             level=3,
             num="4.1.7",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.SupportedVersions", level=3, num="4.1.8"
+            name="RQ.SRS-032.ClickHouse.Parquet.WriteChunkedColumns",
+            level=3,
+            num="4.1.8",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.SupportedVersions", level=3, num="4.1.9"
         ),
         Heading(name="Compression", level=2, num="4.2"),
         Heading(
@@ -2278,22 +2489,27 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             num="4.4.6",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write", level=3, num="4.4.7"
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Unknown",
+            level=3,
+            num="4.4.7",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write", level=3, num="4.4.8"
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNested",
             level=3,
-            num="4.4.8",
+            num="4.4.9",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNullable",
             level=3,
-            num="4.4.9",
+            num="4.4.10",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.TypeConversionFunction",
             level=3,
-            num="4.4.10",
+            num="4.4.11",
         ),
         Heading(name="Unsupported Parquet Types", level=2, num="4.5"),
         Heading(
@@ -2667,35 +2883,46 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             level=3,
             num="4.13.5",
         ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues",
+            level=3,
+            num="4.13.6",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptChecksum",
+            level=3,
+            num="4.13.7",
+        ),
         Heading(name="Encoding", level=2, num="4.14"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Encoding.Plain", level=4, num="4.14.5.1"
+            name="RQ.SRS-032.ClickHouse.Parquet.Encoding.Plain", level=4, num="4.14.7.1"
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Encoding.RunLength",
             level=4,
-            num="4.14.5.2",
+            num="4.14.7.2",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Encoding.Delta", level=4, num="4.14.5.3"
+            name="RQ.SRS-032.ClickHouse.Parquet.Encoding.Delta", level=4, num="4.14.7.3"
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Encoding.DeltaLengthByteArray",
             level=4,
-            num="4.14.5.4",
+            num="4.14.7.4",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Encoding.DeltaStrings",
             level=4,
-            num="4.14.5.5",
+            num="4.14.7.5",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Encoding.ByteStreamSplit",
             level=4,
-            num="4.14.5.6",
+            num="4.14.7.6",
         ),
     ),
     requirements=(
+        RQ_SRS_032_ClickHouse_SupportedDatatypes,
         RQ_SRS_032_ClickHouse_Parquet,
         RQ_SRS_032_ClickHouse_Parquet_ClickHouseLocal,
         RQ_SRS_032_ClickHouse_Parquet_Encryption,
@@ -2718,6 +2945,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadInto_Nullable,
         RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadInto_LowCardinality,
         RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadInto_Nested,
+        RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadInto_Unknown,
         RQ_SRS_032_ClickHouse_Parquet_DataTypes_Write,
         RQ_SRS_032_ClickHouse_Parquet_DataTypes_WriteNested,
         RQ_SRS_032_ClickHouse_Parquet_DataTypes_WriteNullable,
@@ -2798,6 +3026,8 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumn,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptPageHeader,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptPageData,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptChecksum,
         RQ_SRS_032_ClickHouse_Parquet_Encoding_Plain,
         RQ_SRS_032_ClickHouse_Parquet_Encoding_RunLength,
         RQ_SRS_032_ClickHouse_Parquet_Encoding_Delta,
@@ -2816,14 +3046,15 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
 * 3 [Feature Diagram](#feature-diagram)
 * 4 [Requirements](#requirements)
   * 4.1 [General](#general)
-    * 4.1.1 [RQ.SRS-032.ClickHouse.Parquet](#rqsrs-032clickhouseparquet)
-    * 4.1.2 [RQ.SRS-032.ClickHouse.Parquet.ClickHouseLocal](#rqsrs-032clickhouseparquetclickhouselocal)
-    * 4.1.3 [RQ.SRS-032.ClickHouse.Parquet.Encryption](#rqsrs-032clickhouseparquetencryption)
-    * 4.1.4 [RQ.SRS-032.ClickHouse.Parquet.Chunks](#rqsrs-032clickhouseparquetchunks)
-    * 4.1.5 [RQ.SRS-032.ClickHouse.Parquet.Structure](#rqsrs-032clickhouseparquetstructure)
-    * 4.1.6 [RQ.SRS-032.ClickHouse.Parquet.ReadChunkedColumns](#rqsrs-032clickhouseparquetreadchunkedcolumns)
-    * 4.1.7 [RQ.SRS-032.ClickHouse.Parquet.WriteChunkedColumns](#rqsrs-032clickhouseparquetwritechunkedcolumns)
-    * 4.1.8 [RQ.SRS-032.ClickHouse.Parquet.SupportedVersions](#rqsrs-032clickhouseparquetsupportedversions)
+    * 4.1.1 [RQ.SRS-032.ClickHouse.SupportedDatatypes](#rqsrs-032clickhousesupporteddatatypes)
+    * 4.1.2 [RQ.SRS-032.ClickHouse.Parquet](#rqsrs-032clickhouseparquet)
+    * 4.1.3 [RQ.SRS-032.ClickHouse.Parquet.ClickHouseLocal](#rqsrs-032clickhouseparquetclickhouselocal)
+    * 4.1.4 [RQ.SRS-032.ClickHouse.Parquet.Encryption](#rqsrs-032clickhouseparquetencryption)
+    * 4.1.5 [RQ.SRS-032.ClickHouse.Parquet.Chunks](#rqsrs-032clickhouseparquetchunks)
+    * 4.1.6 [RQ.SRS-032.ClickHouse.Parquet.Structure](#rqsrs-032clickhouseparquetstructure)
+    * 4.1.7 [RQ.SRS-032.ClickHouse.Parquet.ReadChunkedColumns](#rqsrs-032clickhouseparquetreadchunkedcolumns)
+    * 4.1.8 [RQ.SRS-032.ClickHouse.Parquet.WriteChunkedColumns](#rqsrs-032clickhouseparquetwritechunkedcolumns)
+    * 4.1.9 [RQ.SRS-032.ClickHouse.Parquet.SupportedVersions](#rqsrs-032clickhouseparquetsupportedversions)
   * 4.2 [Compression](#compression)
     * 4.2.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.None](#rqsrs-032clickhouseparquetcompressionnone)
     * 4.2.2 [RQ.SRS-032.ClickHouse.Parquet.Compression.Gzip](#rqsrs-032clickhouseparquetcompressiongzip)
@@ -2841,10 +3072,11 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
     * 4.4.4 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Nullable](#rqsrs-032clickhouseparquetdatatypesreadintonullable)
     * 4.4.5 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.LowCardinality](#rqsrs-032clickhouseparquetdatatypesreadintolowcardinality)
     * 4.4.6 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Nested](#rqsrs-032clickhouseparquetdatatypesreadintonested)
-    * 4.4.7 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write](#rqsrs-032clickhouseparquetdatatypeswrite)
-    * 4.4.8 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNested](#rqsrs-032clickhouseparquetdatatypeswritenested)
-    * 4.4.9 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNullable](#rqsrs-032clickhouseparquetdatatypeswritenullable)
-    * 4.4.10 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.TypeConversionFunction](#rqsrs-032clickhouseparquetdatatypestypeconversionfunction)
+    * 4.4.7 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Unknown](#rqsrs-032clickhouseparquetdatatypesreadintounknown)
+    * 4.4.8 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write](#rqsrs-032clickhouseparquetdatatypeswrite)
+    * 4.4.9 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNested](#rqsrs-032clickhouseparquetdatatypeswritenested)
+    * 4.4.10 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNullable](#rqsrs-032clickhouseparquetdatatypeswritenullable)
+    * 4.4.11 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.TypeConversionFunction](#rqsrs-032clickhouseparquetdatatypestypeconversionfunction)
   * 4.5 [Unsupported Parquet Types](#unsupported-parquet-types)
     * 4.5.1 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes](#rqsrs-032clickhouseparquetunsupportedparquettypes)
     * 4.5.2 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.ChunkedArray](#rqsrs-032clickhouseparquetunsupportedparquettypeschunkedarray)
@@ -2937,13 +3169,15 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
     * 4.13.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumn](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumn)
     * 4.13.4 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptPageHeader](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptpageheader)
     * 4.13.5 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptPageData](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptpagedata)
+    * 4.13.6 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvalues)
+    * 4.13.7 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptChecksum](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptchecksum)
   * 4.14 [Encoding](#encoding)
-      * 4.14.5.1 [RQ.SRS-032.ClickHouse.Parquet.Encoding.Plain](#rqsrs-032clickhouseparquetencodingplain)
-      * 4.14.5.2 [RQ.SRS-032.ClickHouse.Parquet.Encoding.RunLength](#rqsrs-032clickhouseparquetencodingrunlength)
-      * 4.14.5.3 [RQ.SRS-032.ClickHouse.Parquet.Encoding.Delta](#rqsrs-032clickhouseparquetencodingdelta)
-      * 4.14.5.4 [RQ.SRS-032.ClickHouse.Parquet.Encoding.DeltaLengthByteArray](#rqsrs-032clickhouseparquetencodingdeltalengthbytearray)
-      * 4.14.5.5 [RQ.SRS-032.ClickHouse.Parquet.Encoding.DeltaStrings](#rqsrs-032clickhouseparquetencodingdeltastrings)
-      * 4.14.5.6 [RQ.SRS-032.ClickHouse.Parquet.Encoding.ByteStreamSplit](#rqsrs-032clickhouseparquetencodingbytestreamsplit)
+      * 4.14.7.1 [RQ.SRS-032.ClickHouse.Parquet.Encoding.Plain](#rqsrs-032clickhouseparquetencodingplain)
+      * 4.14.7.2 [RQ.SRS-032.ClickHouse.Parquet.Encoding.RunLength](#rqsrs-032clickhouseparquetencodingrunlength)
+      * 4.14.7.3 [RQ.SRS-032.ClickHouse.Parquet.Encoding.Delta](#rqsrs-032clickhouseparquetencodingdelta)
+      * 4.14.7.4 [RQ.SRS-032.ClickHouse.Parquet.Encoding.DeltaLengthByteArray](#rqsrs-032clickhouseparquetencodingdeltalengthbytearray)
+      * 4.14.7.5 [RQ.SRS-032.ClickHouse.Parquet.Encoding.DeltaStrings](#rqsrs-032clickhouseparquetencodingdeltastrings)
+      * 4.14.7.6 [RQ.SRS-032.ClickHouse.Parquet.Encoding.ByteStreamSplit](#rqsrs-032clickhouseparquetencodingbytestreamsplit)
 
 
 ## Revision History
@@ -3259,6 +3493,145 @@ FixedString_ch --> Binary_out
 
 ### General
 
+#### RQ.SRS-032.ClickHouse.SupportedDatatypes
+version: 1.0
+
+[ClickHouse] SHALL support all the following datatypes:
+
+| name                              | case_insensitive | alias_to data type |
+|-----------------------------------|------------------|--------------------|
+| `JSON`                            | 1                |                    |
+| `Polygon`                         | 0                |                    |
+| `Ring`                            | 0                |                    |
+| `Point`                           | 0                |                    |
+| `SimpleAggregateFunction`         | 0                |                    |
+| `IntervalQuarter`                 | 0                |                    |
+| `IntervalMonth`                   | 0                |                    |
+| `Int64`                           | 0                |                    |
+| `IntervalDay`                     | 0                |                    |
+| `IntervalHour`                    | 0                |                    |
+| `IPv4`                            | 0                |                    |
+| `IntervalSecond`                  | 0                |                    |
+| `LowCardinality`                  | 0                |                    |
+| `Int16`                           | 0                |                    |
+| `UInt256`                         | 0                |                    |
+| `AggregateFunction`               | 0                |                    |
+| `MultiPolygon`                    | 0                |                    |
+| `IPv6`                            | 0                |                    |
+| `Nothing`                         | 0                |                    |
+| `Decimal256`                      | 1                |                    |
+| `Tuple`                           | 0                |                    |
+| `Array`                           | 0                |                    |
+| `IntervalMicrosecond`             | 0                |                    |
+| `Bool`                            | 1                |                    |
+| `Enum16`                          | 0                |                    |
+| `IntervalMinute`                  | 0                |                    |
+| `FixedString`                     | 0                |                    |
+| `String`                          | 0                |                    |
+| `DateTime`                        | 1                |                    |
+| `Object`                          | 0                |                    |
+| `Map`                             | 0                |                    |
+| `UUID`                            | 0                |                    |
+| `Decimal64`                       | 1                |                    |
+| `Nullable`                        | 0                |                    |
+| `Enum`                            | 1                |                    |
+| `Int32`                           | 0                |                    |
+| `UInt8`                           | 0                |                    |
+| `Date`                            | 1                |                    |
+| `Decimal32`                       | 1                |                    |
+| `UInt128`                         | 0                |                    |
+| `Float64`                         | 0                |                    |
+| `Nested`                          | 0                |                    |
+| `UInt16`                          | 0                |                    |
+| `IntervalMillisecond`             | 0                |                    |
+| `Int128`                          | 0                |                    |
+| `Decimal128`                      | 1                |                    |
+| `Int8`                            | 0                |                    |
+| `Decimal`                         | 1                |                    |
+| `Int256`                          | 0                |                    |
+| `DateTime64`                      | 1                |                    |
+| `Enum8`                           | 0                |                    |
+| `DateTime32`                      | 1                |                    |
+| `Date32`                          | 1                |                    |
+| `IntervalWeek`                    | 0                |                    |
+| `UInt64`                          | 0                |                    |
+| `IntervalNanosecond`              | 0                |                    |
+| `IntervalYear`                    | 0                |                    |
+| `UInt32`                          | 0                |                    |
+| `Float32`                         | 0                |                    |
+| `bool`                            | 1                | `Bool`             |
+| `INET6`                           | 1                | `IPv6`             |
+| `INET4`                           | 1                | `IPv4`             |
+| `ENUM`                            | 1                | `Enum`             |
+| `BINARY`                          | 1                | `FixedString`      |
+| `GEOMETRY`                        | 1                | `String`           |
+| `NATIONAL CHAR VARYING`           | 1                | `String`           |
+| `BINARY VARYING`                  | 1                | `String`           |
+| `NCHAR LARGE OBJECT`              | 1                | `String`           |
+| `NATIONAL CHARACTER VARYING`      | 1                | `String`           |
+| `boolean`                         | 1                | `Bool`             |
+| `NATIONAL CHARACTER LARGE OBJECT` | 1                | `String`           |
+| `NATIONAL CHARACTER`              | 1                | `String`           |
+| `NATIONAL CHAR`                   | 1                | `String`           |
+| `CHARACTER VARYING`               | 1                | `String`           |
+| `LONGBLOB`                        | 1                | `String`           |
+| `TINYBLOB`                        | 1                | `String`           |
+| `MEDIUMTEXT`                      | 1                | `String`           |
+| `TEXT`                            | 1                | `String`           |
+| `VARCHAR2`                        | 1                | `String`           |
+| `CHARACTER LARGE OBJECT`          | 1                | `String`           |
+| `DOUBLE PRECISION`                | 1                | `Float64`          |
+| `LONGTEXT`                        | 1                | `String`           |
+| `NVARCHAR`                        | 1                | `String`           |
+| `INT1 UNSIGNED`                   | 1                | `UInt8`            |
+| `VARCHAR`                         | 1                | `String`           |
+| `CHAR VARYING`                    | 1                | `String`           |
+| `MEDIUMBLOB`                      | 1                | `String`           |
+| `NCHAR`                           | 1                | `String`           |
+| `VARBINARY`                       | 1                | `String`           |
+| `CHAR`                            | 1                | `String`           |
+| `SMALLINT UNSIGNED`               | 1                | `UInt16`           |
+| `TIMESTAMP`                       | 1                | `DateTime`         |
+| `FIXED`                           | 1                | `Decimal`          |
+| `TINYTEXT`                        | 1                | `String`           |
+| `NUMERIC`                         | 1                | `Decimal`          |
+| `DEC`                             | 1                | `Decimal`          |
+| `TIME`                            | 1                | `Int64`            |
+| `FLOAT`                           | 1                | `Float32`          |
+| `SET`                             | 1                | `UInt64`           |
+| `TINYINT UNSIGNED`                | 1                | `UInt8`            |
+| `INTEGER UNSIGNED`                | 1                | `UInt32`           |
+| `INT UNSIGNED`                    | 1                | `UInt32`           |
+| `CLOB`                            | 1                | `String`           |
+| `MEDIUMINT UNSIGNED`              | 1                | `UInt32`           |
+| `BLOB`                            | 1                | `String`           |
+| `REAL`                            | 1                | `Float32`          |
+| `SMALLINT`                        | 1                | `Int16`            |
+| `INTEGER SIGNED`                  | 1                | `Int32`            |
+| `NCHAR VARYING`                   | 1                | `String`           |
+| `INT SIGNED`                      | 1                | `Int32`            |
+| `TINYINT SIGNED`                  | 1                | `Int8`             |
+| `BIGINT SIGNED`                   | 1                | `Int64`            |
+| `BINARY LARGE OBJECT`             | 1                | `String`           |
+| `SMALLINT SIGNED`                 | 1                | `Int16`            |
+| `YEAR`                            | 1                | `UInt16`           |
+| `MEDIUMINT`                       | 1                | `Int32`            |
+| `INTEGER`                         | 1                | `Int32`            |
+| `INT1 SIGNED`                     | 1                | `Int8`             |
+| `BIT`                             | 1                | `UInt64`           |
+| `BIGINT UNSIGNED`                 | 1                | `UInt64`           |
+| `BYTEA`                           | 1                | `String`           |
+| `INT`                             | 1                | `Int32`            |
+| `SINGLE`                          | 1                | `Float32`          |
+| `MEDIUMINT SIGNED`                | 1                | `Int32`            |
+| `DOUBLE`                          | 1                | `Float64`          |
+| `INT1`                            | 1                | `Int8`             |
+| `CHAR LARGE OBJECT`               | 1                | `String`           |
+| `TINYINT`                         | 1                | `Int8`             |
+| `BIGINT`                          | 1                | `Int64`            |
+| `CHARACTER`                       | 1                | `String`           |
+| `BYTE`                            | 1                | `Int8`             |
+
 #### RQ.SRS-032.ClickHouse.Parquet
 version: 1.0
 
@@ -3372,7 +3745,7 @@ Parquet Decimal is currently not tested.
 | `DOUBLE`                                      | `Float64`                             |
 | `DATE`                                        | `Date32`                              |
 | `TIME (ms)`                                   | `DateTime`                            |
-| `TIMESTAMP`, `TIME (us, ns)`                  | `DateTime64`                          |
+| `TIMESTAMP (ms, ns, us)`, `TIME (us, ns)`     | `DateTime64`                          |
 | `STRING`, `BINARY`                            | `String`                              |
 | `STRING`, `BINARY`, `FIXED_LENGTH_BYTE_ARRAY` | `FixedString`                         |
 | `DECIMAL`                                     | `Decimal`                             |
@@ -3411,6 +3784,16 @@ version:1.0
 version:1.0
 
 [ClickHouse] SHALL support reading Parquet files into target table's `Nested` datatype columns.
+
+#### RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Unknown
+version:1.0
+
+[ClickHouse] SHALL support reading Parquet files with `UNKNOWN` logical type.
+
+The example as to why the Parquet might have an `UNKNOWN` types is as follows,
+
+> Sometimes, when discovering the schema of existing data, values are always null and there's no type information. 
+> The UNKNOWN type can be used to annotate a column that is always null. (Similar to Null type in Avro and Arrow)
 
 
 #### RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write
@@ -3452,7 +3835,7 @@ version:1.0
 #### RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNullable
 version:1.0
 
-[ClickHouse] SHALL support writing `Nullable` datatypes in Parquet files.
+[ClickHouse] SHALL support writing `Nullable` datatypes in Parquet files and `Nullable` datatypes that consist only of `Null`.
 
 
 #### RQ.SRS-032.ClickHouse.Parquet.DataTypes.TypeConversionFunction
@@ -3468,6 +3851,12 @@ SELECT
     toDateTime(time)
 FROM file('time.parquet', Parquet);
 ```
+
+The conversion MAY not be possible between some datatypes.
+
+For example,
+
+Bool -> IPv6
 
 ### Unsupported Parquet Types
 
@@ -4260,6 +4649,17 @@ version: 1.0
 
 [ClickHouse] SHALL output an error when trying to access the corrupt `Page Data`.
 In this case that page SHALL be lost.
+
+#### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues
+version: 1.0
+
+[ClickHouse] SHALL output an error when trying to access the corrupt column values.
+
+
+#### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptChecksum
+version: 1.0
+
+[ClickHouse] SHALL output an error if the Parquet file's checksum is corrupted.
 
 ### Encoding
 
