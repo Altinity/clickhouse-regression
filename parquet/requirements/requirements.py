@@ -661,7 +661,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_TypeConversionFunction = Requirement(
         "\n"
         "For example,\n"
         "\n"
-        "Bool -> IPv6\n"
+        "`Bool` -> `IPv6`\n"
         "\n"
     ),
     link=None,
@@ -3856,7 +3856,7 @@ The conversion MAY not be possible between some datatypes.
 
 For example,
 
-Bool -> IPv6
+`Bool` -> `IPv6`
 
 ### Unsupported Parquet Types
 
