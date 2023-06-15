@@ -458,8 +458,8 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_Read = Requirement(
     num="4.4.1",
 )
 
-RQ_SRS_032_ClickHouse_Parquet_DataTypes_DataUTCAdjusted = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.DataUTCAdjusted",
+RQ_SRS_032_ClickHouse_Parquet_DataTypes_DateUTCAdjusted = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.DateUTCAdjusted",
     version="1.0",
     priority=None,
     group=None,
@@ -2513,7 +2513,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.Read", level=3, num="4.4.1"
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.DataUTCAdjusted",
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.DateUTCAdjusted",
             level=3,
             num="4.4.2",
         ),
@@ -3004,7 +3004,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Lzo,
         RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Zstd,
         RQ_SRS_032_ClickHouse_Parquet_DataTypes_Read,
-        RQ_SRS_032_ClickHouse_Parquet_DataTypes_DataUTCAdjusted,
+        RQ_SRS_032_ClickHouse_Parquet_DataTypes_DateUTCAdjusted,
         RQ_SRS_032_ClickHouse_Parquet_DataTypes_TimestampUTCAdjusted,
         RQ_SRS_032_ClickHouse_Parquet_DataTypes_TimeUTCAdjusted,
         RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadNested,
@@ -3134,7 +3134,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
     * 4.3.3 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Zstd](#rqsrs-032clickhouseparquetunsupportedcompressionzstd)
   * 4.4 [Data Types](#data-types)
     * 4.4.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Read](#rqsrs-032clickhouseparquetdatatypesread)
-    * 4.4.2 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.DataUTCAdjusted](#rqsrs-032clickhouseparquetdatatypesdatautcadjusted)
+    * 4.4.2 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.DateUTCAdjusted](#rqsrs-032clickhouseparquetdatatypesdateutcadjusted)
     * 4.4.3 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.TimestampUTCAdjusted](#rqsrs-032clickhouseparquetdatatypestimestamputcadjusted)
     * 4.4.4 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.TimeUTCAdjusted](#rqsrs-032clickhouseparquetdatatypestimeutcadjusted)
     * 4.4.5 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNested](#rqsrs-032clickhouseparquetdatatypesreadnested)
@@ -3827,7 +3827,7 @@ Parquet Decimal is currently not tested.
 | `FIXED_LENGTH_BYTE_ARRAY`, `BINARY`           | `Int128`/`UInt128`/`Int256`/`UInt256` |
 
 
-#### RQ.SRS-032.ClickHouse.Parquet.DataTypes.DataUTCAdjusted
+#### RQ.SRS-032.ClickHouse.Parquet.DataTypes.DateUTCAdjusted
 version:1.0
 
 [ClickHouse] SHALL support reading `DATE` Parquet datatype with `isAdjustedToUTC = true`.
