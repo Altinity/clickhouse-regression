@@ -13,6 +13,9 @@
     * 4.1.3 [RQ.SRS-032.ClickHouse.Parquet.Encryption](#rqsrs-032clickhouseparquetencryption)
     * 4.1.4 [RQ.SRS-032.ClickHouse.Parquet.Chunks](#rqsrs-032clickhouseparquetchunks)
     * 4.1.5 [RQ.SRS-032.ClickHouse.Parquet.Structure](#rqsrs-032clickhouseparquetstructure)
+    * 4.1.6 [RQ.SRS-032.ClickHouse.Parquet.ReadChunkedColumns](#rqsrs-032clickhouseparquetreadchunkedcolumns)
+    * 4.1.7 [RQ.SRS-032.ClickHouse.Parquet.WriteChunkedColumns](#rqsrs-032clickhouseparquetwritechunkedcolumns)
+    * 4.1.8 [RQ.SRS-032.ClickHouse.Parquet.SupportedVersions](#rqsrs-032clickhouseparquetsupportedversions)
   * 4.2 [Compression](#compression)
     * 4.2.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.None](#rqsrs-032clickhouseparquetcompressionnone)
     * 4.2.2 [RQ.SRS-032.ClickHouse.Parquet.Compression.Gzip](#rqsrs-032clickhouseparquetcompressiongzip)
@@ -44,16 +47,20 @@
     * 4.6.4 [RQ.SRS-032.ClickHouse.Parquet.Insert.SkipColumns](#rqsrs-032clickhouseparquetinsertskipcolumns)
     * 4.6.5 [RQ.SRS-032.ClickHouse.Parquet.Insert.SkipValues](#rqsrs-032clickhouseparquetinsertskipvalues)
     * 4.6.6 [RQ.SRS-032.ClickHouse.Parquet.Insert.AutoTypecast](#rqsrs-032clickhouseparquetinsertautotypecast)
-    * 4.6.7 [INSERT Settings](#insert-settings)
-      * 4.6.7.1 [RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.ImportNested](#rqsrs-032clickhouseparquetinsertsettingsimportnested)
-      * 4.6.7.2 [RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.CaseInsensitiveColumnMatching](#rqsrs-032clickhouseparquetinsertsettingscaseinsensitivecolumnmatching)
-      * 4.6.7.3 [RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.AllowMissingColumns](#rqsrs-032clickhouseparquetinsertsettingsallowmissingcolumns)
-      * 4.6.7.4 [RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.SkipColumnsWithUnsupportedTypesInSchemaInference](#rqsrs-032clickhouseparquetinsertsettingsskipcolumnswithunsupportedtypesinschemainference)
+    * 4.6.7 [RQ.SRS-032.ClickHouse.Parquet.Insert.RowGroupSize](#rqsrs-032clickhouseparquetinsertrowgroupsize)
+    * 4.6.8 [RQ.SRS-032.ClickHouse.Parquet.Insert.DataPageSize](#rqsrs-032clickhouseparquetinsertdatapagesize)
+    * 4.6.9 [INSERT Settings](#insert-settings)
+      * 4.6.9.1 [RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.ImportNested](#rqsrs-032clickhouseparquetinsertsettingsimportnested)
+      * 4.6.9.2 [RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.CaseInsensitiveColumnMatching](#rqsrs-032clickhouseparquetinsertsettingscaseinsensitivecolumnmatching)
+      * 4.6.9.3 [RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.AllowMissingColumns](#rqsrs-032clickhouseparquetinsertsettingsallowmissingcolumns)
+      * 4.6.9.4 [RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.SkipColumnsWithUnsupportedTypesInSchemaInference](#rqsrs-032clickhouseparquetinsertsettingsskipcolumnswithunsupportedtypesinschemainference)
   * 4.7 [Working With Nested Types](#working-with-nested-types)
-    * 4.7.1 [RQ.SRS-032.ClickHouse.Parquet.Nested.ArrayIntoNested.ImportNested](#rqsrs-032clickhouseparquetnestedarrayintonestedimportnested)
-    * 4.7.2 [RQ.SRS-032.ClickHouse.Parquet.Nested.ArrayIntoNested.NotImportNested](#rqsrs-032clickhouseparquetnestedarrayintonestednotimportnested)
-    * 4.7.3 [RQ.SRS-032.ClickHouse.Parquet.Nested.ArrayIntoNotNested](#rqsrs-032clickhouseparquetnestedarrayintonotnested)
-    * 4.7.4 [RQ.SRS-032.ClickHouse.Parquet.Nested.NonArrayIntoNested](#rqsrs-032clickhouseparquetnestednonarrayintonested)
+    * 4.7.1 [RQ.SRS-032.ClickHouse.Parquet.Nested.ArrayIntoNested.ReadNested](#rqsrs-032clickhouseparquetnestedarrayintonestedreadnested)
+    * 4.7.2 [RQ.SRS-032.ClickHouse.Parquet.Nested.ArrayIntoNested.ImportNested](#rqsrs-032clickhouseparquetnestedarrayintonestedimportnested)
+    * 4.7.3 [RQ.SRS-032.ClickHouse.Parquet.Nested.ArrayIntoNested.NotImportNested](#rqsrs-032clickhouseparquetnestedarrayintonestednotimportnested)
+    * 4.7.4 [RQ.SRS-032.ClickHouse.Parquet.Nested.ArrayIntoNotNested](#rqsrs-032clickhouseparquetnestedarrayintonotnested)
+    * 4.7.5 [RQ.SRS-032.ClickHouse.Parquet.Nested.NonArrayIntoNested](#rqsrs-032clickhouseparquetnestednonarrayintonested)
+    * 4.7.6 [RQ.SRS-032.ClickHouse.Parquet.Nested.ArrayIntoNested.WriteNested](#rqsrs-032clickhouseparquetnestedarrayintonestedwritenested)
   * 4.8 [SELECT](#select)
     * 4.8.1 [RQ.SRS-032.ClickHouse.Parquet.Select](#rqsrs-032clickhouseparquetselect)
     * 4.8.2 [RQ.SRS-032.ClickHouse.Parquet.Select.Outfile.AutoDetectParquetFileFormat](#rqsrs-032clickhouseparquetselectoutfileautodetectparquetfileformat)
@@ -110,7 +117,8 @@
     * 4.12.1 [ParquetFormat](#parquetformat)
       * 4.12.1.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat](#rqsrs-032clickhouseparquetmetadataparquetmetadataformat)
       * 4.12.1.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat.Output](#rqsrs-032clickhouseparquetmetadataparquetmetadataformatoutput)
-      * 4.12.1.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.PerquetMetadata.Content](#rqsrs-032clickhouseparquetmetadataperquetmetadatacontent)
+      * 4.12.1.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.Content](#rqsrs-032clickhouseparquetmetadataparquetmetadatacontent)
+      * 4.12.1.4 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.MinMax](#rqsrs-032clickhouseparquetmetadataparquetmetadataminmax)
     * 4.12.2 [Metadata Types](#metadata-types)
       * 4.12.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.File](#rqsrs-032clickhouseparquetmetadatafile)
       * 4.12.2.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Column](#rqsrs-032clickhouseparquetmetadatacolumn)
@@ -456,7 +464,7 @@ version: 1.0
 #### RQ.SRS-032.ClickHouse.Parquet.Encryption
 version: 1.0
 
-[ClickHouse] MAY not support reading or writnig encrypted Parquet files.
+[ClickHouse] MAY not support reading or writing encrypted Parquet files.
 
 #### RQ.SRS-032.ClickHouse.Parquet.Chunks
 version: 1.0
@@ -473,6 +481,21 @@ For example,
 ```sql
 DESCRIBE TABLE file('data.parquet', Parquet)
 ```
+
+#### RQ.SRS-032.ClickHouse.Parquet.ReadChunkedColumns
+version: 1.0
+
+[ClickHouse] SHALL support reading chunked columns from the Parquet files.
+
+#### RQ.SRS-032.ClickHouse.Parquet.WriteChunkedColumns
+version: 1.0
+
+[ClickHouse] SHALL support writing chunked columns into the Parquet files.
+
+#### RQ.SRS-032.ClickHouse.Parquet.SupportedVersions
+version: 1.0
+
+[ClickHouse] SHALL support reading the following Parquet file versions: `1.0.0`, `2.0.0`, `2.1.0`, `2.2.0`, `2.4.0`, `2.6.0`, `2.7.0`, `2.8.0`, `2.9.0`.
 
 ### Compression
 
@@ -790,6 +813,25 @@ For example,
 > └──────┴────────┴──────────────┴────────────────────┴─────────┴──────────────────┴────────────────┘
 > ```
 
+#### RQ.SRS-032.ClickHouse.Parquet.Insert.RowGroupSize
+version: 1.0
+
+[ClickHouse] SHALL support reading Parquet files with different Row Group Sizes.
+
+As described in https://parquet.apache.org/docs/file-format/configurations/#row-group-size,
+
+> We recommend large row groups (512MB - 1GB). Since an entire row group might need to be read, 
+> we want it to completely fit on one HDFS block.
+
+#### RQ.SRS-032.ClickHouse.Parquet.Insert.DataPageSize
+version: 1.0
+
+[ClickHouse] SHALL support reading Parquet files with different Data Page Sizes.
+
+As described in https://parquet.apache.org/docs/file-format/configurations/#data-page--size,
+
+> Note: for sequential scans, it is not expected to read a page at a time; this is not the IO chunk. We recommend 8KB for page sizes.
+
 #### INSERT Settings
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Insert.Settings.ImportNested
@@ -821,6 +863,11 @@ to allow skipping unsupported types. The default value SHALL be `0`.
 
 ### Working With Nested Types
 
+#### RQ.SRS-032.ClickHouse.Parquet.Nested.ArrayIntoNested.ReadNested
+version: 1.0
+
+[ClickHouse] SHALL support reading nested columns from the Parquet file.
+
 #### RQ.SRS-032.ClickHouse.Parquet.Nested.ArrayIntoNested.ImportNested
 version: 1.0
 
@@ -829,7 +876,7 @@ version: 1.0
 #### RQ.SRS-032.ClickHouse.Parquet.Nested.ArrayIntoNested.NotImportNested
 version: 1.0
 
-[ClickHouse] SHALL retrun an error when trying to insert arrays of nested structs from Parquet files into [ClickHouse] Nested columns when
+[ClickHouse] SHALL return an error when trying to insert arrays of nested structs from Parquet files into [ClickHouse] Nested columns when
 `input_format_parquet_import_nested` setting is set to `0`.
 
 #### RQ.SRS-032.ClickHouse.Parquet.Nested.ArrayIntoNotNested
@@ -842,13 +889,17 @@ version: 1.0
 
 [ClickHouse] SHALL return an error when trying to insert datatypes other than arrays of nested structs from Parquet files into [ClickHouse] Nested columns.
 
+#### RQ.SRS-032.ClickHouse.Parquet.Nested.ArrayIntoNested.WriteNested
+version: 1.0
+
+[ClickHouse] SHALL support writing nested columns to the Parquet file.
+
 ### SELECT
 
 #### RQ.SRS-032.ClickHouse.Parquet.Select
 version: 1.0
 
-[ClickHouse] SHALL support using `SELECT` query with either the `INTO OUTFILE {file_name}` or just `FORMAT Parquet` clauses to
-to write Parquet files. 
+[ClickHouse] SHALL support using `SELECT` query with either the `INTO OUTFILE {file_name}` or just `FORMAT Parquet` clauses to write Parquet files. 
 
 For example,
 
@@ -911,7 +962,7 @@ The default value SHALL be `1000000`.
 version: 1.0
 
 [ClickHouse] SHALL support specifying `output_format_parquet_string_as_string` to use Parquet String type instead of Binary.
-The deafult value SHALL be `0`.
+The default value SHALL be `0`.
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Select.Settings.StringAsFixedByteArray
 version: 1.0
@@ -935,7 +986,7 @@ The default value SHALL be `lz4`.
 ##### RQ.SRS-032.ClickHouse.Parquet.Create.NewTable
 version: 1.0
 
-[ClickHouse] SHALL support creating and populating tables directly from the Parquet files with table schema being auto detected
+[ClickHouse] SHALL support creating and populating tables directly from the Parquet files with table schema being auto-detected
 from file's structure.
 
 For example,
@@ -1208,7 +1259,7 @@ Exception on client:
 Code: 399. DB::Exception: Code: 399. DB::Exception: Format ParquetMetadata is not suitable for output. (FORMAT_IS_NOT_SUITABLE_FOR_OUTPUT) (version 23.5.1.2890 (official build)). (FORMAT_IS_NOT_SUITABLE_FOR_OUTPUT)
 ```
 
-##### RQ.SRS-032.ClickHouse.Parquet.Metadata.PerquetMetadata.Content
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.Content
 version: 1.0
 
 [ClickHouse]'s ParquetMetadata format SHALL output the Parquet metadata in the following structure:
@@ -1338,6 +1389,11 @@ For example,
 > }
 > ```
 
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.MinMax
+version: 1.0
+
+[ClickHouse] SHALL support Parquet files that have Min/Max values in the metadata and the files that are missing Min/Max values.
+
 #### Metadata Types
 
 ##### RQ.SRS-032.ClickHouse.Parquet.Metadata.File
@@ -1354,7 +1410,6 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL support accessing `Page Header Metadata` in Parquet files.
-
 
 ### Error Recovery
 
