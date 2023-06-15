@@ -818,7 +818,7 @@ The conversion MAY not be possible between some datatypes.
 
 For example,
 
-Bool -> IPv6
+`Bool` -> `IPv6`
 
 ### Unsupported Parquet Types
 
