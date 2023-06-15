@@ -438,7 +438,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_Read = Requirement(
         "| `INT64`                                       | `Int64`                               |\n"
         "| `FLOAT`                                       | `Float32`                             |\n"
         "| `DOUBLE`                                      | `Float64`                             |\n"
-        "| `DATE`                                        | `Date32`                              |\n"
+        "| `DATE (ms, ns, us)`                           | `Date32`                              |\n"
         "| `TIME (ms)`                                   | `DateTime`                            |\n"
         "| `TIMESTAMP (ms, ns, us)`, `TIME (us, ns)`     | `DateTime64`                          |\n"
         "| `STRING`, `BINARY`                            | `String`                              |\n"
@@ -451,10 +451,59 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_Read = Requirement(
         "| `FIXED_LENGTH_BYTE_ARRAY`, `BINARY`           | `IPv6`                                |\n"
         "| `FIXED_LENGTH_BYTE_ARRAY`, `BINARY`           | `Int128`/`UInt128`/`Int256`/`UInt256` |\n"
         "\n"
+        "\n"
     ),
     link=None,
     level=3,
     num="4.4.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_DataTypes_DataUTCAdjusted = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.DataUTCAdjusted",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support reading `DATE` Parquet datatype with `isAdjustedToUTC = true`.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.4.2",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_DataTypes_TimestampUTCAdjusted = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.TimestampUTCAdjusted",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support reading `TIMESTAMP` Parquet datatype with `isAdjustedToUTC = true`.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.4.3",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_DataTypes_TimeUTCAdjusted = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.TimeUTCAdjusted",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support reading `TIME` Parquet datatype with `isAdjustedToUTC = true`.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.4.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadNested = Requirement(
@@ -470,7 +519,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadNested = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.2",
+    num="4.4.5",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_NullValues = Requirement(
@@ -488,7 +537,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_NullValues = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.3",
+    num="4.4.6",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadInto_Nullable = Requirement(
@@ -505,7 +554,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadInto_Nullable = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.4",
+    num="4.4.7",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadInto_LowCardinality = Requirement(
@@ -522,7 +571,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadInto_LowCardinality = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.5",
+    num="4.4.8",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadInto_Nested = Requirement(
@@ -538,7 +587,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadInto_Nested = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.6",
+    num="4.4.9",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadInto_Unknown = Requirement(
@@ -560,7 +609,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadInto_Unknown = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.7",
+    num="4.4.10",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_Write = Requirement(
@@ -602,7 +651,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_Write = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.8",
+    num="4.4.11",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_WriteNested = Requirement(
@@ -618,7 +667,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_WriteNested = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.9",
+    num="4.4.12",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_WriteNullable = Requirement(
@@ -635,7 +684,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_WriteNullable = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.10",
+    num="4.4.13",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_TypeConversionFunction = Requirement(
@@ -666,7 +715,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_TypeConversionFunction = Requirement(
     ),
     link=None,
     level=3,
-    num="4.4.11",
+    num="4.4.14",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_UnsupportedParquetTypes = Requirement(
@@ -2464,52 +2513,67 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.Read", level=3, num="4.4.1"
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNested",
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.DataUTCAdjusted",
             level=3,
             num="4.4.2",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.NullValues",
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.TimestampUTCAdjusted",
             level=3,
             num="4.4.3",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Nullable",
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.TimeUTCAdjusted",
             level=3,
             num="4.4.4",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.LowCardinality",
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNested",
             level=3,
             num="4.4.5",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Nested",
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.NullValues",
             level=3,
             num="4.4.6",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Unknown",
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Nullable",
             level=3,
             num="4.4.7",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write", level=3, num="4.4.8"
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.LowCardinality",
+            level=3,
+            num="4.4.8",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNested",
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Nested",
             level=3,
             num="4.4.9",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNullable",
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Unknown",
             level=3,
             num="4.4.10",
         ),
         Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write", level=3, num="4.4.11"
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNested",
+            level=3,
+            num="4.4.12",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNullable",
+            level=3,
+            num="4.4.13",
+        ),
+        Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.TypeConversionFunction",
             level=3,
-            num="4.4.11",
+            num="4.4.14",
         ),
         Heading(name="Unsupported Parquet Types", level=2, num="4.5"),
         Heading(
@@ -2940,6 +3004,9 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Lzo,
         RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Zstd,
         RQ_SRS_032_ClickHouse_Parquet_DataTypes_Read,
+        RQ_SRS_032_ClickHouse_Parquet_DataTypes_DataUTCAdjusted,
+        RQ_SRS_032_ClickHouse_Parquet_DataTypes_TimestampUTCAdjusted,
+        RQ_SRS_032_ClickHouse_Parquet_DataTypes_TimeUTCAdjusted,
         RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadNested,
         RQ_SRS_032_ClickHouse_Parquet_DataTypes_NullValues,
         RQ_SRS_032_ClickHouse_Parquet_DataTypes_ReadInto_Nullable,
@@ -3067,16 +3134,19 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
     * 4.3.3 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Zstd](#rqsrs-032clickhouseparquetunsupportedcompressionzstd)
   * 4.4 [Data Types](#data-types)
     * 4.4.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Read](#rqsrs-032clickhouseparquetdatatypesread)
-    * 4.4.2 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNested](#rqsrs-032clickhouseparquetdatatypesreadnested)
-    * 4.4.3 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.NullValues](#rqsrs-032clickhouseparquetdatatypesnullvalues)
-    * 4.4.4 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Nullable](#rqsrs-032clickhouseparquetdatatypesreadintonullable)
-    * 4.4.5 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.LowCardinality](#rqsrs-032clickhouseparquetdatatypesreadintolowcardinality)
-    * 4.4.6 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Nested](#rqsrs-032clickhouseparquetdatatypesreadintonested)
-    * 4.4.7 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Unknown](#rqsrs-032clickhouseparquetdatatypesreadintounknown)
-    * 4.4.8 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write](#rqsrs-032clickhouseparquetdatatypeswrite)
-    * 4.4.9 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNested](#rqsrs-032clickhouseparquetdatatypeswritenested)
-    * 4.4.10 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNullable](#rqsrs-032clickhouseparquetdatatypeswritenullable)
-    * 4.4.11 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.TypeConversionFunction](#rqsrs-032clickhouseparquetdatatypestypeconversionfunction)
+    * 4.4.2 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.DataUTCAdjusted](#rqsrs-032clickhouseparquetdatatypesdatautcadjusted)
+    * 4.4.3 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.TimestampUTCAdjusted](#rqsrs-032clickhouseparquetdatatypestimestamputcadjusted)
+    * 4.4.4 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.TimeUTCAdjusted](#rqsrs-032clickhouseparquetdatatypestimeutcadjusted)
+    * 4.4.5 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNested](#rqsrs-032clickhouseparquetdatatypesreadnested)
+    * 4.4.6 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.NullValues](#rqsrs-032clickhouseparquetdatatypesnullvalues)
+    * 4.4.7 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Nullable](#rqsrs-032clickhouseparquetdatatypesreadintonullable)
+    * 4.4.8 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.LowCardinality](#rqsrs-032clickhouseparquetdatatypesreadintolowcardinality)
+    * 4.4.9 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Nested](#rqsrs-032clickhouseparquetdatatypesreadintonested)
+    * 4.4.10 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Unknown](#rqsrs-032clickhouseparquetdatatypesreadintounknown)
+    * 4.4.11 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Write](#rqsrs-032clickhouseparquetdatatypeswrite)
+    * 4.4.12 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNested](#rqsrs-032clickhouseparquetdatatypeswritenested)
+    * 4.4.13 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.WriteNullable](#rqsrs-032clickhouseparquetdatatypeswritenullable)
+    * 4.4.14 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.TypeConversionFunction](#rqsrs-032clickhouseparquetdatatypestypeconversionfunction)
   * 4.5 [Unsupported Parquet Types](#unsupported-parquet-types)
     * 4.5.1 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes](#rqsrs-032clickhouseparquetunsupportedparquettypes)
     * 4.5.2 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedParquetTypes.ChunkedArray](#rqsrs-032clickhouseparquetunsupportedparquettypeschunkedarray)
@@ -3743,7 +3813,7 @@ Parquet Decimal is currently not tested.
 | `INT64`                                       | `Int64`                               |
 | `FLOAT`                                       | `Float32`                             |
 | `DOUBLE`                                      | `Float64`                             |
-| `DATE`                                        | `Date32`                              |
+| `DATE (ms, ns, us)`                           | `Date32`                              |
 | `TIME (ms)`                                   | `DateTime`                            |
 | `TIMESTAMP (ms, ns, us)`, `TIME (us, ns)`     | `DateTime64`                          |
 | `STRING`, `BINARY`                            | `String`                              |
@@ -3755,6 +3825,22 @@ Parquet Decimal is currently not tested.
 | `UINT32`                                      | `IPv4`                                |
 | `FIXED_LENGTH_BYTE_ARRAY`, `BINARY`           | `IPv6`                                |
 | `FIXED_LENGTH_BYTE_ARRAY`, `BINARY`           | `Int128`/`UInt128`/`Int256`/`UInt256` |
+
+
+#### RQ.SRS-032.ClickHouse.Parquet.DataTypes.DataUTCAdjusted
+version:1.0
+
+[ClickHouse] SHALL support reading `DATE` Parquet datatype with `isAdjustedToUTC = true`.
+
+#### RQ.SRS-032.ClickHouse.Parquet.DataTypes.TimestampUTCAdjusted
+version:1.0
+
+[ClickHouse] SHALL support reading `TIMESTAMP` Parquet datatype with `isAdjustedToUTC = true`.
+
+#### RQ.SRS-032.ClickHouse.Parquet.DataTypes.TimeUTCAdjusted
+version:1.0
+
+[ClickHouse] SHALL support reading `TIME` Parquet datatype with `isAdjustedToUTC = true`.
 
 #### RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadNested
 version:1.0
