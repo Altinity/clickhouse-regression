@@ -18,16 +18,14 @@ def mixed_keepers_3(self):
 
         with And("I create some replicated table"):
             table_name = f"test{uid}"
-            node.query(
-                f"CREATE TABLE IF NOT EXISTS {table_name}_simple (d DateTime('UTC')) ENGINE = Memory AS SELECT "
-                "toDateTime('2000-01-01 00:00:00', 'UTC');"
+            retry(node.query, timeout=300, delay=10)(
+                "SELECT 1", message="1", exitcode=0
             )
 
             create_simple_table(table_name=table_name)
 
         with And("I stop maximum available Keeper nodes for such configuration"):
             cluster.node("clickhouse3").stop_clickhouse()
-
 
         with And("I check that table in write mode"):
             retry(cluster.node("clickhouse1").query, timeout=500, delay=1)(
@@ -71,15 +69,13 @@ def mixed_keepers_3(self):
         with And("I check clean ability"):
             table_insert(table_name=table_name, node_name="clickhouse1")
 
-        pause()
-
     finally:
         with Finally("I clean up"):
             clean_coordination_on_all_nodes()
 
 
 @TestScenario
-def check_clickhouse_connection_to_keeper(self, node=None, message=None):
+def check_clickhouse_connection_to_keeper(self, node=None, message="keeper"):
     """Check ClickHouse connection to Clickhouse Keeper."""
 
     if node is None:
@@ -91,10 +87,66 @@ def check_clickhouse_connection_to_keeper(self, node=None, message=None):
 
 
 @TestFeature
+def openssl_check(self, node=None, message="New, TLSv1.2, Cipher is "):
+    """Check ClickHouse connection to Clickhouse Keeper is ssl."""
+
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    retry(node.query, timeout=300, delay=10)(
+        "SELECT 1", message="1", exitcode=0
+    )
+
+    ports_list = ["9440", "9281", "9010", "9444"]
+
+    for port in ports_list:
+        with Check(f"port:{port}"):
+            with Then(f"I make openssl check"):
+                with node.cmd(
+                        f"openssl s_client -connect clickhouse1:{port}",
+                        no_checks=True,
+                        asynchronous=True,
+                ) as openssl_process:
+                    openssl_process.app.expect(message)
+
+
+@TestFeature
+def openssl_check_v2(self, node=None, message="New, TLSv1.2, Cipher is "):
+    """Check ClickHouse connection to Clickhouse Keeper is ssl."""
+
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    retry(node.query, timeout=300, delay=10)(
+        "SELECT 1", message="1", exitcode=0
+    )
+
+    ports_list = ["9440", "9281", "9010", "9444"]
+
+    for port in ports_list:
+        with Check(f"port:{port}"):
+            with Then(f"I make openssl check"):
+                node.cmd(f"openssl s_client -connect clickhouse1:{port} <<< \"Q\"", message=message)
+
+
+@TestFeature
 @Name("keeper_ssl_cluster")
 def feature(self):
     """Check 2N+1 cluster configurations for
     clickhouse-keeper and zookeeper.
     """
-    for scenario in loads(current_module(), Scenario):
-        scenario()
+    with Pool(1) as executor:
+
+        try:
+            for feature in loads(current_module(), Feature):
+                if not feature.name.endswith("keeper_ssl_cluster"):
+                    Feature(test=feature, parallel=True, executor=executor)()
+        finally:
+            join()
+
+    with Pool(1) as executor:
+        try:
+            for scenario in loads(current_module(), Scenario):
+                Feature(test=scenario, parallel=True, executor=executor)()
+        finally:
+            join()
