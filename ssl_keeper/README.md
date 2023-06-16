@@ -11,15 +11,15 @@ The minimal requirements for FIPS-compatible operation are:
 
 ### ClickHouse Server Configuration
 
-Required server configuration changes including the following. These settings are by convention stored in 
-`/etc/clickhouse-server/config.xml` and `/etc/clickhouse-server/config.d/`. 
-Disable all ports not in the FIPS-Compatible Network Protocol list, including the following.
-Comment them out and ensure they are not present in `preprocessed_config.xml`. 
+Required server configuration changes including the following. These settings are, by convention, stored in `/etc/clickhouse-server/config.xml` and `/etc/clickhouse-server/config.d/`. 
+Disable all ports not in the FIPS-Compatible Network Protocol list, including the following:
 
 * ClickHouse HTTP port
 * ClickHouse TCP port
 * Interserver HTTP port
 * Additional non-FIPS client protocols: MySQL, PostgreSQL, gRPC, etc. 
+
+Comment them out and ensure they are not present in `preprocessed_config.xml`.
 
 To properly configure ClickHouse with the SSL-FIPS settings, follow these instructions:
 
@@ -66,12 +66,11 @@ Here is an example of the file contents:
 </clickhouse>
 ```
 
-Note: There is no need to set `<openSSL><fips>` value to `1` in the XML above as it is enabled by default in the current build and cannot be turned off.
+Note: There is no need to set `<openSSL><fips>` value to `1` in the XML above, as it is enabled by default in the current build and cannot be turned off.
 Also, make sure to replace `${CERT_PATH}` and `${CA_PATH}` placeholders with appropriate values for your configuration.
 
 Create the file `/etc/clickhouse-server/config.d/secure_keeper.xml` and add your ClickHouse Keeper configuration there. 
-Enable secure connection by adding `<secure>1</secure>` as shown in the example below for a 3-node ClickHouse Keeper
-cluster:
+Enable a secure connection by adding `<secure>1</secure>` as shown in the example below for a 3-node ClickHouse Keeper cluster:
 
 ```xml
 <clickhouse>
@@ -97,7 +96,7 @@ cluster:
 
 
 On the ClickHouse Keeper nodes, provide the ClickHouse Keeper configuration file in `/etc/clickhouse-server/config.d/raft_keeper.xml`.
-To enable ClickHouse Keeper secure connection, use `<tcp_port_secure>9281</tcp_port_secure>` setting in the 
+To enable ClickHouse Keeper's secure connection, use `<tcp_port_secure>9281</tcp_port_secure>` setting in the 
 `<keeper_server>` section and `<secure>true</secure>` setting in the `<raft_configuration>` section.
 Note that the `<server_id>` setting should be unique for every node.
 
@@ -154,7 +153,7 @@ For example,
 Finally, provide your cluster schema in the file `/etc/clickhouse-server/config.d/remote.xml` and add the 
 `<tcp_port_secure>` from `/etc/clickhouse-server/config.d/fips.xml` as the port. 
 
-Enable secure connection by adding `<secure>1</secure>` setting.
+Enable a secure connection by adding `<secure>1</secure>` setting.
 
 ```xml
 <clickhouse>
@@ -187,9 +186,9 @@ Enable secure connection by adding `<secure>1</secure>` setting.
 Make the required changes in the clickhouse-client configuration files
 `/etc/clickhouse-client/config.xml` and `/etc/clickhouse-client/config.d/`.
 
-Configure the `<openSSL>` section in the config.xml file to restrict TLS to `TLSv1.2` and FIPS 140.2-approved ciphers.
-Copy the values for the changes from the server `fips.xml` file and place them in the `/etc/clickhouse-client/config.d/fips.xml`
-or create `/etc/clickhouse-client/config.xml` amd place them there if you don’t have client config file.
+Configure the `<openSSL>` section in the `config.xml` file to restrict TLS to `TLSv1.2` and FIPS 140.2-approved ciphers.
+Copy the values for the changes from the server’s `fips.xml` file and place them in the `/etc/clickhouse-client/config.d/fips.xml`
+or create `/etc/clickhouse-client/config.xml` and place them there if you don’t have a client config file.
 
 ```xml
 <config>
@@ -226,13 +225,13 @@ $ openssl s_client -connect clickhouse1:9444
 
 ### Verify FIPS Library Startup
 
-On startup FIPS-compatible Altinity.Cloud servers will print the following message after a successful start-up test.
-This ensures that FIPS BoringSSL libraries are present and free from tampering. 
+On startup, FIPS-compatible Altinity.Cloud servers will print the following message after a successful start-up test:
 
 ```bash
 $ grep 'FIPS mode' /var/log/clickhouse-server/clickhouse-server.log
 2023.05.28 18:19:03.064038 [ 1 ] {} <Information> Application: Starting in FIPS mode, KAT test result: 1
 ```
+This ensures that FIPS BoringSSL libraries are present and free from tampering.
 
 ### Verify FIPS-Compatible Altinity Stable Version
 
