@@ -7,7 +7,7 @@ The minimal requirements for FIPS-compatible operation are:
 * install FIPS-compatible Altinity Stable build (see https://builds.altinity.cloud/)
 * apply FIPS-compatible configuration settings to set allowed ports, TLS version, and ciphers 
 
-## FIPS-compatible configuration settings
+## FIPS-Compatible Configuration Settings
 
 ### ClickHouse Server Configuration
 
@@ -213,7 +213,7 @@ With these instructions, you should be able to properly configure ClickHouse, Cl
 
 ## Verification of FIPS-Compatible Altinity Stable Operation
 
-### Verify SSL ports connection
+### Verify SSL Ports Connection
 
 To verify the SSL connection on ports, you can run these openssl commands:
 
