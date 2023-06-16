@@ -4,7 +4,7 @@
 
 The minimal requirements for FIPS-compatible operation are: 
 
-* install FIPS-compatible Altinity Stable build
+* install FIPS-compatible Altinity Stable build (see https://builds.altinity.cloud/)
 * apply FIPS-compatible configuration settings to set allowed ports, TLS version, and ciphers 
 
 ## FIPS-compatible configuration settings
@@ -66,7 +66,7 @@ Here is an example of the file contents:
 </clickhouse>
 ```
 
-Note: There is no need to set openSSL/fips value to true in the XML above as it is enabled by default in the current build and cannot be turned off.
+Note: There is no need to set `<openSSL><fips>` value to `1` in the XML above as it is enabled by default in the current build and cannot be turned off.
 Also, make sure to replace `${CERT_PATH}` and `${CA_PATH}` placeholders with appropriate values for your configuration.
 
 Create the file `/etc/clickhouse-server/config.d/secure_keeper.xml` and add your ClickHouse Keeper configuration there. 
@@ -99,7 +99,7 @@ cluster:
 On the ClickHouse Keeper nodes, provide the ClickHouse Keeper configuration file in `/etc/clickhouse-server/config.d/raft_keeper.xml`.
 To enable ClickHouse Keeper secure connection, use `<tcp_port_secure>9281</tcp_port_secure>` setting in the 
 `<keeper_server>` section and `<secure>true</secure>` setting in the `<raft_configuration>` section.
-Also `<server_id>` setting should be unique for every node.
+Note that the `<server_id>` setting should be unique for every node.
 
 ```xml
 <clickhouse>
@@ -139,6 +139,9 @@ Also `<server_id>` setting should be unique for every node.
 ```
 
 Define macros values on all nodes to be able to create a ReplicatedMergeTree table for testing.
+
+For example,
+
 ```xml
 <clickhouse>
     <macros>
@@ -150,31 +153,32 @@ Define macros values on all nodes to be able to create a ReplicatedMergeTree tab
 
 Finally, provide your cluster schema in the file `/etc/clickhouse-server/config.d/remote.xml` and add the 
 `<tcp_port_secure>` from `/etc/clickhouse-server/config.d/fips.xml` as the port. 
+
 Enable secure connection by adding `<secure>1</secure>` setting.
 
 ```xml
 <clickhouse>
-	<remote_servers>
+    <remote_servers>
     	<simple_replication_cluster>
-        	<shard>
-            	<replica>
-                	<host>clickhouse1</host>
-                	<port>9440</port>
-                	<secure>1</secure>
-            	</replica>
-            	<replica>
-                	<host>clickhouse2</host>
-                	<port>9440</port>
-                	<secure>1</secure>
-            	</replica>
-            	<replica>
-                	<host>clickhouse3</host>
-                	<port>9440</port>
-                	<secure>1</secure>
-            	</replica>
-        	</shard>
-    	</simple_replication_cluster>
-	</remote_servers>
+            <shard>
+                <replica>
+                    <host>clickhouse1</host>
+                    <port>9440</port>
+                    <secure>1</secure>
+                </replica>
+                <replica>
+                    <host>clickhouse2</host>
+                    <port>9440</port>
+                    <secure>1</secure>
+                </replica>
+                <replica>
+                    <host>clickhouse3</host>
+                    <port>9440</port>
+                    <secure>1</secure>
+                </replica>
+            </shard>
+        </simple_replication_cluster>
+    </remote_servers>
 </clickhouse>
 ```
 
@@ -182,8 +186,9 @@ Enable secure connection by adding `<secure>1</secure>` setting.
 
 Make the required changes in the clickhouse-client configuration files
 `/etc/clickhouse-client/config.xml` and `/etc/clickhouse-client/config.d/`.
-Configure the openSSL section in the config.xml file to restrict TLS to TLSv1.2 and FIPS 140.2-approved ciphers.
-Copy the values for the changes from the server fips.xml file and place them in `/etc/clickhouse-client/config.d/fips.xml`
+
+Configure the `<openSSL>` section in the config.xml file to restrict TLS to `TLSv1.2` and FIPS 140.2-approved ciphers.
+Copy the values for the changes from the server `fips.xml` file and place them in the `/etc/clickhouse-client/config.d/fips.xml`
 or create `/etc/clickhouse-client/config.xml` amd place them there if you don’t have client config file.
 
 ```xml
@@ -198,20 +203,19 @@ or create `/etc/clickhouse-client/config.xml` amd place them there if you don’
             <preferServerCiphers>true</preferServerCiphers>
       	    <requireTLSv1_2>true</requireTLSv1_2>
       	    <disableProtocols>sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3</disableProtocols>
-      	<cipherList>ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-GCM-SHA384</cipherList>
+      	    <cipherList>ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-GCM-SHA384</cipherList>
   	</client>
     </openSSL>
 </config>
 ```
 
-With these instructions, you should be able to properly configure ClickHouse and ClickHouse Client with the
-SSL_FIPS settings.
+With these instructions, you should be able to properly configure ClickHouse, ClickHouse Keeoer, and ClickHouse Client with the SSL-FIPS settings.
 
 ## Verification of FIPS-Compatible Altinity Stable Operation
 
 ### Verify SSL ports connection
 
-To verify the SSL connection on ports you can run these openssl commands:
+To verify the SSL connection on ports, you can run these openssl commands:
 
 ```bash
 $ openssl s_client -connect clickhouse1:9440
@@ -220,7 +224,7 @@ $ openssl s_client -connect clickhouse1:9010
 $ openssl s_client -connect clickhouse1:9444
 ```
 
-### Verify FIPS library Startup
+### Verify FIPS Library Startup
 
 On startup FIPS-compatible Altinity.Cloud servers will print the following message after a successful start-up test.
 This ensures that FIPS BoringSSL libraries are present and free from tampering. 
@@ -229,6 +233,7 @@ This ensures that FIPS BoringSSL libraries are present and free from tampering.
 $ grep 'FIPS mode' /var/log/clickhouse-server/clickhouse-server.log
 2023.05.28 18:19:03.064038 [ 1 ] {} <Information> Application: Starting in FIPS mode, KAT test result: 1
 ```
+
 ### Verify FIPS-Compatible Altinity Stable Version
 
 To verify the software version, run ‘select version()’ on the running server with any client program.
@@ -245,4 +250,6 @@ SELECT version()
 
 ┌─version()───────────────┐
 │ 22.8.15.25.altinityfips │
+└─────────────────────────┘
 ```
+
