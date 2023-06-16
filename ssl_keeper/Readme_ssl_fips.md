@@ -236,8 +236,8 @@ $ grep 'FIPS mode' /var/log/clickhouse-server/clickhouse-server.log
 
 ### Verify FIPS-Compatible Altinity Stable Version
 
-To verify the software version, run ‘select version()’ on the running server with any client program.
-This example confirms the version for both clickhouse-client as well as clickhouse-server. 
+To verify the software version, run `SELECT version()` on the running server with any client program.
+This example confirms the version for both `clickhouse-client` as well as ClickHouse server. 
 
 ```bash
 $ clickhouse-client <options>
