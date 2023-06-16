@@ -217,7 +217,7 @@ To verify the SSL connection on ports you can run these openssl commands:
 $ openssl s_client -connect clickhouse1:9440
 $ openssl s_client -connect clickhouse1:9281
 $ openssl s_client -connect clickhouse1:9010
-$ openssl s_client -connect clickhouse1:9444 ???
+$ openssl s_client -connect clickhouse1:9444
 ```
 
 ### Verify FIPS library Startup
