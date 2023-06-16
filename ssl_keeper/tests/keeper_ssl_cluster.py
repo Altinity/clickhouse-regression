@@ -88,14 +88,12 @@ def check_clickhouse_connection_to_keeper(self, node=None, message="keeper"):
 
 @TestFeature
 def openssl_check(self, node=None, message="New, TLSv1.2, Cipher is "):
-    """Check ClickHouse connection to Clickhouse Keeper is ssl."""
+    """Check ClickHouse connection to Clickhouse Keeper on port is ssl."""
 
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
-    retry(node.query, timeout=300, delay=10)(
-        "SELECT 1", message="1", exitcode=0
-    )
+    retry(node.query, timeout=300, delay=10)("SELECT 1", message="1", exitcode=0)
 
     ports_list = ["9440", "9281", "9010", "9444"]
 
@@ -103,30 +101,31 @@ def openssl_check(self, node=None, message="New, TLSv1.2, Cipher is "):
         with Check(f"port:{port}"):
             with Then(f"I make openssl check"):
                 with node.cmd(
-                        f"openssl s_client -connect clickhouse1:{port}",
-                        no_checks=True,
-                        asynchronous=True,
+                    f"openssl s_client -connect clickhouse1:{port}",
+                    no_checks=True,
+                    asynchronous=True,
                 ) as openssl_process:
                     openssl_process.app.expect(message)
 
 
 @TestFeature
 def openssl_check_v2(self, node=None, message="New, TLSv1.2, Cipher is "):
-    """Check ClickHouse connection to Clickhouse Keeper is ssl."""
+    """Check ClickHouse connection to Clickhouse Keeper on port is ssl.."""
 
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
-    retry(node.query, timeout=300, delay=10)(
-        "SELECT 1", message="1", exitcode=0
-    )
+    retry(node.query, timeout=300, delay=10)("SELECT 1", message="1", exitcode=0)
 
     ports_list = ["9440", "9281", "9010", "9444"]
 
     for port in ports_list:
         with Check(f"port:{port}"):
             with Then(f"I make openssl check"):
-                node.cmd(f"openssl s_client -connect clickhouse1:{port} <<< \"Q\"", message=message)
+                node.cmd(
+                    f'openssl s_client -connect clickhouse1:{port} <<< "Q"',
+                    message=message,
+                )
 
 
 @TestFeature

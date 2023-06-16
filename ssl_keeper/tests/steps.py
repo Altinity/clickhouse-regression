@@ -987,9 +987,8 @@ def openssl_check_step(self, node=None, port="9440"):
         node = self.context.cluster.node("clickhouse1")
 
     node.cmd(
-            f"openssl s_client -connect clickhouse1:{port}",
-            no_checks=True,
-
+        f"openssl s_client -connect clickhouse1:{port}",
+        no_checks=True,
     )
 
 
