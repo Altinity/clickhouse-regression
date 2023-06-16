@@ -208,7 +208,7 @@ or create `/etc/clickhouse-client/config.xml` and place them there if you don’
 </config>
 ```
 
-With these instructions, you should be able to properly configure ClickHouse, ClickHouse Keeoer, and ClickHouse Client with the SSL-FIPS settings.
+With these instructions, you should be able to properly configure ClickHouse, ClickHouse Keeper, and ClickHouse Client with the SSL-FIPS settings.
 
 ## Verification of FIPS-Compatible Altinity Stable Operation
 
