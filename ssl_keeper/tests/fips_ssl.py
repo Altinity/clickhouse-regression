@@ -110,7 +110,7 @@ def openssl_check(self, node=None, message="New, TLSv1.2, Cipher is "):
 
 @TestFeature
 def openssl_check_v2(self, node=None, message="New, TLSv1.2, Cipher is "):
-    """Check ClickHouse connection to Clickhouse Keeper on port is ssl.."""
+    """Check ClickHouse connection to Clickhouse Keeper on port is ssl."""
 
     if node is None:
         node = self.context.cluster.node("clickhouse1")
@@ -129,7 +129,7 @@ def openssl_check_v2(self, node=None, message="New, TLSv1.2, Cipher is "):
 
 
 @TestFeature
-@Name("keeper_ssl_cluster")
+@Name("FIPS SSL")
 def feature(self):
     """Check 2N+1 cluster configurations for
     clickhouse-keeper and zookeeper.
