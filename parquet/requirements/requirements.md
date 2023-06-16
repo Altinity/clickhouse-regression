@@ -286,7 +286,13 @@ flowchart TB;
             AesGcmV1
             AesGcmCtrV1
         end
-      
+
+        subgraph Corrupted
+            direction LR
+            CorruptedYes[Yes]
+            CorruptedNo[No]
+        end
+       
         subgraph ClickHouse[ClickHouse]
             style ClickHouse fill:#fcbb30
             direction TB;
@@ -428,7 +434,10 @@ flowchart TB;
         end
     end
 
-Sources --> Compression --> Encryption --> Parquet_File_in --Insert into ClickHouse--> Input_settings --> ClickHouse -- Read From ClickHouse --> Output_settings --> Parquet_File_out
+Sources --> Compression --> Encryption --> Parquet_File_in
+Input_settings --> ClickHouse -- Read From ClickHouse --> Output_settings --> Parquet_File_out
+Parquet_File_in --> Corrupted
+CorruptedNo --> Input_settings
 
 UInt8_in --> UInt8_ch --> UInt8_out
 Bool_in --> UInt8_ch
