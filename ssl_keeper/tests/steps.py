@@ -977,3 +977,52 @@ def system_zoo_check(
                 .output.strip(),
                 units="",
             )
+
+
+@TestStep
+def openssl_check_step(self, node=None, port="9440"):
+    """Check ClickHouse connection to Clickhouse Keeper is ssl."""
+
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    node.cmd(
+        f"openssl s_client -connect clickhouse1:{port}",
+        no_checks=True,
+    )
+
+
+@TestStep(Then)
+def openssl_client_connection(
+    self,
+    options="",
+    port=None,
+    node=None,
+    hostname=None,
+    success=True,
+    message=None,
+    messages=None,
+    exitcode=None,
+):
+    """Check SSL connection using openssl s_client utility."""
+    if node is None:
+        node = self.context.node
+
+    if port is None:
+        port = self.context.connection_port
+
+    if hostname is None:
+        hostname = node.name
+
+    if exitcode is None:
+        if success:
+            exitcode = 0
+        else:
+            exitcode = "!= 0"
+
+    node.command(
+        f'openssl s_client -brief {options} -connect {hostname}:{port} <<< "Q"',
+        message=message,
+        messages=messages,
+        exitcode=exitcode,
+    )
