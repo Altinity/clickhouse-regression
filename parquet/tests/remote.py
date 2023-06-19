@@ -7,8 +7,8 @@ from s3.tests.common import *
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Insert("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_Read("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_Datatypes_Supported("1.0"),
 )
 def insert_into_function(self):
     """Check that when data is inserted into `remote` table function it is written into the source file correctly."""
@@ -47,8 +47,8 @@ def insert_into_function(self):
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Select("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_Write("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_Datatypes_Supported("1.0"),
 )
 def select_from_function(self):
     """Check that when data is selected from a `remote` table function into a Parquet file it is written correctly."""
