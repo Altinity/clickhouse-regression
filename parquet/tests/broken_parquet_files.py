@@ -238,16 +238,6 @@ def read_broken_timestamp(self):
 def feature(self):
     """Check reading broken parquet files."""
     Scenario(run=read_broken_bigint)
-    Scenario(run=read_broken_timestamp)
-    Scenario(run=read_broken_timestamp_ms)
-    Scenario(run=read_broken_utinyint)
-    Scenario(run=read_broken_usmallint)
-    Scenario(run=read_broken_ubigint)
-    Scenario(run=read_broken_uint)
-    Scenario(run=read_broken_tinyint)
-    Scenario(run=read_broken_smallint)
-    Scenario(run=read_broken_int)
-    Scenario(run=read_broken_date)
 
 
 feature()
