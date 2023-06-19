@@ -531,10 +531,9 @@ flowchart TB;
         end
     end
 
-Sources --> Compression --> Encryption --> Parquet_File_in
-Input_settings --> ClickHouse -- Read From ClickHouse --> Output_settings --> Parquet_File_out
-Parquet_File_in --> Corrupted
-CorruptedNo --> Input_settings
+Sources --> Compression --> Encryption --> Parquet_File_in --> Input_settings --> ClickHouse -- Read From ClickHouse --> Output_settings --> Parquet_File_out
+Parquet_File_in --> CorruptedYes
+Parquet_File_in --> CorruptedNo --> Input_settings
 
 UInt8_in --> UInt8_ch --> UInt8_out
 Bool_in --> UInt8_ch
