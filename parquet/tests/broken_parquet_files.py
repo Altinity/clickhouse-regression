@@ -13,7 +13,7 @@ def read_broken_date(self):
     node = self.context.node
 
     with Given("I have a Parquet file with broken date value"):
-        broken_date_parquet = os.path.join(current_dir(), '..', 'test_files', 'broken_parquet', 'broken_date.parquet')
+        broken_date_parquet = os.path.join(current_dir(), '..', 'data', 'broken_parquet', 'broken_date.parquet')
 
     with When("I try to import the broken Parquet file into the table"):
         node.query(
@@ -33,7 +33,7 @@ def read_broken_int(self):
     node = self.context.node
 
     with Given("I have a Parquet file with broken int value"):
-        broken_date_parquet = os.path.join(current_dir(), '..', 'test_files', 'broken_parquet', 'broken_int.parquet')
+        broken_date_parquet = os.path.join(current_dir(), '..', 'data', 'broken_parquet', 'broken_int.parquet')
 
     with When("I try to import the broken Parquet file into the table"):
         node.query(
@@ -53,7 +53,7 @@ def read_broken_bigint(self):
     node = self.context.node
 
     with Given("I have a Parquet file with broken bigint value"):
-        broken_date_parquet = os.path.join(current_dir(), '..', 'test_files', 'broken_parquet', 'broken_bigint.parquet')
+        broken_date_parquet = os.path.join(current_dir(), '..', 'data', 'broken_parquet', 'broken_bigint.parquet')
 
     with When("I try to import the broken Parquet file into the table"):
         node.query(
@@ -72,7 +72,7 @@ def read_broken_smallint(self):
     node = self.context.node
 
     with Given("I have a Parquet file with broken smallint value"):
-        broken_date_parquet = os.path.join(current_dir(), '..', 'test_files', 'broken_parquet',
+        broken_date_parquet = os.path.join(current_dir(), '..', 'data', 'broken_parquet',
                                            'broken_smallint.parquet')
 
     with When("I try to import the broken Parquet file into the table"):
@@ -93,7 +93,7 @@ def read_broken_tinyint(self):
     node = self.context.node
 
     with Given("I have a Parquet file with broken tinyint value"):
-        broken_date_parquet = os.path.join(current_dir(), '..', 'test_files', 'broken_parquet',
+        broken_date_parquet = os.path.join(current_dir(), '..', 'data', 'broken_parquet',
                                            'broken_tinyint.parquet')
 
     with When("I try to import the broken Parquet file into the table"):
@@ -114,7 +114,7 @@ def read_broken_uint(self):
     node = self.context.node
 
     with Given("I have a Parquet file with broken uint value"):
-        broken_date_parquet = os.path.join(current_dir(), '..', 'test_files', 'broken_parquet',
+        broken_date_parquet = os.path.join(current_dir(), '..', 'data', 'broken_parquet',
                                            'broken_uinteger.parquet')
 
     with When("I try to import the broken Parquet file into the table"):
@@ -135,7 +135,7 @@ def read_broken_ubigint(self):
     node = self.context.node
 
     with Given("I have a Parquet file with broken ubigint value"):
-        broken_date_parquet = os.path.join(current_dir(), '..', 'test_files', 'broken_parquet',
+        broken_date_parquet = os.path.join(current_dir(), '..', 'data', 'broken_parquet',
                                            'broken_ubigint.parquet')
 
     with When("I try to import the broken Parquet file into the table"):
@@ -156,7 +156,7 @@ def read_broken_usmallint(self):
     node = self.context.node
 
     with Given("I have a Parquet file with broken usmallint value"):
-        broken_date_parquet = os.path.join(current_dir(), '..', 'test_files', 'broken_parquet',
+        broken_date_parquet = os.path.join(current_dir(), '..', 'data', 'broken_parquet',
                                            'broken_usmallint.parquet')
 
     with When("I try to import the broken Parquet file into the table"):
@@ -176,7 +176,7 @@ def read_broken_utinyint(self):
     node = self.context.node
 
     with Given("I have a Parquet file with broken usmallint value"):
-        broken_date_parquet = os.path.join(current_dir(), '..', 'test_files', 'broken_parquet',
+        broken_date_parquet = os.path.join(current_dir(), '..', 'data', 'broken_parquet',
                                            'broken_utinyint.parquet')
 
     with When("I try to import the broken Parquet file into the table"):
@@ -196,7 +196,7 @@ def read_broken_timestamp_ms(self):
     node = self.context.node
 
     with Given("I have a Parquet file with broken timestamp (ms) value"):
-        broken_date_parquet = os.path.join(current_dir(), '..', 'test_files', 'broken_parquet',
+        broken_date_parquet = os.path.join(current_dir(), '..', 'data', 'broken_parquet',
                                            'broken_timestamp_ms.parquet')
 
     with When("I try to import the broken Parquet file into the table"):
@@ -217,7 +217,7 @@ def read_broken_timestamp(self):
     node = self.context.node
 
     with Given("I have a Parquet file with broken timestamp value"):
-        broken_date_parquet = os.path.join(current_dir(), '..', 'test_files', 'broken_parquet',
+        broken_date_parquet = os.path.join(current_dir(), '..', 'data', 'broken_parquet',
                                            'broken_timestamp.parquet')
 
     with When("I try to import the broken Parquet file into the table"):
