@@ -37,44 +37,6 @@ RQ_SRS_032_ClickHouse_Parquet_ClickHouseLocal = Requirement(
     num="4.1.2",
 )
 
-RQ_SRS_032_ClickHouse_Parquet_Encryption = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.Encryption",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] MAY not support importing or exporting encrypted Parquet files.\n"
-        "\n"
-    ),
-    link=None,
-    level=3,
-    num="4.2.1",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_Structure = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.Structure",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL support using `DESCRIBE TABLE` statement on the Parquet to read the file structure.\n"
-        "\n"
-        "For example,\n"
-        "\n"
-        "```sql\n"
-        "DESCRIBE TABLE file('data.parquet', Parquet)\n"
-        "```\n"
-        "\n"
-    ),
-    link=None,
-    level=3,
-    num="4.3.1",
-)
-
 RQ_SRS_032_ClickHouse_Parquet_SupportedVersions = Requirement(
     name="RQ.SRS-032.ClickHouse.Parquet.SupportedVersions",
     version="1.0",
@@ -88,160 +50,7 @@ RQ_SRS_032_ClickHouse_Parquet_SupportedVersions = Requirement(
     ),
     link=None,
     level=4,
-    num="4.3.2.1",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_Compression_None = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.Compression.None",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL support importing or exporting uncompressed Parquet files.\n"
-        "\n"
-    ),
-    link=None,
-    level=4,
-    num="4.4.1.1",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.Compression.Gzip",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL support importing or exporting Parquet files compressed using gzip.\n"
-        "\n"
-    ),
-    link=None,
-    level=4,
-    num="4.4.2.1",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_Compression_Brotli = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.Compression.Brotli",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL support importing or exporting Parquet files compressed using brotli.\n"
-        "\n"
-    ),
-    link=None,
-    level=4,
-    num="4.4.3.1",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4 = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL support importing or exporting Parquet files compressed using lz4.\n"
-        "\n"
-    ),
-    link=None,
-    level=4,
-    num="4.4.4.1",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4Raw = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4Raw",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL support importing or exporting Parquet files compressed using lz4_raw.\n"
-        "\n"
-    ),
-    link=None,
-    level=4,
-    num="4.4.5.1",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Snappy = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Snappy",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] MAY not support importing or exporting Parquet files compressed using snapy.\n"
-        "\n"
-    ),
-    link=None,
-    level=5,
-    num="4.4.6.1.1",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Lzo = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Lzo",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] MAY not support importing or exporting Parquet files compressed using lzo.\n"
-        "\n"
-    ),
-    link=None,
-    level=5,
-    num="4.4.6.2.1",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Zstd = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Zstd",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] MAY not support importing or exporting Parquet files compressed using zstd.\n"
-        "\n"
-    ),
-    link=None,
-    level=5,
-    num="4.4.6.3.1",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_DataTypes_TypeConversionFunction = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.TypeConversionFunction",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL support using type conversion functions when importing Parquet files.\n"
-        "\n"
-        "For example,\n"
-        "\n"
-        "```sql\n"
-        "SELECT\n"
-        "    n,\n"
-        "    toDateTime(time)\n"
-        "FROM file('time.parquet', Parquet);\n"
-        "```\n"
-        "\n"
-    ),
-    link=None,
-    level=4,
-    num="4.4.7.1",
+    num="4.1.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes = Requirement(
@@ -398,7 +207,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes = Requirement(
     ),
     link=None,
     level=4,
-    num="4.5.1.1",
+    num="4.2.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_Import = Requirement(
@@ -442,7 +251,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_Import = Requirement(
     ),
     link=None,
     level=4,
-    num="4.5.1.2",
+    num="4.2.1.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_DateUTCAdjusted = Requirement(
@@ -458,7 +267,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_DateUTCAdjusted = Requirement(
     ),
     link=None,
     level=5,
-    num="4.5.1.3.1",
+    num="4.2.1.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_TimestampUTCAdjusted = Requirement(
@@ -474,7 +283,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_TimestampUTCAdjusted = Requirement(
     ),
     link=None,
     level=5,
-    num="4.5.1.3.2",
+    num="4.2.1.3.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_TimeUTCAdjusted = Requirement(
@@ -490,7 +299,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_TimeUTCAdjusted = Requirement(
     ),
     link=None,
     level=5,
-    num="4.5.1.3.3",
+    num="4.2.1.3.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_NullValues = Requirement(
@@ -508,7 +317,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_NullValues = Requirement(
     ),
     link=None,
     level=5,
-    num="4.5.1.4.1",
+    num="4.2.1.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Nullable = Requirement(
@@ -524,7 +333,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Nullable = Requirement(
     ),
     link=None,
     level=5,
-    num="4.5.1.4.2",
+    num="4.2.1.4.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_LowCardinality = Requirement(
@@ -540,7 +349,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_LowCardinality = Requirement(
     ),
     link=None,
     level=5,
-    num="4.5.1.5.1",
+    num="4.2.1.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Nested = Requirement(
@@ -556,7 +365,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Nested = Requirement(
     ),
     link=None,
     level=5,
-    num="4.5.1.6.1",
+    num="4.2.1.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Unknown = Requirement(
@@ -577,7 +386,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Unknown = Requirement(
     ),
     link=None,
     level=5,
-    num="4.5.1.7.1",
+    num="4.2.1.7.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_Unsupported = Requirement(
@@ -599,7 +408,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_Unsupported = Requirement(
     ),
     link=None,
     level=4,
-    num="4.5.2.1",
+    num="4.2.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_Unsupported_ChunkedArray = Requirement(
@@ -612,7 +421,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_Unsupported_ChunkedArray = Requirement(
     description=("[ClickHouse] MAY not support Parquet chunked arrays.\n" "\n" "\n"),
     link=None,
     level=4,
-    num="4.5.2.2",
+    num="4.2.2.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Import_Insert = Requirement(
@@ -634,7 +443,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Insert = Requirement(
     ),
     link=None,
     level=4,
-    num="4.5.3.1",
+    num="4.2.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Import_Insert_AutoDetectParquetFileFormat = Requirement(
@@ -656,7 +465,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Insert_AutoDetectParquetFileFormat = Requir
     ),
     link=None,
     level=4,
-    num="4.5.3.2",
+    num="4.2.3.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Import_Insert_Projections = Requirement(
@@ -672,7 +481,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Insert_Projections = Requirement(
     ),
     link=None,
     level=5,
-    num="4.5.3.3.1",
+    num="4.2.3.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Import_Insert_SkipColumns = Requirement(
@@ -688,7 +497,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Insert_SkipColumns = Requirement(
     ),
     link=None,
     level=5,
-    num="4.5.3.4.1",
+    num="4.2.3.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Import_Insert_SkipValues = Requirement(
@@ -738,7 +547,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Insert_SkipValues = Requirement(
     ),
     link=None,
     level=5,
-    num="4.5.3.5.1",
+    num="4.2.3.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Import_Insert_AutoTypecast = Requirement(
@@ -810,7 +619,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Insert_AutoTypecast = Requirement(
     ),
     link=None,
     level=5,
-    num="4.5.3.6.1",
+    num="4.2.3.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Import_Insert_RowGroupSize = Requirement(
@@ -831,7 +640,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Insert_RowGroupSize = Requirement(
     ),
     link=None,
     level=5,
-    num="4.5.3.7.1",
+    num="4.2.3.7.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Import_Insert_DataPageSize = Requirement(
@@ -851,7 +660,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Insert_DataPageSize = Requirement(
     ),
     link=None,
     level=5,
-    num="4.5.3.8.1",
+    num="4.2.3.8.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Import_Insert_Settings_ImportNested = Requirement(
@@ -871,7 +680,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Insert_Settings_ImportNested = Requirement(
     ),
     link=None,
     level=4,
-    num="4.5.4.1",
+    num="4.2.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Import_Insert_Settings_CaseInsensitiveColumnMatching = Requirement(
@@ -888,7 +697,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Insert_Settings_CaseInsensitiveColumnMatchi
     ),
     link=None,
     level=4,
-    num="4.5.4.2",
+    num="4.2.4.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Import_Insert_Settings_AllowMissingColumns = Requirement(
@@ -905,7 +714,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Insert_Settings_AllowMissingColumns = Requi
     ),
     link=None,
     level=4,
-    num="4.5.4.3",
+    num="4.2.4.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Import_Insert_Settings_SkipColumnsWithUnsupportedTypesInSchemaInference = Requirement(
@@ -922,7 +731,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Insert_Settings_SkipColumnsWithUnsupportedT
     ),
     link=None,
     level=4,
-    num="4.5.4.4",
+    num="4.2.4.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Import_Create_NewTable = Requirement(
@@ -964,7 +773,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Create_NewTable = Requirement(
     ),
     link=None,
     level=4,
-    num="4.5.5.1",
+    num="4.2.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Import_Nested_ArrayIntoNested = Requirement(
@@ -980,7 +789,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Nested_ArrayIntoNested = Requirement(
     ),
     link=None,
     level=4,
-    num="4.5.6.1",
+    num="4.2.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportNested = Requirement(
@@ -996,7 +805,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportNested = Requirement(
     ),
     link=None,
     level=4,
-    num="4.5.6.2",
+    num="4.2.6.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Import_Nested_ArrayIntoNested_ImportNested = Requirement(
@@ -1012,7 +821,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Nested_ArrayIntoNested_ImportNested = Requi
     ),
     link=None,
     level=4,
-    num="4.5.6.3",
+    num="4.2.6.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Import_Nested_ArrayIntoNested_NotImportNested = Requirement(
@@ -1029,7 +838,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Nested_ArrayIntoNested_NotImportNested = Re
     ),
     link=None,
     level=4,
-    num="4.5.6.4",
+    num="4.2.6.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Import_Nested_ArrayIntoNotNested = Requirement(
@@ -1045,7 +854,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Nested_ArrayIntoNotNested = Requirement(
     ),
     link=None,
     level=4,
-    num="4.5.6.5",
+    num="4.2.6.5",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Import_Nested_NonArrayIntoNested = Requirement(
@@ -1061,7 +870,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Nested_NonArrayIntoNested = Requirement(
     ),
     link=None,
     level=4,
-    num="4.5.6.6",
+    num="4.2.6.6",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Import_ChunkedColumns = Requirement(
@@ -1077,7 +886,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_ChunkedColumns = Requirement(
     ),
     link=None,
     level=4,
-    num="4.5.7.1",
+    num="4.2.7.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Import_Encoding_Plain = Requirement(
@@ -1092,7 +901,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Encoding_Plain = Requirement(
     ),
     link=None,
     level=5,
-    num="4.5.8.1.1",
+    num="4.2.8.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Import_Encoding_RunLength = Requirement(
@@ -1108,7 +917,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Encoding_RunLength = Requirement(
     ),
     link=None,
     level=5,
-    num="4.5.8.2.1",
+    num="4.2.8.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Import_Encoding_Delta = Requirement(
@@ -1124,7 +933,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Encoding_Delta = Requirement(
     ),
     link=None,
     level=5,
-    num="4.5.8.3.1",
+    num="4.2.8.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Import_Encoding_DeltaLengthByteArray = Requirement(
@@ -1140,7 +949,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Encoding_DeltaLengthByteArray = Requirement
     ),
     link=None,
     level=5,
-    num="4.5.8.4.1",
+    num="4.2.8.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Import_Encoding_DeltaStrings = Requirement(
@@ -1156,7 +965,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Encoding_DeltaStrings = Requirement(
     ),
     link=None,
     level=5,
-    num="4.5.8.5.1",
+    num="4.2.8.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Import_Encoding_ByteStreamSplit = Requirement(
@@ -1172,7 +981,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Encoding_ByteStreamSplit = Requirement(
     ),
     link=None,
     level=4,
-    num="4.5.8.7",
+    num="4.2.8.7",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Datatypes_Supported = Requirement(
@@ -1214,7 +1023,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Datatypes_Supported = Requirement(
     ),
     link=None,
     level=4,
-    num="4.6.1.1",
+    num="4.3.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_ExportNullable = Requirement(
@@ -1230,7 +1039,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_ExportNullable = Requirement(
     ),
     link=None,
     level=4,
-    num="4.6.1.2",
+    num="4.3.1.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Nested = Requirement(
@@ -1246,7 +1055,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Nested = Requirement(
     ),
     link=None,
     level=4,
-    num="4.6.2.1",
+    num="4.3.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nested = Requirement(
@@ -1262,7 +1071,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nested = Requirement(
     ),
     link=None,
     level=4,
-    num="4.6.2.2",
+    num="4.3.2.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_ChunkedColumns = Requirement(
@@ -1277,7 +1086,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_ChunkedColumns = Requirement(
     ),
     link=None,
     level=4,
-    num="4.6.3.1",
+    num="4.3.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Select = Requirement(
@@ -1310,7 +1119,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Select = Requirement(
     ),
     link=None,
     level=4,
-    num="4.6.4.1",
+    num="4.3.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Select_Outfile_AutoDetectParquetFileFormat = Requirement(
@@ -1332,7 +1141,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Select_Outfile_AutoDetectParquetFileFormat 
     ),
     link=None,
     level=4,
-    num="4.6.4.2",
+    num="4.3.4.2",
 )
 
 RQ_SRS_032_ClickHouse_Export_Parquet_Select_Join = Requirement(
@@ -1348,7 +1157,7 @@ RQ_SRS_032_ClickHouse_Export_Parquet_Select_Join = Requirement(
     ),
     link=None,
     level=4,
-    num="4.6.4.3",
+    num="4.3.4.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Select_Union = Requirement(
@@ -1364,7 +1173,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Select_Union = Requirement(
     ),
     link=None,
     level=3,
-    num="4.6.5",
+    num="4.3.5",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Select_View = Requirement(
@@ -1380,7 +1189,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Select_View = Requirement(
     ),
     link=None,
     level=4,
-    num="4.6.5.1",
+    num="4.3.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Select_MaterializedView = Requirement(
@@ -1396,7 +1205,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Select_MaterializedView = Requirement(
     ),
     link=None,
     level=4,
-    num="4.6.5.2",
+    num="4.3.5.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Select_Settings_RowGroupSize = Requirement(
@@ -1413,7 +1222,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Select_Settings_RowGroupSize = Requirement(
     ),
     link=None,
     level=4,
-    num="4.6.6.1",
+    num="4.3.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Select_Settings_StringAsString = Requirement(
@@ -1430,7 +1239,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Select_Settings_StringAsString = Requiremen
     ),
     link=None,
     level=4,
-    num="4.6.6.2",
+    num="4.3.6.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Select_Settings_StringAsFixedByteArray = Requirement(
@@ -1446,7 +1255,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Select_Settings_StringAsFixedByteArray = Re
     ),
     link=None,
     level=4,
-    num="4.6.6.3",
+    num="4.3.6.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Select_Settings_ParquetVersion = Requirement(
@@ -1463,7 +1272,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Select_Settings_ParquetVersion = Requiremen
     ),
     link=None,
     level=4,
-    num="4.6.6.4",
+    num="4.3.6.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Select_Settings_CompressionMethod = Requirement(
@@ -1480,7 +1289,199 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Select_Settings_CompressionMethod = Require
     ),
     link=None,
     level=4,
-    num="4.6.6.5",
+    num="4.3.6.5",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_DataTypes_TypeConversionFunction = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.TypeConversionFunction",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support using type conversion functions when importing Parquet files.\n"
+        "\n"
+        "For example,\n"
+        "\n"
+        "```sql\n"
+        "SELECT\n"
+        "    n,\n"
+        "    toDateTime(time)\n"
+        "FROM file('time.parquet', Parquet);\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="4.3.7.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Encryption = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Encryption",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] MAY not support importing or exporting encrypted Parquet files.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.4.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Structure = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Structure",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support using `DESCRIBE TABLE` statement on the Parquet to read the file structure.\n"
+        "\n"
+        "For example,\n"
+        "\n"
+        "```sql\n"
+        "DESCRIBE TABLE file('data.parquet', Parquet)\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.5.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Compression_None = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Compression.None",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing or exporting uncompressed Parquet files.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="4.6.1.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Compression.Gzip",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing or exporting Parquet files compressed using gzip.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="4.6.2.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Compression_Brotli = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Compression.Brotli",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing or exporting Parquet files compressed using brotli.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="4.6.3.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4 = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing or exporting Parquet files compressed using lz4.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="4.6.4.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4Raw = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4Raw",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing or exporting Parquet files compressed using lz4_raw.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="4.6.5.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Snappy = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Snappy",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] MAY not support importing or exporting Parquet files compressed using snapy.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.6.6.1.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Lzo = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Lzo",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] MAY not support importing or exporting Parquet files compressed using lzo.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.6.6.2.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Zstd = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Zstd",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] MAY not support importing or exporting Parquet files compressed using zstd.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.6.6.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableFunctions_URL = Requirement(
@@ -2625,361 +2626,361 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.ClickHouseLocal", level=3, num="4.1.2"
         ),
-        Heading(name="Parquet Encryption", level=2, num="4.2"),
-        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Encryption", level=3, num="4.2.1"),
-        Heading(name="DESCRIBE Parquet", level=2, num="4.3"),
-        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Structure", level=3, num="4.3.1"),
-        Heading(name="Supported Parquet Versions", level=3, num="4.3.2"),
+        Heading(name="Supported Parquet Versions", level=3, num="4.1.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.SupportedVersions",
             level=4,
-            num="4.3.2.1",
+            num="4.1.3.1",
         ),
-        Heading(name="Compression", level=2, num="4.4"),
-        Heading(name="None", level=3, num="4.4.1"),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Compression.None",
-            level=4,
-            num="4.4.1.1",
-        ),
-        Heading(name="Gzip", level=3, num="4.4.2"),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Compression.Gzip",
-            level=4,
-            num="4.4.2.1",
-        ),
-        Heading(name="Brotli", level=3, num="4.4.3"),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Compression.Brotli",
-            level=4,
-            num="4.4.3.1",
-        ),
-        Heading(name="Lz4", level=3, num="4.4.4"),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4", level=4, num="4.4.4.1"
-        ),
-        Heading(name="Lz4Raw", level=3, num="4.4.5"),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4Raw",
-            level=4,
-            num="4.4.5.1",
-        ),
-        Heading(name="Unsupported Compression", level=3, num="4.4.6"),
-        Heading(name="Snappy", level=4, num="4.4.6.1"),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Snappy",
-            level=5,
-            num="4.4.6.1.1",
-        ),
-        Heading(name="Lzo", level=4, num="4.4.6.2"),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Lzo",
-            level=5,
-            num="4.4.6.2.1",
-        ),
-        Heading(name="Zstd", level=4, num="4.4.6.3"),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Zstd",
-            level=5,
-            num="4.4.6.3.1",
-        ),
-        Heading(name="Type Conversion", level=3, num="4.4.7"),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.TypeConversionFunction",
-            level=4,
-            num="4.4.7.1",
-        ),
-        Heading(name="Import from Parquet Files", level=2, num="4.5"),
-        Heading(name="Supported Datatypes", level=3, num="4.5.1"),
-        Heading(name="RQ.SRS-032.ClickHouse.Parquet.DataTypes", level=4, num="4.5.1.1"),
+        Heading(name="Import from Parquet Files", level=2, num="4.2"),
+        Heading(name="Supported Datatypes", level=3, num="4.2.1"),
+        Heading(name="RQ.SRS-032.ClickHouse.Parquet.DataTypes", level=4, num="4.2.1.1"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.Import",
             level=4,
-            num="4.5.1.2",
+            num="4.2.1.2",
         ),
-        Heading(name="UTCAdjusted", level=4, num="4.5.1.3"),
+        Heading(name="UTCAdjusted", level=4, num="4.2.1.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.DateUTCAdjusted",
             level=5,
-            num="4.5.1.3.1",
+            num="4.2.1.3.1",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.TimestampUTCAdjusted",
             level=5,
-            num="4.5.1.3.2",
+            num="4.2.1.3.2",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.TimeUTCAdjusted",
             level=5,
-            num="4.5.1.3.3",
+            num="4.2.1.3.3",
         ),
-        Heading(name="Nullable", level=4, num="4.5.1.4"),
+        Heading(name="Nullable", level=4, num="4.2.1.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.NullValues",
             level=5,
-            num="4.5.1.4.1",
+            num="4.2.1.4.1",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportInto.Nullable",
             level=5,
-            num="4.5.1.4.2",
+            num="4.2.1.4.2",
         ),
-        Heading(name="LowCardinality", level=4, num="4.5.1.5"),
+        Heading(name="LowCardinality", level=4, num="4.2.1.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportInto.LowCardinality",
             level=5,
-            num="4.5.1.5.1",
+            num="4.2.1.5.1",
         ),
-        Heading(name="Nested", level=4, num="4.5.1.6"),
+        Heading(name="Nested", level=4, num="4.2.1.6"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportInto.Nested",
             level=5,
-            num="4.5.1.6.1",
+            num="4.2.1.6.1",
         ),
-        Heading(name="UNKNOWN", level=4, num="4.5.1.7"),
+        Heading(name="UNKNOWN", level=4, num="4.2.1.7"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportInto.Unknown",
             level=5,
-            num="4.5.1.7.1",
+            num="4.2.1.7.1",
         ),
-        Heading(name="Unsupported Datatypes", level=3, num="4.5.2"),
+        Heading(name="Unsupported Datatypes", level=3, num="4.2.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.Unsupported",
             level=4,
-            num="4.5.2.1",
+            num="4.2.2.1",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.Unsupported.ChunkedArray",
             level=4,
-            num="4.5.2.2",
+            num="4.2.2.2",
         ),
-        Heading(name="INSERT", level=3, num="4.5.3"),
+        Heading(name="INSERT", level=3, num="4.2.3"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Import.Insert", level=4, num="4.5.3.1"
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.Insert", level=4, num="4.2.3.1"
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Import.Insert.AutoDetectParquetFileFormat",
             level=4,
-            num="4.5.3.2",
+            num="4.2.3.2",
         ),
-        Heading(name="Projections", level=4, num="4.5.3.3"),
+        Heading(name="Projections", level=4, num="4.2.3.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Import.Insert.Projections",
             level=5,
-            num="4.5.3.3.1",
+            num="4.2.3.3.1",
         ),
-        Heading(name="Skip Columns", level=4, num="4.5.3.4"),
+        Heading(name="Skip Columns", level=4, num="4.2.3.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Import.Insert.SkipColumns",
             level=5,
-            num="4.5.3.4.1",
+            num="4.2.3.4.1",
         ),
-        Heading(name="Skip Values", level=4, num="4.5.3.5"),
+        Heading(name="Skip Values", level=4, num="4.2.3.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Import.Insert.SkipValues",
             level=5,
-            num="4.5.3.5.1",
+            num="4.2.3.5.1",
         ),
-        Heading(name="Auto Typecast", level=4, num="4.5.3.6"),
+        Heading(name="Auto Typecast", level=4, num="4.2.3.6"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Import.Insert.AutoTypecast",
             level=5,
-            num="4.5.3.6.1",
+            num="4.2.3.6.1",
         ),
-        Heading(name="Row Group Size", level=4, num="4.5.3.7"),
+        Heading(name="Row Group Size", level=4, num="4.2.3.7"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Import.Insert.RowGroupSize",
             level=5,
-            num="4.5.3.7.1",
+            num="4.2.3.7.1",
         ),
-        Heading(name="Data Page Size", level=4, num="4.5.3.8"),
+        Heading(name="Data Page Size", level=4, num="4.2.3.8"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Import.Insert.DataPageSize",
             level=5,
-            num="4.5.3.8.1",
+            num="4.2.3.8.1",
         ),
-        Heading(name="INSERT Settings", level=3, num="4.5.4"),
+        Heading(name="INSERT Settings", level=3, num="4.2.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Import.Insert.Settings.ImportNested",
             level=4,
-            num="4.5.4.1",
+            num="4.2.4.1",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Import.Insert.Settings.CaseInsensitiveColumnMatching",
             level=4,
-            num="4.5.4.2",
+            num="4.2.4.2",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Import.Insert.Settings.AllowMissingColumns",
             level=4,
-            num="4.5.4.3",
+            num="4.2.4.3",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Import.Insert.Settings.SkipColumnsWithUnsupportedTypesInSchemaInference",
             level=4,
-            num="4.5.4.4",
+            num="4.2.4.4",
         ),
-        Heading(name="CREATE", level=3, num="4.5.5"),
+        Heading(name="CREATE", level=3, num="4.2.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Import.Create.NewTable",
             level=4,
-            num="4.5.5.1",
+            num="4.2.5.1",
         ),
-        Heading(name="Working With Nested Types Import", level=3, num="4.5.6"),
+        Heading(name="Working With Nested Types Import", level=3, num="4.2.6"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Import.Nested.ArrayIntoNested",
             level=4,
-            num="4.5.6.1",
+            num="4.2.6.1",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportNested",
             level=4,
-            num="4.5.6.2",
+            num="4.2.6.2",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Import.Nested.ArrayIntoNested.ImportNested",
             level=4,
-            num="4.5.6.3",
+            num="4.2.6.3",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Import.Nested.ArrayIntoNested.NotImportNested",
             level=4,
-            num="4.5.6.4",
+            num="4.2.6.4",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Import.Nested.ArrayIntoNotNested",
             level=4,
-            num="4.5.6.5",
+            num="4.2.6.5",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Import.Nested.NonArrayIntoNested",
             level=4,
-            num="4.5.6.6",
+            num="4.2.6.6",
         ),
-        Heading(name="Working With Chunked Columns Import", level=3, num="4.5.7"),
+        Heading(name="Working With Chunked Columns Import", level=3, num="4.2.7"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Import.ChunkedColumns",
             level=4,
-            num="4.5.7.1",
+            num="4.2.7.1",
         ),
-        Heading(name="Encoding", level=3, num="4.5.8"),
-        Heading(name="Plain", level=4, num="4.5.8.1"),
+        Heading(name="Encoding", level=3, num="4.2.8"),
+        Heading(name="Plain", level=4, num="4.2.8.1"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.Plain",
             level=5,
-            num="4.5.8.1.1",
+            num="4.2.8.1.1",
         ),
-        Heading(name="Run Length Encoding", level=4, num="4.5.8.2"),
+        Heading(name="Run Length Encoding", level=4, num="4.2.8.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.RunLength",
             level=5,
-            num="4.5.8.2.1",
+            num="4.2.8.2.1",
         ),
-        Heading(name="Delta", level=4, num="4.5.8.3"),
+        Heading(name="Delta", level=4, num="4.2.8.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.Delta",
             level=5,
-            num="4.5.8.3.1",
+            num="4.2.8.3.1",
         ),
-        Heading(name="Delta-length byte array", level=4, num="4.5.8.4"),
+        Heading(name="Delta-length byte array", level=4, num="4.2.8.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.DeltaLengthByteArray",
             level=5,
-            num="4.5.8.4.1",
+            num="4.2.8.4.1",
         ),
-        Heading(name="Delta Strings", level=4, num="4.5.8.5"),
+        Heading(name="Delta Strings", level=4, num="4.2.8.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.DeltaStrings",
             level=5,
-            num="4.5.8.5.1",
+            num="4.2.8.5.1",
         ),
-        Heading(name="Byte Stream Split", level=4, num="4.5.8.6"),
+        Heading(name="Byte Stream Split", level=4, num="4.2.8.6"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.ByteStreamSplit",
             level=4,
-            num="4.5.8.7",
+            num="4.2.8.7",
         ),
-        Heading(name="Export to Parquet Files", level=2, num="4.6"),
-        Heading(name="Supported Data types", level=3, num="4.6.1"),
+        Heading(name="Export to Parquet Files", level=2, num="4.3"),
+        Heading(name="Supported Data types", level=3, num="4.3.1"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Datatypes.Supported",
             level=4,
-            num="4.6.1.1",
+            num="4.3.1.1",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ExportNullable",
             level=4,
-            num="4.6.1.2",
+            num="4.3.1.2",
         ),
-        Heading(name="Working With Nested Types Export", level=3, num="4.6.2"),
+        Heading(name="Working With Nested Types Export", level=3, num="4.3.2"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Export.Nested", level=4, num="4.6.2.1"
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.Nested", level=4, num="4.3.2.1"
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Nested",
             level=4,
-            num="4.6.2.2",
+            num="4.3.2.2",
         ),
-        Heading(name="Working With Chunked Columns Export", level=3, num="4.6.3"),
+        Heading(name="Working With Chunked Columns Export", level=3, num="4.3.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.ChunkedColumns",
             level=4,
-            num="4.6.3.1",
+            num="4.3.3.1",
         ),
-        Heading(name="SELECT", level=3, num="4.6.4"),
+        Heading(name="SELECT", level=3, num="4.3.4"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Export.Select", level=4, num="4.6.4.1"
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.Select", level=4, num="4.3.4.1"
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Select.Outfile.AutoDetectParquetFileFormat",
             level=4,
-            num="4.6.4.2",
+            num="4.3.4.2",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Export.Parquet.Select.Join",
             level=4,
-            num="4.6.4.3",
+            num="4.3.4.3",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Select.Union",
             level=3,
-            num="4.6.5",
+            num="4.3.5",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Select.View",
             level=4,
-            num="4.6.5.1",
+            num="4.3.5.1",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Select.MaterializedView",
             level=4,
-            num="4.6.5.2",
+            num="4.3.5.2",
         ),
-        Heading(name="SELECT Settings", level=3, num="4.6.6"),
+        Heading(name="SELECT Settings", level=3, num="4.3.6"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Select.Settings.RowGroupSize",
             level=4,
-            num="4.6.6.1",
+            num="4.3.6.1",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Select.Settings.StringAsString",
             level=4,
-            num="4.6.6.2",
+            num="4.3.6.2",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Select.Settings.StringAsFixedByteArray",
             level=4,
-            num="4.6.6.3",
+            num="4.3.6.3",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Select.Settings.ParquetVersion",
             level=4,
-            num="4.6.6.4",
+            num="4.3.6.4",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Select.Settings.CompressionMethod",
             level=4,
-            num="4.6.6.5",
+            num="4.3.6.5",
+        ),
+        Heading(name="Type Conversion", level=3, num="4.3.7"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.TypeConversionFunction",
+            level=4,
+            num="4.3.7.1",
+        ),
+        Heading(name="Parquet Encryption", level=2, num="4.4"),
+        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Encryption", level=3, num="4.4.1"),
+        Heading(name="DESCRIBE Parquet", level=2, num="4.5"),
+        Heading(name="RQ.SRS-032.ClickHouse.Parquet.Structure", level=3, num="4.5.1"),
+        Heading(name="Compression", level=2, num="4.6"),
+        Heading(name="None", level=3, num="4.6.1"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Compression.None",
+            level=4,
+            num="4.6.1.1",
+        ),
+        Heading(name="Gzip", level=3, num="4.6.2"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Compression.Gzip",
+            level=4,
+            num="4.6.2.1",
+        ),
+        Heading(name="Brotli", level=3, num="4.6.3"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Compression.Brotli",
+            level=4,
+            num="4.6.3.1",
+        ),
+        Heading(name="Lz4", level=3, num="4.6.4"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4", level=4, num="4.6.4.1"
+        ),
+        Heading(name="Lz4Raw", level=3, num="4.6.5"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4Raw",
+            level=4,
+            num="4.6.5.1",
+        ),
+        Heading(name="Unsupported Compression", level=3, num="4.6.6"),
+        Heading(name="Snappy", level=4, num="4.6.6.1"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Snappy",
+            level=5,
+            num="4.6.6.1.1",
+        ),
+        Heading(name="Lzo", level=4, num="4.6.6.2"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Lzo",
+            level=5,
+            num="4.6.6.2.1",
+        ),
+        Heading(name="Zstd", level=4, num="4.6.6.3"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Zstd",
+            level=5,
+            num="4.6.6.3.1",
         ),
         Heading(name="Table Functions", level=2, num="4.7"),
         Heading(name="URL", level=3, num="4.7.1"),
@@ -3298,18 +3299,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
     requirements=(
         RQ_SRS_032_ClickHouse_Parquet,
         RQ_SRS_032_ClickHouse_Parquet_ClickHouseLocal,
-        RQ_SRS_032_ClickHouse_Parquet_Encryption,
-        RQ_SRS_032_ClickHouse_Parquet_Structure,
         RQ_SRS_032_ClickHouse_Parquet_SupportedVersions,
-        RQ_SRS_032_ClickHouse_Parquet_Compression_None,
-        RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip,
-        RQ_SRS_032_ClickHouse_Parquet_Compression_Brotli,
-        RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4,
-        RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4Raw,
-        RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Snappy,
-        RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Lzo,
-        RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Zstd,
-        RQ_SRS_032_ClickHouse_Parquet_DataTypes_TypeConversionFunction,
         RQ_SRS_032_ClickHouse_Parquet_DataTypes,
         RQ_SRS_032_ClickHouse_Parquet_DataTypes_Import,
         RQ_SRS_032_ClickHouse_Parquet_DataTypes_DateUTCAdjusted,
@@ -3364,6 +3354,17 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_Export_Select_Settings_StringAsFixedByteArray,
         RQ_SRS_032_ClickHouse_Parquet_Export_Select_Settings_ParquetVersion,
         RQ_SRS_032_ClickHouse_Parquet_Export_Select_Settings_CompressionMethod,
+        RQ_SRS_032_ClickHouse_Parquet_DataTypes_TypeConversionFunction,
+        RQ_SRS_032_ClickHouse_Parquet_Encryption,
+        RQ_SRS_032_ClickHouse_Parquet_Structure,
+        RQ_SRS_032_ClickHouse_Parquet_Compression_None,
+        RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip,
+        RQ_SRS_032_ClickHouse_Parquet_Compression_Brotli,
+        RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4,
+        RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4Raw,
+        RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Snappy,
+        RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Lzo,
+        RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Zstd,
         RQ_SRS_032_ClickHouse_Parquet_TableFunctions_URL,
         RQ_SRS_032_ClickHouse_Parquet_TableFunctions_File,
         RQ_SRS_032_ClickHouse_Parquet_TableFunctions_File_AutoDetectParquetFileFormat,
@@ -3435,118 +3436,118 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
   * 4.1 [Working With Parquet](#working-with-parquet)
     * 4.1.1 [RQ.SRS-032.ClickHouse.Parquet](#rqsrs-032clickhouseparquet)
     * 4.1.2 [RQ.SRS-032.ClickHouse.Parquet.ClickHouseLocal](#rqsrs-032clickhouseparquetclickhouselocal)
-  * 4.2 [Parquet Encryption](#parquet-encryption)
-    * 4.2.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption](#rqsrs-032clickhouseparquetencryption)
-  * 4.3 [DESCRIBE Parquet](#describe-parquet)
-    * 4.3.1 [RQ.SRS-032.ClickHouse.Parquet.Structure](#rqsrs-032clickhouseparquetstructure)
-    * 4.3.2 [Supported Parquet Versions](#supported-parquet-versions)
-      * 4.3.2.1 [RQ.SRS-032.ClickHouse.Parquet.SupportedVersions](#rqsrs-032clickhouseparquetsupportedversions)
-  * 4.4 [Compression](#compression)
-    * 4.4.1 [None](#none)
-      * 4.4.1.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.None](#rqsrs-032clickhouseparquetcompressionnone)
-    * 4.4.2 [Gzip](#gzip)
-      * 4.4.2.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Gzip](#rqsrs-032clickhouseparquetcompressiongzip)
-    * 4.4.3 [Brotli](#brotli)
-      * 4.4.3.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Brotli](#rqsrs-032clickhouseparquetcompressionbrotli)
-    * 4.4.4 [Lz4](#lz4)
-      * 4.4.4.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4](#rqsrs-032clickhouseparquetcompressionlz4)
-    * 4.4.5 [Lz4Raw](#lz4raw)
-      * 4.4.5.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4Raw](#rqsrs-032clickhouseparquetcompressionlz4raw)
-    * 4.4.6 [Unsupported Compression](#unsupported-compression)
-      * 4.4.6.1 [Snappy](#snappy)
-        * 4.4.6.1.1 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Snappy](#rqsrs-032clickhouseparquetunsupportedcompressionsnappy)
-      * 4.4.6.2 [Lzo](#lzo)
-        * 4.4.6.2.1 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Lzo](#rqsrs-032clickhouseparquetunsupportedcompressionlzo)
-      * 4.4.6.3 [Zstd](#zstd)
-        * 4.4.6.3.1 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Zstd](#rqsrs-032clickhouseparquetunsupportedcompressionzstd)
-    * 4.4.7 [Type Conversion](#type-conversion)
-      * 4.4.7.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.TypeConversionFunction](#rqsrs-032clickhouseparquetdatatypestypeconversionfunction)
-  * 4.5 [Import from Parquet Files](#import-from-parquet-files)
-    * 4.5.1 [Supported Datatypes](#supported-datatypes)
-      * 4.5.1.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes](#rqsrs-032clickhouseparquetdatatypes)
-      * 4.5.1.2 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Import](#rqsrs-032clickhouseparquetdatatypesimport)
-      * 4.5.1.3 [UTCAdjusted](#utcadjusted)
-        * 4.5.1.3.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.DateUTCAdjusted](#rqsrs-032clickhouseparquetdatatypesdateutcadjusted)
-        * 4.5.1.3.2 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.TimestampUTCAdjusted](#rqsrs-032clickhouseparquetdatatypestimestamputcadjusted)
-        * 4.5.1.3.3 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.TimeUTCAdjusted](#rqsrs-032clickhouseparquetdatatypestimeutcadjusted)
-      * 4.5.1.4 [Nullable](#nullable)
-        * 4.5.1.4.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.NullValues](#rqsrs-032clickhouseparquetdatatypesnullvalues)
-        * 4.5.1.4.2 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportInto.Nullable](#rqsrs-032clickhouseparquetdatatypesimportintonullable)
-      * 4.5.1.5 [LowCardinality](#lowcardinality)
-        * 4.5.1.5.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportInto.LowCardinality](#rqsrs-032clickhouseparquetdatatypesimportintolowcardinality)
-      * 4.5.1.6 [Nested](#nested)
-        * 4.5.1.6.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportInto.Nested](#rqsrs-032clickhouseparquetdatatypesimportintonested)
-      * 4.5.1.7 [UNKNOWN](#unknown)
-        * 4.5.1.7.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportInto.Unknown](#rqsrs-032clickhouseparquetdatatypesimportintounknown)
-    * 4.5.2 [Unsupported Datatypes](#unsupported-datatypes)
-      * 4.5.2.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Unsupported](#rqsrs-032clickhouseparquetdatatypesunsupported)
-      * 4.5.2.2 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Unsupported.ChunkedArray](#rqsrs-032clickhouseparquetdatatypesunsupportedchunkedarray)
-    * 4.5.3 [INSERT](#insert)
-      * 4.5.3.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert](#rqsrs-032clickhouseparquetimportinsert)
-      * 4.5.3.2 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.AutoDetectParquetFileFormat](#rqsrs-032clickhouseparquetimportinsertautodetectparquetfileformat)
-      * 4.5.3.3 [Projections](#projections)
-        * 4.5.3.3.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.Projections](#rqsrs-032clickhouseparquetimportinsertprojections)
-      * 4.5.3.4 [Skip Columns](#skip-columns)
-        * 4.5.3.4.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.SkipColumns](#rqsrs-032clickhouseparquetimportinsertskipcolumns)
-      * 4.5.3.5 [Skip Values](#skip-values)
-        * 4.5.3.5.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.SkipValues](#rqsrs-032clickhouseparquetimportinsertskipvalues)
-      * 4.5.3.6 [Auto Typecast](#auto-typecast)
-        * 4.5.3.6.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.AutoTypecast](#rqsrs-032clickhouseparquetimportinsertautotypecast)
-      * 4.5.3.7 [Row Group Size](#row-group-size)
-        * 4.5.3.7.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.RowGroupSize](#rqsrs-032clickhouseparquetimportinsertrowgroupsize)
-      * 4.5.3.8 [Data Page Size](#data-page-size)
-        * 4.5.3.8.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.DataPageSize](#rqsrs-032clickhouseparquetimportinsertdatapagesize)
-    * 4.5.4 [INSERT Settings](#insert-settings)
-      * 4.5.4.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.Settings.ImportNested](#rqsrs-032clickhouseparquetimportinsertsettingsimportnested)
-      * 4.5.4.2 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.Settings.CaseInsensitiveColumnMatching](#rqsrs-032clickhouseparquetimportinsertsettingscaseinsensitivecolumnmatching)
-      * 4.5.4.3 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.Settings.AllowMissingColumns](#rqsrs-032clickhouseparquetimportinsertsettingsallowmissingcolumns)
-      * 4.5.4.4 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.Settings.SkipColumnsWithUnsupportedTypesInSchemaInference](#rqsrs-032clickhouseparquetimportinsertsettingsskipcolumnswithunsupportedtypesinschemainference)
-    * 4.5.5 [CREATE](#create)
-      * 4.5.5.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Create.NewTable](#rqsrs-032clickhouseparquetimportcreatenewtable)
-    * 4.5.6 [Working With Nested Types Import](#working-with-nested-types-import)
-      * 4.5.6.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Nested.ArrayIntoNested](#rqsrs-032clickhouseparquetimportnestedarrayintonested)
-      * 4.5.6.2 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportNested](#rqsrs-032clickhouseparquetdatatypesimportnested)
-      * 4.5.6.3 [RQ.SRS-032.ClickHouse.Parquet.Import.Nested.ArrayIntoNested.ImportNested](#rqsrs-032clickhouseparquetimportnestedarrayintonestedimportnested)
-      * 4.5.6.4 [RQ.SRS-032.ClickHouse.Parquet.Import.Nested.ArrayIntoNested.NotImportNested](#rqsrs-032clickhouseparquetimportnestedarrayintonestednotimportnested)
-      * 4.5.6.5 [RQ.SRS-032.ClickHouse.Parquet.Import.Nested.ArrayIntoNotNested](#rqsrs-032clickhouseparquetimportnestedarrayintonotnested)
-      * 4.5.6.6 [RQ.SRS-032.ClickHouse.Parquet.Import.Nested.NonArrayIntoNested](#rqsrs-032clickhouseparquetimportnestednonarrayintonested)
-    * 4.5.7 [Working With Chunked Columns Import](#working-with-chunked-columns-import)
-      * 4.5.7.1 [RQ.SRS-032.ClickHouse.Parquet.Import.ChunkedColumns](#rqsrs-032clickhouseparquetimportchunkedcolumns)
-    * 4.5.8 [Encoding](#encoding)
-      * 4.5.8.1 [Plain](#plain)
-        * 4.5.8.1.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.Plain](#rqsrs-032clickhouseparquetimportencodingplain)
-      * 4.5.8.2 [Run Length Encoding](#run-length-encoding)
-        * 4.5.8.2.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.RunLength](#rqsrs-032clickhouseparquetimportencodingrunlength)
-      * 4.5.8.3 [Delta](#delta)
-        * 4.5.8.3.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.Delta](#rqsrs-032clickhouseparquetimportencodingdelta)
-      * 4.5.8.4 [Delta-length byte array](#delta-length-byte-array)
-        * 4.5.8.4.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.DeltaLengthByteArray](#rqsrs-032clickhouseparquetimportencodingdeltalengthbytearray)
-      * 4.5.8.5 [Delta Strings](#delta-strings)
-        * 4.5.8.5.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.DeltaStrings](#rqsrs-032clickhouseparquetimportencodingdeltastrings)
-      * 4.5.8.6 [Byte Stream Split](#byte-stream-split)
-      * 4.5.8.7 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.ByteStreamSplit](#rqsrs-032clickhouseparquetimportencodingbytestreamsplit)
-  * 4.6 [Export to Parquet Files](#export-to-parquet-files)
-    * 4.6.1 [Supported Data types](#supported-data-types)
-      * 4.6.1.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Datatypes.Supported](#rqsrs-032clickhouseparquetexportdatatypessupported)
-      * 4.6.1.2 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ExportNullable](#rqsrs-032clickhouseparquetdatatypesexportnullable)
-    * 4.6.2 [Working With Nested Types Export](#working-with-nested-types-export)
-      * 4.6.2.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Nested](#rqsrs-032clickhouseparquetexportnested)
-      * 4.6.2.2 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Nested](#rqsrs-032clickhouseparquetexportdatatypesnested)
-    * 4.6.3 [Working With Chunked Columns Export](#working-with-chunked-columns-export)
-      * 4.6.3.1 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.ChunkedColumns](#rqsrs-032clickhouseparquetexportdatatypeschunkedcolumns)
-    * 4.6.4 [SELECT](#select)
-      * 4.6.4.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Select](#rqsrs-032clickhouseparquetexportselect)
-      * 4.6.4.2 [RQ.SRS-032.ClickHouse.Parquet.Export.Select.Outfile.AutoDetectParquetFileFormat](#rqsrs-032clickhouseparquetexportselectoutfileautodetectparquetfileformat)
-      * 4.6.4.3 [RQ.SRS-032.ClickHouse.Export.Parquet.Select.Join](#rqsrs-032clickhouseexportparquetselectjoin)
-    * 4.6.5 [RQ.SRS-032.ClickHouse.Parquet.Export.Select.Union](#rqsrs-032clickhouseparquetexportselectunion)
-      * 4.6.5.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Select.View](#rqsrs-032clickhouseparquetexportselectview)
-      * 4.6.5.2 [RQ.SRS-032.ClickHouse.Parquet.Export.Select.MaterializedView](#rqsrs-032clickhouseparquetexportselectmaterializedview)
-    * 4.6.6 [SELECT Settings](#select-settings)
-      * 4.6.6.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Select.Settings.RowGroupSize](#rqsrs-032clickhouseparquetexportselectsettingsrowgroupsize)
-      * 4.6.6.2 [RQ.SRS-032.ClickHouse.Parquet.Export.Select.Settings.StringAsString](#rqsrs-032clickhouseparquetexportselectsettingsstringasstring)
-      * 4.6.6.3 [RQ.SRS-032.ClickHouse.Parquet.Export.Select.Settings.StringAsFixedByteArray](#rqsrs-032clickhouseparquetexportselectsettingsstringasfixedbytearray)
-      * 4.6.6.4 [RQ.SRS-032.ClickHouse.Parquet.Export.Select.Settings.ParquetVersion](#rqsrs-032clickhouseparquetexportselectsettingsparquetversion)
-      * 4.6.6.5 [RQ.SRS-032.ClickHouse.Parquet.Export.Select.Settings.CompressionMethod](#rqsrs-032clickhouseparquetexportselectsettingscompressionmethod)
+    * 4.1.3 [Supported Parquet Versions](#supported-parquet-versions)
+      * 4.1.3.1 [RQ.SRS-032.ClickHouse.Parquet.SupportedVersions](#rqsrs-032clickhouseparquetsupportedversions)
+  * 4.2 [Import from Parquet Files](#import-from-parquet-files)
+    * 4.2.1 [Supported Datatypes](#supported-datatypes)
+      * 4.2.1.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes](#rqsrs-032clickhouseparquetdatatypes)
+      * 4.2.1.2 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Import](#rqsrs-032clickhouseparquetdatatypesimport)
+      * 4.2.1.3 [UTCAdjusted](#utcadjusted)
+        * 4.2.1.3.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.DateUTCAdjusted](#rqsrs-032clickhouseparquetdatatypesdateutcadjusted)
+        * 4.2.1.3.2 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.TimestampUTCAdjusted](#rqsrs-032clickhouseparquetdatatypestimestamputcadjusted)
+        * 4.2.1.3.3 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.TimeUTCAdjusted](#rqsrs-032clickhouseparquetdatatypestimeutcadjusted)
+      * 4.2.1.4 [Nullable](#nullable)
+        * 4.2.1.4.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.NullValues](#rqsrs-032clickhouseparquetdatatypesnullvalues)
+        * 4.2.1.4.2 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportInto.Nullable](#rqsrs-032clickhouseparquetdatatypesimportintonullable)
+      * 4.2.1.5 [LowCardinality](#lowcardinality)
+        * 4.2.1.5.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportInto.LowCardinality](#rqsrs-032clickhouseparquetdatatypesimportintolowcardinality)
+      * 4.2.1.6 [Nested](#nested)
+        * 4.2.1.6.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportInto.Nested](#rqsrs-032clickhouseparquetdatatypesimportintonested)
+      * 4.2.1.7 [UNKNOWN](#unknown)
+        * 4.2.1.7.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportInto.Unknown](#rqsrs-032clickhouseparquetdatatypesimportintounknown)
+    * 4.2.2 [Unsupported Datatypes](#unsupported-datatypes)
+      * 4.2.2.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Unsupported](#rqsrs-032clickhouseparquetdatatypesunsupported)
+      * 4.2.2.2 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Unsupported.ChunkedArray](#rqsrs-032clickhouseparquetdatatypesunsupportedchunkedarray)
+    * 4.2.3 [INSERT](#insert)
+      * 4.2.3.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert](#rqsrs-032clickhouseparquetimportinsert)
+      * 4.2.3.2 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.AutoDetectParquetFileFormat](#rqsrs-032clickhouseparquetimportinsertautodetectparquetfileformat)
+      * 4.2.3.3 [Projections](#projections)
+        * 4.2.3.3.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.Projections](#rqsrs-032clickhouseparquetimportinsertprojections)
+      * 4.2.3.4 [Skip Columns](#skip-columns)
+        * 4.2.3.4.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.SkipColumns](#rqsrs-032clickhouseparquetimportinsertskipcolumns)
+      * 4.2.3.5 [Skip Values](#skip-values)
+        * 4.2.3.5.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.SkipValues](#rqsrs-032clickhouseparquetimportinsertskipvalues)
+      * 4.2.3.6 [Auto Typecast](#auto-typecast)
+        * 4.2.3.6.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.AutoTypecast](#rqsrs-032clickhouseparquetimportinsertautotypecast)
+      * 4.2.3.7 [Row Group Size](#row-group-size)
+        * 4.2.3.7.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.RowGroupSize](#rqsrs-032clickhouseparquetimportinsertrowgroupsize)
+      * 4.2.3.8 [Data Page Size](#data-page-size)
+        * 4.2.3.8.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.DataPageSize](#rqsrs-032clickhouseparquetimportinsertdatapagesize)
+    * 4.2.4 [INSERT Settings](#insert-settings)
+      * 4.2.4.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.Settings.ImportNested](#rqsrs-032clickhouseparquetimportinsertsettingsimportnested)
+      * 4.2.4.2 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.Settings.CaseInsensitiveColumnMatching](#rqsrs-032clickhouseparquetimportinsertsettingscaseinsensitivecolumnmatching)
+      * 4.2.4.3 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.Settings.AllowMissingColumns](#rqsrs-032clickhouseparquetimportinsertsettingsallowmissingcolumns)
+      * 4.2.4.4 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.Settings.SkipColumnsWithUnsupportedTypesInSchemaInference](#rqsrs-032clickhouseparquetimportinsertsettingsskipcolumnswithunsupportedtypesinschemainference)
+    * 4.2.5 [CREATE](#create)
+      * 4.2.5.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Create.NewTable](#rqsrs-032clickhouseparquetimportcreatenewtable)
+    * 4.2.6 [Working With Nested Types Import](#working-with-nested-types-import)
+      * 4.2.6.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Nested.ArrayIntoNested](#rqsrs-032clickhouseparquetimportnestedarrayintonested)
+      * 4.2.6.2 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportNested](#rqsrs-032clickhouseparquetdatatypesimportnested)
+      * 4.2.6.3 [RQ.SRS-032.ClickHouse.Parquet.Import.Nested.ArrayIntoNested.ImportNested](#rqsrs-032clickhouseparquetimportnestedarrayintonestedimportnested)
+      * 4.2.6.4 [RQ.SRS-032.ClickHouse.Parquet.Import.Nested.ArrayIntoNested.NotImportNested](#rqsrs-032clickhouseparquetimportnestedarrayintonestednotimportnested)
+      * 4.2.6.5 [RQ.SRS-032.ClickHouse.Parquet.Import.Nested.ArrayIntoNotNested](#rqsrs-032clickhouseparquetimportnestedarrayintonotnested)
+      * 4.2.6.6 [RQ.SRS-032.ClickHouse.Parquet.Import.Nested.NonArrayIntoNested](#rqsrs-032clickhouseparquetimportnestednonarrayintonested)
+    * 4.2.7 [Working With Chunked Columns Import](#working-with-chunked-columns-import)
+      * 4.2.7.1 [RQ.SRS-032.ClickHouse.Parquet.Import.ChunkedColumns](#rqsrs-032clickhouseparquetimportchunkedcolumns)
+    * 4.2.8 [Encoding](#encoding)
+      * 4.2.8.1 [Plain](#plain)
+        * 4.2.8.1.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.Plain](#rqsrs-032clickhouseparquetimportencodingplain)
+      * 4.2.8.2 [Run Length Encoding](#run-length-encoding)
+        * 4.2.8.2.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.RunLength](#rqsrs-032clickhouseparquetimportencodingrunlength)
+      * 4.2.8.3 [Delta](#delta)
+        * 4.2.8.3.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.Delta](#rqsrs-032clickhouseparquetimportencodingdelta)
+      * 4.2.8.4 [Delta-length byte array](#delta-length-byte-array)
+        * 4.2.8.4.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.DeltaLengthByteArray](#rqsrs-032clickhouseparquetimportencodingdeltalengthbytearray)
+      * 4.2.8.5 [Delta Strings](#delta-strings)
+        * 4.2.8.5.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.DeltaStrings](#rqsrs-032clickhouseparquetimportencodingdeltastrings)
+      * 4.2.8.6 [Byte Stream Split](#byte-stream-split)
+      * 4.2.8.7 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.ByteStreamSplit](#rqsrs-032clickhouseparquetimportencodingbytestreamsplit)
+  * 4.3 [Export to Parquet Files](#export-to-parquet-files)
+    * 4.3.1 [Supported Data types](#supported-data-types)
+      * 4.3.1.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Datatypes.Supported](#rqsrs-032clickhouseparquetexportdatatypessupported)
+      * 4.3.1.2 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ExportNullable](#rqsrs-032clickhouseparquetdatatypesexportnullable)
+    * 4.3.2 [Working With Nested Types Export](#working-with-nested-types-export)
+      * 4.3.2.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Nested](#rqsrs-032clickhouseparquetexportnested)
+      * 4.3.2.2 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Nested](#rqsrs-032clickhouseparquetexportdatatypesnested)
+    * 4.3.3 [Working With Chunked Columns Export](#working-with-chunked-columns-export)
+      * 4.3.3.1 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.ChunkedColumns](#rqsrs-032clickhouseparquetexportdatatypeschunkedcolumns)
+    * 4.3.4 [SELECT](#select)
+      * 4.3.4.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Select](#rqsrs-032clickhouseparquetexportselect)
+      * 4.3.4.2 [RQ.SRS-032.ClickHouse.Parquet.Export.Select.Outfile.AutoDetectParquetFileFormat](#rqsrs-032clickhouseparquetexportselectoutfileautodetectparquetfileformat)
+      * 4.3.4.3 [RQ.SRS-032.ClickHouse.Export.Parquet.Select.Join](#rqsrs-032clickhouseexportparquetselectjoin)
+    * 4.3.5 [RQ.SRS-032.ClickHouse.Parquet.Export.Select.Union](#rqsrs-032clickhouseparquetexportselectunion)
+      * 4.3.5.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Select.View](#rqsrs-032clickhouseparquetexportselectview)
+      * 4.3.5.2 [RQ.SRS-032.ClickHouse.Parquet.Export.Select.MaterializedView](#rqsrs-032clickhouseparquetexportselectmaterializedview)
+    * 4.3.6 [SELECT Settings](#select-settings)
+      * 4.3.6.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Select.Settings.RowGroupSize](#rqsrs-032clickhouseparquetexportselectsettingsrowgroupsize)
+      * 4.3.6.2 [RQ.SRS-032.ClickHouse.Parquet.Export.Select.Settings.StringAsString](#rqsrs-032clickhouseparquetexportselectsettingsstringasstring)
+      * 4.3.6.3 [RQ.SRS-032.ClickHouse.Parquet.Export.Select.Settings.StringAsFixedByteArray](#rqsrs-032clickhouseparquetexportselectsettingsstringasfixedbytearray)
+      * 4.3.6.4 [RQ.SRS-032.ClickHouse.Parquet.Export.Select.Settings.ParquetVersion](#rqsrs-032clickhouseparquetexportselectsettingsparquetversion)
+      * 4.3.6.5 [RQ.SRS-032.ClickHouse.Parquet.Export.Select.Settings.CompressionMethod](#rqsrs-032clickhouseparquetexportselectsettingscompressionmethod)
+    * 4.3.7 [Type Conversion](#type-conversion)
+      * 4.3.7.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.TypeConversionFunction](#rqsrs-032clickhouseparquetdatatypestypeconversionfunction)
+  * 4.4 [Parquet Encryption](#parquet-encryption)
+    * 4.4.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption](#rqsrs-032clickhouseparquetencryption)
+  * 4.5 [DESCRIBE Parquet](#describe-parquet)
+    * 4.5.1 [RQ.SRS-032.ClickHouse.Parquet.Structure](#rqsrs-032clickhouseparquetstructure)
+  * 4.6 [Compression](#compression)
+    * 4.6.1 [None](#none)
+      * 4.6.1.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.None](#rqsrs-032clickhouseparquetcompressionnone)
+    * 4.6.2 [Gzip](#gzip)
+      * 4.6.2.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Gzip](#rqsrs-032clickhouseparquetcompressiongzip)
+    * 4.6.3 [Brotli](#brotli)
+      * 4.6.3.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Brotli](#rqsrs-032clickhouseparquetcompressionbrotli)
+    * 4.6.4 [Lz4](#lz4)
+      * 4.6.4.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4](#rqsrs-032clickhouseparquetcompressionlz4)
+    * 4.6.5 [Lz4Raw](#lz4raw)
+      * 4.6.5.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4Raw](#rqsrs-032clickhouseparquetcompressionlz4raw)
+    * 4.6.6 [Unsupported Compression](#unsupported-compression)
+      * 4.6.6.1 [Snappy](#snappy)
+        * 4.6.6.1.1 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Snappy](#rqsrs-032clickhouseparquetunsupportedcompressionsnappy)
+      * 4.6.6.2 [Lzo](#lzo)
+        * 4.6.6.2.1 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Lzo](#rqsrs-032clickhouseparquetunsupportedcompressionlzo)
+      * 4.6.6.3 [Zstd](#zstd)
+        * 4.6.6.3.1 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Zstd](#rqsrs-032clickhouseparquetunsupportedcompressionzstd)
   * 4.7 [Table Functions](#table-functions)
     * 4.7.1 [URL](#url)
       * 4.7.1.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.URL](#rqsrs-032clickhouseparquettablefunctionsurl)
@@ -3972,108 +3973,12 @@ version: 1.0
 
 [ClickHouse] SHALL support the usage of `clickhouse-local` with `Parquet` data format.
 
-### Parquet Encryption
-
-#### RQ.SRS-032.ClickHouse.Parquet.Encryption
-version: 1.0
-
-[ClickHouse] MAY not support importing or exporting encrypted Parquet files.
-
-### DESCRIBE Parquet
-
-#### RQ.SRS-032.ClickHouse.Parquet.Structure
-version: 1.0
-
-[ClickHouse] SHALL support using `DESCRIBE TABLE` statement on the Parquet to read the file structure.
-
-For example,
-
-```sql
-DESCRIBE TABLE file('data.parquet', Parquet)
-```
-
 #### Supported Parquet Versions
 
 ##### RQ.SRS-032.ClickHouse.Parquet.SupportedVersions
 version: 1.0
 
 [ClickHouse] SHALL support importing Parquet files with the following versions: `1.0.0`, `2.0.0`, `2.1.0`, `2.2.0`, `2.4.0`, `2.6.0`, `2.7.0`, `2.8.0`, `2.9.0`.
-
-### Compression
-
-#### None
-
-##### RQ.SRS-032.ClickHouse.Parquet.Compression.None
-version: 1.0
-
-[ClickHouse] SHALL support importing or exporting uncompressed Parquet files.
-
-#### Gzip
-
-##### RQ.SRS-032.ClickHouse.Parquet.Compression.Gzip
-version: 1.0
-
-[ClickHouse] SHALL support importing or exporting Parquet files compressed using gzip.
-
-#### Brotli
-
-##### RQ.SRS-032.ClickHouse.Parquet.Compression.Brotli
-version: 1.0
-
-[ClickHouse] SHALL support importing or exporting Parquet files compressed using brotli.
-
-#### Lz4
-
-##### RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4
-version: 1.0
-
-[ClickHouse] SHALL support importing or exporting Parquet files compressed using lz4.
-
-#### Lz4Raw
-
-##### RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4Raw
-version: 1.0
-
-[ClickHouse] SHALL support importing or exporting Parquet files compressed using lz4_raw.
-
-#### Unsupported Compression
-
-##### Snappy
-
-###### RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Snappy
-version: 1.0
-
-[ClickHouse] MAY not support importing or exporting Parquet files compressed using snapy.
-
-##### Lzo
-
-###### RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Lzo
-version: 1.0
-
-[ClickHouse] MAY not support importing or exporting Parquet files compressed using lzo.
-
-##### Zstd
-
-###### RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Zstd
-version: 1.0
-
-[ClickHouse] MAY not support importing or exporting Parquet files compressed using zstd.
-
-#### Type Conversion
-
-##### RQ.SRS-032.ClickHouse.Parquet.DataTypes.TypeConversionFunction
-version:1.0
-
-[ClickHouse] SHALL support using type conversion functions when importing Parquet files.
-
-For example,
-
-```sql
-SELECT
-    n,
-    toDateTime(time)
-FROM file('time.parquet', Parquet);
-```
 
 ### Import from Parquet Files
 
@@ -4790,6 +4695,103 @@ version: 1.0
 
 [ClickHouse] SHALL support specifying `output_format_parquet_compression_method` to set the compression method used in the Parquet file.
 The default value SHALL be `lz4`.
+
+#### Type Conversion
+
+##### RQ.SRS-032.ClickHouse.Parquet.DataTypes.TypeConversionFunction
+version:1.0
+
+[ClickHouse] SHALL support using type conversion functions when importing Parquet files.
+
+For example,
+
+```sql
+SELECT
+    n,
+    toDateTime(time)
+FROM file('time.parquet', Parquet);
+```
+
+### Parquet Encryption
+
+#### RQ.SRS-032.ClickHouse.Parquet.Encryption
+version: 1.0
+
+[ClickHouse] MAY not support importing or exporting encrypted Parquet files.
+
+### DESCRIBE Parquet
+
+#### RQ.SRS-032.ClickHouse.Parquet.Structure
+version: 1.0
+
+[ClickHouse] SHALL support using `DESCRIBE TABLE` statement on the Parquet to read the file structure.
+
+For example,
+
+```sql
+DESCRIBE TABLE file('data.parquet', Parquet)
+```
+
+### Compression
+
+#### None
+
+##### RQ.SRS-032.ClickHouse.Parquet.Compression.None
+version: 1.0
+
+[ClickHouse] SHALL support importing or exporting uncompressed Parquet files.
+
+#### Gzip
+
+##### RQ.SRS-032.ClickHouse.Parquet.Compression.Gzip
+version: 1.0
+
+[ClickHouse] SHALL support importing or exporting Parquet files compressed using gzip.
+
+#### Brotli
+
+##### RQ.SRS-032.ClickHouse.Parquet.Compression.Brotli
+version: 1.0
+
+[ClickHouse] SHALL support importing or exporting Parquet files compressed using brotli.
+
+#### Lz4
+
+##### RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4
+version: 1.0
+
+[ClickHouse] SHALL support importing or exporting Parquet files compressed using lz4.
+
+#### Lz4Raw
+
+##### RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4Raw
+version: 1.0
+
+[ClickHouse] SHALL support importing or exporting Parquet files compressed using lz4_raw.
+
+#### Unsupported Compression
+
+##### Snappy
+
+###### RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Snappy
+version: 1.0
+
+[ClickHouse] MAY not support importing or exporting Parquet files compressed using snapy.
+
+##### Lzo
+
+###### RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Lzo
+version: 1.0
+
+[ClickHouse] MAY not support importing or exporting Parquet files compressed using lzo.
+
+##### Zstd
+
+###### RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Zstd
+version: 1.0
+
+[ClickHouse] MAY not support importing or exporting Parquet files compressed using zstd.
+
 
 ### Table Functions
 
