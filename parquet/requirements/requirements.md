@@ -532,7 +532,7 @@ flowchart TB;
     end
 
 Sources --> Compression --> Encryption --> Parquet_File_in 
-Parquet_File_in --> CorruptedYes -- Raise Exception
+Parquet_File_in --> CorruptedYes --Raise Exception
 Parquet_File_in --> CorruptedNo --Insert Into ClickHouse --> Input_settings --> ClickHouse -- Read From ClickHouse --> Output_settings --> Parquet_File_out
 
 UInt8_in --> UInt8_ch --> UInt8_out
