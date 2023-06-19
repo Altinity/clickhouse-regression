@@ -50,19 +50,23 @@
       * 4.5.1.5 [LowCardinality](#lowcardinality)
         * 4.5.1.5.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.LowCardinality](#rqsrs-032clickhouseparquetdatatypesreadintolowcardinality)
       * 4.5.1.6 [Nested](#nested)
-      * 4.5.1.7 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Nested](#rqsrs-032clickhouseparquetdatatypesreadintonested)
-      * 4.5.1.8 [UNKNOWN](#unknown)
-        * 4.5.1.8.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Unknown](#rqsrs-032clickhouseparquetdatatypesreadintounknown)
+        * 4.5.1.6.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Nested](#rqsrs-032clickhouseparquetdatatypesreadintonested)
+      * 4.5.1.7 [UNKNOWN](#unknown)
+        * 4.5.1.7.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Unknown](#rqsrs-032clickhouseparquetdatatypesreadintounknown)
     * 4.5.2 [Unsupported Datatypes](#unsupported-datatypes)
       * 4.5.2.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Unsupported](#rqsrs-032clickhouseparquetdatatypesunsupported)
       * 4.5.2.2 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Unsupported.ChunkedArray](#rqsrs-032clickhouseparquetdatatypesunsupportedchunkedarray)
     * 4.5.3 [INSERT](#insert)
       * 4.5.3.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert](#rqsrs-032clickhouseparquetimportinsert)
       * 4.5.3.2 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.AutoDetectParquetFileFormat](#rqsrs-032clickhouseparquetimportinsertautodetectparquetfileformat)
-      * 4.5.3.3 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.Projections](#rqsrs-032clickhouseparquetimportinsertprojections)
-      * 4.5.3.4 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.SkipColumns](#rqsrs-032clickhouseparquetimportinsertskipcolumns)
-      * 4.5.3.5 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.SkipValues](#rqsrs-032clickhouseparquetimportinsertskipvalues)
-      * 4.5.3.6 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.AutoTypecast](#rqsrs-032clickhouseparquetimportinsertautotypecast)
+      * 4.5.3.3 [Projections](#projections)
+        * 4.5.3.3.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.Projections](#rqsrs-032clickhouseparquetimportinsertprojections)
+      * 4.5.3.4 [Skip Columns](#skip-columns)
+        * 4.5.3.4.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.SkipColumns](#rqsrs-032clickhouseparquetimportinsertskipcolumns)
+      * 4.5.3.5 [Skip Values](#skip-values)
+        * 4.5.3.5.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.SkipValues](#rqsrs-032clickhouseparquetimportinsertskipvalues)
+      * 4.5.3.6 [Auto Typecast](#auto-typecast)
+        * 4.5.3.6.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.AutoTypecast](#rqsrs-032clickhouseparquetimportinsertautotypecast)
       * 4.5.3.7 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.RowGroupSize](#rqsrs-032clickhouseparquetimportinsertrowgroupsize)
       * 4.5.3.8 [RQ.SRS-032.ClickHouse.Parquet.Import.Insert.DataPageSize](#rqsrs-032clickhouseparquetimportinsertdatapagesize)
     * 4.5.4 [INSERT Settings](#insert-settings)
@@ -836,7 +840,7 @@ version:1.0
 
 ##### Nested
 
-##### RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Nested
+###### RQ.SRS-032.ClickHouse.Parquet.DataTypes.ReadInto.Nested
 version:1.0
 
 [ClickHouse] SHALL support importing Parquet files into target table's `Nested` datatype columns.
@@ -896,17 +900,23 @@ INSERT INTO sometable
 FROM INFILE 'data.parquet';
 ```
 
-##### RQ.SRS-032.ClickHouse.Parquet.Import.Insert.Projections
+##### Projections
+
+###### RQ.SRS-032.ClickHouse.Parquet.Import.Insert.Projections
 version: 1.0
 
 [ClickHouse] SHALL support inserting parquet data into a table that has a projection on it.
 
-##### RQ.SRS-032.ClickHouse.Parquet.Import.Insert.SkipColumns
+##### Skip Columns
+
+###### RQ.SRS-032.ClickHouse.Parquet.Import.Insert.SkipColumns
 version: 1.0
 
 [ClickHouse] SHALL support skipping unexistent columns when reading from Parquet files.
 
-##### RQ.SRS-032.ClickHouse.Parquet.Import.Insert.SkipValues
+##### Skip Values
+
+###### RQ.SRS-032.ClickHouse.Parquet.Import.Insert.SkipValues
 version: 1.0
 
 [ClickHouse] SHALL support skipping unsupported values when reading from Parquet files. When the values are being skipped, the inserted values SHALL be the default value for the corresponding column's datatype.
@@ -945,7 +955,9 @@ FROM TestTable;
 └────────┴────────────┴──────┘
 ```
 
-##### RQ.SRS-032.ClickHouse.Parquet.Import.Insert.AutoTypecast
+##### Auto Typecast
+
+###### RQ.SRS-032.ClickHouse.Parquet.Import.Insert.AutoTypecast
 version: 1.0
 
 [ClickHouse] SHALL automatically typecast parquet datatype based on the types in the target table.
