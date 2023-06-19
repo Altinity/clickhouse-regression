@@ -238,6 +238,3 @@ def read_broken_timestamp(self):
 def feature(self):
     """Check reading broken parquet files."""
     Scenario(run=read_broken_bigint)
-
-
-feature()
