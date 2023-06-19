@@ -78,7 +78,7 @@ def regression(
             self.context.cluster = cluster
             columns = (
                 cluster.node("clickhouse1")
-                .command("cat /var/lib/test_files/clickhouse_table_def.txt")
+                .command("cat /var/lib/data/clickhouse_table_def.txt")
                 .output.strip()
                 .split(".")
             )
@@ -157,6 +157,11 @@ def regression(
                 run=load("parquet.tests.chunked_array", "feature"),
                 parallel=True,
                 executor=executor,
+            )
+            Feature(
+                run=load("parquet.tests.read_broken_bigint", "feature"),
+                parallel=True,
+                executor=executor
             )
 
             join()
