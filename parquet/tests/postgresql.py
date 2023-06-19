@@ -8,8 +8,8 @@ from s3.tests.common import *
 @TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_PostgreSQL("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_Insert("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_Select("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_Datatypes_Supported("1.0"),
 )
 def postgresql_engine_to_parquet_file_to_postgresql_engine(self):
     """Check that ClickHouse reads data from a `PostgreSQL` table engine into a Parquet file and
@@ -86,8 +86,8 @@ def postgresql_engine_to_parquet_file_to_postgresql_engine(self):
 @TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_Parquet_TableFunctions_PostgreSQL("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_Insert("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_Select("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_Datatypes_Supported("1.0"),
 )
 def postgresql_function_to_parquet_file_to_postgresql_function(self):
     """Check that ClickHouse reads data from a `postgresql` table function into a Parquet file and

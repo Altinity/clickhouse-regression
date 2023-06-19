@@ -231,7 +231,7 @@ def read_broken_utinyint(self):
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_Timestamp(
+    RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_TimestampMS(
         "1.0"
     )
 )
@@ -256,7 +256,7 @@ def read_broken_timestamp_ms(self):
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_Timestamp(
+    RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_TimestampUS(
         "1.0"
     )
 )
