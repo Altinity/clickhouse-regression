@@ -5,8 +5,11 @@ from parquet.requirements import *
 from helpers.common import *
 
 
-def io_error_message():
-    return (36, "Exception: IOError")
+def io_error_message(error):
+    return (
+        36,
+        f"Exception: IOError: {error}: Cannot extract table structure from Parquet format file",
+    )
 
 
 @TestScenario
@@ -15,12 +18,10 @@ def io_error_message():
 )
 def read_broken_date(self):
     node = self.context.node
-    exitcode, message = io_error_message()
+    exitcode, message = io_error_message("DATE can only annotate INT32")
 
     with Given("I have a Parquet file with broken date value"):
-        broken_date_parquet = os.path.join(
-            current_dir(), "..", "data", "broken_parquet", "broken_date.parquet"
-        )
+        broken_date_parquet = os.path.join("broken", "broken_date.parquet")
 
     with When("I try to import the broken Parquet file into the table"):
         node.query(
@@ -40,19 +41,17 @@ def read_broken_date(self):
 )
 def read_broken_int(self):
     node = self.context.node
-    exitcode, message = io_error_message()
+    exitcode, message = io_error_message("INT_32 can only annotate INT32")
 
     with Given("I have a Parquet file with broken int value"):
-        broken_date_parquet = os.path.join(
-            current_dir(), "..", "data", "broken_parquet", "broken_int.parquet"
-        )
+        broken_date_parquet = os.path.join("broken", "broken_int.parquet")
 
     with When("I try to import the broken Parquet file into the table"):
         node.query(
             f"""
             CREATE TABLE imported_from_parquet
             ENGINE = MergeTree
-            ORDER BY tuple() AS SELECT * FROM file({broken_date_parquet}, Parquet)
+            ORDER BY tuple() AS SELECT * FROM file('{broken_date_parquet}', Parquet)
             """,
             message=message,
             exitcode=exitcode,
@@ -67,7 +66,7 @@ def read_broken_int(self):
 )
 def read_broken_bigint(self):
     node = self.context.node
-    exitcode, message = io_error_message()
+    exitcode, message = io_error_message("INT_64 can only annotate INT64")
 
     with Given("I have a Parquet file with broken bigint value"):
         broken_date_parquet = os.path.join("broken", "broken_bigint.parquet")
@@ -91,12 +90,10 @@ def read_broken_bigint(self):
 )
 def read_broken_smallint(self):
     node = self.context.node
-    exitcode, message = io_error_message()
+    exitcode, message = io_error_message("INT_16 can only annotate INT32")
 
     with Given("I have a Parquet file with broken smallint value"):
-        broken_date_parquet = os.path.join(
-            current_dir(), "..", "data", "broken_parquet", "broken_smallint.parquet"
-        )
+        broken_date_parquet = os.path.join("broken", "broken_smallint.parquet")
     with When("I try to import the broken Parquet file into the table"):
         node.query(
             f"""
@@ -117,12 +114,10 @@ def read_broken_smallint(self):
 )
 def read_broken_tinyint(self):
     node = self.context.node
-    exitcode, message = io_error_message()
+    exitcode, message = io_error_message("INT_8 can only annotate INT32")
 
     with Given("I have a Parquet file with broken tinyint value"):
-        broken_date_parquet = os.path.join(
-            current_dir(), "..", "data", "broken_parquet", "broken_tinyint.parquet"
-        )
+        broken_date_parquet = os.path.join("broken", "broken_tinyint.parquet")
 
     with When("I try to import the broken Parquet file into the table"):
         node.query(
@@ -142,12 +137,10 @@ def read_broken_tinyint(self):
 )
 def read_broken_uint(self):
     node = self.context.node
-    exitcode, message = io_error_message()
+    exitcode, message = io_error_message("UINT_32 can only annotate INT32")
 
     with Given("I have a Parquet file with broken uint value"):
-        broken_date_parquet = os.path.join(
-            current_dir(), "..", "data", "broken_parquet", "broken_uinteger.parquet"
-        )
+        broken_date_parquet = os.path.join("broken", "broken_uinteger.parquet")
 
     with When("I try to import the broken Parquet file into the table"):
         node.query(
@@ -169,12 +162,10 @@ def read_broken_uint(self):
 )
 def read_broken_ubigint(self):
     node = self.context.node
-    exitcode, message = io_error_message()
+    exitcode, message = io_error_message("UINT_64 can only annotate INT64")
 
     with Given("I have a Parquet file with broken ubigint value"):
-        broken_date_parquet = os.path.join(
-            current_dir(), "..", "data", "broken_parquet", "broken_ubigint.parquet"
-        )
+        broken_date_parquet = os.path.join("broken", "broken_ubigint.parquet")
 
     with When("I try to import the broken Parquet file into the table"):
         node.query(
@@ -196,12 +187,10 @@ def read_broken_ubigint(self):
 )
 def read_broken_usmallint(self):
     node = self.context.node
-    exitcode, message = io_error_message()
+    exitcode, message = io_error_message("UINT_16 can only annotate INT32")
 
     with Given("I have a Parquet file with broken usmallint value"):
-        broken_date_parquet = os.path.join(
-            current_dir(), "..", "data", "broken_parquet", "broken_usmallint.parquet"
-        )
+        broken_date_parquet = os.path.join("broken", "broken_usmallint.parquet")
 
     with When("I try to import the broken Parquet file into the table"):
         node.query(
@@ -223,12 +212,10 @@ def read_broken_usmallint(self):
 )
 def read_broken_utinyint(self):
     node = self.context.node
-    exitcode, message = io_error_message()
+    exitcode, message = io_error_message("UINT_8 can only annotate INT32")
 
     with Given("I have a Parquet file with broken usmallint value"):
-        broken_date_parquet = os.path.join(
-            current_dir(), "..", "data", "broken_parquet", "broken_utinyint.parquet"
-        )
+        broken_date_parquet = os.path.join("broken", "broken_utinyint.parquet")
 
     with When("I try to import the broken Parquet file into the table"):
         node.query(
@@ -250,19 +237,17 @@ def read_broken_utinyint(self):
 )
 def read_broken_timestamp_ms(self):
     node = self.context.node
-    exitcode, message = io_error_message()
+    exitcode, message = io_error_message("TIMESTAMP_MILLIS can only annotate INT64")
 
     with Given("I have a Parquet file with broken timestamp (ms) value"):
-        broken_date_parquet = os.path.join(
-            current_dir(), "..", "data", "broken_parquet", "broken_timestamp_ms.parquet"
-        )
+        broken_date_parquet = os.path.join("broken", "broken_timestamp_ms.parquet")
 
     with When("I try to import the broken Parquet file into the table"):
         node.query(
             f"""
             CREATE TABLE imported_from_parquet
             ENGINE = MergeTree
-            ORDER BY tuple() AS SELECT * FROM file({broken_date_parquet}, Parquet)
+            ORDER BY tuple() AS SELECT * FROM file('{broken_date_parquet}', Parquet)
             """,
             message=message,
             exitcode=exitcode,
@@ -275,21 +260,19 @@ def read_broken_timestamp_ms(self):
         "1.0"
     )
 )
-def read_broken_timestamp(self):
+def read_broken_timestamp_us(self):
     node = self.context.node
-    exitcode, message = io_error_message()
+    exitcode, message = io_error_message("TIMESTAMP_MICROS can only annotate INT64")
 
-    with Given("I have a Parquet file with broken timestamp value"):
-        broken_date_parquet = os.path.join(
-            current_dir(), "..", "data", "broken_parquet", "broken_timestamp.parquet"
-        )
+    with Given("I have a Parquet file with broken timestamp (us) value"):
+        broken_date_parquet = os.path.join("broken", "broken_timestamp.parquet")
 
     with When("I try to import the broken Parquet file into the table"):
         node.query(
             f"""
             CREATE TABLE imported_from_parquet
             ENGINE = MergeTree
-            ORDER BY tuple() AS SELECT * FROM file({broken_date_parquet}, Parquet)
+            ORDER BY tuple() AS SELECT * FROM file('{broken_date_parquet}', Parquet)
             """,
             message=message,
             exitcode=exitcode,
