@@ -1006,7 +1006,7 @@ def openssl_client_connection(
 ):
     """Check SSL connection using openssl s_client utility."""
     if node is None:
-        node = self.context.node
+        node = self.context.cluster.node("clickhouse1")
 
     if port is None:
         port = self.context.connection_port
