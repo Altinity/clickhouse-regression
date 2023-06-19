@@ -37,6 +37,23 @@ RQ_SRS_032_ClickHouse_Parquet_ClickHouseLocal = Requirement(
     num="4.1.2",
 )
 
+RQ_SRS_032_ClickHouse_Parquet_SupportedVersions = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.SupportedVersions",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing Parquet files with the following versions: `1.0.0`, `2.0.0`, `2.1.0`, `2.2.0`, `2.4.0`, `2.6.0`, `2.7.0`, `2.8.0`, `2.9.0`.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="4.1.3.1",
+)
+
 RQ_SRS_032_ClickHouse_Parquet_Encryption = Requirement(
     name="RQ.SRS-032.ClickHouse.Parquet.Encryption",
     version="1.0",
@@ -73,22 +90,6 @@ RQ_SRS_032_ClickHouse_Parquet_Structure = Requirement(
     link=None,
     level=3,
     num="4.3.1",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_SupportedVersions = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.SupportedVersions",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL support importing Parquet files with the following versions: `1.0.0`, `2.0.0`, `2.1.0`, `2.2.0`, `2.4.0`, `2.6.0`, `2.7.0`, `2.8.0`, `2.9.0`.\n"
-        "\n"
-    ),
-    link=None,
-    level=4,
-    num="4.3.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Compression_None = Requirement(
@@ -2625,16 +2626,16 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.ClickHouseLocal", level=3, num="4.1.2"
         ),
+        Heading(name="Supported Parquet Versions", level=3, num="4.1.3"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.SupportedVersions",
+            level=4,
+            num="4.1.3.1",
+        ),
         Heading(name="Parquet Encryption", level=2, num="4.2"),
         Heading(name="RQ.SRS-032.ClickHouse.Parquet.Encryption", level=3, num="4.2.1"),
         Heading(name="DESCRIBE Parquet", level=2, num="4.3"),
         Heading(name="RQ.SRS-032.ClickHouse.Parquet.Structure", level=3, num="4.3.1"),
-        Heading(name="Supported Parquet Versions", level=3, num="4.3.2"),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.SupportedVersions",
-            level=4,
-            num="4.3.2.1",
-        ),
         Heading(name="Compression", level=2, num="4.4"),
         Heading(name="None", level=3, num="4.4.1"),
         Heading(
@@ -3298,9 +3299,9 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
     requirements=(
         RQ_SRS_032_ClickHouse_Parquet,
         RQ_SRS_032_ClickHouse_Parquet_ClickHouseLocal,
+        RQ_SRS_032_ClickHouse_Parquet_SupportedVersions,
         RQ_SRS_032_ClickHouse_Parquet_Encryption,
         RQ_SRS_032_ClickHouse_Parquet_Structure,
-        RQ_SRS_032_ClickHouse_Parquet_SupportedVersions,
         RQ_SRS_032_ClickHouse_Parquet_Compression_None,
         RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip,
         RQ_SRS_032_ClickHouse_Parquet_Compression_Brotli,
@@ -3435,12 +3436,12 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
   * 4.1 [Working With Parquet](#working-with-parquet)
     * 4.1.1 [RQ.SRS-032.ClickHouse.Parquet](#rqsrs-032clickhouseparquet)
     * 4.1.2 [RQ.SRS-032.ClickHouse.Parquet.ClickHouseLocal](#rqsrs-032clickhouseparquetclickhouselocal)
+    * 4.1.3 [Supported Parquet Versions](#supported-parquet-versions)
+      * 4.1.3.1 [RQ.SRS-032.ClickHouse.Parquet.SupportedVersions](#rqsrs-032clickhouseparquetsupportedversions)
   * 4.2 [Parquet Encryption](#parquet-encryption)
     * 4.2.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption](#rqsrs-032clickhouseparquetencryption)
   * 4.3 [DESCRIBE Parquet](#describe-parquet)
     * 4.3.1 [RQ.SRS-032.ClickHouse.Parquet.Structure](#rqsrs-032clickhouseparquetstructure)
-    * 4.3.2 [Supported Parquet Versions](#supported-parquet-versions)
-      * 4.3.2.1 [RQ.SRS-032.ClickHouse.Parquet.SupportedVersions](#rqsrs-032clickhouseparquetsupportedversions)
   * 4.4 [Compression](#compression)
     * 4.4.1 [None](#none)
       * 4.4.1.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.None](#rqsrs-032clickhouseparquetcompressionnone)
@@ -3972,6 +3973,14 @@ version: 1.0
 
 [ClickHouse] SHALL support the usage of `clickhouse-local` with `Parquet` data format.
 
+#### Supported Parquet Versions
+
+##### RQ.SRS-032.ClickHouse.Parquet.SupportedVersions
+version: 1.0
+
+[ClickHouse] SHALL support importing Parquet files with the following versions: `1.0.0`, `2.0.0`, `2.1.0`, `2.2.0`, `2.4.0`, `2.6.0`, `2.7.0`, `2.8.0`, `2.9.0`.
+
+
 ### Parquet Encryption
 
 #### RQ.SRS-032.ClickHouse.Parquet.Encryption
@@ -3991,13 +4000,6 @@ For example,
 ```sql
 DESCRIBE TABLE file('data.parquet', Parquet)
 ```
-
-#### Supported Parquet Versions
-
-##### RQ.SRS-032.ClickHouse.Parquet.SupportedVersions
-version: 1.0
-
-[ClickHouse] SHALL support importing Parquet files with the following versions: `1.0.0`, `2.0.0`, `2.1.0`, `2.2.0`, `2.4.0`, `2.6.0`, `2.7.0`, `2.8.0`, `2.9.0`.
 
 ### Compression
 
