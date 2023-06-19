@@ -10,12 +10,12 @@
   * 4.1 [Working With Parquet](#working-with-parquet)
     * 4.1.1 [RQ.SRS-032.ClickHouse.Parquet](#rqsrs-032clickhouseparquet)
     * 4.1.2 [RQ.SRS-032.ClickHouse.Parquet.ClickHouseLocal](#rqsrs-032clickhouseparquetclickhouselocal)
+    * 4.1.3 [Supported Parquet Versions](#supported-parquet-versions)
+      * 4.1.3.1 [RQ.SRS-032.ClickHouse.Parquet.SupportedVersions](#rqsrs-032clickhouseparquetsupportedversions)
   * 4.2 [Parquet Encryption](#parquet-encryption)
     * 4.2.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption](#rqsrs-032clickhouseparquetencryption)
   * 4.3 [DESCRIBE Parquet](#describe-parquet)
     * 4.3.1 [RQ.SRS-032.ClickHouse.Parquet.Structure](#rqsrs-032clickhouseparquetstructure)
-    * 4.3.2 [Supported Parquet Versions](#supported-parquet-versions)
-      * 4.3.2.1 [RQ.SRS-032.ClickHouse.Parquet.SupportedVersions](#rqsrs-032clickhouseparquetsupportedversions)
   * 4.4 [Compression](#compression)
     * 4.4.1 [None](#none)
       * 4.4.1.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.None](#rqsrs-032clickhouseparquetcompressionnone)
@@ -547,6 +547,14 @@ version: 1.0
 
 [ClickHouse] SHALL support the usage of `clickhouse-local` with `Parquet` data format.
 
+#### Supported Parquet Versions
+
+##### RQ.SRS-032.ClickHouse.Parquet.SupportedVersions
+version: 1.0
+
+[ClickHouse] SHALL support importing Parquet files with the following versions: `1.0.0`, `2.0.0`, `2.1.0`, `2.2.0`, `2.4.0`, `2.6.0`, `2.7.0`, `2.8.0`, `2.9.0`.
+
+
 ### Parquet Encryption
 
 #### RQ.SRS-032.ClickHouse.Parquet.Encryption
@@ -566,13 +574,6 @@ For example,
 ```sql
 DESCRIBE TABLE file('data.parquet', Parquet)
 ```
-
-#### Supported Parquet Versions
-
-##### RQ.SRS-032.ClickHouse.Parquet.SupportedVersions
-version: 1.0
-
-[ClickHouse] SHALL support importing Parquet files with the following versions: `1.0.0`, `2.0.0`, `2.1.0`, `2.2.0`, `2.4.0`, `2.6.0`, `2.7.0`, `2.8.0`, `2.9.0`.
 
 ### Compression
 
