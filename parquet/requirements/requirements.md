@@ -390,13 +390,18 @@ flowchart TB;
             CorruptedNo[No]
         end
 
-        subgraph Possible_Corruptions
+        subgraph Possible_Corruptions[Possible Corruptions]
             direction LR
             CorruptFile[Corrupt File]
             CorruptColumn[Corrupted Column]
             CorruptPageHeader[Corrupt Page Header]
             CorruptPageData[Corrupted Page Data]
             CorruptColumnValues[Corrupted Column Values]
+        end
+
+        subgraph Error
+            direction LR
+            Error_message[File is not inserted into ClickHouse. Error Message Is Shown.]
         end
 
         subgraph ClickHouse[ClickHouse]
@@ -540,7 +545,6 @@ flowchart TB;
         end
     end
 
-Error[ClickHouse outputs an error]
 
 Sources --> Compression --> Encryption --> Parquet_File_in 
 Parquet_File_in --> CorruptedYes
