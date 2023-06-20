@@ -9,18 +9,17 @@
             <privateKeyFile>/etc/clickhouse-server/config.d/server.key</privateKeyFile>
             <dhParamsFile>/etc/clickhouse-server/config.d/dhparam.pem</dhParamsFile>
             <verificationMode>none</verificationMode>
-            <loadDefaultCAFile>True</loadDefaultCAFile>
+            <loadDefaultCAFile>true</loadDefaultCAFile>
             <cipherList>ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-GCM-SHA384</cipherList>
             <requireTLSv1_2>true</requireTLSv1_2>
             <disableProtocols>sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3</disableProtocols>
             <cacheSessions>true</cacheSessions>
-            <disableProtocols>sslv2,sslv3</disableProtocols>
             <preferServerCiphers>true</preferServerCiphers>
         </server>
         <client>
             <certificateFile>/etc/clickhouse-server/config.d/server.crt</certificateFile>
             <privateKeyFile>/etc/clickhouse-server/config.d/server.key</privateKeyFile>
-            <loadDefaultCAFile>True</loadDefaultCAFile>
+            <loadDefaultCAFile>true</loadDefaultCAFile>
             <cacheSessions>true</cacheSessions>
             <requireTLSv1_2>true</requireTLSv1_2>
             <disableProtocols>sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3</disableProtocols>
