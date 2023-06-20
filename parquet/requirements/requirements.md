@@ -150,9 +150,9 @@
       * 4.8.5.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.ODBC](#rqsrs-032clickhouseparquettablefunctionsodbc)
     * 4.8.6 [HDFS](#hdfs)
       * 4.8.6.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.HDFS](#rqsrs-032clickhouseparquettablefunctionshdfs)
-    * 4.8.7 [remote](#remote)
+    * 4.8.7 [Remote](#remote)
       * 4.8.7.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.Remote](#rqsrs-032clickhouseparquettablefunctionsremote)
-    * 4.8.8 [mysql](#mysql)
+    * 4.8.8 [MySQL](#mysql)
       * 4.8.8.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.MySQL](#rqsrs-032clickhouseparquettablefunctionsmysql)
     * 4.8.9 [PostgreSQL](#postgresql)
       * 4.8.9.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.PostgreSQL](#rqsrs-032clickhouseparquettablefunctionspostgresql)
@@ -209,7 +209,7 @@
       * 4.10.2.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Column](#rqsrs-032clickhouseparquetmetadatacolumn)
       * 4.10.2.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Header](#rqsrs-032clickhouseparquetmetadataheader)
   * 4.11 [Error Recovery](#error-recovery)
-    * 4.11.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.Corrupt.Metadata.MagicNumber](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptmetadatamagicnumber)
+    * 4.11.1 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.MagicNumber](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatamagicnumber)
     * 4.11.2 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.File](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatafile)
     * 4.11.3 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.Column](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatacolumn)
     * 4.11.4 [RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.PageHeader](#rqsrs-032clickhouseparqueterrorrecoverycorruptmetadatapageheader)
@@ -1555,14 +1555,14 @@ version: 1.0
 
 [ClickHouse] SHALL support `hdfs` table function for importing and exporting Parquet format.
 
-#### remote
+#### Remote
 
 ##### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.Remote
 version: 1.0
 
 [ClickHouse] SHALL support `remote` table function for importing and exporting Parquet format.
 
-#### mysql
+#### MySQL
 
 ##### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.MySQL
 version: 1.0
@@ -1938,7 +1938,7 @@ version: 1.0
 
 ### Error Recovery
 
-#### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.Corrupt.Metadata.MagicNumber
+#### RQ.SRS-032.ClickHouse.Parquet.ErrorRecovery.Corrupt.Metadata.MagicNumber
 version: 1.0
 
 [ClickHouse] SHALL output an error if the 4-byte magic number "PAR1" is missing from the Parquet metadata.
