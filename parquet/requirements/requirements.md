@@ -465,7 +465,6 @@ flowchart TB;
 
         subgraph PossibleCorruptions[Possible Corrupted Parquet Datatypes]
             direction LR;
-            subgraph Corrupted_Values[Corrupted Values]
                 UInt8_in[UInt8]
                 Bool_in[Bool]
                 Int8_in[Int8]
