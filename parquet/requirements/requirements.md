@@ -463,6 +463,32 @@ flowchart TB;
     Parquet_File_in[Parquet File]
     Parquet_File_out[Parquet File]
 
+        subgraph PossibleCorruptions[Possible Corrupted Parquet Datatypes]
+            direction LR;
+            subgraph Corrupted_Values[Corrupted Values]
+                UInt8_in[UInt8]
+                Bool_in[Bool]
+                Int8_in[Int8]
+                UInt16_in[UInt16]
+                Int16_in[Int16]
+                UInt32_in[UInt32]
+                Int32_in[Int32]
+                UInt64_in[UInt64]
+                Int64_in[Int64]
+                Float_in[Float]
+                Half_Float_in[Half Float]
+                Double_in[Double]
+                Date32_in[Date32]
+                Date64_in[Date62]
+                Timestamp_in[Timestamp]
+                String_in[String]
+                Binary_in[Binary]
+                Decimal_in[Decimal]
+                List_in[List]
+                Struct_in[Struct]
+                Map_in[Map]
+            end
+
         subgraph TypeConversion[Parquet type > ClickHouse type > Parquet type]
             direction LR;
             subgraph Insert_types[Parquet]
