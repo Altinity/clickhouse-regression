@@ -389,7 +389,16 @@ flowchart TB;
             CorruptedYes[Yes]
             CorruptedNo[No]
         end
-       
+
+        subgraph Possible_Corruptions
+            direction LR
+            CorruptFile[Corrupt File]
+            CorruptColumn[Corrupted Column]
+            CorruptPageHeader[Corrupt Page Header]
+            CorruptPageData[Corrupted Page Data]
+            CorruptColumnValues[Corrupted Column Values]
+        end
+
         subgraph ClickHouse[ClickHouse]
             style ClickHouse fill:#fcbb30
             direction TB;
@@ -535,7 +544,7 @@ Error[ClickHouse outputs an error]
 
 Sources --> Compression --> Encryption --> Parquet_File_in 
 Parquet_File_in --> CorruptedYes
-CorruptedYes --> Error
+CorruptedYes --> Possible_Corruptions --> Error
 Parquet_File_in --> CorruptedNo --Insert Into ClickHouse --> Input_settings --> ClickHouse -- Read From ClickHouse --> Output_settings --> Parquet_File_out
 
 UInt8_in --> UInt8_ch --> UInt8_out
