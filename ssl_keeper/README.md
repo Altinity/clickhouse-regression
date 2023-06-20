@@ -39,7 +39,7 @@ Here is an example of the file contents:
             <privateKeyFile>${CERT_PATH}/server.key</privateKeyFile>
             <dhParamsFile>${CERT_PATH}/dhparam.pem</dhParamsFile>
             <verificationMode>none</verificationMode>
-            <loadDefaultCAFile>True</loadDefaultCAFile>
+            <loadDefaultCAFile>true</loadDefaultCAFile>
             <cipherList>ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-GCM-SHA384</cipherList>
             <requireTLSv1_2>true</requireTLSv1_2>
             <disableProtocols>sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3</disableProtocols>
