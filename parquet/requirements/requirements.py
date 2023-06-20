@@ -1157,8 +1157,8 @@ RQ_SRS_032_ClickHouse_Export_Parquet_Join = Requirement(
         "\n"
     ),
     link=None,
-    level=3,
-    num="4.4.13",
+    level=4,
+    num="4.4.13.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Union = Requirement(
@@ -1173,8 +1173,8 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Union = Requirement(
         "\n"
     ),
     link=None,
-    level=3,
-    num="4.4.14",
+    level=4,
+    num="4.4.13.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_View = Requirement(
@@ -1189,8 +1189,8 @@ RQ_SRS_032_ClickHouse_Parquet_Export_View = Requirement(
         "\n"
     ),
     link=None,
-    level=3,
-    num="4.4.15",
+    level=4,
+    num="4.4.13.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Select_MaterializedView = Requirement(
@@ -1205,8 +1205,8 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Select_MaterializedView = Requirement(
         "\n"
     ),
     link=None,
-    level=3,
-    num="4.4.16",
+    level=4,
+    num="4.4.13.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_Plain = Requirement(
@@ -1221,7 +1221,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_Plain = Requirement(
     ),
     link=None,
     level=5,
-    num="4.4.17.1.1",
+    num="4.4.14.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_RunLength = Requirement(
@@ -1237,7 +1237,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_RunLength = Requirement(
     ),
     link=None,
     level=5,
-    num="4.4.17.2.1",
+    num="4.4.14.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_Delta = Requirement(
@@ -1253,7 +1253,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_Delta = Requirement(
     ),
     link=None,
     level=5,
-    num="4.4.17.3.1",
+    num="4.4.14.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_DeltaLengthByteArray = Requirement(
@@ -1269,7 +1269,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_DeltaLengthByteArray = Requirement
     ),
     link=None,
     level=5,
-    num="4.4.17.4.1",
+    num="4.4.14.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_DeltaStrings = Requirement(
@@ -1285,7 +1285,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_DeltaStrings = Requirement(
     ),
     link=None,
     level=5,
-    num="4.4.17.5.1",
+    num="4.4.14.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_ByteStreamSplit = Requirement(
@@ -1301,7 +1301,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_ByteStreamSplit = Requirement(
     ),
     link=None,
     level=4,
-    num="4.4.17.7",
+    num="4.4.14.7",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Settings_RowGroupSize = Requirement(
@@ -1318,7 +1318,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Settings_RowGroupSize = Requirement(
     ),
     link=None,
     level=4,
-    num="4.4.18.1",
+    num="4.4.15.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Settings_StringAsString = Requirement(
@@ -1335,7 +1335,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Settings_StringAsString = Requirement(
     ),
     link=None,
     level=4,
-    num="4.4.18.2",
+    num="4.4.15.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Settings_StringAsFixedByteArray = Requirement(
@@ -1351,7 +1351,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Settings_StringAsFixedByteArray = Requireme
     ),
     link=None,
     level=4,
-    num="4.4.18.3",
+    num="4.4.15.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Settings_ParquetVersion = Requirement(
@@ -1368,7 +1368,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Settings_ParquetVersion = Requirement(
     ),
     link=None,
     level=4,
-    num="4.4.18.4",
+    num="4.4.15.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Settings_CompressionMethod = Requirement(
@@ -1385,7 +1385,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Settings_CompressionMethod = Requirement(
     ),
     link=None,
     level=4,
-    num="4.4.18.5",
+    num="4.4.15.5",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_DataTypes_TypeConversionFunction = Requirement(
@@ -1410,7 +1410,7 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_TypeConversionFunction = Requirement(
     ),
     link=None,
     level=4,
-    num="4.4.19.1",
+    num="4.4.16.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Encryption = Requirement(
@@ -2476,6 +2476,22 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptPageData = Requireme
     num="4.11.5",
 )
 
+RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptChecksum = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptChecksum",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL output an error if the Parquet file's checksum is corrupted.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="4.11.6",
+)
+
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues = Requirement(
     name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues",
     version="1.0",
@@ -2489,11 +2505,12 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues = Requi
         "Error message example,\n"
         "\n"
         "> DB::Exception: Cannot extract table structure from Parquet format file.\n"
-        "> \n"
+        "\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num="4.11.6",
+    num="4.11.7",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_Date = Requirement(
@@ -2509,8 +2526,8 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_Date = 
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.11.6.1.1",
+    level=4,
+    num="4.11.7.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_Int = Requirement(
@@ -2525,8 +2542,8 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_Int = R
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.11.6.1.2",
+    level=4,
+    num="4.11.7.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_BigInt = Requirement(
@@ -2541,8 +2558,8 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_BigInt 
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.11.6.1.3",
+    level=4,
+    num="4.11.7.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_SmallInt = Requirement(
@@ -2557,8 +2574,8 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_SmallIn
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.11.6.1.4",
+    level=4,
+    num="4.11.7.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_TinyInt = Requirement(
@@ -2573,8 +2590,8 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_TinyInt
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.11.6.1.5",
+    level=4,
+    num="4.11.7.5",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_UInt = Requirement(
@@ -2589,8 +2606,8 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_UInt = 
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.11.6.1.6",
+    level=4,
+    num="4.11.7.6",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_UBigInt = Requirement(
@@ -2605,8 +2622,8 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_UBigInt
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.11.6.1.7",
+    level=4,
+    num="4.11.7.7",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_USmallInt = Requirement(
@@ -2621,8 +2638,8 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_USmallI
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.11.6.1.8",
+    level=4,
+    num="4.11.7.8",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_UTinyInt = Requirement(
@@ -2638,8 +2655,8 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_UTinyIn
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.11.6.1.9",
+    level=4,
+    num="4.11.7.9",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_TimestampUS = Requirement(
@@ -2654,8 +2671,8 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_Timesta
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.11.6.1.10",
+    level=4,
+    num="4.11.7.10",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_TimestampMS = Requirement(
@@ -2670,8 +2687,8 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_Timesta
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.11.6.1.11",
+    level=4,
+    num="4.11.7.11",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_Bool = Requirement(
@@ -2686,8 +2703,8 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_Bool = 
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.11.6.1.12",
+    level=4,
+    num="4.11.7.12",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_Float = Requirement(
@@ -2702,8 +2719,8 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_Float =
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.11.6.1.13",
+    level=4,
+    num="4.11.7.13",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_Double = Requirement(
@@ -2718,8 +2735,8 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_Double 
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.11.6.1.14",
+    level=4,
+    num="4.11.7.14",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_TimeMS = Requirement(
@@ -2734,8 +2751,8 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_TimeMS 
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.11.6.1.15",
+    level=4,
+    num="4.11.7.15",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_TimeUS = Requirement(
@@ -2750,8 +2767,8 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_TimeUS 
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.11.6.1.16",
+    level=4,
+    num="4.11.7.16",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_TimeNS = Requirement(
@@ -2766,8 +2783,8 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_TimeNS 
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.11.6.1.17",
+    level=4,
+    num="4.11.7.17",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_String = Requirement(
@@ -2782,8 +2799,8 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_String 
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.11.6.1.18",
+    level=4,
+    num="4.11.7.18",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_Binary = Requirement(
@@ -2798,8 +2815,8 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_Binary 
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.11.6.1.19",
+    level=4,
+    num="4.11.7.19",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_FixedLengthByteArray = Requirement(
@@ -2814,8 +2831,8 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_FixedLe
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.11.6.1.20",
+    level=4,
+    num="4.11.7.20",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_Decimal = Requirement(
@@ -2830,8 +2847,8 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_Decimal
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.11.6.1.21",
+    level=4,
+    num="4.11.7.21",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_List = Requirement(
@@ -2846,8 +2863,8 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_List = 
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.11.6.1.22",
+    level=4,
+    num="4.11.7.22",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_Struct = Requirement(
@@ -2862,8 +2879,8 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_Struct 
         "\n"
     ),
     link=None,
-    level=5,
-    num="4.11.6.1.23",
+    level=4,
+    num="4.11.7.23",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_Map = Requirement(
@@ -2876,21 +2893,6 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_Map = R
     description=(
         "[ClickHouse] SHALL output an error when trying to import the Parquet files with corrupt `MAP` values.\n"
         "\n"
-    ),
-    link=None,
-    level=5,
-    num="4.11.6.1.24",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptChecksum = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptChecksum",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL output an error if the Parquet file's checksum is corrupted.\n"
         "\n"
         "\n"
         "[ClickHouse]: https://clickhouse.com\n"
@@ -2901,7 +2903,7 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptChecksum = Requireme
     ),
     link=None,
     level=4,
-    num="4.11.6.2",
+    num="4.11.7.24",
 )
 
 SRS032_ClickHouse_Parquet_Data_Format = Specification(
@@ -3174,88 +3176,89 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             level=4,
             num="4.4.12.1",
         ),
+        Heading(name="Query Types", level=3, num="4.4.13"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Export.Parquet.Join", level=3, num="4.4.13"
+            name="RQ.SRS-032.ClickHouse.Export.Parquet.Join", level=4, num="4.4.13.1"
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Export.Union", level=3, num="4.4.14"
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.Union", level=4, num="4.4.13.2"
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Export.View", level=3, num="4.4.15"
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.View", level=4, num="4.4.13.3"
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Select.MaterializedView",
-            level=3,
-            num="4.4.16",
+            level=4,
+            num="4.4.13.4",
         ),
-        Heading(name="Export Encoded", level=3, num="4.4.17"),
-        Heading(name="Plain (Export)", level=4, num="4.4.17.1"),
+        Heading(name="Export Encoded", level=3, num="4.4.14"),
+        Heading(name="Plain (Export)", level=4, num="4.4.14.1"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Plain",
             level=5,
-            num="4.4.17.1.1",
+            num="4.4.14.1.1",
         ),
-        Heading(name="Run Length Encoding (Export)", level=4, num="4.4.17.2"),
+        Heading(name="Run Length Encoding (Export)", level=4, num="4.4.14.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.RunLength",
             level=5,
-            num="4.4.17.2.1",
+            num="4.4.14.2.1",
         ),
-        Heading(name="Delta (Export)", level=4, num="4.4.17.3"),
+        Heading(name="Delta (Export)", level=4, num="4.4.14.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Delta",
             level=5,
-            num="4.4.17.3.1",
+            num="4.4.14.3.1",
         ),
-        Heading(name="Delta-length byte array (Export)", level=4, num="4.4.17.4"),
+        Heading(name="Delta-length byte array (Export)", level=4, num="4.4.14.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.DeltaLengthByteArray",
             level=5,
-            num="4.4.17.4.1",
+            num="4.4.14.4.1",
         ),
-        Heading(name="Delta Strings (Export)", level=4, num="4.4.17.5"),
+        Heading(name="Delta Strings (Export)", level=4, num="4.4.14.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.DeltaStrings",
             level=5,
-            num="4.4.17.5.1",
+            num="4.4.14.5.1",
         ),
-        Heading(name="Byte Stream Split (Export)", level=4, num="4.4.17.6"),
+        Heading(name="Byte Stream Split (Export)", level=4, num="4.4.14.6"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.ByteStreamSplit",
             level=4,
-            num="4.4.17.7",
+            num="4.4.14.7",
         ),
-        Heading(name="Export Settings", level=3, num="4.4.18"),
+        Heading(name="Export Settings", level=3, num="4.4.15"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Settings.RowGroupSize",
             level=4,
-            num="4.4.18.1",
+            num="4.4.15.1",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Settings.StringAsString",
             level=4,
-            num="4.4.18.2",
+            num="4.4.15.2",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Settings.StringAsFixedByteArray",
             level=4,
-            num="4.4.18.3",
+            num="4.4.15.3",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Settings.ParquetVersion",
             level=4,
-            num="4.4.18.4",
+            num="4.4.15.4",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Settings.CompressionMethod",
             level=4,
-            num="4.4.18.5",
+            num="4.4.15.5",
         ),
-        Heading(name="Type Conversion", level=3, num="4.4.19"),
+        Heading(name="Type Conversion", level=3, num="4.4.16"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.TypeConversionFunction",
             level=4,
-            num="4.4.19.1",
+            num="4.4.16.1",
         ),
         Heading(name="Parquet Encryption", level=2, num="4.5"),
         Heading(name="RQ.SRS-032.ClickHouse.Parquet.Encryption", level=3, num="4.5.1"),
@@ -3327,25 +3330,25 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             level=4,
             num="4.8.2.2",
         ),
-        Heading(name="s3", level=3, num="4.8.3"),
+        Heading(name="S3", level=3, num="4.8.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3",
             level=4,
             num="4.8.3.1",
         ),
-        Heading(name="jdbc", level=3, num="4.8.4"),
+        Heading(name="JDBC", level=3, num="4.8.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.JDBC",
             level=4,
             num="4.8.4.1",
         ),
-        Heading(name="odbc", level=3, num="4.8.5"),
+        Heading(name="ODBC", level=3, num="4.8.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.ODBC",
             level=4,
             num="4.8.5.1",
         ),
-        Heading(name="hdfs", level=3, num="4.8.6"),
+        Heading(name="HDFS", level=3, num="4.8.6"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableFunctions.HDFS",
             level=4,
@@ -3562,135 +3565,134 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             num="4.11.5",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues",
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptChecksum",
             level=3,
             num="4.11.6",
         ),
-        Heading(name="List of Corrupt Column Values", level=4, num="4.11.6.1"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues",
+            level=3,
+            num="4.11.7",
+        ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Date",
-            level=5,
-            num="4.11.6.1.1",
+            level=4,
+            num="4.11.7.1",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Int",
-            level=5,
-            num="4.11.6.1.2",
+            level=4,
+            num="4.11.7.2",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.BigInt",
-            level=5,
-            num="4.11.6.1.3",
+            level=4,
+            num="4.11.7.3",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.SmallInt",
-            level=5,
-            num="4.11.6.1.4",
+            level=4,
+            num="4.11.7.4",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.TinyInt",
-            level=5,
-            num="4.11.6.1.5",
+            level=4,
+            num="4.11.7.5",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.UInt",
-            level=5,
-            num="4.11.6.1.6",
+            level=4,
+            num="4.11.7.6",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.UBigInt",
-            level=5,
-            num="4.11.6.1.7",
+            level=4,
+            num="4.11.7.7",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.USmallInt",
-            level=5,
-            num="4.11.6.1.8",
+            level=4,
+            num="4.11.7.8",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.UTinyInt",
-            level=5,
-            num="4.11.6.1.9",
+            level=4,
+            num="4.11.7.9",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.TimestampUS",
-            level=5,
-            num="4.11.6.1.10",
+            level=4,
+            num="4.11.7.10",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.TimestampMS",
-            level=5,
-            num="4.11.6.1.11",
+            level=4,
+            num="4.11.7.11",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Bool",
-            level=5,
-            num="4.11.6.1.12",
+            level=4,
+            num="4.11.7.12",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Float",
-            level=5,
-            num="4.11.6.1.13",
+            level=4,
+            num="4.11.7.13",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Double",
-            level=5,
-            num="4.11.6.1.14",
+            level=4,
+            num="4.11.7.14",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.TimeMS",
-            level=5,
-            num="4.11.6.1.15",
+            level=4,
+            num="4.11.7.15",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.TimeUS",
-            level=5,
-            num="4.11.6.1.16",
+            level=4,
+            num="4.11.7.16",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.TimeNS",
-            level=5,
-            num="4.11.6.1.17",
+            level=4,
+            num="4.11.7.17",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.String",
-            level=5,
-            num="4.11.6.1.18",
+            level=4,
+            num="4.11.7.18",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Binary",
-            level=5,
-            num="4.11.6.1.19",
+            level=4,
+            num="4.11.7.19",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.FixedLengthByteArray",
-            level=5,
-            num="4.11.6.1.20",
+            level=4,
+            num="4.11.7.20",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Decimal",
-            level=5,
-            num="4.11.6.1.21",
+            level=4,
+            num="4.11.7.21",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.List",
-            level=5,
-            num="4.11.6.1.22",
+            level=4,
+            num="4.11.7.22",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Struct",
-            level=5,
-            num="4.11.6.1.23",
+            level=4,
+            num="4.11.7.23",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Map",
-            level=5,
-            num="4.11.6.1.24",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptChecksum",
             level=4,
-            num="4.11.6.2",
+            num="4.11.7.24",
         ),
     ),
     requirements=(
@@ -3812,6 +3814,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumn,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptPageHeader,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptPageData,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptChecksum,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_Date,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_Int,
@@ -3837,7 +3840,6 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_List,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_Struct,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_Map,
-        RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptChecksum,
     ),
     content="""
 # SRS032 ClickHouse Parquet Data Format
@@ -3930,31 +3932,32 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
       * 4.4.11.2 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Nested](#rqsrs-032clickhouseparquetexportdatatypesnested)
     * 4.4.12 [Exporting Chunked Columns](#exporting-chunked-columns)
       * 4.4.12.1 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.ChunkedColumns](#rqsrs-032clickhouseparquetexportdatatypeschunkedcolumns)
-    * 4.4.13 [RQ.SRS-032.ClickHouse.Export.Parquet.Join](#rqsrs-032clickhouseexportparquetjoin)
-    * 4.4.14 [RQ.SRS-032.ClickHouse.Parquet.Export.Union](#rqsrs-032clickhouseparquetexportunion)
-    * 4.4.15 [RQ.SRS-032.ClickHouse.Parquet.Export.View](#rqsrs-032clickhouseparquetexportview)
-    * 4.4.16 [RQ.SRS-032.ClickHouse.Parquet.Export.Select.MaterializedView](#rqsrs-032clickhouseparquetexportselectmaterializedview)
-    * 4.4.17 [Export Encoded](#export-encoded)
-      * 4.4.17.1 [Plain (Export)](#plain-export)
-        * 4.4.17.1.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Plain](#rqsrs-032clickhouseparquetexportencodingplain)
-      * 4.4.17.2 [Run Length Encoding (Export)](#run-length-encoding-export)
-        * 4.4.17.2.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.RunLength](#rqsrs-032clickhouseparquetexportencodingrunlength)
-      * 4.4.17.3 [Delta (Export)](#delta-export)
-        * 4.4.17.3.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Delta](#rqsrs-032clickhouseparquetexportencodingdelta)
-      * 4.4.17.4 [Delta-length byte array (Export)](#delta-length-byte-array-export)
-        * 4.4.17.4.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.DeltaLengthByteArray](#rqsrs-032clickhouseparquetexportencodingdeltalengthbytearray)
-      * 4.4.17.5 [Delta Strings (Export)](#delta-strings-export)
-        * 4.4.17.5.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.DeltaStrings](#rqsrs-032clickhouseparquetexportencodingdeltastrings)
-      * 4.4.17.6 [Byte Stream Split (Export)](#byte-stream-split-export)
-      * 4.4.17.7 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.ByteStreamSplit](#rqsrs-032clickhouseparquetexportencodingbytestreamsplit)
-    * 4.4.18 [Export Settings](#export-settings)
-      * 4.4.18.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.RowGroupSize](#rqsrs-032clickhouseparquetexportsettingsrowgroupsize)
-      * 4.4.18.2 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.StringAsString](#rqsrs-032clickhouseparquetexportsettingsstringasstring)
-      * 4.4.18.3 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.StringAsFixedByteArray](#rqsrs-032clickhouseparquetexportsettingsstringasfixedbytearray)
-      * 4.4.18.4 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.ParquetVersion](#rqsrs-032clickhouseparquetexportsettingsparquetversion)
-      * 4.4.18.5 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.CompressionMethod](#rqsrs-032clickhouseparquetexportsettingscompressionmethod)
-    * 4.4.19 [Type Conversion](#type-conversion)
-      * 4.4.19.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.TypeConversionFunction](#rqsrs-032clickhouseparquetdatatypestypeconversionfunction)
+    * 4.4.13 [Query Types](#query-types)
+      * 4.4.13.1 [RQ.SRS-032.ClickHouse.Export.Parquet.Join](#rqsrs-032clickhouseexportparquetjoin)
+      * 4.4.13.2 [RQ.SRS-032.ClickHouse.Parquet.Export.Union](#rqsrs-032clickhouseparquetexportunion)
+      * 4.4.13.3 [RQ.SRS-032.ClickHouse.Parquet.Export.View](#rqsrs-032clickhouseparquetexportview)
+      * 4.4.13.4 [RQ.SRS-032.ClickHouse.Parquet.Export.Select.MaterializedView](#rqsrs-032clickhouseparquetexportselectmaterializedview)
+    * 4.4.14 [Export Encoded](#export-encoded)
+      * 4.4.14.1 [Plain (Export)](#plain-export)
+        * 4.4.14.1.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Plain](#rqsrs-032clickhouseparquetexportencodingplain)
+      * 4.4.14.2 [Run Length Encoding (Export)](#run-length-encoding-export)
+        * 4.4.14.2.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.RunLength](#rqsrs-032clickhouseparquetexportencodingrunlength)
+      * 4.4.14.3 [Delta (Export)](#delta-export)
+        * 4.4.14.3.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Delta](#rqsrs-032clickhouseparquetexportencodingdelta)
+      * 4.4.14.4 [Delta-length byte array (Export)](#delta-length-byte-array-export)
+        * 4.4.14.4.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.DeltaLengthByteArray](#rqsrs-032clickhouseparquetexportencodingdeltalengthbytearray)
+      * 4.4.14.5 [Delta Strings (Export)](#delta-strings-export)
+        * 4.4.14.5.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.DeltaStrings](#rqsrs-032clickhouseparquetexportencodingdeltastrings)
+      * 4.4.14.6 [Byte Stream Split (Export)](#byte-stream-split-export)
+      * 4.4.14.7 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.ByteStreamSplit](#rqsrs-032clickhouseparquetexportencodingbytestreamsplit)
+    * 4.4.15 [Export Settings](#export-settings)
+      * 4.4.15.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.RowGroupSize](#rqsrs-032clickhouseparquetexportsettingsrowgroupsize)
+      * 4.4.15.2 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.StringAsString](#rqsrs-032clickhouseparquetexportsettingsstringasstring)
+      * 4.4.15.3 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.StringAsFixedByteArray](#rqsrs-032clickhouseparquetexportsettingsstringasfixedbytearray)
+      * 4.4.15.4 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.ParquetVersion](#rqsrs-032clickhouseparquetexportsettingsparquetversion)
+      * 4.4.15.5 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.CompressionMethod](#rqsrs-032clickhouseparquetexportsettingscompressionmethod)
+    * 4.4.16 [Type Conversion](#type-conversion)
+      * 4.4.16.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.TypeConversionFunction](#rqsrs-032clickhouseparquetdatatypestypeconversionfunction)
   * 4.5 [Parquet Encryption](#parquet-encryption)
     * 4.5.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption](#rqsrs-032clickhouseparquetencryption)
   * 4.6 [DESCRIBE Parquet](#describe-parquet)
@@ -3983,13 +3986,13 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
     * 4.8.2 [File](#file)
       * 4.8.2.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.File](#rqsrs-032clickhouseparquettablefunctionsfile)
       * 4.8.2.2 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.File.AutoDetectParquetFileFormat](#rqsrs-032clickhouseparquettablefunctionsfileautodetectparquetfileformat)
-    * 4.8.3 [s3](#s3)
+    * 4.8.3 [S3](#s3)
       * 4.8.3.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3](#rqsrs-032clickhouseparquettablefunctionss3)
-    * 4.8.4 [jdbc](#jdbc)
+    * 4.8.4 [JDBC](#jdbc)
       * 4.8.4.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.JDBC](#rqsrs-032clickhouseparquettablefunctionsjdbc)
-    * 4.8.5 [odbc](#odbc)
+    * 4.8.5 [ODBC](#odbc)
       * 4.8.5.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.ODBC](#rqsrs-032clickhouseparquettablefunctionsodbc)
-    * 4.8.6 [hdfs](#hdfs)
+    * 4.8.6 [HDFS](#hdfs)
       * 4.8.6.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.HDFS](#rqsrs-032clickhouseparquettablefunctionshdfs)
     * 4.8.7 [remote](#remote)
       * 4.8.7.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.Remote](#rqsrs-032clickhouseparquettablefunctionsremote)
@@ -4055,33 +4058,32 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
     * 4.11.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumn](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumn)
     * 4.11.4 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptPageHeader](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptpageheader)
     * 4.11.5 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptPageData](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptpagedata)
-    * 4.11.6 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvalues)
-      * 4.11.6.1 [List of Corrupt Column Values](#list-of-corrupt-column-values)
-        * 4.11.6.1.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Date](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesdate)
-        * 4.11.6.1.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Int](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesint)
-        * 4.11.6.1.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.BigInt](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesbigint)
-        * 4.11.6.1.4 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.SmallInt](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluessmallint)
-        * 4.11.6.1.5 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.TinyInt](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluestinyint)
-        * 4.11.6.1.6 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.UInt](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesuint)
-        * 4.11.6.1.7 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.UBigInt](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesubigint)
-        * 4.11.6.1.8 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.USmallInt](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesusmallint)
-        * 4.11.6.1.9 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.UTinyInt](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesutinyint)
-        * 4.11.6.1.10 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.TimestampUS](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluestimestampus)
-        * 4.11.6.1.11 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.TimestampMS](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluestimestampms)
-        * 4.11.6.1.12 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Bool](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesbool)
-        * 4.11.6.1.13 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Float](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesfloat)
-        * 4.11.6.1.14 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Double](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesdouble)
-        * 4.11.6.1.15 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.TimeMS](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluestimems)
-        * 4.11.6.1.16 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.TimeUS](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluestimeus)
-        * 4.11.6.1.17 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.TimeNS](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluestimens)
-        * 4.11.6.1.18 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.String](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesstring)
-        * 4.11.6.1.19 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Binary](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesbinary)
-        * 4.11.6.1.20 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.FixedLengthByteArray](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesfixedlengthbytearray)
-        * 4.11.6.1.21 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Decimal](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesdecimal)
-        * 4.11.6.1.22 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.List](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvalueslist)
-        * 4.11.6.1.23 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Struct](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesstruct)
-        * 4.11.6.1.24 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Map](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesmap)
-      * 4.11.6.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptChecksum](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptchecksum)
+    * 4.11.6 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptChecksum](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptchecksum)
+    * 4.11.7 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvalues)
+      * 4.11.7.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Date](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesdate)
+      * 4.11.7.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Int](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesint)
+      * 4.11.7.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.BigInt](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesbigint)
+      * 4.11.7.4 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.SmallInt](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluessmallint)
+      * 4.11.7.5 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.TinyInt](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluestinyint)
+      * 4.11.7.6 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.UInt](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesuint)
+      * 4.11.7.7 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.UBigInt](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesubigint)
+      * 4.11.7.8 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.USmallInt](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesusmallint)
+      * 4.11.7.9 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.UTinyInt](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesutinyint)
+      * 4.11.7.10 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.TimestampUS](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluestimestampus)
+      * 4.11.7.11 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.TimestampMS](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluestimestampms)
+      * 4.11.7.12 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Bool](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesbool)
+      * 4.11.7.13 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Float](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesfloat)
+      * 4.11.7.14 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Double](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesdouble)
+      * 4.11.7.15 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.TimeMS](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluestimems)
+      * 4.11.7.16 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.TimeUS](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluestimeus)
+      * 4.11.7.17 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.TimeNS](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluestimens)
+      * 4.11.7.18 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.String](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesstring)
+      * 4.11.7.19 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Binary](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesbinary)
+      * 4.11.7.20 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.FixedLengthByteArray](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesfixedlengthbytearray)
+      * 4.11.7.21 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Decimal](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesdecimal)
+      * 4.11.7.22 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.List](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvalueslist)
+      * 4.11.7.23 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Struct](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesstruct)
+      * 4.11.7.24 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Map](#rqsrs-032clickhouseparquetmetadataerrorrecoverycorruptcolumnvaluesmap)
 
 
 ## Revision History
@@ -5137,22 +5139,24 @@ version: 1.0
 
 [ClickHouse] SHALL support exporting chunked columns to Parquet files.
 
-#### RQ.SRS-032.ClickHouse.Export.Parquet.Join
+#### Query Types
+
+##### RQ.SRS-032.ClickHouse.Export.Parquet.Join
 version: 1.0
 
 [ClickHouse] SHALL support exporting output of `SELECT` query with a `JOIN` clause into a Parquet file.
 
-#### RQ.SRS-032.ClickHouse.Parquet.Export.Union
+##### RQ.SRS-032.ClickHouse.Parquet.Export.Union
 version: 1.0
 
 [ClickHouse] SHALL support exporting output of `SELECT` query with a `UNION` clause into a Parquet file.
 
-#### RQ.SRS-032.ClickHouse.Parquet.Export.View
+##### RQ.SRS-032.ClickHouse.Parquet.Export.View
 version: 1.0
 
 [ClickHouse] SHALL support exporting output of `SELECT * FROM {view_name}` query into a Parquet file.
 
-#### RQ.SRS-032.ClickHouse.Parquet.Export.Select.MaterializedView
+##### RQ.SRS-032.ClickHouse.Parquet.Export.Select.MaterializedView
 version: 1.0
 
 [ClickHouse] SHALL support exporting output of `SELECT * FROM {mat_view_name}` query into a Parquet file.
@@ -5360,7 +5364,7 @@ version: 1.0
 SELECT * FROM file('data.parquet')
 ```
 
-#### s3
+#### S3
 
 ##### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.S3
 version: 1.0
@@ -5374,21 +5378,21 @@ SELECT *
 FROM gcs('https://storage.googleapis.com/my-test-bucket-768/data.parquet', Parquet)
 ```
 
-#### jdbc
+#### JDBC
 
 ##### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.JDBC
 version: 1.0
 
 [ClickHouse] SHALL support `jdbc` table function for import and exporting Parquet format.
 
-#### odbc
+#### ODBC
 
 ##### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.ODBC
 version: 1.0
 
 [ClickHouse] SHALL support `odbc` table function for importing and exporting Parquet format.
 
-#### hdfs
+#### HDFS
 
 ##### RQ.SRS-032.ClickHouse.Parquet.TableFunctions.HDFS
 version: 1.0
@@ -5818,6 +5822,11 @@ version: 1.0
 [ClickHouse] SHALL output an error when trying to access the corrupt `Page Data`.
 In this case that page SHALL be lost.
 
+#### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptChecksum
+version: 1.0
+
+[ClickHouse] SHALL output an error if the Parquet file's checksum is corrupted.
+
 #### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues
 version: 1.0
 
@@ -5826,135 +5835,130 @@ version: 1.0
 Error message example,
 
 > DB::Exception: Cannot extract table structure from Parquet format file.
-> 
-##### List of Corrupt Column Values
 
-###### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Date
+
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Date
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to import the Parquet files with corrupt `date` values.
 
 
-###### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Int
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Int
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to import the Parquet files with corrupt `Int` values.
 
-###### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.BigInt
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.BigInt
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to import the Parquet files with corrupt `BigInt` values.
 
-###### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.SmallInt
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.SmallInt
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to import the Parquet files with corrupt `SmallInt` values.
 
-###### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.TinyInt
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.TinyInt
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to import the Parquet files with corrupt `TinyInt` values.
 
-###### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.UInt
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.UInt
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to import the Parquet files with corrupt `UInt` values.
 
-###### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.UBigInt
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.UBigInt
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to import the Parquet files with corrupt `UBigInt` values.
 
-###### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.USmallInt
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.USmallInt
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to import the Parquet files with corrupt `USmallInt` values.
 
-###### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.UTinyInt
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.UTinyInt
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to import the Parquet files with corrupt `UTinyInt` values.
 
 
-###### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.TimestampUS
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.TimestampUS
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to import the Parquet files with corrupt `Timestamp (us)` values.
 
-###### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.TimestampMS
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.TimestampMS
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to import the Parquet files with corrupt `Timestamp (ms)` values.
 
-###### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Bool
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Bool
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to import the Parquet files with corrupt `BOOL` values.
 
-###### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Float
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Float
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to import the Parquet files with corrupt `FLOAT` values.
 
-###### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Double
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Double
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to import the Parquet files with corrupt `DOUBLE` values.
 
-###### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.TimeMS
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.TimeMS
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to import the Parquet files with corrupt `TIME (ms)` values.
 
-###### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.TimeUS
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.TimeUS
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to import the Parquet files with corrupt `TIME (us)` values.
 
-###### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.TimeNS
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.TimeNS
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to import the Parquet files with corrupt `TIME (ns)` values.
 
-###### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.String
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.String
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to import the Parquet files with corrupt `STRING` values.
 
-###### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Binary
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Binary
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to import the Parquet files with corrupt `BINARY` values.
 
-###### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.FixedLengthByteArray
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.FixedLengthByteArray
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to import the Parquet files with corrupt `FIXED_LENGTH_BYTE_ARRAY` values.
 
-###### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Decimal
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Decimal
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to import the Parquet files with corrupt `DECIMAL` values.
 
-###### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.List
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.List
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to import the Parquet files with corrupt `LIST` values.
 
-###### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Struct
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Struct
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to import the Parquet files with corrupt `STRUCT` values.
 
-###### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Map
+##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptColumnValues.Map
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to import the Parquet files with corrupt `MAP` values.
 
-##### RQ.SRS-032.ClickHouse.Parquet.Metadata.ErrorRecovery.CorruptChecksum
-version: 1.0
-
-[ClickHouse] SHALL output an error if the Parquet file's checksum is corrupted.
 
 
 [ClickHouse]: https://clickhouse.com
