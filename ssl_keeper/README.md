@@ -44,7 +44,6 @@ Here is an example of the file contents:
             <requireTLSv1_2>true</requireTLSv1_2>
             <disableProtocols>sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3</disableProtocols>
             <cacheSessions>true</cacheSessions>
-            <disableProtocols>sslv2,sslv3</disableProtocols>
             <preferServerCiphers>true</preferServerCiphers>
         </server>
         <client>
