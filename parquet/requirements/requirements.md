@@ -553,6 +553,12 @@ flowchart TB;
                 Map_out[Map]
             end
 
+            subgraph AutoConversions[Type Auto Conversion Based On The Target Table]
+                direction LR
+                Parquet_type[Parquet Datatype]
+                ClickHouse_type[ClickHouse Datatype]
+            end
+
             subgraph Modifiers[Supported Modifiers]
                 direction LR
                 Nullable
@@ -576,6 +582,8 @@ Parquet_File_in --> CorruptedYes
 CorruptedYes --> Possible_Corruptions --> Error
 Parquet_File_in --> CorruptedNo --Insert Into ClickHouse --> Input_settings --> ClickHouse -- Read From ClickHouse --> Output_settings --> Parquet_File_out
 CorruptColumnValues --> PossibleCorruptions
+ClickHouse_type --> Parquet_type --> ClickHouse_type
+
 
 UInt8_in --> UInt8_ch --> UInt8_out
 Bool_in --> UInt8_ch
