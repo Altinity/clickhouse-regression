@@ -113,139 +113,139 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes = Requirement(
         ">\n"
         ">`Bool` -> `IPv6`\n"
         "\n"
-        "| Parquet to ClickHouse supported Datatypes | ClickHouse Datatype Family        | alias_to Datatype | case_insensitive |\n"
-        "|-------------------------------------------|-----------------------------------|-------------------|------------------|\n"
-        "|                                           | `JSON`                            |                   | 1                |\n"
-        "|                                           | `Polygon`                         |                   | 0                |\n"
-        "|                                           | `Ring`                            |                   | 0                |\n"
-        "|                                           | `Point`                           |                   | 0                |\n"
-        "|                                           | `SimpleAggregateFunction`         |                   | 0                |\n"
-        "|                                           | `IntervalQuarter`                 |                   | 0                |\n"
-        "|                                           | `IntervalMonth`                   |                   | 0                |\n"
-        "|                                           | `Int64`                           |                   | 0                |\n"
-        "|                                           | `IntervalDay`                     |                   | 0                |\n"
-        "|                                           | `IntervalHour`                    |                   | 0                |\n"
-        "|                                           | `IPv4`                            |                   | 0                |\n"
-        "|                                           | `IntervalSecond`                  |                   | 0                |\n"
-        "|                                           | `LowCardinality`                  |                   | 0                |\n"
-        "|                                           | `Int16`                           |                   | 0                |\n"
-        "|                                           | `UInt256`                         |                   | 0                |\n"
-        "|                                           | `AggregateFunction`               |                   | 0                |\n"
-        "|                                           | `MultiPolygon`                    |                   | 0                |\n"
-        "|                                           | `IPv6`                            |                   | 0                |\n"
-        "|                                           | `Nothing`                         |                   | 0                |\n"
-        "|                                           | `Decimal256`                      |                   | 1                |\n"
-        "|                                           | `Tuple`                           |                   | 0                |\n"
-        "|                                           | `Array`                           |                   | 0                |\n"
-        "|                                           | `IntervalMicrosecond`             |                   | 0                |\n"
-        "|                                           | `Bool`                            |                   | 1                |\n"
-        "|                                           | `Enum16`                          |                   | 0                |\n"
-        "|                                           | `IntervalMinute`                  |                   | 0                |\n"
-        "|                                           | `FixedString`                     |                   | 0                |\n"
-        "|                                           | `String`                          |                   | 0                |\n"
-        "|                                           | `DateTime`                        |                   | 1                |\n"
-        "|                                           | `Object`                          |                   | 0                |\n"
-        "|                                           | `Map`                             |                   | 0                |\n"
-        "|                                           | `UUID`                            |                   | 0                |\n"
-        "|                                           | `Decimal64`                       |                   | 1                |\n"
-        "|                                           | `Nullable`                        |                   | 0                |\n"
-        "|                                           | `Enum`                            |                   | 1                |\n"
-        "|                                           | `Int32`                           |                   | 0                |\n"
-        "|                                           | `UInt8`                           |                   | 0                |\n"
-        "|                                           | `Date`                            |                   | 1                |\n"
-        "|                                           | `Decimal32`                       |                   | 1                |\n"
-        "|                                           | `UInt128`                         |                   | 0                |\n"
-        "|                                           | `Float64`                         |                   | 0                |\n"
-        "|                                           | `Nested`                          |                   | 0                |\n"
-        "|                                           | `UInt16`                          |                   | 0                |\n"
-        "|                                           | `IntervalMillisecond`             |                   | 0                |\n"
-        "|                                           | `Int128`                          |                   | 0                |\n"
-        "|                                           | `Decimal128`                      |                   | 1                |\n"
-        "|                                           | `Int8`                            |                   | 0                |\n"
-        "|                                           | `Decimal`                         |                   | 1                |\n"
-        "|                                           | `Int256`                          |                   | 0                |\n"
-        "|                                           | `DateTime64`                      |                   | 1                |\n"
-        "|                                           | `Enum8`                           |                   | 0                |\n"
-        "|                                           | `DateTime32`                      |                   | 1                |\n"
-        "|                                           | `Date32`                          |                   | 1                |\n"
-        "|                                           | `IntervalWeek`                    |                   | 0                |\n"
-        "|                                           | `UInt64`                          |                   | 0                |\n"
-        "|                                           | `IntervalNanosecond`              |                   | 0                |\n"
-        "|                                           | `IntervalYear`                    |                   | 0                |\n"
-        "|                                           | `UInt32`                          |                   | 0                |\n"
-        "|                                           | `Float32`                         |                   | 0                |\n"
-        "|                                           | `bool`                            | `Bool`            | 1                |\n"
-        "|                                           | `INET6`                           | `IPv6`            | 1                |\n"
-        "|                                           | `INET4`                           | `IPv4`            | 1                |\n"
-        "|                                           | `ENUM`                            | `Enum`            | 1                |\n"
-        "|                                           | `BINARY`                          | `FixedString`     | 1                |\n"
-        "|                                           | `GEOMETRY`                        | `String`          | 1                |\n"
-        "|                                           | `NATIONAL CHAR VARYING`           | `String`          | 1                |\n"
-        "|                                           | `BINARY VARYING`                  | `String`          | 1                |\n"
-        "|                                           | `NCHAR LARGE OBJECT`              | `String`          | 1                |\n"
-        "|                                           | `NATIONAL CHARACTER VARYING`      | `String`          | 1                |\n"
-        "|                                           | `boolean`                         | `Bool`            | 1                |\n"
-        "|                                           | `NATIONAL CHARACTER LARGE OBJECT` | `String`          | 1                |\n"
-        "|                                           | `NATIONAL CHARACTER`              | `String`          | 1                |\n"
-        "|                                           | `NATIONAL CHAR`                   | `String`          | 1                |\n"
-        "|                                           | `CHARACTER VARYING`               | `String`          | 1                |\n"
-        "|                                           | `LONGBLOB`                        | `String`          | 1                |\n"
-        "|                                           | `TINYBLOB`                        | `String`          | 1                |\n"
-        "|                                           | `MEDIUMTEXT`                      | `String`          | 1                |\n"
-        "|                                           | `TEXT`                            | `String`          | 1                |\n"
-        "|                                           | `VARCHAR2`                        | `String`          | 1                |\n"
-        "|                                           | `CHARACTER LARGE OBJECT`          | `String`          | 1                |\n"
-        "|                                           | `DOUBLE PRECISION`                | `Float64`         | 1                |\n"
-        "|                                           | `LONGTEXT`                        | `String`          | 1                |\n"
-        "|                                           | `NVARCHAR`                        | `String`          | 1                |\n"
-        "|                                           | `INT1 UNSIGNED`                   | `UInt8`           | 1                |\n"
-        "|                                           | `VARCHAR`                         | `String`          | 1                |\n"
-        "|                                           | `CHAR VARYING`                    | `String`          | 1                |\n"
-        "|                                           | `MEDIUMBLOB`                      | `String`          | 1                |\n"
-        "|                                           | `NCHAR`                           | `String`          | 1                |\n"
-        "|                                           | `VARBINARY`                       | `String`          | 1                |\n"
-        "|                                           | `CHAR`                            | `String`          | 1                |\n"
-        "|                                           | `SMALLINT UNSIGNED`               | `UInt16`          | 1                |\n"
-        "|                                           | `TIMESTAMP`                       | `DateTime`        | 1                |\n"
-        "|                                           | `FIXED`                           | `Decimal`         | 1                |\n"
-        "|                                           | `TINYTEXT`                        | `String`          | 1                |\n"
-        "|                                           | `NUMERIC`                         | `Decimal`         | 1                |\n"
-        "|                                           | `DEC`                             | `Decimal`         | 1                |\n"
-        "|                                           | `TIME`                            | `Int64`           | 1                |\n"
-        "|                                           | `FLOAT`                           | `Float32`         | 1                |\n"
-        "|                                           | `SET`                             | `UInt64`          | 1                |\n"
-        "|                                           | `TINYINT UNSIGNED`                | `UInt8`           | 1                |\n"
-        "|                                           | `INTEGER UNSIGNED`                | `UInt32`          | 1                |\n"
-        "|                                           | `INT UNSIGNED`                    | `UInt32`          | 1                |\n"
-        "|                                           | `CLOB`                            | `String`          | 1                |\n"
-        "|                                           | `MEDIUMINT UNSIGNED`              | `UInt32`          | 1                |\n"
-        "|                                           | `BLOB`                            | `String`          | 1                |\n"
-        "|                                           | `REAL`                            | `Float32`         | 1                |\n"
-        "|                                           | `SMALLINT`                        | `Int16`           | 1                |\n"
-        "|                                           | `INTEGER SIGNED`                  | `Int32`           | 1                |\n"
-        "|                                           | `NCHAR VARYING`                   | `String`          | 1                |\n"
-        "|                                           | `INT SIGNED`                      | `Int32`           | 1                |\n"
-        "|                                           | `TINYINT SIGNED`                  | `Int8`            | 1                |\n"
-        "|                                           | `BIGINT SIGNED`                   | `Int64`           | 1                |\n"
-        "|                                           | `BINARY LARGE OBJECT`             | `String`          | 1                |\n"
-        "|                                           | `SMALLINT SIGNED`                 | `Int16`           | 1                |\n"
-        "|                                           | `YEAR`                            | `UInt16`          | 1                |\n"
-        "|                                           | `MEDIUMINT`                       | `Int32`           | 1                |\n"
-        "|                                           | `INTEGER`                         | `Int32`           | 1                |\n"
-        "|                                           | `INT1 SIGNED`                     | `Int8`            | 1                |\n"
-        "|                                           | `BIT`                             | `UInt64`          | 1                |\n"
-        "|                                           | `BIGINT UNSIGNED`                 | `UInt64`          | 1                |\n"
-        "|                                           | `BYTEA`                           | `String`          | 1                |\n"
-        "|                                           | `INT`                             | `Int32`           | 1                |\n"
-        "|                                           | `SINGLE`                          | `Float32`         | 1                |\n"
-        "|                                           | `MEDIUMINT SIGNED`                | `Int32`           | 1                |\n"
-        "|                                           | `DOUBLE`                          | `Float64`         | 1                |\n"
-        "|                                           | `INT1`                            | `Int8`            | 1                |\n"
-        "|                                           | `CHAR LARGE OBJECT`               | `String`          | 1                |\n"
-        "|                                           | `TINYINT`                         | `Int8`            | 1                |\n"
-        "|                                           | `BIGINT`                          | `Int64`           | 1                |\n"
-        "|                                           | `CHARACTER`                       | `String`          | 1                |\n"
-        "|                                           | `BYTE`                            | `Int8`            | 1                |\n"
+        "| Parquet to ClickHouse supported Datatypes     | ClickHouse Datatype Family        | alias_to Datatype | case_insensitive |\n"
+        "|-----------------------------------------------|-----------------------------------|-------------------|------------------|\n"
+        "|                                               | `JSON`                            |                   | 1                |\n"
+        "|                                               | `Polygon`                         |                   | 0                |\n"
+        "|                                               | `Ring`                            |                   | 0                |\n"
+        "|                                               | `Point`                           |                   | 0                |\n"
+        "|                                               | `SimpleAggregateFunction`         |                   | 0                |\n"
+        "|                                               | `IntervalQuarter`                 |                   | 0                |\n"
+        "|                                               | `IntervalMonth`                   |                   | 0                |\n"
+        "| `INT64`                                       | `Int64`                           |                   | 0                |\n"
+        "|                                               | `IntervalDay`                     |                   | 0                |\n"
+        "|                                               | `IntervalHour`                    |                   | 0                |\n"
+        "| `UINT32`                                      | `IPv4`                            |                   | 0                |\n"
+        "|                                               | `IntervalSecond`                  |                   | 0                |\n"
+        "|                                               | `LowCardinality`                  |                   | 0                |\n"
+        "| `INT16`                                       | `Int16`                           |                   | 0                |\n"
+        "| `FIXED_LENGTH_BYTE_ARRAY`, `BINARY`           | `UInt256`                         |                   | 0                |\n"
+        "|                                               | `AggregateFunction`               |                   | 0                |\n"
+        "|                                               | `MultiPolygon`                    |                   | 0                |\n"
+        "| `FIXED_LENGTH_BYTE_ARRAY`, `BINARY`           | `IPv6`                            |                   | 0                |\n"
+        "|                                               | `Nothing`                         |                   | 0                |\n"
+        "|                                               | `Decimal256`                      |                   | 1                |\n"
+        "| `STRUCT`                                      | `Tuple`                           |                   | 0                |\n"
+        "| `LIST`                                        | `Array`                           |                   | 0                |\n"
+        "|                                               | `IntervalMicrosecond`             |                   | 0                |\n"
+        "|                                               | `Bool`                            |                   | 1                |\n"
+        "| `INT16`                                       | `Enum16`                          |                   | 0                |\n"
+        "|                                               | `IntervalMinute`                  |                   | 0                |\n"
+        "|                                               | `FixedString`                     |                   | 0                |\n"
+        "| `STRING`, `BINARY`                            | `String`                          |                   | 0                |\n"
+        "| `TIME (ms)`                                   | `DateTime`                        |                   | 1                |\n"
+        "|                                               | `Object`                          |                   | 0                |\n"
+        "| `MAP`                                         | `Map`                             |                   | 0                |\n"
+        "|                                               | `UUID`                            |                   | 0                |\n"
+        "|                                               | `Decimal64`                       |                   | 1                |\n"
+        "|                                               | `Nullable`                        |                   | 0                |\n"
+        "|                                               | `Enum`                            |                   | 1                |\n"
+        "| `INT32`                                       | `Int32`                           |                   | 0                |\n"
+        "| `UINT8`, `BOOL`                               | `UInt8`                           |                   | 0                |\n"
+        "|                                               | `Date`                            |                   | 1                |\n"
+        "|                                               | `Decimal32`                       |                   | 1                |\n"
+        "| `FIXED_LENGTH_BYTE_ARRAY`, `BINARY`           | `UInt128`                         |                   | 0                |\n"
+        "| `DOUBLE`                                      | `Float64`                         |                   | 0                |\n"
+        "|                                               | `Nested`                          |                   | 0                |\n"
+        "| `UINT16`                                      | `UInt16`                          |                   | 0                |\n"
+        "|                                               | `IntervalMillisecond`             |                   | 0                |\n"
+        "| `FIXED_LENGTH_BYTE_ARRAY`, `BINARY`           | `Int128`                          |                   | 0                |\n"
+        "|                                               | `Decimal128`                      |                   | 1                |\n"
+        "| `INT8`                                        | `Int8`                            |                   | 0                |\n"
+        "| `DECIMAL`                                     | `Decimal`                         |                   | 1                |\n"
+        "| `FIXED_LENGTH_BYTE_ARRAY`, `BINARY`           | `Int256`                          |                   | 0                |\n"
+        "| `TIMESTAMP (ms, ns, us)`, `TIME (us, ns)`     | `DateTime64`                      |                   | 1                |\n"
+        "| `INT8`                                        | `Enum8`                           |                   | 0                |\n"
+        "|                                               | `DateTime32`                      |                   | 1                |\n"
+        "| `DATE (ms, ns, us)`                           | `Date32`                          |                   | 1                |\n"
+        "|                                               | `IntervalWeek`                    |                   | 0                |\n"
+        "| `UINT64`                                      | `UInt64`                          |                   | 0                |\n"
+        "|                                               | `IntervalNanosecond`              |                   | 0                |\n"
+        "|                                               | `IntervalYear`                    |                   | 0                |\n"
+        "| `UINT32`                                      | `UInt32`                          |                   | 0                |\n"
+        "| `FLOAT`                                       | `Float32`                         |                   | 0                |\n"
+        "| `BOOL`                                        | `bool`                            | `Bool`            | 1                |\n"
+        "| `FIXED_LENGTH_BYTE_ARRAY`, `BINARY`           | `INET6`                           | `IPv6`            | 1                |\n"
+        "| `UINT32`                                      | `INET4`                           | `IPv4`            | 1                |\n"
+        "|                                               | `ENUM`                            | `Enum`            | 1                |\n"
+        "| `STRING`, `BINARY`, `FIXED_LENGTH_BYTE_ARRAY` | `BINARY`                          | `FixedString`     | 1                |\n"
+        "| `STRING`, `BINARY`                            | `GEOMETRY`                        | `String`          | 1                |\n"
+        "| `STRING`, `BINARY`                            | `NATIONAL CHAR VARYING`           | `String`          | 1                |\n"
+        "| `STRING`, `BINARY`                            | `BINARY VARYING`                  | `String`          | 1                |\n"
+        "| `STRING`, `BINARY`                            | `NCHAR LARGE OBJECT`              | `String`          | 1                |\n"
+        "| `STRING`, `BINARY`                            | `NATIONAL CHARACTER VARYING`      | `String`          | 1                |\n"
+        "|                                               | `boolean`                         | `Bool`            | 1                |\n"
+        "| `STRING`, `BINARY`                            | `NATIONAL CHARACTER LARGE OBJECT` | `String`          | 1                |\n"
+        "| `STRING`, `BINARY`                            | `NATIONAL CHARACTER`              | `String`          | 1                |\n"
+        "| `STRING`, `BINARY`                            | `NATIONAL CHAR`                   | `String`          | 1                |\n"
+        "| `STRING`, `BINARY`                            | `CHARACTER VARYING`               | `String`          | 1                |\n"
+        "| `STRING`, `BINARY`                            | `LONGBLOB`                        | `String`          | 1                |\n"
+        "| `STRING`, `BINARY`                            | `TINYBLOB`                        | `String`          | 1                |\n"
+        "| `STRING`, `BINARY`                            | `MEDIUMTEXT`                      | `String`          | 1                |\n"
+        "| `STRING`, `BINARY`                            | `TEXT`                            | `String`          | 1                |\n"
+        "| `STRING`, `BINARY`                            | `VARCHAR2`                        | `String`          | 1                |\n"
+        "| `STRING`, `BINARY`                            | `CHARACTER LARGE OBJECT`          | `String`          | 1                |\n"
+        "| `DOUBLE`                                      | `DOUBLE PRECISION`                | `Float64`         | 1                |\n"
+        "| `STRING`, `BINARY`                            | `LONGTEXT`                        | `String`          | 1                |\n"
+        "| `STRING`, `BINARY`                            | `NVARCHAR`                        | `String`          | 1                |\n"
+        "|                                               | `INT1 UNSIGNED`                   | `UInt8`           | 1                |\n"
+        "| `STRING`, `BINARY`                            | `VARCHAR`                         | `String`          | 1                |\n"
+        "| `STRING`, `BINARY`                            | `CHAR VARYING`                    | `String`          | 1                |\n"
+        "| `STRING`, `BINARY`                            | `MEDIUMBLOB`                      | `String`          | 1                |\n"
+        "| `STRING`, `BINARY`                            | `NCHAR`                           | `String`          | 1                |\n"
+        "| `STRING`, `BINARY`                            | `VARBINARY`                       | `String`          | 1                |\n"
+        "| `STRING`, `BINARY`                            | `CHAR`                            | `String`          | 1                |\n"
+        "| `UINT16`                                      | `SMALLINT UNSIGNED`               | `UInt16`          | 1                |\n"
+        "| `TIME (ms)`                                   | `TIMESTAMP`                       | `DateTime`        | 1                |\n"
+        "| `DECIMAL`                                     | `FIXED`                           | `Decimal`         | 1                |\n"
+        "| `STRING`, `BINARY`                            | `TINYTEXT`                        | `String`          | 1                |\n"
+        "| `DECIMAL`                                     | `NUMERIC`                         | `Decimal`         | 1                |\n"
+        "| `DECIMAL`                                     | `DEC`                             | `Decimal`         | 1                |\n"
+        "| `INT64`                                       | `TIME`                            | `Int64`           | 1                |\n"
+        "| `FLOAT`                                       | `FLOAT`                           | `Float32`         | 1                |\n"
+        "| `UINT64`                                      | `SET`                             | `UInt64`          | 1                |\n"
+        "|                                               | `TINYINT UNSIGNED`                | `UInt8`           | 1                |\n"
+        "| `UINT32`                                      | `INTEGER UNSIGNED`                | `UInt32`          | 1                |\n"
+        "| `UINT32`                                      | `INT UNSIGNED`                    | `UInt32`          | 1                |\n"
+        "| `STRING`, `BINARY`                            | `CLOB`                            | `String`          | 1                |\n"
+        "| `UINT32`                                      | `MEDIUMINT UNSIGNED`              | `UInt32`          | 1                |\n"
+        "| `STRING`, `BINARY`                            | `BLOB`                            | `String`          | 1                |\n"
+        "| `FLOAT`                                       | `REAL`                            | `Float32`         | 1                |\n"
+        "|                                               | `SMALLINT`                        | `Int16`           | 1                |\n"
+        "| `INT32`                                       | `INTEGER SIGNED`                  | `Int32`           | 1                |\n"
+        "| `STRING`, `BINARY`                            | `NCHAR VARYING`                   | `String`          | 1                |\n"
+        "| `INT32`                                       | `INT SIGNED`                      | `Int32`           | 1                |\n"
+        "|                                               | `TINYINT SIGNED`                  | `Int8`            | 1                |\n"
+        "| `INT64`                                       | `BIGINT SIGNED`                   | `Int64`           | 1                |\n"
+        "| `STRING`, `BINARY`                            | `BINARY LARGE OBJECT`             | `String`          | 1                |\n"
+        "|                                               | `SMALLINT SIGNED`                 | `Int16`           | 1                |\n"
+        "|                                               | `YEAR`                            | `UInt16`          | 1                |\n"
+        "| `INT32`                                       | `MEDIUMINT`                       | `Int32`           | 1                |\n"
+        "| `INT32`                                       | `INTEGER`                         | `Int32`           | 1                |\n"
+        "|                                               | `INT1 SIGNED`                     | `Int8`            | 1                |\n"
+        "| `UINT64`                                      | `BIT`                             | `UInt64`          | 1                |\n"
+        "| `UINT64`                                      | `BIGINT UNSIGNED`                 | `UInt64`          | 1                |\n"
+        "| `STRING`, `BINARY`                            | `BYTEA`                           | `String`          | 1                |\n"
+        "| `INT32`                                       | `INT`                             | `Int32`           | 1                |\n"
+        "| `FLOAT`                                       | `SINGLE`                          | `Float32`         | 1                |\n"
+        "| `INT32`                                       | `MEDIUMINT SIGNED`                | `Int32`           | 1                |\n"
+        "| `DOUBLE`                                      | `DOUBLE`                          | `Float64`         | 1                |\n"
+        "|                                               | `INT1`                            | `Int8`            | 1                |\n"
+        "| `STRING`, `BINARY`                            | `CHAR LARGE OBJECT`               | `String`          | 1                |\n"
+        "|                                               | `TINYINT`                         | `Int8`            | 1                |\n"
+        "| `INT64`                                       | `BIGINT`                          | `Int64`           | 1                |\n"
+        "| `STRING`, `BINARY`                            | `CHARACTER`                       | `String`          | 1                |\n"
+        "|                                               | `BYTE`                            | `Int8`            | 1                |\n"
         "\n"
         "\n"
     ),
@@ -4231,7 +4231,21 @@ flowchart TB;
             CorruptedYes[Yes]
             CorruptedNo[No]
         end
-       
+
+        subgraph Possible_Corruptions[Possible Corruptions]
+            direction LR
+            CorruptFile[Corrupt File]
+            CorruptColumn[Corrupted Column]
+            CorruptPageHeader[Corrupt Page Header]
+            CorruptPageData[Corrupted Page Data]
+            CorruptColumnValues[Corrupted Column Values]
+        end
+
+        subgraph Error
+            direction LR
+            Error_message[File is not inserted into ClickHouse. Error Message Is Shown.]
+        end
+
         subgraph ClickHouse[ClickHouse]
             style ClickHouse fill:#fcbb30
             direction TB;
@@ -4290,6 +4304,31 @@ flowchart TB;
 
     Parquet_File_in[Parquet File]
     Parquet_File_out[Parquet File]
+
+        subgraph PossibleCorruptions[Possible Corrupted Parquet Datatypes]
+            direction LR;
+                UInt8in[UInt8]
+                Boolin[Bool]
+                Int8in[Int8]
+                UInt16in[UInt16]
+                Int16in[Int16]
+                UInt32in[UInt32]
+                Int32in[Int32]
+                UInt64in[UInt64]
+                Int64in[Int64]
+                Floatin[Float]
+                HalfFloatin[Half Float]
+                Doublein[Double]
+                Date32in[Date32]
+                Date64in[Date62]
+                Timestampin[Timestamp]
+                Stringin[String]
+                Binaryin[Binary]
+                Decimalin[Decimal]
+                Listin[List]
+                Structin[Struct]
+                Mapin[Map]
+            end
 
         subgraph TypeConversion[Parquet type > ClickHouse type > Parquet type]
             direction LR;
@@ -4356,6 +4395,12 @@ flowchart TB;
                 Map_out[Map]
             end
 
+            subgraph AutoConversions[Type Auto Conversion Based On The Target Table]
+                direction LR
+                Parquet_type[Parquet Datatype]
+                ClickHouse_type[ClickHouse Datatype]
+            end
+
             subgraph Modifiers[Supported Modifiers]
                 direction LR
                 Nullable
@@ -4373,10 +4418,14 @@ flowchart TB;
         end
     end
 
-Sources --> Compression --> Encryption --> Parquet_File_in
-Input_settings --> ClickHouse -- Read From ClickHouse --> Output_settings --> Parquet_File_out
-Parquet_File_in --> Corrupted
-CorruptedNo --> Input_settings
+
+Sources --> Compression --> Encryption --> Parquet_File_in 
+Parquet_File_in --> CorruptedYes
+CorruptedYes --> Possible_Corruptions --> Error
+Parquet_File_in --> CorruptedNo --Insert Into ClickHouse --> Input_settings --> ClickHouse -- Read From ClickHouse --> Output_settings --> Parquet_File_out
+CorruptColumnValues --> PossibleCorruptions
+ClickHouse_type --> Parquet_type --> ClickHouse_type
+
 
 UInt8_in --> UInt8_ch --> UInt8_out
 Bool_in --> UInt8_ch
@@ -4462,139 +4511,139 @@ The conversion MAY not be possible between some datatypes.
 >
 >`Bool` -> `IPv6`
 
-| Parquet to ClickHouse supported Datatypes | ClickHouse Datatype Family        | alias_to Datatype | case_insensitive |
-|-------------------------------------------|-----------------------------------|-------------------|------------------|
-|                                           | `JSON`                            |                   | 1                |
-|                                           | `Polygon`                         |                   | 0                |
-|                                           | `Ring`                            |                   | 0                |
-|                                           | `Point`                           |                   | 0                |
-|                                           | `SimpleAggregateFunction`         |                   | 0                |
-|                                           | `IntervalQuarter`                 |                   | 0                |
-|                                           | `IntervalMonth`                   |                   | 0                |
-|                                           | `Int64`                           |                   | 0                |
-|                                           | `IntervalDay`                     |                   | 0                |
-|                                           | `IntervalHour`                    |                   | 0                |
-|                                           | `IPv4`                            |                   | 0                |
-|                                           | `IntervalSecond`                  |                   | 0                |
-|                                           | `LowCardinality`                  |                   | 0                |
-|                                           | `Int16`                           |                   | 0                |
-|                                           | `UInt256`                         |                   | 0                |
-|                                           | `AggregateFunction`               |                   | 0                |
-|                                           | `MultiPolygon`                    |                   | 0                |
-|                                           | `IPv6`                            |                   | 0                |
-|                                           | `Nothing`                         |                   | 0                |
-|                                           | `Decimal256`                      |                   | 1                |
-|                                           | `Tuple`                           |                   | 0                |
-|                                           | `Array`                           |                   | 0                |
-|                                           | `IntervalMicrosecond`             |                   | 0                |
-|                                           | `Bool`                            |                   | 1                |
-|                                           | `Enum16`                          |                   | 0                |
-|                                           | `IntervalMinute`                  |                   | 0                |
-|                                           | `FixedString`                     |                   | 0                |
-|                                           | `String`                          |                   | 0                |
-|                                           | `DateTime`                        |                   | 1                |
-|                                           | `Object`                          |                   | 0                |
-|                                           | `Map`                             |                   | 0                |
-|                                           | `UUID`                            |                   | 0                |
-|                                           | `Decimal64`                       |                   | 1                |
-|                                           | `Nullable`                        |                   | 0                |
-|                                           | `Enum`                            |                   | 1                |
-|                                           | `Int32`                           |                   | 0                |
-|                                           | `UInt8`                           |                   | 0                |
-|                                           | `Date`                            |                   | 1                |
-|                                           | `Decimal32`                       |                   | 1                |
-|                                           | `UInt128`                         |                   | 0                |
-|                                           | `Float64`                         |                   | 0                |
-|                                           | `Nested`                          |                   | 0                |
-|                                           | `UInt16`                          |                   | 0                |
-|                                           | `IntervalMillisecond`             |                   | 0                |
-|                                           | `Int128`                          |                   | 0                |
-|                                           | `Decimal128`                      |                   | 1                |
-|                                           | `Int8`                            |                   | 0                |
-|                                           | `Decimal`                         |                   | 1                |
-|                                           | `Int256`                          |                   | 0                |
-|                                           | `DateTime64`                      |                   | 1                |
-|                                           | `Enum8`                           |                   | 0                |
-|                                           | `DateTime32`                      |                   | 1                |
-|                                           | `Date32`                          |                   | 1                |
-|                                           | `IntervalWeek`                    |                   | 0                |
-|                                           | `UInt64`                          |                   | 0                |
-|                                           | `IntervalNanosecond`              |                   | 0                |
-|                                           | `IntervalYear`                    |                   | 0                |
-|                                           | `UInt32`                          |                   | 0                |
-|                                           | `Float32`                         |                   | 0                |
-|                                           | `bool`                            | `Bool`            | 1                |
-|                                           | `INET6`                           | `IPv6`            | 1                |
-|                                           | `INET4`                           | `IPv4`            | 1                |
-|                                           | `ENUM`                            | `Enum`            | 1                |
-|                                           | `BINARY`                          | `FixedString`     | 1                |
-|                                           | `GEOMETRY`                        | `String`          | 1                |
-|                                           | `NATIONAL CHAR VARYING`           | `String`          | 1                |
-|                                           | `BINARY VARYING`                  | `String`          | 1                |
-|                                           | `NCHAR LARGE OBJECT`              | `String`          | 1                |
-|                                           | `NATIONAL CHARACTER VARYING`      | `String`          | 1                |
-|                                           | `boolean`                         | `Bool`            | 1                |
-|                                           | `NATIONAL CHARACTER LARGE OBJECT` | `String`          | 1                |
-|                                           | `NATIONAL CHARACTER`              | `String`          | 1                |
-|                                           | `NATIONAL CHAR`                   | `String`          | 1                |
-|                                           | `CHARACTER VARYING`               | `String`          | 1                |
-|                                           | `LONGBLOB`                        | `String`          | 1                |
-|                                           | `TINYBLOB`                        | `String`          | 1                |
-|                                           | `MEDIUMTEXT`                      | `String`          | 1                |
-|                                           | `TEXT`                            | `String`          | 1                |
-|                                           | `VARCHAR2`                        | `String`          | 1                |
-|                                           | `CHARACTER LARGE OBJECT`          | `String`          | 1                |
-|                                           | `DOUBLE PRECISION`                | `Float64`         | 1                |
-|                                           | `LONGTEXT`                        | `String`          | 1                |
-|                                           | `NVARCHAR`                        | `String`          | 1                |
-|                                           | `INT1 UNSIGNED`                   | `UInt8`           | 1                |
-|                                           | `VARCHAR`                         | `String`          | 1                |
-|                                           | `CHAR VARYING`                    | `String`          | 1                |
-|                                           | `MEDIUMBLOB`                      | `String`          | 1                |
-|                                           | `NCHAR`                           | `String`          | 1                |
-|                                           | `VARBINARY`                       | `String`          | 1                |
-|                                           | `CHAR`                            | `String`          | 1                |
-|                                           | `SMALLINT UNSIGNED`               | `UInt16`          | 1                |
-|                                           | `TIMESTAMP`                       | `DateTime`        | 1                |
-|                                           | `FIXED`                           | `Decimal`         | 1                |
-|                                           | `TINYTEXT`                        | `String`          | 1                |
-|                                           | `NUMERIC`                         | `Decimal`         | 1                |
-|                                           | `DEC`                             | `Decimal`         | 1                |
-|                                           | `TIME`                            | `Int64`           | 1                |
-|                                           | `FLOAT`                           | `Float32`         | 1                |
-|                                           | `SET`                             | `UInt64`          | 1                |
-|                                           | `TINYINT UNSIGNED`                | `UInt8`           | 1                |
-|                                           | `INTEGER UNSIGNED`                | `UInt32`          | 1                |
-|                                           | `INT UNSIGNED`                    | `UInt32`          | 1                |
-|                                           | `CLOB`                            | `String`          | 1                |
-|                                           | `MEDIUMINT UNSIGNED`              | `UInt32`          | 1                |
-|                                           | `BLOB`                            | `String`          | 1                |
-|                                           | `REAL`                            | `Float32`         | 1                |
-|                                           | `SMALLINT`                        | `Int16`           | 1                |
-|                                           | `INTEGER SIGNED`                  | `Int32`           | 1                |
-|                                           | `NCHAR VARYING`                   | `String`          | 1                |
-|                                           | `INT SIGNED`                      | `Int32`           | 1                |
-|                                           | `TINYINT SIGNED`                  | `Int8`            | 1                |
-|                                           | `BIGINT SIGNED`                   | `Int64`           | 1                |
-|                                           | `BINARY LARGE OBJECT`             | `String`          | 1                |
-|                                           | `SMALLINT SIGNED`                 | `Int16`           | 1                |
-|                                           | `YEAR`                            | `UInt16`          | 1                |
-|                                           | `MEDIUMINT`                       | `Int32`           | 1                |
-|                                           | `INTEGER`                         | `Int32`           | 1                |
-|                                           | `INT1 SIGNED`                     | `Int8`            | 1                |
-|                                           | `BIT`                             | `UInt64`          | 1                |
-|                                           | `BIGINT UNSIGNED`                 | `UInt64`          | 1                |
-|                                           | `BYTEA`                           | `String`          | 1                |
-|                                           | `INT`                             | `Int32`           | 1                |
-|                                           | `SINGLE`                          | `Float32`         | 1                |
-|                                           | `MEDIUMINT SIGNED`                | `Int32`           | 1                |
-|                                           | `DOUBLE`                          | `Float64`         | 1                |
-|                                           | `INT1`                            | `Int8`            | 1                |
-|                                           | `CHAR LARGE OBJECT`               | `String`          | 1                |
-|                                           | `TINYINT`                         | `Int8`            | 1                |
-|                                           | `BIGINT`                          | `Int64`           | 1                |
-|                                           | `CHARACTER`                       | `String`          | 1                |
-|                                           | `BYTE`                            | `Int8`            | 1                |
+| Parquet to ClickHouse supported Datatypes     | ClickHouse Datatype Family        | alias_to Datatype | case_insensitive |
+|-----------------------------------------------|-----------------------------------|-------------------|------------------|
+|                                               | `JSON`                            |                   | 1                |
+|                                               | `Polygon`                         |                   | 0                |
+|                                               | `Ring`                            |                   | 0                |
+|                                               | `Point`                           |                   | 0                |
+|                                               | `SimpleAggregateFunction`         |                   | 0                |
+|                                               | `IntervalQuarter`                 |                   | 0                |
+|                                               | `IntervalMonth`                   |                   | 0                |
+| `INT64`                                       | `Int64`                           |                   | 0                |
+|                                               | `IntervalDay`                     |                   | 0                |
+|                                               | `IntervalHour`                    |                   | 0                |
+| `UINT32`                                      | `IPv4`                            |                   | 0                |
+|                                               | `IntervalSecond`                  |                   | 0                |
+|                                               | `LowCardinality`                  |                   | 0                |
+| `INT16`                                       | `Int16`                           |                   | 0                |
+| `FIXED_LENGTH_BYTE_ARRAY`, `BINARY`           | `UInt256`                         |                   | 0                |
+|                                               | `AggregateFunction`               |                   | 0                |
+|                                               | `MultiPolygon`                    |                   | 0                |
+| `FIXED_LENGTH_BYTE_ARRAY`, `BINARY`           | `IPv6`                            |                   | 0                |
+|                                               | `Nothing`                         |                   | 0                |
+|                                               | `Decimal256`                      |                   | 1                |
+| `STRUCT`                                      | `Tuple`                           |                   | 0                |
+| `LIST`                                        | `Array`                           |                   | 0                |
+|                                               | `IntervalMicrosecond`             |                   | 0                |
+|                                               | `Bool`                            |                   | 1                |
+| `INT16`                                       | `Enum16`                          |                   | 0                |
+|                                               | `IntervalMinute`                  |                   | 0                |
+|                                               | `FixedString`                     |                   | 0                |
+| `STRING`, `BINARY`                            | `String`                          |                   | 0                |
+| `TIME (ms)`                                   | `DateTime`                        |                   | 1                |
+|                                               | `Object`                          |                   | 0                |
+| `MAP`                                         | `Map`                             |                   | 0                |
+|                                               | `UUID`                            |                   | 0                |
+|                                               | `Decimal64`                       |                   | 1                |
+|                                               | `Nullable`                        |                   | 0                |
+|                                               | `Enum`                            |                   | 1                |
+| `INT32`                                       | `Int32`                           |                   | 0                |
+| `UINT8`, `BOOL`                               | `UInt8`                           |                   | 0                |
+|                                               | `Date`                            |                   | 1                |
+|                                               | `Decimal32`                       |                   | 1                |
+| `FIXED_LENGTH_BYTE_ARRAY`, `BINARY`           | `UInt128`                         |                   | 0                |
+| `DOUBLE`                                      | `Float64`                         |                   | 0                |
+|                                               | `Nested`                          |                   | 0                |
+| `UINT16`                                      | `UInt16`                          |                   | 0                |
+|                                               | `IntervalMillisecond`             |                   | 0                |
+| `FIXED_LENGTH_BYTE_ARRAY`, `BINARY`           | `Int128`                          |                   | 0                |
+|                                               | `Decimal128`                      |                   | 1                |
+| `INT8`                                        | `Int8`                            |                   | 0                |
+| `DECIMAL`                                     | `Decimal`                         |                   | 1                |
+| `FIXED_LENGTH_BYTE_ARRAY`, `BINARY`           | `Int256`                          |                   | 0                |
+| `TIMESTAMP (ms, ns, us)`, `TIME (us, ns)`     | `DateTime64`                      |                   | 1                |
+| `INT8`                                        | `Enum8`                           |                   | 0                |
+|                                               | `DateTime32`                      |                   | 1                |
+| `DATE (ms, ns, us)`                           | `Date32`                          |                   | 1                |
+|                                               | `IntervalWeek`                    |                   | 0                |
+| `UINT64`                                      | `UInt64`                          |                   | 0                |
+|                                               | `IntervalNanosecond`              |                   | 0                |
+|                                               | `IntervalYear`                    |                   | 0                |
+| `UINT32`                                      | `UInt32`                          |                   | 0                |
+| `FLOAT`                                       | `Float32`                         |                   | 0                |
+| `BOOL`                                        | `bool`                            | `Bool`            | 1                |
+| `FIXED_LENGTH_BYTE_ARRAY`, `BINARY`           | `INET6`                           | `IPv6`            | 1                |
+| `UINT32`                                      | `INET4`                           | `IPv4`            | 1                |
+|                                               | `ENUM`                            | `Enum`            | 1                |
+| `STRING`, `BINARY`, `FIXED_LENGTH_BYTE_ARRAY` | `BINARY`                          | `FixedString`     | 1                |
+| `STRING`, `BINARY`                            | `GEOMETRY`                        | `String`          | 1                |
+| `STRING`, `BINARY`                            | `NATIONAL CHAR VARYING`           | `String`          | 1                |
+| `STRING`, `BINARY`                            | `BINARY VARYING`                  | `String`          | 1                |
+| `STRING`, `BINARY`                            | `NCHAR LARGE OBJECT`              | `String`          | 1                |
+| `STRING`, `BINARY`                            | `NATIONAL CHARACTER VARYING`      | `String`          | 1                |
+|                                               | `boolean`                         | `Bool`            | 1                |
+| `STRING`, `BINARY`                            | `NATIONAL CHARACTER LARGE OBJECT` | `String`          | 1                |
+| `STRING`, `BINARY`                            | `NATIONAL CHARACTER`              | `String`          | 1                |
+| `STRING`, `BINARY`                            | `NATIONAL CHAR`                   | `String`          | 1                |
+| `STRING`, `BINARY`                            | `CHARACTER VARYING`               | `String`          | 1                |
+| `STRING`, `BINARY`                            | `LONGBLOB`                        | `String`          | 1                |
+| `STRING`, `BINARY`                            | `TINYBLOB`                        | `String`          | 1                |
+| `STRING`, `BINARY`                            | `MEDIUMTEXT`                      | `String`          | 1                |
+| `STRING`, `BINARY`                            | `TEXT`                            | `String`          | 1                |
+| `STRING`, `BINARY`                            | `VARCHAR2`                        | `String`          | 1                |
+| `STRING`, `BINARY`                            | `CHARACTER LARGE OBJECT`          | `String`          | 1                |
+| `DOUBLE`                                      | `DOUBLE PRECISION`                | `Float64`         | 1                |
+| `STRING`, `BINARY`                            | `LONGTEXT`                        | `String`          | 1                |
+| `STRING`, `BINARY`                            | `NVARCHAR`                        | `String`          | 1                |
+|                                               | `INT1 UNSIGNED`                   | `UInt8`           | 1                |
+| `STRING`, `BINARY`                            | `VARCHAR`                         | `String`          | 1                |
+| `STRING`, `BINARY`                            | `CHAR VARYING`                    | `String`          | 1                |
+| `STRING`, `BINARY`                            | `MEDIUMBLOB`                      | `String`          | 1                |
+| `STRING`, `BINARY`                            | `NCHAR`                           | `String`          | 1                |
+| `STRING`, `BINARY`                            | `VARBINARY`                       | `String`          | 1                |
+| `STRING`, `BINARY`                            | `CHAR`                            | `String`          | 1                |
+| `UINT16`                                      | `SMALLINT UNSIGNED`               | `UInt16`          | 1                |
+| `TIME (ms)`                                   | `TIMESTAMP`                       | `DateTime`        | 1                |
+| `DECIMAL`                                     | `FIXED`                           | `Decimal`         | 1                |
+| `STRING`, `BINARY`                            | `TINYTEXT`                        | `String`          | 1                |
+| `DECIMAL`                                     | `NUMERIC`                         | `Decimal`         | 1                |
+| `DECIMAL`                                     | `DEC`                             | `Decimal`         | 1                |
+| `INT64`                                       | `TIME`                            | `Int64`           | 1                |
+| `FLOAT`                                       | `FLOAT`                           | `Float32`         | 1                |
+| `UINT64`                                      | `SET`                             | `UInt64`          | 1                |
+|                                               | `TINYINT UNSIGNED`                | `UInt8`           | 1                |
+| `UINT32`                                      | `INTEGER UNSIGNED`                | `UInt32`          | 1                |
+| `UINT32`                                      | `INT UNSIGNED`                    | `UInt32`          | 1                |
+| `STRING`, `BINARY`                            | `CLOB`                            | `String`          | 1                |
+| `UINT32`                                      | `MEDIUMINT UNSIGNED`              | `UInt32`          | 1                |
+| `STRING`, `BINARY`                            | `BLOB`                            | `String`          | 1                |
+| `FLOAT`                                       | `REAL`                            | `Float32`         | 1                |
+|                                               | `SMALLINT`                        | `Int16`           | 1                |
+| `INT32`                                       | `INTEGER SIGNED`                  | `Int32`           | 1                |
+| `STRING`, `BINARY`                            | `NCHAR VARYING`                   | `String`          | 1                |
+| `INT32`                                       | `INT SIGNED`                      | `Int32`           | 1                |
+|                                               | `TINYINT SIGNED`                  | `Int8`            | 1                |
+| `INT64`                                       | `BIGINT SIGNED`                   | `Int64`           | 1                |
+| `STRING`, `BINARY`                            | `BINARY LARGE OBJECT`             | `String`          | 1                |
+|                                               | `SMALLINT SIGNED`                 | `Int16`           | 1                |
+|                                               | `YEAR`                            | `UInt16`          | 1                |
+| `INT32`                                       | `MEDIUMINT`                       | `Int32`           | 1                |
+| `INT32`                                       | `INTEGER`                         | `Int32`           | 1                |
+|                                               | `INT1 SIGNED`                     | `Int8`            | 1                |
+| `UINT64`                                      | `BIT`                             | `UInt64`          | 1                |
+| `UINT64`                                      | `BIGINT UNSIGNED`                 | `UInt64`          | 1                |
+| `STRING`, `BINARY`                            | `BYTEA`                           | `String`          | 1                |
+| `INT32`                                       | `INT`                             | `Int32`           | 1                |
+| `FLOAT`                                       | `SINGLE`                          | `Float32`         | 1                |
+| `INT32`                                       | `MEDIUMINT SIGNED`                | `Int32`           | 1                |
+| `DOUBLE`                                      | `DOUBLE`                          | `Float64`         | 1                |
+|                                               | `INT1`                            | `Int8`            | 1                |
+| `STRING`, `BINARY`                            | `CHAR LARGE OBJECT`               | `String`          | 1                |
+|                                               | `TINYINT`                         | `Int8`            | 1                |
+| `INT64`                                       | `BIGINT`                          | `Int64`           | 1                |
+| `STRING`, `BINARY`                            | `CHARACTER`                       | `String`          | 1                |
+|                                               | `BYTE`                            | `Int8`            | 1                |
 
 
 ##### RQ.SRS-032.ClickHouse.Parquet.DataTypes.Import
