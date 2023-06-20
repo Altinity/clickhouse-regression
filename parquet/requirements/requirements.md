@@ -488,7 +488,7 @@ flowchart TB;
                 Mapin[Map]
             end
 
-        subgraph TypeConversion[Parquet type > ClickHouse type > Parquet type]
+        subgraph TypeConversion[Parquet type > ClickHouse type > Parquet type | These are default conversions. Auto-conversion might cast the datatype into a different one if its more suitable.]
             direction LR;
             subgraph Insert_types[Parquet]
                 UInt8_in[UInt8]
