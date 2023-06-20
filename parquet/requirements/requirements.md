@@ -575,6 +575,7 @@ Sources --> Compression --> Encryption --> Parquet_File_in
 Parquet_File_in --> CorruptedYes
 CorruptedYes --> Possible_Corruptions --> Error
 Parquet_File_in --> CorruptedNo --Insert Into ClickHouse --> Input_settings --> ClickHouse -- Read From ClickHouse --> Output_settings --> Parquet_File_out
+CorruptColumnValues --> PossibleCorruptions
 
 UInt8_in --> UInt8_ch --> UInt8_out
 Bool_in --> UInt8_ch
