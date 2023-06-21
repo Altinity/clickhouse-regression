@@ -61,16 +61,18 @@
     * 4.3.8 [Import Encoded](#import-encoded)
       * 4.3.8.1 [Plain (Import)](#plain-import)
         * 4.3.8.1.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.Plain](#rqsrs-032clickhouseparquetimportencodingplain)
-      * 4.3.8.2 [Run Length Encoding (Import)](#run-length-encoding-import)
-        * 4.3.8.2.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.RunLength](#rqsrs-032clickhouseparquetimportencodingrunlength)
-      * 4.3.8.3 [Delta (Import)](#delta-import)
-        * 4.3.8.3.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.Delta](#rqsrs-032clickhouseparquetimportencodingdelta)
-      * 4.3.8.4 [Delta-length byte array (Import)](#delta-length-byte-array-import)
-        * 4.3.8.4.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.DeltaLengthByteArray](#rqsrs-032clickhouseparquetimportencodingdeltalengthbytearray)
-      * 4.3.8.5 [Delta Strings (Import)](#delta-strings-import)
-        * 4.3.8.5.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.DeltaStrings](#rqsrs-032clickhouseparquetimportencodingdeltastrings)
-      * 4.3.8.6 [Byte Stream Split (Import)](#byte-stream-split-import)
-      * 4.3.8.7 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.ByteStreamSplit](#rqsrs-032clickhouseparquetimportencodingbytestreamsplit)
+      * 4.3.8.2 [Dictionary (Import)](#dictionary-import)
+        * 4.3.8.2.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.Dictionary](#rqsrs-032clickhouseparquetimportencodingdictionary)
+      * 4.3.8.3 [Run Length Encoding (Import)](#run-length-encoding-import)
+        * 4.3.8.3.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.RunLength](#rqsrs-032clickhouseparquetimportencodingrunlength)
+      * 4.3.8.4 [Delta (Import)](#delta-import)
+        * 4.3.8.4.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.Delta](#rqsrs-032clickhouseparquetimportencodingdelta)
+      * 4.3.8.5 [Delta-length byte array (Import)](#delta-length-byte-array-import)
+        * 4.3.8.5.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.DeltaLengthByteArray](#rqsrs-032clickhouseparquetimportencodingdeltalengthbytearray)
+      * 4.3.8.6 [Delta Strings (Import)](#delta-strings-import)
+        * 4.3.8.6.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.DeltaStrings](#rqsrs-032clickhouseparquetimportencodingdeltastrings)
+      * 4.3.8.7 [Byte Stream Split (Import)](#byte-stream-split-import)
+      * 4.3.8.8 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.ByteStreamSplit](#rqsrs-032clickhouseparquetimportencodingbytestreamsplit)
     * 4.3.9 [Import Settings](#import-settings)
       * 4.3.9.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Settings.ImportNested](#rqsrs-032clickhouseparquetimportsettingsimportnested)
       * 4.3.9.2 [RQ.SRS-032.ClickHouse.Parquet.Import.Settings.CaseInsensitiveColumnMatching](#rqsrs-032clickhouseparquetimportsettingscaseinsensitivecolumnmatching)
@@ -96,16 +98,18 @@
     * 4.4.14 [Export Encoded](#export-encoded)
       * 4.4.14.1 [Plain (Export)](#plain-export)
         * 4.4.14.1.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Plain](#rqsrs-032clickhouseparquetexportencodingplain)
-      * 4.4.14.2 [Run Length Encoding (Export)](#run-length-encoding-export)
-        * 4.4.14.2.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.RunLength](#rqsrs-032clickhouseparquetexportencodingrunlength)
-      * 4.4.14.3 [Delta (Export)](#delta-export)
-        * 4.4.14.3.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Delta](#rqsrs-032clickhouseparquetexportencodingdelta)
-      * 4.4.14.4 [Delta-length byte array (Export)](#delta-length-byte-array-export)
-        * 4.4.14.4.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.DeltaLengthByteArray](#rqsrs-032clickhouseparquetexportencodingdeltalengthbytearray)
-      * 4.4.14.5 [Delta Strings (Export)](#delta-strings-export)
-        * 4.4.14.5.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.DeltaStrings](#rqsrs-032clickhouseparquetexportencodingdeltastrings)
-      * 4.4.14.6 [Byte Stream Split (Export)](#byte-stream-split-export)
-      * 4.4.14.7 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.ByteStreamSplit](#rqsrs-032clickhouseparquetexportencodingbytestreamsplit)
+      * 4.4.14.2 [Dictionary (Export)](#dictionary-export)
+        * 4.4.14.2.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Dictionary](#rqsrs-032clickhouseparquetexportencodingdictionary)
+      * 4.4.14.3 [Run Length Encoding (Export)](#run-length-encoding-export)
+        * 4.4.14.3.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.RunLength](#rqsrs-032clickhouseparquetexportencodingrunlength)
+      * 4.4.14.4 [Delta (Export)](#delta-export)
+        * 4.4.14.4.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Delta](#rqsrs-032clickhouseparquetexportencodingdelta)
+      * 4.4.14.5 [Delta-length byte array (Export)](#delta-length-byte-array-export)
+        * 4.4.14.5.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.DeltaLengthByteArray](#rqsrs-032clickhouseparquetexportencodingdeltalengthbytearray)
+      * 4.4.14.6 [Delta Strings (Export)](#delta-strings-export)
+        * 4.4.14.6.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.DeltaStrings](#rqsrs-032clickhouseparquetexportencodingdeltastrings)
+      * 4.4.14.7 [Byte Stream Split (Export)](#byte-stream-split-export)
+      * 4.4.14.8 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.ByteStreamSplit](#rqsrs-032clickhouseparquetexportencodingbytestreamsplit)
     * 4.4.15 [Export Settings](#export-settings)
       * 4.4.15.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.RowGroupSize](#rqsrs-032clickhouseparquetexportsettingsrowgroupsize)
       * 4.4.15.2 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.StringAsString](#rqsrs-032clickhouseparquetexportsettingsstringasstring)
@@ -1137,6 +1141,13 @@ version: 1.0
 
 [ClickHouse] SHALL support importing `Plain` encoded Parquet files.
 
+##### Dictionary (Import)
+
+###### RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.Dictionary
+version: 1.0
+
+[ClickHouse] SHALL support importing `Dictionary` encoded Parquet files.
+
 ##### Run Length Encoding (Import)
 
 ###### RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.RunLength
@@ -1326,6 +1337,13 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL support exporting `Plain` encoded Parquet files.
+
+##### Dictionary (Export)
+
+###### RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Dictionary
+version: 1.0
+
+[ClickHouse] SHALL support exporting `Dictionary` encoded Parquet files.
 
 ##### Run Length Encoding (Export)
 
