@@ -159,9 +159,9 @@ def regression(
                 executor=executor,
             )
             Feature(
-                run=load("parquet.tests.read_broken_bigint", "feature"),
+                run=load("parquet.tests.broken", "feature"),
                 parallel=True,
-                executor=executor
+                executor=executor,
             )
 
             join()

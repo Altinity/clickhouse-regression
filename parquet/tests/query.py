@@ -56,8 +56,8 @@ def insert_into_distributed_table_from_file(self):
 
 @TestOutline
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Insert("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_Read("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_Datatypes_Supported("1.0"),
 )
 def insert_into_table_from_file(self, engine, table_name=None):
     """Insert data from Parquet files into tables with different engines using FROM INFILE clause."""
@@ -149,8 +149,8 @@ def select_from_distributed_table_into_file(self):
 
 @TestOutline
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Select("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_Write("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_Datatypes_Supported("1.0"),
 )
 def select_from_table_into_file(self, engine, table_name=None):
     """Select data from tables with different engines and write to Parquet files using INTO OUTFILE clause."""
@@ -191,9 +191,9 @@ def select_from_table_into_file(self, engine, table_name=None):
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Select_MaterializedView("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_Select("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_Write("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_Select_MaterializedView("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_Datatypes_Supported("1.0"),
 )
 def select_from_mat_view_into_file(self):
     """Select data from materialized view and write to Parquet files using INTO OUTFILE clause."""
@@ -246,9 +246,9 @@ def select_from_mat_view_into_file(self):
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Insert_Projections("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_Insert("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_Read("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_Projections("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_DataTypes_Import("1.0"),
 )
 def insert_into_table_with_projection_from_file(self):
     """Insert data from a Parquet file into a table with a projection using FROM INFILE clause."""

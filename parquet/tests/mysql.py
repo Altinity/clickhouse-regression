@@ -8,8 +8,8 @@ from s3.tests.common import *
 @TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_MySQL("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_Insert("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_Select("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_Datatypes_Supported("1.0"),
 )
 def mysql_engine_to_parquet_file_to_mysql_engine(self):
     """Check that ClickHouse reads data from a table with a MySQL table engine into a Parquet file and back into a table with a MySQL table engine correctly."""
@@ -76,8 +76,8 @@ def mysql_engine_to_parquet_file_to_mysql_engine(self):
 @TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_Parquet_TableFunctions_MySQL("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_Insert("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_Select("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_Datatypes_Supported("1.0"),
 )
 def mysql_function_to_parquet_file_to_mysql_function(self):
     """Check that ClickHouse correctly writes data from mysql table function into parquet file and back into mysql table function."""

@@ -24,7 +24,14 @@ def argparser(parser):
     )
 
 
-xfails = {}
+xfails = {
+    "ssl keeper/FIPS SSL/openssl check/port:%%%%/connection using FIPS compatible cipher ECDHE-ECDSA-AES128-GCM-SHA256 should work": [
+        (Fail, "not supported by SSL library")
+    ],
+    "/ssl keeper/FIPS SSL/openssl check/port:%%%%/connection using FIPS compatible cipher ECDHE-ECDSA-AES256-GCM-SHA384 should work": [
+        (Fail, "not supported by SSL library")
+    ],
+}
 xflags = {}
 
 
@@ -71,7 +78,7 @@ def regression(
             skip(reason="only supported on ClickHouse version >= 22.4")
 
         Feature(run=load("ssl_keeper.tests.sanity", "feature"))
-        Feature(run=load("ssl_keeper.tests.keeper_ssl_cluster", "feature"))
+        Feature(run=load("ssl_keeper.tests.fips_ssl", "feature"))
 
 
 if main():

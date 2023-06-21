@@ -6,7 +6,7 @@ from helpers.common import *
 
 @TestFeature
 @Name("list in multiple chunks")
-@Requirements(RQ_SRS_032_ClickHouse_Parquet_Insert("1.0"))
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Import_ChunkedColumns("1.0"))
 def feature(self, node="clickhouse1"):
     """Run checks that clickhouse successfully reads from a parquet file with a list split into multiple chunks."""
     self.context.snapshot_id = get_snapshot_id()
