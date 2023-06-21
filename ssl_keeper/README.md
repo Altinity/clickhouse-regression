@@ -38,21 +38,20 @@ Here is an example of the file contents:
             <certificateFile>${CERT_PATH}/server.crt</certificateFile>
             <privateKeyFile>${CERT_PATH}/server.key</privateKeyFile>
             <dhParamsFile>${CERT_PATH}/dhparam.pem</dhParamsFile>
+            <caConfig>${CA_PATH}/CA.crt</caConfig>
+            <loadDefaultCAFile>false</loadDefaultCAFile>
             <verificationMode>none</verificationMode>
-            <loadDefaultCAFile>True</loadDefaultCAFile>
             <cipherList>ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-GCM-SHA384</cipherList>
             <requireTLSv1_2>true</requireTLSv1_2>
             <disableProtocols>sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3</disableProtocols>
             <cacheSessions>true</cacheSessions>
-            <disableProtocols>sslv2,sslv3</disableProtocols>
             <preferServerCiphers>true</preferServerCiphers>
         </server>
         <client>
             <certificateFile>${CERT_PATH}/server.crt</certificateFile>
             <privateKeyFile>${CERT_PATH}/server.key</privateKeyFile>
-            <!-- in case of private CA, otherwise set `loadDefaultCAFile` to `true` and remove `caConfig` -->
-            <loadDefaultCAFile>false</loadDefaultCAFile>
             <caConfig>${CA_PATH}/CA.crt</caConfig>
+            <loadDefaultCAFile>false</loadDefaultCAFile>
             <cacheSessions>true</cacheSessions>
             <requireTLSv1_2>true</requireTLSv1_2>
             <disableProtocols>sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3</disableProtocols>
@@ -195,15 +194,19 @@ or create `/etc/clickhouse-client/config.xml` and place them there if you don’
     <secure>true</secure>
     <openSSL>
         <client>
+            <certificateFile>${CERT_PATH}/server.crt</certificateFile>
+            <privateKeyFile>${CERT_PATH}/server.key</privateKeyFile>
+            <caConfig>${CA_PATH}/CA.crt</caConfig>
+            <loadDefaultCAFile>false</loadDefaultCAFile>
+            <cacheSessions>true</cacheSessions>
+            <requireTLSv1_2>true</requireTLSv1_2>
+            <disableProtocols>sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3</disableProtocols>
+            <preferServerCiphers>true</preferServerCiphers>
             <verificationMode>none</verificationMode>
             <invalidCertificateHandler>
                 <name>AcceptCertificateHandler</name>
             </invalidCertificateHandler>
-            <preferServerCiphers>true</preferServerCiphers>
-      	    <requireTLSv1_2>true</requireTLSv1_2>
-      	    <disableProtocols>sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3</disableProtocols>
-      	    <cipherList>ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-GCM-SHA384</cipherList>
-  	</client>
+        </client>
     </openSSL>
 </config>
 ```

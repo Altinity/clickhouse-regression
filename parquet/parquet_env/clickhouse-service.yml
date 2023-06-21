@@ -26,6 +26,8 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/data/int-list-zero-based-chunked-array.parquet:/var/lib/data/int-list-zero-based-chunked-array.parquet"
       - "${CLICKHOUSE_TESTS_DIR}/data/list_monotonically_increasing_offsets.parquet:/var/lib/data/list_monotonically_increasing_offsets.parquet"
       - "${CLICKHOUSE_TESTS_DIR}/data/local_app.py:/var/lib/data/local_app.py"
+      - "${CLICKHOUSE_TESTS_DIR}/data/broken:/var/lib/clickhouse/user_files/broken"
+      - "${CLICKHOUSE_TESTS_DIR}/data/arrow:/var/lib/clickhouse/user_files/arrow"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/ssl:/etc/clickhouse-server/ssl"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.xml:/etc/clickhouse-server/config.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.xml:/etc/clickhouse-server/users.xml"

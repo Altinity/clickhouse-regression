@@ -22,6 +22,8 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/data/data_SNAPPY.Parquet:/var/lib/clickhouse/user_files/data_SNAPPY.Parquet.SNAPPY"
       - "${CLICKHOUSE_TESTS_DIR}/data/data_ZSTD.Parquet:/var/lib/clickhouse/user_files/data_ZSTD.Parquet.ZSTD"
       - "${CLICKHOUSE_TESTS_DIR}/data/data_LZ4.Parquet:/var/lib/clickhouse/user_files/data_LZ4.Parquet.LZ4"
+      - "${CLICKHOUSE_TESTS_DIR}/data/broken:/var/lib/clickhouse/user_files/broken"
+      - "${CLICKHOUSE_TESTS_DIR}/data/arrow:/var/lib/clickhouse/user_files/arrow"  
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/ssl:/etc/clickhouse-server/ssl"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.xml:/etc/clickhouse-server/config.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.xml:/etc/clickhouse-server/users.xml"

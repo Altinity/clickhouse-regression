@@ -2,15 +2,22 @@
     <secure>true</secure>
     <openSSL>
         <client>
+            <certificateFile>/etc/clickhouse-server/config.d/server.crt</certificateFile>
+            <privateKeyFile>/etc/clickhouse-server/config.d/server.key</privateKeyFile>
+            <!--  in case of private CA, otherwise set `loadDefaultCAFile` to `true` and remove `caConfig`  -->
+            <loadDefaultCAFile>false</loadDefaultCAFile>
+            <caConfig>/etc/clickhouse-server/config.d/altinity_blog_ca.crt</caConfig>
+            <cacheSessions>true</cacheSessions>
+            <preferServerCiphers>true</preferServerCiphers>
+            <requireTLSv1_2>true</requireTLSv1_2>
+            <disableProtocols>sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3</disableProtocols>
+            <!--  set to 'none' for dev-tests with self-signed certificates  -->
             <verificationMode>none</verificationMode>
             <invalidCertificateHandler>
+        <!--  AcceptCertificateHandler may not be used here  -->
                 <name>AcceptCertificateHandler</name>
             </invalidCertificateHandler>
-            <preferServerCiphers>true</preferServerCiphers>
-      	    <requireTLSv1_2>true</requireTLSv1_2>
-      	    <disableProtocols>sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3</disableProtocols>
-      	<cipherList>ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-GCM-SHA384</cipherList>
-  	</client>
+  	  	</client>
     </openSSL>
 </config>
 
