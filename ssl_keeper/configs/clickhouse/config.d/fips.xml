@@ -8,24 +8,29 @@
             <certificateFile>/etc/clickhouse-server/config.d/server.crt</certificateFile>
             <privateKeyFile>/etc/clickhouse-server/config.d/server.key</privateKeyFile>
             <dhParamsFile>/etc/clickhouse-server/config.d/dhparam.pem</dhParamsFile>
+            <caConfig>/etc/clickhouse-server/config.d/altinity_blog_ca.crt</caConfig>
+            <loadDefaultCAFile>false</loadDefaultCAFile>
             <verificationMode>none</verificationMode>
-            <loadDefaultCAFile>true</loadDefaultCAFile>
+            <cacheSessions>true</cacheSessions>
             <cipherList>ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-GCM-SHA384</cipherList>
             <requireTLSv1_2>true</requireTLSv1_2>
             <disableProtocols>sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3</disableProtocols>
-            <cacheSessions>true</cacheSessions>
             <preferServerCiphers>true</preferServerCiphers>
         </server>
         <client>
             <certificateFile>/etc/clickhouse-server/config.d/server.crt</certificateFile>
             <privateKeyFile>/etc/clickhouse-server/config.d/server.key</privateKeyFile>
-            <loadDefaultCAFile>true</loadDefaultCAFile>
+            <!--  in case of private CA, otherwise set `loadDefaultCAFile` to `true` and remove `caConfig`  -->
+            <loadDefaultCAFile>false</loadDefaultCAFile>
+            <caConfig>/etc/clickhouse-server/config.d/altinity_blog_ca.crt</caConfig>
             <cacheSessions>true</cacheSessions>
+            <preferServerCiphers>true</preferServerCiphers>
             <requireTLSv1_2>true</requireTLSv1_2>
             <disableProtocols>sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3</disableProtocols>
-            <preferServerCiphers>true</preferServerCiphers>
+            <!--  set to 'none' for dev-tests with self-signed certificates  -->
             <verificationMode>none</verificationMode>
             <invalidCertificateHandler>
+        <!--  AcceptCertificateHandler may not be used here  -->
                 <name>AcceptCertificateHandler</name>
             </invalidCertificateHandler>
         </client>
@@ -33,3 +38,31 @@
 </clickhouse>
 
 
+
+<!--    <openSSL>-->
+<!--        <server>-->
+<!--            <certificateFile>/etc/clickhouse-server/config.d/server.crt</certificateFile>-->
+<!--            <privateKeyFile>/etc/clickhouse-server/config.d/server.key</privateKeyFile>-->
+<!--            <dhParamsFile>/etc/clickhouse-server/config.d/dhparam.pem</dhParamsFile>-->
+<!--            <verificationMode>none</verificationMode>-->
+<!--            <loadDefaultCAFile>true</loadDefaultCAFile>-->
+<!--            <cipherList>ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-GCM-SHA384</cipherList>-->
+<!--            <requireTLSv1_2>true</requireTLSv1_2>-->
+<!--            <disableProtocols>sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3</disableProtocols>-->
+<!--            <cacheSessions>true</cacheSessions>-->
+<!--            <preferServerCiphers>true</preferServerCiphers>-->
+<!--        </server>-->
+<!--        <client>-->
+<!--            <certificateFile>/etc/clickhouse-server/config.d/server.crt</certificateFile>-->
+<!--            <privateKeyFile>/etc/clickhouse-server/config.d/server.key</privateKeyFile>-->
+<!--            <loadDefaultCAFile>true</loadDefaultCAFile>-->
+<!--            <cacheSessions>true</cacheSessions>-->
+<!--            <requireTLSv1_2>true</requireTLSv1_2>-->
+<!--            <disableProtocols>sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3</disableProtocols>-->
+<!--            <preferServerCiphers>true</preferServerCiphers>-->
+<!--            <verificationMode>none</verificationMode>-->
+<!--            <invalidCertificateHandler>-->
+<!--                <name>AcceptCertificateHandler</name>-->
+<!--            </invalidCertificateHandler>-->
+<!--        </client>-->
+<!--    </openSSL>-->
