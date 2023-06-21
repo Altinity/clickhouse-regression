@@ -267,6 +267,7 @@ flowchart TB;
         subgraph Sources[Source of data]
             direction TB;   
             MySQL
+            DuckDB
 
             subgraph Libraries[Parquet Libraries]
                 direction LR;
