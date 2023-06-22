@@ -294,10 +294,7 @@ def invalid_credentials(self):
                 expected = "DB::Exception: The AWS Access Key Id you provided does not exist in our records"
 
         else:
-            if check_clickhouse_version(">=22.9")(self):
-                expected = "DB::Exception: Message: The request signature we calculated does not match the signature you provided"
-            else:
-                expected = "DB::Exception: The request signature we calculated does not match the signature you provided"
+            expected = "DB::Exception: Message: Access denied"
 
     with And("I create a table"):
         node.query(
