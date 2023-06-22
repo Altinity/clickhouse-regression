@@ -294,7 +294,7 @@ def invalid_credentials(self):
                 expected = "DB::Exception: The AWS Access Key Id you provided does not exist in our records"
 
         else:
-            expected = "DB::Exception Access denied"
+            expected = "DB::Exception: Message: Access denied"
 
     with And("I create a table"):
         node.query(
