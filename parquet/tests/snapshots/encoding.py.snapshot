@@ -1,0 +1,6 @@
+dictionary_encoded_parquet_example = r"""''"""
+
+dictionary_encoded_parquet_examples = r"""''"""
+
+dictionary_encoded_parquet_examples2 = r"""'0\t1\t0\t0\t0\t0\t0\t0\t01/01/09\t0\t2009-01-01 01:00:00.000000000\n1\t0\t1\t1\t1\t10\t1.1\t10.1\t01/01/09\t1\t2009-01-01 01:01:00.000000000'"""
+
