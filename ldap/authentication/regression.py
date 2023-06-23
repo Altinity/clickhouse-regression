@@ -10,6 +10,8 @@ from helpers.argparser import argparser
 from helpers.common import check_clickhouse_version
 from ldap.authentication.requirements import *
 
+issue_51323 =  "https://github.com/ClickHouse/ClickHouse/issues/51323"
+
 # Cross-outs of known fails
 xfails = {
     "connection protocols/tls/tls_require_cert='try'": [
@@ -36,11 +38,11 @@ xfails = {
     "connection protocols/tls cipher suite": [(Fail, "can't get it to work")],
     # bug
     "user authentications/:/verification cooldown/verification cooldown reset when invalid password is provided": [
-        (Fail, "bug, cache is not cleared on invalid password")
+        (Fail, issue_51323)
     ],
     # 23.3
     "user authentications/:/verification cooldown/:": [
-        (Fail, "changes in behaviour in 23.3", check_clickhouse_version(">=23"))
+        (Fail, issue_51323, check_clickhouse_version(">=23"))
     ],
 }
 
