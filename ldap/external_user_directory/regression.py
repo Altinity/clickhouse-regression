@@ -10,6 +10,8 @@ from helpers.argparser import argparser
 from ldap.external_user_directory.requirements import *
 from helpers.common import check_clickhouse_version
 
+issue_51323 =  "https://github.com/ClickHouse/ClickHouse/issues/51323"
+
 # Cross-outs of known fails
 xfails = {
     "connection protocols/tls/tls_require_cert='try'": [
@@ -36,10 +38,10 @@ xfails = {
     "connection protocols/tls cipher suite": [(Fail, "can't get it to work")],
     # 23.3
     "user authentications/:verification cooldown:/:": [
-        (Fail, "changes in behaviour in 23.3", check_clickhouse_version(">=23"))
+        (Fail, issue_51323, check_clickhouse_version(">=23"))
     ],
     "user authentications/verification cooldown:/:": [
-        (Fail, "changes in behaviour in 23.3", check_clickhouse_version(">=23"))
+        (Fail, issue_51323, check_clickhouse_version(">=23"))
     ],
 }
 
