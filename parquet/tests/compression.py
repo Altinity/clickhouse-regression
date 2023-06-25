@@ -7,9 +7,7 @@ from helpers.common import *
 
 
 @TestScenario
-@Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4Raw("1.0")
-)
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4Raw("1.0"))
 def lz4_raw(self):
     node = self.context.node
     table_name = "table_" + getuid()
@@ -29,9 +27,7 @@ def lz4_raw(self):
             )
 
         with And("I read the contents of the created table"):
-            read = node.query(
-                f'SELECT * FROM {table_name}'
-            )
+            read = node.query(f"SELECT * FROM {table_name}")
 
         with Then("I check the output is correct"):
             with values() as that:
@@ -49,9 +45,7 @@ def lz4_raw(self):
             )
 
         with And("I check the exported Parquet file's contents"):
-            read = node.query(
-                f"SELECT * FROM file('{path_to_export}', Parquet)"
-            )
+            read = node.query(f"SELECT * FROM file('{path_to_export}', Parquet)")
 
         with Then("output must match the snapshot"):
             with values() as that:
@@ -64,13 +58,13 @@ def lz4_raw(self):
 
 
 @TestScenario
-@Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4Raw("1.0")
-)
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4Raw("1.0"))
 def lz4_raw_large(self):
     node = self.context.node
     table_name = "table_" + getuid()
-    path_to_export = "/var/lib/clickhouse/user_files/lz4_raw_large_compressed_export.Parquet"
+    path_to_export = (
+        "/var/lib/clickhouse/user_files/lz4_raw_large_compressed_export.Parquet"
+    )
 
     with Given("I have a large Parquet file with the lz4_raw compression"):
         import_file = os.path.join("arrow", "lz4_raw_compressed_larger.parquet")
@@ -86,9 +80,7 @@ def lz4_raw_large(self):
             )
 
         with And("I read the contents of the created table"):
-            read = node.query(
-                f'SELECT * FROM {table_name}'
-            )
+            read = node.query(f"SELECT * FROM {table_name}")
 
         with Then("I check the output is correct"):
             with values() as that:
@@ -106,9 +98,7 @@ def lz4_raw_large(self):
             )
 
         with And("I check the exported Parquet file's contents"):
-            read = node.query(
-                f"SELECT * FROM file('{path_to_export}', Parquet)"
-            )
+            read = node.query(f"SELECT * FROM file('{path_to_export}', Parquet)")
 
         with Then("output must match the snapshot"):
             with values() as that:
@@ -119,21 +109,23 @@ def lz4_raw_large(self):
                     )
                 ), error()
 
+
 @TestScenario
-@Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0")
-)
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0"))
 def lz4_hadoop(self):
     node = self.context.node
     table_name = "table_" + getuid()
-    path_to_export = "/var/lib/clickhouse/user_files/lz4_hadoop_compressed_export.Parquet"
+    path_to_export = (
+        "/var/lib/clickhouse/user_files/lz4_hadoop_compressed_export.Parquet"
+    )
 
     with Given("I have a Parquet file with the hadoop lz4 compression"):
         import_file = os.path.join("arrow", "hadoop_lz4_compressed.parquet")
 
-
     with Check("import"):
-        with When("I try to import the hadoop lz4 compressed Parquet file into the table"):
+        with When(
+            "I try to import the hadoop lz4 compressed Parquet file into the table"
+        ):
             node.query(
                 f"""
                 CREATE TABLE {table_name}
@@ -143,9 +135,7 @@ def lz4_hadoop(self):
             )
 
         with And("I read the contents of the created table"):
-            read = node.query(
-                f'SELECT * FROM {table_name}'
-            )
+            read = node.query(f"SELECT * FROM {table_name}")
 
         with Then("I check the output is correct"):
             with values() as that:
@@ -163,9 +153,7 @@ def lz4_hadoop(self):
             )
 
         with And("I check the exported Parquet file's contents"):
-            read = node.query(
-                f"SELECT * FROM file('{path_to_export}', Parquet)"
-            )
+            read = node.query(f"SELECT * FROM file('{path_to_export}', Parquet)")
 
         with Then("output must match the snapshot"):
             with values() as that:
@@ -176,21 +164,23 @@ def lz4_hadoop(self):
                     )
                 ), error()
 
+
 @TestScenario
-@Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0")
-)
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0"))
 def lz4_hadoop_large(self):
     node = self.context.node
     table_name = "table_" + getuid()
-    path_to_export = "/var/lib/clickhouse/user_files/lz4_hadoop_compressed_large_export.Parquet"
+    path_to_export = (
+        "/var/lib/clickhouse/user_files/lz4_hadoop_compressed_large_export.Parquet"
+    )
 
     with Given("I have a large Parquet file with the hadoop lz4 compression"):
         import_file = os.path.join("arrow", "hadoop_lz4_compressed.parquet")
 
-
     with Check("import"):
-        with When("I try to import the large hadoop lz4 compressed Parquet file into the table"):
+        with When(
+            "I try to import the large hadoop lz4 compressed Parquet file into the table"
+        ):
             node.query(
                 f"""
                 CREATE TABLE {table_name}
@@ -200,9 +190,7 @@ def lz4_hadoop_large(self):
             )
 
         with And("I read the contents of the created table"):
-            read = node.query(
-                f'SELECT * FROM {table_name}'
-            )
+            read = node.query(f"SELECT * FROM {table_name}")
 
         with Then("I check the output is correct"):
             with values() as that:
@@ -220,9 +208,7 @@ def lz4_hadoop_large(self):
             )
 
         with And("I check the exported Parquet file's contents"):
-            read = node.query(
-                f"SELECT * FROM file('{path_to_export}', Parquet)"
-            )
+            read = node.query(f"SELECT * FROM file('{path_to_export}', Parquet)")
 
         with Then("output must match the snapshot"):
             with values() as that:
@@ -237,14 +223,17 @@ def lz4_hadoop_large(self):
 def lz4_non_hadoop(self):
     node = self.context.node
     table_name = "table_" + getuid()
-    path_to_export = "/var/lib/clickhouse/user_files/lz4_non_hadoop_compressed_export.Parquet"
+    path_to_export = (
+        "/var/lib/clickhouse/user_files/lz4_non_hadoop_compressed_export.Parquet"
+    )
 
     with Given("I have a large Parquet file with the non hadoop lz4 compression"):
         import_file = os.path.join("arrow", "non_hadoop_lz4_compressed.parquet")
 
-
     with Check("import"):
-        with When("I try to import the large non hadoop lz4 compressed Parquet file into the table"):
+        with When(
+            "I try to import the large non hadoop lz4 compressed Parquet file into the table"
+        ):
             node.query(
                 f"""
                 CREATE TABLE {table_name}
@@ -254,9 +243,7 @@ def lz4_non_hadoop(self):
             )
 
         with And("I read the contents of the created table"):
-            read = node.query(
-                f'SELECT * FROM {table_name}'
-            )
+            read = node.query(f"SELECT * FROM {table_name}")
 
         with Then("I check the output is correct"):
             with values() as that:
@@ -274,9 +261,7 @@ def lz4_non_hadoop(self):
             )
 
         with And("I check the exported Parquet file's contents"):
-            read = node.query(
-                f"SELECT * FROM file('{path_to_export}', Parquet)"
-            )
+            read = node.query(f"SELECT * FROM file('{path_to_export}', Parquet)")
 
         with Then("output must match the snapshot"):
             with values() as that:
@@ -291,7 +276,7 @@ def lz4_non_hadoop(self):
 @TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Snappy("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_Import_Encoding_RunLength("1.0")
+    RQ_SRS_032_ClickHouse_Parquet_Import_Encoding_RunLength("1.0"),
 )
 def snappy_rle(self):
     node = self.context.node
@@ -309,14 +294,14 @@ def snappy_rle(self):
                 ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet)
                 """,
                 message="DB::ParsingException: Error while reading Parquet data: IOError: Unknown encoding type.",
-                exitcode=33
+                exitcode=33,
             )
 
 
 @TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Snappy("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_Import_Encoding_RunLength("1.0")
+    RQ_SRS_032_ClickHouse_Parquet_Import_Encoding_RunLength("1.0"),
 )
 def snappy_plain(self):
     node = self.context.node
@@ -334,7 +319,7 @@ def snappy_plain(self):
                 ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet)
                 """,
                 message="DB::ParsingException: Error while reading Parquet data: IOError: Unknown encoding type.",
-                exitcode=33
+                exitcode=33,
             )
 
 
