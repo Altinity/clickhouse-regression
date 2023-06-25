@@ -27,11 +27,13 @@ on:
           - datetime64_extended_range
           - disk_level_encryption
           - dns
+          - engines
           - example
           - extended_precision_data_types
           - functional
           - kafka
           - kerberos
+          - key_value
           - ldap
           - lightweight_delete
           - map_type
@@ -40,6 +42,8 @@ on:
           - rbac
           - s3
           - selects
+          - session_timezone
+          - ssl_keeper
           - ssl_server
           - tiered_storage
           - window_functions
@@ -397,6 +401,34 @@ jobs:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
 
+  engines:
+    runs-on: self-hosted
+    env:
+      SUITE: engines
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'engines' }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup
+        run: .github/setup.sh
+
+      - name: Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
+
+      - name: Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-artifacts
+          path: ${{ env.artifact_paths}}
+
   example:
     runs-on: self-hosted
     env:
@@ -514,6 +546,33 @@ jobs:
     env:
       SUITE: kerberos
     if: ${{ inputs.suite == 'all' || inputs.suite == 'kerberos' }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup
+        run: .github/setup.sh
+
+      - name: Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
+
+      - name: Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-artifacts
+          path: ${{ env.artifact_paths}}
+
+  key_value:
+    runs-on: self-hosted
+    env:
+      SUITE: key_value
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'key_value' }}
     steps:
       - uses: actions/checkout@v3
 
@@ -770,34 +829,6 @@ jobs:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
 
-  selects:
-    runs-on: self-hosted
-    env:
-      SUITE: selects
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'selects' }}
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup
-        run: .github/setup.sh
-
-      - name: Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
-
-      - name: Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
   s3_minio:
     runs-on: self-hosted
     env:
@@ -893,6 +924,90 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-gcs-artifacts
+          path: ${{ env.artifact_paths}}
+
+  selects:
+    runs-on: self-hosted
+    env:
+      SUITE: selects
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'selects' }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup
+        run: .github/setup.sh
+
+      - name: Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
+
+      - name: Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-artifacts
+          path: ${{ env.artifact_paths}}
+          
+  session_timezone:
+    runs-on: self-hosted
+    env:
+      SUITE: session_timezone
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'session_timezone' }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup
+        run: .github/setup.sh
+
+      - name: Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
+
+      - name: Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-artifacts
+          path: ${{ env.artifact_paths}}
+          
+  ssl_keeper:
+    runs-on: self-hosted
+    env:
+      SUITE: ssl_keeper
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_keeper' }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup
+        run: .github/setup.sh
+
+      - name: Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
+
+      - name: Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
 
   ssl_server:
