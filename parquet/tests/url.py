@@ -73,7 +73,8 @@ def select_from_engine(self):
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_URL("1.0"))
 def engine_to_file_to_engine(self):
     """Check that when data is inserted into a table with `URL` engine,
-    the data can be read back correctly from the source file using a different table with `URL` engine."""
+    the data can be read back correctly from the source file using a different table with `URL` engine.
+    """
     self.context.snapshot_id = get_snapshot_id()
     node = self.context.node
     table0_name = "table0_" + getuid()

@@ -1,0 +1,8 @@
+tuple_of_nulls_describe = r"""'b_struct\tTuple(Nullable(Int32))'"""
+
+tuple_of_nulls = r"""'(NULL)\n(NULL)\n(NULL)\n(NULL)\n(NULL)\n(NULL)\n(NULL)\n(NULL)'"""
+
+big_tuple_with_nulls_describe = r"""'id\tNullable(Int32)\t\t\t\t\t\nphoneNumbers\tTuple(Array(Tuple(Nullable(Int64), Nullable(String))))'"""
+
+big_tuple_with_nulls = r""""1\t([])\n2\t([])\n3\t([])\n4\t([(5555555555,NULL)])\n5\t([(1111111111,'home')])\n6\t([(1111111111,'home'),(2222222222,NULL),(3333333333,'mobile')])""""
+

@@ -14,10 +14,12 @@ from helpers.common import *
 def dictionary(self):
     node = self.context.node
     table_name = "table_" + getuid()
-    path_to_export = "/var/lib/clickhouse/user_files/dictionary_encoding_exports.Parquet"
+    path_to_export = (
+        "/var/lib/clickhouse/user_files/dictionary_encoding_exports.Parquet"
+    )
 
     with Given("I have a Parquet file with the Dictionary encoding"):
-        dict_encoded_file = os.path.join("arrow", "alltypes_dictionary.parquet")
+        import_file = os.path.join("arrow", "alltypes_dictionary.parquet")
 
     with Check("import"):
         with When("I try to import the Dictionary encoded Parquet file into the table"):
@@ -25,14 +27,12 @@ def dictionary(self):
                 f"""
                 CREATE TABLE {table_name}
                 ENGINE = MergeTree
-                ORDER BY tuple() AS SELECT * FROM file('{dict_encoded_file}', Parquet)
+                ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet)
                 """
             )
 
         with And("I read the contents of the created table"):
-            read = node.query(
-                f'SELECT * FROM {table_name}'
-            )
+            read = node.query(f"SELECT * FROM {table_name}")
 
         with Then("I check the output is correct"):
             with values() as that:
@@ -50,9 +50,7 @@ def dictionary(self):
             )
 
         with And("I check the exported Parquet file's contents"):
-            read = node.query(
-                f"SELECT * FROM file('{path_to_export}', Parquet)"
-            )
+            read = node.query(f"SELECT * FROM file('{path_to_export}', Parquet)")
 
         with Then("output must match the snapshot", flags=XFAIL):
             with values() as that:
@@ -76,9 +74,9 @@ def plain(self):
     snapshot_name = "plain_encoding"
 
     with Given("I have a Parquet file with the Plain encoding"):
-        dict_encoded_file = os.path.join("arrow", "alltypes_plain.parquet")
+        import_file = os.path.join("arrow", "alltypes_plain.parquet")
         if os.path.exists(path_to_export):
-            node.command(f'rm -r {path_to_export}')
+            node.command(f"rm -r {path_to_export}")
 
     with Check("import"):
         with When("I try to import the Plain encoded Parquet file into the table"):
@@ -86,14 +84,12 @@ def plain(self):
                 f"""
                 CREATE TABLE {table_name}
                 ENGINE = MergeTree
-                ORDER BY tuple() AS SELECT * FROM file('{dict_encoded_file}', Parquet)
+                ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet)
                 """
             )
 
         with And("I read the contents of the created table"):
-            read = node.query(
-                f'SELECT * FROM {table_name}'
-            )
+            read = node.query(f"SELECT * FROM {table_name}")
 
         with Then("I check the output is correct"):
             with values() as that:
@@ -111,9 +107,7 @@ def plain(self):
             )
 
         with And("I check the exported Parquet file's contents"):
-            read = node.query(
-                f"SELECT * FROM file('{path_to_export}', Parquet)"
-            )
+            read = node.query(f"SELECT * FROM file('{path_to_export}', Parquet)")
 
         with Then("output must match the snapshot", flags=XFAIL):
             with values() as that:

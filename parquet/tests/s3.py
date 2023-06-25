@@ -21,13 +21,13 @@ def insert_into_engine(self):
         )
 
     with When(
-            "I insert data into the table",
-            description="insert data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
+        "I insert data into the table",
+        description="insert data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
     ):
         table.insert_test_data()
 
     with Then(
-            "I check that the data inserted into the table was correctly written to the file"
+        "I check that the data inserted into the table was correctly written to the file"
     ):
         check_source_file_on_s3(
             file=table_name + ".Parquet",
@@ -64,7 +64,7 @@ def select_from_engine(self):
         )
 
     with Then(
-            "I check that the table reads the data correctly by checking the table columns"
+        "I check that the table reads the data correctly by checking the table columns"
     ):
         with Pool(3) as executor:
             for column in table_columns:
@@ -82,7 +82,8 @@ def select_from_engine(self):
 @TestScenario
 def engine_to_file_to_engine(self):
     """Check that when data is inserted into a table with `S3` engine,
-    the data can be read back correctly from the source file using a different table with `S3` engine."""
+    the data can be read back correctly from the source file using a different table with `S3` engine.
+    """
     self.context.snapshot_id = get_snapshot_id()
     compression_type = self.context.compression_type
     table0_name = "table0_" + getuid()
@@ -97,13 +98,13 @@ def engine_to_file_to_engine(self):
         )
 
     with When(
-            "I insert data into the table",
-            description="insert data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
+        "I insert data into the table",
+        description="insert data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
     ):
         table0.insert_test_data()
 
     with Then(
-            "I check that the data inserted into the table was correctly written into the file"
+        "I check that the data inserted into the table was correctly written into the file"
     ):
         check_source_file_on_s3(
             file=table0_name + ".Parquet",
@@ -118,7 +119,7 @@ def engine_to_file_to_engine(self):
         )
 
     with Then(
-            "I check that the table reads the data correctly by checking the table columns"
+        "I check that the table reads the data correctly by checking the table columns"
     ):
         with Pool(3) as executor:
             for column in columns:
@@ -134,9 +135,7 @@ def engine_to_file_to_engine(self):
 
 
 @TestScenario
-@Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_TableFunctions_S3("1.0")
-)
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_TableFunctions_S3("1.0"))
 def insert_into_engine_from_file(self):
     """Check that that data read from a Parquet file using the `INFILE` clause in `INSERT` query is
     correctly written into a table with a `S3` engine."""
@@ -162,7 +161,7 @@ def insert_into_engine_from_file(self):
         )
 
     with Then(
-            "I check that the table reads the data correctly by checking the table columns"
+        "I check that the table reads the data correctly by checking the table columns"
     ):
         with Pool(3) as executor:
             for column in table_columns:
@@ -178,9 +177,7 @@ def insert_into_engine_from_file(self):
 
 
 @TestScenario
-@Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_TableFunctions_S3("1.0")
-)
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_TableFunctions_S3("1.0"))
 def engine_select_output_to_file(self):
     """Check that data is correctly written into a Parquet file when using `SELECT` query with `OUTFILE` clause on a table with `S3` engine."""
     self.context.snapshot_id = get_snapshot_id()
@@ -196,8 +193,8 @@ def engine_select_output_to_file(self):
         )
 
     with When(
-            "I insert data into the table",
-            description="insert data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
+        "I insert data into the table",
+        description="insert data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
     ):
         table.insert_test_data()
 
@@ -207,7 +204,7 @@ def engine_select_output_to_file(self):
         )
 
     with Then(
-            "I check that the data inserted into the table was correctly written to the file"
+        "I check that the data inserted into the table was correctly written to the file"
     ):
         check_source_file_on_s3(
             file=table_name + ".Parquet",
@@ -218,7 +215,7 @@ def engine_select_output_to_file(self):
 @TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_Parquet_Import("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_TableFunctions_S3("1.0")
+    RQ_SRS_032_ClickHouse_Parquet_TableFunctions_S3("1.0"),
 )
 def insert_into_function(self):
     """Check that when data is inserted into `s3` table function with manually defined structure,
@@ -247,7 +244,7 @@ def insert_into_function(self):
         )
 
     with Then(
-            "I check that the data inserted into the table function was correctly written to the file"
+        "I check that the data inserted into the table function was correctly written to the file"
     ):
         check_source_file_on_s3(
             file=file_name + ".Parquet",
@@ -258,7 +255,7 @@ def insert_into_function(self):
 @TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_Parquet_TableFunctions_S3("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_TypeConversionFunction("1.0")
+    RQ_SRS_032_ClickHouse_Parquet_DataTypes_TypeConversionFunction("1.0"),
 )
 def select_from_function_manual_cast_types(self):
     """Check that when data is selected from an `s3` table function with manually cast column types,
@@ -297,8 +294,9 @@ def select_from_function_manual_cast_types(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_Parquet_Import("1.0"),
-              RQ_SRS_032_ClickHouse_Parquet_Import_AutoTypecast("1.0")
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_AutoTypecast("1.0"),
 )
 def select_from_function_auto_cast_types(self):
     """Check that when data is selected from an `s3` table function with automatic cast column types,
@@ -370,16 +368,16 @@ def function(self):
     "compression_type",
     [
         (
-                "NONE",
-                Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_None("1.0")),
+            "NONE",
+            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_None("1.0")),
         ),
         (
-                "GZIP",
-                Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip("1.0")),
+            "GZIP",
+            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip("1.0")),
         ),
         (
-                "LZ4",
-                Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0")),
+            "LZ4",
+            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0")),
         ),
     ],
 )

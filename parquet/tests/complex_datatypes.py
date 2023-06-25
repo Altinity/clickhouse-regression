@@ -7,93 +7,28 @@ from helpers.common import *
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_Parquet_DataTypes_Conversion("1.0"))
-def binary(self):
-    node = self.context.node
-    table_name = "table_" + getuid()
-    path_to_export = f"/var/lib/clickhouse/user_files/binary_{table_name}.Parquet"
-
-    with Given("I have a Parquet file with the binary datatype columns"):
-        import_file = os.path.join("arrow", "binary.parquet")
-
-    with And("I save file structure"):
-        structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
-
-        with values() as that:
-            assert that(
-                snapshot(
-                    structure.output.strip(),
-                    name=f"describe_binary",
-                )
-            ), error()
-
-    with Check("import"):
-        with When("I try to import the binary Parquet file into the table"):
-            node.query(
-                f"""
-                CREATE TABLE {table_name}
-                ENGINE = MergeTree
-                ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet)
-                """
-            )
-
-        with And("I read the contents of the created table"):
-            read = node.query(f"SELECT * FROM {table_name}")
-
-        with Then("I check the output is correct"):
-            with values() as that:
-                assert that(
-                    snapshot(
-                        read.output.strip(),
-                        name=f"binary",
-                    )
-                ), error()
-
-    with Check("export"):
-        with When("I export the table back into a new parquet file"):
-            node.query(
-                f"SELECT * FROM {table_name} INTO OUTFILE '{path_to_export}' COMPRESSION 'none' FORMAT Parquet"
-            )
-
-        with And("I check the exported Parquet file's contents"):
-            read = node.query(f"SELECT * FROM file('{path_to_export}', Parquet)")
-
-        with Then("output must match the snapshot"):
-            with values() as that:
-                assert that(
-                    snapshot(
-                        read.output.strip(),
-                        name=f"binary",
-                    )
-                ), error()
-
-
-@TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_Conversion("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_Import("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Nested("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nested("1.0"),
 )
-def byte_array(self):
+def array(self):
     node = self.context.node
     table_name = "table_" + getuid()
-    path_to_export = f"/var/lib/clickhouse/user_files/binary_{table_name}.Parquet"
+    path_to_export = f"/var/lib/clickhouse/user_files/array_{table_name}.Parquet"
 
-    with Given("I have a Parquet file with the decimal byte array datatype columns"):
-        import_file = os.path.join("arrow", "byte_array_decimal.parquet")
+    with Given("I have a Parquet file with the array datatype"):
+        import_file = os.path.join("arrow", "list_columns.parquet")
 
     with And("I save file structure"):
         structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
 
         with values() as that:
             assert that(
-                snapshot(
-                    structure.output.strip(),
-                    name=f"byte_array_describe",
-                )
+                snapshot(structure.output.strip(), name="array_describe")
             ), error()
 
     with Check("import"):
-        with When("I try to import the decimal byte array Parquet file into the table"):
+        with When("I try to import the Parquet file into the table"):
             node.query(
                 f"""
                 CREATE TABLE {table_name}
@@ -107,12 +42,7 @@ def byte_array(self):
 
         with Then("I check the output is correct"):
             with values() as that:
-                assert that(
-                    snapshot(
-                        read.output.strip(),
-                        name=f"byte_array_decimal",
-                    )
-                ), error()
+                assert that(snapshot(read.output.strip(), name="array")), error()
 
     with Check("export"):
         with When("I export the table back into a new parquet file"):
@@ -125,55 +55,40 @@ def byte_array(self):
 
         with Then("output must match the snapshot"):
             with values() as that:
-                assert that(
-                    snapshot(
-                        read.output.strip(),
-                        name=f"byte_array_decimal",
-                    )
-                ), error()
+                assert that(snapshot(read.output.strip(), name="array")), error()
 
         with And("I save file structure after export"):
             structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
 
             with values() as that:
                 assert that(
-                    snapshot(
-                        structure.output.strip(),
-                        name=f"byte_array_describe",
-                    )
+                    snapshot(structure.output.strip(), name="array_describe")
                 ), error()
 
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_Conversion("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_Import("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Nested("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nested("1.0"),
 )
-def fixed_length_decimal(self):
+def nested_array(self):
     node = self.context.node
     table_name = "table_" + getuid()
-    path_to_export = (
-        f"/var/lib/clickhouse/user_files/fixed_decimal_{table_name}.Parquet"
-    )
+    path_to_export = f"/var/lib/clickhouse/user_files/nested_array_{table_name}.Parquet"
 
-    with Given("I have a Parquet file with the fixed length decimal datatype columns"):
-        import_file = os.path.join("arrow", "fixed_length_decimal.parquet")
+    with Given("I have a Parquet file with the nested array datatype"):
+        import_file = os.path.join("arrow", "nested_lists.snappy.parquet")
 
     with And("I save file structure"):
         structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
 
         with values() as that:
             assert that(
-                snapshot(
-                    structure.output.strip(),
-                    name=f"fixed_length_decimal_describe",
-                )
+                snapshot(structure.output.strip(), name="nested_array_describe")
             ), error()
 
     with Check("import"):
-        with When(
-            "I try to import the fixed length decimal Parquet file into the table"
-        ):
+        with When("I try to import the Parquet file into the table"):
             node.query(
                 f"""
                 CREATE TABLE {table_name}
@@ -187,12 +102,7 @@ def fixed_length_decimal(self):
 
         with Then("I check the output is correct"):
             with values() as that:
-                assert that(
-                    snapshot(
-                        read.output.strip(),
-                        name=f"fixed_length_decimal",
-                    )
-                ), error()
+                assert that(snapshot(read.output.strip(), name="nested_array")), error()
 
     with Check("export"):
         with When("I export the table back into a new parquet file"):
@@ -205,57 +115,40 @@ def fixed_length_decimal(self):
 
         with Then("output must match the snapshot"):
             with values() as that:
-                assert that(
-                    snapshot(
-                        read.output.strip(),
-                        name=f"fixed_length_decimal",
-                    )
-                ), error()
+                assert that(snapshot(read.output.strip(), name="nested_array")), error()
 
         with And("I save file structure after export"):
             structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
 
             with values() as that:
                 assert that(
-                    snapshot(
-                        structure.output.strip(),
-                        name=f"fixed_length_decimal_describe",
-                    )
+                    snapshot(structure.output.strip(), name="nested_array_describe")
                 ), error()
 
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_Conversion("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_Import("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Nested("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nested("1.0"),
 )
-def fixed_length_decimal_legacy(self):
+def nested_map(self):
     node = self.context.node
     table_name = "table_" + getuid()
-    path_to_export = (
-        f"/var/lib/clickhouse/user_files/fixed_decimal_legacy_{table_name}.Parquet"
-    )
+    path_to_export = f"/var/lib/clickhouse/user_files/nested_map_{table_name}.Parquet"
 
-    with Given(
-        "I have a Parquet file with the fixed length decimal legacy datatype columns"
-    ):
-        import_file = os.path.join("arrow", "fixed_length_decimal.parquet")
+    with Given("I have a Parquet file with the nested array datatype"):
+        import_file = os.path.join("arrow", "nested_maps.snappy.parquet")
 
     with And("I save file structure"):
         structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
 
         with values() as that:
             assert that(
-                snapshot(
-                    structure.output.strip(),
-                    name=f"fixed_length_legacy_decimal_describe",
-                )
+                snapshot(structure.output.strip(), name="nested_map_describe")
             ), error()
 
     with Check("import"):
-        with When(
-            "I try to import the fixed length decimal legacy Parquet file into the table"
-        ):
+        with When("I try to import the Parquet file into the table"):
             node.query(
                 f"""
                 CREATE TABLE {table_name}
@@ -269,12 +162,7 @@ def fixed_length_decimal_legacy(self):
 
         with Then("I check the output is correct"):
             with values() as that:
-                assert that(
-                    snapshot(
-                        read.output.strip(),
-                        name=f"fixed_length_decimal_legacy",
-                    )
-                ), error()
+                assert that(snapshot(read.output.strip(), name="nested_map")), error()
 
     with Check("export"):
         with When("I export the table back into a new parquet file"):
@@ -287,207 +175,38 @@ def fixed_length_decimal_legacy(self):
 
         with Then("output must match the snapshot"):
             with values() as that:
-                assert that(
-                    snapshot(
-                        read.output.strip(),
-                        name=f"fixed_length_decimal_legacy",
-                    )
-                ), error()
+                assert that(snapshot(read.output.strip(), name="nested_map")), error()
 
         with And("I save file structure after export"):
             structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
 
             with values() as that:
                 assert that(
-                    snapshot(
-                        structure.output.strip(),
-                        name=f"fixed_length_legacy_decimal_describe",
-                    )
+                    snapshot(structure.output.strip(), name="nested_map_describe")
                 ), error()
 
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_Conversion("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_Import("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Nested("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nested("1.0"),
 )
-def int32_decimal(self):
+def nested_struct(self):
     node = self.context.node
     table_name = "table_" + getuid()
     path_to_export = (
-        f"/var/lib/clickhouse/user_files/int32_decimal_{table_name}.Parquet"
+        f"/var/lib/clickhouse/user_files/nested_struct_{table_name}.Parquet"
     )
 
-    with Given("I have a Parquet file with the int32 decimal datatype columns"):
-        import_file = os.path.join("arrow", "int32_decimal.parquet")
+    with Given("I have a Parquet file with the nested array datatype"):
+        import_file = os.path.join("arrow", "nested_structs.rust.parquet")
 
     with And("I save file structure"):
         structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
 
         with values() as that:
             assert that(
-                snapshot(
-                    structure.output.strip(),
-                    name=f"int32_decimal_describe",
-                )
-            ), error()
-
-    with Check("import"):
-        with When("I try to import the int32 decimal Parquet file into the table"):
-            node.query(
-                f"""
-                CREATE TABLE {table_name}
-                ENGINE = MergeTree
-                ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet)
-                """
-            )
-
-        with And("I read the contents of the created table"):
-            read = node.query(f"SELECT * FROM {table_name}")
-
-        with Then("I check the output is correct"):
-            with values() as that:
-                assert that(
-                    snapshot(
-                        read.output.strip(),
-                        name=f"int32_decimal",
-                    )
-                ), error()
-
-    with Check("export"):
-        with When("I export the table back into a new parquet file"):
-            node.query(
-                f"SELECT * FROM {table_name} INTO OUTFILE '{path_to_export}' COMPRESSION 'none' FORMAT Parquet"
-            )
-
-        with And("I check the exported Parquet file's contents"):
-            read = node.query(f"SELECT * FROM file('{path_to_export}', Parquet)")
-
-        with Then("output must match the snapshot"):
-            with values() as that:
-                assert that(
-                    snapshot(
-                        read.output.strip(),
-                        name=f"int32_decimal",
-                    )
-                ), error()
-
-        with And("I save file structure after export"):
-            structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
-
-            with values() as that:
-                assert that(
-                    snapshot(
-                        structure.output.strip(),
-                        name=f"int32_decimal_describe",
-                    )
-                ), error()
-
-
-@TestScenario
-@Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_Conversion("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_Import("1.0"),
-)
-def int64_decimal(self):
-    node = self.context.node
-    table_name = "table_" + getuid()
-    path_to_export = (
-        f"/var/lib/clickhouse/user_files/int64_decimal_{table_name}.Parquet"
-    )
-
-    with Given("I have a Parquet file with the int64 decimal datatype columns"):
-        import_file = os.path.join("arrow", "int64_decimal.parquet")
-
-    with And("I save file structure"):
-        structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
-
-        with values() as that:
-            assert that(
-                snapshot(
-                    structure.output.strip(),
-                    name=f"int64_decimal_describe",
-                )
-            ), error()
-
-    with Check("import"):
-        with When("I try to import the in32 decimal Parquet file into the table"):
-            node.query(
-                f"""
-                CREATE TABLE {table_name}
-                ENGINE = MergeTree
-                ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet)
-                """
-            )
-
-        with And("I read the contents of the created table"):
-            read = node.query(f"SELECT * FROM {table_name}")
-
-        with Then("I check the output is correct"):
-            with values() as that:
-                assert that(
-                    snapshot(
-                        read.output.strip(),
-                        name=f"int64_decimal",
-                    )
-                ), error()
-
-    with Check("export"):
-        with When("I export the table back into a new parquet file"):
-            node.query(
-                f"SELECT * FROM {table_name} INTO OUTFILE '{path_to_export}' COMPRESSION 'none' FORMAT Parquet"
-            )
-
-        with And("I check the exported Parquet file's contents"):
-            read = node.query(f"SELECT * FROM file('{path_to_export}', Parquet)")
-
-        with Then("output must match the snapshot"):
-            with values() as that:
-                assert that(
-                    snapshot(
-                        read.output.strip(),
-                        name=f"int64_decimal",
-                    )
-                ), error()
-
-        with And("I save file structure after export"):
-            structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
-
-            with values() as that:
-                assert that(
-                    snapshot(
-                        structure.output.strip(),
-                        name=f"int64_decimal_describe",
-                    )
-                ), error()
-
-
-@TestScenario
-@Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_Conversion("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_Import("1.0"),
-)
-def decimal_with_filter(self):
-    node = self.context.node
-    table_name = "table_" + getuid()
-    path_to_export = (
-        f"/var/lib/clickhouse/user_files/decimal_filter_{table_name}.Parquet"
-    )
-
-    with Given(
-        "I have a Parquet file with the decimal value with specified filters of precision and scale"
-    ):
-        import_file = os.path.join("arrow", "lineitem-arrow.parquet")
-
-    with And("I save file structure"):
-        structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
-
-        with values() as that:
-            assert that(
-                snapshot(
-                    structure.output.strip(),
-                    name=f"decimal_filter_describe",
-                )
+                snapshot(structure.output.strip(), name="nested_struct_describe")
             ), error()
 
     with Check("import"):
@@ -506,10 +225,7 @@ def decimal_with_filter(self):
         with Then("I check the output is correct"):
             with values() as that:
                 assert that(
-                    snapshot(
-                        read.output.strip(),
-                        name=f"decimal_filter",
-                    )
+                    snapshot(read.output.strip(), name="nested_struct")
                 ), error()
 
     with Check("export"):
@@ -524,10 +240,7 @@ def decimal_with_filter(self):
         with Then("output must match the snapshot"):
             with values() as that:
                 assert that(
-                    snapshot(
-                        read.output.strip(),
-                        name=f"decimal_filter",
-                    )
+                    snapshot(read.output.strip(), name="nested_struct")
                 ), error()
 
         with And("I save file structure after export"):
@@ -535,36 +248,97 @@ def decimal_with_filter(self):
 
             with values() as that:
                 assert that(
-                    snapshot(
-                        structure.output.strip(),
-                        name=f"decimal_filter_describe",
-                    )
+                    snapshot(structure.output.strip(), name="nested_struct_describe")
                 ), error()
 
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_Conversion("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_Import("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Nested("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nested("1.0"),
     RQ_SRS_032_ClickHouse_Parquet_DataTypes_NullValues("1.0"),
 )
-def singlenull(self):
+def complex_null(self):
     node = self.context.node
     table_name = "table_" + getuid()
-    path_to_export = f"/var/lib/clickhouse/user_files/single_null_{table_name}.Parquet"
+    path_to_export = (
+        f"/var/lib/clickhouse/user_files/nested_struct_{table_name}.Parquet"
+    )
 
-    with Given("I have a Parquet file with single null value"):
-        import_file = os.path.join("arrow", "single_nan.parquet")
+    with Given(
+        "I have a Parquet file with the array, map and tuple with null values datatype"
+    ):
+        import_file = os.path.join("arrow", "nullable.impala.parquet")
 
     with And("I save file structure"):
         structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
 
         with values() as that:
             assert that(
-                snapshot(
-                    structure.output.strip(),
-                    name=f"single_null_describe",
-                )
+                snapshot(structure.output.strip(), name="complex_null_describe")
+            ), error()
+
+    with Check("import"):
+        with When("I try to import the Parquet file into the table"):
+            node.query(
+                f"""
+                CREATE TABLE {table_name}
+                ENGINE = MergeTree
+                ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet)
+                """
+            )
+
+        with And("I read the contents of the created table"):
+            read = node.query(f"SELECT * FROM {table_name}")
+
+        with Then("I check the output is correct"):
+            with values() as that:
+                assert that(snapshot(read.output.strip(), name="complex_null")), error()
+
+    with Check("export"):
+        with When("I export the table back into a new parquet file"):
+            node.query(
+                f"SELECT * FROM {table_name} INTO OUTFILE '{path_to_export}' COMPRESSION 'none' FORMAT Parquet"
+            )
+
+        with And("I check the exported Parquet file's contents"):
+            read = node.query(f"SELECT * FROM file('{path_to_export}', Parquet)")
+
+        with Then("output must match the snapshot"):
+            with values() as that:
+                assert that(snapshot(read.output.strip(), name="complex_null")), error()
+
+        with And("I save file structure after export"):
+            structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
+
+            with values() as that:
+                assert that(
+                    snapshot(structure.output.strip(), name="complex_null_describe")
+                ), error()
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Nested("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nested("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_DataTypes_NullValues("1.0"),
+)
+def tupleofnulls(self):
+    node = self.context.node
+    table_name = "table_" + getuid()
+    path_to_export = (
+        f"/var/lib/clickhouse/user_files/nested_struct_{table_name}.Parquet"
+    )
+
+    with Given("I have a Parquet file with the tuple of nulls datatype"):
+        import_file = os.path.join("arrow", "nulls.snappy.parquet")
+
+    with And("I save file structure"):
+        structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
+
+        with values() as that:
+            assert that(
+                snapshot(structure.output.strip(), name="tuple_of_nulls_describe")
             ), error()
 
     with Check("import"):
@@ -583,10 +357,7 @@ def singlenull(self):
         with Then("I check the output is correct"):
             with values() as that:
                 assert that(
-                    snapshot(
-                        read.output.strip(),
-                        name=f"single_null",
-                    )
+                    snapshot(read.output.strip(), name="tuple_of_nulls")
                 ), error()
 
     with Check("export"):
@@ -601,10 +372,7 @@ def singlenull(self):
         with Then("output must match the snapshot"):
             with values() as that:
                 assert that(
-                    snapshot(
-                        read.output.strip(),
-                        name=f"single_null",
-                    )
+                    snapshot(read.output.strip(), name="tuple_of_nulls")
                 ), error()
 
         with And("I save file structure after export"):
@@ -612,12 +380,81 @@ def singlenull(self):
 
             with values() as that:
                 assert that(
-                    snapshot(structure.output.strip(), name=f"single_null_describe")
+                    snapshot(structure.output.strip(), name="tuple_of_nulls_describe")
+                ), error()
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Nested("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nested("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_DataTypes_NullValues("1.0"),
+)
+def bigtuplewithnulls(self):
+    node = self.context.node
+    table_name = "table_" + getuid()
+    path_to_export = (
+        f"/var/lib/clickhouse/user_files/nested_struct_{table_name}.Parquet"
+    )
+
+    with Given("I have a Parquet file with the big tuple with nulls datatype"):
+        import_file = os.path.join("arrow", "repeated_no_annotation.parquet")
+
+    with And("I save file structure"):
+        structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
+
+        with values() as that:
+            assert that(
+                snapshot(structure.output.strip(), name="big_tuple_with_nulls_describe")
+            ), error()
+
+    with Check("import"):
+        with When("I try to import the Parquet file into the table"):
+            node.query(
+                f"""
+                CREATE TABLE {table_name}
+                ENGINE = MergeTree
+                ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet)
+                """
+            )
+
+        with And("I read the contents of the created table"):
+            read = node.query(f"SELECT * FROM {table_name}")
+
+        with Then("I check the output is correct"):
+            with values() as that:
+                assert that(
+                    snapshot(read.output.strip(), name="big_tuple_with_nulls")
+                ), error()
+
+    with Check("export"):
+        with When("I export the table back into a new parquet file"):
+            node.query(
+                f"SELECT * FROM {table_name} INTO OUTFILE '{path_to_export}' COMPRESSION 'none' FORMAT Parquet"
+            )
+
+        with And("I check the exported Parquet file's contents"):
+            read = node.query(f"SELECT * FROM file('{path_to_export}', Parquet)")
+
+        with Then("output must match the snapshot"):
+            with values() as that:
+                assert that(
+                    snapshot(read.output.strip(), name="big_tuple_with_nulls")
+                ), error()
+
+        with And("I save file structure after export"):
+            structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
+
+            with values() as that:
+                assert that(
+                    snapshot(
+                        structure.output.strip(), name="big_tuple_with_nulls_describe"
+                    )
                 ), error()
 
 
 @TestFeature
-@Name("datatypes")
+@Name("complex")
 def feature(self, node="clickhouse1"):
     """Check importing and exporting Dictionary encoded parquet files."""
     self.context.node = self.context.cluster.node(node)
