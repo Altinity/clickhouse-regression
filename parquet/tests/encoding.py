@@ -121,7 +121,6 @@ def plain(self):
 
 @TestFeature
 @Name("encoding")
-@Requirements(RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values("1.0"))
 def feature(self, node="clickhouse1"):
     """Check importing and exporting Dictionary encoded parquet files."""
     self.context.node = self.context.cluster.node(node)

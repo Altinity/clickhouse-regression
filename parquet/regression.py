@@ -183,6 +183,11 @@ def regression(
                 parallel=True,
                 executor=executor,
             )
+            Feature(
+                run=load("parquet.tests.indexing", "feature"),
+                parallel=True,
+                executor=executor,
+            )
             join()
 
         if storages is None:
