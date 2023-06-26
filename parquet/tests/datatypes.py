@@ -11,7 +11,7 @@ from helpers.common import *
 def binary(self):
     node = self.context.node
     table_name = "table_" + getuid()
-    path_to_export = f"/var/lib/clickhouse/user_files/binary_{table_name}.Parquet"
+    path_to_export = f"/var/lib/clickhouse/user_files/binary_{table_name}.parquet"
 
     with Given("I have a Parquet file with the binary datatype columns"):
         import_file = os.path.join("arrow", "binary.parquet")
@@ -76,7 +76,7 @@ def binary(self):
 def byte_array(self):
     node = self.context.node
     table_name = "table_" + getuid()
-    path_to_export = f"/var/lib/clickhouse/user_files/binary_{table_name}.Parquet"
+    path_to_export = f"/var/lib/clickhouse/user_files/binary_{table_name}.parquet"
 
     with Given("I have a Parquet file with the decimal byte array datatype columns"):
         import_file = os.path.join("arrow", "byte_array_decimal.parquet")
@@ -153,7 +153,7 @@ def fixed_length_decimal(self):
     node = self.context.node
     table_name = "table_" + getuid()
     path_to_export = (
-        f"/var/lib/clickhouse/user_files/fixed_decimal_{table_name}.Parquet"
+        f"/var/lib/clickhouse/user_files/fixed_decimal_{table_name}.parquet"
     )
 
     with Given("I have a Parquet file with the fixed length decimal datatype columns"):
@@ -233,7 +233,7 @@ def fixed_length_decimal_legacy(self):
     node = self.context.node
     table_name = "table_" + getuid()
     path_to_export = (
-        f"/var/lib/clickhouse/user_files/fixed_decimal_legacy_{table_name}.Parquet"
+        f"/var/lib/clickhouse/user_files/fixed_decimal_legacy_{table_name}.parquet"
     )
 
     with Given(
@@ -315,7 +315,7 @@ def int32_decimal(self):
     node = self.context.node
     table_name = "table_" + getuid()
     path_to_export = (
-        f"/var/lib/clickhouse/user_files/int32_decimal_{table_name}.Parquet"
+        f"/var/lib/clickhouse/user_files/int32_decimal_{table_name}.parquet"
     )
 
     with Given("I have a Parquet file with the int32 decimal datatype columns"):
@@ -393,7 +393,7 @@ def int64_decimal(self):
     node = self.context.node
     table_name = "table_" + getuid()
     path_to_export = (
-        f"/var/lib/clickhouse/user_files/int64_decimal_{table_name}.Parquet"
+        f"/var/lib/clickhouse/user_files/int64_decimal_{table_name}.parquet"
     )
 
     with Given("I have a Parquet file with the int64 decimal datatype columns"):
@@ -471,7 +471,7 @@ def decimal_with_filter(self):
     node = self.context.node
     table_name = "table_" + getuid()
     path_to_export = (
-        f"/var/lib/clickhouse/user_files/decimal_filter_{table_name}.Parquet"
+        f"/var/lib/clickhouse/user_files/decimal_filter_{table_name}.parquet"
     )
 
     with Given(
@@ -551,7 +551,7 @@ def decimal_with_filter(self):
 def singlenull(self):
     node = self.context.node
     table_name = "table_" + getuid()
-    path_to_export = f"/var/lib/clickhouse/user_files/single_null_{table_name}.Parquet"
+    path_to_export = f"/var/lib/clickhouse/user_files/single_null_{table_name}.parquet"
 
     with Given("I have a Parquet file with single null value"):
         import_file = os.path.join("arrow", "single_nan.parquet")
@@ -614,6 +614,29 @@ def singlenull(self):
                 assert that(
                     snapshot(structure.output.strip(), name=f"single_null_describe")
                 ), error()
+
+
+@TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_DataTypes_Unsupported("1.0"))
+def unsupported_uuid(self):
+    node = self.context.node
+    table_name = "table_" + getuid()
+    path_to_export = f"/var/lib/clickhouse/user_files/uuid_{table_name}.parquet"
+
+    with Given("I have a Parquet file with single null value"):
+        import_file = os.path.join("arrow", "uuid-arrow.parquet")
+
+    with Check("import"):
+        with When("I try to import the Parquet file into the table"):
+            node.query(
+                f"""
+                CREATE TABLE {table_name}
+                ENGINE = MergeTree
+                ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet)
+                """,
+                message="DB::Exception: Unsupported Parquet type 'fixed_size_binary'",
+                exitcode=50,
+            )
 
 
 @TestFeature

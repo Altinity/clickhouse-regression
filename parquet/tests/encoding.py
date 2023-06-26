@@ -15,7 +15,7 @@ def dictionary(self):
     node = self.context.node
     table_name = "table_" + getuid()
     path_to_export = (
-        "/var/lib/clickhouse/user_files/dictionary_encoding_exports.Parquet"
+        "/var/lib/clickhouse/user_files/dictionary_encoding_exports.parquet"
     )
 
     with Given("I have a Parquet file with the Dictionary encoding"):
@@ -70,7 +70,7 @@ def dictionary(self):
 def plain(self):
     node = self.context.node
     table_name = "table_" + getuid()
-    path_to_export = "/var/lib/clickhouse/user_files/plain_encoding_export.Parquet"
+    path_to_export = "/var/lib/clickhouse/user_files/plain_encoding_export.parquet"
     snapshot_name = "plain_encoding"
 
     with Given("I have a Parquet file with the Plain encoding"):
