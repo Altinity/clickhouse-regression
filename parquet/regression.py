@@ -78,7 +78,7 @@ def regression(
             self.context.cluster = cluster
             columns = (
                 cluster.node("clickhouse1")
-                .command("cat /var/lib/data/clickhouse_table_def.txt")
+                .command("cat /var/lib/test_files/clickhouse_table_def.txt")
                 .output.strip()
                 .split(".")
             )
@@ -163,7 +163,31 @@ def regression(
                 parallel=True,
                 executor=executor,
             )
-
+            Feature(
+                run=load("parquet.tests.encoding", "feature"),
+                parallel=True,
+                executor=executor,
+            )
+            Feature(
+                run=load("parquet.tests.compression", "feature"),
+                parallel=True,
+                executor=executor,
+            )
+            Feature(
+                run=load("parquet.tests.datatypes", "feature"),
+                parallel=True,
+                executor=executor,
+            )
+            Feature(
+                run=load("parquet.tests.complex_datatypes", "feature"),
+                parallel=True,
+                executor=executor,
+            )
+            Feature(
+                run=load("parquet.tests.indexing", "feature"),
+                parallel=True,
+                executor=executor,
+            )
             join()
 
         if storages is None:
