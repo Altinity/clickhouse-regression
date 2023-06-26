@@ -2,6 +2,8 @@ import time
 
 from clickhouse_keeper.requirements import *
 from clickhouse_keeper.tests.steps import *
+from clickhouse_keeper.tests.steps_ssl import *
+from helpers.common import *
 
 
 @TestScenario
@@ -10,87 +12,91 @@ from clickhouse_keeper.tests.steps import *
 )
 def startup_timeout(self):
     """I check ClickHouse Keeper coordination setting startup_timeout (30000 ms)"""
-    xfail("doesn't work 22.8")
-    cluster = self.context.cluster
-    exitcode = 70
-    message = "DB::Exception: Failed to wait RAFT initialization"
-    startup_timeout = 10000
+    if check_clickhouse_version(">22.3")(self):
+        xfail("doesn't function beyond version 22.3")
+    else:
+        cluster = self.context.cluster
+        exitcode = 70
+        message = "DB::Exception: Failed to wait RAFT initialization"
+        startup_timeout = 10000
 
-    try:
-        with Given("I create Keeper Raft Config File and start cluster"):
-            start_mixed_keeper(
-                control_nodes=cluster.nodes["clickhouse"][:3],
-                cluster_nodes=cluster.nodes["clickhouse"][:3],
-                rest_cluster_nodes="no_rest_nodes",
-                test_setting_name="startup_timeout",
-                test_setting_value="10000",
-            )
+        try:
+            with Given("I create Keeper Raft Config File and start cluster"):
+                start_mixed_keeper(
+                    control_nodes=cluster.nodes["clickhouse"][:3],
+                    cluster_nodes=cluster.nodes["clickhouse"][:3],
+                    rest_cluster_nodes="no_rest_nodes",
+                    test_setting_name="startup_timeout",
+                    test_setting_value="10000",
+                )
 
-        with When("I stop all clickhouse servers"):
-            for name in cluster.nodes["clickhouse"][:3]:
-                retry(cluster.node(name).stop_clickhouse, timeout=100, delay=1)()
+            with When("I stop all clickhouse servers"):
+                for name in cluster.nodes["clickhouse"][:3]:
+                    retry(cluster.node(name).stop_clickhouse, timeout=100, delay=1)()
 
-        with Then(
-            "I wait keeper to exit with an error",
-            description=f"""
-                  keeper exits with exitcode: {exitcode} and shows message: {message} cause
-                   startup_timeout failed""",
-        ) as start_keeper:
-            cluster.node("clickhouse1").cmd(
-                "clickhouse keeper --config /etc/clickhouse-server/config.xml",
-                exitcode=exitcode,
-                message=message,
-            )
+            with Then(
+                "I wait keeper to exit with an error",
+                description=f"""
+                      keeper exits with exitcode: {exitcode} and shows message: {message} cause
+                       startup_timeout failed""",
+            ) as start_keeper:
+                cluster.node("clickhouse1").cmd(
+                    "clickhouse keeper --config /etc/clickhouse-server/config.xml",
+                    exitcode=exitcode,
+                    message=message,
+                )
 
-        with And(f"I check startup_timeout time value is {startup_timeout} ms"):
-            assert current_time(test=start_keeper) < 10.3, error()
-            time.sleep(5)
+            with And(f"I check startup_timeout time value is {startup_timeout} ms"):
+                assert current_time(test=start_keeper) < 10.3, error()
+                time.sleep(5)
 
-        with Then("I start clickhouse servers"):
-            for name in cluster.nodes["clickhouse"][:3]:
-                self.context.cluster.node(name).start_clickhouse(wait_healthy=False)
-    finally:
-        with Finally("I clean up coordination folder"):
-            clean_coordination_on_all_nodes()
+            with Then("I start clickhouse servers"):
+                for name in cluster.nodes["clickhouse"][:3]:
+                    self.context.cluster.node(name).start_clickhouse(wait_healthy=False)
+        finally:
+            with Finally("I clean up coordination folder"):
+                clean_coordination_on_all_nodes()
 
 
 @TestScenario
 @Requirements(RQ_SRS_024_ClickHouse_Keeper_Config_ServerID("1.0"))
 def server_id(self):
     """I check ClickHouse Keeper setting server_id"""
-    xfail("doesn't work 22.8")
-    cluster = self.context.cluster
-    message = "[PRE-VOTE INIT] my id 1"
+    if check_clickhouse_version(">22.3")(self):
+        xfail("doesn't function beyond version 22.3")
+    else:
+        cluster = self.context.cluster
+        message = "[PRE-VOTE INIT] my id 1"
 
-    try:
-        with Given("I create Keeper Raft Config File and start cluster"):
-            start_mixed_keeper(
-                control_nodes=cluster.nodes["clickhouse"][:3],
-                cluster_nodes=cluster.nodes["clickhouse"][:3],
-                rest_cluster_nodes="no_rest_nodes",
-                test_setting_name="startup_timeout",
-                test_setting_value="10000",
-            )
-
-        with When("I stop all clickhouse servers"):
-            for name in cluster.nodes["clickhouse"][:3]:
-                retry(cluster.node(name).stop_clickhouse, timeout=100, delay=1)()
-
-        with Then("I wait  keeper message: {message}"):
-            cluster.node("clickhouse1").cmd(
-                "clickhouse keeper --config /etc/clickhouse-server/config.xml",
-                message=message,
-            )
-            time.sleep(5)
-
-        with Then("I start clickhouse servers"):
-            for name in cluster.nodes["clickhouse"][:3]:
-                retry(cluster.node(name).start_clickhouse, timeout=100, delay=1)(
-                    wait_healthy=False
+        try:
+            with Given("I create Keeper Raft Config File and start cluster"):
+                start_mixed_keeper(
+                    control_nodes=cluster.nodes["clickhouse"][:3],
+                    cluster_nodes=cluster.nodes["clickhouse"][:3],
+                    rest_cluster_nodes="no_rest_nodes",
+                    test_setting_name="startup_timeout",
+                    test_setting_value="10000",
                 )
-    finally:
-        with Finally("I clean up coordination folder"):
-            clean_coordination_on_all_nodes()
+
+            with When("I stop all clickhouse servers"):
+                for name in cluster.nodes["clickhouse"][:3]:
+                    retry(cluster.node(name).stop_clickhouse, timeout=100, delay=1)()
+
+            with Then("I wait  keeper message: {message}"):
+                cluster.node("clickhouse1").cmd(
+                    "clickhouse keeper --config /etc/clickhouse-server/config.xml",
+                    message=message,
+                )
+                time.sleep(5)
+
+            with Then("I start clickhouse servers"):
+                for name in cluster.nodes["clickhouse"][:3]:
+                    retry(cluster.node(name).start_clickhouse, timeout=100, delay=1)(
+                        wait_healthy=False
+                    )
+        finally:
+            with Finally("I clean up coordination folder"):
+                clean_coordination_on_all_nodes()
 
 
 @TestScenario

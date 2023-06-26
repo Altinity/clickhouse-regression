@@ -1026,3 +1026,124 @@ def openssl_client_connection(
         messages=messages,
         exitcode=exitcode,
     )
+
+
+@TestStep(Given)
+def add_ssl_clickhouse_client_configuration_file(
+    self,
+    entries,
+    config=None,
+    config_d_dir="/etc/clickhouse-client/config.d/",
+    config_file="fips.xml",
+    timeout=300,
+    restart=False,
+    node=None,
+):
+    """Add clickhouse-client SSL configuration file.
+
+    <config>
+        <openSSL>
+            <client> <!-- Used for connection to server's secure tcp port -->
+                <loadDefaultCAFile>true</loadDefaultCAFile>
+                <cacheSessions>true</cacheSessions>
+                <disableProtocols>sslv2,sslv3</disableProtocols>
+                <preferServerCiphers>true</preferServerCiphers>
+                <!-- Use for self-signed: <verificationMode>none</verificationMode> -->
+                <invalidCertificateHandler>
+                    <!-- Use for self-signed: <name>AcceptCertificateHandler</name> -->
+                    <name>RejectCertificateHandler</name>
+                </invalidCertificateHandler>
+            </client>
+        </openSSL>
+    </config>
+    """
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    entries = {"secure": "true", "openSSL": {"client": entries}}
+    if config is None:
+        config = create_xml_config_content(
+            entries, config_file=config_file, config_d_dir=config_d_dir, root="config"
+        )
+
+    with When("I add the config", description=config.path):
+        node.command(f"mkdir -p {config_d_dir}", exitcode=0)
+        command = f"cat <<HEREDOC > {config.path}\n{config.content}\nHEREDOC"
+        node.command(command, steps=False, exitcode=0)
+
+    # try:
+    #     with When("I add the config", description=config.path):
+    #         node.command(f"mkdir -p {config_d_dir}", exitcode=0)
+    #         command = f"cat <<HEREDOC > {config.path}\n{config.content}\nHEREDOC"
+    #         node.command(command, steps=False, exitcode=0)
+    #
+    #     yield
+    # finally:
+    #     with Finally(f"I remove {config.name} on {node.name}"):
+    #         with By("deleting the config file", description=config.path):
+    #             node.command(f"rm -rf {config.path}", exitcode=0)
+
+
+@TestStep(Then)
+def clickhouse_client_connection(
+    self,
+    options=None,
+    port=None,
+    node=None,
+    hostname=None,
+    success=True,
+    message=None,
+    messages=None,
+    exitcode=None,
+    insecure=True,
+    prefer_server_ciphers=False,
+):
+    """Check SSL TCP connection using clickhouse-client utility.
+
+    supported configuration options:
+        <verificationMode>none|relaxed|strict|once</verificationMode>
+        <cipherList>ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH</cipherList>
+        <preferServerCiphers>true|false</preferServerCiphers>
+        <requireTLSv1>true|false</requireTLSv1>
+        <requireTLSv1_1>true|false</requireTLSv1_1>
+        <requireTLSv1_2>true|false</requireTLSv1_2>
+        <requireTLSv1_3>true|false</requireTLSv1_3>
+        <disableProtocols>sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_2,tlsv1_3</disableProtocols>
+    """
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    if port is None:
+        port = self.context.connection_port
+
+    if hostname is None:
+        hostname = node.name
+
+    if options is None:
+        options = {"loadDefaultCAFile": "false", "caConfig": "/etc/clickhouse-server/config.d/altinity_blog_ca.crt"}
+    else:
+        options["loadDefaultCAFile"] = "false"
+        options["caConfig"] = "/etc/clickhouse-server/config.d/altinity_blog_ca.crt"
+
+    if exitcode is None:
+        if success:
+            exitcode = 0
+        else:
+            exitcode = "!= 0"
+
+    if insecure:
+        options["verificationMode"] = "none"
+
+    options["preferServerCiphers"] = "true" if prefer_server_ciphers else "false"
+
+    with Given("custom clickhouse-client SSL configuration"):
+        add_ssl_clickhouse_client_configuration_file(entries=options)
+
+    output = node.command(
+        f'clickhouse client -s --verbose --host {hostname} --port {port} -q "SELECT 1"',
+        message=message,
+        messages=messages,
+        exitcode=exitcode,
+    ).output
+
+    return output
