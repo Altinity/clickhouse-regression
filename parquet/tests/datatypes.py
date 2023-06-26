@@ -67,6 +67,9 @@ def binary(self):
                     )
                 ), error()
 
+        with And("I save file structure after export"):
+            structure = node.query(f"DESCRIBE TABLE file('{path_to_export}')")
+
 
 @TestScenario
 @Requirements(
