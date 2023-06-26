@@ -21,6 +21,17 @@ def dictionary(self):
     with Given("I have a Parquet file with the Dictionary encoding"):
         import_file = os.path.join("arrow", "alltypes_dictionary.parquet")
 
+    with And("I save file structure"):
+        structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
+
+        with values() as that:
+            assert that(
+                snapshot(
+                    structure.output.strip(),
+                    name=f"dictionary_describe",
+                )
+            ), error()
+
     with Check("import"):
         with When("I try to import the Dictionary encoded Parquet file into the table"):
             node.query(
@@ -61,6 +72,17 @@ def dictionary(self):
                     )
                 ), error()
 
+        with And("I save file structure after export"):
+            structure = node.query(f"DESCRIBE TABLE file('{path_to_export}')")
+
+            with values() as that:
+                assert that(
+                    snapshot(
+                        structure.output.strip(),
+                        name=f"dictionary_describe",
+                    )
+                ), error()
+
 
 @TestScenario
 @Requirements(
@@ -71,12 +93,22 @@ def plain(self):
     node = self.context.node
     table_name = "table_" + getuid()
     path_to_export = "/var/lib/clickhouse/user_files/plain_encoding_export.parquet"
-    snapshot_name = "plain_encoding"
 
     with Given("I have a Parquet file with the Plain encoding"):
         import_file = os.path.join("arrow", "alltypes_plain.parquet")
         if os.path.exists(path_to_export):
             node.command(f"rm -r {path_to_export}")
+
+    with And("I save file structure"):
+        structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
+
+        with values() as that:
+            assert that(
+                snapshot(
+                    structure.output.strip(),
+                    name=f"plain_describe",
+                )
+            ), error()
 
     with Check("import"):
         with When("I try to import the Plain encoded Parquet file into the table"):
@@ -96,7 +128,7 @@ def plain(self):
                 assert that(
                     snapshot(
                         read.output.strip(),
-                        name=snapshot_name,
+                        name="plain_encoding"
                     )
                 ), error()
 
@@ -114,7 +146,18 @@ def plain(self):
                 assert that(
                     snapshot(
                         read.output.strip(),
-                        name=snapshot_name,
+                        name="plain_encoding",
+                    )
+                ), error()
+
+        with And("I save file structure after export"):
+            structure = node.query(f"DESCRIBE TABLE file('{path_to_export}')")
+
+            with values() as that:
+                assert that(
+                    snapshot(
+                        structure.output.strip(),
+                        name=f"plain_describe",
                     )
                 ), error()
 

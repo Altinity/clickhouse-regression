@@ -133,7 +133,7 @@ def byte_array(self):
                 ), error()
 
         with And("I save file structure after export"):
-            structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
+            structure = node.query(f"DESCRIBE TABLE file('{path_to_export}')")
 
             with values() as that:
                 assert that(
@@ -213,7 +213,7 @@ def fixed_length_decimal(self):
                 ), error()
 
         with And("I save file structure after export"):
-            structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
+            structure = node.query(f"DESCRIBE TABLE file('{path_to_export}')")
 
             with values() as that:
                 assert that(
@@ -295,7 +295,7 @@ def fixed_length_decimal_legacy(self):
                 ), error()
 
         with And("I save file structure after export"):
-            structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
+            structure = node.query(f"DESCRIBE TABLE file('{path_to_export}')")
 
             with values() as that:
                 assert that(
@@ -373,7 +373,7 @@ def int32_decimal(self):
                 ), error()
 
         with And("I save file structure after export"):
-            structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
+            structure = node.query(f"DESCRIBE TABLE file('{path_to_export}')")
 
             with values() as that:
                 assert that(
@@ -451,7 +451,7 @@ def int64_decimal(self):
                 ), error()
 
         with And("I save file structure after export"):
-            structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
+            structure = node.query(f"DESCRIBE TABLE file('{path_to_export}')")
 
             with values() as that:
                 assert that(
@@ -531,7 +531,7 @@ def decimal_with_filter(self):
                 ), error()
 
         with And("I save file structure after export"):
-            structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
+            structure = node.query(f"DESCRIBE TABLE file('{path_to_export}')")
 
             with values() as that:
                 assert that(
@@ -608,7 +608,7 @@ def singlenull(self):
                 ), error()
 
         with And("I save file structure after export"):
-            structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
+            structure = node.query(f"DESCRIBE TABLE file('{path_to_export}')")
 
             with values() as that:
                 assert that(
