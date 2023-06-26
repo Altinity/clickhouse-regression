@@ -88,7 +88,7 @@ def plain(self):
 @TestFeature
 @Name("encoding")
 def feature(self, node="clickhouse1"):
-    """Check importing and exporting Dictionary encoded parquet files."""
+    """Check importing and exporting encoded parquet files."""
     self.context.node = self.context.cluster.node(node)
 
     for scenario in loads(current_module(), Scenario):
