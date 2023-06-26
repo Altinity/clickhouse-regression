@@ -14,7 +14,7 @@ from helpers.common import *
 def array(self):
     node = self.context.node
     table_name = "table_" + getuid()
-    path_to_export = f"/var/lib/clickhouse/user_files/array_{table_name}.Parquet"
+    path_to_export = f"/var/lib/clickhouse/user_files/array_{table_name}.parquet"
 
     with Given("I have a Parquet file with the array datatype"):
         import_file = os.path.join("arrow", "list_columns.parquet")
@@ -74,7 +74,7 @@ def array(self):
 def nested_array(self):
     node = self.context.node
     table_name = "table_" + getuid()
-    path_to_export = f"/var/lib/clickhouse/user_files/nested_array_{table_name}.Parquet"
+    path_to_export = f"/var/lib/clickhouse/user_files/nested_array_{table_name}.parquet"
 
     with Given("I have a Parquet file with the nested array datatype"):
         import_file = os.path.join("arrow", "nested_lists.snappy.parquet")
@@ -134,7 +134,7 @@ def nested_array(self):
 def nested_map(self):
     node = self.context.node
     table_name = "table_" + getuid()
-    path_to_export = f"/var/lib/clickhouse/user_files/nested_map_{table_name}.Parquet"
+    path_to_export = f"/var/lib/clickhouse/user_files/nested_map_{table_name}.parquet"
 
     with Given("I have a Parquet file with the nested array datatype"):
         import_file = os.path.join("arrow", "nested_maps.snappy.parquet")
@@ -195,7 +195,7 @@ def nested_struct(self):
     node = self.context.node
     table_name = "table_" + getuid()
     path_to_export = (
-        f"/var/lib/clickhouse/user_files/nested_struct_{table_name}.Parquet"
+        f"/var/lib/clickhouse/user_files/nested_struct_{table_name}.parquet"
     )
 
     with Given("I have a Parquet file with the nested array datatype"):
@@ -262,7 +262,7 @@ def complex_null(self):
     node = self.context.node
     table_name = "table_" + getuid()
     path_to_export = (
-        f"/var/lib/clickhouse/user_files/nested_struct_{table_name}.Parquet"
+        f"/var/lib/clickhouse/user_files/nested_struct_{table_name}.parquet"
     )
 
     with Given(
@@ -327,7 +327,7 @@ def tupleofnulls(self):
     node = self.context.node
     table_name = "table_" + getuid()
     path_to_export = (
-        f"/var/lib/clickhouse/user_files/nested_struct_{table_name}.Parquet"
+        f"/var/lib/clickhouse/user_files/nested_struct_{table_name}.parquet"
     )
 
     with Given("I have a Parquet file with the tuple of nulls datatype"):
@@ -394,7 +394,7 @@ def bigtuplewithnulls(self):
     node = self.context.node
     table_name = "table_" + getuid()
     path_to_export = (
-        f"/var/lib/clickhouse/user_files/nested_struct_{table_name}.Parquet"
+        f"/var/lib/clickhouse/user_files/nested_struct_{table_name}.parquet"
     )
 
     with Given("I have a Parquet file with the big tuple with nulls datatype"):

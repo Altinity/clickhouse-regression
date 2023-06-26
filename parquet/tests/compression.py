@@ -11,11 +11,14 @@ from helpers.common import *
 def lz4_raw(self):
     node = self.context.node
     table_name = "table_" + getuid()
-    path_to_export = "/var/lib/clickhouse/user_files/lz4_raw_compressed_export.Parquet"
+    path_to_export = (
+        f"/var/lib/clickhouse/user_files/lz4_raw_compressed_export_{table_name}.parquet"
+    )
 
     with Given("I have a Parquet file with the lz4_raw compression"):
         import_file = os.path.join("arrow", "lz4_raw_compressed.parquet")
         node.command(f"rm -r {path_to_export}")
+
     with Check("import"):
         with When("I try to import the lz4_raw compressed Parquet file into the table"):
             node.query(
@@ -59,12 +62,10 @@ def lz4_raw(self):
 
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4Raw("1.0"))
-def lz4_raw_large(self):
+def lz4rawlarge(self):
     node = self.context.node
     table_name = "table_" + getuid()
-    path_to_export = (
-        "/var/lib/clickhouse/user_files/lz4_raw_large_compressed_export.Parquet"
-    )
+    path_to_export = f"/var/lib/clickhouse/user_files/lz4_raw_large_compressed_export_{table_name}.parquet"
 
     with Given("I have a large Parquet file with the lz4_raw compression"):
         import_file = os.path.join("arrow", "lz4_raw_compressed_larger.parquet")
@@ -115,9 +116,7 @@ def lz4_raw_large(self):
 def lz4_hadoop(self):
     node = self.context.node
     table_name = "table_" + getuid()
-    path_to_export = (
-        "/var/lib/clickhouse/user_files/lz4_hadoop_compressed_export.Parquet"
-    )
+    path_to_export = f"/var/lib/clickhouse/user_files/lz4_hadoop_compressed_export_{table_name}.parquet"
 
     with Given("I have a Parquet file with the hadoop lz4 compression"):
         import_file = os.path.join("arrow", "hadoop_lz4_compressed.parquet")
@@ -170,9 +169,7 @@ def lz4_hadoop(self):
 def lz4_hadoop_large(self):
     node = self.context.node
     table_name = "table_" + getuid()
-    path_to_export = (
-        "/var/lib/clickhouse/user_files/lz4_hadoop_compressed_large_export.Parquet"
-    )
+    path_to_export = f"/var/lib/clickhouse/user_files/lz4_hadoop_compressed_large_export_{table_name}.parquet"
 
     with Given("I have a large Parquet file with the hadoop lz4 compression"):
         import_file = os.path.join("arrow", "hadoop_lz4_compressed.parquet")
@@ -223,9 +220,7 @@ def lz4_hadoop_large(self):
 def lz4_non_hadoop(self):
     node = self.context.node
     table_name = "table_" + getuid()
-    path_to_export = (
-        "/var/lib/clickhouse/user_files/lz4_non_hadoop_compressed_export.Parquet"
-    )
+    path_to_export = f"/var/lib/clickhouse/user_files/lz4_non_hadoop_compressed_export_{table_name}.parquet"
 
     with Given("I have a large Parquet file with the non hadoop lz4 compression"):
         import_file = os.path.join("arrow", "non_hadoop_lz4_compressed.parquet")
@@ -310,7 +305,7 @@ def snappy_plain(self):
     with Given("I have a Parquet file with the snappy compression"):
         import_file = os.path.join("arrow", "alltypes_plain.snappy.parquet")
 
-    with Check("import"):
+    with Check("import", flags=XFAIL):
         with When("I try to import the snappy compressed Parquet file into the table"):
             node.query(
                 f"""

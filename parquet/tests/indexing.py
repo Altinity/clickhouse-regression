@@ -5,18 +5,17 @@ from testflows.asserts import snapshot, values
 from parquet.requirements import *
 from helpers.common import *
 
+
 @TestScenario
-@Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_MinMax("1.0")
-)
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_MinMax("1.0"))
 def bigtuplewithnulls(self):
     node = self.context.node
     table_name = "table_" + getuid()
-    path_to_export = (
-        f"/var/lib/clickhouse/user_files/zero_offset_{table_name}.Parquet"
-    )
+    path_to_export = f"/var/lib/clickhouse/user_files/zero_offset_{table_name}.parquet"
 
-    with Given("I have a Parquet file with the zero offset zero. min and max are the same value."):
+    with Given(
+        "I have a Parquet file with the zero offset zero. min and max are the same value."
+    ):
         import_file = os.path.join("arrow", "dict-page-offset-zero.parquet")
 
     with And("I save file structure"):
@@ -42,9 +41,7 @@ def bigtuplewithnulls(self):
 
         with Then("I check the output is correct"):
             with values() as that:
-                assert that(
-                    snapshot(read.output.strip(), name="zero_offset")
-                ), error()
+                assert that(snapshot(read.output.strip(), name="zero_offset")), error()
 
     with Check("export"):
         with When("I export the table back into a new parquet file"):
@@ -57,19 +54,16 @@ def bigtuplewithnulls(self):
 
         with Then("output must match the snapshot"):
             with values() as that:
-                assert that(
-                    snapshot(read.output.strip(), name="zero_offset")
-                ), error()
+                assert that(snapshot(read.output.strip(), name="zero_offset")), error()
 
         with And("I save file structure after export"):
             structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
 
             with values() as that:
                 assert that(
-                    snapshot(
-                        structure.output.strip(), name="zero_offset_describe"
-                    )
+                    snapshot(structure.output.strip(), name="zero_offset_describe")
                 ), error()
+
 
 @TestFeature
 @Name("indexing")
