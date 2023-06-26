@@ -5,6 +5,7 @@ from testflows.asserts import snapshot, values
 from parquet.requirements import *
 from helpers.common import *
 
+
 @TestOutline
 def import_export(self, snapshot_name, import_file):
     node = self.context.node
@@ -49,8 +50,14 @@ def import_export(self, snapshot_name, import_file):
             assert read.output.strip() == import_read.output.strip(), error()
 
         with And("I check that table structure matches ..."):
-            export_columns_structure = node.query(f"DESCRIBE TABLE file('{path_to_export}')")
-            assert import_column_structure.output.strip() == export_columns_structure.output.strip(), error()
+            export_columns_structure = node.query(
+                f"DESCRIBE TABLE file('{path_to_export}')"
+            )
+            assert (
+                import_column_structure.output.strip()
+                == export_columns_structure.output.strip()
+            ), error()
+
 
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4Raw("1.0"))
@@ -70,7 +77,6 @@ def lz4_raw_large(self):
     import_export(snapshot_name="lz4_raw_large_structure", import_file=import_file)
 
 
-
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0"))
 def lz4_hadoop(self):
@@ -78,7 +84,6 @@ def lz4_hadoop(self):
         import_file = os.path.join("arrow", "hadoop_lz4_compressed.parquet")
 
     import_export(snapshot_name="lz4_hadoop_structure", import_file=import_file)
-
 
 
 @TestScenario
@@ -95,7 +100,6 @@ def lz4_non_hadoop(self):
         import_file = os.path.join("arrow", "non_hadoop_lz4_compressed.parquet")
 
     import_export(snapshot_name="lz4_non_hadoop_structure", import_file=import_file)
-
 
 
 @TestScenario

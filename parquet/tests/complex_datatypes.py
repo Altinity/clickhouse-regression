@@ -5,6 +5,7 @@ from testflows.asserts import snapshot, values
 from parquet.requirements import *
 from helpers.common import *
 
+
 @TestOutline
 def import_export(self, snapshot_name, import_file):
     node = self.context.node
@@ -49,8 +50,14 @@ def import_export(self, snapshot_name, import_file):
             assert read.output.strip() == import_read.output.strip(), error()
 
         with And("I check that table structure matches ..."):
-            export_columns_structure = node.query(f"DESCRIBE TABLE file('{path_to_export}')")
-            assert import_column_structure.output.strip() == export_columns_structure.output.strip(), error()
+            export_columns_structure = node.query(
+                f"DESCRIBE TABLE file('{path_to_export}')"
+            )
+            assert (
+                import_column_structure.output.strip()
+                == export_columns_structure.output.strip()
+            ), error()
+
 
 @TestScenario
 @Requirements(
@@ -74,6 +81,7 @@ def nested_array(self):
         import_file = os.path.join("arrow", "nested_lists.snappy.parquet")
 
     import_export(snapshot_name="nested_array_structure", import_file=import_file)
+
 
 @TestScenario
 @Requirements(
@@ -100,7 +108,6 @@ def nested_struct(self):
     import_export(snapshot_name="nested_struct_structure", import_file=import_file)
 
 
-
 @TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Nested("1.0"),
@@ -116,7 +123,6 @@ def complex_null(self):
     import_export(snapshot_name="complex_null_structure", import_file=import_file)
 
 
-
 @TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Nested("1.0"),
@@ -129,6 +135,7 @@ def tuple_of_nulls(self):
 
     import_export(snapshot_name="tuple_of_nulls_structure", import_file=import_file)
 
+
 @TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Nested("1.0"),
@@ -139,7 +146,10 @@ def big_tuple_with_nulls(self):
     with Given("I have a Parquet file with the big tuple with nulls datatype"):
         import_file = os.path.join("arrow", "repeated_no_annotation.parquet")
 
-    import_export(snapshot_name="big_tuple_with_nulls_structure", import_file=import_file)
+    import_export(
+        snapshot_name="big_tuple_with_nulls_structure", import_file=import_file
+    )
+
 
 @TestFeature
 @Name("complex")
