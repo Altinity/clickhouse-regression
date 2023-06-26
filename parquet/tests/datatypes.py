@@ -168,7 +168,6 @@ def singlenull(self):
 def unsupported_uuid(self):
     node = self.context.node
     table_name = "table_" + getuid()
-    path_to_export = f"/var/lib/clickhouse/user_files/uuid_{table_name}.parquet"
 
     with Given("I have a Parquet file with single null value"):
         import_file = os.path.join("arrow", "uuid-arrow.parquet")
