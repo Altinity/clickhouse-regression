@@ -189,7 +189,7 @@ def unsupported_uuid(self):
 @TestFeature
 @Name("datatypes")
 def feature(self, node="clickhouse1"):
-    """Check importing and exporting Dictionary encoded parquet files."""
+    """Check importing and exporting parquet files with various datatypes."""
     self.context.node = self.context.cluster.node(node)
 
     for scenario in loads(current_module(), Scenario):
