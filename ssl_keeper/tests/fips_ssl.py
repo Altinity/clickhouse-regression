@@ -277,7 +277,7 @@ def server_connection_openssl_client(self, port, tls1_2_enabled=True):
 
 @TestFeature
 def openssl_check(self, node=None):
-    """Check ClickHouse connection to Clickhouse Keeper on port is fips ssl."""
+    """Check ClickHouse connection on all ports is ssl."""
 
     if node is None:
         node = self.context.cluster.node("clickhouse1")
@@ -289,6 +289,149 @@ def openssl_check(self, node=None):
     for port in ports_list:
         with Check(f"port:{port}"):
             server_connection_openssl_client(port=port)
+
+
+@TestOutline
+def tcp_connection_clickhouse_client(
+    self, hostname="clickhouse1", tls1_2_enabled=True, port=None
+):
+    """Check that server accepts only FIPS compatible TCP connections using clickhouse-client"""
+
+    tls1_2_status = "work" if tls1_2_enabled else "be rejected"
+
+    if port is None:
+        port = self.context.secure_tcp_port
+
+    with Given(
+        "server is configured to accept only FIPS compatible connections",
+        description=f"on port {port}",
+    ):
+        self.context.connection_port = port
+
+    with Check("Connection with no protocols should be rejected"):
+        output = clickhouse_client_connection(
+            options={
+                "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_2,tlsv1_3",
+            },
+            success=False,
+            hostname=hostname,
+        )
+        assert (
+            "NO_SUPPORTED_VERSIONS_ENABLED" or "TLSV1_ALERT_PROTOCOL_VERSION" in output
+        ), error()
+
+    with Check(f"TLSv1.2 suite connection should {tls1_2_status}"):
+        clickhouse_client_connection(
+            options={
+                "requireTLSv1_2": "true",
+                "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3",
+            },
+            success=tls1_2_enabled,
+            hostname=hostname,
+        )
+
+    with Check("TLSv1 suite connection should be rejected"):
+        clickhouse_client_connection(
+            options={
+                "requireTLSv1": "true",
+                "disableProtocols": "sslv2,sslv3,tlsv1_1,tlsv1_2,tlsv1_3",
+            },
+            success=False,
+            hostname=hostname,
+        )
+
+    with Check("TLSv1.1 suite connection should be rejected"):
+        clickhouse_client_connection(
+            options={
+                "requireTLSv1_1": "true",
+                "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_2,tlsv1_3",
+            },
+            success=False,
+            hostname=hostname,
+        )
+
+    with Check("TLSv1.3 suite connection should be rejected"):
+        output = clickhouse_client_connection(
+            options={
+                "requireTLSv1_3": "true",
+                "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_2",
+            },
+            success=False,
+            hostname=hostname,
+        )
+        assert (
+            "NO_SUPPORTED_VERSIONS_ENABLED" or "TLSV1_ALERT_PROTOCOL_VERSION" in output
+        ), error()
+
+    with Check(f"just disabling TLSv1 suite connection should {tls1_2_status}"):
+        clickhouse_client_connection(
+            options={"disableProtocols": "tlsv1"},
+            success=tls1_2_enabled,
+            prefer_server_ciphers=True,
+            hostname=hostname,
+        )
+
+    with Check(f"just disabling TLSv1.1 suite connection should {tls1_2_status}"):
+        pause()
+        clickhouse_client_connection(
+            options={"disableProtocols": "tlsv1_1"},
+            success=tls1_2_enabled,
+            prefer_server_ciphers=True,
+            hostname=hostname,
+        )
+
+    with Check(f"just disabling TLSv1.3 suite connection should {tls1_2_status}"):
+        clickhouse_client_connection(
+            options={"disableProtocols": "tlsv1_3"},
+            success=tls1_2_enabled,
+            prefer_server_ciphers=True,
+            hostname=hostname,
+        )
+
+    for cipher in fips_compatible_tlsv1_2_cipher_suites:
+        with Check(
+            f"connection using FIPS compatible cipher {cipher} should {tls1_2_status}"
+        ):
+            clickhouse_client_connection(
+                options={
+                    "requireTLSv1_2": "true",
+                    "cipherList": cipher,
+                    "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3",
+                },
+                success=tls1_2_enabled,
+                hostname=hostname,
+            )
+
+    for cipher in all_ciphers:
+        if cipher in fips_compatible_tlsv1_2_cipher_suites:
+            continue
+        with Check(
+            f"connection using non-FIPS compatible cipher {cipher} should be rejected"
+        ):
+            output = clickhouse_client_connection(
+                options={"cipherList": cipher, "disableProtocols": ""},
+                success=False,
+                hostname=hostname,
+            )
+            assert (
+                "NO_CIPHERS_AVAILABLE" or "SSLV3_ALERT_HANDSHAKE_FAILURE" in output
+            ), error()
+
+
+@TestFeature
+def tcp_connection_check(self, node=None):
+    """Check  Clickhouse Keeper FIPS compatible TCP connections."""
+
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    retry(node.query, timeout=300, delay=10)("SELECT 1", message="1", exitcode=0)
+
+    ports_list = define("All ports for testing", ["9440"])
+
+    for port in ports_list:
+        with Check(f"port:{port}"):
+            tcp_connection_clickhouse_client(port=port)
 
 
 @TestFeature
