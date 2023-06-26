@@ -5,11 +5,15 @@ from testflows.asserts import snapshot, values
 from parquet.requirements import *
 from helpers.common import *
 
+
 @TestOutline
-def import_export(self, snapshot_name, import_file, snapshot_id):
+def import_export(self, snapshot_name, import_file, snapshot_id=None):
     node = self.context.node
     table_name = "table_" + getuid()
     path_to_export = f"/var/lib/clickhouse/user_files/{table_name}.parquet"
+
+    if snapshot_id is None:
+        snapshot_id = self.context.snapshot_id
 
     with And("I save file structure"):
         import_column_structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
@@ -33,7 +37,7 @@ def import_export(self, snapshot_name, import_file, snapshot_id):
                     snapshot(
                         import_column_structure.output.strip(),
                         name=snapshot_name,
-                        id=snapshot_id
+                        id=snapshot_id,
                     )
                 ), error()
 
@@ -54,6 +58,6 @@ def import_export(self, snapshot_name, import_file, snapshot_id):
                 f"DESCRIBE TABLE file('{path_to_export}')"
             )
             assert (
-                    import_column_structure.output.strip()
-                    == export_columns_structure.output.strip()
+                import_column_structure.output.strip()
+                == export_columns_structure.output.strip()
             ), error()

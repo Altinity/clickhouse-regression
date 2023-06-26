@@ -6,14 +6,14 @@ from parquet.requirements import *
 from helpers.common import *
 from parquet.tests.outline import import_export
 
-snapshot_id = "compression"
+
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4Raw("1.0"))
 def lz4_raw(self):
     with Given("I have a Parquet file with the lz4_raw compression"):
         import_file = os.path.join("arrow", "lz4_raw_compressed.parquet")
 
-    import_export(snapshot_name="lz4_raw_structure", import_file=import_file, snapshot_id=snapshot_id)
+    import_export(snapshot_name="lz4_raw_structure", import_file=import_file)
 
 
 @TestScenario
@@ -22,7 +22,7 @@ def lz4_raw_large(self):
     with Given("I have a large Parquet file with the lz4_raw compression"):
         import_file = os.path.join("arrow", "lz4_raw_compressed_larger.parquet")
 
-    import_export(snapshot_name="lz4_raw_large_structure", import_file=import_file, snapshot_id=snapshot_id)
+    import_export(snapshot_name="lz4_raw_large_structure", import_file=import_file)
 
 
 @TestScenario
@@ -31,7 +31,7 @@ def lz4_hadoop(self):
     with Given("I have a Parquet file with the hadoop lz4 compression"):
         import_file = os.path.join("arrow", "hadoop_lz4_compressed.parquet")
 
-    import_export(snapshot_name="lz4_hadoop_structure", import_file=import_file, snapshot_id=snapshot_id)
+    import_export(snapshot_name="lz4_hadoop_structure", import_file=import_file)
 
 
 @TestScenario
@@ -40,14 +40,14 @@ def lz4_hadoop_large(self):
     with Given("I have a large Parquet file with the hadoop lz4 compression"):
         import_file = os.path.join("arrow", "hadoop_lz4_compressed.parquet")
 
-    import_export(snapshot_name="lz4_hadoop_large_structure", import_file=import_file, snapshot_id=snapshot_id)
+    import_export(snapshot_name="lz4_hadoop_large_structure", import_file=import_file)
 
 
 def lz4_non_hadoop(self):
     with Given("I have a large Parquet file with the non hadoop lz4 compression"):
         import_file = os.path.join("arrow", "non_hadoop_lz4_compressed.parquet")
 
-    import_export(snapshot_name="lz4_non_hadoop_structure", import_file=import_file, snapshot_id=snapshot_id)
+    import_export(snapshot_name="lz4_non_hadoop_structure", import_file=import_file)
 
 
 @TestScenario
@@ -105,6 +105,7 @@ def snappy_plain(self):
 def feature(self, node="clickhouse1"):
     """Check importing and exporting compressed parquet files."""
     self.context.node = self.context.cluster.node(node)
+    self.context.snapshot_id = "compression"
 
     for scenario in loads(current_module(), Scenario):
         scenario()

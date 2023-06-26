@@ -6,7 +6,6 @@ from parquet.requirements import *
 from helpers.common import *
 from parquet.tests.outline import import_export
 
-snapshot_id = "encoding"
 
 @TestScenario
 @XFailed("Issue with datetime. Different number of on import and export")
@@ -18,7 +17,7 @@ def dictionary(self):
     with Given("I have a Parquet file with the Dictionary encoding"):
         import_file = os.path.join("arrow", "alltypes_dictionary.parquet")
 
-    import_export(snapshot_name="dictionary_structure", import_file=import_file, snapshot_id=snapshot_id)
+    import_export(snapshot_name="dictionary_structure", import_file=import_file)
 
 
 @TestScenario
@@ -31,7 +30,7 @@ def plain(self):
     with Given("I have a Parquet file with the Plain encoding"):
         import_file = os.path.join("arrow", "alltypes_plain.parquet")
 
-    import_export(snapshot_name="plain_structure", import_file=import_file, snapshot_id=snapshot_id)
+    import_export(snapshot_name="plain_structure", import_file=import_file)
 
 
 @TestFeature
@@ -39,6 +38,7 @@ def plain(self):
 def feature(self, node="clickhouse1"):
     """Check importing and exporting encoded parquet files."""
     self.context.node = self.context.cluster.node(node)
+    self.context.snapshot_id = "encoding"
 
     for scenario in loads(current_module(), Scenario):
         scenario()
