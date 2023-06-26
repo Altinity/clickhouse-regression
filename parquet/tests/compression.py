@@ -5,267 +5,97 @@ from testflows.asserts import snapshot, values
 from parquet.requirements import *
 from helpers.common import *
 
+@TestOutline
+def import_export(self, snapshot_name, import_file):
+    node = self.context.node
+    table_name = "table_" + getuid()
+    path_to_export = f"/var/lib/clickhouse/user_files/{table_name}.parquet"
+
+    with And("I save file structure"):
+        import_column_structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
+
+    with Check("import"):
+        with When(f"I try to import the Parquet file into the table"):
+            node.query(
+                f"""
+                CREATE TABLE {table_name}
+                ENGINE = MergeTree
+                ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet)
+                """
+            )
+
+        with And("I read the contents of the created table"):
+            import_read = node.query(f"SELECT * FROM {table_name}")
+
+        with Then("I check the output is correct"):
+            with values() as that:
+                assert that(
+                    snapshot(
+                        import_column_structure.output.strip(),
+                        name=snapshot_name,
+                    )
+                ), error()
+
+    with Check("export"):
+        with When("I export the table back into a new parquet file"):
+            node.query(
+                f"SELECT * FROM {table_name} INTO OUTFILE '{path_to_export}' COMPRESSION 'none' FORMAT Parquet"
+            )
+
+        with And("I check the exported Parquet file's contents"):
+            read = node.query(f"SELECT * FROM file('{path_to_export}', Parquet)")
+
+        with Then("output must match the snapshot"):
+            assert read.output.strip() == import_read.output.strip(), error()
+
+        with And("I check that table structure matches ..."):
+            export_columns_structure = node.query(f"DESCRIBE TABLE file('{path_to_export}')")
+            assert import_column_structure.output.strip() == export_columns_structure.output.strip(), error()
 
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4Raw("1.0"))
 def lz4_raw(self):
-    node = self.context.node
-    table_name = "table_" + getuid()
-    path_to_export = (
-        f"/var/lib/clickhouse/user_files/lz4_raw_compressed_export_{table_name}.parquet"
-    )
-
     with Given("I have a Parquet file with the lz4_raw compression"):
         import_file = os.path.join("arrow", "lz4_raw_compressed.parquet")
-        node.command(f"rm -r {path_to_export}")
 
-    with Check("import"):
-        with When("I try to import the lz4_raw compressed Parquet file into the table"):
-            node.query(
-                f"""
-                CREATE TABLE {table_name}
-                ENGINE = MergeTree
-                ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet)
-                """
-            )
-
-        with And("I read the contents of the created table"):
-            read = node.query(f"SELECT * FROM {table_name}")
-
-        with Then("I check the output is correct"):
-            with values() as that:
-                assert that(
-                    snapshot(
-                        read.output.strip(),
-                        name=f"dictionary_encoded_parquet_examples2",
-                    )
-                ), error()
-
-    with Check("export"):
-        with When("I export the table back into a new parquet file"):
-            node.query(
-                f"SELECT * FROM {table_name} INTO OUTFILE '{path_to_export}' COMPRESSION 'none' FORMAT Parquet"
-            )
-
-        with And("I check the exported Parquet file's contents"):
-            read = node.query(f"SELECT * FROM file('{path_to_export}', Parquet)")
-
-        with Then("output must match the snapshot"):
-            with values() as that:
-                assert that(
-                    snapshot(
-                        read.output.strip(),
-                        name=f"dictionary_encoded_parquet_examples2",
-                    )
-                ), error()
+    import_export(snapshot_name="lz4_raw_structure", import_file=import_file)
 
 
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4Raw("1.0"))
-def lz4rawlarge(self):
-    node = self.context.node
-    table_name = "table_" + getuid()
-    path_to_export = f"/var/lib/clickhouse/user_files/lz4_raw_large_compressed_export_{table_name}.parquet"
-
+def lz4_raw_large(self):
     with Given("I have a large Parquet file with the lz4_raw compression"):
         import_file = os.path.join("arrow", "lz4_raw_compressed_larger.parquet")
 
-    with Check("import"):
-        with When("I try to import the lz4_raw compressed Parquet file into the table"):
-            node.query(
-                f"""
-                CREATE TABLE {table_name}
-                ENGINE = MergeTree
-                ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet)
-                """
-            )
+    import_export(snapshot_name="lz4_raw_large_structure", import_file=import_file)
 
-        with And("I read the contents of the created table"):
-            read = node.query(f"SELECT * FROM {table_name}")
-
-        with Then("I check the output is correct"):
-            with values() as that:
-                assert that(
-                    snapshot(
-                        read.output.strip(),
-                        name=f"lz4_raw_large",
-                    )
-                ), error()
-
-    with Check("export"):
-        with When("I export the table back into a new parquet file"):
-            node.query(
-                f"SELECT * FROM {table_name} INTO OUTFILE '{path_to_export}' COMPRESSION 'none' FORMAT Parquet"
-            )
-
-        with And("I check the exported Parquet file's contents"):
-            read = node.query(f"SELECT * FROM file('{path_to_export}', Parquet)")
-
-        with Then("output must match the snapshot"):
-            with values() as that:
-                assert that(
-                    snapshot(
-                        read.output.strip(),
-                        name=f"lz4_raw_large",
-                    )
-                ), error()
 
 
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0"))
 def lz4_hadoop(self):
-    node = self.context.node
-    table_name = "table_" + getuid()
-    path_to_export = f"/var/lib/clickhouse/user_files/lz4_hadoop_compressed_export_{table_name}.parquet"
-
     with Given("I have a Parquet file with the hadoop lz4 compression"):
         import_file = os.path.join("arrow", "hadoop_lz4_compressed.parquet")
 
-    with Check("import"):
-        with When(
-            "I try to import the hadoop lz4 compressed Parquet file into the table"
-        ):
-            node.query(
-                f"""
-                CREATE TABLE {table_name}
-                ENGINE = MergeTree
-                ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet)
-                """
-            )
+    import_export(snapshot_name="lz4_hadoop_structure", import_file=import_file)
 
-        with And("I read the contents of the created table"):
-            read = node.query(f"SELECT * FROM {table_name}")
-
-        with Then("I check the output is correct"):
-            with values() as that:
-                assert that(
-                    snapshot(
-                        read.output.strip(),
-                        name=f"lz4_hadoop",
-                    )
-                ), error()
-
-    with Check("export"):
-        with When("I export the table back into a new parquet file"):
-            node.query(
-                f"SELECT * FROM {table_name} INTO OUTFILE '{path_to_export}' COMPRESSION 'none' FORMAT Parquet"
-            )
-
-        with And("I check the exported Parquet file's contents"):
-            read = node.query(f"SELECT * FROM file('{path_to_export}', Parquet)")
-
-        with Then("output must match the snapshot"):
-            with values() as that:
-                assert that(
-                    snapshot(
-                        read.output.strip(),
-                        name=f"lz4_hadoop",
-                    )
-                ), error()
 
 
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0"))
 def lz4_hadoop_large(self):
-    node = self.context.node
-    table_name = "table_" + getuid()
-    path_to_export = f"/var/lib/clickhouse/user_files/lz4_hadoop_compressed_large_export_{table_name}.parquet"
-
     with Given("I have a large Parquet file with the hadoop lz4 compression"):
         import_file = os.path.join("arrow", "hadoop_lz4_compressed.parquet")
 
-    with Check("import"):
-        with When(
-            "I try to import the large hadoop lz4 compressed Parquet file into the table"
-        ):
-            node.query(
-                f"""
-                CREATE TABLE {table_name}
-                ENGINE = MergeTree
-                ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet)
-                """
-            )
-
-        with And("I read the contents of the created table"):
-            read = node.query(f"SELECT * FROM {table_name}")
-
-        with Then("I check the output is correct"):
-            with values() as that:
-                assert that(
-                    snapshot(
-                        read.output.strip(),
-                        name=f"lz4_hadoop_large",
-                    )
-                ), error()
-
-    with Check("export"):
-        with When("I export the table back into a new parquet file"):
-            node.query(
-                f"SELECT * FROM {table_name} INTO OUTFILE '{path_to_export}' COMPRESSION 'none' FORMAT Parquet"
-            )
-
-        with And("I check the exported Parquet file's contents"):
-            read = node.query(f"SELECT * FROM file('{path_to_export}', Parquet)")
-
-        with Then("output must match the snapshot"):
-            with values() as that:
-                assert that(
-                    snapshot(
-                        read.output.strip(),
-                        name=f"lz4_hadoop_large",
-                    )
-                ), error()
+    import_export(snapshot_name="lz4_hadoop_large_structure", import_file=import_file)
 
 
 def lz4_non_hadoop(self):
-    node = self.context.node
-    table_name = "table_" + getuid()
-    path_to_export = f"/var/lib/clickhouse/user_files/lz4_non_hadoop_compressed_export_{table_name}.parquet"
-
     with Given("I have a large Parquet file with the non hadoop lz4 compression"):
         import_file = os.path.join("arrow", "non_hadoop_lz4_compressed.parquet")
 
-    with Check("import"):
-        with When(
-            "I try to import the large non hadoop lz4 compressed Parquet file into the table"
-        ):
-            node.query(
-                f"""
-                CREATE TABLE {table_name}
-                ENGINE = MergeTree
-                ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet)
-                """
-            )
+    import_export(snapshot_name="lz4_non_hadoop_structure", import_file=import_file)
 
-        with And("I read the contents of the created table"):
-            read = node.query(f"SELECT * FROM {table_name}")
-
-        with Then("I check the output is correct"):
-            with values() as that:
-                assert that(
-                    snapshot(
-                        read.output.strip(),
-                        name=f"lz4_non_hadoop_large",
-                    )
-                ), error()
-
-    with Check("export"):
-        with When("I export the table back into a new parquet file"):
-            node.query(
-                f"SELECT * FROM {table_name} INTO OUTFILE '{path_to_export}' COMPRESSION 'none' FORMAT Parquet"
-            )
-
-        with And("I check the exported Parquet file's contents"):
-            read = node.query(f"SELECT * FROM file('{path_to_export}', Parquet)")
-
-        with Then("output must match the snapshot"):
-            with values() as that:
-                assert that(
-                    snapshot(
-                        read.output.strip(),
-                        name=f"lz4_non_hadoop_large",
-                    )
-                ), error()
 
 
 @TestScenario
@@ -321,7 +151,7 @@ def snappy_plain(self):
 @TestFeature
 @Name("compression")
 def feature(self, node="clickhouse1"):
-    """Check importing and exporting Dictionary encoded parquet files."""
+    """Check importing and exporting compressed parquet files."""
     self.context.node = self.context.cluster.node(node)
 
     for scenario in loads(current_module(), Scenario):
