@@ -6,7 +6,6 @@ from parquet.requirements import *
 from helpers.common import *
 from parquet.tests.outline import import_export
 
-snapshot_id = "datatypes"
 
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_DataTypes_Conversion("1.0"))
@@ -14,7 +13,7 @@ def binary(self):
     with Given("I have a Parquet file with the binary datatype columns"):
         import_file = os.path.join("arrow", "binary.parquet")
 
-    import_export(snapshot_name="binary_values_structure", import_file=import_file, snapshot_id=snapshot_id)
+    import_export(snapshot_name="binary_values_structure", import_file=import_file)
 
 
 @TestScenario
@@ -26,7 +25,7 @@ def byte_array(self):
     with Given("I have a Parquet file with the decimal byte array datatype columns"):
         import_file = os.path.join("arrow", "byte_array_decimal.parquet")
 
-    import_export(snapshot_name="byte_array_structure", import_file=import_file, snapshot_id=snapshot_id)
+    import_export(snapshot_name="byte_array_structure", import_file=import_file)
 
 
 @TestScenario
@@ -39,7 +38,7 @@ def fixed_length_decimal(self):
         import_file = os.path.join("arrow", "fixed_length_decimal.parquet")
 
     import_export(
-        snapshot_name="fixed_length_decimal_structure", import_file=import_file, snapshot_id=snapshot_id
+        snapshot_name="fixed_length_decimal_structure", import_file=import_file
     )
 
 
@@ -55,7 +54,7 @@ def fixed_length_decimal_legacy(self):
         import_file = os.path.join("arrow", "fixed_length_decimal.parquet")
 
     import_export(
-        snapshot_name="fixed_length_decimal_legacy_structure", import_file=import_file, snapshot_id=snapshot_id
+        snapshot_name="fixed_length_decimal_legacy_structure", import_file=import_file
     )
 
 
@@ -68,7 +67,7 @@ def int32_decimal(self):
     with Given("I have a Parquet file with the int32 decimal datatype columns"):
         import_file = os.path.join("arrow", "int32_decimal.parquet")
 
-    import_export(snapshot_name="int32_decimal_structure", import_file=import_file, snapshot_id=snapshot_id)
+    import_export(snapshot_name="int32_decimal_structure", import_file=import_file)
 
 
 @TestScenario
@@ -80,7 +79,7 @@ def int64_decimal(self):
     with Given("I have a Parquet file with the int64 decimal datatype columns"):
         import_file = os.path.join("arrow", "int64_decimal.parquet")
 
-    import_export(snapshot_name="int64_decimal_structure", import_file=import_file, snapshot_id=snapshot_id)
+    import_export(snapshot_name="int64_decimal_structure", import_file=import_file)
 
 
 @TestScenario
@@ -95,7 +94,7 @@ def decimal_with_filter(self):
         import_file = os.path.join("arrow", "lineitem-arrow.parquet")
 
     import_export(
-        snapshot_name="decimal_with_filter_structure", import_file=import_file, snapshot_id=snapshot_id
+        snapshot_name="decimal_with_filter_structure", import_file=import_file
     )
 
 
@@ -109,7 +108,7 @@ def singlenull(self):
     with Given("I have a Parquet file with single null value"):
         import_file = os.path.join("arrow", "single_nan.parquet")
 
-    import_export(snapshot_name="single_null_structure", import_file=import_file, snapshot_id=snapshot_id)
+    import_export(snapshot_name="single_null_structure", import_file=import_file)
 
 
 @TestScenario
@@ -139,6 +138,7 @@ def unsupported_uuid(self):
 def feature(self, node="clickhouse1"):
     """Check importing and exporting parquet files with various datatypes."""
     self.context.node = self.context.cluster.node(node)
+    self.context.snapshot_id = "datatypes"
 
     for scenario in loads(current_module(), Scenario):
         scenario()
