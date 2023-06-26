@@ -50,8 +50,13 @@ def import_export(self, snapshot_name, import_file):
             assert read.output.strip() == import_read.output.strip(), error()
 
         with And("I check that table structure matches ..."):
-            export_columns_structure = node.query(f"DESCRIBE TABLE file('{path_to_export}')")
-            assert import_column_structure.output.strip() == export_columns_structure.output.strip(), error()
+            export_columns_structure = node.query(
+                f"DESCRIBE TABLE file('{path_to_export}')"
+            )
+            assert (
+                import_column_structure.output.strip()
+                == export_columns_structure.output.strip()
+            ), error()
 
 
 @TestScenario
@@ -84,7 +89,9 @@ def fixed_length_decimal(self):
     with Given("I have a Parquet file with the fixed length decimal datatype columns"):
         import_file = os.path.join("arrow", "fixed_length_decimal.parquet")
 
-    import_export(snapshot_name="fixed_length_decimal_structure", import_file=import_file)
+    import_export(
+        snapshot_name="fixed_length_decimal_structure", import_file=import_file
+    )
 
 
 @TestScenario
@@ -94,11 +101,13 @@ def fixed_length_decimal(self):
 )
 def fixed_length_decimal_legacy(self):
     with Given(
-            "I have a Parquet file with the fixed length decimal legacy datatype columns"
+        "I have a Parquet file with the fixed length decimal legacy datatype columns"
     ):
         import_file = os.path.join("arrow", "fixed_length_decimal.parquet")
 
-    import_export(snapshot_name="fixed_length_decimal_legacy_structure", import_file=import_file)
+    import_export(
+        snapshot_name="fixed_length_decimal_legacy_structure", import_file=import_file
+    )
 
 
 @TestScenario
@@ -132,11 +141,13 @@ def int64_decimal(self):
 )
 def decimal_with_filter(self):
     with Given(
-            "I have a Parquet file with the decimal value with specified filters of precision and scale"
+        "I have a Parquet file with the decimal value with specified filters of precision and scale"
     ):
         import_file = os.path.join("arrow", "lineitem-arrow.parquet")
 
-    import_export(snapshot_name="decimal_with_filter_structure", import_file=import_file)
+    import_export(
+        snapshot_name="decimal_with_filter_structure", import_file=import_file
+    )
 
 
 @TestScenario
