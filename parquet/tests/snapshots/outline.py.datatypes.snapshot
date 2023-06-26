@@ -1,0 +1,16 @@
+binary_values_structure = r"""'foo\tNullable(String)'"""
+
+byte_array_structure = r"""'value\tNullable(Decimal(4, 2))'"""
+
+decimal_with_filter_structure = r"""'l_orderkey\tNullable(Int32)\t\t\t\t\t\nl_partkey\tNullable(Int32)\t\t\t\t\t\nl_suppkey\tNullable(Int32)\t\t\t\t\t\nl_linenumber\tNullable(Int32)\t\t\t\t\t\nl_quantity\tNullable(Int32)\t\t\t\t\t\nl_extendedprice\tNullable(Decimal(15, 2))\t\t\t\t\t\nl_discount\tNullable(Decimal(15, 2))\t\t\t\t\t\nl_tax\tNullable(Decimal(15, 2))\t\t\t\t\t\nl_returnflag\tNullable(String)\t\t\t\t\t\nl_linestatus\tNullable(String)\t\t\t\t\t\nl_shipdate\tNullable(Date32)\t\t\t\t\t\nl_commitdate\tNullable(Date32)\t\t\t\t\t\nl_receiptdate\tNullable(Date32)\t\t\t\t\t\nl_shipinstruct\tNullable(String)\t\t\t\t\t\nl_shipmode\tNullable(String)\t\t\t\t\t\nl_comment\tNullable(String)'"""
+
+fixed_length_decimal_structure = r"""'value\tNullable(Decimal(25, 2))'"""
+
+fixed_length_decimal_legacy_structure = r"""'value\tNullable(Decimal(25, 2))'"""
+
+int32_decimal_structure = r"""'value\tNullable(Decimal(4, 2))'"""
+
+int64_decimal_structure = r"""'value\tNullable(Decimal(10, 2))'"""
+
+single_null_structure = r"""'mycol\tNullable(Float64)'"""
+

@@ -13,9 +13,7 @@ def io_error_message(error):
 
 
 @TestScenario
-@Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_Date("1.0")
-)
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Date("1.0"))
 def read_broken_date(self):
     node = self.context.node
     exitcode, message = io_error_message("DATE can only annotate INT32")
@@ -36,9 +34,7 @@ def read_broken_date(self):
 
 
 @TestScenario
-@Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_Int("1.0")
-)
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Int("1.0"))
 def read_broken_int(self):
     node = self.context.node
     exitcode, message = io_error_message("INT_32 can only annotate INT32")
@@ -59,11 +55,7 @@ def read_broken_int(self):
 
 
 @TestScenario
-@Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_BigInt(
-        "1.0"
-    )
-)
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_BigInt("1.0"))
 def read_broken_bigint(self):
     node = self.context.node
     exitcode, message = io_error_message("INT_64 can only annotate INT64")
@@ -84,9 +76,7 @@ def read_broken_bigint(self):
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_SmallInt(
-        "1.0"
-    )
+    RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_SmallInt("1.0")
 )
 def read_broken_smallint(self):
     node = self.context.node
@@ -107,11 +97,7 @@ def read_broken_smallint(self):
 
 
 @TestScenario
-@Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_TinyInt(
-        "1.0"
-    )
-)
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_TinyInt("1.0"))
 def read_broken_tinyint(self):
     node = self.context.node
     exitcode, message = io_error_message("INT_8 can only annotate INT32")
@@ -132,9 +118,7 @@ def read_broken_tinyint(self):
 
 
 @TestScenario
-@Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_UInt("1.0")
-)
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_UInt("1.0"))
 def read_broken_uint(self):
     node = self.context.node
     exitcode, message = io_error_message("UINT_32 can only annotate INT32")
@@ -155,11 +139,7 @@ def read_broken_uint(self):
 
 
 @TestScenario
-@Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_UBigInt(
-        "1.0"
-    )
-)
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_UBigInt("1.0"))
 def read_broken_ubigint(self):
     node = self.context.node
     exitcode, message = io_error_message("UINT_64 can only annotate INT64")
@@ -181,9 +161,7 @@ def read_broken_ubigint(self):
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_USmallInt(
-        "1.0"
-    )
+    RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_USmallInt("1.0")
 )
 def read_broken_usmallint(self):
     node = self.context.node
@@ -206,9 +184,7 @@ def read_broken_usmallint(self):
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_UTinyInt(
-        "1.0"
-    )
+    RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_UTinyInt("1.0")
 )
 def read_broken_utinyint(self):
     node = self.context.node
@@ -231,9 +207,7 @@ def read_broken_utinyint(self):
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_TimestampMS(
-        "1.0"
-    )
+    RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_TimestampMS("1.0")
 )
 def read_broken_timestamp_ms(self):
     node = self.context.node
@@ -256,9 +230,7 @@ def read_broken_timestamp_ms(self):
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues_TimestampUS(
-        "1.0"
-    )
+    RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_TimestampUS("1.0")
 )
 def read_broken_timestamp_us(self):
     node = self.context.node
@@ -281,9 +253,7 @@ def read_broken_timestamp_us(self):
 
 @TestFeature
 @Name("broken")
-@Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Metadata_ErrorRecovery_CorruptColumnValues("1.0")
-)
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values("1.0"))
 def feature(self, node="clickhouse1"):
     """Check reading broken parquet files."""
     self.context.node = self.context.cluster.node(node)

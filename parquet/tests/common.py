@@ -104,7 +104,6 @@ def table(
                     settings=[("allow_suspicious_low_cardinality_types", 1)],
                 )
             elif create == "ATTACH":
-
                 node.query(
                     f"""
                     ATTACH TABLE {name} FROM '{path}' {table_def}
