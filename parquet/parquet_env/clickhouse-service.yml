@@ -28,6 +28,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/data/local_app.py:/var/lib/test_files/local_app.py"
       - "${CLICKHOUSE_TESTS_DIR}/data/broken:/var/lib/clickhouse/user_files/broken"
       - "${CLICKHOUSE_TESTS_DIR}/data/arrow:/var/lib/clickhouse/user_files/arrow"
+      - "${CLICKHOUSE_TESTS_DIR}/data/decimal:/var/lib/clickhouse/user_files/decimal"
       - "${CLICKHOUSE_TESTS_DIR}/data/compression/generated:/var/lib/clickhouse/user_files/compression"
       - "${CLICKHOUSE_TESTS_DIR}/data/cache:/var/lib/clickhouse/user_files/cache"
       - "${CLICKHOUSE_TESTS_DIR}/data/glob:/var/lib/clickhouse/user_files/glob"
