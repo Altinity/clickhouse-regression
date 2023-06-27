@@ -132,16 +132,20 @@ def unsupported_uuid(self):
                 exitcode=50,
             )
 
+
 @TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_Parquet_DataTypes_Conversion("1.0"),
     RQ_SRS_032_ClickHouse_Parquet_DataTypes_Import("1.0"),
 )
 def pandasdecimal(self):
-    with Given("I have a Parquet file generated via pandas library with the decimal values"):
+    with Given(
+        "I have a Parquet file generated via pandas library with the decimal values"
+    ):
         import_file = os.path.join("decimal", "pandas_decimal.parquet")
 
     import_export(snapshot_name="pandas_decimal_structure", import_file=import_file)
+
 
 @TestFeature
 @Name("datatypes")
