@@ -239,7 +239,7 @@ def regression(
                     Feature(run=load("parquet.tests.s3", "feature"))
 
             if "gcs" in storages:
-                with Feature("gcs")
+                with Feature("gcs"):
                     fail("GCS not implemented")    
 
 
