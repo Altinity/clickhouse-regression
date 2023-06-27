@@ -20,6 +20,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/dhparam.pem:/etc/clickhouse-server/config.d/dhparam.pem"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/server.crt:/etc/clickhouse-server/config.d/server.crt"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/server.key:/etc/clickhouse-server/config.d/server.key"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/altinity_blog_ca.crt:/etc/clickhouse-server/config.d/altinity_blog_ca.crt"
       - "${CLICKHOUSE_TESTS_SERVER_BIN_PATH:-/usr/bin/clickhouse}:/usr/bin/clickhouse"
       - "${CLICKHOUSE_TESTS_ODBC_BRIDGE_BIN_PATH:-/usr/bin/clickhouse-odbc-bridge}:/usr/bin/clickhouse-odbc-bridge"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse-client/:/etc/clickhouse-client"
