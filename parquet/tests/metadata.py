@@ -6,6 +6,7 @@ from parquet.requirements import *
 from helpers.common import *
 from parquet.tests.outline import import_export
 
+
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4Raw("1.0"))
 def cache1(self):
@@ -13,6 +14,7 @@ def cache1(self):
         import_file = os.path.join("cache", "cache1.parquet")
 
     import_export(snapshot_name="cache1_structure", import_file=import_file)
+
 
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4Raw("1.0"))
