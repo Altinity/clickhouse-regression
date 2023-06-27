@@ -17,7 +17,8 @@ _entries_open_ssl = {
         "privateKeyFile": "/etc/clickhouse-server/config.d/server.key",
         "dhParamsFile": "/etc/clickhouse-server/config.d/dhparam.pem",
         "verificationMode": "none",
-        "loadDefaultCAFile": "true",
+        "caConfig": "/etc/clickhouse-server/config.d/altinity_blog_ca.crt",
+        "loadDefaultCAFile": "false",
         "cacheSessions": "true",
         "requireTLSv1_2": "true",
         "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3",
@@ -27,7 +28,8 @@ _entries_open_ssl = {
     "client": {
         "certificateFile": "/etc/clickhouse-server/config.d/server.crt",
         "privateKeyFile": "/etc/clickhouse-server/config.d/server.key",
-        "loadDefaultCAFile": "true",
+        "caConfig": "/etc/clickhouse-server/config.d/altinity_blog_ca.crt",
+        "loadDefaultCAFile": "false",
         "cacheSessions": "true",
         "requireTLSv1_2": "true",
         "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3",
@@ -42,13 +44,16 @@ _entries_client_ssl = {
     "secure": "true",
     "openSSL": {
         "client": {
-            "verificationMode": "none",
-            "invalidCertificateHandler": {"name": "AcceptCertificateHandler"},
-            "preferServerCiphers": "true",
+            "certificateFile": "/etc/clickhouse-server/config.d/server.crt",
+            "privateKeyFile": "/etc/clickhouse-server/config.d/server.key",
+            "caConfig": "/etc/clickhouse-server/config.d/altinity_blog_ca.crt",
+            "loadDefaultCAFile": "false",
+            "cacheSessions": "true",
             "requireTLSv1_2": "true",
             "disableProtocols": "sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_3",
-            "cipherList": "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-GCM-SHA384"
-
+            "preferServerCiphers": "true",
+            "verificationMode": "none",
+            "invalidCertificateHandler": {"name": "AcceptCertificateHandler"},
         }
     },
 }
