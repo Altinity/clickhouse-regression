@@ -10,6 +10,7 @@ from parquet.tests.outline import import_export
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_DataTypes_Conversion("1.0"))
 def binary(self):
+    """Check importing and exporting the Parquet file with the binary."""
     with Given("I have a Parquet file with the binary datatype columns"):
         import_file = os.path.join("arrow", "binary.parquet")
 
@@ -22,6 +23,7 @@ def binary(self):
     RQ_SRS_032_ClickHouse_Parquet_DataTypes_Import("1.0"),
 )
 def byte_array(self):
+    """Check importing and exporting the Parquet file with the byte_array."""
     with Given("I have a Parquet file with the decimal byte array datatype columns"):
         import_file = os.path.join("arrow", "byte_array_decimal.parquet")
 
@@ -34,6 +36,7 @@ def byte_array(self):
     RQ_SRS_032_ClickHouse_Parquet_DataTypes_Import("1.0"),
 )
 def fixed_length_decimal(self):
+    """Check importing and exporting the Parquet file with the fixed_length_decimal."""
     with Given("I have a Parquet file with the fixed length decimal datatype columns"):
         import_file = os.path.join("arrow", "fixed_length_decimal.parquet")
 
@@ -48,6 +51,7 @@ def fixed_length_decimal(self):
     RQ_SRS_032_ClickHouse_Parquet_DataTypes_Import("1.0"),
 )
 def fixed_length_decimal_legacy(self):
+    """Check importing and exporting the Parquet file with the legacy fixed_length_decimal."""
     with Given(
         "I have a Parquet file with the fixed length decimal legacy datatype columns"
     ):
@@ -64,6 +68,7 @@ def fixed_length_decimal_legacy(self):
     RQ_SRS_032_ClickHouse_Parquet_DataTypes_Import("1.0"),
 )
 def int32_decimal(self):
+    """Check importing and exporting the Parquet file with the int32 with decimal."""
     with Given("I have a Parquet file with the int32 decimal datatype columns"):
         import_file = os.path.join("arrow", "int32_decimal.parquet")
 
@@ -76,6 +81,7 @@ def int32_decimal(self):
     RQ_SRS_032_ClickHouse_Parquet_DataTypes_Import("1.0"),
 )
 def int64_decimal(self):
+    """Check importing and exporting the Parquet file with the int64 with decimal."""
     with Given("I have a Parquet file with the int64 decimal datatype columns"):
         import_file = os.path.join("arrow", "int64_decimal.parquet")
 
@@ -88,6 +94,7 @@ def int64_decimal(self):
     RQ_SRS_032_ClickHouse_Parquet_DataTypes_Import("1.0"),
 )
 def decimal_with_filter(self):
+    """Check importing and exporting the Parquet file with the decimal with specified filter."""
     with Given(
         "I have a Parquet file with the decimal value with specified filters of precision and scale"
     ):
@@ -105,6 +112,7 @@ def decimal_with_filter(self):
     RQ_SRS_032_ClickHouse_Parquet_DataTypes_NullValues("1.0"),
 )
 def singlenull(self):
+    """Check importing and exporting the Parquet file with the single null value."""
     with Given("I have a Parquet file with single null value"):
         import_file = os.path.join("arrow", "single_nan.parquet")
 
@@ -114,6 +122,7 @@ def singlenull(self):
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_DataTypes_Unsupported("1.0"))
 def unsupported_uuid(self):
+    """Checking that the fixed_size_binary is not supported by CliCkhouse when trying to import from the Parquet files"""
     node = self.context.node
     table_name = "table_" + getuid()
 
@@ -139,6 +148,7 @@ def unsupported_uuid(self):
     RQ_SRS_032_ClickHouse_Parquet_DataTypes_Import("1.0"),
 )
 def pandasdecimal(self):
+    """Checking that ClickHouse can import and export Parquet files created via pandas"""
     with Given(
         "I have a Parquet file generated via pandas library with the decimal values"
     ):

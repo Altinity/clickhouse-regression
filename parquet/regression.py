@@ -189,7 +189,7 @@ def regression(
                 executor=executor,
             )
             Feature(
-                run=load("parquet.tests.metadata", "feature"),
+                run=load("parquet.tests.cache", "feature"),
                 parallel=True,
                 executor=executor,
             )

@@ -26,3 +26,5 @@ zstd_page_1_structure = r"""'plain\tNullable(Int64)\t\t\t\t\t\nplain_random\tNul
 
 zstd_page_2_structure = r"""'plain\tNullable(Int64)\t\t\t\t\t\nplain_random\tNullable(Int64)\t\t\t\t\t\nnested_nulls\tTuple(Nullable(String), Nullable(Int64))\t\t\t\t\t\nlist\tArray(Nullable(Int64))'"""
 
+lz4_non_hadoop_structure = r"""'plain\tNullable(Int64)\t\t\t\t\t\nplain_random\tNullable(Int64)\t\t\t\t\t\nnested_nulls\tTuple(string Nullable(String), int Nullable(Int64))\t\t\t\t\t\nlist\tArray(Nullable(Int64))'"""
+
