@@ -101,7 +101,6 @@ def snappy_plain(self):
 
 
 @TestScenario
-@XFailed("Brotli is not supported on ClickHouse 22")
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Brotli("1.0"))
 def brotli(self):
     """Currently ClickHouse doesn't support reading Parquet files with brotli compression, but it will be added in

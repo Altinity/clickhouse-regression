@@ -15,6 +15,7 @@ def io_error_message(error):
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Date("1.0"))
 def read_broken_date(self):
+    """Check that ClickHouse outputs an error when trying to import a Parquet file with broken date values"""
     node = self.context.node
     exitcode, message = io_error_message("DATE can only annotate INT32")
 
@@ -36,6 +37,7 @@ def read_broken_date(self):
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_Int("1.0"))
 def read_broken_int(self):
+    """Check that ClickHouse outputs an error when trying to import a Parquet file with broken int values"""
     node = self.context.node
     exitcode, message = io_error_message("INT_32 can only annotate INT32")
 
@@ -57,6 +59,7 @@ def read_broken_int(self):
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_BigInt("1.0"))
 def read_broken_bigint(self):
+    """Check that ClickHouse outputs an error when trying to import a Parquet file with broken bigint values"""
     node = self.context.node
     exitcode, message = io_error_message("INT_64 can only annotate INT64")
 
@@ -79,6 +82,7 @@ def read_broken_bigint(self):
     RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_SmallInt("1.0")
 )
 def read_broken_smallint(self):
+    """Check that ClickHouse outputs an error when trying to import a Parquet file with broken smallint values"""
     node = self.context.node
     exitcode, message = io_error_message("INT_16 can only annotate INT32")
 
@@ -99,6 +103,7 @@ def read_broken_smallint(self):
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_TinyInt("1.0"))
 def read_broken_tinyint(self):
+    """Check that ClickHouse outputs an error when trying to import a Parquet file with broken tinyint values"""
     node = self.context.node
     exitcode, message = io_error_message("INT_8 can only annotate INT32")
 
@@ -120,6 +125,7 @@ def read_broken_tinyint(self):
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_UInt("1.0"))
 def read_broken_uint(self):
+    """Check that ClickHouse outputs an error when trying to import a Parquet file with broken date values"""
     node = self.context.node
     exitcode, message = io_error_message("UINT_32 can only annotate INT32")
 
@@ -141,6 +147,7 @@ def read_broken_uint(self):
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_UBigInt("1.0"))
 def read_broken_ubigint(self):
+    """Check that ClickHouse outputs an error when trying to import a Parquet file with broken Ubigint values"""
     node = self.context.node
     exitcode, message = io_error_message("UINT_64 can only annotate INT64")
 
@@ -164,6 +171,7 @@ def read_broken_ubigint(self):
     RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_USmallInt("1.0")
 )
 def read_broken_usmallint(self):
+    """Check that ClickHouse outputs an error when trying to import a Parquet file with broken Usmallint values"""
     node = self.context.node
     exitcode, message = io_error_message("UINT_16 can only annotate INT32")
 
@@ -187,6 +195,7 @@ def read_broken_usmallint(self):
     RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_UTinyInt("1.0")
 )
 def read_broken_utinyint(self):
+    """Check that ClickHouse outputs an error when trying to import a Parquet file with broken Utinyint values"""
     node = self.context.node
     exitcode, message = io_error_message("UINT_8 can only annotate INT32")
 
@@ -210,6 +219,7 @@ def read_broken_utinyint(self):
     RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_TimestampMS("1.0")
 )
 def read_broken_timestamp_ms(self):
+    """Check that ClickHouse outputs an error when trying to import a Parquet file with broken timestamp (ms) values"""
     node = self.context.node
     exitcode, message = io_error_message("TIMESTAMP_MILLIS can only annotate INT64")
 
@@ -233,6 +243,7 @@ def read_broken_timestamp_ms(self):
     RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_TimestampUS("1.0")
 )
 def read_broken_timestamp_us(self):
+    """Check that ClickHouse outputs an error when trying to import a Parquet file with broken timestamp (us) values"""
     node = self.context.node
     exitcode, message = io_error_message("TIMESTAMP_MICROS can only annotate INT64")
 
@@ -255,7 +266,7 @@ def read_broken_timestamp_us(self):
 @Name("broken")
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values("1.0"))
 def feature(self, node="clickhouse1"):
-    """Check reading broken parquet files."""
+    """Check reading Parquet files with broken values."""
     self.context.node = self.context.cluster.node(node)
 
     for scenario in loads(current_module(), Scenario):
