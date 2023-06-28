@@ -13,6 +13,7 @@ from parquet.tests.outline import import_export
     RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nested("1.0"),
 )
 def array(self):
+    """Check importing and exporting the Parquet file with the array value."""
     with Given("I have a Parquet file with the array datatype"):
         import_file = os.path.join("arrow", "list_columns.parquet")
 
@@ -25,6 +26,7 @@ def array(self):
     RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nested("1.0"),
 )
 def nested_array(self):
+    """Check importing and exporting the Parquet file with the nested array value."""
     with Given("I have a Parquet file with the nested array datatype"):
         import_file = os.path.join("arrow", "nested_lists.snappy.parquet")
 
@@ -37,7 +39,8 @@ def nested_array(self):
     RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nested("1.0"),
 )
 def nested_map(self):
-    with Given("I have a Parquet file with the nested array datatype"):
+    """Check importing and exporting the Parquet file with the nested map value."""
+    with Given("I have a Parquet file with the nested map datatype"):
         import_file = os.path.join("arrow", "nested_maps.snappy.parquet")
 
     import_export(snapshot_name="nested_map_structure", import_file=import_file)
@@ -50,7 +53,8 @@ def nested_map(self):
     RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nested("1.0"),
 )
 def nested_struct(self):
-    with Given("I have a Parquet file with the nested array datatype"):
+    """Check importing and exporting the Parquet file with the nested map value."""
+    with Given("I have a Parquet file with the nested struct datatype"):
         import_file = os.path.join("arrow", "nested_structs.rust.parquet")
 
     import_export(snapshot_name="nested_struct_structure", import_file=import_file)
@@ -63,6 +67,7 @@ def nested_struct(self):
     RQ_SRS_032_ClickHouse_Parquet_DataTypes_NullValues("1.0"),
 )
 def complex_null(self):
+    """Check importing and exporting the Parquet file with the nested complex datatypes that have null values."""
     with Given(
         "I have a Parquet file with the array, map and tuple with null values datatype"
     ):
@@ -78,6 +83,7 @@ def complex_null(self):
     RQ_SRS_032_ClickHouse_Parquet_DataTypes_NullValues("1.0"),
 )
 def tuple_of_nulls(self):
+    """Check importing and exporting the Parquet file with the nested tuple with null values."""
     with Given("I have a Parquet file with the tuple of nulls datatype"):
         import_file = os.path.join("arrow", "nulls.snappy.parquet")
 
@@ -91,6 +97,7 @@ def tuple_of_nulls(self):
     RQ_SRS_032_ClickHouse_Parquet_DataTypes_NullValues("1.0"),
 )
 def big_tuple_with_nulls(self):
+    """Check importing and exporting a big Parquet file with the nested tuple with null values."""
     with Given("I have a Parquet file with the big tuple with nulls datatype"):
         import_file = os.path.join("arrow", "repeated_no_annotation.parquet")
 
