@@ -12,6 +12,11 @@ then
     artifact_s3_bucket_path="altinity-test-reports"
     confidential=""
 fi
+elif [[ $artifacts == 'builds' ]];
+then
+    artifact_s3_bucket_path="altinity-build-artifacts"
+    confidential=""
+fi
 
 echo $version > version.log.txt
 echo "https://gitlab.com/altinity-qa/clickhouse/cicd/clickhouse-regression/-/pipelines/$GITHUB_RUN_ID" > pipeline_url.log.txt
