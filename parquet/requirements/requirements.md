@@ -659,7 +659,7 @@ For example,
 > ```sql
 > SELECT * 
 > FROM file('data.parquet', Parquet)
-> SETTINGS use_query_cache = true
+> SETTINGS use_query_cache = true;
 > 
 > Elapsed: 0.009 sec.
 >```
@@ -668,7 +668,7 @@ For example,
 > ```sql
 > SELECT * 
 > FROM file('data.parquet', Parquet)
-> SETTINGS use_query_cache = true
+> SETTINGS use_query_cache = true;
 > 
 > Elapsed: 0.003 sec.
 >```
