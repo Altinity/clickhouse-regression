@@ -1,0 +1,12 @@
+array_structure = r"""'int64_list\tArray(Nullable(Int64))\t\t\t\t\t\nutf8_list\tArray(Nullable(String))'"""
+
+big_tuple_with_nulls_structure = r"""'id\tNullable(Int32)\t\t\t\t\t\nphoneNumbers\tTuple(Array(Tuple(Nullable(Int64), Nullable(String))))'"""
+
+complex_null_structure = r"""'id\tNullable(Int64)\t\t\t\t\t\nint_array\tArray(Nullable(Int32))\t\t\t\t\t\nint_array_Array\tArray(Array(Nullable(Int32)))\t\t\t\t\t\nint_map\tMap(String, Nullable(Int32))\t\t\t\t\t\nint_Map_Array\tArray(Map(String, Nullable(Int32)))\t\t\t\t\t\nnested_struct\tTuple(Nullable(Int32), Array(Nullable(Int32)), Tuple(Array(Array(Tuple(Nullable(Int32), Nullable(String))))), Map(String, Tuple(Tuple(Array(Nullable(Float64))))))'"""
+
+nested_array_structure = r"""'a\tArray(Array(Array(Nullable(String))))\t\t\t\t\t\nb\tNullable(Int32)'"""
+
+nested_map_structure = r"""'a\tMap(String, Map(Int32, Nullable(UInt8)))\t\t\t\t\t\nb\tNullable(Int32)\t\t\t\t\t\nc\tNullable(Float64)'"""
+
+tuple_of_nulls_structure = r"""'b_struct\tTuple(Nullable(Int32))'"""
+

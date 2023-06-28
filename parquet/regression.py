@@ -22,7 +22,13 @@ xfails = {
 
 xflags = {}
 
-ffails = {}
+ffails = {
+    "/parquet/compression/brotli": (
+        Skip,
+        "Not implemented before 23.3",
+        check_clickhouse_version("<23.3"),
+    ),
+}
 
 
 @TestModule
@@ -188,6 +194,11 @@ def regression(
             )
             Feature(
                 run=load("parquet.tests.indexing", "feature"),
+                parallel=True,
+                executor=executor,
+            )
+            Feature(
+                run=load("parquet.tests.cache", "feature"),
                 parallel=True,
                 executor=executor,
             )
