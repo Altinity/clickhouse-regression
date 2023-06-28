@@ -86,7 +86,7 @@ RQ_SRS_032_ClickHouse_Parquet_Query_Cache_Performance = Requirement(
         "> ```sql\n"
         "> SELECT * \n"
         "> FROM file('data.parquet', Parquet)\n"
-        "> SETTINGS use_query_cache = true\n"
+        "> SETTINGS use_query_cache = true;\n"
         "> \n"
         "> Elapsed: 0.009 sec.\n"
         ">```\n"
@@ -95,7 +95,7 @@ RQ_SRS_032_ClickHouse_Parquet_Query_Cache_Performance = Requirement(
         "> ```sql\n"
         "> SELECT * \n"
         "> FROM file('data.parquet', Parquet)\n"
-        "> SETTINGS use_query_cache = true\n"
+        "> SETTINGS use_query_cache = true;\n"
         "> \n"
         "> Elapsed: 0.003 sec.\n"
         ">```\n"
@@ -4644,7 +4644,7 @@ For example,
 > ```sql
 > SELECT * 
 > FROM file('data.parquet', Parquet)
-> SETTINGS use_query_cache = true
+> SETTINGS use_query_cache = true;
 > 
 > Elapsed: 0.009 sec.
 >```
@@ -4653,7 +4653,7 @@ For example,
 > ```sql
 > SELECT * 
 > FROM file('data.parquet', Parquet)
-> SETTINGS use_query_cache = true
+> SETTINGS use_query_cache = true;
 > 
 > Elapsed: 0.003 sec.
 >```
