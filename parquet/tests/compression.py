@@ -10,6 +10,7 @@ from parquet.tests.outline import import_export
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4Raw("1.0"))
 def lz4_raw(self):
+    """Check importing and exporting a parquet file with lz4 raw compression"""
     with Given("I have a Parquet file with the lz4_raw compression"):
         import_file = os.path.join("arrow", "lz4_raw_compressed.parquet")
 
@@ -19,6 +20,7 @@ def lz4_raw(self):
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4Raw("1.0"))
 def lz4_raw_large(self):
+    """Check importing and exporting a large parquet file with lz4 raw compression"""
     with Given("I have a large Parquet file with the lz4_raw compression"):
         import_file = os.path.join("arrow", "lz4_raw_compressed_larger.parquet")
 
@@ -37,6 +39,7 @@ def lz4_hadoop(self):
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0"))
 def lz4_hadoop_large(self):
+    """Check importing and exporting a parquet file with lz4 compression"""
     with Given("I have a large Parquet file with the hadoop lz4 compression"):
         import_file = os.path.join("arrow", "hadoop_lz4_compressed.parquet")
 
@@ -56,6 +59,7 @@ def lz4_non_hadoop(self):
     RQ_SRS_032_ClickHouse_Parquet_Import_Encoding_RunLength("1.0"),
 )
 def snappy_rle(self):
+    """Check importing and exporting a parquet file with snappy compression and rle encoding"""
     node = self.context.node
     table_name = "table_" + getuid()
 
@@ -81,6 +85,7 @@ def snappy_rle(self):
     RQ_SRS_032_ClickHouse_Parquet_Import_Encoding_RunLength("1.0"),
 )
 def snappy_plain(self):
+    """Check importing and exporting a parquet file with snappy compression end plain encoding"""
     node = self.context.node
     table_name = "table_" + getuid()
 
@@ -103,9 +108,7 @@ def snappy_plain(self):
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Brotli("1.0"))
 def brotli(self):
-    """Currently ClickHouse doesn't support reading Parquet files with brotli compression, but it will be added in
-    the next release 23.3. (In regression we are using 22.8.15, maybe need to update?)
-    """
+    """Check importing and exporting a parquet file with brotli compression"""
     with Given("I have a parquet file with brotli compression"):
         import_file = os.path.join("compression", f"data_page=1_BROTLI.parquet")
 
@@ -115,6 +118,7 @@ def brotli(self):
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip("1.0"))
 def gzip_pages(self):
+    """Check importing and exporting a parquet file with gzip compression"""
     for page_number in range(1, 3):
         with Given(
             f"I have a parquet page={page_number} file with gzip page1 compression"
@@ -131,6 +135,7 @@ def gzip_pages(self):
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0"))
 def lz4pages(self):
+    """Check importing and exporting a parquet file with lz4 compression"""
     for page_number in range(1, 3):
         with Given(f"I have a parquet page={page_number} file with lz4 compression"):
             import_file = os.path.join(
@@ -145,6 +150,7 @@ def lz4pages(self):
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_None("1.0"))
 def nonepages(self):
+    """Check importing and exporting a parquet file with no compression"""
     for page_number in range(1, 3):
         with Given(f"I have a parquet page={page_number} file with None compression"):
             import_file = os.path.join(
@@ -159,7 +165,7 @@ def nonepages(self):
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Snappy("1.0"))
 def snappypages(self):
-    """need to investigate if snappy should or should not be supported for both read and write"""
+    """Check importing and exporting a parquet file with snappy compression"""
     for page_number in range(1, 3):
         with Given(f"I have a parquet page={page_number} file with Snappy compression"):
             import_file = os.path.join(
@@ -175,7 +181,7 @@ def snappypages(self):
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Snappy("1.0"))
 def zstdpages(self):
-    """need to investigate if snappy should or should not be supported for both read and write"""
+    """Check importing and exporting a parquet file with snappy compression"""
     for page_number in range(1, 3):
         with Given(f"I have a parquet page={page_number} file with ZSTD compression"):
             import_file = os.path.join(
