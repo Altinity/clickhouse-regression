@@ -17,7 +17,11 @@ from parquet.tests.common import start_minio, parquet_test_columns
 
 xfails = {
     "chunked array": [(Fail, "Not supported")],
-    "gcs": [(Fail, "Not implemented")]
+    "gcs": [(Fail, "Not implemented")],
+    "/parquet/encoding/dictionary/*": [(Fail, "datetime different on export and import, that needs to be investigated")],
+    "/parquet/encoding/plain/*": [(Fail, "datetime different on export and import, needs to be investigated")],
+    "/parquet/complex/nestedstruct/*": [(Fail, "datetime different on export and import, needs to be investigated")],
+    "/parquet/compression/snappyplain/*": [(Fail, "datetime different on export and import, needs to be investigated")]
 }
 
 xflags = {}

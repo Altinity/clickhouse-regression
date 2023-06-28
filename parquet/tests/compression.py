@@ -84,25 +84,13 @@ def snappy_rle(self):
     RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Snappy("1.0"),
     RQ_SRS_032_ClickHouse_Parquet_Import_Encoding_RunLength("1.0"),
 )
-def snappy_plain(self):
+def snappyplain(self):
     """Check importing and exporting a parquet file with snappy compression end plain encoding"""
-    node = self.context.node
-    table_name = "table_" + getuid()
-
     with Given("I have a Parquet file with the snappy compression"):
         import_file = os.path.join("arrow", "alltypes_plain.snappy.parquet")
 
-    with Check("import", flags=XFAIL):
-        with When("I try to import the snappy compressed Parquet file into the table"):
-            node.query(
-                f"""
-                CREATE TABLE {table_name}
-                ENGINE = MergeTree
-                ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet)
-                """,
-                message="DB::ParsingException: Error while reading Parquet data: IOError: Unknown encoding type.",
-                exitcode=33,
-            )
+    import_export(snapshot_name="snappyplain_structure", import_file=import_file)
+
 
 
 @TestScenario

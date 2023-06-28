@@ -8,7 +8,6 @@ from parquet.tests.outline import import_export
 
 
 @TestScenario
-@XFailed("Issue with datetime. datetime values.")
 @Requirements(
     RQ_SRS_032_ClickHouse_Parquet_Import_Encoding_Dictionary("1.0"),
     RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_Dictionary("1.0"),
@@ -22,7 +21,6 @@ def dictionary(self):
 
 
 @TestScenario
-@XFailed("Issue with datetime. datetime values.")
 @Requirements(
     RQ_SRS_032_ClickHouse_Parquet_Import_Encoding_Plain("1.0"),
     RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_Plain("1.0"),

@@ -47,12 +47,12 @@ def nested_map(self):
 
 
 @TestScenario
-@XFailed("Difference between imported values and exported values")
+# @XFailed("Difference between imported values and exported values")
 @Requirements(
     RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Nested("1.0"),
     RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nested("1.0"),
 )
-def nested_struct(self):
+def nestedstruct(self):
     """Check importing and exporting the Parquet file with the nested map value."""
     with Given("I have a Parquet file with the nested struct datatype"):
         import_file = os.path.join("arrow", "nested_structs.rust.parquet")
