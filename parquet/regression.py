@@ -18,10 +18,25 @@ from parquet.tests.common import start_minio, parquet_test_columns
 xfails = {
     "chunked array": [(Fail, "Not supported")],
     "gcs": [(Fail, "Not implemented")],
-    "/parquet/encoding/dictionary/*": [(Fail, "datetime different on export and import, that needs to be investigated")],
-    "/parquet/encoding/plain/*": [(Fail, "datetime different on export and import, needs to be investigated")],
-    "/parquet/complex/nestedstruct/*": [(Fail, "datetime different on export and import, needs to be investigated")],
-    "/parquet/compression/snappyplain/*": [(Fail, "datetime different on export and import, needs to be investigated")]
+    "/parquet/encoding/dictionary/*": [
+        (Fail, "datetime different on export and import, that needs to be investigated")
+    ],
+    "/parquet/encoding/plain/*": [
+        (Fail, "datetime different on export and import, needs to be investigated")
+    ],
+    "/parquet/complex/nestedstruct/*": [
+        (Fail, "datetime different on export and import, needs to be investigated")
+    ],
+    "/parquet/compression/snappyplain/*": [
+        (Fail, "datetime different on export and import, needs to be investigated")
+    ],
+    "/parquet/compression/snappyrle/*": [
+        (
+            Fail,
+            "Getting an error that encoding is not supported. Probably error "
+            "occurs because of Delta Encoding (DELTA_BINARY_PACKED)",
+        )
+    ],
 }
 
 xflags = {}
@@ -86,7 +101,6 @@ def regression(
         nodes=nodes,
         docker_compose_project_dir=os.path.join(current_dir(), env),
     ) as cluster:
-
         with Given("I have a Parquet table definition"):
             self.context.cluster = cluster
             columns = (
@@ -219,7 +233,6 @@ def regression(
         else:
             if "aws_s3" in storages:
                 with Given("I make sure the S3 credentials are set"):
-
                     if aws_s3_access_key == None:
                         fail("AWS S3 access key needs to be set")
 
@@ -246,7 +259,6 @@ def regression(
                     Feature(run=load("parquet.tests.s3", "feature"))
 
             if "minio" in storages:
-
                 self.context.storage = "minio"
                 self.context.uri = "http://minio:9001/root/data/parquet/"
                 self.context.access_key_id = "minio"
@@ -260,7 +272,7 @@ def regression(
 
             if "gcs" in storages:
                 with Feature("gcs"):
-                    fail("GCS not implemented")    
+                    fail("GCS not implemented")
 
 
 if main():

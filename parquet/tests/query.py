@@ -248,7 +248,7 @@ def select_from_mat_view_into_file(self):
 @Requirements(
     RQ_SRS_032_ClickHouse_Parquet_Import_Projections("1.0"),
     RQ_SRS_032_ClickHouse_Parquet_Import("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_Import("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported("1.0"),
 )
 def insert_into_table_with_projection_from_file(self):
     """Insert data from a Parquet file into a table with a projection using FROM INFILE clause."""

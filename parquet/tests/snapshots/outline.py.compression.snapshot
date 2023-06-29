@@ -30,3 +30,5 @@ lz4_non_hadoop_structure = r"""'plain\tNullable(Int64)\t\t\t\t\t\nplain_random\t
 
 snappyplain_structure = r"""'id\tNullable(Int32)\t\t\t\t\t\nbool_col\tNullable(Bool)\t\t\t\t\t\ntinyint_col\tNullable(Int32)\t\t\t\t\t\nsmallint_col\tNullable(Int32)\t\t\t\t\t\nint_col\tNullable(Int32)\t\t\t\t\t\nbigint_col\tNullable(Int64)\t\t\t\t\t\nfloat_col\tNullable(Float32)\t\t\t\t\t\ndouble_col\tNullable(Float64)\t\t\t\t\t\ndate_string_col\tNullable(String)\t\t\t\t\t\nstring_col\tNullable(String)\t\t\t\t\t\ntimestamp_col\tNullable(DateTime64(9))'"""
 
+snappy_rle_structure = r"""'a\tNullable(String)\t\t\t\t\t\nb\tNullable(Int32)\t\t\t\t\t\nc\tNullable(Float64)\t\t\t\t\t\nd\tNullable(Bool)\t\t\t\t\t\ne\tArray(Nullable(Int32))'"""
+

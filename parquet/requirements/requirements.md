@@ -45,22 +45,23 @@
       * 4.5.2.22 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.BINARY](#rqsrs-032clickhouseparquetimportdatatypessupportedbinary)
       * 4.5.2.23 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.FixedLengthByteArray](#rqsrs-032clickhouseparquetimportdatatypessupportedfixedlengthbytearray)
       * 4.5.2.24 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.DECIMAL](#rqsrs-032clickhouseparquetimportdatatypessupporteddecimal)
-      * 4.5.2.25 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.LIST](#rqsrs-032clickhouseparquetimportdatatypessupportedlist)
-      * 4.5.2.26 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.STRUCT](#rqsrs-032clickhouseparquetimportdatatypessupportedstruct)
-      * 4.5.2.27 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.MAP](#rqsrs-032clickhouseparquetimportdatatypessupportedmap)
-      * 4.5.2.28 [UTCAdjusted](#utcadjusted)
-        * 4.5.2.28.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.DateUTCAdjusted](#rqsrs-032clickhouseparquetimportdatatypesdateutcadjusted)
-        * 4.5.2.28.2 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.TimestampUTCAdjusted](#rqsrs-032clickhouseparquetimportdatatypestimestamputcadjusted)
-        * 4.5.2.28.3 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.TimeUTCAdjusted](#rqsrs-032clickhouseparquetimportdatatypestimeutcadjusted)
-      * 4.5.2.29 [Nullable](#nullable)
-        * 4.5.2.29.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.NullValues](#rqsrs-032clickhouseparquetimportdatatypesnullvalues)
-        * 4.5.2.29.2 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.Nullable](#rqsrs-032clickhouseparquetimportdatatypesimportintonullable)
-      * 4.5.2.30 [LowCardinality](#lowcardinality)
-        * 4.5.2.30.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.LowCardinality](#rqsrs-032clickhouseparquetimportdatatypesimportintolowcardinality)
-      * 4.5.2.31 [Nested](#nested)
-        * 4.5.2.31.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.Nested](#rqsrs-032clickhouseparquetimportdatatypesimportintonested)
-      * 4.5.2.32 [UNKNOWN](#unknown)
-        * 4.5.2.32.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.Unknown](#rqsrs-032clickhouseparquetimportdatatypesimportintounknown)
+      * 4.5.2.25 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.DECIMAL.Filter](#rqsrs-032clickhouseparquetimportdatatypessupporteddecimalfilter)
+      * 4.5.2.26 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.LIST](#rqsrs-032clickhouseparquetimportdatatypessupportedlist)
+      * 4.5.2.27 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.STRUCT](#rqsrs-032clickhouseparquetimportdatatypessupportedstruct)
+      * 4.5.2.28 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.MAP](#rqsrs-032clickhouseparquetimportdatatypessupportedmap)
+      * 4.5.2.29 [UTCAdjusted](#utcadjusted)
+        * 4.5.2.29.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.DateUTCAdjusted](#rqsrs-032clickhouseparquetimportdatatypesdateutcadjusted)
+        * 4.5.2.29.2 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.TimestampUTCAdjusted](#rqsrs-032clickhouseparquetimportdatatypestimestamputcadjusted)
+        * 4.5.2.29.3 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.TimeUTCAdjusted](#rqsrs-032clickhouseparquetimportdatatypestimeutcadjusted)
+      * 4.5.2.30 [Nullable](#nullable)
+        * 4.5.2.30.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.NullValues](#rqsrs-032clickhouseparquetimportdatatypesnullvalues)
+        * 4.5.2.30.2 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.Nullable](#rqsrs-032clickhouseparquetimportdatatypesimportintonullable)
+      * 4.5.2.31 [LowCardinality](#lowcardinality)
+        * 4.5.2.31.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.LowCardinality](#rqsrs-032clickhouseparquetimportdatatypesimportintolowcardinality)
+      * 4.5.2.32 [Nested](#nested)
+        * 4.5.2.32.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.Nested](#rqsrs-032clickhouseparquetimportdatatypesimportintonested)
+      * 4.5.2.33 [UNKNOWN](#unknown)
+        * 4.5.2.33.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.Unknown](#rqsrs-032clickhouseparquetimportdatatypesimportintounknown)
     * 4.5.3 [Unsupported Datatypes](#unsupported-datatypes)
       * 4.5.3.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Unsupported](#rqsrs-032clickhouseparquetimportdatatypesunsupported)
       * 4.5.3.2 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Unsupported.ChunkedArray](#rqsrs-032clickhouseparquetimportdatatypesunsupportedchunkedarray)
@@ -135,15 +136,16 @@
       * 4.6.9.21 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.BINARY](#rqsrs-032clickhouseparquetexportdatatypessupportedbinary)
       * 4.6.9.22 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.FixedLengthByteArray](#rqsrs-032clickhouseparquetexportdatatypessupportedfixedlengthbytearray)
       * 4.6.9.23 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.DECIMAL](#rqsrs-032clickhouseparquetexportdatatypessupporteddecimal)
-      * 4.6.9.24 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.LIST](#rqsrs-032clickhouseparquetexportdatatypessupportedlist)
-      * 4.6.9.25 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.STRUCT](#rqsrs-032clickhouseparquetexportdatatypessupportedstruct)
-      * 4.6.9.26 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.MAP](#rqsrs-032clickhouseparquetexportdatatypessupportedmap)
-      * 4.6.9.27 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Nullable](#rqsrs-032clickhouseparquetexportdatatypesnullable)
+      * 4.6.9.24 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.DECIMAL.Filter](#rqsrs-032clickhouseparquetexportdatatypessupporteddecimalfilter)
+      * 4.6.9.25 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.LIST](#rqsrs-032clickhouseparquetexportdatatypessupportedlist)
+      * 4.6.9.26 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.STRUCT](#rqsrs-032clickhouseparquetexportdatatypessupportedstruct)
+      * 4.6.9.27 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.MAP](#rqsrs-032clickhouseparquetexportdatatypessupportedmap)
+      * 4.6.9.28 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Nullable](#rqsrs-032clickhouseparquetexportdatatypesnullable)
     * 4.6.10 [Working With Nested Types Export](#working-with-nested-types-export)
       * 4.6.10.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Nested](#rqsrs-032clickhouseparquetexportnested)
-      * 4.6.10.2 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Nested.Complex](#rqsrs-032clickhouseparquetexportdatatypesnestedcomplex)
+      * 4.6.10.2 [RQ.SRS-032.ClickHouse.Parquet.Export.Nested.Complex](#rqsrs-032clickhouseparquetexportnestedcomplex)
     * 4.6.11 [Exporting Chunked Columns](#exporting-chunked-columns)
-      * 4.6.11.1 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.ChunkedColumns](#rqsrs-032clickhouseparquetexportdatatypeschunkedcolumns)
+      * 4.6.11.1 [RQ.SRS-032.ClickHouse.Parquet.Export.ChunkedColumns](#rqsrs-032clickhouseparquetexportchunkedcolumns)
     * 4.6.12 [Query Types](#query-types)
       * 4.6.12.1 [RQ.SRS-032.ClickHouse.Export.Parquet.Join](#rqsrs-032clickhouseexportparquetjoin)
       * 4.6.12.2 [RQ.SRS-032.ClickHouse.Parquet.Export.Union](#rqsrs-032clickhouseparquetexportunion)
@@ -189,13 +191,13 @@
       * 4.10.4.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4](#rqsrs-032clickhouseparquetcompressionlz4)
     * 4.10.5 [Lz4Raw](#lz4raw)
       * 4.10.5.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4Raw](#rqsrs-032clickhouseparquetcompressionlz4raw)
-    * 4.10.6 [Unsupported Compression](#unsupported-compression)
-      * 4.10.6.1 [Snappy](#snappy)
-        * 4.10.6.1.1 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Snappy](#rqsrs-032clickhouseparquetunsupportedcompressionsnappy)
-      * 4.10.6.2 [Lzo](#lzo)
-        * 4.10.6.2.1 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Lzo](#rqsrs-032clickhouseparquetunsupportedcompressionlzo)
-      * 4.10.6.3 [Zstd](#zstd)
-        * 4.10.6.3.1 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Zstd](#rqsrs-032clickhouseparquetunsupportedcompressionzstd)
+    * 4.10.6 [Snappy](#snappy)
+      * 4.10.6.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Snappy](#rqsrs-032clickhouseparquetcompressionsnappy)
+    * 4.10.7 [Unsupported Compression](#unsupported-compression)
+      * 4.10.7.1 [Lzo](#lzo)
+        * 4.10.7.1.1 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Lzo](#rqsrs-032clickhouseparquetunsupportedcompressionlzo)
+      * 4.10.7.2 [Zstd](#zstd)
+        * 4.10.7.2.1 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Zstd](#rqsrs-032clickhouseparquetunsupportedcompressionzstd)
   * 4.11 [Table Functions](#table-functions)
     * 4.11.1 [URL](#url)
       * 4.11.1.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.URL](#rqsrs-032clickhouseparquettablefunctionsurl)
@@ -1032,6 +1034,11 @@ version:1.0
 
 [ClickHouse] SHALL support importing `DECIMAL` Parquet datatype.
 
+##### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.DECIMAL.Filter
+version:1.0
+
+[ClickHouse] SHALL support importing `DECIMAL` Parquet datatype with specified filters.
+
 ##### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.LIST
 version:1.0
 
@@ -1598,6 +1605,11 @@ version:1.0
 
 [ClickHouse] SHALL support exporting `DECIMAL` Parquet datatype.
 
+##### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.DECIMAL.Filter
+version:1.0
+
+[ClickHouse] SHALL support exporting `DECIMAL` Parquet datatype with specified filters.
+
 ##### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.LIST
 version:1.0
 
@@ -1625,14 +1637,14 @@ version: 1.0
 
 [ClickHouse] SHALL support exporting nested columns to the Parquet file.
 
-##### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Nested.Complex
+##### RQ.SRS-032.ClickHouse.Parquet.Export.Nested.Complex
 version:1.0
 
 [ClickHouse] SHALL support exporting nested: `Array`, `Tuple` and `Map` datatypes to Parquet files.
 
 #### Exporting Chunked Columns
 
-##### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.ChunkedColumns
+##### RQ.SRS-032.ClickHouse.Parquet.Export.ChunkedColumns
 version: 1.0
 
 [ClickHouse] SHALL support exporting chunked columns to Parquet files.
@@ -1839,14 +1851,14 @@ version: 1.0
 
 [ClickHouse] SHALL support importing or exporting Parquet files compressed using lz4_raw.
 
-#### Unsupported Compression
+#### Snappy
 
-##### Snappy
-
-###### RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Snappy
+##### RQ.SRS-032.ClickHouse.Parquet.Compression.Snappy
 version: 1.0
 
-[ClickHouse] MAY not support importing or exporting Parquet files compressed using snapy.
+[ClickHouse] SHALL support importing or exporting Parquet files compressed using Snappy.
+
+#### Unsupported Compression
 
 ##### Lzo
 
