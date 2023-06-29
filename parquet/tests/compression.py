@@ -92,7 +92,6 @@ def snappyplain(self):
     import_export(snapshot_name="snappyplain_structure", import_file=import_file)
 
 
-
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Brotli("1.0"))
 def brotli(self):
