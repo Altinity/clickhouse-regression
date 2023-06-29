@@ -35,7 +35,7 @@ def insert_into_engine(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_Parquet_DataTypes_Import("1.0"))
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported("1.0"))
 def select_from_engine(self):
     """Check that when a table with `File(Parquet)` engine is attached on top of a Parquet file, it reads the data correctly."""
     node = self.context.node

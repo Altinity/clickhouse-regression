@@ -41,7 +41,7 @@ def lz4_hadoop(self):
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0"))
 def lz4_hadoop_large(self):
-    """Check importing and exporting a parquet file with lz4 compression"""
+    """Check importing and exporting a large parquet file with hadoop lz4 compression"""
     with Given("I have a large Parquet file with the hadoop lz4 compression"):
         import_file = os.path.join("arrow", "hadoop_lz4_compressed.parquet")
 
@@ -49,6 +49,7 @@ def lz4_hadoop_large(self):
 
 
 def lz4_non_hadoop(self):
+    """Check importing and exporting a parquet file withlz4 compression"""
     with Given("I have a large Parquet file with the non hadoop lz4 compression"):
         import_file = os.path.join("arrow", "non_hadoop_lz4_compressed.parquet")
 
@@ -57,40 +58,26 @@ def lz4_non_hadoop(self):
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Snappy("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Compression_Snappy("1.0"),
     RQ_SRS_032_ClickHouse_Parquet_Import_Encoding_RunLength("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_Encoding_Delta("1.0"),
 )
-def snappy_rle(self):
-    """Check importing and exporting a parquet file with snappy compression and rle encoding"""
-    node = self.context.node
-    table_name = "table_" + getuid()
-
-    with Given(
-        "I have a Parquet file with the snappy compression and RunLength encoding"
-    ):
+def snappyrle(self):
+    """Check importing and exporting a parquet file with Snappy compression and RLE and DELTA encodings"""
+    with Given("I have a Parquet file with the Snappy compression and RLE encoding"):
         import_file = os.path.join("arrow", "datapage_v2.snappy.parquet")
 
-    with Check("import"):
-        with When("I try to import the snappy compressed Parquet file into the table"):
-            node.query(
-                f"""
-                CREATE TABLE {table_name}
-                ENGINE = MergeTree
-                ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet)
-                """,
-                message="DB::ParsingException: Error while reading Parquet data: IOError: Unknown encoding type.",
-                exitcode=33,
-            )
+    import_export(snapshot_name="snappy_rle_structure", import_file=import_file)
 
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Snappy("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Compression_Snappy("1.0"),
     RQ_SRS_032_ClickHouse_Parquet_Import_Encoding_Plain("1.0"),
 )
 def snappyplain(self):
     """Check importing and exporting a parquet file with snappy compression end plain encoding."""
-    with Given("I have a Parquet file with the snappy compression and Plain"):
+    with Given("I have a Parquet file with the Snappy compression and Plain encoding"):
         import_file = os.path.join("arrow", "alltypes_plain.snappy.parquet")
 
     import_export(snapshot_name="snappyplain_structure", import_file=import_file)
@@ -109,11 +96,9 @@ def brotli(self):
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip("1.0"))
 def gzip_pages(self):
-    """Check importing and exporting a parquet file with gzip compression."""
+    """Check importing and exporting a parquet file with gzip compression placed in two different page files."""
     for page_number in range(1, 3):
-        with Given(
-            f"I have a parquet page={page_number} file with gzip page1 compression"
-        ):
+        with Given(f"I have a parquet page={page_number} file with gzip compression"):
             import_file = os.path.join(
                 "compression", f"data_page={page_number}_GZIP.parquet"
             )
@@ -126,7 +111,7 @@ def gzip_pages(self):
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0"))
 def lz4pages(self):
-    """Check importing and exporting a parquet file with lz4 compression"""
+    """Check importing and exporting a parquet file with lz4 compression placed in two different page files"""
     for page_number in range(1, 3):
         with Given(f"I have a parquet page={page_number} file with lz4 compression"):
             import_file = os.path.join(
@@ -141,7 +126,7 @@ def lz4pages(self):
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_None("1.0"))
 def nonepages(self):
-    """Check importing and exporting a parquet file with no compression."""
+    """Check importing and exporting a parquet file with no compression placed in two different page files."""
     for page_number in range(1, 3):
         with Given(f"I have a parquet page={page_number} file with None compression"):
             import_file = os.path.join(
@@ -154,9 +139,9 @@ def nonepages(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Snappy("1.0"))
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Snappy("1.0"))
 def snappypages(self):
-    """Check importing and exporting a parquet file with snappy compression."""
+    """Check importing and exporting a parquet file with snappy compression placed in two different page files."""
     for page_number in range(1, 3):
         with Given(f"I have a parquet page={page_number} file with Snappy compression"):
             import_file = os.path.join(
@@ -170,9 +155,9 @@ def snappypages(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_Parquet_UnsupportedCompression_Snappy("1.0"))
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Snappy("1.0"))
 def zstdpages(self):
-    """Check importing and exporting a parquet file with zstd compression."""
+    """Check importing and exporting a parquet file with zstd compression placed in two different page files."""
     for page_number in range(1, 3):
         with Given(f"I have a parquet page={page_number} file with ZSTD compression"):
             import_file = os.path.join(

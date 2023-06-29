@@ -6,7 +6,9 @@ from helpers.common import *
 
 @TestFeature
 @Name("chunked array")
-@Requirements(RQ_SRS_032_ClickHouse_Parquet_DataTypes_Unsupported_ChunkedArray("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Unsupported_ChunkedArray("1.0")
+)
 def feature(self, node="clickhouse1"):
     """Run checks that clickhouse successfully read and writes Parquet chunked array datatype."""
     self.context.snapshot_id = get_snapshot_id()

@@ -10,10 +10,10 @@ from helpers.common import *
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Nested("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nested("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_LIST("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_LIST("1.0"),
 )
-def array(self):
+def list(self):
     """Check importing and exporting the Parquet file with the array value."""
     with Given("I have a Parquet file with the array datatype"):
         import_file = os.path.join("arrow", "list_columns.parquet")
@@ -23,12 +23,15 @@ def array(self):
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Nested("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nested("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_LIST("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_LIST("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Compression_Snappy("1.0"),
 )
 def nested_array(self):
-    """Check importing and exporting the Parquet file with the nested array value."""
-    with Given("I have a Parquet file with the nested array datatype"):
+    """Check importing and exporting the Parquet file with the nested array value and snappy compression."""
+    with Given(
+        "I have a Parquet file with the nested array datatype and snappy compression"
+    ):
         import_file = os.path.join("arrow", "nested_lists.snappy.parquet")
 
     import_export(snapshot_name="nested_array_structure", import_file=import_file)
@@ -36,8 +39,9 @@ def nested_array(self):
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Nested("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nested("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_MAP("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_MAP("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Compression_Snappy("1.0"),
 )
 def nested_map(self):
     """Check importing and exporting the Parquet file with the nested map value."""
@@ -50,8 +54,8 @@ def nested_map(self):
 @TestScenario
 # @XFailed("Difference between imported values and exported values")
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Nested("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nested("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_STRUCT("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_STRUCT("1.0"),
 )
 def nestedstruct(self):
     """Check importing and exporting the Parquet file with the nested map value."""
@@ -63,15 +67,12 @@ def nestedstruct(self):
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Nested("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nested("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_NullValues("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_NullValues("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nullable("1.0"),
 )
 def complex_null(self):
     """Check importing and exporting the Parquet file with the nested complex datatypes that have null values."""
-    with Given(
-        "I have a Parquet file with the array, map and tuple with null values datatype"
-    ):
+    with Given("I have a Parquet file with the array, map and tuple with null values"):
         import_file = os.path.join("arrow", "nullable.impala.parquet")
 
     import_export(snapshot_name="complex_null_structure", import_file=import_file)
@@ -79,13 +80,14 @@ def complex_null(self):
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Nested("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nested("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_NullValues("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_NullValues("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nullable("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_STRUCT("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_STRUCT("1.0"),
 )
 def tuple_of_nulls(self):
     """Check importing and exporting the Parquet file with the nested tuple with null values."""
-    with Given("I have a Parquet file with the tuple of nulls datatype"):
+    with Given("I have a Parquet file with the tuple of nulls"):
         import_file = os.path.join("arrow", "nulls.snappy.parquet")
 
     import_export(snapshot_name="tuple_of_nulls_structure", import_file=import_file)
@@ -93,13 +95,14 @@ def tuple_of_nulls(self):
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Nested("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nested("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_DataTypes_NullValues("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_NullValues("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nullable("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_STRUCT("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_STRUCT("1.0"),
 )
 def big_tuple_with_nulls(self):
     """Check importing and exporting a big Parquet file with the nested tuple with null values."""
-    with Given("I have a Parquet file with the big tuple with nulls datatype"):
+    with Given("I have a Parquet file with the big tuple with nulls"):
         import_file = os.path.join("arrow", "repeated_no_annotation.parquet")
 
     import_export(
@@ -108,6 +111,10 @@ def big_tuple_with_nulls(self):
 
 
 @TestFeature
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_Nested_Complex("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_Nested_Complex("1.0"),
+)
 @Name("complex")
 def feature(self, node="clickhouse1"):
     """Check importing and exporting parquet files with complex datatypes."""
