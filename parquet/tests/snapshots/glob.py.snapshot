@@ -1,0 +1,54 @@
+asterisk = r"""'1\ta\n2\tb'"""
+
+globstar = r"""'1\ta\n2\tb'"""
+
+question_mark = r"""'1\ta\n2\tb'"""
+
+range = r"""'2\tb\n1\ta'"""
+
+nested_glob_1 = r"""'3\tc\n1\ta'"""
+
+nested_glob_2 = r"""'1\ta\n3\tc'"""
+
+nested_glob_3 = r"""'1\ta\n3\tc'"""
+
+nested_glob_4 = r"""'3\tc\n1\ta'"""
+
+single_nested_glob = r"""'2\tb'"""
+
+select_from_file_with_asterisk = r"""'1\ta\n2\tb'"""
+
+create_table_with_asterisk = r"""''"""
+
+select_from_file_with_globstar = r"""'1\ta\n2\tb'"""
+
+create_table_with_globstar = r"""''"""
+
+select_from_file_with_question_mark = r"""'1\ta\n2\tb'"""
+
+create_table_with_question_mark = r"""''"""
+
+select_from_file_with_range = r"""'1\ta\n2\tb'"""
+
+create_table_with_range = r"""''"""
+
+select_from_file_with_nested_glob_1 = r"""'1\ta\n3\tc'"""
+
+create_table_with_nested_glob_1 = r"""''"""
+
+select_from_file_with_nested_glob_2 = r"""'1\ta\n3\tc'"""
+
+create_table_with_nested_glob_2 = r"""''"""
+
+select_from_file_with_nested_glob_3 = r"""'1\ta\n3\tc'"""
+
+create_table_with_nested_glob_3 = r"""''"""
+
+select_from_file_with_nested_glob_4 = r"""'1\ta\n3\tc'"""
+
+create_table_with_nested_glob_4 = r"""''"""
+
+select_from_file_with_single_nested_glob = r"""'2\tb'"""
+
+create_table_with_single_nested_glob = r"""''"""
+
