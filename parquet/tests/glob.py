@@ -6,7 +6,6 @@ from parquet.requirements import *
 from helpers.common import *
 from parquet.tests.outline import import_export
 
-# SELECT * FROM file('{directory}/*', Parquet)
 glob1 = os.path.join("glob")
 glob3 = os.path.join("glob3")
 
