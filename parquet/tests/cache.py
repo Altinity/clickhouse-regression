@@ -51,7 +51,7 @@ def performance(self):
         "I check that the time of the execution is lees for the second query run compared to the first run"
     ):
         second_run = end_time - start_time
-        assert second_run > first_run
+        assert second_run > first_run, error()
 
 
 @TestFeature
