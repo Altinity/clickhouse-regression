@@ -62,7 +62,7 @@ def glob2(self):
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Glob("1.0"))
 @Name("glob")
 def feature(self, node="clickhouse1"):
-    """Check using glob pattern with parquet files."""
+    """Check using glob pattern when importing from Parquet files."""
     self.context.node = self.context.cluster.node(node)
 
     for scenario in loads(current_module(), Scenario):
