@@ -62,48 +62,11 @@ RQ_SRS_032_ClickHouse_Parquet_Query_Cache = Requirement(
     uid=None,
     description=(
         "[ClickHouse] SHALL support using the query cache functionality when working with the Parquet files.\n"
-        " \n"
+        "\n"
     ),
     link=None,
     level=3,
     num="4.3.1",
-)
-
-RQ_SRS_032_ClickHouse_Parquet_Query_Cache_Performance = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.Query.Cache.Performance",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL output the results faster with subsequent executions of the same query.\n"
-        "\n"
-        "For example,\n"
-        "\n"
-        "\n"
-        "> The first execution of query\n"
-        "> ```sql\n"
-        "> SELECT * \n"
-        "> FROM file('data.parquet', Parquet)\n"
-        "> SETTINGS use_query_cache = true;\n"
-        "> \n"
-        "> Elapsed: 0.009 sec.\n"
-        ">```\n"
-        "\n"
-        "> The second execution of query\n"
-        "> ```sql\n"
-        "> SELECT * \n"
-        "> FROM file('data.parquet', Parquet)\n"
-        "> SETTINGS use_query_cache = true;\n"
-        "> \n"
-        "> Elapsed: 0.003 sec.\n"
-        ">```\n"
-        "\n"
-    ),
-    link=None,
-    level=3,
-    num="4.3.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Glob = Requirement(
@@ -176,8 +139,8 @@ RQ_SRS_032_ClickHouse_Parquet_Import_AutoDetectParquetFileFormat = Requirement(
     num="4.5.1.2.1",
 )
 
-RQ_SRS_032_ClickHouse_Parquet_DataTypes_Conversion = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.Conversion",
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Conversion = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Conversion",
     version="1.0",
     priority=None,
     group=None,
@@ -188,9 +151,9 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_Conversion = Requirement(
         "\n"
         "The conversion MAY not be possible between some datatypes.\n"
         ">\n"
-        ">For example,\n"
+        "> For example,\n"
         ">\n"
-        ">`Bool` -> `IPv6`\n"
+        "> `Bool` -> `IPv6`\n"
         "\n"
         "| Parquet to ClickHouse supported Datatypes     | ClickHouse Datatype Family        | alias_to Datatype | case_insensitive |\n"
         "|-----------------------------------------------|-----------------------------------|-------------------|------------------|\n"
@@ -333,8 +296,8 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_Conversion = Requirement(
     num="4.5.2.1",
 )
 
-RQ_SRS_032_ClickHouse_Parquet_DataTypes_Import = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.Import",
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported",
     version="1.0",
     priority=None,
     group=None,
@@ -377,8 +340,382 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_Import = Requirement(
     num="4.5.2.2",
 )
 
-RQ_SRS_032_ClickHouse_Parquet_DataTypes_DateUTCAdjusted = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.DateUTCAdjusted",
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_BOOL = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.BOOL",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing `BOOL` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.5.2.2.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_UINT8 = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.UINT8",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing `UINT8` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.5.2.2.2",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_INT8 = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.INT8",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing `INT8` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.5.2.2.3",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_UINT16 = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.UINT16",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing `UINT16` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.5.2.2.4",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_INT16 = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.INT16",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing `INT16` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.5.2.2.5",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_UINT32 = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.UINT32",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing `UINT32` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.5.2.2.6",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_INT32 = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.INT32",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing `INT32` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.5.2.2.7",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_UINT64 = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.UINT64",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing `UINT64` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.5.2.2.8",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_INT64 = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.INT64",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing `INT64` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.5.2.2.9",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_FLOAT = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.FLOAT",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing `FLOAT` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.5.2.2.10",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_DOUBLE = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.DOUBLE",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing `DOUBLE` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.5.2.2.11",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_DATE_ms = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.DATE.ms",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing `DATE (ms)` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.5.2.2.12",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_DATE_ns = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.DATE.ns",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing `DATE (ns)` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.5.2.2.13",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_DATE_us = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.DATE.us",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing `DATE (us)` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.5.2.2.14",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_TIME_ms = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.TIME.ms",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing `TIME (ms)` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.5.2.2.15",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_TIMESTAMP_ms = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.TIMESTAMP.ms",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing `TIMESTAMP (ms)` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.5.2.2.16",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_TIMESTAMP_ns = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.TIMESTAMP.ns",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing `TIMESTAMP (ns)` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.5.2.2.17",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_TIMESTAMP_us = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.TIMESTAMP.us",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing `TIMESTAMP (us)` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.5.2.2.18",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_STRING = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.STRING",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing `STRING` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.5.2.2.19",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_BINARY = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.BINARY",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing `BINARY` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.5.2.2.20",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_FixedLengthByteArray = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.FixedLengthByteArray",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing `FIXED_LENGTH_BYTE_ARRAY` Parquet datatype.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.5.2.2.21",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_DECIMAL = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.DECIMAL",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing `DECIMAL` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.5.2.2.22",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_LIST = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.LIST",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing `LIST` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.5.2.2.23",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_STRUCT = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.STRUCT",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing `STRUCT` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.5.2.2.24",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_MAP = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.MAP",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=("[ClickHouse] SHALL support importing `MAP` Parquet datatype.\n" "\n"),
+    link=None,
+    level=5,
+    num="4.5.2.2.25",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_DateUTCAdjusted = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.DateUTCAdjusted",
     version="1.0",
     priority=None,
     group=None,
@@ -393,8 +730,8 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_DateUTCAdjusted = Requirement(
     num="4.5.2.3.1",
 )
 
-RQ_SRS_032_ClickHouse_Parquet_DataTypes_TimestampUTCAdjusted = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.TimestampUTCAdjusted",
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_TimestampUTCAdjusted = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.TimestampUTCAdjusted",
     version="1.0",
     priority=None,
     group=None,
@@ -409,8 +746,8 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_TimestampUTCAdjusted = Requirement(
     num="4.5.2.3.2",
 )
 
-RQ_SRS_032_ClickHouse_Parquet_DataTypes_TimeUTCAdjusted = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.TimeUTCAdjusted",
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_TimeUTCAdjusted = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.TimeUTCAdjusted",
     version="1.0",
     priority=None,
     group=None,
@@ -425,8 +762,8 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_TimeUTCAdjusted = Requirement(
     num="4.5.2.3.3",
 )
 
-RQ_SRS_032_ClickHouse_Parquet_DataTypes_NullValues = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.NullValues",
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_NullValues = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.NullValues",
     version="1.0",
     priority=None,
     group=None,
@@ -443,8 +780,8 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_NullValues = Requirement(
     num="4.5.2.4.1",
 )
 
-RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Nullable = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportInto.Nullable",
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_ImportInto_Nullable = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.Nullable",
     version="1.0",
     priority=None,
     group=None,
@@ -459,8 +796,8 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Nullable = Requirement(
     num="4.5.2.4.2",
 )
 
-RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_LowCardinality = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportInto.LowCardinality",
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_ImportInto_LowCardinality = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.LowCardinality",
     version="1.0",
     priority=None,
     group=None,
@@ -475,8 +812,8 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_LowCardinality = Requirement(
     num="4.5.2.5.1",
 )
 
-RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Nested = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportInto.Nested",
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_ImportInto_Nested = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.Nested",
     version="1.0",
     priority=None,
     group=None,
@@ -491,8 +828,8 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Nested = Requirement(
     num="4.5.2.6.1",
 )
 
-RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Unknown = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportInto.Unknown",
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_ImportInto_Unknown = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.Unknown",
     version="1.0",
     priority=None,
     group=None,
@@ -512,8 +849,8 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Unknown = Requirement(
     num="4.5.2.7.1",
 )
 
-RQ_SRS_032_ClickHouse_Parquet_DataTypes_Unsupported = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.Unsupported",
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Unsupported = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Unsupported",
     version="1.0",
     priority=None,
     group=None,
@@ -534,8 +871,8 @@ RQ_SRS_032_ClickHouse_Parquet_DataTypes_Unsupported = Requirement(
     num="4.5.3.1",
 )
 
-RQ_SRS_032_ClickHouse_Parquet_DataTypes_Unsupported_ChunkedArray = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.Unsupported.ChunkedArray",
+RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Unsupported_ChunkedArray = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Unsupported.ChunkedArray",
     version="1.0",
     priority=None,
     group=None,
@@ -801,8 +1138,8 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Nested_ArrayIntoNested = Requirement(
     num="4.5.5.1",
 )
 
-RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportNested = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportNested",
+RQ_SRS_032_ClickHouse_Parquet_Import_Nested_Complex = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.Nested.Complex",
     version="1.0",
     priority=None,
     group=None,
@@ -1177,8 +1514,382 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Datatypes_Supported = Requirement(
     num="4.6.9.1",
 )
 
-RQ_SRS_032_ClickHouse_Parquet_DataTypes_ExportNullable = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ExportNullable",
+RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_BOOL = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.BOOL",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting `BOOL` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.6.9.1.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_UINT8 = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.UINT8",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting `UINT8` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.6.9.1.2",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_INT8 = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.INT8",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting `INT8` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.6.9.1.3",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_UINT16 = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.UINT16",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting `UINT16` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.6.9.1.4",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_INT16 = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.INT16",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting `INT16` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.6.9.1.5",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_UINT32 = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.UINT32",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting `UINT32` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.6.9.1.6",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_INT32 = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.INT32",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting `INT32` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.6.9.1.7",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_UINT64 = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.UINT64",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting `UINT64` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.6.9.1.8",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_INT64 = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.INT64",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting `INT64` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.6.9.1.9",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_FLOAT = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.FLOAT",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting `FLOAT` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.6.9.1.10",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_DOUBLE = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.DOUBLE",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting `DOUBLE` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.6.9.1.11",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_DATE_ms = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.DATE.ms",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting `DATE (ms)` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.6.9.1.12",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_DATE_ns = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.DATE.ns",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting `DATE (ns)` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.6.9.1.13",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_DATE_us = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.DATE.us",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting `DATE (us)` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.6.9.1.14",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_TIME_ms = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.TIME.ms",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting `TIME (ms)` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.6.9.1.15",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_TIMESTAMP_ms = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.TIMESTAMP.ms",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting `TIMESTAMP (ms)` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.6.9.1.16",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_TIMESTAMP_ns = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.TIMESTAMP.ns",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting `TIMESTAMP (ns)` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.6.9.1.17",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_TIMESTAMP_us = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.TIMESTAMP.us",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting `TIMESTAMP (us)` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.6.9.1.18",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_STRING = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.STRING",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting `STRING` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.6.9.1.19",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_BINARY = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.BINARY",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting `BINARY` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.6.9.1.20",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_FixedLengthByteArray = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.FixedLengthByteArray",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting `FIXED_LENGTH_BYTE_ARRAY` Parquet datatype.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.6.9.1.21",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_DECIMAL = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.DECIMAL",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting `DECIMAL` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.6.9.1.22",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_LIST = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.LIST",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting `LIST` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.6.9.1.23",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_STRUCT = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.STRUCT",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting `STRUCT` Parquet datatype.\n" "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.6.9.1.24",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_MAP = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.MAP",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=("[ClickHouse] SHALL support exporting `MAP` Parquet datatype.\n" "\n"),
+    link=None,
+    level=5,
+    num="4.6.9.1.25",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nullable = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Nullable",
     version="1.0",
     priority=None,
     group=None,
@@ -1209,8 +1920,8 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Nested = Requirement(
     num="4.6.10.1",
 )
 
-RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nested = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Nested",
+RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nested_Complex = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Nested.Complex",
     version="1.0",
     priority=None,
     group=None,
@@ -3083,11 +3794,6 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         ),
         Heading(name="Query Cache", level=2, num="4.3"),
         Heading(name="RQ.SRS-032.ClickHouse.Parquet.Query.Cache", level=3, num="4.3.1"),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Query.Cache.Performance",
-            level=3,
-            num="4.3.2",
-        ),
         Heading(name="Glob Patterns", level=2, num="4.4"),
         Heading(name="RQ.SRS-032.ClickHouse.Parquet.Glob", level=3, num="4.4.1"),
         Heading(name="Import from Parquet Files", level=2, num="4.5"),
@@ -3100,68 +3806,193 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         ),
         Heading(name="Supported Datatypes", level=3, num="4.5.2"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.Conversion",
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Conversion",
             level=4,
             num="4.5.2.1",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.Import",
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported",
             level=4,
             num="4.5.2.2",
         ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.BOOL",
+            level=5,
+            num="4.5.2.2.1",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.UINT8",
+            level=5,
+            num="4.5.2.2.2",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.INT8",
+            level=5,
+            num="4.5.2.2.3",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.UINT16",
+            level=5,
+            num="4.5.2.2.4",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.INT16",
+            level=5,
+            num="4.5.2.2.5",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.UINT32",
+            level=5,
+            num="4.5.2.2.6",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.INT32",
+            level=5,
+            num="4.5.2.2.7",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.UINT64",
+            level=5,
+            num="4.5.2.2.8",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.INT64",
+            level=5,
+            num="4.5.2.2.9",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.FLOAT",
+            level=5,
+            num="4.5.2.2.10",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.DOUBLE",
+            level=5,
+            num="4.5.2.2.11",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.DATE.ms",
+            level=5,
+            num="4.5.2.2.12",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.DATE.ns",
+            level=5,
+            num="4.5.2.2.13",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.DATE.us",
+            level=5,
+            num="4.5.2.2.14",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.TIME.ms",
+            level=5,
+            num="4.5.2.2.15",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.TIMESTAMP.ms",
+            level=5,
+            num="4.5.2.2.16",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.TIMESTAMP.ns",
+            level=5,
+            num="4.5.2.2.17",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.TIMESTAMP.us",
+            level=5,
+            num="4.5.2.2.18",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.STRING",
+            level=5,
+            num="4.5.2.2.19",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.BINARY",
+            level=5,
+            num="4.5.2.2.20",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.FixedLengthByteArray",
+            level=5,
+            num="4.5.2.2.21",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.DECIMAL",
+            level=5,
+            num="4.5.2.2.22",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.LIST",
+            level=5,
+            num="4.5.2.2.23",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.STRUCT",
+            level=5,
+            num="4.5.2.2.24",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.MAP",
+            level=5,
+            num="4.5.2.2.25",
+        ),
         Heading(name="UTCAdjusted", level=4, num="4.5.2.3"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.DateUTCAdjusted",
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.DateUTCAdjusted",
             level=5,
             num="4.5.2.3.1",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.TimestampUTCAdjusted",
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.TimestampUTCAdjusted",
             level=5,
             num="4.5.2.3.2",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.TimeUTCAdjusted",
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.TimeUTCAdjusted",
             level=5,
             num="4.5.2.3.3",
         ),
         Heading(name="Nullable", level=4, num="4.5.2.4"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.NullValues",
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.NullValues",
             level=5,
             num="4.5.2.4.1",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportInto.Nullable",
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.Nullable",
             level=5,
             num="4.5.2.4.2",
         ),
         Heading(name="LowCardinality", level=4, num="4.5.2.5"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportInto.LowCardinality",
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.LowCardinality",
             level=5,
             num="4.5.2.5.1",
         ),
         Heading(name="Nested", level=4, num="4.5.2.6"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportInto.Nested",
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.Nested",
             level=5,
             num="4.5.2.6.1",
         ),
         Heading(name="UNKNOWN", level=4, num="4.5.2.7"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportInto.Unknown",
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.Unknown",
             level=5,
             num="4.5.2.7.1",
         ),
         Heading(name="Unsupported Datatypes", level=3, num="4.5.3"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.Unsupported",
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Unsupported",
             level=4,
             num="4.5.3.1",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.Unsupported.ChunkedArray",
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Unsupported.ChunkedArray",
             level=4,
             num="4.5.3.2",
         ),
@@ -3212,7 +4043,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             num="4.5.5.1",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportNested",
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.Nested.Complex",
             level=4,
             num="4.5.5.2",
         ),
@@ -3321,7 +4152,132 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             num="4.6.9.1",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.DataTypes.ExportNullable",
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.BOOL",
+            level=5,
+            num="4.6.9.1.1",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.UINT8",
+            level=5,
+            num="4.6.9.1.2",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.INT8",
+            level=5,
+            num="4.6.9.1.3",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.UINT16",
+            level=5,
+            num="4.6.9.1.4",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.INT16",
+            level=5,
+            num="4.6.9.1.5",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.UINT32",
+            level=5,
+            num="4.6.9.1.6",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.INT32",
+            level=5,
+            num="4.6.9.1.7",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.UINT64",
+            level=5,
+            num="4.6.9.1.8",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.INT64",
+            level=5,
+            num="4.6.9.1.9",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.FLOAT",
+            level=5,
+            num="4.6.9.1.10",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.DOUBLE",
+            level=5,
+            num="4.6.9.1.11",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.DATE.ms",
+            level=5,
+            num="4.6.9.1.12",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.DATE.ns",
+            level=5,
+            num="4.6.9.1.13",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.DATE.us",
+            level=5,
+            num="4.6.9.1.14",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.TIME.ms",
+            level=5,
+            num="4.6.9.1.15",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.TIMESTAMP.ms",
+            level=5,
+            num="4.6.9.1.16",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.TIMESTAMP.ns",
+            level=5,
+            num="4.6.9.1.17",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.TIMESTAMP.us",
+            level=5,
+            num="4.6.9.1.18",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.STRING",
+            level=5,
+            num="4.6.9.1.19",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.BINARY",
+            level=5,
+            num="4.6.9.1.20",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.FixedLengthByteArray",
+            level=5,
+            num="4.6.9.1.21",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.DECIMAL",
+            level=5,
+            num="4.6.9.1.22",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.LIST",
+            level=5,
+            num="4.6.9.1.23",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.STRUCT",
+            level=5,
+            num="4.6.9.1.24",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.MAP",
+            level=5,
+            num="4.6.9.1.25",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Nullable",
             level=4,
             num="4.6.9.2",
         ),
@@ -3330,7 +4286,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.Nested", level=4, num="4.6.10.1"
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Nested",
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Nested.Complex",
             level=4,
             num="4.6.10.2",
         ),
@@ -3874,22 +4830,46 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_SupportedVersions,
         RQ_SRS_032_ClickHouse_Parquet_ClickHouseLocal,
         RQ_SRS_032_ClickHouse_Parquet_Query_Cache,
-        RQ_SRS_032_ClickHouse_Parquet_Query_Cache_Performance,
         RQ_SRS_032_ClickHouse_Parquet_Glob,
         RQ_SRS_032_ClickHouse_Parquet_Import,
         RQ_SRS_032_ClickHouse_Parquet_Import_AutoDetectParquetFileFormat,
-        RQ_SRS_032_ClickHouse_Parquet_DataTypes_Conversion,
-        RQ_SRS_032_ClickHouse_Parquet_DataTypes_Import,
-        RQ_SRS_032_ClickHouse_Parquet_DataTypes_DateUTCAdjusted,
-        RQ_SRS_032_ClickHouse_Parquet_DataTypes_TimestampUTCAdjusted,
-        RQ_SRS_032_ClickHouse_Parquet_DataTypes_TimeUTCAdjusted,
-        RQ_SRS_032_ClickHouse_Parquet_DataTypes_NullValues,
-        RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Nullable,
-        RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_LowCardinality,
-        RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Nested,
-        RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportInto_Unknown,
-        RQ_SRS_032_ClickHouse_Parquet_DataTypes_Unsupported,
-        RQ_SRS_032_ClickHouse_Parquet_DataTypes_Unsupported_ChunkedArray,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Conversion,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_BOOL,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_UINT8,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_INT8,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_UINT16,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_INT16,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_UINT32,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_INT32,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_UINT64,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_INT64,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_FLOAT,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_DOUBLE,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_DATE_ms,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_DATE_ns,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_DATE_us,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_TIME_ms,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_TIMESTAMP_ms,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_TIMESTAMP_ns,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_TIMESTAMP_us,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_STRING,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_BINARY,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_FixedLengthByteArray,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_DECIMAL,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_LIST,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_STRUCT,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_MAP,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_DateUTCAdjusted,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_TimestampUTCAdjusted,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_TimeUTCAdjusted,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_NullValues,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_ImportInto_Nullable,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_ImportInto_LowCardinality,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_ImportInto_Nested,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_ImportInto_Unknown,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Unsupported,
+        RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Unsupported_ChunkedArray,
         RQ_SRS_032_ClickHouse_Parquet_Import_Projections,
         RQ_SRS_032_ClickHouse_Parquet_Import_SkipColumns,
         RQ_SRS_032_ClickHouse_Parquet_Import_SkipValues,
@@ -3898,7 +4878,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_Import_DataPageSize,
         RQ_SRS_032_ClickHouse_Parquet_Import_NewTable,
         RQ_SRS_032_ClickHouse_Parquet_Import_Nested_ArrayIntoNested,
-        RQ_SRS_032_ClickHouse_Parquet_DataTypes_ImportNested,
+        RQ_SRS_032_ClickHouse_Parquet_Import_Nested_Complex,
         RQ_SRS_032_ClickHouse_Parquet_Import_Nested_ArrayIntoNested_ImportNested,
         RQ_SRS_032_ClickHouse_Parquet_Import_Nested_ArrayIntoNested_NotImportNested,
         RQ_SRS_032_ClickHouse_Parquet_Import_Nested_ArrayIntoNotNested,
@@ -3918,9 +4898,34 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_Export,
         RQ_SRS_032_ClickHouse_Parquet_Export_Outfile_AutoDetectParquetFileFormat,
         RQ_SRS_032_ClickHouse_Parquet_Export_Datatypes_Supported,
-        RQ_SRS_032_ClickHouse_Parquet_DataTypes_ExportNullable,
+        RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_BOOL,
+        RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_UINT8,
+        RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_INT8,
+        RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_UINT16,
+        RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_INT16,
+        RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_UINT32,
+        RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_INT32,
+        RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_UINT64,
+        RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_INT64,
+        RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_FLOAT,
+        RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_DOUBLE,
+        RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_DATE_ms,
+        RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_DATE_ns,
+        RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_DATE_us,
+        RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_TIME_ms,
+        RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_TIMESTAMP_ms,
+        RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_TIMESTAMP_ns,
+        RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_TIMESTAMP_us,
+        RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_STRING,
+        RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_BINARY,
+        RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_FixedLengthByteArray,
+        RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_DECIMAL,
+        RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_LIST,
+        RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_STRUCT,
+        RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_MAP,
+        RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nullable,
         RQ_SRS_032_ClickHouse_Parquet_Export_Nested,
-        RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nested,
+        RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nested_Complex,
         RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_ChunkedColumns,
         RQ_SRS_032_ClickHouse_Export_Parquet_Join,
         RQ_SRS_032_ClickHouse_Parquet_Export_Union,
@@ -4038,7 +5043,6 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
     * 4.2.2 [RQ.SRS-032.ClickHouse.Parquet.ClickHouseLocal](#rqsrs-032clickhouseparquetclickhouselocal)
   * 4.3 [Query Cache](#query-cache)
     * 4.3.1 [RQ.SRS-032.ClickHouse.Parquet.Query.Cache](#rqsrs-032clickhouseparquetquerycache)
-    * 4.3.2 [RQ.SRS-032.ClickHouse.Parquet.Query.Cache.Performance](#rqsrs-032clickhouseparquetquerycacheperformance)
   * 4.4 [Glob Patterns](#glob-patterns)
     * 4.4.1 [RQ.SRS-032.ClickHouse.Parquet.Glob](#rqsrs-032clickhouseparquetglob)
   * 4.5 [Import from Parquet Files](#import-from-parquet-files)
@@ -4046,24 +5050,49 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
       * 4.5.1.2 [Auto Detect Parquet File When Importing](#auto-detect-parquet-file-when-importing)
         * 4.5.1.2.1 [RQ.SRS-032.ClickHouse.Parquet.Import.AutoDetectParquetFileFormat](#rqsrs-032clickhouseparquetimportautodetectparquetfileformat)
     * 4.5.2 [Supported Datatypes](#supported-datatypes)
-      * 4.5.2.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Conversion](#rqsrs-032clickhouseparquetdatatypesconversion)
-      * 4.5.2.2 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Import](#rqsrs-032clickhouseparquetdatatypesimport)
+      * 4.5.2.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Conversion](#rqsrs-032clickhouseparquetimportdatatypesconversion)
+      * 4.5.2.2 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported](#rqsrs-032clickhouseparquetimportdatatypessupported)
+        * 4.5.2.2.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.BOOL](#rqsrs-032clickhouseparquetimportdatatypessupportedbool)
+        * 4.5.2.2.2 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.UINT8](#rqsrs-032clickhouseparquetimportdatatypessupporteduint8)
+        * 4.5.2.2.3 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.INT8](#rqsrs-032clickhouseparquetimportdatatypessupportedint8)
+        * 4.5.2.2.4 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.UINT16](#rqsrs-032clickhouseparquetimportdatatypessupporteduint16)
+        * 4.5.2.2.5 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.INT16](#rqsrs-032clickhouseparquetimportdatatypessupportedint16)
+        * 4.5.2.2.6 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.UINT32](#rqsrs-032clickhouseparquetimportdatatypessupporteduint32)
+        * 4.5.2.2.7 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.INT32](#rqsrs-032clickhouseparquetimportdatatypessupportedint32)
+        * 4.5.2.2.8 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.UINT64](#rqsrs-032clickhouseparquetimportdatatypessupporteduint64)
+        * 4.5.2.2.9 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.INT64](#rqsrs-032clickhouseparquetimportdatatypessupportedint64)
+        * 4.5.2.2.10 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.FLOAT](#rqsrs-032clickhouseparquetimportdatatypessupportedfloat)
+        * 4.5.2.2.11 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.DOUBLE](#rqsrs-032clickhouseparquetimportdatatypessupporteddouble)
+        * 4.5.2.2.12 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.DATE.ms](#rqsrs-032clickhouseparquetimportdatatypessupporteddatems)
+        * 4.5.2.2.13 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.DATE.ns](#rqsrs-032clickhouseparquetimportdatatypessupporteddatens)
+        * 4.5.2.2.14 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.DATE.us](#rqsrs-032clickhouseparquetimportdatatypessupporteddateus)
+        * 4.5.2.2.15 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.TIME.ms](#rqsrs-032clickhouseparquetimportdatatypessupportedtimems)
+        * 4.5.2.2.16 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.TIMESTAMP.ms](#rqsrs-032clickhouseparquetimportdatatypessupportedtimestampms)
+        * 4.5.2.2.17 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.TIMESTAMP.ns](#rqsrs-032clickhouseparquetimportdatatypessupportedtimestampns)
+        * 4.5.2.2.18 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.TIMESTAMP.us](#rqsrs-032clickhouseparquetimportdatatypessupportedtimestampus)
+        * 4.5.2.2.19 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.STRING](#rqsrs-032clickhouseparquetimportdatatypessupportedstring)
+        * 4.5.2.2.20 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.BINARY](#rqsrs-032clickhouseparquetimportdatatypessupportedbinary)
+        * 4.5.2.2.21 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.FixedLengthByteArray](#rqsrs-032clickhouseparquetimportdatatypessupportedfixedlengthbytearray)
+        * 4.5.2.2.22 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.DECIMAL](#rqsrs-032clickhouseparquetimportdatatypessupporteddecimal)
+        * 4.5.2.2.23 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.LIST](#rqsrs-032clickhouseparquetimportdatatypessupportedlist)
+        * 4.5.2.2.24 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.STRUCT](#rqsrs-032clickhouseparquetimportdatatypessupportedstruct)
+        * 4.5.2.2.25 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.MAP](#rqsrs-032clickhouseparquetimportdatatypessupportedmap)
       * 4.5.2.3 [UTCAdjusted](#utcadjusted)
-        * 4.5.2.3.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.DateUTCAdjusted](#rqsrs-032clickhouseparquetdatatypesdateutcadjusted)
-        * 4.5.2.3.2 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.TimestampUTCAdjusted](#rqsrs-032clickhouseparquetdatatypestimestamputcadjusted)
-        * 4.5.2.3.3 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.TimeUTCAdjusted](#rqsrs-032clickhouseparquetdatatypestimeutcadjusted)
+        * 4.5.2.3.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.DateUTCAdjusted](#rqsrs-032clickhouseparquetimportdatatypesdateutcadjusted)
+        * 4.5.2.3.2 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.TimestampUTCAdjusted](#rqsrs-032clickhouseparquetimportdatatypestimestamputcadjusted)
+        * 4.5.2.3.3 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.TimeUTCAdjusted](#rqsrs-032clickhouseparquetimportdatatypestimeutcadjusted)
       * 4.5.2.4 [Nullable](#nullable)
-        * 4.5.2.4.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.NullValues](#rqsrs-032clickhouseparquetdatatypesnullvalues)
-        * 4.5.2.4.2 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportInto.Nullable](#rqsrs-032clickhouseparquetdatatypesimportintonullable)
+        * 4.5.2.4.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.NullValues](#rqsrs-032clickhouseparquetimportdatatypesnullvalues)
+        * 4.5.2.4.2 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.Nullable](#rqsrs-032clickhouseparquetimportdatatypesimportintonullable)
       * 4.5.2.5 [LowCardinality](#lowcardinality)
-        * 4.5.2.5.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportInto.LowCardinality](#rqsrs-032clickhouseparquetdatatypesimportintolowcardinality)
+        * 4.5.2.5.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.LowCardinality](#rqsrs-032clickhouseparquetimportdatatypesimportintolowcardinality)
       * 4.5.2.6 [Nested](#nested)
-        * 4.5.2.6.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportInto.Nested](#rqsrs-032clickhouseparquetdatatypesimportintonested)
+        * 4.5.2.6.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.Nested](#rqsrs-032clickhouseparquetimportdatatypesimportintonested)
       * 4.5.2.7 [UNKNOWN](#unknown)
-        * 4.5.2.7.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportInto.Unknown](#rqsrs-032clickhouseparquetdatatypesimportintounknown)
+        * 4.5.2.7.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.Unknown](#rqsrs-032clickhouseparquetimportdatatypesimportintounknown)
     * 4.5.3 [Unsupported Datatypes](#unsupported-datatypes)
-      * 4.5.3.1 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Unsupported](#rqsrs-032clickhouseparquetdatatypesunsupported)
-      * 4.5.3.2 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.Unsupported.ChunkedArray](#rqsrs-032clickhouseparquetdatatypesunsupportedchunkedarray)
+      * 4.5.3.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Unsupported](#rqsrs-032clickhouseparquetimportdatatypesunsupported)
+      * 4.5.3.2 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Unsupported.ChunkedArray](#rqsrs-032clickhouseparquetimportdatatypesunsupportedchunkedarray)
       * 4.5.3.3 [Projections](#projections)
         * 4.5.3.3.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Projections](#rqsrs-032clickhouseparquetimportprojections)
       * 4.5.3.4 [Skip Columns](#skip-columns)
@@ -4080,7 +5109,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
       * 4.5.4.1 [RQ.SRS-032.ClickHouse.Parquet.Import.NewTable](#rqsrs-032clickhouseparquetimportnewtable)
     * 4.5.5 [Import Nested Types](#import-nested-types)
       * 4.5.5.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Nested.ArrayIntoNested](#rqsrs-032clickhouseparquetimportnestedarrayintonested)
-      * 4.5.5.2 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportNested](#rqsrs-032clickhouseparquetdatatypesimportnested)
+      * 4.5.5.2 [RQ.SRS-032.ClickHouse.Parquet.Import.Nested.Complex](#rqsrs-032clickhouseparquetimportnestedcomplex)
       * 4.5.5.3 [RQ.SRS-032.ClickHouse.Parquet.Import.Nested.ArrayIntoNested.ImportNested](#rqsrs-032clickhouseparquetimportnestedarrayintonestedimportnested)
       * 4.5.5.4 [RQ.SRS-032.ClickHouse.Parquet.Import.Nested.ArrayIntoNested.NotImportNested](#rqsrs-032clickhouseparquetimportnestedarrayintonestednotimportnested)
       * 4.5.5.5 [RQ.SRS-032.ClickHouse.Parquet.Import.Nested.ArrayIntoNotNested](#rqsrs-032clickhouseparquetimportnestedarrayintonotnested)
@@ -4113,10 +5142,35 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         * 4.6.8.2.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Outfile.AutoDetectParquetFileFormat](#rqsrs-032clickhouseparquetexportoutfileautodetectparquetfileformat)
     * 4.6.9 [Supported Data types](#supported-data-types)
       * 4.6.9.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Datatypes.Supported](#rqsrs-032clickhouseparquetexportdatatypessupported)
-      * 4.6.9.2 [RQ.SRS-032.ClickHouse.Parquet.DataTypes.ExportNullable](#rqsrs-032clickhouseparquetdatatypesexportnullable)
+        * 4.6.9.1.1 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.BOOL](#rqsrs-032clickhouseparquetexportdatatypessupportedbool)
+        * 4.6.9.1.2 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.UINT8](#rqsrs-032clickhouseparquetexportdatatypessupporteduint8)
+        * 4.6.9.1.3 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.INT8](#rqsrs-032clickhouseparquetexportdatatypessupportedint8)
+        * 4.6.9.1.4 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.UINT16](#rqsrs-032clickhouseparquetexportdatatypessupporteduint16)
+        * 4.6.9.1.5 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.INT16](#rqsrs-032clickhouseparquetexportdatatypessupportedint16)
+        * 4.6.9.1.6 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.UINT32](#rqsrs-032clickhouseparquetexportdatatypessupporteduint32)
+        * 4.6.9.1.7 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.INT32](#rqsrs-032clickhouseparquetexportdatatypessupportedint32)
+        * 4.6.9.1.8 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.UINT64](#rqsrs-032clickhouseparquetexportdatatypessupporteduint64)
+        * 4.6.9.1.9 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.INT64](#rqsrs-032clickhouseparquetexportdatatypessupportedint64)
+        * 4.6.9.1.10 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.FLOAT](#rqsrs-032clickhouseparquetexportdatatypessupportedfloat)
+        * 4.6.9.1.11 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.DOUBLE](#rqsrs-032clickhouseparquetexportdatatypessupporteddouble)
+        * 4.6.9.1.12 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.DATE.ms](#rqsrs-032clickhouseparquetexportdatatypessupporteddatems)
+        * 4.6.9.1.13 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.DATE.ns](#rqsrs-032clickhouseparquetexportdatatypessupporteddatens)
+        * 4.6.9.1.14 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.DATE.us](#rqsrs-032clickhouseparquetexportdatatypessupporteddateus)
+        * 4.6.9.1.15 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.TIME.ms](#rqsrs-032clickhouseparquetexportdatatypessupportedtimems)
+        * 4.6.9.1.16 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.TIMESTAMP.ms](#rqsrs-032clickhouseparquetexportdatatypessupportedtimestampms)
+        * 4.6.9.1.17 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.TIMESTAMP.ns](#rqsrs-032clickhouseparquetexportdatatypessupportedtimestampns)
+        * 4.6.9.1.18 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.TIMESTAMP.us](#rqsrs-032clickhouseparquetexportdatatypessupportedtimestampus)
+        * 4.6.9.1.19 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.STRING](#rqsrs-032clickhouseparquetexportdatatypessupportedstring)
+        * 4.6.9.1.20 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.BINARY](#rqsrs-032clickhouseparquetexportdatatypessupportedbinary)
+        * 4.6.9.1.21 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.FixedLengthByteArray](#rqsrs-032clickhouseparquetexportdatatypessupportedfixedlengthbytearray)
+        * 4.6.9.1.22 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.DECIMAL](#rqsrs-032clickhouseparquetexportdatatypessupporteddecimal)
+        * 4.6.9.1.23 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.LIST](#rqsrs-032clickhouseparquetexportdatatypessupportedlist)
+        * 4.6.9.1.24 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.STRUCT](#rqsrs-032clickhouseparquetexportdatatypessupportedstruct)
+        * 4.6.9.1.25 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.MAP](#rqsrs-032clickhouseparquetexportdatatypessupportedmap)
+      * 4.6.9.2 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Nullable](#rqsrs-032clickhouseparquetexportdatatypesnullable)
     * 4.6.10 [Working With Nested Types Export](#working-with-nested-types-export)
       * 4.6.10.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Nested](#rqsrs-032clickhouseparquetexportnested)
-      * 4.6.10.2 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Nested](#rqsrs-032clickhouseparquetexportdatatypesnested)
+      * 4.6.10.2 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Nested.Complex](#rqsrs-032clickhouseparquetexportdatatypesnestedcomplex)
     * 4.6.11 [Exporting Chunked Columns](#exporting-chunked-columns)
       * 4.6.11.1 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.ChunkedColumns](#rqsrs-032clickhouseparquetexportdatatypeschunkedcolumns)
     * 4.6.12 [Query Types](#query-types)
@@ -4672,32 +5726,6 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL support using the query cache functionality when working with the Parquet files.
- 
-#### RQ.SRS-032.ClickHouse.Parquet.Query.Cache.Performance
-version: 1.0
-
-[ClickHouse] SHALL output the results faster with subsequent executions of the same query.
-
-For example,
-
-
-> The first execution of query
-> ```sql
-> SELECT * 
-> FROM file('data.parquet', Parquet)
-> SETTINGS use_query_cache = true;
-> 
-> Elapsed: 0.009 sec.
->```
-
-> The second execution of query
-> ```sql
-> SELECT * 
-> FROM file('data.parquet', Parquet)
-> SETTINGS use_query_cache = true;
-> 
-> Elapsed: 0.003 sec.
->```
 
 ### Glob Patterns
 
@@ -4744,16 +5772,16 @@ FROM INFILE 'data.parquet';
 
 #### Supported Datatypes
 
-##### RQ.SRS-032.ClickHouse.Parquet.DataTypes.Conversion
+##### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Conversion
 version: 1.0
 
 [ClickHouse] SHALL support importing the Parquet files with the following datatypes and converting them into corresponding ClickHouse columns as described in the table.
 
 The conversion MAY not be possible between some datatypes.
 >
->For example,
+> For example,
 >
->`Bool` -> `IPv6`
+> `Bool` -> `IPv6`
 
 | Parquet to ClickHouse supported Datatypes     | ClickHouse Datatype Family        | alias_to Datatype | case_insensitive |
 |-----------------------------------------------|-----------------------------------|-------------------|------------------|
@@ -4890,7 +5918,7 @@ The conversion MAY not be possible between some datatypes.
 |                                               | `BYTE`                            | `Int8`            | 1                |
 
 
-##### RQ.SRS-032.ClickHouse.Parquet.DataTypes.Import
+##### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported
 version:1.0
 
 [ClickHouse] SHALL support importing the following Parquet data types:
@@ -4923,54 +5951,179 @@ Parquet Decimal is currently not tested.
 | `FIXED_LENGTH_BYTE_ARRAY`, `BINARY`           | `Int128`/`UInt128`/`Int256`/`UInt256` |
 
 
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.BOOL
+version:1.0
+
+[ClickHouse] SHALL support importing `BOOL` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.UINT8
+version:1.0
+
+[ClickHouse] SHALL support importing `UINT8` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.INT8
+version:1.0
+
+[ClickHouse] SHALL support importing `INT8` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.UINT16
+version:1.0
+
+[ClickHouse] SHALL support importing `UINT16` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.INT16
+version:1.0
+
+[ClickHouse] SHALL support importing `INT16` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.UINT32
+version:1.0
+
+[ClickHouse] SHALL support importing `UINT32` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.INT32
+version:1.0
+
+[ClickHouse] SHALL support importing `INT32` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.UINT64
+version:1.0
+
+[ClickHouse] SHALL support importing `UINT64` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.INT64
+version:1.0
+
+[ClickHouse] SHALL support importing `INT64` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.FLOAT
+version:1.0
+
+[ClickHouse] SHALL support importing `FLOAT` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.DOUBLE
+version:1.0
+
+[ClickHouse] SHALL support importing `DOUBLE` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.DATE.ms
+version:1.0
+
+[ClickHouse] SHALL support importing `DATE (ms)` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.DATE.ns
+version:1.0
+
+[ClickHouse] SHALL support importing `DATE (ns)` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.DATE.us
+version:1.0
+
+[ClickHouse] SHALL support importing `DATE (us)` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.TIME.ms
+version:1.0
+
+[ClickHouse] SHALL support importing `TIME (ms)` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.TIMESTAMP.ms
+version:1.0
+
+[ClickHouse] SHALL support importing `TIMESTAMP (ms)` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.TIMESTAMP.ns
+version:1.0
+
+[ClickHouse] SHALL support importing `TIMESTAMP (ns)` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.TIMESTAMP.us
+version:1.0
+
+[ClickHouse] SHALL support importing `TIMESTAMP (us)` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.STRING
+version:1.0
+
+[ClickHouse] SHALL support importing `STRING` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.BINARY
+version:1.0
+
+[ClickHouse] SHALL support importing `BINARY` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.FixedLengthByteArray
+version:1.0
+
+[ClickHouse] SHALL support importing `FIXED_LENGTH_BYTE_ARRAY` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.DECIMAL
+version:1.0
+
+[ClickHouse] SHALL support importing `DECIMAL` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.LIST
+version:1.0
+
+[ClickHouse] SHALL support importing `LIST` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.STRUCT
+version:1.0
+
+[ClickHouse] SHALL support importing `STRUCT` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.MAP
+version:1.0
+
+[ClickHouse] SHALL support importing `MAP` Parquet datatype.
+
 ##### UTCAdjusted
 
-###### RQ.SRS-032.ClickHouse.Parquet.DataTypes.DateUTCAdjusted
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.DateUTCAdjusted
 version:1.0
 
 [ClickHouse] SHALL support importing `DATE` Parquet datatype with `isAdjustedToUTC = true`.
 
-###### RQ.SRS-032.ClickHouse.Parquet.DataTypes.TimestampUTCAdjusted
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.TimestampUTCAdjusted
 version:1.0
 
 [ClickHouse] SHALL support importing `TIMESTAMP` Parquet datatype with `isAdjustedToUTC = true`.
 
-###### RQ.SRS-032.ClickHouse.Parquet.DataTypes.TimeUTCAdjusted
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.TimeUTCAdjusted
 version:1.0
 
 [ClickHouse] SHALL support importing `TIME` Parquet datatype with `isAdjustedToUTC = true`.
 
 ##### Nullable
 
-###### RQ.SRS-032.ClickHouse.Parquet.DataTypes.NullValues
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.NullValues
 version:1.0
 
 [ClickHouse] SHALL support importing columns that have `Null` values in Parquet files. If the target [ClickHouse] column is not `Nullable` then the `Null` value should be converted to the default values for the target column datatype.
 
 For example, if the target column has `Int32`, then the `Null` value will be replaced with `0`.
 
-###### RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportInto.Nullable
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.Nullable
 version:1.0
 
 [ClickHouse] SHALL support importing Parquet files into target table's `Nullable` datatype columns.
 
 ##### LowCardinality
 
-###### RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportInto.LowCardinality
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.LowCardinality
 version:1.0
 
 [ClickHouse] SHALL support importing Parquet files into target table's `LowCardinality` datatype columns.
 
 ##### Nested
 
-###### RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportInto.Nested
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.Nested
 version:1.0
 
 [ClickHouse] SHALL support importing Parquet files into target table's `Nested` datatype columns.
 
 ##### UNKNOWN
 
-###### RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportInto.Unknown
+###### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.Unknown
 version:1.0
 
 [ClickHouse] SHALL support importing Parquet files with `UNKNOWN` logical type.
@@ -4982,7 +6135,7 @@ The example as to why the Parquet might have an `UNKNOWN` types is as follows,
 
 #### Unsupported Datatypes
 
-##### RQ.SRS-032.ClickHouse.Parquet.DataTypes.Unsupported
+##### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Unsupported
 version:1.0
 
 [ClickHouse] MAY not support the following Parquet types:
@@ -4993,7 +6146,7 @@ version:1.0
 - `UUID`
 - `ENUM`
 
-##### RQ.SRS-032.ClickHouse.Parquet.DataTypes.Unsupported.ChunkedArray
+##### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Unsupported.ChunkedArray
 version:1.0
 
 [ClickHouse] MAY not support Parquet chunked arrays.
@@ -5180,7 +6333,7 @@ version: 1.0
 
 [ClickHouse] SHALL support importing nested columns from the Parquet file.
 
-##### RQ.SRS-032.ClickHouse.Parquet.DataTypes.ImportNested
+##### RQ.SRS-032.ClickHouse.Parquet.Import.Nested.Complex
 version:1.0
 
 [ClickHouse] SHALL support importing nested: `Array`, `Tuple` and `Map` datatypes from Parquet files.
@@ -5364,7 +6517,132 @@ version:1.0
 | `IPv6`                                | `FIXED_LENGTH_BYTE_ARRAY` |
 | `Int128`/`UInt128`/`Int256`/`UInt256` | `FIXED_LENGTH_BYTE_ARRAY` |
 
-##### RQ.SRS-032.ClickHouse.Parquet.DataTypes.ExportNullable
+###### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.BOOL
+version:1.0
+
+[ClickHouse] SHALL support exporting `BOOL` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.UINT8
+version:1.0
+
+[ClickHouse] SHALL support exporting `UINT8` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.INT8
+version:1.0
+
+[ClickHouse] SHALL support exporting `INT8` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.UINT16
+version:1.0
+
+[ClickHouse] SHALL support exporting `UINT16` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.INT16
+version:1.0
+
+[ClickHouse] SHALL support exporting `INT16` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.UINT32
+version:1.0
+
+[ClickHouse] SHALL support exporting `UINT32` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.INT32
+version:1.0
+
+[ClickHouse] SHALL support exporting `INT32` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.UINT64
+version:1.0
+
+[ClickHouse] SHALL support exporting `UINT64` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.INT64
+version:1.0
+
+[ClickHouse] SHALL support exporting `INT64` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.FLOAT
+version:1.0
+
+[ClickHouse] SHALL support exporting `FLOAT` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.DOUBLE
+version:1.0
+
+[ClickHouse] SHALL support exporting `DOUBLE` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.DATE.ms
+version:1.0
+
+[ClickHouse] SHALL support exporting `DATE (ms)` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.DATE.ns
+version:1.0
+
+[ClickHouse] SHALL support exporting `DATE (ns)` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.DATE.us
+version:1.0
+
+[ClickHouse] SHALL support exporting `DATE (us)` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.TIME.ms
+version:1.0
+
+[ClickHouse] SHALL support exporting `TIME (ms)` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.TIMESTAMP.ms
+version:1.0
+
+[ClickHouse] SHALL support exporting `TIMESTAMP (ms)` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.TIMESTAMP.ns
+version:1.0
+
+[ClickHouse] SHALL support exporting `TIMESTAMP (ns)` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.TIMESTAMP.us
+version:1.0
+
+[ClickHouse] SHALL support exporting `TIMESTAMP (us)` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.STRING
+version:1.0
+
+[ClickHouse] SHALL support exporting `STRING` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.BINARY
+version:1.0
+
+[ClickHouse] SHALL support exporting `BINARY` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.FixedLengthByteArray
+version:1.0
+
+[ClickHouse] SHALL support exporting `FIXED_LENGTH_BYTE_ARRAY` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.DECIMAL
+version:1.0
+
+[ClickHouse] SHALL support exporting `DECIMAL` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.LIST
+version:1.0
+
+[ClickHouse] SHALL support exporting `LIST` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.STRUCT
+version:1.0
+
+[ClickHouse] SHALL support exporting `STRUCT` Parquet datatype.
+
+###### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.MAP
+version:1.0
+
+[ClickHouse] SHALL support exporting `MAP` Parquet datatype.
+
+##### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Nullable
 version:1.0
 
 [ClickHouse] SHALL support exporting `Nullable` datatypes to Parquet files and `Nullable` datatypes that consist only of `Null`.
@@ -5376,7 +6654,7 @@ version: 1.0
 
 [ClickHouse] SHALL support exporting nested columns to the Parquet file.
 
-##### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Nested
+##### RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Nested.Complex
 version:1.0
 
 [ClickHouse] SHALL support exporting nested: `Array`, `Tuple` and `Map` datatypes to Parquet files.
