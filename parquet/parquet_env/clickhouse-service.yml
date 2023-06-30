@@ -34,6 +34,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/data/glob:/var/lib/clickhouse/user_files/glob"
       - "${CLICKHOUSE_TESTS_DIR}/data/glob2:/var/lib/clickhouse/user_files/glob2"
       - "${CLICKHOUSE_TESTS_DIR}/data/glob3:/var/lib/clickhouse/user_files/glob3"
+      - "${CLICKHOUSE_TESTS_DIR}/data/hive-partitioning:/var/lib/clickhouse/user_files/hive-partitioning"
       - "${CLICKHOUSE_TESTS_DIR}/data/h2oai:/var/lib/clickhouse/user_files/h2oai"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/ssl:/etc/clickhouse-server/ssl"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.xml:/etc/clickhouse-server/config.xml"

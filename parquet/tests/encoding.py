@@ -14,7 +14,7 @@ from parquet.tests.outline import import_export
     RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_Dictionary("1.0"),
 )
 def dictionary(self):
-    """Checking importing and exporting of hte Parquet file with the Dictionary encoding"""
+    """Checking importing and exporting of hte Parquet file with the Dictionary encoding."""
     with Given("I have a Parquet file with the Dictionary encoding"):
         import_file = os.path.join("arrow", "alltypes_dictionary.parquet")
 
@@ -27,7 +27,7 @@ def dictionary(self):
     RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_Plain("1.0"),
 )
 def plain(self):
-    """Checking importing and exporting of hte Parquet file with the Plain encoding"""
+    """Checking importing and exporting of hte Parquet file with the Plain encoding."""
     with Given("I have a Parquet file with the Plain encoding"):
         import_file = os.path.join("arrow", "alltypes_plain.parquet")
 
