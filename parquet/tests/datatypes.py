@@ -40,11 +40,15 @@ def byte_array(self):
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_DECIMAL("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_DECIMAL("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_FixedLengthByteArray(
+        "1.0"
+    ),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_FixedLengthByteArray(
+        "1.0"
+    ),
 )
 def fixed_length_decimal(self):
-    """Check importing and exporting the Parquet file with the fixed_length_decimal."""
+    """Check importing and exporting the Parquet file with Decimal(precision=25, scale=2)."""
     with Given("I have a Parquet file with the fixed length decimal datatype columns"):
         import_file = os.path.join("arrow", "fixed_length_decimal.parquet")
 
@@ -55,18 +59,22 @@ def fixed_length_decimal(self):
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_DECIMAL("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_DECIMAL("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_FixedLengthByteArray(
+        "1.0"
+    ),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_FixedLengthByteArray(
+        "1.0"
+    ),
 )
 def fixed_length_decimal_legacy(self):
-    """Check importing and exporting the Parquet file with the legacy fixed_length_decimal."""
+    """Check importing and exporting the Parquet file with the Decimal(precision=13, scale=2)."""
     with Given(
         "I have a Parquet file with the fixed length decimal legacy datatype columns"
     ):
-        import_file = os.path.join("arrow", "fixed_length_decimal.parquet")
+        import_file = os.path.join("arrow", "fixed_length_decimal_legacy.parquet")
 
     import_export(
-        snapshot_name="fixed_length_decimal_legacy_structure", import_file=import_file
+        snapshot_name="fixed_length_legacy_structure", import_file=import_file
     )
 
 
@@ -102,7 +110,7 @@ def int64_decimal(self):
     RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_DECIMAL_Filter("1.0"),
 )
 def decimal_with_filter(self):
-    """Check importing and exporting the Parquet file with the decimal with specified filter."""
+    """Check importing and exporting the Parquet file with the decimal with specified filter Decimal(precision=15, scale=2)."""
     with Given(
         "I have a Parquet file with the decimal value with specified filters of precision and scale"
     ):
@@ -129,7 +137,7 @@ def singlenull(self):
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Unsupported("1.0"))
 def unsupported_uuid(self):
-    """Checking that the fixed_size_binary is not supported by CliCkhouse when trying to import from the Parquet files"""
+    """Checking that the fixed_size_binary is not supported by CliCkhouse when trying to import from the Parquet files."""
     node = self.context.node
     table_name = "table_" + getuid()
 
@@ -150,12 +158,9 @@ def unsupported_uuid(self):
 
 
 @TestScenario
-@Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_DECIMAL("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_DECIMAL("1.0"),
-)
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Libraries_Pandas("1.0"))
 def pandasdecimal(self):
-    """Checking that ClickHouse can import and export Parquet files created via pandas"""
+    """Checking that ClickHouse can import and export Parquet files created via pandas."""
     with Given(
         "I have a Parquet file generated via pandas library with the decimal values"
     ):
@@ -164,10 +169,22 @@ def pandasdecimal(self):
     import_export(snapshot_name="pandas_decimal_structure", import_file=import_file)
 
 
+@TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Libraries_H2OAI("1.0"))
+def h2oai(self):
+    """Checking that ClickHouse can import and export Parquet files created via h2oAI."""
+    with Given("I have a Parquet file generated via h2oAI"):
+        import_file = os.path.join("h2oai", "h2oai_group_small.parquet")
+
+    import_export(snapshot_name="h2oai_structure", import_file=import_file)
+
+
 @TestFeature
 @Requirements(
     RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported("1.0"),
     RQ_SRS_032_ClickHouse_Parquet_Export_Datatypes_Supported("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_DECIMAL("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_DECIMAL("1.0"),
 )
 @Name("datatypes")
 def feature(self, node="clickhouse1"):

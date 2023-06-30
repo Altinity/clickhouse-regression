@@ -16,3 +16,5 @@ single_null_structure = r"""'mycol\tNullable(Float64)'"""
 
 pandas_decimal_structure = r"""'value0\tNullable(Decimal(5, 1))\t\t\t\t\t\nvalue1\tNullable(Decimal(4, 2))\t\t\t\t\t\nvalue2\tNullable(Decimal(9, 4))\t\t\t\t\t\nvalue3\tNullable(Decimal(17, 8))\t\t\t\t\t\nvalue4\tNullable(Decimal(36, 17))'"""
 
+fixed_length_legacy_structure = r"""'value\tNullable(Decimal(13, 2))'"""
+

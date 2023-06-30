@@ -11,7 +11,7 @@ from parquet.tests.outline import import_export
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4Raw("1.0"))
 def lz4_raw(self):
-    """Check importing and exporting a parquet file with lz4 raw compression"""
+    """Check importing and exporting a parquet file with lz4 raw compression."""
     with Given("I have a Parquet file with the lz4_raw compression"):
         import_file = os.path.join("arrow", "lz4_raw_compressed.parquet")
 
@@ -39,17 +39,19 @@ def lz4_hadoop(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0"))
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4Hadoop("1.0"))
 def lz4_hadoop_large(self):
-    """Check importing and exporting a large parquet file with hadoop lz4 compression"""
+    """Check importing and exporting a large parquet file with hadoop lz4 compression."""
     with Given("I have a large Parquet file with the hadoop lz4 compression"):
         import_file = os.path.join("arrow", "hadoop_lz4_compressed.parquet")
 
     import_export(snapshot_name="lz4_hadoop_large_structure", import_file=import_file)
 
 
+@TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0"))
 def lz4_non_hadoop(self):
-    """Check importing and exporting a parquet file withlz4 compression"""
+    """Check importing and exporting a parquet file with lz4 compression."""
     with Given("I have a large Parquet file with the non hadoop lz4 compression"):
         import_file = os.path.join("arrow", "non_hadoop_lz4_compressed.parquet")
 
@@ -63,7 +65,7 @@ def lz4_non_hadoop(self):
     RQ_SRS_032_ClickHouse_Parquet_Import_Encoding_Delta("1.0"),
 )
 def snappyrle(self):
-    """Check importing and exporting a parquet file with Snappy compression and RLE and DELTA encodings"""
+    """Check importing and exporting a parquet file with Snappy compression and RLE and DELTA encodings."""
     with Given("I have a Parquet file with the Snappy compression and RLE encoding"):
         import_file = os.path.join("arrow", "datapage_v2.snappy.parquet")
 
@@ -111,7 +113,7 @@ def gzip_pages(self):
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0"))
 def lz4pages(self):
-    """Check importing and exporting a parquet file with lz4 compression placed in two different page files"""
+    """Check importing and exporting a parquet file with lz4 compression placed in two different page files."""
     for page_number in range(1, 3):
         with Given(f"I have a parquet page={page_number} file with lz4 compression"):
             import_file = os.path.join(
