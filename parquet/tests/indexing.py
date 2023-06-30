@@ -12,12 +12,12 @@ from helpers.common import *
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_MinMax("1.0"))
 def bigtuplewithnulls(self):
     """Checking importing and exporting a parquet file with Min/Max values where offset between Min and Max is zero."""
-    with Given(
-        "I have a Parquet file with the zero offset between min and max"
-    ):
+    with Given("I have a Parquet file with the zero offset between min and max"):
         import_file = os.path.join("arrow", "dict-page-offset-zero.parquet")
 
-    import_export(snapshot_name="min_max_zero_offset_structure", import_file=import_file)
+    import_export(
+        snapshot_name="min_max_zero_offset_structure", import_file=import_file
+    )
 
 
 @TestFeature

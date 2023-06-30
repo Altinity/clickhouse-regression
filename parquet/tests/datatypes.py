@@ -178,10 +178,11 @@ def h2oai(self):
 
     import_export(snapshot_name="h2oai_structure", import_file=import_file)
 
+
 @TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_STRING("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_STRING("1.0")
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_STRING("1.0"),
 )
 def string(self):
     """Checking that ClickHouse can import and export Parquet files with String datatype."""
@@ -190,17 +191,19 @@ def string(self):
 
     import_export(snapshot_name="string_structure", import_file=import_file)
 
+
 @TestScenario
-@Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Hive("1.0")
-)
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Hive("1.0"))
 def hive(self):
     """Checking if the ClickHouse can import and export parquet files created for hive partitioning."""
     for page_number in range(1, 3):
         with Given("I have a Parquet file created for hive partitioning datatype"):
             import_file = os.path.join("hive-partitioning", f"f{page_number}.parquet")
 
-        import_export(snapshot_name=f"f{page_number}_structure", import_file=import_file)
+        import_export(
+            snapshot_name=f"f{page_number}_structure", import_file=import_file
+        )
+
 
 @TestFeature
 @Requirements(
