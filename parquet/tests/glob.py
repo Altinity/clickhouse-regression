@@ -89,7 +89,7 @@ def glob1(self):
     ],
 )
 def glob2(self):
-    """Importing from the Parquet files using the glob patterns from multiple nested directories."""
+    """Importing multiple Parquet files using the glob patterns from multiple nested directories."""
     for example in self.examples:
         select_with_glob(query=example[0], snapshot_name=example[1])
 
