@@ -21,7 +21,7 @@ def lz4_raw(self):
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4Raw("1.0"))
 def lz4_raw_large(self):
-    """Check importing and exporting a large parquet file with lz4 raw compression"""
+    """Check importing and exporting a large parquet file with lz4 raw compression."""
     with Given("I have a large Parquet file with the lz4_raw compression"):
         import_file = os.path.join("arrow", "lz4_raw_compressed_larger.parquet")
 
@@ -31,7 +31,7 @@ def lz4_raw_large(self):
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0"))
 def lz4_hadoop(self):
-    """Check importing and exporting a parquet file with hadoop lz4 compression"""
+    """Check importing and exporting a parquet file with hadoop lz4 compression."""
     with Given("I have a Parquet file with the hadoop lz4 compression"):
         import_file = os.path.join("arrow", "hadoop_lz4_compressed.parquet")
 
