@@ -24,3 +24,7 @@ f1_structure = r"""'i\tNullable(Int32)\t\t\t\t\t\nj\tNullable(Int32)\t\t\t\t\t\n
 
 f2_structure = r"""'i\tNullable(Int32)\t\t\t\t\t\nj\tNullable(Int32)'"""
 
+blob_structure = r"""'ids\tNullable(Int64)\t\t\t\t\t\nblobs\tNullable(String)\t\t\t\t\t\nstrings\tNullable(String)'"""
+
+boolean_structure = r"""'i\tNullable(Bool)'"""
+

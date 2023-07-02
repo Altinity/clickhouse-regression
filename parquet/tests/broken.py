@@ -197,6 +197,7 @@ def read_broken_usmallint(self):
 def read_broken_utinyint(self):
     """Check that ClickHouse outputs an error when trying to import a Parquet file with broken Utinyint values."""
     node = self.context.node
+    table_name = "table_" + getuid()
     exitcode, message = io_error_message("UINT_8 can only annotate INT32")
 
     with Given("I have a Parquet file with broken usmallint value"):
@@ -205,7 +206,7 @@ def read_broken_utinyint(self):
     with When("I try to import the broken Parquet file into the table"):
         node.query(
             f"""
-            CREATE TABLE imported_from_parquet
+            CREATE TABLE {table_name}
             ENGINE = MergeTree
             ORDER BY tuple() AS SELECT * FROM file('{broken_date_parquet}', Parquet)
             """,
@@ -221,6 +222,7 @@ def read_broken_utinyint(self):
 def read_broken_timestamp_ms(self):
     """Check that ClickHouse outputs an error when trying to import a Parquet file with broken timestamp (ms) values."""
     node = self.context.node
+    table_name = "table_" + getuid()
     exitcode, message = io_error_message("TIMESTAMP_MILLIS can only annotate INT64")
 
     with Given("I have a Parquet file with broken timestamp (ms) value"):
@@ -229,7 +231,7 @@ def read_broken_timestamp_ms(self):
     with When("I try to import the broken Parquet file into the table"):
         node.query(
             f"""
-            CREATE TABLE imported_from_parquet
+            CREATE TABLE {table_name}
             ENGINE = MergeTree
             ORDER BY tuple() AS SELECT * FROM file('{broken_date_parquet}', Parquet)
             """,
@@ -245,6 +247,8 @@ def read_broken_timestamp_ms(self):
 def read_broken_timestamp_us(self):
     """Check that ClickHouse outputs an error when trying to import a Parquet file with broken timestamp (us) values."""
     node = self.context.node
+    table_name = "table_" + getuid()
+
     exitcode, message = io_error_message("TIMESTAMP_MICROS can only annotate INT64")
 
     with Given("I have a Parquet file with broken timestamp (us) value"):
@@ -253,7 +257,7 @@ def read_broken_timestamp_us(self):
     with When("I try to import the broken Parquet file into the table"):
         node.query(
             f"""
-            CREATE TABLE imported_from_parquet
+            CREATE TABLE {table_name}
             ENGINE = MergeTree
             ORDER BY tuple() AS SELECT * FROM file('{broken_date_parquet}', Parquet)
             """,
@@ -261,6 +265,21 @@ def read_broken_timestamp_us(self):
             exitcode=exitcode,
         )
 
+
+@TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_File("1.0"))
+def file(self):
+    """Check that ClickHouse outputs an error when trying to import a broken Parquet file with broken file."""
+    broken_date_parquet = os.path.join("broken", "broken-arrow.parquet")
+    pass
+
+
+@TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_String("1.0"))
+def string(self):
+    """Check that ClickHouse outputs an error when trying to import a broken Parquet file with invalid string value."""
+    broken_date_parquet = os.path.join("broken", "invalid.parquet")
+    pass
 
 @TestFeature
 @Name("broken")

@@ -103,6 +103,15 @@ def int64_decimal(self):
 
     import_export(snapshot_name="int64_decimal_structure", import_file=import_file)
 
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_INT64("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_INT64("1.0"),
+)
+def int64(self):
+    """Check importing and exporting the Parquet file with int64."""
+    import_file = os.path.join("arrow", "file_row_number.parquet")
+    pass
 
 @TestScenario
 @Requirements(
@@ -120,6 +129,15 @@ def decimal_with_filter(self):
         snapshot_name="decimal_with_filter_structure", import_file=import_file
     )
 
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_DECIMAL_Filter("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_DECIMAL_Filter("1.0"),
+)
+def decimal_with_filter2(self):
+    """Check importing and exporting the Parquet file with the decimal with specified filter Decimal(precision=15, scale=2)."""
+    import_file = os.path.join("arrow", "p2strings.parquet")
+    pass
 
 @TestScenario
 @Requirements(
@@ -168,6 +186,20 @@ def pandasdecimal(self):
 
     import_export(snapshot_name="pandas_decimal_structure", import_file=import_file)
 
+@TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Libraries_Pandas("1.0"),
+              RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_TIMESTAMP_ms("1.0"))
+def pandasdecimal_date(self):
+    """Checking that ClickHouse can import and export Parquet files with a timestamp column from an arrow-parquet generated file via pandas."""
+    import_file = os.path.join("datatypes", "pandas-date.parquet")
+    pass
+
+@TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Libraries_ParquetGO("1.0"),)
+def parquet_go(self):
+    """Checking that ClickHouse can import and export Parquet files generated via parquet-go library."""
+    import_file = os.path.join("datatypes", "parquet_go.parquet")
+    pass
 
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Libraries_H2OAI("1.0"))
@@ -203,7 +235,311 @@ def hive(self):
         import_export(
             snapshot_name=f"f{page_number}_structure", import_file=import_file
         )
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Unsupported("1.0")
+)
+def enum(self):
+    """Checking that ClickHouse can import and export Parquet file with enum datatype."""
+    import_file = os.path.join("datatypes", "adam_genotypes.parquet")
+    pass
 
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Unsupported("1.0"),
+)
+def enum2(self):
+    """Checking that ClickHouse can import and export Parquet file with enum datatype."""
+    import_file = os.path.join("datatypes", "enum.parquet")
+    pass
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Libraries_Pyarrow("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Compression_Snappy("1.0"),
+)
+def binary_string(self):
+    """Checking that ClickHouse can import a parquet file with a binary values as a string and export it back."""
+    with Given("I have a Parquet file with binary datatype"):
+        import_file = os.path.join("datatypes", "binary_string.parquet")
+
+    import_export(snapshot_name="binary_string_structure", import_file=import_file)
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_BLOB("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_BLOB("1.0"),
+)
+def blob(self):
+    """Checking that ClickHouse can import and export Parquet files with blob values."""
+    with Given("I have a Parquet file with blob values"):
+        import_file = os.path.join("datatypes", "blob.parquet")
+
+    import_export(snapshot_name="blob_structure", import_file=import_file)
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_BOOL("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_BOOL("1.0"),
+)
+def boolean(self):
+    """Checking that ClickHouse can import and export Parquet files with boolean datatype."""
+    with Given(
+        "I have a Parquet file with boolean datatype containing true and false values"
+    ):
+        import_file = os.path.join("datatypes", "boolean_stats.parquet")
+
+    import_export(snapshot_name="boolean_structure", import_file=import_file)
+
+
+@TestScenario
+def manydatatypes(self):
+    """Checking that ClickHouse can import and export a single Parquet file with int, float, decimal, string, bool and date datatypes."""
+    import_file = os.path.join("datatypes", "data-types.parquet")
+    pass
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_DATE("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_DATE("1.0"),
+)
+def date(self):
+    """Checking that ClickHouse can import and export a Parquet file with date datatype."""
+    import_file = os.path.join("datatypes", "date.parquet")
+    pass
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_TIMESTAMP_ns("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_TIMESTAMP_ms("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_TIMESTAMP_ns("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_TIMESTAMP_ms("1.0"),
+)
+def timestamp(self):
+    """Checking that ClickHouse can import and export a Parquet file with timestamp (ms, ns) datatypes."""
+    import_file = os.path.join("datatypes", "date_stats.parquet")
+    pass
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_DECIMAL("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_DECIMAL("1.0"),
+)
+def stat_decimal(self):
+    """Checking that ClickHouse can import and export a Parquet file with decimal datatype having
+    CAST(-999999999999999999999999999999999.99999 AS DECIMAL(38,5)) as a column name."""
+    import_file = os.path.join("datatypes", "decimal_stats.parquet")
+    pass
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_DECIMAL("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_DECIMAL("1.0"),
+)
+def decimal_various_filters(self):
+    """Checking that ClickHouse can import and export a Parquet file with decimal datatype having various precision filters."""
+    import_file = os.path.join("datatypes", "decimals.parquet")
+    pass
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_FixedLengthByteArray("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_FixedLengthByteArray("1.0"),
+)
+def fixedstring(self):
+    """Checking that ClickHouse can import and export Parquet file with FixedString(16) datatype."""
+    import_file = os.path.join("datatypes", "fixed.parquet")
+    pass
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Unsupported("1.0"),
+)
+def json(self):
+    """Checking that ClickHouse can't import json from parquet files datatype."""
+    import_file = os.path.join("datatypes", "json_convertedtype.parquet")
+    pass
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_DOUBLE("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_DOUBLE("1.0"),
+)
+def large_double(self):
+    """Checking that ClickHouse can import and export a very large Parquet file with double datatype."""
+    import_file = os.path.join("datatypes", "leftdate3_192_loop_1.parquet")
+    pass
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_DOUBLE("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_DOUBLE("1.0"),
+)
+def nan_double(self):
+    """Checking that ClickHouse can import and export a Parquet file with double datatype having an infinity value."""
+    import_file = os.path.join("datatypes", "nan-float.parquet")
+    pass
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_DOUBLE("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_DOUBLE("1.0"),
+)
+def nan_double(self):
+    """Checking that ClickHouse can import and export a Parquet file with double datatype having an infinity value."""
+    import_file = os.path.join("datatypes", "nan-float.parquet")
+    pass
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_STRING("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_STRING("1.0"),
+)
+def nullbyte(self):
+    """Checking that ClickHouse can import and export a Parquet file with null bytes in strings."""
+    import_file = os.path.join("datatypes", "nullbyte.parquet")
+    pass
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_STRING("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_STRING("1.0"),
+)
+def nullbyte_multiple(self):
+    """Checking that ClickHouse can import and export a Parquet file with multiple null bytes in strings."""
+    import_file = os.path.join("datatypes", "nullbyte_multiple.parquet")
+    pass
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_INT64("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_INT64("1.0"),
+)
+def nulls_in_id(self):
+    """Checking that ClickHouse can import and export a Parquet file with int64 datatype having nulls."""
+    import_file = os.path.join("datatypes", "p2.parquet")
+    pass
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_INT64("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_INT64("1.0"),
+)
+def names_with_emoji(self):
+    """Checking that ClickHouse can import and export a Parquet file with emojis for column names."""
+    import_file = os.path.join("datatypes", "silly-names.parquet")
+    pass
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Libraries_PySpark("1.0"),
+)
+def spark_v2_1(self):
+    """Checking that ClickHouse can import and export a Parquet file generated via Spark's Parquet v2 writer."""
+    import_file = os.path.join("datatypes", "spark-ontime.parquet")
+    pass
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Libraries_PySpark("1.0"),
+)
+def spark_v2_2(self):
+    """Checking that ClickHouse can import and export a Parquet file generated via Spark's Parquet v2 writer."""
+    import_file = os.path.join("datatypes", "spark-store.parquet")
+    pass
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_STRUCT("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_STRUCT("1.0"),
+)
+def struct(self):
+    """Checking that ClickHouse can import and export a Parquet file with struct."""
+    import_file = os.path.join("datatypes", "struct.parquet")
+    pass
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_MAP("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_MAP("1.0"),
+)
+def struct_skip(self):
+    """Checking that ClickHouse can import a Parquet file with sizable dataset that contains a map."""
+    import_file = os.path.join("datatypes", "struct.parquet")
+    pass
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Libraries_Pyarrow("1.0")
+)
+def arrow_timestamp(self):
+    """Checking that ClickHouse can import a Parquet file with timestamp column from a pyarrow generated file."""
+    import_file = os.path.join("datatypes", "timestamp.parquet")
+    pass
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Libraries_Pyarrow("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_TIMESTAMP_ms("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_TIMESTAMP_ms("1.0"),
+)
+def arrow_timestamp_ms(self):
+    """Checking that ClickHouse can import a Parquet file with timestamp (ms) column from a pyarrow generated file."""
+    import_file = os.path.join("datatypes", "timestamp.parquet")
+    pass
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_DateUTCAdjusted("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_INT64("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_INT64("1.0"),
+)
+def timezone(self):
+    """Checking that ClickHouse can import a Parquet file with timezone information."""
+    import_file = os.path.join("datatypes", "tz.parquet")
+    pass
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_UINT8("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_UINT16("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_UINT32("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_UINT64("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_UINT8("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_UINT16("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_UINT32("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_UINT64("1.0"),
+)
+def unsigned(self):
+    """Checking that ClickHouse can import a Parquet file with timezone information."""
+    import_file = os.path.join("datatypes", "unsigned.parquet")
+    import_file2 = os.path.join("datatypes", "unsigned_stats.parquet")
+    pass
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_STRING("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_STRING("1.0"),
+)
+def string_types(self):
+    """Checking that ClickHouse can import and export Parquet files containing different string values like emojis, symbols, etc."""
+    import_file = os.path.join("datatypes", "userdata1.parquet")
+    pass
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_STRING("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_STRING("1.0"),
+)
+def column_name(self):
+    """Checking that ClickHouse can import and export Parquet files having hello\x00world as column name."""
+    import_file = os.path.join("datatypes", "varchar_stats.parquet")
+    pass
 
 @TestFeature
 @Requirements(
