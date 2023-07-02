@@ -15,12 +15,14 @@ def many_row_groups(self):
     import_file = os.path.join("manyrowgroups.parquet")
     pass
 
+
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Import_RowGroupSize("1.0"))
 def many_row_groups2(self):
     """Checking that ClickHouse can import and export parquet files that are  written such that every row has its own row group."""
     import_file = os.path.join("manyrowgroups2.parquet")
     pass
+
 
 @TestFeature
 @Name("rowgroups")

@@ -70,6 +70,7 @@ def delta_byte_array2(self):
     import_file = os.path.join("encodings", "delta_byte_array.parquet")
     pass
 
+
 @TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_Parquet_Import_Encoding_DeltaLengthByteArray("1.0"),
@@ -80,6 +81,7 @@ def delta_length_byte_array(self):
     import_file = os.path.join("encodings", "delta_length_byte_array.parquet")
     pass
 
+
 @TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_Parquet_Import_Encoding_RunLength("1.0"),
@@ -89,6 +91,7 @@ def rle_boolean(self):
     """Checking importing and exporting of the Parquet file with boolean values and the Run Length Encoding / Bit-Packing Hybrid (RLE)."""
     import_file = os.path.join("encodings", "rle_boolean_encoding.parquet")
     pass
+
 
 @TestFeature
 @Name("encoding")
