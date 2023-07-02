@@ -115,10 +115,14 @@
       * 4.4.9.1 [RQ.SRS-032.ClickHouse.Parquet.Libraries](#rqsrs-032clickhouseparquetlibraries)
       * 4.4.9.2 [Pyarrow](#pyarrow)
         * 4.4.9.2.1 [RQ.SRS-032.ClickHouse.Parquet.Libraries.Pyarrow](#rqsrs-032clickhouseparquetlibrariespyarrow)
-      * 4.4.9.3 [Pandas](#pandas)
-        * 4.4.9.3.1 [RQ.SRS-032.ClickHouse.Parquet.Libraries.Pandas](#rqsrs-032clickhouseparquetlibrariespandas)
-      * 4.4.9.4 [H2OAI](#h2oai)
-        * 4.4.9.4.1 [RQ.SRS-032.ClickHouse.Parquet.Libraries.H2OAI](#rqsrs-032clickhouseparquetlibrariesh2oai)
+      * 4.4.9.3 [PySpark](#pyspark)
+        * 4.4.9.3.1 [RQ.SRS-032.ClickHouse.Parquet.Libraries.PySpark](#rqsrs-032clickhouseparquetlibrariespyspark)
+      * 4.4.9.4 [Pandas](#pandas)
+        * 4.4.9.4.1 [RQ.SRS-032.ClickHouse.Parquet.Libraries.Pandas](#rqsrs-032clickhouseparquetlibrariespandas)
+      * 4.4.9.5 [parquet-go](#parquet-go)
+        * 4.4.9.5.1 [RQ.SRS-032.ClickHouse.Parquet.Libraries.ParquetGO](#rqsrs-032clickhouseparquetlibrariesparquetgo)
+      * 4.4.9.6 [H2OAI](#h2oai)
+        * 4.4.9.6.1 [RQ.SRS-032.ClickHouse.Parquet.Libraries.H2OAI](#rqsrs-032clickhouseparquetlibrariesh2oai)
   * 4.5 [Export from Parquet Files](#export-from-parquet-files)
       * 4.5.9.1 [RQ.SRS-032.ClickHouse.Parquet.Export](#rqsrs-032clickhouseparquetexport)
       * 4.5.9.2 [Auto Detect Parquet File When Exporting](#auto-detect-parquet-file-when-exporting)
@@ -209,11 +213,11 @@
       * 4.9.6.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4Hadoop](#rqsrs-032clickhouseparquetcompressionlz4hadoop)
     * 4.9.7 [Snappy](#snappy)
       * 4.9.7.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Snappy](#rqsrs-032clickhouseparquetcompressionsnappy)
+      * 4.9.7.2 [Zstd](#zstd)
+        * 4.9.7.2.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Zstd](#rqsrs-032clickhouseparquetcompressionzstd)
     * 4.9.8 [Unsupported Compression](#unsupported-compression)
       * 4.9.8.1 [Lzo](#lzo)
         * 4.9.8.1.1 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Lzo](#rqsrs-032clickhouseparquetunsupportedcompressionlzo)
-      * 4.9.8.2 [Zstd](#zstd)
-        * 4.9.8.2.1 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Zstd](#rqsrs-032clickhouseparquetunsupportedcompressionzstd)
   * 4.10 [Table Functions](#table-functions)
     * 4.10.1 [URL](#url)
       * 4.10.1.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.URL](#rqsrs-032clickhouseparquettablefunctionsurl)
@@ -1466,12 +1470,26 @@ version: 1.0
 
 [ClickHouse] SHALL support importing from Parquet files generated using `Pyarrow`.
 
+##### PySpark
+
+###### RQ.SRS-032.ClickHouse.Parquet.Libraries.PySpark
+version: 1.0
+
+[ClickHouse] SHALL support importing from Parquet files generated using `PySpark`.
+
 ##### Pandas
 
 ###### RQ.SRS-032.ClickHouse.Parquet.Libraries.Pandas
 version: 1.0
 
 [ClickHouse] SHALL support importing from Parquet files generated using `Pandas`.
+
+##### parquet-go
+
+###### RQ.SRS-032.ClickHouse.Parquet.Libraries.ParquetGO
+version: 1.0
+
+[ClickHouse] SHALL support importing from Parquet files generated using `parquet-go`.
 
 ##### H2OAI
 
@@ -1918,6 +1936,13 @@ version: 1.0
 
 [ClickHouse] SHALL support importing or exporting Parquet files compressed using Snappy.
 
+##### Zstd
+
+###### RQ.SRS-032.ClickHouse.Parquet.Compression.Zstd
+version: 1.0
+
+[ClickHouse] SHALL support importing or exporting Parquet files compressed using Zstd.
+
 #### Unsupported Compression
 
 ##### Lzo
@@ -1926,14 +1951,6 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] MAY not support importing or exporting Parquet files compressed using lzo.
-
-##### Zstd
-
-###### RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Zstd
-version: 1.0
-
-[ClickHouse] MAY not support importing or exporting Parquet files compressed using zstd.
-
 
 ### Table Functions
 

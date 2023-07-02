@@ -170,6 +170,35 @@ def zstdpages(self):
             snapshot_name=f"zstd_page_{page_number}_structure", import_file=import_file
         )
 
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Libraries_Pyarrow("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Compression_Snappy("1.0"),
+)
+def arrow_snappy(self):
+    """Checking that ClickHouse can import and export Parquet files generated with arrow2 and snappy compression."""
+    with Given("I have a Parquet file generated with arrow2 and snappy compression"):
+        import_file = os.path.join("arrow", "7-set.snappy.arrow2.parquet")
+
+    import_export(snapshot_name="arrow_snappy_structure", import_file=import_file)
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip("1.0")
+)
+def large_gzip(self):
+    """Checking that ClickHouse can import and export very large Parquet files with gzip compression."""
+    import_file = os.path.join("compression", "lineitem-top10000.gzip.parquet")
+    pass
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Compression_Zstd("1.0")
+)
+def zstd(self):
+    """Checking that ClickHouse can import Parquet files with zstd compression."""
+    import_file = os.path.join("compression", "zstd.parquet")
+    pass
 
 @TestFeature
 @Name("compression")
