@@ -105,7 +105,7 @@
       * 4.4.7.6 [Delta Strings (Import)](#delta-strings-import)
         * 4.4.7.6.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.DeltaStrings](#rqsrs-032clickhouseparquetimportencodingdeltastrings)
       * 4.4.7.7 [Byte Stream Split (Import)](#byte-stream-split-import)
-      * 4.4.7.8 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.ByteStreamSplit](#rqsrs-032clickhouseparquetimportencodingbytestreamsplit)
+        * 4.4.7.7.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.ByteStreamSplit](#rqsrs-032clickhouseparquetimportencodingbytestreamsplit)
     * 4.4.8 [Import Settings](#import-settings)
       * 4.4.8.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Settings.ImportNested](#rqsrs-032clickhouseparquetimportsettingsimportnested)
       * 4.4.8.2 [RQ.SRS-032.ClickHouse.Parquet.Import.Settings.CaseInsensitiveColumnMatching](#rqsrs-032clickhouseparquetimportsettingscaseinsensitivecolumnmatching)
@@ -1418,7 +1418,7 @@ version: 1.0
 
 ##### Byte Stream Split (Import)
 
-##### RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.ByteStreamSplit
+###### RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.ByteStreamSplit
 version: 1.0
 
 [ClickHouse] SHALL support importing `Byte Stream Split` encoded Parquet files.
