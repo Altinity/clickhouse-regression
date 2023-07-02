@@ -281,6 +281,7 @@ def string(self):
     broken_date_parquet = os.path.join("broken", "invalid.parquet")
     pass
 
+
 @TestFeature
 @Name("broken")
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values("1.0"))

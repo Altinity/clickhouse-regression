@@ -147,6 +147,7 @@ def largestruct(self):
 
     import_export(snapshot_name="large_struct_structure", import_file=import_file)
 
+
 @TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_STRUCT("1.0"),
@@ -156,6 +157,7 @@ def lage_map(self):
     """Check importing and exporting a large Parquet file with map."""
     import_file = os.path.join("datatypes", "map.parquet")
     pass
+
 
 @TestScenario
 @Requirements(
@@ -167,26 +169,32 @@ def tuple_with_datetime(self):
     import_file = os.path.join("datatypes", "simple.parquet")
     pass
 
+
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_FixedLengthByteArray("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_FixedLengthByteArray("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_FixedLengthByteArray(
+        "1.0"
+    ),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_FixedLengthByteArray(
+        "1.0"
+    ),
 )
 def tuple_with_datetime(self):
     """Check importing and exporting a Parquet file with dictionary of fixed length byte arrays."""
     import_file = os.path.join("datatypes", "sorted.zstd_18_131072_small.parquet")
     pass
 
+
 @TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_ImportInto_Nested("1.0"),
     RQ_SRS_032_ClickHouse_Parquet_Export_Nested("1.0"),
-
 )
 def nested_all_complex(self):
     """Check importing and exporting a Parquet file with nested complex datatypes."""
     import_file = os.path.join("datatypes", "test_unnest_rewriter.parquet")
     pass
+
 
 @TestFeature
 @Requirements(
