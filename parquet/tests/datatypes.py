@@ -410,17 +410,6 @@ def nan_double(self):
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_DOUBLE("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_DOUBLE("1.0"),
-)
-def nan_double(self):
-    """Checking that ClickHouse can import and export a Parquet file with double datatype having an infinity value."""
-    import_file = os.path.join("datatypes", "nan-float.parquet")
-    pass
-
-
-@TestScenario
-@Requirements(
     RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_STRING("1.0"),
     RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_STRING("1.0"),
 )
@@ -549,7 +538,7 @@ def timezone(self):
     RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_UINT64("1.0"),
 )
 def unsigned(self):
-    """Checking that ClickHouse can import a Parquet file with timezone information."""
+    """Checking that ClickHouse can import and export Parquet files with unsigned integers."""
     import_file = os.path.join("datatypes", "unsigned.parquet")
     import_file2 = os.path.join("datatypes", "unsigned_stats.parquet")
     pass

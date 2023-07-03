@@ -147,6 +147,7 @@ def largestruct(self):
 
     import_export(snapshot_name="large_struct_structure", import_file=import_file)
 
+
 @TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_STRUCT("1.0"),
@@ -157,7 +158,10 @@ def largestruct2(self):
     with Given("I have a large Parquet file with struct datatype"):
         import_file = os.path.join("malloy-smaller", "tbl_.parquet")
 
-    import_export(snapshot_name="large_nested_struct_2_structure", import_file=import_file)
+    import_export(
+        snapshot_name="large_nested_struct_2_structure", import_file=import_file
+    )
+
 
 @TestScenario
 @Requirements(
