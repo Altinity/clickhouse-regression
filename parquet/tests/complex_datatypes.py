@@ -165,8 +165,8 @@ def largestruct2(self):
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_STRUCT("1.0"),
-    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_STRUCT("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_MAP("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_MAP("1.0"),
 )
 def lage_map(self):
     """Check importing and exporting a large Parquet file with map."""
