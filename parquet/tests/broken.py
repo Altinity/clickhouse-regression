@@ -271,7 +271,7 @@ def read_broken_timestamp_us(self):
 def file(self):
     """Check that ClickHouse outputs an error when trying to import a broken Parquet file with broken file."""
     broken_date_parquet = os.path.join("broken", "broken-arrow.parquet")
-    pass
+    xfail(reason="Test not added yet")
 
 
 @TestScenario
@@ -279,7 +279,7 @@ def file(self):
 def string(self):
     """Check that ClickHouse outputs an error when trying to import a broken Parquet file with invalid string value."""
     broken_date_parquet = os.path.join("broken", "invalid.parquet")
-    pass
+    xfail(reason="Test not added yet")
 
 
 @TestFeature

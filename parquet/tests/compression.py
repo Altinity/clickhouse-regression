@@ -189,7 +189,7 @@ def arrow_snappy(self):
 def large_gzip(self):
     """Checking that ClickHouse can import and export very large Parquet files with gzip compression."""
     import_file = os.path.join("compression", "lineitem-top10000.gzip.parquet")
-    pass
+    xfail(reason="Test not added yet")
 
 
 @TestScenario
@@ -197,7 +197,7 @@ def large_gzip(self):
 def zstd(self):
     """Checking that ClickHouse can import Parquet files with zstd compression."""
     import_file = os.path.join("compression", "zstd.parquet")
-    pass
+    xfail(reason="Test not added yet")
 
 
 @TestFeature
