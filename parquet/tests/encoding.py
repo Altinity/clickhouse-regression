@@ -68,7 +68,7 @@ def plain_rle_snappy(self):
 def delta_byte_array2(self):
     """Checking importing and exporting of the Parquet file with the Delta Strings: (DELTA_BYTE_ARRAY) encoding."""
     import_file = os.path.join("encodings", "delta_byte_array.parquet")
-    pass
+    xfail(reason="Test not added yet")
 
 
 @TestScenario
@@ -79,7 +79,7 @@ def delta_byte_array2(self):
 def delta_length_byte_array(self):
     """Checking importing and exporting of the Parquet file with the Delta-length byte array (DELTA_LENGTH_BYTE_ARRAY) encoding."""
     import_file = os.path.join("encodings", "delta_length_byte_array.parquet")
-    pass
+    xfail(reason="Test not added yet")
 
 
 @TestScenario
@@ -90,7 +90,7 @@ def delta_length_byte_array(self):
 def rle_boolean(self):
     """Checking importing and exporting of the Parquet file with boolean values and the Run Length Encoding / Bit-Packing Hybrid (RLE)."""
     import_file = os.path.join("encodings", "rle_boolean_encoding.parquet")
-    pass
+    xfail(reason="Test not added yet")
 
 
 @TestFeature

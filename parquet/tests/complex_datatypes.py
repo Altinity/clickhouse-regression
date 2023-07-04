@@ -171,7 +171,7 @@ def largestruct2(self):
 def lage_map(self):
     """Check importing and exporting a large Parquet file with map."""
     import_file = os.path.join("datatypes", "map.parquet")
-    pass
+    xfail(reason="Test not added yet")
 
 
 @TestScenario
@@ -182,7 +182,7 @@ def lage_map(self):
 def tuple_with_datetime(self):
     """Check importing and exporting a large Parquet file with tuple containing DateTime64(6, 'UTC'))."""
     import_file = os.path.join("datatypes", "simple.parquet")
-    pass
+    xfail(reason="Test not added yet")
 
 
 @TestScenario
@@ -197,7 +197,7 @@ def tuple_with_datetime(self):
 def tuple_with_datetime(self):
     """Check importing and exporting a Parquet file with dictionary of fixed length byte arrays."""
     import_file = os.path.join("datatypes", "sorted.zstd_18_131072_small.parquet")
-    pass
+    xfail(reason="Test not added yet")
 
 
 @TestScenario
@@ -208,7 +208,7 @@ def tuple_with_datetime(self):
 def nested_all_complex(self):
     """Check importing and exporting a Parquet file with nested complex datatypes."""
     import_file = os.path.join("datatypes", "test_unnest_rewriter.parquet")
-    pass
+    xfail(reason="Test not added yet")
 
 
 @TestFeature

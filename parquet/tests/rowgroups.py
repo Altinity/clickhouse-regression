@@ -13,7 +13,7 @@ from helpers.common import *
 def many_row_groups(self):
     """Checking that ClickHouse can import and export parquet files that are  written such that every row has its own row group."""
     import_file = os.path.join("manyrowgroups.parquet")
-    pass
+    xfail(reason="Test not added yet")
 
 
 @TestScenario
@@ -21,7 +21,7 @@ def many_row_groups(self):
 def many_row_groups2(self):
     """Checking that ClickHouse can import and export parquet files that are  written such that every row has its own row group."""
     import_file = os.path.join("manyrowgroups2.parquet")
-    pass
+    xfail(reason="Test not added yet")
 
 
 @TestFeature
