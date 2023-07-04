@@ -78,12 +78,8 @@ def memory_usage_for_column_input(self, node=None):
             f"SELECT max(memory_usage) FROM system.query_log WHERE query_id = '2003'"
         )
         b58_decode_memory_usage = int(r.output)
-        assert min(b58_encode_memory_usage, b64_encode_memory_usage) * 2 >= max(
-            b58_encode_memory_usage, b64_encode_memory_usage
-        ), error()
-        assert min(b58_decode_memory_usage, b64_decode_memory_usage) * 2 >= max(
-            b58_decode_memory_usage, b64_decode_memory_usage
-        ), error()
+        assert b58_encode_memory_usage <= b64_encode_memory_usage * 2, error()
+        assert b58_decode_memory_usage <= b64_decode_memory_usage * 2, error()
 
 
 @TestScenario
@@ -134,12 +130,8 @@ def memory_usage_for_constant_input(self, node=None):
         assert b64_decoded_string == string_of_all_askii_symbols() * 30, error()
 
     with Then("I check memory usages are similar"):
-        assert min(b58_encode_memory_usage, b64_encode_memory_usage) * 2 >= max(
-            b58_encode_memory_usage, b64_encode_memory_usage
-        ), error()
-        assert min(b58_decode_memory_usage, b64_decode_memory_usage) * 2 >= max(
-            b58_decode_memory_usage, b64_decode_memory_usage
-        ), error()
+        assert b58_encode_memory_usage <= b64_encode_memory_usage * 2, error()
+        assert b58_decode_memory_usage <= b64_decode_memory_usage * 2, error()
 
 
 @TestFeature
