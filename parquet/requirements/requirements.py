@@ -149,7 +149,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Glob_MultiDirectory = Requirement(
         "\n"
         "For example,\n"
         "\n"
-        "> The following query will import both from a/1.csv and b/2.csv\n"
+        "> The following query will import both from a/1.parquet and b/2.parquet\n"
         "> \n"
         "> ```sql\n"
         "> SELECT\n"
@@ -6200,7 +6200,7 @@ version: 1.0
 
 For example,
 
-> The following query will import both from a/1.csv and b/2.csv
+> The following query will import both from a/1.parquet and b/2.parquet
 > 
 > ```sql
 > SELECT

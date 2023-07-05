@@ -769,7 +769,7 @@ version: 1.0
 
 For example,
 
-> The following query will import both from a/1.csv and b/2.csv
+> The following query will import both from a/1.parquet and b/2.parquet
 > 
 > ```sql
 > SELECT
