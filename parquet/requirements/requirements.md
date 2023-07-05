@@ -68,18 +68,20 @@
   * 7.3 [Unsupported Datatypes](#unsupported-datatypes)
     * 7.3.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Unsupported](#rqsrs-032clickhouseparquetimportdatatypesunsupported)
     * 7.3.2 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Unsupported.ChunkedArray](#rqsrs-032clickhouseparquetimportdatatypesunsupportedchunkedarray)
-    * 7.3.3 [Projections](#projections)
-      * 7.3.3.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Projections](#rqsrs-032clickhouseparquetimportprojections)
-    * 7.3.4 [Skip Columns](#skip-columns)
-      * 7.3.4.1 [RQ.SRS-032.ClickHouse.Parquet.Import.SkipColumns](#rqsrs-032clickhouseparquetimportskipcolumns)
-    * 7.3.5 [Skip Values](#skip-values)
-      * 7.3.5.1 [RQ.SRS-032.ClickHouse.Parquet.Import.SkipValues](#rqsrs-032clickhouseparquetimportskipvalues)
-    * 7.3.6 [Auto Typecast](#auto-typecast)
-      * 7.3.6.1 [RQ.SRS-032.ClickHouse.Parquet.Import.AutoTypecast](#rqsrs-032clickhouseparquetimportautotypecast)
-    * 7.3.7 [Row Group Size](#row-group-size)
-      * 7.3.7.1 [RQ.SRS-032.ClickHouse.Parquet.Import.RowGroupSize](#rqsrs-032clickhouseparquetimportrowgroupsize)
-    * 7.3.8 [Data Page Size](#data-page-size)
-      * 7.3.8.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataPageSize](#rqsrs-032clickhouseparquetimportdatapagesize)
+    * 7.3.3 [Filter Pushdown](#filter-pushdown)
+      * 7.3.3.1 [RQ.SRS-032.ClickHouse.Parquet.Import.FilterPushdown](#rqsrs-032clickhouseparquetimportfilterpushdown)
+    * 7.3.4 [Projections](#projections)
+      * 7.3.4.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Projections](#rqsrs-032clickhouseparquetimportprojections)
+    * 7.3.5 [Skip Columns](#skip-columns)
+      * 7.3.5.1 [RQ.SRS-032.ClickHouse.Parquet.Import.SkipColumns](#rqsrs-032clickhouseparquetimportskipcolumns)
+    * 7.3.6 [Skip Values](#skip-values)
+      * 7.3.6.1 [RQ.SRS-032.ClickHouse.Parquet.Import.SkipValues](#rqsrs-032clickhouseparquetimportskipvalues)
+    * 7.3.7 [Auto Typecast](#auto-typecast)
+      * 7.3.7.1 [RQ.SRS-032.ClickHouse.Parquet.Import.AutoTypecast](#rqsrs-032clickhouseparquetimportautotypecast)
+    * 7.3.8 [Row Group Size](#row-group-size)
+      * 7.3.8.1 [RQ.SRS-032.ClickHouse.Parquet.Import.RowGroupSize](#rqsrs-032clickhouseparquetimportrowgroupsize)
+    * 7.3.9 [Data Page Size](#data-page-size)
+      * 7.3.9.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataPageSize](#rqsrs-032clickhouseparquetimportdatapagesize)
   * 7.4 [Import Into New Table](#import-into-new-table)
     * 7.4.1 [RQ.SRS-032.ClickHouse.Parquet.Import.NewTable](#rqsrs-032clickhouseparquetimportnewtable)
   * 7.5 [Import Nested Types](#import-nested-types)
@@ -1179,6 +1181,15 @@ version:1.0
 version:1.0
 
 [ClickHouse] MAY not support Parquet chunked arrays.
+
+#### Filter Pushdown
+
+##### RQ.SRS-032.ClickHouse.Parquet.Import.FilterPushdown
+version:1.0
+
+[ClickHouse] SHALL support filter pushdown functionality when importing from the Parquet files.
+
+> The functionality should behave similar to https://drill.apache.org/docs/parquet-filter-pushdown/
 
 #### Projections
 
