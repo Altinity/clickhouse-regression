@@ -16,9 +16,9 @@
 * 7 [Import from Parquet Files](#import-from-parquet-files)
     * 7.1.1 [RQ.SRS-032.ClickHouse.Parquet.Import](#rqsrs-032clickhouseparquetimport)
     * 7.1.2 [Auto Detect Parquet File When Importing](#auto-detect-parquet-file-when-importing)
-    * 7.1.3 [RQ.SRS-032.ClickHouse.Parquet.Import.AutoDetectParquetFileFormat](#rqsrs-032clickhouseparquetimportautodetectparquetfileformat)
-    * 7.1.4 [Glob Patterns](#glob-patterns)
-    * 7.1.5 [RQ.SRS-032.ClickHouse.Parquet.Import.Glob](#rqsrs-032clickhouseparquetimportglob)
+      * 7.1.2.1 [RQ.SRS-032.ClickHouse.Parquet.Import.AutoDetectParquetFileFormat](#rqsrs-032clickhouseparquetimportautodetectparquetfileformat)
+    * 7.1.3 [Glob Patterns](#glob-patterns)
+      * 7.1.3.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Glob](#rqsrs-032clickhouseparquetimportglob)
   * 7.2 [Supported Datatypes](#supported-datatypes)
     * 7.2.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Conversion](#rqsrs-032clickhouseparquetimportdatatypesconversion)
     * 7.2.2 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported](#rqsrs-032clickhouseparquetimportdatatypessupported)
@@ -52,33 +52,33 @@
     * 7.2.30 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.STRUCT](#rqsrs-032clickhouseparquetimportdatatypessupportedstruct)
     * 7.2.31 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported.MAP](#rqsrs-032clickhouseparquetimportdatatypessupportedmap)
     * 7.2.32 [UTCAdjusted](#utcadjusted)
-    * 7.2.33 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.DateUTCAdjusted](#rqsrs-032clickhouseparquetimportdatatypesdateutcadjusted)
-    * 7.2.34 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.TimestampUTCAdjusted](#rqsrs-032clickhouseparquetimportdatatypestimestamputcadjusted)
-    * 7.2.35 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.TimeUTCAdjusted](#rqsrs-032clickhouseparquetimportdatatypestimeutcadjusted)
-    * 7.2.36 [Nullable](#nullable)
-    * 7.2.37 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.NullValues](#rqsrs-032clickhouseparquetimportdatatypesnullvalues)
-    * 7.2.38 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.Nullable](#rqsrs-032clickhouseparquetimportdatatypesimportintonullable)
-    * 7.2.39 [LowCardinality](#lowcardinality)
-    * 7.2.40 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.LowCardinality](#rqsrs-032clickhouseparquetimportdatatypesimportintolowcardinality)
-    * 7.2.41 [Nested](#nested)
-    * 7.2.42 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.Nested](#rqsrs-032clickhouseparquetimportdatatypesimportintonested)
-    * 7.2.43 [UNKNOWN](#unknown)
-    * 7.2.44 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.Unknown](#rqsrs-032clickhouseparquetimportdatatypesimportintounknown)
+      * 7.2.32.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.DateUTCAdjusted](#rqsrs-032clickhouseparquetimportdatatypesdateutcadjusted)
+      * 7.2.32.2 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.TimestampUTCAdjusted](#rqsrs-032clickhouseparquetimportdatatypestimestamputcadjusted)
+      * 7.2.32.3 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.TimeUTCAdjusted](#rqsrs-032clickhouseparquetimportdatatypestimeutcadjusted)
+    * 7.2.33 [Nullable](#nullable)
+      * 7.2.33.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.NullValues](#rqsrs-032clickhouseparquetimportdatatypesnullvalues)
+      * 7.2.33.2 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.Nullable](#rqsrs-032clickhouseparquetimportdatatypesimportintonullable)
+    * 7.2.34 [LowCardinality](#lowcardinality)
+      * 7.2.34.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.LowCardinality](#rqsrs-032clickhouseparquetimportdatatypesimportintolowcardinality)
+    * 7.2.35 [Nested](#nested)
+      * 7.2.35.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.Nested](#rqsrs-032clickhouseparquetimportdatatypesimportintonested)
+    * 7.2.36 [UNKNOWN](#unknown)
+      * 7.2.36.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.Unknown](#rqsrs-032clickhouseparquetimportdatatypesimportintounknown)
   * 7.3 [Unsupported Datatypes](#unsupported-datatypes)
     * 7.3.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Unsupported](#rqsrs-032clickhouseparquetimportdatatypesunsupported)
     * 7.3.2 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Unsupported.ChunkedArray](#rqsrs-032clickhouseparquetimportdatatypesunsupportedchunkedarray)
     * 7.3.3 [Projections](#projections)
-    * 7.3.4 [RQ.SRS-032.ClickHouse.Parquet.Import.Projections](#rqsrs-032clickhouseparquetimportprojections)
-    * 7.3.5 [Skip Columns](#skip-columns)
-    * 7.3.6 [RQ.SRS-032.ClickHouse.Parquet.Import.SkipColumns](#rqsrs-032clickhouseparquetimportskipcolumns)
-    * 7.3.7 [Skip Values](#skip-values)
-    * 7.3.8 [RQ.SRS-032.ClickHouse.Parquet.Import.SkipValues](#rqsrs-032clickhouseparquetimportskipvalues)
-    * 7.3.9 [Auto Typecast](#auto-typecast)
-    * 7.3.10 [RQ.SRS-032.ClickHouse.Parquet.Import.AutoTypecast](#rqsrs-032clickhouseparquetimportautotypecast)
-    * 7.3.11 [Row Group Size](#row-group-size)
-    * 7.3.12 [RQ.SRS-032.ClickHouse.Parquet.Import.RowGroupSize](#rqsrs-032clickhouseparquetimportrowgroupsize)
-    * 7.3.13 [Data Page Size](#data-page-size)
-    * 7.3.14 [RQ.SRS-032.ClickHouse.Parquet.Import.DataPageSize](#rqsrs-032clickhouseparquetimportdatapagesize)
+      * 7.3.3.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Projections](#rqsrs-032clickhouseparquetimportprojections)
+    * 7.3.4 [Skip Columns](#skip-columns)
+      * 7.3.4.1 [RQ.SRS-032.ClickHouse.Parquet.Import.SkipColumns](#rqsrs-032clickhouseparquetimportskipcolumns)
+    * 7.3.5 [Skip Values](#skip-values)
+      * 7.3.5.1 [RQ.SRS-032.ClickHouse.Parquet.Import.SkipValues](#rqsrs-032clickhouseparquetimportskipvalues)
+    * 7.3.6 [Auto Typecast](#auto-typecast)
+      * 7.3.6.1 [RQ.SRS-032.ClickHouse.Parquet.Import.AutoTypecast](#rqsrs-032clickhouseparquetimportautotypecast)
+    * 7.3.7 [Row Group Size](#row-group-size)
+      * 7.3.7.1 [RQ.SRS-032.ClickHouse.Parquet.Import.RowGroupSize](#rqsrs-032clickhouseparquetimportrowgroupsize)
+    * 7.3.8 [Data Page Size](#data-page-size)
+      * 7.3.8.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataPageSize](#rqsrs-032clickhouseparquetimportdatapagesize)
   * 7.4 [Import Into New Table](#import-into-new-table)
     * 7.4.1 [RQ.SRS-032.ClickHouse.Parquet.Import.NewTable](#rqsrs-032clickhouseparquetimportnewtable)
   * 7.5 [Import Nested Types](#import-nested-types)
@@ -92,19 +92,19 @@
     * 7.6.1 [RQ.SRS-032.ClickHouse.Parquet.Import.ChunkedColumns](#rqsrs-032clickhouseparquetimportchunkedcolumns)
   * 7.7 [Import Encoded](#import-encoded)
     * 7.7.1 [Plain (Import)](#plain-import)
-    * 7.7.2 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.Plain](#rqsrs-032clickhouseparquetimportencodingplain)
-    * 7.7.3 [Dictionary (Import)](#dictionary-import)
-    * 7.7.4 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.Dictionary](#rqsrs-032clickhouseparquetimportencodingdictionary)
-    * 7.7.5 [Run Length Encoding (Import)](#run-length-encoding-import)
-    * 7.7.6 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.RunLength](#rqsrs-032clickhouseparquetimportencodingrunlength)
-    * 7.7.7 [Delta (Import)](#delta-import)
-    * 7.7.8 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.Delta](#rqsrs-032clickhouseparquetimportencodingdelta)
-    * 7.7.9 [Delta-length byte array (Import)](#delta-length-byte-array-import)
-    * 7.7.10 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.DeltaLengthByteArray](#rqsrs-032clickhouseparquetimportencodingdeltalengthbytearray)
-    * 7.7.11 [Delta Strings (Import)](#delta-strings-import)
-    * 7.7.12 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.DeltaStrings](#rqsrs-032clickhouseparquetimportencodingdeltastrings)
-    * 7.7.13 [Byte Stream Split (Import)](#byte-stream-split-import)
-    * 7.7.14 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.ByteStreamSplit](#rqsrs-032clickhouseparquetimportencodingbytestreamsplit)
+      * 7.7.1.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.Plain](#rqsrs-032clickhouseparquetimportencodingplain)
+    * 7.7.2 [Dictionary (Import)](#dictionary-import)
+      * 7.7.2.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.Dictionary](#rqsrs-032clickhouseparquetimportencodingdictionary)
+    * 7.7.3 [Run Length Encoding (Import)](#run-length-encoding-import)
+      * 7.7.3.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.RunLength](#rqsrs-032clickhouseparquetimportencodingrunlength)
+    * 7.7.4 [Delta (Import)](#delta-import)
+      * 7.7.4.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.Delta](#rqsrs-032clickhouseparquetimportencodingdelta)
+    * 7.7.5 [Delta-length byte array (Import)](#delta-length-byte-array-import)
+      * 7.7.5.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.DeltaLengthByteArray](#rqsrs-032clickhouseparquetimportencodingdeltalengthbytearray)
+    * 7.7.6 [Delta Strings (Import)](#delta-strings-import)
+      * 7.7.6.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.DeltaStrings](#rqsrs-032clickhouseparquetimportencodingdeltastrings)
+    * 7.7.7 [Byte Stream Split (Import)](#byte-stream-split-import)
+      * 7.7.7.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.ByteStreamSplit](#rqsrs-032clickhouseparquetimportencodingbytestreamsplit)
   * 7.8 [Import Settings](#import-settings)
     * 7.8.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Settings.ImportNested](#rqsrs-032clickhouseparquetimportsettingsimportnested)
     * 7.8.2 [RQ.SRS-032.ClickHouse.Parquet.Import.Settings.CaseInsensitiveColumnMatching](#rqsrs-032clickhouseparquetimportsettingscaseinsensitivecolumnmatching)
@@ -113,19 +113,19 @@
   * 7.9 [Libraries](#libraries)
     * 7.9.1 [RQ.SRS-032.ClickHouse.Parquet.Libraries](#rqsrs-032clickhouseparquetlibraries)
     * 7.9.2 [Pyarrow](#pyarrow)
-    * 7.9.3 [RQ.SRS-032.ClickHouse.Parquet.Libraries.Pyarrow](#rqsrs-032clickhouseparquetlibrariespyarrow)
-    * 7.9.4 [PySpark](#pyspark)
-    * 7.9.5 [RQ.SRS-032.ClickHouse.Parquet.Libraries.PySpark](#rqsrs-032clickhouseparquetlibrariespyspark)
-    * 7.9.6 [Pandas](#pandas)
-    * 7.9.7 [RQ.SRS-032.ClickHouse.Parquet.Libraries.Pandas](#rqsrs-032clickhouseparquetlibrariespandas)
-    * 7.9.8 [parquet-go](#parquet-go)
-    * 7.9.9 [RQ.SRS-032.ClickHouse.Parquet.Libraries.ParquetGO](#rqsrs-032clickhouseparquetlibrariesparquetgo)
-    * 7.9.10 [H2OAI](#h2oai)
-    * 7.9.11 [RQ.SRS-032.ClickHouse.Parquet.Libraries.H2OAI](#rqsrs-032clickhouseparquetlibrariesh2oai)
+      * 7.9.2.1 [RQ.SRS-032.ClickHouse.Parquet.Libraries.Pyarrow](#rqsrs-032clickhouseparquetlibrariespyarrow)
+    * 7.9.3 [PySpark](#pyspark)
+      * 7.9.3.1 [RQ.SRS-032.ClickHouse.Parquet.Libraries.PySpark](#rqsrs-032clickhouseparquetlibrariespyspark)
+    * 7.9.4 [Pandas](#pandas)
+      * 7.9.4.1 [RQ.SRS-032.ClickHouse.Parquet.Libraries.Pandas](#rqsrs-032clickhouseparquetlibrariespandas)
+    * 7.9.5 [parquet-go](#parquet-go)
+      * 7.9.5.1 [RQ.SRS-032.ClickHouse.Parquet.Libraries.ParquetGO](#rqsrs-032clickhouseparquetlibrariesparquetgo)
+    * 7.9.6 [H2OAI](#h2oai)
+      * 7.9.6.1 [RQ.SRS-032.ClickHouse.Parquet.Libraries.H2OAI](#rqsrs-032clickhouseparquetlibrariesh2oai)
 * 8 [Export from Parquet Files](#export-from-parquet-files)
     * 8.9.1 [RQ.SRS-032.ClickHouse.Parquet.Export](#rqsrs-032clickhouseparquetexport)
     * 8.9.2 [Auto Detect Parquet File When Exporting](#auto-detect-parquet-file-when-exporting)
-    * 8.9.3 [RQ.SRS-032.ClickHouse.Parquet.Export.Outfile.AutoDetectParquetFileFormat](#rqsrs-032clickhouseparquetexportoutfileautodetectparquetfileformat)
+      * 8.9.2.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Outfile.AutoDetectParquetFileFormat](#rqsrs-032clickhouseparquetexportoutfileautodetectparquetfileformat)
   * 8.10 [Supported Data types](#supported-data-types)
     * 8.10.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Datatypes.Supported](#rqsrs-032clickhouseparquetexportdatatypessupported)
     * 8.10.2 [RQ.SRS-032.ClickHouse.Parquet.Export.DataTypes.Supported.BLOB](#rqsrs-032clickhouseparquetexportdatatypessupportedblob)
@@ -170,19 +170,19 @@
     * 8.13.4 [RQ.SRS-032.ClickHouse.Parquet.Export.Select.MaterializedView](#rqsrs-032clickhouseparquetexportselectmaterializedview)
   * 8.14 [Export Encoded](#export-encoded)
     * 8.14.1 [Plain (Export)](#plain-export)
-    * 8.14.2 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Plain](#rqsrs-032clickhouseparquetexportencodingplain)
-    * 8.14.3 [Dictionary (Export)](#dictionary-export)
-    * 8.14.4 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Dictionary](#rqsrs-032clickhouseparquetexportencodingdictionary)
-    * 8.14.5 [Run Length Encoding (Export)](#run-length-encoding-export)
-    * 8.14.6 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.RunLength](#rqsrs-032clickhouseparquetexportencodingrunlength)
-    * 8.14.7 [Delta (Export)](#delta-export)
-    * 8.14.8 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Delta](#rqsrs-032clickhouseparquetexportencodingdelta)
-    * 8.14.9 [Delta-length byte array (Export)](#delta-length-byte-array-export)
-    * 8.14.10 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.DeltaLengthByteArray](#rqsrs-032clickhouseparquetexportencodingdeltalengthbytearray)
-    * 8.14.11 [Delta Strings (Export)](#delta-strings-export)
-    * 8.14.12 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.DeltaStrings](#rqsrs-032clickhouseparquetexportencodingdeltastrings)
-    * 8.14.13 [Byte Stream Split (Export)](#byte-stream-split-export)
-    * 8.14.14 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.ByteStreamSplit](#rqsrs-032clickhouseparquetexportencodingbytestreamsplit)
+      * 8.14.1.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Plain](#rqsrs-032clickhouseparquetexportencodingplain)
+    * 8.14.2 [Dictionary (Export)](#dictionary-export)
+      * 8.14.2.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Dictionary](#rqsrs-032clickhouseparquetexportencodingdictionary)
+    * 8.14.3 [Run Length Encoding (Export)](#run-length-encoding-export)
+      * 8.14.3.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.RunLength](#rqsrs-032clickhouseparquetexportencodingrunlength)
+    * 8.14.4 [Delta (Export)](#delta-export)
+      * 8.14.4.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Delta](#rqsrs-032clickhouseparquetexportencodingdelta)
+    * 8.14.5 [Delta-length byte array (Export)](#delta-length-byte-array-export)
+      * 8.14.5.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.DeltaLengthByteArray](#rqsrs-032clickhouseparquetexportencodingdeltalengthbytearray)
+    * 8.14.6 [Delta Strings (Export)](#delta-strings-export)
+      * 8.14.6.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.DeltaStrings](#rqsrs-032clickhouseparquetexportencodingdeltastrings)
+    * 8.14.7 [Byte Stream Split (Export)](#byte-stream-split-export)
+      * 8.14.7.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.ByteStreamSplit](#rqsrs-032clickhouseparquetexportencodingbytestreamsplit)
   * 8.15 [Export Settings](#export-settings)
     * 8.15.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.RowGroupSize](#rqsrs-032clickhouseparquetexportsettingsrowgroupsize)
     * 8.15.2 [RQ.SRS-032.ClickHouse.Parquet.Export.Settings.StringAsString](#rqsrs-032clickhouseparquetexportsettingsstringasstring)
@@ -216,7 +216,7 @@
     * 12.7.3 [RQ.SRS-032.ClickHouse.Parquet.Compression.Zstd](#rqsrs-032clickhouseparquetcompressionzstd)
   * 12.8 [Unsupported Compression](#unsupported-compression)
     * 12.8.1 [Lzo](#lzo)
-    * 12.8.2 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Lzo](#rqsrs-032clickhouseparquetunsupportedcompressionlzo)
+      * 12.8.1.1 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Lzo](#rqsrs-032clickhouseparquetunsupportedcompressionlzo)
 * 13 [Table Functions](#table-functions)
   * 13.1 [URL](#url)
     * 13.1.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.URL](#rqsrs-032clickhouseparquettablefunctionsurl)
@@ -241,38 +241,38 @@
   * 14.1 [MergeTree](#mergetree)
     * 14.1.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.MergeTree](#rqsrs-032clickhouseparquettableenginesmergetreemergetree)
     * 14.1.2 [ReplicatedMergeTree](#replicatedmergetree)
-    * 14.1.3 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplicatedMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreereplicatedmergetree)
-    * 14.1.4 [ReplacingMergeTree](#replacingmergetree)
-    * 14.1.5 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplacingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreereplacingmergetree)
-    * 14.1.6 [SummingMergeTree](#summingmergetree)
-    * 14.1.7 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.SummingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreesummingmergetree)
-    * 14.1.8 [AggregatingMergeTree](#aggregatingmergetree)
-    * 14.1.9 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.AggregatingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreeaggregatingmergetree)
-    * 14.1.10 [CollapsingMergeTree](#collapsingmergetree)
-    * 14.1.11 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.CollapsingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreecollapsingmergetree)
-    * 14.1.12 [VersionedCollapsingMergeTree](#versionedcollapsingmergetree)
-    * 14.1.13 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.VersionedCollapsingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreeversionedcollapsingmergetree)
-    * 14.1.14 [GraphiteMergeTree](#graphitemergetree)
-    * 14.1.15 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.GraphiteMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreegraphitemergetree)
+      * 14.1.2.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplicatedMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreereplicatedmergetree)
+    * 14.1.3 [ReplacingMergeTree](#replacingmergetree)
+      * 14.1.3.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplacingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreereplacingmergetree)
+    * 14.1.4 [SummingMergeTree](#summingmergetree)
+      * 14.1.4.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.SummingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreesummingmergetree)
+    * 14.1.5 [AggregatingMergeTree](#aggregatingmergetree)
+      * 14.1.5.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.AggregatingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreeaggregatingmergetree)
+    * 14.1.6 [CollapsingMergeTree](#collapsingmergetree)
+      * 14.1.6.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.CollapsingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreecollapsingmergetree)
+    * 14.1.7 [VersionedCollapsingMergeTree](#versionedcollapsingmergetree)
+      * 14.1.7.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.VersionedCollapsingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreeversionedcollapsingmergetree)
+    * 14.1.8 [GraphiteMergeTree](#graphitemergetree)
+      * 14.1.8.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.GraphiteMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreegraphitemergetree)
   * 14.2 [Integration Engines](#integration-engines)
     * 14.2.1 [ODBC Engine](#odbc-engine)
-    * 14.2.2 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.ODBC](#rqsrs-032clickhouseparquettableenginesintegrationodbc)
-    * 14.2.3 [JDBC Engine](#jdbc-engine)
-    * 14.2.4 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.JDBC](#rqsrs-032clickhouseparquettableenginesintegrationjdbc)
-    * 14.2.5 [MySQL Engine](#mysql-engine)
-    * 14.2.6 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MySQL](#rqsrs-032clickhouseparquettableenginesintegrationmysql)
-    * 14.2.7 [MongoDB Engine](#mongodb-engine)
-    * 14.2.8 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MongoDB](#rqsrs-032clickhouseparquettableenginesintegrationmongodb)
-    * 14.2.9 [HDFS Engine](#hdfs-engine)
-    * 14.2.10 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.HDFS](#rqsrs-032clickhouseparquettableenginesintegrationhdfs)
-    * 14.2.11 [S3 Engine](#s3-engine)
-    * 14.2.12 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.S3](#rqsrs-032clickhouseparquettableenginesintegrations3)
-    * 14.2.13 [Kafka Engine](#kafka-engine)
-    * 14.2.14 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.Kafka](#rqsrs-032clickhouseparquettableenginesintegrationkafka)
-    * 14.2.15 [EmbeddedRocksDB Engine](#embeddedrocksdb-engine)
-    * 14.2.16 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.EmbeddedRocksDB](#rqsrs-032clickhouseparquettableenginesintegrationembeddedrocksdb)
-    * 14.2.17 [PostgreSQL Engine](#postgresql-engine)
-    * 14.2.18 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.PostgreSQL](#rqsrs-032clickhouseparquettableenginesintegrationpostgresql)
+      * 14.2.1.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.ODBC](#rqsrs-032clickhouseparquettableenginesintegrationodbc)
+    * 14.2.2 [JDBC Engine](#jdbc-engine)
+      * 14.2.2.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.JDBC](#rqsrs-032clickhouseparquettableenginesintegrationjdbc)
+    * 14.2.3 [MySQL Engine](#mysql-engine)
+      * 14.2.3.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MySQL](#rqsrs-032clickhouseparquettableenginesintegrationmysql)
+    * 14.2.4 [MongoDB Engine](#mongodb-engine)
+      * 14.2.4.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MongoDB](#rqsrs-032clickhouseparquettableenginesintegrationmongodb)
+    * 14.2.5 [HDFS Engine](#hdfs-engine)
+      * 14.2.5.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.HDFS](#rqsrs-032clickhouseparquettableenginesintegrationhdfs)
+    * 14.2.6 [S3 Engine](#s3-engine)
+      * 14.2.6.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.S3](#rqsrs-032clickhouseparquettableenginesintegrations3)
+    * 14.2.7 [Kafka Engine](#kafka-engine)
+      * 14.2.7.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.Kafka](#rqsrs-032clickhouseparquettableenginesintegrationkafka)
+    * 14.2.8 [EmbeddedRocksDB Engine](#embeddedrocksdb-engine)
+      * 14.2.8.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.EmbeddedRocksDB](#rqsrs-032clickhouseparquettableenginesintegrationembeddedrocksdb)
+    * 14.2.9 [PostgreSQL Engine](#postgresql-engine)
+      * 14.2.9.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.PostgreSQL](#rqsrs-032clickhouseparquettableenginesintegrationpostgresql)
   * 14.3 [Special Engines](#special-engines)
     * 14.3.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Memory](#rqsrs-032clickhouseparquettableenginesspecialmemory)
     * 14.3.2 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Distributed](#rqsrs-032clickhouseparquettableenginesspecialdistributed)
@@ -732,7 +732,7 @@ FROM INFILE 'data.parquet' FORMAT Parquet;
 
 #### Auto Detect Parquet File When Importing
 
-#### RQ.SRS-032.ClickHouse.Parquet.Import.AutoDetectParquetFileFormat
+##### RQ.SRS-032.ClickHouse.Parquet.Import.AutoDetectParquetFileFormat
 version: 1.0
 
 [ClickHouse] SHALL support automatically detecting Parquet file format based on 
@@ -745,7 +745,7 @@ FROM INFILE 'data.parquet';
 
 #### Glob Patterns
 
-#### RQ.SRS-032.ClickHouse.Parquet.Import.Glob
+##### RQ.SRS-032.ClickHouse.Parquet.Import.Glob
 version: 1.0
 
 [ClickHouse] SHALL support using glob patterns in file paths to import multiple Parquet files.
@@ -1085,52 +1085,52 @@ version:1.0
 
 #### UTCAdjusted
 
-#### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.DateUTCAdjusted
+##### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.DateUTCAdjusted
 version:1.0
 
 [ClickHouse] SHALL support importing `DATE` Parquet datatype with `isAdjustedToUTC = true`.
 
-#### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.TimestampUTCAdjusted
+##### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.TimestampUTCAdjusted
 version:1.0
 
 [ClickHouse] SHALL support importing `TIMESTAMP` Parquet datatype with `isAdjustedToUTC = true`.
 
-#### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.TimeUTCAdjusted
+##### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.TimeUTCAdjusted
 version:1.0
 
 [ClickHouse] SHALL support importing `TIME` Parquet datatype with `isAdjustedToUTC = true`.
 
 #### Nullable
 
-#### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.NullValues
+##### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.NullValues
 version:1.0
 
 [ClickHouse] SHALL support importing columns that have `Null` values in Parquet files. If the target [ClickHouse] column is not `Nullable` then the `Null` value should be converted to the default values for the target column datatype.
 
 For example, if the target column has `Int32`, then the `Null` value will be replaced with `0`.
 
-#### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.Nullable
+##### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.Nullable
 version:1.0
 
 [ClickHouse] SHALL support importing Parquet files into target table's `Nullable` datatype columns.
 
 #### LowCardinality
 
-#### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.LowCardinality
+##### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.LowCardinality
 version:1.0
 
 [ClickHouse] SHALL support importing Parquet files into target table's `LowCardinality` datatype columns.
 
 #### Nested
 
-#### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.Nested
+##### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.Nested
 version:1.0
 
 [ClickHouse] SHALL support importing Parquet files into target table's `Nested` datatype columns.
 
 #### UNKNOWN
 
-#### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.Unknown
+##### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.ImportInto.Unknown
 version:1.0
 
 [ClickHouse] SHALL support importing Parquet files with `UNKNOWN` logical type.
@@ -1160,21 +1160,21 @@ version:1.0
 
 #### Projections
 
-#### RQ.SRS-032.ClickHouse.Parquet.Import.Projections
+##### RQ.SRS-032.ClickHouse.Parquet.Import.Projections
 version: 1.0
 
 [ClickHouse] SHALL support inserting parquet data into a table that has a projection on it.
 
 #### Skip Columns
 
-#### RQ.SRS-032.ClickHouse.Parquet.Import.SkipColumns
+##### RQ.SRS-032.ClickHouse.Parquet.Import.SkipColumns
 version: 1.0
 
 [ClickHouse] SHALL support skipping unexistent columns when importing from Parquet files.
 
 #### Skip Values
 
-#### RQ.SRS-032.ClickHouse.Parquet.Import.SkipValues
+##### RQ.SRS-032.ClickHouse.Parquet.Import.SkipValues
 version: 1.0
 
 [ClickHouse] SHALL support skipping unsupported values when import from Parquet files. When the values are being skipped, the inserted values SHALL be the default value for the corresponding column's datatype.
@@ -1215,7 +1215,7 @@ FROM TestTable;
 
 #### Auto Typecast
 
-#### RQ.SRS-032.ClickHouse.Parquet.Import.AutoTypecast
+##### RQ.SRS-032.ClickHouse.Parquet.Import.AutoTypecast
 version: 1.0
 
 [ClickHouse] SHALL automatically typecast parquet datatype based on the types in the target table.
@@ -1278,7 +1278,7 @@ For example,
 
 #### Row Group Size
 
-#### RQ.SRS-032.ClickHouse.Parquet.Import.RowGroupSize
+##### RQ.SRS-032.ClickHouse.Parquet.Import.RowGroupSize
 version: 1.0
 
 [ClickHouse] SHALL support importing Parquet files with different Row Group Sizes.
@@ -1290,7 +1290,7 @@ As described in https://parquet.apache.org/docs/file-format/configurations/#row-
 
 #### Data Page Size
 
-#### RQ.SRS-032.ClickHouse.Parquet.Import.DataPageSize
+##### RQ.SRS-032.ClickHouse.Parquet.Import.DataPageSize
 version: 1.0
 
 [ClickHouse] SHALL support importing Parquet files with different Data Page Sizes.
@@ -1377,49 +1377,49 @@ version: 1.0
 
 #### Plain (Import)
 
-#### RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.Plain
+##### RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.Plain
 version: 1.0
 
 [ClickHouse] SHALL support importing `Plain` encoded Parquet files.
 
 #### Dictionary (Import)
 
-#### RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.Dictionary
+##### RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.Dictionary
 version: 1.0
 
 [ClickHouse] SHALL support importing `Dictionary` encoded Parquet files.
 
 #### Run Length Encoding (Import)
 
-#### RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.RunLength
+##### RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.RunLength
 version: 1.0
 
 [ClickHouse] SHALL support importing `Run Length Encoding / Bit-Packing Hybrid` encoded Parquet files.
 
 #### Delta (Import)
 
-#### RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.Delta
+##### RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.Delta
 version: 1.0
 
 [ClickHouse] SHALL support importing `Delta Encoding` encoded Parquet files.
 
 #### Delta-length byte array (Import)
 
-#### RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.DeltaLengthByteArray
+##### RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.DeltaLengthByteArray
 version: 1.0
 
 [ClickHouse] SHALL support importing `Delta-length byte array` encoded Parquet files.
 
 #### Delta Strings (Import)
 
-#### RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.DeltaStrings
+##### RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.DeltaStrings
 version: 1.0
 
 [ClickHouse] SHALL support importing `Delta Strings` encoded Parquet files.
 
 #### Byte Stream Split (Import)
 
-#### RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.ByteStreamSplit
+##### RQ.SRS-032.ClickHouse.Parquet.Import.Encoding.ByteStreamSplit
 version: 1.0
 
 [ClickHouse] SHALL support importing `Byte Stream Split` encoded Parquet files.
@@ -1462,35 +1462,35 @@ version: 1.0
 
 #### Pyarrow
 
-#### RQ.SRS-032.ClickHouse.Parquet.Libraries.Pyarrow
+##### RQ.SRS-032.ClickHouse.Parquet.Libraries.Pyarrow
 version: 1.0
 
 [ClickHouse] SHALL support importing from Parquet files generated using `Pyarrow`.
 
 #### PySpark
 
-#### RQ.SRS-032.ClickHouse.Parquet.Libraries.PySpark
+##### RQ.SRS-032.ClickHouse.Parquet.Libraries.PySpark
 version: 1.0
 
 [ClickHouse] SHALL support importing from Parquet files generated using `PySpark`.
 
 #### Pandas
 
-#### RQ.SRS-032.ClickHouse.Parquet.Libraries.Pandas
+##### RQ.SRS-032.ClickHouse.Parquet.Libraries.Pandas
 version: 1.0
 
 [ClickHouse] SHALL support importing from Parquet files generated using `Pandas`.
 
 #### parquet-go
 
-#### RQ.SRS-032.ClickHouse.Parquet.Libraries.ParquetGO
+##### RQ.SRS-032.ClickHouse.Parquet.Libraries.ParquetGO
 version: 1.0
 
 [ClickHouse] SHALL support importing from Parquet files generated using `parquet-go`.
 
 #### H2OAI
 
-#### RQ.SRS-032.ClickHouse.Parquet.Libraries.H2OAI
+##### RQ.SRS-032.ClickHouse.Parquet.Libraries.H2OAI
 version: 1.0
 
 [ClickHouse] SHALL support importing from Parquet files generated using `H2OAI`.
@@ -1521,7 +1521,7 @@ FORMAT Parquet
 
 #### Auto Detect Parquet File When Exporting
 
-#### RQ.SRS-032.ClickHouse.Parquet.Export.Outfile.AutoDetectParquetFileFormat
+##### RQ.SRS-032.ClickHouse.Parquet.Export.Outfile.AutoDetectParquetFileFormat
 version: 1.0
 
 
@@ -1761,49 +1761,49 @@ version: 1.0
 
 #### Plain (Export)
 
-#### RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Plain
+##### RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Plain
 version: 1.0
 
 [ClickHouse] SHALL support exporting `Plain` encoded Parquet files.
 
 #### Dictionary (Export)
 
-#### RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Dictionary
+##### RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Dictionary
 version: 1.0
 
 [ClickHouse] SHALL support exporting `Dictionary` encoded Parquet files.
 
 #### Run Length Encoding (Export)
 
-#### RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.RunLength
+##### RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.RunLength
 version: 1.0
 
 [ClickHouse] SHALL support exporting `Run Length Encoding / Bit-Packing Hybrid` encoded Parquet files.
 
 #### Delta (Export)
 
-#### RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Delta
+##### RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.Delta
 version: 1.0
 
 [ClickHouse] SHALL support exporting `Delta Encoding` encoded Parquet files.
 
 #### Delta-length byte array (Export)
 
-#### RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.DeltaLengthByteArray
+##### RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.DeltaLengthByteArray
 version: 1.0
 
 [ClickHouse] SHALL support exporting `Delta-length byte array` encoded Parquet files.
 
 #### Delta Strings (Export)
 
-#### RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.DeltaStrings
+##### RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.DeltaStrings
 version: 1.0
 
 [ClickHouse] SHALL support exporting `Delta Strings` encoded Parquet files.
 
 #### Byte Stream Split (Export)
 
-#### RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.ByteStreamSplit
+##### RQ.SRS-032.ClickHouse.Parquet.Export.Encoding.ByteStreamSplit
 version: 1.0
 
 [ClickHouse] SHALL support exporting `Byte Stream Split` encoded Parquet files.
@@ -1944,7 +1944,7 @@ version: 1.0
 
 #### Lzo
 
-#### RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Lzo
+##### RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Lzo
 version: 1.0
 
 [ClickHouse] MAY not support importing or exporting Parquet files compressed using lzo.
@@ -2065,49 +2065,49 @@ version: 1.0
 
 #### ReplicatedMergeTree
 
-#### RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplicatedMergeTree
+##### RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplicatedMergeTree
 version: 1.0
 
 [ClickHouse] SHALL support Parquet format being exported from and imported into a `ReplicatedMergeTree` table engine.
 
 #### ReplacingMergeTree
 
-#### RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplacingMergeTree
+##### RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplacingMergeTree
 version: 1.0
 
 [ClickHouse] SHALL support Parquet format being exported from and imported into a `ReplacingMergeTree` table engine.
 
 #### SummingMergeTree
 
-#### RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.SummingMergeTree
+##### RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.SummingMergeTree
 version: 1.0
 
 [ClickHouse] SHALL support Parquet format being exported from and imported into a `SummingMergeTree` table engine.
 
 #### AggregatingMergeTree
 
-#### RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.AggregatingMergeTree
+##### RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.AggregatingMergeTree
 version: 1.0
 
 [ClickHouse] SHALL support Parquet format being exported from and imported into a `AggregatingMergeTree` table engine.
 
 #### CollapsingMergeTree
 
-#### RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.CollapsingMergeTree
+##### RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.CollapsingMergeTree
 version: 1.0
 
 [ClickHouse] SHALL support Parquet format being exported from and imported into a `CollapsingMergeTree` table engine.
 
 #### VersionedCollapsingMergeTree
 
-#### RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.VersionedCollapsingMergeTree
+##### RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.VersionedCollapsingMergeTree
 version: 1.0
 
 [ClickHouse] SHALL support Parquet format being exported from and imported into a `VersionedCollapsingMergeTree` table engine.
 
 #### GraphiteMergeTree
 
-#### RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.GraphiteMergeTree
+##### RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.GraphiteMergeTree
 version: 1.0
 
 [ClickHouse] SHALL support Parquet format being exported from and imported into a `GraphiteMergeTree` table engine.
@@ -2116,63 +2116,63 @@ version: 1.0
 
 #### ODBC Engine
 
-#### RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.ODBC
+##### RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.ODBC
 version: 1.0
 
 [ClickHouse] SHALL support Parquet format being exported from and imported into an `ODBC` table engine.
 
 #### JDBC Engine
 
-#### RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.JDBC
+##### RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.JDBC
 version: 1.0
 
 [ClickHouse] SHALL support Parquet format being exported from and imported into a `JDBC` table engine.
 
 #### MySQL Engine
 
-#### RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MySQL
+##### RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MySQL
 version: 1.0
 
 [ClickHouse] SHALL support Parquet format being exported from and imported into a `MySQL` table engine.
 
 #### MongoDB Engine
 
-#### RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MongoDB
+##### RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MongoDB
 version: 1.0
 
 [ClickHouse] SHALL support Parquet format being exported from and imported into a `MongoDB` table engine.
 
 #### HDFS Engine
 
-#### RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.HDFS
+##### RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.HDFS
 version: 1.0
 
 [ClickHouse] SHALL support Parquet format being exported from and imported into a `HDFS` table engine.
 
 #### S3 Engine
 
-#### RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.S3
+##### RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.S3
 version: 1.0
 
 [ClickHouse] SHALL support Parquet format being exported from and imported into an `S3` table engine.
 
 #### Kafka Engine
 
-#### RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.Kafka
+##### RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.Kafka
 version: 1.0
 
 [ClickHouse] SHALL support Parquet format being exported from and imported into a `Kafka` table engine.
 
 #### EmbeddedRocksDB Engine
 
-#### RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.EmbeddedRocksDB
+##### RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.EmbeddedRocksDB
 version: 1.0
 
 [ClickHouse] SHALL support Parquet format being exported from and imported into an `EmbeddedRocksDB` table engine.
 
 #### PostgreSQL Engine
 
-#### RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.PostgreSQL
+##### RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.PostgreSQL
 version: 1.0
 
 [ClickHouse] SHALL support Parquet format being exported from and imported into a `PostgreSQL` table engine.
