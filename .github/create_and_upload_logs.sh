@@ -17,6 +17,8 @@ then
     confidential=""
 fi
 
+echo $artifacts
+echo $artifact_s3_bucket_path
 echo $version > version.log.txt
 echo "https://gitlab.com/altinity-qa/clickhouse/cicd/clickhouse-regression/-/pipelines/$GITHUB_RUN_ID" > pipeline_url.log.txt
 tfs --debug --no-colors transform compact raw.log compact.log
