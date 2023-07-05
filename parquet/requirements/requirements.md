@@ -200,8 +200,18 @@
 * 9 [Hive Partitioning](#hive-partitioning)
   * 9.1 [RQ.SRS-032.ClickHouse.Parquet.Hive](#rqsrs-032clickhouseparquethive)
 * 10 [Parquet Encryption](#parquet-encryption)
-  * 10.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption](#rqsrs-032clickhouseparquetencryption)
-  * 10.2 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Modular](#rqsrs-032clickhouseparquetencryptionmodular)
+  * 10.1 [File Encryption](#file-encryption)
+    * 10.1.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption.File](#rqsrs-032clickhouseparquetencryptionfile)
+  * 10.2 [Column Encryption](#column-encryption)
+    * 10.2.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Column.Modular](#rqsrs-032clickhouseparquetencryptioncolumnmodular)
+    * 10.2.2 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Column.Keys](#rqsrs-032clickhouseparquetencryptioncolumnkeys)
+  * 10.3 [Encryption Algorithms](#encryption-algorithms)
+    * 10.3.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Algorithms.AESGCM](#rqsrs-032clickhouseparquetencryptionalgorithmsaesgcm)
+    * 10.3.2 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Algorithms.AESGCMCTR](#rqsrs-032clickhouseparquetencryptionalgorithmsaesgcmctr)
+  * 10.4 [Parameters](#parameters)
+    * 10.4.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters](#rqsrs-032clickhouseparquetencryptionparameters)
+      * 10.4.1.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.algorythm](#rqsrs-032clickhouseparquetencryptionparametersalgorythm)
+      * 10.4.1.2 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.plaintext.footer](#rqsrs-032clickhouseparquetencryptionparametersplaintextfooter)
 * 11 [DESCRIBE Parquet](#describe-parquet)
   * 11.1 [RQ.SRS-032.ClickHouse.Parquet.Structure](#rqsrs-032clickhouseparquetstructure)
 * 12 [Compression](#compression)
@@ -1929,15 +1939,59 @@ version: 1.0
 
 ## Parquet Encryption
 
-### RQ.SRS-032.ClickHouse.Parquet.Encryption
+### File Encryption
+
+#### RQ.SRS-032.ClickHouse.Parquet.Encryption.File
 version: 1.0
 
 [ClickHouse] MAY support importing or exporting encrypted Parquet files.
 
-### RQ.SRS-032.ClickHouse.Parquet.Encryption.Modular
+### Column Encryption
+
+#### RQ.SRS-032.ClickHouse.Parquet.Encryption.Column.Modular
 version: 1.0
 
 [ClickHouse] MAY support importing or exporting Parquet files with specific encrypted columns.
+
+#### RQ.SRS-032.ClickHouse.Parquet.Encryption.Column.Keys
+version: 1.0
+
+[ClickHouse] MAY support importing or exporting Parquet files when different columns are encrypted with different keys.
+
+### Encryption Algorithms
+
+#### RQ.SRS-032.ClickHouse.Parquet.Encryption.Algorithms.AESGCM
+version: 1.0
+
+[ClickHouse] MAY support importing or exporting Parquet files with `AES-GCM` encryption algorithm.
+
+> The default algorithm AES-GCM provides full protection against tampering with data and metadata parts in Parquet files.
+
+#### RQ.SRS-032.ClickHouse.Parquet.Encryption.Algorithms.AESGCMCTR
+version: 1.0
+
+[ClickHouse] MAY support importing or exporting Parquet files with `AES-GCM-CTR`  encryption algorithm.
+
+> The alternative algorithm AES-GCM-CTR supports partial integrity protection of Parquet files. 
+> Only metadata parts are protected against tampering, not data parts. 
+> An advantage of this algorithm is that it has a lower throughput overhead compared to the AES-GCM algorithm.
+
+### Parameters
+
+#### RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters
+version: 1.0
+
+[ClickHouse] MAY support importing or exporting Parquet files with different parameters.
+
+##### RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.algorythm
+version: 1.0
+
+[ClickHouse] MAY support importing or exporting Parquet files with `encryption.algorithm` parameter specified.
+
+##### RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.plaintext.footer
+version: 1.0
+
+[ClickHouse] MAY support importing or exporting Parquet files with `encryption.plaintext.footer` parameter specified.
 
 ## DESCRIBE Parquet
 
