@@ -2274,8 +2274,8 @@ RQ_SRS_032_ClickHouse_Export_Parquet_Join = Requirement(
         "\n"
     ),
     link=None,
-    level=3,
-    num="8.21.1",
+    level=4,
+    num="8.21.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_Union = Requirement(
@@ -2290,8 +2290,36 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Union = Requirement(
         "\n"
     ),
     link=None,
-    level=3,
-    num="8.21.2",
+    level=4,
+    num="8.21.2.1",
+)
+
+RQ_SRS_032_ClickHouse_Parquet_Export_Union_Multiple = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Export.Union.Multiple",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support exporting output of `SELECT` query with multiple `UNION` clauses used on the Parquet file.\n"
+        "\n"
+        "For example,\n"
+        "\n"
+        "```sql\n"
+        "SELECT * FROM (SELECT * FROM file('file0001.parquet')\n"
+        "UNION ALL SELECT * FROM file('file0001.parquet')\n"
+        "UNION ALL SELECT * FROM file('file0001.parquet')\n"
+        "UNION ALL SELECT * FROM file('file0001.parquet')\n"
+        "UNION ALL SELECT * FROM file('file0001.parquet')\n"
+        "...\n"
+        "UNION ALL SELECT * FROM file('file0001.parquet')) LIMIT 10;\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="8.21.2.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Export_View = Requirement(
@@ -4846,11 +4874,18 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             num="8.20.1",
         ),
         Heading(name="Query Types", level=2, num="8.21"),
+        Heading(name="JOIN", level=3, num="8.21.1"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Export.Parquet.Join", level=3, num="8.21.1"
+            name="RQ.SRS-032.ClickHouse.Export.Parquet.Join", level=4, num="8.21.1.1"
+        ),
+        Heading(name="UNION", level=3, num="8.21.2"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.Union", level=4, num="8.21.2.1"
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Export.Union", level=3, num="8.21.2"
+            name="RQ.SRS-032.ClickHouse.Parquet.Export.Union.Multiple",
+            level=4,
+            num="8.21.2.2",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Export.View", level=3, num="8.21.3"
@@ -5537,6 +5572,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_Export_ChunkedColumns,
         RQ_SRS_032_ClickHouse_Export_Parquet_Join,
         RQ_SRS_032_ClickHouse_Parquet_Export_Union,
+        RQ_SRS_032_ClickHouse_Parquet_Export_Union_Multiple,
         RQ_SRS_032_ClickHouse_Parquet_Export_View,
         RQ_SRS_032_ClickHouse_Parquet_Export_Select_MaterializedView,
         RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_Plain,
@@ -5816,8 +5852,11 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
   * 8.20 [Exporting Chunked Columns](#exporting-chunked-columns)
     * 8.20.1 [RQ.SRS-032.ClickHouse.Parquet.Export.ChunkedColumns](#rqsrs-032clickhouseparquetexportchunkedcolumns)
   * 8.21 [Query Types](#query-types)
-    * 8.21.1 [RQ.SRS-032.ClickHouse.Export.Parquet.Join](#rqsrs-032clickhouseexportparquetjoin)
-    * 8.21.2 [RQ.SRS-032.ClickHouse.Parquet.Export.Union](#rqsrs-032clickhouseparquetexportunion)
+    * 8.21.1 [JOIN](#join)
+      * 8.21.1.1 [RQ.SRS-032.ClickHouse.Export.Parquet.Join](#rqsrs-032clickhouseexportparquetjoin)
+    * 8.21.2 [UNION](#union)
+      * 8.21.2.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Union](#rqsrs-032clickhouseparquetexportunion)
+      * 8.21.2.2 [RQ.SRS-032.ClickHouse.Parquet.Export.Union.Multiple](#rqsrs-032clickhouseparquetexportunionmultiple)
     * 8.21.3 [RQ.SRS-032.ClickHouse.Parquet.Export.View](#rqsrs-032clickhouseparquetexportview)
     * 8.21.4 [RQ.SRS-032.ClickHouse.Parquet.Export.Select.MaterializedView](#rqsrs-032clickhouseparquetexportselectmaterializedview)
   * 8.22 [Export Encoded](#export-encoded)
@@ -7458,15 +7497,36 @@ version: 1.0
 
 ### Query Types
 
-#### RQ.SRS-032.ClickHouse.Export.Parquet.Join
+#### JOIN
+
+##### RQ.SRS-032.ClickHouse.Export.Parquet.Join
 version: 1.0
 
 [ClickHouse] SHALL support exporting output of `SELECT` query with a `JOIN` clause into a Parquet file.
 
-#### RQ.SRS-032.ClickHouse.Parquet.Export.Union
+#### UNION
+
+##### RQ.SRS-032.ClickHouse.Parquet.Export.Union
 version: 1.0
 
 [ClickHouse] SHALL support exporting output of `SELECT` query with a `UNION` clause into a Parquet file.
+
+##### RQ.SRS-032.ClickHouse.Parquet.Export.Union.Multiple
+version: 1.0
+
+[ClickHouse] SHALL support exporting output of `SELECT` query with multiple `UNION` clauses used on the Parquet file.
+
+For example,
+
+```sql
+SELECT * FROM (SELECT * FROM file('file0001.parquet')
+UNION ALL SELECT * FROM file('file0001.parquet')
+UNION ALL SELECT * FROM file('file0001.parquet')
+UNION ALL SELECT * FROM file('file0001.parquet')
+UNION ALL SELECT * FROM file('file0001.parquet')
+...
+UNION ALL SELECT * FROM file('file0001.parquet')) LIMIT 10;
+```
 
 #### RQ.SRS-032.ClickHouse.Parquet.Export.View
 version: 1.0
