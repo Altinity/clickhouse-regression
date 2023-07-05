@@ -238,47 +238,49 @@
   * 13.9 [PostgreSQL](#postgresql)
     * 13.9.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.PostgreSQL](#rqsrs-032clickhouseparquettablefunctionspostgresql)
 * 14 [Table Engines](#table-engines)
-  * 14.1 [MergeTree](#mergetree)
-    * 14.1.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.MergeTree](#rqsrs-032clickhouseparquettableenginesmergetreemergetree)
-    * 14.1.2 [ReplicatedMergeTree](#replicatedmergetree)
-      * 14.1.2.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplicatedMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreereplicatedmergetree)
-    * 14.1.3 [ReplacingMergeTree](#replacingmergetree)
-      * 14.1.3.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplacingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreereplacingmergetree)
-    * 14.1.4 [SummingMergeTree](#summingmergetree)
-      * 14.1.4.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.SummingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreesummingmergetree)
-    * 14.1.5 [AggregatingMergeTree](#aggregatingmergetree)
-      * 14.1.5.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.AggregatingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreeaggregatingmergetree)
-    * 14.1.6 [CollapsingMergeTree](#collapsingmergetree)
-      * 14.1.6.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.CollapsingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreecollapsingmergetree)
-    * 14.1.7 [VersionedCollapsingMergeTree](#versionedcollapsingmergetree)
-      * 14.1.7.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.VersionedCollapsingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreeversionedcollapsingmergetree)
-    * 14.1.8 [GraphiteMergeTree](#graphitemergetree)
-      * 14.1.8.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.GraphiteMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreegraphitemergetree)
-  * 14.2 [Integration Engines](#integration-engines)
-    * 14.2.1 [ODBC Engine](#odbc-engine)
-      * 14.2.1.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.ODBC](#rqsrs-032clickhouseparquettableenginesintegrationodbc)
-    * 14.2.2 [JDBC Engine](#jdbc-engine)
-      * 14.2.2.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.JDBC](#rqsrs-032clickhouseparquettableenginesintegrationjdbc)
-    * 14.2.3 [MySQL Engine](#mysql-engine)
-      * 14.2.3.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MySQL](#rqsrs-032clickhouseparquettableenginesintegrationmysql)
-    * 14.2.4 [MongoDB Engine](#mongodb-engine)
-      * 14.2.4.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MongoDB](#rqsrs-032clickhouseparquettableenginesintegrationmongodb)
-    * 14.2.5 [HDFS Engine](#hdfs-engine)
-      * 14.2.5.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.HDFS](#rqsrs-032clickhouseparquettableenginesintegrationhdfs)
-    * 14.2.6 [S3 Engine](#s3-engine)
-      * 14.2.6.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.S3](#rqsrs-032clickhouseparquettableenginesintegrations3)
-    * 14.2.7 [Kafka Engine](#kafka-engine)
-      * 14.2.7.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.Kafka](#rqsrs-032clickhouseparquettableenginesintegrationkafka)
-    * 14.2.8 [EmbeddedRocksDB Engine](#embeddedrocksdb-engine)
-      * 14.2.8.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.EmbeddedRocksDB](#rqsrs-032clickhouseparquettableenginesintegrationembeddedrocksdb)
-    * 14.2.9 [PostgreSQL Engine](#postgresql-engine)
-      * 14.2.9.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.PostgreSQL](#rqsrs-032clickhouseparquettableenginesintegrationpostgresql)
-  * 14.3 [Special Engines](#special-engines)
-    * 14.3.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Memory](#rqsrs-032clickhouseparquettableenginesspecialmemory)
-    * 14.3.2 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Distributed](#rqsrs-032clickhouseparquettableenginesspecialdistributed)
-    * 14.3.3 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Dictionary](#rqsrs-032clickhouseparquettableenginesspecialdictionary)
-    * 14.3.4 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.File](#rqsrs-032clickhouseparquettableenginesspecialfile)
-    * 14.3.5 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.URL](#rqsrs-032clickhouseparquettableenginesspecialurl)
+  * 14.1 [Create Readable External Table](#create-readable-external-table)
+    * 14.1.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Create.Readable.Table](#rqsrs-032clickhouseparquettableenginescreatereadabletable)
+  * 14.2 [MergeTree](#mergetree)
+    * 14.2.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.MergeTree](#rqsrs-032clickhouseparquettableenginesmergetreemergetree)
+    * 14.2.2 [ReplicatedMergeTree](#replicatedmergetree)
+      * 14.2.2.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplicatedMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreereplicatedmergetree)
+    * 14.2.3 [ReplacingMergeTree](#replacingmergetree)
+      * 14.2.3.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplacingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreereplacingmergetree)
+    * 14.2.4 [SummingMergeTree](#summingmergetree)
+      * 14.2.4.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.SummingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreesummingmergetree)
+    * 14.2.5 [AggregatingMergeTree](#aggregatingmergetree)
+      * 14.2.5.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.AggregatingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreeaggregatingmergetree)
+    * 14.2.6 [CollapsingMergeTree](#collapsingmergetree)
+      * 14.2.6.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.CollapsingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreecollapsingmergetree)
+    * 14.2.7 [VersionedCollapsingMergeTree](#versionedcollapsingmergetree)
+      * 14.2.7.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.VersionedCollapsingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreeversionedcollapsingmergetree)
+    * 14.2.8 [GraphiteMergeTree](#graphitemergetree)
+      * 14.2.8.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.GraphiteMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreegraphitemergetree)
+  * 14.3 [Integration Engines](#integration-engines)
+    * 14.3.1 [ODBC Engine](#odbc-engine)
+      * 14.3.1.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.ODBC](#rqsrs-032clickhouseparquettableenginesintegrationodbc)
+    * 14.3.2 [JDBC Engine](#jdbc-engine)
+      * 14.3.2.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.JDBC](#rqsrs-032clickhouseparquettableenginesintegrationjdbc)
+    * 14.3.3 [MySQL Engine](#mysql-engine)
+      * 14.3.3.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MySQL](#rqsrs-032clickhouseparquettableenginesintegrationmysql)
+    * 14.3.4 [MongoDB Engine](#mongodb-engine)
+      * 14.3.4.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MongoDB](#rqsrs-032clickhouseparquettableenginesintegrationmongodb)
+    * 14.3.5 [HDFS Engine](#hdfs-engine)
+      * 14.3.5.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.HDFS](#rqsrs-032clickhouseparquettableenginesintegrationhdfs)
+    * 14.3.6 [S3 Engine](#s3-engine)
+      * 14.3.6.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.S3](#rqsrs-032clickhouseparquettableenginesintegrations3)
+    * 14.3.7 [Kafka Engine](#kafka-engine)
+      * 14.3.7.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.Kafka](#rqsrs-032clickhouseparquettableenginesintegrationkafka)
+    * 14.3.8 [EmbeddedRocksDB Engine](#embeddedrocksdb-engine)
+      * 14.3.8.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.EmbeddedRocksDB](#rqsrs-032clickhouseparquettableenginesintegrationembeddedrocksdb)
+    * 14.3.9 [PostgreSQL Engine](#postgresql-engine)
+      * 14.3.9.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.PostgreSQL](#rqsrs-032clickhouseparquettableenginesintegrationpostgresql)
+  * 14.4 [Special Engines](#special-engines)
+    * 14.4.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Memory](#rqsrs-032clickhouseparquettableenginesspecialmemory)
+    * 14.4.2 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Distributed](#rqsrs-032clickhouseparquettableenginesspecialdistributed)
+    * 14.4.3 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Dictionary](#rqsrs-032clickhouseparquettableenginesspecialdictionary)
+    * 14.4.4 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.File](#rqsrs-032clickhouseparquettableenginesspecialfile)
+    * 14.4.5 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.URL](#rqsrs-032clickhouseparquettableenginesspecialurl)
 * 15 [Metadata](#metadata)
   * 15.1 [ParquetFormat](#parquetformat)
     * 15.1.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat](#rqsrs-032clickhouseparquetmetadataparquetmetadataformat)
@@ -2056,6 +2058,27 @@ version: 1.0
 [ClickHouse] SHALL support `postgresql` table function importing and exporting Parquet format.
 
 ## Table Engines
+
+### Create Readable External Table
+
+#### RQ.SRS-032.ClickHouse.Parquet.TableEngines.Create.Readable.Table
+version: 1.0
+
+[ClickHouse] MAY support Parquet format being exported from and imported into all table engines using `CREATE READABLE EXTERNAL TABLE`.
+
+For example,
+
+> ```sql
+> CREATE READABLE EXTERNAL TABLE table_name (
+>     key UInt32,
+>     value UInt32
+> ) LOCATION ('postgresql://postgresql:5123/public');
+> 
+> CREATE READABLE EXTERNAL TABLE table_name (
+>     key UInt32,
+>     value UInt32
+> ) LOCATION ('file://file_localtion/*.csv')
+> ```
 
 ### MergeTree
 
