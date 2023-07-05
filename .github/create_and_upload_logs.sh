@@ -11,7 +11,6 @@ elif [[ $artifacts == 'public' ]];
 then
     artifact_s3_bucket_path="altinity-test-reports"
     confidential=""
-fi
 elif [[ $artifacts == 'builds' ]];
 then
     artifact_s3_bucket_path="altinity-build-artifacts"
