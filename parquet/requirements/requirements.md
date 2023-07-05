@@ -211,10 +211,10 @@
   * 10.3 [Encryption Algorithms](#encryption-algorithms)
     * 10.3.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Algorithms.AESGCM](#rqsrs-032clickhouseparquetencryptionalgorithmsaesgcm)
     * 10.3.2 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Algorithms.AESGCMCTR](#rqsrs-032clickhouseparquetencryptionalgorithmsaesgcmctr)
-  * 10.4 [Parameters](#parameters)
+  * 10.4 [EncryptionParameters](#encryptionparameters)
     * 10.4.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters](#rqsrs-032clickhouseparquetencryptionparameters)
-      * 10.4.1.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.algorythm](#rqsrs-032clickhouseparquetencryptionparametersalgorythm)
-      * 10.4.1.2 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.plaintext.footer](#rqsrs-032clickhouseparquetencryptionparametersplaintextfooter)
+      * 10.4.1.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.Algorythm](#rqsrs-032clickhouseparquetencryptionparametersalgorythm)
+      * 10.4.1.2 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.Plaintext.Footer](#rqsrs-032clickhouseparquetencryptionparametersplaintextfooter)
 * 11 [DESCRIBE Parquet](#describe-parquet)
   * 11.1 [RQ.SRS-032.ClickHouse.Parquet.Structure](#rqsrs-032clickhouseparquetstructure)
 * 12 [Compression](#compression)
@@ -258,8 +258,8 @@
   * 13.9 [PostgreSQL](#postgresql)
     * 13.9.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.PostgreSQL](#rqsrs-032clickhouseparquettablefunctionspostgresql)
 * 14 [Table Engines](#table-engines)
-  * 14.1 [Create Readable External Table](#create-readable-external-table)
-    * 14.1.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Create.Readable.Table](#rqsrs-032clickhouseparquettableenginescreatereadabletable)
+  * 14.1 [Readable External Table](#readable-external-table)
+    * 14.1.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.ReadableExternalTable](#rqsrs-032clickhouseparquettableenginesreadableexternaltable)
   * 14.2 [MergeTree](#mergetree)
     * 14.2.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.MergeTree](#rqsrs-032clickhouseparquettableenginesmergetreemergetree)
     * 14.2.2 [ReplicatedMergeTree](#replicatedmergetree)
@@ -2000,19 +2000,19 @@ version: 1.0
 > Only metadata parts are protected against tampering, not data parts. 
 > An advantage of this algorithm is that it has a lower throughput overhead compared to the AES-GCM algorithm.
 
-### Parameters
+### EncryptionParameters
 
 #### RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters
 version: 1.0
 
 [ClickHouse] MAY support importing or exporting Parquet files with different parameters.
 
-##### RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.algorythm
+##### RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.Algorythm
 version: 1.0
 
 [ClickHouse] MAY support importing or exporting Parquet files with `encryption.algorithm` parameter specified.
 
-##### RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.plaintext.footer
+##### RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.Plaintext.Footer
 version: 1.0
 
 [ClickHouse] MAY support importing or exporting Parquet files with `encryption.plaintext.footer` parameter specified.
@@ -2204,12 +2204,12 @@ version: 1.0
 
 ## Table Engines
 
-### Create Readable External Table
+### Readable External Table
 
-#### RQ.SRS-032.ClickHouse.Parquet.TableEngines.Create.Readable.Table
+#### RQ.SRS-032.ClickHouse.Parquet.TableEngines.ReadableExternalTable
 version: 1.0
 
-[ClickHouse] MAY support Parquet format being exported from and imported into all table engines using `CREATE READABLE EXTERNAL TABLE`.
+[ClickHouse] MAY support Parquet format being exported from and imported into all table engines using `READABLE EXTERNAL TABLE`.
 
 For example,
 
@@ -2217,12 +2217,7 @@ For example,
 > CREATE READABLE EXTERNAL TABLE table_name (
 >     key UInt32,
 >     value UInt32
-> ) LOCATION ('postgresql://postgresql:5123/public');
-> 
-> CREATE READABLE EXTERNAL TABLE table_name (
->     key UInt32,
->     value UInt32
-> ) LOCATION ('file://file_localtion/*.csv')
+> ) LOCATION ('file://file_localtion/*.parquet')
 > ```
 
 ### MergeTree

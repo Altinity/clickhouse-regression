@@ -2692,8 +2692,8 @@ RQ_SRS_032_ClickHouse_Parquet_Encryption_Parameters = Requirement(
     num="10.4.1",
 )
 
-RQ_SRS_032_ClickHouse_Parquet_Encryption_Parameters_algorythm = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.algorythm",
+RQ_SRS_032_ClickHouse_Parquet_Encryption_Parameters_Algorythm = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.Algorythm",
     version="1.0",
     priority=None,
     group=None,
@@ -2708,8 +2708,8 @@ RQ_SRS_032_ClickHouse_Parquet_Encryption_Parameters_algorythm = Requirement(
     num="10.4.1.1",
 )
 
-RQ_SRS_032_ClickHouse_Parquet_Encryption_Parameters_plaintext_footer = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.plaintext.footer",
+RQ_SRS_032_ClickHouse_Parquet_Encryption_Parameters_Plaintext_Footer = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.Plaintext.Footer",
     version="1.0",
     priority=None,
     group=None,
@@ -3085,15 +3085,15 @@ RQ_SRS_032_ClickHouse_Parquet_TableFunctions_PostgreSQL = Requirement(
     num="13.9.1",
 )
 
-RQ_SRS_032_ClickHouse_Parquet_TableEngines_Create_Readable_Table = Requirement(
-    name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Create.Readable.Table",
+RQ_SRS_032_ClickHouse_Parquet_TableEngines_ReadableExternalTable = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.ReadableExternalTable",
     version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] MAY support Parquet format being exported from and imported into all table engines using `CREATE READABLE EXTERNAL TABLE`.\n"
+        "[ClickHouse] MAY support Parquet format being exported from and imported into all table engines using `READABLE EXTERNAL TABLE`.\n"
         "\n"
         "For example,\n"
         "\n"
@@ -3101,12 +3101,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_Create_Readable_Table = Requirement(
         "> CREATE READABLE EXTERNAL TABLE table_name (\n"
         ">     key UInt32,\n"
         ">     value UInt32\n"
-        "> ) LOCATION ('postgresql://postgresql:5123/public');\n"
-        "> \n"
-        "> CREATE READABLE EXTERNAL TABLE table_name (\n"
-        ">     key UInt32,\n"
-        ">     value UInt32\n"
-        "> ) LOCATION ('file://file_localtion/*.csv')\n"
+        "> ) LOCATION ('file://file_localtion/*.parquet')\n"
         "> ```\n"
         "\n"
     ),
@@ -4999,19 +4994,19 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             level=3,
             num="10.3.2",
         ),
-        Heading(name="Parameters", level=2, num="10.4"),
+        Heading(name="EncryptionParameters", level=2, num="10.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters",
             level=3,
             num="10.4.1",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.algorythm",
+            name="RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.Algorythm",
             level=4,
             num="10.4.1.1",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.plaintext.footer",
+            name="RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.Plaintext.Footer",
             level=4,
             num="10.4.1.2",
         ),
@@ -5126,9 +5121,9 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             num="13.9.1",
         ),
         Heading(name="Table Engines", level=1, num="14"),
-        Heading(name="Create Readable External Table", level=2, num="14.1"),
+        Heading(name="Readable External Table", level=2, num="14.1"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Create.Readable.Table",
+            name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.ReadableExternalTable",
             level=3,
             num="14.1.1",
         ),
@@ -5595,8 +5590,8 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_Encryption_Algorithms_AESGCM,
         RQ_SRS_032_ClickHouse_Parquet_Encryption_Algorithms_AESGCMCTR,
         RQ_SRS_032_ClickHouse_Parquet_Encryption_Parameters,
-        RQ_SRS_032_ClickHouse_Parquet_Encryption_Parameters_algorythm,
-        RQ_SRS_032_ClickHouse_Parquet_Encryption_Parameters_plaintext_footer,
+        RQ_SRS_032_ClickHouse_Parquet_Encryption_Parameters_Algorythm,
+        RQ_SRS_032_ClickHouse_Parquet_Encryption_Parameters_Plaintext_Footer,
         RQ_SRS_032_ClickHouse_Parquet_Structure,
         RQ_SRS_032_ClickHouse_Parquet_Compression_None,
         RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip,
@@ -5617,7 +5612,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_TableFunctions_Remote,
         RQ_SRS_032_ClickHouse_Parquet_TableFunctions_MySQL,
         RQ_SRS_032_ClickHouse_Parquet_TableFunctions_PostgreSQL,
-        RQ_SRS_032_ClickHouse_Parquet_TableEngines_Create_Readable_Table,
+        RQ_SRS_032_ClickHouse_Parquet_TableEngines_ReadableExternalTable,
         RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_MergeTree,
         RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_ReplicatedMergeTree,
         RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_ReplacingMergeTree,
@@ -5893,10 +5888,10 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
   * 10.3 [Encryption Algorithms](#encryption-algorithms)
     * 10.3.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Algorithms.AESGCM](#rqsrs-032clickhouseparquetencryptionalgorithmsaesgcm)
     * 10.3.2 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Algorithms.AESGCMCTR](#rqsrs-032clickhouseparquetencryptionalgorithmsaesgcmctr)
-  * 10.4 [Parameters](#parameters)
+  * 10.4 [EncryptionParameters](#encryptionparameters)
     * 10.4.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters](#rqsrs-032clickhouseparquetencryptionparameters)
-      * 10.4.1.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.algorythm](#rqsrs-032clickhouseparquetencryptionparametersalgorythm)
-      * 10.4.1.2 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.plaintext.footer](#rqsrs-032clickhouseparquetencryptionparametersplaintextfooter)
+      * 10.4.1.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.Algorythm](#rqsrs-032clickhouseparquetencryptionparametersalgorythm)
+      * 10.4.1.2 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.Plaintext.Footer](#rqsrs-032clickhouseparquetencryptionparametersplaintextfooter)
 * 11 [DESCRIBE Parquet](#describe-parquet)
   * 11.1 [RQ.SRS-032.ClickHouse.Parquet.Structure](#rqsrs-032clickhouseparquetstructure)
 * 12 [Compression](#compression)
@@ -5940,8 +5935,8 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
   * 13.9 [PostgreSQL](#postgresql)
     * 13.9.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.PostgreSQL](#rqsrs-032clickhouseparquettablefunctionspostgresql)
 * 14 [Table Engines](#table-engines)
-  * 14.1 [Create Readable External Table](#create-readable-external-table)
-    * 14.1.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Create.Readable.Table](#rqsrs-032clickhouseparquettableenginescreatereadabletable)
+  * 14.1 [Readable External Table](#readable-external-table)
+    * 14.1.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.ReadableExternalTable](#rqsrs-032clickhouseparquettableenginesreadableexternaltable)
   * 14.2 [MergeTree](#mergetree)
     * 14.2.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.MergeTree](#rqsrs-032clickhouseparquettableenginesmergetreemergetree)
     * 14.2.2 [ReplicatedMergeTree](#replicatedmergetree)
@@ -7682,19 +7677,19 @@ version: 1.0
 > Only metadata parts are protected against tampering, not data parts. 
 > An advantage of this algorithm is that it has a lower throughput overhead compared to the AES-GCM algorithm.
 
-### Parameters
+### EncryptionParameters
 
 #### RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters
 version: 1.0
 
 [ClickHouse] MAY support importing or exporting Parquet files with different parameters.
 
-##### RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.algorythm
+##### RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.Algorythm
 version: 1.0
 
 [ClickHouse] MAY support importing or exporting Parquet files with `encryption.algorithm` parameter specified.
 
-##### RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.plaintext.footer
+##### RQ.SRS-032.ClickHouse.Parquet.Encryption.Parameters.Plaintext.Footer
 version: 1.0
 
 [ClickHouse] MAY support importing or exporting Parquet files with `encryption.plaintext.footer` parameter specified.
@@ -7886,12 +7881,12 @@ version: 1.0
 
 ## Table Engines
 
-### Create Readable External Table
+### Readable External Table
 
-#### RQ.SRS-032.ClickHouse.Parquet.TableEngines.Create.Readable.Table
+#### RQ.SRS-032.ClickHouse.Parquet.TableEngines.ReadableExternalTable
 version: 1.0
 
-[ClickHouse] MAY support Parquet format being exported from and imported into all table engines using `CREATE READABLE EXTERNAL TABLE`.
+[ClickHouse] MAY support Parquet format being exported from and imported into all table engines using `READABLE EXTERNAL TABLE`.
 
 For example,
 
@@ -7899,12 +7894,7 @@ For example,
 > CREATE READABLE EXTERNAL TABLE table_name (
 >     key UInt32,
 >     value UInt32
-> ) LOCATION ('postgresql://postgresql:5123/public');
-> 
-> CREATE READABLE EXTERNAL TABLE table_name (
->     key UInt32,
->     value UInt32
-> ) LOCATION ('file://file_localtion/*.csv')
+> ) LOCATION ('file://file_localtion/*.parquet')
 > ```
 
 ### MergeTree
