@@ -1396,7 +1396,7 @@ For example,
 #### RQ.SRS-032.ClickHouse.Parquet.Import.Performance.ParallelProcessing
 version: 1.0
 
-[ClickHouse] MAY support process parallelization when importing from the parquet files.
+[ClickHouse] SHALL support process parallelization when importing from the parquet files.
 
 ### Import Nested Types
 

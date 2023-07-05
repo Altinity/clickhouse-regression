@@ -1268,7 +1268,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Performance_ParallelProcessing = Requiremen
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] MAY support process parallelization when importing from the parquet files.\n"
+        "[ClickHouse] SHALL support process parallelization when importing from the parquet files.\n"
         "\n"
     ),
     link=None,
@@ -6896,7 +6896,7 @@ For example,
 #### RQ.SRS-032.ClickHouse.Parquet.Import.Performance.ParallelProcessing
 version: 1.0
 
-[ClickHouse] MAY support process parallelization when importing from the parquet files.
+[ClickHouse] SHALL support process parallelization when importing from the parquet files.
 
 ### Import Nested Types
 
