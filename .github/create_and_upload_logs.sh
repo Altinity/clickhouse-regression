@@ -11,6 +11,10 @@ elif [[ $artifacts == 'public' ]];
 then
     artifact_s3_bucket_path="altinity-test-reports"
     confidential=""
+elif [[ $artifacts == 'builds' ]];
+then
+    artifact_s3_bucket_path="altinity-build-artifacts"
+    confidential=""
 fi
 
 echo $version > version.log.txt
