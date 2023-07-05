@@ -196,6 +196,7 @@
   * 9.1 [RQ.SRS-032.ClickHouse.Parquet.Hive](#rqsrs-032clickhouseparquethive)
 * 10 [Parquet Encryption](#parquet-encryption)
   * 10.1 [RQ.SRS-032.ClickHouse.Parquet.Encryption](#rqsrs-032clickhouseparquetencryption)
+  * 10.2 [RQ.SRS-032.ClickHouse.Parquet.Encryption.Modular](#rqsrs-032clickhouseparquetencryptionmodular)
 * 11 [DESCRIBE Parquet](#describe-parquet)
   * 11.1 [RQ.SRS-032.ClickHouse.Parquet.Structure](#rqsrs-032clickhouseparquetstructure)
 * 12 [Compression](#compression)
@@ -1888,7 +1889,12 @@ version: 1.0
 ### RQ.SRS-032.ClickHouse.Parquet.Encryption
 version: 1.0
 
-[ClickHouse] MAY not support importing or exporting encrypted Parquet files.
+[ClickHouse] MAY support importing or exporting encrypted Parquet files.
+
+### RQ.SRS-032.ClickHouse.Parquet.Encryption.Modular
+version: 1.0
+
+[ClickHouse] MAY support importing or exporting Parquet files with specific encrypted columns.
 
 ## DESCRIBE Parquet
 
