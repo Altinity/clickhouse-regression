@@ -49,9 +49,11 @@ xfails = {
         (Fail, "datetime different on export and import, needs to be investigated")
     ],
     "/parquet/datatypes/nameswithemoji/*": [
-        (Fail, "DB::Exception: Expected not empty name: While processing ``: While processing SELECT `önë`, ``, `🦆` FROM file")
+        (
+            Fail,
+            "DB::Exception: Expected not empty name: While processing ``: While processing SELECT `önë`, ``, `🦆` FROM file",
+        )
     ],
-
     "/parquet/compression/snappyrle/*": [
         (
             Fail,
