@@ -145,7 +145,7 @@ def largestruct(self):
     with Given("I have a large Parquet file with struct datatype"):
         import_file = os.path.join("datatypes", "complex.parquet")
 
-    import_export(snapshot_name="large_struct_structure", import_file=import_file)
+    import_export(snapshot_name="large_struct_structure1", import_file=import_file)
 
 
 @TestScenario

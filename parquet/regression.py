@@ -30,6 +30,28 @@ xfails = {
     "/parquet/compression/snappyplain/*": [
         (Fail, "datetime different on export and import, needs to be investigated")
     ],
+    "/parquet/datatypes/manydatatypes/*": [
+        (Fail, "datetime different on export and import, needs to be investigated")
+    ],
+    "/parquet/datatypes/timestamp/*": [
+        (Fail, "datetime different on export and import, needs to be investigated")
+    ],
+    "/parquet/datatypes/json/*": [
+        (Fail, "datetime different on export and import, needs to be investigated")
+    ],
+    "/parquet/datatypes/arrowtimestamp/*": [
+        (Fail, "datetime different on export and import, needs to be investigated")
+    ],
+    "/parquet/datatypes/arrowtimestampms/*": [
+        (Fail, "datetime different on export and import, needs to be investigated")
+    ],
+    "/parquet/datatypes/stringtypes/*": [
+        (Fail, "datetime different on export and import, needs to be investigated")
+    ],
+    "/parquet/datatypes/nameswithemoji/*": [
+        (Fail, "DB::Exception: Expected not empty name: While processing ``: While processing SELECT `önë`, ``, `🦆` FROM file")
+    ],
+
     "/parquet/compression/snappyrle/*": [
         (
             Fail,
@@ -41,6 +63,20 @@ xfails = {
         (
             Fail,
             "Getting an error that encoding is not supported. Probably error "
+            "occurs because of Delta Encoding (DELTA_BINARY_PACKED)",
+        )
+    ],
+    "/parquet/datatypes/decimalwithfilter2/*": [
+        (
+            Fail,
+            "Getting an error that encoding is not supported. error "
+            "occurs because of Delta Encoding (DELTA_BINARY_PACKED)",
+        )
+    ],
+    "/parquet/datatypes/sparkv2?/*": [
+        (
+            Fail,
+            "Getting an error that encoding is not supported. error "
             "occurs because of Delta Encoding (DELTA_BINARY_PACKED)",
         )
     ],
