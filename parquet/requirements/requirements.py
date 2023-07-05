@@ -137,6 +137,34 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Glob = Requirement(
     num="7.1.3.1",
 )
 
+RQ_SRS_032_ClickHouse_Parquet_Import_Glob_MultiDirectory = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Import.Glob.MultiDirectory",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support using `{str1, ...}` globs across different directories when importing from the Parquet files. \n"
+        "\n"
+        "For example,\n"
+        "\n"
+        "> The following query will import both from a/1.csv and b/2.csv\n"
+        "> \n"
+        "> ```sql\n"
+        "> SELECT\n"
+        ">     *,\n"
+        ">     _path,\n"
+        ">     _file\n"
+        "> FROM file('{a/1,b/2}.parquet', Parquet)\n"
+        "> ```\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.1.3.2",
+)
+
 RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Conversion = Requirement(
     name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Conversion",
     version="1.0",
@@ -4080,6 +4108,11 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Import.Glob", level=4, num="7.1.3.1"
         ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Import.Glob.MultiDirectory",
+            level=4,
+            num="7.1.3.2",
+        ),
         Heading(name="Supported Datatypes", level=2, num="7.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Conversion",
@@ -5184,6 +5217,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_Import,
         RQ_SRS_032_ClickHouse_Parquet_Import_AutoDetectParquetFileFormat,
         RQ_SRS_032_ClickHouse_Parquet_Import_Glob,
+        RQ_SRS_032_ClickHouse_Parquet_Import_Glob_MultiDirectory,
         RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Conversion,
         RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported,
         RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_BLOB,
@@ -5416,6 +5450,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
       * 7.1.2.1 [RQ.SRS-032.ClickHouse.Parquet.Import.AutoDetectParquetFileFormat](#rqsrs-032clickhouseparquetimportautodetectparquetfileformat)
     * 7.1.3 [Glob Patterns](#glob-patterns)
       * 7.1.3.1 [RQ.SRS-032.ClickHouse.Parquet.Import.Glob](#rqsrs-032clickhouseparquetimportglob)
+      * 7.1.3.2 [RQ.SRS-032.ClickHouse.Parquet.Import.Glob.MultiDirectory](#rqsrs-032clickhouseparquetimportglobmultidirectory)
   * 7.2 [Supported Datatypes](#supported-datatypes)
     * 7.2.1 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Conversion](#rqsrs-032clickhouseparquetimportdatatypesconversion)
     * 7.2.2 [RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Supported](#rqsrs-032clickhouseparquetimportdatatypessupported)
@@ -6157,6 +6192,23 @@ version: 1.0
 >   - `{some_string,another_string,yet_another_one}` — Substitutes any of strings 'some_string', 'another_string', 'yet_another_one'.
 >   - `{N..M}` — Substitutes any number in range from N to M including both borders.
 >   - `**` - Fetches all files inside the folder recursively.
+
+##### RQ.SRS-032.ClickHouse.Parquet.Import.Glob.MultiDirectory
+version: 1.0
+
+[ClickHouse] SHALL support using `{str1, ...}` globs across different directories when importing from the Parquet files. 
+
+For example,
+
+> The following query will import both from a/1.csv and b/2.csv
+> 
+> ```sql
+> SELECT
+>     *,
+>     _path,
+>     _file
+> FROM file('{a/1,b/2}.parquet', Parquet)
+> ```
 
 ### Supported Datatypes
 
