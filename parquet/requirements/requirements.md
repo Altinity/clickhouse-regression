@@ -212,11 +212,11 @@
     * 12.6.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Lz4Hadoop](#rqsrs-032clickhouseparquetcompressionlz4hadoop)
   * 12.7 [Snappy](#snappy)
     * 12.7.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Snappy](#rqsrs-032clickhouseparquetcompressionsnappy)
-    * 12.7.2 [Zstd](#zstd)
-    * 12.7.3 [RQ.SRS-032.ClickHouse.Parquet.Compression.Zstd](#rqsrs-032clickhouseparquetcompressionzstd)
-  * 12.8 [Unsupported Compression](#unsupported-compression)
-    * 12.8.1 [Lzo](#lzo)
-      * 12.8.1.1 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Lzo](#rqsrs-032clickhouseparquetunsupportedcompressionlzo)
+  * 12.8 [Zstd](#zstd)
+    * 12.8.1 [RQ.SRS-032.ClickHouse.Parquet.Compression.Zstd](#rqsrs-032clickhouseparquetcompressionzstd)
+  * 12.9 [Unsupported Compression](#unsupported-compression)
+    * 12.9.1 [Lzo](#lzo)
+      * 12.9.1.1 [RQ.SRS-032.ClickHouse.Parquet.UnsupportedCompression.Lzo](#rqsrs-032clickhouseparquetunsupportedcompressionlzo)
 * 13 [Table Functions](#table-functions)
   * 13.1 [URL](#url)
     * 13.1.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.URL](#rqsrs-032clickhouseparquettablefunctionsurl)
@@ -1933,7 +1933,7 @@ version: 1.0
 
 [ClickHouse] SHALL support importing or exporting Parquet files compressed using Snappy.
 
-#### Zstd
+### Zstd
 
 #### RQ.SRS-032.ClickHouse.Parquet.Compression.Zstd
 version: 1.0
