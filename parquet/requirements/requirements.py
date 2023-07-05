@@ -3402,6 +3402,39 @@ RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_MinMax = Requirement(
     num="15.1.4",
 )
 
+RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_CountFromMetadata = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.CountFromMetadata",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] MAY support importing the information about the number of rows from Parquet file directly from the metadata instead of going through the whole file.\n"
+        "\n"
+        "For example,\n"
+        "\n"
+        "> When running this query,\n"
+        "> \n"
+        "> ```sql\n"
+        "> SELECT count(*)\n"
+        "> FROM file('*.parquet', 'Parquet');\n"
+        ">\n"
+        "> ┌───count()─┐\n"
+        "> │ 110000000 │\n"
+        "> └───────────┘\n"
+        "> \n"
+        "> Elapsed: 1.365 sec.\n"
+        "> ```\n"
+        "> \n"
+        "> The runtime should be around ~16ms instead of 1.365 sec.\n"
+        ">\n"
+    ),
+    link=None,
+    level=3,
+    num="15.1.5",
+)
+
 RQ_SRS_032_ClickHouse_Parquet_Metadata_File = Requirement(
     name="RQ.SRS-032.ClickHouse.Parquet.Metadata.File",
     version="1.0",
@@ -4935,6 +4968,11 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             level=3,
             num="15.1.4",
         ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.CountFromMetadata",
+            level=3,
+            num="15.1.5",
+        ),
         Heading(name="Metadata Types", level=2, num="15.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.Metadata.File", level=3, num="15.2.1"
@@ -5283,6 +5321,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadataFormat_Output,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_Content,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_MinMax,
+        RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadata_CountFromMetadata,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_File,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Column,
         RQ_SRS_032_ClickHouse_Parquet_Metadata_Header,
@@ -5606,6 +5645,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
     * 15.1.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat.Output](#rqsrs-032clickhouseparquetmetadataparquetmetadataformatoutput)
     * 15.1.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.Content](#rqsrs-032clickhouseparquetmetadataparquetmetadatacontent)
     * 15.1.4 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.MinMax](#rqsrs-032clickhouseparquetmetadataparquetmetadataminmax)
+    * 15.1.5 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.CountFromMetadata](#rqsrs-032clickhouseparquetmetadataparquetmetadatacountfrommetadata)
   * 15.2 [Metadata Types](#metadata-types)
     * 15.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.File](#rqsrs-032clickhouseparquetmetadatafile)
     * 15.2.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Column](#rqsrs-032clickhouseparquetmetadatacolumn)
@@ -7700,6 +7740,28 @@ version: 1.0
 
 [ClickHouse] SHALL support Parquet files that have Min/Max values in the metadata and the files that are missing Min/Max values.
 
+#### RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.CountFromMetadata
+version: 1.0
+
+[ClickHouse] MAY support importing the information about the number of rows from Parquet file directly from the metadata instead of going through the whole file.
+
+For example,
+
+> When running this query,
+> 
+> ```sql
+> SELECT count(*)
+> FROM file('*.parquet', 'Parquet');
+>
+> ┌───count()─┐
+> │ 110000000 │
+> └───────────┘
+> 
+> Elapsed: 1.365 sec.
+> ```
+> 
+> The runtime should be around ~16ms instead of 1.365 sec.
+>
 ### Metadata Types
 
 #### RQ.SRS-032.ClickHouse.Parquet.Metadata.File

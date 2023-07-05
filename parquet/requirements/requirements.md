@@ -285,6 +285,7 @@
     * 15.1.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat.Output](#rqsrs-032clickhouseparquetmetadataparquetmetadataformatoutput)
     * 15.1.3 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.Content](#rqsrs-032clickhouseparquetmetadataparquetmetadatacontent)
     * 15.1.4 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.MinMax](#rqsrs-032clickhouseparquetmetadataparquetmetadataminmax)
+    * 15.1.5 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.CountFromMetadata](#rqsrs-032clickhouseparquetmetadataparquetmetadatacountfrommetadata)
   * 15.2 [Metadata Types](#metadata-types)
     * 15.2.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.File](#rqsrs-032clickhouseparquetmetadatafile)
     * 15.2.2 [RQ.SRS-032.ClickHouse.Parquet.Metadata.Column](#rqsrs-032clickhouseparquetmetadatacolumn)
@@ -2379,6 +2380,28 @@ version: 1.0
 
 [ClickHouse] SHALL support Parquet files that have Min/Max values in the metadata and the files that are missing Min/Max values.
 
+#### RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadata.CountFromMetadata
+version: 1.0
+
+[ClickHouse] MAY support importing the information about the number of rows from Parquet file directly from the metadata instead of going through the whole file.
+
+For example,
+
+> When running this query,
+> 
+> ```sql
+> SELECT count(*)
+> FROM file('*.parquet', 'Parquet');
+>
+> ┌───count()─┐
+> │ 110000000 │
+> └───────────┘
+> 
+> Elapsed: 1.365 sec.
+> ```
+> 
+> The runtime should be around ~16ms instead of 1.365 sec.
+>
 ### Metadata Types
 
 #### RQ.SRS-032.ClickHouse.Parquet.Metadata.File
