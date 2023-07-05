@@ -2843,6 +2843,36 @@ RQ_SRS_032_ClickHouse_Parquet_TableFunctions_PostgreSQL = Requirement(
     num="13.9.1",
 )
 
+RQ_SRS_032_ClickHouse_Parquet_TableEngines_Create_Readable_Table = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Create.Readable.Table",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] MAY support Parquet format being exported from and imported into all table engines using `CREATE READABLE EXTERNAL TABLE`.\n"
+        "\n"
+        "For example,\n"
+        "\n"
+        "> ```sql\n"
+        "> CREATE READABLE EXTERNAL TABLE table_name (\n"
+        ">     key UInt32,\n"
+        ">     value UInt32\n"
+        "> ) LOCATION ('postgresql://postgresql:5123/public');\n"
+        "> \n"
+        "> CREATE READABLE EXTERNAL TABLE table_name (\n"
+        ">     key UInt32,\n"
+        ">     value UInt32\n"
+        "> ) LOCATION ('file://file_localtion/*.csv')\n"
+        "> ```\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="14.1.1",
+)
+
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_MergeTree = Requirement(
     name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.MergeTree",
     version="1.0",
@@ -2856,7 +2886,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_MergeTree = Requirement(
     ),
     link=None,
     level=3,
-    num="14.1.1",
+    num="14.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_ReplicatedMergeTree = Requirement(
@@ -2872,7 +2902,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_ReplicatedMergeTree = Requi
     ),
     link=None,
     level=4,
-    num="14.1.2.1",
+    num="14.2.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_ReplacingMergeTree = Requirement(
@@ -2888,7 +2918,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_ReplacingMergeTree = Requir
     ),
     link=None,
     level=4,
-    num="14.1.3.1",
+    num="14.2.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_SummingMergeTree = Requirement(
@@ -2904,7 +2934,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_SummingMergeTree = Requirem
     ),
     link=None,
     level=4,
-    num="14.1.4.1",
+    num="14.2.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_AggregatingMergeTree = Requirement(
@@ -2920,7 +2950,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_AggregatingMergeTree = Requ
     ),
     link=None,
     level=4,
-    num="14.1.5.1",
+    num="14.2.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_CollapsingMergeTree = Requirement(
@@ -2936,7 +2966,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_CollapsingMergeTree = Requi
     ),
     link=None,
     level=4,
-    num="14.1.6.1",
+    num="14.2.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_VersionedCollapsingMergeTree = Requirement(
@@ -2952,7 +2982,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_VersionedCollapsingMergeTre
     ),
     link=None,
     level=4,
-    num="14.1.7.1",
+    num="14.2.7.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_GraphiteMergeTree = Requirement(
@@ -2968,7 +2998,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_GraphiteMergeTree = Require
     ),
     link=None,
     level=4,
-    num="14.1.8.1",
+    num="14.2.8.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_ODBC = Requirement(
@@ -2984,7 +3014,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_ODBC = Requirement(
     ),
     link=None,
     level=4,
-    num="14.2.1.1",
+    num="14.3.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_JDBC = Requirement(
@@ -3000,7 +3030,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_JDBC = Requirement(
     ),
     link=None,
     level=4,
-    num="14.2.2.1",
+    num="14.3.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_MySQL = Requirement(
@@ -3016,7 +3046,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_MySQL = Requirement(
     ),
     link=None,
     level=4,
-    num="14.2.3.1",
+    num="14.3.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_MongoDB = Requirement(
@@ -3032,7 +3062,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_MongoDB = Requirement(
     ),
     link=None,
     level=4,
-    num="14.2.4.1",
+    num="14.3.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_HDFS = Requirement(
@@ -3048,7 +3078,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_HDFS = Requirement(
     ),
     link=None,
     level=4,
-    num="14.2.5.1",
+    num="14.3.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_S3 = Requirement(
@@ -3064,7 +3094,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_S3 = Requirement(
     ),
     link=None,
     level=4,
-    num="14.2.6.1",
+    num="14.3.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_Kafka = Requirement(
@@ -3080,7 +3110,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_Kafka = Requirement(
     ),
     link=None,
     level=4,
-    num="14.2.7.1",
+    num="14.3.7.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_EmbeddedRocksDB = Requirement(
@@ -3096,7 +3126,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_EmbeddedRocksDB = Require
     ),
     link=None,
     level=4,
-    num="14.2.8.1",
+    num="14.3.8.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_PostgreSQL = Requirement(
@@ -3112,7 +3142,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_Integration_PostgreSQL = Requirement(
     ),
     link=None,
     level=4,
-    num="14.2.9.1",
+    num="14.3.9.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_Memory = Requirement(
@@ -3128,7 +3158,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_Memory = Requirement(
     ),
     link=None,
     level=3,
-    num="14.3.1",
+    num="14.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_Distributed = Requirement(
@@ -3144,7 +3174,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_Distributed = Requirement(
     ),
     link=None,
     level=3,
-    num="14.3.2",
+    num="14.4.2",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_Dictionary = Requirement(
@@ -3160,7 +3190,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_Dictionary = Requirement(
     ),
     link=None,
     level=3,
-    num="14.3.3",
+    num="14.4.3",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_File = Requirement(
@@ -3176,7 +3206,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_File = Requirement(
     ),
     link=None,
     level=3,
-    num="14.3.4",
+    num="14.4.4",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_URL = Requirement(
@@ -3192,7 +3222,7 @@ RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_URL = Requirement(
     ),
     link=None,
     level=3,
-    num="14.3.5",
+    num="14.4.5",
 )
 
 RQ_SRS_032_ClickHouse_Parquet_Metadata_ParquetMetadataFormat = Requirement(
@@ -4817,134 +4847,140 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
             num="13.9.1",
         ),
         Heading(name="Table Engines", level=1, num="14"),
-        Heading(name="MergeTree", level=2, num="14.1"),
+        Heading(name="Create Readable External Table", level=2, num="14.1"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.MergeTree",
+            name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Create.Readable.Table",
             level=3,
             num="14.1.1",
         ),
-        Heading(name="ReplicatedMergeTree", level=3, num="14.1.2"),
+        Heading(name="MergeTree", level=2, num="14.2"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.MergeTree",
+            level=3,
+            num="14.2.1",
+        ),
+        Heading(name="ReplicatedMergeTree", level=3, num="14.2.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplicatedMergeTree",
             level=4,
-            num="14.1.2.1",
+            num="14.2.2.1",
         ),
-        Heading(name="ReplacingMergeTree", level=3, num="14.1.3"),
+        Heading(name="ReplacingMergeTree", level=3, num="14.2.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplacingMergeTree",
             level=4,
-            num="14.1.3.1",
+            num="14.2.3.1",
         ),
-        Heading(name="SummingMergeTree", level=3, num="14.1.4"),
+        Heading(name="SummingMergeTree", level=3, num="14.2.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.SummingMergeTree",
             level=4,
-            num="14.1.4.1",
+            num="14.2.4.1",
         ),
-        Heading(name="AggregatingMergeTree", level=3, num="14.1.5"),
+        Heading(name="AggregatingMergeTree", level=3, num="14.2.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.AggregatingMergeTree",
             level=4,
-            num="14.1.5.1",
+            num="14.2.5.1",
         ),
-        Heading(name="CollapsingMergeTree", level=3, num="14.1.6"),
+        Heading(name="CollapsingMergeTree", level=3, num="14.2.6"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.CollapsingMergeTree",
             level=4,
-            num="14.1.6.1",
+            num="14.2.6.1",
         ),
-        Heading(name="VersionedCollapsingMergeTree", level=3, num="14.1.7"),
+        Heading(name="VersionedCollapsingMergeTree", level=3, num="14.2.7"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.VersionedCollapsingMergeTree",
             level=4,
-            num="14.1.7.1",
+            num="14.2.7.1",
         ),
-        Heading(name="GraphiteMergeTree", level=3, num="14.1.8"),
+        Heading(name="GraphiteMergeTree", level=3, num="14.2.8"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.GraphiteMergeTree",
             level=4,
-            num="14.1.8.1",
+            num="14.2.8.1",
         ),
-        Heading(name="Integration Engines", level=2, num="14.2"),
-        Heading(name="ODBC Engine", level=3, num="14.2.1"),
+        Heading(name="Integration Engines", level=2, num="14.3"),
+        Heading(name="ODBC Engine", level=3, num="14.3.1"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.ODBC",
             level=4,
-            num="14.2.1.1",
+            num="14.3.1.1",
         ),
-        Heading(name="JDBC Engine", level=3, num="14.2.2"),
+        Heading(name="JDBC Engine", level=3, num="14.3.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.JDBC",
             level=4,
-            num="14.2.2.1",
+            num="14.3.2.1",
         ),
-        Heading(name="MySQL Engine", level=3, num="14.2.3"),
+        Heading(name="MySQL Engine", level=3, num="14.3.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MySQL",
             level=4,
-            num="14.2.3.1",
+            num="14.3.3.1",
         ),
-        Heading(name="MongoDB Engine", level=3, num="14.2.4"),
+        Heading(name="MongoDB Engine", level=3, num="14.3.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MongoDB",
             level=4,
-            num="14.2.4.1",
+            num="14.3.4.1",
         ),
-        Heading(name="HDFS Engine", level=3, num="14.2.5"),
+        Heading(name="HDFS Engine", level=3, num="14.3.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.HDFS",
             level=4,
-            num="14.2.5.1",
+            num="14.3.5.1",
         ),
-        Heading(name="S3 Engine", level=3, num="14.2.6"),
+        Heading(name="S3 Engine", level=3, num="14.3.6"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.S3",
             level=4,
-            num="14.2.6.1",
+            num="14.3.6.1",
         ),
-        Heading(name="Kafka Engine", level=3, num="14.2.7"),
+        Heading(name="Kafka Engine", level=3, num="14.3.7"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.Kafka",
             level=4,
-            num="14.2.7.1",
+            num="14.3.7.1",
         ),
-        Heading(name="EmbeddedRocksDB Engine", level=3, num="14.2.8"),
+        Heading(name="EmbeddedRocksDB Engine", level=3, num="14.3.8"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.EmbeddedRocksDB",
             level=4,
-            num="14.2.8.1",
+            num="14.3.8.1",
         ),
-        Heading(name="PostgreSQL Engine", level=3, num="14.2.9"),
+        Heading(name="PostgreSQL Engine", level=3, num="14.3.9"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.PostgreSQL",
             level=4,
-            num="14.2.9.1",
+            num="14.3.9.1",
         ),
-        Heading(name="Special Engines", level=2, num="14.3"),
+        Heading(name="Special Engines", level=2, num="14.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Memory",
             level=3,
-            num="14.3.1",
+            num="14.4.1",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Distributed",
             level=3,
-            num="14.3.2",
+            num="14.4.2",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Dictionary",
             level=3,
-            num="14.3.3",
+            num="14.4.3",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.File",
             level=3,
-            num="14.3.4",
+            num="14.4.4",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.URL",
             level=3,
-            num="14.3.5",
+            num="14.4.5",
         ),
         Heading(name="Metadata", level=1, num="15"),
         Heading(name="ParquetFormat", level=2, num="15.1"),
@@ -5295,6 +5331,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_TableFunctions_Remote,
         RQ_SRS_032_ClickHouse_Parquet_TableFunctions_MySQL,
         RQ_SRS_032_ClickHouse_Parquet_TableFunctions_PostgreSQL,
+        RQ_SRS_032_ClickHouse_Parquet_TableEngines_Create_Readable_Table,
         RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_MergeTree,
         RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_ReplicatedMergeTree,
         RQ_SRS_032_ClickHouse_Parquet_TableEngines_MergeTree_ReplacingMergeTree,
@@ -5598,47 +5635,49 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
   * 13.9 [PostgreSQL](#postgresql)
     * 13.9.1 [RQ.SRS-032.ClickHouse.Parquet.TableFunctions.PostgreSQL](#rqsrs-032clickhouseparquettablefunctionspostgresql)
 * 14 [Table Engines](#table-engines)
-  * 14.1 [MergeTree](#mergetree)
-    * 14.1.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.MergeTree](#rqsrs-032clickhouseparquettableenginesmergetreemergetree)
-    * 14.1.2 [ReplicatedMergeTree](#replicatedmergetree)
-      * 14.1.2.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplicatedMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreereplicatedmergetree)
-    * 14.1.3 [ReplacingMergeTree](#replacingmergetree)
-      * 14.1.3.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplacingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreereplacingmergetree)
-    * 14.1.4 [SummingMergeTree](#summingmergetree)
-      * 14.1.4.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.SummingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreesummingmergetree)
-    * 14.1.5 [AggregatingMergeTree](#aggregatingmergetree)
-      * 14.1.5.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.AggregatingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreeaggregatingmergetree)
-    * 14.1.6 [CollapsingMergeTree](#collapsingmergetree)
-      * 14.1.6.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.CollapsingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreecollapsingmergetree)
-    * 14.1.7 [VersionedCollapsingMergeTree](#versionedcollapsingmergetree)
-      * 14.1.7.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.VersionedCollapsingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreeversionedcollapsingmergetree)
-    * 14.1.8 [GraphiteMergeTree](#graphitemergetree)
-      * 14.1.8.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.GraphiteMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreegraphitemergetree)
-  * 14.2 [Integration Engines](#integration-engines)
-    * 14.2.1 [ODBC Engine](#odbc-engine)
-      * 14.2.1.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.ODBC](#rqsrs-032clickhouseparquettableenginesintegrationodbc)
-    * 14.2.2 [JDBC Engine](#jdbc-engine)
-      * 14.2.2.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.JDBC](#rqsrs-032clickhouseparquettableenginesintegrationjdbc)
-    * 14.2.3 [MySQL Engine](#mysql-engine)
-      * 14.2.3.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MySQL](#rqsrs-032clickhouseparquettableenginesintegrationmysql)
-    * 14.2.4 [MongoDB Engine](#mongodb-engine)
-      * 14.2.4.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MongoDB](#rqsrs-032clickhouseparquettableenginesintegrationmongodb)
-    * 14.2.5 [HDFS Engine](#hdfs-engine)
-      * 14.2.5.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.HDFS](#rqsrs-032clickhouseparquettableenginesintegrationhdfs)
-    * 14.2.6 [S3 Engine](#s3-engine)
-      * 14.2.6.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.S3](#rqsrs-032clickhouseparquettableenginesintegrations3)
-    * 14.2.7 [Kafka Engine](#kafka-engine)
-      * 14.2.7.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.Kafka](#rqsrs-032clickhouseparquettableenginesintegrationkafka)
-    * 14.2.8 [EmbeddedRocksDB Engine](#embeddedrocksdb-engine)
-      * 14.2.8.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.EmbeddedRocksDB](#rqsrs-032clickhouseparquettableenginesintegrationembeddedrocksdb)
-    * 14.2.9 [PostgreSQL Engine](#postgresql-engine)
-      * 14.2.9.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.PostgreSQL](#rqsrs-032clickhouseparquettableenginesintegrationpostgresql)
-  * 14.3 [Special Engines](#special-engines)
-    * 14.3.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Memory](#rqsrs-032clickhouseparquettableenginesspecialmemory)
-    * 14.3.2 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Distributed](#rqsrs-032clickhouseparquettableenginesspecialdistributed)
-    * 14.3.3 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Dictionary](#rqsrs-032clickhouseparquettableenginesspecialdictionary)
-    * 14.3.4 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.File](#rqsrs-032clickhouseparquettableenginesspecialfile)
-    * 14.3.5 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.URL](#rqsrs-032clickhouseparquettableenginesspecialurl)
+  * 14.1 [Create Readable External Table](#create-readable-external-table)
+    * 14.1.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Create.Readable.Table](#rqsrs-032clickhouseparquettableenginescreatereadabletable)
+  * 14.2 [MergeTree](#mergetree)
+    * 14.2.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.MergeTree](#rqsrs-032clickhouseparquettableenginesmergetreemergetree)
+    * 14.2.2 [ReplicatedMergeTree](#replicatedmergetree)
+      * 14.2.2.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplicatedMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreereplicatedmergetree)
+    * 14.2.3 [ReplacingMergeTree](#replacingmergetree)
+      * 14.2.3.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.ReplacingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreereplacingmergetree)
+    * 14.2.4 [SummingMergeTree](#summingmergetree)
+      * 14.2.4.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.SummingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreesummingmergetree)
+    * 14.2.5 [AggregatingMergeTree](#aggregatingmergetree)
+      * 14.2.5.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.AggregatingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreeaggregatingmergetree)
+    * 14.2.6 [CollapsingMergeTree](#collapsingmergetree)
+      * 14.2.6.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.CollapsingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreecollapsingmergetree)
+    * 14.2.7 [VersionedCollapsingMergeTree](#versionedcollapsingmergetree)
+      * 14.2.7.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.VersionedCollapsingMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreeversionedcollapsingmergetree)
+    * 14.2.8 [GraphiteMergeTree](#graphitemergetree)
+      * 14.2.8.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.MergeTree.GraphiteMergeTree](#rqsrs-032clickhouseparquettableenginesmergetreegraphitemergetree)
+  * 14.3 [Integration Engines](#integration-engines)
+    * 14.3.1 [ODBC Engine](#odbc-engine)
+      * 14.3.1.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.ODBC](#rqsrs-032clickhouseparquettableenginesintegrationodbc)
+    * 14.3.2 [JDBC Engine](#jdbc-engine)
+      * 14.3.2.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.JDBC](#rqsrs-032clickhouseparquettableenginesintegrationjdbc)
+    * 14.3.3 [MySQL Engine](#mysql-engine)
+      * 14.3.3.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MySQL](#rqsrs-032clickhouseparquettableenginesintegrationmysql)
+    * 14.3.4 [MongoDB Engine](#mongodb-engine)
+      * 14.3.4.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.MongoDB](#rqsrs-032clickhouseparquettableenginesintegrationmongodb)
+    * 14.3.5 [HDFS Engine](#hdfs-engine)
+      * 14.3.5.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.HDFS](#rqsrs-032clickhouseparquettableenginesintegrationhdfs)
+    * 14.3.6 [S3 Engine](#s3-engine)
+      * 14.3.6.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.S3](#rqsrs-032clickhouseparquettableenginesintegrations3)
+    * 14.3.7 [Kafka Engine](#kafka-engine)
+      * 14.3.7.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.Kafka](#rqsrs-032clickhouseparquettableenginesintegrationkafka)
+    * 14.3.8 [EmbeddedRocksDB Engine](#embeddedrocksdb-engine)
+      * 14.3.8.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.EmbeddedRocksDB](#rqsrs-032clickhouseparquettableenginesintegrationembeddedrocksdb)
+    * 14.3.9 [PostgreSQL Engine](#postgresql-engine)
+      * 14.3.9.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Integration.PostgreSQL](#rqsrs-032clickhouseparquettableenginesintegrationpostgresql)
+  * 14.4 [Special Engines](#special-engines)
+    * 14.4.1 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Memory](#rqsrs-032clickhouseparquettableenginesspecialmemory)
+    * 14.4.2 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Distributed](#rqsrs-032clickhouseparquettableenginesspecialdistributed)
+    * 14.4.3 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.Dictionary](#rqsrs-032clickhouseparquettableenginesspecialdictionary)
+    * 14.4.4 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.File](#rqsrs-032clickhouseparquettableenginesspecialfile)
+    * 14.4.5 [RQ.SRS-032.ClickHouse.Parquet.TableEngines.Special.URL](#rqsrs-032clickhouseparquettableenginesspecialurl)
 * 15 [Metadata](#metadata)
   * 15.1 [ParquetFormat](#parquetformat)
     * 15.1.1 [RQ.SRS-032.ClickHouse.Parquet.Metadata.ParquetMetadataFormat](#rqsrs-032clickhouseparquetmetadataparquetmetadataformat)
@@ -7416,6 +7455,27 @@ version: 1.0
 [ClickHouse] SHALL support `postgresql` table function importing and exporting Parquet format.
 
 ## Table Engines
+
+### Create Readable External Table
+
+#### RQ.SRS-032.ClickHouse.Parquet.TableEngines.Create.Readable.Table
+version: 1.0
+
+[ClickHouse] MAY support Parquet format being exported from and imported into all table engines using `CREATE READABLE EXTERNAL TABLE`.
+
+For example,
+
+> ```sql
+> CREATE READABLE EXTERNAL TABLE table_name (
+>     key UInt32,
+>     value UInt32
+> ) LOCATION ('postgresql://postgresql:5123/public');
+> 
+> CREATE READABLE EXTERNAL TABLE table_name (
+>     key UInt32,
+>     value UInt32
+> ) LOCATION ('file://file_localtion/*.csv')
+> ```
 
 ### MergeTree
 
