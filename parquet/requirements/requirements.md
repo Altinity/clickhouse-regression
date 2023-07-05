@@ -170,8 +170,11 @@
   * 8.20 [Exporting Chunked Columns](#exporting-chunked-columns)
     * 8.20.1 [RQ.SRS-032.ClickHouse.Parquet.Export.ChunkedColumns](#rqsrs-032clickhouseparquetexportchunkedcolumns)
   * 8.21 [Query Types](#query-types)
-    * 8.21.1 [RQ.SRS-032.ClickHouse.Export.Parquet.Join](#rqsrs-032clickhouseexportparquetjoin)
-    * 8.21.2 [RQ.SRS-032.ClickHouse.Parquet.Export.Union](#rqsrs-032clickhouseparquetexportunion)
+    * 8.21.1 [JOIN](#join)
+      * 8.21.1.1 [RQ.SRS-032.ClickHouse.Export.Parquet.Join](#rqsrs-032clickhouseexportparquetjoin)
+    * 8.21.2 [UNION](#union)
+      * 8.21.2.1 [RQ.SRS-032.ClickHouse.Parquet.Export.Union](#rqsrs-032clickhouseparquetexportunion)
+      * 8.21.2.2 [RQ.SRS-032.ClickHouse.Parquet.Export.Union.Multiple](#rqsrs-032clickhouseparquetexportunionmultiple)
     * 8.21.3 [RQ.SRS-032.ClickHouse.Parquet.Export.View](#rqsrs-032clickhouseparquetexportview)
     * 8.21.4 [RQ.SRS-032.ClickHouse.Parquet.Export.Select.MaterializedView](#rqsrs-032clickhouseparquetexportselectmaterializedview)
   * 8.22 [Export Encoded](#export-encoded)
@@ -1812,15 +1815,36 @@ version: 1.0
 
 ### Query Types
 
-#### RQ.SRS-032.ClickHouse.Export.Parquet.Join
+#### JOIN
+
+##### RQ.SRS-032.ClickHouse.Export.Parquet.Join
 version: 1.0
 
 [ClickHouse] SHALL support exporting output of `SELECT` query with a `JOIN` clause into a Parquet file.
 
-#### RQ.SRS-032.ClickHouse.Parquet.Export.Union
+#### UNION
+
+##### RQ.SRS-032.ClickHouse.Parquet.Export.Union
 version: 1.0
 
 [ClickHouse] SHALL support exporting output of `SELECT` query with a `UNION` clause into a Parquet file.
+
+##### RQ.SRS-032.ClickHouse.Parquet.Export.Union.Multiple
+version: 1.0
+
+[ClickHouse] SHALL support exporting output of `SELECT` query with multiple `UNION` clauses used on the Parquet file.
+
+For example,
+
+```sql
+SELECT * FROM (SELECT * FROM file('file0001.parquet')
+UNION ALL SELECT * FROM file('file0001.parquet')
+UNION ALL SELECT * FROM file('file0001.parquet')
+UNION ALL SELECT * FROM file('file0001.parquet')
+UNION ALL SELECT * FROM file('file0001.parquet')
+...
+UNION ALL SELECT * FROM file('file0001.parquet')) LIMIT 10;
+```
 
 #### RQ.SRS-032.ClickHouse.Parquet.Export.View
 version: 1.0
