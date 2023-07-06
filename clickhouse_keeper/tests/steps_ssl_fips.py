@@ -674,3 +674,152 @@ def openssl_client_connection(
         messages=messages,
         exitcode=exitcode,
     )
+
+@TestStep(Given)
+def start_keepers(self, standalone_keeper_nodes=None, manual_cleanup=False):
+    """Start Keeper services.
+
+    :param standalone_keeper_nodes: nodes which will be used for standalone Keeper cluster
+    """
+    standalone_keeper_nodes = (
+        self.context.cluster.nodes["clickhouse"][9:12]
+        if standalone_keeper_nodes is None
+        else standalone_keeper_nodes
+    )
+    try:
+        for name in standalone_keeper_nodes:
+            node = self.context.cluster.node(name)
+            with When(f"I start {name}"):
+                with By("starting keeper process"):
+                    node.cmd("rm -rf /tmp/clickhouse-keeper.pid")
+                    node.cmd(
+                        "clickhouse keeper --config /etc/clickhouse-server/config.xml"
+                        " --pidfile=/tmp/clickhouse-keeper.pid --daemon",
+                        exitcode=0,
+                    )
+
+                with And("checking that keeper pid file was created"):
+                    node.cmd(
+                        "ls /tmp/clickhouse-keeper.pid",
+                        exitcode=0,
+                        message="/tmp/clickhouse-keeper.pid",
+                    )
+        yield
+    finally:
+        with Given("I stop all keepers"):
+            if manual_cleanup is False:
+                for name in standalone_keeper_nodes:
+                    node = self.context.cluster.node(name)
+                    with When(f"I stop {name}"):
+                        with By("sending kill -TERM to keeper process"):
+                            if node.cmd("ls /tmp/clickhouse-keeper.pid", exitcode=0):
+                                pid = node.cmd(
+                                    "cat /tmp/clickhouse-keeper.pid"
+                                ).output.strip()
+                                node.cmd(f"kill -TERM {pid}", exitcode=0)
+                        with And("checking pid does not exist"):
+                            retry(node.cmd, timeout=100, delay=1)(
+                                f"ps {pid}", exitcode=1, steps=False
+                            )
+
+
+@TestStep(Given)
+def stop_keepers(self, cluster_nodes=None):
+    """Stop ClickHouses group.
+
+    :param cluster_nodes: Clickhouse server nodes
+    """
+    cluster_nodes = (
+        self.context.cluster.nodes["clickhouse"][:9]
+        if cluster_nodes is None
+        else cluster_nodes
+    )
+    for name in cluster_nodes:
+        node = self.context.cluster.node(name)
+        with When(f"I stop {name}"):
+            with By("sending kill -TERM to keeper process"):
+                if node.cmd("ls /tmp/clickhouse-keeper.pid", exitcode=0):
+                    pid = node.cmd("cat /tmp/clickhouse-keeper.pid").output.strip()
+                    node.cmd(f"kill -TERM {pid}", exitcode=0)
+            with And("checking pid does not exist"):
+                retry(node.cmd, timeout=100, delay=1)(
+                    f"ps {pid}", exitcode=1, steps=False
+                )
+
+
+@TestStep(Given)
+def start_stand_alone_keeper_ssl(self, control_nodes=None, cluster_nodes=None, test_setting_name="startup_timeout",
+    test_setting_value="30000"):
+
+    cluster = self.context.cluster
+    control_nodes = (
+        cluster.nodes["clickhouse"][9:12] if control_nodes is None else control_nodes
+    )
+    cluster_nodes = (
+        cluster.nodes["clickhouse"][0:9] if cluster_nodes is None else cluster_nodes
+    )
+    try:
+        with Given("I stop all ClickHouse server nodes"):
+            for name in cluster_nodes:
+                retry(cluster.node(name).stop_clickhouse, timeout=100, delay=1)(
+                    safe=False
+                )
+
+            for name in control_nodes:
+                retry(cluster.node(name).stop_clickhouse, timeout=100, delay=1)(
+                    safe=False
+                )
+
+        with And("I clean ClickHouse Keeper server nodes"):
+            clean_coordination_on_all_nodes1()
+
+        with And("I create server Keeper config"):
+            create_config_section_ssl(
+                control_nodes=control_nodes,
+                cluster_nodes=cluster_nodes,
+                check_preprocessed=False,
+                restart=False,
+                modify=True,
+            )
+
+        with And("I create server openSSL config"):
+            create_open_ssl()
+
+        with And("I create client openSSL config"):
+            create_client_ssl()
+
+        with And("I create standalone 3 nodes Keeper server config file"):
+            create_keeper_cluster_configuration_ssl(
+                nodes=control_nodes,
+                test_setting_name=test_setting_name,
+                test_setting_value=test_setting_value,
+                check_preprocessed=False,
+                restart=False,
+                modify=True,
+            )
+
+        with And("I start ClickHouse Keepers"):
+            time.sleep(10)
+            start_keepers(standalone_keeper_nodes=control_nodes, manual_cleanup=True)
+
+        with And(f"I check that ruok returns imok"):
+            for name in control_nodes:
+                retry(cluster.node("bash-tools").cmd, timeout=100, delay=1)(
+                    f"echo ruok | nc {name} {self.context.port}",
+                    exitcode=0,
+                    message="F",
+                )
+
+        with And("I start rest ClickHouse server nodes"):
+            for name in cluster_nodes:
+                retry(cluster.node(name).start_clickhouse, timeout=100, delay=1)()
+
+        yield
+    finally:
+        with Finally("I clean up"):
+            with By("I start clickhouse servers", flags=TE):
+                stop_keepers(cluster_nodes=control_nodes)
+                for name in control_nodes:
+                    self.context.cluster.node(name).start_clickhouse(wait_healthy=False)
+                    time.sleep(5)
+            clean_coordination_on_all_nodes1()
