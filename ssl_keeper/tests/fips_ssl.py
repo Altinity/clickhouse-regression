@@ -147,7 +147,7 @@ def mixed_keepers_3(self):
 
 
 @TestScenario
-def check_clickhouse_connection_to_keeper(self, node=None, message="keeper"):
+def simple_check_clickhouse_connection_to_keeper(self, node=None, message="keeper"):
     """Check ClickHouse connection to Clickhouse Keeper."""
 
     if node is None:
@@ -159,7 +159,7 @@ def check_clickhouse_connection_to_keeper(self, node=None, message="keeper"):
 
 
 @TestFeature
-def simple_openssl_check(self, node=None, message="New, TLSv1.2, Cipher is "):
+def openssl_check_simple(self, node=None, message="New, TLSv1.2, Cipher is "):
     """Check ClickHouse connection to Clickhouse Keeper on port is ssl."""
 
     if node is None:
@@ -181,7 +181,7 @@ def simple_openssl_check(self, node=None, message="New, TLSv1.2, Cipher is "):
 
 
 @TestFeature
-def simple_openssl_check_v2(self, node=None, message="New, TLSv1.2, Cipher is "):
+def openssl_check_v2_simple(self, node=None, message="New, TLSv1.2, Cipher is "):
     """Check ClickHouse connection to Clickhouse Keeper on port is ssl."""
 
     if node is None:
@@ -372,7 +372,6 @@ def tcp_connection_clickhouse_client(
         )
 
     with Check(f"just disabling TLSv1.1 suite connection should {tls1_2_status}"):
-        pause()
         clickhouse_client_connection(
             options={"disableProtocols": "tlsv1_1"},
             success=tls1_2_enabled,
@@ -441,6 +440,13 @@ def feature(self):
     clickhouse-keeper and zookeeper.
     """
     with Pool(1) as executor:
+        try:
+            for scenario in loads(current_module(), Scenario):
+                Feature(test=scenario, parallel=True, executor=executor)()
+        finally:
+            join()
+
+    with Pool(1) as executor:
 
         try:
             for feature in loads(current_module(), Feature):
@@ -449,9 +455,4 @@ def feature(self):
         finally:
             join()
 
-    with Pool(1) as executor:
-        try:
-            for scenario in loads(current_module(), Scenario):
-                Feature(test=scenario, parallel=True, executor=executor)()
-        finally:
-            join()
+

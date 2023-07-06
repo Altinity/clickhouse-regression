@@ -596,37 +596,72 @@ def table_select(
 
 
 @TestStep(Given)
-def start_stand_alone_keeper(self):
-    """Start 9 nodes ClickHouse server and standalone 3 nodes Keeper."""
+def start_stand_alone_keeper(self, control_nodes=None, cluster_nodes=None, test_setting_name="startup_timeout",
+    test_setting_value="30000"):
+
     cluster = self.context.cluster
+    control_nodes = (
+        cluster.nodes["clickhouse"][9:12] if control_nodes is None else control_nodes
+    )
+    cluster_nodes = (
+        cluster.nodes["clickhouse"][0:9] if cluster_nodes is None else cluster_nodes
+    )
     try:
-        with Given("I start standalone 3 nodes Keeper server"):
-            time.sleep(10)
-            create_keeper_cluster_configuration(nodes=cluster.nodes["clickhouse"][9:12])
+        with Given("I stop all ClickHouse server nodes"):
+            for name in cluster_nodes:
+                retry(cluster.node(name).stop_clickhouse, timeout=100, delay=1)(
+                    safe=False
+                )
 
-        with Given("I start all standalone Keepers nodes"):
-            time.sleep(10)
-            for name in cluster.nodes["clickhouse"][9:12]:
-                cluster.node(name).stop_clickhouse()
-            start_keepers(standalone_keeper_nodes=cluster.nodes["clickhouse"][9:12])
+            for name in control_nodes:
+                retry(cluster.node(name).stop_clickhouse, timeout=100, delay=1)(
+                    safe=False
+                )
 
-        with And("I add Keeper server configuration file"):
-            time.sleep(3)
+        with And("I clean ClickHouse Keeper server nodes"):
+            clean_coordination_on_all_nodes()
+
+        with And("I create server Keeper config"):
             create_config_section(
-                control_nodes=cluster.nodes["clickhouse"][9:12],
-                cluster_nodes=cluster.nodes["clickhouse"][:12],
+                control_nodes=control_nodes,
+                cluster_nodes=cluster_nodes,
+                check_preprocessed=False,
+                restart=False,
+                modify=False,
             )
 
-        with And("I start ClickHouse server"):
-            time.sleep(3)
-            for name in cluster.nodes["clickhouse"][:9]:
-                cluster.node(name).restart_clickhouse()
+        with And("I create standalone 3 nodes Keeper server config file"):
+            create_keeper_cluster_configuration(
+                nodes=control_nodes,
+                test_setting_name=test_setting_name,
+                test_setting_value=test_setting_value,
+                check_preprocessed=False,
+                restart=False,
+                modify=False,
+            )
+
+        with And("I start ClickHouse Keepers"):
+            time.sleep(10)
+            start_keepers(standalone_keeper_nodes=control_nodes, manual_cleanup=True)
+
+        with And(f"I check that ruok returns imok"):
+            for name in control_nodes:
+                retry(cluster.node("bash-tools").cmd, timeout=100, delay=1)(
+                    f"echo ruok | nc {name} {self.context.port}",
+                    exitcode=0,
+                    message="imok",
+                )
+
+        with And("I start rest ClickHouse server nodes"):
+            for name in cluster_nodes:
+                retry(cluster.node(name).start_clickhouse, timeout=100, delay=1)()
+
         yield
     finally:
         with Finally("I clean up"):
             with By("I start clickhouse servers", flags=TE):
-                stop_keepers(cluster_nodes=cluster.nodes["clickhouse"][9:12])
-                for name in cluster.nodes["clickhouse"][9:12]:
+                stop_keepers(cluster_nodes=control_nodes)
+                for name in control_nodes:
                     self.context.cluster.node(name).start_clickhouse(wait_healthy=False)
                     time.sleep(5)
 
