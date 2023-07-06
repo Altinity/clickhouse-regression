@@ -675,6 +675,7 @@ def openssl_client_connection(
         exitcode=exitcode,
     )
 
+
 @TestStep(Given)
 def start_keepers(self, standalone_keeper_nodes=None, manual_cleanup=False):
     """Start Keeper services.
@@ -748,8 +749,13 @@ def stop_keepers(self, cluster_nodes=None):
 
 
 @TestStep(Given)
-def start_stand_alone_keeper_ssl(self, control_nodes=None, cluster_nodes=None, test_setting_name="startup_timeout",
-    test_setting_value="30000"):
+def start_stand_alone_keeper_ssl(
+    self,
+    control_nodes=None,
+    cluster_nodes=None,
+    test_setting_name="startup_timeout",
+    test_setting_value="30000",
+):
 
     cluster = self.context.cluster
     control_nodes = (
