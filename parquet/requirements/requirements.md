@@ -1191,6 +1191,7 @@ version:1.0
 - `JSON`
 - `UUID`
 - `ENUM`
+- `Null`
 
 #### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Unsupported.ChunkedArray
 version:1.0
