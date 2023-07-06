@@ -357,7 +357,7 @@ def date(self):
     RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_TIMESTAMP_ns("1.0"),
     RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_TIMESTAMP_ms("1.0"),
 )
-def timestamp(self):
+def timestamp1(self):
     """Checking that ClickHouse can import and export a Parquet file with timestamp (ms, ns) datatypes."""
     with Given("I have a Parquet file with timestamp (ms, ns) datatype"):
         import_file = os.path.join("datatypes", "date_stats.parquet")

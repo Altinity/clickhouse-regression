@@ -110,3 +110,5 @@ int64_negative_structure = r"""'dt\tNullable(String)\t\t\t\t\t\ndt2\tNullable(In
 
 int64_negative2_structure = r"""'ORGUNITID\tNullable(Int64)\t\t\t\t\t\nVALIDFROM\tNullable(String)\t\t\t\t\t\nVALIDTO\tNullable(String)\t\t\t\t\t\nORGUNITNAME\tNullable(String)\t\t\t\t\t\nNAMEVALIDFROM\tNullable(String)\t\t\t\t\t\nNAMEVALIDTO\tNullable(String)\t\t\t\t\t\nPARENTID\tNullable(Int64)\t\t\t\t\t\nPARENTNAME\tNullable(String)\t\t\t\t\t\nPARENTNAMEVALIDFROM\tNullable(String)\t\t\t\t\t\nPARENTNAMEVALIDTO\tNullable(String)\t\t\t\t\t\nLEVELID\tNullable(Int64)\t\t\t\t\t\nLEVELNAME\tNullable(String)\t\t\t\t\t\nPARENTLEVELID\tNullable(Int64)\t\t\t\t\t\nPARENTLEVELNAME\tNullable(String)\t\t\t\t\t\nORGSTRUCTVALIDFROM\tNullable(String)\t\t\t\t\t\nORGSTRUCTVALIDTO\tNullable(String)\t\t\t\t\t\nPARENTORGSTRUCTVALIDFROM\tNullable(String)\t\t\t\t\t\nPARENTORGSTRUCTVALIDTO\tNullable(String)\t\t\t\t\t\nCUSTOMERCODE\tNullable(String)'"""
 
+int32_2_structure = r"""'tconst\tNullable(String)\t\t\t\t\t\nprincipals\tTuple(ordering Nullable(Int32), nconst Nullable(String), category Nullable(String), job Nullable(String), characters Array(Nullable(String)))'"""
+
