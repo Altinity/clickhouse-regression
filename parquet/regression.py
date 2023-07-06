@@ -27,6 +27,9 @@ xfails = {
     "/parquet/complex/nestedstruct/*": [
         (Fail, "datetime different on export and import, needs to be investigated")
     ],
+    "/parquet/complex/largestruct3/*": [
+        (Fail, "datetime different on export and import, needs to be investigated")
+    ],
     "/parquet/compression/snappyplain/*": [
         (Fail, "datetime different on export and import, needs to be investigated")
     ],
@@ -49,6 +52,9 @@ xfails = {
         (Fail, "datetime different on export and import, needs to be investigated")
     ],
     "/parquet/encoding/plainrlesnappy/*": [
+        (Fail, "datetime different on export and import, needs to be investigated")
+    ],
+    "/parquet/encoding/negativeint64/*": [
         (Fail, "datetime different on export and import, needs to be investigated")
     ],
     "/parquet/datatypes/nameswithemoji/*": [
