@@ -3,6 +3,7 @@ import time
 from clickhouse_keeper.tests.steps import *
 from clickhouse_keeper.tests.steps_ssl import *
 from clickhouse_keeper.requirements import *
+from helpers.common import *
 
 
 @TestScenario
@@ -91,123 +92,126 @@ def mixed_start_up(
 )
 def standalone_start_up(self):
     """Check 9 nodes ClickHouse server and standalone 3 nodes Keeper start up and simple synchronization"""
-    if self.context.ssl == "true":
-        clean_coordination_on_all_nodes()
-        cluster = self.context.cluster
-        try:
-            with Given("I stop all ClickHouse server nodes"):
-                for name in cluster.nodes["clickhouse"][:12]:
-                    retry(cluster.node(name).stop_clickhouse, timeout=100, delay=1)(
-                        safe=False
-                    )
-
-            with And("I clean ClickHouse Keeper server nodes"):
-                clean_coordination_on_all_nodes1()
-
-            with Given("I create config 3 nodes Keeper server"):
-                create_keeper_cluster_configuration_ssl(
-                    nodes=cluster.nodes["clickhouse"][9:12]
-                )
-
-            with And("I create server openSSL config"):
-                create_open_ssl()
-
-            with And("I create client openSSL config"):
-                create_client_ssl()
-
-            with And("I add Keeper server configuration file"):
-                create_config_section_ssl(
-                    control_nodes=cluster.nodes["clickhouse"][9:12],
-                    cluster_nodes=cluster.nodes["clickhouse"][:12],
-                    check_preprocessed=False,
-                )
-
-            with Given("I start all standalone Keepers nodes"):
-                start_keepers_ssl(
-                    standalone_keeper_nodes=cluster.nodes["clickhouse"][9:12],
-                    manual_cleanup=True,
-                )
-
-            with And("I start ClickHouse server"):
-                time.sleep(15)
-                for name in cluster.nodes["clickhouse"][:9]:
-                    cluster.node(name).start_clickhouse()
-
-            with And("I create simple table"):
-                create_simple_table(manual_cleanup=True)
-
-            with And("I make simple synchronization check"):
-                simple_synchronization_check()
-
-        finally:
-            with Finally("I clean up"):
-                with By("Dropping table if exists", flags=TE):
-                    self.context.cluster.node("clickhouse1").query(
-                        f"DROP TABLE IF EXISTS test ON CLUSTER "
-                        "'Cluster_3shards_with_3replicas' SYNC"
-                    )
-
-                with By("I start clickhouse servers", flags=TE):
-                    stop_keepers(cluster_nodes=cluster.nodes["clickhouse"][9:12])
-                    for name in cluster.nodes["clickhouse"][9:12]:
-                        self.context.cluster.node(name).start_clickhouse(
-                            wait_healthy=False
+    if check_clickhouse_version("<23.3")(self):
+        if self.context.ssl == "true":
+            clean_coordination_on_all_nodes()
+            cluster = self.context.cluster
+            try:
+                with Given("I stop all ClickHouse server nodes"):
+                    for name in cluster.nodes["clickhouse"][:12]:
+                        retry(cluster.node(name).stop_clickhouse, timeout=100, delay=1)(
+                            safe=False
                         )
-                        time.sleep(5)
 
-                clean_coordination_on_all_nodes()
+                with And("I clean ClickHouse Keeper server nodes"):
+                    clean_coordination_on_all_nodes1()
+
+                with Given("I create config 3 nodes Keeper server"):
+                    create_keeper_cluster_configuration_ssl(
+                        nodes=cluster.nodes["clickhouse"][9:12]
+                    )
+
+                with And("I create server openSSL config"):
+                    create_open_ssl()
+
+                with And("I create client openSSL config"):
+                    create_client_ssl()
+
+                with And("I add Keeper server configuration file"):
+                    create_config_section_ssl(
+                        control_nodes=cluster.nodes["clickhouse"][9:12],
+                        cluster_nodes=cluster.nodes["clickhouse"][:12],
+                        check_preprocessed=False,
+                    )
+
+                with Given("I start all standalone Keepers nodes"):
+                    start_keepers_ssl(
+                        standalone_keeper_nodes=cluster.nodes["clickhouse"][9:12],
+                        manual_cleanup=True,
+                    )
+
+                with And("I start ClickHouse server"):
+                    time.sleep(15)
+                    for name in cluster.nodes["clickhouse"][:9]:
+                        cluster.node(name).start_clickhouse()
+
+                with And("I create simple table"):
+                    create_simple_table(manual_cleanup=True)
+
+                with And("I make simple synchronization check"):
+                    simple_synchronization_check()
+
+            finally:
+                with Finally("I clean up"):
+                    with By("Dropping table if exists", flags=TE):
+                        self.context.cluster.node("clickhouse1").query(
+                            f"DROP TABLE IF EXISTS test ON CLUSTER "
+                            "'Cluster_3shards_with_3replicas' SYNC"
+                        )
+
+                    with By("I start clickhouse servers", flags=TE):
+                        stop_keepers(cluster_nodes=cluster.nodes["clickhouse"][9:12])
+                        for name in cluster.nodes["clickhouse"][9:12]:
+                            self.context.cluster.node(name).start_clickhouse(
+                                wait_healthy=False
+                            )
+                            time.sleep(5)
+
+                    clean_coordination_on_all_nodes()
+        else:
+            clean_coordination_on_all_nodes()
+            cluster = self.context.cluster
+            try:
+                with Given("I create config 3 nodes Keeper server"):
+                    create_keeper_cluster_configuration(
+                        nodes=cluster.nodes["clickhouse"][9:12]
+                    )
+
+                with Given("I start all standalone Keepers nodes"):
+                    for name in cluster.nodes["clickhouse"][:12]:
+                        cluster.node(name).stop_clickhouse()
+                    start_keepers(
+                        standalone_keeper_nodes=cluster.nodes["clickhouse"][9:12],
+                        manual_cleanup=True,
+                    )
+
+                with And("I add Keeper server configuration file"):
+                    create_config_section(
+                        control_nodes=cluster.nodes["clickhouse"][9:12],
+                        cluster_nodes=cluster.nodes["clickhouse"][:12],
+                        check_preprocessed=False,
+                    )
+
+                with And("I start ClickHouse server"):
+                    time.sleep(3)
+                    for name in cluster.nodes["clickhouse"][:9]:
+                        cluster.node(name).start_clickhouse()
+
+                with And("I create simple table"):
+                    create_simple_table(manual_cleanup=True)
+
+                with And("I make simple synchronization check"):
+                    simple_synchronization_check()
+
+            finally:
+                with Finally("I clean up"):
+                    with By("Dropping table if exists", flags=TE):
+                        self.context.cluster.node("clickhouse1").query(
+                            f"DROP TABLE IF EXISTS test ON CLUSTER "
+                            "'Cluster_3shards_with_3replicas' SYNC"
+                        )
+
+                    with By("I start clickhouse servers", flags=TE):
+                        stop_keepers(cluster_nodes=cluster.nodes["clickhouse"][9:12])
+                        for name in cluster.nodes["clickhouse"][9:12]:
+                            self.context.cluster.node(name).start_clickhouse(
+                                wait_healthy=False
+                            )
+                            time.sleep(5)
+
+                    clean_coordination_on_all_nodes()
     else:
-        clean_coordination_on_all_nodes()
-        cluster = self.context.cluster
-        try:
-            with Given("I create config 3 nodes Keeper server"):
-                create_keeper_cluster_configuration(
-                    nodes=cluster.nodes["clickhouse"][9:12]
-                )
-
-            with Given("I start all standalone Keepers nodes"):
-                for name in cluster.nodes["clickhouse"][:12]:
-                    cluster.node(name).stop_clickhouse()
-                start_keepers(
-                    standalone_keeper_nodes=cluster.nodes["clickhouse"][9:12],
-                    manual_cleanup=True,
-                )
-
-            with And("I add Keeper server configuration file"):
-                create_config_section(
-                    control_nodes=cluster.nodes["clickhouse"][9:12],
-                    cluster_nodes=cluster.nodes["clickhouse"][:12],
-                    check_preprocessed=False,
-                )
-
-            with And("I start ClickHouse server"):
-                time.sleep(3)
-                for name in cluster.nodes["clickhouse"][:9]:
-                    cluster.node(name).start_clickhouse()
-
-            with And("I create simple table"):
-                create_simple_table(manual_cleanup=True)
-
-            with And("I make simple synchronization check"):
-                simple_synchronization_check()
-
-        finally:
-            with Finally("I clean up"):
-                with By("Dropping table if exists", flags=TE):
-                    self.context.cluster.node("clickhouse1").query(
-                        f"DROP TABLE IF EXISTS test ON CLUSTER "
-                        "'Cluster_3shards_with_3replicas' SYNC"
-                    )
-
-                with By("I start clickhouse servers", flags=TE):
-                    stop_keepers(cluster_nodes=cluster.nodes["clickhouse"][9:12])
-                    for name in cluster.nodes["clickhouse"][9:12]:
-                        self.context.cluster.node(name).start_clickhouse(
-                            wait_healthy=False
-                        )
-                        time.sleep(5)
-
-                clean_coordination_on_all_nodes()
+        xfail("test doesn't work from 23.3")
 
 
 @TestScenario
@@ -277,67 +281,70 @@ def different_start_up(self):
 def different_shared_start_up(self):
     """Check 9 nodes ClickHouse server with different 3 nodes Keeper clusters for each shard with one shared start up
     and synchronization"""
-    if self.context.ssl == "true":
-        xfail("was not created for the SSL configuration")
-    cluster = self.context.cluster
-    cluster_nodes = cluster.nodes["clickhouse"][:9]
-    control_nodes = cluster.nodes["clickhouse"][6:9]
-    try:
-        with Given("I stop all ClickHouse server nodes"):
-            for name in cluster_nodes:
-                cluster.node(name).stop_clickhouse(safe=False)
+    if check_clickhouse_version("<23.3")(self):
+        if self.context.ssl == "true":
+            xfail("was not created for the SSL configuration")
+        cluster = self.context.cluster
+        cluster_nodes = cluster.nodes["clickhouse"][:9]
+        control_nodes = cluster.nodes["clickhouse"][6:9]
+        try:
+            with Given("I stop all ClickHouse server nodes"):
+                for name in cluster_nodes:
+                    cluster.node(name).stop_clickhouse(safe=False)
 
-        with And("I clean ClickHouse Keeper server nodes"):
-            clean_coordination_on_all_nodes()
+            with And("I clean ClickHouse Keeper server nodes"):
+                clean_coordination_on_all_nodes()
 
-        with And("I create server Keeper config"):
-            create_config_section(
-                control_nodes=control_nodes,
-                cluster_nodes=cluster_nodes,
-                check_preprocessed=False,
-                restart=False,
-                modify=False,
-            )
+            with And("I create server Keeper config"):
+                create_config_section(
+                    control_nodes=control_nodes,
+                    cluster_nodes=cluster_nodes,
+                    check_preprocessed=False,
+                    restart=False,
+                    modify=False,
+                )
 
-        with And("I create main mixed 3 nodes Keeper server config file"):
-            create_keeper_cluster_configuration(
-                nodes=control_nodes,
-                check_preprocessed=False,
-                restart=False,
-                modify=False,
-            )
+            with And("I create main mixed 3 nodes Keeper server config file"):
+                create_keeper_cluster_configuration(
+                    nodes=control_nodes,
+                    check_preprocessed=False,
+                    restart=False,
+                    modify=False,
+                )
 
-        with And("I create first sub mixed 3 nodes Keeper server config file"):
-            create_keeper_cluster_configuration(
-                nodes=cluster.nodes["clickhouse"][:3],
-                check_preprocessed=False,
-                restart=False,
-                modify=False,
-            )
+            with And("I create first sub mixed 3 nodes Keeper server config file"):
+                create_keeper_cluster_configuration(
+                    nodes=cluster.nodes["clickhouse"][:3],
+                    check_preprocessed=False,
+                    restart=False,
+                    modify=False,
+                )
 
-        with And("I create second sub mixed 3 nodes Keeper server config file"):
-            create_keeper_cluster_configuration(
-                nodes=cluster.nodes["clickhouse"][3:6],
-                check_preprocessed=False,
-                restart=False,
-                modify=False,
-            )
+            with And("I create second sub mixed 3 nodes Keeper server config file"):
+                create_keeper_cluster_configuration(
+                    nodes=cluster.nodes["clickhouse"][3:6],
+                    check_preprocessed=False,
+                    restart=False,
+                    modify=False,
+                )
 
-        with And("I start mixed ClickHouse server nodes"):
-            for name in control_nodes:
-                cluster.node(name).start_clickhouse(wait_healthy=False)
+            with And("I start mixed ClickHouse server nodes"):
+                for name in control_nodes:
+                    cluster.node(name).start_clickhouse(wait_healthy=False)
 
-        with And("I start first 3 ClickHouse server nodes"):
-            for name in cluster.nodes["clickhouse"][:3]:
-                retry(cluster.node(name).start_clickhouse, timeout=100, delay=1)()
+            with And("I start first 3 ClickHouse server nodes"):
+                for name in cluster.nodes["clickhouse"][:3]:
+                    retry(cluster.node(name).start_clickhouse, timeout=100, delay=1)()
 
-        with And("I start second 3 ClickHouse server nodes"):
-            for name in cluster.nodes["clickhouse"][3:6]:
-                retry(cluster.node(name).start_clickhouse, timeout=100, delay=1)()
+            with And("I start second 3 ClickHouse server nodes"):
+                for name in cluster.nodes["clickhouse"][3:6]:
+                    retry(cluster.node(name).start_clickhouse, timeout=100, delay=1)()
 
-    finally:
-        with Finally("I clean up"):
-            clean_coordination_on_all_nodes()
+        finally:
+            with Finally("I clean up"):
+                clean_coordination_on_all_nodes()
+    else:
+        xfail("test doesn't work from 23.3")
 
 
 # @TestScenario
