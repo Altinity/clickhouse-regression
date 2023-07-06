@@ -471,14 +471,12 @@ def standalone_keepers_3(self):
     try:
         if self.context.ssl == "true":
             start_stand_alone_keeper_ssl(
-                cluster_nodes=cluster_nodes,
-                control_nodes=control_nodes
+                cluster_nodes=cluster_nodes, control_nodes=control_nodes
             )
 
         else:
             start_stand_alone_keeper(
-                cluster_nodes=cluster_nodes,
-                control_nodes=control_nodes
+                cluster_nodes=cluster_nodes, control_nodes=control_nodes
             )
 
         with Given("Receive UID"):
@@ -521,7 +519,10 @@ def standalone_keepers_3(self):
                 )
 
         with And("I start dropped nodes"):
-            start_keepers(standalone_keeper_nodes=cluster.nodes["clickhouse"][9:11], manual_cleanup=True)
+            start_keepers(
+                standalone_keeper_nodes=cluster.nodes["clickhouse"][9:11],
+                manual_cleanup=True,
+            )
 
         with And(f"I check that ruok returns imok"):
             for name in cluster.nodes["clickhouse"][9:12]:
@@ -542,8 +543,7 @@ def standalone_keepers_3(self):
 
 @TestScenario
 def standalone_keepers_2(self):
-    """Check that 2 nodes Clickhouse Keeper Cluster work in write and in read mode.
-    """
+    """Check that 2 nodes Clickhouse Keeper Cluster work in write and in read mode."""
 
     cluster = self.context.cluster
     control_nodes = cluster.nodes["clickhouse"][9:11]
@@ -552,14 +552,12 @@ def standalone_keepers_2(self):
     try:
         if self.context.ssl == "true":
             start_stand_alone_keeper_ssl(
-                cluster_nodes=cluster_nodes,
-                control_nodes=control_nodes
+                cluster_nodes=cluster_nodes, control_nodes=control_nodes
             )
 
         else:
             start_stand_alone_keeper(
-                cluster_nodes=cluster_nodes,
-                control_nodes=control_nodes
+                cluster_nodes=cluster_nodes, control_nodes=control_nodes
             )
 
         with Given("Receive UID"):
@@ -598,7 +596,10 @@ def standalone_keepers_2(self):
                 )
 
         with And("I start dropped nodes"):
-            start_keepers(standalone_keeper_nodes=cluster.nodes["clickhouse"][10:11], manual_cleanup=True)
+            start_keepers(
+                standalone_keeper_nodes=cluster.nodes["clickhouse"][10:11],
+                manual_cleanup=True,
+            )
 
         with And(f"I check that ruok returns imok"):
             for name in cluster.nodes["clickhouse"][9:11]:
@@ -619,8 +620,7 @@ def standalone_keepers_2(self):
 
 @TestScenario
 def standalone_keepers_1(self):
-    """Check that 1 node Clickhouse Keeper Cluster work in write and in read mode.
-    """
+    """Check that 1 node Clickhouse Keeper Cluster work in write and in read mode."""
 
     cluster = self.context.cluster
     control_nodes = cluster.nodes["clickhouse"][9:10]
@@ -629,14 +629,12 @@ def standalone_keepers_1(self):
     try:
         if self.context.ssl == "true":
             start_stand_alone_keeper_ssl(
-                cluster_nodes=cluster_nodes,
-                control_nodes=control_nodes
+                cluster_nodes=cluster_nodes, control_nodes=control_nodes
             )
 
         else:
             start_stand_alone_keeper(
-                cluster_nodes=cluster_nodes,
-                control_nodes=control_nodes
+                cluster_nodes=cluster_nodes, control_nodes=control_nodes
             )
 
         with Given("Receive UID"):
@@ -675,7 +673,10 @@ def standalone_keepers_1(self):
                 )
 
         with And("I start dropped nodes"):
-            start_keepers(standalone_keeper_nodes=cluster.nodes["clickhouse"][9:10], manual_cleanup=True)
+            start_keepers(
+                standalone_keeper_nodes=cluster.nodes["clickhouse"][9:10],
+                manual_cleanup=True,
+            )
 
         with And(f"I check that ruok returns imok"):
             for name in cluster.nodes["clickhouse"][9:10]:

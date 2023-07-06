@@ -72,31 +72,37 @@ def start_bench_scenario(
 
 
 @TestScenario
-def standalone(self, number_clickhouse_cluster_nodes=9, number_of_clickhouse_keeper_nodes=1):
+def standalone(
+    self, number_clickhouse_cluster_nodes=9, number_of_clickhouse_keeper_nodes=1
+):
     """
     Standalone Keeper configuration bench test.
     """
     cluster = self.context.cluster
-    control_nodes = cluster.nodes["clickhouse"][number_clickhouse_cluster_nodes:
-                                                number_clickhouse_cluster_nodes+number_of_clickhouse_keeper_nodes]
+    control_nodes = cluster.nodes["clickhouse"][
+        number_clickhouse_cluster_nodes : number_clickhouse_cluster_nodes
+        + number_of_clickhouse_keeper_nodes
+    ]
     cluster_nodes = cluster.nodes["clickhouse"][:number_clickhouse_cluster_nodes]
 
-    cluster_name = '\'Cluster_3shards_with_3replicas\''
+    cluster_name = "'Cluster_3shards_with_3replicas'"
     self.context.list = []
     try:
         with Given("I start mixed ClickHouse Keepers"):
             if self.context.ssl == "true":
-                start_stand_alone_keeper_ssl(control_nodes=control_nodes,
-                                   cluster_nodes=cluster_nodes)
+                start_stand_alone_keeper_ssl(
+                    control_nodes=control_nodes, cluster_nodes=cluster_nodes
+                )
             else:
-                start_stand_alone_keeper(control_nodes=control_nodes,
-                                   cluster_nodes=cluster_nodes)
+                start_stand_alone_keeper(
+                    control_nodes=control_nodes, cluster_nodes=cluster_nodes
+                )
 
         with And("I start bench scenario"):
             for i in range(5):
                 start_bench_scenario(cluster_name=cluster_name, number=100)
 
-        with open('bench.csv', 'a', encoding='UTF8', newline='') as f:
+        with open("bench.csv", "a", encoding="UTF8", newline="") as f:
             writer = csv.writer(f)
 
             writer.writerow(["standalone:" + self.context.clickhouse_version])
@@ -116,32 +122,40 @@ def mixed(self, number_clickhouse_cluster_nodes=9, number_of_clickhouse_keeper_n
     Mixed keeper configuration bench test.
     """
     cluster = self.context.cluster
-    control_nodes = cluster.nodes["clickhouse"][number_clickhouse_cluster_nodes-number_of_clickhouse_keeper_nodes:
-                                                number_clickhouse_cluster_nodes]
+    control_nodes = cluster.nodes["clickhouse"][
+        number_clickhouse_cluster_nodes
+        - number_of_clickhouse_keeper_nodes : number_clickhouse_cluster_nodes
+    ]
     cluster_nodes = cluster.nodes["clickhouse"][:number_clickhouse_cluster_nodes]
-    rest_cluster_nodes = cluster.nodes["clickhouse"][:number_clickhouse_cluster_nodes-number_of_clickhouse_keeper_nodes]
-    cluster_name = '\'Cluster_3shards_with_3replicas\''
+    rest_cluster_nodes = cluster.nodes["clickhouse"][
+        : number_clickhouse_cluster_nodes - number_of_clickhouse_keeper_nodes
+    ]
+    cluster_name = "'Cluster_3shards_with_3replicas'"
     self.context.list = []
 
     try:
         with Given("I start mixed ClickHouse Keepers"):
             if self.context.ssl == "true":
-                start_mixed_keeper_ssl(control_nodes=control_nodes,
-                                   cluster_nodes=cluster_nodes,
-                                   rest_cluster_nodes=rest_cluster_nodes)
+                start_mixed_keeper_ssl(
+                    control_nodes=control_nodes,
+                    cluster_nodes=cluster_nodes,
+                    rest_cluster_nodes=rest_cluster_nodes,
+                )
             else:
-                start_mixed_keeper(control_nodes=control_nodes,
-                                   cluster_nodes=cluster_nodes,
-                                   rest_cluster_nodes=rest_cluster_nodes)
+                start_mixed_keeper(
+                    control_nodes=control_nodes,
+                    cluster_nodes=cluster_nodes,
+                    rest_cluster_nodes=rest_cluster_nodes,
+                )
 
         with And("I start bench scenario"):
             for i in range(5):
                 start_bench_scenario(cluster_name=cluster_name, number=100)
 
-            with open('bench.csv', 'a', encoding='UTF8', newline='') as f:
+            with open("bench.csv", "a", encoding="UTF8", newline="") as f:
                 writer = csv.writer(f)
 
-                writer.writerow(["mixed:"+self.context.clickhouse_version])
+                writer.writerow(["mixed:" + self.context.clickhouse_version])
 
                 writer.writerow(self.context.list)
 
@@ -161,22 +175,23 @@ def zookeeper(self, number_clickhouse_cluster_nodes=9):
     clickhouse_cluster_nodes = cluster.nodes["clickhouse"][
         :number_clickhouse_cluster_nodes
     ]
-    cluster_name = '\'Cluster_3shards_with_3replicas\''
+    cluster_name = "'Cluster_3shards_with_3replicas'"
 
     try:
         with Given("I create 1 keeper cluster configuration"):
             create_config_section(
-                control_nodes=keeper_cluster_nodes, cluster_nodes=clickhouse_cluster_nodes
+                control_nodes=keeper_cluster_nodes,
+                cluster_nodes=clickhouse_cluster_nodes,
             )
 
         with And("I start bench scenario"):
             for i in range(5):
                 start_bench_scenario(cluster_name=cluster_name, number=100)
 
-            with open('bench.csv', 'a', encoding='UTF8', newline='') as f:
+            with open("bench.csv", "a", encoding="UTF8", newline="") as f:
                 writer = csv.writer(f)
 
-                writer.writerow(["zookeeper:"+self.context.clickhouse_version])
+                writer.writerow(["zookeeper:" + self.context.clickhouse_version])
 
                 writer.writerow(self.context.list)
     finally:
