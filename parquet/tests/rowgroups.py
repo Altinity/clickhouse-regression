@@ -10,18 +10,22 @@ from helpers.common import *
 
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Import_RowGroupSize("1.0"))
-def many_row_groups(self):
+def manyrowgroups(self):
     """Checking that ClickHouse can import and export parquet files that are  written such that every row has its own row group."""
-    import_file = os.path.join("manyrowgroups.parquet")
-    xfail(reason="Test not added yet")
+    with Given("I have a large Parquet file in which every row has its own row group"):
+        import_file = os.path.join("datatypes", "manyrowgroups.parquet")
+
+    import_export(snapshot_name="many_row_groups_structure", import_file=import_file)
 
 
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Import_RowGroupSize("1.0"))
-def many_row_groups2(self):
+def manyrowgroups2(self):
     """Checking that ClickHouse can import and export parquet files that are  written such that every row has its own row group."""
-    import_file = os.path.join("manyrowgroups2.parquet")
-    xfail(reason="Test not added yet")
+    with Given("I have a large Parquet file in which every row has its own row group"):
+        import_file = os.path.join("datatypes", "manyrowgroups2.parquet")
+
+    import_export(snapshot_name="many_row_groups_2_structure", import_file=import_file)
 
 
 @TestFeature
