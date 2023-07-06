@@ -48,6 +48,9 @@ xfails = {
     "/parquet/datatypes/stringtypes/*": [
         (Fail, "datetime different on export and import, needs to be investigated")
     ],
+    "/parquet/encoding/plainrlesnappy/*": [
+        (Fail, "datetime different on export and import, needs to be investigated")
+    ],
     "/parquet/datatypes/nameswithemoji/*": [
         (
             Fail,
@@ -87,6 +90,20 @@ xfails = {
             Fail,
             "Getting an error that encoding is not supported. error "
             "occurs because of Delta Encoding (DELTA_BINARY_PACKED)",
+        )
+    ],
+    "/parquet/encoding/deltabytearray?/*": [
+        (
+            Fail,
+            "Getting an error that encoding is not supported. error "
+            "occurs because of DELTA_BYTE_ARRAY encoding",
+        )
+    ],
+    "/parquet/encoding/deltalengthbytearray/*": [
+        (
+            Fail,
+            "Getting an error that encoding is not supported. error "
+            "occurs because of DELTA_LENGTH_BYTE_ARRAY encoding",
         )
     ],
 }
