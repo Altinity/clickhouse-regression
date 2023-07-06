@@ -1,7 +1,7 @@
 from clickhouse_keeper.requirements import *
 from clickhouse_keeper.tests.steps import *
-from helpers.common import getuid
 import time
+from helpers.common import *
 
 
 @TestOutline
@@ -93,6 +93,7 @@ def migrate_from_zookeeper(self, use_standalone_keeper_server):
                 )
 
             with Given("I start all standalone Keepers nodes"):
+                time.sleep(30)
                 for name in cluster.nodes["clickhouse"][9:12]:
                     cluster.node(name).stop_clickhouse()
                 start_keepers(
@@ -109,6 +110,7 @@ def migrate_from_zookeeper(self, use_standalone_keeper_server):
                 )
 
             with And("I start all ClickHouse server nodes"):
+                time.sleep(30)
                 for name in cluster.nodes["clickhouse"][:9]:
                     cluster.node(name).start_clickhouse()
 
@@ -153,6 +155,7 @@ def migrate_from_zookeeper(self, use_standalone_keeper_server):
 
         if use_standalone_keeper_server:
             with Then("I start clickhouse servers"):
+                time.sleep(30)
                 stop_keepers(cluster_nodes=cluster.nodes["clickhouse"][9:12])
                 for name in cluster.nodes["clickhouse"][9:12]:
                     self.context.cluster.node(name).start_clickhouse(wait_healthy=False)
@@ -235,7 +238,10 @@ def migrate_from_zookeeper_to_standalone_keeper(self):
     available after Zookeeper cluster is down and `clickhouse-keeper`
     is available.
     """
-    migrate_from_zookeeper(use_standalone_keeper_server=True)
+    if check_clickhouse_version("<23.3")(self):
+        migrate_from_zookeeper(use_standalone_keeper_server=True)
+    else:
+        xfail("test doesn't work from 23.3")
 
 
 @TestFeature
