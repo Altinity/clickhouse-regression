@@ -950,6 +950,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Unsupported = Requirement(
         "- `JSON`\n"
         "- `UUID`\n"
         "- `ENUM`\n"
+        "- `Null`\n"
         "\n"
     ),
     link=None,
@@ -6868,6 +6869,7 @@ version:1.0
 - `JSON`
 - `UUID`
 - `ENUM`
+- `Null`
 
 #### RQ.SRS-032.ClickHouse.Parquet.Import.DataTypes.Unsupported.ChunkedArray
 version:1.0

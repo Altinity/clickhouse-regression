@@ -357,7 +357,7 @@ def date(self):
     RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_TIMESTAMP_ns("1.0"),
     RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_TIMESTAMP_ms("1.0"),
 )
-def timestamp(self):
+def timestamp1(self):
     """Checking that ClickHouse can import and export a Parquet file with timestamp (ms, ns) datatypes."""
     with Given("I have a Parquet file with timestamp (ms, ns) datatype"):
         import_file = os.path.join("datatypes", "date_stats.parquet")
@@ -642,11 +642,200 @@ def stringtypes(self):
 def columnname(self):
     """Checking that ClickHouse can import and export Parquet files having hello\x00world as column name."""
     with Given(
-        "I have a large Parquet file with having hello\\x00world as column name"
+        r"I have a large Parquet file with having hello\x00world as column name"
     ):
         import_file = os.path.join("datatypes", "varchar_stats.parquet")
 
     import_export(snapshot_name="column_name_structure", import_file=import_file)
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_NullValues("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nullable("1.0"),
+)
+def columnwithnull(self):
+    """Checking that ClickHouse can import and export Parquet files with null values inside columns."""
+    with Given("I have a Parquet file with null values inside columns"):
+        import_file = os.path.join("datatypes", "bug687_nulls.parquet")
+
+    import_export(
+        snapshot_name="column_with_nulls_structure", import_file=import_file, limit=100
+    )
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_NullValues("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Nullable("1.0"),
+)
+def columnwithnull2(self):
+    """Checking that ClickHouse can import and export Parquet files with null values inside columns."""
+    with Given("I have a Parquet file with null values inside columns"):
+        import_file = os.path.join("datatypes", "bug1554.parquet")
+
+    import_export(
+        snapshot_name="column_with_nulls_2_structure", import_file=import_file
+    )
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_INT32("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_INT32("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_INT64("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_INT64("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_BOOL("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_BOOL("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_STRING("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_STRING("1.0"),
+)
+def manydatatypes2(self):
+    """Checking that ClickHouse can import and export Parquet files with int32, int64, BOOLEAN and String."""
+    with Given("I have a Parquet file with int32, int64, BOOLEAN and String datatypes"):
+        import_file = os.path.join("datatypes", "bug1588.parquet")
+
+    import_export(snapshot_name="many_datatypes_2_structure", import_file=import_file)
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_INT32("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_INT32("1.0"),
+)
+def int32(self):
+    """Checking that ClickHouse can import and export Parquet files with int32."""
+    with Given("I have a Parquet file with int32 datatype"):
+        import_file = os.path.join("datatypes", "bug1589.parquet")
+
+    import_export(snapshot_name="int32_1_structure", import_file=import_file)
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_INT32("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_INT32("1.0"),
+)
+def int32(self):
+    """Checking that ClickHouse can import and export Parquet Int(bitWidth=32, isSigned=true)."""
+    with Given("I have a Parquet file with Int(bitWidth=32, isSigned=true)"):
+        import_file = os.path.join("datatypes", "bug3734.parquet")
+
+    import_export(snapshot_name="int32_2_structure", import_file=import_file)
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_TIMESTAMP_ns("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_TIMESTAMP_ns("1.0"),
+)
+def timestamp2(self):
+    """Checking that ClickHouse can import and export Parquet file with Timestamp(isAdjustedToUTC=true, timeUnit=nanoseconds, is_from_converted_type=false, force_set_converted_type=false)."""
+    with Given(
+        "I have a Parquet file with Timestamp(isAdjustedToUTC=true, timeUnit=nanoseconds, is_from_converted_type=false, force_set_converted_type=false)"
+    ):
+        import_file = os.path.join("datatypes", "bug4442.parquet")
+
+    import_export(snapshot_name="int32_2_structure", import_file=import_file)
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_INT64("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_INT64("1.0"),
+)
+def negativeint64(self):
+    """Checking that ClickHouse can import and export Parquet file with negative int64 values."""
+    with Given("I have a Parquet file with negative int64"):
+        import_file = os.path.join("datatypes", "bug4903.parquet")
+
+    import_export(snapshot_name="int64_negative_structure", import_file=import_file)
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_STRING("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_STRING("1.0"),
+)
+def selectdatewithfilter(self):
+    """Checking that ClickHouse can import and export Parquet files with dates using filters."""
+    node = self.context.node
+    table_name = "table_" + getuid()
+    path_to_export = f"/var/lib/clickhouse/user_files/{table_name}.parquet"
+
+    with Given("I have a Parquet file with negative int64"):
+        import_file = os.path.join("datatypes", "filter_bug1391.parquet")
+
+    with And("I save file structure"):
+        import_column_structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
+
+    with Check("import"):
+        with When("I try to import the binary Parquet file into the table"):
+            node.query(
+                f"""
+                CREATE TABLE {table_name}
+                ENGINE = MergeTree
+                ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet) WHERE NAMEVALIDFROM <= '2017-03-01'
+                """
+            )
+
+        with And("I read the contents of the created table"):
+            import_read = node.query(f"SELECT * FROM {table_name}")
+
+        with Then("I check the output is correct"):
+            with values() as that:
+                assert that(
+                    snapshot(
+                        import_column_structure.output.strip(),
+                        name="import_using_filter_structure",
+                    )
+                ), error()
+
+    with Check("export"):
+        with When("I export the table back into a new parquet file"):
+            node.query(
+                f"SELECT * FROM {table_name} INTO OUTFILE '{path_to_export}' COMPRESSION 'none' FORMAT Parquet"
+            )
+
+        with And("I check the exported Parquet file's contents"):
+            read = node.query(f"SELECT * FROM file('{path_to_export}', Parquet)")
+
+        with Then("output must match the snapshot"):
+            assert read.output.strip() == import_read.output.strip(), error()
+
+        with And("I check that table structure matches ..."):
+            export_columns_structure = node.query(
+                f"DESCRIBE TABLE file('{path_to_export}')"
+            )
+            assert (
+                import_column_structure.output.strip()
+                == export_columns_structure.output.strip()
+            ), error()
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Unsupported("1.0"),
+)
+def unsupportednull(self):
+    """Checking that ClickHouse outputs an error when trying to import a Parquet file with 'null' datatype."""
+    node = self.context.node
+    table_name = "table_" + getuid()
+
+    for number in range(1, 3):
+        with Given("I have a Parquet file with null datatype"):
+            import_file = os.path.join("datatypes", f"issue6630_{number}.parquet")
+
+        with When("I try to import the Parquet file into the table"):
+            node.query(
+                f"""
+                CREATE TABLE {table_name}
+                ENGINE = MergeTree
+                ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet)
+                """,
+                message="DB::Exception: Unsupported Parquet type",
+                exitcode=50,
+            )
 
 
 @TestFeature

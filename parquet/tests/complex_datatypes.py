@@ -84,7 +84,7 @@ def complex_null(self):
     RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_STRUCT("1.0"),
     RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_STRUCT("1.0"),
 )
-def tuple_of_nulls(self):
+def tupleofnulls(self):
     """Check importing and exporting the Parquet file with the nested tuple with null values."""
     with Given("I have a Parquet file with the tuple of nulls"):
         import_file = os.path.join("arrow", "nulls.snappy.parquet")
@@ -164,6 +164,19 @@ def largestruct2(self):
 
 @TestScenario
 @Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_STRUCT("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_STRUCT("1.0"),
+)
+def largestruct3(self):
+    """Check importing and exporting a large Parquet file with struct."""
+    with Given("I have a large Parquet file with struct datatype"):
+        import_file = os.path.join("datatypes", "bug4859.parquet")
+
+    import_export(snapshot_name="large_struct_3_structure", import_file=import_file)
+
+
+@TestScenario
+@Requirements(
     RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_MAP("1.0"),
     RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_MAP("1.0"),
 )
@@ -226,6 +239,58 @@ def nestedallcomplex(self):
         import_file = os.path.join("datatypes", "test_unnest_rewriter.parquet")
 
     import_export(snapshot_name="complex_nested_2_structure", import_file=import_file)
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_STRUCT("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_STRUCT("1.0"),
+)
+def nestedstruct2(self):
+    """Checking that ClickHouse can import and export Parquet files with nested struct."""
+    with Given("I have a Parquet file with with nested struct"):
+        import_file = os.path.join("datatypes", "bug1589.parquet")
+
+    import_export(snapshot_name="nestedstruct_2_structure", import_file=import_file)
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_STRUCT("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_STRUCT("1.0"),
+)
+def nestedstruct3(self):
+    """Checking that ClickHouse can import and export Parquet files with nested struct."""
+    with Given("I have a Parquet file with with nested struct"):
+        import_file = os.path.join("datatypes", "bug2267.parquet")
+
+    import_export(snapshot_name="nestedstruct_3_structure", import_file=import_file)
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_STRUCT("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_STRUCT("1.0"),
+)
+def nestedstruct4(self):
+    """Checking that ClickHouse can import and export Parquet files with nested struct."""
+    with Given("I have a Parquet file with with nested struct"):
+        import_file = os.path.join("datatypes", "issue_6013.parquet")
+
+    import_export(snapshot_name="nestedstruct_4_structure", import_file=import_file)
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_ARRAY("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_ARRAY("1.0"),
+)
+def nestedarray2(self):
+    """Checking that ClickHouse can import and export Parquet files with nested array."""
+    with Given("I have a Parquet file with with nested array"):
+        import_file = os.path.join("datatypes", "bug2557.parquet")
+
+    import_export(snapshot_name="nestedarray_2_structure", import_file=import_file)
 
 
 @TestFeature
