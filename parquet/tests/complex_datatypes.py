@@ -211,7 +211,7 @@ def bytearraydictionary(self):
     import_export(
         snapshot_name="fixed_length_byte_dictionary_structure",
         import_file=import_file,
-        additional="LIMIT 100",
+        limit="100",
     )
 
 

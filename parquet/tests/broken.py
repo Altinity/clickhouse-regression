@@ -1,8 +1,10 @@
 import os
+
 from testflows import *
 from testflows.core import *
 from parquet.requirements import *
 from helpers.common import *
+from parquet.tests.outline import import_export
 
 
 def io_error_message(error):
@@ -270,16 +272,34 @@ def read_broken_timestamp_us(self):
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Metadata_File("1.0"))
 def file(self):
     """Check that ClickHouse outputs an error when trying to import a broken Parquet file with broken file."""
-    broken_date_parquet = os.path.join("broken", "broken-arrow.parquet")
-    xfail(reason="Test not added yet")
+    node = self.context.node
+    table_name = "table_" + getuid()
+
+    with Given("I have a broken Parquet file generated via arrow library"):
+        broken_date_parquet = os.path.join("broken", "broken-arrow.parquet")
+
+    with When("I try to import the broken Parquet file into the table"):
+        node.query(
+            f"""
+            CREATE TABLE {table_name}
+            ENGINE = MergeTree
+            ORDER BY tuple() AS SELECT * FROM file('{broken_date_parquet}', Parquet)
+            """,
+            message="DB::Exception: Received",
+            exitcode=33,
+        )
 
 
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_ErrorRecovery_Corrupt_Values_String("1.0"))
 def string(self):
-    """Check that ClickHouse outputs an error when trying to import a broken Parquet file with invalid string value."""
-    broken_date_parquet = os.path.join("broken", "invalid.parquet")
-    xfail(reason="Test not added yet")
+    """Check that ClickHouse outputs an error when trying to import a Parquet file with invalid string value."""
+    with Given(r"I have a Parquet file with TREL\xC3 as a string value"):
+        broken_date_parquet = os.path.join("broken", "invalid.parquet")
+
+    import_export(
+        snapshot_name="invalid_string_1_structure", import_file=broken_date_parquet
+    )
 
 
 @TestFeature
@@ -288,6 +308,7 @@ def string(self):
 def feature(self, node="clickhouse1"):
     """Check reading Parquet files with broken values."""
     self.context.node = self.context.cluster.node(node)
+    self.context.snapshot_id = "broken"
 
     for scenario in loads(current_module(), Scenario):
         scenario()

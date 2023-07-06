@@ -186,18 +186,24 @@ def arrow_snappy(self):
 
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip("1.0"))
-def large_gzip(self):
+def largegzip(self):
     """Checking that ClickHouse can import and export very large Parquet files with gzip compression."""
-    import_file = os.path.join("compression", "lineitem-top10000.gzip.parquet")
-    xfail(reason="Test not added yet")
+    with Given("I have a large Parquet large Parquet file with gzip compression"):
+        import_file = os.path.join("compression", "lineitem-top10000.gzip.parquet")
+
+    import_export(
+        snapshot_name="complex_nested_2_structure", import_file=import_file, limit="100"
+    )
 
 
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Zstd("1.0"))
 def zstd(self):
     """Checking that ClickHouse can import Parquet files with zstd compression."""
-    import_file = os.path.join("compression", "zstd.parquet")
-    xfail(reason="Test not added yet")
+    with Given("I have a large Parquet Parquet file with zstd compression"):
+        import_file = os.path.join("compression", "zstd.parquet")
+
+    import_export(snapshot_name="zstd_compression_1_structure", import_file=import_file)
 
 
 @TestFeature

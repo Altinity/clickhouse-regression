@@ -32,3 +32,7 @@ snappyplain_structure = r"""'id\tNullable(Int32)\t\t\t\t\t\nbool_col\tNullable(B
 
 snappy_rle_structure = r"""'a\tNullable(String)\t\t\t\t\t\nb\tNullable(Int32)\t\t\t\t\t\nc\tNullable(Float64)\t\t\t\t\t\nd\tNullable(Bool)\t\t\t\t\t\ne\tArray(Nullable(Int32))'"""
 
+complex_nested_2_structure = r"""'l_orderkey\tNullable(Int64)\t\t\t\t\t\nl_partkey\tNullable(Int64)\t\t\t\t\t\nl_suppkey\tNullable(Int64)\t\t\t\t\t\nl_linenumber\tNullable(Int32)\t\t\t\t\t\nl_quantity\tNullable(Int32)\t\t\t\t\t\nl_extendedprice\tNullable(Float64)\t\t\t\t\t\nl_discount\tNullable(Float64)\t\t\t\t\t\nl_tax\tNullable(Float64)\t\t\t\t\t\nl_returnflag\tNullable(String)\t\t\t\t\t\nl_linestatus\tNullable(String)\t\t\t\t\t\nl_shipdate\tNullable(String)\t\t\t\t\t\nl_commitdate\tNullable(String)\t\t\t\t\t\nl_receiptdate\tNullable(String)\t\t\t\t\t\nl_shipinstruct\tNullable(String)\t\t\t\t\t\nl_shipmode\tNullable(String)\t\t\t\t\t\nl_comment\tNullable(String)'"""
+
+zstd_compression_1_structure = r"""'one\tNullable(Float64)\t\t\t\t\t\ntwo\tNullable(String)\t\t\t\t\t\nthree\tNullable(Bool)'"""
+
