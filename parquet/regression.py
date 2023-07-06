@@ -82,6 +82,13 @@ xfails = {
             "occurs because of Delta Encoding (DELTA_BINARY_PACKED)",
         )
     ],
+    "/parquet/complex/tuplewithdatetime?/*": [
+        (
+            Fail,
+            "Getting an error that encoding is not supported. error "
+            "occurs because of Delta Encoding (DELTA_BINARY_PACKED)",
+        )
+    ],
 }
 
 xflags = {}
