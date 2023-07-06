@@ -52,7 +52,6 @@ def nested_map(self):
 
 
 @TestScenario
-# @XFailed("Difference between imported values and exported values")
 @Requirements(
     RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_STRUCT("1.0"),
     RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_STRUCT("1.0"),
@@ -168,10 +167,12 @@ def largestruct2(self):
     RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_MAP("1.0"),
     RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_MAP("1.0"),
 )
-def lage_map(self):
+def lagemap(self):
     """Check importing and exporting a large Parquet file with map."""
-    import_file = os.path.join("datatypes", "map.parquet")
-    xfail(reason="Test not added yet")
+    with Given("I have a large Parquet file with map datatype"):
+        import_file = os.path.join("datatypes", "map.parquet")
+
+    import_export(snapshot_name="large_map_2_structure", import_file=import_file)
 
 
 @TestScenario
@@ -179,10 +180,16 @@ def lage_map(self):
     RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_STRUCT("1.0"),
     RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_STRUCT("1.0"),
 )
-def tuple_with_datetime(self):
+def tuplewithdatetime(self):
     """Check importing and exporting a large Parquet file with tuple containing DateTime64(6, 'UTC'))."""
-    import_file = os.path.join("datatypes", "simple.parquet")
-    xfail(reason="Test not added yet")
+    with Given(
+        "I have a large Parquet file with tuple containing DateTime64(6, 'UTC'))"
+    ):
+        import_file = os.path.join("datatypes", "simple.parquet")
+
+    import_export(
+        snapshot_name="struct_datetime64_UTC_2_structure", import_file=import_file
+    )
 
 
 @TestScenario
@@ -194,10 +201,18 @@ def tuple_with_datetime(self):
         "1.0"
     ),
 )
-def tuple_with_datetime(self):
+def bytearraydictionary(self):
     """Check importing and exporting a Parquet file with dictionary of fixed length byte arrays."""
-    import_file = os.path.join("datatypes", "sorted.zstd_18_131072_small.parquet")
-    xfail(reason="Test not added yet")
+    with Given(
+        "I have a large Parquet file with dictionary of fixed length byte arrays"
+    ):
+        import_file = os.path.join("datatypes", "sorted.zstd_18_131072_small.parquet")
+
+    import_export(
+        snapshot_name="fixed_length_byte_dictionary_structure",
+        import_file=import_file,
+        additional="LIMIT 100",
+    )
 
 
 @TestScenario
@@ -205,10 +220,12 @@ def tuple_with_datetime(self):
     RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_ImportInto_Nested("1.0"),
     RQ_SRS_032_ClickHouse_Parquet_Export_Nested("1.0"),
 )
-def nested_all_complex(self):
+def nestedallcomplex(self):
     """Check importing and exporting a Parquet file with nested complex datatypes."""
-    import_file = os.path.join("datatypes", "test_unnest_rewriter.parquet")
-    xfail(reason="Test not added yet")
+    with Given("I have a large Parquet file with nested complex datatypes"):
+        import_file = os.path.join("datatypes", "test_unnest_rewriter.parquet")
+
+    import_export(snapshot_name="complex_nested_2_structure", import_file=import_file)
 
 
 @TestFeature
