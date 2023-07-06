@@ -69,7 +69,6 @@ def start_bench_scenario(
         self.context.list.append(f"{current_time()}")
 
         # self.context.cluster.node("clickhouse1").cmd(f"echo {current_time()} > /etc/1.csv")
-        pause(f"{self.context.list}")
 
 
 @TestScenario
@@ -83,24 +82,32 @@ def standalone(self, number_clickhouse_cluster_nodes=9, number_of_clickhouse_kee
     cluster_nodes = cluster.nodes["clickhouse"][:number_clickhouse_cluster_nodes]
 
     cluster_name = '\'Cluster_3shards_with_3replicas\''
-    with Given("I start mixed ClickHouse Keepers"):
-        if self.context.ssl == "true":
-            start_stand_alone_keeper_ssl(control_nodes=control_nodes,
-                               cluster_nodes=cluster_nodes)
-        else:
-            start_stand_alone_keeper(control_nodes=control_nodes,
-                               cluster_nodes=cluster_nodes)
+    self.context.list = []
+    try:
+        with Given("I start mixed ClickHouse Keepers"):
+            if self.context.ssl == "true":
+                start_stand_alone_keeper_ssl(control_nodes=control_nodes,
+                                   cluster_nodes=cluster_nodes)
+            else:
+                start_stand_alone_keeper(control_nodes=control_nodes,
+                                   cluster_nodes=cluster_nodes)
 
-    with Given("I stop all unused nodes"):
-        for name in cluster.nodes["zookeeper"][0:4]:
-            cluster.node(name).stop()
-        for name in cluster.nodes["clickhouse"][number_clickhouse_cluster_nodes+number_of_clickhouse_keeper_nodes:13]:
-            cluster.node(name).stop()
-    time.sleep(15)
+        with And("I start bench scenario"):
+            for i in range(5):
+                start_bench_scenario(cluster_name=cluster_name, number=100)
 
-    with And("I start bench scenario"):
-        start_bench_scenario(cluster_name=cluster_name, number=10000)
-        pause()
+        with open('bench.csv', 'a', encoding='UTF8', newline='') as f:
+            writer = csv.writer(f)
+
+            writer.writerow(["standalone:" + self.context.clickhouse_version])
+
+            writer.writerow(self.context.list)
+
+    finally:
+
+        with Finally("I clean up files"):
+            clean_coordination_on_all_nodes()
+            self.context.cluster.node("clickhouse1").cmd(f"rm -rf /share/")
 
 
 @TestScenario
@@ -114,35 +121,34 @@ def mixed(self, number_clickhouse_cluster_nodes=9, number_of_clickhouse_keeper_n
     cluster_nodes = cluster.nodes["clickhouse"][:number_clickhouse_cluster_nodes]
     rest_cluster_nodes = cluster.nodes["clickhouse"][:number_clickhouse_cluster_nodes-number_of_clickhouse_keeper_nodes]
     cluster_name = '\'Cluster_3shards_with_3replicas\''
+    self.context.list = []
 
-    with Given("I start mixed ClickHouse Keepers"):
-        if self.context.ssl == "true":
-            start_mixed_keeper_ssl(control_nodes=control_nodes,
-                               cluster_nodes=cluster_nodes,
-                               rest_cluster_nodes=rest_cluster_nodes)
-        else:
-            start_mixed_keeper(control_nodes=control_nodes,
-                               cluster_nodes=cluster_nodes,
-                               rest_cluster_nodes=rest_cluster_nodes)
+    try:
+        with Given("I start mixed ClickHouse Keepers"):
+            if self.context.ssl == "true":
+                start_mixed_keeper_ssl(control_nodes=control_nodes,
+                                   cluster_nodes=cluster_nodes,
+                                   rest_cluster_nodes=rest_cluster_nodes)
+            else:
+                start_mixed_keeper(control_nodes=control_nodes,
+                                   cluster_nodes=cluster_nodes,
+                                   rest_cluster_nodes=rest_cluster_nodes)
 
-    with Given("I stop all unused nodes"):
-        for name in cluster.nodes["zookeeper"][0:4]:
-            cluster.node(name).stop()
-        for name in cluster.nodes["clickhouse"][number_clickhouse_cluster_nodes:13]:
-            cluster.node(name).stop()
-    time.sleep(15)
+        with And("I start bench scenario"):
+            for i in range(5):
+                start_bench_scenario(cluster_name=cluster_name, number=100)
 
-    with And("I start bench scenario"):
-        for i in range(3):
-            start_bench_scenario(cluster_name=cluster_name, number=100)
+            with open('bench.csv', 'a', encoding='UTF8', newline='') as f:
+                writer = csv.writer(f)
 
-        with open('bench.csv', 'w', encoding='UTF8', newline='') as f:
-            writer = csv.writer(f)
+                writer.writerow(["mixed:"+self.context.clickhouse_version])
 
-            # write the header
-            writer.writerow(self.context.list)
+                writer.writerow(self.context.list)
 
-    pause()
+    finally:
+        with Finally("I clean up files"):
+            clean_coordination_on_all_nodes()
+            self.context.cluster.node("clickhouse1").cmd(f"rm -rf /share/")
 
 
 @TestScenario
@@ -157,20 +163,26 @@ def zookeeper(self, number_clickhouse_cluster_nodes=9):
     ]
     cluster_name = '\'Cluster_3shards_with_3replicas\''
 
-    with Given("I stop all unused nodes"):
-        for name in cluster.nodes["zookeeper"][3:4]:
-            cluster.node(name).stop()
-        for name in cluster.nodes["clickhouse"][number_clickhouse_cluster_nodes:13]:
-            cluster.node(name).stop()
-    time.sleep(15)
+    try:
+        with Given("I create 1 keeper cluster configuration"):
+            create_config_section(
+                control_nodes=keeper_cluster_nodes, cluster_nodes=clickhouse_cluster_nodes
+            )
 
-    with And("I create 1 keeper cluster configuration"):
-        create_config_section(
-            control_nodes=keeper_cluster_nodes, cluster_nodes=clickhouse_cluster_nodes
-        )
+        with And("I start bench scenario"):
+            for i in range(5):
+                start_bench_scenario(cluster_name=cluster_name, number=100)
 
-    with And("I start bench scenario"):
-        start_bench_scenario(cluster_name=cluster_name, number=100)
+            with open('bench.csv', 'a', encoding='UTF8', newline='') as f:
+                writer = csv.writer(f)
+
+                writer.writerow(["zookeeper:"+self.context.clickhouse_version])
+
+                writer.writerow(self.context.list)
+    finally:
+        with Finally("I clean up files"):
+            clean_coordination_on_all_nodes()
+            self.context.cluster.node("clickhouse1").cmd(f"rm -rf /share/")
 
 
 @TestFeature
@@ -178,7 +190,6 @@ def zookeeper(self, number_clickhouse_cluster_nodes=9):
 @Name("bench")
 def feature(self):
     """Bench tests of CLickHouse Keeper"""
-
     self.context.list = []
 
     for scenario in loads(current_module(), Scenario):
