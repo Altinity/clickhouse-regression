@@ -226,6 +226,7 @@ def add_secure_ports_configuration_file(
     self,
     https="8443",
     tcp="9440",
+    interserver_https="9010",
     config=None,
     config_d_dir="/etc/clickhouse-server/config.d",
     config_file="ssl_ports.xml",
@@ -237,7 +238,7 @@ def add_secure_ports_configuration_file(
     self.context.secure_http_port = https
     self.context.secure_tcp_port = tcp
 
-    entries = {"https_port": f"{https}", "tcp_port_secure": f"{tcp}"}
+    entries = {"https_port": f"{https}", "tcp_port_secure": f"{tcp}", "interserver_https_port": f"{interserver_https}"}
     if config is None:
         config = create_xml_config_content(
             entries, config_file=config_file, config_d_dir=config_d_dir
