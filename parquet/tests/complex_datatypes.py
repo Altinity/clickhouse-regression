@@ -279,6 +279,7 @@ def nestedstruct4(self):
 
     import_export(snapshot_name="nestedstruct_4_structure", import_file=import_file)
 
+
 @TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_ARRAY("1.0"),

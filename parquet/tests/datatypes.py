@@ -69,7 +69,7 @@ def fixed_length_decimal(self):
 def fixed_length_decimal_legacy(self):
     """Check importing and exporting the Parquet file with the Decimal(precision=13, scale=2)."""
     with Given(
-            "I have a Parquet file with the fixed length decimal legacy datatype columns"
+        "I have a Parquet file with the fixed length decimal legacy datatype columns"
     ):
         import_file = os.path.join("arrow", "fixed_length_decimal_legacy.parquet")
 
@@ -125,7 +125,7 @@ def int64(self):
 def decimal_with_filter(self):
     """Check importing and exporting the Parquet file with the decimal with specified filter Decimal(precision=15, scale=2)."""
     with Given(
-            "I have a Parquet file with the decimal value with specified filters of precision and scale"
+        "I have a Parquet file with the decimal value with specified filters of precision and scale"
     ):
         import_file = os.path.join("arrow", "lineitem-arrow.parquet")
 
@@ -175,7 +175,7 @@ def supporteduuid(self):
 def pandasdecimal(self):
     """Checking that ClickHouse can import and export Parquet files created via pandas."""
     with Given(
-            "I have a Parquet file generated via pandas library with the decimal values"
+        "I have a Parquet file generated via pandas library with the decimal values"
     ):
         import_file = os.path.join("decimal", "pandas_decimal.parquet")
 
@@ -190,7 +190,7 @@ def pandasdecimal(self):
 def pandasdecimaldate(self):
     """Checking that ClickHouse can import and export Parquet files with a DATE column from an arrow-parquet generated file via pandas."""
     with Given(
-            "I have a Parquet file with a DATE generated via arrow-parquet and pandas libraries"
+        "I have a Parquet file with a DATE generated via arrow-parquet and pandas libraries"
     ):
         import_file = os.path.join("datatypes", "pandas-date.parquet")
 
@@ -305,7 +305,7 @@ def blob(self):
 def boolean(self):
     """Checking that ClickHouse can import and export Parquet files with boolean datatype."""
     with Given(
-            "I have a Parquet file with boolean datatype containing true and false values"
+        "I have a Parquet file with boolean datatype containing true and false values"
     ):
         import_file = os.path.join("datatypes", "boolean_stats.parquet")
 
@@ -330,7 +330,7 @@ def boolean(self):
 def manydatatypes(self):
     """Checking that ClickHouse can import and export a single Parquet file with int, float, decimal, string, bool and date datatypes."""
     with Given(
-            "I have a Parquet file with int, float, decimal, string, bool and date datatypes"
+        "I have a Parquet file with int, float, decimal, string, bool and date datatypes"
     ):
         import_file = os.path.join("datatypes", "data-types.parquet")
 
@@ -564,7 +564,7 @@ def maps(self):
 def arrowtimestamp(self):
     """Checking that ClickHouse can import a Parquet file with timestamp column from a pyarrow generated file."""
     with Given(
-            "I have a large Parquet file with timestamp column from a pyarrow generated file"
+        "I have a large Parquet file with timestamp column from a pyarrow generated file"
     ):
         import_file = os.path.join("datatypes", "timestamp.parquet")
 
@@ -580,7 +580,7 @@ def arrowtimestamp(self):
 def arrowtimestampms(self):
     """Checking that ClickHouse can import a Parquet file with timestamp (ms) column from a pyarrow generated file."""
     with Given(
-            "I have a large Parquet file with timestamp (ms) column from a pyarrow generated file"
+        "I have a large Parquet file with timestamp (ms) column from a pyarrow generated file"
     ):
         import_file = os.path.join("datatypes", "timestamp-ms.parquet")
 
@@ -642,7 +642,7 @@ def stringtypes(self):
 def columnname(self):
     """Checking that ClickHouse can import and export Parquet files having hello\x00world as column name."""
     with Given(
-            r"I have a large Parquet file with having hello\x00world as column name"
+        r"I have a large Parquet file with having hello\x00world as column name"
     ):
         import_file = os.path.join("datatypes", "varchar_stats.parquet")
 
@@ -732,7 +732,7 @@ def int32(self):
 def timestamp2(self):
     """Checking that ClickHouse can import and export Parquet file with Timestamp(isAdjustedToUTC=true, timeUnit=nanoseconds, is_from_converted_type=false, force_set_converted_type=false)."""
     with Given(
-            "I have a Parquet file with Timestamp(isAdjustedToUTC=true, timeUnit=nanoseconds, is_from_converted_type=false, force_set_converted_type=false)"
+        "I have a Parquet file with Timestamp(isAdjustedToUTC=true, timeUnit=nanoseconds, is_from_converted_type=false, force_set_converted_type=false)"
     ):
         import_file = os.path.join("datatypes", "bug4442.parquet")
 
@@ -808,14 +808,15 @@ def selectdatewithfilter(self):
                 f"DESCRIBE TABLE file('{path_to_export}')"
             )
             assert (
-                    import_column_structure.output.strip()
-                    == export_columns_structure.output.strip()
+                import_column_structure.output.strip()
+                == export_columns_structure.output.strip()
             ), error()
 
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Unsupported("1.0"), )
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Unsupported("1.0"),
+)
 def unsupportednull(self):
     """Checking that ClickHouse outputs an error when trying to import a Parquet file with 'null' datatype."""
     node = self.context.node
