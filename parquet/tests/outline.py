@@ -8,13 +8,18 @@ from helpers.common import *
 
 
 @TestOutline
-def import_export(self, snapshot_name, import_file, snapshot_id=None, additional=""):
+def import_export(self, snapshot_name, import_file, snapshot_id=None, limit=None):
     node = self.context.node
     table_name = "table_" + getuid()
     path_to_export = f"/var/lib/clickhouse/user_files/{table_name}.parquet"
 
     if snapshot_id is None:
         snapshot_id = self.context.snapshot_id
+
+    if limit is None:
+        limit = ""
+    else:
+        limit = f"LIMIT {limit}"
 
     with And("I save file structure"):
         import_column_structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
@@ -25,7 +30,7 @@ def import_export(self, snapshot_name, import_file, snapshot_id=None, additional
                 f"""
                 CREATE TABLE {table_name}
                 ENGINE = MergeTree
-                ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet) {additional}
+                ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet) {limit}
                 """
             )
 
@@ -45,7 +50,7 @@ def import_export(self, snapshot_name, import_file, snapshot_id=None, additional
     with Check("export"):
         with When("I export the table back into a new parquet file"):
             node.query(
-                f"SELECT * FROM {table_name} {additional} INTO OUTFILE '{path_to_export}' COMPRESSION 'none' FORMAT Parquet"
+                f"SELECT * FROM {table_name} {limit} INTO OUTFILE '{path_to_export}' COMPRESSION 'none' FORMAT Parquet"
             )
 
         with And("I check the exported Parquet file's contents"):

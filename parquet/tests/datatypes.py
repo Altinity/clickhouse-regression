@@ -436,7 +436,7 @@ def largedouble(self):
     import_export(
         snapshot_name="double_structure",
         import_file=import_file,
-        additional="LIMIT 100",
+        limit="100",
     )
 
 
