@@ -82,6 +82,8 @@ def regression(
     if len(clickhouse_binary_list) == 0:
         clickhouse_binary_list.append(os.getenv("CLICKHOUSE_TESTS_SERVER_BIN_PATH", "/usr/bin/clickhouse"))
 
+    self.context.name = f"bench{getuid()}.csv"
+
     for clickhouse_binary_path in clickhouse_binary_list:
         self.context.clickhouse_version = clickhouse_version
 

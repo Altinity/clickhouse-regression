@@ -465,7 +465,5 @@ def feature(self):
     """Bench tests of CLickHouse Keeper"""
     self.context.list = []
 
-    self.context.name = f"bench{getuid()}.csv"
-
     for scenario in loads(current_module(), Scenario):
         scenario()
