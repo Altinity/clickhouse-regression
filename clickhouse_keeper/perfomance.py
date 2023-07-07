@@ -29,13 +29,13 @@ def argparser(parser):
         "--clickhouse-binary-list",
         action="append",
         dest="clickhouse_binary_list",
-        # help="path to ClickHouse binary, default: /usr/bin/clickhouse",
-        # metavar="path",
-        default=os.getenv("CLICKHOUSE_TESTS_SERVER_BIN_PATH", "/usr/bin/clickhouse"),
+        help="path to ClickHouse binary, default: /usr/bin/clickhouse",
+        metavar="path",
+        default=[],
     )
 
-xfails = {}
 
+xfails = {}
 
 xflags = {}
 
@@ -48,8 +48,6 @@ ffails = {}
 @XFlags(xflags)
 @FFails(ffails)
 @Name("benchmark clickhouse keeper")
-@Requirements(RQ_SRS_024_ClickHouse_Keeper("1.0"))
-@Specifications(SRS024_ClickHouse_Keeper)
 def regression(
     self,
     local,
@@ -81,32 +79,34 @@ def regression(
         ),
     }
 
-    self.context.clickhouse_version = clickhouse_version
-
-    if stress is not None:
-        self.context.stress = stress
-
-    if ssl:
-        self.context.tcp_port_secure = True
-        self.context.secure = 1
-        self.context.port = "9281"
-        self.context.ssl = "true"
-    else:
-        self.context.tcp_port_secure = False
-        self.context.secure = 0
-        self.context.ssl = "false"
-        self.context.port = "2181"
-
-    from platform import processor as current_cpu
-
-    folder_name = os.path.basename(current_dir())
-    if current_cpu() == "aarch64":
-        env = f"{folder_name}_env_arm64"
-    else:
-        env = f"{folder_name}_env"
+    if len(clickhouse_binary_list) == 0:
+        clickhouse_binary_list.append(os.getenv("CLICKHOUSE_TESTS_SERVER_BIN_PATH", "/usr/bin/clickhouse"))
 
     for clickhouse_binary_path in clickhouse_binary_list:
-        pause(f"{clickhouse_binary_path}")
+        self.context.clickhouse_version = clickhouse_version
+
+        if stress is not None:
+            self.context.stress = stress
+
+        if ssl:
+            self.context.tcp_port_secure = True
+            self.context.secure = 1
+            self.context.port = "9281"
+            self.context.ssl = "true"
+        else:
+            self.context.tcp_port_secure = False
+            self.context.secure = 0
+            self.context.ssl = "false"
+            self.context.port = "2181"
+
+        from platform import processor as current_cpu
+
+        folder_name = os.path.basename(current_dir())
+        if current_cpu() == "aarch64":
+            env = f"{folder_name}_env_arm64"
+        else:
+            env = f"{folder_name}_env"
+
         with Cluster(
             local,
             clickhouse_binary_path=clickhouse_binary_path,
