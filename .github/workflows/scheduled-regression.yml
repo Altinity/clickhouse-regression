@@ -10,6 +10,7 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
   AWS_DEFAULT_REGION: ${{ secrets.AWS_REPORT_REGION }}
   PYTHONIOENCODING: utf-8
+  REGRESSION_RESULTS_URL: clickhouse/${{ inputs.version }}/${GITHUB_RUN_ID}/testflows
   artifacts: internal
   args: --test-to-end
     --local
@@ -1116,45 +1117,6 @@ jobs:
     runs-on: self-hosted
     env:
       SUITE: session_timezone
-      clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
-      version: ${{ matrix.version }}
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup
-        run: .github/setup.sh
-
-      - name: Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
-
-      - name: Create and upload logs
-        if: success() || failure()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-  ssl_keeper:
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - version: 22.8.15.25.altinitystable
-            clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 22.3.15.34.altinitystable
-            clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
-            clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: self-hosted
-    env:
-      SUITE: ssl_keeper
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
       version: ${{ matrix.version }}
     steps:
