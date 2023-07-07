@@ -127,9 +127,7 @@ def regression(
                 )
             )
             Feature(run=load("clickhouse_keeper.tests.servers_start_up", "feature"))
-            # Feature(
-            #     run=load("clickhouse_keeper.tests.bench", "feature")
-            # )
+
             Feature(
                 run=load("clickhouse_keeper.tests.fips_ssl", "feature")
             )
@@ -162,12 +160,6 @@ def regression(
             Feature(
                 run=load("clickhouse_keeper.tests.coordination_settings", "feature")
             )
-            # Feature(
-            #     run=load("clickhouse_keeper.tests.bench", "feature")
-            # )
-            # Feature(
-            #     run=load("clickhouse_keeper.tests.significant_number_of_replicated_tables", "feature")
-            # )
 
 
 if main():
