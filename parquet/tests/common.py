@@ -137,16 +137,16 @@ def copy_file_to_host(self, src_node, src_path, host_filename):
             ).output
 
         with And("copying the file from the node to the host"):
-            self.context.cluster.command(None, f"mkdir /tmp/data")
+            self.context.cluster.command(None, f"mkdir /tmp/test_files")
             self.context.cluster.command(
-                None, f"docker cp {x}:{src_path} /tmp/data/{host_filename}"
+                None, f"docker cp {x}:{src_path} /tmp/test_files/{host_filename}"
             )
 
         yield
 
     finally:
         with Finally("remove the file from the host"):
-            self.context.cluster.command(None, f"rm /tmp/data/{host_filename}")
+            self.context.cluster.command(None, f"rm /tmp/test_files/{host_filename}")
 
 
 @TestStep(Given)
@@ -210,7 +210,7 @@ def check_source_file_on_s3(self, file, compression_type=None):
             self.context.s3_client.download_file(
                 self.context.aws_s3_bucket,
                 f"data/parquet/{file}",
-                "/tmp/data/data.Parquet",
+                "/tmp/test_files/data.Parquet",
             )
 
     elif self.context.storage == "minio":
@@ -218,7 +218,7 @@ def check_source_file_on_s3(self, file, compression_type=None):
             self.context.s3_client.fget_object(
                 self.context.cluster.minio_bucket,
                 "data/parquet/" + file,
-                "/tmp/data/data.Parquet",
+                "/tmp/test_files/data.Parquet",
             )
 
     with By("copying the file to the docker node"):
@@ -227,7 +227,7 @@ def check_source_file_on_s3(self, file, compression_type=None):
         ).output
         self.context.cluster.command(
             None,
-            f"docker cp /tmp/data/data.Parquet {x}:/data.Parquet",
+            f"docker cp /tmp/test_files/data.Parquet {x}:/data.Parquet",
         )
 
     with Then("I check the file"):

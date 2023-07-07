@@ -21,22 +21,22 @@ def import_export(self, snapshot_name, import_file, snapshot_id=None, limit=None
     else:
         limit = f"LIMIT {limit}"
 
-    with And("I save file structure"):
+    with Given("I save file structure"):
         import_column_structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
 
+    with And("I try to import the binary Parquet file into the table"):
+        node.query(
+            f"""
+            CREATE TABLE {table_name}
+            ENGINE = MergeTree
+            ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet) {limit}
+            """
+        )
+
+    with And("I read the contents of the created table"):
+        import_read = node.query(f"SELECT * FROM {table_name}")
+
     with Check("import"):
-        with When("I try to import the binary Parquet file into the table"):
-            node.query(
-                f"""
-                CREATE TABLE {table_name}
-                ENGINE = MergeTree
-                ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet) {limit}
-                """
-            )
-
-        with And("I read the contents of the created table"):
-            import_read = node.query(f"SELECT * FROM {table_name}")
-
         with Then("I check the output is correct"):
             with values() as that:
                 assert that(
@@ -56,7 +56,7 @@ def import_export(self, snapshot_name, import_file, snapshot_id=None, limit=None
         with And("I check the exported Parquet file's contents"):
             read = node.query(f"SELECT * FROM file('{path_to_export}', Parquet)")
 
-        with Then("output must match the snapshot"):
+        with Then("output must match the import snapshot"):
             assert read.output.strip() == import_read.output.strip(), error()
 
         with And("I check that table structure matches ..."):

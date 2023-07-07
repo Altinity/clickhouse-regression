@@ -45,7 +45,7 @@ def select_from_engine(self):
 
     node.command(f"mkdir /var/lib/clickhouse/user_files/{table_name}")
     node.command(
-        f"cp /var/lib/data/data_NONE.Parquet /var/lib/clickhouse/user_files/{table_name}/data.Parquet"
+        f"cp /var/lib/test_files/data_NONE.Parquet /var/lib/clickhouse/user_files/{table_name}/data.Parquet"
     )
 
     with Given("I attach a table with a `URL` engine on top of a Parquet file"):
@@ -169,7 +169,7 @@ def insert_into_engine_from_file(self, compression_type):
 
     with When("I insert data into the table from a Parquet file"):
         node.command(
-            f"cp /var/lib/data/data_{compression_type}.Parquet /var/lib/clickhouse/user_files/data_{compression_type}.Parquet"
+            f"cp /var/lib/test_files/data_{compression_type}.Parquet /var/lib/clickhouse/user_files/data_{compression_type}.Parquet"
         )
         node.query(
             f"INSERT INTO {table_name} FROM INFILE '/var/lib/clickhouse/user_files/data_{compression_type}.Parquet' FORMAT Parquet"
@@ -338,7 +338,7 @@ def feature(self, node="clickhouse1"):
 
     with Given("I have a directory for the flask server"):
         self.context.node.command("mkdir /var/lib/app_files")
-        self.context.node.command("cp /var/lib/data/* /var/lib/app_files")
+        self.context.node.command("cp /var/lib/test_files/* /var/lib/app_files")
 
     with self.context.cluster.shell(self.context.node.name) as bash:
         cmd = "python3 /var/lib/test_files/local_app.py"
