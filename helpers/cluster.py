@@ -627,6 +627,7 @@ class ClickHouseNode(Node):
         query_id=None,
         use_file=False,
         hash_output=None,
+        file_output=None,
         pipe_cmd="echo -e",
         *args,
         **kwargs,
@@ -683,6 +684,8 @@ class ClickHouseNode(Node):
                 else:
                     if hash_output:
                         command = f'cat "{query.name}" | {self.cluster.docker_compose} exec -T {self.name} bash -c "(set -o pipefail && {client}{client_options} 2>&1 | sha512sum)"'
+                    elif file_output:
+                        command = f'cat "{query.name}" | {self.cluster.docker_compose} exec -T {self.name} bash -c "(set -o pipefail && {client}{client_options} 2>&1 > \'{file_output}\')"'
                     else:
                         command = f'cat "{query.name}" | {self.cluster.docker_compose} exec -T {self.name} bash -c "{client}{client_options} 2>&1"'
 
