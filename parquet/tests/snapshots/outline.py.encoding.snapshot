@@ -1,8 +1,10 @@
-dictionary_structure = r"""'id\tNullable(Int32)\t\t\t\t\t\nbool_col\tNullable(Bool)\t\t\t\t\t\ntinyint_col\tNullable(Int32)\t\t\t\t\t\nsmallint_col\tNullable(Int32)\t\t\t\t\t\nint_col\tNullable(Int32)\t\t\t\t\t\nbigint_col\tNullable(Int64)\t\t\t\t\t\nfloat_col\tNullable(Float32)\t\t\t\t\t\ndouble_col\tNullable(Float64)\t\t\t\t\t\ndate_string_col\tNullable(String)\t\t\t\t\t\nstring_col\tNullable(String)\t\t\t\t\t\ntimestamp_col\tNullable(DateTime64(9))'"""
+delta_string_structure = r"""'status\tNullable(String)'"""
 
 delta_byte_array_2_structure = r"""'c_customer_id\tNullable(String)\t\t\t\t\t\nc_salutation\tNullable(String)\t\t\t\t\t\nc_first_name\tNullable(String)\t\t\t\t\t\nc_last_name\tNullable(String)\t\t\t\t\t\nc_preferred_cust_flag\tNullable(String)\t\t\t\t\t\nc_birth_country\tNullable(String)\t\t\t\t\t\nc_login\tNullable(String)\t\t\t\t\t\nc_email_address\tNullable(String)\t\t\t\t\t\nc_last_review_date\tNullable(String)'"""
 
 delta_length_byte_array_2_structure = r"""'FRUIT\tNullable(String)'"""
+
+dictionary_structure = r"""'id\tNullable(Int32)\t\t\t\t\t\nbool_col\tNullable(Bool)\t\t\t\t\t\ntinyint_col\tNullable(Int32)\t\t\t\t\t\nsmallint_col\tNullable(Int32)\t\t\t\t\t\nint_col\tNullable(Int32)\t\t\t\t\t\nbigint_col\tNullable(Int64)\t\t\t\t\t\nfloat_col\tNullable(Float32)\t\t\t\t\t\ndouble_col\tNullable(Float64)\t\t\t\t\t\ndate_string_col\tNullable(String)\t\t\t\t\t\nstring_col\tNullable(String)\t\t\t\t\t\ntimestamp_col\tNullable(DateTime64(9))'"""
 
 plain_structure = r"""'id\tNullable(Int32)\t\t\t\t\t\nbool_col\tNullable(Bool)\t\t\t\t\t\ntinyint_col\tNullable(Int32)\t\t\t\t\t\nsmallint_col\tNullable(Int32)\t\t\t\t\t\nint_col\tNullable(Int32)\t\t\t\t\t\nbigint_col\tNullable(Int64)\t\t\t\t\t\nfloat_col\tNullable(Float32)\t\t\t\t\t\ndouble_col\tNullable(Float64)\t\t\t\t\t\ndate_string_col\tNullable(String)\t\t\t\t\t\nstring_col\tNullable(String)\t\t\t\t\t\ntimestamp_col\tNullable(DateTime64(9))'"""
 
