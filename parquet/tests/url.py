@@ -341,7 +341,7 @@ def feature(self, node="clickhouse1"):
         self.context.node.command("cp /var/lib/data/* /var/lib/app_files")
 
     with self.context.cluster.shell(self.context.node.name) as bash:
-        cmd = "python3 /var/lib/data/local_app.py"
+        cmd = "python3 /var/lib/test_files/local_app.py"
 
         try:
             with Given("I launch the flask server"):

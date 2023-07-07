@@ -92,12 +92,12 @@ def brotli(self):
     with Given("I have a parquet file with brotli compression"):
         import_file = os.path.join("compression", f"data_page=1_BROTLI.parquet")
 
-    import_export(snapshot_name="lz4_non_hadoop_structure", import_file=import_file)
+    import_export(snapshot_name="brotli_structure", import_file=import_file)
 
 
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip("1.0"))
-def gzip_pages(self):
+def gzippages(self):
     """Check importing and exporting a parquet file with gzip compression placed in two different page files."""
     for page_number in range(1, 3):
         with Given(f"I have a parquet page={page_number} file with gzip compression"):
