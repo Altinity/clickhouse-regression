@@ -5,16 +5,22 @@
                 <replica>
                     <host>clickhouse1</host>
                     <port>9440</port>
+<!--                    <user>default</user>-->
+<!--                    <password>ClickHouse123!</password>-->
                     <secure>1</secure>
                 </replica>
                 <replica>
                     <host>clickhouse2</host>
                     <port>9440</port>
+<!--                    <user>default</user>-->
+<!--                    <password>ClickHouse123!</password>-->
                     <secure>1</secure>
                 </replica>
                 <replica>
                     <host>clickhouse3</host>
                     <port>9440</port>
+<!--                    <user>default</user>-->
+<!--                    <password>ClickHouse123!</password>-->
                     <secure>1</secure>
                 </replica>
             </shard>
