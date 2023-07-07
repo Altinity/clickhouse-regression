@@ -24,7 +24,7 @@ def feature(self, node="clickhouse1"):
         )
 
     with And("I have a parquet file with a chunked array"):
-        node.command("python3 /var/lib/data/generate_chunked_file.py")
+        node.command("python3 /var/lib/test_files/generate_chunked_file.py")
 
     with When("I insert data from a parquet file"):
         node.query(

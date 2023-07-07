@@ -25,7 +25,7 @@ def feature(self, node="clickhouse1"):
 
     with When("I insert data from a parquet file"):
         self.context.node.command(
-            "cp /var/lib/data/list_monotonically_increasing_offsets.parquet /var/lib/clickhouse/user_files/list_monotonically_increasing_offsets.parquet"
+            "cp /var/lib/test_files/list_monotonically_increasing_offsets.parquet /var/lib/clickhouse/user_files/list_monotonically_increasing_offsets.parquet"
         )
         self.context.node.query(
             f"INSERT INTO {table_name} FROM INFILE '/var/lib/clickhouse/user_files/list_monotonically_increasing_offsets.parquet' FORMAT Parquet"

@@ -22,7 +22,7 @@ def feature(self, node="clickhouse1"):
 
     with When("I insert data from a parquet file"):
         self.context.node.command(
-            "cp /var/lib/data/int-list-zero-based-chunked-array.parquet /var/lib/clickhouse/user_files/int-list-zero-based-chunked-array.parquet"
+            "cp /var/lib/test_files/int-list-zero-based-chunked-array.parquet /var/lib/clickhouse/user_files/int-list-zero-based-chunked-array.parquet"
         )
         self.context.node.query(
             f"INSERT INTO {table_name} FROM INFILE '/var/lib/clickhouse/user_files/int-list-zero-based-chunked-array.parquet' FORMAT Parquet"
