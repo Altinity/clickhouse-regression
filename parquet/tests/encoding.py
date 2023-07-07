@@ -39,7 +39,7 @@ def plain(self):
     RQ_SRS_032_ClickHouse_Parquet_Import_Encoding_DeltaStrings("1.0"),
     RQ_SRS_032_ClickHouse_Parquet_Export_Encoding_DeltaStrings("1.0"),
 )
-def deltabytearray(self):
+def deltabytearray1(self):
     """Checking importing and exporting of the Parquet file with the Delta Strings: (DELTA_BYTE_ARRAY) encoding."""
     with Given("I have a Parquet file with the Delta Strings encoding"):
         import_file = os.path.join("encodings", "aws2.parquet")
@@ -95,7 +95,7 @@ def deltalengthbytearray(self):
 )
 def rleboolean(self):
     """Checking importing and exporting of the Parquet file with boolean values and the Run Length Encoding / Bit-Packing Hybrid (RLE)."""
-    with Given("I have a Parquet file with the DELTA_LENGTH_BYTE_ARRAY encoding"):
+    with Given("I have a Parquet file with the Run Length Encoding encoding"):
         import_file = os.path.join("encodings", "rle_boolean_encoding.parquet")
 
     import_export(snapshot_name="rle_boolean_2_structure", import_file=import_file)
