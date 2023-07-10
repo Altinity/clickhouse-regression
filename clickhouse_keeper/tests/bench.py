@@ -268,8 +268,6 @@ def feature(self):
             "I choose Clickhouse cluster for tests, number of inserts on it and how many times to repeat this "
             "scenario"
     ):
-        self.context.number_of_repeats = 2
-        self.context.number_of_inserts = 100
         self.context.cluster_name = "'Cluster_3shards_with_3replicas'"
 
     for scenario in loads(current_module(), Scenario):
