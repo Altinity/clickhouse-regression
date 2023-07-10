@@ -129,6 +129,43 @@ def mixed_1_node(
 
 
 @TestScenario
+def zookeeper_1_node(self, number_clickhouse_cluster_nodes=9):
+    """Zookeeper 1-node configuration bench test."""
+    xfail("doesn't work on full run")
+
+    configuration = f"Zookeeper_1_node_{self.context.clickhouse_version}"
+
+    keeper_cluster_nodes = self.context.cluster.nodes["zookeeper"][3:4]
+
+    clickhouse_cluster_nodes = self.context.cluster.nodes["clickhouse"][:number_clickhouse_cluster_nodes]
+
+    try:
+        if self.context.ssl == "true":
+            xfail("zookeeper ssl is not supported by tests")
+
+        with Given("I stop all unused zookeeper nodes"):
+            for node_name in self.context.cluster.nodes["zookeeper"][:3]:
+                self.context.cluster.node(node_name).stop()
+
+        with And("I start Zookeeper cluster"):
+            create_config_section(
+                control_nodes=keeper_cluster_nodes,
+                cluster_nodes=clickhouse_cluster_nodes,
+            )
+
+        with Then(
+                f"I start bench scenarios and append observation dictionary with configuration name and "
+                f"'mean' insert time value"
+        ):
+            self.context.dict[configuration] = start_bench_scenario()
+
+    finally:
+        with Finally("I stop all start zookeeper nodes"):
+            for node_name in self.context.cluster.nodes["zookeeper"][:3]:
+                self.context.cluster.node(node_name).start()
+
+
+@TestScenario
 def standalone_3_node(
         self, number_clickhouse_cluster_nodes=9, number_of_clickhouse_keeper_nodes=3
 ):

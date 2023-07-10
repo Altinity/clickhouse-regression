@@ -1,4 +1,4 @@
-## ClickhHouse performance test program.
+## ClickhHouse Keeper/Zookeeper performance test program
 
 Bench tests can be launched with `./perfomance.py` command. After that performance of all available control cluster 
 configurations will be tested for local ClickHouse binary. 
