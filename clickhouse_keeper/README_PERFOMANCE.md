@@ -66,8 +66,8 @@ Example:
 Special `perfomance.py` settings are:
 
 * `--clickhouse-binary-list` to test some special ClickHouse versions
-* `--number-of-repeats` number of insert time check for 'mean value calculation (default: 5)
-* `--number-of-inserts` number of inserts into table on one repeat (default: 10000)
+* `--repeats` number of insert test repeats for `mean` value calculation (default: 5)
+* `--inserts` number of inserts into table on one repeat (default: 10000)
 
 
 
