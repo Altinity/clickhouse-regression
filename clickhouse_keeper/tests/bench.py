@@ -7,7 +7,7 @@ def start_bench_scenario(
         self,
         timeout=30000,
 ):
-    """Step creates a 'bad' table and inserts 10000 rows. Every row generates ZK transaction.
+    """Step creates a 'bad' table and make inserts. Every row generates ZK transaction.
     It checks insert time and zoo metrics from system.events before and after insert."""
 
     node = self.context.cluster.node("clickhouse1")
@@ -16,8 +16,8 @@ def start_bench_scenario(
 
     table_name = f"bench_{getuid()}"
 
-    for i in range(self.context.number_of_repeats):
-        with When(f"I start bench scenario №{self.context.number_of_repeats}"):
+    for i in range(self.context.repeats):
+        with When(f"I start bench scenario №{self.context.repeats}"):
             try:
                 with Given("I create 'bad' table"):
                     retry(node.query, timeout=100, delay=1)(
@@ -44,7 +44,7 @@ def start_bench_scenario(
                 ):
                     retry(node.query, timeout=1000, delay=1)(
                         f"insert into {table_name} select rand(1)%100,"
-                        f" rand(2) from numbers({self.context.number_of_inserts}) "
+                        f" rand(2) from numbers({self.context.inserts}) "
                         f"settings max_block_size=100, "
                         f"min_insert_block_size_bytes=1, "
                         f"min_insert_block_size_rows=1, "
@@ -225,7 +225,7 @@ def mixed_3_node(
 
 @TestScenario
 def zookeeper_3_node(
-        self, number_clickhouse_cluster_nodes=9, number_of_tests=5, number_of_inserts=100
+        self, number_clickhouse_cluster_nodes=9
 ):
     """Zookeeper 3-node configuration bench test."""
     configuration = f"Zookeeper_3_node_{self.context.clickhouse_version}"
@@ -265,8 +265,7 @@ def zookeeper_3_node(
 def feature(self):
     """Bench tests of CLickHouse Keeper"""
     with Given(
-            "I choose Clickhouse cluster for tests, number of inserts on it and how many times to repeat this "
-            "scenario"
+            "I choose Clickhouse cluster for tests"
     ):
         self.context.cluster_name = "'Cluster_3shards_with_3replicas'"
 
