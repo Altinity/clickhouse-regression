@@ -26,7 +26,7 @@ SETTINGS
 Insert query:
 
 ```commandline
-INSERT INTO zookeeper_bench SELECT rand(1)%100, rand(2) FROM numbers({number_of_inserts}) 
+INSERT INTO {table_name} SELECT rand(1)%100, rand(2) FROM numbers({number_of_inserts}) 
 SETTINGS max_block_size=100, min_insert_block_size_bytes=1, min_insert_block_size_rows=1, 
 insert_deduplicate=0, max_threads=128,max_insert_threads=128;
 ```
