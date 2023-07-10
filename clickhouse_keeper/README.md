@@ -79,9 +79,9 @@ to all numeric cells to receive more readable output.
 
 Color scale setting example:
 
-<img src="Color_scale.png" alt="Color scale img" width="400" height="600">
+<img src="Color_scale.png" alt="Color scale img">
 
 Final output example:
 
-<img src="final_output.png" alt="final output img" width="1500" height="300">
+<img src="final_output.png" alt="final output img">
 
