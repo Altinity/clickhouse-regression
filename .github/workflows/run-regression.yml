@@ -81,7 +81,7 @@ env:
 
 jobs:
   aes_encryption:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: aes_encryption
     if: ${{ inputs.suite == 'all' || inputs.suite == 'aes_encryption' }}
@@ -109,7 +109,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   aggregate_functions:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: aggregate_functions
     if: ${{ inputs.suite == 'all' || inputs.suite == 'aggregate_functions' }}
@@ -137,7 +137,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   atomic_insert:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: atomic_insert
     if: ${{ inputs.suite == 'all' || inputs.suite == 'atomic_insert' }}
@@ -165,7 +165,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   base_58:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: base_58
     if: ${{ inputs.suite == 'all' || inputs.suite == 'base_58' }}
@@ -193,7 +193,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   benchmark_minio:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: ontime_benchmark
       STORAGE: /minio
@@ -223,7 +223,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   benchmark_aws:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: ontime_benchmark
       STORAGE: /aws
@@ -257,7 +257,7 @@ jobs:
           path: ${{ env.artifact_paths}}  
 
   benchmark_gcs:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: ontime_benchmark
       STORAGE: /gcs
@@ -290,7 +290,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   clickhouse_keeper:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: clickhouse_keeper
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
@@ -318,7 +318,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   datetime64_extended_range:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: datetime64_extended_range
     if: ${{ inputs.suite == 'all' || inputs.suite == 'datetime64_extended_range' }}
@@ -346,7 +346,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   disk_level_encryption:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: disk_level_encryption
     if: ${{ inputs.suite == 'all' || inputs.suite == 'disk_level_encryption' }}
@@ -374,7 +374,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   dns:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: dns
     if: ${{ inputs.suite == 'all' || inputs.suite == 'dns' }}
@@ -402,7 +402,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   engines:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: engines
     if: ${{ inputs.suite == 'all' || inputs.suite == 'engines' }}
@@ -430,7 +430,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   example:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: example
     if: ${{ inputs.suite == 'all' || inputs.suite == 'example' }}
@@ -458,7 +458,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   extended_precision_data_types:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: extended_precision_data_types
     if: ${{ inputs.suite == 'all' || inputs.suite == 'extended_precision_data_types' }}
@@ -514,7 +514,7 @@ jobs:
   #         path: ${{ env.artifact_paths}}
 
   kafka:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: kafka
     if: ${{ inputs.suite == 'all' || inputs.suite == 'kafka' }}
@@ -542,7 +542,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   kerberos:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: kerberos
     if: ${{ inputs.suite == 'all' || inputs.suite == 'kerberos' }}
@@ -569,7 +569,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   key_value:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: key_value
     if: ${{ inputs.suite == 'all' || inputs.suite == 'key_value' }}
@@ -596,7 +596,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   ldap_authentication:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: ldap/authentication
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
@@ -624,7 +624,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   ldap_external_user_directory:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: ldap/external_user_directory
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
@@ -652,7 +652,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   ldap_role_mapping:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: ldap/role_mapping
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
@@ -680,7 +680,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   lightweight_delete:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: lightweight_delete
     if: ${{ inputs.suite == 'all' || inputs.suite == 'lightweight_delete' }}
@@ -708,7 +708,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   map_type:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: map_type
     if: ${{ inputs.suite == 'all' || inputs.suite == 'map_type' }}
@@ -736,7 +736,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   parquet:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: parquet
     if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet' }}
@@ -774,7 +774,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   part_moves_between_shards:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: part_moves_between_shards
     if: ${{ inputs.suite == 'all' || inputs.suite == 'part_moves_between_shards' }}
@@ -802,7 +802,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   rbac:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: rbac
     if: ${{ inputs.suite == 'all' || inputs.suite == 'rbac' }}
@@ -830,7 +830,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   s3_minio:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: s3
       STORAGE: /minio
@@ -860,7 +860,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   s3_aws:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: s3
       STORAGE: /aws
@@ -894,7 +894,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   s3_gcs:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: s3
       STORAGE: /gcs
@@ -927,7 +927,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   selects:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: selects
     if: ${{ inputs.suite == 'all' || inputs.suite == 'selects' }}
@@ -955,7 +955,7 @@ jobs:
           path: ${{ env.artifact_paths}}
           
   session_timezone:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: session_timezone
     if: ${{ inputs.suite == 'all' || inputs.suite == 'session_timezone' }}
@@ -983,7 +983,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   ssl_server:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: ssl_server
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
@@ -1011,7 +1011,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   tiered_storage:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: tiered_storage
     if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage' }}
@@ -1039,7 +1039,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   tiered_storage_minio:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: tiered_storage
       STORAGE: /minio
@@ -1069,7 +1069,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   tiered_storage_aws:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: tiered_storage
       STORAGE: /aws
@@ -1102,7 +1102,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   tiered_storage_gcs:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: tiered_storage
       STORAGE: /gcs
@@ -1135,7 +1135,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   window_functions:
-    runs-on: [self-hosted, altinity-x86]
+    runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: window_functions
     if: ${{ inputs.suite == 'all' || inputs.suite == 'window_functions' }}
