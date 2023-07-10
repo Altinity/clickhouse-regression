@@ -223,7 +223,6 @@ def zookeeper_3_node(
                 self.context.cluster.node(node_name).start()
 
 
-
 @TestFeature
 @Name("bench")
 def feature(self):
