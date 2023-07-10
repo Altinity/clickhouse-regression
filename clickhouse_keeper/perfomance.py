@@ -47,7 +47,7 @@ def argparser(parser):
     parser.add_argument(
         "--inserts",
         type=int,
-        dest="number_of_inserts",
+        dest="inserts",
         help="number of inserts into table on one repeat",
         default=10000,
     )
