@@ -4,6 +4,7 @@ import time
 from helpers.common import getuid, instrument_clickhouse_server_log
 from testflows.asserts import error
 from testflows.connect import Shell
+from clickhouse_keeper.tests.steps_ssl_fips import start_mixed_keeper_ssl, start_stand_alone_keeper_ssl
 
 
 @TestStep(Given)
@@ -1020,3 +1021,39 @@ def system_zoo_check(
                 .output.strip(),
                 units="",
             )
+
+
+@TestStep(Given)
+def start_mixed_keeper_ssl_or_not(
+    self, control_nodes, cluster_nodes, rest_cluster_nodes
+):
+    """Check if ssl option is True for mixed keeper start up."""
+
+    if self.context.ssl == "true":
+        start_mixed_keeper_ssl(
+            control_nodes=control_nodes,
+            cluster_nodes=cluster_nodes,
+            rest_cluster_nodes=rest_cluster_nodes,
+        )
+    else:
+        start_mixed_keeper(
+            control_nodes=control_nodes,
+            cluster_nodes=cluster_nodes,
+            rest_cluster_nodes=rest_cluster_nodes,
+        )
+
+
+@TestStep(Given)
+def start_stand_alone_keeper_ssl_or_not(self, control_nodes, cluster_nodes):
+    """Check if ssl option is True for standalone keeper start up."""
+
+    if self.context.ssl == "true":
+        start_stand_alone_keeper_ssl(
+            control_nodes=control_nodes,
+            cluster_nodes=cluster_nodes,
+        )
+    else:
+        start_stand_alone_keeper(
+            control_nodes=control_nodes,
+            cluster_nodes=cluster_nodes,
+        )
