@@ -12,6 +12,8 @@ from helpers.common import check_clickhouse_version
 from clickhouse_keeper.requirements import *
 from clickhouse_keeper.tests.steps import *
 from clickhouse_keeper.tests.steps_ssl import *
+import csv
+
 
 
 def argparser(parser):
@@ -82,7 +84,9 @@ def regression(
     if len(clickhouse_binary_list) == 0:
         clickhouse_binary_list.append(os.getenv("CLICKHOUSE_TESTS_SERVER_BIN_PATH", "/usr/bin/clickhouse"))
 
-    self.context.name = f"bench{getuid()}.csv"
+    self.context.uid = getuid()
+
+    self.context.dict = {}
 
     for clickhouse_binary_path in clickhouse_binary_list:
         self.context.clickhouse_version = clickhouse_version
@@ -90,16 +94,10 @@ def regression(
         if stress is not None:
             self.context.stress = stress
 
-        if ssl:
-            self.context.tcp_port_secure = True
-            self.context.secure = 1
-            self.context.port = "9281"
-            self.context.ssl = "true"
-        else:
-            self.context.tcp_port_secure = False
-            self.context.secure = 0
-            self.context.ssl = "false"
-            self.context.port = "2181"
+        self.context.tcp_port_secure = True
+        self.context.secure = 1
+        self.context.port = "9281"
+        self.context.ssl = "true"
 
         from platform import processor as current_cpu
 
@@ -121,17 +119,61 @@ def regression(
             if check_clickhouse_version("<21.4")(self):
                 skip(reason="only supported on ClickHouse version >= 21.4")
 
-            if ssl:
-                create_3_3_cluster_config_ssl()
-                Feature(
-                    run=load("clickhouse_keeper.tests.bench", "feature")
-                )
+            create_3_3_cluster_config_ssl()
+            Feature(
+                run=load("clickhouse_keeper.tests.bench", "feature")
+            )
 
-            else:
-                create_3_3_cluster_config()
-                Feature(
-                    run=load("clickhouse_keeper.tests.bench", "feature")
-                )
+        if stress is not None:
+            self.context.stress = stress
+
+        self.context.tcp_port_secure = False
+        self.context.secure = 0
+        self.context.ssl = "false"
+        self.context.port = "2181"
+
+        from platform import processor as current_cpu
+
+        folder_name = os.path.basename(current_dir())
+        if current_cpu() == "aarch64":
+            env = f"{folder_name}_env_arm64"
+        else:
+            env = f"{folder_name}_env"
+
+        with Cluster(
+            local,
+            clickhouse_binary_path=clickhouse_binary_path,
+            collect_service_logs=collect_service_logs,
+            nodes=nodes,
+            docker_compose_project_dir=os.path.join(current_dir(), env),
+        ) as cluster:
+            self.context.cluster = cluster
+
+            if check_clickhouse_version("<21.4")(self):
+                skip(reason="only supported on ClickHouse version >= 21.4")
+
+            create_3_3_cluster_config()
+            Feature(
+                run=load("clickhouse_keeper.tests.bench", "feature")
+            )
+
+    file_name = (
+        f"bench_{self.context.uid}.csv"
+    )
+
+    with open(file_name, "a", encoding="UTF8", newline="") as f:
+        writer = csv.writer(f)
+
+        buffer_list = ['config name:']
+        for name1 in list(self.context.dict):
+            buffer_list.append(name1)
+        writer.writerow(buffer_list)
+
+        for name1 in list(self.context.dict):
+            buffer_list = [name1]
+            for name2 in list(self.context.dict):
+                buffer_list.append(float(self.context.dict[name2]/float(self.context.dict[name1])))
+            writer.writerow(buffer_list)
 
 
 if main():
