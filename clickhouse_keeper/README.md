@@ -74,7 +74,7 @@ Special `perfomance.py` settings are:
 As output, you will receive a `bench_*.csv` file with a unique name for every run where numeric cell values are ratios 
 between the mean values of insert times for column and row control cluster configurations.
 
-The result file can be imported to Google Docks, where `Format-->Conditional formatting-->Color scale` can be applied 
+The result file can be imported to Google Sheets, where `Format-->Conditional formatting-->Color scale` can be applied 
 to all numeric cells to receive more readable output.
 
 Color scale setting example:
