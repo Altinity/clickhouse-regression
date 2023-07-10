@@ -118,6 +118,12 @@ xfails = {
             "occurs because of DELTA_LENGTH_BYTE_ARRAY encoding",
         )
     ],
+    "/parquet/encoding/rleboolean/*": [
+        (
+            Fail,
+            "Getting an error that encoding is not supported.",
+        )
+    ],
 }
 
 xflags = {}
