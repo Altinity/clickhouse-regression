@@ -26,7 +26,7 @@ SETTINGS
 Insert query:
 
 ```commandline
-INSERT INTO zookeeper_bench SELECT rand(1)%100, rand(2) FROM numbers({number}) 
+INSERT INTO zookeeper_bench SELECT rand(1)%100, rand(2) FROM numbers({number_of_inserts}) 
 SETTINGS max_block_size=100, min_insert_block_size_bytes=1, min_insert_block_size_rows=1, 
 insert_deduplicate=0, max_threads=128,max_insert_threads=128;
 ```
@@ -66,6 +66,8 @@ Example:
 Special `perfomance.py` settings are:
 
 * `--clickhouse-binary-list` to test some special ClickHouse versions
+* `--number-of-repeats` number of insert time check for 'mean value calculation (default: 5)
+* `--number-of-inserts` number of inserts into table on one repeat (default: 10000)
 
 
 

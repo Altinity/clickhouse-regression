@@ -36,6 +36,22 @@ def argparser(parser):
         default=[],
     )
 
+    parser.add_argument(
+        "--number-of-repeats",
+        type=int,
+        dest="number_of_repeats",
+        help="number of insert time check for 'mean value calculation",
+        default=2,
+    )
+
+    parser.add_argument(
+        "--number-of-inserts",
+        type=int,
+        dest="number_of_inserts",
+        help="number of inserts into table on one repeat",
+        default=100,
+    )
+
 
 xfails = {}
 
@@ -55,6 +71,8 @@ def regression(
     local,
     clickhouse_binary_path,
     clickhouse_binary_list,
+    number_of_repeats,
+    number_of_inserts,
     clickhouse_version,
     collect_service_logs,
     ssl=None,
@@ -87,6 +105,9 @@ def regression(
     self.context.uid = getuid()
 
     self.context.dict = {}
+
+    self.context.number_of_repeats = number_of_repeats
+    self.context.number_of_inserts = number_of_inserts
 
     for clickhouse_binary_path in clickhouse_binary_list:
         self.context.clickhouse_version = clickhouse_version
