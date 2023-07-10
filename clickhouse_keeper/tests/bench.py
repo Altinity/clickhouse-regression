@@ -160,7 +160,7 @@ def zookeeper_1_node(self, number_clickhouse_cluster_nodes=9):
             self.context.dict[configuration] = start_bench_scenario()
 
     finally:
-        with Finally("I stop all start zookeeper nodes"):
+        with Finally("I start all stopped Zookeeper nodes"):
             for node_name in self.context.cluster.nodes["zookeeper"][:3]:
                 self.context.cluster.node(node_name).start()
 
@@ -255,7 +255,7 @@ def zookeeper_3_node(
         ):
             self.context.dict[configuration] = start_bench_scenario()
     finally:
-        with Finally("I stop all start zookeeper nodes"):
+        with Finally("I start all stopped zookeeper nodes"):
             for node_name in self.context.cluster.nodes["zookeeper"][3:4]:
                 self.context.cluster.node(node_name).start()
 

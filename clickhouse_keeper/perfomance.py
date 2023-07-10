@@ -41,7 +41,7 @@ def argparser(parser):
         type=int,
         dest="number_of_repeats",
         help="number of insert time check for 'mean value calculation",
-        default=2,
+        default=5,
     )
 
     parser.add_argument(
@@ -49,7 +49,7 @@ def argparser(parser):
         type=int,
         dest="number_of_inserts",
         help="number of inserts into table on one repeat",
-        default=100,
+        default=10000,
     )
 
 
