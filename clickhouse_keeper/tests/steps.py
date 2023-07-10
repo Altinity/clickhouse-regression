@@ -4,7 +4,10 @@ import time
 from helpers.common import getuid, instrument_clickhouse_server_log
 from testflows.asserts import error
 from testflows.connect import Shell
-from clickhouse_keeper.tests.steps_ssl_fips import start_mixed_keeper_ssl, start_stand_alone_keeper_ssl
+from clickhouse_keeper.tests.steps_ssl_fips import (
+    start_mixed_keeper_ssl,
+    start_stand_alone_keeper_ssl,
+)
 
 
 @TestStep(Given)
