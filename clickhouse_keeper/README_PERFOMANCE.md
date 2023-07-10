@@ -47,7 +47,7 @@ Example:
 ./perfomance.py --clickhouse-binary-list=docker://altinity/clickhouse-server:23.3.5.10.altinitytest --clickhouse-binary-list=docker://clickhouse/clickhouse-server:22.8 --test-to-end -o classic
 ```
 
-As program based on [TestFlows](https://testflows.com/) framework, `perfomance.py` can use all its
+The program is based on [TestFlows](https://testflows.com/) framework. So `perfomance.py` can use all its
 [possibilities](https://testflows.com/handbook/) (except `--clickhouse-binary-path`)
 
 Most usefully are:
