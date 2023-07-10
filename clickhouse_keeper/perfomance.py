@@ -15,7 +15,6 @@ from clickhouse_keeper.tests.steps_ssl import *
 import csv
 
 
-
 def argparser(parser):
     """Custom argperser that add --ssl option."""
     base_argparser(parser)
@@ -100,7 +99,9 @@ def regression(
     }
 
     if len(clickhouse_binary_list) == 0:
-        clickhouse_binary_list.append(os.getenv("CLICKHOUSE_TESTS_SERVER_BIN_PATH", "/usr/bin/clickhouse"))
+        clickhouse_binary_list.append(
+            os.getenv("CLICKHOUSE_TESTS_SERVER_BIN_PATH", "/usr/bin/clickhouse")
+        )
 
     self.context.uid = getuid()
 
@@ -153,18 +154,14 @@ def regression(
                 else:
                     create_3_3_cluster_config()
 
-                Feature(
-                    run=load("clickhouse_keeper.tests.bench", "feature")
-                )
+                Feature(run=load("clickhouse_keeper.tests.bench", "feature"))
 
-    file_name = (
-        f"bench_{self.context.uid}.csv"
-    )
+    file_name = f"bench_{self.context.uid}.csv"
 
     with open(file_name, "a", encoding="UTF8", newline="") as f:
         writer = csv.writer(f)
 
-        buffer_list = ['config name:']
+        buffer_list = ["config name:"]
         for name1 in list(self.context.dict):
             buffer_list.append(name1)
         writer.writerow(buffer_list)
@@ -172,7 +169,9 @@ def regression(
         for name1 in list(self.context.dict):
             buffer_list = [name1]
             for name2 in list(self.context.dict):
-                buffer_list.append(float(self.context.dict[name2]/float(self.context.dict[name1])))
+                buffer_list.append(
+                    float(self.context.dict[name2] / float(self.context.dict[name1]))
+                )
             writer.writerow(buffer_list)
 
 

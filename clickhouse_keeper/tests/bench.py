@@ -4,8 +4,8 @@ from clickhouse_keeper.tests.steps_ssl_fips import *
 
 @TestStep
 def start_bench_scenario(
-        self,
-        timeout=30000,
+    self,
+    timeout=30000,
 ):
     """Step creates a 'bad' table and make inserts. Every row generates ZK transaction.
     It checks insert time and zoo metrics from system.events before and after insert."""
@@ -40,7 +40,7 @@ def start_bench_scenario(
                     system_zoo_check()
 
                 with And(
-                        "I make insert into the table and collect its time into a list."
+                    "I make insert into the table and collect its time into a list."
                 ):
                     retry(node.query, timeout=1000, delay=1)(
                         f"insert into {table_name} select rand(1)%100,"
@@ -74,17 +74,19 @@ def start_bench_scenario(
 
 @TestScenario
 def standalone_1_node(
-        self, number_clickhouse_cluster_nodes=9, number_of_clickhouse_keeper_nodes=1
+    self, number_clickhouse_cluster_nodes=9, number_of_clickhouse_keeper_nodes=1
 ):
     """Standalone Keeper 1 node configuration bench test."""
     configuration = f"Standalone_1_node_CH_keeper_{self.context.clickhouse_version}"
 
     control_nodes = self.context.cluster.nodes["clickhouse"][
-                    number_clickhouse_cluster_nodes: number_clickhouse_cluster_nodes
-                                                     + number_of_clickhouse_keeper_nodes
-                    ]
+        number_clickhouse_cluster_nodes : number_clickhouse_cluster_nodes
+        + number_of_clickhouse_keeper_nodes
+    ]
 
-    cluster_nodes = self.context.cluster.nodes["clickhouse"][:number_clickhouse_cluster_nodes]
+    cluster_nodes = self.context.cluster.nodes["clickhouse"][
+        :number_clickhouse_cluster_nodes
+    ]
 
     with Given("I start standalone ClickHouse Keeper cluster"):
         start_stand_alone_keeper_ssl_or_not(
@@ -92,27 +94,29 @@ def standalone_1_node(
         )
 
     with Then(
-            f"I start bench scenarios and append observation dictionary with configuration name and "
-            f"'mean' insert time value"
+        f"I start bench scenarios and append observation dictionary with configuration name and "
+        f"'mean' insert time value"
     ):
         self.context.dict[configuration] = start_bench_scenario()
 
 
 @TestScenario
 def mixed_1_node(
-        self, number_clickhouse_cluster_nodes=9, number_of_clickhouse_keeper_nodes=1
+    self, number_clickhouse_cluster_nodes=9, number_of_clickhouse_keeper_nodes=1
 ):
     """Mixed keeper 1-node configuration bench test."""
     configuration = f"Mixed_1_node_CH_keeper_{'ssl' if self.context.ssl == 'true' else ''}_{self.context.clickhouse_version}"
 
     control_nodes = self.context.cluster.nodes["clickhouse"][
-                    number_clickhouse_cluster_nodes
-                    - number_of_clickhouse_keeper_nodes: number_clickhouse_cluster_nodes
-                    ]
-    cluster_nodes = self.context.cluster.nodes["clickhouse"][:number_clickhouse_cluster_nodes]
+        number_clickhouse_cluster_nodes
+        - number_of_clickhouse_keeper_nodes : number_clickhouse_cluster_nodes
+    ]
+    cluster_nodes = self.context.cluster.nodes["clickhouse"][
+        :number_clickhouse_cluster_nodes
+    ]
     rest_cluster_nodes = self.context.cluster.nodes["clickhouse"][
-                         : number_clickhouse_cluster_nodes - number_of_clickhouse_keeper_nodes
-                         ]
+        : number_clickhouse_cluster_nodes - number_of_clickhouse_keeper_nodes
+    ]
 
     with Given("I start mixed ClickHouse Keeper cluster"):
         start_mixed_keeper_ssl_or_not(
@@ -122,8 +126,8 @@ def mixed_1_node(
         )
 
     with Then(
-            f"I start bench scenarios and append observation dictionary with configuration name and "
-            f"'mean' insert time value"
+        f"I start bench scenarios and append observation dictionary with configuration name and "
+        f"'mean' insert time value"
     ):
         self.context.dict[configuration] = start_bench_scenario()
 
@@ -137,7 +141,9 @@ def zookeeper_1_node(self, number_clickhouse_cluster_nodes=9):
 
     keeper_cluster_nodes = self.context.cluster.nodes["zookeeper"][3:4]
 
-    clickhouse_cluster_nodes = self.context.cluster.nodes["clickhouse"][:number_clickhouse_cluster_nodes]
+    clickhouse_cluster_nodes = self.context.cluster.nodes["clickhouse"][
+        :number_clickhouse_cluster_nodes
+    ]
 
     try:
         if self.context.ssl == "true":
@@ -154,8 +160,8 @@ def zookeeper_1_node(self, number_clickhouse_cluster_nodes=9):
             )
 
         with Then(
-                f"I start bench scenarios and append observation dictionary with configuration name and "
-                f"'mean' insert time value"
+            f"I start bench scenarios and append observation dictionary with configuration name and "
+            f"'mean' insert time value"
         ):
             self.context.dict[configuration] = start_bench_scenario()
 
@@ -168,17 +174,19 @@ def zookeeper_1_node(self, number_clickhouse_cluster_nodes=9):
 
 @TestScenario
 def standalone_3_node(
-        self, number_clickhouse_cluster_nodes=9, number_of_clickhouse_keeper_nodes=3
+    self, number_clickhouse_cluster_nodes=9, number_of_clickhouse_keeper_nodes=3
 ):
     """Standalone Keeper 3-node configuration bench test."""
     configuration = f"Standalone_3_node_CH_keeper_{self.context.clickhouse_version}"
 
     control_nodes = self.context.cluster.nodes["clickhouse"][
-                    number_clickhouse_cluster_nodes: number_clickhouse_cluster_nodes
-                                                     + number_of_clickhouse_keeper_nodes
-                    ]
+        number_clickhouse_cluster_nodes : number_clickhouse_cluster_nodes
+        + number_of_clickhouse_keeper_nodes
+    ]
 
-    cluster_nodes = self.context.cluster.nodes["clickhouse"][:number_clickhouse_cluster_nodes]
+    cluster_nodes = self.context.cluster.nodes["clickhouse"][
+        :number_clickhouse_cluster_nodes
+    ]
 
     with Given("I start standalone ClickHouse Keeper cluster"):
         start_stand_alone_keeper_ssl_or_not(
@@ -186,29 +194,31 @@ def standalone_3_node(
         )
 
     with Then(
-            f"I start bench scenarios and append observation dictionary with configuration name and "
-            f"'mean' insert time value"
+        f"I start bench scenarios and append observation dictionary with configuration name and "
+        f"'mean' insert time value"
     ):
         self.context.dict[configuration] = start_bench_scenario()
 
 
 @TestScenario
 def mixed_3_node(
-        self, number_clickhouse_cluster_nodes=9, number_of_clickhouse_keeper_nodes=3
+    self, number_clickhouse_cluster_nodes=9, number_of_clickhouse_keeper_nodes=3
 ):
     """Mixed Keeper 3-node configuration bench test."""
     configuration = f"Mixed_3_node_CH_keeper_{self.context.clickhouse_version}"
 
     control_nodes = self.context.cluster.nodes["clickhouse"][
-                    number_clickhouse_cluster_nodes
-                    - number_of_clickhouse_keeper_nodes: number_clickhouse_cluster_nodes
-                    ]
+        number_clickhouse_cluster_nodes
+        - number_of_clickhouse_keeper_nodes : number_clickhouse_cluster_nodes
+    ]
 
-    cluster_nodes = self.context.cluster.nodes["clickhouse"][:number_clickhouse_cluster_nodes]
+    cluster_nodes = self.context.cluster.nodes["clickhouse"][
+        :number_clickhouse_cluster_nodes
+    ]
 
     rest_cluster_nodes = self.context.cluster.nodes["clickhouse"][
-                         : number_clickhouse_cluster_nodes - number_of_clickhouse_keeper_nodes
-                         ]
+        : number_clickhouse_cluster_nodes - number_of_clickhouse_keeper_nodes
+    ]
 
     with Given("I start mixed ClickHouse Keeper cluster"):
         start_mixed_keeper_ssl_or_not(
@@ -218,24 +228,22 @@ def mixed_3_node(
         )
 
     with Then(
-            f"I start bench scenarios and append observation dictionary with configuration name and "
-            f"'mean' insert time value"
+        f"I start bench scenarios and append observation dictionary with configuration name and "
+        f"'mean' insert time value"
     ):
         self.context.dict[configuration] = start_bench_scenario()
 
 
 @TestScenario
-def zookeeper_3_node(
-        self, number_clickhouse_cluster_nodes=9
-):
+def zookeeper_3_node(self, number_clickhouse_cluster_nodes=9):
     """Zookeeper 3-node configuration bench test."""
     configuration = f"Zookeeper_3_node_{self.context.clickhouse_version}"
 
     keeper_cluster_nodes = self.context.cluster.nodes["zookeeper"][0:3]
 
     clickhouse_cluster_nodes = self.context.cluster.nodes["clickhouse"][
-                               :number_clickhouse_cluster_nodes
-                               ]
+        :number_clickhouse_cluster_nodes
+    ]
     try:
         if self.context.ssl == "true":
             xfail("zookeeper ssl is not supported by tests")
@@ -251,8 +259,8 @@ def zookeeper_3_node(
             )
 
         with Then(
-                f"I start bench scenarios and append observation dictionary with configuration name and "
-                f"'mean' insert time value"
+            f"I start bench scenarios and append observation dictionary with configuration name and "
+            f"'mean' insert time value"
         ):
             self.context.dict[configuration] = start_bench_scenario()
     finally:
@@ -266,11 +274,8 @@ def zookeeper_3_node(
 @Name("bench")
 def feature(self):
     """Bench tests of CLickHouse Keeper"""
-    with Given(
-            "I choose Clickhouse cluster for tests"
-    ):
+    with Given("I choose Clickhouse cluster for tests"):
         self.context.cluster_name = "'Cluster_3shards_with_3replicas'"
 
     for scenario in loads(current_module(), Scenario):
         scenario()
-
