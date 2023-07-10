@@ -62,7 +62,7 @@ def start_bench_scenario(
                     system_zoo_check()
 
             finally:
-                with Finally("I drop table if exists"):
+                with Finally("I drop table if exists and provide cleanup"):
                     node.query(
                         f"DROP TABLE IF EXISTS {table_name} ON CLUSTER {self.context.cluster_name} SYNC"
                     )
@@ -163,6 +163,7 @@ def zookeeper_1_node(self, number_clickhouse_cluster_nodes=9):
         with Finally("I start all stopped Zookeeper nodes"):
             for node_name in self.context.cluster.nodes["zookeeper"][:3]:
                 self.context.cluster.node(node_name).start()
+            self.context.cluster.node("clickhouse1").cmd(f"rm -rf /share/")
 
 
 @TestScenario
@@ -258,6 +259,7 @@ def zookeeper_3_node(
         with Finally("I start all stopped zookeeper nodes"):
             for node_name in self.context.cluster.nodes["zookeeper"][3:4]:
                 self.context.cluster.node(node_name).start()
+            self.context.cluster.node("clickhouse1").cmd(f"rm -rf /share/")
 
 
 @TestFeature
