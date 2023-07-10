@@ -40,7 +40,7 @@ Available control cluster configurations:
 * zookeeper 3 node (non-ssl)
 
 
-To test some special ClickHouse versions, the `--clickhouse-binary-list` setting can be applied, as in the example below.
+The `--clickhouse-binary-list` setting can be applied to test some special ClickHouse versions, as in the example below.
 
 Example:
 ```commandline
