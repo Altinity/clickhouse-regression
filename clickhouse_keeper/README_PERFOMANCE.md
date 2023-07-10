@@ -3,7 +3,7 @@
 Bench tests can be launched with `./perfomance.py` command. After that performance of all available control cluster 
 configurations will be tested for local ClickHouse binary. 
 
-The bench test scenario is based on inserting into a `bad` table where every row generates ZK transaction. It collects 
+The bench test scenario is based on inserting into a `bad` table (every row generates ZK transaction). It collects 
 insert times and calculates the `mean` value. After that, it provides a `bench_*.csv` file with ratio values of all 
 `mean` values for all control cluster configurations.
 
