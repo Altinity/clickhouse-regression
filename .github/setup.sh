@@ -18,7 +18,6 @@ python3 -c "import platform; print('Platform machine:', platform.machine())"
 if [[ $clickhouse_binary_path == "docker"* ]]; then
     echo "login to docker"
     echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-    cat /home/ec2-user/.docker/config.json
     echo "clickhouse_binary_path=$clickhouse_binary_path:$version" >> $GITHUB_ENV
     echo "get specific ClickHouse version $version"
     docker_image=$(echo $clickhouse_binary_path | cut -c10- | cut -d: -f1):$version
