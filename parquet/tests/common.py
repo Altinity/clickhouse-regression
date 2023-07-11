@@ -120,10 +120,10 @@ def table(
 def getuid():
     if current().subtype == TestSubType.Example:
         testname = (
-            f"{basename(parentname(current().name)).replace(' ', '_').replace(',','')}"
+            f"{basename(parentname(current().name)).replace(' ', '_').replace(',', '')}"
         )
     else:
-        testname = f"{basename(current().name).replace(' ', '_').replace(',','')}"
+        testname = f"{basename(current().name).replace(' ', '_').replace(',', '')}"
     return testname + "_" + str(uuid.uuid1()).replace("-", "_")
 
 
@@ -171,7 +171,7 @@ def upload_file_to_s3(self, file_src, file_dest):
 
 
 @TestStep(Then)
-def check_source_file(self, path, compression=None):
+def check_source_file(self, path, compression=None, reference_table_name=None):
     """Check the contents of a Parquet file against either snapshot or provided values."""
     node = current().context.node
     table_name = "table_" + getuid()
@@ -185,17 +185,27 @@ def check_source_file(self, path, compression=None):
 
     with And("inserting data from the specified file"):
         node.query(
-            f"INSERT INTO {table_name} FROM INFILE '{path}' {'COMPRESSION '+ compression if compression and compression != 'NONE' else ''} FORMAT Parquet"
+            f"INSERT INTO {table_name} FROM INFILE '{path}' {'COMPRESSION ' + compression if compression and compression != 'NONE' else ''} FORMAT Parquet"
         )
 
     with Pool(3) as executor:
         for column in table.columns:
+            if reference_table_name:
+                r = current().context.node.query(
+                    f"SELECT {column.name}, toTypeName({column.name}) FROM {reference_table_name}"
+                    + " FORMAT JSONEachRow",
+                    exitcode=0,
+                )
+
             Check(
                 test=execute_query_step,
                 name=f"{column.datatype.name}",
                 parallel=True,
                 executor=executor,
-            )(sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table.name}")
+            )(
+                sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table.name}",
+                expected=r.output.strip() if reference_table_name else None,
+                )
         join()
 
     return
