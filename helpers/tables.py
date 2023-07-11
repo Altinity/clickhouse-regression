@@ -339,13 +339,23 @@ def create_table(
     try:
         if create == "CREATE":
             with By(f"creating table {name}"):
-                node.query(
-                    f"""
-                    CREATE TABLE {name} {columns_def}
-                    Engine = {engine}
-                """,
-                    settings=[("allow_suspicious_low_cardinality_types", 1)],
-                )
+                if engine == 'MergeTree':
+                    node.query(
+                        f"""
+                        CREATE TABLE {name} {columns_def}
+                        Engine = {engine}
+                        ORDER BY tuple()
+                    """,
+                        settings=[("allow_suspicious_low_cardinality_types", 1)],
+                    )
+                else:
+                    node.query(
+                        f"""
+                        CREATE TABLE {name} {columns_def}
+                        Engine = {engine}
+                    """,
+                        settings=[("allow_suspicious_low_cardinality_types", 1)],
+                    )
         elif create == "ATTACH":
             with By(f"attaching table {name}"):
                 node.query(
