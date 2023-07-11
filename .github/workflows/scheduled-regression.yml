@@ -9,6 +9,8 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_REPORT_SECRET_ACCESS_KEY }}
   AWS_DEFAULT_REGION: ${{ secrets.AWS_REPORT_REGION }}
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   PYTHONIOENCODING: utf-8
   REGRESSION_RESULTS_URL: clickhouse/${{ inputs.version }}/${GITHUB_RUN_ID}/testflows
   artifacts: internal
