@@ -8,18 +8,17 @@ from helpers.common import *
 
 
 @TestOutline
-def import_export(self, snapshot_name, import_file, snapshot_id=None, limit=None):
+def import_export(self, snapshot_name, import_file, order_by=None, snapshot_id=None):
     node = self.context.node
     table_name = "table_" + getuid()
     path_to_export = f"/var/lib/clickhouse/user_files/{table_name}.parquet"
+    file_import = f"import_{getuid()}"
+    file_export = f"export_{getuid()}"
+
+    order_by = "" if order_by is None else order_by
 
     if snapshot_id is None:
         snapshot_id = self.context.snapshot_id
-
-    if limit is None:
-        limit = ""
-    else:
-        limit = f"LIMIT {limit}"
 
     with Given("I save file structure"):
         import_column_structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
@@ -29,12 +28,14 @@ def import_export(self, snapshot_name, import_file, snapshot_id=None, limit=None
             f"""
             CREATE TABLE {table_name}
             ENGINE = MergeTree
-            ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet) {limit}
+            ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet)
             """
         )
 
     with And("I read the contents of the created table"):
-        import_read = node.query(f"SELECT * FROM {table_name}")
+        node.query(
+            f"SELECT * FROM {table_name} ORDER BY {order_by}", file_output=file_import, use_file=True
+        )
 
     with Check("import"):
         with Then("I check the output is correct"):
@@ -50,14 +51,18 @@ def import_export(self, snapshot_name, import_file, snapshot_id=None, limit=None
     with Check("export"):
         with When("I export the table back into a new parquet file"):
             node.query(
-                f"SELECT * FROM {table_name} {limit} INTO OUTFILE '{path_to_export}' COMPRESSION 'none' FORMAT Parquet"
+                f"SELECT * FROM {table_name} INTO OUTFILE '{path_to_export}' COMPRESSION 'none' FORMAT Parquet"
             )
 
         with And("I check the exported Parquet file's contents"):
-            read = node.query(f"SELECT * FROM file('{path_to_export}', Parquet)")
+            node.query(
+                f"SELECT * FROM file('{path_to_export}', Parquet) ORDER BY {order_by}",
+                file_output=file_export,
+                use_file=True,
+            )
 
-        with Then("output must match the import snapshot"):
-            assert read.output.strip() == import_read.output.strip(), error()
+        with Then("output must match the import"):
+            node.command(f"diff {file_import} {file_export}", exitcode=0)
 
         with And("I check that table structure matches ..."):
             export_columns_structure = node.query(
