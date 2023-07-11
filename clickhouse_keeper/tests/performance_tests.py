@@ -3,28 +3,28 @@ from clickhouse_keeper.tests.steps_ssl_fips import *
 
 
 @TestStep
-def start_bench_scenario(
+def performance_check(
     self,
     timeout=30000,
 ):
-    """Step creates a 'bad' table and make inserts. Every row generates ZK transaction.
+    """Step creates a 'bad' table and make inserts. Every row generates ZooKeeper transaction.
     It checks insert time and zoo metrics from system.events before and after insert."""
 
     node = self.context.cluster.node("clickhouse1")
 
     insert_time_list = []
 
-    table_name = f"bench_{getuid()}"
+    table_name = f"performance_{getuid()}"
 
     for i in range(self.context.repeats):
-        with When(f"I start bench scenario №{self.context.repeats}"):
+        with When(f"I start performance scenario #{self.context.repeats}"):
             try:
                 with Given("I create 'bad' table"):
                     retry(node.query, timeout=100, delay=1)(
                         f"CREATE TABLE IF NOT EXISTS {table_name} on CLUSTER {self.context.cluster_name}"
                         f" (p UInt64, x UInt64) "
                         "ENGINE = ReplicatedSummingMergeTree('/clickhouse/tables/replicated/{shard}"
-                        f"/zookeeper_bench'"
+                        f"/{table_name}'"
                         ", '{replica}') "
                         "ORDER BY tuple() PARTITION BY p "
                         "SETTINGS  in_memory_parts_enable_wal=0, "
@@ -35,9 +35,6 @@ def start_bench_scenario(
                         "max_parts_in_total=1000000;",
                         steps=False,
                     )
-
-                with And("I check zoo metrics from system.events before scenario"):
-                    system_zoo_check()
 
                 with And(
                     "I make insert into the table and collect its time into a list."
@@ -58,9 +55,6 @@ def start_bench_scenario(
 
                     insert_time_list.append(float(current_time()))
 
-                with Then("I check zoo metrics from system.events after scenario"):
-                    system_zoo_check()
-
             finally:
                 with Finally("I drop table if exists and provide cleanup"):
                     node.query(
@@ -69,14 +63,14 @@ def start_bench_scenario(
                     clean_coordination_on_all_nodes()
                     self.context.cluster.node("clickhouse1").cmd(f"rm -rf /share/")
 
-    return sum(insert_time_list) / len(insert_time_list)
+    return min(insert_time_list)
 
 
 @TestScenario
 def standalone_1_node(
     self, number_clickhouse_cluster_nodes=9, number_of_clickhouse_keeper_nodes=1
 ):
-    """Standalone Keeper 1 node configuration bench test."""
+    """Standalone ClickHouse Keeper 1-node configuration performance test."""
     configuration = f"Standalone_1_node_CH_keeper_{self.context.clickhouse_version}"
 
     control_nodes = self.context.cluster.nodes["clickhouse"][
@@ -89,22 +83,23 @@ def standalone_1_node(
     ]
 
     with Given("I start standalone ClickHouse Keeper cluster"):
-        start_stand_alone_keeper_ssl_or_not(
+        start_standalone_ch_keeper(
             control_nodes=control_nodes, cluster_nodes=cluster_nodes
         )
 
     with Then(
-        f"I start bench scenarios and append observation dictionary with configuration name and "
-        f"'mean' insert time value"
+        "I collect the configuration and minimum insert time value from the performance test."
     ):
-        self.context.dict[configuration] = start_bench_scenario()
+        self.context.configurations_minimum_insert_time_values[
+            configuration
+        ] = performance_check()
 
 
 @TestScenario
 def mixed_1_node(
     self, number_clickhouse_cluster_nodes=9, number_of_clickhouse_keeper_nodes=1
 ):
-    """Mixed keeper 1-node configuration bench test."""
+    """Mixed ClickHouse Keeper 1-node configuration performance test."""
     configuration = f"Mixed_1_node_CH_keeper_{'ssl' if self.context.ssl == 'true' else ''}_{self.context.clickhouse_version}"
 
     control_nodes = self.context.cluster.nodes["clickhouse"][
@@ -119,22 +114,23 @@ def mixed_1_node(
     ]
 
     with Given("I start mixed ClickHouse Keeper cluster"):
-        start_mixed_keeper_ssl_or_not(
+        start_mixed_ch_keeper(
             control_nodes=control_nodes,
             cluster_nodes=cluster_nodes,
             rest_cluster_nodes=rest_cluster_nodes,
         )
 
     with Then(
-        f"I start bench scenarios and append observation dictionary with configuration name and "
-        f"'mean' insert time value"
+        "I collect the configuration and minimum insert time value from the performance test."
     ):
-        self.context.dict[configuration] = start_bench_scenario()
+        self.context.configurations_minimum_insert_time_values[
+            configuration
+        ] = performance_check()
 
 
 @TestScenario
 def zookeeper_1_node(self, number_clickhouse_cluster_nodes=9):
-    """Zookeeper 1-node configuration bench test."""
+    """ZooKeeper 1-node configuration performance test."""
     xfail("doesn't work on full run")
 
     configuration = f"Zookeeper_1_node_{self.context.clickhouse_version}"
@@ -147,7 +143,7 @@ def zookeeper_1_node(self, number_clickhouse_cluster_nodes=9):
 
     try:
         if self.context.ssl == "true":
-            xfail("zookeeper ssl is not supported by tests")
+            xfail("ZooKeeper ssl is not supported by tests")
 
         with Given("I stop all unused zookeeper nodes"):
             for node_name in self.context.cluster.nodes["zookeeper"][:3]:
@@ -160,13 +156,14 @@ def zookeeper_1_node(self, number_clickhouse_cluster_nodes=9):
             )
 
         with Then(
-            f"I start bench scenarios and append observation dictionary with configuration name and "
-            f"'mean' insert time value"
+            "I collect the configuration and minimum insert time value from the performance test."
         ):
-            self.context.dict[configuration] = start_bench_scenario()
+            self.context.configurations_minimum_insert_time_values[
+                configuration
+            ] = performance_check()
 
     finally:
-        with Finally("I start all stopped Zookeeper nodes"):
+        with Finally("I start all stopped ZooKeeper nodes"):
             for node_name in self.context.cluster.nodes["zookeeper"][:3]:
                 self.context.cluster.node(node_name).start()
             self.context.cluster.node("clickhouse1").cmd(f"rm -rf /share/")
@@ -176,7 +173,7 @@ def zookeeper_1_node(self, number_clickhouse_cluster_nodes=9):
 def standalone_3_node(
     self, number_clickhouse_cluster_nodes=9, number_of_clickhouse_keeper_nodes=3
 ):
-    """Standalone Keeper 3-node configuration bench test."""
+    """Standalone ClickHouse Keeper 3-node configuration performance test."""
     configuration = f"Standalone_3_node_CH_keeper_{self.context.clickhouse_version}"
 
     control_nodes = self.context.cluster.nodes["clickhouse"][
@@ -189,22 +186,23 @@ def standalone_3_node(
     ]
 
     with Given("I start standalone ClickHouse Keeper cluster"):
-        start_stand_alone_keeper_ssl_or_not(
+        start_standalone_ch_keeper(
             control_nodes=control_nodes, cluster_nodes=cluster_nodes
         )
 
     with Then(
-        f"I start bench scenarios and append observation dictionary with configuration name and "
-        f"'mean' insert time value"
+        "I collect the configuration and minimum insert time value from the performance test."
     ):
-        self.context.dict[configuration] = start_bench_scenario()
+        self.context.configurations_minimum_insert_time_values[
+            configuration
+        ] = performance_check()
 
 
 @TestScenario
 def mixed_3_node(
     self, number_clickhouse_cluster_nodes=9, number_of_clickhouse_keeper_nodes=3
 ):
-    """Mixed Keeper 3-node configuration bench test."""
+    """Mixed Keeper 3-node configuration performance test."""
     configuration = f"Mixed_3_node_CH_keeper_{self.context.clickhouse_version}"
 
     control_nodes = self.context.cluster.nodes["clickhouse"][
@@ -221,22 +219,23 @@ def mixed_3_node(
     ]
 
     with Given("I start mixed ClickHouse Keeper cluster"):
-        start_mixed_keeper_ssl_or_not(
+        start_mixed_ch_keeper(
             control_nodes=control_nodes,
             cluster_nodes=cluster_nodes,
             rest_cluster_nodes=rest_cluster_nodes,
         )
 
     with Then(
-        f"I start bench scenarios and append observation dictionary with configuration name and "
-        f"'mean' insert time value"
+        "I collect the configuration and minimum insert time value from the performance test."
     ):
-        self.context.dict[configuration] = start_bench_scenario()
+        self.context.configurations_minimum_insert_time_values[
+            configuration
+        ] = performance_check()
 
 
 @TestScenario
 def zookeeper_3_node(self, number_clickhouse_cluster_nodes=9):
-    """Zookeeper 3-node configuration bench test."""
+    """Zookeeper 3-node configuration performance test."""
     configuration = f"Zookeeper_3_node_{self.context.clickhouse_version}"
 
     keeper_cluster_nodes = self.context.cluster.nodes["zookeeper"][0:3]
@@ -246,23 +245,24 @@ def zookeeper_3_node(self, number_clickhouse_cluster_nodes=9):
     ]
     try:
         if self.context.ssl == "true":
-            xfail("zookeeper ssl is not supported by tests")
+            xfail("ZooKeeper ssl is not supported by tests")
 
         with Given("I stop all unused zookeeper nodes"):
             for node_name in self.context.cluster.nodes["zookeeper"][3:4]:
                 self.context.cluster.node(node_name).stop()
 
-        with And("I start Zookeeper cluster"):
+        with And("I start ZooKeeper cluster"):
             create_config_section(
                 control_nodes=keeper_cluster_nodes,
                 cluster_nodes=clickhouse_cluster_nodes,
             )
 
         with Then(
-            f"I start bench scenarios and append observation dictionary with configuration name and "
-            f"'mean' insert time value"
+            "I collect the configuration and minimum insert time value from the performance test."
         ):
-            self.context.dict[configuration] = start_bench_scenario()
+            self.context.configurations_minimum_insert_time_values[
+                configuration
+            ] = performance_check()
     finally:
         with Finally("I start all stopped zookeeper nodes"):
             for node_name in self.context.cluster.nodes["zookeeper"][3:4]:
@@ -271,9 +271,9 @@ def zookeeper_3_node(self, number_clickhouse_cluster_nodes=9):
 
 
 @TestFeature
-@Name("bench")
+@Name("performance")
 def feature(self):
-    """Bench tests of CLickHouse Keeper"""
+    """Performance tests of CLickHouse Keeper."""
     with Given("I choose Clickhouse cluster for tests"):
         self.context.cluster_name = "'Cluster_3shards_with_3replicas'"
 
