@@ -124,7 +124,7 @@ def regression(
         else:
             env = f"{folder_name}_env"
 
-        for ssl in ["true", "false"]:
+        for ssl in ["false", "true"]:
 
             self.context.ssl = ssl
 
@@ -155,7 +155,28 @@ def regression(
                     create_3_3_cluster_config()
 
                 Feature(
-                    run=load("clickhouse_keeper.tests.performance_tests", "feature")
+                    run=load("clickhouse_keeper.tests.performance_zookeeper", "feature")
+                )
+
+            with Cluster(
+                local,
+                clickhouse_binary_path=clickhouse_binary_path,
+                collect_service_logs=collect_service_logs,
+                nodes=nodes,
+                docker_compose_project_dir=os.path.join(current_dir(), env),
+            ) as cluster:
+                self.context.cluster = cluster
+
+                if check_clickhouse_version("<21.4")(self):
+                    skip(reason="only supported on ClickHouse version >= 21.4")
+
+                if ssl == "true":
+                    create_3_3_cluster_config_ssl()
+                else:
+                    create_3_3_cluster_config()
+
+                Feature(
+                    run=load("clickhouse_keeper.tests.performance_keeper", "feature")
                 )
 
     test_results = f"bench_{self.context.uid}.csv"
