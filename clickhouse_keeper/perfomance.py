@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import sys
+import csv
 
 from testflows.core import *
 
@@ -12,7 +13,6 @@ from helpers.common import check_clickhouse_version
 from clickhouse_keeper.requirements import *
 from clickhouse_keeper.tests.steps import *
 from clickhouse_keeper.tests.steps_ssl import *
-import csv
 
 
 def argparser(parser):
@@ -64,7 +64,7 @@ ffails = {}
 @XFails(xfails)
 @XFlags(xflags)
 @FFails(ffails)
-@Name("benchmark clickhouse keeper")
+@Name("coordination cluster")
 def regression(
     self,
     local,
@@ -77,7 +77,7 @@ def regression(
     ssl=None,
     stress=None,
 ):
-    """ClickHouse benchmark when using clickhouse-keeper."""
+    """Check ClickHouse performance when using ClickHouse Keeper."""
     nodes = {
         "zookeeper": ("zookeeper1", "zookeeper2", "zookeeper3", "zookeeper"),
         "bash_tools": ("bash_tools"),
@@ -105,7 +105,7 @@ def regression(
 
     self.context.uid = getuid()
 
-    self.context.dict = {}
+    self.context.configurations_minimum_insert_time_values = {}
 
     self.context.repeats = repeats
     self.context.inserts = inserts
@@ -154,23 +154,40 @@ def regression(
                 else:
                     create_3_3_cluster_config()
 
-                Feature(run=load("clickhouse_keeper.tests.bench", "feature"))
+                Feature(
+                    run=load("clickhouse_keeper.tests.performance_tests", "feature")
+                )
 
-    file_name = f"bench_{self.context.uid}.csv"
+    test_results = f"bench_{self.context.uid}.csv"
 
-    with open(file_name, "a", encoding="UTF8", newline="") as f:
+    with open(test_results, "a", encoding="UTF8", newline="") as f:
         writer = csv.writer(f)
 
-        buffer_list = ["config name:"]
-        for name1 in list(self.context.dict):
-            buffer_list.append(name1)
+        buffer_list = ["configuration:"]
+        for configuration in list(
+            self.context.configurations_minimum_insert_time_values
+        ):
+            buffer_list.append(configuration)
         writer.writerow(buffer_list)
 
-        for name1 in list(self.context.dict):
-            buffer_list = [name1]
-            for name2 in list(self.context.dict):
+        for first_configuration in list(
+            self.context.configurations_minimum_insert_time_values
+        ):
+            buffer_list = [first_configuration]
+            for second_configuration in list(
+                self.context.configurations_minimum_insert_time_values
+            ):
                 buffer_list.append(
-                    float(self.context.dict[name2] / float(self.context.dict[name1]))
+                    float(
+                        self.context.configurations_minimum_insert_time_values[
+                            second_configuration
+                        ]
+                        / float(
+                            self.context.configurations_minimum_insert_time_values[
+                                first_configuration
+                            ]
+                        )
+                    )
                 )
             writer.writerow(buffer_list)
 

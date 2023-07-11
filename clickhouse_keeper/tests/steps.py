@@ -1027,10 +1027,8 @@ def system_zoo_check(
 
 
 @TestStep(Given)
-def start_mixed_keeper_ssl_or_not(
-    self, control_nodes, cluster_nodes, rest_cluster_nodes
-):
-    """Check if ssl option is True for mixed keeper start up."""
+def start_mixed_ch_keeper(self, control_nodes, cluster_nodes, rest_cluster_nodes):
+    """Mixed keeper start up with and without ssl."""
 
     if self.context.ssl == "true":
         start_mixed_keeper_ssl(
@@ -1047,8 +1045,8 @@ def start_mixed_keeper_ssl_or_not(
 
 
 @TestStep(Given)
-def start_stand_alone_keeper_ssl_or_not(self, control_nodes, cluster_nodes):
-    """Check if ssl option is True for standalone keeper start up."""
+def start_standalone_ch_keeper(self, control_nodes, cluster_nodes):
+    """Standalone keeper start up with and without ssl."""
 
     if self.context.ssl == "true":
         start_stand_alone_keeper_ssl(

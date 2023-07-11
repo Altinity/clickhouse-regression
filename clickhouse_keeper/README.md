@@ -79,9 +79,9 @@ to all numeric cells to receive more readable output.
 
 Color scale setting example:
 
-<img src="Color_scale.png" alt="Color scale img">
+<img src="readme_data/color_scale_settings.png" alt="color scale settings img">
 
 Final output example:
 
-<img src="final_output.png" alt="final output img">
+<img src="readme_data/final_output.png" alt="final output img">
 
