@@ -88,8 +88,9 @@ def standalone_1_node(
         )
 
     with Then(
-        "I collect the configuration and minimum insert time value from the performance test."
+        "I collect the coordination cluster configuration and minimum insert time value from the performance test."
     ):
+
         self.context.configurations_minimum_insert_time_values[
             configuration
         ] = performance_check()
@@ -121,8 +122,9 @@ def mixed_1_node(
         )
 
     with Then(
-        "I collect the configuration and minimum insert time value from the performance test."
+        "I collect the coordination cluster configuration and minimum insert time value from the performance test."
     ):
+
         self.context.configurations_minimum_insert_time_values[
             configuration
         ] = performance_check()
@@ -191,8 +193,9 @@ def standalone_3_node(
         )
 
     with Then(
-        "I collect the configuration and minimum insert time value from the performance test."
+        "I collect the coordination cluster configuration and minimum insert time value from the performance test."
     ):
+
         self.context.configurations_minimum_insert_time_values[
             configuration
         ] = performance_check()
@@ -226,8 +229,9 @@ def mixed_3_node(
         )
 
     with Then(
-        "I collect the configuration and minimum insert time value from the performance test."
+        "I collect the coordination cluster configuration and minimum insert time value from the performance test."
     ):
+
         self.context.configurations_minimum_insert_time_values[
             configuration
         ] = performance_check()
@@ -258,7 +262,7 @@ def zookeeper_3_node(self, number_clickhouse_cluster_nodes=9):
             )
 
         with Then(
-            "I collect the configuration and minimum insert time value from the performance test."
+            "I collect the coordination cluster configuration and minimum insert time value from the performance test."
         ):
             self.context.configurations_minimum_insert_time_values[
                 configuration
