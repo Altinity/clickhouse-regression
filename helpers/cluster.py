@@ -645,7 +645,15 @@ class ClickHouseNode(Node):
                which retry should be triggered, default: MESSAGES_TO_RETRY
         :param retry_delay: number of seconds to sleep before retry, default: 5
         :param secure: use secure connection, default: False
-        :param max_query_output_in_bytes: truncate query output the specified number of bytes using 'head' command utility, default: -0 (do not truncate any output)
+        :param max_query_output_in_bytes: truncate query output the specified number of bytes using 'head' command utility,
+                default: -0 (do not truncate any output)
+        :param use_file: determines whether to use a temporary file for storing the SQL query. default: False
+        :param hash_output: specifies whether the output of the executed command should be hashed.
+                if set to True, the output will be processed through the `sha512sum` command, which calculates the SHA-512 hash value.
+                default: None
+        :param file_output: specifies the file path where the output of the executed command should be stored.
+                if specified, the output will be redirected to the specified file instead of being displayed on the console.
+                default: None
         """
         r = None
         retry_count = max(0, int(retry_count))
@@ -789,7 +797,6 @@ class Cluster(object):
         collect_service_logs=False,
         use_zookeeper_nodes=False,
     ):
-
         self._bash = {}
         self._control_shell = None
         self.environ = {} if (environ is None) else environ
