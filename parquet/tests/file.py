@@ -10,28 +10,50 @@ def insert_into_engine(self):
     """Check that when data is inserted into a table with `File(Parquet)` engine, it is written into the source file correctly."""
     self.context.snapshot_id = get_snapshot_id()
     node = self.context.node
-    table_name = "table_" + getuid()
+    table_name_parquet_file = "table_" + getuid()
+    table_name_merge_tree = "table_" + getuid()
 
-    with Given("I have a table with a `File(Parquet)` engine"):
+    with Given("I have a table with a `MergeTree` engine"):
         table = create_table(
-            name=table_name,
-            engine="File(Parquet)",
+            name=table_name_merge_tree,
+            engine="MergeTree",
             columns=generate_all_column_types(include=parquet_test_columns()),
         )
 
     with And(
-        "I populate table with test data",
-        description="inserted data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
+            "I populate table with test data",
+            description="inserted data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
     ):
         table.insert_test_data()
 
-    with Then(
+    with Then("I create a new table with `File(Parquet)`"):
+        create_table(
+            name=table_name_parquet_file,
+            engine="File(Parquet)",
+            columns=generate_all_column_types(include=parquet_test_columns()),
+        )
+
+    with And("Populate it with values from the first table"):
+        node.query(
+            f"INSERT INTO {table_name_parquet_file} SELECT * FROM {table_name_merge_tree}"
+        )
+
+    with Check("I check the data inserted into a new table"):
+        table1 = node.query(
+            f"SELECT * FROM {table_name_merge_tree}"
+        )
+        table2 = node.query(
+            f"SELECT * FROM {table_name_parquet_file}"
+        )
+        assert table1.output.strip() == table2.output.strip(), error()
+
+    with Check(
         "I check that the data inserted into the table was correctly written to the file"
     ):
         node.command(
-            f"cp /var/lib/clickhouse/data/default/{table_name}/data.Parquet /var/lib/clickhouse/user_files/{table_name}.Parquet"
+            f"cp /var/lib/clickhouse/data/default/{table_name_parquet_file}/data.Parquet /var/lib/clickhouse/user_files/{table_name_parquet_file}.Parquet"
         )
-        check_source_file(path=f"/var/lib/clickhouse/user_files/{table_name}.Parquet")
+        check_source_file(path=f"/var/lib/clickhouse/user_files/{table_name_parquet_file}.Parquet", reference_table_name=table_name_merge_tree)
 
 
 @TestScenario
@@ -50,7 +72,7 @@ def select_from_engine(self):
         )
 
     with Given(
-        "I attach a table with a `File(Parquet)` engine on top of a Parquet file"
+            "I attach a table with a `File(Parquet)` engine on top of a Parquet file"
     ):
         table = create_table(
             name=table_name,
@@ -61,7 +83,7 @@ def select_from_engine(self):
         )
 
     with Then(
-        "I check that the table reads the data correctly by checking the table columns"
+            "I check that the table reads the data correctly by checking the table columns"
     ):
         with Pool(3) as executor:
             for column in table_columns:
@@ -95,13 +117,13 @@ def engine_to_file_to_engine(self):
         )
 
     with When(
-        "I insert data into the table",
-        description="inserted data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
+            "I insert data into the table",
+            description="inserted data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
     ):
         table0.insert_test_data()
 
     with Then(
-        "I check that the data inserted into the table was correctly written into the file"
+            "I check that the data inserted into the table was correctly written into the file"
     ):
         node.command(
             f"cp /var/lib/clickhouse/data/default/{table0_name}/data.Parquet /var/lib/clickhouse/user_files/{table0_name}.Parquet"
@@ -115,7 +137,7 @@ def engine_to_file_to_engine(self):
         )
 
     with And(
-        "I attach a new table on top of the Parquet source file created by the previous table"
+            "I attach a new table on top of the Parquet source file created by the previous table"
     ):
         table1 = create_table(
             name=table1_name,
@@ -126,7 +148,7 @@ def engine_to_file_to_engine(self):
         )
 
     with Then(
-        "I check that the new table is able to read the data from the file correctly"
+            "I check that the new table is able to read the data from the file correctly"
     ):
         with Pool(3) as executor:
             for column in table1.columns:
@@ -147,16 +169,16 @@ def engine_to_file_to_engine(self):
     "compression_type",
     [
         (
-            "NONE",
-            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_None("1.0")),
+                "NONE",
+                Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_None("1.0")),
         ),
         (
-            "GZIP",
-            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip("1.0")),
+                "GZIP",
+                Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip("1.0")),
         ),
         (
-            "LZ4",
-            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0")),
+                "LZ4",
+                Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0")),
         ),
     ],
 )
@@ -207,16 +229,16 @@ def insert_into_engine_from_file(self, compression_type):
     "compression_type",
     [
         (
-            "NONE",
-            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_None("1.0")),
+                "NONE",
+                Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_None("1.0")),
         ),
         (
-            "GZIP",
-            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip("1.0")),
+                "GZIP",
+                Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip("1.0")),
         ),
         (
-            "LZ4",
-            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0")),
+                "LZ4",
+                Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0")),
         ),
     ],
 )
@@ -235,8 +257,8 @@ def engine_select_output_to_file(self, compression_type):
         )
 
     with When(
-        "I insert data into the table",
-        description="inserted data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
+            "I insert data into the table",
+            description="inserted data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
     ):
         table.insert_test_data()
 
@@ -274,8 +296,8 @@ def insert_into_function_manual_cast_types(self):
         )
 
     with When(
-        "I insert data into the `file` table function",
-        description="inserted data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
+            "I insert data into the `file` table function",
+            description="inserted data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
     ):
         node.query(
             f"INSERT INTO FUNCTION file('{file_name}.Parquet', 'Parquet', '{func_def}') VALUES {','.join(total_values)}"
@@ -303,8 +325,8 @@ def insert_into_function_auto_cast_types(self):
         )
 
     with And(
-        "I populate table with test data",
-        description="insert data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
+            "I populate table with test data",
+            description="insert data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
     ):
         table.insert_test_data(row_count=1, cardinality=1)
 
