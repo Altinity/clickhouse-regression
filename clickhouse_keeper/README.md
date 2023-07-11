@@ -77,7 +77,7 @@ To test more than one version of ClickHouse just add new `--clickhouse-binary-li
 Example to test all [available coordination cluster] with `23.3.5.10.altinitytest` and vanilla `22.8` ClickHouse versions:
 
 ```commandline
-./perfomance.py --only --clickhouse-binary-list=docker://altinity/clickhouse-server:23.3.5.10.altinitytest --clickhouse-binary-list=docker://clickhouse/clickhouse-server:22.8 --test-to-end -o classic
+./perfomance.py --clickhouse-binary-list=docker://altinity/clickhouse-server:23.3.5.10.altinitytest --clickhouse-binary-list=docker://clickhouse/clickhouse-server:22.8 --test-to-end -o classic
 ```
 
 2) To test the only one coordination cluster configuration you can add `--only` setting
