@@ -90,12 +90,12 @@ Example to test Clickhouse Keeper `mixed one node` coordination cluster configur
 
 Available options for `--only`:
 
-* "/coordination cluster/performance keeper/mixed one node/*"
-* "/coordination cluster/performance keeper/mixed three node/*"
-* "/coordination cluster/performance keeper/standalone one node/*"
-* "/coordination cluster/performance keeper/standalone three node/*"
-* "/coordination cluster//performance zookeeper/one node/*"
-* "/coordination cluster//performance zookeeper/three node/*"
+* `"/coordination cluster/performance keeper/mixed one node/*"`
+* `"/coordination cluster/performance keeper/mixed three node/*"`
+* `"/coordination cluster/performance keeper/standalone one node/*"`
+* `"/coordination cluster/performance keeper/standalone three node/*"`
+* `"/coordination cluster//performance zookeeper/one node/*"`
+* `"/coordination cluster//performance zookeeper/three node/*"`
 
 
 # Available Coordination Clusters
