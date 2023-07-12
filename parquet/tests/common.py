@@ -205,7 +205,7 @@ def check_source_file(self, path, compression=None, reference_table_name=None):
             )(
                 sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table.name}",
                 expected=r.output.strip() if reference_table_name else None,
-                )
+            )
         join()
 
     return
