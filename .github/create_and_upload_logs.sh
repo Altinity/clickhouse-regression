@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -x
-sudo chown -R ubuntu:ubuntu $SUITE/
+sudo chown -R $(whoami):$(whoami) $SUITE/
 
 if [[ $artifacts == 'internal' ]];
 then
