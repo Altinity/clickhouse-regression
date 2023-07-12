@@ -2,8 +2,8 @@
 
 Performance tests can be launched with `./perfomance.py` command.
 It will start performance tests of all [available coordination cluster]
-configurations for local ClickHouse binary (path to ClickHouse binary, default: /usr/bin/clickhouse notification:
-`chown clickhouse:clickhouse /usr/bin/clickhouse` should be applied to work correct with default value). 
+configurations for local ClickHouse binary. Path to default ClickHouse binary is `/usr/bin/clickhouse`. (warning:
+`chown clickhouse:clickhouse /usr/bin/clickhouse` should be applied to work correctly with the default value) 
 
 The performance test scenario is based on inserting into a `bad` table (every row generates coordination cluster
 transaction). It collects insert times and returns the `min` value. After that, it provides a `bench_*.csv` file
@@ -51,7 +51,7 @@ Special `perfomance.py` settings are:
 * `--inserts` number of inserts into table on one repeat (default: 10000)
 
 
-As output, you will receive a `bench_*.csv` file with a unique name for every run where numeric cell values are ratios 
+As output, `bench_*.csv` file with a unique name will be created for every run where numeric cell values are ratios 
 between the min values of insert times for column and row coordination cluster configurations.
 
 The result file can be imported to `Google Sheets`, where `Format-->Conditional formatting-->Color scale` can be applied 
@@ -82,7 +82,7 @@ Example to test all [available coordination cluster] with `23.3.5.10.altinitytes
 ./perfomance.py --clickhouse-binary-list=docker://altinity/clickhouse-server:23.3.5.10.altinitytest --clickhouse-binary-list=docker://clickhouse/clickhouse-server:22.8 --test-to-end -o classic
 ```
 
-2) To test the only one coordination cluster configuration you can add `--only` setting
+2) To test the only one coordination cluster configuration `--only` setting can be added.
 
 Example to test Clickhouse Keeper `mixed one node` coordination cluster configuration for vanilla `22.8` ClickHouse version:
 
