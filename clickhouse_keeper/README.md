@@ -1,7 +1,9 @@
 ## ClickHouse Keeper/Zookeeper Performance Test Program
 
-Performance tests can be launched with `./perfomance.py` command. It will start performance tests of all [available coordination cluster]
-configurations for local ClickHouse binary (path to ClickHouse binary, default: /usr/bin/clickhouse). 
+Performance tests can be launched with `./perfomance.py` command.
+It will start performance tests of all [available coordination cluster]
+configurations for local ClickHouse binary (path to ClickHouse binary, default: /usr/bin/clickhouse notification:
+`chown clickhouse:clickhouse /usr/bin/clickhouse` should be applied to work correct with default value). 
 
 The performance test scenario is based on inserting into a `bad` table (every row generates coordination cluster
 transaction). It collects insert times and returns the `min` value. After that, it provides a `bench_*.csv` file
