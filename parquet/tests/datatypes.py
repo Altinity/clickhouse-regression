@@ -436,7 +436,6 @@ def largedouble(self):
     import_export(
         snapshot_name="double_structure",
         import_file=import_file,
-        limit="100",
     )
 
 
@@ -660,7 +659,7 @@ def columnwithnull(self):
         import_file = os.path.join("datatypes", "bug687_nulls.parquet")
 
     import_export(
-        snapshot_name="column_with_nulls_structure", import_file=import_file, limit=100
+        snapshot_name="column_with_nulls_structure", import_file=import_file
     )
 
 
