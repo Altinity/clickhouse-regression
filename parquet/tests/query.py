@@ -186,6 +186,7 @@ def select_from_table_into_file(self, engine, table_name=None):
         check_source_file(
             path=f"/var/lib/clickhouse/user_files/{table_name}.Parquet",
             compression=f"'{compression_type.lower()}'",
+            reference_table_name=table_name,
         )
 
 
@@ -237,6 +238,7 @@ def select_from_mat_view_into_file(self):
             check_source_file(
                 path=f"/var/lib/clickhouse/user_files/{table_name}.Parquet",
                 compression=f"'{compression_type.lower()}'",
+                reference_table_name=table_name,
             )
 
     finally:
