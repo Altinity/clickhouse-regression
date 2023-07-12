@@ -8,14 +8,12 @@ from helpers.common import *
 
 
 @TestOutline
-def import_export(self, snapshot_name, import_file, order_by=None, snapshot_id=None):
+def import_export(self, snapshot_name, import_file, snapshot_id=None):
     node = self.context.node
     table_name = "table_" + getuid()
     path_to_export = f"/var/lib/clickhouse/user_files/{table_name}.parquet"
     file_import = f"import_{getuid()}"
     file_export = f"export_{getuid()}"
-
-    order_by = "" if order_by is None else order_by
 
     if snapshot_id is None:
         snapshot_id = self.context.snapshot_id
@@ -34,7 +32,9 @@ def import_export(self, snapshot_name, import_file, order_by=None, snapshot_id=N
 
     with And("I read the contents of the created table"):
         node.query(
-            f"SELECT * FROM {table_name} ORDER BY {order_by}", file_output=file_import, use_file=True
+            f"SELECT * FROM {table_name}",
+            file_output=file_import,
+            use_file=True,
         )
 
     with Check("import"):
@@ -56,7 +56,7 @@ def import_export(self, snapshot_name, import_file, order_by=None, snapshot_id=N
 
         with And("I check the exported Parquet file's contents"):
             node.query(
-                f"SELECT * FROM file('{path_to_export}', Parquet) ORDER BY {order_by}",
+                f"SELECT * FROM file('{path_to_export}', Parquet)",
                 file_output=file_export,
                 use_file=True,
             )
