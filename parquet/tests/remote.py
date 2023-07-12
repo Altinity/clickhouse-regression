@@ -76,6 +76,7 @@ def select_from_function(self):
         check_source_file(
             path=f"/var/lib/clickhouse/user_files/{table_name}_{compression_type}.Parquet",
             compression=f"'{compression_type.lower()}'",
+            reference_table_name=table_name,
         )
 
 
