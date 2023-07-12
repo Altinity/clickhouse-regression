@@ -247,11 +247,19 @@ def insert_into_function(self):
     self.context.snapshot_id = get_snapshot_id()
     node = self.context.node
     file_name = "file_" + getuid() + ".Parquet"
+    table_name = "table_" + getuid()
     columns = generate_all_column_types(include=parquet_test_columns())
     func_def = ",".join([column.full_definition() for column in columns])
 
     columns_values = [column.values(row_count=2, cardinality=10) for column in columns]
     total_values = []
+
+    with Given("I have a table with a `MergeTree` engine"):
+        table = create_table(
+            name=table_name,
+            engine="MergeTree",
+            columns=generate_all_column_types(include=parquet_test_columns()),
+        )
 
     for row in range(2):
         total_values.append(
@@ -269,12 +277,22 @@ def insert_into_function(self):
         )
 
     with Then(
-        "I check that the data inserted into the table was correctly written to the file"
+        "I insert the data from the 'file' table function into a MergeTree engine table"
     ):
         node.command(
             f"cp /var/lib/app_files/{file_name} /var/lib/clickhouse/user_files/{file_name}"
         )
-        check_source_file(path=f"/var/lib/clickhouse/user_files/{file_name}")
+        node.query(
+            f"INSERT INTO {table_name} FROM INFILE '/var/lib/clickhouse/user_files/{file_name}' FORMAT Parquet"
+        )
+
+    with Then(
+        "I check that the data inserted into the table was correctly written to the file"
+    ):
+        check_source_file(
+            path=f"/var/lib/clickhouse/user_files/{file_name}",
+            reference_table_name=table_name,
+        )
 
 
 @TestScenario
