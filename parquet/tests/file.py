@@ -154,8 +154,7 @@ def engine_to_file_to_engine(self):
                     parallel=True,
                     executor=executor,
                 )(
-                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table1.name}",
-                    # expected=f"SELECT {column.name}, toTypeName({column.name}) FROM {table0_name}"
+                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table1.name}"
                 )
             join()
 
