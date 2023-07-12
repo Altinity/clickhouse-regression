@@ -33,7 +33,7 @@ def insert_into_engine(self):
             columns=generate_all_column_types(include=parquet_test_columns()),
         )
 
-    with And("Populate it with values from the first table"):
+    with And("populate it with values from the first table"):
         node.query(
             f"INSERT INTO {table_name_parquet_file} SELECT * FROM {table_name_merge_tree}"
         )
@@ -132,6 +132,12 @@ def engine_to_file_to_engine(self):
             reference_table_name=table0_name,
         )
 
+    with When("I copy of the Parquet source file to a new directory"):
+        node.command(f"mkdir /var/lib/clickhouse/user_files/{table1_name}")
+        node.command(
+            f"cp /var/lib/clickhouse/data/default/{table0_name}/data.Parquet /var/lib/clickhouse/user_files/{table1_name}/data.Parquet"
+        )
+
     with And(
         "I attach a new table on top of the Parquet source file created by the previous table"
     ):
@@ -148,13 +154,20 @@ def engine_to_file_to_engine(self):
     ):
         with Pool(3) as executor:
             for column in table1.columns:
+                r = node.query(
+                    f"SELECT {column.name}, toTypeName({column.name}) FROM {table0_name}"
+                    + " FORMAT JSONEachRow",
+                    exitcode=0,
+                )
+
                 Check(
                     test=execute_query_step,
                     name=f"{column.datatype.name}",
                     parallel=True,
                     executor=executor,
                 )(
-                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table1.name}"
+                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table1.name}",
+                    expected=r.output.strip(),
                 )
             join()
 
@@ -344,7 +357,7 @@ def insert_into_function_auto_cast_types(self):
         "I populate table with test data",
         description="insert data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
     ):
-        table.insert_test_data(row_count=1, cardinality=1)
+        table.insert_test_data(row_count=2, cardinality=10)
 
     with When("I copy the Parquet file created by the table"):
         node.command(
@@ -372,7 +385,10 @@ def insert_into_function_auto_cast_types(self):
         )
 
     with Then("I check that the created file has correct data"):
-        check_source_file(path=f"/var/lib/clickhouse/user_files/{file_name}.1.Parquet")
+        check_source_file(
+            path=f"/var/lib/clickhouse/user_files/{file_name}.1.Parquet",
+            reference_table_name=table_name,
+        )
 
 
 @TestScenario

@@ -31,7 +31,10 @@ def insert_into_engine(self):
         node.command(
             f"cp /var/lib/app_files/{table_name}.Parquet /var/lib/clickhouse/user_files/{table_name}.Parquet"
         )
-        check_source_file(path=f"/var/lib/clickhouse/user_files/{table_name}.Parquet")
+        check_source_file(
+            path=f"/var/lib/clickhouse/user_files/{table_name}.Parquet",
+            reference_table_name=table_name,
+        )
 
 
 @TestScenario
@@ -99,7 +102,10 @@ def engine_to_file_to_engine(self):
         node.command(
             f"cp /var/lib/app_files/{table0_name}.Parquet /var/lib/clickhouse/user_files/{table0_name}.Parquet"
         )
-        check_source_file(path=f"/var/lib/clickhouse/user_files/{table0_name}.Parquet")
+        check_source_file(
+            path=f"/var/lib/clickhouse/user_files/{table0_name}.Parquet",
+            reference_table_name=table0_name,
+        )
 
     with When("I copy of the Parquet source file to a new directory"):
         node.command(
@@ -118,13 +124,19 @@ def engine_to_file_to_engine(self):
     ):
         with Pool(3) as executor:
             for column in table1.columns:
+                r = node.query(
+                    f"SELECT {column.name}, toTypeName({column.name}) FROM {table0_name}"
+                    + " FORMAT JSONEachRow",
+                    exitcode=0,
+                )
                 Check(
                     test=execute_query_step,
                     name=f"{column.name}",
                     parallel=True,
                     executor=executor,
                 )(
-                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table1.name}"
+                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table1.name}",
+                    expected=r.output.strip(),
                 )
             join()
 
@@ -236,6 +248,7 @@ def engine_select_output_to_file(self, compression_type):
         check_source_file(
             path=f"/var/lib/clickhouse/user_files/{table_name}.Parquet",
             compression=f"'{compression_type.lower()}'",
+            reference_table_name=table_name,
         )
 
 
@@ -273,7 +286,8 @@ def insert_into_function(self):
         description="insert data includes all of the ClickHouse data types supported by Parquet, including nested types and nulls",
     ):
         node.query(
-            f"INSERT INTO FUNCTION url('http://127.0.0.1:5000/{file_name}', 'Parquet', '{func_def}') VALUES {','.join(total_values)}"
+            f"INSERT INTO FUNCTION url('http://127.0.0.1:5000/{file_name}', 'Parquet', '{func_def}') VALUES {','.join(total_values)}",
+            settings=[("allow_suspicious_low_cardinality_types", 1)],
         )
 
     with Then(
@@ -283,7 +297,8 @@ def insert_into_function(self):
             f"cp /var/lib/app_files/{file_name} /var/lib/clickhouse/user_files/{file_name}"
         )
         node.query(
-            f"INSERT INTO {table_name} FROM INFILE '/var/lib/clickhouse/user_files/{file_name}' FORMAT Parquet"
+            f"INSERT INTO {table_name} FROM INFILE '/var/lib/clickhouse/user_files/{file_name}' FORMAT Parquet",
+            settings=[("allow_suspicious_low_cardinality_types", 1)],
         )
 
     with Then(
