@@ -192,7 +192,7 @@ def largegzip(self):
         import_file = os.path.join("compression", "lineitem-top10000.gzip.parquet")
 
     import_export(
-        snapshot_name="complex_nested_2_structure", import_file=import_file, limit="100"
+        snapshot_name="complex_nested_2_structure", import_file=import_file
     )
 
 
