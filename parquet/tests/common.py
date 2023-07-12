@@ -191,8 +191,9 @@ def check_source_file(self, path, compression=None, reference_table_name=None):
     with Pool(3) as executor:
         for column in table.columns:
             if reference_table_name:
+                sql = "SELECT {column_name}, toTypeName({column_name}) FROM {table_name} ORDER BY tuple(*)"
                 r = current().context.node.query(
-                    f"SELECT {column.name}, toTypeName({column.name}) FROM {reference_table_name}"
+                    sql.format(column_name=column.name, table_name=reference_table_name)
                     + " FORMAT JSONEachRow",
                     exitcode=0,
                 )
@@ -203,7 +204,7 @@ def check_source_file(self, path, compression=None, reference_table_name=None):
                 parallel=True,
                 executor=executor,
             )(
-                sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table.name}",
+                sql=sql.format(column_name=column.name, table_name=table.name),
                 expected=r.output.strip() if reference_table_name else None,
             )
         join()
@@ -212,7 +213,9 @@ def check_source_file(self, path, compression=None, reference_table_name=None):
 
 
 @TestStep(Then)
-def check_source_file_on_s3(self, file, compression_type=None):
+def check_source_file_on_s3(
+    self, file, compression_type=None, reference_table_name=None
+):
     """Download specified file from aws s3 and check the contents."""
 
     if self.context.storage == "aws_s3":
@@ -241,7 +244,11 @@ def check_source_file_on_s3(self, file, compression_type=None):
         )
 
     with Then("I check the file"):
-        check_source_file(path="/data.Parquet", compression=compression_type)
+        check_source_file(
+            path="/data.Parquet",
+            compression=compression_type,
+            reference_table_name=reference_table_name,
+        )
 
 
 def parquet_test_columns():
