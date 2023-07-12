@@ -31,4 +31,4 @@ def feature(self, node="clickhouse1"):
     with Then(
         "I check that the data was successfully written into the ClickHouse table"
     ):
-        execute_query(f"SELECT * FROM {table_name}")
+        execute_query(f"SELECT * FROM {table_name} ORDER BY tuple(*)")

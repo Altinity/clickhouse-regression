@@ -189,9 +189,9 @@ def check_source_file(self, path, compression=None, reference_table_name=None):
         )
 
     with Pool(3) as executor:
+        sql = "SELECT {column_name}, toTypeName({column_name}) FROM {table_name} ORDER BY tuple(*)"
         for column in table.columns:
             if reference_table_name:
-                sql = "SELECT {column_name}, toTypeName({column_name}) FROM {table_name} ORDER BY tuple(*)"
                 r = current().context.node.query(
                     sql.format(column_name=column.name, table_name=reference_table_name)
                     + " FORMAT JSONEachRow",
