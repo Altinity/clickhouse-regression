@@ -1,0 +1,23 @@
+version: '2.3'
+
+services:
+  clickhouse:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    init: true
+    expose:
+      - "9000"
+      - "9009"
+      - "8123"
+    entrypoint: bash -c "tail -f /dev/null"
+    healthcheck:
+      test: echo 1
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 300s
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - label:disable
