@@ -63,4 +63,4 @@ def performance_check(
                     clean_coordination_on_all_nodes()
                     self.context.cluster.node("clickhouse1").cmd(f"rm -rf /share/")
 
-    return min(insert_time_list)
+    return insert_time_list

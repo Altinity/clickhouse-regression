@@ -8,6 +8,9 @@ def standalone_one_node(
     self, number_clickhouse_cluster_nodes=9, number_of_clickhouse_keeper_nodes=1
 ):
     """Standalone ClickHouse Keeper 1-node configuration performance test."""
+    if self.context.three_nodes:
+        xfail("three nodes mode applied")
+
     configuration = f"Standalone_1_node_CH_keeper_{'ssl' if self.context.ssl == 'true' else ''}_{self.context.clickhouse_version}"
 
     control_nodes = self.context.cluster.nodes["clickhouse"][
@@ -28,7 +31,7 @@ def standalone_one_node(
         "I collect the coordination cluster configuration and minimum insert time value from the performance test."
     ):
 
-        self.context.configurations_minimum_insert_time_values[
+        self.context.configurations_insert_time_values[
             configuration
         ] = performance_check()
 
@@ -38,6 +41,9 @@ def mixed_one_node(
     self, number_clickhouse_cluster_nodes=9, number_of_clickhouse_keeper_nodes=1
 ):
     """Mixed ClickHouse Keeper 1-node configuration performance test."""
+    if self.context.three_nodes:
+        xfail("three nodes mode applied")
+
     configuration = f"Mixed_1_node_CH_keeper_{'ssl' if self.context.ssl == 'true' else ''}_{self.context.clickhouse_version}"
 
     control_nodes = self.context.cluster.nodes["clickhouse"][
@@ -62,7 +68,7 @@ def mixed_one_node(
         "I collect the coordination cluster configuration and minimum insert time value from the performance test."
     ):
 
-        self.context.configurations_minimum_insert_time_values[
+        self.context.configurations_insert_time_values[
             configuration
         ] = performance_check()
 
@@ -72,6 +78,9 @@ def standalone_three_node(
     self, number_clickhouse_cluster_nodes=9, number_of_clickhouse_keeper_nodes=3
 ):
     """Standalone ClickHouse Keeper 3-node configuration performance test."""
+    if self.context.one_node:
+        xfail("one node mode applied")
+
     configuration = f"Standalone_3_node_CH_keeper_{'ssl' if self.context.ssl == 'true' else ''}_{self.context.clickhouse_version}"
 
     control_nodes = self.context.cluster.nodes["clickhouse"][
@@ -92,7 +101,7 @@ def standalone_three_node(
         "I collect the coordination cluster configuration and minimum insert time value from the performance test."
     ):
 
-        self.context.configurations_minimum_insert_time_values[
+        self.context.configurations_insert_time_values[
             configuration
         ] = performance_check()
 
@@ -102,6 +111,9 @@ def mixed_three_node(
     self, number_clickhouse_cluster_nodes=9, number_of_clickhouse_keeper_nodes=3
 ):
     """Mixed Keeper 3-node configuration performance test."""
+    if self.context.one_node:
+        xfail("one node mode applied")
+
     configuration = f"Mixed_3_node_CH_keeper_{'ssl' if self.context.ssl == 'true' else ''}_{self.context.clickhouse_version}"
 
     control_nodes = self.context.cluster.nodes["clickhouse"][
@@ -128,7 +140,7 @@ def mixed_three_node(
         "I collect the coordination cluster configuration and minimum insert time value from the performance test."
     ):
 
-        self.context.configurations_minimum_insert_time_values[
+        self.context.configurations_insert_time_values[
             configuration
         ] = performance_check()
 

@@ -6,6 +6,8 @@ from clickhouse_keeper.tests.performance_steps import *
 @TestScenario
 def one_node(self, number_clickhouse_cluster_nodes=9):
     """ZooKeeper 1-node configuration performance test."""
+    if self.context.three_nodes:
+        xfail("three nodes mode applied")
 
     configuration = f"Zookeeper_1_node_{self.context.clickhouse_version}"
 
@@ -32,7 +34,7 @@ def one_node(self, number_clickhouse_cluster_nodes=9):
         with Then(
             "I collect the configuration and minimum insert time value from the performance test."
         ):
-            self.context.configurations_minimum_insert_time_values[
+            self.context.configurations_insert_time_values[
                 configuration
             ] = performance_check()
 
@@ -46,6 +48,9 @@ def one_node(self, number_clickhouse_cluster_nodes=9):
 @TestScenario
 def three_nodes(self, number_clickhouse_cluster_nodes=9):
     """Zookeeper 3-node configuration performance test."""
+    if self.context.one_node:
+        xfail("one node mode applied")
+
     configuration = f"Zookeeper_3_node_{self.context.clickhouse_version}"
 
     keeper_cluster_nodes = self.context.cluster.nodes["zookeeper"][0:3]
@@ -70,7 +75,7 @@ def three_nodes(self, number_clickhouse_cluster_nodes=9):
         with Then(
             "I collect the coordination cluster configuration and minimum insert time value from the performance test."
         ):
-            self.context.configurations_minimum_insert_time_values[
+            self.context.configurations_insert_time_values[
                 configuration
             ] = performance_check()
     finally:
