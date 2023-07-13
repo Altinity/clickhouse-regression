@@ -204,7 +204,7 @@ def create_configuration_ssl(
     for name in nodes:
         node = self.context.cluster.node(name)
 
-        if root is not "clickhouse":
+        if root != "clickhouse":
             _entries = entries
         else:
             _entries = {section: entries}
