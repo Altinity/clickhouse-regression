@@ -741,7 +741,7 @@ jobs:
     runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: parquet
-      STORAGE: /minio
+      STORAGE: /no_s3
     if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet' }}
     steps:
       - uses: actions/checkout@v3
