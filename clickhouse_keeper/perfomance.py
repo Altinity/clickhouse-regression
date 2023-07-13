@@ -8,49 +8,11 @@ from testflows.core import *
 append_path(sys.path, "..")
 
 from helpers.cluster import Cluster
-from helpers.argparser import argparser as base_argparser
 from helpers.common import check_clickhouse_version
 from clickhouse_keeper.requirements import *
 from clickhouse_keeper.tests.steps import *
 from clickhouse_keeper.tests.steps_ssl import *
-
-
-def argparser(parser):
-    """Custom argperser that add --ssl option."""
-    base_argparser(parser)
-
-    parser.add_argument(
-        "--ssl",
-        action="store_true",
-        help="enable ssl connection for clickhouse keepers and clickhouse",
-        default=False,
-    )
-
-    parser.add_argument(
-        "--clickhouse-binary-list",
-        action="append",
-        dest="clickhouse_binary_list",
-        help="path to ClickHouse binary, default: /usr/bin/clickhouse",
-        metavar="path",
-        default=[],
-    )
-
-    parser.add_argument(
-        "--repeats",
-        type=int,
-        dest="repeats",
-        help="number of insert test repeats for `mean` value calculation",
-        default=5,
-    )
-
-    parser.add_argument(
-        "--inserts",
-        type=int,
-        dest="inserts",
-        help="number of inserts into table on one repeat",
-        default=10000,
-    )
-
+from clickhouse_keeper.tests.argparsers import argparser
 
 xfails = {}
 
@@ -72,6 +34,9 @@ def regression(
     clickhouse_binary_list,
     repeats,
     inserts,
+    results_file_name,
+    one_node,
+    three_nodes,
     clickhouse_version,
     collect_service_logs,
     ssl=None,
@@ -105,10 +70,13 @@ def regression(
 
     self.context.uid = getuid()
 
-    self.context.configurations_minimum_insert_time_values = {}
+    self.context.configurations_insert_time_values = {}
 
     self.context.repeats = repeats
     self.context.inserts = inserts
+    self.context.results_file_name = results_file_name
+    self.context.one_node = one_node
+    self.context.three_nodes = three_nodes
 
     for clickhouse_binary_path in clickhouse_binary_list:
         self.context.clickhouse_version = clickhouse_version
@@ -137,80 +105,66 @@ def regression(
                 self.context.secure = 0
                 self.context.port = "2181"
 
-            with Cluster(
-                local,
-                clickhouse_binary_path=clickhouse_binary_path,
-                collect_service_logs=collect_service_logs,
-                nodes=nodes,
-                docker_compose_project_dir=os.path.join(current_dir(), env),
-            ) as cluster:
-                self.context.cluster = cluster
+            test_features = ["performance_keeper", "performance_zookeeper"]
 
-                if check_clickhouse_version("<21.4")(self):
-                    skip(reason="only supported on ClickHouse version >= 21.4")
+            for test_feature in test_features:
+                with Cluster(
+                    local,
+                    clickhouse_binary_path=clickhouse_binary_path,
+                    collect_service_logs=collect_service_logs,
+                    nodes=nodes,
+                    docker_compose_project_dir=os.path.join(current_dir(), env),
+                ) as cluster:
+                    self.context.cluster = cluster
 
-                if ssl == "true":
-                    create_3_3_cluster_config_ssl()
-                else:
-                    create_3_3_cluster_config()
+                    if check_clickhouse_version("<21.4")(self):
+                        skip(reason="only supported on ClickHouse version >= 21.4")
 
-                Feature(
-                    run=load("clickhouse_keeper.tests.performance_zookeeper", "feature")
-                )
+                    if ssl == "true":
+                        create_3_3_cluster_config_ssl()
+                    else:
+                        create_3_3_cluster_config()
 
-            with Cluster(
-                local,
-                clickhouse_binary_path=clickhouse_binary_path,
-                collect_service_logs=collect_service_logs,
-                nodes=nodes,
-                docker_compose_project_dir=os.path.join(current_dir(), env),
-            ) as cluster:
-                self.context.cluster = cluster
+                    Feature(
+                        run=load(f"clickhouse_keeper.tests.{test_feature}", "feature")
+                    )
 
-                if check_clickhouse_version("<21.4")(self):
-                    skip(reason="only supported on ClickHouse version >= 21.4")
+    if self.context.results_file_name == "false":
+        test_results_file = f"performance_{self.context.uid}.csv"
+    else:
+        test_results_file = f"{self.context.results_file_name}.csv"
 
-                if ssl == "true":
-                    create_3_3_cluster_config_ssl()
-                else:
-                    create_3_3_cluster_config()
-
-                Feature(
-                    run=load("clickhouse_keeper.tests.performance_keeper", "feature")
-                )
-
-    test_results = f"bench_{self.context.uid}.csv"
-
-    with open(test_results, "a", encoding="UTF8", newline="") as f:
+    with open(test_results_file, "a", encoding="UTF8", newline="") as f:
         writer = csv.writer(f)
 
+        writer.writerow(
+            ["repeats", self.context.repeats, "inserts", self.context.inserts]
+        )
+
         buffer_list = ["configuration:"]
-        for configuration in list(
-            self.context.configurations_minimum_insert_time_values
-        ):
+        for configuration in list(self.context.configurations_insert_time_values):
             buffer_list.append(configuration)
         writer.writerow(buffer_list)
 
-        for first_configuration in list(
-            self.context.configurations_minimum_insert_time_values
-        ):
+        for first_configuration in list(self.context.configurations_insert_time_values):
             buffer_list = [first_configuration]
             for second_configuration in list(
-                self.context.configurations_minimum_insert_time_values
+                self.context.configurations_insert_time_values
             ):
                 buffer_list.append(
-                    float(
-                        self.context.configurations_minimum_insert_time_values[
+                    min(
+                        self.context.configurations_insert_time_values[
                             second_configuration
                         ]
-                        / float(
-                            self.context.configurations_minimum_insert_time_values[
-                                first_configuration
-                            ]
-                        )
+                    )
+                    / min(
+                        self.context.configurations_insert_time_values[
+                            first_configuration
+                        ]
                     )
                 )
             writer.writerow(buffer_list)
+        writer.writerow(" ")
 
 
 if main():

@@ -41,8 +41,8 @@ def regression(
 
     self.context.clickhouse_version = clickhouse_version
 
-    if check_clickhouse_version("<22.12")(self):
-        skip(reason="only supported on ClickHouse version >= 22.12")
+    if check_clickhouse_version("<23.5")(self):
+        skip(reason="only supported on ClickHouse version >= 23.5")
 
     with Cluster(
         local,

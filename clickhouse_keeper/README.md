@@ -6,8 +6,8 @@ configurations for local ClickHouse binary. Path to default ClickHouse binary is
 `chown clickhouse:clickhouse /usr/bin/clickhouse` should be applied to work correctly with the default value) 
 
 The performance test scenario is based on inserting into a `bad` table (every row generates coordination cluster
-transaction). It collects insert times and returns the `min` value. After that, it provides a `bench_*.csv` file
-with ratio values of all `min` values for all coordination cluster configurations.
+transaction). It collects insert times and returns the minimum value. After that, it provides a `perfomance_*.csv` file
+with ratio values of all minimum values for all coordination cluster configurations.
 
 Table schema:
 
@@ -47,11 +47,14 @@ Most usefully are:
 Special `perfomance.py` settings are:
 
 * `--clickhouse-binary-list` to test some special ClickHouse versions
-* `--repeats` number of insert test repeats for `mean` value calculation (default: 5)
+* `--repeats` number of insert each tests scenario repeats (default: 5)
 * `--inserts` number of inserts into table on one repeat (default: 10000)
+* `--one-node` disable all three nodes configuration cluster tests
+* `--three-nodes` disable all one node configuration cluster tests
+* `--results-file-name` allow to provide results file name manually (default: performance_{uid}.csv)
 
 
-As output, `bench_*.csv` file with a unique name will be created for every run where numeric cell values are ratios 
+As output, `perfomance_*.csv` file with a unique name will be created for every run where numeric cell values are ratios 
 between the min values of insert times for column and row coordination cluster configurations.
 
 The result file can be imported to `Google Sheets`, where `Format-->Conditional formatting-->Color scale` can be applied 
