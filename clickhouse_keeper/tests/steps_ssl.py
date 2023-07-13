@@ -575,7 +575,7 @@ def stop_keepers_ssl(self, cluster_nodes=None):
 
 
 @TestStep(Given)
-def start_stand_alone_keeper_ssl(self):
+def start_standalone_keeper_ssl(self):
     """Start 9 nodes ClickHouse server and standalone 3 nodes Keeper."""
     cluster = self.context.cluster
     try:

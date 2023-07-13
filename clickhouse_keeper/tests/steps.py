@@ -6,7 +6,7 @@ from testflows.asserts import error
 from testflows.connect import Shell
 from clickhouse_keeper.tests.steps_ssl_fips import (
     start_mixed_keeper_ssl,
-    start_stand_alone_keeper_ssl,
+    start_standalone_keeper_ssl,
 )
 
 
@@ -600,7 +600,7 @@ def table_select(
 
 
 @TestStep(Given)
-def start_stand_alone_keeper(
+def start_standalone_keeper(
     self,
     control_nodes=None,
     cluster_nodes=None,
@@ -1049,12 +1049,12 @@ def start_standalone_ch_keeper(self, control_nodes, cluster_nodes):
     """Standalone keeper start up with and without ssl."""
 
     if self.context.ssl == "true":
-        start_stand_alone_keeper_ssl(
+        start_standalone_keeper_ssl(
             control_nodes=control_nodes,
             cluster_nodes=cluster_nodes,
         )
     else:
-        start_stand_alone_keeper(
+        start_standalone_keeper(
             control_nodes=control_nodes,
             cluster_nodes=cluster_nodes,
         )

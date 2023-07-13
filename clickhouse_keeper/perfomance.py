@@ -137,47 +137,29 @@ def regression(
                 self.context.secure = 0
                 self.context.port = "2181"
 
-            with Cluster(
-                local,
-                clickhouse_binary_path=clickhouse_binary_path,
-                collect_service_logs=collect_service_logs,
-                nodes=nodes,
-                docker_compose_project_dir=os.path.join(current_dir(), env),
-            ) as cluster:
-                self.context.cluster = cluster
+            test_features = ["performance_keeper", "performance_zookeeper"]
 
-                if check_clickhouse_version("<21.4")(self):
-                    skip(reason="only supported on ClickHouse version >= 21.4")
+            for test_feature in test_features:
+                with Cluster(
+                    local,
+                    clickhouse_binary_path=clickhouse_binary_path,
+                    collect_service_logs=collect_service_logs,
+                    nodes=nodes,
+                    docker_compose_project_dir=os.path.join(current_dir(), env),
+                ) as cluster:
+                    self.context.cluster = cluster
 
-                if ssl == "true":
-                    create_3_3_cluster_config_ssl()
-                else:
-                    create_3_3_cluster_config()
+                    if check_clickhouse_version("<21.4")(self):
+                        skip(reason="only supported on ClickHouse version >= 21.4")
 
-                Feature(
-                    run=load("clickhouse_keeper.tests.performance_zookeeper", "feature")
-                )
+                    if ssl == "true":
+                        create_3_3_cluster_config_ssl()
+                    else:
+                        create_3_3_cluster_config()
 
-            with Cluster(
-                local,
-                clickhouse_binary_path=clickhouse_binary_path,
-                collect_service_logs=collect_service_logs,
-                nodes=nodes,
-                docker_compose_project_dir=os.path.join(current_dir(), env),
-            ) as cluster:
-                self.context.cluster = cluster
-
-                if check_clickhouse_version("<21.4")(self):
-                    skip(reason="only supported on ClickHouse version >= 21.4")
-
-                if ssl == "true":
-                    create_3_3_cluster_config_ssl()
-                else:
-                    create_3_3_cluster_config()
-
-                Feature(
-                    run=load("clickhouse_keeper.tests.performance_keeper", "feature")
-                )
+                    Feature(
+                        run=load(f"clickhouse_keeper.tests.{test_feature}", "feature")
+                    )
 
     test_results = f"bench_{self.context.uid}.csv"
 
