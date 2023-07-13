@@ -159,7 +159,8 @@ def insert_into_engine_from_file(self):
             f"cp /var/lib/test_files/data_{compression_type}.Parquet /var/lib/clickhouse/user_files/data_{compression_type}.Parquet"
         )
         node.query(
-            f"INSERT INTO {table_name} FROM INFILE '/var/lib/clickhouse/user_files/data_{compression_type}.Parquet' FORMAT Parquet"
+            f"INSERT INTO {table_name} FROM INFILE '/var/lib/clickhouse/user_files/data_{compression_type}.Parquet' FORMAT Parquet",
+            settings=[("allow_suspicious_low_cardinality_types", 1)],
         )
 
     with Then(
@@ -243,7 +244,8 @@ def insert_into_function(self):
 
     with When("I insert test data into `s3` table function in Parquet format"):
         node.query(
-            f"INSERT INTO FUNCTION s3('{self.context.uri}{file_name}.Parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'Parquet', '{func_def}', '{compression_type.lower()}') VALUES {','.join(total_values)}"
+            f"INSERT INTO FUNCTION s3('{self.context.uri}{file_name}.Parquet', '{self.context.access_key_id}', '{self.context.secret_access_key}', 'Parquet', '{func_def}', '{compression_type.lower()}') VALUES {','.join(total_values)}",
+            settings=[("allow_suspicious_low_cardinality_types", 1)],
         )
 
     with Then(
