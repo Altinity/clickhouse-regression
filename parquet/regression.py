@@ -134,6 +134,26 @@ ffails = {
         "Not implemented before 23.3",
         check_clickhouse_version("<23.3"),
     ),
+    "/parquet/*/*/insert into function auto cast types/*": (
+        Skip,
+        "Datatype issues before 23.3",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/*/*/select from function auto cast types/*": (
+        Skip,
+        "Datatype issues before 23.3",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/*/*/select from function manual cast types/*": (
+        Skip,
+        "Datatype issues before 23.3",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/aws s3/s3/*/function/select from function manual cast types/*": (
+        Skip,
+        "Datatype issues before 23.3",
+        check_clickhouse_version("<23.3"),
+    ),
 }
 
 
