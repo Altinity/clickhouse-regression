@@ -753,16 +753,70 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
+
+      - name: Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-artifacts
+          path: ${{ env.artifact_paths}}
+
+  parquet_minio:
+    runs-on: [self-hosted, altinity-amd64]
+    env:
+      SUITE: parquet
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet' }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup
+        run: .github/setup.sh
+
+      - name: Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
               --storage minio
+              --only "/parquet/minio/*"
+              ${{ env.args }}
+
+      - name: Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-artifacts
+          path: ${{ env.artifact_paths}}
+
+  parquet_aws_s3:
+    runs-on: [self-hosted, altinity-amd64]
+    env:
+      SUITE: parquet
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet' }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup
+        run: .github/setup.sh
+
+      - name: Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
               --storage aws_s3
               --aws-s3-bucket ${{ secrets.AWS_BUCKET }}
               --aws-s3-region ${{ secrets.AWS_REGION }}
               --aws-s3-key-id ${{ secrets.AWS_KEY_ID }}
               --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
-              --storage gcs
-              --gcs-uri ${{ secrets.GCS_URI }}
-              --gcs-key-id ${{ secrets.GCS_KEY_ID }}
-              --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
+              --only "/parquet/aws s3/*"
               ${{ env.args }}
 
       - name: Create and upload logs
