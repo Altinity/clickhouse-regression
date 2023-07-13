@@ -7,7 +7,7 @@ def iops_check_standalone_keeper(self):
     Check IOPS on Standalone Keeper Process.
     """
     with Given("I start standalone ClickHouse Keepers"):
-        start_stand_alone_keeper()
+        start_standalone_keeper()
 
     When("I check IOPS every 1 sec for 79 times", test=iops_check, parallel=True)(
         sleep=1, check_points=80
@@ -28,7 +28,7 @@ def crash_check_standalone_keeper(self):
     Check ClickHouse with Standalone Keepers crashes with mass insert params.
     """
     with Given("I start Standalone Keepers"):
-        start_stand_alone_keeper()
+        start_standalone_keeper()
 
     with And("I make multi nodes insert with params for crash"):
         multi_nodes_insert(
