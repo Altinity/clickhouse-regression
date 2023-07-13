@@ -741,6 +741,7 @@ jobs:
     runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: parquet
+      STORAGE: /minio
     if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet' }}
     steps:
       - uses: actions/checkout@v3
@@ -769,6 +770,7 @@ jobs:
     runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: parquet
+      STORAGE: /minio
     if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet' }}
     steps:
       - uses: actions/checkout@v3
@@ -792,13 +794,14 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: ${{ env.SUITE }}-artifacts
+          name: ${{ env.SUITE }}-minio-artifacts
           path: ${{ env.artifact_paths}}
 
   parquet_aws_s3:
     runs-on: [self-hosted, altinity-amd64]
     env:
       SUITE: parquet
+      STORAGE: /aws_s3
     if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet' }}
     steps:
       - uses: actions/checkout@v3
@@ -826,7 +829,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: ${{ env.SUITE }}-artifacts
+          name: ${{ env.SUITE }}-aws-artifacts
           path: ${{ env.artifact_paths}}
 
   part_moves_between_shards:
