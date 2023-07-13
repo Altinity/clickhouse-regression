@@ -32,6 +32,7 @@ def insert_into_engine(self):
         check_source_file_on_s3(
             file=table_name + ".Parquet",
             compression_type=f"'{compression_type.lower()}'",
+            reference_table_name=table_name,
         )
 
 
@@ -109,6 +110,7 @@ def engine_to_file_to_engine(self):
         check_source_file_on_s3(
             file=table0_name + ".Parquet",
             compression_type=f"'{compression_type.lower()}'",
+            reference_table_name=table0_name,
         )
 
     with When("I create a table with a `S3` engine on top of a Parquet file"):
@@ -209,6 +211,7 @@ def engine_select_output_to_file(self):
         check_source_file_on_s3(
             file=table_name + ".Parquet",
             compression_type=f"'{compression_type.lower()}'",
+            reference_table_name=table_name,
         )
 
 

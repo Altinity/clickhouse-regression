@@ -658,9 +658,7 @@ def columnwithnull(self):
     with Given("I have a Parquet file with null values inside columns"):
         import_file = os.path.join("datatypes", "bug687_nulls.parquet")
 
-    import_export(
-        snapshot_name="column_with_nulls_structure", import_file=import_file
-    )
+    import_export(snapshot_name="column_with_nulls_structure", import_file=import_file)
 
 
 @TestScenario
