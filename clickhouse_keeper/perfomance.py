@@ -138,7 +138,7 @@ def regression(
         writer = csv.writer(f)
 
         writer.writerow(
-            ["repeats", self.context.repeats, "inserts", self.context.repeats]
+            ["repeats", self.context.repeats, "inserts", self.context.inserts]
         )
 
         buffer_list = ["configuration:"]
