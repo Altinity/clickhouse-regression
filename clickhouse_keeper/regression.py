@@ -25,7 +25,48 @@ def argparser(parser):
         default=False,
     )
 
-xfails = {}
+xfails = {
+    # fips
+    ":/:/:/:/:cipher ECDHE-ECDSA-AES256-GCM-SHA384 should work": [
+        (Fail, "not supported by SSL library")
+    ],
+    ":/:/:/:/:cipher ECDHE-ECDSA-AES128-GCM-SHA256 should work": [
+        (Fail, "not supported by SSL library")
+    ],
+    ":/:/:/:/:/:cipher ECDHE-ECDSA-AES256-GCM-SHA384 should work": [
+        (Fail, "not supported by SSL library")
+    ],
+    ":/:/:/:/:/:cipher ECDHE-ECDSA-AES128-GCM-SHA256 should work": [
+        (Fail, "not supported by SSL library")
+    ],
+    ":/:/:cipher ECDHE-ECDSA-AES256-GCM-SHA384 should work": [
+        (Fail, "not supported by SSL library")
+    ],
+    ":/:/:cipher ECDHE-ECDSA-AES128-GCM-SHA256 should work": [
+        (Fail, "not supported by SSL library")
+    ],
+    "fips/server/tcp connection/:/:/just disabling TLSv1.1 suite connection should work": [
+        (Fail, "needs to be reviewed")
+    ],
+    "fips/server/:/tcp connection/:/:/just disabling TLSv1.1 suite connection should work": [
+        (Fail, "needs to be reviewed")
+    ],
+    "fips/:/:/:/just disabling TLSv1.1 suite connection should work": [
+        (Fail, "needs to be reviewed")
+    ],
+    ":/:/just disabling TLSv1.1 suite connection should work": [
+        (Fail, "needs to be reviewed")
+    ],
+    "fips/clickhouse client/:/:/: should be rejected": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/45445")
+    ],
+    "fips/:/:/connection with at least one FIPS compatible cipher should work, ciphers: ECDHE-ECDSA-AES256-GCM-SHA384 :": [
+        (Fail, "not supported by SSL library")
+    ],
+    "fips/:/:/connection with at least one FIPS compatible cipher should work, ciphers: ECDHE-ECDSA-AES128-GCM-SHA256 :": [
+        (Fail, "not supported by SSL library")
+    ],
+}
 
 
 xflags = {}
@@ -107,6 +148,10 @@ def regression(
         if check_clickhouse_version("<21.4")(self):
             skip(reason="only supported on ClickHouse version >= 21.4")
 
+        with Given("I check if the binary is FIPS compatible"):
+            if "fips" in current().context.clickhouse_version:
+                self.context.fips_mode = True
+
         if ssl:
             create_3_3_cluster_config_ssl()
             Feature(run=load("clickhouse_keeper.tests.sanity", "feature"))
@@ -131,6 +176,10 @@ def regression(
             Feature(
                 run=load("clickhouse_keeper.tests.fips_ssl", "feature")
             )
+            Feature(
+                run=load("clickhouse_keeper.tests.fips_ssl_server", "feature")
+            )
+
 
         else:
             create_3_3_cluster_config()

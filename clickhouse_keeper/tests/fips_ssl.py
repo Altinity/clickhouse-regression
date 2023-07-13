@@ -214,12 +214,6 @@ def feature(self):
             control_nodes=cluster.nodes["clickhouse"][0:3],
             rest_cluster_nodes=cluster.nodes["clickhouse"][3:9],
         )
-    else:
-        start_mixed_keeper(
-            cluster_nodes=cluster.nodes["clickhouse"][:9],
-            control_nodes=cluster.nodes["clickhouse"][0:3],
-            rest_cluster_nodes=cluster.nodes["clickhouse"][3:9],
-        )
 
     with Pool(1) as executor:
         try:
