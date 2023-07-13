@@ -105,8 +105,7 @@ def regression(
                 self.context.secure = 0
                 self.context.port = "2181"
 
-            # test_features = ["performance_keeper", "performance_zookeeper"]
-            test_features = ["performance_keeper"]
+            test_features = ["performance_keeper", "performance_zookeeper"]
 
             for test_feature in test_features:
                 with Cluster(
