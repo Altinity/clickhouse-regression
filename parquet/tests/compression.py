@@ -191,9 +191,7 @@ def largegzip(self):
     with Given("I have a large Parquet large Parquet file with gzip compression"):
         import_file = os.path.join("compression", "lineitem-top10000.gzip.parquet")
 
-    import_export(
-        snapshot_name="complex_nested_2_structure", import_file=import_file
-    )
+    import_export(snapshot_name="complex_nested_2_structure", import_file=import_file)
 
 
 @TestScenario
