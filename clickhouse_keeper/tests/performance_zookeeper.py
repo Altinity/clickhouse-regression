@@ -1,13 +1,14 @@
 from clickhouse_keeper.tests.steps import *
 from clickhouse_keeper.tests.steps_ssl_fips import *
-from clickhouse_keeper.tests.performance_steps import *
 
 
 @TestScenario
 def one_node(self, number_clickhouse_cluster_nodes=9):
     """ZooKeeper 1-node configuration performance test."""
 
-    configuration = f"Zookeeper_1_node_{self.context.clickhouse_version}"
+    coordination_cluster_configuration = (
+        f"Zookeeper_1_node_{self.context.clickhouse_version}"
+    )
 
     keeper_cluster_nodes = self.context.cluster.nodes["zookeeper"][3:4]
 
@@ -33,7 +34,7 @@ def one_node(self, number_clickhouse_cluster_nodes=9):
             "I collect the configuration and minimum insert time value from the performance test."
         ):
             self.context.configurations_minimum_insert_time_values[
-                configuration
+                coordination_cluster_configuration
             ] = performance_check()
 
     finally:
@@ -46,7 +47,9 @@ def one_node(self, number_clickhouse_cluster_nodes=9):
 @TestScenario
 def three_nodes(self, number_clickhouse_cluster_nodes=9):
     """Zookeeper 3-node configuration performance test."""
-    configuration = f"Zookeeper_3_node_{self.context.clickhouse_version}"
+    coordination_cluster_configuration = (
+        f"Zookeeper_3_node_{self.context.clickhouse_version}"
+    )
 
     keeper_cluster_nodes = self.context.cluster.nodes["zookeeper"][0:3]
 
@@ -71,7 +74,7 @@ def three_nodes(self, number_clickhouse_cluster_nodes=9):
             "I collect the coordination cluster configuration and minimum insert time value from the performance test."
         ):
             self.context.configurations_minimum_insert_time_values[
-                configuration
+                coordination_cluster_configuration
             ] = performance_check()
     finally:
         with Finally("I start all stopped zookeeper nodes"):

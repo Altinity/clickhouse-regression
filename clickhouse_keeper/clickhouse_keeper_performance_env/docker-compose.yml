@@ -1,0 +1,336 @@
+version: '2.3'
+
+services:
+  zookeeper1:
+    extends:
+      file: zookeeper-service.yml
+      service: zookeeper
+    hostname: zookeeper1
+    environment:
+      ZOO_MY_ID: 1
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/zookeeper1/data/:/data/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/zookeeper1/datalog/:/datalog"      
+
+  zookeeper2:
+    extends:
+      file: zookeeper-service.yml
+      service: zookeeper
+    hostname: zookeeper2
+    environment:
+      ZOO_MY_ID: 2
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/zookeeper2/data/:/data/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/zookeeper2/datalog/:/datalog/"
+
+  zookeeper3:
+    extends:
+      file: zookeeper-service.yml
+      service: zookeeper
+    hostname: zookeeper3
+    environment:
+      ZOO_MY_ID: 3
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/zookeeper3/data/:/data/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/zookeeper3/datalog/:/datalog/"
+      
+  zookeeper:
+    extends:
+      file: zookeeper-service_alone.yml
+      service: zookeeper
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/zookeeper/data/:/data/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/zookeeper/datalog/:/datalog"
+
+  clickhouse1:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse1
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/etc/:/etc/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/keeperlogs/:/var/lib/clickhouse/coordination/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/:/share" 
+    depends_on:
+      zookeeper1:
+        condition: service_healthy
+      zookeeper2:
+        condition: service_healthy
+      zookeeper3:
+        condition: service_healthy
+
+      
+  clickhouse2:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse2
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/etc/:/etc/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse2/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/keeperlogs/:/var/lib/clickhouse/coordination/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/:/share" 
+    depends_on:
+      zookeeper1:
+        condition: service_healthy
+      zookeeper2:
+        condition: service_healthy
+      zookeeper3:
+        condition: service_healthy
+
+  clickhouse3:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse3
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/etc/:/etc/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/keeperlogs/:/var/lib/clickhouse/coordination/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/:/share" 
+    depends_on:
+      zookeeper1:
+        condition: service_healthy
+      zookeeper2:
+        condition: service_healthy
+      zookeeper3:
+        condition: service_healthy
+        
+  clickhouse4:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse4
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse4/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse4/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse4/etc/:/etc/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse4/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse4/keeperlogs/:/var/lib/clickhouse/coordination/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/:/share" 
+    depends_on:
+      zookeeper1:
+        condition: service_healthy
+      zookeeper2:
+        condition: service_healthy
+      zookeeper3:
+        condition: service_healthy
+
+      
+  clickhouse5:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse5
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse5/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse5/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse5/etc/:/etc/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse5/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse5/keeperlogs/:/var/lib/clickhouse/coordination/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/:/share" 
+    depends_on:
+      zookeeper1:
+        condition: service_healthy
+      zookeeper2:
+        condition: service_healthy
+      zookeeper3:
+        condition: service_healthy
+#
+#  clickhouse6:
+#    extends:
+#      file: clickhouse-service.yml
+#      service: clickhouse
+#    hostname: clickhouse6
+#    volumes:
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse6/database/:/var/lib/clickhouse/"
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse6/logs/:/var/log/clickhouse-server/"
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse6/etc/:/etc/clickhouse-server/"
+#      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse6/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse6/keeperlogs/:/var/lib/clickhouse/coordination/"
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/:/share"
+#    depends_on:
+#      zookeeper1:
+#        condition: service_healthy
+#      zookeeper2:
+#        condition: service_healthy
+#      zookeeper3:
+#        condition: service_healthy
+#
+#  clickhouse7:
+#    extends:
+#      file: clickhouse-service.yml
+#      service: clickhouse
+#    hostname: clickhouse7
+#    volumes:
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse7/database/:/var/lib/clickhouse/"
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse7/logs/:/var/log/clickhouse-server/"
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse7/etc/:/etc/clickhouse-server/"
+#      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse7/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse7/keeperlogs/:/var/lib/clickhouse/coordination/"
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/:/share"
+#    depends_on:
+#      zookeeper1:
+#        condition: service_healthy
+#      zookeeper2:
+#        condition: service_healthy
+#      zookeeper3:
+#        condition: service_healthy
+#
+#
+#  clickhouse8:
+#    extends:
+#      file: clickhouse-service.yml
+#      service: clickhouse
+#    hostname: clickhouse8
+#    volumes:
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse8/database/:/var/lib/clickhouse/"
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse8/logs/:/var/log/clickhouse-server/"
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse8/etc/:/etc/clickhouse-server/"
+#      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse8/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse8/keeperlogs/:/var/lib/clickhouse/coordination/"
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/:/share"
+#    depends_on:
+#      zookeeper1:
+#        condition: service_healthy
+#      zookeeper2:
+#        condition: service_healthy
+#      zookeeper3:
+#        condition: service_healthy
+#
+#  clickhouse9:
+#    extends:
+#      file: clickhouse-service.yml
+#      service: clickhouse
+#    hostname: clickhouse9
+#    volumes:
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse9/database/:/var/lib/clickhouse/"
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse9/logs/:/var/log/clickhouse-server/"
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse9/etc/:/etc/clickhouse-server/"
+#      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse9/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse9/keeperlogs/:/var/lib/clickhouse/coordination/"
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/:/share"
+#    depends_on:
+#      zookeeper1:
+#        condition: service_healthy
+#      zookeeper2:
+#        condition: service_healthy
+#      zookeeper3:
+#        condition: service_healthy
+#
+#  clickhouse10:
+#    extends:
+#      file: clickhouse-service.yml
+#      service: clickhouse
+#    hostname: clickhouse10
+#    volumes:
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse10/database/:/var/lib/clickhouse/"
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse10/logs/:/var/log/clickhouse-server/"
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse10/etc/:/etc/clickhouse-server/"
+#      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse10/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse10/keeperlogs/:/var/lib/clickhouse/coordination/"
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/:/share"
+#    depends_on:
+#      zookeeper1:
+#        condition: service_healthy
+#      zookeeper2:
+#        condition: service_healthy
+#      zookeeper3:
+#        condition: service_healthy
+#
+#
+#  clickhouse11:
+#    extends:
+#      file: clickhouse-service.yml
+#      service: clickhouse
+#    hostname: clickhouse11
+#    volumes:
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse11/database/:/var/lib/clickhouse/"
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse11/logs/:/var/log/clickhouse-server/"
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse11/etc/:/etc/clickhouse-server/"
+#      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse11/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse11/keeperlogs/:/var/lib/clickhouse/coordination/"
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/:/share"
+#    depends_on:
+#      zookeeper1:
+#        condition: service_healthy
+#      zookeeper2:
+#        condition: service_healthy
+#      zookeeper3:
+#        condition: service_healthy
+#
+#
+#  clickhouse12:
+#    extends:
+#      file: clickhouse-service.yml
+#      service: clickhouse
+#    hostname: clickhouse12
+#    volumes:
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse12/database/:/var/lib/clickhouse/"
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse12/logs/:/var/log/clickhouse-server/"
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse12/etc/:/etc/clickhouse-server/"
+#      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse12/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse12/keeperlogs/:/var/lib/clickhouse/coordination/"
+#      - "${CLICKHOUSE_TESTS_DIR}/_instances/share/:/share"
+#    depends_on:
+#      zookeeper1:
+#        condition: service_healthy
+#      zookeeper2:
+#        condition: service_healthy
+#      zookeeper3:
+#        condition: service_healthy
+
+  bash-tools:
+    image: registry.gitlab.com/altinity-public/container-images/test/bash-tools:3.0
+    hostname: bash-tools
+    restart: "no"
+    entrypoint:
+      - /bin/sleep
+    command:
+      - infinity
+
+  # dummy service which does nothing, but allows to postpone
+  # 'docker-compose up -d' till all dependecies will go healthy
+  all_services_ready:
+    image: hello-world
+    depends_on:
+      clickhouse1:
+        condition: service_healthy
+      clickhouse2:
+        condition: service_healthy
+      clickhouse3:
+        condition: service_healthy
+      clickhouse4:
+        condition: service_healthy
+      clickhouse5:
+        condition: service_healthy
+#      clickhouse6:
+#        condition: service_healthy
+#      clickhouse7:
+#        condition: service_healthy
+#      clickhouse8:
+#        condition: service_healthy
+#      clickhouse9:
+#        condition: service_healthy
+#      clickhouse10:
+#        condition: service_healthy
+#      clickhouse11:
+#        condition: service_healthy
+#      clickhouse12:
+#        condition: service_healthy
+      zookeeper1:
+        condition: service_healthy
+      zookeeper2:
+        condition: service_healthy
+      zookeeper3:
+        condition: service_healthy
+      zookeeper:
+        condition: service_healthy
+

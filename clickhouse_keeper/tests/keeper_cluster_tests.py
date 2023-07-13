@@ -470,12 +470,12 @@ def standalone_keepers_3(self):
 
     try:
         if self.context.ssl == "true":
-            start_stand_alone_keeper_ssl(
+            start_standalone_keeper_ssl(
                 cluster_nodes=cluster_nodes, control_nodes=control_nodes
             )
 
         else:
-            start_stand_alone_keeper(
+            start_standalone_keeper(
                 cluster_nodes=cluster_nodes, control_nodes=control_nodes
             )
 
@@ -551,12 +551,12 @@ def standalone_keepers_2(self):
 
     try:
         if self.context.ssl == "true":
-            start_stand_alone_keeper_ssl(
+            start_standalone_keeper_ssl(
                 cluster_nodes=cluster_nodes, control_nodes=control_nodes
             )
 
         else:
-            start_stand_alone_keeper(
+            start_standalone_keeper(
                 cluster_nodes=cluster_nodes, control_nodes=control_nodes
             )
 
@@ -628,12 +628,12 @@ def standalone_keepers_1(self):
 
     try:
         if self.context.ssl == "true":
-            start_stand_alone_keeper_ssl(
+            start_standalone_keeper_ssl(
                 cluster_nodes=cluster_nodes, control_nodes=control_nodes
             )
 
         else:
-            start_stand_alone_keeper(
+            start_standalone_keeper(
                 cluster_nodes=cluster_nodes, control_nodes=control_nodes
             )
 

@@ -179,6 +179,53 @@ def create_3_3_cluster_config_ssl(self):
 
 
 @TestStep(Given)
+def create_2_2_cluster_config_ssl(self):
+    with Given("I create remote config"):
+        entries = {
+            "Cluster_2shards_with_2replicas": [
+                {
+                    "shard": [
+                        {
+                            "replica": {
+                                "host": "clickhouse1",
+                                "port": "9440",
+                                "secure": "1",
+                            }
+                        },
+                        {
+                            "replica": {
+                                "host": "clickhouse2",
+                                "port": "9440",
+                                "secure": "1",
+                            }
+                        },
+                    ]
+                },
+                {
+                    "shard": [
+                        {
+                            "replica": {
+                                "host": "clickhouse3",
+                                "port": "9440",
+                                "secure": "1",
+                            }
+                        },
+                        {
+                            "replica": {
+                                "host": "clickhouse4",
+                                "port": "9440",
+                                "secure": "1",
+                            }
+                        },
+                    ]
+                }
+            ]
+        }
+
+        create_configuration_ssl(entries=entries, modify=True)
+
+
+@TestStep(Given)
 def create_configuration_ssl(
     self,
     root="clickhouse",
@@ -575,7 +622,7 @@ def stop_keepers_ssl(self, cluster_nodes=None):
 
 
 @TestStep(Given)
-def start_stand_alone_keeper_ssl(self):
+def start_standalone_keeper_ssl(self):
     """Start 9 nodes ClickHouse server and standalone 3 nodes Keeper."""
     cluster = self.context.cluster
     try:

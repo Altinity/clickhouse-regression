@@ -6,7 +6,7 @@ from testflows.asserts import error
 from testflows.connect import Shell
 from clickhouse_keeper.tests.steps_ssl_fips import (
     start_mixed_keeper_ssl,
-    start_stand_alone_keeper_ssl,
+    start_standalone_keeper_ssl,
 )
 
 
@@ -34,6 +34,29 @@ def create_3_3_cluster_config(self):
                         {"replica": {"host": "clickhouse7", "port": "9000"}},
                         {"replica": {"host": "clickhouse8", "port": "9000"}},
                         {"replica": {"host": "clickhouse9", "port": "9000"}},
+                    ]
+                },
+            ]
+        }
+
+        create_remote_configuration(entries=entries, modify=True)
+
+
+@TestStep(Given)
+def create_2_2_cluster_config(self):
+    with Given("I create remote config"):
+        entries = {
+            "Cluster_2shards_with_2replicas": [
+                {
+                    "shard": [
+                        {"replica": {"host": "clickhouse1", "port": "9000"}},
+                        {"replica": {"host": "clickhouse2", "port": "9000"}},
+                    ]
+                },
+                {
+                    "shard": [
+                        {"replica": {"host": "clickhouse3", "port": "9000"}},
+                        {"replica": {"host": "clickhouse4", "port": "9000"}},
                     ]
                 },
             ]
@@ -600,7 +623,7 @@ def table_select(
 
 
 @TestStep(Given)
-def start_stand_alone_keeper(
+def start_standalone_keeper(
     self,
     control_nodes=None,
     cluster_nodes=None,
@@ -670,11 +693,15 @@ def start_stand_alone_keeper(
         with Finally("I clean up"):
             with By("I start clickhouse servers", flags=TE):
                 stop_keepers(cluster_nodes=control_nodes)
+                pause("1")
                 for name in control_nodes:
-                    self.context.cluster.node(name).start_clickhouse(wait_healthy=False)
-                    time.sleep(5)
+                    retry(cluster.node(name).start_clickhouse, timeout=100, delay=1)(wait_healthy=False)
+                   #self.context.cluster.node(name).start_clickhouse(wait_healthy=False)
+                    # time.sleep(30)
+                pause("2")
+                clean_coordination_on_all_nodes()
 
-            clean_coordination_on_all_nodes()
+
 
 
 @TestStep(Given)
@@ -1026,6 +1053,210 @@ def system_zoo_check(
             )
 
 
+@TestStep
+def performance_check(
+    self,
+    timeout=30000,
+):
+    """Step creates a 'bad' table and make inserts. Every row generates ZooKeeper transaction.
+    It checks insert time and zoo metrics from system.events before and after insert."""
+
+    node = self.context.cluster.node("clickhouse1")
+
+    table_name = f"performance_{getuid()}"
+
+    with When(f"I start performance scenario #{self.context.repeats}"):
+        try:
+            with Given("I create 'bad' table"):
+                retry(node.query, timeout=100, delay=1)(
+                    f"CREATE TABLE IF NOT EXISTS {table_name} on CLUSTER {self.context.cluster_name}"
+                    f" (p UInt64, x UInt64) "
+                    "ENGINE = ReplicatedSummingMergeTree('/clickhouse/tables/replicated/{shard}"
+                    f"/{table_name}'"
+                    ", '{replica}') "
+                    "ORDER BY tuple() PARTITION BY p "
+                    "SETTINGS  in_memory_parts_enable_wal=0, "
+                    "min_bytes_for_wide_part=104857600, "
+                    "min_bytes_for_wide_part=104857600, "
+                    "parts_to_delay_insert=1000000, "
+                    "parts_to_throw_insert=1000000, "
+                    "max_parts_in_total=1000000;",
+                    steps=False,
+                )
+
+            with And(
+                "I make insert into the table and collect insert time (sec) into a list."
+            ):
+                retry(node.query, timeout=1000, delay=1)(
+                    f"insert into {table_name} select rand(1)%100,"
+                    f" rand(2) from numbers({self.context.inserts}) "
+                    f"settings max_block_size=100, "
+                    f"min_insert_block_size_bytes=1, "
+                    f"min_insert_block_size_rows=1, "
+                    f"insert_deduplicate=0, "
+                    f"max_threads=128, "
+                    f"max_insert_threads=128;",
+                    timeout=timeout,
+                )
+
+                metric(name="Time", value=current_time(), units="sec")
+
+                insert_time = float(current_time())
+
+        finally:
+            with Finally("I drop table if exists and provide cleanup"):
+                node.query(
+                    f"DROP TABLE IF EXISTS {table_name} ON CLUSTER {self.context.cluster_name} SYNC"
+                )
+
+    return insert_time
+
+
+@TestStep
+def performance_check_mixed(
+    self,
+    control_nodes,
+    cluster_nodes,
+    rest_cluster_nodes,
+    coordination_cluster_configuration,
+):
+    insert_time_list = []
+
+    for i in range(self.context.repeats):
+        try:
+            with Given("I start mixed ClickHouse Keeper cluster"):
+                start_mixed_ch_keeper(
+                    control_nodes=control_nodes,
+                    cluster_nodes=cluster_nodes,
+                    rest_cluster_nodes=rest_cluster_nodes,
+                )
+
+            with Then("I collect insert time value from the performance test."):
+                insert_time_list.append(performance_check())
+        finally:
+            with Finally("I provide cleanup"):
+                clean_coordination_on_all_nodes()
+                self.context.cluster.node("clickhouse1").cmd(f"rm -rf /share/")
+
+    with Then(
+        "I collect the coordination cluster configuration and minimum insert time value."
+    ):
+        self.context.configurations_minimum_insert_time_values[
+            coordination_cluster_configuration
+        ] = min(insert_time_list)
+
+
+@TestStep
+def performance_check_standalone(
+    self,
+    control_nodes,
+    cluster_nodes,
+    coordination_cluster_configuration,
+):
+    insert_time_list = []
+
+    for i in range(self.context.repeats):
+        try:
+            pause()
+            with Given("I start standalone ClickHouse Keeper cluster"):
+                start_standalone_ch_keeper(
+                    control_nodes=control_nodes, cluster_nodes=cluster_nodes
+                )
+
+            with Then("I collect insert time value from the performance test."):
+                insert_time_list.append(performance_check())
+
+            yield
+        finally:
+            with Finally("I provide cleanup"):
+                clean_coordination_on_all_nodes()
+                self.context.cluster.node("clickhouse1").cmd(f"rm -rf /share/")
+
+    with Then(
+        "I collect the coordination cluster configuration and minimum insert time value."
+    ):
+        self.context.configurations_minimum_insert_time_values[
+            coordination_cluster_configuration
+        ] = min(insert_time_list)
+
+
+@TestStep(Given)
+def start_mixed_keeper_performance(
+    self,
+    control_nodes=None,
+    cluster_nodes=None,
+    rest_cluster_nodes=None,
+    test_setting_name="startup_timeout",
+    test_setting_value="30000",
+):
+    """Start 9 nodes ClickHouse server with one shared 3 nodes shard Keeper."""
+    cluster = self.context.cluster
+    control_nodes = (
+        cluster.nodes["clickhouse"][6:9] if control_nodes is None else control_nodes
+    )
+    cluster_nodes = (
+        cluster.nodes["clickhouse"][0:9] if cluster_nodes is None else cluster_nodes
+    )
+    rest_cluster_nodes = (
+        cluster.nodes["clickhouse"][0:6]
+        if rest_cluster_nodes is None
+        else rest_cluster_nodes
+    )
+    try:
+        with Given("I stop all ClickHouse server nodes"):
+            for name in cluster_nodes:
+                retry(cluster.node(name).stop_clickhouse, timeout=100, delay=1)(
+                    safe=False
+                )
+
+        with And("I clean ClickHouse Keeper server nodes"):
+            clean_coordination_on_all_nodes()
+
+        with And("I create server Keeper config"):
+            create_config_section(
+                control_nodes=control_nodes,
+                cluster_nodes=cluster_nodes,
+                check_preprocessed=False,
+                restart=False,
+                modify=True,
+            )
+
+        with And("I create mixed 3 nodes Keeper server config file"):
+            create_keeper_cluster_configuration(
+                nodes=control_nodes,
+                test_setting_name=test_setting_name,
+                test_setting_value=test_setting_value,
+                check_preprocessed=False,
+                restart=False,
+                modify=True,
+            )
+
+        with And("I start mixed ClickHouse server nodes"):
+            for name in control_nodes:
+                retry(cluster.node(name).start_clickhouse, timeout=100, delay=1)(
+                    wait_healthy=False
+                )
+
+        with And(f"I check that ruok returns imok"):
+            for name in control_nodes:
+                retry(cluster.node("bash-tools").cmd, timeout=100, delay=1)(
+                    f"echo ruok | nc {name} {self.context.port}",
+                    exitcode=0,
+                    message="imok",
+                )
+
+        if rest_cluster_nodes != "no_rest_nodes":
+            with And("I start rest ClickHouse server nodes"):
+                for name in rest_cluster_nodes:
+                    retry(cluster.node(name).start_clickhouse, timeout=100, delay=1)()
+
+        yield
+    finally:
+        with Finally("I clean up"):
+            with By("I clean ClickHouse Keeper server nodes"):
+                clean_coordination_on_all_nodes()
+
+
 @TestStep(Given)
 def start_mixed_ch_keeper(self, control_nodes, cluster_nodes, rest_cluster_nodes):
     """Mixed keeper start up with and without ssl."""
@@ -1037,7 +1268,7 @@ def start_mixed_ch_keeper(self, control_nodes, cluster_nodes, rest_cluster_nodes
             rest_cluster_nodes=rest_cluster_nodes,
         )
     else:
-        start_mixed_keeper(
+        start_mixed_keeper_performance(
             control_nodes=control_nodes,
             cluster_nodes=cluster_nodes,
             rest_cluster_nodes=rest_cluster_nodes,
@@ -1049,12 +1280,12 @@ def start_standalone_ch_keeper(self, control_nodes, cluster_nodes):
     """Standalone keeper start up with and without ssl."""
 
     if self.context.ssl == "true":
-        start_stand_alone_keeper_ssl(
+        start_standalone_keeper_ssl(
             control_nodes=control_nodes,
             cluster_nodes=cluster_nodes,
         )
     else:
-        start_stand_alone_keeper(
+        start_standalone_keeper(
             control_nodes=control_nodes,
             cluster_nodes=cluster_nodes,
         )
