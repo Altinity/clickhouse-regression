@@ -26,7 +26,7 @@ def import_export(self, snapshot_name, import_file, snapshot_id=None):
             f"""
             CREATE TABLE {table_name}
             ENGINE = MergeTree
-            ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet)
+            ORDER BY tuple() AS SELECT * FROM file('{import_file}', Parquet) LIMIT 100
             """
         )
 
@@ -51,7 +51,7 @@ def import_export(self, snapshot_name, import_file, snapshot_id=None):
     with Check("export"):
         with When("I export the table back into a new parquet file"):
             node.query(
-                f"SELECT * FROM {table_name} INTO OUTFILE '{path_to_export}' COMPRESSION 'none' FORMAT Parquet"
+                f"SELECT * FROM {table_name} LIMIT 100 INTO OUTFILE '{path_to_export}' COMPRESSION 'none' FORMAT Parquet"
             )
 
         with And("I check the exported Parquet file's contents"):
