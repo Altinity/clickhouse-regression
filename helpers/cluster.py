@@ -1030,6 +1030,7 @@ class Cluster(object):
                     raise RuntimeError(
                         f"failed to get docker container id for the {node} service"
                     )
+                time.sleep(1)
         return container_id
 
     def shell(self, node, timeout=300):
