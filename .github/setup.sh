@@ -12,7 +12,7 @@ sudo apt-get update
 mkdir $SUITE/_instances
 
 echo "login to docker"
-echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+../retry.sh 60 2 "docker login -u $DOCKER_USERNAME --password $DOCKER_PASSWORD"
 
 env
 uname -i
