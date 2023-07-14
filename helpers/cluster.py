@@ -1025,11 +1025,11 @@ class Cluster(object):
                     raise
                 except ExpectTimeoutError:
                     self.close_control_shell()
-                    timeout = timeout - (time.time() - time_start)
-                    if timeout <= 0:
-                        raise RuntimeError(
-                            f"failed to get docker container id for the {node} service"
-                        )
+                timeout = timeout - (time.time() - time_start)
+                if timeout <= 0:
+                    raise RuntimeError(
+                        f"failed to get docker container id for the {node} service"
+                    )
         return container_id
 
     def shell(self, node, timeout=300):
