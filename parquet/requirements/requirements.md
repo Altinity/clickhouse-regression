@@ -1508,7 +1508,7 @@ version: 1.0
 #### RQ.SRS-032.ClickHouse.Parquet.Import.Settings.ImportNested
 version: 1.0
 
-[ClickHouse] SHALL support specifying `input_format_parquet_import_nested` to allow inserting arrays of
+[ClickHouse] SHALL support specifying `input_format_parquet_import_nested` setting to allow inserting arrays of
 nested structs into Nested tables. The default value SHALL be `0`.
 
 - `0` — Data can not be inserted into Nested columns as an array of structs.
@@ -1517,20 +1517,20 @@ nested structs into Nested tables. The default value SHALL be `0`.
 #### RQ.SRS-032.ClickHouse.Parquet.Import.Settings.CaseInsensitiveColumnMatching
 version: 1.0
 
-[ClickHouse] SHALL support specifying `input_format_parquet_case_insensitive_column_matching` to ignore matching
+[ClickHouse] SHALL support specifying `input_format_parquet_case_insensitive_column_matching` setting to ignore matching
 Parquet and ClickHouse columns. The default value SHALL be `0`.
 
 #### RQ.SRS-032.ClickHouse.Parquet.Import.Settings.AllowMissingColumns
 version: 1.0
 
-[ClickHouse] SHALL support specifying `input_format_parquet_allow_missing_columns` to allow missing columns.
+[ClickHouse] SHALL support specifying `input_format_parquet_allow_missing_columns` setting to allow missing columns.
 The default value SHALL be `0`.
 
 #### RQ.SRS-032.ClickHouse.Parquet.Import.Settings.SkipColumnsWithUnsupportedTypesInSchemaInference
 version: 1.0
 
-[ClickHouse] SHALL support specifying `input_format_parquet_skip_columns_with_unsupported_types_in_schema_inference`
-to allow skipping unsupported types. The default value SHALL be `0`.
+[ClickHouse] SHALL support specifying `input_format_parquet_skip_columns_with_unsupported_types_in_schema_inference` 
+setting to allow skipping unsupported types. The default value SHALL be `0`.
 
 ### Libraries
 
