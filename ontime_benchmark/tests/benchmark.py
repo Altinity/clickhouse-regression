@@ -15,7 +15,8 @@ def insert_ontime_data(self, year, table_name, node=None):
         node = self.context.node
 
     node.query(
-        f"INSERT INTO {table_name} SELECT * FROM s3('https://clickhouse-public-datasets.s3.amazonaws.com/ontime/csv_by_year/{year}.csv.gz', CSVWithNames) SETTINGS max_insert_threads = 40;"
+        f"INSERT INTO {table_name} SELECT * FROM s3('https://clickhouse-public-datasets.s3.amazonaws.com/ontime/csv_by_year/{year}.csv.gz', CSVWithNames) SETTINGS max_insert_threads = 40, receive_timeout=600;",
+        timeout=600,
     )
 
 
