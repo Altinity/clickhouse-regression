@@ -1,81 +1,7 @@
-import time
-
 from clickhouse_keeper.requirements import *
 from clickhouse_keeper.tests.steps_ssl_fips import *
 from clickhouse_keeper.tests.steps import *
 from helpers.common import *
-
-fips_compatible_tlsv1_2_cipher_suites = [
-    "ECDHE-RSA-AES128-GCM-SHA256",
-    "ECDHE-RSA-AES256-GCM-SHA384",
-    # "ECDHE-ECDSA-AES128-GCM-SHA256",
-    # "ECDHE-ECDSA-AES256-GCM-SHA384",
-    "AES128-GCM-SHA256",
-    "AES256-GCM-SHA384",
-]
-
-all_ciphers = [
-    "TLS_AES_256_GCM_SHA384",
-    "TLS_CHACHA20_POLY1305_SHA256",
-    "TLS_AES_128_GCM_SHA256",
-    "ECDHE-ECDSA-AES256-GCM-SHA384",
-    "ECDHE-RSA-AES256-GCM-SHA384",
-    "DHE-RSA-AES256-GCM-SHA384",
-    "ECDHE-ECDSA-CHACHA20-POLY1305",
-    "ECDHE-RSA-CHACHA20-POLY1305",
-    "DHE-RSA-CHACHA20-POLY1305",
-    "ECDHE-ECDSA-AES128-GCM-SHA256",
-    "ECDHE-RSA-AES128-GCM-SHA256",
-    "DHE-RSA-AES128-GCM-SHA256",
-    "ECDHE-ECDSA-AES256-SHA384",
-    "ECDHE-RSA-AES256-SHA384",
-    "DHE-RSA-AES256-SHA256",
-    "ECDHE-ECDSA-AES128-SHA256",
-    "ECDHE-RSA-AES128-SHA256",
-    "DHE-RSA-AES128-SHA256",
-    "ECDHE-ECDSA-AES256-SHA",
-    "ECDHE-RSA-AES256-SHA",
-    "DHE-RSA-AES256-SHA",
-    "ECDHE-ECDSA-AES128-SHA",
-    "ECDHE-RSA-AES128-SHA",
-    "DHE-RSA-AES128-SHA",
-    "RSA-PSK-AES256-GCM-SHA384",
-    "DHE-PSK-AES256-GCM-SHA384",
-    "RSA-PSK-CHACHA20-POLY1305",
-    "DHE-PSK-CHACHA20-POLY1305",
-    "ECDHE-PSK-CHACHA20-POLY1305",
-    "AES256-GCM-SHA384",
-    "PSK-AES256-GCM-SHA384",
-    "PSK-CHACHA20-POLY1305",
-    "RSA-PSK-AES128-GCM-SHA256",
-    "DHE-PSK-AES128-GCM-SHA256",
-    "AES128-GCM-SHA256",
-    "PSK-AES128-GCM-SHA256",
-    "AES256-SHA256",
-    "AES128-SHA256",
-    "ECDHE-PSK-AES256-CBC-SHA384",
-    "ECDHE-PSK-AES256-CBC-SHA",
-    "SRP-RSA-AES-256-CBC-SHA",
-    "SRP-AES-256-CBC-SHA",
-    "RSA-PSK-AES256-CBC-SHA384",
-    "DHE-PSK-AES256-CBC-SHA384",
-    "RSA-PSK-AES256-CBC-SHA",
-    "DHE-PSK-AES256-CBC-SHA",
-    "AES256-SHA",
-    "PSK-AES256-CBC-SHA384",
-    "PSK-AES256-CBC-SHA",
-    "ECDHE-PSK-AES128-CBC-SHA256",
-    "ECDHE-PSK-AES128-CBC-SHA",
-    "SRP-RSA-AES-128-CBC-SHA",
-    "SRP-AES-128-CBC-SHA",
-    "RSA-PSK-AES128-CBC-SHA256",
-    "DHE-PSK-AES128-CBC-SHA256",
-    "RSA-PSK-AES128-CBC-SHA",
-    "DHE-PSK-AES128-CBC-SHA",
-    "AES128-SHA",
-    "PSK-AES128-CBC-SHA256",
-    "PSK-AES128-CBC-SHA",
-]
 
 
 @TestScenario
@@ -154,9 +80,11 @@ def check_clickhouse_connection_to_keeper(self, node=None, message="keeper"):
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
-    node.query(
-        "SELECT * FROM system.zookeeper WHERE path = '/' FORMAT JSON", message=message
-    )
+    with Given("I check that ClickHouse is connected to Keeper"):
+        node.query(
+            "SELECT * FROM system.zookeeper WHERE path = '/' FORMAT JSON",
+            message=message,
+        )
 
 
 @TestFeature
@@ -204,16 +132,14 @@ def openssl_check_v2(self, node=None, message="New, TLSv1.2, Cipher is "):
 @TestFeature
 @Name("FIPS SSL")
 def feature(self):
-    """Check 2N+1 cluster configurations for
-    clickhouse-keeper and zookeeper.
-    """
+    """Check FIPS SSL connections on ports for Clickhouse Keeper."""
     cluster = self.context.cluster
-    if self.context.ssl == "true":
-        start_mixed_keeper_ssl(
-            cluster_nodes=cluster.nodes["clickhouse"][:9],
-            control_nodes=cluster.nodes["clickhouse"][0:3],
-            rest_cluster_nodes=cluster.nodes["clickhouse"][3:9],
-        )
+
+    start_mixed_keeper_ssl(
+        cluster_nodes=cluster.nodes["clickhouse"][:9],
+        control_nodes=cluster.nodes["clickhouse"][0:3],
+        rest_cluster_nodes=cluster.nodes["clickhouse"][3:9],
+    )
 
     with Pool(1) as executor:
         try:

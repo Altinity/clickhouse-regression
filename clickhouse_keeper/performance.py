@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import os
 import sys
-import csv
 
 from testflows.core import *
 
@@ -9,10 +8,10 @@ append_path(sys.path, "..")
 
 from helpers.cluster import Cluster
 from helpers.common import check_clickhouse_version
-from clickhouse_keeper.requirements import *
 from clickhouse_keeper.tests.steps import *
 from clickhouse_keeper.tests.steps_ssl import *
 from clickhouse_keeper.tests.argparsers import argparser
+from clickhouse_keeper.tests.performance_files.performance_reports import *
 
 xfails = {}
 
@@ -126,45 +125,37 @@ def regression(
                         create_3_3_cluster_config()
 
                     Feature(
-                        run=load(f"clickhouse_keeper.tests.{test_feature}", "feature")
+                        run=load(
+                            f"clickhouse_keeper.tests.performance_files.{test_feature}",
+                            "feature",
+                        )
                     )
 
     if self.context.results_file_name == "false":
-        test_results_file = f"performance_{self.context.uid}.csv"
+        test_results_file_name = f"performance_{self.context.uid}"
     else:
-        test_results_file = f"{self.context.results_file_name}.csv"
+        test_results_file_name = f"{self.context.results_file_name}"
 
-    with open(test_results_file, "a", encoding="UTF8", newline="") as f:
-        writer = csv.writer(f)
+    comparison_setups = ["", "ssl", "zookeeper", "altinity"]
 
-        writer.writerow(
-            ["repeats", self.context.repeats, "inserts", self.context.inserts]
+    provide_resulting_csv_file(
+        test_results_file_name=test_results_file_name,
+        repeats=self.context.repeats,
+        inserts=self.context.inserts,
+        configurations_insert_time_values=self.context.configurations_insert_time_values,
+        setups=comparison_setups,
+    )
+
+    if (
+        count_word_in_file(
+            f"performance_reports/{test_results_file_name}.csv", "repeats"
         )
-
-        buffer_list = ["configuration:"]
-        for configuration in list(self.context.configurations_insert_time_values):
-            buffer_list.append(configuration)
-        writer.writerow(buffer_list)
-
-        for first_configuration in list(self.context.configurations_insert_time_values):
-            buffer_list = [first_configuration]
-            for second_configuration in list(
-                self.context.configurations_insert_time_values
-            ):
-                buffer_list.append(
-                    min(
-                        self.context.configurations_insert_time_values[
-                            second_configuration
-                        ]
-                    )
-                    / min(
-                        self.context.configurations_insert_time_values[
-                            first_configuration
-                        ]
-                    )
-                )
-            writer.writerow(buffer_list)
-        writer.writerow(" ")
+        == 1
+    ):
+        markdown_and_html_auto_performance_autoreport(
+            test_results_file_name=test_results_file_name,
+            data=self.context.configurations_insert_time_values,
+        )
 
 
 if main():

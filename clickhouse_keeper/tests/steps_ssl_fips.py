@@ -676,6 +676,7 @@ def openssl_check_step(self, node=None, port="9440"):
 #     )
 #
 
+
 @TestStep(Then)
 def openssl_client_connection(
     self,
@@ -804,7 +805,10 @@ def clickhouse_client_connection(
         hostname = node.name
 
     if options is None:
-        options = {"loadDefaultCAFile": "false", "caConfig": "/etc/clickhouse-server/config.d/altinity_blog_ca.crt"}
+        options = {
+            "loadDefaultCAFile": "false",
+            "caConfig": "/etc/clickhouse-server/config.d/altinity_blog_ca.crt",
+        }
     else:
         options["loadDefaultCAFile"] = "false"
         options["caConfig"] = "/etc/clickhouse-server/config.d/altinity_blog_ca.crt"
@@ -987,6 +991,7 @@ def start_standalone_keeper_ssl(
                     time.sleep(5)
             clean_coordination_on_all_nodes1()
 
+
 @TestStep(Given)
 def add_ssl_clickhouse_client_configuration_file(
     self,
@@ -1079,7 +1084,10 @@ def clickhouse_client_connection(
         hostname = node.name
 
     if options is None:
-        options = {"loadDefaultCAFile": "false", "caConfig": "/etc/clickhouse-server/config.d/altinity_blog_ca.crt"}
+        options = {
+            "loadDefaultCAFile": "false",
+            "caConfig": "/etc/clickhouse-server/config.d/altinity_blog_ca.crt",
+        }
     else:
         options["loadDefaultCAFile"] = "false"
         options["caConfig"] = "/etc/clickhouse-server/config.d/altinity_blog_ca.crt"

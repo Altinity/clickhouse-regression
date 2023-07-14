@@ -1,5 +1,3 @@
-import time
-
 from clickhouse_keeper.requirements import *
 from clickhouse_keeper.tests.steps_ssl_fips import *
 from clickhouse_keeper.tests.steps import *
@@ -162,7 +160,9 @@ def openssl_check(self, node=None):
 
     retry(node.query, timeout=300, delay=10)("SELECT 1", message="1", exitcode=0)
 
-    ports_list = define("All ports for testing", ["9440", "9281", "9010", "9444", "8443"])
+    ports_list = define(
+        "All ports for testing", ["9440", "9281", "9010", "9444", "8443"]
+    )
 
     for port in ports_list:
         with Check(f"port:{port}"):
@@ -173,7 +173,7 @@ def openssl_check(self, node=None):
 def tcp_connection_clickhouse_client(
     self, hostname="clickhouse1", tls1_2_enabled=True, port=None
 ):
-    """Check that server accepts only FIPS compatible TCP connections using clickhouse-client"""
+    """Check that server accepts only FIPS compatible TCP connections using clickhouse-client."""
 
     tls1_2_status = "work" if tls1_2_enabled else "be rejected"
 
@@ -297,7 +297,7 @@ def tcp_connection_clickhouse_client(
 
 @TestFeature
 def tcp_connection_check(self, node=None):
-    """Check  Clickhouse Keeper FIPS compatible TCP connections."""
+    """Check Clickhouse Keeper FIPS compatible TCP connections."""
 
     if node is None:
         node = self.context.cluster.node("clickhouse1")
@@ -314,9 +314,7 @@ def tcp_connection_check(self, node=None):
 @TestFeature
 @Name("FIPS SSL server")
 def feature(self):
-    """Check 2N+1 cluster configurations for
-    clickhouse-keeper and zookeeper.
-    """
+    """Clickhouse Keeper FIPS is using the correct cyphers, and FIPS has compatible TCP connections."""
     cluster = self.context.cluster
 
     start_mixed_keeper_ssl(
