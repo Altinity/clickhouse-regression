@@ -84,6 +84,7 @@ env:
 jobs:
   aes_encryption:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: aes_encryption
     if: ${{ inputs.suite == 'all' || inputs.suite == 'aes_encryption' }}
@@ -112,6 +113,7 @@ jobs:
 
   aggregate_functions:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: aggregate_functions
     if: ${{ inputs.suite == 'all' || inputs.suite == 'aggregate_functions' }}
@@ -140,6 +142,7 @@ jobs:
 
   atomic_insert:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: atomic_insert
     if: ${{ inputs.suite == 'all' || inputs.suite == 'atomic_insert' }}
@@ -168,6 +171,7 @@ jobs:
 
   base_58:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: base_58
     if: ${{ inputs.suite == 'all' || inputs.suite == 'base_58' }}
@@ -196,6 +200,7 @@ jobs:
 
   benchmark_minio:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: ontime_benchmark
       STORAGE: /minio
@@ -226,6 +231,7 @@ jobs:
 
   benchmark_aws:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: ontime_benchmark
       STORAGE: /aws
@@ -260,6 +266,7 @@ jobs:
 
   benchmark_gcs:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: ontime_benchmark
       STORAGE: /gcs
@@ -293,6 +300,7 @@ jobs:
 
   clickhouse_keeper:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: clickhouse_keeper
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
@@ -321,6 +329,7 @@ jobs:
 
   datetime64_extended_range:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: datetime64_extended_range
     if: ${{ inputs.suite == 'all' || inputs.suite == 'datetime64_extended_range' }}
@@ -349,6 +358,7 @@ jobs:
 
   disk_level_encryption:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: disk_level_encryption
     if: ${{ inputs.suite == 'all' || inputs.suite == 'disk_level_encryption' }}
@@ -377,6 +387,7 @@ jobs:
 
   dns:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: dns
     if: ${{ inputs.suite == 'all' || inputs.suite == 'dns' }}
@@ -405,6 +416,7 @@ jobs:
 
   engines:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: engines
     if: ${{ inputs.suite == 'all' || inputs.suite == 'engines' }}
@@ -433,6 +445,7 @@ jobs:
 
   example:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: example
     if: ${{ inputs.suite == 'all' || inputs.suite == 'example' }}
@@ -461,6 +474,7 @@ jobs:
 
   extended_precision_data_types:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: extended_precision_data_types
     if: ${{ inputs.suite == 'all' || inputs.suite == 'extended_precision_data_types' }}
@@ -517,6 +531,7 @@ jobs:
 
   kafka:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: kafka
     if: ${{ inputs.suite == 'all' || inputs.suite == 'kafka' }}
@@ -545,6 +560,7 @@ jobs:
 
   kerberos:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: kerberos
     if: ${{ inputs.suite == 'all' || inputs.suite == 'kerberos' }}
@@ -572,6 +588,7 @@ jobs:
 
   key_value:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: key_value
     if: ${{ inputs.suite == 'all' || inputs.suite == 'key_value' }}
@@ -599,6 +616,7 @@ jobs:
 
   ldap_authentication:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: ldap/authentication
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
@@ -627,6 +645,7 @@ jobs:
 
   ldap_external_user_directory:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: ldap/external_user_directory
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
@@ -655,6 +674,7 @@ jobs:
 
   ldap_role_mapping:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: ldap/role_mapping
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
@@ -683,6 +703,7 @@ jobs:
 
   lightweight_delete:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: lightweight_delete
     if: ${{ inputs.suite == 'all' || inputs.suite == 'lightweight_delete' }}
@@ -711,6 +732,7 @@ jobs:
 
   map_type:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: map_type
     if: ${{ inputs.suite == 'all' || inputs.suite == 'map_type' }}
@@ -739,6 +761,7 @@ jobs:
 
   parquet:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: parquet
       STORAGE: /no_s3
@@ -768,6 +791,7 @@ jobs:
 
   parquet_minio:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: parquet
       STORAGE: /minio
@@ -799,6 +823,7 @@ jobs:
 
   parquet_aws_s3:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: parquet
       STORAGE: /aws_s3
@@ -834,6 +859,7 @@ jobs:
 
   part_moves_between_shards:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: part_moves_between_shards
     if: ${{ inputs.suite == 'all' || inputs.suite == 'part_moves_between_shards' }}
@@ -862,6 +888,7 @@ jobs:
 
   rbac:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: rbac
     if: ${{ inputs.suite == 'all' || inputs.suite == 'rbac' }}
@@ -890,6 +917,7 @@ jobs:
 
   s3_minio:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: s3
       STORAGE: /minio
@@ -920,6 +948,7 @@ jobs:
 
   s3_aws:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: s3
       STORAGE: /aws
@@ -954,6 +983,7 @@ jobs:
 
   s3_gcs:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: s3
       STORAGE: /gcs
@@ -987,6 +1017,7 @@ jobs:
 
   selects:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: selects
     if: ${{ inputs.suite == 'all' || inputs.suite == 'selects' }}
@@ -1015,6 +1046,7 @@ jobs:
           
   session_timezone:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: session_timezone
     if: ${{ inputs.suite == 'all' || inputs.suite == 'session_timezone' }}
@@ -1043,6 +1075,7 @@ jobs:
 
   ssl_server:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: ssl_server
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
@@ -1071,6 +1104,7 @@ jobs:
 
   tiered_storage:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: tiered_storage
     if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage' }}
@@ -1099,6 +1133,7 @@ jobs:
 
   tiered_storage_minio:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: tiered_storage
       STORAGE: /minio
@@ -1129,6 +1164,7 @@ jobs:
 
   tiered_storage_aws:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: tiered_storage
       STORAGE: /aws
@@ -1162,6 +1198,7 @@ jobs:
 
   tiered_storage_gcs:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: tiered_storage
       STORAGE: /gcs
@@ -1195,6 +1232,7 @@ jobs:
 
   window_functions:
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: window_functions
     if: ${{ inputs.suite == 'all' || inputs.suite == 'window_functions' }}
