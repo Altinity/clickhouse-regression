@@ -44,6 +44,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: aes_encryption
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
@@ -83,6 +84,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: aggregate_functions
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
@@ -122,6 +124,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: atomic_insert
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
@@ -161,6 +164,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: base_58
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
@@ -200,6 +204,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: ontime_benchmark
       STORAGE: /minio
@@ -241,6 +246,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: ontime_benchmark
       STORAGE: /aws
@@ -286,6 +292,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: ontime_benchmark
       STORAGE: /gcs
@@ -330,6 +337,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: clickhouse_keeper
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
@@ -369,6 +377,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: datetime64_extended_range
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
@@ -408,6 +417,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: disk_level_encryption
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
@@ -447,6 +457,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: dns
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
@@ -486,6 +497,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: engines
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
@@ -525,6 +537,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: example
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
@@ -564,6 +577,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: extended_precision_data_types
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
@@ -640,6 +654,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: kafka
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
@@ -679,6 +694,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: kerberos
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
@@ -717,6 +733,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: key_value
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
@@ -756,6 +773,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: ldap/authentication
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
@@ -795,6 +813,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: ldap/external_user_directory
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
@@ -834,6 +853,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: ldap/role_mapping
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
@@ -873,6 +893,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: lightweight_delete
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
@@ -912,6 +933,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: map_type
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
@@ -951,6 +973,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: parquet
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
@@ -1000,6 +1023,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: part_moves_between_shards
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
@@ -1039,6 +1063,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: rbac
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
@@ -1078,6 +1103,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: selects
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
@@ -1117,6 +1143,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: session_timezone
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
@@ -1156,6 +1183,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: s3
       STORAGE: /minio
@@ -1199,6 +1227,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: s3
       STORAGE: /aws
@@ -1246,6 +1275,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: s3
       STORAGE: /gcs
@@ -1292,6 +1322,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: ssl_server
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
@@ -1331,6 +1362,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: tiered_storage
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
@@ -1370,6 +1402,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: tiered_storage
       STORAGE: /minio
@@ -1413,6 +1446,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: tiered_storage
       STORAGE: /aws
@@ -1459,6 +1493,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: tiered_storage
       STORAGE: /gcs
@@ -1505,6 +1540,7 @@ jobs:
           - version: 23.3.2.37-alpine
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
     runs-on: [self-hosted, altinity-amd64]
+    timeout-minutes: 180
     env:
       SUITE: window_functions
       clickhouse_binary_path: ${{ matrix.clickhouse_binary_path }}
