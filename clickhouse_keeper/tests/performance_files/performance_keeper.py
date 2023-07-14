@@ -1,6 +1,4 @@
-from clickhouse_keeper.tests.steps import *
-from clickhouse_keeper.tests.steps_ssl_fips import *
-from clickhouse_keeper.tests.performance_steps import *
+from clickhouse_keeper.tests.performance_files.performance_steps import *
 
 
 @TestScenario
