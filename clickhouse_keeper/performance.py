@@ -27,19 +27,19 @@ ffails = {}
 @FFails(ffails)
 @Name("coordination cluster")
 def regression(
-    self,
-    local,
-    clickhouse_binary_path,
-    clickhouse_binary_list,
-    repeats,
-    inserts,
-    results_file_name,
-    one_node,
-    three_nodes,
-    clickhouse_version,
-    collect_service_logs,
-    ssl=None,
-    stress=None,
+        self,
+        local,
+        clickhouse_binary_path,
+        clickhouse_binary_list,
+        repeats,
+        inserts,
+        results_file_name,
+        one_node,
+        three_nodes,
+        clickhouse_version,
+        collect_service_logs,
+        ssl=None,
+        stress=None,
 ):
     """Check ClickHouse performance when using ClickHouse Keeper."""
     nodes = {
@@ -66,8 +66,6 @@ def regression(
         clickhouse_binary_list.append(
             os.getenv("CLICKHOUSE_TESTS_SERVER_BIN_PATH", "/usr/bin/clickhouse")
         )
-
-    self.context.uid = getuid()
 
     self.context.configurations_insert_time_values = {}
 
@@ -108,11 +106,11 @@ def regression(
 
             for test_feature in test_features:
                 with Cluster(
-                    local,
-                    clickhouse_binary_path=clickhouse_binary_path,
-                    collect_service_logs=collect_service_logs,
-                    nodes=nodes,
-                    docker_compose_project_dir=os.path.join(current_dir(), env),
+                        local,
+                        clickhouse_binary_path=clickhouse_binary_path,
+                        collect_service_logs=collect_service_logs,
+                        nodes=nodes,
+                        docker_compose_project_dir=os.path.join(current_dir(), env),
                 ) as cluster:
                     self.context.cluster = cluster
 
@@ -131,31 +129,20 @@ def regression(
                         )
                     )
 
-    if self.context.results_file_name == "false":
-        test_results_file_name = f"performance_{self.context.uid}"
-    else:
-        test_results_file_name = f"{self.context.results_file_name}"
-
-    comparison_setups = ["", "ssl", "zookeeper", "altinity"]
+    comparison_setups = ["all setups", "ssl", "Zookeeper", "altinitystable"]
 
     provide_resulting_csv_file(
-        test_results_file_name=test_results_file_name,
+        test_results_file_name=self.context.results_file_name,
         repeats=self.context.repeats,
         inserts=self.context.inserts,
         configurations_insert_time_values=self.context.configurations_insert_time_values,
         setups=comparison_setups,
     )
 
-    if (
-        count_word_in_file(
-            f"performance_reports/{test_results_file_name}.csv", "repeats"
-        )
-        == 1
-    ):
-        markdown_and_html_auto_performance_autoreport(
-            test_results_file_name=test_results_file_name,
-            data=self.context.configurations_insert_time_values,
-        )
+    markdown_and_html_auto_performance_autoreport(
+        test_results_file_name=self.context.results_file_name,
+        configurations_insert_time_values=self.context.configurations_insert_time_values,
+    )
 
 
 if main():
