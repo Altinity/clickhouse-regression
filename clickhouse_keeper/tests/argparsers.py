@@ -1,4 +1,4 @@
-import os
+from helpers.common import getuid
 
 from helpers.argparser import argparser as base_argparser
 
@@ -44,7 +44,7 @@ def argparser(parser):
         type=str,
         dest="results_file_name",
         help="number of inserts into table on one repeat",
-        default="false",
+        default=f"performance_{getuid()}",
     )
 
     parser.add_argument(
