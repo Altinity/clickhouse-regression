@@ -87,7 +87,7 @@ def regression(
         if current_cpu() == "aarch64":
             env = f"{folder_name}_env_arm64"
         else:
-            env = f"{folder_name}_env"
+            env = f"{folder_name}_performance_env"
 
         for ssl in ["false", "true"]:
 

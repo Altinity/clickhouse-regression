@@ -93,7 +93,7 @@ def regression(
 ):
     """ClickHouse regression when using clickhouse-keeper."""
     nodes = {
-        "zookeeper": ("zookeeper1", "zookeeper2", "zookeeper3", "zookeeper"),
+        "zookeeper": ("zookeeper1", "zookeeper2", "zookeeper3", "zookeeper", "zookeeper-fips"),
         "bash_tools": ("bash_tools"),
         "clickhouse": (
             "clickhouse1",
