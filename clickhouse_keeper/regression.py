@@ -187,6 +187,7 @@ def regression(
             Feature(run=load("clickhouse_keeper.tests.servers_start_up", "feature"))
 
             Feature(run=load("clickhouse_keeper.tests.ports_ssl_fips", "feature"))
+            Feature(run=load("clickhouse_keeper.tests.fips", "feature"))
 
         else:
             create_3_3_cluster_config()
