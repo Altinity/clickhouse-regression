@@ -3,7 +3,7 @@ import markdown
 import os
 
 
-def provide_resulting_csv_file(
+def create_csv_file(
     test_results_file_name="test_file",
     repeats=1,
     inserts=1,
@@ -64,7 +64,7 @@ def provide_resulting_csv_file(
                 writer.writerow(" ")
 
 
-def markdown_and_html_auto_performance_autoreport(
+def create_markdown_and_html_reports(
     test_results_file_name="test_file", configurations_insert_time_values=None
 ):
     """Auto report creation for performance tests in .md and .html formats."""
