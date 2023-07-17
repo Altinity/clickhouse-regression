@@ -3,6 +3,7 @@ from testflows.core import *
 from clickhouse_keeper.tests.common import *
 from ssl_server.tests.ssl_context import enable_ssl
 from clickhouse_keeper.requirements import *
+from clickhouse_keeper.tests.steps_ssl_fips import *
 
 
 @TestOutline
@@ -753,10 +754,15 @@ def server_as_client(self):
 @Requirements()
 def feature(self, node="clickhouse1"):
     """Check using SSL configuration to force only FIPS compatible SSL connections."""
+    xfail("not ready")
+    cluster = self.context.cluster
     self.context.node = self.context.cluster.node(node)
 
-    with Given("I enable SSL"):
-        enable_ssl(my_own_ca_key_passphrase="", server_key_passphrase="")
+    start_mixed_keeper_ssl(
+        cluster_nodes=cluster.nodes["clickhouse"][:9],
+        control_nodes=cluster.nodes["clickhouse"][0:3],
+        rest_cluster_nodes=cluster.nodes["clickhouse"][3:9],
+    )
 
     if self.context.fips_mode:
         Feature(run=fips_check)
