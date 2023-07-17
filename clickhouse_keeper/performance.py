@@ -136,7 +136,7 @@ def regression(
 
     comparison_setups = ["all setups", "ssl", "Zookeeper", "altinitystable"]
 
-    provide_resulting_csv_file(
+    create_csv_file(
         test_results_file_name=self.context.results_file_name,
         repeats=self.context.repeats,
         inserts=self.context.inserts,
@@ -144,7 +144,7 @@ def regression(
         setups=comparison_setups,
     )
 
-    markdown_and_html_auto_performance_autoreport(
+    create_markdown_and_html_reports(
         test_results_file_name=self.context.results_file_name,
         configurations_insert_time_values=self.context.configurations_insert_time_values,
     )
