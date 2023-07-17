@@ -27,19 +27,19 @@ ffails = {}
 @FFails(ffails)
 @Name("coordination cluster")
 def regression(
-        self,
-        local,
-        clickhouse_binary_path,
-        clickhouse_binary_list,
-        repeats,
-        inserts,
-        results_file_name,
-        one_node,
-        three_nodes,
-        clickhouse_version,
-        collect_service_logs,
-        ssl=None,
-        stress=None,
+    self,
+    local,
+    clickhouse_binary_path,
+    clickhouse_binary_list,
+    repeats,
+    inserts,
+    results_file_name,
+    one_node,
+    three_nodes,
+    clickhouse_version,
+    collect_service_logs,
+    ssl=None,
+    stress=None,
 ):
     """Check ClickHouse performance when using ClickHouse Keeper."""
     nodes = {
@@ -105,14 +105,17 @@ def regression(
             test_features = ["performance_keeper", "performance_zookeeper"]
 
             for test_feature in test_features:
-                if self.context.ssl == "true" and test_feature == "performance_zookeeper":
+                if (
+                    self.context.ssl == "true"
+                    and test_feature == "performance_zookeeper"
+                ):
                     xfail("ZooKeeper ssl is not supported by tests")
                 with Cluster(
-                        local,
-                        clickhouse_binary_path=clickhouse_binary_path,
-                        collect_service_logs=collect_service_logs,
-                        nodes=nodes,
-                        docker_compose_project_dir=os.path.join(current_dir(), env),
+                    local,
+                    clickhouse_binary_path=clickhouse_binary_path,
+                    collect_service_logs=collect_service_logs,
+                    nodes=nodes,
+                    docker_compose_project_dir=os.path.join(current_dir(), env),
                 ) as cluster:
                     self.context.cluster = cluster
 
