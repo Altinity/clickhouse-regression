@@ -1,6 +1,4 @@
 import csv
-import markdown
-import os
 
 
 def create_csv_file(
@@ -11,15 +9,6 @@ def create_csv_file(
     setups=None,
 ):
     """Auto csv creation for performance tests."""
-    if setups is None:
-        setups = ["all", "first", "sec", "p"]
-
-    if configurations_insert_time_values is None:
-        configurations_insert_time_values = {
-            "first_setup": (3, 4),
-            "second_setup": (6, 7),
-            "third_setup": (6, 7),
-        }
 
     configurations_sorted_by_min_insert_time = sorted(
         configurations_insert_time_values.items(), key=lambda x: x[1]
@@ -69,13 +58,6 @@ def create_markdown_and_html_reports(
 ):
     """Auto report creation for performance tests in .md and .html formats."""
 
-    if configurations_insert_time_values is None:
-        configurations_insert_time_values = {
-            "first_setup": (3, 4),
-            "second_setup": (6, 7),
-            "third_setup": (6, 7),
-        }
-
     data = sorted(configurations_insert_time_values.items(), key=lambda x: x[1])
 
     header = "# Performance tests report\n\n"
@@ -96,21 +78,3 @@ def create_markdown_and_html_reports(
     with open(f"performance_reports/{test_results_file_name}.md", "w") as f:
         f.write(header + table + min_insert_time_report)
 
-    html_header = markdown.markdown(header)
-
-    html_table = markdown.markdown(table, extensions=["tables"])
-
-    html_string = markdown.markdown(min_insert_time_report)
-
-    with open(f"performance_reports/{test_results_file_name}.html", "w") as f:
-        f.write(html_header + html_table + html_string)
-
-
-if __name__ == "__main__":
-    print(os.path.abspath(__file__))
-    if not os.path.exists(
-        f"{os.path.dirname(os.path.abspath(__file__))}/../../performance_reports/"
-        f"test_file.csv"
-    ):
-        markdown_and_html_auto_performance_autoreport()
-    provide_resulting_csv_file()
