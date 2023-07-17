@@ -41,7 +41,6 @@ def one_node(self, number_clickhouse_cluster_nodes=9):
 @TestScenario
 def three_nodes(self, number_clickhouse_cluster_nodes=9):
     """Zookeeper 3-node configuration performance test."""
-
     configuration = f"Zookeeper_3_node_{self.context.clickhouse_version}"
 
     keeper_cluster_nodes = self.context.cluster.nodes["zookeeper"][0:3]
@@ -77,6 +76,11 @@ def three_nodes(self, number_clickhouse_cluster_nodes=9):
 @Name("performance zookeeper")
 def feature(self):
     """Performance tests of ZooKeeper."""
+    if (
+        self.context.ssl == "true"
+    ):
+        xfail("ZooKeeper ssl is not supported by tests")
+
     with Given("I choose Clickhouse cluster for tests"):
         self.context.cluster_name = "'Cluster_3shards_with_3replicas'"
 
