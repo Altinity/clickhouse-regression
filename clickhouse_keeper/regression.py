@@ -25,6 +25,7 @@ def argparser(parser):
         default=False,
     )
 
+
 xfails = {
     # fips
     ":/:/:/:/:cipher ECDHE-ECDSA-AES256-GCM-SHA384 should work": [
@@ -66,6 +67,12 @@ xfails = {
     "fips/:/:/connection with at least one FIPS compatible cipher should work, ciphers: ECDHE-ECDSA-AES128-GCM-SHA256 :": [
         (Fail, "not supported by SSL library")
     ],
+    "ports ssl fips/:/:/:cipher ECDHE-ECDSA-AES256-GCM-SHA384 should work": [
+        (Fail, "not supported by SSL library")
+    ],
+    "ports ssl fips/:/:/:cipher ECDHE-ECDSA-AES128-GCM-SHA256 should work": [
+        (Fail, "not supported by SSL library")
+    ],
 }
 
 
@@ -93,7 +100,13 @@ def regression(
 ):
     """ClickHouse regression when using clickhouse-keeper."""
     nodes = {
-        "zookeeper": ("zookeeper1", "zookeeper2", "zookeeper3", "zookeeper", "zookeeper-fips"),
+        "zookeeper": (
+            "zookeeper1",
+            "zookeeper2",
+            "zookeeper3",
+            "zookeeper",
+            "zookeeper-fips",
+        ),
         "bash_tools": ("bash_tools"),
         "clickhouse": (
             "clickhouse1",
@@ -173,12 +186,7 @@ def regression(
             )
             Feature(run=load("clickhouse_keeper.tests.servers_start_up", "feature"))
 
-            Feature(
-                run=load("clickhouse_keeper.tests.fips_ssl", "feature")
-            )
-            Feature(
-                run=load("clickhouse_keeper.tests.fips_ssl_server", "feature")
-            )
+            Feature(run=load("clickhouse_keeper.tests.ports_ssl_fips", "feature"))
 
         else:
             create_3_3_cluster_config()

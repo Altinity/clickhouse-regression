@@ -6,8 +6,8 @@ from helpers.common import *
 fips_compatible_tlsv1_2_cipher_suites = [
     "ECDHE-RSA-AES128-GCM-SHA256",
     "ECDHE-RSA-AES256-GCM-SHA384",
-    # "ECDHE-ECDSA-AES128-GCM-SHA256",
-    # "ECDHE-ECDSA-AES256-GCM-SHA384",
+    "ECDHE-ECDSA-AES128-GCM-SHA256",
+    "ECDHE-ECDSA-AES256-GCM-SHA384",
     "AES128-GCM-SHA256",
     "AES256-GCM-SHA384",
 ]
@@ -74,6 +74,40 @@ all_ciphers = [
     "PSK-AES128-CBC-SHA256",
     "PSK-AES128-CBC-SHA",
 ]
+
+
+@TestScenario
+def check_clickhouse_connection_to_keeper(self, node=None, message="keeper"):
+    """Check ClickHouse connection to Clickhouse Keeper."""
+
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    with Given("I check that ClickHouse is connected to Keeper"):
+        node.query(
+            "SELECT * FROM system.zookeeper WHERE path = '/' FORMAT JSON",
+            message=message,
+        )
+
+
+@TestFeature
+def openssl_check(self, node=None, message="New, TLSv1.2, Cipher is "):
+    """Check ClickHouse connection to Clickhouse Keeper on port is ssl."""
+
+    if node is None:
+        node = self.context.cluster.node("clickhouse1")
+
+    retry(node.query, timeout=300, delay=10)("SELECT 1", message="1", exitcode=0)
+
+    ports_list = ["9440", "9281", "9010", "9444", "8443"]
+
+    for port in ports_list:
+        with Check(f"port:{port}"):
+            with Then(f"I make openssl check"):
+                node.cmd(
+                    f'openssl s_client -connect clickhouse1:{port} <<< "Q"',
+                    message=message,
+                )
 
 
 @TestOutline
@@ -152,7 +186,7 @@ def server_connection_openssl_client(self, port, tls1_2_enabled=True):
 
 
 @TestFeature
-def openssl_check(self, node=None):
+def server_connection_openssl_client_check(self, node=None):
     """Check ClickHouse connection on all ports is ssl."""
 
     if node is None:
@@ -312,9 +346,9 @@ def tcp_connection_check(self, node=None):
 
 
 @TestFeature
-@Name("FIPS SSL server")
+@Name("ports ssl fips")
 def feature(self):
-    """Clickhouse Keeper FIPS is using the correct cyphers, and FIPS has compatible TCP connections."""
+    """Different checks for FIPS ssl connections on ports for Clickhouse Keeper."""
     cluster = self.context.cluster
 
     start_mixed_keeper_ssl(
@@ -325,15 +359,15 @@ def feature(self):
 
     with Pool(1) as executor:
         try:
-            for feature in loads(current_module(), Feature):
-                if not feature.name.endswith("FIPS SSL server"):
-                    Feature(test=feature, parallel=True, executor=executor)()
+            for scenario in loads(current_module(), Scenario):
+                Feature(test=scenario, parallel=True, executor=executor)()
         finally:
             join()
 
     with Pool(1) as executor:
         try:
-            for scenario in loads(current_module(), Scenario):
-                Feature(test=scenario, parallel=True, executor=executor)()
+            for feature in loads(current_module(), Feature):
+                if not feature.name.endswith("ports ssl fips"):
+                    Feature(test=feature, parallel=True, executor=executor)()
         finally:
             join()
