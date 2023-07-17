@@ -4,8 +4,6 @@ from clickhouse_keeper.tests.performance_files.performance_steps import *
 @TestScenario
 def one_node(self, number_clickhouse_cluster_nodes=9):
     """ZooKeeper 1-node configuration performance test."""
-    if self.context.three_nodes:
-        xfail("three nodes mode applied")
 
     configuration = f"Zookeeper_1_node_{self.context.clickhouse_version}"
 
@@ -16,9 +14,6 @@ def one_node(self, number_clickhouse_cluster_nodes=9):
     ]
 
     try:
-        if self.context.ssl == "true":
-            xfail("ZooKeeper ssl is not supported by tests")
-
         with Given("I stop all unused zookeeper nodes"):
             for node_name in self.context.cluster.nodes["zookeeper"][:3]:
                 self.context.cluster.node(node_name).stop()
@@ -46,8 +41,6 @@ def one_node(self, number_clickhouse_cluster_nodes=9):
 @TestScenario
 def three_nodes(self, number_clickhouse_cluster_nodes=9):
     """Zookeeper 3-node configuration performance test."""
-    if self.context.one_node:
-        xfail("one node mode applied")
 
     configuration = f"Zookeeper_3_node_{self.context.clickhouse_version}"
 
@@ -57,9 +50,6 @@ def three_nodes(self, number_clickhouse_cluster_nodes=9):
         :number_clickhouse_cluster_nodes
     ]
     try:
-        if self.context.ssl == "true":
-            xfail("ZooKeeper ssl is not supported by tests")
-
         with Given("I stop all unused zookeeper nodes"):
             for node_name in self.context.cluster.nodes["zookeeper"][3:4]:
                 self.context.cluster.node(node_name).stop()
@@ -90,5 +80,10 @@ def feature(self):
     with Given("I choose Clickhouse cluster for tests"):
         self.context.cluster_name = "'Cluster_3shards_with_3replicas'"
 
-    for scenario in loads(current_module(), Scenario):
-        scenario()
+    if self.context.one_node:
+        Scenario(run=one_node)
+    elif self.context.one_node:
+        Scenario(run=three_nodes)
+    else:
+        for scenario in loads(current_module(), Scenario):
+            scenario()

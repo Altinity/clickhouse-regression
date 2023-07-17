@@ -6,8 +6,6 @@ def standalone_one_node(
     self, number_clickhouse_cluster_nodes=9, number_of_clickhouse_keeper_nodes=1
 ):
     """Standalone ClickHouse Keeper 1-node configuration performance test."""
-    if self.context.three_nodes:
-        xfail("three nodes mode applied")
 
     configuration = f"Standalone_1_node_CH_keeper_{'ssl' if self.context.ssl == 'true' else ''}_{self.context.clickhouse_version}"
 
@@ -39,8 +37,6 @@ def mixed_one_node(
     self, number_clickhouse_cluster_nodes=9, number_of_clickhouse_keeper_nodes=1
 ):
     """Mixed ClickHouse Keeper 1-node configuration performance test."""
-    if self.context.three_nodes:
-        xfail("three nodes mode applied")
 
     configuration = f"Mixed_1_node_CH_keeper_{'ssl' if self.context.ssl == 'true' else ''}_{self.context.clickhouse_version}"
 
@@ -72,12 +68,10 @@ def mixed_one_node(
 
 
 @TestScenario
-def standalone_three_node(
+def standalone_three_nodes(
     self, number_clickhouse_cluster_nodes=9, number_of_clickhouse_keeper_nodes=3
 ):
     """Standalone ClickHouse Keeper 3-node configuration performance test."""
-    if self.context.one_node:
-        xfail("one node mode applied")
 
     configuration = f"Standalone_3_node_CH_keeper_{'ssl' if self.context.ssl == 'true' else ''}_{self.context.clickhouse_version}"
 
@@ -105,12 +99,10 @@ def standalone_three_node(
 
 
 @TestScenario
-def mixed_three_node(
+def mixed_three_nodes(
     self, number_clickhouse_cluster_nodes=9, number_of_clickhouse_keeper_nodes=3
 ):
     """Mixed Keeper 3-node configuration performance test."""
-    if self.context.one_node:
-        xfail("one node mode applied")
 
     configuration = f"Mixed_3_node_CH_keeper_{'ssl' if self.context.ssl == 'true' else ''}_{self.context.clickhouse_version}"
 
@@ -150,5 +142,12 @@ def feature(self):
     with Given("I choose Clickhouse cluster for tests"):
         self.context.cluster_name = "'Cluster_3shards_with_3replicas'"
 
-    for scenario in loads(current_module(), Scenario):
-        scenario()
+    if self.context.one_node:
+        Scenario(run=standalone_one_node)
+        Scenario(run=mixed_one_node)
+    elif self.context.one_node:
+        Scenario(run=standalone_three_nodes)
+        Scenario(run=mixed_three_nodes)
+    else:
+        for scenario in loads(current_module(), Scenario):
+            scenario()
