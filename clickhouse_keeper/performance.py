@@ -105,11 +105,6 @@ def regression(
             test_features = ["performance_keeper", "performance_zookeeper"]
 
             for test_feature in test_features:
-                if (
-                    self.context.ssl == "true"
-                    and test_feature == "performance_zookeeper"
-                ):
-                    xfail("ZooKeeper ssl is not supported by tests")
                 with Cluster(
                     local,
                     clickhouse_binary_path=clickhouse_binary_path,
