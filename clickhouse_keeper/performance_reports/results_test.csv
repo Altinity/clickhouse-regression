@@ -1,0 +1,20 @@
+repeats,1,inserts,1
+all setups
+configuration:,Mixed_1_node_CH_keeper__23.3.5.10.altinitystable,Standalone_1_node_CH_keeper_ssl_23.3.5.10.altinitystable,Mixed_1_node_CH_keeper_ssl_23.3.5.10.altinitystable,Standalone_1_node_CH_keeper__23.3.5.10.altinitystable
+Mixed_1_node_CH_keeper__23.3.5.10.altinitystable,0,-9,-12,-77
+Standalone_1_node_CH_keeper_ssl_23.3.5.10.altinitystable,8,0,-3,-62
+Mixed_1_node_CH_keeper_ssl_23.3.5.10.altinitystable,11,3,0,-57
+Standalone_1_node_CH_keeper__23.3.5.10.altinitystable,43,38,36,0
+ 
+ssl
+configuration:,Standalone_1_node_CH_keeper_ssl_23.3.5.10.altinitystable,Mixed_1_node_CH_keeper_ssl_23.3.5.10.altinitystable
+Mixed_1_node_CH_keeper__23.3.5.10.altinitystable,-9,-12
+Standalone_1_node_CH_keeper__23.3.5.10.altinitystable,38,36
+ 
+Zookeeper
+configuration:
+Mixed_1_node_CH_keeper__23.3.5.10.altinitystable
+Standalone_1_node_CH_keeper_ssl_23.3.5.10.altinitystable
+Mixed_1_node_CH_keeper_ssl_23.3.5.10.altinitystable
+Standalone_1_node_CH_keeper__23.3.5.10.altinitystable
+ 

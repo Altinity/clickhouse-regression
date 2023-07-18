@@ -7,7 +7,7 @@ def standalone_one_node(
 ):
     """Standalone ClickHouse Keeper 1-node configuration performance test."""
 
-    configuration = f"Standalone_1_node_CH_keeper_{'ssl' if self.context.ssl == 'true' else ''}_{self.context.clickhouse_version}"
+    configuration = f"Keeper_standalone_1_node_{'ssl_' if self.context.ssl == 'true' else ''}{self.context.clickhouse_version}"
 
     control_nodes = self.context.cluster.nodes["clickhouse"][
         number_clickhouse_cluster_nodes : number_clickhouse_cluster_nodes
@@ -38,7 +38,7 @@ def mixed_one_node(
 ):
     """Mixed ClickHouse Keeper 1-node configuration performance test."""
 
-    configuration = f"Mixed_1_node_CH_keeper_{'ssl' if self.context.ssl == 'true' else ''}_{self.context.clickhouse_version}"
+    configuration = f"Keeper_mixed_1_node_{'ssl_' if self.context.ssl == 'true' else ''}{self.context.clickhouse_version}"
 
     control_nodes = self.context.cluster.nodes["clickhouse"][
         number_clickhouse_cluster_nodes
@@ -73,7 +73,7 @@ def standalone_three_nodes(
 ):
     """Standalone ClickHouse Keeper 3-node configuration performance test."""
 
-    configuration = f"Standalone_3_node_CH_keeper_{'ssl' if self.context.ssl == 'true' else ''}_{self.context.clickhouse_version}"
+    configuration = f"Keeper_standalone_3_nodes_{'ssl_' if self.context.ssl == 'true' else ''}{self.context.clickhouse_version}"
 
     control_nodes = self.context.cluster.nodes["clickhouse"][
         number_clickhouse_cluster_nodes : number_clickhouse_cluster_nodes
@@ -104,7 +104,7 @@ def mixed_three_nodes(
 ):
     """Mixed Keeper 3-node configuration performance test."""
 
-    configuration = f"Mixed_3_node_CH_keeper_{'ssl' if self.context.ssl == 'true' else ''}_{self.context.clickhouse_version}"
+    configuration = f"Keeper_mixed_3_nodes_{'ssl_' if self.context.ssl == 'true' else ''}{self.context.clickhouse_version}"
 
     control_nodes = self.context.cluster.nodes["clickhouse"][
         number_clickhouse_cluster_nodes

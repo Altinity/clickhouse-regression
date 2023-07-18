@@ -6,8 +6,14 @@ configurations for local ClickHouse binary. Path to default ClickHouse binary is
 `chown clickhouse:clickhouse /usr/bin/clickhouse` should be applied to work correctly with the default value) 
 
 The performance test scenario is based on inserting into a `bad` table (every row generates coordination cluster
-transaction). It collects insert times and returns the minimum value. After that, it provides a `perfomance_*.csv` file
-with ratio values of all minimum values for all coordination cluster configurations.
+transaction). It collects insert times and returns the minimum value. After that, it provides a `performance_reports/
+perfomance_*.csv` file which contains a table with [Percentage Increase](https://www.investopedia.com/terms/p/percentage-change.asp) 
+values of all minimum values for all coordination cluster configurations can be founded. Also, it generates some 
+additional tables with comparison data:
+
+* ssl vs non-ssl
+* Zookeeper vs Keeper
+* altinitystable vs all-others
 
 Table schema:
 
