@@ -145,7 +145,7 @@ def feature(self):
     if self.context.one_node:
         Scenario(run=standalone_one_node)
         Scenario(run=mixed_one_node)
-    elif self.context.one_node:
+    elif self.context.three_nodes:
         Scenario(run=standalone_three_nodes)
         Scenario(run=mixed_three_nodes)
     else:

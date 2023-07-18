@@ -86,7 +86,7 @@ def feature(self):
 
     if self.context.one_node:
         Scenario(run=one_node)
-    elif self.context.one_node:
+    elif self.context.three_nodes:
         Scenario(run=three_nodes)
     else:
         for scenario in loads(current_module(), Scenario):
