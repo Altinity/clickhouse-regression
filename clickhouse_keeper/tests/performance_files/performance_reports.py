@@ -27,15 +27,20 @@ def create_csv_file(
         comparison_setups = setups
 
         for setup in comparison_setups:
+            min_inserts_times = [" "]
             buffer_list = ["configuration:"]
             for configuration in configurations_sorted_by_min_insert_time:
                 if setup in configuration[0] or setup == setups[0]:
+                    if setup == setups[0]:
+                        min_inserts_times.append(min(configuration[1]))
                     buffer_list.append(configuration[0])
             if (
                     len(buffer_list) != len(configurations_sorted_by_min_insert_time) + 1
                     or setup == setups[0]
             ):
                 writer.writerow([setup])
+                writer.writerow(min_inserts_times)
+
                 writer.writerow(buffer_list)
 
                 for first_configuration in configurations_sorted_by_min_insert_time:
