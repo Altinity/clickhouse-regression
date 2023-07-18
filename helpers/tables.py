@@ -327,7 +327,7 @@ class Table:
 
 @TestStep(Given)
 def create_table(
-    self, engine, columns, name=None, create="CREATE", path=None, drop_sync=False
+    self, engine, columns, name=None, create="CREATE", path=None, drop_sync=False, order_by=None, comment=None, as_select=None, settings=None, empty=None, query_settings=None,
 ):
     """Create or attach a table with specified name and engine."""
     node = current().context.node
@@ -340,14 +340,16 @@ def create_table(
     try:
         if create == "CREATE":
             with By(f"creating table {name}"):
-                engines = {"MergeTree": "ORDER BY tuple()"}
-                query = f"""
-                    CREATE TABLE {name} {columns_def}
-                    Engine = {engine}
-                    """
+                query = (
+                    f"CREATE TABLE {name} {columns_def}\n"
+                    f"ENGINE = {engine}"
+                    ")
 
-                if engine in engines:
-                    query += engines[engine]
+                if order_by is not None:
+                    query += f"\nORDER BY {order_by}"
+
+                if comment is not None:
+                    query += f"\nCOMMENT '{comment}'"
 
                 node.query(
                     query,
