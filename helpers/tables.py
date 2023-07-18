@@ -203,7 +203,8 @@ def generate_tuple_datatype(datatype_list):
 
 def generate_map_datatypes(datatype_list):
     """Generate a list of map datatypes based on the input list.
-    Generates every combination between datatypes that are valid keys and all other provided columns."""
+    Generates every combination between datatypes that are valid keys and all other provided columns.
+    """
     map_list = []
     for key in datatype_list:
         if key.is_valid_map_key:
@@ -339,23 +340,20 @@ def create_table(
     try:
         if create == "CREATE":
             with By(f"creating table {name}"):
-                if engine == 'MergeTree':
-                    node.query(
-                        f"""
-                        CREATE TABLE {name} {columns_def}
-                        Engine = {engine}
-                        ORDER BY tuple()
-                    """,
-                        settings=[("allow_suspicious_low_cardinality_types", 1)],
-                    )
-                else:
-                    node.query(
-                        f"""
-                        CREATE TABLE {name} {columns_def}
-                        Engine = {engine}
-                    """,
-                        settings=[("allow_suspicious_low_cardinality_types", 1)],
-                    )
+                engines = {"MergeTree": "ORDER BY tuple()"}
+                query = f"""
+                    CREATE TABLE {name} {columns_def}
+                    Engine = {engine}
+                    """
+
+                if engine in engines:
+                    query += engines[engine]
+
+                node.query(
+                    query,
+                    settings=[("allow_suspicious_low_cardinality_types", 1)],
+                )
+
         elif create == "ATTACH":
             with By(f"attaching table {name}"):
                 node.query(
