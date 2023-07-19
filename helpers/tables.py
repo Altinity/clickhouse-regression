@@ -327,45 +327,78 @@ class Table:
 
 @TestStep(Given)
 def create_table(
-    self, engine, columns, name=None, create="CREATE", path=None, drop_sync=False, order_by=None, comment=None, as_select=None, settings=None, empty=None, query_settings=None,
+    self,
+    engine,
+    columns,
+    name=None,
+    path=None,
+    drop_sync=False,
+    order_by=None,
+    comment=None,
+    as_select=None,
+    settings=None,
+    empty=None,
 ):
-    """Create or attach a table with specified name and engine."""
-    node = current().context.node
+    """Create a table with specified name and engine."""
+    if settings is None:
+        settings = [("allow_suspicious_low_cardinality_types", 1)]
 
     if name is None:
         name = f"table_{getuid()}"
 
+    node = current().context.node
+
     columns_def = "(" + ",".join([column.full_definition() for column in columns]) + ")"
 
     try:
-        if create == "CREATE":
-            with By(f"creating table {name}"):
-                query = (
-                    f"CREATE TABLE {name} {columns_def}\n"
-                    f"ENGINE = {engine}"
-                    ")
+        with By(f"creating table {name}"):
+            query = f"CREATE TABLE {name} {columns_def}\n" f"ENGINE = {engine}"
 
-                if order_by is not None:
-                    query += f"\nORDER BY {order_by}"
+            if order_by is not None:
+                query += f"\nORDER BY {order_by}"
 
-                if comment is not None:
-                    query += f"\nCOMMENT '{comment}'"
+            if comment is not None:
+                query += f"\nCOMMENT '{comment}'"
 
-                node.query(
-                    query,
-                    settings=[("allow_suspicious_low_cardinality_types", 1)],
-                )
+            if empty is not None:
+                query += f"\nEMPTY AS {empty}"
 
-        elif create == "ATTACH":
-            with By(f"attaching table {name}"):
-                node.query(
-                    f"""
+            if as_select is not None:
+                query += f"\nAS SELECT {as_select}"
+
+            node.query(
+                query,
+                settings=settings,
+            )
+
+            yield Table(name, columns, engine)
+
+    finally:
+        with Finally(f"drop the table {name}"):
+            node.query(f"DROP TABLE IF EXISTS {name}{' SYNC' if drop_sync else ''}")
+
+
+@TestStep(Given)
+def attach_table1(
+    self, engine, columns, name=None, path=None, drop_sync=False
+):
+    """Attach a table with specified name and engine."""
+    if name is None:
+        name = f"table_{getuid()}"
+
+    node = current().context.node
+
+    columns_def = "(" + ",".join([column.full_definition() for column in columns]) + ")"
+    try:
+        with By(f"attaching table {name}"):
+            node.query(
+                f"""
                     ATTACH TABLE {name} FROM '{path}' {columns_def}
                     Engine = {engine}
                     """
-                )
+            )
 
-        yield Table(name, columns, engine)
+            yield Table(name, columns, engine)
 
     finally:
         with Finally(f"drop the table {name}"):
