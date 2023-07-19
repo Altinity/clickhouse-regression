@@ -3,7 +3,8 @@
 Performance tests can be launched with `./perfomance.py` command.
 It will start performance tests of all [available coordination cluster]
 configurations for local ClickHouse binary. Path to default ClickHouse binary is `/usr/bin/clickhouse`. (warning:
-`chown clickhouse:clickhouse /usr/bin/clickhouse` should be applied to work correctly with the default value).
+`chown clickhouse:clickhouse /usr/bin/clickhouse` should be applied to work correctly with the default value. Also, for 
+clear runs `rm -rf _instances` should be used to delete all docker-compose volumes information).
 
 The performance test scenario is based on inserting into a `bad` table (every row generates coordination cluster
 transaction). It collects insert times and returns the minimum value. After that, it provides a `performance_reports/
