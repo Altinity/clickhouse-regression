@@ -17,6 +17,7 @@ def insert_into_engine(self):
         table = create_table(
             name=table_name_merge_tree,
             engine="MergeTree",
+            order_by="tuple()",
             columns=generate_all_column_types(include=parquet_test_columns()),
         )
 
@@ -73,10 +74,9 @@ def select_from_engine(self):
     with Given(
         "I attach a table with a `File(Parquet)` engine on top of a Parquet file"
     ):
-        table = create_table(
+        table = attach_table1(
             name=table_name,
             engine="File(Parquet)",
-            create="ATTACH",
             path=table_name,
             columns=table_columns,
         )
@@ -141,10 +141,9 @@ def engine_to_file_to_engine(self):
     with And(
         "I attach a new table on top of the Parquet source file created by the previous table"
     ):
-        table1 = create_table(
+        table1 = attach_table1(
             name=table1_name,
             engine="File(Parquet)",
-            create="ATTACH",
             path=f"/var/lib/clickhouse/user_files/{table1_name}/",
             columns=generate_all_column_types(include=parquet_test_columns()),
         )
@@ -310,6 +309,7 @@ def insert_into_function_manual_cast_types(self):
         table = create_table(
             name=table_name,
             engine="MergeTree",
+            order_by="tuple()",
             columns=generate_all_column_types(include=parquet_test_columns()),
         )
 

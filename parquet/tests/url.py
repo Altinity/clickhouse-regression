@@ -271,6 +271,7 @@ def insert_into_function(self):
         table = create_table(
             name=table_name,
             engine="MergeTree",
+            order_by="tuple()",
             columns=generate_all_column_types(include=parquet_test_columns()),
         )
 
