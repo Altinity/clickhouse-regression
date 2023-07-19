@@ -38,6 +38,8 @@ on:
           - lightweight_delete
           - map_type
           - parquet
+          - parquet_minio
+          - parquet_s3
           - part_moves_between_shards
           - rbac
           - s3
@@ -793,7 +795,7 @@ jobs:
     runs-on: [self-hosted, altinity-amd64]
     timeout-minutes: 180
     env:
-      SUITE: parquet
+      SUITE: parquet_minio
       STORAGE: /minio
     if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet' }}
     steps:
@@ -825,7 +827,7 @@ jobs:
     runs-on: [self-hosted, altinity-amd64]
     timeout-minutes: 180
     env:
-      SUITE: parquet
+      SUITE: parquet_s3
       STORAGE: /aws_s3
     if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet' }}
     steps:
