@@ -795,9 +795,9 @@ jobs:
     runs-on: [self-hosted, altinity-amd64]
     timeout-minutes: 180
     env:
-      SUITE: parquet_minio
+      SUITE: parquet
       STORAGE: /minio
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet' }}
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet_minio' }}
     steps:
       - uses: actions/checkout@v3
 
@@ -827,9 +827,9 @@ jobs:
     runs-on: [self-hosted, altinity-amd64]
     timeout-minutes: 180
     env:
-      SUITE: parquet_s3
+      SUITE: parquet
       STORAGE: /aws_s3
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet' }}
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet_s3' }}
     steps:
       - uses: actions/checkout@v3
 
