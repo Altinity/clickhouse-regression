@@ -13,7 +13,7 @@ mkdir $SUITE/_instances
 
 echo "login to docker"
 pwd
-../retry.sh 60 2 "docker login -u $DOCKER_USERNAME --password $DOCKER_PASSWORD"
+./retry.sh 60 2 "docker login -u $DOCKER_USERNAME --password $DOCKER_PASSWORD"
 
 env
 uname -i
@@ -27,7 +27,7 @@ if [[ $clickhouse_binary_path == "docker"* ]]; then
     if [[ $version == 'latest' ]]; then
         pid=$(docker run -d $docker_image)
         echo $pid
-        ../retry.sh 60 2 "docker exec $pid clickhouse-client -q \"SELECT version()\""
+        ./retry.sh 60 2 "docker exec $pid clickhouse-client -q \"SELECT version()\""
         echo "version=$(docker exec $pid clickhouse-client -q 'SELECT version()')" >> $GITHUB_ENV
         docker stop $pid
     fi
