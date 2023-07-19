@@ -3,12 +3,12 @@
 Performance tests can be launched with `./perfomance.py` command.
 It will start performance tests of all [available coordination cluster]
 configurations for local ClickHouse binary. Path to default ClickHouse binary is `/usr/bin/clickhouse`. (warning:
-`chown clickhouse:clickhouse /usr/bin/clickhouse` should be applied to work correctly with the default value) 
+`chown clickhouse:clickhouse /usr/bin/clickhouse` should be applied to work correctly with the default value).
 
 The performance test scenario is based on inserting into a `bad` table (every row generates coordination cluster
 transaction). It collects insert times and returns the minimum value. After that, it provides a `performance_reports/
 perfomance_*.csv` file which contains a table with [Percentage Increase](https://www.investopedia.com/terms/p/percentage-change.asp) 
-values of all minimum values for all coordination cluster configurations can be founded. Also, it generates some 
+values of all minimum values for all pairs of coordination cluster configurations. Also, it generates some 
 additional tables with comparison data:
 
 * ssl vs non-ssl
@@ -53,17 +53,17 @@ Most usefully are:
 Special `perfomance.py` settings are:
 
 * `--clickhouse-binary-list` to test some special ClickHouse versions
-* `--repeats` number of insert each tests scenario repeats (default: 5)
-* `--inserts` number of inserts into table on one repeat (default: 10000)
+* `--repeats` number of insert each tests scenario repeats (default: 4)
+* `--inserts` number of inserts into table on one repeat (default: 200)
 * `--one-node` disable all three nodes configuration cluster tests
 * `--three-nodes` disable all one node configuration cluster tests
 * `--results-file-name` allow to provide results file name manually (default: performance_{uid}.csv)
 
+Mostly default values for `repeats` and `inserts` were tested, and they are stable. Some other combinations can put the
+table in read only-mode that will interrupt the program run.
 
-As output, `perfomance_*.csv` file with a unique name will be created for every run where numeric cell values are ratios 
-between the min values of insert times for column and row coordination cluster configurations.
-
-The result file can be imported to `Google Sheets`, where `Format-->Conditional formatting-->Color scale` can be applied 
+As output, `performance_reports/perfomance_*.csv` file with a unique name will be created. This result file can be 
+imported to `Google Sheets`, where `Format-->Conditional formatting-->Color scale` can be applied 
 to all numeric cells to receive more readable output.
 
 Color scale setting example:

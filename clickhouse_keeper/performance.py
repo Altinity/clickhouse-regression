@@ -10,7 +10,7 @@ from helpers.cluster import Cluster
 from helpers.common import check_clickhouse_version
 from clickhouse_keeper.tests.steps import *
 from clickhouse_keeper.tests.steps_ssl import *
-from clickhouse_keeper.tests.argparsers import argparser
+from clickhouse_keeper.tests.performance_files.argparsers import argparser
 from clickhouse_keeper.tests.performance_files.performance_reports import *
 
 xfails = {}
