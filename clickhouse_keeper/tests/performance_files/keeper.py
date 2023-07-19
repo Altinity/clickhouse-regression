@@ -136,7 +136,7 @@ def mixed_three_nodes(
 
 
 @TestFeature
-@Name("performance keeper")
+@Name("keeper")
 def feature(self):
     """Performance tests of CLickHouse Keeper."""
     with Given("I choose Clickhouse cluster for tests"):

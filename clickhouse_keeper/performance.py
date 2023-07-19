@@ -11,7 +11,7 @@ from helpers.common import check_clickhouse_version
 from clickhouse_keeper.tests.steps import *
 from clickhouse_keeper.tests.steps_ssl import *
 from clickhouse_keeper.tests.performance_files.argparsers import argparser
-from clickhouse_keeper.tests.performance_files.performance_reports import *
+from clickhouse_keeper.tests.performance_files.reports import *
 
 xfails = {}
 
@@ -25,7 +25,7 @@ ffails = {}
 @XFails(xfails)
 @XFlags(xflags)
 @FFails(ffails)
-@Name("coordination cluster")
+@Name("performance")
 def regression(
     self,
     local,
@@ -102,7 +102,7 @@ def regression(
                 self.context.secure = 0
                 self.context.port = "2181"
 
-            test_features = ["performance_keeper", "performance_zookeeper"]
+            test_features = ["keeper", "zookeeper"]
 
             for test_feature in test_features:
                 with Cluster(

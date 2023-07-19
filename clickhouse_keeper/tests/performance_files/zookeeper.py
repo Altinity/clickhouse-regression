@@ -73,7 +73,7 @@ def three_nodes(self, number_clickhouse_cluster_nodes=9):
 
 
 @TestFeature
-@Name("performance zookeeper")
+@Name("zookeeper")
 def feature(self):
     """Performance tests of ZooKeeper."""
     if self.context.ssl == "true":

@@ -8,12 +8,30 @@ configurations for local ClickHouse binary. Path to default ClickHouse binary is
 The performance test scenario is based on inserting into a `bad` table (every row generates coordination cluster
 transaction). It collects insert times and returns the minimum value. After that, it provides a `performance_reports/
 perfomance_*.csv` file which contains a table with [Percentage Increase](https://www.investopedia.com/terms/p/percentage-change.asp) 
-values of all minimum values for all pairs of coordination cluster configurations. Also, it generates some 
-additional tables with comparison data:
+values of all minimum values for all pairs of coordination cluster configurations. Also, it generates additional tables with comparison data:
 
 * ssl vs non-ssl
 * Zookeeper vs Keeper
 * altinitystable vs all-others
+
+Calculation example:
+
+Formula for all tables is `(min_insert_time(row config)  - min_insert_time(column config)) * 100 / min_insert_time(column config)`
+
+
+
+| config:  | Keeper   | Zookeeper |
+|----------|----------|-----------|
+| Keeper   | Result_1 | Result_2  |
+| Zookeeper| Result_3 | Result_4  |
+
+ (min_insert_time(Keeper) -  min_insert_time(Keeper)*100/ min_insert_time(Keeper)= Result_1
+
+ (min_insert_time(Zookeeper) -  min_insert_time(Keeper))*100/ min_insert_time(Keeper)= Result_3
+
+ (min_insert_time(Keeper) -  min_insert_time(Zookeeper)*100/ min_insert_time(Zookeeper)= Result_2
+
+ (min_insert_time(Zookeeper) -  min_insert_time(Zookeeper))*100/ min_insert_time(Zookeeper)= Result_4
 
 Table schema:
 
@@ -96,17 +114,17 @@ Example to test all [available coordination cluster] with `23.3.5.10.altinitytes
 Example to test Clickhouse Keeper `mixed one node` coordination cluster configuration for vanilla `22.8` ClickHouse version:
 
 ```commandline
-./perfomance.py --only "/coordination cluster/performance keeper/mixed one node/*" --clickhouse-binary-list=docker://clickhouse/clickhouse-server:22.8 --test-to-end -o classic
+./perfomance.py --only "/performance/keeper/mixed one node/*" --clickhouse-binary-list=docker://clickhouse/clickhouse-server:22.8 --test-to-end -o classic
 ```
 
 Available options for `--only`:
 
-* `"/coordination cluster/performance keeper/mixed one node/*"`
-* `"/coordination cluster/performance keeper/mixed three node/*"`
-* `"/coordination cluster/performance keeper/standalone one node/*"`
-* `"/coordination cluster/performance keeper/standalone three node/*"`
-* `"/coordination cluster//performance zookeeper/one node/*"`
-* `"/coordination cluster//performance zookeeper/three node/*"`
+* `"/performance/keeper/mixed one node/*"`
+* `"/performance/keeper/mixed three node/*"`
+* `"/performance/keeper/standalone one node/*"`
+* `"/performance/keeperstandalone three node/*"`
+* `"/performance/zookeeper/one node/*"`
+* `"/performance/zookeeper/three node/*"`
 
 
 # Available Coordination Clusters
