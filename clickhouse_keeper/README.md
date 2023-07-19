@@ -3,17 +3,36 @@
 Performance tests can be launched with `./perfomance.py` command.
 It will start performance tests of all [available coordination cluster]
 configurations for local ClickHouse binary. Path to default ClickHouse binary is `/usr/bin/clickhouse`. (warning:
-`chown clickhouse:clickhouse /usr/bin/clickhouse` should be applied to work correctly with the default value) 
+`chown clickhouse:clickhouse /usr/bin/clickhouse` should be applied to work correctly with the default value. Also, for 
+clear runs `rm -rf _instances` should be used to delete all docker-compose volumes information).
 
 The performance test scenario is based on inserting into a `bad` table (every row generates coordination cluster
 transaction). It collects insert times and returns the minimum value. After that, it provides a `performance_reports/
 perfomance_*.csv` file which contains a table with [Percentage Increase](https://www.investopedia.com/terms/p/percentage-change.asp) 
-values of all minimum values for all coordination cluster configurations can be founded. Also, it generates some 
-additional tables with comparison data:
+values of all minimum values for all pairs of coordination cluster configurations. Also, it generates additional tables with comparison data:
 
 * ssl vs non-ssl
 * Zookeeper vs Keeper
 * altinitystable vs all-others
+
+Calculation example:
+
+Formula for all tables is `(min_insert_time(row config)  - min_insert_time(column config)) * 100 / min_insert_time(column config)`
+
+
+
+| config:  | Keeper   | Zookeeper |
+|----------|----------|-----------|
+| Keeper   | Result_1 | Result_2  |
+| Zookeeper| Result_3 | Result_4  |
+
+ (min_insert_time(Keeper) -  min_insert_time(Keeper)*100/ min_insert_time(Keeper)= Result_1
+
+ (min_insert_time(Zookeeper) -  min_insert_time(Keeper))*100/ min_insert_time(Keeper)= Result_3
+
+ (min_insert_time(Keeper) -  min_insert_time(Zookeeper)*100/ min_insert_time(Zookeeper)= Result_2
+
+ (min_insert_time(Zookeeper) -  min_insert_time(Zookeeper))*100/ min_insert_time(Zookeeper)= Result_4
 
 Table schema:
 
@@ -53,17 +72,17 @@ Most usefully are:
 Special `perfomance.py` settings are:
 
 * `--clickhouse-binary-list` to test some special ClickHouse versions
-* `--repeats` number of insert each tests scenario repeats (default: 5)
-* `--inserts` number of inserts into table on one repeat (default: 10000)
+* `--repeats` number of insert each tests scenario repeats (default: 4)
+* `--inserts` number of inserts into table on one repeat (default: 200)
 * `--one-node` disable all three nodes configuration cluster tests
 * `--three-nodes` disable all one node configuration cluster tests
 * `--results-file-name` allow to provide results file name manually (default: performance_{uid}.csv)
 
+Mostly default values for `repeats` and `inserts` were tested, and they are stable. Some other combinations can put the
+table in read only-mode that will interrupt the program run.
 
-As output, `perfomance_*.csv` file with a unique name will be created for every run where numeric cell values are ratios 
-between the min values of insert times for column and row coordination cluster configurations.
-
-The result file can be imported to `Google Sheets`, where `Format-->Conditional formatting-->Color scale` can be applied 
+As output, `performance_reports/perfomance_*.csv` file with a unique name will be created. This result file can be 
+imported to `Google Sheets`, where `Format-->Conditional formatting-->Color scale` can be applied 
 to all numeric cells to receive more readable output.
 
 Color scale setting example:
@@ -96,17 +115,17 @@ Example to test all [available coordination cluster] with `23.3.5.10.altinitytes
 Example to test Clickhouse Keeper `mixed one node` coordination cluster configuration for vanilla `22.8` ClickHouse version:
 
 ```commandline
-./perfomance.py --only "/coordination cluster/performance keeper/mixed one node/*" --clickhouse-binary-list=docker://clickhouse/clickhouse-server:22.8 --test-to-end -o classic
+./perfomance.py --only "/performance/keeper/mixed one node/*" --clickhouse-binary-list=docker://clickhouse/clickhouse-server:22.8 --test-to-end -o classic
 ```
 
 Available options for `--only`:
 
-* `"/coordination cluster/performance keeper/mixed one node/*"`
-* `"/coordination cluster/performance keeper/mixed three node/*"`
-* `"/coordination cluster/performance keeper/standalone one node/*"`
-* `"/coordination cluster/performance keeper/standalone three node/*"`
-* `"/coordination cluster//performance zookeeper/one node/*"`
-* `"/coordination cluster//performance zookeeper/three node/*"`
+* `"/performance/keeper/mixed one node/*"`
+* `"/performance/keeper/mixed three node/*"`
+* `"/performance/keeper/standalone one node/*"`
+* `"/performance/keeperstandalone three node/*"`
+* `"/performance/zookeeper/one node/*"`
+* `"/performance/zookeeper/three node/*"`
 
 
 # Available Coordination Clusters
