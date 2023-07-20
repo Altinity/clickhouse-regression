@@ -1,7 +1,7 @@
 from testflows.core import *
 
 from clickhouse_keeper.tests.common import *
-from ssl_server.tests.ssl_context import enable_ssl
+from clickhouse_keeper.tests.ssl_context import enable_ssl
 from clickhouse_keeper.requirements import *
 from clickhouse_keeper.tests.steps_ssl_fips import *
 
@@ -505,7 +505,6 @@ def dictionary(self):
 
 @TestScenario
 @Name("log check")
-# @Requirements(RQ_SRS_017_ClickHouse_SSL_Server_FIPS_Compatible_LogMessage("1.0"))
 def log_check(self):
     """Check the server log to ensure ClickHouse is running in FIPS mode."""
     exitcode = self.context.node.command(
@@ -516,11 +515,6 @@ def log_check(self):
 
 @TestScenario
 @Name("check build options")
-# @Requirements(
-#     RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_SystemTable_BuildOptions(
-#         "1.0"
-#     )
-# )
 def build_options_check(self):
     """Check that system.build_options shows that ClickHouse was built using FIPs compliant BoringSSL library."""
     node = self.context.node
@@ -533,36 +527,7 @@ def build_options_check(self):
 
 
 @TestScenario
-@Name("break hash")
-def break_hash(self):
-    """Check that when break_hash.go is run on the binary, it fails the integrity check."""
-    xfail("Binary does not have the section necessary for break-hash")
-    self.context.cluster.command(None, "ls")
-    try:
-        with Given("I apply break-hash to the clickhouse binary"):
-            self.context.cluster.command(
-                None,
-                f"./test_files/break-hash '{self.context.cluster.clickhouse_binary_path}' 'clickhouse-broken-binary'",
-            )
-
-        with When(f"I try to start the broken clickhouse binary"):
-            output = self.context.cluster.command(
-                None, f"./clickhouse-broken-binary server"
-            ).output
-            assert "FIPS integrity test failed." in output, error()
-
-    finally:
-        with Finally("I remove the broken clickhouse binary"):
-            self.context.cluster.command(None, "rm clickhouse-broken-binary")
-
-
-@TestScenario
 @Name("non fips clickhouse client")
-# @Requirements(
-#     RQ_SRS_034_ClickHouse_SSL_FIPS_Compatible_BoringSSL_Clients_TCP_ClickHouseClient_NonFIPS(
-#         "1.0"
-#     )
-# )
 def non_fips_clickhouse_client(self, tls1_2_enabled=True):
     """Check that clickhouse-client from a non-FIPS compliant build is able to connect to a clickhouse server using only FIPS compliant protocols and ciphers."""
     node = self.context.cluster.node("non_fips_clickhouse")
@@ -574,11 +539,6 @@ def non_fips_clickhouse_client(self, tls1_2_enabled=True):
 
 @TestScenario
 @Name("fips clickhouse client")
-# @Requirements(
-#     RQ_SRS_034_ClickHouse_SSL_FIPS_Compatible_BoringSSL_Clients_TCP_ClickHouseClient_FIPS(
-#         "1.0"
-#     )
-# )
 def fips_clickhouse_client(self, tls1_2_enabled=True):
     """Check that clickhouse-client from a FIPS compliant build is able to connect to a clickhouse server using only FIPS compliant protocols and ciphers."""
     node = self.context.cluster.node("clickhouse1")
@@ -590,7 +550,6 @@ def fips_clickhouse_client(self, tls1_2_enabled=True):
 @TestOutline
 def clickhouse_client_tcp(self, tls1_2_enabled=True):
     """Check clickhouse-client TCP using a client from a FIPS and a non FIPS build."""
-
     Scenario("fips clickhouse-client", test=fips_clickhouse_client)(
         tls1_2_enabled=tls1_2_enabled,
     )
@@ -717,9 +676,6 @@ def fips_check(self):
 
 @TestFeature
 @Name("clickhouse server acting as a client")
-# @Requirements(
-#     RQ_SRS_034_ClickHouse_SSL_Server_FIPS_Compatible_BoringSSL_Client_Config("1.0")
-# )
 def server_as_client(self):
     """Check connections from clickhouse-server when it is acting as a client and configured using openSSL client configs."""
     node = self.context.node
@@ -754,20 +710,32 @@ def server_as_client(self):
 @Requirements()
 def feature(self, node="clickhouse1"):
     """Check using SSL configuration to force only FIPS compatible SSL connections."""
-    xfail("not ready")
     cluster = self.context.cluster
     self.context.node = self.context.cluster.node(node)
 
-    start_mixed_keeper_ssl(
-        cluster_nodes=cluster.nodes["clickhouse"][:9],
-        control_nodes=cluster.nodes["clickhouse"][0:3],
-        rest_cluster_nodes=cluster.nodes["clickhouse"][3:9],
-    )
+    self.context.secure_http_port = "8443"
+    self.context.secure_tcp_port = "9440"
 
-    if self.context.fips_mode:
-        Feature(run=fips_check)
-        Scenario(run=break_hash)
+    try:
+        start_standalone_keeper_ssl(
+            cluster_nodes=cluster.nodes["clickhouse"][0:1],
+            control_nodes=cluster.nodes["clickhouse"][1:2],
+        )
 
-    Feature(run=server)
-    Feature(run=clickhouse_client)
-    Feature(run=server_as_client)
+        with And("I stop all zookeepers"):
+            for zookeeper_node in self.context.cluster.nodes["zookeeper"]:
+                self.context.cluster.node(zookeeper_node).stop()
+
+        with Given("I enable SSL"):
+            enable_ssl(my_own_ca_key_passphrase="", server_key_passphrase="")
+
+        if self.context.fips_mode:
+            Feature(run=fips_check)
+
+        Feature(run=server)
+        Feature(run=clickhouse_client)
+        Feature(run=server_as_client)
+    finally:
+        with Finally("I start all stopped all zookeepers"):
+            for zookeeper_node in self.context.cluster.nodes["zookeeper"]:
+                self.context.cluster.node(zookeeper_node).start()

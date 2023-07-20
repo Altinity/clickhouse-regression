@@ -89,7 +89,7 @@ def add_ssl_server_configuration_file(
     entries,
     config=None,
     config_d_dir="/etc/clickhouse-server/config.d",
-    config_file="ssl_server.xml",
+    config_file="ssl_conf.xml",
     timeout=300,
     restart=False,
     node=None,

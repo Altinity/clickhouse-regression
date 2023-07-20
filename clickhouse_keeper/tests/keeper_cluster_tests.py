@@ -697,7 +697,7 @@ def standalone_keepers_1(self):
 
 @TestFeature
 @Requirements(RQ_SRS_024_ClickHouse_Keeper_WriteAvailability("1.0"))
-@Name("keeper_cluster_tests")
+@Name("keeper cluster tests")
 def feature(self):
     """Check 2N+1 cluster configurations for
     clickhouse-keeper and zookeeper.
