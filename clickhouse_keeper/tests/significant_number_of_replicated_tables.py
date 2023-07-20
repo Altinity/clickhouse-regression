@@ -2,7 +2,7 @@ import time
 
 from clickhouse_keeper.requirements import *
 from clickhouse_keeper.tests.steps import *
-from clickhouse_keeper.tests.steps_ssl import *
+from clickhouse_keeper.tests.steps_ssl_fips import *
 from helpers.common import *
 
 
