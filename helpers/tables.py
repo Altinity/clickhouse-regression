@@ -288,6 +288,23 @@ def generate_all_column_types(include=None, exclude=None):
 
     return [Column(datatype) for datatype in all_test_datatypes]
 
+def generate_all_map_column_types():
+    """Generate map columns with every possible datatype."""
+    _basic_datatypes = basic_datatypes()
+
+    null_datatypes = generate_nullable_datatypes(_basic_datatypes)
+    low_cardinality_datatypes = generate_low_card_datatypes(
+        _basic_datatypes + null_datatypes
+    )
+
+    map_datatypes = generate_map_datatypes(
+        _basic_datatypes
+        + null_datatypes
+        + low_cardinality_datatypes
+        + common_complex_datatypes()
+    )
+
+    return [Column(datatype) for datatype in map_datatypes]
 
 class Table:
     def __init__(self, name, columns, engine):
@@ -296,7 +313,7 @@ class Table:
         self.engine = engine
 
     def insert_test_data(
-        self, row_count=10, cardinality=2, node=None, query_settings=None, random=None
+        self, row_count=10, cardinality=2, node=None, query_settings=None, random=None, get_values=False
     ):
         """Insert data necessarily for Parquet testing into the specified table."""
 
@@ -310,19 +327,23 @@ class Table:
             for column in columns
         ]
 
-        total_values = []
+        values = []
 
         for row in range(row_count):
-            total_values.append(
+            values.append(
                 "("
                 + ",".join([next(column_values) for column_values in columns_values])
                 + ")"
             )
 
-        return node.query(
-            f"INSERT INTO {name} VALUES {','.join(total_values)}",
+        result = node.query(
+            f"INSERT INTO {name} VALUES {','.join(values)}",
             settings=query_settings,
         )
+
+        if get_values:
+            return result, {','.join(values)}
+        return result
 
 
 @TestStep(Given)
@@ -379,7 +400,7 @@ def create_table(
 
 
 @TestStep(Given)
-def attach_table1(
+def attach_table(
     self, engine, columns, name=None, path=None, drop_sync=False
 ):
     """Attach a table with specified name and engine."""

@@ -1,7 +1,13 @@
 from testflows.core import *
 from parquet.requirements import *
-from parquet.tests.common import *
+from parquet.tests.common import (
+    generate_all_column_types,
+    parquet_test_columns,
+    check_source_file,
+    execute_query_step,
+)
 from helpers.common import *
+from helpers.tables import create_table, attach_table
 
 
 @TestScenario
@@ -74,7 +80,7 @@ def select_from_engine(self):
     with Given(
         "I attach a table with a `File(Parquet)` engine on top of a Parquet file"
     ):
-        table = attach_table1(
+        table = attach_table(
             name=table_name,
             engine="File(Parquet)",
             path=table_name,
@@ -141,7 +147,7 @@ def engine_to_file_to_engine(self):
     with And(
         "I attach a new table on top of the Parquet source file created by the previous table"
     ):
-        table1 = attach_table1(
+        table1 = attach_table(
             name=table1_name,
             engine="File(Parquet)",
             path=f"/var/lib/clickhouse/user_files/{table1_name}/",
