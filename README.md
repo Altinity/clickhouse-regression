@@ -71,6 +71,8 @@ Specify `suite` variable to select running only specific suites
 | `suite` | `lightweight_delete` | Lightweight Delete suite |
 | `suite` | `map_type` | Map Data Type suite |
 | `suite` | `parquet` | Parquet Data Type suite |
+| `suite` | `parquet_minio` | Parquet MinIO suite |
+| `suite` | `parquet_s3` | Parquet AWS S3 suite |
 | `suite` | `part_moves_between_shards` | Part Moves Between Shards suite |
 | `suite` | `s3` | All S3 (MinIO, AWS, GCS) suites |
 | `suite` | `s3_aws` | S3 AWS suite |
