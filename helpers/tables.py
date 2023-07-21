@@ -288,6 +288,7 @@ def generate_all_column_types(include=None, exclude=None):
 
     return [Column(datatype) for datatype in all_test_datatypes]
 
+
 def generate_all_map_column_types():
     """Generate map columns with every possible datatype."""
     _basic_datatypes = basic_datatypes()
@@ -306,6 +307,7 @@ def generate_all_map_column_types():
 
     return [Column(datatype) for datatype in map_datatypes]
 
+
 class Table:
     def __init__(self, name, columns, engine):
         self.name = name
@@ -313,10 +315,27 @@ class Table:
         self.engine = engine
 
     def insert_test_data(
-        self, row_count=10, cardinality=2, node=None, query_settings=None, random=None, get_values=False
+        self,
+        row_count=10,
+        cardinality=2,
+        node=None,
+        query_settings=None,
+        random=None,
+        get_values=False,
     ):
-        """Insert data necessarily for Parquet testing into the specified table."""
-
+        """Insert data that is necessary for Parquet testing into the specified table.
+        :param row_count: the number of rows to insert into the table.
+            Default: 10
+        :param cardinality: the number of distinct values to generate for each column.
+            Default: 2
+        :param node: the node object to execute the query. If not provided, it will use the current context node.
+        :param query_settings: list of settings to be used for the query.
+            Default: None
+        :param random: an optional random number generator object to control the data generation.
+            Default: None
+        :param get_values: if True, returns the generated values in addition to the query execution result.
+            Default: False
+        """
         if node is None:
             node = current().context.node
 
@@ -342,7 +361,7 @@ class Table:
         )
 
         if get_values:
-            return result, {','.join(values)}
+            return result, {",".join(values)}
         return result
 
 
@@ -400,9 +419,7 @@ def create_table(
 
 
 @TestStep(Given)
-def attach_table(
-    self, engine, columns, name=None, path=None, drop_sync=False
-):
+def attach_table(self, engine, columns, name=None, path=None, drop_sync=False):
     """Attach a table with specified name and engine."""
     if name is None:
         name = f"table_{getuid()}"
