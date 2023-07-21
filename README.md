@@ -191,7 +191,7 @@ If you want to run only a single test such as the `/clickhouse/rbac/syntax/grant
 
 For more information, please see [Filtering](https://testflows.com/handbook/#Filtering) section in the [TestFlows Handbook].
 
-### [How To Debug Why Test Failed]((#table-of-contents)
+### [How To Debug Why Test Failed](#table-of-contents)
 
 #### [Step 1: find which tests failed](#table-of-contents)
 
