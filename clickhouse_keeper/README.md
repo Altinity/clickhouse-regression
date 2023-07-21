@@ -90,6 +90,8 @@ Example to test all available coordination cluster with `23.3.5.10.altinitytest`
 ./perfomance.py --clickhouse-binary-list=docker://altinity/clickhouse-server:23.3.5.10.altinitytest --results-file-name results --test-to-end -o classic
 ```
 
+**Performance test scenario:**
+
 The performance test scenario is based on inserting into a `bad` table (every row generates coordination cluster
 transaction). It collects insert times and returns the minimum value. After that, it provides a `performance_reports/
 perfomance_*.csv` file which contains a table with percentage increase values of all minimum values for all pairs of 
