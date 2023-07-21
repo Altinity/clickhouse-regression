@@ -10,7 +10,7 @@ from helpers.common import *
 
 @TestScenario
 def check_clickhouse_connection_to_keeper(self, node=None, message="keeper"):
-    """Check ClickHouse connection to Clickhouse Keeper."""
+    """Check ClickHouse's connection to ClickHouse Keeper."""
 
     if node is None:
         node = self.context.cluster.node("clickhouse1")
@@ -24,7 +24,7 @@ def check_clickhouse_connection_to_keeper(self, node=None, message="keeper"):
 
 @TestFeature
 def openssl_check(self, node=None, message="New, TLSv1.2, Cipher is "):
-    """Check ClickHouse connection to Clickhouse Keeper on all ports is SSL."""
+    """Check that ClickHouse's connection to ClickHouse Keeper on all ports is SSL."""
 
     if node is None:
         node = self.context.cluster.node("clickhouse1")
@@ -44,7 +44,7 @@ def openssl_check(self, node=None, message="New, TLSv1.2, Cipher is "):
 
 @TestFeature
 def server_connection_openssl_client_check(self, node=None):
-    """Check ClickHouse SSL connection on all ports is working correct with different protocols and cyphers combinations."""
+    """Check that ClickHouse's SSL connection on all ports is working correctly with different protocols and cypher combinations."""
 
     if node is None:
         node = self.context.cluster.node("clickhouse1")
@@ -62,7 +62,7 @@ def server_connection_openssl_client_check(self, node=None):
 
 @TestFeature
 def tcp_connection_check(self, node=None):
-    """Check Clickhouse Keeper FIPS compatible TCP connections for ports available for TCP connection."""
+    """Check Clickhouse Keeper FIPS compatible TCP connections for all ports available for TCP connection."""
 
     if node is None:
         node = self.context.cluster.node("clickhouse1")
