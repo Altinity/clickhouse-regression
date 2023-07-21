@@ -1,5 +1,4 @@
 from clickhouse_keeper.tests.steps import *
-from clickhouse_keeper.tests.steps_ssl_fips import *
 
 
 @TestStep

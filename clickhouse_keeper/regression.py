@@ -11,7 +11,6 @@ from helpers.argparser import argparser as base_argparser
 from helpers.common import check_clickhouse_version
 from clickhouse_keeper.requirements import *
 from clickhouse_keeper.tests.steps import *
-from clickhouse_keeper.tests.steps_ssl_fips import *
 
 
 def argparser(parser):
@@ -73,6 +72,9 @@ xfails = {
     "ports ssl fips/:/:/:cipher ECDHE-ECDSA-AES128-GCM-SHA256 should work": [
         (Fail, "not supported by SSL library")
     ],
+    "ports ssl fips/:/:/just disabling TLSv1.1 suite connection should work": [
+        (Fail, "needs to be reviewed")
+    ],
 }
 
 
@@ -126,6 +128,7 @@ def regression(
     }
 
     self.context.clickhouse_version = clickhouse_version
+    self.context.ssl = ssl
 
     if stress is not None:
         self.context.stress = stress

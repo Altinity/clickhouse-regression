@@ -2,7 +2,6 @@ import time
 
 from clickhouse_keeper.requirements import *
 from clickhouse_keeper.tests.steps import *
-from clickhouse_keeper.tests.steps_ssl_fips import *
 from helpers.common import *
 
 
@@ -470,7 +469,7 @@ def standalone_keepers_3(self):
 
     try:
         if self.context.ssl == "true":
-            start_standalone_keeper_ssl(
+            start_standalone_keeper(
                 cluster_nodes=cluster_nodes, control_nodes=control_nodes
             )
 
@@ -551,7 +550,7 @@ def standalone_keepers_2(self):
 
     try:
         if self.context.ssl == "true":
-            start_standalone_keeper_ssl(
+            start_standalone_keeper(
                 cluster_nodes=cluster_nodes, control_nodes=control_nodes
             )
 
@@ -628,7 +627,7 @@ def standalone_keepers_1(self):
 
     try:
         if self.context.ssl == "true":
-            start_standalone_keeper_ssl(
+            start_standalone_keeper(
                 cluster_nodes=cluster_nodes, control_nodes=control_nodes
             )
 

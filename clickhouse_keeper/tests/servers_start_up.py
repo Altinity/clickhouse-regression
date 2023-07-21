@@ -1,7 +1,6 @@
 import time
 
 from clickhouse_keeper.tests.steps import *
-from clickhouse_keeper.tests.steps_ssl_fips import *
 from clickhouse_keeper.requirements import *
 from helpers.common import *
 
@@ -104,7 +103,7 @@ def standalone_start_up(self):
                         )
 
                 with And("I clean ClickHouse Keeper server nodes"):
-                    clean_coordination_on_all_nodes1()
+                    clean_coordination_on_all_nodes()
 
                 with Given("I create config 3 nodes Keeper server"):
                     create_keeper_cluster_configuration_ssl(
@@ -125,7 +124,7 @@ def standalone_start_up(self):
                     )
 
                 with Given("I start all standalone Keepers nodes"):
-                    start_keepers_ssl(
+                    start_keepers(
                         standalone_keeper_nodes=cluster.nodes["clickhouse"][9:12],
                         manual_cleanup=True,
                     )
@@ -245,7 +244,7 @@ def different_start_up(self):
                 )
         finally:
             with Finally("I clean up"):
-                clean_coordination_on_all_nodes1()
+                clean_coordination_on_all_nodes()
     else:
         cluster = self.context.cluster
         try:
