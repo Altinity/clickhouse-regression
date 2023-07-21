@@ -137,7 +137,7 @@ def help_option(self, node=None):
 
 
 @TestFeature
-@Name("cli_converter")
+@Name("cli converter")
 def feature(self, node="clickhouse1"):
     """Check ClickHouse Keeper converter command line options."""
     self.context.node = self.context.cluster.node(node)

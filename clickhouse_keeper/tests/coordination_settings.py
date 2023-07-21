@@ -695,7 +695,7 @@ def force_sync(self):
 
 
 @TestFeature
-@Name("coordination_settings")
+@Name("coordination settings")
 def feature(self):
     """Check coordination settings to ClickHouse Keeper."""
     if check_clickhouse_version("<23.3")(self):

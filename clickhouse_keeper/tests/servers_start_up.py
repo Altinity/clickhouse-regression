@@ -404,7 +404,7 @@ def different_shared_start_up(self):
 
 @TestFeature
 @Requirements(RQ_SRS_024_ClickHouse_Keeper_Configurations("1.0"))
-@Name("servers_start_up")
+@Name("servers start up")
 def feature(self):
     """Check different ClickHouse server configurations"""
     for scenario in loads(current_module(), Scenario):
