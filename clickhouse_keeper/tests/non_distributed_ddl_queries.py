@@ -200,7 +200,7 @@ def create(self):
 
 
 @TestFeature
-@Name("non_distributed_ddl_queries")
+@Name("non distributed ddl queries")
 def feature(self):
     """
     Check that clickhouse-keeper controlled replicated tables

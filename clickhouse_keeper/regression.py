@@ -11,7 +11,7 @@ from helpers.argparser import argparser as base_argparser
 from helpers.common import check_clickhouse_version
 from clickhouse_keeper.requirements import *
 from clickhouse_keeper.tests.steps import *
-from clickhouse_keeper.tests.steps_ssl import *
+from clickhouse_keeper.tests.steps_ssl_fips import *
 
 
 def argparser(parser):

@@ -2,7 +2,6 @@ import time
 
 from clickhouse_keeper.requirements import *
 from clickhouse_keeper.tests.steps import *
-from clickhouse_keeper.tests.steps_ssl import *
 from helpers.common import *
 
 
@@ -696,7 +695,7 @@ def force_sync(self):
 
 
 @TestFeature
-@Name("coordination_settings")
+@Name("coordination settings")
 def feature(self):
     """Check coordination settings to ClickHouse Keeper."""
     if check_clickhouse_version("<23.3")(self):
