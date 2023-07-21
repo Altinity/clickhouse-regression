@@ -106,7 +106,7 @@ def date_null(self):
 @Requirements(RQ_SRS_037_ClickHouse_SessionTimezone_DateFunctions_ToDateOrZero("1.0"))
 def date_zero(self):
     """Verify that `toDateOrZero`, `toDate32OrZero`, `toDateTimeOrZero` and `toDateTime64OrZero` functions are returning
-     the minimum values when the `session_timezone` setting is applied."""
+    the minimum values when the `session_timezone` setting is applied."""
     node = self.context.cluster.node("clickhouse1")
 
     list_of_functions = [
