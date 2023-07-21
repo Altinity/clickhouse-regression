@@ -312,7 +312,7 @@ def alter_modify_column_remove(self):
 
 @TestFeature
 @Requirements(RQ_SRS_024_ClickHouse_Keeper_ClickHouseOperation_Alter("1.0"))
-@Name("alter_column_distributed")
+@Name("alter column distributed")
 def feature(self):
     """Check data synchronization between replicas for different ALTER column DDL queries."""
     with Given("I start mixed ClickHouse cluster"):

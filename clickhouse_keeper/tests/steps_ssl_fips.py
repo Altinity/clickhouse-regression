@@ -1,9 +1,11 @@
+import time
+
 from testflows.core import *
 from helpers.common import create_xml_config_content, add_config, add_invalid_config
-import time
 from helpers.common import getuid, instrument_clickhouse_server_log
 from testflows.asserts import error
 from testflows.connect import Shell
+
 
 remote_entries_ssl = {
     "server": {
@@ -61,7 +63,7 @@ _entries_client_ssl = {
 
 @TestStep(Given)
 def create_client_ssl(
-    self, config_d_dir="/etc/clickhouse-client/", config_file="config.xml"
+    self, config_d_dir="/etc/clickhouse-client/", config_file="config.xml", nodes=None
 ):
     try:
         with Given("I create remote config"):
@@ -69,7 +71,7 @@ def create_client_ssl(
                 root="config",
                 config_d_dir=config_d_dir,
                 config_file=config_file,
-                nodes=None,
+                nodes=nodes,
                 entries=_entries_client_ssl,
                 restart=False,
                 modify=True,
@@ -84,7 +86,10 @@ def create_client_ssl(
 
 @TestStep(Given)
 def create_open_ssl(
-    self, config_d_dir="/etc/clickhouse-server/config.d/", config_file="ssl_conf.xml"
+    self,
+    config_d_dir="/etc/clickhouse-server/config.d/",
+    config_file="ssl_conf.xml",
+    nodes=None,
 ):
     with Given("I create remote config"):
         try:
@@ -92,7 +97,7 @@ def create_open_ssl(
                 section="openSSL",
                 config_d_dir=config_d_dir,
                 config_file=config_file,
-                nodes=None,
+                nodes=nodes,
                 entries=_entries_open_ssl,
                 restart=False,
                 modify=True,
@@ -460,7 +465,7 @@ def start_mixed_keeper_ssl(
         with And("I create client openSSL config"):
             create_client_ssl()
 
-        with And("I create mixed 3 nodes Keeper server config file"):
+        with And("I create mixed Keeper server config files"):
             create_keeper_cluster_configuration_ssl(
                 nodes=control_nodes,
                 test_setting_name=test_setting_name,
@@ -640,203 +645,6 @@ def openssl_check_step(self, node=None, port="9440"):
     )
 
 
-# @TestStep(Then)
-# def openssl_client_connection(
-#     self,
-#     options="",
-#     port=None,
-#     node=None,
-#     hostname=None,
-#     success=True,
-#     message=None,
-#     messages=None,
-#     exitcode=None,
-# ):
-#     """Check SSL connection using openssl s_client utility."""
-#     if node is None:
-#         node = self.context.node
-#
-#     if port is None:
-#         port = self.context.connection_port
-#
-#     if hostname is None:
-#         hostname = node.name
-#
-#     if exitcode is None:
-#         if success:
-#             exitcode = 0
-#         else:
-#             exitcode = "!= 0"
-#
-#     node.command(
-#         f'openssl s_client -brief {options} -connect {hostname}:{port} <<< "Q"',
-#         message=message,
-#         messages=messages,
-#         exitcode=exitcode,
-#     )
-#
-
-
-@TestStep(Then)
-def openssl_client_connection(
-    self,
-    options="",
-    port=None,
-    node=None,
-    hostname=None,
-    success=True,
-    message=None,
-    messages=None,
-    exitcode=None,
-):
-    """Check SSL connection using openssl s_client utility."""
-    if node is None:
-        node = self.context.cluster.node("clickhouse1")
-
-    if port is None:
-        port = self.context.connection_port
-
-    if hostname is None:
-        hostname = node.name
-
-    if exitcode is None:
-        if success:
-            exitcode = 0
-        else:
-            exitcode = "!= 0"
-
-    node.command(
-        f'openssl s_client -brief {options} -connect {hostname}:{port} <<< "Q"',
-        message=message,
-        messages=messages,
-        exitcode=exitcode,
-    )
-
-
-@TestStep(Given)
-def add_ssl_clickhouse_client_configuration_file(
-    self,
-    entries,
-    config=None,
-    config_d_dir="/etc/clickhouse-client/config.d/",
-    config_file="fips.xml",
-    timeout=300,
-    restart=False,
-    node=None,
-):
-    """Add clickhouse-client SSL configuration file.
-
-    <config>
-        <openSSL>
-            <client> <!-- Used for connection to server's secure tcp port -->
-                <loadDefaultCAFile>true</loadDefaultCAFile>
-                <cacheSessions>true</cacheSessions>
-                <disableProtocols>sslv2,sslv3</disableProtocols>
-                <preferServerCiphers>true</preferServerCiphers>
-                <!-- Use for self-signed: <verificationMode>none</verificationMode> -->
-                <invalidCertificateHandler>
-                    <!-- Use for self-signed: <name>AcceptCertificateHandler</name> -->
-                    <name>RejectCertificateHandler</name>
-                </invalidCertificateHandler>
-            </client>
-        </openSSL>
-    </config>
-    """
-    if node is None:
-        node = self.context.cluster.node("clickhouse1")
-
-    entries = {"secure": "true", "openSSL": {"client": entries}}
-    if config is None:
-        config = create_xml_config_content(
-            entries, config_file=config_file, config_d_dir=config_d_dir, root="config"
-        )
-
-    with When("I add the config", description=config.path):
-        node.command(f"mkdir -p {config_d_dir}", exitcode=0)
-        command = f"cat <<HEREDOC > {config.path}\n{config.content}\nHEREDOC"
-        node.command(command, steps=False, exitcode=0)
-
-    try:
-        with When("I add the config", description=config.path):
-            node.command(f"mkdir -p {config_d_dir}", exitcode=0)
-            command = f"cat <<HEREDOC > {config.path}\n{config.content}\nHEREDOC"
-            node.command(command, steps=False, exitcode=0)
-
-        yield
-    finally:
-        with Finally(f"I remove {config.name} on {node.name}"):
-            with By("deleting the config file", description=config.path):
-                node.command(f"rm -rf {config.path}", exitcode=0)
-
-
-@TestStep(Then)
-def clickhouse_client_connection(
-    self,
-    options=None,
-    port=None,
-    node=None,
-    hostname=None,
-    success=True,
-    message=None,
-    messages=None,
-    exitcode=None,
-    insecure=True,
-    prefer_server_ciphers=False,
-):
-    """Check SSL TCP connection using clickhouse-client utility.
-
-    supported configuration options:
-        <verificationMode>none|relaxed|strict|once</verificationMode>
-        <cipherList>ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH</cipherList>
-        <preferServerCiphers>true|false</preferServerCiphers>
-        <requireTLSv1>true|false</requireTLSv1>
-        <requireTLSv1_1>true|false</requireTLSv1_1>
-        <requireTLSv1_2>true|false</requireTLSv1_2>
-        <requireTLSv1_3>true|false</requireTLSv1_3>
-        <disableProtocols>sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_2,tlsv1_3</disableProtocols>
-    """
-    if node is None:
-        node = self.context.cluster.node("clickhouse1")
-
-    if port is None:
-        port = self.context.connection_port
-
-    if hostname is None:
-        hostname = node.name
-
-    if options is None:
-        options = {
-            "loadDefaultCAFile": "false",
-            "caConfig": "/etc/clickhouse-server/config.d/altinity_blog_ca.crt",
-        }
-    else:
-        options["loadDefaultCAFile"] = "false"
-        options["caConfig"] = "/etc/clickhouse-server/config.d/altinity_blog_ca.crt"
-
-    if exitcode is None:
-        if success:
-            exitcode = 0
-        else:
-            exitcode = "!= 0"
-
-    if insecure:
-        options["verificationMode"] = "none"
-
-    options["preferServerCiphers"] = "true" if prefer_server_ciphers else "false"
-
-    with Given("custom clickhouse-client SSL configuration"):
-        add_ssl_clickhouse_client_configuration_file(entries=options)
-
-    output = node.command(
-        f'clickhouse client -s --verbose --host {hostname} --port {port} -q "SELECT 1"',
-        message=message,
-        messages=messages,
-        exitcode=exitcode,
-    ).output
-
-    return output
-
-
 @TestStep(Given)
 def start_keepers(self, standalone_keeper_nodes=None, manual_cleanup=False):
     """Start Keeper services.
@@ -955,7 +763,7 @@ def start_standalone_keeper_ssl(
         with And("I create client openSSL config"):
             create_client_ssl()
 
-        with And("I create standalone 3 nodes Keeper server config file"):
+        with And("I create standalone Keeper server config files"):
             create_keeper_cluster_configuration_ssl(
                 nodes=control_nodes,
                 test_setting_name=test_setting_name,
@@ -991,126 +799,161 @@ def start_standalone_keeper_ssl(
                     time.sleep(5)
             clean_coordination_on_all_nodes1()
 
+# @TestStep(Given)
+# def add_ssl_clickhouse_client_configuration_file(
+#     self,
+#     entries,
+#     config=None,
+#     config_d_dir="/etc/clickhouse-client/config.d/",
+#     config_file="fips.xml",
+#     timeout=300,
+#     restart=False,
+#     node=None,
+# ):
+#     """Add clickhouse-client SSL configuration file.
+#
+#     <config>
+#         <openSSL>
+#             <client> <!-- Used for connection to server's secure tcp port -->
+#                 <loadDefaultCAFile>true</loadDefaultCAFile>
+#                 <cacheSessions>true</cacheSessions>
+#                 <disableProtocols>sslv2,sslv3</disableProtocols>
+#                 <preferServerCiphers>true</preferServerCiphers>
+#                 <!-- Use for self-signed: <verificationMode>none</verificationMode> -->
+#                 <invalidCertificateHandler>
+#                     <!-- Use for self-signed: <name>AcceptCertificateHandler</name> -->
+#                     <name>RejectCertificateHandler</name>
+#                 </invalidCertificateHandler>
+#             </client>
+#         </openSSL>
+#     </config>
+#     """
+#     if node is None:
+#         node = self.context.cluster.node("clickhouse1")
+#
+#     entries = {"secure": "true", "openSSL": {"client": entries}}
+#     if config is None:
+#         config = create_xml_config_content(
+#             entries, config_file=config_file, config_d_dir=config_d_dir, root="config"
+#         )
+#
+#     with When("I add the config", description=config.path):
+#         node.command(f"mkdir -p {config_d_dir}", exitcode=0)
+#         command = f"cat <<HEREDOC > {config.path}\n{config.content}\nHEREDOC"
+#         node.command(command, steps=False, exitcode=0)
+#
+#     # try:
+#     #     with When("I add the config", description=config.path):
+#     #         node.command(f"mkdir -p {config_d_dir}", exitcode=0)
+#     #         command = f"cat <<HEREDOC > {config.path}\n{config.content}\nHEREDOC"
+#     #         node.command(command, steps=False, exitcode=0)
+#     #
+#     #     yield
+#     # finally:
+#     #     with Finally(f"I remove {config.name} on {node.name}"):
+#     #         with By("deleting the config file", description=config.path):
+#     #             node.command(f"rm -rf {config.path}", exitcode=0)
 
-@TestStep(Given)
-def add_ssl_clickhouse_client_configuration_file(
-    self,
-    entries,
-    config=None,
-    config_d_dir="/etc/clickhouse-client/config.d/",
-    config_file="fips.xml",
-    timeout=300,
-    restart=False,
-    node=None,
-):
-    """Add clickhouse-client SSL configuration file.
 
-    <config>
-        <openSSL>
-            <client> <!-- Used for connection to server's secure tcp port -->
-                <loadDefaultCAFile>true</loadDefaultCAFile>
-                <cacheSessions>true</cacheSessions>
-                <disableProtocols>sslv2,sslv3</disableProtocols>
-                <preferServerCiphers>true</preferServerCiphers>
-                <!-- Use for self-signed: <verificationMode>none</verificationMode> -->
-                <invalidCertificateHandler>
-                    <!-- Use for self-signed: <name>AcceptCertificateHandler</name> -->
-                    <name>RejectCertificateHandler</name>
-                </invalidCertificateHandler>
-            </client>
-        </openSSL>
-    </config>
-    """
-    if node is None:
-        node = self.context.cluster.node("clickhouse1")
+# @TestStep(Then)
+# def clickhouse_client_connection(
+#     self,
+#     options=None,
+#     port=None,
+#     node=None,
+#     hostname=None,
+#     success=True,
+#     message=None,
+#     messages=None,
+#     exitcode=None,
+#     insecure=True,
+#     prefer_server_ciphers=False,
+# ):
+#     """Check SSL TCP connection using clickhouse-client utility.
+#
+#     supported configuration options:
+#         <verificationMode>none|relaxed|strict|once</verificationMode>
+#         <cipherList>ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH</cipherList>
+#         <preferServerCiphers>true|false</preferServerCiphers>
+#         <requireTLSv1>true|false</requireTLSv1>
+#         <requireTLSv1_1>true|false</requireTLSv1_1>
+#         <requireTLSv1_2>true|false</requireTLSv1_2>
+#         <requireTLSv1_3>true|false</requireTLSv1_3>
+#         <disableProtocols>sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_2,tlsv1_3</disableProtocols>
+#     """
+#     if node is None:
+#         node = self.context.cluster.node("clickhouse1")
+#
+#     if port is None:
+#         port = self.context.connection_port
+#
+#     if hostname is None:
+#         hostname = node.name
+#
+#     if options is None:
+#         options = {
+#             "loadDefaultCAFile": "false",
+#             "caConfig": "/etc/clickhouse-server/config.d/altinity_blog_ca.crt",
+#         }
+#     else:
+#         options["loadDefaultCAFile"] = "false"
+#         options["caConfig"] = "/etc/clickhouse-server/config.d/altinity_blog_ca.crt"
+#
+#     if exitcode is None:
+#         if success:
+#             exitcode = 0
+#         else:
+#             exitcode = "!= 0"
+#
+#     if insecure:
+#         options["verificationMode"] = "none"
+#
+#     options["preferServerCiphers"] = "true" if prefer_server_ciphers else "false"
+#
+#     with Given("custom clickhouse-client SSL configuration"):
+#         add_ssl_clickhouse_client_configuration_file(entries=options)
+#
+#     output = node.command(
+#         f'clickhouse client -s --verbose --host {hostname} --port {port} -q "SELECT 1"',
+#         message=message,
+#         messages=messages,
+#         exitcode=exitcode,
+#     ).output
+#
+#     return output
 
-    entries = {"secure": "true", "openSSL": {"client": entries}}
-    if config is None:
-        config = create_xml_config_content(
-            entries, config_file=config_file, config_d_dir=config_d_dir, root="config"
-        )
 
-    with When("I add the config", description=config.path):
-        node.command(f"mkdir -p {config_d_dir}", exitcode=0)
-        command = f"cat <<HEREDOC > {config.path}\n{config.content}\nHEREDOC"
-        node.command(command, steps=False, exitcode=0)
-
-    # try:
-    #     with When("I add the config", description=config.path):
-    #         node.command(f"mkdir -p {config_d_dir}", exitcode=0)
-    #         command = f"cat <<HEREDOC > {config.path}\n{config.content}\nHEREDOC"
-    #         node.command(command, steps=False, exitcode=0)
-    #
-    #     yield
-    # finally:
-    #     with Finally(f"I remove {config.name} on {node.name}"):
-    #         with By("deleting the config file", description=config.path):
-    #             node.command(f"rm -rf {config.path}", exitcode=0)
-
-
-@TestStep(Then)
-def clickhouse_client_connection(
-    self,
-    options=None,
-    port=None,
-    node=None,
-    hostname=None,
-    success=True,
-    message=None,
-    messages=None,
-    exitcode=None,
-    insecure=True,
-    prefer_server_ciphers=False,
-):
-    """Check SSL TCP connection using clickhouse-client utility.
-
-    supported configuration options:
-        <verificationMode>none|relaxed|strict|once</verificationMode>
-        <cipherList>ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH</cipherList>
-        <preferServerCiphers>true|false</preferServerCiphers>
-        <requireTLSv1>true|false</requireTLSv1>
-        <requireTLSv1_1>true|false</requireTLSv1_1>
-        <requireTLSv1_2>true|false</requireTLSv1_2>
-        <requireTLSv1_3>true|false</requireTLSv1_3>
-        <disableProtocols>sslv2,sslv3,tlsv1,tlsv1_1,tlsv1_2,tlsv1_3</disableProtocols>
-    """
-    if node is None:
-        node = self.context.cluster.node("clickhouse1")
-
-    if port is None:
-        port = self.context.connection_port
-
-    if hostname is None:
-        hostname = node.name
-
-    if options is None:
-        options = {
-            "loadDefaultCAFile": "false",
-            "caConfig": "/etc/clickhouse-server/config.d/altinity_blog_ca.crt",
-        }
-    else:
-        options["loadDefaultCAFile"] = "false"
-        options["caConfig"] = "/etc/clickhouse-server/config.d/altinity_blog_ca.crt"
-
-    if exitcode is None:
-        if success:
-            exitcode = 0
-        else:
-            exitcode = "!= 0"
-
-    if insecure:
-        options["verificationMode"] = "none"
-
-    options["preferServerCiphers"] = "true" if prefer_server_ciphers else "false"
-
-    with Given("custom clickhouse-client SSL configuration"):
-        add_ssl_clickhouse_client_configuration_file(entries=options)
-
-    output = node.command(
-        f'clickhouse client -s --verbose --host {hostname} --port {port} -q "SELECT 1"',
-        message=message,
-        messages=messages,
-        exitcode=exitcode,
-    ).output
-
-    return output
+# @TestStep(Then)
+# def openssl_client_connection(
+#     self,
+#     options="",
+#     port=None,
+#     node=None,
+#     hostname=None,
+#     success=True,
+#     message=None,
+#     messages=None,
+#     exitcode=None,
+# ):
+#     """Check SSL connection using openssl s_client utility."""
+#     if node is None:
+#         node = self.context.cluster.node("clickhouse1")
+#
+#     if port is None:
+#         port = self.context.connection_port
+#
+#     if hostname is None:
+#         hostname = node.name
+#
+#     if exitcode is None:
+#         if success:
+#             exitcode = 0
+#         else:
+#             exitcode = "!= 0"
+#
+#     node.command(
+#         f'openssl s_client -brief {options} -connect {hostname}:{port} <<< "Q"',
+#         message=message,
+#         messages=messages,
+#         exitcode=exitcode,
+#     )

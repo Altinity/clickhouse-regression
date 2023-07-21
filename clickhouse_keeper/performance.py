@@ -9,7 +9,7 @@ append_path(sys.path, "..")
 from helpers.cluster import Cluster
 from helpers.common import check_clickhouse_version
 from clickhouse_keeper.tests.steps import *
-from clickhouse_keeper.tests.steps_ssl import *
+from clickhouse_keeper.tests.steps_ssl_fips import *
 from clickhouse_keeper.tests.performance_files.argparsers import argparser
 from clickhouse_keeper.tests.performance_files.reports import *
 
