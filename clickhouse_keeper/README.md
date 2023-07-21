@@ -133,7 +133,7 @@ FROM
   max_insert_threads = 128;
 ```
 
-### Results processing
+### Results Processing
 
 As output, `performance_reports/perfomance_*.csv` file with a unique name will be created. This result file can be 
 imported to `Google Sheets`, where `Format-->Conditional formatting-->Color scale` can be applied 
