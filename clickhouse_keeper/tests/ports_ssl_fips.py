@@ -62,7 +62,7 @@ def server_connection_openssl_client_check(self, node=None):
 
 @TestFeature
 def tcp_connection_check(self, node=None):
-    """Check Clickhouse Keeper FIPS compatible TCP connections for all ports available for TCP connection."""
+    """Check ClickHouse Keeper's FIPS-compatible TCP connections for all ports available for TCP connections."""
 
     if node is None:
         node = self.context.cluster.node("clickhouse1")
@@ -81,7 +81,7 @@ def tcp_connection_check(self, node=None):
 @TestFeature
 @Name("ports ssl fips")
 def feature(self):
-    """Different checks for FIPS SSL connections on ports for Clickhouse Keeper."""
+    """Checks for FIPS SSL connections on all ports for ClickHouse Keeper."""
     cluster = self.context.cluster
     self.context.node = self.context.cluster.node("clickhouse1")
 
