@@ -3,7 +3,7 @@ from testflows.core import *
 from clickhouse_keeper.tests.common import *
 from clickhouse_keeper.tests.ssl_context import enable_ssl
 from clickhouse_keeper.requirements import *
-from clickhouse_keeper.tests.steps_ssl_fips import *
+from clickhouse_keeper.tests.steps import *
 
 
 @TestOutline
@@ -713,20 +713,18 @@ def feature(self, node="clickhouse1"):
     cluster = self.context.cluster
     self.context.node = self.context.cluster.node(node)
 
-    self.context.secure_http_port = "8443"
-    self.context.secure_tcp_port = "9440"
-
     try:
-        start_standalone_keeper_ssl(
-            cluster_nodes=cluster.nodes["clickhouse"][0:1],
-            control_nodes=cluster.nodes["clickhouse"][1:2],
-        )
+        with Given("I start standalone keeper"):
+            start_standalone_keeper(
+                cluster_nodes=cluster.nodes["clickhouse"][0:1],
+                control_nodes=cluster.nodes["clickhouse"][1:2],
+            )
 
         with And("I stop all zookeepers"):
             for zookeeper_node in self.context.cluster.nodes["zookeeper"]:
                 self.context.cluster.node(zookeeper_node).stop()
 
-        with Given("I enable SSL"):
+        with And("I enable SSL"):
             enable_ssl(my_own_ca_key_passphrase="", server_key_passphrase="")
 
         if self.context.fips_mode:
