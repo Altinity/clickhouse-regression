@@ -34,7 +34,7 @@ def regression(
     inserts,
     results_file_name,
     one_node,
-    three_nodes,
+    three_node,
     clickhouse_version,
     collect_service_logs,
     ssl=None,
@@ -72,7 +72,7 @@ def regression(
     self.context.inserts = inserts
     self.context.results_file_name = results_file_name
     self.context.one_node = one_node
-    self.context.three_nodes = three_nodes
+    self.context.three_node = three_node
 
     for clickhouse_binary_path in clickhouse_binary_list:
         self.context.clickhouse_version = clickhouse_version

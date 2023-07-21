@@ -68,7 +68,7 @@ def mixed_one_node(
 
 
 @TestScenario
-def standalone_three_nodes(
+def standalone_three_node(
     self, number_clickhouse_cluster_nodes=9, number_of_clickhouse_keeper_nodes=3
 ):
     """Standalone ClickHouse Keeper 3-node configuration performance test."""
@@ -99,7 +99,7 @@ def standalone_three_nodes(
 
 
 @TestScenario
-def mixed_three_nodes(
+def mixed_three_node(
     self, number_clickhouse_cluster_nodes=9, number_of_clickhouse_keeper_nodes=3
 ):
     """Mixed Keeper 3-node configuration performance test."""
@@ -145,9 +145,9 @@ def feature(self):
     if self.context.one_node:
         Scenario(run=standalone_one_node)
         Scenario(run=mixed_one_node)
-    elif self.context.three_nodes:
-        Scenario(run=standalone_three_nodes)
-        Scenario(run=mixed_three_nodes)
+    elif self.context.three_node:
+        Scenario(run=standalone_three_node)
+        Scenario(run=mixed_three_node)
     else:
         for scenario in loads(current_module(), Scenario):
             scenario()

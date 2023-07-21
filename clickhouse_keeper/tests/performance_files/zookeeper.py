@@ -39,7 +39,7 @@ def one_node(self, number_clickhouse_cluster_nodes=9):
 
 
 @TestScenario
-def three_nodes(self, number_clickhouse_cluster_nodes=9):
+def three_node(self, number_clickhouse_cluster_nodes=9):
     """Zookeeper 3-node configuration performance test."""
     configuration = f"Zookeeper_3_nodes_{self.context.clickhouse_version}"
 
@@ -84,8 +84,8 @@ def feature(self):
 
     if self.context.one_node:
         Scenario(run=one_node)
-    elif self.context.three_nodes:
-        Scenario(run=three_nodes)
+    elif self.context.three_node:
+        Scenario(run=three_node)
     else:
         for scenario in loads(current_module(), Scenario):
             scenario()
