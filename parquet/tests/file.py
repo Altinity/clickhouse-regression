@@ -1,12 +1,13 @@
 from testflows.core import *
 from parquet.requirements import *
+from helpers.common import *
+
 from parquet.tests.common import (
     generate_all_column_types,
     parquet_test_columns,
     check_source_file,
     execute_query_step,
 )
-from helpers.common import *
 from helpers.tables import create_table, attach_table
 
 
