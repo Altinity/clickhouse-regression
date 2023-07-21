@@ -41,7 +41,9 @@ xfails = {
     "drop empty part/drop empty part/": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/49909")
     ],
-    "concurrent alter and delete/:/concurrent delete attach detach partition/": [(Fail, "https://github.com/ClickHouse/ClickHouse/issues/50922")]
+    "concurrent alter and delete/:/concurrent delete attach detach partition/": [
+        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/50922")
+    ],
 }
 
 xflags = {}

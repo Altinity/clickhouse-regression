@@ -10,7 +10,7 @@ from helpers.argparser import argparser
 from ldap.external_user_directory.requirements import *
 from helpers.common import check_clickhouse_version
 
-issue_51323 =  "https://github.com/ClickHouse/ClickHouse/issues/51323"
+issue_51323 = "https://github.com/ClickHouse/ClickHouse/issues/51323"
 
 # Cross-outs of known fails
 xfails = {

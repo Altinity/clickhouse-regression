@@ -32,7 +32,9 @@ def concurrent_delete_attach_detach_partition(self, node=None):
             f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0)"
         ).output
 
-    with When("I compute expected output for when delete does nit affect the detached part"):
+    with When(
+        "I compute expected output for when delete does nit affect the detached part"
+    ):
         output2 = node.query(
             f"SELECT count(*) FROM {table_name} WHERE NOT(x % 2 == 0 and id != 3)"
         ).output

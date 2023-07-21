@@ -1120,7 +1120,10 @@ def clickhouse_client_connection(
         hostname = node.name
 
     if options is None:
-        options = {"loadDefaultCAFile": "false", "caConfig": "/etc/clickhouse-server/config.d/altinity_blog_ca.crt"}
+        options = {
+            "loadDefaultCAFile": "false",
+            "caConfig": "/etc/clickhouse-server/config.d/altinity_blog_ca.crt",
+        }
     else:
         options["loadDefaultCAFile"] = "false"
         options["caConfig"] = "/etc/clickhouse-server/config.d/altinity_blog_ca.crt"
