@@ -55,7 +55,7 @@ def argparser(parser):
     )
 
     parser.add_argument(
-        "--three-nodes",
+        "--three-node",
         action="store_true",
         help="enable only three nodes coordination cluster testing",
         default=False,
