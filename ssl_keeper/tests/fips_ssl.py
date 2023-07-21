@@ -284,7 +284,9 @@ def openssl_check(self, node=None):
 
     retry(node.query, timeout=300, delay=10)("SELECT 1", message="1", exitcode=0)
 
-    ports_list = define("All ports for testing", ["9440", "9281", "9010", "9444", "8443"])
+    ports_list = define(
+        "All ports for testing", ["9440", "9281", "9010", "9444", "8443"]
+    )
 
     for port in ports_list:
         with Check(f"port:{port}"):
@@ -454,5 +456,3 @@ def feature(self):
                     Feature(test=feature, parallel=True, executor=executor)()
         finally:
             join()
-
-

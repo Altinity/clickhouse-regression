@@ -20,9 +20,11 @@ def create_date_type_table(self, table_name=None, with_data=False):
 
         if with_data:
             with When("I insert data with enabled 'session_timezone' setting "):
-                node.query(f"INSERT INTO {table_name} VALUES ('2000-01-01','2000-01-01','2000-01-01'),"
-                           f"('2000-01-02','2000-01-02','2000-01-02'),"
-                           f"('2000-01-03','2000-01-03','2000-01-03')")
+                node.query(
+                    f"INSERT INTO {table_name} VALUES ('2000-01-01','2000-01-01','2000-01-01'),"
+                    f"('2000-01-02','2000-01-02','2000-01-02'),"
+                    f"('2000-01-03','2000-01-03','2000-01-03')"
+                )
 
         yield
     finally:
@@ -36,13 +38,15 @@ def session_tz_select(self):
 
     table_name = f"test_tz_{getuid()}"
 
-    with Given("I create table with Date, DateTime, DateTime64 columns and inserted data"):
+    with Given(
+        "I create table with Date, DateTime, DateTime64 columns and inserted data"
+    ):
         create_date_type_table(table_name=table_name, with_data=True)
 
     with Then("I check inserted data with session time zone setting"):
         node.query(
             f"SELECT * FROM {table_name} SETTINGS session_timezone='UTC' FORMAT CSV",
-            message='"2000-01-01","1999-12-31 23:00:00","1999-12-31 23:00:00.000"'
+            message='"2000-01-01","1999-12-31 23:00:00","1999-12-31 23:00:00.000"',
         )
 
 
