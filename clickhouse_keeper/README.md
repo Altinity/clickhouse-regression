@@ -78,7 +78,7 @@ Example to test all available coordination cluster with `23.3.5.10.altinitytest`
 ./perfomance.py --clickhouse-binary-list=docker://altinity/clickhouse-server:23.3.5.10.altinitytest --clickhouse-binary-list=docker://clickhouse/clickhouse-server:22.8 --test-to-end -o classic
 ```
 
-2) The `--inserts` and `--repeats` settings can be applied to change the number of inserts and repeats of inserts.
+2) The `--inserts` and `--repeats` settings can be applied to change the number of inserts and repeats f inserting into the table.
 
 ```commandline
 ./perfomance.py --clickhouse-binary-list=docker://altinity/clickhouse-server:23.3.5.10.altinitytest --inserts=10000 --repeats=1 --test-to-end -o classic
