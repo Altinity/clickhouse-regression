@@ -47,7 +47,7 @@ Available configurations options for `--only`:
 * `"/performance/zookeeper/one node/*"`
 * `"/performance/zookeeper/three node/*"`
 
-**Program settings:**
+### Program Settings
 
 * `--inserts` size of insert into table on one repetition (default: 200)
 * `--repeats` number of repeats of inserting into the table (default: 4)
@@ -90,7 +90,7 @@ To test more than one version of ClickHouse just add new `--clickhouse-binary-li
 ./perfomance.py --clickhouse-binary-list=docker://altinity/clickhouse-server:23.3.5.10.altinitytest --results-file-name results --test-to-end -o classic
 ```
 
-**Performance test scenario:**
+### Performance Test Scenario
 
 The performance test scenario is based on inserting into a `bad` table (every row generates coordination cluster
 transaction). It collects insert times and returns the minimum value. After that, it provides a `performance_reports/
@@ -133,7 +133,7 @@ FROM
   max_insert_threads = 128;
 ```
 
-**Results processing:**
+### Results processing
 
 As output, `performance_reports/perfomance_*.csv` file with a unique name will be created. This result file can be 
 imported to `Google Sheets`, where `Format-->Conditional formatting-->Color scale` can be applied 
