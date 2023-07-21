@@ -20,19 +20,19 @@ Also, for clear runs `rm -rf _instances` should be used to delete all docker-com
   * one node 
   * three node
 
-Example to test Clickhouse Keeper only for `mixed one node` coordination cluster configuration for vanilla `22.8` ClickHouse version:
+*Example* to test Clickhouse Keeper only for `mixed one node` coordination cluster configuration for vanilla `22.8` ClickHouse version:
 
 ```commandline
 ./perfomance.py --only "/performance/keeper/mixed one node/*" --clickhouse-binary-list=docker://clickhouse/clickhouse-server:22.8 --test-to-end -o classic
 ```
 
-Example to test ZooKeeper only for `one node` coordination cluster configuration for vanilla `22.8` ClickHouse version:
+*Example* to test ZooKeeper only for `one node` coordination cluster configuration for vanilla `22.8` ClickHouse version:
 
 ```commandline
 ./perfomance.py --only "/performance/zookeeper/one node/*" --clickhouse-binary-list=docker://clickhouse/clickhouse-server:22.8 --test-to-end -o classic
 ```
 
-Example to test ZooKeeper only for `one node` coordination cluster configuration for vanilla `22.8` and `23.3` ClickHouse versions:
+*Example* to test ZooKeeper only for `one node` coordination cluster configuration for vanilla `22.8` and `23.3` ClickHouse versions:
 
 ```commandline
 ./perfomance.py --only "/performance/zookeeper/one node/*" --clickhouse-binary-list=docker://clickhouse/clickhouse-server:22.8 --clickhouse-binary-list=docker://clickhouse/clickhouse-server:22.8 --test-to-end -o classic
@@ -65,14 +65,14 @@ table in read only-mode which will lead the program to fail.
 
 1) The `--clickhouse-binary-list` setting can be applied to test some special ClickHouse versions, as in the example below.
 
-Example to test all available coordination cluster with `23.3.5.10.altinitytest` ClickHouse version:
+*Example* to test all available coordination cluster with `23.3.5.10.altinitytest` ClickHouse version:
 ```commandline
 ./perfomance.py --clickhouse-binary-list=docker://altinity/clickhouse-server:23.3.5.10.altinitytest --test-to-end -o classic
 ```
 
 To test more than one version of ClickHouse just add new `--clickhouse-binary-list`:
 
-Example to test all available coordination cluster with `23.3.5.10.altinitytest` and vanilla `22.8` ClickHouse versions:
+*Example* to test all available coordination cluster with `23.3.5.10.altinitytest` and vanilla `22.8` ClickHouse versions:
 
 ```commandline
 ./perfomance.py --clickhouse-binary-list=docker://altinity/clickhouse-server:23.3.5.10.altinitytest --clickhouse-binary-list=docker://clickhouse/clickhouse-server:22.8 --test-to-end -o classic
