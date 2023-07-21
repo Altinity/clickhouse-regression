@@ -324,17 +324,13 @@ class Table:
         get_values=False,
     ):
         """Insert data that is necessary for Parquet testing into the specified table.
-        :param row_count: the number of rows to insert into the table.
-            Default: 10
-        :param cardinality: the number of distinct values to generate for each column.
-            Default: 2
-        :param node: the node object to execute the query. If not provided, it will use the current context node.
-        :param query_settings: list of settings to be used for the query.
-            Default: None
-        :param random: an optional random number generator object to control the data generation.
-            Default: None
-        :param get_values: if True, returns the generated values in addition to the query execution result.
-            Default: False
+
+        :param row_count: the number of rows to insert into the table, default: `10`
+        :param cardinality: the number of distinct values to generate for each column, default: `2`
+        :param node: the node object to execute the query, if not provided, it will use the current context node.
+        :param query_settings: list of settings to be used for the query, default: `None`
+        :param random: an optional random number generator object to control the data generation, default: `None`
+        :param get_values: if True, returns the generated values in addition to the query execution result, default: `False`
         """
         if node is None:
             node = current().context.node
