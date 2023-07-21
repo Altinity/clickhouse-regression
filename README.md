@@ -33,14 +33,14 @@ that involves several ClickHouse instances, custom configs, ZooKeeper, etc.
     * 5.5.5 [Pausing In Tests](#pausing-in-tests)
 * 6 [Running GitHub Actions](#running-github-actions)
 
-## Supported environment
+## [Supported environment](#table-of-contents)
 
 * [Ubuntu] 22.04
 * [Python 3] >= 3.8
 * [TestFlows] >= 1.9.51
 * [Docker Compose] == 1.29.2
 
-## Prerequisites
+## [Prerequisites](#table-of-contents)
 
 * [Docker](https://docs.docker.com/engine/install/)
 
@@ -50,9 +50,9 @@ To install all necessary Python modules (including [TestFlows] and [Docker Compo
 pip3 install -r pip_requirements.txt
 ```
 
-## Running CI/CD
+## [Running CI/CD](#table-of-contents)
 
-### Running Only Specific Suites
+### [Running Only Specific Suites](#table-of-contents)
 
 Specify `suite` variable to select running only specific suites
 
@@ -84,7 +84,7 @@ Specify `suite` variable to select running only specific suites
 | `suite` | `window_functions` | Window Functions suite |
 | `suite` | `benchmark` | S3 Benchmak suite |
 
-### Running from Docker image
+### [Running from Docker image](#table-of-contents)
 When running the CI/CD pipeline, provide the following variables:  
 Example values using `altinity/clickhouse-server:21.8.15.15.altinitystable`
 | Variables | | |
@@ -92,7 +92,7 @@ Example values using `altinity/clickhouse-server:21.8.15.15.altinitystable`
 | `Variable` | `package` | `docker://altinity/clickhouse-server` |
 | `Variable` | `version` | `21.8.15.15.altinitystable` |
 
-### Running from Altinity repo
+### [Running from Altinity repo](#table-of-contents)
 When running the CI/CD pipeline, provide the following variables:
 
 | Variables | | |
@@ -100,7 +100,7 @@ When running the CI/CD pipeline, provide the following variables:
 | `Variable` | `package` | `deb://builds.altinity.cloud/apt-repo/pool/main` |
 | `Variable` | `version` | The version to use for tests. For example, `21.8.8.1.altinitystable` |
 
-### Running from ClickHouse PR
+### [Running from ClickHouse PR](#table-of-contents)
 Get the link to the deb package: PR -> ClickHouse build check (actions) -> Details -> copy link to a deb package.  
 Break down the link into CI/CD variables:  
 Example values using https://s3.amazonaws.com/clickhouse-builds/37882/f74618722585d507cf5fe6d9284cf32028c67716/package_release/clickhouse-client_22.7.1.1738_amd64.deb
@@ -110,7 +110,7 @@ Example values using https://s3.amazonaws.com/clickhouse-builds/37882/f746187225
 | `Variable` | `version` | `22.7.1.1738` |
 | `Variable` | `package_version_postfix` | By default `all` (supports older versions), specify `amd64` for newer PRs where all packages have `amd64` postfix. |
 
-## Running CI/CD with CI/CD trigger
+## [Running CI/CD with CI/CD trigger](#table-of-contents)
 To run the CI/CD pipline you can use cicd-trigger.py
 ```./cicd-trigger.py```
 with following options
@@ -131,8 +131,7 @@ with following options
 --debug               Enable script running in debug mode, default: 'False'. Choices 'True', 'False'.
 ```
 
-
-## Running tests locally
+## [Running tests locally](#table-of-contents)
 
 You can run tests locally by passing `--local` and `--clickhouse-binary-path` to the top level `regression.py` or
 `cd` into any sub-folders to run suite specific `regression.py`.
@@ -163,12 +162,12 @@ regressions locally using the following command.
 ```bash
 python3 regression.py --local --clickhouse-binary-path "/usr/bin/clickhouse"
 ```
-### Output Verbosity
+### [Output Verbosity](#table-of-contents)
 
 You can control verbosity of the output by specifying the output format with `-o` or `--output` option.
 See `--help` for more details.
 
-### Running Only Selected Tests
+### [Running Only Selected Tests](#table-of-contents)
 
 You can run only the selected tests by passing `--only` option to the `regression.py`.
 
@@ -192,9 +191,9 @@ If you want to run only a single test such as the `/clickhouse/rbac/syntax/grant
 
 For more information, please see [Filtering](https://testflows.com/handbook/#Filtering) section in the [TestFlows Handbook].
 
-### How To Debug Why Test Failed
+### [How To Debug Why Test Failed]((#table-of-contents)
 
-#### Step 1: find which tests failed
+#### [Step 1: find which tests failed](#table-of-contents)
 
 If [TestFlows] check does not pass you should look at the end of the `test_run.txt.out.log` to find the list
 of failing tests. For example,
@@ -233,11 +232,11 @@ while the others
 failed because the first fail gets "bubble-up" the test execution tree all the way to the top level test which is the
 `/clickhouse`.
 
-#### Step 2: download `test.log` that contains all raw messages
+#### [Step 2: download `test.log` that contains all raw messages](#table-of-contents)
 
 You need to download the `test.log` that contains all raw messages.
 
-#### Step 3: get messages for the failing test
+#### [Step 3: get messages for the failing test](#table-of-contents)
 
 Once you know the name of the failing test and you have the `test.log` that contains all the raw messages
 for all the tests, you can use `tfs show test messages` command. 
@@ -253,7 +252,7 @@ cat test.log | tfs show test messages "/clickhouse/rbac/syntax/grant privilege/g
 > Note: that characters that are treated as special in extended regular expressions need to be escaped. In this case
 > we have to escape the `*`, `(`, and the `)` characters in the test name.
 
-#### Step 4: working with the `test.log`
+#### [Step 4: working with the `test.log`](#table-of-contents)
 
 You can use the `test.log` with many of the commands provided by the 
 `tfs` utility. 
@@ -280,9 +279,9 @@ or you can transform the log to see only the new fails using the
 $ cat test.log | tfs transform fails --new
 ```
 
-### Running S3 Suites
+### [Running S3 Suites](#table-of-contents)
 
-#### Minio
+#### [Minio](#table-of-contents)
 
 Minio is the default test suite, but can be specificed using `--storage minio`.
 
@@ -300,7 +299,7 @@ $ s3/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhou
 
 You can also specify the minio uri (`--minio-uri`), root user (`--minio-root-user`), and root password (`--minio-root-password`). However, this is not necessary.
 
-#### AWS S3 Storage
+#### [AWS S3 Storage](#table-of-contents)
 
 Aws requires a region(`--aws-s3-region`) and a bucket(`--aws-s3-bucket`) (the bucket must end with `/`), in addition to the key id and secret access key.
 Aws can be specified using `--storage aws_s3`.
@@ -324,7 +323,7 @@ Env:
 $ s3/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --storage aws_s3
 ```
 
-#### GCS (Google Cloud Storage)
+#### [GCS (Google Cloud Storage)](#table-of-contents)
 
 GCS requires a gcs uri (`--gcs-uri`) (the uri must end with `/`), gcs key id (`--gcs-key-id`), and gcs key secret(`--gcs-key-secret`), in addition to the s3 key id and secret access key.
 GCS can be specified using `--storage gcs`.
@@ -347,9 +346,9 @@ Env:
 $ s3/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --storage gcs
 ```
 
-### Running Tiered Storage Suites
+### [Running Tiered Storage Suites](#table-of-contents)
 
-#### Normal
+#### [Normal](#table-of-contents)
 
 Normal tiered storage suite does not require any variables to be provided.
 
@@ -358,7 +357,7 @@ From the regression directory, it can be run with the following command:
 $ tiered_storage/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine
 ```
 
-#### Running on Minio
+#### [Running on Minio](#table-of-contents)
 
 Minio tiered storage suite only requires that `--with-minio` is specified.
 
@@ -367,7 +366,7 @@ It can be run with the following command:
 $ tiered_storage/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --with-minio
 ```
 
-#### Running on AWS S3 Storage
+#### [Running on AWS S3 Storage](#table-of-contents)
 
 AWS S3 tiered storage requires an access key (`--aws-s3-access-key`), a key id (`--aws-s3-key-id`), and a uri (`--aws-s3-uri`). The uri must end with `/`.
 These can be passed as environment variables. AWS S3 must be specified using `--with-s3amazon`.
@@ -390,7 +389,7 @@ Env:
 $ tiered_storage/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --with-s3amazon
 ```
 
-#### Running on GCS Storage
+#### [Running on GCS Storage](#table-of-contents)
 
 GCS tiered storage requires a gcs uri (`--gcs-uri`) (the uri must end with `/`), gcs key id (`--gcs-key-id`), and gcs key secret(`--gcs-key-secret`).
 GCS can be specified using `--with-s3gcs`.
@@ -413,7 +412,7 @@ Env:
 $ tiered_storage/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --with-s3gcs
 ```
 
-#### Pausing In Tests
+#### [Pausing in Tests](#table-of-contents)
 
 You can explicitly specify `PAUSE_BEFORE`, `PAUSE_AFTER`, `PAUSE_ON_PASS` and `PAUSE_ON_FAIL` flags inside your test program.
 For example,
@@ -441,7 +440,7 @@ def my_scenario(self):
 ```
  This can be used for getting access to [Docker Compose] environment with condition equal to cluster condition on current step by executing standard [Docker Compose] commands ("ps", "exec" etc.) from "*_env" folder. It allows to make some manual checks/changes on dockers and continue test with new manually set conditions.
 
-## Running GitHub Actions
+## [Running GitHub Actions](#table-of-contents)
 To run GitHub actions, navigate to `Actions`, select `Run CI/CD regression tests`. Inside `Run workflow` dropdown menu specify the package, version, suite and upload destination of artifacts.
 
 Package: `docker://` or `https://` package specifier to use for tests. For example: 
