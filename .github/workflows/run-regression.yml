@@ -1064,7 +1064,7 @@ jobs:
           path: ${{ env.artifact_paths}}
           
   session_timezone:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: session_timezone
