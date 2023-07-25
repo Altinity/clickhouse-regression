@@ -102,7 +102,7 @@ env:
 
 jobs:
   aes_encryption:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: aes_encryption
@@ -131,7 +131,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   aggregate_functions:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: aggregate_functions
@@ -160,7 +160,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   atomic_insert:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: atomic_insert
@@ -189,7 +189,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   base_58:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: base_58
@@ -218,7 +218,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   benchmark_minio:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: ontime_benchmark
@@ -249,7 +249,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   benchmark_aws:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: ontime_benchmark
@@ -284,7 +284,7 @@ jobs:
           path: ${{ env.artifact_paths}}  
 
   benchmark_gcs:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: ontime_benchmark
@@ -318,7 +318,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   clickhouse_keeper:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: clickhouse_keeper
@@ -347,7 +347,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   datetime64_extended_range:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: datetime64_extended_range
@@ -376,7 +376,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   disk_level_encryption:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: disk_level_encryption
@@ -405,7 +405,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   dns:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: dns
@@ -434,7 +434,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   engines:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: engines
@@ -463,7 +463,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   example:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: example
@@ -492,7 +492,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   extended_precision_data_types:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: extended_precision_data_types
@@ -549,7 +549,7 @@ jobs:
   #         path: ${{ env.artifact_paths}}
 
   kafka:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: kafka
@@ -578,7 +578,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   kerberos:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: kerberos
@@ -606,7 +606,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   key_value:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: key_value
@@ -634,7 +634,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   ldap_authentication:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: ldap/authentication
@@ -663,7 +663,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   ldap_external_user_directory:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: ldap/external_user_directory
@@ -692,7 +692,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   ldap_role_mapping:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: ldap/role_mapping
@@ -721,7 +721,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   lightweight_delete:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-large]
     timeout-minutes: 180
     env:
       SUITE: lightweight_delete
@@ -750,7 +750,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   map_type:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: map_type
@@ -779,7 +779,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   parquet:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: parquet
@@ -809,7 +809,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   parquet_minio:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: parquet
@@ -841,7 +841,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   parquet_aws_s3:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: parquet
@@ -877,7 +877,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   part_moves_between_shards:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: part_moves_between_shards
@@ -906,7 +906,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   rbac:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: rbac
@@ -935,7 +935,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   s3_minio:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: s3
@@ -966,7 +966,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   s3_aws:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: s3
@@ -1001,7 +1001,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   s3_gcs:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: s3
@@ -1035,7 +1035,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   selects:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: selects
@@ -1093,7 +1093,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   ssl_server:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: ssl_server
@@ -1122,7 +1122,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   tiered_storage:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: tiered_storage
@@ -1151,7 +1151,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   tiered_storage_minio:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: tiered_storage
@@ -1182,7 +1182,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   tiered_storage_aws:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: tiered_storage
@@ -1216,7 +1216,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   tiered_storage_gcs:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: tiered_storage
@@ -1250,7 +1250,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   window_functions:
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: window_functions
