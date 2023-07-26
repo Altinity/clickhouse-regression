@@ -2392,7 +2392,7 @@ def all_types(self):
             columns=generate_all_map_column_types(),
         )
 
-    with When("I insert data into the table"):
+    with When("I populate all map key-value pairs with different combinations of data"):
         insert, values1 = table.insert_test_data(get_values=True)
         with values() as that:
             assert that(
@@ -2403,7 +2403,7 @@ def all_types(self):
         table_output = node.query(f"SELECT * FROM {table_name} FORMAT JSONEachRow")
 
     with Then(
-        "I check that the table reads the data correctly by checking the table columns"
+        "I check that the table reads the inserted data correctly by comparing the table values with the snapshot"
     ):
         with values() as that:
             assert that(
