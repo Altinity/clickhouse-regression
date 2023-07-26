@@ -2376,6 +2376,7 @@ def performance(self, len=10, rows=6000000):
         map_select_time = time.time() - start_time
         metric("map select time", map_select_time, "sec")
 
+
 @TestScenario
 def all_types(self):
     """Check that after populating the table in ClickHouse with map columns of every possible datatype the inserted data is correct."""
@@ -2387,32 +2388,29 @@ def all_types(self):
         table = create_table_from_helpers(
             name=table_name,
             engine="MergeTree",
-            order_by='tuple()',
-            columns=generate_all_map_column_types()
+            order_by="tuple()",
+            columns=generate_all_map_column_types(),
         )
 
     with When("I insert data into the table"):
         insert, values1 = table.insert_test_data(get_values=True)
         with values() as that:
             assert that(
-                snapshot(
-                    values1,
-                    name="generated_values",
-                    id="values"
-                )
+                snapshot(values1, name="generated_values", id="values")
             ), error()
 
     with And("I select everything from the table and save the output values"):
         table_output = node.query(f"SELECT * FROM {table_name} FORMAT JSONEachRow")
 
-    with Then('I check that the table reads the data correctly by checking the table columns'):
+    with Then(
+        "I check that the table reads the data correctly by checking the table columns"
+    ):
         with values() as that:
             assert that(
-                snapshot(
-                    table_output.output.strip(),
-                    name="map_all_values"
-                )
+                snapshot(table_output.output.strip(), name="map_all_values")
             ), error()
+
+
 # FIXME: add tests for different table engines
 
 
