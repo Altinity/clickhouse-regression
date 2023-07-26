@@ -134,9 +134,7 @@ xfails = {
         (Fail, "new bug due to JSON changes")
     ],
     "map/table map with key integer/UInt64": [(Fail, "new bug due to JSON changes")],
-    "map/table map with value integer/UInt64": [
-        (Fail, "new bug due to JSON changes")
-    ],
+    "map/table map with value integer/UInt64": [(Fail, "new bug due to JSON changes")],
     "map/:/:": [(Fail, "debug")],
 }
 
