@@ -90,7 +90,7 @@ def encrypted(self):
 
 
 @TestFeature
-@Requirements(RQ_SRS_032_ClickHouse_Parquet_Import_Glob("1.0"))
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Encryption_File("1.0"))
 @Name("encrypted")
 def feature(self, node="clickhouse1"):
     """Run checks for encrypted Parquet files."""
