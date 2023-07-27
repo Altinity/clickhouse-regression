@@ -751,6 +751,19 @@ def negativeint64(self):
 
 @TestScenario
 @Requirements(
+    RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_INT64("1.0"),
+    RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_INT64("1.0"),
+)
+def large_string_map(self):
+    """Checking that ClickHouse can import and export Parquet file with negative int64 values."""
+    with Given("I have a Parquet file with negative int64"):
+        import_file = os.path.join("arrow", "large_string_map.brotli.parquet")
+
+    import_export(snapshot_name="large_string_map_structure", import_file=import_file)
+
+
+@TestScenario
+@Requirements(
     RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported_STRING("1.0"),
     RQ_SRS_032_ClickHouse_Parquet_Export_DataTypes_Supported_STRING("1.0"),
 )
