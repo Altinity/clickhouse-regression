@@ -22,31 +22,40 @@ on:
           - aggregate_functions
           - atomic_insert
           - base_58
-          - benchmark
+          - benchmark_all
+          - benchmark_aws
+          - benchamrk_gcs
+          - benchmark_minio
           - clickhouse_keeper
+          - data_types
           - datetime64_extended_range
           - disk_level_encryption
           - dns
           - engines
           - example
           - extended_precision_data_types
-          - functional
           - kafka
           - kerberos
           - key_value
           - ldap
           - lightweight_delete
-          - map_type
           - parquet
           - parquet_minio
           - parquet_s3
           - part_moves_between_shards
           - rbac
-          - s3
+          - s3_all
+          - s3_aws
+          - s3_gcs
+          - s3_minio
           - selects
           - session_timezone
           - ssl_server
-          - tiered_storage
+          - tiered_storage_all
+          - tiered_storage_aws
+          - tiered_storage_gcs
+          - tiered_storage_local
+          - tiered_storage_minio
           - window_functions
       artifacts:
         description: "Artifact S3 bucket"
@@ -223,7 +232,7 @@ jobs:
     env:
       SUITE: ontime_benchmark
       STORAGE: /minio
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'benchmark' }}
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'benchmark_all' || inputs.suite == 'benchmark_minio' }}
     steps:
       - uses: actions/checkout@v3
 
@@ -254,7 +263,7 @@ jobs:
     env:
       SUITE: ontime_benchmark
       STORAGE: /aws
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'benchmark' }}
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'benchmark_all' || inputs.suite == 'benchmark_aws' }}
     steps:
       - uses: actions/checkout@v3
 
@@ -289,7 +298,7 @@ jobs:
     env:
       SUITE: ontime_benchmark
       STORAGE: /gcs
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'benchmark' }}
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'benchmark_all' || inputs.suite == 'benchmark_gcs' }}
     steps:
       - uses: actions/checkout@v3
 
@@ -367,6 +376,35 @@ jobs:
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
               --ssl
+              ${{ env.args }}
+
+      - name: Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-artifacts
+          path: ${{ env.artifact_paths}}
+
+  data_types:
+    runs-on: [self-hosted, altinity-amd64-medium]
+    timeout-minutes: 180
+    env:
+      SUITE: data_types
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'data_types' }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup
+        run: .github/setup.sh
+
+      - name: Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
               ${{ env.args }}
 
       - name: Create and upload logs
@@ -782,35 +820,6 @@ jobs:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
 
-  map_type:
-    runs-on: [self-hosted, altinity-amd64-medium]
-    timeout-minutes: 180
-    env:
-      SUITE: map_type
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'map_type' }}
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup
-        run: .github/setup.sh
-
-      - name: Run ${{ env.SUITE }} suite
-        run: python3
-              -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
-
-      - name: Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
   parquet:
     runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
@@ -967,44 +976,13 @@ jobs:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
 
-  s3_minio:
-    runs-on: [self-hosted, altinity-amd64-medium]
-    timeout-minutes: 180
-    env:
-      SUITE: s3
-      STORAGE: /minio
-    if: ${{ inputs.suite == 'all' || inputs.suite == 's3' }}
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup
-        run: .github/setup.sh
-
-      - name: Run ${{ env.SUITE }} suite
-        run: python3 
-              -u ${{ env.SUITE }}/regression.py
-              --storage minio
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
-
-      - name: Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-minio-artifacts
-          path: ${{ env.artifact_paths}}
-
   s3_aws:
     runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: s3
       STORAGE: /aws
-    if: ${{ inputs.suite == 'all' || inputs.suite == 's3' }}
+    if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_aws' }}
     steps:
       - uses: actions/checkout@v3
 
@@ -1039,7 +1017,7 @@ jobs:
     env:
       SUITE: s3
       STORAGE: /gcs
-    if: ${{ inputs.suite == 'all' || inputs.suite == 's3' }}
+    if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_gcs' }}
     steps:
       - uses: actions/checkout@v3
 
@@ -1065,6 +1043,37 @@ jobs:
         if: always()
         with:
           name: ${{ env.SUITE }}-gcs-artifacts
+          path: ${{ env.artifact_paths}}
+
+  s3_minio:
+    runs-on: [self-hosted, altinity-amd64-medium]
+    timeout-minutes: 180
+    env:
+      SUITE: s3
+      STORAGE: /minio
+    if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_minio' }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup
+        run: .github/setup.sh
+
+      - name: Run ${{ env.SUITE }} suite
+        run: python3 
+              -u ${{ env.SUITE }}/regression.py
+              --storage minio
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
+
+      - name: Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-minio-artifacts
           path: ${{ env.artifact_paths}}
 
   selects:
@@ -1154,73 +1163,13 @@ jobs:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
 
-  tiered_storage:
-    runs-on: [self-hosted, altinity-amd64-medium]
-    timeout-minutes: 180
-    env:
-      SUITE: tiered_storage
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage' }}
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup
-        run: .github/setup.sh
-
-      - name: Run ${{ env.SUITE }} suite
-        run: python3 
-              -u ${{ env.SUITE }}/regression.py
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
-
-      - name: Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-artifacts
-          path: ${{ env.artifact_paths}}
-
-  tiered_storage_minio:
-    runs-on: [self-hosted, altinity-amd64-medium]
-    timeout-minutes: 180
-    env:
-      SUITE: tiered_storage
-      STORAGE: /minio
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage' }}
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup
-        run: .github/setup.sh
-
-      - name: Run ${{ env.SUITE }} suite
-        run: python3 
-              -u ${{ env.SUITE }}/regression.py
-              --with-minio
-              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
-              --clickhouse-version ${{ env.version }}
-              ${{ env.args }}
-
-      - name: Create and upload logs
-        if: always()
-        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
-
-      - uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: ${{ env.SUITE }}-minio-artifacts
-          path: ${{ env.artifact_paths}}
-
   tiered_storage_aws:
     runs-on: [self-hosted, altinity-amd64-medium]
     timeout-minutes: 180
     env:
       SUITE: tiered_storage
       STORAGE: /aws
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage' }}
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage_aws' || inputs.suite == 'tiered_storage_all' }}
     steps:
       - uses: actions/checkout@v3
 
@@ -1254,7 +1203,7 @@ jobs:
     env:
       SUITE: tiered_storage
       STORAGE: /gcs
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage' }}
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage_gcs' || inputs.suite == 'tiered_storage_all' }}
     steps:
       - uses: actions/checkout@v3
 
@@ -1281,6 +1230,67 @@ jobs:
         with:
           name: ${{ env.SUITE }}-gcs-artifacts
           path: ${{ env.artifact_paths}}
+
+  tiered_storage_local:
+    runs-on: [self-hosted, altinity-amd64-medium]
+    timeout-minutes: 180
+    env:
+      SUITE: tiered_storage
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage_local' || inputs.suite == 'tiered_storage_all' }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup
+        run: .github/setup.sh
+
+      - name: Run ${{ env.SUITE }} suite
+        run: python3 
+              -u ${{ env.SUITE }}/regression.py
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
+
+      - name: Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-artifacts
+          path: ${{ env.artifact_paths}}
+
+  tiered_storage_minio:
+    runs-on: [self-hosted, altinity-amd64-medium]
+    timeout-minutes: 180
+    env:
+      SUITE: tiered_storage
+      STORAGE: /minio
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage_minio' || inputs.suite == 'tiered_storage_all' }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup
+        run: .github/setup.sh
+
+      - name: Run ${{ env.SUITE }} suite
+        run: python3 
+              -u ${{ env.SUITE }}/regression.py
+              --with-minio
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
+
+      - name: Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-minio-artifacts
+          path: ${{ env.artifact_paths}}
+
 
   window_functions:
     runs-on: [self-hosted, altinity-amd64-medium]
