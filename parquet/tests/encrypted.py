@@ -78,7 +78,7 @@ def column_and_metadata_uniform(self):
 
 
 @TestSuite
-@Requirements(RQ_SRS_032_ClickHouse_Parquet_TableFunctions_File("1.0"))
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Encryption_File("1.0"))
 def encrypted(self):
     """Check that when importing encrypted Parquet files without decryption the ClickHouse outputs an error."""
     Scenario(run=column_and_metadata)
