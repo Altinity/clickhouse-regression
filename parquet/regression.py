@@ -124,8 +124,13 @@ xfails = {
             "Getting an error that encoding is not supported.",
         )
     ],
+    "/parquet/datatypes/large string map": [
+        (
+            Fail,
+            "Will fail until the, https://github.com/apache/arrow/pull/35825, gets merged.",
+        )
+    ],
 }
-
 xflags = {}
 
 ffails = {
