@@ -24,7 +24,7 @@ on:
           - base_58
           - benchmark_all
           - benchmark_aws
-          - benchamrk_gcs
+          - benchmark_gcs
           - benchmark_minio
           - clickhouse_keeper
           - data_types
