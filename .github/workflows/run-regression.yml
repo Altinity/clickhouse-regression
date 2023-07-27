@@ -1004,7 +1004,7 @@ jobs:
     env:
       SUITE: s3
       STORAGE: /aws
-    if: ${{ (inputs.suite == 'all' || inputs.suite == 's3') && vars.S3_AWS == 1 }}
+    if: ${{ inputs.suite == 'all' || inputs.suite == 's3' }}
     steps:
       - uses: actions/checkout@v3
 
@@ -1039,7 +1039,7 @@ jobs:
     env:
       SUITE: s3
       STORAGE: /gcs
-    if: ${{ (inputs.suite == 'all' || inputs.suite == 's3') && vars.S3_GCS }}
+    if: ${{ inputs.suite == 'all' || inputs.suite == 's3' }}
     steps:
       - uses: actions/checkout@v3
 
@@ -1220,7 +1220,7 @@ jobs:
     env:
       SUITE: tiered_storage
       STORAGE: /aws
-    if: ${{ (inputs.suite == 'all' || inputs.suite == 'tiered_storage') && vars.TIERED_STORAGE_AWS == 1 }}
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage' }}
     steps:
       - uses: actions/checkout@v3
 
@@ -1254,7 +1254,7 @@ jobs:
     env:
       SUITE: tiered_storage
       STORAGE: /gcs
-    if: ${{ (inputs.suite == 'all' || inputs.suite == 'tiered_storage') && vars.TIERED_STORAGE_GCS }}
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage' }}
     steps:
       - uses: actions/checkout@v3
 
