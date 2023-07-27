@@ -13,25 +13,28 @@ that involves several ClickHouse instances, custom configs, ZooKeeper, etc.
   * 3.3 [Running from Altinity repo](#running-from-altinity-repo)
   * 3.4 [Running from ClickHouse PR](#running-from-clickhouse-pr)
 * 4 [Running CI/CD with CI/CD trigger](#running-cicd-with-cicd-trigger)
-* 5 [Running tests locally](#running-tests-locally)
-  * 5.1 [Output Verbosity](#output-verbosity)
-  * 5.2 [Running Only Selected Tests](#running-only-selected-tests)
-  * 5.3 [How To Debug Why Test Failed](#how-to-debug-why-test-failed)
-    * 5.3.1 [Step 1: find which tests failed](#step-1-find-which-tests-failed)
-    * 5.3.2 [Step 2: download `test.log` that contains all raw messages](#step-2-download-testlog-that-contains-all-raw-messages)
-    * 5.3.3 [Step 3: get messages for the failing test](#step-3-get-messages-for-the-failing-test)
-    * 5.3.4 [Step 4: working with the `test.log`](#step-4-working-with-the-testlog)
-  * 5.4 [Running S3 Suites](#running-s3-suites)
-    * 5.4.1 [Minio](#minio)
-    * 5.4.2 [AWS S3 Storage](#aws-s3-storage)
-    * 5.4.3 [GCS (Google Cloud Storage)](#gcs-google-cloud-storage)
-  * 5.5 [Running Tiered Storage Suites](#running-tiered-storage-suites)
-    * 5.5.1 [Normal](#normal)
-    * 5.5.2 [Running on Minio](#running-on-minio)
-    * 5.5.3 [Running on AWS S3 Storage](#running-on-aws-s3-storage)
-    * 5.5.4 [Running on GCS Storage](#running-on-gcs-storage)
-    * 5.5.5 [Pausing In Tests](#pausing-in-tests)
-* 6 [Running GitHub Actions](#running-github-actions)
+* 5 [CI/CD Secrets And Variables](#cicd-secrets-and-variables)
+  * 5.1 [Variables](#variables)
+  * 5.2 [Secrets](#secrets)
+* 6 [Running tests locally](#running-tests-locally)
+  * 6.1 [Output Verbosity](#output-verbosity)
+  * 6.2 [Running Only Selected Tests](#running-only-selected-tests)
+  * 6.3 [How To Debug Why Test Failed](#how-to-debug-why-test-failed)
+    * 6.3.1 [Step 1: find which tests failed](#step-1-find-which-tests-failed)
+    * 6.3.2 [Step 2: download `test.log` that contains all raw messages](#step-2-download-testlog-that-contains-all-raw-messages)
+    * 6.3.3 [Step 3: get messages for the failing test](#step-3-get-messages-for-the-failing-test)
+    * 6.3.4 [Step 4: working with the `test.log`](#step-4-working-with-the-testlog)
+  * 6.4 [Running S3 Suites](#running-s3-suites)
+    * 6.4.1 [Minio](#minio)
+    * 6.4.2 [AWS S3 Storage](#aws-s3-storage)
+    * 6.4.3 [GCS (Google Cloud Storage)](#gcs-google-cloud-storage)
+  * 6.5 [Running Tiered Storage Suites](#running-tiered-storage-suites)
+    * 6.5.1 [Normal](#normal)
+    * 6.5.2 [Running on Minio](#running-on-minio)
+    * 6.5.3 [Running on AWS S3 Storage](#running-on-aws-s3-storage)
+    * 6.5.4 [Running on GCS Storage](#running-on-gcs-storage)
+    * 6.5.5 [Pausing In Tests](#pausing-in-tests)
+* 7 [Running GitHub Actions](#running-github-actions)
 
 ## [Supported environment](#table-of-contents)
 
@@ -130,6 +133,34 @@ with following options
 --artifacts           Specify whether to upload artifacts internally or publically, default: 'internal'. Choices 'internal', 'public'. Bucket for internal upload: 'altinity-internal-test-reports'. Bucket for public upload 'altinity-test-reports'.
 --debug               Enable script running in debug mode, default: 'False'. Choices 'True', 'False'.
 ```
+
+## [CI/CD Secrets And Variables](#cicd-secrets-and-variables)
+
+### [Variables](#variables)
+
+The CI/CD has the following variables:
+| Variable | Purpose | Default |
+| --- | --- | ---  |
+| `PARALLEL` | Specify whether to run tests within each suite in parallel. | 1 | 
+| `UPLOAD_LOGS` | Specify whether to upload logs. | 1 |
+
+### [Secrets](#secrets)
+
+The CI/CD has the following secrets:
+| Secret | Purpose | Notes |
+| --- | --- | --- |
+| `AWS_ACCESS_KEY` | AWS Secret Access Key for the bucket used during testing. |   |
+| `AWS_KEY_ID` | AWS Access Key ID for the bucket used during testing. | |
+| `AWS_BUCKET` | AWS Bucket used during testing. | |
+| `AWS_REGION` | AWS Region of the bucket used during testing. | |
+| `GCS_KEY_ID` | GCS Key ID for the bucket used during testing. | |
+| `GCS_KEY_SECRET` | GCS Key Secret for the bucket used during testing. | |
+| `GCS_URI` | GCS URI of the bucket used for testing. | |
+| `AWS_REPORT_KEY_ID` | AWS Access Key ID for the report bucket. | The report buckets are hardcoded in `create_and_upload_logs.sh`. |
+| `AWS_REPORT_SECRET_ACCESS_KEY` | AWS Secret Access Key for the report bucket. | The report buckets are hardcoded in `create_and_upload_logs.sh`. |
+| `AWS_REPORT_REGION` | AWS Region of the report bucket. | The report buckets are hardcoded in `create_and_upload_logs.sh`. |
+| `DOCKER_USERNAME` | Docker username for login to prevent pull limit. | Not necessary if running small amount of tests. |
+| `DOCKER_PASSWORD` | Docker password for login to prevent pull limit. | Not necessary if running small amount of tests. |
 
 ## [Running tests locally](#table-of-contents)
 
