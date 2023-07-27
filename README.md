@@ -59,33 +59,43 @@ pip3 install -r pip_requirements.txt
 
 Specify `suite` variable to select running only specific suites
 
-| Variable | | |
+| Variable | Name | Description |
 | --- | --- | ---  |
-| `suite` | `window_functions` | Window Functions suite |
-| `suite` | `aes_encryption` | AES Encryption Functions suite |
-| `suite` | `clickhouse_keeper` | ClickHouse Keeper suite |
+| `suite` | `aes_encryption` | AES Encryption suite |
+| `suite` | `aggregate_functions` | Aggregate Functions suite |
+| `suite` | `atomic_insert` | Atomic Insert suite |
+| `suite` | `base_58` | Base58 suite |
+| `suite` | `benchmark` | Ontime Benchmark suite |
+| `suite` | `clickhouse_keeper` | ClickHouse Keeper (No SSL and SSL FIPS) suite 
+| `suite` | `data_types` | Data Types suite |
 | `suite` | `datetime64_extended_range` | Extended DateTime64 suite |
 | `suite` | `disk_level_encryption` | Disk Level Encryption |
+| `suite` | `dns` | DNS suite |
+| `suite` | `engines` | Engines suite |
 | `suite` | `example` | Example suite |
 | `suite` | `extended_precision_data_types` | Extended Precision Data Types suite |
 | `suite` | `kafka` | Kafka suite |
 | `suite` | `kerberos` | Kerberos suite |
 | `suite` | `ldap` | LDAP suite |
-| `suite` | `lightweight_delete` | Lightweight Delete suite |
-| `suite` | `map_type` | Map Data Type suite |
+| `suite` | `lightweight_delete` | Lightweight Delete suite ||
 | `suite` | `parquet` | Parquet Data Type suite |
 | `suite` | `parquet_minio` | Parquet MinIO suite |
 | `suite` | `parquet_s3` | Parquet AWS S3 suite |
 | `suite` | `part_moves_between_shards` | Part Moves Between Shards suite |
-| `suite` | `s3` | All S3 (MinIO, AWS, GCS) suites |
+| `suite` | `rbac` | RBAC suite |
+| `suite` | `s3_all` | All S3 (MinIO, AWS, GCS) suites |
 | `suite` | `s3_aws` | S3 AWS suite |
 | `suite` | `s3_gcs` | S3 GCS suite |
+| `suite` | `s3_minio` | S3 MinIO suite |
+| `suite` | `selects` | Selects suite |
+| `suite` | `session_timezone` | Session Timezone suite |
 | `suite` | `ssl_server` | SSL Server suite |
-| `suite` | `tiered_storage` | All Tiered Storage (Local Disk, MinIO, AWS, GCS) suites |
+| `suite` | `tiered_storage_all` | All Tiered Storage (Local Disk, MinIO, AWS, GCS) suites |
 | `suite` | `tiered_storage_aws` | Tiered Storage AWS suite |
 | `suite` | `tiered_storage_gcs` | Tiered Storage GCS suite |
+| `suite` | `tiered_storage_local` | Tiered Storage Local suite |
+| `suite` | `tiered_storage_minio` | Tiered Storage MinIO suite |
 | `suite` | `window_functions` | Window Functions suite |
-| `suite` | `benchmark` | S3 Benchmak suite |
 
 ### [Running from Docker image](#table-of-contents)
 When running the CI/CD pipeline, provide the following variables:  
