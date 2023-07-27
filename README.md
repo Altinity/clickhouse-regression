@@ -65,7 +65,10 @@ Specify `suite` variable to select running only specific suites
 | `suite` | `aggregate_functions` | Aggregate Functions suite |
 | `suite` | `atomic_insert` | Atomic Insert suite |
 | `suite` | `base_58` | Base58 suite |
-| `suite` | `benchmark` | Ontime Benchmark suite |
+| `suite` | `benchmark_all` | All Ontime Benchmark (MinIO, AWS, GCS) suite |
+| `suite` | `benchmark_aws` | Ontime Benchmark AWS suite |
+| `suite` | `benchmark_gcs` | Ontime Benchmark GCS suite |
+| `suite` | `benchmark_minio` | Ontime Benchmark MinIO suite |
 | `suite` | `clickhouse_keeper` | ClickHouse Keeper (No SSL and SSL FIPS) suite 
 | `suite` | `data_types` | Data Types suite |
 | `suite` | `datetime64_extended_range` | Extended DateTime64 suite |
