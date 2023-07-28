@@ -331,7 +331,6 @@ RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported = Requirement(
     uid=None,
     description=(
         "[ClickHouse] SHALL support importing the following Parquet data types:\n"
-        "Parquet Decimal is currently not tested.\n"
         "\n"
         "| Parquet data type                             | ClickHouse data type                  |\n"
         "|-----------------------------------------------|---------------------------------------|\n"
@@ -1317,7 +1316,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Nested_ArrayIntoNested_ImportNested = Requi
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support inserting arrays of nested structs from Parquet files into [ClickHouse] Nested columns when `input_format_parquet_import_nested` setting is set to `1`.\n"
+        "[ClickHouse] SHALL support inserting arrays of nested structs from Parquet files into [ClickHouse] Nested columns when the `input_format_parquet_import_nested` setting is set to `1`.\n"
         "\n"
     ),
     link=None,
@@ -1333,7 +1332,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Nested_ArrayIntoNested_NotImportNested = Re
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL return an error when trying to insert arrays of nested structs from Parquet files into [ClickHouse] Nested columns when\n"
+        "[ClickHouse] SHALL return an error when trying to insert arrays of nested structs from Parquet files into [ClickHouse] Nested columns when the\n"
         "`input_format_parquet_import_nested` setting is set to `0`.\n"
         "\n"
     ),
@@ -1509,8 +1508,8 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Settings_ImportNested = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support specifying `input_format_parquet_import_nested` setting to allow inserting arrays of\n"
-        "nested structs into Nested tables. The default value SHALL be `0`.\n"
+        "[ClickHouse] SHALL support specifying the `input_format_parquet_import_nested` setting to allow inserting arrays of\n"
+        "nested structs into Nested column type. The default value SHALL be `0`.\n"
         "\n"
         "- `0` — Data can not be inserted into Nested columns as an array of structs.\n"
         "- `1` — Data can be inserted into Nested columns as an array of structs.\n"
@@ -1529,7 +1528,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Settings_CaseInsensitiveColumnMatching = Re
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support specifying `input_format_parquet_case_insensitive_column_matching` setting to ignore matching\n"
+        "[ClickHouse] SHALL support specifying the `input_format_parquet_case_insensitive_column_matching` setting to ignore matching\n"
         "Parquet and ClickHouse columns. The default value SHALL be `0`.\n"
         "\n"
     ),
@@ -1546,7 +1545,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Settings_AllowMissingColumns = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support specifying `input_format_parquet_allow_missing_columns` setting to allow missing columns.\n"
+        "[ClickHouse] SHALL support specifying the `input_format_parquet_allow_missing_columns` setting to allow missing columns.\n"
         "The default value SHALL be `0`.\n"
         "\n"
     ),
@@ -1563,7 +1562,7 @@ RQ_SRS_032_ClickHouse_Parquet_Import_Settings_SkipColumnsWithUnsupportedTypesInS
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support specifying `input_format_parquet_skip_columns_with_unsupported_types_in_schema_inference` \n"
+        "[ClickHouse] SHALL support specifying the `input_format_parquet_skip_columns_with_unsupported_types_in_schema_inference` \n"
         "setting to allow skipping unsupported types. The default value SHALL be `0`.\n"
         "\n"
     ),
@@ -2474,7 +2473,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Settings_RowGroupSize = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support specifying `output_format_parquet_row_group_size` row group size by row count.\n"
+        "[ClickHouse] SHALL support specifying the `output_format_parquet_row_group_size` setting to specify row group size in rows.\n"
         "The default value SHALL be `1000000`.\n"
         "\n"
     ),
@@ -2491,7 +2490,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Settings_StringAsString = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support specifying `output_format_parquet_string_as_string` to use Parquet String type instead of Binary.\n"
+        "[ClickHouse] SHALL support specifying the `output_format_parquet_string_as_string` setting to use Parquet String type instead of Binary.\n"
         "The default value SHALL be `0`.\n"
         "\n"
     ),
@@ -2508,7 +2507,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Settings_StringAsFixedByteArray = Requireme
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support specifying `output_format_parquet_fixed_string_as_fixed_byte_array` to use Parquet FIXED_LENGTH_BYTE_ARRAY type instead of Binary/String for FixedString columns. The default value SHALL be `1`.\n"
+        "[ClickHouse] SHALL support specifying the `output_format_parquet_fixed_string_as_fixed_byte_array` setting to use Parquet FIXED_LENGTH_BYTE_ARRAY type instead of Binary/String for FixedString columns. The default value SHALL be `1`.\n"
         "\n"
     ),
     link=None,
@@ -2524,7 +2523,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Settings_ParquetVersion = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support specifying `output_format_parquet_version` to set the version of Parquet used in the output file.\n"
+        "[ClickHouse] SHALL support specifying the `output_format_parquet_version` setting to set the version of Parquet used in the output file.\n"
         "The default value SHALL be `2.latest`.\n"
         "\n"
     ),
@@ -2541,7 +2540,7 @@ RQ_SRS_032_ClickHouse_Parquet_Export_Settings_CompressionMethod = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support specifying `output_format_parquet_compression_method` to set the compression method used in the Parquet file.\n"
+        "[ClickHouse] SHALL support specifying the `output_format_parquet_compression_method` setting to set the compression method used in the Parquet file.\n"
         "The default value SHALL be `lz4`.\n"
         "\n"
     ),
@@ -6627,7 +6626,6 @@ The conversion MAY not be possible between some datatypes.
 version:1.0
 
 [ClickHouse] SHALL support importing the following Parquet data types:
-Parquet Decimal is currently not tested.
 
 | Parquet data type                             | ClickHouse data type                  |
 |-----------------------------------------------|---------------------------------------|
@@ -7105,12 +7103,12 @@ version:1.0
 #### RQ.SRS-032.ClickHouse.Parquet.Import.Nested.ArrayIntoNested.ImportNested
 version: 1.0
 
-[ClickHouse] SHALL support inserting arrays of nested structs from Parquet files into [ClickHouse] Nested columns when `input_format_parquet_import_nested` setting is set to `1`.
+[ClickHouse] SHALL support inserting arrays of nested structs from Parquet files into [ClickHouse] Nested columns when the `input_format_parquet_import_nested` setting is set to `1`.
 
 #### RQ.SRS-032.ClickHouse.Parquet.Import.Nested.ArrayIntoNested.NotImportNested
 version: 1.0
 
-[ClickHouse] SHALL return an error when trying to insert arrays of nested structs from Parquet files into [ClickHouse] Nested columns when
+[ClickHouse] SHALL return an error when trying to insert arrays of nested structs from Parquet files into [ClickHouse] Nested columns when the
 `input_format_parquet_import_nested` setting is set to `0`.
 
 #### RQ.SRS-032.ClickHouse.Parquet.Import.Nested.ArrayIntoNotNested
@@ -7186,8 +7184,8 @@ version: 1.0
 #### RQ.SRS-032.ClickHouse.Parquet.Import.Settings.ImportNested
 version: 1.0
 
-[ClickHouse] SHALL support specifying `input_format_parquet_import_nested` setting to allow inserting arrays of
-nested structs into Nested tables. The default value SHALL be `0`.
+[ClickHouse] SHALL support specifying the `input_format_parquet_import_nested` setting to allow inserting arrays of
+nested structs into Nested column type. The default value SHALL be `0`.
 
 - `0` — Data can not be inserted into Nested columns as an array of structs.
 - `1` — Data can be inserted into Nested columns as an array of structs.
@@ -7195,19 +7193,19 @@ nested structs into Nested tables. The default value SHALL be `0`.
 #### RQ.SRS-032.ClickHouse.Parquet.Import.Settings.CaseInsensitiveColumnMatching
 version: 1.0
 
-[ClickHouse] SHALL support specifying `input_format_parquet_case_insensitive_column_matching` setting to ignore matching
+[ClickHouse] SHALL support specifying the `input_format_parquet_case_insensitive_column_matching` setting to ignore matching
 Parquet and ClickHouse columns. The default value SHALL be `0`.
 
 #### RQ.SRS-032.ClickHouse.Parquet.Import.Settings.AllowMissingColumns
 version: 1.0
 
-[ClickHouse] SHALL support specifying `input_format_parquet_allow_missing_columns` setting to allow missing columns.
+[ClickHouse] SHALL support specifying the `input_format_parquet_allow_missing_columns` setting to allow missing columns.
 The default value SHALL be `0`.
 
 #### RQ.SRS-032.ClickHouse.Parquet.Import.Settings.SkipColumnsWithUnsupportedTypesInSchemaInference
 version: 1.0
 
-[ClickHouse] SHALL support specifying `input_format_parquet_skip_columns_with_unsupported_types_in_schema_inference` 
+[ClickHouse] SHALL support specifying the `input_format_parquet_skip_columns_with_unsupported_types_in_schema_inference` 
 setting to allow skipping unsupported types. The default value SHALL be `0`.
 
 ### Libraries
@@ -7591,30 +7589,30 @@ version: 1.0
 #### RQ.SRS-032.ClickHouse.Parquet.Export.Settings.RowGroupSize
 version: 1.0
 
-[ClickHouse] SHALL support specifying `output_format_parquet_row_group_size` row group size by row count.
+[ClickHouse] SHALL support specifying the `output_format_parquet_row_group_size` setting to specify row group size in rows.
 The default value SHALL be `1000000`.
 
 #### RQ.SRS-032.ClickHouse.Parquet.Export.Settings.StringAsString
 version: 1.0
 
-[ClickHouse] SHALL support specifying `output_format_parquet_string_as_string` to use Parquet String type instead of Binary.
+[ClickHouse] SHALL support specifying the `output_format_parquet_string_as_string` setting to use Parquet String type instead of Binary.
 The default value SHALL be `0`.
 
 #### RQ.SRS-032.ClickHouse.Parquet.Export.Settings.StringAsFixedByteArray
 version: 1.0
 
-[ClickHouse] SHALL support specifying `output_format_parquet_fixed_string_as_fixed_byte_array` to use Parquet FIXED_LENGTH_BYTE_ARRAY type instead of Binary/String for FixedString columns. The default value SHALL be `1`.
+[ClickHouse] SHALL support specifying the `output_format_parquet_fixed_string_as_fixed_byte_array` setting to use Parquet FIXED_LENGTH_BYTE_ARRAY type instead of Binary/String for FixedString columns. The default value SHALL be `1`.
 
 #### RQ.SRS-032.ClickHouse.Parquet.Export.Settings.ParquetVersion
 version: 1.0
 
-[ClickHouse] SHALL support specifying `output_format_parquet_version` to set the version of Parquet used in the output file.
+[ClickHouse] SHALL support specifying the `output_format_parquet_version` setting to set the version of Parquet used in the output file.
 The default value SHALL be `2.latest`.
 
 #### RQ.SRS-032.ClickHouse.Parquet.Export.Settings.CompressionMethod
 version: 1.0
 
-[ClickHouse] SHALL support specifying `output_format_parquet_compression_method` to set the compression method used in the Parquet file.
+[ClickHouse] SHALL support specifying the `output_format_parquet_compression_method` setting to set the compression method used in the Parquet file.
 The default value SHALL be `lz4`.
 
 ### Type Conversion

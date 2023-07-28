@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 import time
 
-from testflows.core import *
-from testflows.asserts import error
-
-from map_type.requirements import *
-from map_type.tests.common import *
+from testflows.asserts import snapshot, values, error
+from data_types.requirements import *
+from data_types.tests.common import *
 from helpers.common import check_clickhouse_version
+from helpers.tables import generate_all_map_column_types
+from helpers.tables import create_table as create_table_from_helpers
 
 
 @TestOutline
@@ -2377,11 +2377,45 @@ def performance(self, len=10, rows=6000000):
         metric("map select time", map_select_time, "sec")
 
 
+@TestScenario
+def all_types(self):
+    """Check that after populating the table in ClickHouse with map columns of every possible datatype the inserted data is correct."""
+    node = self.context.node
+
+    table_name = "table_" + getuid()
+
+    with Given("I have a table that has all the different map columns with map types"):
+        table = create_table_from_helpers(
+            name=table_name,
+            engine="MergeTree",
+            order_by="tuple()",
+            columns=generate_all_map_column_types(),
+        )
+
+    with When("I populate all map key-value pairs with different combinations of data"):
+        insert, values1 = table.insert_test_data(get_values=True)
+        with values() as that:
+            assert that(
+                snapshot(values1, name="generated_values", id="values")
+            ), error()
+
+    with And("I select everything from the table and save the output values"):
+        table_output = node.query(f"SELECT * FROM {table_name} FORMAT JSONEachRow")
+
+    with Then(
+        "I check that the table reads the inserted data correctly by comparing the table values with the snapshot"
+    ):
+        with values() as that:
+            assert that(
+                snapshot(table_output.output.strip(), name="map_all_values")
+            ), error()
+
+
 # FIXME: add tests for different table engines
 
 
 @TestFeature
-@Name("tests")
+@Name("map")
 @Requirements(
     RQ_SRS_018_ClickHouse_Map_DataType("1.0"),
     RQ_SRS_018_ClickHouse_Map_DataType_Functions_Map("1.0"),

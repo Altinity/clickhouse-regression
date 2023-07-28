@@ -357,7 +357,7 @@ class Table:
         )
 
         if get_values:
-            return result, {",".join(values)}
+            return result, values
         return result
 
 
