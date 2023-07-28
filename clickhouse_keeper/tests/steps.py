@@ -726,7 +726,7 @@ def start_mixed_keeper(
                 cluster_nodes=cluster_nodes,
                 check_preprocessed=False,
                 restart=False,
-                modify=False,
+                modify=True,
             )
 
         with And("I create mixed 3 nodes Keeper server config file"):
@@ -736,7 +736,7 @@ def start_mixed_keeper(
                 test_setting_value=test_setting_value,
                 check_preprocessed=False,
                 restart=False,
-                modify=False,
+                modify=True,
             )
 
         with And("I start mixed ClickHouse server nodes"):
