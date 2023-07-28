@@ -159,6 +159,11 @@ ffails = {
         "Datatype issues before 23.3",
         check_clickhouse_version("<23.3"),
     ),
+    "/parquet/broken/*": (
+        Skip,
+        "Different error messages on 23.6",
+        check_clickhouse_version(">=23.6"),
+    ),
 }
 
 
