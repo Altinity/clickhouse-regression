@@ -468,15 +468,9 @@ def standalone_keepers_3(self):
     cluster_nodes = cluster.nodes["clickhouse"][:9]
 
     try:
-        if self.context.ssl == "true":
-            start_standalone_keeper(
-                cluster_nodes=cluster_nodes, control_nodes=control_nodes
-            )
-
-        else:
-            start_standalone_keeper(
-                cluster_nodes=cluster_nodes, control_nodes=control_nodes
-            )
+        start_standalone_keeper(
+            cluster_nodes=cluster_nodes, control_nodes=control_nodes
+        )
 
         with Given("Receive UID"):
             uid = getuid()
@@ -549,15 +543,9 @@ def standalone_keepers_2(self):
     cluster_nodes = cluster.nodes["clickhouse"][:9]
 
     try:
-        if self.context.ssl == "true":
-            start_standalone_keeper(
-                cluster_nodes=cluster_nodes, control_nodes=control_nodes
-            )
-
-        else:
-            start_standalone_keeper(
-                cluster_nodes=cluster_nodes, control_nodes=control_nodes
-            )
+        start_standalone_keeper(
+            cluster_nodes=cluster_nodes, control_nodes=control_nodes
+        )
 
         with Given("Receive UID"):
             uid = getuid()
@@ -626,15 +614,9 @@ def standalone_keepers_1(self):
     cluster_nodes = cluster.nodes["clickhouse"][:9]
 
     try:
-        if self.context.ssl == "true":
-            start_standalone_keeper(
-                cluster_nodes=cluster_nodes, control_nodes=control_nodes
-            )
-
-        else:
-            start_standalone_keeper(
-                cluster_nodes=cluster_nodes, control_nodes=control_nodes
-            )
+        start_standalone_keeper(
+            cluster_nodes=cluster_nodes, control_nodes=control_nodes
+        )
 
         with Given("Receive UID"):
             uid = getuid()
