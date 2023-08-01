@@ -227,7 +227,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   benchmark_aws:
-    runs-on: [self-hosted, type-ccx22, image-x86-app-docker-ce, in-fsn1]
+    runs-on: [self-hosted, type-cpx41, image-x86-app-docker-ce, in-fsn1]
     timeout-minutes: 180
     env:
       SUITE: ontime_benchmark
@@ -262,7 +262,7 @@ jobs:
           path: ${{ env.artifact_paths}}  
 
   benchmark_gcs:
-    runs-on: [self-hosted, type-ccx22, image-x86-app-docker-ce, in-fsn1]
+    runs-on: [self-hosted, type-cpx41, image-x86-app-docker-ce, in-fsn1]
     timeout-minutes: 180
     env:
       SUITE: ontime_benchmark
@@ -296,7 +296,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   benchmark_minio:
-    runs-on: [self-hosted, type-ccx22, image-x86-app-docker-ce, in-fsn1]
+    runs-on: [self-hosted, type-cpx41, image-x86-app-docker-ce, in-fsn1]
     timeout-minutes: 180
     env:
       SUITE: ontime_benchmark
