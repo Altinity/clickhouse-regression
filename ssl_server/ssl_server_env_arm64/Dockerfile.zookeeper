@@ -1,0 +1,4 @@
+FROM zookeeper:3.6.2
+
+RUN apt-get update
+RUN apt-get install --yes procps

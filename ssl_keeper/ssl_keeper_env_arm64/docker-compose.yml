@@ -1,0 +1,57 @@
+version: '2.3'
+
+services:
+  clickhouse1:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse1
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d/raft_keeper.xml:/etc/clickhouse-server/config.d/raft_keeper.xml"
+
+  clickhouse2:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse2
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse2/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse2/config.d/raft_keeper.xml:/etc/clickhouse-server/config.d/raft_keeper.xml"
+
+  clickhouse3:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse3
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/config.d/raft_keeper.xml:/etc/clickhouse-server/config.d/raft_keeper.xml"
+
+  bash-tools:
+    image: registry.gitlab.com/altinity-public/container-images/test/bash-tools:3.0
+    hostname: bash-tools
+    restart: "no"
+    entrypoint:
+      - /bin/sleep
+    command:
+      - infinity
+
+#   dummy service which does nothing, but allows to postpone
+#   'docker-compose up -d' till all dependecies will go healthy
+  all_services_ready:
+    image: hello-world
+    depends_on:
+      clickhouse1:
+        condition: service_healthy
+      clickhouse2:
+        condition: service_healthy
+      clickhouse3:
+        condition: service_healthy
+
