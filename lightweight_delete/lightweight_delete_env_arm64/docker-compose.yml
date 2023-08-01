@@ -1,6 +1,36 @@
 version: '2.3'
 
+volumes:
+  data1-1:
+
+  clickhouse1_jbod1:
+    driver: local
+    driver_opts:
+      o: "size=40m"
+      device: tmpfs
+      type: tmpfs
+
+  clickhouse1_jbod2:
+    driver: local
+    driver_opts:
+      o: "size=40m"
+      device: tmpfs
+      type: tmpfs
+
 services:
+  minio:
+    extends:
+      file: minio-service.yml
+      service: minio
+
+  minio-client:
+    extends:
+      file: minio-client.yml
+      service: minio-client
+    depends_on:
+      minio:
+        condition: service_healthy
+
   zookeeper:
     extends:
       file: zookeeper-service.yml
@@ -12,6 +42,8 @@ services:
       service: clickhouse
     hostname: clickhouse1
     volumes:
+      - "clickhouse1_jbod1:/jbod1"
+      - "clickhouse1_jbod2:/jbod2"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
@@ -57,4 +89,6 @@ services:
       clickhouse3:
         condition: service_healthy
       zookeeper:
+        condition: service_healthy
+      minio:
         condition: service_healthy
