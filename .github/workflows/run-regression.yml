@@ -1213,9 +1213,9 @@ jobs:
         run: python3 
               -u ${{ env.SUITE }}/regression.py
               --with-s3gcs 
+              --gcs-uri ${{ secrets.GCS_URI }}
               --gcs-key-id ${{ secrets.GCS_KEY_ID }}
               --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
-              --gcs-uri ${{ secrets.GCS_URI }}
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
               ${{ env.args }}
