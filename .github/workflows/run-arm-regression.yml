@@ -227,7 +227,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   benchmark_aws:
-    runs-on: [self-hosted, type-cax31, image-arm-app-docker-ce, in-fsn1]
+    runs-on: [self-hosted, type-cax31, image-arm-app-docker-ce]
     timeout-minutes: 180
     env:
       SUITE: ontime_benchmark
@@ -262,7 +262,7 @@ jobs:
           path: ${{ env.artifact_paths}}  
 
   benchmark_gcs:
-    runs-on: [self-hosted, type-cax31, image-arm-app-docker-ce, in-fsn1]
+    runs-on: [self-hosted, type-cax31, image-arm-app-docker-ce]
     timeout-minutes: 180
     env:
       SUITE: ontime_benchmark
@@ -296,7 +296,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   benchmark_minio:
-    runs-on: [self-hosted, type-cax31, image-arm-app-docker-ce, in-fsn1]
+    runs-on: [self-hosted, type-cax31, image-arm-app-docker-ce]
     timeout-minutes: 180
     env:
       SUITE: ontime_benchmark
@@ -882,7 +882,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   parquet_aws_s3:
-    runs-on: [self-hosted, type-cax21, image-arm-app-docker-ce, in-hel1]
+    runs-on: [self-hosted, type-cax21, image-arm-app-docker-ce]
     timeout-minutes: 180
     env:
       SUITE: parquet
@@ -976,7 +976,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   s3_aws:
-    runs-on: [self-hosted, type-cax21, image-arm-app-docker-ce, in-hel1]
+    runs-on: [self-hosted, type-cax21, image-arm-app-docker-ce]
     timeout-minutes: 180
     env:
       SUITE: s3
@@ -1011,7 +1011,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   s3_gcs:
-    runs-on: [self-hosted, type-cax21, image-arm-app-docker-ce, in-hel1]
+    runs-on: [self-hosted, type-cax21, image-arm-app-docker-ce]
     timeout-minutes: 180
     env:
       SUITE: s3
@@ -1163,7 +1163,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   tiered_storage_aws:
-    runs-on: [self-hosted, type-cax21, image-arm-app-docker-ce, in-hel1]
+    runs-on: [self-hosted, type-cax21, image-arm-app-docker-ce]
     timeout-minutes: 180
     env:
       SUITE: tiered_storage
@@ -1197,7 +1197,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   tiered_storage_gcs:
-    runs-on: [self-hosted, type-cax21, image-arm-app-docker-ce, in-hel1]
+    runs-on: [self-hosted, type-cax21, image-arm-app-docker-ce]
     timeout-minutes: 180
     env:
       SUITE: tiered_storage
