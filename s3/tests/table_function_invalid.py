@@ -277,7 +277,7 @@ def invalid_credentials(self):
     secret_access_key = "invalid_key"
     uri = self.context.uri
     node = current().context.node
-    expected = "DB::Exception"
+    expected = "DB::Exception:"
     
     with Given("I create a table"):
         node.query(
