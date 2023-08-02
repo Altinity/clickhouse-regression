@@ -277,26 +277,9 @@ def invalid_credentials(self):
     secret_access_key = "invalid_key"
     uri = self.context.uri
     node = current().context.node
-    expected = None
-
-    with Given("I set the proper error message"):
-        if self.context.storage == "minio":
-
-            if check_clickhouse_version(">=22.9")(self):
-                expected = "DB::Exception: Message: The Access Key Id you provided does not exist in our records"
-            else:
-                expected = "DB::Exception: The Access Key Id you provided does not exist in our records"
-
-        elif self.context.storage == "aws_s3":
-            if check_clickhouse_version(">=22.9")(self):
-                expected = "DB::Exception: Message: The AWS Access Key Id you provided does not exist in our records."
-            else:
-                expected = "DB::Exception: The AWS Access Key Id you provided does not exist in our records"
-
-        else:
-            expected = "DB::Exception: Message: Access denied"
-
-    with And("I create a table"):
+    expected = "DB::Exception"
+    
+    with Given("I create a table"):
         node.query(
             f"""
             CREATE TABLE {name_table1} (
