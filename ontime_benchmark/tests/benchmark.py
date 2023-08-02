@@ -179,11 +179,13 @@ def benchmark(self, table_name, table_settings, nodes=None, format=None):
 
         with When("I insert data into the ontime table in parallel"):
             for year in range(1987, 2023):
-                Step(
-                    name="insert 1 year into ontime table",
-                    test=insert_ontime_data,
-                    parallel=True,
-                )(year=year, table_name=table_name)
+                for retry in retries(timeout=60, delay=0.1):
+                    with retry:
+                        Step(
+                            name="insert 1 year into ontime table",
+                            test=insert_ontime_data,
+                            parallel=True,
+                        )(year=year, table_name=table_name)
 
             join()
 
