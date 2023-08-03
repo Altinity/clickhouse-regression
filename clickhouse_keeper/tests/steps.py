@@ -1449,7 +1449,6 @@ def start_standalone_keeper(
             clean_coordination_on_all_nodes()
 
         if ssl:
-            pause("3")
             with And("I create server Keeper config"):
                 create_config_section_ssl(
                     control_nodes=control_nodes,
@@ -1475,7 +1474,6 @@ def start_standalone_keeper(
                     modify=True,
                 )
         else:
-            pause("2")
             with And("I create server Keeper config"):
                 create_config_section(
                     control_nodes=control_nodes,
