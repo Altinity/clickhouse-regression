@@ -195,10 +195,9 @@ def regression(
         else:
             create_3_3_cluster_config()
             Feature(run=load("clickhouse_keeper.tests.sanity", "feature"))
-            # Feature(run=load("clickhouse_keeper.tests.migration", "feature"))
+            Feature(run=load("clickhouse_keeper.tests.migration", "feature"))
             Feature(run=load("clickhouse_keeper.tests.synchronization", "feature"))
             Feature(run=load("clickhouse_keeper.tests.cli", "feature"))
-            Feature(run=load("clickhouse_keeper.tests.servers_start_up", "feature"))
             Feature(run=load("clickhouse_keeper.tests.cli_converter", "feature"))
             Feature(
                 run=load(
@@ -217,6 +216,7 @@ def regression(
             Feature(
                 run=load("clickhouse_keeper.tests.four_letter_word_commands", "feature")
             )
+            Feature(run=load("clickhouse_keeper.tests.servers_start_up", "feature"))
             Feature(
                 run=load("clickhouse_keeper.tests.coordination_settings", "feature")
             )
