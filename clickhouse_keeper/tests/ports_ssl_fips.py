@@ -52,12 +52,16 @@ def openssl_all_ports_different_protocols_cyphers(self, node=None):
     retry(node.query, timeout=300, delay=10)("SELECT 1", message="1", exitcode=0)
 
     ports_list = define(
-        "All ports for testing", ["9440", "9281", "9010", "9444", "8443"]
+        "All ports for testing", ["9440", "9281", "9010", "8443"]
     )
 
     for port in ports_list:
         with Check(f"port:{port}"):
             server_connection_openssl_client(port=port)
+
+    if self.context.fips_mode:
+        with Check("port:9444"):
+            server_connection_openssl_client(port="9444")
 
 
 @TestFeature
