@@ -51,9 +51,7 @@ def openssl_all_ports_different_protocols_cyphers(self, node=None):
 
     retry(node.query, timeout=300, delay=10)("SELECT 1", message="1", exitcode=0)
 
-    ports_list = define(
-        "All ports for testing", ["9440", "9281", "9010", "8443"]
-    )
+    ports_list = define("All ports for testing", ["9440", "9281", "9010", "8443"])
 
     for port in ports_list:
         with Check(f"port:{port}"):
