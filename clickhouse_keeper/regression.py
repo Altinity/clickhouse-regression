@@ -167,6 +167,8 @@ def regression(
         with Given("I check if the binary is FIPS compatible"):
             if "fips" in current().context.clickhouse_version:
                 self.context.fips_mode = True
+            else:
+                self.context.fips_mode = False
 
         if ssl:
             create_3_3_cluster_config_ssl()
