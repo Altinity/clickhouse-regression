@@ -68,7 +68,8 @@ def create_csv_file(
 
 
 def create_markdown_and_html_reports(
-    test_results_file_name: str = "test_file", configurations_insert_time_values: dict = None,
+    test_results_file_name: str = "test_file",
+    configurations_insert_time_values: dict = None,
 ):
     """Auto report creation for performance tests in .md and .html formats."""
 
