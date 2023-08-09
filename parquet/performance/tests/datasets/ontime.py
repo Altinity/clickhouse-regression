@@ -3,7 +3,7 @@ from helpers.common import getuid
 
 
 @TestStep(Given)
-def create_parquet_files(self, from_year: int = 1999, to_year: int = 2005):
+def create_parquet_files(self, from_year: int = 1999, to_year: int = 2000):
     """Prepare data in Parquet format using the ontime airlines dataset
     https://clickhouse.com/docs/en/getting-started/example-datasets/ontime
     that contains 200M rows."""
@@ -131,11 +131,11 @@ def create_parquet_files(self, from_year: int = 1999, to_year: int = 2005):
                 """
         )
 
-        for i in range(from_year, to_year + 1):
-            clickhouse_node.query(
-                f"INSERT INTO {table_name} SELECT * FROM s3('https://clickhouse-public-datasets.s3.amazonaws.com/ontime"
-                f"/csv_by_year/{i}.csv.gz', CSVWithNames) SETTINGS max_insert_threads = 40;"
-            )
+        clickhouse_node.query(
+            f"INSERT INTO {table_name} SELECT * FROM s3('https://clickhouse-public-datasets.s3.amazonaws.com/ontime"
+            f"/csv_by_year/{{{from_year}..{to_year}}}.csv.gz', CSVWithNames) SETTINGS max_insert_threads = 40;",
+            progress=True,
+        )
 
         clickhouse_node.query(
             f"SELECT * FROM {table_name} INTO OUTFILE '{parquet_file}' FORMAT Parquet SETTINGS "
