@@ -629,6 +629,7 @@ class ClickHouseNode(Node):
         hash_output=None,
         file_output=None,
         pipe_cmd="echo -e",
+        progress=False,
         *args,
         **kwargs,
     ):
@@ -676,6 +677,8 @@ class ClickHouseNode(Node):
         client = "clickhouse client -n"
         if secure:
             client += " -s"
+        if progress:
+            client += " --progress"
 
         if len(sql) > 1024 or use_file:
             with tempfile.NamedTemporaryFile("w", encoding="utf-8") as query:
