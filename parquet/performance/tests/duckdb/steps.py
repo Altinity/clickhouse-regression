@@ -24,11 +24,12 @@ def run_query(self, name: str, clickhouse_query: str, duckdb_query: str):
 
         self.context.query_results.append(
             (
-                f"clickhouse: {name}",
+                name,
+                self.context.clickhouse_version,
+                self.context.duckdb_version,
                 clickhouse_run_time,
-                clickhouse_query,
-                f"duckdb: {name}",
                 duckdb_run_time,
+                clickhouse_query,
                 duckdb_query,
             )
         )
