@@ -41,7 +41,10 @@ def query_0(self, filename: str):
 def query_1(self, filename: str):
     """Get the number of flights per day from the year 2000 to 2008."""
 
-    query = "SELECT DayOfWeek, count(*) AS c FROM {filename} WHERE Year>=2000 AND Year<=2008 GROUP BY DayOfWeek ORDER BY c DESC;"
+    query = (
+        "SELECT DayOfWeek, count(*) AS c FROM {filename} WHERE Year>=2000 AND Year<=2008 GROUP BY DayOfWeek ORDER "
+        "BY c DESC;"
+    )
 
     clickhouse_query = query.format(filename=f"file({filename})")
     duckdb_query = query.format(filename=f'"/data1/{filename}"')
@@ -57,8 +60,14 @@ def query_1(self, filename: str):
 def query_2(self, filename: str):
     """Get the number of flights delayed by more than 10 minutes, grouped by the day of the week, for 2000-2008."""
 
-    clickhouse_query = f"SELECT DayOfWeek, count(*) AS c FROM file('{filename}') WHERE Year>=2000 AND Year<=2008 GROUP BY DayOfWeek ORDER BY c DESC;"
-    duckdb_query = f'SELECT DayOfWeek, COUNT(*) AS c FROM "/data1/{filename}" WHERE Year >= 2000 AND Year <= 2008 GROUP BY DayOfWeek ORDER BY c DESC;'
+    clickhouse_query = (
+        f"SELECT DayOfWeek, count(*) AS c FROM file('{filename}') "
+        f"WHERE Year>=2000 AND Year<=2008 GROUP BY DayOfWeek ORDER BY c DESC;"
+    )
+    duckdb_query = (
+        f'SELECT DayOfWeek, COUNT(*) AS c FROM "/data1/{filename}" '
+        f"WHERE Year >= 2000 AND Year <= 2008 GROUP BY DayOfWeek ORDER BY c DESC;"
+    )
 
     outline(
         clickhouse_query=clickhouse_query,
@@ -71,8 +80,14 @@ def query_2(self, filename: str):
 def query_3(self, filename: str):
     """Get the number of delays by the airport for 2000-2008."""
 
-    clickhouse_query = f"SELECT Origin, count(*) AS c FROM file('{filename}') WHERE DepDelay>10 AND Year>=2000 AND Year<=2008 GROUP BY Origin ORDER BY c DESC LIMIT 10;"
-    duckdb_query = f'SELECT Origin, COUNT(*) AS c FROM "/data1/{filename}" WHERE DepDelay > 10 AND Year >= 2000 AND Year <= 2008 GROUP BY Origin ORDER BY c DESC LIMIT 10;'
+    clickhouse_query = (
+        f"SELECT Origin, count(*) AS c FROM file('{filename}') "
+        f"WHERE DepDelay>10 AND Year>=2000 AND Year<=2008 GROUP BY Origin ORDER BY c DESC LIMIT 10;"
+    )
+    duckdb_query = (
+        f'SELECT Origin, COUNT(*) AS c FROM "/data1/{filename}" '
+        f"WHERE DepDelay > 10 AND Year >= 2000 AND Year <= 2008 GROUP BY Origin ORDER BY c DESC LIMIT 10;"
+    )
 
     outline(
         clickhouse_query=clickhouse_query,
@@ -85,8 +100,14 @@ def query_3(self, filename: str):
 def query_4(self, filename: str):
     """Get the number of delays by carrier for 2007."""
 
-    clickhouse_query = f"SELECT IATA_CODE_Reporting_Airline AS Carrier, count(*) FROM file('{filename}') WHERE DepDelay>10 AND Year=2007 GROUP BY Carrier ORDER BY count(*) DESC;"
-    duckdb_query = f'SELECT IATA_CODE_Reporting_Airline AS Carrier, COUNT(*) AS count FROM "/data1/{filename}" WHERE DepDelay > 10 AND Year = 2007 GROUP BY Carrier ORDER BY count DESC;'
+    clickhouse_query = (
+        f"SELECT IATA_CODE_Reporting_Airline AS Carrier, count(*) FROM file('{filename}') "
+        f"WHERE DepDelay>10 AND Year=2007 GROUP BY Carrier ORDER BY count(*) DESC;"
+    )
+    duckdb_query = (
+        f'SELECT IATA_CODE_Reporting_Airline AS Carrier, COUNT(*) AS count FROM "/data1/{filename}" '
+        f"WHERE DepDelay > 10 AND Year = 2007 GROUP BY Carrier ORDER BY count DESC;"
+    )
 
     outline(
         clickhouse_query=clickhouse_query,
@@ -103,7 +124,10 @@ def query_5(self, filename: str):
         f"SELECT IATA_CODE_Reporting_Airline AS Carrier, avg(DepDelay>10)*100 AS c3 FROM file('{filename}') WHERE "
         f"Year=2007 GROUP BY Carrier ORDER BY c3 DESC"
     )
-    duckdb_query = f'SELECT IATA_CODE_Reporting_Airline AS Carrier, AVG(CAST(DepDelay > 10 AS DECIMAL) * 100) AS c3 FROM "/data1/{filename}" WHERE Year = 2007 GROUP BY Carrier ORDER BY c3 DESC;'
+    duckdb_query = (
+        f"SELECT IATA_CODE_Reporting_Airline AS Carrier, AVG(CAST(DepDelay > 10 AS DECIMAL) * 100) AS c3 "
+        f'FROM "/data1/{filename}" WHERE Year = 2007 GROUP BY Carrier ORDER BY c3 DESC;'
+    )
 
     outline(
         clickhouse_query=clickhouse_query,
@@ -116,9 +140,15 @@ def query_5(self, filename: str):
 def query_6(self, filename: str):
     """Get the percentage of delays by carrier for a broader range of years, 2000-2008."""
 
-    clickhouse_query = f"SELECT IATA_CODE_Reporting_Airline AS Carrier, avg(DepDelay>10)*100 AS c3 FROM file('{filename}') WHERE Year>=2000 AND Year<=2008 GROUP BY Carrier ORDER BY c3 DESC;"
+    clickhouse_query = (
+        f"SELECT IATA_CODE_Reporting_Airline AS Carrier, avg(DepDelay>10)*100 AS c3 FROM file('{filename}') "
+        f"WHERE Year>=2000 AND Year<=2008 GROUP BY Carrier ORDER BY c3 DESC;"
+    )
 
-    duckdb_query = f'SELECT IATA_CODE_Reporting_Airline AS Carrier, AVG(CAST(DepDelay > 10 AS DECIMAL) * 100) AS c3 FROM "/data1/{filename}" WHERE Year >= 2000 AND Year <= 2008 GROUP BY Carrier ORDER BY c3 DESC;'
+    duckdb_query = (
+        f"SELECT IATA_CODE_Reporting_Airline AS Carrier, AVG(CAST(DepDelay > 10 AS DECIMAL) * 100) AS c3 "
+        f'FROM "/data1/{filename}" WHERE Year >= 2000 AND Year <= 2008 GROUP BY Carrier ORDER BY c3 DESC;'
+    )
 
     outline(
         clickhouse_query=clickhouse_query,
@@ -149,7 +179,10 @@ def query_8(self, filename: str):
         f"SELECT DestCityName, uniqExact(OriginCityName) AS u FROM file('{filename}') "
         f"WHERE Year >= 2000 and Year <= 2010 GROUP BY DestCityName ORDER BY u DESC LIMIT 10;"
     )
-    duckdb_query = f'SELECT DestCityName, COUNT(DISTINCT OriginCityName) AS u FROM "/data1/{filename}" WHERE Year >= 2000 AND Year <= 2010 GROUP BY DestCityName ORDER BY u DESC LIMIT 10;'
+    duckdb_query = (
+        f'SELECT DestCityName, COUNT(DISTINCT OriginCityName) AS u FROM "/data1/{filename}" WHERE Year >= '
+        f"2000 AND Year <= 2010 GROUP BY DestCityName ORDER BY u DESC LIMIT 10;"
+    )
 
     outline(
         clickhouse_query=clickhouse_query,
@@ -160,6 +193,7 @@ def query_8(self, filename: str):
 
 @TestStep
 def query_9(self, filename: str):
+    """Group the data by the Year column, and calculate the count of rows in each year."""
     clickhouse_query = (
         f"SELECT Year, count(*) AS c1 FROM file('{filename}') GROUP BY Year;"
     )
