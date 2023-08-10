@@ -31,3 +31,12 @@ def argparser(parser):
         metavar="value",
         default=2022,
     )
+
+    parser.add_argument(
+        "--threads",
+        type=str,
+        dest="threads",
+        help="Used to determine the number of threads used in creating a parquet file with large dataset",
+        metavar="value",
+        default=20,
+    )
