@@ -89,6 +89,7 @@
 
     <!-- Maximum number of concurrent queries. -->
     <max_concurrent_queries>100</max_concurrent_queries>
+    <max_server_memory_usage_to_ram_ratio>2</max_server_memory_usage_to_ram_ratio>
 
     <!-- Set limit on number of open files (default: maximum). This setting makes sense on Mac OS X because getrlimit() fails to retrieve
          correct maximum value. -->
