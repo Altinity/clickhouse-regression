@@ -8,6 +8,7 @@ append_path(sys.path, "../..")
 
 from parquet.performance.argparsers import argparser
 from helpers.cluster import short_hash, Shell, Cluster
+from parquet.performance.tests.duckdb.reports import write_to_csv
 
 
 @TestStep(Given)
@@ -95,10 +96,13 @@ def module(
         )
     self.context.duckdb_node = self.context.cluster.node("duckdb1")
     self.context.clickhouse_node = self.context.cluster.node("clickhouse1")
+    self.context.query_results = []
 
     Feature(test=load("parquet.performance.tests.duckdb.feature", "feature"))(
         from_year=from_year, to_year=to_year
     )
+
+    write_to_csv(filename="query.csv", data=self.context.query_results)
 
 
 if main():

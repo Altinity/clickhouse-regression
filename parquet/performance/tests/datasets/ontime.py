@@ -142,7 +142,7 @@ def create_parquet_files(self, from_year: int, to_year: int):
         clickhouse_node.query(
             f"SELECT * FROM {table_name} INTO OUTFILE '{parquet_file}' FORMAT Parquet SETTINGS "
             f"output_format_parquet_compression_method = 'none', max_insert_threads = 20, max_memory_usage=29000000000;",
-            timeout=1800
+            timeout=1800,
         )
 
         clickhouse_node.command(
