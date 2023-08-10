@@ -99,7 +99,7 @@ def module(
     self.context.clickhouse_node = self.context.cluster.node("clickhouse1")
     self.context.query_results = []
     self.context.clickhouse_version = clickhouse_version
-    self.context.duckdb_version = duckdb_binary_path.rsplit("/", 2)[-2]
+    self.context.duckdb_version = duckdb_binary_path.rsplit("/", 2)[-2][1:]
 
     Feature(test=load("parquet.performance.tests.duckdb.feature", "feature"))(
         from_year=from_year, to_year=to_year, threads=threads
