@@ -9,7 +9,8 @@ def write_to_csv(filename, data):
             [
                 "Query",
                 "ClickHouse version",
-                "DuckDB version" "ClickHouse Query Runtime",
+                "DuckDB version",
+                "ClickHouse Query Runtime",
                 "DuckDB Query Runtime",
                 "ClickHouse Query Description",
                 "DuckDB Query Description",
