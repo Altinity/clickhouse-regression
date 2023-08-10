@@ -84,6 +84,7 @@ def module(
     from_year,
     to_year,
     threads,
+    max_memory_usage,
     collect_service_logs,
     clickhouse_binary_path=None,
 ):
@@ -102,7 +103,10 @@ def module(
     self.context.duckdb_version = duckdb_binary_path.rsplit("/", 2)[-2][1:]
 
     Feature(test=load("parquet.performance.tests.duckdb.feature", "feature"))(
-        from_year=from_year, to_year=to_year, threads=threads
+        from_year=from_year,
+        to_year=to_year,
+        threads=threads,
+        max_memory_usage=max_memory_usage,
     )
 
     write_to_csv(filename="query.csv", data=self.context.query_results)

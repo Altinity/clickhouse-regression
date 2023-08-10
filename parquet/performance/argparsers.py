@@ -40,3 +40,11 @@ def argparser(parser):
         metavar="value",
         default=20,
     )
+    parser.add_argument(
+        "--max-memory-usage",
+        type=str,
+        dest="max_memory_usage",
+        help="Used to determine The maximum amount of RAM to use for running a query on a single server (values used in bytes)",
+        metavar="value",
+        default=29000000000,
+    )

@@ -5,14 +5,19 @@ from parquet.performance.tests.duckdb.steps import *
 
 
 @TestSuite
-def compare_clickhouse_vs_duckdb_performance(self, from_year, to_year, threads):
+def compare_clickhouse_vs_duckdb_performance(
+    self, from_year, to_year, threads, max_memory_usage
+):
     """Comparing the time it takes to read the large dataset in ClickHouse and duckdb"""
 
     clickhouse_node = self.context.clickhouse_node
 
     with Given("I generate a parquet file with large dataset"):
         parquet_file = create_parquet_files(
-            from_year=from_year, to_year=to_year, threads=threads
+            from_year=from_year,
+            to_year=to_year,
+            threads=threads,
+            max_memory_usage=max_memory_usage,
         )
         clickhouse_node.command(
             f"cp /var/lib/clickhouse/user_files/{parquet_file} /data1", exitcode=0
@@ -27,8 +32,11 @@ def compare_clickhouse_vs_duckdb_performance(self, from_year, to_year, threads):
 
 @TestFeature
 @Name("clickhouse vs duckdb")
-def feature(self, from_year, to_year, threads):
+def feature(self, from_year, to_year, threads, max_memory_usage):
     """Compare parquet performance between single node clickhouse and duckdb"""
     Suite(test=compare_clickhouse_vs_duckdb_performance)(
-        from_year=from_year, to_year=to_year, threads=threads
+        from_year=from_year,
+        to_year=to_year,
+        threads=threads,
+        max_memory_usage=max_memory_usage,
     )
