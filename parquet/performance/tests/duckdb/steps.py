@@ -4,20 +4,34 @@ import time
 
 
 @TestOutline
-def outline(self, clickhouse_query: str, duckdb_query: str, step_name: str):
+def run_query(self, name: str, clickhouse_query: str, duckdb_query: str):
+    """Run the query on clickhouse and duckdb and collect the metrics of execution time for each."""
     clickhouse_node = self.context.clickhouse_node
     duckdb_node = self.context.duckdb_node
     duckdb_database = "db_" + getuid()
 
-    start_time = time.time()
-    clickhouse_node.query(clickhouse_query)
-    clickhouse_run_time = time.time() - start_time
-    metric(name="ClickHouse: " + step_name, value=clickhouse_run_time, units="s")
+    with By("running the query on clickhouse", description=f"{clickhouse_query}"):
+        start_time = time.time()
+        clickhouse_node.query(clickhouse_query)
+        clickhouse_run_time = time.time() - start_time
+        metric(name="clickhouse-" + name, value=clickhouse_run_time, units="s")
 
-    start_time = time.time()
-    duckdb_node.command(f"duckdb {duckdb_database} '{duckdb_query}'", exitcode=0)
-    duckdb_run_time = time.time() - start_time
-    metric(name="DuckDB: " + step_name, value=duckdb_run_time, units="s")
+    with By("running the query on duckdb", description=f"{duckdb_query}"):
+        start_time = time.time()
+        duckdb_node.command(f"duckdb {duckdb_database} '{duckdb_query}'", exitcode=0)
+        duckdb_run_time = time.time() - start_time
+        metric(name="duckdb-" + name, value=duckdb_run_time, units="s")
+
+        self.context.query_results.append(
+            (
+                f"clickhouse: {name}",
+                clickhouse_run_time,
+                clickhouse_query,
+                f"duckdb: {name}",
+                duckdb_run_time,
+                duckdb_query,
+            )
+        )
 
 
 @TestStep
@@ -30,10 +44,10 @@ def query_0(self, filename: str):
     clickhouse_query = r.format(filename=f"file({filename})")
     duckdb_query = r.format(filename=f'"/data1/{filename}"')
 
-    outline(
+    run_query(
         clickhouse_query=clickhouse_query,
         duckdb_query=duckdb_query,
-        step_name="query_0",
+        name="query_0",
     )
 
 
@@ -49,10 +63,10 @@ def query_1(self, filename: str):
     clickhouse_query = query.format(filename=f"file({filename})")
     duckdb_query = query.format(filename=f'"/data1/{filename}"')
 
-    outline(
+    run_query(
         clickhouse_query=clickhouse_query,
         duckdb_query=duckdb_query,
-        step_name="query_1",
+        name="query_1",
     )
 
 
@@ -69,10 +83,10 @@ def query_2(self, filename: str):
         f"WHERE Year >= 2000 AND Year <= 2008 GROUP BY DayOfWeek ORDER BY c DESC;"
     )
 
-    outline(
+    run_query(
         clickhouse_query=clickhouse_query,
         duckdb_query=duckdb_query,
-        step_name="query_2",
+        name="query_2",
     )
 
 
@@ -89,10 +103,10 @@ def query_3(self, filename: str):
         f"WHERE DepDelay > 10 AND Year >= 2000 AND Year <= 2008 GROUP BY Origin ORDER BY c DESC LIMIT 10;"
     )
 
-    outline(
+    run_query(
         clickhouse_query=clickhouse_query,
         duckdb_query=duckdb_query,
-        step_name="query_2",
+        name="query_2",
     )
 
 
@@ -109,10 +123,10 @@ def query_4(self, filename: str):
         f"WHERE DepDelay > 10 AND Year = 2007 GROUP BY Carrier ORDER BY count DESC;"
     )
 
-    outline(
+    run_query(
         clickhouse_query=clickhouse_query,
         duckdb_query=duckdb_query,
-        step_name="query_4",
+        name="query_4",
     )
 
 
@@ -129,10 +143,10 @@ def query_5(self, filename: str):
         f'FROM "/data1/{filename}" WHERE Year = 2007 GROUP BY Carrier ORDER BY c3 DESC;'
     )
 
-    outline(
+    run_query(
         clickhouse_query=clickhouse_query,
         duckdb_query=duckdb_query,
-        step_name="query_5",
+        name="query_5",
     )
 
 
@@ -150,10 +164,10 @@ def query_6(self, filename: str):
         f'FROM "/data1/{filename}" WHERE Year >= 2000 AND Year <= 2008 GROUP BY Carrier ORDER BY c3 DESC;'
     )
 
-    outline(
+    run_query(
         clickhouse_query=clickhouse_query,
         duckdb_query=duckdb_query,
-        step_name="query_6",
+        name="query_6",
     )
 
 
@@ -164,10 +178,10 @@ def query_7(self, filename: str):
     clickhouse_query = f"SELECT Year, avg(DepDelay>10)*100 FROM file('{filename}') GROUP BY Year ORDER BY Year;"
     duckdb_query = f'SELECT Year, AVG(CAST(DepDelay > 10 AS DECIMAL) * 100) FROM "/data1/{filename}" GROUP BY Year ORDER BY Year;'
 
-    outline(
+    run_query(
         clickhouse_query=clickhouse_query,
         duckdb_query=duckdb_query,
-        step_name="query_7",
+        name="query_7",
     )
 
 
@@ -184,10 +198,10 @@ def query_8(self, filename: str):
         f"2000 AND Year <= 2010 GROUP BY DestCityName ORDER BY u DESC LIMIT 10;"
     )
 
-    outline(
+    run_query(
         clickhouse_query=clickhouse_query,
         duckdb_query=duckdb_query,
-        step_name="query_8",
+        name="query_8",
     )
 
 
@@ -201,10 +215,10 @@ def query_9(self, filename: str):
         f'SELECT Year, COUNT(*) AS c1 FROM "/data1/{filename}" GROUP BY Year;'
     )
 
-    outline(
+    run_query(
         clickhouse_query=clickhouse_query,
         duckdb_query=duckdb_query,
-        step_name="query_9",
+        name="query_9",
     )
 
 
