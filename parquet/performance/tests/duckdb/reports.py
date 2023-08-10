@@ -7,11 +7,11 @@ def write_to_csv(filename, data):
         csv_writer = csv.writer(csvfile)
         csv_writer.writerow(
             [
-                "ClickHouse Query",
-                "ClickHouse Query Runtime",
-                "ClickHouse Query Description",
-                "DuckDB Query",
+                "Query",
+                "ClickHouse version",
+                "DuckDB version" "ClickHouse Query Runtime",
                 "DuckDB Query Runtime",
+                "ClickHouse Query Description",
                 "DuckDB Query Description",
             ]
         )
