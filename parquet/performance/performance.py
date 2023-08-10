@@ -83,6 +83,7 @@ def module(
     stress,
     from_year,
     to_year,
+    threads,
     collect_service_logs,
     clickhouse_binary_path=None,
 ):
@@ -99,7 +100,7 @@ def module(
     self.context.query_results = []
 
     Feature(test=load("parquet.performance.tests.duckdb.feature", "feature"))(
-        from_year=from_year, to_year=to_year
+        from_year=from_year, to_year=to_year, threads=threads
     )
 
     write_to_csv(filename="query.csv", data=self.context.query_results)
