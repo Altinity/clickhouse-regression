@@ -9,14 +9,14 @@ def outline(self, clickhouse_query: str, duckdb_query: str, step_name: str):
     duckdb_node = self.context.duckdb_node
     duckdb_database = "db_" + getuid()
 
-    clickhouse_start_time = time.time()
+    start_time = time.time()
     clickhouse_node.query(clickhouse_query)
-    clickhouse_run_time = time.time() - clickhouse_start_time
+    clickhouse_run_time = time.time() - start_time
     metric(name="ClickHouse: " + step_name, value=clickhouse_run_time, units="s")
 
-    duckdb_start_time = time.time()
+    start_time = time.time()
     duckdb_node.command(f"duckdb {duckdb_database} '{duckdb_query}'", exitcode=0)
-    duckdb_run_time = time.time() - duckdb_start_time
+    duckdb_run_time = time.time() - start_time
     metric(name="DuckDB: " + step_name, value=duckdb_run_time, units="s")
 
 
