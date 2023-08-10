@@ -80,6 +80,8 @@ def module(
     clickhouse_version,
     duckdb_binary_path,
     stress,
+    from_year,
+    to_year,
     collect_service_logs,
     clickhouse_binary_path=None,
 ):
@@ -94,7 +96,9 @@ def module(
     self.context.duckdb_node = self.context.cluster.node("duckdb1")
     self.context.clickhouse_node = self.context.cluster.node("clickhouse1")
 
-    Feature(run=load("parquet.performance.tests.duckdb.feature", "feature"))
+    Feature(test=load("parquet.performance.tests.duckdb.feature", "feature"))(
+        from_year=from_year, to_year=to_year
+    )
 
 
 if main():
