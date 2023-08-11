@@ -4,7 +4,12 @@ from helpers.common import getuid
 
 @TestStep(Given)
 def create_parquet_files(
-    self, from_year: int, to_year: int, threads: str, max_memory_usage: int
+    self,
+    from_year: int,
+    to_year: int,
+    threads: str,
+    max_memory_usage: int,
+    compression: str = None,
 ):
     """Prepare data in Parquet format using the ontime airlines dataset
     https://clickhouse.com/docs/en/getting-started/example-datasets/ontime
@@ -141,9 +146,18 @@ def create_parquet_files(
             timeout=900,
         )
 
-        clickhouse_node.query(
+        insert_into_parquet = (
             f"SELECT * FROM {table_name} INTO OUTFILE '{parquet_file}' FORMAT Parquet SETTINGS "
-            f"max_insert_threads = {threads}, max_memory_usage={max_memory_usage};",
+            f"max_insert_threads = {threads}, max_memory_usage={max_memory_usage}"
+        )
+
+        if compression is not None:
+            insert_into_parquet += (
+                f"output_format_parquet_compression_method={compression}"
+            )
+
+        clickhouse_node.query(
+            insert_into_parquet,
             timeout=1800,
         )
 

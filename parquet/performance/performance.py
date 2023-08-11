@@ -85,6 +85,7 @@ def module(
     to_year,
     threads,
     max_memory_usage,
+    compression,
     collect_service_logs,
     clickhouse_binary_path=None,
 ):
@@ -107,6 +108,7 @@ def module(
         to_year=to_year,
         threads=threads,
         max_memory_usage=max_memory_usage,
+        compression=compression,
     )
 
     write_to_csv(filename="query.csv", data=self.context.query_results)
