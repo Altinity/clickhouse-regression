@@ -153,9 +153,10 @@ def create_parquet_files(
 
         if compression is not None:
             insert_into_parquet += (
-                f", output_format_parquet_compression_method={compression}"
+                f", output_format_parquet_compression_method={compression};"
             )
-
+        else:
+            insert_into_parquet += ";"
         clickhouse_node.query(
             insert_into_parquet,
             timeout=1800,
