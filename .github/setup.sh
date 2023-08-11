@@ -16,6 +16,7 @@ echo "login to docker"
 
 env
 uname -i
+hostname -I
 python3 -c "import platform; print('Platform machine:', platform.machine())"
 
 if [[ $clickhouse_binary_path == "docker"* ]]; then
