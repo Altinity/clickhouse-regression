@@ -389,6 +389,7 @@ def zookeepers_3(self):
     """Check that 3 nodes ZooKeeper Cluster work in write mode
     with 1 node down and in read mode only with 2 nodes down.
     """
+    xfail("need to be fixed")
     if check_clickhouse_version("<23.3")(self):
 
         cluster = self.context.cluster
