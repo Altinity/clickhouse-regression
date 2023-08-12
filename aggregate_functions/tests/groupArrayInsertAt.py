@@ -17,12 +17,12 @@ def datatype(self, func, table, col1_name, col2_name):
     )
 
 
-@TestFeature
+@TestScenario
 @Name("groupArrayInsertAt")
 @Requirements(
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_GroupArrayInsertAt("1.0")
 )
-def feature(self, func="groupArrayInsertAt({params})", table=None):
+def scenario(self, func="groupArrayInsertAt({params})", table=None):
     """Check topKWeighted aggregate function."""
     self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=23.2")
 
@@ -80,8 +80,8 @@ def feature(self, func="groupArrayInsertAt({params})", table=None):
             f"SELECT {_func.format(params='y,x')} FROM values('x UInt8, y Float64', (0,0.1), (1,0.34), (2,.88), (3,-1.23), (4,-3.3), (5,5.4))"
         )
 
-    with Feature("datatypes"):
-        with Feature(
+    with Scenario("datatypes"):
+        with Scenario(
             "permutations",
             description="sanity check most common column type permutations",
         ):

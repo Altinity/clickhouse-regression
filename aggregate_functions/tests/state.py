@@ -6,10 +6,10 @@ from aggregate_functions.requirements import (
 )
 
 
-@TestFeature
-def state(self, suite, func):
+@TestScenario
+def state(self, scenario, func):
     """Check -State combinator function."""
-    suite(func=func)
+    scenario(func=func)
 
 
 @TestFeature
@@ -23,13 +23,13 @@ def feature(self):
         for name in aggregate_functions:
             func = f"hex({name}State({{params}}))"
             try:
-                suite = load(f"aggregate_functions.tests.{name}", "feature")
+                scenario = load(f"aggregate_functions.tests.{name}", "scenario")
             except ModuleNotFoundError as e:
-                with Suite(f"{name}State"):
-                    xfail(reason=f"{name}State() tests are not implemented")
+                with Scenario(f"{name}State"):
+                    skip(reason=f"{name}State() test is not implemented")
             else:
-                Suite(
+                Scenario(
                     name=f"{name}State", test=state, parallel=True, executor=executor
-                )(func=func, suite=suite)
+                )(func=func, scenario=scenario)
 
         join()

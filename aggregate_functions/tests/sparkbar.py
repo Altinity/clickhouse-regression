@@ -18,10 +18,10 @@ from aggregate_functions.tests.steps import (
 )
 
 
-@TestFeature
+@TestScenario
 @Name("sparkbar")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_Sparkbar("1.0"))
-def feature(self, func="sparkbar({params})", table=None):
+def scenario(self, func="sparkbar({params})", table=None):
     """Check sparkbar aggregate function by using the same tests as for quantileWeighted."""
     self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=23.2")
 
@@ -76,8 +76,8 @@ def feature(self, func="sparkbar({params})", table=None):
             f"SELECT toTypeName({func.format(params='toUInt8(number),toUInt64(number)')}) FROM numbers(1, 10)"
         )
 
-    with Feature("datatypes"):
-        with Feature(
+    with Scenario("datatypes"):
+        with Scenario(
             "permutations",
             description="sanity check most common column type permutations",
         ):

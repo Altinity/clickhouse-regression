@@ -4,10 +4,10 @@ from aggregate_functions.requirements import (
 )
 
 
-@TestFeature
+@TestScenario
 @Name("any")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Any("1.0"))
-def feature(self, func="any({params})", table=None):
+def scenario(self, func="any({params})", table=None):
     """Check any aggregate function."""
     self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=23.2")
 

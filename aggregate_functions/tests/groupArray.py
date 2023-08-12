@@ -5,13 +5,13 @@ from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_GroupArray,
 )
 
-from aggregate_functions.tests.any import feature as checks
+from aggregate_functions.tests.any import scenario as checks
 
 
-@TestFeature
+@TestScenario
 @Name("groupArray")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_GroupArray("1.0"))
-def feature(self, func="groupArray({params})", table=None):
+def scenario(self, func="groupArray({params})", table=None):
     """Check groupArray aggregate function by using the same tests as for any."""
     self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=23.2")
 

@@ -4,7 +4,7 @@ from aggregate_functions.requirements import (
 )
 
 
-@TestScenario
+@TestCheck
 def expr(self, func="count({params})"):
     """Check that count(expr) counts how many times expr
     returned not NULL and returned type is UInt64.
@@ -31,7 +31,7 @@ def expr(self, func="count({params})"):
         execute_query(f"SELECT toTypeName({func.format(params='1')})")
 
 
-@TestScenario
+@TestCheck
 def distinct_expr(self, func="count({params})"):
     """Check that COUNT(DISTINCT expr) by default
     is equivalent to uniqExact(expr) and returned type is UInt64.
@@ -63,7 +63,7 @@ def distinct_expr(self, func="count({params})"):
         )
 
 
-@TestScenario
+@TestCheck
 def zero_parameters(self, func="count({params})"):
     """Check that count() and COUNT(*) counts number of rows."""
     for f in [f"{func.format(params='')}", f"{func.format(params='*')}"]:
@@ -83,12 +83,12 @@ def zero_parameters(self, func="count({params})"):
                 )
 
 
-@TestFeature
+@TestScenario
 @Name("count")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Count("1.0"))
-def feature(self, func="count({params})", table=None):
+def scenario(self, func="count({params})", table=None):
     """Check count aggregate function."""
     self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=23.2")
 
-    for scenario in loads(current_module(), Scenario):
-        scenario(func=func)
+    for check in loads(current_module(), Check):
+        Check(test=check)(func=func)
