@@ -4,10 +4,10 @@ from aggregate_functions.requirements import (
 )
 
 
-@TestFeature
+@TestScenario
 @Name("min")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Min("1.0"))
-def feature(self, func="min({params})", table=None):
+def scenario(self, func="min({params})", table=None):
     """Check min aggregate function."""
     self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=23.2")
 

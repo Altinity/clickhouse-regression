@@ -5,13 +5,13 @@ from aggregate_functions.requirements import (
 )
 
 from aggregate_functions.tests.steps import get_snapshot_id
-from aggregate_functions.tests.quantile import feature as checks
+from aggregate_functions.tests.quantile import scenario as checks
 
 
-@TestFeature
+@TestScenario
 @Name("quantiles")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_Quantiles("1.0"))
-def feature(self, func="quantiles({params})", table=None):
+def scenario(self, func="quantiles({params})", table=None):
     """Check quantiles aggregate function by using the same tests as for quantile."""
     self.context.snapshot_id = get_snapshot_id()
 

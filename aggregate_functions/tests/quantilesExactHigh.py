@@ -5,15 +5,15 @@ from aggregate_functions.requirements import (
 )
 
 from aggregate_functions.tests.steps import get_snapshot_id
-from aggregate_functions.tests.quantileExactHigh import feature as checks
+from aggregate_functions.tests.quantileExactHigh import scenario as checks
 
 
-@TestFeature
+@TestScenario
 @Name("quantilesExactHigh")
 @Requirements(
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_QuantilesExactHigh("1.0")
 )
-def feature(self, func="quantilesExactHigh({params})", table=None):
+def scenario(self, func="quantilesExactHigh({params})", table=None):
     """Check quantilesExactHigh aggregate function by using the same tests as for quantileExactHigh."""
     self.context.snapshot_id = get_snapshot_id()
 

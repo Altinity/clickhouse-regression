@@ -20,10 +20,10 @@ def datatype(self, func, table, col1_name, col2_name):
     )
 
 
-@TestFeature
+@TestScenario
 @Name("argMin")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_ArgMin("1.0"))
-def feature(self, func="argMin({params})", table=None):
+def scenario(self, func="argMin({params})", table=None):
     """Check argMin or argMax or one of their combinator aggregate functions. By default: argMin."""
     self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=23.2")
 

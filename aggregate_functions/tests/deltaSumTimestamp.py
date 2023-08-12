@@ -15,12 +15,12 @@ def datatype(self, func, table, col1_name, col2_name):
     )
 
 
-@TestFeature
+@TestScenario
 @Name("deltaSumTimestamp")
 @Requirements(
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_DeltaSumTimestamp("1.0")
 )
-def feature(
+def scenario(
     self,
     func="deltaSumTimestamp({params})",
     table=None,
@@ -73,8 +73,8 @@ def feature(
             f"SELECT toTypeName({func.format(params='number, number+1')}) FROM numbers(1, 10)"
         )
 
-    with Feature("datatypes"):
-        with Feature(
+    with Scenario("datatypes"):
+        with Scenario(
             "permutations",
         ):
             with Pool(3) as executor:

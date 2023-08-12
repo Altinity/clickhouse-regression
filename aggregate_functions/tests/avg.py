@@ -6,10 +6,10 @@ from aggregate_functions.requirements import (
 )
 
 
-@TestFeature
+@TestScenario
 @Name("avg")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Avg("1.0"))
-def feature(
+def scenario(
     self,
     func="avg({params})",
     table=None,

@@ -4,10 +4,10 @@ from aggregate_functions.requirements import (
 )
 
 
-@TestFeature
+@TestScenario
 @Name("max")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Max("1.0"))
-def feature(self, func="max({params})", table=None):
+def scenario(self, func="max({params})", table=None):
     """Check max aggregate function."""
     self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=23.2")
 
