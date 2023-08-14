@@ -976,7 +976,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   s3_aws:
-    runs-on: [self-hosted, type-cpx41]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: s3
@@ -1011,7 +1011,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   s3_gcs:
-    runs-on: [self-hosted, type-cpx41]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: s3
@@ -1045,7 +1045,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   s3_minio:
-    runs-on: [self-hosted, type-cpx41]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: s3
@@ -1163,7 +1163,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   tiered_storage_aws:
-    runs-on: [self-hosted, type-cpx41]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: tiered_storage
@@ -1197,7 +1197,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   tiered_storage_gcs:
-    runs-on: [self-hosted, type-cpx41]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: tiered_storage
@@ -1231,7 +1231,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   tiered_storage_local:
-    runs-on: [self-hosted, type-cpx41]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: tiered_storage
@@ -1260,7 +1260,7 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   tiered_storage_minio:
-    runs-on: [self-hosted, type-cpx41]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: tiered_storage
