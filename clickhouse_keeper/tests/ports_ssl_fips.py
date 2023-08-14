@@ -65,6 +65,7 @@ def openssl_all_ports_different_protocols_cyphers(self, node=None):
 @TestFeature
 def tcp_connection_all_ports(self, node=None):
     """Check ClickHouse Keeper's FIPS-compatible TCP connections for all ports available for TCP connections."""
+    xfail("duplication test")
 
     if node is None:
         node = self.context.cluster.node("clickhouse1")
