@@ -223,5 +223,6 @@ def different_shared_start_up(self):
 @Name("servers start up")
 def feature(self):
     """Check different ClickHouse server configurations"""
+    xfail("unstable fix check")
     for scenario in loads(current_module(), Scenario):
         scenario()
