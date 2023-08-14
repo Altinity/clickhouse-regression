@@ -5,13 +5,13 @@ from aggregate_functions.requirements import (
 )
 
 from aggregate_functions.tests.steps import get_snapshot_id
-from aggregate_functions.tests.any import feature as checks
+from aggregate_functions.tests.any import scenario as checks
 
 
-@TestFeature
+@TestScenario
 @Name("entropy")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_Entropy("1.0"))
-def feature(self, func="entropy({params})", table=None):
+def scenario(self, func="entropy({params})", table=None):
     """Check entropy aggregate function by using the same tests as for any."""
     self.context.snapshot_id = get_snapshot_id()
 

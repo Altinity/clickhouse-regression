@@ -4,10 +4,10 @@ from aggregate_functions.requirements import (
 )
 
 
-@TestFeature
+@TestScenario
 @Name("first_value")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_FirstValue("1.0"))
-def feature(self, func="first_value({params})", table=None):
+def scenario(self, func="first_value({params})", table=None):
     """Check first_value aggregate function."""
     self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=23.2")
 

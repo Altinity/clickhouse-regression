@@ -6,10 +6,10 @@ from aggregate_functions.requirements import (
 )
 
 
-@TestFeature
+@TestScenario
 @Name("sumMap")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_SumMap("1.0"))
-def feature(self, func="sumMap({params})", table=None):
+def scenario(self, func="sumMap({params})", table=None):
     """Check sumMap aggregate function."""
     self.context.snapshot_id = get_snapshot_id()
 

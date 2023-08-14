@@ -2,11 +2,11 @@ import csv
 
 
 def create_csv_file(
-    test_results_file_name="test_file",
-    repeats=1,
-    inserts=1,
-    configurations_insert_time_values=None,
-    setups=None,
+    test_results_file_name: str = "test_file",
+    repeats: int = 1,
+    inserts: int = 1,
+    configurations_insert_time_values: dict = None,
+    setups: list = None,
 ):
     """Auto csv creation for performance tests."""
 
@@ -68,7 +68,8 @@ def create_csv_file(
 
 
 def create_markdown_and_html_reports(
-    test_results_file_name="test_file", configurations_insert_time_values=None
+    test_results_file_name: str = "test_file",
+    configurations_insert_time_values: dict = None,
 ):
     """Auto report creation for performance tests in .md and .html formats."""
 

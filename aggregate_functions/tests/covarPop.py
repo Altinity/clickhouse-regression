@@ -20,10 +20,10 @@ def datatype(self, func, table, col1_name, col2_name):
     )
 
 
-@TestFeature
+@TestScenario
 @Name("covarPop")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_CovarPop("1.0"))
-def feature(
+def scenario(
     self,
     func="covarPop({params})",
     table=None,
@@ -86,7 +86,7 @@ def feature(
             f"SELECT {func.format(params='y,x')} FROM values('x Int8, y Float64', (0,0.1), (1,0.34), (2,.88), (3,-1.23), (4,-3.3), (5,5.4))"
         )
 
-    with Feature("datatypes"):
+    with Check("datatypes"):
         with Pool(3) as executor:
             for column in table.columns:
                 col_name, col_type = column.name, column.datatype.name
@@ -115,7 +115,7 @@ def feature(
 
             join()
 
-        with Feature(
+        with Check(
             "permutations",
             description="sanity check most common column type permutations",
         ):

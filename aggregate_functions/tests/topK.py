@@ -5,13 +5,13 @@ from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_TopK,
 )
 
-from aggregate_functions.tests.any import feature as checks
+from aggregate_functions.tests.any import scenario as checks
 
 
-@TestFeature
+@TestScenario
 @Name("topK")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_TopK("1.0"))
-def feature(self, func="topK({params})", table=None):
+def scenario(self, func="topK({params})", table=None):
     """Check topK aggregate function by using the same checks as for any
     as well as functions specific checks."""
     self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=23.2")

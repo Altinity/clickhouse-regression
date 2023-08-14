@@ -5,15 +5,15 @@ from aggregate_functions.requirements import (
 )
 
 from aggregate_functions.tests.steps import get_snapshot_id
-from aggregate_functions.tests.quantileTimingWeighted import feature as checks
+from aggregate_functions.tests.quantileTimingWeighted import scenario as checks
 
 
-@TestFeature
+@TestScenario
 @Name("quantilesTimingWeighted")
 @Requirements(
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_QuantilesTimingWeighted("1.0")
 )
-def feature(self, func="quantilesTimingWeighted({params})", table=None):
+def scenario(self, func="quantilesTimingWeighted({params})", table=None):
     """Check quantilesTimingWeighted aggregate function by using the same tests as for quantileTimingWeighted."""
     self.context.snapshot_id = get_snapshot_id()
 
