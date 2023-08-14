@@ -261,7 +261,7 @@ def regression(
                     f"Common code did not provide {datatype}"
                 )
 
-        with Pool(2) as executor:
+        with Pool(4) as executor:
             Feature(
                 run=load("parquet.tests.file", "feature"),
                 parallel=True,

@@ -368,29 +368,49 @@ def function(self):
         join()
 
 
-@TestOutline(Feature)
-@Examples(
-    "compression_type",
-    [
-        (
-            "NONE",
-            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_None("1.0")),
-        ),
-        (
-            "GZIP",
-            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip("1.0")),
-        ),
-        (
-            "LZ4",
-            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0")),
-        ),
-    ],
-)
-@Name("s3")
-def feature(self, compression_type):
+@TestOutline
+def outline(self, compression_type):
     """Run checks for ClickHouse using Parquet format using `S3` table engine and `s3` table function."""
     self.context.compression_type = compression_type
     self.context.node = self.context.cluster.node("clickhouse1")
 
     Suite(run=engine)
     Suite(run=function)
+
+
+@TestFeature
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_None("1.0"))
+def none(self):
+    """Run checks for ClickHouse Parquet format using `S3` table engine and `s3` table function
+    with NONE compression type."""
+    outline(compression_type="NONE")
+
+
+@TestFeature
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip("1.0"))
+def gzip(self):
+    """Run checks for ClickHouse Parquet format using `S3` table engine and `s3` table function
+    with GZIP compression type."""
+    outline(compression_type="GZIP")
+
+
+@TestFeature
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0"))
+def lz4(self):
+    """Run checks for ClickHouse Parquet format using `S3` table engine and `s3` table function
+    with LZ4 compression type."""
+    outline(compression_type="LZ4")
+
+
+@TestFeature
+@Name("s3")
+def feature(self):
+    """Run checks for ClickHouse using Parquet format using `S3` table engine and `s3` table function
+    using different compression types."""
+
+    with Feature("compression type"):
+        with Pool(3) as executor:
+            Feature(run=none, parallel=True, executor=executor)
+            Feature(run=gzip, parallel=True, executor=executor)
+            Feature(run=lz4, parallel=True, executor=executor)
+            join()

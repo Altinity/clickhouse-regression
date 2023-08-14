@@ -279,7 +279,7 @@ def insert_into_table_with_projection_from_file(self):
         )
 
     with Then("I check that the table contains correct data"):
-        with Pool(3) as executor:
+        with Pool(6) as executor:
             for column in table_columns:
                 Check(
                     test=execute_query_step,
