@@ -218,12 +218,14 @@ def check_source_file_on_s3(
 ):
     """Download specified file from aws s3 and check the contents."""
 
+    parquet_file = "data_" + getuid() + ".Parquet"
+
     if self.context.storage == "aws_s3":
         with By("Downloading the file"):
             self.context.s3_client.download_file(
                 self.context.aws_s3_bucket,
                 f"data/parquet/{file}",
-                "/tmp/test_files/data.Parquet",
+                f"/tmp/test_files/{parquet_file}",
             )
 
     elif self.context.storage == "minio":
@@ -231,7 +233,7 @@ def check_source_file_on_s3(
             self.context.s3_client.fget_object(
                 self.context.cluster.minio_bucket,
                 "data/parquet/" + file,
-                "/tmp/test_files/data.Parquet",
+                f"/tmp/test_files/{parquet_file}",
             )
 
     with By("copying the file to the docker node"):
@@ -240,12 +242,12 @@ def check_source_file_on_s3(
         ).output
         self.context.cluster.command(
             None,
-            f"docker cp /tmp/test_files/data.Parquet {x}:/data.Parquet",
+            f"docker cp /tmp/test_files/{parquet_file} {x}:/{parquet_file}",
         )
 
     with Then("I check the file"):
         check_source_file(
-            path="/data.Parquet",
+            path=f"/{parquet_file}",
             compression=compression_type,
             reference_table_name=reference_table_name,
         )
