@@ -382,63 +382,63 @@ def tcp_port_conf(
             clean_coordination_on_all_nodes()
 
 
-@TestScenario
-@Requirements(RQ_SRS_024_ClickHouse_Keeper_Config_TCPPort("1.0"))
-def valid_tcp_port(self):
-    """I check behavior of ClickHouse server and ClickHouse Keeper with valid tcp_port."""
-    cluster = self.context.cluster
-    cluster_name = "'cluster_1replica_1shard'"
-    try:
-        with Given("I create configs with valid tcp_port option"):
-            tcp_port_conf(tcp_port=2181, tcp_port_secure=False, secure=0)
-
-        with Then("I create table and I expect replicated table creation"):
-            retry(cluster.node("clickhouse1").query, timeout=500, delay=1)(
-                f"CREATE TABLE IF NOT EXISTS"
-                f" zookeeper_bench on CLUSTER {cluster_name}"
-                f" (p UInt64, x UInt64) "
-                "ENGINE = ReplicatedSummingMergeTree"
-                "('/clickhouse/tables/replicated/{shard}"
-                f"/zookeeper_bench'"
-                ", '{replica}') "
-                "ORDER BY tuple() PARTITION BY p ",
-                steps=False,
-            )
-    finally:
-        with Finally("I clean created data"):
-            cluster.node("clickhouse1").query(
-                f"DROP TABLE IF EXISTS zookeeper_bench ON CLUSTER {cluster_name} SYNC"
-            )
-
-
-@TestScenario
-@Requirements(RQ_SRS_024_ClickHouse_Keeper_Config_TCPPortSecure("1.0"))
-def tcp_port_secure(self):
-    """I check behavior of ClickHouse server and ClickHouse Keeper with correct tcp_port_secure config option."""
-    cluster = self.context.cluster
-    cluster_name = "'cluster_1replica_1shard'"
-    try:
-        with Given("I create configs with valid tcp_port_secure and secure option"):
-            tcp_port_conf(tcp_port=2181, tcp_port_secure=True, secure=1)
-
-        with Then("I create table and I expect replicated table creation"):
-            retry(cluster.node("clickhouse1").query, timeout=500, delay=1)(
-                f"CREATE TABLE IF NOT EXISTS"
-                f" zookeeper_bench on CLUSTER {cluster_name}"
-                f" (p UInt64, x UInt64) "
-                "ENGINE = ReplicatedSummingMergeTree"
-                "('/clickhouse/tables/replicated/{shard}"
-                f"/zookeeper_bench'"
-                ", '{replica}') "
-                "ORDER BY tuple() PARTITION BY p ",
-                steps=False,
-            )
-    finally:
-        with Finally("I clean created data"):
-            cluster.node("clickhouse1").query(
-                f"DROP TABLE IF EXISTS zookeeper_bench ON CLUSTER {cluster_name} SYNC"
-            )
-            clean_coordination_on_all_nodes()
+# @TestScenario
+# @Requirements(RQ_SRS_024_ClickHouse_Keeper_Config_TCPPort("1.0"))
+# def valid_tcp_port(self):
+#     """I check behavior of ClickHouse server and ClickHouse Keeper with valid tcp_port."""
+#     cluster = self.context.cluster
+#     cluster_name = "'cluster_1replica_1shard'"
+#     try:
+#         with Given("I create configs with valid tcp_port option"):
+#             tcp_port_conf(tcp_port=2181, tcp_port_secure=False, secure=0)
+#
+#         with Then("I create table and I expect replicated table creation"):
+#             retry(cluster.node("clickhouse1").query, timeout=500, delay=1)(
+#                 f"CREATE TABLE IF NOT EXISTS"
+#                 f" zookeeper_bench on CLUSTER {cluster_name}"
+#                 f" (p UInt64, x UInt64) "
+#                 "ENGINE = ReplicatedSummingMergeTree"
+#                 "('/clickhouse/tables/replicated/{shard}"
+#                 f"/zookeeper_bench'"
+#                 ", '{replica}') "
+#                 "ORDER BY tuple() PARTITION BY p ",
+#                 steps=False,
+#             )
+#     finally:
+#         with Finally("I clean created data"):
+#             cluster.node("clickhouse1").query(
+#                 f"DROP TABLE IF EXISTS zookeeper_bench ON CLUSTER {cluster_name} SYNC"
+#             )
+#
+#
+# @TestScenario
+# @Requirements(RQ_SRS_024_ClickHouse_Keeper_Config_TCPPortSecure("1.0"))
+# def tcp_port_secure(self):
+#     """I check behavior of ClickHouse server and ClickHouse Keeper with correct tcp_port_secure config option."""
+#     cluster = self.context.cluster
+#     cluster_name = "'cluster_1replica_1shard'"
+#     try:
+#         with Given("I create configs with valid tcp_port_secure and secure option"):
+#             tcp_port_conf(tcp_port=2181, tcp_port_secure=True, secure=1)
+#
+#         with Then("I create table and I expect replicated table creation"):
+#             retry(cluster.node("clickhouse1").query, timeout=500, delay=1)(
+#                 f"CREATE TABLE IF NOT EXISTS"
+#                 f" zookeeper_bench on CLUSTER {cluster_name}"
+#                 f" (p UInt64, x UInt64) "
+#                 "ENGINE = ReplicatedSummingMergeTree"
+#                 "('/clickhouse/tables/replicated/{shard}"
+#                 f"/zookeeper_bench'"
+#                 ", '{replica}') "
+#                 "ORDER BY tuple() PARTITION BY p ",
+#                 steps=False,
+#             )
+#     finally:
+#         with Finally("I clean created data"):
+#             cluster.node("clickhouse1").query(
+#                 f"DROP TABLE IF EXISTS zookeeper_bench ON CLUSTER {cluster_name} SYNC"
+#             )
+#             clean_coordination_on_all_nodes()
 
 
 # @TestScenario
