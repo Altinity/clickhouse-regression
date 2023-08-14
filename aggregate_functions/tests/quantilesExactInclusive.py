@@ -5,15 +5,15 @@ from aggregate_functions.requirements import (
 )
 
 from aggregate_functions.tests.steps import get_snapshot_id
-from aggregate_functions.tests.quantileExactInclusive import feature as checks
+from aggregate_functions.tests.quantileExactInclusive import scenario as checks
 
 
-@TestFeature
+@TestScenario
 @Name("quantilesExactInclusive")
 @Requirements(
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_QuantilesExactInclusive("1.0")
 )
-def feature(self, func="quantilesExactInclusive({params})", table=None):
+def scenario(self, func="quantilesExactInclusive({params})", table=None):
     """Check quantilesExactInclusive aggregate function by using the same tests as for quantileExactInclusive."""
     self.context.snapshot_id = get_snapshot_id()
 

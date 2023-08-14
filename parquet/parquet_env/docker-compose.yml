@@ -49,21 +49,21 @@ services:
         condition: service_healthy
 
   proxy1:
-    image: registry.gitlab.com/altinity-public/container-images/test/clickhouse-s3-proxy:1.0
+    image: altinityinfra/s3-proxy:265-ea7abf434d5f99618d1e188b8284cf43835724f3
     ports:
       - "8080"
       - "80"
       - "443"
 
   proxy2:
-    image: registry.gitlab.com/altinity-public/container-images/test/clickhouse-s3-proxy:1.0
+    image: altinityinfra/s3-proxy:265-ea7abf434d5f99618d1e188b8284cf43835724f3
     ports:
       - "8080"
       - "80"
       - "443"
 
   resolver:
-    image: registry.gitlab.com/altinity-public/container-images/test/clickhouse-python-bottle:1.0
+    image: altinityinfra/python-bottle:265-ea7abf434d5f99618d1e188b8284cf43835724f3
     ports:
       - "8080"
     tty: true
@@ -106,7 +106,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/postgres1/database:/var/lib/postgres"
 
   # dummy service which does nothing, but allows to postpone
-  # 'docker-compose up -d' till all dependecies will go healthy
+  # 'docker-compose up -d' till all dependencies will go healthy
   all_services_ready:
     image: hello-world
     depends_on:

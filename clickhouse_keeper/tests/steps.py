@@ -78,15 +78,15 @@ def instrument_cluster_nodes(self, test, cluster_nodes, always_dump=True):
 
 @TestStep(Given)
 def add_config_section(
-        self,
-        config,
-        timeout=300,
-        restart=False,
-        modify=False,
-        node=None,
-        user=None,
-        wait_healthy=True,
-        check_preprocessed=True,
+    self,
+    config,
+    timeout=300,
+    restart=False,
+    modify=False,
+    node=None,
+    user=None,
+    wait_healthy=True,
+    check_preprocessed=True,
 ):
     """Add config on cluster nodes."""
     return add_config(
@@ -102,15 +102,15 @@ def add_config_section(
 
 @TestStep(Given)
 def add_invalid_config_section(
-        self,
-        config,
-        message,
-        recover_config=None,
-        tail=30,
-        timeout=300,
-        restart=True,
-        user=None,
-        node=None,
+    self,
+    config,
+    message,
+    recover_config=None,
+    tail=30,
+    timeout=300,
+    restart=True,
+    user=None,
+    node=None,
 ):
     """Add invalid config on cluster nodes."""
     # todo add node section as in add config, add yield in common.py
@@ -127,13 +127,13 @@ def add_invalid_config_section(
 
 @TestStep(Given)
 def create_ssl_configuration(
-        self,
-        config_d_dir="/etc/clickhouse-server/config.d/",
-        config_file="ssl_conf.xml",
-        nodes=None,
-        entries=ssl_entries,
-        restart=True,
-        check_preprocessed=True,
+    self,
+    config_d_dir="/etc/clickhouse-server/config.d/",
+    config_file="ssl_conf.xml",
+    nodes=None,
+    entries=ssl_entries,
+    restart=True,
+    check_preprocessed=True,
 ):
     """Create ClickHouse SSL servers configuration.
 
@@ -166,14 +166,14 @@ def create_ssl_configuration(
 
 @TestStep(Given)
 def create_remote_configuration(
-        self,
-        config_d_dir="/etc/clickhouse-server/config.d/",
-        config_file="remote.xml",
-        nodes=None,
-        entries=remote_entries,
-        restart=True,
-        modify=False,
-        check_preprocessed=True,
+    self,
+    config_d_dir="/etc/clickhouse-server/config.d/",
+    config_file="remote.xml",
+    nodes=None,
+    entries=remote_entries,
+    restart=True,
+    modify=False,
+    check_preprocessed=True,
 ):
     """Create ClickHouse remote servers configuration.
 
@@ -206,18 +206,18 @@ def create_remote_configuration(
 
 @TestStep(When)
 def create_keeper_cluster_configuration(
-        self,
-        invalid_config=False,
-        config_d_dir="/etc/clickhouse-server/config.d/",
-        config_file="serverkeeper.xml",
-        nodes=None,
-        test_setting_name="startup_timeout",
-        test_setting_value="30000",
-        check_preprocessed=True,
-        tcp_port=2181,
-        tcp_port_secure=False,
-        restart=True,
-        modify=False,
+    self,
+    invalid_config=False,
+    config_d_dir="/etc/clickhouse-server/config.d/",
+    config_file="serverkeeper.xml",
+    nodes=None,
+    test_setting_name="startup_timeout",
+    test_setting_value="30000",
+    check_preprocessed=True,
+    tcp_port=2181,
+    tcp_port_secure=False,
+    restart=True,
+    modify=False,
 ):
     """Create ClickHouse Keeper raft configuration file.
 
@@ -320,15 +320,15 @@ def create_keeper_cluster_configuration(
 
 @TestStep(When)
 def create_config_section(
-        self,
-        config_d_dir="/etc/clickhouse-server/config.d/",
-        config_file="keeper.xml",
-        control_nodes=None,
-        cluster_nodes=None,
-        check_preprocessed=True,
-        restart=True,
-        modify=False,
-        ssl=False,
+    self,
+    config_d_dir="/etc/clickhouse-server/config.d/",
+    config_file="keeper.xml",
+    control_nodes=None,
+    cluster_nodes=None,
+    check_preprocessed=True,
+    restart=True,
+    modify=False,
+    ssl=False,
 ):
     """Create section for ClickHouse servers config file.
 
@@ -386,14 +386,14 @@ def create_config_section(
 
 @TestStep(When)
 def create_config_section_ssl(
-        self,
-        config_d_dir="/etc/clickhouse-server/config.d/",
-        config_file="use_secure_keeper.xml",
-        control_nodes=None,
-        cluster_nodes=None,
-        check_preprocessed=False,
-        restart=False,
-        modify=True,
+    self,
+    config_d_dir="/etc/clickhouse-server/config.d/",
+    config_file="use_secure_keeper.xml",
+    control_nodes=None,
+    cluster_nodes=None,
+    check_preprocessed=False,
+    restart=False,
+    modify=True,
 ):
     create_config_section(
         config_d_dir=config_d_dir,
@@ -530,14 +530,14 @@ def clean_coordination_on_all_nodes(self, cluster_nodes=None):
 
 @TestStep(When)
 def create_simple_table(
-        self,
-        node=None,
-        table_name="test",
-        cluster_name="'Cluster_3shards_with_3replicas'",
-        values="Id Int32, partition Int32",
-        order_by="ORDER BY Id ",
-        partition_by="PARTITION BY Id",
-        manual_cleanup=False,
+    self,
+    node=None,
+    table_name="test",
+    cluster_name="'Cluster_3shards_with_3replicas'",
+    values="Id Int32, partition Int32",
+    order_by="ORDER BY Id ",
+    partition_by="PARTITION BY Id",
+    manual_cleanup=False,
 ):
     """Create simple table with timeout option.
 
@@ -571,12 +571,12 @@ def create_simple_table(
 
 @TestStep(When)
 def table_insert(
-        self,
-        node=None,
-        exitcode=0,
-        node_name="clickhouse1",
-        table_name="test",
-        values="1,111",
+    self,
+    node=None,
+    exitcode=0,
+    node_name="clickhouse1",
+    table_name="test",
+    values="1,111",
 ):
     """Table insert with timeout option.
 
@@ -595,7 +595,7 @@ def table_insert(
 
 @TestStep(Given)
 def table_select(
-        self, node=None, node_name="clickhouse1", table_name="test", message="1,111"
+    self, node=None, node_name="clickhouse1", table_name="test", message="1,111"
 ):
     """Select from table with timeout option.
 
@@ -612,12 +612,12 @@ def table_select(
 
 @TestStep(Given)
 def start_mixed_keeper(
-        self,
-        control_nodes=None,
-        cluster_nodes=None,
-        rest_cluster_nodes=None,
-        test_setting_name="startup_timeout",
-        test_setting_value="30000",
+    self,
+    control_nodes=None,
+    cluster_nodes=None,
+    rest_cluster_nodes=None,
+    test_setting_name="startup_timeout",
+    test_setting_value="30000",
 ):
     """Start 9 nodes ClickHouse server with one shared 3 nodes shard Keeper."""
     cluster = self.context.cluster
@@ -707,7 +707,7 @@ def start_different_shared_keeper(self):
             )
 
         with And(
-                "I start 9 nodes ClickHouse Keeper server with 3 different ClickHouse Keeper servers and 1 shared"
+            "I start 9 nodes ClickHouse Keeper server with 3 different ClickHouse Keeper servers and 1 shared"
         ):
             for name in cluster.nodes["clickhouse"][:9]:
                 cluster.node(name).restart_clickhouse(wait_healthy=False)
@@ -890,7 +890,7 @@ def drop_table_check(self):
         )(name="clickhouse1", sleep=10)
 
         with Then(
-                "I try dropping table when clickhouse1 node is stopped", flags=MANDATORY
+            "I try dropping table when clickhouse1 node is stopped", flags=MANDATORY
         ):
             self.context.cluster.node("clickhouse2").query(
                 f"DROP TABLE IF EXISTS {table_name} ON CLUSTER "
@@ -942,9 +942,9 @@ def drop_table(self, table_name="test"):
 
 @TestStep(Given)
 def system_zoo_check(
-        self,
-        sleep=0,
-        check_points=2,
+    self,
+    sleep=0,
+    check_points=2,
 ):
     """ZooKeeper rows check from system table."""
     with When("I check rows number"):
@@ -1046,7 +1046,7 @@ _entries_client_ssl = {
 
 @TestStep(Given)
 def create_client_ssl(
-        self, config_d_dir="/etc/clickhouse-client/", config_file="config.xml", nodes=None
+    self, config_d_dir="/etc/clickhouse-client/", config_file="config.xml", nodes=None
 ):
     try:
         with Given("I create remote config"):
@@ -1069,10 +1069,10 @@ def create_client_ssl(
 
 @TestStep(Given)
 def create_open_ssl(
-        self,
-        config_d_dir="/etc/clickhouse-server/config.d/",
-        config_file="ssl_conf.xml",
-        nodes=None,
+    self,
+    config_d_dir="/etc/clickhouse-server/config.d/",
+    config_file="ssl_conf.xml",
+    nodes=None,
 ):
     with Given("I create remote config"):
         try:
@@ -1181,16 +1181,16 @@ def create_3_3_cluster_config_ssl(self):
 
 @TestStep(Given)
 def create_configuration_ssl(
-        self,
-        root="clickhouse",
-        section="remote_servers",
-        config_d_dir="/etc/clickhouse-server/config.d/",
-        config_file="remote.xml",
-        nodes=None,
-        entries=remote_entries_ssl,
-        restart=False,
-        modify=True,
-        check_preprocessed=True,
+    self,
+    root="clickhouse",
+    section="remote_servers",
+    config_d_dir="/etc/clickhouse-server/config.d/",
+    config_file="remote.xml",
+    nodes=None,
+    entries=remote_entries_ssl,
+    restart=False,
+    modify=True,
+    check_preprocessed=True,
 ):
     """Create ClickHouse remote servers configuration.
 
@@ -1228,17 +1228,17 @@ def create_configuration_ssl(
 
 @TestStep(When)
 def create_keeper_cluster_configuration_ssl(
-        self,
-        invalid_config=False,
-        config_d_dir="/etc/clickhouse-server/config.d/",
-        config_file="enable_secure_keeper.xml",
-        nodes=None,
-        test_setting_name="startup_timeout",
-        test_setting_value="30000",
-        check_preprocessed=False,
-        tcp_port=9281,
-        restart=False,
-        modify=True,
+    self,
+    invalid_config=False,
+    config_d_dir="/etc/clickhouse-server/config.d/",
+    config_file="enable_secure_keeper.xml",
+    nodes=None,
+    test_setting_name="startup_timeout",
+    test_setting_value="30000",
+    check_preprocessed=False,
+    tcp_port=9281,
+    restart=False,
+    modify=True,
 ):
     """Create ClickHouse Keeper raft configuration file.
 
@@ -1317,12 +1317,12 @@ def create_keeper_cluster_configuration_ssl(
 
 @TestStep(Given)
 def start_mixed_keeper_ssl(
-        self,
-        control_nodes=None,
-        cluster_nodes=None,
-        rest_cluster_nodes=None,
-        test_setting_name="startup_timeout",
-        test_setting_value="30000",
+    self,
+    control_nodes=None,
+    cluster_nodes=None,
+    rest_cluster_nodes=None,
+    test_setting_name="startup_timeout",
+    test_setting_value="30000",
 ):
     """Start 9 nodes ClickHouse server with one shared 3 nodes shard Keeper."""
     cluster = self.context.cluster
@@ -1413,12 +1413,12 @@ def openssl_check_step(self, node=None, port="9440"):
 
 @TestStep(Given)
 def start_standalone_keeper(
-        self,
-        control_nodes=None,
-        cluster_nodes=None,
-        test_setting_name="startup_timeout",
-        test_setting_value="30000",
-        ssl=None,
+    self,
+    control_nodes=None,
+    cluster_nodes=None,
+    test_setting_name="startup_timeout",
+    test_setting_value="30000",
+    ssl=None,
 ):
     if ssl is None:
         if self.context.ssl == "true":
@@ -1449,7 +1449,6 @@ def start_standalone_keeper(
             clean_coordination_on_all_nodes()
 
         if ssl:
-            pause("3")
             with And("I create server Keeper config"):
                 create_config_section_ssl(
                     control_nodes=control_nodes,
@@ -1475,7 +1474,6 @@ def start_standalone_keeper(
                     modify=True,
                 )
         else:
-            pause("2")
             with And("I create server Keeper config"):
                 create_config_section(
                     control_nodes=control_nodes,

@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  clickhouse:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    init: true
+    expose:
+      - "9000"
+      - "9009"
+      - "8123"
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/docker_related_config.xml:/etc/clickhouse-server/config.d/docker_related_config.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.xml:/etc/clickhouse-server/config.xml"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.xml:/etc/clickhouse-server/users.xml"
+      - "${CLICKHOUSE_TESTS_SERVER_BIN_PATH:-/usr/bin/clickhouse}:/usr/bin/clickhouse"
+    entrypoint: bash -c "tail -f /dev/null"
+    healthcheck:
+      test: echo 1
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 300s
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - label:disable

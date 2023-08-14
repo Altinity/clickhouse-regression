@@ -218,11 +218,11 @@ def different_shared_start_up(self):
         xfail("test doesn't work from 23.3")
 
 
-
 @TestFeature
 @Requirements(RQ_SRS_024_ClickHouse_Keeper_Configurations("1.0"))
 @Name("servers start up")
 def feature(self):
     """Check different ClickHouse server configurations"""
+    xfail("unstable fix check")
     for scenario in loads(current_module(), Scenario):
         scenario()

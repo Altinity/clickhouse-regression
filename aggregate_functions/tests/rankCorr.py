@@ -20,10 +20,10 @@ def datatype(self, func, table, col1_name, col2_name):
     )
 
 
-@TestFeature
+@TestScenario
 @Name("rankCorr")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_RankCorr("1.0"))
-def feature(self, func="rankCorr({params})", table=None):
+def scenario(self, func="rankCorr({params})", table=None):
     """Check rankCorr aggregate function by using the same checks as for corr."""
     self.context.snapshot_id = get_snapshot_id()
 
@@ -83,7 +83,7 @@ def feature(self, func="rankCorr({params})", table=None):
             f"SELECT {func.format(params='y,x')} FROM values('x Int8, y Float64', (0,0.1), (1,0.34), (2,.88), (3,-1.23), (4,-3.3), (5,5.4))"
         )
 
-    with Feature("datatypes"):
+    with Scenario("datatypes"):
         with Pool(3) as executor:
             for column in table.columns:
                 col_name, col_type = column.name, column.datatype.name
@@ -108,7 +108,7 @@ def feature(self, func="rankCorr({params})", table=None):
 
             join()
 
-        with Feature(
+        with Scenario(
             "permutations",
             description="sanity check most common column type permutations",
         ):

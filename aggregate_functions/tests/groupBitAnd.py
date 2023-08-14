@@ -7,10 +7,10 @@ from aggregate_functions.requirements import (
 )
 
 
-@TestFeature
+@TestScenario
 @Name("groupBitAnd")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_GroupBitAnd("1.0"))
-def feature(self, func="groupBitAnd({params})", table=None, extended_precision=False):
+def scenario(self, func="groupBitAnd({params})", table=None, extended_precision=False):
     """Check groupBitAnd aggregate function."""
     self.context.snapshot_id = get_snapshot_id()
 

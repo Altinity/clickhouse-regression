@@ -3,9 +3,9 @@ from helpers.tables import is_numeric, is_unsigned_integer
 from aggregate_functions.tests.steps import *
 
 
-@TestFeature
+@TestScenario
 @Name("quantileWeighted")
-def feature(
+def scenario(
     self,
     func="avg({params})",
     table=None,
@@ -84,8 +84,8 @@ def feature(
             f"SELECT {func.format(params='x,1')}  FROM values('x Float64', (nan), (2.3), (inf), (6.7), (-inf), (5))"
         )
 
-    with Feature("datatypes"):
-        with Feature(
+    with Scenario("datatypes"):
+        with Scenario(
             "permutations",
             description="sanity check most common column type permutations",
         ):

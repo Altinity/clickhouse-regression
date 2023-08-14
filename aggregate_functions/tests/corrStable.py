@@ -5,13 +5,13 @@ from aggregate_functions.requirements import (
 )
 
 from aggregate_functions.tests.steps import get_snapshot_id
-from aggregate_functions.tests.corr import feature as checks
+from aggregate_functions.tests.corr import scenario as checks
 
 
-@TestFeature
+@TestScenario
 @Name("corrStable")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_Corr("1.0"))
-def feature(self, func="corrStable({params})", table=None):
+def scenario(self, func="corrStable({params})", table=None):
     """Check corrStable aggregate function by using the same checks as for covarPop."""
     self.context.snapshot_id = get_snapshot_id()
 

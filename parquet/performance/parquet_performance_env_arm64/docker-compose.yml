@@ -1,0 +1,35 @@
+version: '2.3'
+
+volumes:
+  data1-1:
+
+services:
+  clickhouse1:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse1
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+      - data1-1:/data1
+
+  duckdb1:
+    extends:
+      file: duckdb-service.yml
+      service: duckdb
+    hostname: duckdb1
+    volumes:
+      - data1-1:/data1
+
+
+  # dummy service which does nothing, but allows to postpone
+  # 'docker-compose up -d' until all dependencies will go healthy
+  all_services_ready:
+    image: hello-world
+    depends_on:
+      clickhouse1:
+        condition: service_healthy
+      duckdb1:
+        condition: service_healthy

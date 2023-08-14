@@ -6,13 +6,13 @@ from aggregate_functions.requirements import (
 )
 
 from aggregate_functions.tests.steps import get_snapshot_id, execute_query
-from aggregate_functions.tests.quantileWeighted import feature as checks
+from aggregate_functions.tests.quantileWeighted import scenario as checks
 
 
-@TestFeature
+@TestScenario
 @Name("welchTTest")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_WelchTTest("1.0"))
-def feature(
+def scenario(
     self,
     func="welchTTest({params})",
     table=None,

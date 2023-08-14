@@ -167,6 +167,8 @@ def regression(
         with Given("I check if the binary is FIPS compatible"):
             if "fips" in current().context.clickhouse_version:
                 self.context.fips_mode = True
+            else:
+                self.context.fips_mode = False
 
         if ssl:
             create_3_3_cluster_config_ssl()
@@ -198,7 +200,6 @@ def regression(
             Feature(run=load("clickhouse_keeper.tests.migration", "feature"))
             Feature(run=load("clickhouse_keeper.tests.synchronization", "feature"))
             Feature(run=load("clickhouse_keeper.tests.cli", "feature"))
-            Feature(run=load("clickhouse_keeper.tests.servers_start_up", "feature"))
             Feature(run=load("clickhouse_keeper.tests.cli_converter", "feature"))
             Feature(
                 run=load(
@@ -217,6 +218,7 @@ def regression(
             Feature(
                 run=load("clickhouse_keeper.tests.four_letter_word_commands", "feature")
             )
+            Feature(run=load("clickhouse_keeper.tests.servers_start_up", "feature"))
             Feature(
                 run=load("clickhouse_keeper.tests.coordination_settings", "feature")
             )

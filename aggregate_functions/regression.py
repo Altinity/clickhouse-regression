@@ -117,13 +117,13 @@ def regression(
     with Pool(5) as executor:
         for name in aggregate_functions:
             try:
-                suite = load(f"aggregate_functions.tests.{name}", "feature")
+                scenario = load(f"aggregate_functions.tests.{name}", "scenario")
             except ModuleNotFoundError:
-                with Feature(f"{name}"):
-                    xfail(reason=f"{name} tests are not implemented")
+                with Scenario(f"{name}"):
+                    skip(reason=f"{name} test is not implemented")
                 continue
 
-            Feature(test=suite, parallel=True, executor=executor)()
+            Scenario(test=scenario, parallel=True, executor=executor)()
 
         join()
 

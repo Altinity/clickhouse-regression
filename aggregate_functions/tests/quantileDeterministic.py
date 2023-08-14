@@ -5,15 +5,15 @@ from aggregate_functions.requirements import (
 )
 
 from aggregate_functions.tests.steps import get_snapshot_id
-from aggregate_functions.tests.quantile import feature as checks
+from aggregate_functions.tests.quantile import scenario as checks
 
 
-@TestFeature
+@TestScenario
 @Name("quantileDeterministic")
 @Requirements(
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_QuantileDeterministic("1.0")
 )
-def feature(
+def scenario(
     self, func="quantileDeterministic({params})", table=None, date=True, datetime=True
 ):
     """Check quantileDeterministic aggregate function by using the same tests as for avg."""

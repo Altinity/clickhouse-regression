@@ -5,13 +5,13 @@ from aggregate_functions.requirements import (
 )
 
 from aggregate_functions.tests.steps import get_snapshot_id
-from aggregate_functions.tests.avg import feature as checks
+from aggregate_functions.tests.avg import scenario as checks
 
 
-@TestFeature
+@TestScenario
 @Name("stddevSamp")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_StddevSamp("1.0"))
-def feature(self, func="stddevSamp({params})", table=None):
+def scenario(self, func="stddevSamp({params})", table=None):
     """Check stddevSamp aggregate function by using the same checks as for avg."""
     self.context.snapshot_id = get_snapshot_id()
 

@@ -14,10 +14,10 @@ from aggregate_functions.tests.steps import (
 )
 
 
-@TestFeature
+@TestScenario
 @Name("mannWhitneyUTest")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_MannWhitneyUTest("1.0"))
-def feature(self, func="mannWhitneyUTest({params})", table=None, snapshot_id=None):
+def scenario(self, func="mannWhitneyUTest({params})", table=None, snapshot_id=None):
     """Check mannWhitneyUTest aggregate function by using the same tests as for welchTTest."""
     clickhouse_version = (
         ">=22.6" if check_clickhouse_version("<23.2")(self) else ">=23.2"
@@ -120,8 +120,8 @@ def feature(self, func="mannWhitneyUTest({params})", table=None, snapshot_id=Non
             f"SELECT {func.format(params='x,y')}  FROM values('x Float64, y Int8', (nan,0), (2.3,1), (inf,1), (6.7,0), (-inf,0), (5,1))"
         )
 
-    with Feature("datatypes"):
-        with Feature(
+    with Scenario("datatypes"):
+        with Scenario(
             "permutations",
             description="sanity check most common column type permutations",
         ):

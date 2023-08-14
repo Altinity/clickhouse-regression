@@ -4,17 +4,17 @@ from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_StochasticLogisticRegression,
 )
 
-from aggregate_functions.tests.avg import feature as checks
+from aggregate_functions.tests.avg import scenario as checks
 
 
-@TestFeature
+@TestScenario
 @Name("stochasticLogisticRegression")
 @Requirements(
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_StochasticLogisticRegression(
         "1.0"
     )
 )
-def feature(self, func="stochasticLogisticRegression({params})", table=None):
+def scenario(self, func="stochasticLogisticRegression({params})", table=None):
     """Check stochasticLogisticRegression aggregate function by using the same tests as for avg."""
 
     if table is None:
