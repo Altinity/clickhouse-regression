@@ -43,6 +43,7 @@ def select_from_engine(self):
     self.context.snapshot_id = get_snapshot_id()
     node = self.context.node
     compression_type = self.context.compression_type
+    uid = getuid()
     table_name = "table_" + getuid()
     table_columns = self.context.parquet_table_columns
 
@@ -50,10 +51,10 @@ def select_from_engine(self):
         copy_file_to_host(
             src_node="clickhouse1",
             src_path=f"/var/lib/test_files/data_{compression_type}.Parquet",
-            host_filename=f"data_{compression_type}.Parquet",
+            host_filename=f"data_{uid}_{compression_type}.Parquet",
         )
         upload_file_to_s3(
-            file_src=f"/tmp/test_files/data_{compression_type}.Parquet",
+            file_src=f"/tmp/test_files/data_{uid}_{compression_type}.Parquet",
             file_dest=f"data/parquet/{table_name}.Parquet",
         )
 
@@ -268,6 +269,7 @@ def select_from_function_manual_cast_types(self):
     """
     self.context.snapshot_id = get_snapshot_id()
     compression_type = self.context.compression_type
+    uid = getuid()
     table_name = "table_" + getuid()
     table_columns = self.context.parquet_table_columns
     table_def = ",".join([column.full_definition() for column in table_columns])
@@ -276,10 +278,10 @@ def select_from_function_manual_cast_types(self):
         copy_file_to_host(
             src_node="clickhouse1",
             src_path=f"/var/lib/test_files/data_{compression_type}.Parquet",
-            host_filename=f"data_{compression_type}.Parquet",
+            host_filename=f"data_{uid}_{compression_type}.Parquet",
         )
         upload_file_to_s3(
-            file_src=f"/tmp/test_files/data_{compression_type}.Parquet",
+            file_src=f"/tmp/test_files/data_{uid}_{compression_type}.Parquet",
             file_dest=f"data/parquet/{table_name}.Parquet",
         )
 
@@ -309,6 +311,7 @@ def select_from_function_auto_cast_types(self):
     """
     self.context.snapshot_id = get_snapshot_id(clickhouse_version="<22.6")
     compression_type = self.context.compression_type
+    uid = getuid()
     table_name = "table_" + getuid()
     table_columns = self.context.parquet_table_columns
 
@@ -316,10 +319,10 @@ def select_from_function_auto_cast_types(self):
         copy_file_to_host(
             src_node="clickhouse1",
             src_path=f"/var/lib/test_files/data_{compression_type}.Parquet",
-            host_filename=f"data_{compression_type}.Parquet",
+            host_filename=f"data_{uid}_{compression_type}.Parquet",
         )
         upload_file_to_s3(
-            file_src=f"/tmp/test_files/data_{compression_type}.Parquet",
+            file_src=f"/tmp/test_files/data_{uid}_{compression_type}.Parquet",
             file_dest=f"data/parquet/{table_name}.Parquet",
         )
 
