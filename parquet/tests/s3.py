@@ -68,7 +68,7 @@ def select_from_engine(self):
     with Check(
         "I check that the table reads the data correctly by checking the table columns"
     ):
-        with Pool(3) as executor:
+        with Pool(6) as executor:
             for column in table_columns:
                 Check(
                     test=execute_query_step,
@@ -124,7 +124,7 @@ def engine_to_file_to_engine(self):
     with Check(
         "I check that the table reads the data correctly by checking the table columns"
     ):
-        with Pool(3) as executor:
+        with Pool(6) as executor:
             for column in columns:
                 Check(
                     test=execute_query_step,
@@ -167,7 +167,7 @@ def insert_into_engine_from_file(self):
     with Check(
         "I check that the table reads the data correctly by checking the table columns"
     ):
-        with Pool(3) as executor:
+        with Pool(6) as executor:
             for column in table_columns:
                 Check(
                     test=execute_query_step,
@@ -286,7 +286,7 @@ def select_from_function_manual_cast_types(self):
         )
 
     with Check("I check that the `s3` table function reads data correctly"):
-        with Pool(3) as executor:
+        with Pool(6) as executor:
             for column in table_columns:
                 Check(
                     test=execute_query_step,
@@ -327,7 +327,7 @@ def select_from_function_auto_cast_types(self):
         )
 
     with Check("I check that the `s3` table function reads data correctly"):
-        with Pool(3) as executor:
+        with Pool(6) as executor:
             for column in table_columns:
                 Check(
                     test=execute_query_step,
@@ -346,7 +346,7 @@ def select_from_function_auto_cast_types(self):
 def engine(self):
     """Check that table with `S3` engine correctly reads and writes Parquet format."""
 
-    with Pool(2) as executor:
+    with Pool(5) as executor:
         Scenario(run=insert_into_engine, parallel=True, executor=executor)
         Scenario(run=select_from_engine, parallel=True, executor=executor)
         Scenario(run=engine_to_file_to_engine, parallel=True, executor=executor)
