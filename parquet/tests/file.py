@@ -91,7 +91,7 @@ def select_from_engine(self):
     with Check(
         "I check that the table reads the data correctly by checking the table columns"
     ):
-        with Pool(6) as executor:
+        with Pool(3) as executor:
             for column in table_columns:
                 Check(
                     test=execute_query_step,
@@ -158,7 +158,7 @@ def engine_to_file_to_engine(self):
     with Check(
         "I check that the new table is able to read the data from the file correctly"
     ):
-        with Pool(6) as executor:
+        with Pool(3) as executor:
             for column in table1.columns:
                 r = node.query(
                     f"SELECT {column.name}, toTypeName({column.name}) FROM {table0_name}"
@@ -222,7 +222,7 @@ def insert_into_engine_from_file(self, compression_type):
         )
 
     with Check("I check that the table columns contain correct data"):
-        with Pool(6) as executor:
+        with Pool(3) as executor:
             for column in table_columns:
                 Check(
                     test=execute_query_step,
@@ -409,7 +409,7 @@ def select_from_function_manual_cast_types(self):
     table_def = ",".join([column.full_definition() for column in table_columns])
 
     with Check("I check that the `file` table function reads data correctly"):
-        with Pool(6) as executor:
+        with Pool(3) as executor:
             for column in table_columns:
                 Check(
                     test=execute_query_step,
@@ -431,7 +431,7 @@ def select_from_function_auto_cast_types(self):
     table_columns = self.context.parquet_table_columns
 
     with Check("I check that the `file` table function reads data correctly"):
-        with Pool(6) as executor:
+        with Pool(3) as executor:
             for column in table_columns:
                 Check(
                     test=execute_query_step,
