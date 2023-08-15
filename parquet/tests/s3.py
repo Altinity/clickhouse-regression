@@ -410,7 +410,7 @@ def feature(self):
 
     with Feature("compression type"):
         with Pool(3) as executor:
-            Feature(run=none, parallel=True, executor=executor)
-            Feature(run=gzip, parallel=True, executor=executor)
-            Feature(run=lz4, parallel=True, executor=executor)
+            Feature(name="=NONE ", run=none, parallel=True, executor=executor)
+            Feature(name="=GZIP ", run=gzip, parallel=True, executor=executor)
+            Feature(name="=LZ4 ", run=lz4, parallel=True, executor=executor)
             join()
