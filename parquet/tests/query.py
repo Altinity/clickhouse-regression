@@ -344,6 +344,7 @@ def lz4(self):
     outline(compression_type="LZ4")
 
 
+@TestFeature
 @Name("query")
 def feature(self):
     """Check that ClickHouse correctly reads and writes Parquet files when using
