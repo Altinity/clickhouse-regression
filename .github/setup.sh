@@ -1,6 +1,12 @@
 #!/bin/bash
 
 set -x
+
+export RUNNER_IP=$(hostname -I | cut -d ' ' -f 1)
+export RUNNER_SSH_COMMAND="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@$RUNNER_IP"
+env
+uname -i
+
 sudo rm -rf /var/lib/apt/lists/*
 sudo rm -rf /var/cache/debconf
 sudo rm -rf /tmp/*
@@ -13,11 +19,6 @@ mkdir $SUITE/_instances
 
 echo "login to docker"
 ./retry.sh 60 2 "docker login -u $DOCKER_USERNAME --password $DOCKER_PASSWORD"
-
-env
-uname -i
-hostname -I
-python3 -c "import platform; print('Platform machine:', platform.machine())"
 
 if [[ $clickhouse_binary_path == "docker"* ]]; then
     echo "clickhouse_binary_path=$clickhouse_binary_path:$version" >> $GITHUB_ENV
