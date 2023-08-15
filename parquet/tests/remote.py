@@ -31,7 +31,7 @@ def insert_into_function(self):
             f"INSERT INTO FUNCTION remote('127.0.0.1', 'default', '{table_name}') FROM INFILE '/var/lib/clickhouse/user_files/data_{compression_type}.Parquet' FORMAT Parquet"
         )
 
-    with Then("I check the table has correct data"):
+    with Check("I check the table has correct data"):
         with Pool(3) as executor:
             for column in table_columns:
                 Check(
@@ -72,7 +72,7 @@ def select_from_function(self):
             f"SELECT * FROM remote('127.0.0.1', 'default', '{table_name}') INTO OUTFILE {path} COMPRESSION '{compression_type.lower()}' FORMAT Parquet"
         )
 
-    with Then("I check the Parquet file"):
+    with Check("I check the Parquet file"):
         check_source_file(
             path=f"/var/lib/clickhouse/user_files/{table_name}_{compression_type}.Parquet",
             compression=f"'{compression_type.lower()}'",
@@ -80,30 +80,51 @@ def select_from_function(self):
         )
 
 
-@TestOutline(Feature)
-@Examples(
-    "compression_type",
-    [
-        (
-            "NONE",
-            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_None("1.0")),
-        ),
-        (
-            "GZIP",
-            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip("1.0")),
-        ),
-        (
-            "LZ4",
-            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0")),
-        ),
-    ],
-)
-@Name("remote")
-@Requirements(RQ_SRS_032_ClickHouse_Parquet_TableFunctions_Remote("1.0"))
-def feature(self, compression_type):
-    """Run checks for ClickHouse using Parquet format using `remote` table function."""
+@TestOutline
+def outline(self, compression_type):
+    """Run checks for ClickHouse using Parquet format using `remote` table function
+    for a specific compression type."""
     self.context.compression_type = compression_type
-    self.context.node = self.context.cluster.node("clickhouse1")
 
     Scenario(run=insert_into_function)
     Scenario(run=select_from_function)
+
+
+@TestFeature
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_None("1.0"))
+def none(self):
+    """Run checks for ClickHouse using Parquet format using `remote` table function
+    using the NONE compression type."""
+    outline(compression_type="NONE")
+
+
+@TestFeature
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip("1.0"))
+def gzip(self):
+    """Run checks for ClickHouse using Parquet format using `remote` table function
+    using the GZIP compression type."""
+    outline(compression_type="GZIP")
+
+
+@TestFeature
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0"))
+def lz4(self):
+    """Run checks for ClickHouse using Parquet format using `remote` table function
+    using the LZ4 compression type."""
+    outline(compression_type="LZ4")
+
+
+@TestFeature
+@Name("remote")
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_TableFunctions_Remote("1.0"))
+def feature(self, compression_type):
+    """Run checks for ClickHouse using Parquet format using `remote` table function
+    using different compression types."""
+    self.context.node = self.context.cluster.node("clickhouse1")
+
+    with Feature("compression type"):
+        with Pool(3) as executor:
+            Feature(name="=NONE ", run=none, parallel=True, executor=executor)
+            Feature(name="=GZIP ", run=gzip, parallel=True, executor=executor)
+            Feature(name="=LZ4 ", run=lz4, parallel=True, executor=executor)
+            join()

@@ -65,7 +65,7 @@ def select_from_engine(self):
             columns=table_columns,
         )
 
-    with Then(
+    with Check(
         "I check that the table reads the data correctly by checking the table columns"
     ):
         with Pool(3) as executor:
@@ -105,7 +105,7 @@ def engine_to_file_to_engine(self):
     ):
         table0.insert_test_data()
 
-    with Then(
+    with Check(
         "I check that the data inserted into the table was correctly written into the file"
     ):
         check_source_file_on_s3(
@@ -121,7 +121,7 @@ def engine_to_file_to_engine(self):
             columns=columns,
         )
 
-    with Then(
+    with Check(
         "I check that the table reads the data correctly by checking the table columns"
     ):
         with Pool(3) as executor:
@@ -164,7 +164,7 @@ def insert_into_engine_from_file(self):
             settings=[("allow_suspicious_low_cardinality_types", 1)],
         )
 
-    with Then(
+    with Check(
         "I check that the table reads the data correctly by checking the table columns"
     ):
         with Pool(3) as executor:
@@ -207,7 +207,7 @@ def engine_select_output_to_file(self):
             f"SELECT * FROM {table_name} INTO OUTFILE '/var/lib/clickhouse/user_files/{table_name}.Parquet' COMPRESSION '{compression_type.lower()}' FORMAT Parquet"
         )
 
-    with Then(
+    with Check(
         "I check that the data inserted into the table was correctly written to the file"
     ):
         check_source_file_on_s3(
@@ -249,7 +249,7 @@ def insert_into_function(self):
             settings=[("allow_suspicious_low_cardinality_types", 1)],
         )
 
-    with Then(
+    with Check(
         "I check that the data inserted into the table function was correctly written to the file"
     ):
         check_source_file_on_s3(
@@ -285,7 +285,7 @@ def select_from_function_manual_cast_types(self):
             file_dest=f"data/parquet/{table_name}.Parquet",
         )
 
-    with When("I check that the `s3` table function reads data correctly"):
+    with Check("I check that the `s3` table function reads data correctly"):
         with Pool(3) as executor:
             for column in table_columns:
                 Check(
@@ -326,7 +326,7 @@ def select_from_function_auto_cast_types(self):
             file_dest=f"data/parquet/{table_name}.Parquet",
         )
 
-    with When("I check that the `s3` table function reads data correctly"):
+    with Check("I check that the `s3` table function reads data correctly"):
         with Pool(3) as executor:
             for column in table_columns:
                 Check(
