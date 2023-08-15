@@ -75,6 +75,9 @@ xfails = {
     "fips/:/:/connection with at least one FIPS compatible cipher should work, ciphers: ECDHE-ECDSA-AES128-GCM-SHA256 :": [
         (Fail, "not supported by SSL library")
     ],
+    "check certificate/system certificates": [
+        (Fail, "unstable test")
+    ],
     # zookeeper ssl
     "zookeepe:/fips/ECDHE-ECDSA-AES128-GCM-SHA256": [
         (
