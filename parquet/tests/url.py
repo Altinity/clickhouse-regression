@@ -25,7 +25,7 @@ def insert_into_engine(self):
     ):
         table.insert_test_data()
 
-    with Then(
+    with Check(
         "I check that the data inserted into the table was correctly written to the file"
     ):
         node.command(
@@ -58,7 +58,7 @@ def select_from_engine(self):
             columns=table_columns,
         )
 
-    with Then("I check that the table reads the data correctly"):
+    with Check("I check that the table reads the data correctly"):
         with Pool(3) as executor:
             for column in table_columns:
                 Check(
@@ -96,7 +96,7 @@ def engine_to_file_to_engine(self):
     ):
         table0.insert_test_data()
 
-    with Then(
+    with Check(
         "I check that the data inserted into the table was correctly written into the file"
     ):
         node.command(
@@ -119,7 +119,7 @@ def engine_to_file_to_engine(self):
             columns=generate_all_column_types(include=parquet_test_columns()),
         )
 
-    with Then(
+    with Check(
         "I check that the new table is able to read the data from the file correctly"
     ):
         with Pool(3) as executor:
@@ -187,7 +187,7 @@ def insert_into_engine_from_file(self, compression_type):
             f"INSERT INTO {table_name} FROM INFILE '/var/lib/clickhouse/user_files/data_{compression_type}.Parquet' FORMAT Parquet"
         )
 
-    with Then("I check that the table contains correct data"):
+    with Check("I check that the table contains correct data"):
         for column in table_columns:
             with Check(f"{column.name}"):
                 execute_query(
@@ -243,7 +243,7 @@ def engine_select_output_to_file(self, compression_type):
             f"SELECT * FROM {table_name} INTO OUTFILE {path} COMPRESSION '{compression_type.lower()}' FORMAT Parquet"
         )
 
-    with Then("I check that data was written into the Parquet file correctly"):
+    with Check("I check that data was written into the Parquet file correctly"):
         node.command(f"cp {path} /var/lib/clickhouse/user_files/{table_name}.Parquet")
         check_source_file(
             path=f"/var/lib/clickhouse/user_files/{table_name}.Parquet",
@@ -302,7 +302,7 @@ def insert_into_function(self):
             settings=[("allow_suspicious_low_cardinality_types", 1)],
         )
 
-    with Then(
+    with Check(
         "I check that the data inserted into the table was correctly written to the file"
     ):
         check_source_file(
@@ -320,7 +320,7 @@ def select_from_function_manual_cast_types(self):
     table_columns = self.context.parquet_table_columns
     table_def = ",".join([column.full_definition() for column in table_columns])
 
-    with When("I check that the `file` table function reads data correctly"):
+    with Check("I check that the `file` table function reads data correctly"):
         for column in table_columns:
             with Check(f"{column.name}"):
                 execute_query(
@@ -336,7 +336,7 @@ def select_from_function_auto_cast_types(self):
     self.context.snapshot_id = get_snapshot_id(clickhouse_version="<22.6")
     table_columns = self.context.parquet_table_columns
 
-    with When("I check that the `file` table function reads data correctly"):
+    with Check("I check that the `file` table function reads data correctly"):
         for column in table_columns:
             with Check(f"{column.name}"):
                 execute_query(

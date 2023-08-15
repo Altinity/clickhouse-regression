@@ -170,7 +170,7 @@ def upload_file_to_s3(self, file_src, file_dest):
     return
 
 
-@TestStep(Then)
+@TestCheck
 def check_source_file(self, path, compression=None, reference_table_name=None):
     """Check the contents of a Parquet file against either snapshot or provided values."""
     node = current().context.node
@@ -212,7 +212,7 @@ def check_source_file(self, path, compression=None, reference_table_name=None):
     return
 
 
-@TestStep(Then)
+@TestCheck
 def check_source_file_on_s3(
     self, file, compression_type=None, reference_table_name=None
 ):
@@ -245,7 +245,7 @@ def check_source_file_on_s3(
             f"docker cp /tmp/test_files/{parquet_file} {x}:/{parquet_file}",
         )
 
-    with Then("I check the file"):
+    with Check("I check the file"):
         check_source_file(
             path=f"/{parquet_file}",
             compression=compression_type,
