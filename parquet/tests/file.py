@@ -91,7 +91,7 @@ def select_from_engine(self):
     with Check(
         "I check that the table reads the data correctly by checking the table columns"
     ):
-        with Pool(3) as executor:
+        with Pool(6) as executor:
             for column in table_columns:
                 Check(
                     test=execute_query_step,
@@ -158,7 +158,7 @@ def engine_to_file_to_engine(self):
     with Check(
         "I check that the new table is able to read the data from the file correctly"
     ):
-        with Pool(3) as executor:
+        with Pool(6) as executor:
             for column in table1.columns:
                 r = node.query(
                     f"SELECT {column.name}, toTypeName({column.name}) FROM {table0_name}"
@@ -222,7 +222,7 @@ def insert_into_engine_from_file(self, compression_type):
         )
 
     with Check("I check that the table columns contain correct data"):
-        with Pool(3) as executor:
+        with Pool(6) as executor:
             for column in table_columns:
                 Check(
                     test=execute_query_step,
@@ -409,7 +409,7 @@ def select_from_function_manual_cast_types(self):
     table_def = ",".join([column.full_definition() for column in table_columns])
 
     with Check("I check that the `file` table function reads data correctly"):
-        with Pool(3) as executor:
+        with Pool(6) as executor:
             for column in table_columns:
                 Check(
                     test=execute_query_step,
@@ -431,7 +431,7 @@ def select_from_function_auto_cast_types(self):
     table_columns = self.context.parquet_table_columns
 
     with Check("I check that the `file` table function reads data correctly"):
-        with Pool(3) as executor:
+        with Pool(6) as executor:
             for column in table_columns:
                 Check(
                     test=execute_query_step,
@@ -448,21 +448,33 @@ def select_from_function_auto_cast_types(self):
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_File("1.0"))
 def engine(self):
     """Check that table with `File(Parquet)` engine correctly reads and writes Parquet format."""
-    Scenario(run=insert_into_engine)
-    Scenario(run=select_from_engine)
-    Scenario(run=engine_to_file_to_engine)
-    Scenario(run=insert_into_engine_from_file)
-    Scenario(run=engine_select_output_to_file)
+    with Pool(5) as executor:
+        Scenario(run=insert_into_engine, parallel=True, executor=executor)
+        Scenario(run=select_from_engine, parallel=True, executor=executor)
+        Scenario(run=engine_to_file_to_engine, parallel=True, executor=executor)
+        Scenario(run=insert_into_engine_from_file, parallel=True, executor=executor)
+        Scenario(run=engine_select_output_to_file, parallel=True, executor=executor)
+        join()
 
 
 @TestSuite
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_TableFunctions_File("1.0"))
 def function(self):
     """Check that `file` table function correctly reads and writes Parquet format."""
-    Scenario(run=insert_into_function_manual_cast_types)
-    Scenario(run=insert_into_function_auto_cast_types)
-    Scenario(run=select_from_function_manual_cast_types)
-    Scenario(run=select_from_function_auto_cast_types)
+    with Pool(4) as executor:
+        Scenario(
+            run=insert_into_function_manual_cast_types, parallel=True, executor=executor
+        )
+        Scenario(
+            run=insert_into_function_auto_cast_types, parallel=True, executor=executor
+        )
+        Scenario(
+            run=select_from_function_manual_cast_types, parallel=True, executor=executor
+        )
+        Scenario(
+            run=select_from_function_auto_cast_types, parallel=True, executor=executor
+        )
+        join()
 
 
 @TestFeature
