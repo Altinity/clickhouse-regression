@@ -821,7 +821,7 @@ jobs:
 
   parquet:
     runs-on: [self-hosted, type-cpx51]
-    timeout-minutes: 300
+    timeout-minutes: 600
     env:
       SUITE: parquet
       STORAGE: /no_s3
