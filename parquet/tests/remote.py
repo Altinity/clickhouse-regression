@@ -117,7 +117,7 @@ def lz4(self):
 @TestFeature
 @Name("remote")
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_TableFunctions_Remote("1.0"))
-def feature(self, compression_type):
+def feature(self):
     """Run checks for ClickHouse using Parquet format using `remote` table function
     using different compression types."""
     self.context.node = self.context.cluster.node("clickhouse1")
