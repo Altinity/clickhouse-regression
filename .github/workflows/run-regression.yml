@@ -3,6 +3,10 @@ run-name: ${{ github.actor }} is running regression tests
 on:
   workflow_dispatch:
     inputs:
+      ref:
+        description: "The branch, tag or SHA to checkout. Default: current."
+        type: string
+        default: ""
       package:
         description: "Package either 'docker://' or 'https://'. Example: 'https://s3.amazonaws.com/clickhouse-builds/23.3/.../package_release/clickhouse-common-static_23.3.1.64_amd64.deb', or 'docker://clickhouse/clickhouse-server'"
         required: true
@@ -117,7 +121,10 @@ jobs:
       SUITE: aes_encryption
     if: ${{ inputs.suite == 'all' || inputs.suite == 'aes_encryption' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -146,7 +153,10 @@ jobs:
       SUITE: aggregate_functions
     if: ${{ inputs.suite == 'all' || inputs.suite == 'aggregate_functions' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -175,7 +185,10 @@ jobs:
       SUITE: atomic_insert
     if: ${{ inputs.suite == 'all' || inputs.suite == 'atomic_insert' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -204,7 +217,10 @@ jobs:
       SUITE: base_58
     if: ${{ inputs.suite == 'all' || inputs.suite == 'base_58' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -234,7 +250,10 @@ jobs:
       STORAGE: /aws
     if: ${{ inputs.suite == 'all' || inputs.suite == 'benchmark_all' || inputs.suite == 'benchmark_aws' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -269,7 +288,10 @@ jobs:
       STORAGE: /gcs
     if: ${{ inputs.suite == 'all' || inputs.suite == 'benchmark_all' || inputs.suite == 'benchmark_gcs' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -303,7 +325,10 @@ jobs:
       STORAGE: /minio
     if: ${{ inputs.suite == 'all' || inputs.suite == 'benchmark_all' || inputs.suite == 'benchmark_minio' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -334,7 +359,10 @@ jobs:
       STORAGE: /no_ssl
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -364,7 +392,10 @@ jobs:
       STORAGE: /ssl
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -394,7 +425,10 @@ jobs:
       SUITE: data_types
     if: ${{ inputs.suite == 'all' || inputs.suite == 'data_types' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -423,7 +457,10 @@ jobs:
       SUITE: datetime64_extended_range
     if: ${{ inputs.suite == 'all' || inputs.suite == 'datetime64_extended_range' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -452,7 +489,10 @@ jobs:
       SUITE: disk_level_encryption
     if: ${{ inputs.suite == 'all' || inputs.suite == 'disk_level_encryption' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -481,7 +521,10 @@ jobs:
       SUITE: dns
     if: ${{ inputs.suite == 'all' || inputs.suite == 'dns' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -510,7 +553,10 @@ jobs:
       SUITE: engines
     if: ${{ inputs.suite == 'all' || inputs.suite == 'engines' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -539,7 +585,10 @@ jobs:
       SUITE: example
     if: ${{ inputs.suite == 'all' || inputs.suite == 'example' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -568,7 +617,10 @@ jobs:
       SUITE: extended_precision_data_types
     if: ${{ inputs.suite == 'all' || inputs.suite == 'extended_precision_data_types' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -625,7 +677,10 @@ jobs:
       SUITE: kafka
     if: ${{ inputs.suite == 'all' || inputs.suite == 'kafka' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -654,7 +709,10 @@ jobs:
       SUITE: kerberos
     if: ${{ inputs.suite == 'all' || inputs.suite == 'kerberos' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -682,7 +740,10 @@ jobs:
       SUITE: key_value
     if: ${{ inputs.suite == 'all' || inputs.suite == 'key_value' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -710,7 +771,10 @@ jobs:
       SUITE: ldap/authentication
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -739,7 +803,10 @@ jobs:
       SUITE: ldap/external_user_directory
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -768,7 +835,10 @@ jobs:
       SUITE: ldap/role_mapping
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -797,7 +867,10 @@ jobs:
       SUITE: lightweight_delete
     if: ${{ inputs.suite == 'all' || inputs.suite == 'lightweight_delete' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -827,7 +900,10 @@ jobs:
       STORAGE: /no_s3
     if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -857,7 +933,10 @@ jobs:
       STORAGE: /minio
     if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet_minio' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -889,7 +968,10 @@ jobs:
       STORAGE: /aws_s3
     if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet_s3' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -924,7 +1006,10 @@ jobs:
       SUITE: part_moves_between_shards
     if: ${{ inputs.suite == 'all' || inputs.suite == 'part_moves_between_shards' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -953,7 +1038,10 @@ jobs:
       SUITE: rbac
     if: ${{ inputs.suite == 'all' || inputs.suite == 'rbac' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -983,7 +1071,10 @@ jobs:
       STORAGE: /aws
     if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_aws' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -1018,7 +1109,10 @@ jobs:
       STORAGE: /gcs
     if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_gcs' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -1052,7 +1146,10 @@ jobs:
       STORAGE: /minio
     if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_minio' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -1082,7 +1179,10 @@ jobs:
       SUITE: selects
     if: ${{ inputs.suite == 'all' || inputs.suite == 'selects' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -1111,7 +1211,10 @@ jobs:
       SUITE: session_timezone
     if: ${{ inputs.suite == 'all' || inputs.suite == 'session_timezone' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -1140,7 +1243,10 @@ jobs:
       SUITE: ssl_server
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -1170,7 +1276,10 @@ jobs:
       STORAGE: /aws
     if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage_aws' || inputs.suite == 'tiered_storage_all' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -1204,7 +1313,10 @@ jobs:
       STORAGE: /gcs
     if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage_gcs' || inputs.suite == 'tiered_storage_all' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -1237,7 +1349,10 @@ jobs:
       SUITE: tiered_storage
     if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage_local' || inputs.suite == 'tiered_storage_all' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -1267,7 +1382,10 @@ jobs:
       STORAGE: /minio
     if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage_minio' || inputs.suite == 'tiered_storage_all' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -1290,7 +1408,6 @@ jobs:
           name: ${{ env.SUITE }}-minio-artifacts
           path: ${{ env.artifact_paths}}
 
-
   window_functions:
     runs-on: [self-hosted, type-cpx41]
     timeout-minutes: 180
@@ -1298,8 +1415,11 @@ jobs:
       SUITE: window_functions
     if: ${{ inputs.suite == 'all' || inputs.suite == 'window_functions' }}
     steps:
-      - uses: actions/checkout@v3
-
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
+ 
       - name: Setup
         run: .github/setup.sh
 
