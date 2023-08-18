@@ -107,7 +107,7 @@ def scenario(self, cluster, node="clickhouse1"):
                     with Then("it should return the result of 1"):
                         assert r == "1", error()
 
-                for retry with retries(timeout=60, delay=10):
+                for retry in retries(timeout=60, delay=10):
                     with When("I ensure all rows are in the table"):
                         r = node.query(f"SELECT COUNT() FROM {name}").output.strip()
                         with Then("it should return the result of 500"):
