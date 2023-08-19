@@ -21,11 +21,6 @@ def insert_into_function(self):
     with Given("I have a table"):
         table = create_table(name=table_name, engine="Memory", columns=table_columns)
 
-    with And("I have a Parquet file"):
-        node.command(
-            f"cp /var/lib/test_files/data_{compression_type}.Parquet /var/lib/clickhouse/user_files/data_{compression_type}.Parquet"
-        )
-
     with And("I read the data from the Parquet file into the `remote` table function"):
         node.query(
             f"INSERT INTO FUNCTION remote('127.0.0.1', 'default', '{table_name}') FROM INFILE '/var/lib/clickhouse/user_files/data_{compression_type}.Parquet' FORMAT Parquet"
