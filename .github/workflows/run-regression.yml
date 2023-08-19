@@ -96,6 +96,7 @@ env:
   version: ${{ inputs.version }}
   artifacts: ${{ inputs.artifacts }}
   args: --test-to-end
+    --no-colors
     --local
     --collect-service-logs
     --output ${{ inputs.output_format }}
