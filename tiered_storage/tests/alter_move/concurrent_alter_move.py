@@ -108,10 +108,11 @@ def scenario(self, cluster, node="clickhouse1"):
                         assert r == "1", error()
 
                 for retry in retries(timeout=60, delay=10):
-                    with When("I ensure all rows are in the table"):
-                        r = node.query(f"SELECT COUNT() FROM {name}").output.strip()
-                        with Then("it should return the result of 500"):
-                            assert r == "500", error()
+                    with retry:
+                        with When("I ensure all rows are in the table"):
+                            r = node.query(f"SELECT COUNT() FROM {name}").output.strip()
+                            with Then("it should return the result of 500"):
+                                assert r == "500", error()
             finally:
                 with Finally("I drop the table"):
                     node.query(f"DROP TABLE IF EXISTS {name} SYNC", timeout=360)
