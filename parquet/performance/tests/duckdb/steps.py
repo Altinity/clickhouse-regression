@@ -126,7 +126,7 @@ def query_3(self, filename: str):
     run_query(
         clickhouse_query=clickhouse_query,
         duckdb_query=duckdb_query,
-        name="query_2",
+        name="query_3",
     )
 
 
