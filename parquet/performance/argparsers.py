@@ -47,7 +47,7 @@ def argparser(parser):
         dest="max_memory_usage",
         help="Used to determine The maximum amount of RAM to use for running a query on a single server (values used in bytes)",
         metavar="value",
-        default=29000000000,
+        default=0,
     )
 
     parser.add_argument(
@@ -57,4 +57,22 @@ def argparser(parser):
         help="Used to determine compression used for inserting into outfile",
         metavar="value",
         default=None,
+    )
+
+    parser.add_argument(
+        "--rerun-queries",
+        type=str,
+        dest="rerun_queries",
+        help="Used to determine the number of time to rerun each query for performance test",
+        metavar="value",
+        default=3,
+    )
+
+    parser.add_argument(
+        "--filename",
+        type=str,
+        dest="filename",
+        help="Used to determine the name of the csv file",
+        metavar="value",
+        default="query.csv",
     )

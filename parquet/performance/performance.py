@@ -82,11 +82,13 @@ def module(
     duckdb_binary_path,
     stress,
     from_year,
+    filename,
     to_year,
     threads,
     max_memory_usage,
     compression,
     collect_service_logs,
+    rerun_queries,
     clickhouse_binary_path=None,
 ):
     """Running performance tests for ClickHouse"""
@@ -97,11 +99,14 @@ def module(
             clickhouse_version=clickhouse_version,
             stress=stress,
         )
+
+    self.context.run_count = rerun_queries
     self.context.duckdb_node = self.context.cluster.node("duckdb1")
     self.context.clickhouse_node = self.context.cluster.node("clickhouse1")
     self.context.query_results = []
     self.context.clickhouse_version = clickhouse_version
     self.context.duckdb_version = duckdb_binary_path.rsplit("/", 2)[-2][1:]
+    self.context.row_count = []
 
     Feature(test=load("parquet.performance.tests.duckdb.feature", "feature"))(
         from_year=from_year,
@@ -111,7 +116,11 @@ def module(
         compression=compression,
     )
 
-    write_to_csv(filename="query.csv", data=self.context.query_results)
+    write_to_csv(
+        filename=filename,
+        data=self.context.query_results,
+        row_count=self.context.row_count[0],
+    )
 
 
 if main():
