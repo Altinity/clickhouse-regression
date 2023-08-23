@@ -21,7 +21,7 @@ def memory_usage_for_column_input(self, node=None):
 
     with When("I compute expected result"):
         expected_result = node.query(
-            f"select count(*) from (select * from {table_name_random} limit 10000)"
+            f"select count(*) from (select * from {table_name_random} limit 1000000)"
         ).output
 
     with When("I create a table with MergeTree engine"):
@@ -29,7 +29,7 @@ def memory_usage_for_column_input(self, node=None):
 
     with When("I insert data into the table with base64 encoding"):
         node.query(
-            f"insert into {table_name_e64} select id, base64Encode(x) from {table_name_random} limit 10000;",
+            f"insert into {table_name_e64} select id, base64Encode(x) from {table_name_random} limit 1000000;",
             query_id=2000,
         )
 
@@ -38,7 +38,7 @@ def memory_usage_for_column_input(self, node=None):
 
     with When("I insert data into the table with base58 encoding"):
         node.query(
-            f"insert into {table_name_e58} select id, base58Encode(x) from {table_name_random} limit 10000;",
+            f"insert into {table_name_e58} select id, base58Encode(x) from {table_name_random} limit 1000000;",
             query_id=2001,
         )
 
@@ -91,7 +91,7 @@ def memory_usage_for_constant_input(self, node=None):
 
     with When("I check memory usage of base58 encode function"):
         r = node.query(
-            f"SELECT base58Encode('{string_of_all_askii_symbols()*30}')", query_id=1000
+            f"SELECT base58Encode('{string_of_all_askii_symbols()*1000}')", query_id=1000
         )
         b58_encoded_string = r.output
         r = node.query(
@@ -101,7 +101,7 @@ def memory_usage_for_constant_input(self, node=None):
 
     with When("I check memory usage of base64 encode function"):
         r = node.query(
-            f"SELECT base64Encode('{string_of_all_askii_symbols()*30}')", query_id=1001
+            f"SELECT base64Encode('{string_of_all_askii_symbols()*1000}')", query_id=1001
         )
         b64_encoded_string = r.output
         r = node.query(
@@ -126,8 +126,8 @@ def memory_usage_for_constant_input(self, node=None):
         b64_decode_memory_usage = int(r.output)
 
     with Then("I check strings are not changed after encode, decode"):
-        assert b58_decoded_string == string_of_all_askii_symbols() * 30, error()
-        assert b64_decoded_string == string_of_all_askii_symbols() * 30, error()
+        assert b58_decoded_string == string_of_all_askii_symbols() * 1000, error()
+        assert b64_decoded_string == string_of_all_askii_symbols() * 1000, error()
 
     with Then("I check memory usages are similar"):
         assert b58_encode_memory_usage <= b64_encode_memory_usage * 2, error()

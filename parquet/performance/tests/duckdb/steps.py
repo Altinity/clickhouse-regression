@@ -9,18 +9,27 @@ def run_query(self, name: str, clickhouse_query: str, duckdb_query: str):
     clickhouse_node = self.context.clickhouse_node
     duckdb_node = self.context.duckdb_node
     duckdb_database = "db_" + getuid()
+    repeats = self.context.run_count
 
     with By("running the query on clickhouse", description=f"{clickhouse_query}"):
-        start_time = time.time()
-        clickhouse_node.query(clickhouse_query)
-        clickhouse_run_time = time.time() - start_time
-        metric(name="clickhouse-" + name, value=clickhouse_run_time, units="s")
+        clickhouse_times = []
+        for _ in range(repeats):
+            start_time = time.time()
+            clickhouse_node.query(clickhouse_query)
+            clickhouse_run_time = time.time() - start_time
+            clickhouse_times.append(clickhouse_run_time)
+        metric(name="clickhouse-" + name, value=min(clickhouse_times), units="s")
 
     with By("running the query on duckdb", description=f"{duckdb_query}"):
-        start_time = time.time()
-        duckdb_node.command(f"duckdb {duckdb_database} '{duckdb_query}'", exitcode=0)
-        duckdb_run_time = time.time() - start_time
-        metric(name="duckdb-" + name, value=duckdb_run_time, units="s")
+        duckdb_times = []
+        for _ in range(repeats):
+            start_time = time.time()
+            duckdb_node.command(
+                f"duckdb {duckdb_database} '{duckdb_query}'", exitcode=0
+            )
+            duckdb_run_time = time.time() - start_time
+            duckdb_times.append(duckdb_run_time)
+        metric(name="duckdb-" + name, value=min(duckdb_times), units="s")
 
         self.context.query_results.append(
             (
@@ -31,8 +40,20 @@ def run_query(self, name: str, clickhouse_query: str, duckdb_query: str):
                 duckdb_run_time,
                 clickhouse_query,
                 duckdb_query,
+                str(clickhouse_times),
+                str(duckdb_times),
             )
         )
+
+
+@TestStep
+def get_row_count(self, filename: str):
+    """Calculating and uploading the row count of the parquet file into the CSV."""
+    clickhouse_node = self.context.clickhouse_node
+
+    with Given("I select the number of rows from the parquet file"):
+        rows = clickhouse_node.query(f"SELECT count() FROM file({filename})")
+    self.context.row_count.append(rows.output.strip())
 
 
 @TestStep
@@ -107,7 +128,7 @@ def query_3(self, filename: str):
     run_query(
         clickhouse_query=clickhouse_query,
         duckdb_query=duckdb_query,
-        name="query_2",
+        name="query_3",
     )
 
 

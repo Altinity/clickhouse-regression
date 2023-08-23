@@ -187,7 +187,7 @@ def s3_storage(
     policies,
     config_d_dir="/etc/clickhouse-server/config.d",
     config_file="storage.xml",
-    timeout=60,
+    timeout=300,
     restart=False,
     config=None,
     nodes=None,
@@ -197,7 +197,7 @@ def s3_storage(
         config = create_s3_storage_config_content(
             disks, policies, config_d_dir, config_file
         )
-    return add_config(config, restart=restart, nodes=nodes)
+    return add_config(config, restart=restart, nodes=nodes, timeout=timeout)
 
 
 @contextmanager

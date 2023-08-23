@@ -161,7 +161,7 @@ def regression(
                         },
                     }
 
-                with s3_storage(disks, policies):
+                with s3_storage(disks, policies, timeout=360):
                     Feature(test=load("ontime_benchmark.tests.benchmark", "feature"))(
                         format=format
                     )
