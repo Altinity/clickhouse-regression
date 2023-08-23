@@ -115,19 +115,10 @@ xfails = {
     ],
     ":/ttl moves/defaults to delete": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/50060")
-    ]
-    # "/tiered storage/with s3amazon/alter move/concurrent/concurrent alter move and select": [
-    #    (Error, "unstable test")
-    # ],
-    # "/tiered storage/with s3amazon/ttl moves": [(Fail, "unstable tests")],
-    # "/tiered storage/with s3amazon/background move/adding another volume": [
-    #     (Fail, "unstable tests")
-    # ],
-    # "/tiered storage/with s3amazon/ttl moves/:": [(Fail, "unstable test")],
-    # "/tiered storage/with s3gcs/:": [
-    #     (Fail, "suite is under development"),
-    #     (Error, "suite is under development"),
-    # ],
+    ],
+    ":/alter move/concurrent/concurrent alter move and drop": [
+        (Fail, "unstable test")
+    ],
 }
 
 ffails = {
