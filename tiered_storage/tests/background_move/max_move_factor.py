@@ -75,8 +75,8 @@ def scenario(self, cluster, node="clickhouse1"):
                             not sum(1 for x in used_disks if x == "jbod1") <= 0
                             and i < retry
                         ):
-                            with And("sleep 0.5 sec"):
-                                time.sleep(0.5)
+                            with And("sleep 1 sec"):
+                                time.sleep(1)
                             used_disks = get_used_disks_for_table(node, name)
                             i += 1
 

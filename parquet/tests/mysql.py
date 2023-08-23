@@ -144,30 +144,49 @@ def mysql_function_to_parquet_file_to_mysql_function(self):
 
 
 @TestOutline(Feature)
-@Examples(
-    "compression_type",
-    [
-        (
-            "NONE",
-            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_None("1.0")),
-        ),
-        (
-            "GZIP",
-            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip("1.0")),
-        ),
-        (
-            "LZ4",
-            Requirements(
-                RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0"),
-            ),
-        ),
-    ],
-)
-@Name("mysql")
-def feature(self, compression_type):
-    """Run checks for clickhouse using Parquet format using `MySQL` table engine and `mysql` table function."""
+def outline(self, compression_type):
+    """Run checks for clickhouse using Parquet format using `MySQL` table engine and `mysql` table function
+    using the specified compression type."""
     self.context.compression_type = compression_type
-    self.context.node = self.context.cluster.node("clickhouse1")
 
     Scenario(run=mysql_engine_to_parquet_file_to_mysql_engine)
     Scenario(run=mysql_function_to_parquet_file_to_mysql_function)
+
+
+@TestFeature
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_None("1.0"))
+def none(self):
+    """Run checks for clickhouse using Parquet format using `MySQL` table engine and `mysql` table function
+    using the NONE compression type."""
+    outline(compression_type="NONE")
+
+
+@TestFeature
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip("1.0"))
+def gzip(self):
+    """Run checks for clickhouse using Parquet format using `MySQL` table engine and `mysql` table function
+    using the GZIP compression type."""
+    outline(compression_type="GZIP")
+
+
+@TestFeature
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0"))
+def lz4(self):
+    """Run checks for clickhouse using Parquet format using `MySQL` table engine and `mysql` table function
+    using the LZ4 compression type."""
+    outline(compression_type="LZ4")
+
+
+@TestFeature
+@Name("mysql")
+def feature(self):
+    """Run checks for clickhouse using Parquet format using `MySQL` table engine and `mysql` table function
+    using different compression types."""
+    self.context.node = self.context.cluster.node("clickhouse1")
+
+    with Feature("compression type"):
+        with Pool(3) as executor:
+            Feature(name="=NONE ", run=none, parallel=True, executor=executor)
+            Feature(name="=GZIP ", run=gzip, parallel=True, executor=executor)
+            Feature(name="=LZ4 ", run=lz4, parallel=True, executor=executor)
+            join()

@@ -43,6 +43,7 @@ def select_from_engine(self):
     self.context.snapshot_id = get_snapshot_id()
     node = self.context.node
     compression_type = self.context.compression_type
+    uid = getuid()
     table_name = "table_" + getuid()
     table_columns = self.context.parquet_table_columns
 
@@ -50,10 +51,10 @@ def select_from_engine(self):
         copy_file_to_host(
             src_node="clickhouse1",
             src_path=f"/var/lib/test_files/data_{compression_type}.Parquet",
-            host_filename=f"data_{compression_type}.Parquet",
+            host_filename=f"data_{uid}_{compression_type}.Parquet",
         )
         upload_file_to_s3(
-            file_src=f"/tmp/test_files/data_{compression_type}.Parquet",
+            file_src=f"/tmp/test_files/data_{uid}_{compression_type}.Parquet",
             file_dest=f"data/parquet/{table_name}.Parquet",
         )
 
@@ -64,7 +65,7 @@ def select_from_engine(self):
             columns=table_columns,
         )
 
-    with Then(
+    with Check(
         "I check that the table reads the data correctly by checking the table columns"
     ):
         with Pool(3) as executor:
@@ -104,7 +105,7 @@ def engine_to_file_to_engine(self):
     ):
         table0.insert_test_data()
 
-    with Then(
+    with Check(
         "I check that the data inserted into the table was correctly written into the file"
     ):
         check_source_file_on_s3(
@@ -120,7 +121,7 @@ def engine_to_file_to_engine(self):
             columns=columns,
         )
 
-    with Then(
+    with Check(
         "I check that the table reads the data correctly by checking the table columns"
     ):
         with Pool(3) as executor:
@@ -155,15 +156,12 @@ def insert_into_engine_from_file(self):
         )
 
     with When("I insert data into the table from a Parquet file"):
-        node.command(
-            f"cp /var/lib/test_files/data_{compression_type}.Parquet /var/lib/clickhouse/user_files/data_{compression_type}.Parquet"
-        )
         node.query(
             f"INSERT INTO {table_name} FROM INFILE '/var/lib/clickhouse/user_files/data_{compression_type}.Parquet' FORMAT Parquet",
             settings=[("allow_suspicious_low_cardinality_types", 1)],
         )
 
-    with Then(
+    with Check(
         "I check that the table reads the data correctly by checking the table columns"
     ):
         with Pool(3) as executor:
@@ -206,7 +204,7 @@ def engine_select_output_to_file(self):
             f"SELECT * FROM {table_name} INTO OUTFILE '/var/lib/clickhouse/user_files/{table_name}.Parquet' COMPRESSION '{compression_type.lower()}' FORMAT Parquet"
         )
 
-    with Then(
+    with Check(
         "I check that the data inserted into the table was correctly written to the file"
     ):
         check_source_file_on_s3(
@@ -248,7 +246,7 @@ def insert_into_function(self):
             settings=[("allow_suspicious_low_cardinality_types", 1)],
         )
 
-    with Then(
+    with Check(
         "I check that the data inserted into the table function was correctly written to the file"
     ):
         check_source_file_on_s3(
@@ -268,6 +266,7 @@ def select_from_function_manual_cast_types(self):
     """
     self.context.snapshot_id = get_snapshot_id()
     compression_type = self.context.compression_type
+    uid = getuid()
     table_name = "table_" + getuid()
     table_columns = self.context.parquet_table_columns
     table_def = ",".join([column.full_definition() for column in table_columns])
@@ -276,14 +275,14 @@ def select_from_function_manual_cast_types(self):
         copy_file_to_host(
             src_node="clickhouse1",
             src_path=f"/var/lib/test_files/data_{compression_type}.Parquet",
-            host_filename=f"data_{compression_type}.Parquet",
+            host_filename=f"data_{uid}_{compression_type}.Parquet",
         )
         upload_file_to_s3(
-            file_src=f"/tmp/test_files/data_{compression_type}.Parquet",
+            file_src=f"/tmp/test_files/data_{uid}_{compression_type}.Parquet",
             file_dest=f"data/parquet/{table_name}.Parquet",
         )
 
-    with When("I check that the `s3` table function reads data correctly"):
+    with Check("I check that the `s3` table function reads data correctly"):
         with Pool(3) as executor:
             for column in table_columns:
                 Check(
@@ -309,6 +308,7 @@ def select_from_function_auto_cast_types(self):
     """
     self.context.snapshot_id = get_snapshot_id(clickhouse_version="<22.6")
     compression_type = self.context.compression_type
+    uid = getuid()
     table_name = "table_" + getuid()
     table_columns = self.context.parquet_table_columns
 
@@ -316,14 +316,14 @@ def select_from_function_auto_cast_types(self):
         copy_file_to_host(
             src_node="clickhouse1",
             src_path=f"/var/lib/test_files/data_{compression_type}.Parquet",
-            host_filename=f"data_{compression_type}.Parquet",
+            host_filename=f"data_{uid}_{compression_type}.Parquet",
         )
         upload_file_to_s3(
-            file_src=f"/tmp/test_files/data_{compression_type}.Parquet",
+            file_src=f"/tmp/test_files/data_{uid}_{compression_type}.Parquet",
             file_dest=f"data/parquet/{table_name}.Parquet",
         )
 
-    with When("I check that the `s3` table function reads data correctly"):
+    with Check("I check that the `s3` table function reads data correctly"):
         with Pool(3) as executor:
             for column in table_columns:
                 Check(
@@ -343,7 +343,7 @@ def select_from_function_auto_cast_types(self):
 def engine(self):
     """Check that table with `S3` engine correctly reads and writes Parquet format."""
 
-    with Pool(2) as executor:
+    with Pool(5) as executor:
         Scenario(run=insert_into_engine, parallel=True, executor=executor)
         Scenario(run=select_from_engine, parallel=True, executor=executor)
         Scenario(run=engine_to_file_to_engine, parallel=True, executor=executor)
@@ -368,29 +368,49 @@ def function(self):
         join()
 
 
-@TestOutline(Feature)
-@Examples(
-    "compression_type",
-    [
-        (
-            "NONE",
-            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_None("1.0")),
-        ),
-        (
-            "GZIP",
-            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip("1.0")),
-        ),
-        (
-            "LZ4",
-            Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0")),
-        ),
-    ],
-)
-@Name("s3")
-def feature(self, compression_type):
+@TestOutline
+def outline(self, compression_type):
     """Run checks for ClickHouse using Parquet format using `S3` table engine and `s3` table function."""
     self.context.compression_type = compression_type
     self.context.node = self.context.cluster.node("clickhouse1")
 
     Suite(run=engine)
     Suite(run=function)
+
+
+@TestFeature
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_None("1.0"))
+def none(self):
+    """Run checks for ClickHouse Parquet format using `S3` table engine and `s3` table function
+    with NONE compression type."""
+    outline(compression_type="NONE")
+
+
+@TestFeature
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Gzip("1.0"))
+def gzip(self):
+    """Run checks for ClickHouse Parquet format using `S3` table engine and `s3` table function
+    with GZIP compression type."""
+    outline(compression_type="GZIP")
+
+
+@TestFeature
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Compression_Lz4("1.0"))
+def lz4(self):
+    """Run checks for ClickHouse Parquet format using `S3` table engine and `s3` table function
+    with LZ4 compression type."""
+    outline(compression_type="LZ4")
+
+
+@TestFeature
+@Name("s3")
+def feature(self):
+    """Run checks for ClickHouse using Parquet format using `S3` table engine and `s3` table function
+    using different compression types."""
+
+    with Feature("compression type"):
+        with Pool(3) as executor:
+            Feature(name="=NONE ", run=none, parallel=True, executor=executor)
+            Feature(name="=GZIP ", run=gzip, parallel=True, executor=executor)
+            Feature(name="=LZ4 ", run=lz4, parallel=True, executor=executor)
+            join()

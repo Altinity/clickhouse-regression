@@ -88,7 +88,7 @@ def select_from_engine(self):
             columns=table_columns,
         )
 
-    with Then(
+    with Check(
         "I check that the table reads the data correctly by checking the table columns"
     ):
         with Pool(3) as executor:
@@ -128,7 +128,7 @@ def engine_to_file_to_engine(self):
     ):
         table0.insert_test_data()
 
-    with Then(
+    with Check(
         "I check that the data inserted into the table was correctly written into the file"
     ):
         node.command(
@@ -155,7 +155,7 @@ def engine_to_file_to_engine(self):
             columns=generate_all_column_types(include=parquet_test_columns()),
         )
 
-    with Then(
+    with Check(
         "I check that the new table is able to read the data from the file correctly"
     ):
         with Pool(3) as executor:
@@ -211,17 +211,12 @@ def insert_into_engine_from_file(self, compression_type):
             name=table_name, engine="File(Parquet)", columns=table_columns
         )
 
-    with And("I have a Parquet file"):
-        node.command(
-            f"cp /var/lib/test_files/data_{compression_type}.Parquet /var/lib/clickhouse/user_files/data_{compression_type}.Parquet"
-        )
-
     with When("I insert data into the table from a Parquet file"):
         node.query(
             f"INSERT INTO {table_name} FROM INFILE '/var/lib/clickhouse/user_files/data_{compression_type}.Parquet' FORMAT Parquet"
         )
 
-    with Then("I check that the table columns contain correct data"):
+    with Check("I check that the table columns contain correct data"):
         with Pool(3) as executor:
             for column in table_columns:
                 Check(
@@ -282,7 +277,7 @@ def engine_select_output_to_file(self, compression_type):
             f"SELECT * FROM {table_name} INTO OUTFILE {path} COMPRESSION '{compression_type.lower()}' FORMAT Parquet"
         )
 
-    with Then("I check that data was written into the Parquet file correctly"):
+    with Check("I check that data was written into the Parquet file correctly"):
         node.command(f"cp {path} /var/lib/clickhouse/user_files/{table_name}.Parquet")
         check_source_file(
             path=f"/var/lib/clickhouse/user_files/{table_name}.Parquet",
@@ -336,7 +331,7 @@ def insert_into_function_manual_cast_types(self):
             f"INSERT INTO {table_name} FROM INFILE '/var/lib/clickhouse/user_files/{file_name}.Parquet' FORMAT Parquet"
         )
 
-    with And("I check the specified file has correct data"):
+    with Check("I check the specified file has correct data"):
         check_source_file(
             path=f"/var/lib/clickhouse/user_files/{file_name}.Parquet",
             reference_table_name=table_name,
@@ -391,7 +386,7 @@ def insert_into_function_auto_cast_types(self):
             settings=[("engine_file_allow_create_multiple_files", 1)],
         )
 
-    with Then("I check that the created file has correct data"):
+    with Check("I check that the created file has correct data"):
         check_source_file(
             path=f"/var/lib/clickhouse/user_files/{file_name}.1.Parquet",
             reference_table_name=table_name,
@@ -408,7 +403,7 @@ def select_from_function_manual_cast_types(self):
     table_columns = self.context.parquet_table_columns
     table_def = ",".join([column.full_definition() for column in table_columns])
 
-    with When("I check that the `file` table function reads data correctly"):
+    with Check("I check that the `file` table function reads data correctly"):
         with Pool(3) as executor:
             for column in table_columns:
                 Check(
@@ -430,7 +425,7 @@ def select_from_function_auto_cast_types(self):
     self.context.snapshot_id = get_snapshot_id(clickhouse_version="<22.6")
     table_columns = self.context.parquet_table_columns
 
-    with When("I check that the `file` table function reads data correctly"):
+    with Check("I check that the `file` table function reads data correctly"):
         with Pool(3) as executor:
             for column in table_columns:
                 Check(
@@ -448,21 +443,33 @@ def select_from_function_auto_cast_types(self):
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_File("1.0"))
 def engine(self):
     """Check that table with `File(Parquet)` engine correctly reads and writes Parquet format."""
-    Scenario(run=insert_into_engine)
-    Scenario(run=select_from_engine)
-    Scenario(run=engine_to_file_to_engine)
-    Scenario(run=insert_into_engine_from_file)
-    Scenario(run=engine_select_output_to_file)
+    with Pool(5) as executor:
+        Scenario(run=insert_into_engine, parallel=True, executor=executor)
+        Scenario(run=select_from_engine, parallel=True, executor=executor)
+        Scenario(run=engine_to_file_to_engine, parallel=True, executor=executor)
+        Scenario(run=insert_into_engine_from_file, parallel=True, executor=executor)
+        Scenario(run=engine_select_output_to_file, parallel=True, executor=executor)
+        join()
 
 
 @TestSuite
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_TableFunctions_File("1.0"))
 def function(self):
     """Check that `file` table function correctly reads and writes Parquet format."""
-    Scenario(run=insert_into_function_manual_cast_types)
-    Scenario(run=insert_into_function_auto_cast_types)
-    Scenario(run=select_from_function_manual_cast_types)
-    Scenario(run=select_from_function_auto_cast_types)
+    with Pool(4) as executor:
+        Scenario(
+            run=insert_into_function_manual_cast_types, parallel=True, executor=executor
+        )
+        Scenario(
+            run=insert_into_function_auto_cast_types, parallel=True, executor=executor
+        )
+        Scenario(
+            run=select_from_function_manual_cast_types, parallel=True, executor=executor
+        )
+        Scenario(
+            run=select_from_function_auto_cast_types, parallel=True, executor=executor
+        )
+        join()
 
 
 @TestFeature
@@ -471,5 +478,7 @@ def feature(self, node="clickhouse1"):
     """Run checks for ClickHouse using Parquet format using `File(Parquet)` table engine and `file` table function."""
     self.context.node = self.context.cluster.node(node)
 
-    Suite(run=engine)
-    Suite(run=function)
+    with Pool(2) as executor:
+        Feature(run=engine, parallel=True, executor=executor)
+        Feature(run=function, parallel=True, executor=executor)
+        join()
