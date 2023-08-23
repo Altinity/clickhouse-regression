@@ -21,8 +21,8 @@ def run_query(self, name: str, clickhouse_query: str, duckdb_query: str):
         metric(name="clickhouse-" + name, value=min(clickhouse_times), units="s")
 
     with By("running the query on duckdb", description=f"{duckdb_query}"):
+        duckdb_times = []
         for _ in range(repeats):
-            duckdb_times = []
             start_time = time.time()
             duckdb_node.command(
                 f"duckdb {duckdb_database} '{duckdb_query}'", exitcode=0

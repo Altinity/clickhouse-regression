@@ -15,6 +15,8 @@ def write_to_csv(filename, data, row_count):
                 "DuckDB Query Runtime",
                 "ClickHouse Query Description",
                 "DuckDB Query Description",
+                "ClickHouse samples",
+                "DuckDB samples",
             ]
         )
 
