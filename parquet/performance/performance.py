@@ -100,13 +100,13 @@ def module(
             stress=stress,
         )
 
-    self.context.run_count = rerun_queries
-    self.context.duckdb_node = self.context.cluster.node("duckdb1")
     self.context.clickhouse_node = self.context.cluster.node("clickhouse1")
-    self.context.query_results = []
-    self.context.row_count = []
+    self.context.duckdb_node = self.context.cluster.node("duckdb1")
     self.context.clickhouse_version = clickhouse_version
     self.context.duckdb_version = duckdb_binary_path.rsplit("/", 2)[-2][1:]
+    self.context.run_count = rerun_queries
+    self.context.query_results = []
+    self.context.row_count = []
 
     Feature(test=load("parquet.performance.tests.duckdb.feature", "feature"))(
         from_year=from_year,
