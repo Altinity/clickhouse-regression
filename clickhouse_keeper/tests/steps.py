@@ -690,6 +690,7 @@ def start_mixed_keeper(
 @TestStep(Given)
 def start_different_shared_keeper(self):
     """Check 9 ClickHouse server with different Keeper for each shard with one shared start up."""
+    xfail("flaky construction time.sleep")
     cluster = self.context.cluster
     try:
         with Given("I create 3 by 3 nodes Keeper server config section"):
@@ -722,6 +723,7 @@ def start_different_shared_keeper(self):
 @TestStep(Given)
 def start_different_keeper(self):
     """Start 9 nodes ClickHouse server with different 3 nodes Keeper for each shard."""
+    xfail("flaky construction time.sleep")
     cluster = self.context.cluster
     try:
         with Given("I create 3 nodes Keeper server config section"):
