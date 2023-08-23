@@ -40,6 +40,8 @@ def run_query(self, name: str, clickhouse_query: str, duckdb_query: str):
                 duckdb_run_time,
                 clickhouse_query,
                 duckdb_query,
+                str(clickhouse_times),
+                str(duckdb_times),
             )
         )
 
