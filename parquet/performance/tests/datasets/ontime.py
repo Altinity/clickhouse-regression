@@ -151,7 +151,7 @@ def create_parquet_files(
             f"max_insert_threads = {threads}, max_memory_usage={max_memory_usage}"
         )
 
-        if check_clickhouse_version(">=23.3"):
+        if check_clickhouse_version(">=23.3")(self):
             insert_into_parquet += (
                 f", output_format_parquet_compression_method='{compression}'"
             )
