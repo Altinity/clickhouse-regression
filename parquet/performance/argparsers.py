@@ -29,7 +29,7 @@ def argparser(parser):
         dest="to_year",
         help="determines the end year for downloading the large ontime dataset from the Bureau of Transportation Statistics",
         metavar="value",
-        default=2015,
+        default=2022,
     )
 
     parser.add_argument(
