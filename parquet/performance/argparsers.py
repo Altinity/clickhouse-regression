@@ -9,7 +9,7 @@ def argparser(parser):
         "--duckdb-binary-path",
         type=str,
         dest="duckdb_binary_path",
-        help="path to duckdb binary, default: /usr/bin/duckdb",
+        help="path to duckdb binary",
         metavar="path",
         required=True,
     )
