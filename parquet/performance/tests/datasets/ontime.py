@@ -1,5 +1,5 @@
 from testflows.core import *
-from helpers.common import getuid
+from helpers.common import getuid, check_clickhouse_version
 
 
 @TestStep(Given)
@@ -151,7 +151,7 @@ def create_parquet_files(
             f"max_insert_threads = {threads}, max_memory_usage={max_memory_usage}"
         )
 
-        if compression is not None:
+        if check_clickhouse_version(">22.8.20.11"):
             insert_into_parquet += (
                 f", output_format_parquet_compression_method='{compression}'"
             )

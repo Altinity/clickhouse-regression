@@ -57,7 +57,7 @@ def argparser(parser):
         dest="compression",
         help="determines compression used for inserting into a parquet file",
         metavar="value",
-        default=None,
+        default="none",
     )
 
     parser.add_argument(
