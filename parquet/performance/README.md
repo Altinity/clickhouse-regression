@@ -46,12 +46,25 @@ graph TD
 - `--threads` determines the number of threads used in creating a parquet file with large dataset. (default: 20)
 - `--max-memory-usage` sets the maximum amount of RAM (in bytes) to use for running a query on a single server, 0 sets it to unlimited (default: 0)
 - `--compression` determines the compression used for a generated parquet file (default: snappy)
+- `--rerun-queries` the number of times each query in the steps file will be run (default: 3)
 - `--filename` determines the name of the CSV file that contains the results of the test run (default: query.csv)
+- `--log` path to the log file where test output will be stored
 
 
  
-> - If you set `--threads` to 0 it will disable parallel execution, this will significantly increase test runtime and potentially result in a test timeout.
-> - If you change the`--compression` value make sure DuckDB supports reading this compression type.
+> - If you set `--threads` to 0 it will disable parallel execution, but this will significantly increase test runtime and potentially result in a test timeout.
+> - If you change the`--compression` value make sure DuckDB supports reading from file with this compression type. Currently `none` and `snappy` are supported both by ClickHouse and DuckDB.
+
 #### Examples
 
+1) In the process of generating parquet file, we use the [ontime airlines dataset](https://clickhouse.com/docs/en/getting-started/example-datasets/ontime).
+We can choose the size of our dataset by specifying `--from-year` and `--to-year`, these values can be set in range of `1987-2022`.
+
+*Examples* to run performance test with parquet file that has 200 million rows
+
+```shell
+sudo ./performance.py --duckdb-binary-path https://github.com/duckdb/duckdb/releases/download/v0.8.1/duckdb_cli-linux-amd64.zip --clickhouse-binary-path docker://clickhouse/clickhouse-server:23.7.4.5-alpine --clickhouse-version 23.7.4.5 --from-year 1987 --to-year 2022 
+```
+> Decreasing the range between `--from-year` and `--to-year` results in a smaller dataset. For examples from our tests `--from-year 1987 --to-year 2015` is around 166 million rows.
  
+
