@@ -91,6 +91,8 @@ sudo ./performance.py --duckdb-binary-path https://github.com/duckdb/duckdb/rele
 ```shell
 ./performance.py --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.8 --clickhouse-version 22.8 --duckdb-binary-path https://github.com/duckdb/duckdb/releases/download/v0.7.1/duckdb_cli-linux-amd64.zip 
 ```
+> [!NOTE]
+> > I'f you want to run the test with different DuckDB version after already running it once, make sure to remove `duckdb` from `/tmp` directory.
 
 > [!WARNING]
 > Tests were performed using the latest DuckDB release, using old versions might cause the program to fail.
