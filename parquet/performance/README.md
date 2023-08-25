@@ -78,6 +78,8 @@ We can choose the size of our dataset by specifying `--from-year` and `--to-year
 ```shell
 sudo ./performance.py --duckdb-binary-path https://github.com/duckdb/duckdb/releases/download/v0.8.1/duckdb_cli-linux-amd64.zip --clickhouse-binary-path docker://clickhouse/clickhouse-server:23.7.4.5-alpine --clickhouse-version 23.7.4.5 --from-year 1987 --to-year 2022 
 ```
+
+> [!NOTE]
 > Decreasing the range between `--from-year` and `--to-year` results in a smaller dataset. For example, from our tests `--from-year 1987 --to-year 2015` is around 166 million rows.
  
 2) You can run performance test program using different ClickHouse and DuckDB versions, for this use `--clickhouse-binary-path` and `--duckdb-binary-path` settings.
