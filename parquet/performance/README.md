@@ -19,7 +19,7 @@ a set of queries on it using ClickHouse and DuckDB, collect runtime results from
 results into a CSV file. Below you can see a [diagram](#performance-tests-diagram) demonstrating the flow of the process.
 
 
-> ***WARNING:*** For clear runs `rm -rf _instances` should be used to delete all docker-compose volumes information.
+> <span style='color: red;'>***WARNING:***</span> For clear runs `rm -rf _instances` should be used to delete all docker-compose volumes information.
 
 
 ### [Performance Tests Diagram](#table-of-contents)
