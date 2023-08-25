@@ -69,7 +69,7 @@ sudo ./performance.py --duckdb-binary-path https://github.com/duckdb/duckdb/rele
  
 2) You can run performance test program using different ClickHouse and DuckDB versions, for this use `--clickhouse-binary-path` and `--duckdb-binary-path` settings.
 
-3) *Example* to run test with ClickHouse 22.8:
+*Example* to run test with ClickHouse 22.8:
 ```shell
 ./performance.py --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.8 --clickhouse-version 22.8 --duckdb-binary-path https://github.com/duckdb/duckdb/releases/download/v0.8.1/duckdb_cli-linux-amd64.zip 
 ```
