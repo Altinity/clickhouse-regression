@@ -60,7 +60,7 @@ graph TD
 1) In the process of generating parquet file, we use the [ontime airlines dataset].
 We can choose the size of our dataset by specifying `--from-year` and `--to-year`, these values can be set in range of `1987-2022`.
 
-*Example:* to run performance test with parquet file that has 200 million rows:
+*Example* to run performance test with parquet file that has 200 million rows:
 
 ```shell
 sudo ./performance.py --duckdb-binary-path https://github.com/duckdb/duckdb/releases/download/v0.8.1/duckdb_cli-linux-amd64.zip --clickhouse-binary-path docker://clickhouse/clickhouse-server:23.7.4.5-alpine --clickhouse-version 23.7.4.5 --from-year 1987 --to-year 2022 
@@ -68,7 +68,8 @@ sudo ./performance.py --duckdb-binary-path https://github.com/duckdb/duckdb/rele
 > Decreasing the range between `--from-year` and `--to-year` results in a smaller dataset. For example, from our tests `--from-year 1987 --to-year 2015` is around 166 million rows.
  
 2) You can run performance test program using different ClickHouse and DuckDB versions, for this use `--clickhouse-binary-path` and `--duckdb-binary-path` settings.
-*Example* to run test with ClickHouse 22.8:
+
+3) *Example* to run test with ClickHouse 22.8:
 ```shell
 ./performance.py --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.8 --clickhouse-version 22.8 --duckdb-binary-path https://github.com/duckdb/duckdb/releases/download/v0.8.1/duckdb_cli-linux-amd64.zip 
 ```
