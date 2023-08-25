@@ -82,7 +82,7 @@ sudo ./performance.py --duckdb-binary-path https://github.com/duckdb/duckdb/rele
 > [!NOTE]
 > Decreasing the range between `--from-year` and `--to-year` results in a smaller dataset. For example, from our tests `--from-year 1987 --to-year 2015` is around 166 million rows.
  
-2) You can run performance test program using different ClickHouse and DuckDB versions, for this use `--clickhouse-binary-path` and `--duckdb-binary-path` settings.
+2) You can run the performance test program using different ClickHouse and DuckDB versions, for this use `--clickhouse-binary-path` and `--duckdb-binary-path` settings.
 
 *Example* to run test with ClickHouse 22.8:
 ```shell
