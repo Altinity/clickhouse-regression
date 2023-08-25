@@ -18,8 +18,8 @@ Performance tests can be launched with `./perfomance.py` command. The program wi
 a set of queries on it using ClickHouse and DuckDB, collect runtime results from each query and export the 
 results into a CSV file. Below you can see a [diagram](#performance-tests-diagram) demonstrating the flow of the process.
 
-
-> <span style='color: red;'>***WARNING:***</span> For clear runs `rm -rf _instances` should be used to delete all docker-compose volumes information.
+> [!WARNING]
+> For clear runs `rm -rf _instances` should be used to delete all docker-compose volumes information.
 
 
 ### [Performance Tests Diagram](#table-of-contents)
