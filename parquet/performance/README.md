@@ -112,7 +112,7 @@ We have a set of queries stored inside the [steps] file, both ClickHouse and Duc
 For each query we get samples containing the runtime of each run, from this sample we take a minimal value and use it as a metric. 
 
 For example, if we use the default value of `--rerun-queries` setting, which is 3, each query from the [steps] 
-file will be run 3 times and each one of these queries will produce samples like this: [0.53, 0.52, 0.54]. As a metric we will use the minimal value from this list
+file will be run 3 times and each one of these queries will produce samples like this: `[0.53, 0.52, 0.54]`. As a metric we will use the minimal value from this list
  `runtime = min[0.53, 0.52, 0.54]`
 
 ### [Test Environment Configuration](#table-of-contents)
