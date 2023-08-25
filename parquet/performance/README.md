@@ -105,7 +105,7 @@ cat test.log | tfs show metrics
 
 ## [Additional Information](#table-of-contents)
 
-### How Do We Calculate The Runtime
+### [How Do We Calculate The Runtime](#table-of-contents)
 We have a set of queries stored inside the [steps] file, both ClickHouse and DuckDB run each query `n` number of times based on the value of `--rerun-queries` setting.
 For each query we get samples containing the runtime of each run, from this sample we take a minimal value and use it as a metric. 
 
