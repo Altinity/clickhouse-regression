@@ -8,8 +8,11 @@
   * 1.3 [Performance Tests Diagram](#performance-tests-diagram)
 * 2 [Running The Test Program](#running-the-test-program)
   * 2.1 [Run Tests](#run-tests)
-    * 2.1.1 [Run Tests On x86 Machine](#run-tests-on-x86-machine)
-    * 2.1.2 [Run Tests On ARM Machine](#run-tests-on-arm-machine)
+    * 2.1.1 [Getting Started](#getting-started)
+      * 2.1.1.1 [Prerequisites](#prerequisites)
+      * 2.1.1.2 [Dependencies](#dependencies)
+    * 2.1.2 [Run Tests On x86 Machine](#run-tests-on-x86-machine)
+    * 2.1.3 [Run Tests On ARM Machine](#run-tests-on-arm-machine)
   * 2.2 [Program Settings](#program-settings)
   * 2.3 [Examples](#examples)
     * 2.3.1 [Run Performance Test Program With Parquet File That Has 200 Million Rows](#run-performance-test-program-with-parquet-file-that-has-200-million-rows)
@@ -66,17 +69,47 @@ graph TD
 
 ## [Running The Test Program](#table-of-contents)
 
+### [Getting Started](#table-of-contents)
+
+These instructions will help you set up and run the test program on your local machine. Before you proceed, 
+make sure you have the following dependencies installed
+
+### [Prerequisites](#table-of-contents)
+* Python (version: 3.8 or greater)
+* Docker Compose
+
+### [Dependencies](#table-of-contents)
+
+Install pip:
+  ```bash
+  sudo apt update
+  sudo apt install python3-pip
+  ```
+Get all python dependencies from `requirements.txt` file:
+
+```bash
+pip install -r requirements.txt
+```
+
+Install `unzip`:
+
+```bash
+sudo apt install unzip
+```
+
+You also need docker in order to run the test program, for ubuntu refer to [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/).
+
 ### [Run Tests](#table-of-contents)
 
 #### Run tests on `x86` machine:
 
-```shell
+```bash
 ./performance.py --clickhouse-binary-path docker://clickhouse/clickhouse-server:23.7.4.5-alpine --clickhouse-version 23.7.4.5 --duckdb-binary-path https://github.com/duckdb/duckdb/releases/download/v0.8.1/duckdb_cli-linux-amd64.zip 
 ```
 
 #### Run tests on `ARM` machine:
 
-```shell
+```bash
 ./performance.py --clickhouse-binary-path docker://clickhouse/clickhouse-server:23.7.4.5-alpine --clickhouse-version 23.7.4.5 --duckdb-binary-path https://github.com/duckdb/duckdb/releases/download/v0.8.1/duckdb_cli-linux-aarch64.zip 
 ```
 
@@ -102,30 +135,30 @@ graph TD
 
 #### Run performance test program with parquet file that has 200 million rows:
 
-```shell
-sudo ./performance.py --duckdb-binary-path https://github.com/duckdb/duckdb/releases/download/v0.8.1/duckdb_cli-linux-amd64.zip --clickhouse-binary-path docker://clickhouse/clickhouse-server:23.7.4.5-alpine --clickhouse-version 23.7.4.5 --to-year 2022 
+```bash
+./performance.py --duckdb-binary-path https://github.com/duckdb/duckdb/releases/download/v0.8.1/duckdb_cli-linux-amd64.zip --clickhouse-binary-path docker://clickhouse/clickhouse-server:23.7.4.5-alpine --clickhouse-version 23.7.4.5 --to-year 2022 
 ```
 
 #### Run performance test program with parquet file that has 166 million rows:
 
-```shell
-sudo ./performance.py --duckdb-binary-path https://github.com/duckdb/duckdb/releases/download/v0.8.1/duckdb_cli-linux-amd64.zip --clickhouse-binary-path docker://clickhouse/clickhouse-server:23.7.4.5-alpine --clickhouse-version 23.7.4.5 --to-year 2015 
+```bash
+./performance.py --duckdb-binary-path https://github.com/duckdb/duckdb/releases/download/v0.8.1/duckdb_cli-linux-amd64.zip --clickhouse-binary-path docker://clickhouse/clickhouse-server:23.7.4.5-alpine --clickhouse-version 23.7.4.5 --to-year 2015 
 ```
 
 #### Run test program with ClickHouse 22.8:
-```shell
+```bash
 ./performance.py --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.8 --clickhouse-version 22.8 --duckdb-binary-path https://github.com/duckdb/duckdb/releases/download/v0.8.1/duckdb_cli-linux-amd64.zip 
 ```
 
 #### Run test program with DuckDB 0.7.1:
-```shell
+```bash
 ./performance.py --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.8 --clickhouse-version 22.8 --duckdb-binary-path https://github.com/duckdb/duckdb/releases/download/v0.7.1/duckdb_cli-linux-amd64.zip 
 ```
 > [!NOTE]
 > If you want to run the test program with different DuckDB version after already running it once, make sure to remove `duckdb` from the `/tmp` directory.
 
 #### Get metrics using [TestFlows]:
-```shell
+```bash
 cat test.log | tfs show metrics
 ```
 
