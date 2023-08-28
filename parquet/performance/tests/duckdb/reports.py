@@ -7,7 +7,9 @@ def write_to_csv(filename, data, row_count, test_machine):
     with open(filename, "w", newline="") as csvfile:
         csv_writer = csv.writer(csvfile)
 
-        csv_writer.writerow(["Number of rows:", row_count, "Test Environment:", test_machine])
+        csv_writer.writerow(
+            ["Number of rows:", row_count, "Test Environment:", test_machine]
+        )
         csv_writer.writerow(
             [
                 "Query",
@@ -30,7 +32,7 @@ def convert_to_markdown(csv_file, markdown_name):
     data = pd.read_csv(csv_file, skiprows=1)
 
     with open(markdown_name, "w") as f:
-        f.write("# ClickHouse vs DuckDB\n\n")
+        f.write("# ClickHouse vs DuckDB (Runtime in Seconds)\n\n")
         for index, row in data.iterrows():
             clickhouse_runtime = row["ClickHouse Query Runtime"]
             duckdb_runtime = row["DuckDB Query Runtime"]
