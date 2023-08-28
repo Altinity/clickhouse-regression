@@ -129,13 +129,13 @@ def module(
         repeats=rerun_queries,
     )
 
+    create_bar_chart(csv_file=f"results/{filename}", png_path="results/bar_chart.png")
+
     convert_to_markdown(
         csv_file=f"results/{filename}",
         markdown_name="results/README.md",
         query=self.context.query_results,
     )
-
-    create_bar_chart(csv_file=f"results/{filename}", png_path="results/bar_chart.png")
 
 
 if main():
