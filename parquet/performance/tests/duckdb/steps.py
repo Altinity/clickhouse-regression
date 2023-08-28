@@ -31,19 +31,23 @@ def run_query(self, name: str, clickhouse_query: str, duckdb_query: str):
             duckdb_times.append(duckdb_run_time)
         metric(name="duckdb-" + name, value=min(duckdb_times), units="s")
 
-        self.context.query_results.append(
-            (
-                name,
-                self.context.clickhouse_version,
-                self.context.duckdb_version,
-                clickhouse_run_time,
-                duckdb_run_time,
-                clickhouse_query,
-                duckdb_query,
-                str(clickhouse_times),
-                str(duckdb_times),
-            )
+        csv_result = (
+            name,
+            self.context.clickhouse_version,
+            self.context.duckdb_version,
+            clickhouse_run_time,
+            duckdb_run_time,
+            clickhouse_query,
+            duckdb_query,
         )
+
+        for i in range(repeats):
+            csv_result += (clickhouse_times[i],)
+
+        for i in range(repeats):
+            csv_result += (duckdb_times[i],)
+
+        self.context.query_results.append(csv_result)
 
 
 @TestStep

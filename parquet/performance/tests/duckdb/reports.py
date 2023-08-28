@@ -2,7 +2,7 @@ import csv
 import pandas as pd
 
 
-def write_to_csv(filename, data, row_count, test_machine):
+def write_to_csv(filename, data, row_count, test_machine, repeats):
     """Generating a CSV file with performance results from the test run."""
     with open(filename, "w", newline="") as csvfile:
         csv_writer = csv.writer(csvfile)
@@ -10,19 +10,24 @@ def write_to_csv(filename, data, row_count, test_machine):
         csv_writer.writerow(
             ["Number of rows:", row_count, "Test Environment:", test_machine]
         )
-        csv_writer.writerow(
-            [
-                "Query",
-                "ClickHouse version",
-                "DuckDB version",
-                "ClickHouse Query Runtime",
-                "DuckDB Query Runtime",
-                "ClickHouse Query Description",
-                "DuckDB Query Description",
-                "ClickHouse samples",
-                "DuckDB samples",
-            ]
-        )
+
+        csv_contents = [
+            "Query",
+            "ClickHouse version",
+            "DuckDB version",
+            "ClickHouse Query Runtime",
+            "DuckDB Query Runtime",
+            "ClickHouse Query Description",
+            "DuckDB Query Description",
+        ]
+
+        for i in range(repeats):
+            csv_contents.append(f"ClickHouse sample {i}")
+
+        for i in range(repeats):
+            csv_contents.append(f"DuckDB sample {i}")
+
+        csv_writer.writerow(csv_contents)
 
         for row in data:
             csv_writer.writerow(row)
@@ -32,6 +37,13 @@ def convert_to_markdown(csv_file, markdown_name, query):
     """Converting the CSV report of a Parquet performance test program into a markdown file."""
     data = pd.read_csv(csv_file, skiprows=1)
 
+    query_dictionary = {}
+
+    for i in query:
+        query_dictionary[i[0]] = i[5]
+
+    print(query_dictionary)
+
     with open(markdown_name, "w") as f:
         f.write("# ClickHouse vs DuckDB (Runtime in Seconds)\n\n")
         for index, row in data.iterrows():
@@ -39,7 +51,7 @@ def convert_to_markdown(csv_file, markdown_name, query):
             duckdb_runtime = row["DuckDB Query Runtime"]
             query_number = row["Query"]
             f.write(f"# {query_number}\n")
-            f.write(f"```sql\n {query}\n```\n")
+            f.write(f"```sql\n {query_dictionary[query_number]}\n```\n")
             f.write(
                 f"""
 ```mermaid
