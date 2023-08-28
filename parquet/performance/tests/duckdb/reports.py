@@ -43,8 +43,8 @@ def convert_to_markdown(csv_file, markdown_name):
 ```mermaid
      pie showData
          title {query_number}
-         "ClickHouse" : {clickhouse_runtime}s
-         "DuckDB" : {duckdb_runtime}s
+         "ClickHouse" : {clickhouse_runtime}
+         "DuckDB" : {duckdb_runtime}
 ```\n
                 """
             )
