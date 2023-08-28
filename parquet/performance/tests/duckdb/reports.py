@@ -48,6 +48,8 @@ def convert_to_markdown(csv_file, markdown_name, query):
 
     with open(markdown_name, "w") as f:
         f.write("# ClickHouse vs DuckDB (Runtime in Seconds)\n\n")
+        f.write("## Bar Chart\n")
+        f.write("![Bar Chart](bar_chart.png)\n")
         for index, row in data.iterrows():
             clickhouse_runtime = row["ClickHouse Query Runtime"]
             duckdb_runtime = row["DuckDB Query Runtime"]
