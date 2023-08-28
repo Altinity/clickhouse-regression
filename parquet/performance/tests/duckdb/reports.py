@@ -28,7 +28,7 @@ def write_to_csv(filename, data, row_count, test_machine):
             csv_writer.writerow(row)
 
 
-def convert_to_markdown(csv_file, markdown_name):
+def convert_to_markdown(csv_file, markdown_name, query):
     data = pd.read_csv(csv_file, skiprows=1)
 
     with open(markdown_name, "w") as f:
@@ -37,14 +37,13 @@ def convert_to_markdown(csv_file, markdown_name):
             clickhouse_runtime = row["ClickHouse Query Runtime"]
             duckdb_runtime = row["DuckDB Query Runtime"]
             query_number = row["Query"]
-
+            f.write(f"# {query_number}\n")
+            f.write(f"```sql {query}```")
             f.write(
                 f"""
 ```mermaid
      pie showData
-         title {query_number}
          "ClickHouse" : {clickhouse_runtime}
          "DuckDB" : {duckdb_runtime}
-```\n
-                """
+```\n"""
             )
