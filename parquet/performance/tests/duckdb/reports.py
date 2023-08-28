@@ -65,6 +65,7 @@ def convert_to_markdown(csv_file, markdown_name, query):
 
 
 def create_bar_chart(csv_file, png_path):
+    """Converting the CSV report of a Parquet performance test program into a bar chart png file."""
     data = pd.read_csv(csv_file, skiprows=1)
 
     names = ()
@@ -83,15 +84,13 @@ def create_bar_chart(csv_file, png_path):
         values["ClickHouse"] += (clickhouse,)
         values["DuckDB"] += (duckdb,)
 
-    y = np.arange(len(names))  # the label locations
-    height = 0.25  # the height of the bars
+    y = np.arange(len(names))
+    height = 0.25
     multiplier = 0
 
-    # Set a larger figure size
-    fig, ax = plt.subplots(figsize=(12, 6))  # Adjust the width and height as needed
+    fig, ax = plt.subplots(figsize=(12, 6))
 
-    # Specify hex color codes for the bars
-    bar_colors = ["#be362b", "#4285f4"]  # Example hex codes
+    bar_colors = ["#be362b", "#4285f4"]
 
     for attribute, measurement, color in zip(
         values.keys(), values.values(), bar_colors
@@ -108,5 +107,4 @@ def create_bar_chart(csv_file, png_path):
 
     plt.tight_layout()
 
-    # Save the chart as a PNG file
     plt.savefig(png_path)
