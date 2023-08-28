@@ -77,3 +77,12 @@ def argparser(parser):
         metavar="value",
         default="performance.csv",
     )
+
+    parser.add_argument(
+        "--test-machine",
+        type=str,
+        dest="test_machine",
+        help="the name of the test environment",
+        metavar="value",
+        default=None,
+    )

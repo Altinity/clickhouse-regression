@@ -10,9 +10,15 @@
   * 2.1 [Run Tests](#run-tests)
   * 2.2 [Program Settings](#program-settings)
   * 2.3 [Examples](#examples)
+    * 2.3.1 [Run Performance Test Program With Parquet File That Has 200 Million Rows](#run-performance-test-program-with-parquet-file-that-has-200-million-rows)
+    * 2.3.2 [Run Performance Test Program With Parquet File That Has 166 Million Rows](#run-performance-test-program-with-parquet-file-that-has-166-million-rows)
+    * 2.3.3 [Run Test Program With ClickHouse 22.8](#run-test-program-with-clickhouse-228)
+    * 2.3.4 [Run Test Program With DuckDB 0.7.1](#run-test-program-with-duckdb-071)
+    * 2.3.5 [Get Metrics Using TestFlows]
 * 3 [Additional Information](#additional-information)
   * 3.1 [How Do We Calculate The Runtime](#how-do-we-calculate-the-runtime)
   * 3.2 [Test Environment Configuration](#test-environment-configuration)
+  * 3.3 [Test Results](#test-results)
 
 ## [ClickHouse Performance Test Program](#table-of-contents)
 
@@ -37,11 +43,11 @@ results into a CSV file. Below you can see a [diagram](#performance-tests-diagra
 
 The list contains the versions of ClickHouse and DckDB that were used when running the test program:
 
-* ClickHouse
+* ClickHouse:
   * 23.7.5
   * 23.3.1
   * 22.8.10
-* DuckDB
+* DuckDB:
   * 0.8.1
 
 ### [Performance Tests Diagram](#table-of-contents)
@@ -92,24 +98,24 @@ graph TD
 
 ### [Examples](#table-of-contents)
 
-Run performance test with parquet file that has 200 million rows:
+#### Run performance test program with parquet file that has 200 million rows:
 
 ```shell
 sudo ./performance.py --duckdb-binary-path https://github.com/duckdb/duckdb/releases/download/v0.8.1/duckdb_cli-linux-amd64.zip --clickhouse-binary-path docker://clickhouse/clickhouse-server:23.7.4.5-alpine --clickhouse-version 23.7.4.5 --to-year 2022 
 ```
 
-Run performance test with parquet file that has 166 million rows:
+### Run performance test program with parquet file that has 166 million rows:
 
 ```shell
 sudo ./performance.py --duckdb-binary-path https://github.com/duckdb/duckdb/releases/download/v0.8.1/duckdb_cli-linux-amd64.zip --clickhouse-binary-path docker://clickhouse/clickhouse-server:23.7.4.5-alpine --clickhouse-version 23.7.4.5 --to-year 2015 
 ```
 
-Run test with ClickHouse 22.8:
+### Run test program with ClickHouse 22.8:
 ```shell
 ./performance.py --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.8 --clickhouse-version 22.8 --duckdb-binary-path https://github.com/duckdb/duckdb/releases/download/v0.8.1/duckdb_cli-linux-amd64.zip 
 ```
 
-Run test with DuckDB 0.7.1:
+### Run test program with DuckDB 0.7.1:
 ```shell
 ./performance.py --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.8 --clickhouse-version 22.8 --duckdb-binary-path https://github.com/duckdb/duckdb/releases/download/v0.7.1/duckdb_cli-linux-amd64.zip 
 ```
@@ -141,7 +147,12 @@ The test program was executed on a Hetzner Cloud machine (CPX51) with the follow
 - Disk space: 360 GB
 - System: Ubuntu 22.04.2 LTS
 
+### [Test Results](#table-of-contents)
+
+Test results can be found inside the [performance_reports] directory.
+
 [TestFlows]: https://testflows.com/
 [steps]: https://github.com/Altinity/clickhouse-regression/blob/main/parquet/performance/tests/duckdb/steps.py
 [DuckDB website]: https://duckdb.org/docs/installation/
 [ontime airlines dataset]: https://clickhouse.com/docs/en/getting-started/example-datasets/ontime
+[performance_reports]: https://github.com/Altinity/clickhouse-regression/tree/main/parquet/performance/performance_reports

@@ -89,6 +89,7 @@ def module(
     compression,
     collect_service_logs,
     rerun_queries,
+    test_machine,
     clickhouse_binary_path=None,
 ):
     """Running performance tests for ClickHouse"""
@@ -120,6 +121,7 @@ def module(
         filename=f"performance_reports/{filename}",
         data=self.context.query_results,
         row_count=self.context.row_count[0],
+        test_machine=test_machine
     )
 
     convert_to_markdown(
