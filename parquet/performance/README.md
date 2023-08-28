@@ -6,7 +6,7 @@
   * 1.1 [Documentation Used](#documentation-used)
   * 1.2 [Versions Tested](#versions-tested)
   * 1.3 [Performance Tests Diagram](#performance-tests-diagram)
-* 2 [Running Tests and Program Settings](#running-tests-and-program-settings)
+* 2 [Running The Test Program](#running-the-test-program)
   * 2.1 [Run Tests](#run-tests)
   * 2.2 [Program Settings](#program-settings)
     * 2.2.1 [Examples](#examples)
