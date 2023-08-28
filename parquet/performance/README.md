@@ -151,10 +151,10 @@ The test program was executed on a Hetzner Cloud machine (CPX51) with the follow
 
 ### [Test Results](#table-of-contents)
 
-Test results can be found inside the [performance_reports] directory.
+Test results can be found inside the [results] directory.
 
 [TestFlows]: https://testflows.com/
 [steps]: https://github.com/Altinity/clickhouse-regression/blob/main/parquet/performance/tests/duckdb/steps.py
 [DuckDB website]: https://duckdb.org/docs/installation/
 [ontime airlines dataset]: https://clickhouse.com/docs/en/getting-started/example-datasets/ontime
-[performance_reports]: https://github.com/Altinity/clickhouse-regression/tree/main/parquet/performance/results
+[results]: https://github.com/Altinity/clickhouse-regression/tree/main/parquet/performance/results
