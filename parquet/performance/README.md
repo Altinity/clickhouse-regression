@@ -38,10 +38,10 @@ results into a CSV file. Below you can see a [diagram](#performance-tests-diagra
 
 ### [References and Resources](#table-of-contents)
 
-* https://clickhouse.com/docs/en/intro
-* https://clickhouse.com/docs/en/getting-started/example-datasets/ontime
-* https://transtats.bts.gov/PREZIP/
-* https://duckdb.org/docs/
+* ClickHouse Parquet Documentation: https://clickhouse.com/docs/en/integrations/data-formats/parquet
+* The Guide to Create A Parquet File With Large Dataset: https://clickhouse.com/docs/en/getting-started/example-datasets/ontime
+* The Source of Data Used For the Parquet File: https://transtats.bts.gov/PREZIP/
+* DuckDB Installation Guide: https://duckdb.org/docs/installation/
 
 
 ### [Versions Tested](#table-of-contents)
