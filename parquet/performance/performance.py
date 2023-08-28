@@ -126,7 +126,8 @@ def module(
 
     convert_to_markdown(
         csv_file=f"performance_reports/{filename}",
-        markdown_name="performance_reports/results.md",
+        markdown_name="performance_reports/performance.md",
+        query=self.context.query_results[0][5],
     )
 
 
