@@ -8,6 +8,8 @@
   * 1.3 [Performance Tests Diagram](#performance-tests-diagram)
 * 2 [Running The Test Program](#running-the-test-program)
   * 2.1 [Run Tests](#run-tests)
+    * 2.1.1 [Run tests on x86 machine](#run-tests-on-x86-machine)
+    * 2.1.2 [Run tests on ARM machine](#run-tests-on-arm-machine)
   * 2.2 [Program Settings](#program-settings)
   * 2.3 [Examples](#examples)
     * 2.3.1 [Run Performance Test Program With Parquet File That Has 200 Million Rows](#run-performance-test-program-with-parquet-file-that-has-200-million-rows)
@@ -66,13 +68,13 @@ graph TD
 
 ### [Run Tests](#table-of-contents)
 
-*Example* to run tests on `x86` machine:
+#### Run tests on `x86` machine:
 
 ```shell
 ./performance.py --clickhouse-binary-path docker://clickhouse/clickhouse-server:23.7.4.5-alpine --clickhouse-version 23.7.4.5 --duckdb-binary-path https://github.com/duckdb/duckdb/releases/download/v0.8.1/duckdb_cli-linux-amd64.zip 
 ```
 
-*Example* to run tests on `ARM` machine:
+#### Run tests on `ARM` machine:
 
 ```shell
 ./performance.py --clickhouse-binary-path docker://clickhouse/clickhouse-server:23.7.4.5-alpine --clickhouse-version 23.7.4.5 --duckdb-binary-path https://github.com/duckdb/duckdb/releases/download/v0.8.1/duckdb_cli-linux-aarch64.zip 
