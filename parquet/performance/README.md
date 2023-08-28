@@ -145,12 +145,12 @@ You also need docker in order to run the test program, for ubuntu refer to [Inst
 ./performance.py --duckdb-binary-path https://github.com/duckdb/duckdb/releases/download/v0.8.1/duckdb_cli-linux-amd64.zip --clickhouse-binary-path docker://clickhouse/clickhouse-server:23.7.4.5-alpine --clickhouse-version 23.7.4.5 --to-year 2015 
 ```
 
-#### Run test program with ClickHouse 22.8:
+#### Run test program with ClickHouse 22.8 and DuckDB 0.8.1:
 ```bash
 ./performance.py --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.8 --clickhouse-version 22.8 --duckdb-binary-path https://github.com/duckdb/duckdb/releases/download/v0.8.1/duckdb_cli-linux-amd64.zip 
 ```
 
-#### Run test program with DuckDB 0.7.1:
+#### Run test program with DuckDB 0.7.1 and ClickHouse 22.8:
 ```bash
 ./performance.py --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.8 --clickhouse-version 22.8 --duckdb-binary-path https://github.com/duckdb/duckdb/releases/download/v0.7.1/duckdb_cli-linux-amd64.zip 
 ```
