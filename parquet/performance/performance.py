@@ -118,16 +118,17 @@ def module(
     )
 
     write_to_csv(
-        filename=f"performance_reports/{filename}",
+        filename=f"results/{filename}",
         data=self.context.query_results,
         row_count=self.context.row_count[0],
         test_machine=test_machine,
+        repeats=rerun_queries,
     )
 
     convert_to_markdown(
-        csv_file=f"performance_reports/{filename}",
-        markdown_name="performance_reports/performance.md",
-        query=self.context.query_results[0][5],
+        csv_file=f"results/{filename}",
+        markdown_name="performance_reports/README.md",
+        query=self.context.query_results,
     )
 
 
