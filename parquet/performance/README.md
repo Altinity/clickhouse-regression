@@ -14,7 +14,7 @@
     * 2.3.2 [Run Performance Test Program With Parquet File That Has 166 Million Rows](#run-performance-test-program-with-parquet-file-that-has-166-million-rows)
     * 2.3.3 [Run Test Program With ClickHouse 22.8](#run-test-program-with-clickhouse-228)
     * 2.3.4 [Run Test Program With DuckDB 0.7.1](#run-test-program-with-duckdb-071)
-    * 2.3.5 [Get Metrics Using TestFlows]
+    * 2.3.5 [Get Metrics Using TestFlows](#get-metrics-using-testflows)
 * 3 [Additional Information](#additional-information)
   * 3.1 [How Do We Calculate The Runtime](#how-do-we-calculate-the-runtime)
   * 3.2 [Test Environment Configuration](#test-environment-configuration)
@@ -122,7 +122,7 @@ sudo ./performance.py --duckdb-binary-path https://github.com/duckdb/duckdb/rele
 > [!NOTE]
 > If you want to run the test program with different DuckDB version after already running it once, make sure to remove `duckdb` from the `/tmp` directory.
 
-Get metrics using [TestFlows]:
+#### Get metrics using [TestFlows]:
 ```shell
 cat test.log | tfs show metrics
 ```
