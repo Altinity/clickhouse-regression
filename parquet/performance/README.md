@@ -9,7 +9,7 @@
 * 2 [Running The Test Program](#running-the-test-program)
   * 2.1 [Run Tests](#run-tests)
   * 2.2 [Program Settings](#program-settings)
-    * 2.2.1 [Examples](#examples)
+  * 2.3 [Examples](#examples)
 * 3 [Additional Information](#additional-information)
   * 3.1 [How Do We Calculate The Runtime](#how-do-we-calculate-the-runtime)
   * 3.2 [Test Environment Configuration](#test-environment-configuration)
