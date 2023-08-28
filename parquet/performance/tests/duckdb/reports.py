@@ -29,6 +29,7 @@ def write_to_csv(filename, data, row_count, test_machine):
 
 
 def convert_to_markdown(csv_file, markdown_name, query):
+    """Converting the CSV report of a Parquet performance test program into a markdown file."""
     data = pd.read_csv(csv_file, skiprows=1)
 
     with open(markdown_name, "w") as f:
