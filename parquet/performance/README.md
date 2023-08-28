@@ -157,4 +157,4 @@ Test results can be found inside the [performance_reports] directory.
 [steps]: https://github.com/Altinity/clickhouse-regression/blob/main/parquet/performance/tests/duckdb/steps.py
 [DuckDB website]: https://duckdb.org/docs/installation/
 [ontime airlines dataset]: https://clickhouse.com/docs/en/getting-started/example-datasets/ontime
-[performance_reports]: https://github.com/Altinity/clickhouse-regression/tree/main/parquet/performance/performance_reports
+[performance_reports]: https://github.com/Altinity/clickhouse-regression/tree/main/parquet/performance/results
