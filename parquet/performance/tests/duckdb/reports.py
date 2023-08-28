@@ -38,7 +38,7 @@ def convert_to_markdown(csv_file, markdown_name, query):
             duckdb_runtime = row["DuckDB Query Runtime"]
             query_number = row["Query"]
             f.write(f"# {query_number}\n")
-            f.write(f"```sql {query}```")
+            f.write(f"```sql\n {query}\n```\n")
             f.write(
                 f"""
 ```mermaid
