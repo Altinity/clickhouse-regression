@@ -1,4 +1,4 @@
-# ClickHouse vs DuckDB
+# ClickHouse vs DuckDB Runtime in Seconds
 
 
 ```mermaid
