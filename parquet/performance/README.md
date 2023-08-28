@@ -128,7 +128,7 @@ You also need docker in order to run the test program, for ubuntu refer to [Inst
 
 > [!IMPORTANT] 
 > - If you set `--threads` to 0 it will disable parallel execution when creating a parquet file, but this will significantly increase test program runtime and potentially result in a test timeout (this setting is only used to speed up the process of generating a parquet file using ClickHouse).
-> - If you change the`--compression` value make sure DuckDB supports reading from file with this compression type. Currently `none` and `snappy` are supported both by ClickHouse and DuckDB.
+> - If you change the `--compression` value make sure DuckDB supports reading from file with this compression type. Currently `none` and `snappy` are supported both by ClickHouse and DuckDB.
 > - `--duckdb-binary-path` is a required setting, test program will throw an error if it's not specified. 
 
 ### [Examples](#table-of-contents)
