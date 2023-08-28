@@ -44,8 +44,6 @@ def convert_to_markdown(csv_file, markdown_name, query):
     for i in query:
         query_dictionary[i[0]] = i[5]
 
-    print(query_dictionary)
-
     with open(markdown_name, "w") as f:
         f.write("# ClickHouse vs DuckDB (Runtime in Seconds)\n\n")
         f.write("## Bar Chart\n")
