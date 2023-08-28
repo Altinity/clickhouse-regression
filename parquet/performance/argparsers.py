@@ -75,5 +75,5 @@ def argparser(parser):
         dest="filename",
         help="determines the name of the csv file that contains the report of the test run",
         metavar="value",
-        default="query.csv",
+        default="performance.csv",
     )
