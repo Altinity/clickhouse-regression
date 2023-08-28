@@ -41,7 +41,7 @@ SELECT Origin, count(*) AS c FROM file('{filename}') WHERE DepDelay>10 AND Year>
          "DuckDB" : 0.780264139175415
 ```
 # query_4
-```
+```sql
 SELECT IATA_CODE_Reporting_Airline AS Carrier, count(*) FROM file('{filename}') WHERE DepDelay>10 AND Year=2007 GROUP BY Carrier ORDER BY count(*) DESC;
 ```
 
