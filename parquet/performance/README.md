@@ -44,7 +44,7 @@ results into a CSV file. Below you can see a [diagram](#performance-tests-diagra
 The list contains the versions of ClickHouse and DuckDB that were used when running the test program:
 
 * ClickHouse:
-  * 23.7.5
+  * 23.7.4.5
   * 23.3.1
   * 22.8.10
 * DuckDB:
