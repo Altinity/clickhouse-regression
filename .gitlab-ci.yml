@@ -98,7 +98,7 @@ variables:
         /var/cache/debconf
         /tmp/*
     - apt-get clean
-    - pip install -r pip_requirements.txt
+    - pip install -r requirements.txt
     - export PATH=~/local/bin:$PATH
     - echo "start dockerd"
     - dockerd-start.sh
