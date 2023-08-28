@@ -8,7 +8,11 @@ append_path(sys.path, "../..")
 
 from parquet.performance.argparsers import argparser
 from helpers.cluster import short_hash, Shell, Cluster
-from parquet.performance.tests.duckdb.reports import write_to_csv, convert_to_markdown
+from parquet.performance.tests.duckdb.reports import (
+    write_to_csv,
+    convert_to_markdown,
+    create_bar_chart,
+)
 
 
 @TestStep(Given)
@@ -127,9 +131,11 @@ def module(
 
     convert_to_markdown(
         csv_file=f"results/{filename}",
-        markdown_name="performance_reports/README.md",
+        markdown_name="results/README.md",
         query=self.context.query_results,
     )
+
+    create_bar_chart(csv_file=f"results/{filename}", png_path="results/bar_chart.png")
 
 
 if main():
