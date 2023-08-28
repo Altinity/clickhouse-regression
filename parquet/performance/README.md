@@ -3,7 +3,7 @@
 ## Table of Contents
 
 * 1 [ClickHouse Performance Test Program](#ClickHouse-Performance-Test-Program)
-  * 1.1 [Documentation Used](#documentation-used)
+  * 1.1 [References and Resources](#references-and-resources)
   * 1.2 [Versions Tested](#versions-tested)
   * 1.3 [Performance Tests Diagram](#performance-tests-diagram)
 * 2 [Running The Test Program](#running-the-test-program)
@@ -31,7 +31,7 @@ results into a CSV file. Below you can see a [diagram](#performance-tests-diagra
 > - Tests were performed using the latest DuckDB release, using old versions might cause some compatability issues.
 
 
-### [Documentation Used](#table-of-contents)
+### [References and Resources](#table-of-contents)
 
 * https://clickhouse.com/docs/en/intro
 * https://clickhouse.com/docs/en/getting-started/example-datasets/ontime
