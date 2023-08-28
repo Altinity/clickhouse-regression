@@ -121,7 +121,7 @@ def module(
         filename=f"performance_reports/{filename}",
         data=self.context.query_results,
         row_count=self.context.row_count[0],
-        test_machine=test_machine
+        test_machine=test_machine,
     )
 
     convert_to_markdown(
