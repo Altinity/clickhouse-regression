@@ -39,6 +39,7 @@ on:
           - key_value
           - ldap
           - lightweight_delete
+          - parquet_all
           - parquet
           - parquet_minio
           - parquet_s3
@@ -901,7 +902,7 @@ jobs:
     env:
       SUITE: parquet
       STORAGE: /no_s3
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet' }}
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet' || inputs.suite == 'parquet_all'}}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -934,7 +935,7 @@ jobs:
     env:
       SUITE: parquet
       STORAGE: /minio
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet_minio' }}
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet_minio' || inputs.suite == 'parquet_all'}}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -969,7 +970,7 @@ jobs:
     env:
       SUITE: parquet
       STORAGE: /aws_s3
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet_s3' }}
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet_s3' || inputs.suite == 'parquet_all'}}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
