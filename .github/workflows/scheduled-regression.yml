@@ -37,13 +37,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: aes_encryption
@@ -77,13 +77,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: aggregate_functions
@@ -117,13 +117,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: atomic_insert
@@ -157,13 +157,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: base_58
@@ -197,13 +197,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: ontime_benchmark
@@ -239,13 +239,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: ontime_benchmark
@@ -285,13 +285,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: ontime_benchmark
@@ -330,13 +330,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: clickhouse_keeper
@@ -370,13 +370,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: datetime64_extended_range
@@ -410,13 +410,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: disk_level_encryption
@@ -450,13 +450,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: dns
@@ -490,13 +490,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: engines
@@ -530,13 +530,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: example
@@ -570,13 +570,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: extended_precision_data_types
@@ -610,13 +610,13 @@ jobs:
     #  fail-fast: false
     #   matrix:
     #     include:
-    #       - version: 22.8.15.25.altinitystable
+    #       - version: 22.8.20.12.altinitystable
     #         clickhouse_binary_path: docker://altinity/clickhouse-server
     #       - version: 22.3.15.34.altinitystable
     #         clickhouse_binary_path: docker://altinity/clickhouse-server
     #       - version: 23.3.1.2823
     #         clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    # runs-on: [self-hosted, altinity-amd64]
+    # runs-on: [self-hosted, type-cpx51]
   #   env:
   #     SUITE: clickhouse/functional
   #   steps:
@@ -647,13 +647,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: kafka
@@ -687,13 +687,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: kerberos
@@ -726,13 +726,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: key_value
@@ -766,13 +766,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: ldap/authentication
@@ -806,13 +806,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: ldap/external_user_directory
@@ -846,13 +846,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: ldap/role_mapping
@@ -886,13 +886,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: lightweight_delete
@@ -926,13 +926,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: map_type
@@ -966,13 +966,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: parquet
@@ -1016,13 +1016,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: part_moves_between_shards
@@ -1056,13 +1056,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: rbac
@@ -1096,13 +1096,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: selects
@@ -1136,13 +1136,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: session_timezone
@@ -1176,13 +1176,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: s3
@@ -1220,13 +1220,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: s3
@@ -1268,13 +1268,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: s3
@@ -1315,13 +1315,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: ssl_server
@@ -1355,13 +1355,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: tiered_storage
@@ -1395,13 +1395,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: tiered_storage
@@ -1439,13 +1439,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: tiered_storage
@@ -1486,13 +1486,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: tiered_storage
@@ -1533,13 +1533,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - version: 22.8.15.25.altinitystable
+          - version: 22.8.20.12.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
           - version: 22.3.15.34.altinitystable
             clickhouse_binary_path: docker://altinity/clickhouse-server
-          - version: 23.3.2.37-alpine
+          - version: 23.3.8.22.altinitystable
             clickhouse_binary_path: docker://clickhouse/clickhouse-server
-    runs-on: [self-hosted, altinity-amd64]
+    runs-on: [self-hosted, type-cpx51]
     timeout-minutes: 180
     env:
       SUITE: window_functions
