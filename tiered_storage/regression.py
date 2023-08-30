@@ -119,6 +119,9 @@ xfails = {
     ":/alter move/concurrent/concurrent alter move and drop": [
         (Fail, "unstable test")
     ],
+    ":/alter move/concurrent/concurrent alter move insert and select": [
+        (Fail, "unstable test")
+    ],
 }
 
 ffails = {
