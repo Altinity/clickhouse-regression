@@ -269,7 +269,6 @@ jobs:
               --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              --retry /benchmark,3
               ${{ env.args }}
 
       - name: Create and upload logs
@@ -307,7 +306,6 @@ jobs:
               --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              --retry /benchmark,3
               ${{ env.args }}
 
       - name: Create and upload logs
@@ -342,7 +340,6 @@ jobs:
               --storage minio
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              --retry /benchmark,3
               ${{ env.args }}
 
       - name: Create and upload logs
@@ -1297,7 +1294,6 @@ jobs:
               --aws-s3-uri https://s3.${{ secrets.AWS_REGION}}.amazonaws.com/${{ secrets.AWS_BUCKET }}/data/
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              --retry /${{ env.SUITE }},3
               ${{ env.args }}
 
       - name: Create and upload logs
@@ -1335,7 +1331,6 @@ jobs:
               --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              --retry /${{ env.SUITE }},3
               ${{ env.args }}
 
       - name: Create and upload logs
@@ -1368,7 +1363,6 @@ jobs:
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              --retry /${{ env.SUITE }},3
               ${{ env.args }}
 
       - name: Create and upload logs
@@ -1403,7 +1397,6 @@ jobs:
               --with-minio
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
-              --retry /${{ env.SUITE }},3
               ${{ env.args }}
 
       - name: Create and upload logs
