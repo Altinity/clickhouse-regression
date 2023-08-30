@@ -41,9 +41,6 @@ def regression(
 
     self.context.clickhouse_version = clickhouse_version
 
-    if check_clickhouse_version("<23.5")(self):
-        skip(reason="only supported on ClickHouse version >= 23.5")
-
     with Cluster(
         local,
         clickhouse_binary_path,
@@ -55,6 +52,9 @@ def regression(
     ) as cluster:
         self.context.cluster = cluster
         self.context.stress = stress
+
+        if check_clickhouse_version("<23.5")(self):
+            skip(reason="only supported on ClickHouse version >= 23.5")
 
         if parallel is not None:
             self.context.parallel = parallel
