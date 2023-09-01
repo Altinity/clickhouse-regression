@@ -4,6 +4,32 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 
+def sort_csv_data(data):
+    print(f"Before data: {data}")
+
+    merged_data = {}
+
+    for item in data:
+        key = item[0][-1]
+        if key in merged_data:
+            merged_data[key].append(item)
+        else:
+            merged_data[key] = [item]
+
+    result = []
+
+    for key in merged_data:
+        if len(merged_data[key]) > 1:
+            merged_items = tuple(
+                [item for sublist in merged_data[key] for item in sublist]
+            )
+            result.append(merged_items)
+        else:
+            result.extend(merged_data[key])
+
+    return result
+
+
 def write_to_csv(filename, data, row_count, test_machine, repeats):
     """Generating a CSV file with performance results from the test run."""
     with open(filename, "w", newline="") as csvfile:
@@ -16,22 +42,28 @@ def write_to_csv(filename, data, row_count, test_machine, repeats):
         csv_contents = [
             "Query",
             "ClickHouse version",
-            "DuckDB version",
             "ClickHouse Query Runtime",
-            "DuckDB Query Runtime",
             "ClickHouse Query Description",
+            "Query DuckDB",
+            "DuckDB version",
+            "DuckDB Query Runtime",
             "DuckDB Query Description",
         ]
 
+        clickhouse_samples_position = 4
+
         for i in range(repeats):
-            csv_contents.append(f"ClickHouse sample {i}")
+            csv_contents.insert(clickhouse_samples_position, f"ClickHouse sample {i}")
+            clickhouse_samples_position += 1
 
         for i in range(repeats):
             csv_contents.append(f"DuckDB sample {i}")
 
         csv_writer.writerow(csv_contents)
 
-        for row in data:
+        corrected_data = sort_csv_data(data)
+
+        for row in corrected_data:
             csv_writer.writerow(row)
 
 
