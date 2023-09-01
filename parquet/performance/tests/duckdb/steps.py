@@ -288,6 +288,7 @@ def duckdb(self, filename):
 
 @TestScenario
 def queries(self, filename):
+    """Save number of rows of th parquet file into a CSV file and run the set of queries on ClickHouse and DuckDB."""
     Feature(run=get_row_count(filename=filename))
     Feature(test=clickhouse)(filename=filename)
     Feature(test=duckdb)(filename=filename)
