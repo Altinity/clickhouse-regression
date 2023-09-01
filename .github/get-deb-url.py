@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+import platform
 
 from argparse import ArgumentParser, RawTextHelpFormatter
 
@@ -43,9 +44,17 @@ if __name__ == "__main__":
     reports_path = args.reports_path
     github_env = args.github_env
 
+    arch = platform.uname()[-1]
+    if arch == 'x86_64':
+        build_url = 'build_urls_package_release/build_urls_package_release.json'
+    elif arch == 'aarch64':
+        build_url = 'build_urls_package_aarch64/build_urls_package_aarch64.json'
+    else:
+        raise Exception("Only x86_64 and ARM are supported.")
+    
     with open(
         os.path.join(
-            reports_path, "build_urls_package_release/build_urls_package_release.json"
+            reports_path, build_url
         ),
         "r",
         encoding="utf-8",
