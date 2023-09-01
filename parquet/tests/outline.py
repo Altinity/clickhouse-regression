@@ -9,6 +9,7 @@ from helpers.common import *
 
 @TestOutline
 def import_export(self, snapshot_name, import_file, snapshot_id=None):
+    """Import parquet file into a clickhouse table and export it back."""
     node = self.context.node
     table_name = "table_" + getuid()
     path_to_export = f"/var/lib/clickhouse/user_files/{table_name}.parquet"
