@@ -184,7 +184,7 @@ The test program was executed on a Hetzner Cloud machine (CPX51) with the follow
 
 ### [Results](#table-of-contents)
 
-Teh results of the program run are generated automatically and can be found inside the [results] directory.
+The results of the program run are generated automatically and can be found inside the [results] directory.
 
 [TestFlows]: https://testflows.com/
 [steps]: https://github.com/Altinity/clickhouse-regression/blob/main/parquet/performance/tests/duckdb/steps.py
