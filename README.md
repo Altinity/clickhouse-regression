@@ -307,20 +307,20 @@ For example, you can get a list of failing tests from the `test.log` using the
 `tfs show fails` command as follows
 
 ```bash
-$ cat test.log | tfs show fails
+cat test.log | tfs show fails
 ```
 
 or get the results using the `tfs show results` command as follows
 
 ```bash
-$ cat test.log | tfs show results
+cat test.log | tfs show results
 ```
 
 or you can transform the log to see only the new fails using the
 `tfs transform fail --new` command as follows
 
 ```bash
-$ cat test.log | tfs transform fails --new
+cat test.log | tfs transform fails --new
 ```
 
 ### [Running S3 Suites](#table-of-contents)
@@ -333,12 +333,12 @@ Examples:
 
 Explicit storage declaration:
 ```bash
-$ s3/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --storage minio
+s3/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --storage minio
 ```
 
 Utilizing default values:
 ```bash
-$ s3/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine
+s3/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine
 ```
 
 You can also specify the minio uri (`--minio-uri`), root user (`--minio-root-user`), and root password (`--minio-root-password`). However, this is not necessary.
@@ -350,21 +350,21 @@ Aws can be specified using `--storage aws_s3`.
 
 Env variables:
 ```bash
-$ export AWS_ACCESS_KEY_ID=
-$ export AWS_SECRET_ACCESS_KEY=
-$ export AWS_DEFAULT_REGION=
-$ export S3_AMAZON_BUCKET=
+export AWS_ACCESS_KEY_ID=
+export AWS_SECRET_ACCESS_KEY=
+export AWS_DEFAULT_REGION=
+export S3_AMAZON_BUCKET=
 ```
 
 Examples:
 
 Inline:
 ```bash
-$ s3/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --aws_s3_key_id [masked] --aws_s3_access_key [masked] --aws-s3-bucket [masked] --aws-s3-region [masked] --storage aws_s3
+s3/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --aws_s3_key_id [masked] --aws_s3_access_key [masked] --aws-s3-bucket [masked] --aws-s3-region [masked] --storage aws_s3
 ```
 Env:
 ```bash
-$ s3/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --storage aws_s3
+s3/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --storage aws_s3
 ```
 
 #### [GCS (Google Cloud Storage)](#table-of-contents)
@@ -374,20 +374,20 @@ GCS can be specified using `--storage gcs`.
 
 Env variables:
 ```bash
-$ export GCS_URI=
-$ export GCS_KEY_ID=
-$ export GCS_KEY_SECRET=
+export GCS_URI=
+export GCS_KEY_ID=
+export GCS_KEY_SECRET=
 ```
 
 Examples:
 
 Inline:
 ```bash
-$ s3/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --gcs-uri [masked] --gcs-key-id [masked] --gcs-key-secret [masked] --storage gcs
+s3/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --gcs-uri [masked] --gcs-key-id [masked] --gcs-key-secret [masked] --storage gcs
 ```
 Env:
 ```bash
-$ s3/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --storage gcs
+s3/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --storage gcs
 ```
 
 ### [Running Tiered Storage Suites](#table-of-contents)
@@ -398,7 +398,7 @@ Normal tiered storage suite does not require any variables to be provided.
 
 From the regression directory, it can be run with the following command:
 ```bash
-$ tiered_storage/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine
+tiered_storage/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine
 ```
 
 #### [Running on Minio](#table-of-contents)
@@ -407,7 +407,7 @@ Minio tiered storage suite only requires that `--with-minio` is specified.
 
 It can be run with the following command:
 ```bash
-$ tiered_storage/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --with-minio
+tiered_storage/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --with-minio
 ```
 
 #### [Running on AWS S3 Storage](#table-of-contents)
@@ -417,20 +417,20 @@ These can be passed as environment variables. AWS S3 must be specified using `--
 
 Env variables:
 ```bash
-$ export AWS_ACCESS_KEY_ID=
-$ export AWS_SECRET_ACCESS_KEY=
-$ export S3_AMAZON_URI=
+export AWS_ACCESS_KEY_ID=
+export AWS_SECRET_ACCESS_KEY=
+export S3_AMAZON_URI=
 ```
 
 Examples:
 
 Inline:
 ```bash
-$ tiered_storage/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --aws-s3-key-id [masked] --aws-s3-access-key [masked] --aws-s3-uri [masked] --with-s3amazon
+tiered_storage/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --aws-s3-key-id [masked] --aws-s3-access-key [masked] --aws-s3-uri [masked] --with-s3amazon
 ```
 Env:
 ```bash
-$ tiered_storage/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --with-s3amazon
+tiered_storage/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --with-s3amazon
 ```
 
 #### [Running on GCS Storage](#table-of-contents)
@@ -440,20 +440,20 @@ GCS can be specified using `--with-s3gcs`.
 
 Env variables:
 ```bash
-$ export GCS_URI=
-$ export GCS_KEY_ID=
-$ export GCS_KEY_SECRET=
+export GCS_URI=
+export GCS_KEY_ID=
+export GCS_KEY_SECRET=
 ```
 
 Examples:
 
 Inline:
 ```bash
-$ tiered_storage/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --gcs-uri [masked] --gcs-key-id [masked] --gcs-key-secret [masked] --with-s3gcs
+tiered_storage/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --gcs-uri [masked] --gcs-key-id [masked] --gcs-key-secret [masked] --with-s3gcs
 ```
 Env:
 ```bash
-$ tiered_storage/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --with-s3gcs
+tiered_storage/regression.py --local --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine --with-s3gcs
 ```
 
 #### [Pausing in Tests](#table-of-contents)
