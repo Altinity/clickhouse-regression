@@ -272,18 +272,24 @@ def query_9(self, filename: str, database: str):
 
 @TestSuite
 def clickhouse(self, filename):
-    clickhouse_node = self.context.clickhouse_node
+    duckdb_node = self.context.duckdb_node
+    duckdb_node.stop()
 
     for step in loads(current_module(), Step):
         step(filename=filename, database="clickhouse")
 
-    clickhouse_node.command("docker-compose stop clickhouse1")
+    duckdb_node.start()
 
 
 @TestScenario
 def duckdb(self, filename):
+    clickhouse_node = self.context.clickhouse_node
+    clickhouse_node.stop()
+
     for step in loads(current_module(), Step):
         step(filename=filename, database="duckdb")
+
+    clickhouse_node.start()
 
 
 @TestScenario

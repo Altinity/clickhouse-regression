@@ -5,8 +5,6 @@ import pandas as pd
 
 
 def sort_csv_data(data):
-    print(f"Before data: {data}")
-
     merged_data = {}
 
     for item in data:
