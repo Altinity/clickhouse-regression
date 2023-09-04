@@ -71,7 +71,9 @@ def convert_to_markdown(csv_file, markdown_name, query):
 
     query_dictionary = {}
 
-    for i in query:
+    corrected_data = sort_csv_data(query)
+
+    for i in corrected_data:
         query_dictionary[i[0]] = i[3]
 
     with open(markdown_name, "w") as f:
