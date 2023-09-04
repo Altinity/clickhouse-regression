@@ -460,7 +460,7 @@ tiered_storage/regression.py --local --clickhouse-binary-path docker://clickhous
 
 You can explicitly specify `PAUSE_BEFORE`, `PAUSE_AFTER`, `PAUSE_ON_PASS` and `PAUSE_ON_FAIL` flags inside your test program.
 For example,
-```bash
+```python
 with Test("my test"):
     with Step("my step 1", flags=PAUSE_BEFORE):
         note("my step 1")
