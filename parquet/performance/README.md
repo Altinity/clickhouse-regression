@@ -6,7 +6,7 @@
   * 1.1 [References and Resources](#references-and-resources)
   * 1.2 [Versions Tested](#versions-tested)
   * 1.3 [Performance Tests Diagram](#performance-tests-diagram)
-* 2 [Running The Test Program](#running-the-test-program)
+* 2 [Running The Program](#running-the-program)
   * 2.1 [Run Tests](#run-tests)
     * 2.1.1 [Getting Started](#getting-started)
       * 2.1.1.1 [Prerequisites](#prerequisites)
@@ -22,8 +22,8 @@
     * 2.3.5 [Get Metrics Using TestFlows](#get-metrics-using-testflows)
 * 3 [Additional Information](#additional-information)
   * 3.1 [How Do We Calculate The Runtime](#how-do-we-calculate-the-runtime)
-  * 3.2 [Test Environment Configuration](#test-environment-configuration)
-  * 3.3 [Test Results](#test-results)
+  * 3.2 [Environment Configuration](#environment-configuration)
+  * 3.3 [Results](#results)
 
 ## [ClickHouse Performance Test Program](#table-of-contents)
 
@@ -67,7 +67,7 @@ graph TD
     F --> G[Export results into CSV]
 ```
 
-## [Running The Test Program](#table-of-contents)
+## [Running The Program](#table-of-contents)
 
 ### [Getting Started](#table-of-contents)
 
@@ -173,7 +173,7 @@ file will be run 3 times and each one of these queries will produce samples like
 ```python
 runtime = min([0.53, 0.52, 0.54])
 ```
-### [Test Environment Configuration](#table-of-contents)
+### [Environment Configuration](#table-of-contents)
 
 The test program was executed on a Hetzner Cloud machine (CPX51) with the following specifications:
 
@@ -182,7 +182,7 @@ The test program was executed on a Hetzner Cloud machine (CPX51) with the follow
 - Disk space: 360 GB
 - System: Ubuntu 22.04.2 LTS
 
-### [Test Results](#table-of-contents)
+### [Results](#table-of-contents)
 
 Test results can be found inside the [results] directory.
 
