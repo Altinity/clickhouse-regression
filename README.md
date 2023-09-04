@@ -476,7 +476,7 @@ with Test("my test"):
 ```
 For decorated tests `Flags` decorator can be used to set these flags.
 
-```bash
+```python
 @TestScenario
 @Flags(PAUSE_BEFORE|PAUSE_AFTER) # pause before and after this test
 def my_scenario(self):
