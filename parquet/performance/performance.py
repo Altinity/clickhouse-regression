@@ -89,6 +89,9 @@ def module(
     filename,
     to_year,
     threads,
+    first_number,
+    last_number,
+    hits,
     max_memory_usage,
     compression,
     collect_service_logs,
@@ -111,14 +114,20 @@ def module(
     self.context.duckdb_version = duckdb_binary_path.rsplit("/", 2)[-2][1:]
     self.context.run_count = rerun_queries
     self.context.query_results = []
+    self.context.query_results_hits = []
+    self.context.test_machine = test_machine
+    self.context.rerun_queries = rerun_queries
     self.context.row_count = []
 
     Feature(test=load("parquet.performance.tests.duckdb.feature", "feature"))(
         from_year=from_year,
         to_year=to_year,
         threads=threads,
+        first_number=first_number,
+        last_number=last_number,
         max_memory_usage=max_memory_usage,
         compression=compression,
+        hits=hits,
     )
 
     write_to_csv(

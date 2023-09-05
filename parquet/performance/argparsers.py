@@ -33,6 +33,24 @@ def argparser(parser):
     )
 
     parser.add_argument(
+        "--first-number",
+        type=str,
+        dest="first_number",
+        help="Determines the first number in a range of 1 to 99 to download the hits dataset",
+        metavar="value",
+        default=1,
+    )
+
+    parser.add_argument(
+        "--last-number",
+        type=str,
+        dest="last_number",
+        help="Determines the last number in a range of 1 to 99 to download the hits dataset",
+        metavar="value",
+        default=99,
+    )
+
+    parser.add_argument(
         "--threads",
         type=str,
         dest="threads",
@@ -85,4 +103,13 @@ def argparser(parser):
         help="the name of the test environment",
         metavar="value",
         default=None,
+    )
+
+    parser.add_argument(
+        "--hits",
+        type=str,
+        dest="hits",
+        help="Runs queries for hits dataset",
+        metavar="value",
+        default=False,
     )
