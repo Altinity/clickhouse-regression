@@ -8,7 +8,7 @@ def sort_csv_data(data):
     merged_data = {}
 
     for item in data:
-        key = item[0][-1]
+        key = item[0][6:]
         if key in merged_data:
             merged_data[key].append(item)
         else:
@@ -60,6 +60,7 @@ def write_to_csv(filename, data, row_count, test_machine, repeats):
         csv_writer.writerow(csv_contents)
 
         corrected_data = sort_csv_data(data)
+        print(corrected_data)
 
         for row in corrected_data:
             csv_writer.writerow(row)

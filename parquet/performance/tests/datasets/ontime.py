@@ -3,7 +3,7 @@ from helpers.common import getuid, check_clickhouse_version
 
 
 @TestStep(Given)
-def create_parquet_files(
+def create_parquet_file(
     self,
     from_year: int,
     to_year: int,
