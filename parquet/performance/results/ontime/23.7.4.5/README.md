@@ -1,6 +1,6 @@
 # ClickHouse vs DuckDB (Runtime in Seconds)
 
-## Versions:
+## Versions
   * ClickHouse: 23.7.4.5
   * DuckDB: 0.8.1
 
