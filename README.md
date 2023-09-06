@@ -185,14 +185,13 @@ You can run tests locally by passing `--local` and `--clickhouse-binary-path` to
   run. You can also use a docker image that should have `docker://` prefix.
   For example, `--clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine`
 > [!NOTE]
-> You can pass the `-h` or `--help` argument to the `regression.py` to see a help message.
+> * You can pass the `-h` or `--help` argument to the `regression.py` to see a help message.
 >
 > ```bash
 > python3 regression.py -h
 > ```
-
-> [!NOTE]
-> Make sure that the ClickHouse binary has correct permissions. 
+> 
+> * Make sure that the ClickHouse binary has correct permissions. 
 > If you are using `/usr/bin/clickhouse` its owner and group are set to `root:root` by default 
 > and it needs to be changed to `clickhouse:clickhouse`. You can change the owner and the group 
 > using the following command.
