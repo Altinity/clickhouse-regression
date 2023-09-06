@@ -178,21 +178,21 @@ The CI/CD has the following secrets:
 ## [Running tests locally](#table-of-contents)
 
 You can run tests locally by passing `--local` and `--clickhouse-binary-path` to the top level `regression.py` or
-`cd` into any sub-folders to run suite specific `regression.py`.
+`cd` into any sub-folders to run suite-specific `regression.py`.
 
 * `--local` specifies that regression will be run locally
 * `--clickhouse-binary-path` specifies the path to the ClickHouse binary on the host machine that will be used during the regression
-  run. You can also use docker image that should have `docker://` prefix.
+  run. You can also use a docker image that should have `docker://` prefix.
   For example, `--clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine`
 
-> Note: you can pass `-h` or `--help` argument to the `regression.py` to see a help message.
+> Note: you can pass the `-h` or `--help` argument to the `regression.py` to see a help message.
 >
 > ```bash
 > python3 regression.py -h
 > ```
 
-> Note: make sure that the ClickHouse binary has correct permissions. 
-> If you are using `/usr/bin/clickhouse` its owner and group is set to `root:root` by default 
+> Note: Make sure that the ClickHouse binary has correct permissions. 
+> If you are using `/usr/bin/clickhouse` its owner and group are set to `root:root` by default 
 > and it needs to be changed to `clickhouse:clickhouse`. You can change the owner and the group 
 > using the following command.
 > 
@@ -208,12 +208,12 @@ python3 regression.py --local --clickhouse-binary-path "/usr/bin/clickhouse"
 ```
 ### [Output Verbosity](#table-of-contents)
 
-You can control verbosity of the output by specifying the output format with `-o` or `--output` option.
+You can control the verbosity of the output by specifying the output format with the `-o` or `--output` option.
 See `--help` for more details.
 
 ### [Running Only Selected Tests](#table-of-contents)
 
-You can run only the selected tests by passing `--only` option to the `regression.py`.
+You can run only the selected tests by passing the `--only` option to the `regression.py`.
 
 For example,
 
@@ -233,13 +233,13 @@ If you want to run only a single test such as the `/clickhouse/rbac/syntax/grant
 
 > Note that you need to end the filtering pattern with `/*` to run all the steps inside the test.
 
-For more information, please see [Filtering](https://testflows.com/handbook/#Filtering) section in the [TestFlows Handbook].
+For more information, please see the [Filtering](https://testflows.com/handbook/#Filtering) section in the [TestFlows Handbook].
 
 ### [How To Debug Why Test Failed](#table-of-contents)
 
 #### [Step 1: find which tests failed](#table-of-contents)
 
-If [TestFlows] check does not pass you should look at the end of the `test_run.txt.out.log` to find the list
+If the [TestFlows] check does not pass you should look at the end of the `test_run.txt.out.log` to find the list
 of failing tests. For example,
 
 ```bash
@@ -257,7 +257,7 @@ Failing
 ✘ [ Fail ] /clickhouse
 ```
 
-In this case the failing test is
+In this case, the failing test is
 
 ```
 /clickhouse/rbac/syntax/grant privilege/grant privileges/privilege='SELECT', on=('db0.table0', 'db0.*', '*.*', 'tb0', '*'), allow_column=True, allow_introspection=False
@@ -273,14 +273,14 @@ while the others
 ✘ [ Fail ] /clickhouse
 ```
 
-failed because the first fail gets "bubble-up" the test execution tree all the way to the top level test which is the
+failed because the first fail gets "bubble-up" the test execution tree all the way to the top-level test which is the
 `/clickhouse`.
 
-#### [Step 2: download `test.log` that contains all raw messages](#table-of-contents)
+#### [Step 2: Download `test.log` that contains all raw messages](#table-of-contents)
 
 You need to download the `test.log` that contains all raw messages.
 
-#### [Step 3: get messages for the failing test](#table-of-contents)
+#### [Step 3: Get messages for the failing test](#table-of-contents)
 
 Once you know the name of the failing test and you have the `test.log` that contains all the raw messages
 for all the tests, you can use `tfs show test messages` command. 
@@ -292,8 +292,8 @@ For example,
 ```bash
 cat test.log | tfs show test messages "/clickhouse/rbac/syntax/grant privilege/grant privileges/privilege='SELECT', on=\('db0.table0', 'db0.\*', '\*.\*', 'tb0', '\*'\), allow_column=True, allow_introspection=False"
 ```
-
-> Note: that characters that are treated as special in extended regular expressions need to be escaped. In this case
+> [!NOTE]
+> Characters that are treated as special in extended regular expressions need to be escaped. In this case
 > we have to escape the `*`, `(`, and the `)` characters in the test name.
 
 #### [Step 4: working with the `test.log`](#table-of-contents)
