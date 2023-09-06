@@ -12,7 +12,7 @@ sudo rm -rf /var/cache/debconf
 sudo rm -rf /tmp/*
 
 sudo apt-get clean
-sudo pip install -r requirements.txt
+./retry.sh 60 2 "sudo pip install -r requirements.txt"
 sudo apt-get update
 
 mkdir $SUITE/_instances
