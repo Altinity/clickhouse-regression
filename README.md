@@ -184,14 +184,15 @@ You can run tests locally by passing `--local` and `--clickhouse-binary-path` to
 * `--clickhouse-binary-path` specifies the path to the ClickHouse binary on the host machine that will be used during the regression
   run. You can also use a docker image that should have `docker://` prefix.
   For example, `--clickhouse-binary-path docker://clickhouse/clickhouse-server:22.3.6.5-alpine`
-
-> Note: you can pass the `-h` or `--help` argument to the `regression.py` to see a help message.
+> [!NOTE]
+> You can pass the `-h` or `--help` argument to the `regression.py` to see a help message.
 >
 > ```bash
 > python3 regression.py -h
 > ```
 
-> Note: Make sure that the ClickHouse binary has correct permissions. 
+> [!NOTE]
+> Make sure that the ClickHouse binary has correct permissions. 
 > If you are using `/usr/bin/clickhouse` its owner and group are set to `root:root` by default 
 > and it needs to be changed to `clickhouse:clickhouse`. You can change the owner and the group 
 > using the following command.
@@ -228,10 +229,9 @@ If you want to run only a single test such as the `/clickhouse/rbac/syntax/grant
 ```bash
 ./regression.py --local --clickhouse-binary-path /usr/bin/clickhouse --only "/clickhouse/rbac/syntax/grant privilege/grant privileges/privilege='KILL QUERY', on=('[*].[*]',), allow_introspection=False/*"
 ```
-
-> Note that you need to surround special characters such as `*` with square brackets, for example `[*]`.
-
-> Note that you need to end the filtering pattern with `/*` to run all the steps inside the test.
+> [!NOTE]
+> * You need to surround special characters such as `*` with square brackets, for example `[*]`.
+> * You need to end the filtering pattern with `/*` to run all the steps inside the test.
 
 For more information, please see the [Filtering](https://testflows.com/handbook/#Filtering) section in the [TestFlows Handbook].
 
