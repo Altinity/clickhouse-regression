@@ -29,7 +29,7 @@ def run_query(self, name: str, clickhouse_query: str, duckdb_query: str, databas
         csv_result = (
             name,
             self.context.clickhouse_version,
-            clickhouse_run_time,
+            min(clickhouse_times),
             clickhouse_query,
         )
 
@@ -52,7 +52,7 @@ def run_query(self, name: str, clickhouse_query: str, duckdb_query: str, databas
         csv_result = (
             name,
             self.context.duckdb_version,
-            duckdb_run_time,
+            min(duckdb_times),
             duckdb_query,
         )
 
