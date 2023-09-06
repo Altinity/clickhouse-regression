@@ -12,7 +12,8 @@ def create_parquet_file_hits(
     compression: str = None,
 ):
     """Prepare data in Parquet format using the hits dataset from
-    https://datasets.clickhouse.com/hits_compatible/athena_partitioned/hits_%7B0..99%7D.parquet."""
+    https://datasets.clickhouse.com/hits_compatible/athena_partitioned/hits_%7B0..99%7D.parquet.
+    """
 
     clickhouse_node = self.context.clickhouse_node
     table_name = "hits_" + getuid()

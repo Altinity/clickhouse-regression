@@ -37,6 +37,26 @@ def compare_clickhouse_vs_duckdb_performance(
         with By("Running the scenario which contains all the query steps"):
             queries(filename=parquet_file)
 
+    with Then("I export the test run results into a CSV file and generate charts"):
+        write_to_csv(
+            filename=f"results/ontime/{self.context.filename}",
+            data=self.context.query_results,
+            row_count=self.context.row_count[0],
+            test_machine=self.context.test_machine,
+            repeats=self.context.rerun_queries,
+        )
+
+        create_bar_chart(
+            csv_file=f"results/ontime/{self.context.filename}",
+            png_path="results/ontime/bar_chart.png",
+        )
+
+        convert_to_markdown(
+            csv_file=f"results/ontime/{self.context.filename}",
+            markdown_name="results/ontime/README.md",
+            query=self.context.query_results,
+        )
+
 
 @TestSuite
 def compare_clickhouse_vs_duckdb_performance_hits(
@@ -64,7 +84,7 @@ def compare_clickhouse_vs_duckdb_performance_hits(
         with By("Running the scenario which contains all the query steps"):
             queries_hits(filename=parquet_file)
 
-    with Then("I export the test run results into a CSV file"):
+    with Then("I export the test run results into a CSV file and generate charts"):
         write_to_csv(
             filename=f"results/hits/performance_hits.csv",
             data=self.context.query_results_hits,

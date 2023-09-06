@@ -115,9 +115,10 @@ def module(
     self.context.run_count = rerun_queries
     self.context.query_results = []
     self.context.query_results_hits = []
+    self.context.row_count = []
     self.context.test_machine = test_machine
     self.context.rerun_queries = rerun_queries
-    self.context.row_count = []
+    self.context.filename = filename
 
     Feature(test=load("parquet.performance.tests.duckdb.feature", "feature"))(
         from_year=from_year,
@@ -128,22 +129,6 @@ def module(
         max_memory_usage=max_memory_usage,
         compression=compression,
         hits=hits,
-    )
-
-    write_to_csv(
-        filename=f"results/{filename}",
-        data=self.context.query_results,
-        row_count=self.context.row_count[0],
-        test_machine=test_machine,
-        repeats=rerun_queries,
-    )
-
-    create_bar_chart(csv_file=f"results/{filename}", png_path="results/bar_chart.png")
-
-    convert_to_markdown(
-        csv_file=f"results/{filename}",
-        markdown_name="results/README.md",
-        query=self.context.query_results,
     )
 
 
