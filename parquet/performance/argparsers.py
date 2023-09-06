@@ -109,7 +109,7 @@ def argparser(parser):
         "--hits",
         type=str,
         dest="hits",
-        help="Runs queries for hits dataset",
+        help="Runs queries for hits dataset if set to True",
         metavar="value",
         default=False,
     )

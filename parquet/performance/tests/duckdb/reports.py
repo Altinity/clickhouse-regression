@@ -2,6 +2,12 @@ import csv
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+import os
+
+
+def create_directory_if_not_exists(directory_path):
+    if not os.path.exists(directory_path):
+        os.makedirs(directory_path)
 
 
 def sort_csv_data(data):
