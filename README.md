@@ -190,6 +190,7 @@ You can run tests locally by passing `--local` and `--clickhouse-binary-path` to
 > ```bash
 > python3 regression.py -h
 > ```
+
 > [!IMPORTANT]
 > Make sure that the ClickHouse binary has correct permissions. 
 > If you are using `/usr/bin/clickhouse` its owner and group are set to `root:root` by default 
