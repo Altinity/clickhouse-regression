@@ -6,6 +6,7 @@ from parquet.performance.tests.duckdb.reports import (
     write_to_csv,
     create_bar_chart,
     convert_to_markdown,
+    create_directory_if_not_exists,
 )
 from parquet.performance.tests.duckdb.steps import *
 from parquet.performance.tests.duckdb.steps_hits import *
@@ -38,8 +39,12 @@ def compare_clickhouse_vs_duckdb_performance(
             queries(filename=parquet_file)
 
     with Then("I export the test run results into a CSV file and generate charts"):
+        path = f"results/ontime/{self.context.clickhouse_version}"
+
+        create_directory_if_not_exists(path)
+
         write_to_csv(
-            filename=f"results/ontime/{self.context.filename}",
+            filename=f"{path}/{self.context.filename}",
             data=self.context.query_results,
             row_count=self.context.row_count[0],
             test_machine=self.context.test_machine,
@@ -47,13 +52,13 @@ def compare_clickhouse_vs_duckdb_performance(
         )
 
         create_bar_chart(
-            csv_file=f"results/ontime/{self.context.filename}",
-            png_path="results/ontime/bar_chart.png",
+            csv_file=f"{path}/{self.context.filename}",
+            png_path=f"{path}/bar_chart.png",
         )
 
         convert_to_markdown(
-            csv_file=f"results/ontime/{self.context.filename}",
-            markdown_name="results/ontime/README.md",
+            csv_file=f"{path}/{self.context.filename}",
+            markdown_name=f"{path}/README.md",
             query=self.context.query_results,
         )
 
@@ -85,8 +90,12 @@ def compare_clickhouse_vs_duckdb_performance_hits(
             queries_hits(filename=parquet_file)
 
     with Then("I export the test run results into a CSV file and generate charts"):
+        path = f"results/hits/{self.context.clickhouse_version}"
+
+        create_directory_if_not_exists(path)
+
         write_to_csv(
-            filename=f"results/hits/performance_hits.csv",
+            filename=f"{path}/performance_hits.csv",
             data=self.context.query_results_hits,
             row_count=self.context.row_count[0],
             test_machine=self.context.test_machine,
@@ -94,13 +103,13 @@ def compare_clickhouse_vs_duckdb_performance_hits(
         )
 
         create_bar_chart(
-            csv_file=f"results/hits/performance_hits.csv",
-            png_path="results/hits/bar_chart.png",
+            csv_file=f"{path}/performance_hits.csv",
+            png_path=f"{path}/bar_chart.png",
         )
 
         convert_to_markdown(
-            csv_file=f"results/hits/performance_hits.csv",
-            markdown_name="results/hits/README.md",
+            csv_file=f"{path}/performance_hits.csv",
+            markdown_name=f"{path}/README.md",
             query=self.context.query_results_hits,
         )
 
