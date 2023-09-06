@@ -51,8 +51,6 @@ if __name__ == "__main__":
         build_url = 'build_urls_package_aarch64/build_urls_package_aarch64.json'
     else:
         raise Exception("Only x86_64 and ARM are supported.")
-    sys.stdout.write(arch)
-    sys.stdout.write(build_url)
     
     with open(
         os.path.join(
@@ -64,7 +62,6 @@ if __name__ == "__main__":
         build_report = json.load(file_handler)
 
     for url in build_report["build_urls"]:
-        sys.stdout.write(url)
         if "clickhouse-common-static_" in url and "deb" in url:
             with open(github_env, "a") as f:
                 f.write("version=" + url.split("/")[-1].split("_")[1] + "\n")
