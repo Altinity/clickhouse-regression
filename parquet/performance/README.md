@@ -116,17 +116,20 @@ You also need docker in order to run the test program, for ubuntu refer to [Inst
 ### [Program Settings](#table-of-contents)
 
 - `--clickhouse-binary-path` specifies the path to the ClickHouse binary on the host machine that will be used during the run. You can also use docker image that should have `docker://` prefix. (default: `/usr/bin/clickhouse`)
+- `--clickhouse-version` the version of the ClickHouse used in the program run
 - `--duckdb-binary-path` path to duckdb binary, need to specify duckdb CLI binary download link from the [DuckDB website]
-- `--from-year` and `--to-year` these settings determine the size of the dataset for the parquet file. (default values are: from 1987 to 2022, the range results in a parquet file with 200 million rows)
+- `--from-year` and `--to-year` these settings determine the size of the dataset for the parquet file with ontime dataset. (default values are: from 1987 to 2022, the range results in a parquet file with 200 million rows)
 - `--threads` determines the number of threads used in creating a parquet file. (default: 20)
 - `--max-memory-usage` sets the maximum amount of RAM (in bytes) to use for running a query on a single server, 0 sets it to unlimited (default: 0)
 - `--compression` determines the compression used for a generated parquet file (default: snappy)
 - `--rerun-queries` the number of times each query will be run (default: 3)
 - `--filename` determines the name of the CSV file that contains the results of the program run (default: performance.csv)
 - `--log` path to the log file where test program output will be stored
-
+- `--hits` determines weather the hits dataset will be used instead of the default ontime (default: False)
+- `--first-number` and `--last-number` these settings determine the size of the dataset for the parquet file with hits dataset. (default values are: first 1 and last 99)
 
 > [!IMPORTANT] 
+> - Please specify `--clickhouse-version` in order for the program to run without issues on any ClickHouse version.
 > - If you set `--threads` to 0 it will disable parallel execution when creating a parquet file, but this will significantly increase test program runtime and potentially result in a test timeout (this setting is only used to speed up the process of generating a parquet file using ClickHouse).
 > - If you change the `--compression` value make sure DuckDB supports reading from file with this compression type. Currently `none` and `snappy` are supported both by ClickHouse and DuckDB.
 > - `--duckdb-binary-path` is a required setting, test program will throw an error if it's not specified. 
