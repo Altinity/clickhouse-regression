@@ -327,7 +327,7 @@ cat test.log | tfs transform fails --new
 
 #### [Minio](#table-of-contents)
 
-Minio is the default test suite, but can be specificed using `--storage minio`.
+Minio is the default test suite, but can be specified using `--storage minio`.
 
 Examples:
 
@@ -458,7 +458,7 @@ tiered_storage/regression.py --local --clickhouse-binary-path docker://clickhous
 
 #### [Pausing in Tests](#table-of-contents)
 
-You can explicitly specify `PAUSE_BEFORE`, `PAUSE_AFTER`, `PAUSE_ON_PASS` and `PAUSE_ON_FAIL` flags inside your test program.
+You can explicitly specify `PAUSE_BEFORE`, `PAUSE_AFTER`, `PAUSE_ON_PASS`, and `PAUSE_ON_FAIL` flags inside your test program.
 For example,
 ```python
 with Test("my test"):
@@ -482,17 +482,17 @@ For decorated tests `Flags` decorator can be used to set these flags.
 def my_scenario(self):
     pass
 ```
- This can be used for getting access to [Docker Compose] environment with condition equal to cluster condition on current step by executing standard [Docker Compose] commands ("ps", "exec" etc.) from "*_env" folder. It allows to make some manual checks/changes on dockers and continue test with new manually set conditions.
+ This can be used for getting access to the [Docker Compose] environment with conditions equal to cluster condition on the current step by executing standard [Docker Compose] commands ("ps", "exec" etc.) from the "*_env" folder. It allows us to make some manual checks/changes on dockers and continue test with new manually set conditions.
 
 ## [Running GitHub Actions](#table-of-contents)
-To run GitHub actions, navigate to `Actions`, select `Run CI/CD regression tests`. Inside `Run workflow` dropdown menu specify the package, version, suite and upload destination of artifacts.
+To run GitHub actions, navigate to `Actions`, and select `Run CI/CD regression tests`. Inside the `Run workflow` dropdown menu specify the package, version, suite, and upload destination of artifacts.
 
 Package: `docker://` or `https://` package specifier to use for tests. For example: 
 * docker://altinity/clickhouse-server
 * docker://clickhouse/clickhouse-server
 * https://s3.amazonaws.com/altinity-build-artifacts/217/acf34c9fc6932aaf9af69425612070b50529f484/package_release/clickhouse-client_22.8.11.17.altinitystable_amd64.deb
  
-Version: Version of clickhouse to use for tests. The test verifies that node version matches specified version. When package option uses `docker://` specifier then the version is the image tag. For example:
+Version: Version of clickhouse to use for tests. The test verifies that the node version matches the specified version. When the package option uses the `docker://` specifier then the version is the image tag. For example:
  * 22.3.9.19-alpine
  * 22.3.8.40.altinitystable
  * latest
