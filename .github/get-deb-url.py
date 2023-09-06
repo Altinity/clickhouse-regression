@@ -37,6 +37,7 @@ def argparser():
 
 if __name__ == "__main__":
     args = argparser().parse_args()
+    print(platform.uname()[-1])
 
     assert args.reports_path is not None, "reports path must be set"
     assert args.github_env is not None, "github env must be set"
