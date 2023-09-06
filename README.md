@@ -5,25 +5,25 @@ that involves several ClickHouse instances, custom configs, ZooKeeper, etc.
 
 ## Table of Contents
 
-* 1 [Supported environment](#supported-environment)
+* 1 [Supported Environment](#supported-environment)
 * 2 [Prerequisites](#prerequisites)
 * 3 [Running CI/CD](#running-cicd)
   * 3.1 [Running Only Specific Suites](#running-only-specific-suites)
-  * 3.2 [Running from Docker image](#running-from-docker-image)
-  * 3.3 [Running from Altinity repo](#running-from-altinity-repo)
-  * 3.4 [Running from ClickHouse PR](#running-from-clickhouse-pr)
-* 4 [Running CI/CD with CI/CD trigger](#running-cicd-with-cicd-trigger)
-* 5 [CI/CD Secrets And Variables](#cicd-secrets-and-variables)
+  * 3.2 [Running From Docker Image](#running-from-docker-image)
+  * 3.3 [Running From Altinity Repo](#running-from-altinity-repo)
+  * 3.4 [Running From ClickHouse PR](#running-from-clickhouse-pr)
+* 4 [Running CI/CD With CI/CD Trigger](#running-cicd-with-cicd-trigger)
+* 5 [CI/CD Secrets and Variables](#cicd-secrets-and-variables)
   * 5.1 [Variables](#variables)
   * 5.2 [Secrets](#secrets)
-* 6 [Running tests locally](#running-tests-locally)
+* 6 [Running Tests Locally](#running-tests-locally)
   * 6.1 [Output Verbosity](#output-verbosity)
   * 6.2 [Running Only Selected Tests](#running-only-selected-tests)
   * 6.3 [How To Debug Why Test Failed](#how-to-debug-why-test-failed)
-    * 6.3.1 [Step 1: find which tests failed](#step-1-find-which-tests-failed)
-    * 6.3.2 [Step 2: download `test.log` that contains all raw messages](#step-2-download-testlog-that-contains-all-raw-messages)
-    * 6.3.3 [Step 3: get messages for the failing test](#step-3-get-messages-for-the-failing-test)
-    * 6.3.4 [Step 4: working with the `test.log`](#step-4-working-with-the-testlog)
+    * 6.3.1 [Step 1: Find Which Tests Failed](#step-1-find-which-tests-failed)
+    * 6.3.2 [Step 2: Download `test.log` That Contains All Raw Messages](#step-2-download-testlog-that-contains-all-raw-messages)
+    * 6.3.3 [Step 3: Get Messages for the Failing Test](#step-3-get-messages-for-the-failing-test)
+    * 6.3.4 [Step 4: Working With the `test.log`](#step-4-working-with-the-testlog)
   * 6.4 [Running S3 Suites](#running-s3-suites)
     * 6.4.1 [Minio](#minio)
     * 6.4.2 [AWS S3 Storage](#aws-s3-storage)
@@ -36,7 +36,7 @@ that involves several ClickHouse instances, custom configs, ZooKeeper, etc.
     * 6.5.5 [Pausing In Tests](#pausing-in-tests)
 * 7 [Running GitHub Actions](#running-github-actions)
 
-## [Supported environment](#table-of-contents)
+## [Supported Environment](#table-of-contents)
 
 * [Ubuntu] 22.04
 * [Python 3] >= 3.8
@@ -100,7 +100,7 @@ Specify `suite` variable to select running only specific suites
 | `suite` | `tiered_storage_minio` | Tiered Storage MinIO suite |
 | `suite` | `window_functions` | Window Functions suite |
 
-### [Running from Docker image](#table-of-contents)
+### [Running From Docker Image](#table-of-contents)
 When running the CI/CD pipeline, provide the following variables:  
 Example values using `altinity/clickhouse-server:21.8.15.15.altinitystable`
 | Variables | | |
@@ -108,7 +108,7 @@ Example values using `altinity/clickhouse-server:21.8.15.15.altinitystable`
 | `Variable` | `package` | `docker://altinity/clickhouse-server` |
 | `Variable` | `version` | `21.8.15.15.altinitystable` |
 
-### [Running from Altinity repo](#table-of-contents)
+### [Running From Altinity Repo](#table-of-contents)
 When running the CI/CD pipeline, provide the following variables:
 
 | Variables | | |
@@ -116,7 +116,7 @@ When running the CI/CD pipeline, provide the following variables:
 | `Variable` | `package` | `deb://builds.altinity.cloud/apt-repo/pool/main` |
 | `Variable` | `version` | The version to use for tests. For example, `21.8.8.1.altinitystable` |
 
-### [Running from ClickHouse PR](#table-of-contents)
+### [Running From ClickHouse PR](#table-of-contents)
 Get the link to the deb package: PR -> ClickHouse build check (actions) -> Details -> copy link to a deb package.  
 Break down the link into CI/CD variables:  
 Example values using https://s3.amazonaws.com/clickhouse-builds/37882/f74618722585d507cf5fe6d9284cf32028c67716/package_release/clickhouse-client_22.7.1.1738_amd64.deb
@@ -126,7 +126,7 @@ Example values using https://s3.amazonaws.com/clickhouse-builds/37882/f746187225
 | `Variable` | `version` | `22.7.1.1738` |
 | `Variable` | `package_version_postfix` | By default `all` (supports older versions), specify `amd64` for newer PRs where all packages have `amd64` postfix. |
 
-## [Running CI/CD with CI/CD trigger](#table-of-contents)
+## [Running CI/CD With CI/CD Trigger](#table-of-contents)
 To run the CI/CD pipline you can use cicd-trigger.py
 ```./cicd-trigger.py```
 with following options
@@ -175,7 +175,7 @@ The CI/CD has the following secrets:
 | `DOCKER_USERNAME` | Docker username for login to prevent pull limit. | Not necessary if running small amount of tests. |
 | `DOCKER_PASSWORD` | Docker password for login to prevent pull limit. | Not necessary if running small amount of tests. |
 
-## [Running tests locally](#table-of-contents)
+## [Running Tests Locally](#table-of-contents)
 
 You can run tests locally by passing `--local` and `--clickhouse-binary-path` to the top level `regression.py` or
 `cd` into any sub-folders to run suite-specific `regression.py`.
@@ -237,7 +237,7 @@ For more information, please see the [Filtering](https://testflows.com/handbook/
 
 ### [How To Debug Why Test Failed](#table-of-contents)
 
-#### [Step 1: find which tests failed](#table-of-contents)
+#### [Step 1: Find Which Tests Failed](#table-of-contents)
 
 If the [TestFlows] check does not pass you should look at the end of the `test_run.txt.out.log` to find the list
 of failing tests. For example,
@@ -276,13 +276,13 @@ while the others
 failed because the first fail gets "bubble-up" the test execution tree all the way to the top-level test which is the
 `/clickhouse`.
 
-#### [Step 2: Download `test.log` that contains all raw messages](#table-of-contents)
+#### [Step 2: Download `test.log` That Contains All Raw Messages](#table-of-contents)
 
 You need to download the `test.log` that contains all raw messages.
 
-#### [Step 3: Get messages for the failing test](#table-of-contents)
+#### [Step 3: Get Messages For The Failing Test](#table-of-contents)
 
-Once you know the name of the failing test and you have the `test.log` that contains all the raw messages
+Once you know the name of the failing test, and you have the `test.log` that contains all the raw messages
 for all the tests, you can use `tfs show test messages` command. 
 
 > You get the `tfs` command by installing [TestFlows]. 
@@ -296,7 +296,7 @@ cat test.log | tfs show test messages "/clickhouse/rbac/syntax/grant privilege/g
 > Characters that are treated as special in extended regular expressions need to be escaped. In this case
 > we have to escape the `*`, `(`, and the `)` characters in the test name.
 
-#### [Step 4: working with the `test.log`](#table-of-contents)
+#### [Step 4: Working With the `test.log`](#table-of-contents)
 
 You can use the `test.log` with many of the commands provided by the 
 `tfs` utility. 
