@@ -31,15 +31,15 @@ if [[ $1 == 1 ]];
 then
     echo "::notice title=$SUITE$STORAGE s3 logs and reports::https://$artifact_s3_bucket_path.s3.amazonaws.com/index.html#clickhouse/$version/$GITHUB_RUN_ID/$(uname -i)/testflows/$SUITE$STORAGE/"
     aws s3 cp pipeline_url.log.txt s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/pipeline_url.log.txt --content-type "text/plain; charset=utf-8"
-    aws s3 cp version.log.txt s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/$SUITE$STORAGE/$(uname -i)/version.log.txt --content-type "text/plain; charset=utf-8"
-    aws s3 cp raw.log s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/$SUITE$STORAGE/$(uname -i)/raw.log
-    aws s3 cp compact.log s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/$SUITE$STORAGE/$(uname -i)/compact.log
-    aws s3 cp nice.log.txt s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/$SUITE$STORAGE/$(uname -i)/nice.log.txt --content-type "text/plain; charset=utf-8"
-    aws s3 cp short.log.txt s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/$SUITE$STORAGE/$(uname -i)/short.log.txt --content-type "text/plain; charset=utf-8"
-    aws s3 cp report.html s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/$SUITE$STORAGE/$(uname -i)/report.html
-    aws s3 cp compare.html s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/$SUITE$STORAGE/$(uname -i)/compare.html
-    aws s3 cp coverage.html s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/$SUITE$STORAGE/$(uname -i)/coverage.html
+    aws s3 cp version.log.txt s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/$(uname -i)/$SUITE$STORAGE/version.log.txt --content-type "text/plain; charset=utf-8"
+    aws s3 cp raw.log s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/$(uname -i)/$SUITE$STORAGE/raw.log
+    aws s3 cp compact.log s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/$(uname -i)/$SUITE$STORAGE/compact.log
+    aws s3 cp nice.log.txt s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/$(uname -i)/$SUITE$STORAGE/nice.log.txt --content-type "text/plain; charset=utf-8"
+    aws s3 cp short.log.txt s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/$(uname -i)/$SUITE$STORAGE/short.log.txt --content-type "text/plain; charset=utf-8"
+    aws s3 cp report.html s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/$(uname -i)/$SUITE$STORAGE/report.html
+    aws s3 cp compare.html s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/$(uname -i)/$SUITE$STORAGE/compare.html
+    aws s3 cp coverage.html s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/$(uname -i)/$SUITE$STORAGE/coverage.html
     sudo rm --recursive --force $SUITE/_instances/*/database/
-    aws s3 cp . s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/$SUITE$STORAGE/$(uname -i)/ --recursive --exclude "*" --include "*/_instances/*/logs/*.log" --content-type "text/plain; charset=utf-8"
-    aws s3 cp . s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/$SUITE$STORAGE/$(uname -i)/ --recursive --exclude "*" --include "*/_instances/*.log" --content-type "text/plain; charset=utf-8"
+    aws s3 cp . s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/$(uname -i)/$SUITE$STORAGE/ --recursive --exclude "*" --include "*/_instances/*/logs/*.log" --content-type "text/plain; charset=utf-8"
+    aws s3 cp . s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/$(uname -i)/$SUITE$STORAGE/ --recursive --exclude "*" --include "*/_instances/*.log" --content-type "text/plain; charset=utf-8"
 fi
