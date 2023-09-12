@@ -66,7 +66,6 @@ def write_to_csv(filename, data, row_count, test_machine, repeats):
         csv_writer.writerow(csv_contents)
 
         corrected_data = sort_csv_data(data)
-        print(corrected_data)
 
         for row in corrected_data:
             csv_writer.writerow(row)
