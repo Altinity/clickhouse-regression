@@ -143,7 +143,7 @@ def create_parquet_file(
             f"INSERT INTO {table_name} SELECT * FROM s3('https://clickhouse-public-datasets.s3.amazonaws.com/ontime"
             f"/csv_by_year/{{{from_year}..{to_year}}}.csv.gz', CSVWithNames) SETTINGS max_insert_threads = {threads}, max_memory_usage={max_memory_usage};",
             progress=True,
-            timeout=900,
+            timeout=1800,
         )
 
         insert_into_parquet = (
