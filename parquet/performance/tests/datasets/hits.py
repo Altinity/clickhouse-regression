@@ -139,7 +139,7 @@ def create_parquet_file_hits(
             f"/hits_compatible/athena_partitioned/hits_{{{first_number}..{last_number}}}.parquet') SETTINGS max_insert_threads = {threads}, "
             f"max_memory_usage={max_memory_usage};",
             progress=True,
-            timeout=900,
+            timeout=1800,
         )
 
         insert_into_parquet = (
