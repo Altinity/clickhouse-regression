@@ -59,46 +59,47 @@ pip3 install -r requirements.txt
 
 Specify `suite` variable to select running only specific suites
 
-| Variable | Name | Description |
-| --- | --- | ---  |
-| `suite` | `aes_encryption` | AES Encryption suite |
-| `suite` | `aggregate_functions` | Aggregate Functions suite |
-| `suite` | `atomic_insert` | Atomic Insert suite |
-| `suite` | `base_58` | Base58 suite |
-| `suite` | `benchmark_all` | All Ontime Benchmark (MinIO, AWS, GCS) suite |
-| `suite` | `benchmark_aws` | Ontime Benchmark AWS suite |
-| `suite` | `benchmark_gcs` | Ontime Benchmark GCS suite |
-| `suite` | `benchmark_minio` | Ontime Benchmark MinIO suite |
-| `suite` | `clickhouse_keeper` | ClickHouse Keeper (No SSL and SSL FIPS) suite 
-| `suite` | `data_types` | Data Types suite |
-| `suite` | `datetime64_extended_range` | Extended DateTime64 suite |
-| `suite` | `disk_level_encryption` | Disk Level Encryption |
-| `suite` | `dns` | DNS suite |
-| `suite` | `engines` | Engines suite |
-| `suite` | `example` | Example suite |
-| `suite` | `extended_precision_data_types` | Extended Precision Data Types suite |
-| `suite` | `kafka` | Kafka suite |
-| `suite` | `kerberos` | Kerberos suite |
-| `suite` | `ldap` | LDAP suite |
-| `suite` | `lightweight_delete` | Lightweight Delete suite ||
-| `suite` | `parquet` | Parquet Data Type suite |
-| `suite` | `parquet_minio` | Parquet MinIO suite |
-| `suite` | `parquet_s3` | Parquet AWS S3 suite |
-| `suite` | `part_moves_between_shards` | Part Moves Between Shards suite |
-| `suite` | `rbac` | RBAC suite |
-| `suite` | `s3_all` | All S3 (MinIO, AWS, GCS) suites |
-| `suite` | `s3_aws` | S3 AWS suite |
-| `suite` | `s3_gcs` | S3 GCS suite |
-| `suite` | `s3_minio` | S3 MinIO suite |
-| `suite` | `selects` | Selects suite |
-| `suite` | `session_timezone` | Session Timezone suite |
-| `suite` | `ssl_server` | SSL Server suite |
-| `suite` | `tiered_storage_all` | All Tiered Storage (Local Disk, MinIO, AWS, GCS) suites |
-| `suite` | `tiered_storage_aws` | Tiered Storage AWS suite |
-| `suite` | `tiered_storage_gcs` | Tiered Storage GCS suite |
-| `suite` | `tiered_storage_local` | Tiered Storage Local suite |
-| `suite` | `tiered_storage_minio` | Tiered Storage MinIO suite |
-| `suite` | `window_functions` | Window Functions suite |
+| Variable | Name                            | Description                                             |
+| --- |---------------------------------|---------------------------------------------------------|
+| `suite` | `aes_encryption`                | AES Encryption suite                                    |
+| `suite` | `aggregate_functions`           | Aggregate Functions suite                               |
+| `suite` | `atomic_insert`                 | Atomic Insert suite                                     |
+| `suite` | `base_58`                       | Base58 suite                                            |
+| `suite` | `benchmark_all`                 | All Ontime Benchmark (MinIO, AWS, GCS) suite            |
+| `suite` | `benchmark_aws`                 | Ontime Benchmark AWS suite                              |
+| `suite` | `benchmark_gcs`                 | Ontime Benchmark GCS suite                              |
+| `suite` | `benchmark_minio`               | Ontime Benchmark MinIO suite                            |
+| `suite` | `clickhouse_keeper`             | ClickHouse Keeper (No SSL and SSL FIPS) suite           
+| `suite` | `data_types`                    | Data Types suite                                        |
+| `suite` | `datetime64_extended_range`     | Extended DateTime64 suite                               |
+| `suite` | `disk_level_encryption`         | Disk Level Encryption                                   |
+| `suite` | `dns`                           | DNS suite                                               |
+| `suite` | `engines`                       | Engines suite                                           |
+| `suite` | `example`                       | Example suite                                           |
+| `suite` | `extended_precision_data_types` | Extended Precision Data Types suite                     |
+| `suite` | `kafka`                         | Kafka suite                                             |
+| `suite` | `kerberos`                      | Kerberos suite                                          |
+| `suite` | `ldap`                          | LDAP suite                                              |
+| `suite` | `lightweight_delete`            | Lightweight Delete suite                                ||
+| `suite` | `parquet_all`                   | Full Parquet Suite                                      |
+| `suite` | `parquet`                       | Parquet Data Type suite                                 |
+| `suite` | `parquet_minio`                 | Parquet MinIO suite                                     |
+| `suite` | `parquet_s3`                    | Parquet AWS S3 suite                                    |
+| `suite` | `part_moves_between_shards`     | Part Moves Between Shards suite                         |
+| `suite` | `rbac`                          | RBAC suite                                              |
+| `suite` | `s3_all`                        | All S3 (MinIO, AWS, GCS) suites                         |
+| `suite` | `s3_aws`                        | S3 AWS suite                                            |
+| `suite` | `s3_gcs`                        | S3 GCS suite                                            |
+| `suite` | `s3_minio`                      | S3 MinIO suite                                          |
+| `suite` | `selects`                       | Selects suite                                           |
+| `suite` | `session_timezone`              | Session Timezone suite                                  |
+| `suite` | `ssl_server`                    | SSL Server suite                                        |
+| `suite` | `tiered_storage_all`            | All Tiered Storage (Local Disk, MinIO, AWS, GCS) suites |
+| `suite` | `tiered_storage_aws`            | Tiered Storage AWS suite                                |
+| `suite` | `tiered_storage_gcs`            | Tiered Storage GCS suite                                |
+| `suite` | `tiered_storage_local`          | Tiered Storage Local suite                              |
+| `suite` | `tiered_storage_minio`          | Tiered Storage MinIO suite                              |
+| `suite` | `window_functions`              | Window Functions suite                                  |
 
 ### [Running From Docker Image](#table-of-contents)
 When running the CI/CD pipeline, provide the following variables:  
