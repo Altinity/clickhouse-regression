@@ -1,7 +1,8 @@
-from testflows.core import *
-from testflows.asserts import error
-from helpers.common import getuid
 import time
+
+from testflows.core import *
+from testflows.asserts import snapshot, values, error
+from helpers.common import getuid
 
 
 @TestOutline
@@ -21,10 +22,21 @@ def run_query(self, name: str, clickhouse_query: str, duckdb_query: str, databas
             clickhouse_times = []
             for _ in range(repeats):
                 start_time = time.time()
-                clickhouse_node.query(clickhouse_query)
+                query = clickhouse_node.query(clickhouse_query)
                 clickhouse_run_time = time.time() - start_time
                 clickhouse_times.append(clickhouse_run_time)
             metric(name="clickhouse-" + name, value=min(clickhouse_times), units="s")
+
+            with values() as that:
+                assert that(
+                    snapshot(
+                        query.output.strip(),
+                        name=name
+                        + "clickhouse"
+                        + f"from_year_{self.context.from_year}"
+                        + f"_to_year_{self.context.to_year}",
+                    )
+                ), error()
 
         csv_result = (
             name,
@@ -43,12 +55,24 @@ def run_query(self, name: str, clickhouse_query: str, duckdb_query: str, databas
             duckdb_times = []
             for _ in range(repeats):
                 start_time = time.time()
-                duckdb_node.command(
+                query = duckdb_node.command(
                     f"duckdb {duckdb_database} '{duckdb_query}'", exitcode=0
                 )
                 duckdb_run_time = time.time() - start_time
                 duckdb_times.append(duckdb_run_time)
             metric(name="duckdb-" + name, value=min(duckdb_times), units="s")
+
+            with values() as that:
+                assert that(
+                    snapshot(
+                        query.output.strip(),
+                        name=name
+                        + "duckdb"
+                        + f"from_year_{self.context.from_year}"
+                        + f"_to_year_{self.context.to_year}",
+                    )
+                ), error()
+
         csv_result = (
             name,
             self.context.duckdb_version,

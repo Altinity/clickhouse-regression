@@ -120,6 +120,9 @@ def module(
     self.context.rerun_queries = rerun_queries
     self.context.filename = filename
 
+    self.context.from_year = from_year
+    self.context.to_year = to_year
+
     Feature(test=load("parquet.performance.tests.duckdb.feature", "feature"))(
         from_year=from_year,
         to_year=to_year,
