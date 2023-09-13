@@ -1280,8 +1280,8 @@ def create_keeper_cluster_configuration_ssl(
                     "snapshot_storage_path": "/var/lib/clickhouse/coordination/snapshots",
                     "coordination_settings": {
                         "operation_timeout_ms": "10000",
-                        "session_timeout_ms": "300000",
-                        "dead_session_check_period_ms": "3000",
+                        "session_timeout_ms": "30000",
+                        "dead_session_check_period_ms": "300",
                         "raft_logs_level": "information",
                         # "election_timeout_upper_bound_ms": "10000",
                         "rotate_log_storage_interval": "10000",
