@@ -85,7 +85,7 @@ Install pip:
   sudo apt update
   sudo apt install python3-pip
   ```
-Get all python dependencies from `requirements.txt` file:
+Get all python dependencies from `requirements.txt` file located in the root directory:
 
 ```bash
 pip install -r requirements.txt
@@ -164,6 +164,8 @@ You also need docker in order to run the test program, for ubuntu refer to [Inst
 ```bash
 cat test.log | tfs show metrics
 ```
+> [!NOTE]
+> You need to access the log file to use this functionality. use `--log log_name.log` when running the test program to generate it.
 
 ## [Additional Information](#table-of-contents)
 
