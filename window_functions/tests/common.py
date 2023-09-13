@@ -9,7 +9,7 @@ from testflows._core.name import sep
 from testflows._core.testtype import TestSubType
 from testflows.asserts import values, error, snapshot
 
-from helpers.common import check_clickhouse_version, getuid
+from helpers.common import check_clickhouse_version, getuid, current_cpu
 
 interval_periods = [
     "SECOND",
@@ -156,7 +156,7 @@ def execute_query(
                     assert that(
                         snapshot(
                             "\n" + r.output.strip() + "\n",
-                            "tests",
+                            "tests." + current_cpu(),
                             name=snapshot_name,
                             encoder=str,
                         )
