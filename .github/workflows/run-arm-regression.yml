@@ -1,6 +1,6 @@
 name: Run CI/CD ARM regression tests
 run-name: ${{ github.actor }} is running ARM regression tests
-on: 
+on:
   workflow_dispatch:
     inputs:
       package:
@@ -39,6 +39,7 @@ on:
           - key_value
           - ldap
           - lightweight_delete
+          - parquet_all
           - parquet
           - parquet_minio
           - parquet_s3
@@ -79,7 +80,10 @@ on:
           - dots
           - progress
           - raw
-        
+      ref:
+        description: "Commit SHA to checkout. Default: current (empty string)."
+        type: string
+        default: ""
 
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_REPORT_KEY_ID }}
@@ -93,9 +97,10 @@ env:
   version: ${{ inputs.version }}
   artifacts: ${{ inputs.artifacts }}
   args: --test-to-end
+    --no-colors
     --local
-    --collect-service-logs 
-    --output ${{ inputs.output_format }} 
+    --collect-service-logs
+    --output ${{ inputs.output_format }}
     --parallel ${{ vars.PARALLEL }}
     --attr project="${GITHUB_REPOSITORY}" project.id="${GITHUB_REPOSITORY_ID}" user.name="${GITHUB_ACTOR}" version="${{ inputs.version }}" package="${{ inputs.package }}" repository="https://github.com/Altinity/clickhouse-regression" commit.hash="${GITHUB_SHA}" job.id="${GITHUB_RUN_ID}" job.url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" arch="$(uname -i)"
     --log raw.log
@@ -111,13 +116,16 @@ env:
 
 jobs:
   aes_encryption:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: aes_encryption
     if: ${{ inputs.suite == 'all' || inputs.suite == 'aes_encryption' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -140,13 +148,16 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   aggregate_functions:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: aggregate_functions
     if: ${{ inputs.suite == 'all' || inputs.suite == 'aggregate_functions' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -169,13 +180,16 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   atomic_insert:
-    runs-on: [self-hosted, type-cax21]
+    runs-on: [self-hosted, type-cax41]
     timeout-minutes: 180
     env:
       SUITE: atomic_insert
     if: ${{ inputs.suite == 'all' || inputs.suite == 'atomic_insert' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -198,13 +212,16 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   base_58:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: base_58
     if: ${{ inputs.suite == 'all' || inputs.suite == 'base_58' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -234,13 +251,16 @@ jobs:
       STORAGE: /aws
     if: ${{ inputs.suite == 'all' || inputs.suite == 'benchmark_all' || inputs.suite == 'benchmark_aws' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
+        run: python3
               -u ${{ env.SUITE }}/benchmark.py
               --storage aws_s3
               --aws-s3-bucket ${{ secrets.AWS_BUCKET }}
@@ -259,7 +279,7 @@ jobs:
         if: always()
         with:
           name: benchmark-aws-artifacts
-          path: ${{ env.artifact_paths}}  
+          path: ${{ env.artifact_paths}}
 
   benchmark_gcs:
     runs-on: [self-hosted, type-cax31, image-arm-system-ubuntu-22.04]
@@ -269,13 +289,16 @@ jobs:
       STORAGE: /gcs
     if: ${{ inputs.suite == 'all' || inputs.suite == 'benchmark_all' || inputs.suite == 'benchmark_gcs' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
+        run: python3
               -u ${{ env.SUITE }}/benchmark.py
               --storage gcs
               --gcs-uri ${{ secrets.GCS_URI }}
@@ -303,13 +326,16 @@ jobs:
       STORAGE: /minio
     if: ${{ inputs.suite == 'all' || inputs.suite == 'benchmark_all' || inputs.suite == 'benchmark_minio' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
+        run: python3
               -u ${{ env.SUITE }}/benchmark.py
               --storage minio
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
@@ -327,14 +353,17 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   clickhouse_keeper:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: clickhouse_keeper
       STORAGE: /no_ssl
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -357,14 +386,17 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   clickhouse_keeper_ssl:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: clickhouse_keeper
       STORAGE: /ssl
     if: ${{ inputs.suite == 'all' || inputs.suite == 'clickhouse_keeper' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -388,13 +420,16 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   data_types:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: data_types
     if: ${{ inputs.suite == 'all' || inputs.suite == 'data_types' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -417,13 +452,16 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   datetime64_extended_range:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: datetime64_extended_range
     if: ${{ inputs.suite == 'all' || inputs.suite == 'datetime64_extended_range' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -446,13 +484,16 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   disk_level_encryption:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: disk_level_encryption
     if: ${{ inputs.suite == 'all' || inputs.suite == 'disk_level_encryption' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -475,13 +516,16 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   dns:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: dns
     if: ${{ inputs.suite == 'all' || inputs.suite == 'dns' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -504,13 +548,16 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   engines:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: engines
     if: ${{ inputs.suite == 'all' || inputs.suite == 'engines' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -533,13 +580,16 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   example:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: example
     if: ${{ inputs.suite == 'all' || inputs.suite == 'example' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -562,13 +612,16 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   extended_precision_data_types:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: extended_precision_data_types
     if: ${{ inputs.suite == 'all' || inputs.suite == 'extended_precision_data_types' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -604,8 +657,8 @@ jobs:
   #     - name: Run ${{ env.SUITE }} suite
   #       run: python3
   #             -u ${{ env.SUITE }}/functional.py
-  #             --clickhouse-binary-path ${{ env.clickhouse_binary_path }}  
-  #             --clickhouse-version ${{ env.version }} 
+  #             --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+  #             --clickhouse-version ${{ env.version }}
   #             ${{ env.args }}
 
   #     - name: Create and upload logs
@@ -619,13 +672,16 @@ jobs:
   #         path: ${{ env.artifact_paths}}
 
   kafka:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: kafka
     if: ${{ inputs.suite == 'all' || inputs.suite == 'kafka' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -648,13 +704,16 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   kerberos:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: kerberos
     if: ${{ inputs.suite == 'all' || inputs.suite == 'kerberos' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -676,13 +735,16 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   key_value:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: key_value
     if: ${{ inputs.suite == 'all' || inputs.suite == 'key_value' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -704,19 +766,22 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   ldap_authentication:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: ldap/authentication
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
+        run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
@@ -733,19 +798,22 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   ldap_external_user_directory:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: ldap/external_user_directory
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
+        run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
@@ -762,13 +830,16 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   ldap_role_mapping:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: ldap/role_mapping
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ldap' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -797,13 +868,16 @@ jobs:
       SUITE: lightweight_delete
     if: ${{ inputs.suite == 'all' || inputs.suite == 'lightweight_delete' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
+        run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
@@ -820,14 +894,17 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   parquet:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
-    timeout-minutes: 180
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
+    timeout-minutes: 300
     env:
       SUITE: parquet
       STORAGE: /no_s3
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet' }}
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet' || inputs.suite == 'parquet_all'}}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -850,14 +927,17 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   parquet_minio:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
-    timeout-minutes: 180
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
+    timeout-minutes: 300
     env:
       SUITE: parquet
       STORAGE: /minio
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet_minio' }}
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet_minio' || inputs.suite == 'parquet_all'}}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -882,14 +962,17 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   parquet_aws_s3:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
-    timeout-minutes: 180
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
+    timeout-minutes: 300
     env:
       SUITE: parquet
       STORAGE: /aws_s3
-    if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet_s3' }}
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'parquet_s3' || inputs.suite == 'parquet_all'}}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -918,13 +1001,16 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   part_moves_between_shards:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: part_moves_between_shards
     if: ${{ inputs.suite == 'all' || inputs.suite == 'part_moves_between_shards' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -947,13 +1033,16 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   rbac:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: rbac
     if: ${{ inputs.suite == 'all' || inputs.suite == 'rbac' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -976,20 +1065,23 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   s3_aws:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: s3
       STORAGE: /aws
     if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_aws' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
+        run: python3
               -u ${{ env.SUITE }}/regression.py
               --storage aws_s3
               --aws-s3-bucket ${{ secrets.AWS_BUCKET }}
@@ -1011,20 +1103,23 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   s3_gcs:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: s3
       STORAGE: /gcs
     if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_gcs' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
+        run: python3
               -u ${{ env.SUITE }}/regression.py
               --storage gcs
               --gcs-uri ${{ secrets.GCS_URI }}
@@ -1045,20 +1140,23 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   s3_minio:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: s3
       STORAGE: /minio
     if: ${{ inputs.suite == 'all' || inputs.suite == 's3_all' || inputs.suite == 's3_minio' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
+        run: python3
               -u ${{ env.SUITE }}/regression.py
               --storage minio
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
@@ -1076,13 +1174,16 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   selects:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: selects
     if: ${{ inputs.suite == 'all' || inputs.suite == 'selects' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -1103,15 +1204,18 @@ jobs:
         with:
           name: ${{ env.SUITE }}-artifacts
           path: ${{ env.artifact_paths}}
-          
+
   session_timezone:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: session_timezone
     if: ${{ inputs.suite == 'all' || inputs.suite == 'session_timezone' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -1134,13 +1238,16 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   ssl_server:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: ssl_server
     if: ${{ inputs.suite == 'all' || inputs.suite == 'ssl_server' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
@@ -1163,20 +1270,23 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   tiered_storage_aws:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: tiered_storage
       STORAGE: /aws
     if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage_aws' || inputs.suite == 'tiered_storage_all' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
+        run: python3
               -u ${{ env.SUITE }}/regression.py
               --with-s3amazon
               --aws-s3-access-key ${{ secrets.AWS_ACCESS_KEY }}
@@ -1197,25 +1307,28 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   tiered_storage_gcs:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: tiered_storage
       STORAGE: /gcs
     if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage_gcs' || inputs.suite == 'tiered_storage_all' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
+        run: python3
               -u ${{ env.SUITE }}/regression.py
-              --with-s3gcs 
+              --with-s3gcs
+              --gcs-uri ${{ secrets.GCS_URI }}
               --gcs-key-id ${{ secrets.GCS_KEY_ID }}
               --gcs-key-secret ${{ secrets.GCS_KEY_SECRET }}
-              --gcs-uri ${{ secrets.GCS_URI }}
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
               ${{ env.args }}
@@ -1231,19 +1344,22 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   tiered_storage_local:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: tiered_storage
     if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage_local' || inputs.suite == 'tiered_storage_all' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
+        run: python3
               -u ${{ env.SUITE }}/regression.py
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
               --clickhouse-version ${{ env.version }}
@@ -1260,20 +1376,23 @@ jobs:
           path: ${{ env.artifact_paths}}
 
   tiered_storage_minio:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: tiered_storage
       STORAGE: /minio
     if: ${{ inputs.suite == 'all' || inputs.suite == 'tiered_storage_minio' || inputs.suite == 'tiered_storage_all' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
 
       - name: Run ${{ env.SUITE }} suite
-        run: python3 
+        run: python3
               -u ${{ env.SUITE }}/regression.py
               --with-minio
               --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
@@ -1290,15 +1409,17 @@ jobs:
           name: ${{ env.SUITE }}-minio-artifacts
           path: ${{ env.artifact_paths}}
 
-
   window_functions:
-    runs-on: [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]
+    runs-on: [self-hosted, type-cax41, image-arm-system-ubuntu-22.04]
     timeout-minutes: 180
     env:
       SUITE: window_functions
     if: ${{ inputs.suite == 'all' || inputs.suite == 'window_functions' }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
 
       - name: Setup
         run: .github/setup.sh
