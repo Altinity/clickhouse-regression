@@ -139,7 +139,7 @@ def create_parquet_file_hits(
             f"/hits_compatible/athena_partitioned/hits_{{{first_number}..{last_number}}}.parquet') SETTINGS max_insert_threads = {threads}, "
             f"max_memory_usage={max_memory_usage};",
             progress=True,
-            timeout=1800,
+            timeout=3600,
         )
 
         insert_into_parquet = (
@@ -154,7 +154,7 @@ def create_parquet_file_hits(
 
         clickhouse_node.query(
             insert_into_parquet,
-            timeout=1800,
+            timeout=3600,
         )
 
         clickhouse_node.command(
