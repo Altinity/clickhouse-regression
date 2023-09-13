@@ -107,3 +107,6 @@
          "ClickHouse" : 0.4720489978790283
          "DuckDB" : 0.4412055015563965
 ```
+
+## Statistics
+ClickHouse is faster 1 time(s) out of 10
