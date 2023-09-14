@@ -345,20 +345,56 @@ def select_from_function_auto_cast_types(self):
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_TableEngines_Special_URL("1.0"))
 def engine(self):
     """Check that table with `URL` engine correctly reads and writes Parquet format."""
-    Scenario(run=insert_into_engine)
-    Scenario(run=select_from_engine)
-    Scenario(run=engine_to_file_to_engine)
-    Scenario(run=insert_into_engine_from_file)
-    Scenario(run=engine_select_output_to_file)
+    with Pool(5) as executor:
+        Scenario(
+            run=insert_into_engine,
+            parallel=self.context.parallel_run,
+            executor=executor,
+        )
+        Scenario(
+            run=select_from_engine,
+            parallel=self.context.parallel_run,
+            executor=executor,
+        )
+        Scenario(
+            run=engine_to_file_to_engine,
+            parallel=self.context.parallel_run,
+            executor=executor,
+        )
+        Scenario(
+            run=insert_into_engine_from_file,
+            parallel=self.context.parallel_run,
+            executor=executor,
+        )
+        Scenario(
+            run=engine_select_output_to_file,
+            parallel=self.context.parallel_run,
+            executor=executor,
+        )
+        join()
 
 
 @TestSuite
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_TableFunctions_URL("1.0"))
 def function(self):
     """Check that `url` table function correctly reads and writes Parquet format."""
-    Scenario(run=insert_into_function)
-    Scenario(run=select_from_function_manual_cast_types)
-    Scenario(run=select_from_function_auto_cast_types)
+    with Pool(3) as executor:
+        Scenario(
+            run=insert_into_function,
+            parallel=self.context.parallel_run,
+            executor=executor,
+        )
+        Scenario(
+            run=select_from_function_manual_cast_types,
+            parallel=self.context.parallel_run,
+            executor=executor,
+        )
+        Scenario(
+            run=select_from_function_auto_cast_types,
+            parallel=self.context.parallel_run,
+            executor=executor,
+        )
+        join()
 
 
 @TestFeature
@@ -380,10 +416,12 @@ def feature(self, node="clickhouse1"):
                 bash.expect(cmd, escape=True)
                 bash.expect("\n")
                 bash.expect("Serving Flask app 'local_app'", escape=True)
-
-            Suite(run=engine)
-            Suite(run=function)
-
+            with Pool(2) as executor:
+                Suite(run=engine, parallel=self.context.parallel_run, executor=executor)
+                Suite(
+                    run=function, parallel=self.context.parallel_run, executor=executor
+                )
+                join()
         finally:
             while True:
                 try:

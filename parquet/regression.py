@@ -198,6 +198,13 @@ def regression(
     """Parquet regression."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
+    if check_clickhouse_version("<23.3"):
+        self.context.parallel_run = False
+        pool = 2
+    else:
+        self.context.parallel_run = True
+        pool = 4
+
     self.context.clickhouse_version = clickhouse_version
 
     if stress is not None:
@@ -261,7 +268,7 @@ def regression(
                     f"Common code did not provide {datatype}"
                 )
 
-        with Pool(4) as executor:
+        with Pool(pool) as executor:
             Feature(
                 run=load("parquet.tests.file", "feature"),
                 parallel=True,
