@@ -344,11 +344,31 @@ def engine(self):
     """Check that table with `S3` engine correctly reads and writes Parquet format."""
 
     with Pool(5) as executor:
-        Scenario(run=insert_into_engine, parallel=True, executor=executor)
-        Scenario(run=select_from_engine, parallel=True, executor=executor)
-        Scenario(run=engine_to_file_to_engine, parallel=True, executor=executor)
-        Scenario(run=insert_into_engine_from_file, parallel=True, executor=executor)
-        Scenario(run=engine_select_output_to_file, parallel=True, executor=executor)
+        Scenario(
+            run=insert_into_engine,
+            parallel=self.context.parallel_run,
+            executor=executor,
+        )
+        Scenario(
+            run=select_from_engine,
+            parallel=self.context.parallel_run,
+            executor=executor,
+        )
+        Scenario(
+            run=engine_to_file_to_engine,
+            parallel=self.context.parallel_run,
+            executor=executor,
+        )
+        Scenario(
+            run=insert_into_engine_from_file,
+            parallel=self.context.parallel_run,
+            executor=executor,
+        )
+        Scenario(
+            run=engine_select_output_to_file,
+            parallel=self.context.parallel_run,
+            executor=executor,
+        )
         join()
 
 
@@ -358,12 +378,20 @@ def function(self):
     """Check that `s3` table function correctly reads and writes Parquet format."""
 
     with Pool(3) as executor:
-        Scenario(run=insert_into_function, parallel=True, executor=executor)
         Scenario(
-            run=select_from_function_manual_cast_types, parallel=True, executor=executor
+            run=insert_into_function,
+            parallel=self.context.parallel_run,
+            executor=executor,
         )
         Scenario(
-            run=select_from_function_auto_cast_types, parallel=True, executor=executor
+            run=select_from_function_manual_cast_types,
+            parallel=self.context.parallel_run,
+            executor=executor,
+        )
+        Scenario(
+            run=select_from_function_auto_cast_types,
+            parallel=self.context.parallel_run,
+            executor=executor,
         )
         join()
 
@@ -410,7 +438,22 @@ def feature(self):
 
     with Feature("compression type"):
         with Pool(3) as executor:
-            Feature(name="=NONE ", run=none, parallel=True, executor=executor)
-            Feature(name="=GZIP ", run=gzip, parallel=True, executor=executor)
-            Feature(name="=LZ4 ", run=lz4, parallel=True, executor=executor)
+            Feature(
+                name="=NONE ",
+                run=none,
+                parallel=self.context.parallel_run,
+                executor=executor,
+            )
+            Feature(
+                name="=GZIP ",
+                run=gzip,
+                parallel=self.context.parallel_run,
+                executor=executor,
+            )
+            Feature(
+                name="=LZ4 ",
+                run=lz4,
+                parallel=self.context.parallel_run,
+                executor=executor,
+            )
             join()
