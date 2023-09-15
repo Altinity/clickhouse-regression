@@ -101,10 +101,8 @@ def query_0(self, filename: str, database: str):
     """Calculating the average count of rows per group, where each group is defined by a combination of Year and
     Month values from the table."""
 
-    r = "SELECT avg(c1) FROM(SELECT Year, Month, count(*) AS c1 FROM {filename} GROUP BY Year, Month);"
-
-    clickhouse_query = r.format(filename=f"file({filename})")
-    duckdb_query = r.format(filename=f'"/data1/{filename}"')
+    clickhouse_query = f"SELECT avg(c1) FROM(SELECT Year, Month, count(*) AS c1 FROM file('{filename}') GROUP BY Year, Month ORDER BY Year ASC, Month ASC);"
+    duckdb_query = f'SELECT avg(c1) FROM(SELECT Year, Month, count(*) AS c1 FROM "/data1/{filename}" GROUP BY Year, Month ORDER BY Year ASC, Month ASC);'
 
     run_query(
         clickhouse_query=clickhouse_query,
@@ -118,13 +116,12 @@ def query_0(self, filename: str, database: str):
 def query_1(self, filename: str, database: str):
     """Get the number of flights per day from the year 2000 to 2008."""
 
-    query = (
-        "SELECT DayOfWeek, count(*) AS c FROM {filename} WHERE Year>=2000 AND Year<=2008 GROUP BY DayOfWeek ORDER "
+    clickhouse_query = (
+        f"SELECT DayOfWeek, count(*) AS c FROM file('{filename}') WHERE Year>=2000 AND Year<=2008 GROUP BY DayOfWeek ORDER "
         "BY c DESC;"
     )
 
-    clickhouse_query = query.format(filename=f"file({filename})")
-    duckdb_query = query.format(filename=f'"/data1/{filename}"')
+    duckdb_query = f'SELECT DayOfWeek, count(*) AS c FROM "/data1/{filename}" WHERE Year>=2000 AND Year<=2008 GROUP BY DayOfWeek ORDER BY c DESC;'
 
     run_query(
         clickhouse_query=clickhouse_query,
@@ -279,12 +276,8 @@ def query_8(self, filename: str, database: str):
 @TestStep
 def query_9(self, filename: str, database: str):
     """Group the data by the Year column, and calculate the count of rows in each year."""
-    clickhouse_query = (
-        f"SELECT Year, count(*) AS c1 FROM file('{filename}') GROUP BY Year;"
-    )
-    duckdb_query = (
-        f'SELECT Year, COUNT(*) AS c1 FROM "/data1/{filename}" GROUP BY Year;'
-    )
+    clickhouse_query = f"SELECT Year, count(*) AS c1 FROM file('{filename}') GROUP BY Year ORDER BY Year ASC;"
+    duckdb_query = f'SELECT Year, COUNT(*) AS c1 FROM "/data1/{filename}" GROUP BY Year ORDER BY Year ASC;'
 
     run_query(
         clickhouse_query=clickhouse_query,
