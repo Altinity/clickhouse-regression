@@ -29,7 +29,7 @@ tfs --debug --no-colors report compare results --log compact.log --order-by vers
 #Specify whether logs should be uploaded.
 if [[ $1 == 1 ]];
 then
-    echo "::notice title=$SUITE$STORAGE s3 logs and reports::https://$artifact_s3_bucket_path.s3.amazonaws.com/index.html#clickhouse/$version/$GITHUB_RUN_ID/$(uname -i)/testflows/$SUITE$STORAGE/"
+    echo "::notice title=$SUITE$STORAGE s3 logs and reports::https://$artifact_s3_bucket_path.s3.amazonaws.com/index.html#clickhouse/$version/$GITHUB_RUN_ID/testflows/$(uname -i)/$SUITE$STORAGE/"
     aws s3 cp pipeline_url.log.txt s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/pipeline_url.log.txt --content-type "text/plain; charset=utf-8"
     aws s3 cp version.log.txt s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/$(uname -i)/$SUITE$STORAGE/version.log.txt --content-type "text/plain; charset=utf-8"
     aws s3 cp raw.log s3://$artifact_s3_bucket_path/clickhouse/$version/$GITHUB_RUN_ID/testflows/$(uname -i)/$SUITE$STORAGE/raw.log
