@@ -243,7 +243,8 @@ def regression(
         with And("I check that common code provides all necessary data types"):
             columns = generate_all_column_types(include=parquet_test_columns())
             datatypes = [type(column.datatype) for column in columns]
-            for datatype in [
+
+            check_datatypes = [
                 UInt8,
                 Int8,
                 UInt16,
@@ -257,13 +258,17 @@ def regression(
                 Date,
                 DateTime,
                 String,
-                Decimal128,
                 Array,
                 Tuple,
                 Map,
                 Nullable,
                 LowCardinality,
-            ]:
+            ]
+
+            if check_clickhouse_version("<23.8"):
+                datatypes.append(Decimal128)
+
+            for datatype in check_datatypes:
                 assert datatype in datatypes, fail(
                     f"Common code did not provide {datatype}"
                 )

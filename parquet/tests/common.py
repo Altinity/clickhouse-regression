@@ -253,8 +253,9 @@ def check_source_file_on_s3(
         )
 
 
-def parquet_test_columns():
-    return [
+@TestStep
+def parquet_test_columns(self):
+    datatypes_list = [
         Boolean(),
         UInt8(),
         Int8(),
@@ -266,12 +267,16 @@ def parquet_test_columns():
         Int64(),
         Float32(),
         Float64(),
-        Decimal128(38),
         Date(),
         DateTime(),
         String(),
-        FixedString(51),
     ]
+
+    if check_clickhouse_version("<23.8")(self):
+        datatypes_list.append(Decimal128(38))
+        datatypes_list.append(FixedString(51))
+
+    return datatypes_list
 
 
 def mysql_test_columns():
