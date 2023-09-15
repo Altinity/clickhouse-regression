@@ -198,7 +198,7 @@ def regression(
     """Parquet regression."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
-    if check_clickhouse_version("<23.3"):
+    if check_clickhouse_version("<23.3")(self):
         self.context.parallel_run = False
         pool = 2
     else:
