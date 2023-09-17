@@ -268,13 +268,11 @@ def parquet_test_columns(self):
         Float32(),
         Float64(),
         Date(),
+        Decimal128(38),
         DateTime(),
         String(),
+        FixedString(51),
     ]
-
-    if check_clickhouse_version("<23.8")(self):
-        datatypes_list.append(Decimal128(38))
-        datatypes_list.append(FixedString(51))
 
     return datatypes_list
 

@@ -263,10 +263,8 @@ def regression(
                 Map,
                 Nullable,
                 LowCardinality,
+                Decimal128,
             ]
-
-            if check_clickhouse_version("<23.8"):
-                datatypes.append(Decimal128)
 
             for datatype in check_datatypes:
                 assert datatype in datatypes, fail(

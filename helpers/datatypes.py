@@ -194,18 +194,18 @@ class Decimal(DataType):
         )
 
     def max_value(self):
-        return f"to{self.name}({self.max}, {self.scale})"
+        return f"to{self.name[:-4]}({self.max}, {self.scale})"
 
     def min_value(self):
-        return f"to{self.name}({self.min}, {self.scale})"
+        return f"to{self.name[:-4]}({self.min}, {self.scale})"
 
     def rand_value(self, random=None):
         if random is None:
             random = default_random
-        return f"to{self.name}({random.uniform(float(self.min), float(self.max))},{self.scale})"
+        return f"to{self.name[:-4]}({random.uniform(float(self.min), float(self.max))},{self.scale})"
 
     def zero_or_null_value(self):
-        return f"to{self.name}(0,{self.scale})"
+        return f"to{self.name[:-4]}(0,{self.scale})"
 
 
 class Decimal32(Decimal):
@@ -394,10 +394,10 @@ class FixedString(String):
         super().__init__(f"FixedString({length})", max=max)
 
     def max_value(self):
-        return f"to{self.name}({self.max},{self.length})"
+        return f"to{self.name[:-4]}({self.max},{self.length})"
 
     def min_value(self):
-        return f"to{self.name}({self.min},{self.length})"
+        return f"to{self.name[:-4]}({self.min},{self.length})"
 
     def rand_value(self, random=None):
         if random is None:
