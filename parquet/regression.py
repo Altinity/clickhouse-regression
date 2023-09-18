@@ -169,6 +169,106 @@ ffails = {
         "Different error message on 23.8",
         check_clickhouse_version(">=23.8"),
     ),
+    "/parquet/compression/*": (
+        Skip,
+        "Different on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/datatypes/boolean": (
+        Skip,
+        "Different on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/datatypes/columnwithnull2": (
+        Skip,
+        "Different on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/datatypes/enum*": (
+        Skip,
+        "Different on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/datatypes/nameswithemoji": (
+        Skip,
+        "Different on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/datatypes/nandouble": (
+        Skip,
+        "Different on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/datatypes/manydatatypes*": (
+        Skip,
+        "Different on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/datatypes/fixedstring": (
+        Skip,
+        "Unsupported on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/datatypes/supporteduuid": (
+        Skip,
+        "Unsupported on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/datatypes/int32": (
+        Skip,
+        "Unsupported on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/datatypes/struct": (
+        Skip,
+        "Unsupported on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/complex/tupleofnulls": (
+        Skip,
+        "Unsupported on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/complex/nestedstruct*": (
+        Skip,
+        "Unsupported on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/complex/nestedallcomplex": (
+        Skip,
+        "Unsupported on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/complex/nested map": (
+        Skip,
+        "Unsupported on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/complex/largestruct2": (
+        Skip,
+        "Unsupported on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/complex/complex null": (
+        Skip,
+        "Unsupported on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/complex/big tuple with nulls": (
+        Skip,
+        "Unsupported on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/complex/arraystring": (
+        Skip,
+        "Unsupported on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/complex/bytearraydictionary": (
+        Skip,
+        "Unsupported on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
 }
 
 
