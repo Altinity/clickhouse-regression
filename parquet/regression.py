@@ -164,6 +164,11 @@ ffails = {
         "Different error messages on 23.6",
         check_clickhouse_version(">=23.6"),
     ),
+    "/parquet/encrypted/encrypted/*": (
+        Skip,
+        "Different error message on 23.8",
+        check_clickhouse_version(">=23.8"),
+    ),
 }
 
 
