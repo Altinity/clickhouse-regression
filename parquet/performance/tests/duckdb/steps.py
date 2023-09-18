@@ -258,11 +258,16 @@ def query_8(self, filename: str, database: str):
 
     clickhouse_query = (
         f"SELECT DestCityName, uniqExact(OriginCityName) AS u FROM file('{filename}') "
-        f"WHERE Year >= 2000 and Year <= 2010 GROUP BY DestCityName ORDER BY u DESC LIMIT 10;"
+        f"WHERE Year >= 2000 and Year <= 2010 GROUP BY DestCityName ORDER BY u DESC, DestCityName ASC LIMIT 10;;"
     )
     duckdb_query = (
         f'SELECT DestCityName, COUNT(DISTINCT OriginCityName) AS u FROM "/data1/{filename}" WHERE Year >= '
         f"2000 AND Year <= 2010 GROUP BY DestCityName ORDER BY u DESC LIMIT 10;"
+    )
+
+    test = (
+        f'SELECT DestCityName, COUNT(DISTINCT OriginCityName) AS u FROM "/data1/{filename}" WHERE Year >= 2000 AND '
+        f"Year <= 2010 GROUP BY DestCityName ORDER BY u DESC, DestCityName ASC LIMIT 10;"
     )
 
     run_query(
