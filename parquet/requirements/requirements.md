@@ -739,7 +739,7 @@ version: 1.0
 ### RQ.SRS-032.ClickHouse.Parquet.Offsets
 version: 1.0
 
-[ClickHouse] SHALL support importing and exporting parquet files with different offsets.
+[ClickHouse] SHALL support importing and exporting parquet files with offsets.
 
 ## Query Cache
 

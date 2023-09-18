@@ -61,7 +61,7 @@ RQ_SRS_032_ClickHouse_Parquet_Offsets = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support importing and exporting parquet files with different offsets.\n"
+        "[ClickHouse] SHALL support importing and exporting parquet files with offsets.\n"
         "\n"
     ),
     link=None,
@@ -6435,7 +6435,7 @@ version: 1.0
 ### RQ.SRS-032.ClickHouse.Parquet.Offsets
 version: 1.0
 
-[ClickHouse] SHALL support importing and exporting parquet files with different offsets.
+[ClickHouse] SHALL support importing and exporting parquet files with offsets.
 
 ## Query Cache
 
