@@ -267,7 +267,7 @@ def insert_into_table_with_projection_from_file(self):
 
     with And("I have a projection on the table"):
         node.query(
-            f"ALTER TABLE {table_name} ADD PROJECTION {projection_name} (SELECT *)"
+            f"ALTER TABLE {table_name} ADD PROJECTION {projection_name} (SELECT * ORDER BY tuple(list_map_bool_uint8))"
         )
 
     with When("I insert data into the table from a Parquet file"):
