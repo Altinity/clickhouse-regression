@@ -253,9 +253,8 @@ def check_source_file_on_s3(
         )
 
 
-@TestStep
-def parquet_test_columns(self):
-    datatypes_list = [
+def parquet_test_columns():
+    return [
         Boolean(),
         UInt8(),
         Int8(),
@@ -273,8 +272,6 @@ def parquet_test_columns(self):
         String(),
         FixedString(51),
     ]
-
-    return datatypes_list
 
 
 def mysql_test_columns():
