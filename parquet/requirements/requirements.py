@@ -69,6 +69,22 @@ RQ_SRS_032_ClickHouse_Parquet_Offsets = Requirement(
     num="6.1",
 )
 
+RQ_SRS_032_ClickHouse_Parquet_Offsets_MonotonicallyIncreasing = Requirement(
+    name="RQ.SRS-032.ClickHouse.Parquet.Offsets.MonotonicallyIncreasing",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support importing and exporting parquet files with monotonically increasing offsets.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="6.1.1",
+)
+
 RQ_SRS_032_ClickHouse_Parquet_Query_Cache = Requirement(
     name="RQ.SRS-032.ClickHouse.Parquet.Query.Cache",
     version="1.0",
@@ -4288,6 +4304,11 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         ),
         Heading(name="Offsets", level=1, num="6"),
         Heading(name="RQ.SRS-032.ClickHouse.Parquet.Offsets", level=2, num="6.1"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Parquet.Offsets.MonotonicallyIncreasing",
+            level=3,
+            num="6.1.1",
+        ),
         Heading(name="Query Cache", level=1, num="7"),
         Heading(name="RQ.SRS-032.ClickHouse.Parquet.Query.Cache", level=2, num="7.1"),
         Heading(name="Import from Parquet Files", level=1, num="8"),
@@ -5468,6 +5489,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
         RQ_SRS_032_ClickHouse_Parquet_SupportedVersions,
         RQ_SRS_032_ClickHouse_Parquet_ClickHouseLocal,
         RQ_SRS_032_ClickHouse_Parquet_Offsets,
+        RQ_SRS_032_ClickHouse_Parquet_Offsets_MonotonicallyIncreasing,
         RQ_SRS_032_ClickHouse_Parquet_Query_Cache,
         RQ_SRS_032_ClickHouse_Parquet_Import,
         RQ_SRS_032_ClickHouse_Parquet_Import_AutoDetectParquetFileFormat,
@@ -5709,6 +5731,7 @@ SRS032_ClickHouse_Parquet_Data_Format = Specification(
   * 5.2 [RQ.SRS-032.ClickHouse.Parquet.ClickHouseLocal](#rqsrs-032clickhouseparquetclickhouselocal)
 * 6 [Offsets](#offsets)
   * 6.1 [RQ.SRS-032.ClickHouse.Parquet.Offsets](#rqsrs-032clickhouseparquetoffsets)
+    * 6.1.1 [RQ.SRS-032.ClickHouse.Parquet.Offsets.MonotonicallyIncreasing](#rqsrs-032clickhouseparquetoffsetsmonotonicallyincreasing)
 * 7 [Query Cache](#query-cache)
   * 7.1 [RQ.SRS-032.ClickHouse.Parquet.Query.Cache](#rqsrs-032clickhouseparquetquerycache)
 * 8 [Import from Parquet Files](#import-from-parquet-files)
@@ -6436,6 +6459,11 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL support importing and exporting parquet files with offsets.
+
+#### RQ.SRS-032.ClickHouse.Parquet.Offsets.MonotonicallyIncreasing
+version: 1.0
+
+[ClickHouse] SHALL support importing and exporting parquet files with monotonically increasing offsets.
 
 ## Query Cache
 
