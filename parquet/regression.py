@@ -269,6 +269,16 @@ ffails = {
         "Unsupported on 22.8",
         check_clickhouse_version("<23.3"),
     ),
+    "/parquet/*/s3/compression type/*/engine/engine to file to engine/": (
+        Skip,
+        "Unsupported on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/*/s3/compression type/*/function/insert into function/": (
+        Skip,
+        "Unsupported on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
 }
 
 
