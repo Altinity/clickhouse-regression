@@ -348,27 +348,27 @@ def engine(self):
     with Pool(5) as executor:
         Scenario(
             run=insert_into_engine,
-            parallel=self.context.parallel_run,
+            parallel=True,
             executor=executor,
         )
         Scenario(
             run=select_from_engine,
-            parallel=self.context.parallel_run,
+            parallel=True,
             executor=executor,
         )
         Scenario(
             run=engine_to_file_to_engine,
-            parallel=self.context.parallel_run,
+            parallel=True,
             executor=executor,
         )
         Scenario(
             run=insert_into_engine_from_file,
-            parallel=self.context.parallel_run,
+            parallel=True,
             executor=executor,
         )
         Scenario(
             run=engine_select_output_to_file,
-            parallel=self.context.parallel_run,
+            parallel=True,
             executor=executor,
         )
         join()
@@ -381,17 +381,17 @@ def function(self):
     with Pool(3) as executor:
         Scenario(
             run=insert_into_function,
-            parallel=self.context.parallel_run,
+            parallel=True,
             executor=executor,
         )
         Scenario(
             run=select_from_function_manual_cast_types,
-            parallel=self.context.parallel_run,
+            parallel=True,
             executor=executor,
         )
         Scenario(
             run=select_from_function_auto_cast_types,
-            parallel=self.context.parallel_run,
+            parallel=True,
             executor=executor,
         )
         join()
@@ -417,10 +417,8 @@ def feature(self, node="clickhouse1"):
                 bash.expect("\n")
                 bash.expect("Serving Flask app 'local_app'", escape=True)
             with Pool(2) as executor:
-                Suite(run=engine, parallel=self.context.parallel_run, executor=executor)
-                Suite(
-                    run=function, parallel=self.context.parallel_run, executor=executor
-                )
+                Suite(run=engine, parallel=True, executor=executor)
+                Suite(run=function, parallel=True, executor=executor)
                 join()
         finally:
             while True:

@@ -164,10 +164,10 @@ ffails = {
         "Different error messages on 23.6",
         check_clickhouse_version(">=23.6"),
     ),
-    "/parquet/encrypted/encrypted/*": (
+    "/parquet/encrypted/*": (
         Skip,
         "Different error message on 23.8",
-        check_clickhouse_version(">=23.8"),
+        check_clickhouse_version("<=23.8"),
     ),
     "/parquet/compression/*": (
         Skip,
@@ -303,13 +303,6 @@ def regression(
     """Parquet regression."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
-    if check_clickhouse_version("<23.3")(self):
-        self.context.parallel_run = False
-        pool = 2
-    else:
-        self.context.parallel_run = True
-        pool = 4
-
     self.context.clickhouse_version = clickhouse_version
 
     if stress is not None:
@@ -376,7 +369,7 @@ def regression(
                     f"Common code did not provide {datatype}"
                 )
 
-        with Pool(pool) as executor:
+        with Pool(4) as executor:
             Feature(
                 run=load("parquet.tests.file", "feature"),
                 parallel=True,
