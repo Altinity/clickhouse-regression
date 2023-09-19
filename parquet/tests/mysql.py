@@ -189,19 +189,19 @@ def feature(self):
             Feature(
                 name="=NONE ",
                 run=none,
-                parallel=self.context.parallel_run,
+                parallel=True,
                 executor=executor,
             )
             Feature(
                 name="=GZIP ",
                 run=gzip,
-                parallel=self.context.parallel_run,
+                parallel=True,
                 executor=executor,
             )
             Feature(
                 name="=LZ4 ",
                 run=lz4,
-                parallel=self.context.parallel_run,
+                parallel=True,
                 executor=executor,
             )
             join()
