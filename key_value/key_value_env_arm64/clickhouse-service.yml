@@ -3,7 +3,7 @@ version: '2.3'
 services:
   clickhouse:
     image: altinityinfra/clickhouse-regression-multiarch:1.0
-    privileged: true
+    init: true
     expose:
       - "9000"
       - "9009"
