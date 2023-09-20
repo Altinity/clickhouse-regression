@@ -848,6 +848,18 @@ def unsupportednull(self):
             )
 
 
+@TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Offsets_MonotonicallyIncreasing("1.0"))
+def string_int_list_inconsistent_offset_multiple_batches(self):
+    """Checking that ClickHouse does not crash when importing and exporting the parquet file with monotonically increassing offsets."""
+    with Given("I have a Parquet file with monotonically increasing offsets"):
+        import_file = os.path.join(
+            "datatypes", "string_int_list_inconsistent_offset_multiple_batches.parquet"
+        )
+
+    import_export(snapshot_name="inconsistent_offsets", import_file=import_file)
+
+
 @TestFeature
 @Requirements(
     RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Supported("1.0"),
