@@ -134,12 +134,6 @@ xfails = {
             "Will fail until the, https://github.com/apache/arrow/pull/35825, gets merged.",
         )
     ],
-    "/parquet/datatypes/string int list inconsistent offset multiple batches": [
-        (
-            Fail,
-            "The fix not implemented yet",
-        )
-    ],
 }
 xflags = {}
 
@@ -288,6 +282,11 @@ ffails = {
         Skip,
         "Unsupported on 22.8",
         check_clickhouse_version("<23.3"),
+    ),
+    "/parquet/datatypes/string int list inconsistent offset multiple batches": (
+        Skip,
+        "The fix not implemented yet",
+        check_clickhouse_version("<23.9"),
     ),
 }
 
