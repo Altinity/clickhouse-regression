@@ -94,6 +94,15 @@ def glob2(self):
         select_with_glob(query=example[0], snapshot_name=example[1])
 
 
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Import_Glob_MultiDirectory("1.0"))
+@TestScenario
+def glob_with_multiple_elements(self):
+    select_with_glob(
+        query=f'SELECT * FROM file("{{{glob1}/t1, {glob3}/a/dir/x,{glob3}/c/dir/z, {glob3}/b/y}}.parquet") SETTINGS ignore_access_denied_multidirectory_globs=True',
+        snapshot_name="glob_with_multiple_elements",
+    )
+
+
 @TestFeature
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Import_Glob("1.0"))
 @Name("glob")
