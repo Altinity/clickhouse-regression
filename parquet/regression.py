@@ -288,6 +288,11 @@ ffails = {
         "The fix not implemented yet",
         check_clickhouse_version("<23.9"),
     ),
+    "/parquet/aws s3/s3/compression type/=NONE /engine/insert into engine": (
+        Skip,
+        "Unsupported on 22.8",
+        check_clickhouse_version("<23.3"),
+    ),
 }
 
 
