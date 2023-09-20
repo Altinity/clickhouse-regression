@@ -15,7 +15,11 @@ def feature(self):
     docker_client = docker.from_env()
 
     def get_instance_docker_id(instance_name):
-        return "dns_env" + "_" + instance_name + "_1"
+        if current_cpu() == "aarch64":
+            env = f"dns_env_arm64"
+        else:
+            env = f"dns_env"
+        return env + "_" + instance_name + "_1"
 
     def get_instance_ip(instance_name):
         docker_id = get_instance_docker_id(instance_name)
