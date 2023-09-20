@@ -9,7 +9,7 @@ services:
       POSTGRES_USER: 'user'
       POSTGRES_PASSWORD: 'password'
     expose:
-      - '3306'
+      - '5432'
     healthcheck:
       test: PGPASSWORD=password psql -U user -d default -c "select 1;"
       interval: 3s

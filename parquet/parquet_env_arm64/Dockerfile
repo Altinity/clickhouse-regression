@@ -5,3 +5,5 @@ RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-k
 
 RUN apt-get update
 RUN apt-get -y install postgresql
+
+RUN pip install pyarrow

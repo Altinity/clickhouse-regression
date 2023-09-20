@@ -71,20 +71,17 @@ services:
       - proxy1
       - proxy2
 
-  minio1:
+  minio:
     extends:
       file: minio-service.yml
-      service: minio1
-    depends_on:
-      - proxy1
-      - proxy2
+      service: minio
 
   minio-client:
     extends:
       file: minio-client.yml
       service: minio-client
     depends_on:
-      minio1:
+      minio:
         condition: service_healthy
 
   aws:
@@ -109,7 +106,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/postgres1/database:/var/lib/postgres"
 
   # dummy service which does nothing, but allows to postpone
-  # 'docker-compose up -d' till all dependecies will go healthy
+  # 'docker-compose up -d' till all dependencies will go healthy
   all_services_ready:
     image: hello-world
     depends_on:
@@ -126,4 +123,6 @@ services:
       aws:
         condition: service_healthy
       minio-client:
+        condition: service_healthy
+      postgres1:
         condition: service_healthy
