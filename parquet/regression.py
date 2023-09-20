@@ -15,6 +15,10 @@ from helpers.tables import Column, generate_all_column_types
 from helpers.datatypes import *
 from parquet.tests.common import start_minio, parquet_test_columns
 
+
+flag = NO_PARALLEL if check_clickhouse_version("<23.3") else None
+
+
 xfails = {
     "chunked array": [(Fail, "Not supported")],
     "gcs": [(Fail, "Not implemented")],
@@ -128,6 +132,12 @@ xfails = {
         (
             Fail,
             "Will fail until the, https://github.com/apache/arrow/pull/35825, gets merged.",
+        )
+    ],
+    "/parquet/datatypes/string int list inconsistent offset multiple batches": [
+        (
+            Fail,
+            "The fix not implemented yet",
         )
     ],
 }
@@ -290,6 +300,7 @@ ffails = {
 @Name("parquet")
 @Specifications(SRS032_ClickHouse_Parquet_Data_Format)
 @Requirements(RQ_SRS_032_ClickHouse_Parquet("1.0"))
+@Flags(flag)
 def regression(
     self,
     local,
