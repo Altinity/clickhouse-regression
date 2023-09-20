@@ -98,7 +98,8 @@ def glob2(self):
 @TestScenario
 def glob_with_multiple_elements(self):
     select_with_glob(
-        query=f'SELECT * FROM file("{{{glob1}/t1, {glob3}/a/dir/x,{glob3}/c/dir/z, {glob3}/b/y}}.parquet") SETTINGS ignore_access_denied_multidirectory_globs=True',
+        query=f'SELECT * FROM file("{{{glob1}/t1, {glob3}/a/dir/x,{glob3}/c/dir/z, {glob3}/b/y}}.parquet") SETTINGS '
+        f"ignore_access_denied_multidirectory_globs=True",
         snapshot_name="glob_with_multiple_elements",
     )
 
