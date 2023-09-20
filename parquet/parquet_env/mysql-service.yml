@@ -2,7 +2,7 @@ version: '2.3'
 
 services:
   mysql:
-    image: mysql:5.7.30
+    image: mysql:8.0.34
     restart: always
     environment:
       MYSQL_DATABASE: 'default'
