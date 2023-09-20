@@ -3,7 +3,7 @@ version: '2.3'
 services:
   clickhouse:
     image: altinityinfra/clickhouse-regression-multiarch:1.0
-    privileged: true
+    init: true
     expose:
       - "9000"
       - "9009"
@@ -16,7 +16,6 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/dhparam.pem:/etc/clickhouse-server/config.d/dhparam.pem"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/server.crt:/etc/clickhouse-server/config.d/server.crt"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/server.key:/etc/clickhouse-server/config.d/server.key"
-      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/transactions.xml:/etc/clickhouse-server/config.d/transactions.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.xml:/etc/clickhouse-server/config.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/users.xml:/etc/clickhouse-server/users.xml"
       - "${CLICKHOUSE_TESTS_SERVER_BIN_PATH:-/usr/bin/clickhouse}:/usr/bin/clickhouse"
