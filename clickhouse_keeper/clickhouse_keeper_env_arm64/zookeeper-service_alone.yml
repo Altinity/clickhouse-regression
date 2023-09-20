@@ -5,6 +5,7 @@ services:
     image: zookeeper:3.4.12
     expose:
       - "2181"
+      - "2281"
     environment:
       ZOO_TICK_TIME: 500
       ZOO_MY_ID: 4

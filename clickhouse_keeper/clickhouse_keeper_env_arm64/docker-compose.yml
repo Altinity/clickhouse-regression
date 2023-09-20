@@ -42,6 +42,18 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/share/zookeeper/data/:/data/"
       - "${CLICKHOUSE_TESTS_DIR}/_instances/share/zookeeper/datalog/:/datalog"
 
+  non_fips_clickhouse:
+    extends:
+      file: non-fips-clickhouse-service.yml
+      service: clickhouse
+    hostname: non_fips_clickhouse
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/non_fips_clickhouse/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/non_fips_clickhouse/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/non_fips_clickhouse/etc/:/etc/clickhouse-server/"
+    depends_on:
+      zookeeper:
+        condition: service_healthy
 
   clickhouse13:
     extends:
@@ -356,4 +368,5 @@ services:
         condition: service_healthy
       zookeeper:
         condition: service_healthy
-
+      non_fips_clickhouse:
+        condition: service_healthy
