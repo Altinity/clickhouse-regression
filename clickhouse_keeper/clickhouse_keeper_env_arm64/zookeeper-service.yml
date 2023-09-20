@@ -2,10 +2,11 @@ version: '2.3'
 
 services:
   zookeeper:
-    image: zookeeper:3.7.0
+    image: zookeeper:3.6.2
     restart: always
     expose:
       - "2181"
+      - "2281"
     environment:
       ZOO_TICK_TIME: 1000
       ZOO_SYNC_LIMIT: 4
