@@ -16,9 +16,6 @@ from helpers.datatypes import *
 from parquet.tests.common import start_minio, parquet_test_columns
 
 
-flag = NO_PARALLEL if check_clickhouse_version("<23.3") else None
-
-
 xfails = {
     "chunked array": [(Fail, "Not supported")],
     "gcs": [(Fail, "Not implemented")],
@@ -304,7 +301,6 @@ ffails = {
 @Name("parquet")
 @Specifications(SRS032_ClickHouse_Parquet_Data_Format)
 @Requirements(RQ_SRS_032_ClickHouse_Parquet("1.0"))
-@Flags(flag)
 def regression(
     self,
     local,
@@ -329,6 +325,13 @@ def regression(
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
     self.context.clickhouse_version = clickhouse_version
+
+    if check_clickhouse_version("<23.3")(self):
+        pool = 2
+        parallel = NO_PARALLEL
+    else:
+        pool = 4
+        parallel = PARALLEL
 
     if stress is not None:
         self.context.stress = stress
@@ -394,96 +397,114 @@ def regression(
                     f"Common code did not provide {datatype}"
                 )
 
-        with Pool(4) as executor:
+        with Pool(pool) as executor:
             Feature(
                 run=load("parquet.tests.file", "feature"),
                 parallel=True,
                 executor=executor,
+                flags=parallel,
             )
             Feature(
                 run=load("parquet.tests.query", "feature"),
                 parallel=True,
                 executor=executor,
+                flags=parallel,
             )
             Feature(
                 run=load("parquet.tests.int_list_multiple_chunks", "feature"),
                 parallel=True,
                 executor=executor,
+                flags=parallel,
             )
             Feature(
                 run=load("parquet.tests.url", "feature"),
                 parallel=True,
                 executor=executor,
+                flags=parallel,
             )
             Feature(
                 run=load("parquet.tests.mysql", "feature"),
                 parallel=True,
                 executor=executor,
+                flags=parallel,
             )
             Feature(
                 run=load("parquet.tests.postgresql", "feature"),
                 parallel=True,
                 executor=executor,
+                flags=parallel,
             )
             Feature(
                 run=load("parquet.tests.remote", "feature"),
                 parallel=True,
                 executor=executor,
+                flags=parallel,
             )
             Feature(
                 run=load("parquet.tests.chunked_array", "feature"),
                 parallel=True,
                 executor=executor,
+                flags=parallel,
             )
             Feature(
                 run=load("parquet.tests.broken", "feature"),
                 parallel=True,
                 executor=executor,
+                flags=parallel,
             )
             Feature(
                 run=load("parquet.tests.encoding", "feature"),
                 parallel=True,
                 executor=executor,
+                flags=parallel,
             )
             Feature(
                 run=load("parquet.tests.compression", "feature"),
                 parallel=True,
                 executor=executor,
+                flags=parallel,
             )
             Feature(
                 run=load("parquet.tests.datatypes", "feature"),
                 parallel=True,
                 executor=executor,
+                flags=parallel,
             )
             Feature(
                 run=load("parquet.tests.complex_datatypes", "feature"),
                 parallel=True,
                 executor=executor,
+                flags=parallel,
             )
             Feature(
                 run=load("parquet.tests.indexing", "feature"),
                 parallel=True,
                 executor=executor,
+                flags=parallel,
             )
             Feature(
                 run=load("parquet.tests.cache", "feature"),
                 parallel=True,
                 executor=executor,
+                flags=parallel,
             )
             Feature(
                 run=load("parquet.tests.glob", "feature"),
                 parallel=True,
                 executor=executor,
+                flags=parallel,
             )
             Feature(
                 run=load("parquet.tests.rowgroups", "feature"),
                 parallel=True,
                 executor=executor,
+                flags=parallel,
             )
             Feature(
                 run=load("parquet.tests.encrypted", "feature"),
                 parallel=True,
                 executor=executor,
+                flags=parallel,
             )
             join()
 
