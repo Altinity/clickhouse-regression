@@ -51,6 +51,10 @@ For example,
 
 This query copies the data partition from the `table1` to `table2` and replaces existing partition in the `table2`.
 
+```sql
+ALTER TABLE table2 [ON CLUSTER cluster] REPLACE PARTITION partition_expr FROM table1
+```
+
 ##### RQ.SRS-032.ClickHouse.Alter.ReplacePartition.ReplaceData.Conditions
 version: 1.0
 
@@ -59,10 +63,6 @@ version: 1.0
 * Both Table have the same structure.
 * Both tables have the same partition key, the same `ORDER BY` key and the same primary key.
 * Both tables must have the same storage policy.
-
-```sql
-ALTER TABLE table2 [ON CLUSTER cluster] REPLACE PARTITION partition_expr FROM table1
-```
 
 #### RQ.SRS-032.ClickHouse.Alter.ReplacePartition.NewData
 version: 1.0
