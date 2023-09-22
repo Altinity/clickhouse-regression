@@ -3,21 +3,32 @@
 
 ## Table of Contents
 
-* 1 [Working with ALTER statement](#working-with-alter-statement)
-  * 1.1 [RQ.SRS-032.ClickHouse.Alter](#rqsrs-032clickhousealter)
-  * 1.2 [REPLACE PARTITION](#replace-partition)
-    * 1.2.1 [RQ.SRS-032.ClickHouse.Alter.ReplacePartition](#rqsrs-032clickhousealterreplacepartition)
-    * 1.2.2 [RQ.SRS-032.ClickHouse.Alter.ReplacePartition.AddNewPartition](#rqsrs-032clickhousealterreplacepartitionaddnewpartition)
-    * 1.2.3 [RQ.SRS-032.ClickHouse.Alter.ReplacePartition.AddNewPartition.KeepTable](#rqsrs-032clickhousealterreplacepartitionaddnewpartitionkeeptable)
-    * 1.2.4 [RQ.SRS-032.ClickHouse.Alter.ReplacePartition.AddNewPartition.TemporaryTable](#rqsrs-032clickhousealterreplacepartitionaddnewpartitiontemporarytable)
-    * 1.2.5 [RQ.SRS-032.ClickHouse.Alter.ReplacePartition.AddNewPartition.Conditions](#rqsrs-032clickhousealterreplacepartitionaddnewpartitionconditions)
+* 1 [Revision History](#revision-history)
+* 2 [Introduction](#introduction)
+* 3 [Working with ALTER statement](#working-with-alter-statement)
+  * 3.1 [REPLACE PARTITION](#replace-partition)
+    * 3.1.1 [RQ.SRS-032.ClickHouse.Alter.ReplacePartition](#rqsrs-032clickhousealterreplacepartition)
+    * 3.1.2 [RQ.SRS-032.ClickHouse.Alter.ReplacePartition.ReplaceData](#rqsrs-032clickhousealterreplacepartitionreplacedata)
+    * 3.1.3 [RQ.SRS-032.ClickHouse.Alter.ReplacePartition.AddNewPartition.NewData](#rqsrs-032clickhousealterreplacepartitionaddnewpartitionnewdata)
+    * 3.1.4 [RQ.SRS-032.ClickHouse.Alter.ReplacePartition.AddNewPartition.KeepTable](#rqsrs-032clickhousealterreplacepartitionaddnewpartitionkeeptable)
+    * 3.1.5 [RQ.SRS-032.ClickHouse.Alter.ReplacePartition.AddNewPartition.TemporaryTable](#rqsrs-032clickhousealterreplacepartitionaddnewpartitiontemporarytable)
+    * 3.1.6 [RQ.SRS-032.ClickHouse.Alter.ReplacePartition.AddNewPartition.Conditions](#rqsrs-032clickhousealterreplacepartitionaddnewpartitionconditions)
 
 
+## Revision History
+
+This document is stored in an electronic form using [Git] source control management software
+hosted in a [GitHub Repository].
+All the updates are tracked using the [Revision History].
+
+## Introduction
+
+This software requirements specification covers requirements for `ALTER` statement in [ClickHouse].
+
+The documentation used:
+- https://clickhouse.com/docs/en/sql-reference/statements/alter/partition#replace-partition
 
 ## Working with ALTER statement
-
-### RQ.SRS-032.ClickHouse.Alter
-version: 1.0
 
 [ClickHouse] SHALL support the usage of the `ALTER` statement.
 
@@ -73,3 +84,7 @@ version: 1.0
 
 
 [ClickHouse]: https://clickhouse.com
+[GitHub Repository]: https://github.com/Altinity/clickhouse-regression/blob/main/alter/requirements/requirements.md
+[Revision History]: https://github.com/Altinity/clickhouse-regression/commits/main/alter/requirements/requirements.md
+[Git]: https://git-scm.com/
+[GitHub]: https://github.com
