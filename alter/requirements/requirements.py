@@ -47,15 +47,15 @@ RQ_SRS_032_ClickHouse_Alter_ReplacePartition_ReplaceData = Requirement(
     num="3.1.2",
 )
 
-RQ_SRS_032_ClickHouse_Alter_ReplacePartition_AddNewPartition_NewData = Requirement(
-    name="RQ.SRS-032.ClickHouse.Alter.ReplacePartition.AddNewPartition.NewData",
+RQ_SRS_032_ClickHouse_Alter_ReplacePartition_NewData = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.ReplacePartition.NewData",
     version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support replace an existing partition with new data.\n"
+        "[ClickHouse] SHALL support replace an existing partition with new data using `ATTACH`.\n"
         "\n"
         "For example,\n"
         "```sql\n"
@@ -66,6 +66,75 @@ RQ_SRS_032_ClickHouse_Alter_ReplacePartition_AddNewPartition_NewData = Requireme
     link=None,
     level=3,
     num="3.1.3",
+)
+
+RQ_SRS_032_ClickHouse_Alter_ReplacePartition_StorageEngine = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.ReplacePartition.StorageEngine",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support replacing the storage engine used for a specific partition.\n"
+        "\n"
+        "For example,\n"
+        "```sql\n"
+        "ALTER TABLE my_table REPLACE PARTITION 202302\n"
+        "ENGINE = MergeTree()\n"
+        "PARTITION BY toYYYYMM(event_date)\n"
+        "ORDER BY (event_date, event_id);\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="3.1.4",
+)
+
+RQ_SRS_032_ClickHouse_Alter_ReplacePartition_PartitionKey = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.ReplacePartition.PartitionKey",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support replacing the partitioning key for a specific partition.\n"
+        "\n"
+        "For example,\n"
+        "```sql\n"
+        "ALTER TABLE my_table REPLACE PARTITION 202303\n"
+        "PARTITION BY toYYYY(event_date)\n"
+        "ORDER BY (event_date, event_id);\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="3.1.5",
+)
+
+RQ_SRS_032_ClickHouse_Alter_ReplacePartition_MultiplePartitions = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.ReplacePartition.MultiplePartitions",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support replacing multiple partitions with new data or different configurations in a single command.\n"
+        "\n"
+        "For example,\n"
+        "```sql\n"
+        "ALTER TABLE my_table REPLACE PARTITION 202305, 202306, 202307\n"
+        "WITH ATTACH 'path_to_new_data';\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="3.1.6",
 )
 
 RQ_SRS_032_ClickHouse_Alter_ReplacePartition_AddNewPartition_KeepTable = Requirement(
@@ -81,7 +150,7 @@ RQ_SRS_032_ClickHouse_Alter_ReplacePartition_AddNewPartition_KeepTable = Require
     ),
     link=None,
     level=3,
-    num="3.1.4",
+    num="3.1.7",
 )
 
 RQ_SRS_032_ClickHouse_Alter_ReplacePartition_AddNewPartition_TemporaryTable = Requirement(
@@ -97,7 +166,7 @@ RQ_SRS_032_ClickHouse_Alter_ReplacePartition_AddNewPartition_TemporaryTable = Re
     ),
     link=None,
     level=3,
-    num="3.1.5",
+    num="3.1.8",
 )
 
 RQ_SRS_032_ClickHouse_Alter_ReplacePartition_AddNewPartition_Conditions = Requirement(
@@ -124,7 +193,7 @@ RQ_SRS_032_ClickHouse_Alter_ReplacePartition_AddNewPartition_Conditions = Requir
     ),
     link=None,
     level=3,
-    num="3.1.6",
+    num="3.1.9",
 )
 
 SRS032_ClickHouse_Alter_statement = Specification(
@@ -157,30 +226,48 @@ SRS032_ClickHouse_Alter_statement = Specification(
             num="3.1.2",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.ReplacePartition.AddNewPartition.NewData",
+            name="RQ.SRS-032.ClickHouse.Alter.ReplacePartition.NewData",
             level=3,
             num="3.1.3",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.ReplacePartition.AddNewPartition.KeepTable",
+            name="RQ.SRS-032.ClickHouse.Alter.ReplacePartition.StorageEngine",
             level=3,
             num="3.1.4",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.ReplacePartition.AddNewPartition.TemporaryTable",
+            name="RQ.SRS-032.ClickHouse.Alter.ReplacePartition.PartitionKey",
             level=3,
             num="3.1.5",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.ReplacePartition.AddNewPartition.Conditions",
+            name="RQ.SRS-032.ClickHouse.Alter.ReplacePartition.MultiplePartitions",
             level=3,
             num="3.1.6",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.ReplacePartition.AddNewPartition.KeepTable",
+            level=3,
+            num="3.1.7",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.ReplacePartition.AddNewPartition.TemporaryTable",
+            level=3,
+            num="3.1.8",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.ReplacePartition.AddNewPartition.Conditions",
+            level=3,
+            num="3.1.9",
         ),
     ),
     requirements=(
         RQ_SRS_032_ClickHouse_Alter_ReplacePartition,
         RQ_SRS_032_ClickHouse_Alter_ReplacePartition_ReplaceData,
-        RQ_SRS_032_ClickHouse_Alter_ReplacePartition_AddNewPartition_NewData,
+        RQ_SRS_032_ClickHouse_Alter_ReplacePartition_NewData,
+        RQ_SRS_032_ClickHouse_Alter_ReplacePartition_StorageEngine,
+        RQ_SRS_032_ClickHouse_Alter_ReplacePartition_PartitionKey,
+        RQ_SRS_032_ClickHouse_Alter_ReplacePartition_MultiplePartitions,
         RQ_SRS_032_ClickHouse_Alter_ReplacePartition_AddNewPartition_KeepTable,
         RQ_SRS_032_ClickHouse_Alter_ReplacePartition_AddNewPartition_TemporaryTable,
         RQ_SRS_032_ClickHouse_Alter_ReplacePartition_AddNewPartition_Conditions,
@@ -197,10 +284,13 @@ SRS032_ClickHouse_Alter_statement = Specification(
   * 3.1 [REPLACE PARTITION](#replace-partition)
     * 3.1.1 [RQ.SRS-032.ClickHouse.Alter.ReplacePartition](#rqsrs-032clickhousealterreplacepartition)
     * 3.1.2 [RQ.SRS-032.ClickHouse.Alter.ReplacePartition.ReplaceData](#rqsrs-032clickhousealterreplacepartitionreplacedata)
-    * 3.1.3 [RQ.SRS-032.ClickHouse.Alter.ReplacePartition.AddNewPartition.NewData](#rqsrs-032clickhousealterreplacepartitionaddnewpartitionnewdata)
-    * 3.1.4 [RQ.SRS-032.ClickHouse.Alter.ReplacePartition.AddNewPartition.KeepTable](#rqsrs-032clickhousealterreplacepartitionaddnewpartitionkeeptable)
-    * 3.1.5 [RQ.SRS-032.ClickHouse.Alter.ReplacePartition.AddNewPartition.TemporaryTable](#rqsrs-032clickhousealterreplacepartitionaddnewpartitiontemporarytable)
-    * 3.1.6 [RQ.SRS-032.ClickHouse.Alter.ReplacePartition.AddNewPartition.Conditions](#rqsrs-032clickhousealterreplacepartitionaddnewpartitionconditions)
+    * 3.1.3 [RQ.SRS-032.ClickHouse.Alter.ReplacePartition.NewData](#rqsrs-032clickhousealterreplacepartitionnewdata)
+    * 3.1.4 [RQ.SRS-032.ClickHouse.Alter.ReplacePartition.StorageEngine](#rqsrs-032clickhousealterreplacepartitionstorageengine)
+    * 3.1.5 [RQ.SRS-032.ClickHouse.Alter.ReplacePartition.PartitionKey](#rqsrs-032clickhousealterreplacepartitionpartitionkey)
+    * 3.1.6 [RQ.SRS-032.ClickHouse.Alter.ReplacePartition.MultiplePartitions](#rqsrs-032clickhousealterreplacepartitionmultiplepartitions)
+    * 3.1.7 [RQ.SRS-032.ClickHouse.Alter.ReplacePartition.AddNewPartition.KeepTable](#rqsrs-032clickhousealterreplacepartitionaddnewpartitionkeeptable)
+    * 3.1.8 [RQ.SRS-032.ClickHouse.Alter.ReplacePartition.AddNewPartition.TemporaryTable](#rqsrs-032clickhousealterreplacepartitionaddnewpartitiontemporarytable)
+    * 3.1.9 [RQ.SRS-032.ClickHouse.Alter.ReplacePartition.AddNewPartition.Conditions](#rqsrs-032clickhousealterreplacepartitionaddnewpartitionconditions)
 
 
 ## Revision History
@@ -240,14 +330,50 @@ This query copies the data partition from the `table1` to `table2` and replaces 
 ALTER TABLE table2 [ON CLUSTER cluster] REPLACE PARTITION partition_expr FROM table1
 ```
 
-#### RQ.SRS-032.ClickHouse.Alter.ReplacePartition.AddNewPartition.NewData
+#### RQ.SRS-032.ClickHouse.Alter.ReplacePartition.NewData
 version: 1.0
 
-[ClickHouse] SHALL support replace an existing partition with new data.
+[ClickHouse] SHALL support replace an existing partition with new data using `ATTACH`.
 
 For example,
 ```sql
 ALTER TABLE my_table REPLACE PARTITION 202301 WITH ATTACH 'path_to_new_data';
+```
+
+#### RQ.SRS-032.ClickHouse.Alter.ReplacePartition.StorageEngine
+version: 1.0
+
+[ClickHouse] SHALL support replacing the storage engine used for a specific partition.
+
+For example,
+```sql
+ALTER TABLE my_table REPLACE PARTITION 202302
+ENGINE = MergeTree()
+PARTITION BY toYYYYMM(event_date)
+ORDER BY (event_date, event_id);
+```
+
+#### RQ.SRS-032.ClickHouse.Alter.ReplacePartition.PartitionKey
+version: 1.0
+
+[ClickHouse] SHALL support replacing the partitioning key for a specific partition.
+
+For example,
+```sql
+ALTER TABLE my_table REPLACE PARTITION 202303
+PARTITION BY toYYYY(event_date)
+ORDER BY (event_date, event_id);
+```
+
+#### RQ.SRS-032.ClickHouse.Alter.ReplacePartition.MultiplePartitions
+version: 1.0
+
+[ClickHouse] SHALL support replacing multiple partitions with new data or different configurations in a single command.
+
+For example,
+```sql
+ALTER TABLE my_table REPLACE PARTITION 202305, 202306, 202307
+WITH ATTACH 'path_to_new_data';
 ```
 
 #### RQ.SRS-032.ClickHouse.Alter.ReplacePartition.AddNewPartition.KeepTable
