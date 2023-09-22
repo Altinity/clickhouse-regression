@@ -1,0 +1,128 @@
+version: '2.3'
+
+volumes:
+  data1-1:
+
+services:
+  zookeeper:
+    extends:
+      file: zookeeper-service.yml
+      service: zookeeper
+
+  clickhouse1:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse1
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse1/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse1/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+
+  clickhouse2:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse2
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse2/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse2/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+
+  clickhouse3:
+    extends:
+      file: clickhouse-service.yml
+      service: clickhouse
+    hostname: clickhouse3
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/database/:/var/lib/clickhouse/"
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/clickhouse3/logs/:/var/log/clickhouse-server/"
+      - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse3/config.d/macros.xml:/etc/clickhouse-server/config.d/macros.xml"
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+
+  proxy1:
+    image: altinityinfra/s3-proxy:265-ea7abf434d5f99618d1e188b8284cf43835724f3
+    ports:
+      - "8080"
+      - "80"
+      - "443"
+
+  proxy2:
+    image: altinityinfra/s3-proxy:265-ea7abf434d5f99618d1e188b8284cf43835724f3
+    ports:
+      - "8080"
+      - "80"
+      - "443"
+
+  resolver:
+    image: altinityinfra/python-bottle:265-ea7abf434d5f99618d1e188b8284cf43835724f3
+    ports:
+      - "8080"
+    tty: true
+    depends_on:
+      - proxy1
+      - proxy2
+
+  minio:
+    extends:
+      file: minio-service.yml
+      service: minio
+
+  minio-client:
+    extends:
+      file: minio-client.yml
+      service: minio-client
+    depends_on:
+      minio:
+        condition: service_healthy
+
+  aws:
+    extends:
+      file: aws-client.yml
+      service: aws
+
+  mysql1:
+    extends:
+      file: mysql-service.yml
+      service: mysql
+    hostname: mysql1
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/mysql1/database:/var/lib/mysql"
+
+  postgres1:
+    extends:
+      file: postgres-service.yml
+      service: postgres
+    hostname: postgres1
+    volumes:
+      - "${CLICKHOUSE_TESTS_DIR}/_instances/postgres1/database:/var/lib/postgres"
+
+  # dummy service which does nothing, but allows to postpone
+  # 'docker-compose up -d' till all dependencies will go healthy
+  all_services_ready:
+    image: hello-world
+    depends_on:
+      clickhouse1:
+        condition: service_healthy
+      clickhouse2:
+        condition: service_healthy
+      clickhouse3:
+        condition: service_healthy
+      zookeeper:
+        condition: service_healthy
+      mysql1:
+        condition: service_healthy
+      aws:
+        condition: service_healthy
+      minio-client:
+        condition: service_healthy
+      postgres1:
+        condition: service_healthy
