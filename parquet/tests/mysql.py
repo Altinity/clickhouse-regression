@@ -68,7 +68,8 @@ def mysql_engine_to_parquet_file_to_mysql_engine(self):
                     parallel=True,
                     executor=executor,
                 )(
-                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table1_name}"
+                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM {table1_name}",
+                    snapshot_id="tests." + current_cpu(),
                 )
             join()
 
@@ -138,7 +139,8 @@ def mysql_function_to_parquet_file_to_mysql_function(self):
                     parallel=True,
                     executor=executor,
                 )(
-                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM mysql('mysql1:3306', 'default', '{table1_name}', 'user', 'password')"
+                    sql=f"SELECT {column.name}, toTypeName({column.name}) FROM mysql('mysql1:3306', 'default', '{table1_name}', 'user', 'password')",
+                    snapshot_id="tests." + current_cpu(),
                 )
             join()
 

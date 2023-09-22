@@ -502,6 +502,7 @@ def execute_query_step(
     format="JSONEachRow",
     use_file=False,
     hash_output=False,
+    snapshot_id=None,
 ):
     """Wrapper to call the execute_query function using testflows Check."""
     execute_query(
@@ -514,6 +515,7 @@ def execute_query_step(
         format=format,
         use_file=use_file,
         hash_output=hash_output,
+        snapshot_id=snapshot_id,
     )
 
 
@@ -527,6 +529,7 @@ def execute_query(
     format="JSONEachRow",
     use_file=False,
     hash_output=False,
+    snapshot_id=None,
 ):
     """Execute SQL query and compare the output to the snapshot."""
     if snapshot_name is None:
@@ -537,6 +540,11 @@ def execute_query(
             snapshot_name += ">=22.8"
 
     assert "snapshot_id" in current().context, "test must set self.context.snapshot_id"
+
+    if snapshot_id is not None:
+        snapshot_id = snapshot_id
+    else:
+        snapshot_id = current().context.snapshot_id
 
     with When("I execute query", description=sql):
         if format and not "FORMAT" in sql:
@@ -563,7 +571,7 @@ def execute_query(
                     assert that(
                         snapshot(
                             "\n" + r.output.strip() + "\n",
-                            id=current().context.snapshot_id,
+                            id=snapshot_id,
                             name=snapshot_name,
                             encoder=str,
                         )
