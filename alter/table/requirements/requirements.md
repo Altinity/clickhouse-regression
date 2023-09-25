@@ -8,24 +8,27 @@
 * 2 [Introduction](#introduction)
 * 3 [User Actions](#user-actions)
 * 4 [REPLACE PARTITION](#replace-partition)
-  * 4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition](#rqsrs-032clickhousealtertablereplacepartition)
-  * 4.2 [Replace Partition Between Tables](#replace-partition-between-tables)
-    * 4.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData](#rqsrs-032clickhousealtertablereplacepartitionreplacedata)
-      * 4.2.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions](#rqsrs-032clickhousealtertablereplacepartitionreplacedataconditions)
-      * 4.2.1.2 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.KeepTable](#rqsrs-032clickhousealtertablereplacepartitionreplacedatakeeptable)
-      * 4.2.1.3 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.TemporaryTable](#rqsrs-032clickhousealtertablereplacepartitionreplacedatatemporarytable)
-      * 4.2.1.4 [Conditions Not Satisfied](#conditions-not-satisfied)
-        * 4.2.1.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.Structure](#rqsrs-032clickhousealtertablereplacepartitionreplacedataconditionsdifferentstructure)
-        * 4.2.1.4.2 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.Key](#rqsrs-032clickhousealtertablereplacepartitionreplacedataconditionsdifferentkey)
-        * 4.2.1.4.3 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.StoragePolicy](#rqsrs-032clickhousealtertablereplacepartitionreplacedataconditionsdifferentstoragepolicy)
-  * 4.3 [New Data](#new-data)
-    * 4.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.NewData](#rqsrs-032clickhousealtertablereplacepartitionnewdata)
-  * 4.4 [Storage Engine](#storage-engine)
-    * 4.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.StorageEngine](#rqsrs-032clickhousealtertablereplacepartitionstorageengine)
-  * 4.5 [Partition Key](#partition-key)
-    * 4.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.PartitionKey](#rqsrs-032clickhousealtertablereplacepartitionpartitionkey)
-  * 4.6 [Replace Multiple Partitions](#replace-multiple-partitions)
-    * 4.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.MultiplePartitions](#rqsrs-032clickhousealtertablereplacepartitionmultiplepartitions)
+  * 4.1 [Flowchart](#flowchart)
+  * 4.2 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition](#rqsrs-032clickhousealtertablereplacepartition)
+  * 4.3 [Replace Partition Between Tables](#replace-partition-between-tables)
+    * 4.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData](#rqsrs-032clickhousealtertablereplacepartitionreplacedata)
+      * 4.3.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions](#rqsrs-032clickhousealtertablereplacepartitionreplacedataconditions)
+      * 4.3.1.2 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.KeepTable](#rqsrs-032clickhousealtertablereplacepartitionreplacedatakeeptable)
+      * 4.3.1.3 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.TemporaryTable](#rqsrs-032clickhousealtertablereplacepartitionreplacedatatemporarytable)
+      * 4.3.1.4 [Conditions Not Satisfied](#conditions-not-satisfied)
+        * 4.3.1.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.Structure](#rqsrs-032clickhousealtertablereplacepartitionreplacedataconditionsdifferentstructure)
+        * 4.3.1.4.2 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.Key](#rqsrs-032clickhousealtertablereplacepartitionreplacedataconditionsdifferentkey)
+        * 4.3.1.4.3 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.StoragePolicy](#rqsrs-032clickhousealtertablereplacepartitionreplacedataconditionsdifferentstoragepolicy)
+  * 4.4 [New Data](#new-data)
+    * 4.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.NewData](#rqsrs-032clickhousealtertablereplacepartitionnewdata)
+  * 4.5 [Storage Engine](#storage-engine)
+    * 4.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.StorageEngine](#rqsrs-032clickhousealtertablereplacepartitionstorageengine)
+  * 4.6 [Partition Key](#partition-key)
+    * 4.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.PartitionKey](#rqsrs-032clickhousealtertablereplacepartitionpartitionkey)
+  * 4.7 [Replace Multiple Partitions](#replace-multiple-partitions)
+    * 4.7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.MultiplePartitions](#rqsrs-032clickhousealtertablereplacepartitionmultiplepartitions)
+  * 4.8 [Concurrent Actions](#concurrent-actions)
+    * 4.8.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent](#rqsrs-032clickhousealtertablereplacepartitionconcurrent)
 
 ## Revision History
 
@@ -64,6 +67,35 @@ The documentation used:
 
 
 ## REPLACE PARTITION
+
+### Flowchart
+
+```mermaid
+graph TD;
+
+subgraph Replace Partition Flow
+  A[Start]
+  A -->|1. User Initiates| B(Execute ALTER TABLE)
+  B -->|2. Specify Tables| C{Are table names valid?}
+  C -->|Yes| D[Retrieve table schema]
+  C -->|No| E[Show error message]
+  D -->|3. Validate Structure| F{Same structure in both tables?}
+  F -->|No| G[Show error message]
+  F -->|Yes| H[Validate Keys]
+  H -->|4. Validate Keys| I{Same partition, order by, and primary keys?}
+  I -->|No| J[Show error message]
+  I -->|Yes| K[Retrieve partition data]
+  K -->|5. Replace Partition| L[Update table2 with data from table1]
+  L -->|6. Update Metadata| M[Update partition metadata in table2]
+  M -->|7. Complete| N[ALTER TABLE completed successfully]
+  E -->|Error| Z[Handle Error]
+  G -->|Error| Z[Handle Error]
+  J -->|Error| Z[Handle Error]
+  Z --> N
+end
+
+
+```
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition
 version: 1.0
@@ -180,6 +212,13 @@ For example,
 ALTER TABLE my_table REPLACE PARTITION 202305, 202306, 202307
 WITH ATTACH 'path_to_new_data';
 ```
+
+### Concurrent Actions
+
+#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent
+version: 1.0
+
+[ClickHouse] SHALL support concurrent merges/mutations that happen on the same partition at the same time.
 
 [ClickHouse]: https://clickhouse.com
 
