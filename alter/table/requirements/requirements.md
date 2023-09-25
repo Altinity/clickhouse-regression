@@ -40,8 +40,7 @@ This software requirements specification covers requirements for `ALTER TABLE` s
 The documentation used:
 
 - https://clickhouse.com/docs/en/sql-reference/statements/alter/partition#replace-partition
-
-  GNU nano 6.2                                                                                         asd *                                                                                                
+ 
 ## User Actions
 
 
