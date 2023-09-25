@@ -10,14 +10,18 @@
   * 3.2 [Replace Partition Between Tables](#replace-partition-between-tables)
     * 3.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData](#rqsrs-032clickhousealtertablereplacepartitionreplacedata)
       * 3.2.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions](#rqsrs-032clickhousealtertablereplacepartitionreplacedataconditions)
-      * 3.2.1.2 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.Structure](#rqsrs-032clickhousealtertablereplacepartitionreplacedataconditionsdifferentstructure)
-      * 3.2.1.3 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.Key](#rqsrs-032clickhousealtertablereplacepartitionreplacedataconditionsdifferentkey)
-  * 3.3 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.NewData](#rqsrs-032clickhousealtertablereplacepartitionnewdata)
-  * 3.4 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.StorageEngine](#rqsrs-032clickhousealtertablereplacepartitionstorageengine)
-  * 3.5 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.PartitionKey](#rqsrs-032clickhousealtertablereplacepartitionpartitionkey)
-  * 3.6 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.MultiplePartitions](#rqsrs-032clickhousealtertablereplacepartitionmultiplepartitions)
-  * 3.7 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.AddNewPartition.KeepTable](#rqsrs-032clickhousealtertablereplacepartitionaddnewpartitionkeeptable)
-  * 3.8 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.AddNewPartition.TemporaryTable](#rqsrs-032clickhousealtertablereplacepartitionaddnewpartitiontemporarytable)
+      * 3.2.1.2 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.KeepTable](#rqsrs-032clickhousealtertablereplacepartitionreplacedatakeeptable)
+      * 3.2.1.3 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.TemporaryTable](#rqsrs-032clickhousealtertablereplacepartitionreplacedatatemporarytable)
+      * 3.2.1.4 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.Structure](#rqsrs-032clickhousealtertablereplacepartitionreplacedataconditionsdifferentstructure)
+      * 3.2.1.5 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.Key](#rqsrs-032clickhousealtertablereplacepartitionreplacedataconditionsdifferentkey)
+  * 3.3 [New Data](#new-data)
+    * 3.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.NewData](#rqsrs-032clickhousealtertablereplacepartitionnewdata)
+  * 3.4 [Storage Engine](#storage-engine)
+    * 3.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.StorageEngine](#rqsrs-032clickhousealtertablereplacepartitionstorageengine)
+  * 3.5 [Partition Key](#partition-key)
+    * 3.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.PartitionKey](#rqsrs-032clickhousealtertablereplacepartitionpartitionkey)
+  * 3.6 [Replace Multiple Partitions](#replace-multiple-partitions)
+    * 3.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.MultiplePartitions](#rqsrs-032clickhousealtertablereplacepartitionmultiplepartitions)
 
 
 ## Revision History
@@ -64,6 +68,16 @@ version: 1.0
 * Both tables have the same partition key, the same `ORDER BY` key and the same primary key.
 * Both tables must have the same storage policy.
 
+##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.KeepTable
+version: 1.0
+
+[ClickHouse] SHALL keep the data of the table from which the partition is copied from.
+
+##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.TemporaryTable
+version: 1.0
+
+[ClickHouse] SHALL support copying the data partition from the temporary table.
+
 ##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.Structure
 version: 1.0
 
@@ -74,7 +88,9 @@ version: 1.0
 
 [ClickHouse] SHALL not support the usage of `REPLACE PARTITION` between two tables when tables have different partition key, `ORDER BY` key andprimary key.
 
-### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.NewData
+### New Data
+
+#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.NewData
 version: 1.0
 
 [ClickHouse] SHALL support replace an existing partition with new data using `ATTACH`.
@@ -84,7 +100,9 @@ For example,
 ALTER TABLE my_table REPLACE PARTITION 202301 WITH ATTACH 'path_to_new_data';
 ```
 
-### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.StorageEngine
+### Storage Engine
+
+#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.StorageEngine
 version: 1.0
 
 [ClickHouse] SHALL support replacing the storage engine used for a specific partition.
@@ -97,7 +115,9 @@ PARTITION BY toYYYYMM(event_date)
 ORDER BY (event_date, event_id);
 ```
 
-### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.PartitionKey
+### Partition Key
+
+#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.PartitionKey
 version: 1.0
 
 [ClickHouse] SHALL support replacing the partitioning key for a specific partition.
@@ -109,7 +129,9 @@ PARTITION BY toYYYY(event_date)
 ORDER BY (event_date, event_id);
 ```
 
-### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.MultiplePartitions
+### Replace Multiple Partitions
+
+#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.MultiplePartitions
 version: 1.0
 
 [ClickHouse] SHALL support replacing multiple partitions with new data or different configurations in a single command.
@@ -120,15 +142,7 @@ ALTER TABLE my_table REPLACE PARTITION 202305, 202306, 202307
 WITH ATTACH 'path_to_new_data';
 ```
 
-### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.AddNewPartition.KeepTable
-version: 1.0
 
-[ClickHouse] SHALL keep the data of the table from which the partition is copied from.
-
-### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.AddNewPartition.TemporaryTable
-version: 1.0
-
-[ClickHouse] SHALL support copying the data partition from the temporary table.
 
 
 
