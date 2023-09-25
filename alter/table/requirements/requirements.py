@@ -111,8 +111,8 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ReplaceData_Conditions_Differ
         "\n"
     ),
     link=None,
-    level=4,
-    num="3.2.1.4",
+    level=5,
+    num="3.2.1.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ReplaceData_Conditions_Different_Key = Requirement(
@@ -127,8 +127,25 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ReplaceData_Conditions_Differ
         "\n"
     ),
     link=None,
-    level=4,
-    num="3.2.1.5",
+    level=5,
+    num="3.2.1.4.2",
+)
+
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ReplaceData_Conditions_Different_StoragePolicy = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.StoragePolicy",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL not support the usage of `REPLACE PARTITION` between two tables when tables have different storage policy.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="3.2.1.4.3",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_NewData = Requirement(
@@ -276,15 +293,21 @@ SRS032_ClickHouse_Alter_Table_statement = Specification(
             level=4,
             num="3.2.1.3",
         ),
+        Heading(name="Conditions Not Satisfied", level=4, num="3.2.1.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.Structure",
-            level=4,
-            num="3.2.1.4",
+            level=5,
+            num="3.2.1.4.1",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.Key",
-            level=4,
-            num="3.2.1.5",
+            level=5,
+            num="3.2.1.4.2",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.StoragePolicy",
+            level=5,
+            num="3.2.1.4.3",
         ),
         Heading(name="New Data", level=2, num="3.3"),
         Heading(
@@ -319,6 +342,7 @@ SRS032_ClickHouse_Alter_Table_statement = Specification(
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ReplaceData_TemporaryTable,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ReplaceData_Conditions_Different_Structure,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ReplaceData_Conditions_Different_Key,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ReplaceData_Conditions_Different_StoragePolicy,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_NewData,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_StorageEngine,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_PartitionKey,
@@ -339,8 +363,10 @@ SRS032_ClickHouse_Alter_Table_statement = Specification(
       * 3.2.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions](#rqsrs-032clickhousealtertablereplacepartitionreplacedataconditions)
       * 3.2.1.2 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.KeepTable](#rqsrs-032clickhousealtertablereplacepartitionreplacedatakeeptable)
       * 3.2.1.3 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.TemporaryTable](#rqsrs-032clickhousealtertablereplacepartitionreplacedatatemporarytable)
-      * 3.2.1.4 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.Structure](#rqsrs-032clickhousealtertablereplacepartitionreplacedataconditionsdifferentstructure)
-      * 3.2.1.5 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.Key](#rqsrs-032clickhousealtertablereplacepartitionreplacedataconditionsdifferentkey)
+      * 3.2.1.4 [Conditions Not Satisfied](#conditions-not-satisfied)
+        * 3.2.1.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.Structure](#rqsrs-032clickhousealtertablereplacepartitionreplacedataconditionsdifferentstructure)
+        * 3.2.1.4.2 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.Key](#rqsrs-032clickhousealtertablereplacepartitionreplacedataconditionsdifferentkey)
+        * 3.2.1.4.3 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.StoragePolicy](#rqsrs-032clickhousealtertablereplacepartitionreplacedataconditionsdifferentstoragepolicy)
   * 3.3 [New Data](#new-data)
     * 3.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.NewData](#rqsrs-032clickhousealtertablereplacepartitionnewdata)
   * 3.4 [Storage Engine](#storage-engine)
@@ -405,15 +431,23 @@ version: 1.0
 
 [ClickHouse] SHALL support copying the data partition from the temporary table.
 
-##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.Structure
+##### Conditions Not Satisfied
+
+###### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.Structure
 version: 1.0
 
 [ClickHouse] SHALL not support the usage of `REPLACE PARTITION` between two tables when tables have different structure.
 
-##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.Key
+###### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.Key
 version: 1.0
 
 [ClickHouse] SHALL not support the usage of `REPLACE PARTITION` between two tables when tables have different partition key, `ORDER BY` key andprimary key.
+
+###### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.StoragePolicy
+version: 1.0
+
+[ClickHouse] SHALL not support the usage of `REPLACE PARTITION` between two tables when tables have different storage policy.
+
 
 ### New Data
 
