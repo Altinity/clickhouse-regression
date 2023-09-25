@@ -1,30 +1,31 @@
 # SRS032 ClickHouse Alter Table statement
+
 # Software Requirements Specification
 
 ## Table of Contents
 
 * 1 [Revision History](#revision-history)
 * 2 [Introduction](#introduction)
-* 3 [REPLACE PARTITION](#replace-partition)
-  * 3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition](#rqsrs-032clickhousealtertablereplacepartition)
-  * 3.2 [Replace Partition Between Tables](#replace-partition-between-tables)
-    * 3.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData](#rqsrs-032clickhousealtertablereplacepartitionreplacedata)
-      * 3.2.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions](#rqsrs-032clickhousealtertablereplacepartitionreplacedataconditions)
-      * 3.2.1.2 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.KeepTable](#rqsrs-032clickhousealtertablereplacepartitionreplacedatakeeptable)
-      * 3.2.1.3 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.TemporaryTable](#rqsrs-032clickhousealtertablereplacepartitionreplacedatatemporarytable)
-      * 3.2.1.4 [Conditions Not Satisfied](#conditions-not-satisfied)
-        * 3.2.1.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.Structure](#rqsrs-032clickhousealtertablereplacepartitionreplacedataconditionsdifferentstructure)
-        * 3.2.1.4.2 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.Key](#rqsrs-032clickhousealtertablereplacepartitionreplacedataconditionsdifferentkey)
-        * 3.2.1.4.3 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.StoragePolicy](#rqsrs-032clickhousealtertablereplacepartitionreplacedataconditionsdifferentstoragepolicy)
-  * 3.3 [New Data](#new-data)
-    * 3.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.NewData](#rqsrs-032clickhousealtertablereplacepartitionnewdata)
-  * 3.4 [Storage Engine](#storage-engine)
-    * 3.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.StorageEngine](#rqsrs-032clickhousealtertablereplacepartitionstorageengine)
-  * 3.5 [Partition Key](#partition-key)
-    * 3.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.PartitionKey](#rqsrs-032clickhousealtertablereplacepartitionpartitionkey)
-  * 3.6 [Replace Multiple Partitions](#replace-multiple-partitions)
-    * 3.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.MultiplePartitions](#rqsrs-032clickhousealtertablereplacepartitionmultiplepartitions)
-
+* 3 [User Actions](#user-actions)
+* 4 [REPLACE PARTITION](#replace-partition)
+  * 4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition](#rqsrs-032clickhousealtertablereplacepartition)
+  * 4.2 [Replace Partition Between Tables](#replace-partition-between-tables)
+    * 4.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData](#rqsrs-032clickhousealtertablereplacepartitionreplacedata)
+      * 4.2.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions](#rqsrs-032clickhousealtertablereplacepartitionreplacedataconditions)
+      * 4.2.1.2 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.KeepTable](#rqsrs-032clickhousealtertablereplacepartitionreplacedatakeeptable)
+      * 4.2.1.3 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.TemporaryTable](#rqsrs-032clickhousealtertablereplacepartitionreplacedatatemporarytable)
+      * 4.2.1.4 [Conditions Not Satisfied](#conditions-not-satisfied)
+        * 4.2.1.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.Structure](#rqsrs-032clickhousealtertablereplacepartitionreplacedataconditionsdifferentstructure)
+        * 4.2.1.4.2 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.Key](#rqsrs-032clickhousealtertablereplacepartitionreplacedataconditionsdifferentkey)
+        * 4.2.1.4.3 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.StoragePolicy](#rqsrs-032clickhousealtertablereplacepartitionreplacedataconditionsdifferentstoragepolicy)
+  * 4.3 [New Data](#new-data)
+    * 4.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.NewData](#rqsrs-032clickhousealtertablereplacepartitionnewdata)
+  * 4.4 [Storage Engine](#storage-engine)
+    * 4.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.StorageEngine](#rqsrs-032clickhousealtertablereplacepartitionstorageengine)
+  * 4.5 [Partition Key](#partition-key)
+    * 4.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.PartitionKey](#rqsrs-032clickhousealtertablereplacepartitionpartitionkey)
+  * 4.6 [Replace Multiple Partitions](#replace-multiple-partitions)
+    * 4.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.MultiplePartitions](#rqsrs-032clickhousealtertablereplacepartitionmultiplepartitions)
 
 ## Revision History
 
@@ -37,14 +38,31 @@ All the updates are tracked using the [Revision History].
 This software requirements specification covers requirements for `ALTER TABLE` statement in [ClickHouse].
 
 The documentation used:
+
 - https://clickhouse.com/docs/en/sql-reference/statements/alter/partition#replace-partition
 
+  GNU nano 6.2                                                                                         asd *                                                                                                
 ## User Actions
 
-| Action                | Description                                                                                         |
-|-----------------------|-----------------------------------------------------------------------------------------------------|
-| DETACH PARTITION/PART | ```sql<br/>ALTER TABLE table_name [ON CLUSTER cluster] DETACH PARTITION/PART partition_expr<br/>``` |
-| Paragraph             | Text                                                                                                |
+
+| **Action**                     | **Description**                                                                                                              |
+|--------------------------------|------------------------------------------------------------------------------------------------------------------------------|
+| `DETACH PARTITION/PART`        | `ALTER TABLE table_name [ON CLUSTER cluster] DETACH PARTITION/PART partition_expr`                                           |
+| `DROP PARTITION/PART`          | `ALTER TABLE table_name [ON CLUSTER cluster] DROP PARTITION/PART partition_expr`                                             |                                          >
+| `DROP DETACHED PARTITION/PART` | `ALTER TABLE table_name [ON CLUSTER cluster] DROP DETACHED PARTITION/PART partition_expr`                                    |
+| `ATTACH PARTITION/PART`        | `ALTER TABLE table_name [ON CLUSTER cluster] ATTACH PARTITION/PART partition_expr`                                           |
+| `ATTACH PARTITION FROM`        | `ALTER TABLE table2 [ON CLUSTER cluster] ATTACH PARTITION partition_expr FROM table1`                                        |
+| `REPLACE PARTITION`            | `ALTER TABLE table2 [ON CLUSTER cluster] REPLACE PARTITION partition_expr FROM table1`                                       |
+| `MOVE PARTITION TO TABLE`      | `ALTER TABLE table_source [ON CLUSTER cluster] MOVE PARTITION partition_expr TO TABLE table_dest`                            |
+| `CLEAR COLUMN IN PARTITION`    | `ALTER TABLE table_name [ON CLUSTER cluster] CLEAR COLUMN column_name IN PARTITION partition_expr`                           |
+| `FREEZE PARTITION`             | `ALTER TABLE table_name [ON CLUSTER cluster] FREEZE [PARTITION partition_expr] [WITH NAME 'backup_name']`                    |
+| `UNFREEZE PARTITION`           | `ALTER TABLE table_name [ON CLUSTER cluster] UNFREEZE [PARTITION 'part_expr'] WITH NAME 'backup_name'`                       |
+| `CLEAR INDEX IN PARTITION`     | `ALTER TABLE table_name [ON CLUSTER cluster] CLEAR INDEX index_name IN PARTITION partition_expr`                             |
+| `FETCH PARTITION/PART`         | `ALTER TABLE table_name [ON CLUSTER cluster] FETCH PARTITION/PART partition_expr FROM 'path-in-zookeeper'`                   |
+| `MOVE PARTITION/PART`          | `ALTER TABLE table_name [ON CLUSTER cluster] MOVE PARTITION/PART partition_expr TO DISK/VOLUME 'disk_name'`                  |
+| `UPDATE IN PARTITION`          | `ALTER TABLE [db.]table [ON CLUSTER cluster] UPDATE column1 = expr1 [, ...] [IN PARTITION partition_expr] WHERE filter_expr` |
+| `DELETE IN PARTITION`          | `ALTER TABLE [db.]table [ON CLUSTER cluster] DELETE [IN PARTITION partition_expr] WHERE filter_expr`                         |
+
 
 ## REPLACE PARTITION
 
@@ -97,13 +115,14 @@ version: 1.0
 ###### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.Key
 version: 1.0
 
-[ClickHouse] SHALL not support the usage of `REPLACE PARTITION` between two tables when tables have different partition key, `ORDER BY` key andprimary key.
+[ClickHouse] SHALL not support the usage of `REPLACE PARTITION` between two tables when tables have different partition
+key, `ORDER BY` key andprimary key.
 
 ###### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.StoragePolicy
 version: 1.0
 
-[ClickHouse] SHALL not support the usage of `REPLACE PARTITION` between two tables when tables have different storage policy.
-
+[ClickHouse] SHALL not support the usage of `REPLACE PARTITION` between two tables when tables have different storage
+policy.
 
 ### New Data
 
@@ -113,6 +132,7 @@ version: 1.0
 [ClickHouse] SHALL support replace an existing partition with new data using `ATTACH`.
 
 For example,
+
 ```sql
 ALTER TABLE my_table REPLACE PARTITION 202301 WITH ATTACH 'path_to_new_data';
 ```
@@ -125,6 +145,7 @@ version: 1.0
 [ClickHouse] SHALL support replacing the storage engine used for a specific partition.
 
 For example,
+
 ```sql
 ALTER TABLE my_table REPLACE PARTITION 202302
 ENGINE = MergeTree()
@@ -140,6 +161,7 @@ version: 1.0
 [ClickHouse] SHALL support replacing the partitioning key for a specific partition.
 
 For example,
+
 ```sql
 ALTER TABLE my_table REPLACE PARTITION 202303
 PARTITION BY toYYYY(event_date)
@@ -154,17 +176,18 @@ version: 1.0
 [ClickHouse] SHALL support replacing multiple partitions with new data or different configurations in a single command.
 
 For example,
+
 ```sql
 ALTER TABLE my_table REPLACE PARTITION 202305, 202306, 202307
 WITH ATTACH 'path_to_new_data';
 ```
 
-
-
-
-
 [ClickHouse]: https://clickhouse.com
+
 [GitHub Repository]: https://github.com/Altinity/clickhouse-regression/blob/main/alter/requirements/requirements.md
+
 [Revision History]: https://github.com/Altinity/clickhouse-regression/commits/main/alter/requirements/requirements.md
+
 [Git]: https://git-scm.com/
+
 [GitHub]: https://github.com
