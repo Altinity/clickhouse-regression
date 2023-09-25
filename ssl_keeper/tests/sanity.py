@@ -34,8 +34,7 @@ def fips_build_check(self, node=None):
                 message="<Information> Application: Starting in \x1b[01;31m\x1b[KFIPS mode\x1b[m\x1b[K, KAT test result: 1",
             )
     else:
-        with Then("I make pause and provide warning that non-FIPS build is testing"):
-            pause("Warning: It's not a FIPS build")
+        xfail("It's not a FIPS build")
 
 
 @TestFeature
