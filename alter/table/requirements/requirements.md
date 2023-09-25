@@ -39,6 +39,13 @@ This software requirements specification covers requirements for `ALTER TABLE` s
 The documentation used:
 - https://clickhouse.com/docs/en/sql-reference/statements/alter/partition#replace-partition
 
+## User Actions
+
+| Action                | Description                                                                                         |
+|-----------------------|-----------------------------------------------------------------------------------------------------|
+| DETACH PARTITION/PART | ```sql<br/>ALTER TABLE table_name [ON CLUSTER cluster] DETACH PARTITION/PART partition_expr<br/>``` |
+| Paragraph             | Text                                                                                                |
+
 ## REPLACE PARTITION
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition
