@@ -52,7 +52,7 @@ def empty_current_key_id(self, node=None):
 
     with And("I add invalid storage configuration that uses encrypted disk"):
         add_invalid_encrypted_disk_configuration(
-            entries=entries_in_this_test, message="Exception", restart=True
+            entries=entries_in_this_test, message="Syntax error", restart=True
         )
 
 
