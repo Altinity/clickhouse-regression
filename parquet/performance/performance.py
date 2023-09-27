@@ -91,7 +91,7 @@ def module(
     threads,
     first_number,
     last_number,
-    hits,
+    data,
     max_memory_usage,
     compression,
     collect_service_logs,
@@ -114,7 +114,6 @@ def module(
     self.context.duckdb_version = duckdb_binary_path.rsplit("/", 2)[-2][1:]
     self.context.run_count = rerun_queries
     self.context.query_results = []
-    self.context.query_results_hits = []
     self.context.row_count = []
     self.context.test_machine = test_machine
     self.context.rerun_queries = rerun_queries
@@ -131,7 +130,7 @@ def module(
         last_number=last_number,
         max_memory_usage=max_memory_usage,
         compression=compression,
-        hits=hits,
+        data=data,
     )
 
 

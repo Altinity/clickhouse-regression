@@ -106,10 +106,10 @@ def argparser(parser):
     )
 
     parser.add_argument(
-        "--hits",
+        "--data",
         type=str,
-        dest="hits",
-        help="Runs queries for hits dataset if set to True",
+        dest="data",
+        help="Determines the type of dataset used for the performance run (ontime, hits, nyc_taxi)",
         metavar="value",
-        default=False,
+        default="ontime",
     )

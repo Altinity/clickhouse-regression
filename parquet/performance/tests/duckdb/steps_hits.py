@@ -36,7 +36,7 @@ def run_query(self, name: str, clickhouse_query: str, duckdb_query: str, databas
         for i in range(repeats):
             csv_result += (clickhouse_times[i],)
 
-        self.context.query_results_hits.append(csv_result)
+        self.context.query_results.append(csv_result)
 
     elif database == "duckdb":
         with By("running the query on duckdb", description=f"{duckdb_query}"):
@@ -59,7 +59,7 @@ def run_query(self, name: str, clickhouse_query: str, duckdb_query: str, databas
         for i in range(repeats):
             csv_result += (duckdb_times[i],)
 
-        self.context.query_results_hits.append(csv_result)
+        self.context.query_results.append(csv_result)
 
 
 @TestScenario
