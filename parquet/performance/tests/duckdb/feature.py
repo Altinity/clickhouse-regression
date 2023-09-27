@@ -118,7 +118,7 @@ def compare_clickhouse_vs_duckdb_performance_hits(
 
 @TestSuite
 def nyc_taxi(self, threads, max_memory_usage, compression):
-    """Comparing the time it takes to read the large hits dataset in ClickHouse and duckdb"""
+    """Comparing the time it takes to read from the nyc taxi dataset in ClickHouse and duckdb"""
 
     clickhouse_node = self.context.clickhouse_node
     with Given("I generate a parquet file with large dataset"):
@@ -133,7 +133,7 @@ def nyc_taxi(self, threads, max_memory_usage, compression):
         )
 
     with When(
-        "I run all the queries from the steps file in ClickHouse and DuckDB to read from the Parquet file with large ontime dataset"
+        "I run all the queries from the steps file in ClickHouse and DuckDB to read from the Parquet file with nyc taxi dataset"
     ):
         with By("Running the scenario which contains all the query steps"):
             queries_nyc_taxi(filename=parquet_file)
