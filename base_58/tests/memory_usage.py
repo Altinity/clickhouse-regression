@@ -14,7 +14,7 @@ def memory_usage_for_column_input(self, node=None):
     with When("I create a table with random engine"):
         create_partitioned_table(
             table_name=table_name_random,
-            engine="GenerateRandom(1, 5, 3)",
+            engine="GenerateRandom(1, 500, 3)",
             order="",
             partition="",
         )
