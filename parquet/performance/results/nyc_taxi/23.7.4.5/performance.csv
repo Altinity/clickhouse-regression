@@ -1,0 +1,3 @@
+Number of rows:,3000317,Test Environment:,
+Query,ClickHouse version,ClickHouse Query Runtime,ClickHouse Query Description,ClickHouse sample 0,ClickHouse sample 1,ClickHouse sample 2,Query DuckDB,DuckDB version,DuckDB Query Runtime,DuckDB Query Description,DuckDB sample 0,DuckDB sample 1,DuckDB sample 2
+query_0,23.7.4.5,0.05221843719482422,SELECT COUNT(*) FROM file(nyc_taxi_parquet_df78fb21_5d63_11ee_8734_83580fb48b84.parquet);,0.05221843719482422,0.053815603256225586,0.10520362854003906,query_0,0.8.1,0.012671709060668945,SELECT COUNT(*) FROM '/data1/nyc_taxi_parquet_df78fb21_5d63_11ee_8734_83580fb48b84.parquet';,0.46970582008361816,0.012671709060668945,0.012841463088989258
