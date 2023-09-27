@@ -87,6 +87,90 @@ def query_0(self, filename: str, database: str):
     )
 
 
+@TestStep
+def query_1(self, filename: str, database: str):
+    r = "SELECT pickup_ntaname, count(*) AS count FROM {filename} GROUP BY pickup_ntaname ORDER BY count DESC LIMIT 10;"
+
+    clickhouse_query = r.format(filename=f"file({filename})")
+    duckdb_query = r.format(filename=f"'/data1/{filename}'")
+
+    run_query(
+        clickhouse_query=clickhouse_query,
+        duckdb_query=duckdb_query,
+        name="query_1",
+        database=database,
+    )
+
+
+@TestStep
+def query_2(self, filename: str, database: str):
+    clickhouse_query = f"SELECT passenger_count, avg(total_amount) FROM file('{filename}') GROUP BY passenger_count;"
+    duckdb_query = f"SELECT passenger_count, avg(total_amount) FROM '/data1/{filename}' GROUP BY passenger_count;"
+
+    run_query(
+        clickhouse_query=clickhouse_query,
+        duckdb_query=duckdb_query,
+        name="query_2",
+        database=database,
+    )
+
+
+@TestStep
+def query_3(self, filename: str, database: str):
+    clickhouse_query = f"SELECT AVG(tip_amount) FROM file('{filename}');"
+    duckdb_query = f"SELECT AVG(tip_amount) FROM '/data1/{filename}';"
+
+    run_query(
+        clickhouse_query=clickhouse_query,
+        duckdb_query=duckdb_query,
+        name="query_3",
+        database=database,
+    )
+
+
+@TestStep
+def query_4(self, filename: str, database: str):
+    clickhouse_query = f"SELECT COUNT(DISTINCT payment_type) FROM file('{filename}');"
+    duckdb_query = f"SELECT COUNT(DISTINCT payment_type) FROM '/data1/{filename}';"
+
+    run_query(
+        clickhouse_query=clickhouse_query,
+        duckdb_query=duckdb_query,
+        name="query_4",
+        database=database,
+    )
+
+
+@TestStep
+def query_5(self, filename: str, database: str):
+    clickhouse_query = (
+        f"SELECT MIN(pickup_datetime), MAX(pickup_datetime) FROM file('{filename}');"
+    )
+    duckdb_query = (
+        f"SELECT MIN(pickup_datetime), MAX(pickup_datetime) FROM '/data1/{filename}';"
+    )
+
+    run_query(
+        clickhouse_query=clickhouse_query,
+        duckdb_query=duckdb_query,
+        name="query_5",
+        database=database,
+    )
+
+
+@TestStep
+def query_6(self, filename: str, database: str):
+    clickhouse_query = f"SELECT trip_id, COUNT(*) FROM file('{filename}') GROUP BY trip_id ORDER BY COUNT(*) DESC LIMIT 10;;"
+    duckdb_query = f"SELECT trip_id, COUNT(*) FROM '/data1/{filename}' GROUP BY trip_id ORDER BY COUNT(*) DESC LIMIT 10;;"
+
+    run_query(
+        clickhouse_query=clickhouse_query,
+        duckdb_query=duckdb_query,
+        name="query_6",
+        database=database,
+    )
+
+
 @TestSuite
 def clickhouse(self, filename):
     duckdb_node = self.context.duckdb_node
