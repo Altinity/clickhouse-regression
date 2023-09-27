@@ -67,8 +67,8 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ReplaceData_Conditions = Requ
     num="5.3.1.1",
 )
 
-RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ReplaceData_KeepTable = Requirement(
-    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.KeepTable",
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartitionDistributedTable_ReplaceData_KeepTable = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartitionDistributedTable.ReplaceData.KeepTable",
     version="1.0",
     priority=None,
     group=None,
@@ -124,7 +124,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ReplaceData_Conditions_Differ
     uid=None,
     description=(
         "[ClickHouse] SHALL not support the usage of `REPLACE PARTITION` between two tables when tables have different partition\n"
-        "key, `ORDER BY` key andprimary key.\n"
+        "key, `ORDER BY` key and primary key.\n"
         "\n"
     ),
     link=None,
@@ -243,6 +243,150 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_MultiplePartitions = Requirem
     num="5.7.1",
 )
 
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ZooKeeper_TableEngines_MergeTree = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.MergeTree",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support the usage of the `REPLACE PARTITION` on the table with `MergeTree` engine.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="5.8.1.1.1",
+)
+
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ZooKeeper_TableEngines_ReplicatedMergeTree = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.ReplicatedMergeTree",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support the usage of the `REPLACE PARTITION` on the table with `ReplicatedMergeTree` engine.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="5.8.1.1.2",
+)
+
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ZooKeeper_TableEngines_ReplacingMergeTree = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.ReplacingMergeTree",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support the usage of the `REPLACE PARTITION` on the table with `ReplacingMergeTree` engine.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="5.8.1.1.3",
+)
+
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ZooKeeper_TableEngines_AggregatingMergeTree = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.AggregatingMergeTree",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support the usage of the `REPLACE PARTITION` on the table with `AggregatingMergeTree` engine.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="5.8.1.1.4",
+)
+
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ZooKeeper_TableEngines_CollapsingMergeTree = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.CollapsingMergeTree",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support the usage of the `REPLACE PARTITION` on the table with `CollapsingMergeTree` engine.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="5.8.1.1.5",
+)
+
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ZooKeeper_TableEngines_VersionedCollapsingMergeTree = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.VersionedCollapsingMergeTree",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support the usage of the `REPLACE PARTITION` on the table with `VersionedCollapsingMergeTree` engine.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="5.8.1.1.6",
+)
+
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ZooKeeper_TableEngines_GraphiteMergeTree = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.GraphiteMergeTree",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support the usage of the `REPLACE PARTITION` on the table with `GraphiteMergeTree` engine.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="5.8.1.1.7",
+)
+
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ZooKeeper_TableEngines_DistributedTable = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.DistributedTable",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support the usage of the `REPLACE PARTITION` on the table with `DistributedTable` engine.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="5.8.1.2.1",
+)
+
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ZooKeeper_TableEngines_MaterializedView = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.MaterializedView",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support the usage of the `REPLACE PARTITION` on the table with `MaterializedView` engine.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="5.8.1.3.1",
+)
+
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent = Requirement(
     name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent",
     version="1.0",
@@ -252,6 +396,26 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent = Requirement(
     uid=None,
     description=(
         "[ClickHouse] SHALL support concurrent merges/mutations that happen on the same partition at the same time.\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="5.9.1",
+)
+
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_MergesAndMutations = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.MergesAndMutations",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL cancel only for mutations/merges that are scheduled/already operating on target partition. \n"
+        "And wait ONLY for those cancelled merges/mutations (on target partition) to wrap up.\n"
+        "\n"
+        "\n"
         "\n"
         "[ClickHouse]: https://clickhouse.com\n"
         "\n"
@@ -265,7 +429,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent = Requirement(
     ),
     link=None,
     level=3,
-    num="5.8.1",
+    num="5.9.2",
 )
 
 SRS032_ClickHouse_Alter_Table_statement = Specification(
@@ -309,7 +473,7 @@ SRS032_ClickHouse_Alter_Table_statement = Specification(
             num="5.3.1.1",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.KeepTable",
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartitionDistributedTable.ReplaceData.KeepTable",
             level=4,
             num="5.3.1.2",
         ),
@@ -358,18 +522,73 @@ SRS032_ClickHouse_Alter_Table_statement = Specification(
             level=3,
             num="5.7.1",
         ),
-        Heading(name="Concurrent Actions", level=2, num="5.8"),
+        Heading(name="ZooKeeper", level=2, num="5.8"),
+        Heading(name="Table Engines", level=3, num="5.8.1"),
+        Heading(name="MergeTree", level=4, num="5.8.1.1"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.MergeTree",
+            level=5,
+            num="5.8.1.1.1",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.ReplicatedMergeTree",
+            level=5,
+            num="5.8.1.1.2",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.ReplacingMergeTree",
+            level=5,
+            num="5.8.1.1.3",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.AggregatingMergeTree",
+            level=5,
+            num="5.8.1.1.4",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.CollapsingMergeTree",
+            level=5,
+            num="5.8.1.1.5",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.VersionedCollapsingMergeTree",
+            level=5,
+            num="5.8.1.1.6",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.GraphiteMergeTree",
+            level=5,
+            num="5.8.1.1.7",
+        ),
+        Heading(name="DistributedTable", level=4, num="5.8.1.2"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.DistributedTable",
+            level=5,
+            num="5.8.1.2.1",
+        ),
+        Heading(name="MaterializedView", level=4, num="5.8.1.3"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.MaterializedView",
+            level=5,
+            num="5.8.1.3.1",
+        ),
+        Heading(name="Concurrent Actions", level=2, num="5.9"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent",
             level=3,
-            num="5.8.1",
+            num="5.9.1",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.MergesAndMutations",
+            level=3,
+            num="5.9.2",
         ),
     ),
     requirements=(
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ReplaceData,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ReplaceData_Conditions,
-        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ReplaceData_KeepTable,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartitionDistributedTable_ReplaceData_KeepTable,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ReplaceData_TemporaryTable,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ReplaceData_Conditions_Different_Structure,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ReplaceData_Conditions_Different_Key,
@@ -378,7 +597,17 @@ SRS032_ClickHouse_Alter_Table_statement = Specification(
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_StorageEngine,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_PartitionKey,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_MultiplePartitions,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ZooKeeper_TableEngines_MergeTree,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ZooKeeper_TableEngines_ReplicatedMergeTree,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ZooKeeper_TableEngines_ReplacingMergeTree,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ZooKeeper_TableEngines_AggregatingMergeTree,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ZooKeeper_TableEngines_CollapsingMergeTree,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ZooKeeper_TableEngines_VersionedCollapsingMergeTree,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ZooKeeper_TableEngines_GraphiteMergeTree,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ZooKeeper_TableEngines_DistributedTable,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ZooKeeper_TableEngines_MaterializedView,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_MergesAndMutations,
     ),
     content="""
 # SRS032 ClickHouse Alter Table statement
@@ -396,7 +625,7 @@ SRS032_ClickHouse_Alter_Table_statement = Specification(
   * 4.3 [Replace Partition Between Tables](#replace-partition-between-tables)
     * 4.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData](#rqsrs-032clickhousealtertablereplacepartitionreplacedata)
       * 4.3.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions](#rqsrs-032clickhousealtertablereplacepartitionreplacedataconditions)
-      * 4.3.1.2 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.KeepTable](#rqsrs-032clickhousealtertablereplacepartitionreplacedatakeeptable)
+      * 4.3.1.2 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartitionDistributedTable.ReplaceData.KeepTable](#rqsrs-032clickhousealtertablereplacepartitiondistributedtablereplacedatakeeptable)
       * 4.3.1.3 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.TemporaryTable](#rqsrs-032clickhousealtertablereplacepartitionreplacedatatemporarytable)
       * 4.3.1.4 [Conditions Not Satisfied](#conditions-not-satisfied)
         * 4.3.1.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.Structure](#rqsrs-032clickhousealtertablereplacepartitionreplacedataconditionsdifferentstructure)
@@ -410,8 +639,23 @@ SRS032_ClickHouse_Alter_Table_statement = Specification(
     * 4.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.PartitionKey](#rqsrs-032clickhousealtertablereplacepartitionpartitionkey)
   * 4.7 [Replace Multiple Partitions](#replace-multiple-partitions)
     * 4.7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.MultiplePartitions](#rqsrs-032clickhousealtertablereplacepartitionmultiplepartitions)
-  * 4.8 [Concurrent Actions](#concurrent-actions)
-    * 4.8.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent](#rqsrs-032clickhousealtertablereplacepartitionconcurrent)
+  * 4.8 [ZooKeeper](#zookeeper)
+    * 4.8.1 [Table Engines](#table-engines)
+      * 4.8.1.1 [MergeTree](#mergetree)
+        * 4.8.1.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.MergeTree](#rqsrs-032clickhousealtertablereplacepartitionzookeepertableenginesmergetree)
+        * 4.8.1.1.2 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.ReplicatedMergeTree](#rqsrs-032clickhousealtertablereplacepartitionzookeepertableenginesreplicatedmergetree)
+        * 4.8.1.1.3 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.ReplacingMergeTree](#rqsrs-032clickhousealtertablereplacepartitionzookeepertableenginesreplacingmergetree)
+        * 4.8.1.1.4 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.AggregatingMergeTree](#rqsrs-032clickhousealtertablereplacepartitionzookeepertableenginesaggregatingmergetree)
+        * 4.8.1.1.5 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.CollapsingMergeTree](#rqsrs-032clickhousealtertablereplacepartitionzookeepertableenginescollapsingmergetree)
+        * 4.8.1.1.6 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.VersionedCollapsingMergeTree](#rqsrs-032clickhousealtertablereplacepartitionzookeepertableenginesversionedcollapsingmergetree)
+        * 4.8.1.1.7 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.GraphiteMergeTree](#rqsrs-032clickhousealtertablereplacepartitionzookeepertableenginesgraphitemergetree)
+      * 4.8.1.2 [DistributedTable](#distributedtable)
+        * 4.8.1.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.DistributedTable](#rqsrs-032clickhousealtertablereplacepartitionzookeepertableenginesdistributedtable)
+      * 4.8.1.3 [MaterializedView](#materializedview)
+        * 4.8.1.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.MaterializedView](#rqsrs-032clickhousealtertablereplacepartitionzookeepertableenginesmaterializedview)
+  * 4.9 [Concurrent Actions](#concurrent-actions)
+    * 4.9.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent](#rqsrs-032clickhousealtertablereplacepartitionconcurrent)
+    * 4.9.2 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.MergesAndMutations](#rqsrs-032clickhousealtertablereplacepartitionmergesandmutations)
 
 ## Revision History
 
@@ -455,7 +699,6 @@ The documentation used:
 
 ```mermaid
 graph TD;
-
 subgraph Replace Partition Flow
   A[Start]
   A -->|1. User Initiates| B(Execute ALTER TABLE REPLACE PARTITION)
@@ -509,7 +752,7 @@ version: 1.0
 * Both tables have the same partition key, the same `ORDER BY` key and the same primary key.
 * Both tables must have the same storage policy.
 
-##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.KeepTable
+##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartitionDistributedTable.ReplaceData.KeepTable
 version: 1.0
 
 [ClickHouse] SHALL keep the data of the table from which the partition is copied from.
@@ -530,7 +773,7 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL not support the usage of `REPLACE PARTITION` between two tables when tables have different partition
-key, `ORDER BY` key andprimary key.
+key, `ORDER BY` key and primary key.
 
 ###### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ReplaceData.Conditions.Different.StoragePolicy
 version: 1.0
@@ -596,12 +839,76 @@ ALTER TABLE my_table REPLACE PARTITION 202305, 202306, 202307
 WITH ATTACH 'path_to_new_data';
 ```
 
+### ZooKeeper
+
+#### Table Engines
+
+##### MergeTree
+
+###### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.MergeTree
+version: 1.0
+
+[ClickHouse] SHALL support the usage of the `REPLACE PARTITION` on the table with `MergeTree` engine.
+
+###### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.ReplicatedMergeTree
+version: 1.0
+
+[ClickHouse] SHALL support the usage of the `REPLACE PARTITION` on the table with `ReplicatedMergeTree` engine.
+
+###### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.ReplacingMergeTree
+version: 1.0
+
+[ClickHouse] SHALL support the usage of the `REPLACE PARTITION` on the table with `ReplacingMergeTree` engine.
+
+###### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.AggregatingMergeTree
+version: 1.0
+
+[ClickHouse] SHALL support the usage of the `REPLACE PARTITION` on the table with `AggregatingMergeTree` engine.
+
+###### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.CollapsingMergeTree
+version: 1.0
+
+[ClickHouse] SHALL support the usage of the `REPLACE PARTITION` on the table with `CollapsingMergeTree` engine.
+
+###### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.VersionedCollapsingMergeTree
+version: 1.0
+
+[ClickHouse] SHALL support the usage of the `REPLACE PARTITION` on the table with `VersionedCollapsingMergeTree` engine.
+
+###### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.GraphiteMergeTree
+version: 1.0
+
+[ClickHouse] SHALL support the usage of the `REPLACE PARTITION` on the table with `GraphiteMergeTree` engine.
+
+##### DistributedTable
+
+###### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.DistributedTable
+version: 1.0
+
+[ClickHouse] SHALL support the usage of the `REPLACE PARTITION` on the table with `DistributedTable` engine.
+
+##### MaterializedView
+
+###### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ZooKeeper.TableEngines.MaterializedView
+version: 1.0
+
+[ClickHouse] SHALL support the usage of the `REPLACE PARTITION` on the table with `MaterializedView` engine.
+
 ### Concurrent Actions
 
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent
 version: 1.0
 
 [ClickHouse] SHALL support concurrent merges/mutations that happen on the same partition at the same time.
+
+
+#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.MergesAndMutations
+version: 1.0
+
+[ClickHouse] SHALL cancel only for mutations/merges that are scheduled/already operating on target partition. 
+And wait ONLY for those cancelled merges/mutations (on target partition) to wrap up.
+
+
 
 [ClickHouse]: https://clickhouse.com
 
