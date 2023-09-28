@@ -16,7 +16,6 @@ def alter_user_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=alter_user,
             examples=Examples(
@@ -41,7 +40,6 @@ def alter_user_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -75,10 +73,8 @@ def alter_user(self, privilege, grant_target_name, user_name, node=None):
         node = self.context.node
 
     with Scenario("ALTER USER without privilege"):
-
         alter_user_name = f"alter_user_{getuid()}"
         with user(node, alter_user_name):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 

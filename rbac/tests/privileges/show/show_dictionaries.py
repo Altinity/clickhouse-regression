@@ -130,7 +130,6 @@ def show_dict(self, privilege, on, grant_target_name, user_name, dict_name, node
             )
 
         with Scenario("SHOW DICTIONARIES without privilege"):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -192,7 +191,6 @@ def exists(self, privilege, on, grant_target_name, user_name, dict_name, node=No
             )
 
         with Scenario("EXISTS without privilege"):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -256,7 +254,6 @@ def show_create(
             )
 
         with Scenario("SHOW CREATE without privilege"):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 

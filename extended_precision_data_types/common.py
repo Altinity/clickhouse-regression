@@ -73,7 +73,6 @@ def execute_query(
 
     if expected is not None:
         with Then("I check output against expected"):
-
             if compare_func is None:
                 assert r.output.strip() == expected, error()
 
@@ -92,7 +91,6 @@ def execute_query(
 
         with Then("I check output against snapshot"):
             with values() as that:
-
                 assert that(
                     snapshot(
                         "\n" + r.output.strip() + "\n",

@@ -123,11 +123,9 @@ def show_db(self, privilege, on, grant_target_name, user_name, db_name, node=Non
 
     try:
         with Given("I have a database"):
-
             node.query(f"CREATE DATABASE {db_name}")
 
         with Scenario("SHOW DATABASES without privilege"):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -141,7 +139,6 @@ def show_db(self, privilege, on, grant_target_name, user_name, db_name, node=Non
                 assert output == "", error()
 
         with Scenario("SHOW DATABASES with privilege"):
-
             with When(f"I grant {privilege} on the database"):
                 node.query(f"GRANT {privilege} ON {db_name}.* TO {grant_target_name}")
 
@@ -153,7 +150,6 @@ def show_db(self, privilege, on, grant_target_name, user_name, db_name, node=Non
                 )
 
         with Scenario("SHOW DATABASES with revoked privilege"):
-
             with When(f"I grant {privilege} on the database"):
                 node.query(f"GRANT {privilege} ON {db_name}.* TO {grant_target_name}")
 
@@ -191,7 +187,6 @@ def use(self, privilege, on, grant_target_name, user_name, db_name, node=None):
             node.query(f"CREATE DATABASE {db_name}")
 
         with Scenario("USE without privilege"):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -207,7 +202,6 @@ def use(self, privilege, on, grant_target_name, user_name, db_name, node=None):
                 )
 
         with Scenario("USE with privilege"):
-
             with When(f"I grant {privilege} on the database"):
                 node.query(f"GRANT {privilege} ON {db_name}.* TO {grant_target_name}")
 
@@ -215,7 +209,6 @@ def use(self, privilege, on, grant_target_name, user_name, db_name, node=None):
                 node.query(f"USE {db_name}", settings=[("user", user_name)])
 
         with Scenario("USE with revoked privilege"):
-
             with When(f"I grant {privilege} on the database"):
                 node.query(f"GRANT {privilege} ON {db_name}.* TO {grant_target_name}")
 
@@ -255,7 +248,6 @@ def show_create(self, privilege, on, grant_target_name, user_name, db_name, node
             node.query(f"CREATE DATABASE {db_name}")
 
         with Scenario("SHOW CREATE without privilege"):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -271,7 +263,6 @@ def show_create(self, privilege, on, grant_target_name, user_name, db_name, node
                 )
 
         with Scenario("SHOW CREATE with privilege"):
-
             with When(f"I grant {privilege} on the database"):
                 node.query(f"GRANT {privilege} ON {db_name}.* TO {grant_target_name}")
 
@@ -281,7 +272,6 @@ def show_create(self, privilege, on, grant_target_name, user_name, db_name, node
                 )
 
         with Scenario("SHOW CREATE with revoked privilege"):
-
             with When(f"I grant {privilege} on the database"):
                 node.query(f"GRANT {privilege} ON {db_name}.* TO {grant_target_name}")
 

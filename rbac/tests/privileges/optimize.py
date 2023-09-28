@@ -14,7 +14,6 @@ def privilege_granted_directly_or_via_role(self, table_type, node=None):
 
     with Suite("user with direct privilege"):
         with user(node, user_name):
-
             with When(
                 f"I run checks that {user_name} is only able to execute OPTIMIZE with required privileges"
             ):
@@ -27,7 +26,6 @@ def privilege_granted_directly_or_via_role(self, table_type, node=None):
 
     with Suite("user with privilege via role"):
         with user(node, user_name), role(node, role_name):
-
             with When("I grant the role to the user"):
                 node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -50,7 +48,6 @@ def privilege_check(grant_target_name, user_name, table_type, node=None):
         table_name = f"merge_tree_{getuid()}"
 
         with table(node, table_name, table_type):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -69,7 +66,6 @@ def privilege_check(grant_target_name, user_name, table_type, node=None):
         table_name = f"merge_tree_{getuid()}"
 
         with table(node, table_name, table_type):
-
             with When("I grant the optimize privilege"):
                 node.query(f"GRANT OPTIMIZE ON {table_name} TO {grant_target_name}")
 
@@ -82,7 +78,6 @@ def privilege_check(grant_target_name, user_name, table_type, node=None):
         table_name = f"merge_tree_{getuid()}"
 
         with table(node, table_name, table_type):
-
             with When("I grant the optimize privilege"):
                 node.query(f"GRANT OPTIMIZE ON {table_name} TO {grant_target_name}")
 
@@ -101,7 +96,6 @@ def privilege_check(grant_target_name, user_name, table_type, node=None):
         table_name = f"merge_tree_{getuid()}"
 
         with table(node, table_name, table_type):
-
             with When("I grant the optimize privilege"):
                 node.query(f"GRANT OPTIMIZE ON {table_name} TO {grant_target_name}")
 
@@ -144,7 +138,6 @@ def privilege_check(grant_target_name, user_name, table_type, node=None):
         table_name = f"merge_tree_{getuid()}"
 
         with table(node, table_name, table_type):
-
             with When("I revoke ALL privilege"):
                 node.query(f"REVOKE ALL ON *.* FROM {grant_target_name}")
 

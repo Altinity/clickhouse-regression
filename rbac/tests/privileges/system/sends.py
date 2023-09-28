@@ -17,7 +17,6 @@ def replicated_privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=check_replicated_privilege,
             examples=Examples(
@@ -43,7 +42,6 @@ def replicated_privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -117,9 +115,7 @@ def start_replicated_sends(
     on = on.replace("table", f"{table_name}")
 
     with table(node, table_name, "ReplicatedMergeTree-sharded_cluster"):
-
         with Scenario("SYSTEM START REPLICATED SENDS without privilege"):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -135,7 +131,6 @@ def start_replicated_sends(
                 )
 
         with Scenario("SYSTEM START REPLICATED SENDS with privilege"):
-
             with When(f"I grant {privilege} on the table"):
                 node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
@@ -146,7 +141,6 @@ def start_replicated_sends(
                 )
 
         with Scenario("SYSTEM START REPLICATED SENDS with revoked privilege"):
-
             with When(f"I grant {privilege} on the table"):
                 node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
@@ -174,9 +168,7 @@ def stop_replicated_sends(self, privilege, on, grant_target_name, user_name, nod
     on = on.replace("table", f"{table_name}")
 
     with table(node, table_name, "ReplicatedMergeTree-sharded_cluster"):
-
         with Scenario("SYSTEM STOP REPLICATED SENDS without privilege"):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -192,7 +184,6 @@ def stop_replicated_sends(self, privilege, on, grant_target_name, user_name, nod
                 )
 
         with Scenario("SYSTEM STOP REPLICATED SENDS with privilege"):
-
             with When(f"I grant {privilege} on the table"):
                 node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
@@ -203,7 +194,6 @@ def stop_replicated_sends(self, privilege, on, grant_target_name, user_name, nod
                 )
 
         with Scenario("SYSTEM STOP REPLICATED SENDS with revoked privilege"):
-
             with When(f"I grant {privilege} on the table"):
                 node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
@@ -341,7 +331,6 @@ def start_distributed_moves(
                 )
 
             with Scenario("SYSTEM START DISTRIBUTED SENDS without privilege"):
-
                 with When("I grant the user NONE privilege"):
                     node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -357,7 +346,6 @@ def start_distributed_moves(
                     )
 
             with Scenario("SYSTEM START DISTRIBUTED SENDS with privilege"):
-
                 with When(f"I grant {privilege} on the table"):
                     node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
@@ -368,7 +356,6 @@ def start_distributed_moves(
                     )
 
             with Scenario("SYSTEM START DISTRIBUTED SENDS with revoked privilege"):
-
                 with When(f"I grant {privilege} on the table"):
                     node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
@@ -409,7 +396,6 @@ def stop_distributed_moves(
                 )
 
             with Scenario("SYSTEM STOP DISTRIBUTED SENDS without privilege"):
-
                 with When("I grant the user NONE privilege"):
                     node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -425,7 +411,6 @@ def stop_distributed_moves(
                     )
 
             with Scenario("SYSTEM STOP DISTRIBUTED SENDS with privilege"):
-
                 with When(f"I grant {privilege} on the table"):
                     node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
@@ -436,7 +421,6 @@ def stop_distributed_moves(
                     )
 
             with Scenario("SYSTEM STOP DISTRIBUTED SENDS with revoked privilege"):
-
                 with When(f"I grant {privilege} on the table"):
                     node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 

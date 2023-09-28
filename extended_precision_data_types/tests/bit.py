@@ -39,7 +39,6 @@ def bit_int_inline(self, func, supported, error, int_type, min, max, node=None):
         node = self.context.node
 
     if func in ["bitNot", "bitCount"]:
-
         with When(f"Check {func} with {int_type}"):
             execute_query(
                 f"""
@@ -48,7 +47,6 @@ def bit_int_inline(self, func, supported, error, int_type, min, max, node=None):
             )
 
     elif supported:
-
         with When(f"I check {func} with {int_type}"):
             execute_query(
                 f"""
@@ -57,7 +55,6 @@ def bit_int_inline(self, func, supported, error, int_type, min, max, node=None):
             )
 
     else:
-
         with When(f"I check {func} with {int_type}"):
             node.query(
                 f"SELECT {func}(to{int_type}(1), 1), {func}(to{int_type}('{max}'), 1), {func}(to{int_type}('{min}'), 1)",
@@ -83,9 +80,7 @@ def bit_int_table(self, func, supported, error, int_type, min, max, node=None):
         table(name=table_name, data_type=int_type)
 
     if func in ["bitNot", "bitCount"]:
-
         for value in [1, min, max]:
-
             with When(f"I insert the output of {func} with {int_type} and {value}"):
                 node.query(
                     f"INSERT INTO {table_name} SELECT {func}(to{int_type}('{value}'))"
@@ -99,9 +94,7 @@ def bit_int_table(self, func, supported, error, int_type, min, max, node=None):
             )
 
     elif supported:
-
         for value in [1, min, max]:
-
             with When(f"I insert the output of {func} with {int_type} and {value}"):
                 node.query(
                     f"INSERT INTO {table_name} SELECT {func}(to{int_type}('{value}'), 1)"
@@ -115,9 +108,7 @@ def bit_int_table(self, func, supported, error, int_type, min, max, node=None):
             )
 
     else:
-
         for value in [1, min, max]:
-
             with When(f"I insert the output of {func} with {int_type} and {value}"):
                 node.query(
                     f"INSERT INTO {table_name} SELECT {func}(to{int_type}('{value}'), 1)",
@@ -139,7 +130,6 @@ def bit_dec_inline(self, func, supported, error, node=None):
         node = self.context.node
 
     if func in ["bitNot", "bitCount"]:
-
         with When(f"Check {func} with Decimal256"):
             node.query(
                 f"SELECT {func}(toDecimal256(1,0)), {func}(toDecimal256('{max}',0)), {func}(toDecimal256('{min}',0))",
@@ -148,7 +138,6 @@ def bit_dec_inline(self, func, supported, error, node=None):
             )
 
     else:
-
         with When(f"I check {func} with Decimal256"):
             node.query(
                 f"SELECT {func}(toDecimal256(1,0), 1), {func}(toDecimal256('{max}',0), 1), {func}(toDecimal256('{min}',0), 1)",
@@ -174,9 +163,7 @@ def bit_dec_table(self, func, supported, error, node=None):
         table(name=table_name, data_type="Decimal256(0)")
 
     if func in ["bitNot", "bitCount"]:
-
         for value in [1, min, max]:
-
             with When(f"I insert the output of {func} with Decimal256 and {value}"):
                 node.query(
                     f"INSERT INTO {table_name} SELECT {func}(toDecimal256('{value}',0))",
@@ -185,9 +172,7 @@ def bit_dec_table(self, func, supported, error, node=None):
                 )
 
     else:
-
         for value in [1, min, max]:
-
             with When(f"I insert the output of {func} with Decimal256 and {value}"):
                 node.query(
                     f"INSERT INTO {table_name} SELECT {func}(toDecimal256('{value}',0), 1)",

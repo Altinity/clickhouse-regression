@@ -16,7 +16,6 @@ def privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=create_row_policy,
             examples=Examples(
@@ -41,7 +40,6 @@ def privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 

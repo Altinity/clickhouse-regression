@@ -26,7 +26,6 @@ def standalone_one_node(
     with Then(
         "I collect the coordination cluster configuration and minimum insert time value from the performance test."
     ):
-
         self.context.configurations_insert_time_values[
             configuration
         ] = performance_check()
@@ -61,7 +60,6 @@ def mixed_one_node(
     with Then(
         "I collect the coordination cluster configuration and minimum insert time value from the performance test."
     ):
-
         self.context.configurations_insert_time_values[
             configuration
         ] = performance_check()
@@ -92,7 +90,6 @@ def standalone_three_node(
     with Then(
         "I collect the coordination cluster configuration and minimum insert time value from the performance test."
     ):
-
         self.context.configurations_insert_time_values[
             configuration
         ] = performance_check()
@@ -129,7 +126,6 @@ def mixed_three_node(
     with Then(
         "I collect the coordination cluster configuration and minimum insert time value from the performance test."
     ):
-
         self.context.configurations_insert_time_values[
             configuration
         ] = performance_check()

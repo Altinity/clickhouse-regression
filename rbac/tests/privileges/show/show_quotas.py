@@ -29,7 +29,6 @@ def privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=check_privilege,
             examples=Examples(
@@ -54,7 +53,6 @@ def privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -108,7 +106,6 @@ def show_quotas(self, privilege, grant_target_name, user_name, node=None):
         node = self.context.node
 
     with Scenario("SHOW QUOTAS without privilege"):
-
         with When("I grant the user NONE privilege"):
             node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -124,7 +121,6 @@ def show_quotas(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("SHOW QUOTAS with privilege"):
-
         with When(f"I grant {privilege}"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -132,7 +128,6 @@ def show_quotas(self, privilege, grant_target_name, user_name, node=None):
             node.query(f"SHOW QUOTAS", settings=[("user", f"{user_name}")])
 
     with Scenario("SHOW QUOTAS with revoked privilege"):
-
         with When(f"I grant {privilege}"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -163,7 +158,6 @@ def show_create(self, privilege, grant_target_name, user_name, node=None):
         target_quota_name = f"target_quota_{getuid()}"
 
         with quota(node, target_quota_name):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -182,7 +176,6 @@ def show_create(self, privilege, grant_target_name, user_name, node=None):
         target_quota_name = f"target_quota_{getuid()}"
 
         with quota(node, target_quota_name):
-
             with When(f"I grant {privilege}"):
                 node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -196,7 +189,6 @@ def show_create(self, privilege, grant_target_name, user_name, node=None):
         target_quota_name = f"target_quota_{getuid()}"
 
         with quota(node, target_quota_name):
-
             with When(f"I grant {privilege}"):
                 node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 

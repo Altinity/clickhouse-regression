@@ -20,7 +20,6 @@ def detach_partition_after_delete(
         description=f"{partitions} partitions, "
         f"{parts_per_partition} parts in each partition, block_size={block_size}",
     ):
-
         insert(
             table_name=table_name,
             partitions=partitions,
@@ -52,7 +51,6 @@ def drop_partition_after_delete(
         description=f"{partitions} partitions, "
         f"{parts_per_partition} parts in each partition, block_size={block_size}",
     ):
-
         insert(
             table_name=table_name,
             partitions=partitions,
@@ -84,7 +82,6 @@ def attach_partition_after_delete(
         description=f"{partitions} partitions, "
         f"{parts_per_partition} parts in each partition, block_size={block_size}",
     ):
-
         insert(
             table_name=table_name,
             partitions=partitions,
@@ -116,7 +113,6 @@ def freeze_partition_after_delete(
         description=f"{partitions} partitions, "
         f"{parts_per_partition} parts in each partition, block_size={block_size}",
     ):
-
         insert(
             table_name=table_name,
             partitions=partitions,
@@ -148,7 +144,6 @@ def unfreeze_partition_after_delete(
         description=f"{partitions} partitions, "
         f"{parts_per_partition} parts in each partition, block_size={block_size}",
     ):
-
         insert(
             table_name=table_name,
             partitions=partitions,
@@ -180,7 +175,6 @@ def add_column_after_delete(
         description=f"{partitions} partitions, "
         f"{parts_per_partition} parts in each partition, block_size={block_size}",
     ):
-
         insert(
             table_name=table_name,
             partitions=partitions,
@@ -212,7 +206,6 @@ def drop_column_after_delete(
         description=f"{partitions} partitions, "
         f"{parts_per_partition} parts in each partition, block_size={block_size}",
     ):
-
         insert(
             table_name=table_name,
             partitions=partitions,
@@ -244,7 +237,6 @@ def clear_column_after_delete(
         description=f"{partitions} partitions, "
         f"{parts_per_partition} parts in each partition, block_size={block_size}",
     ):
-
         insert(
             table_name=table_name,
             partitions=partitions,
@@ -276,7 +268,6 @@ def modify_column_after_delete(
         description=f"{partitions} partitions, "
         f"{parts_per_partition} parts in each partition, block_size={block_size}",
     ):
-
         insert(
             table_name=table_name,
             partitions=partitions,
@@ -312,7 +303,6 @@ def comment_column_after_delete(
         description=f"{partitions} partitions, "
         f"{parts_per_partition} parts in each partition, block_size={block_size}",
     ):
-
         insert(
             table_name=table_name,
             partitions=partitions,
@@ -350,7 +340,6 @@ def move_partition_after_delete(
         description=f"{partitions} partitions, "
         f"{parts_per_partition} parts in each partition, block_size={block_size}",
     ):
-
         insert(
             table_name=table_name_1,
             partitions=partitions,
@@ -409,7 +398,6 @@ def replace_partition_after_delete(
         description=f"{partitions} partitions, "
         f"{parts_per_partition} parts in each partition, block_size={block_size}",
     ):
-
         insert(
             table_name=table_name_1,
             partitions=partitions,
@@ -464,7 +452,6 @@ def feature(self, node="clickhouse1"):
         "VersionedCollapsingMergeTree",
         "GraphiteMergeTree",
     ]:
-
         with Feature(f"{table_engine}"):
             self.context.table_engine = table_engine
             for scenario in loads(current_module(), Scenario):

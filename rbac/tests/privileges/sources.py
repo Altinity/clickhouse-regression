@@ -16,7 +16,6 @@ def file_privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=file,
             examples=Examples(
@@ -38,7 +37,6 @@ def file_privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -92,7 +90,6 @@ def file(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("File source with privilege"):
-
         with When(f"I grant {privilege}"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -105,7 +102,6 @@ def file(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("File source with revoked privilege"):
-
         with When(f"I grant {privilege}"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -131,7 +127,6 @@ def url_privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=url,
             examples=Examples(
@@ -153,7 +148,6 @@ def url_privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -242,7 +236,6 @@ def remote_privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=remote,
             examples=Examples(
@@ -264,7 +257,6 @@ def remote_privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -318,7 +310,6 @@ def remote(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("Remote source with privilege"):
-
         with When(f"I grant {privilege}"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -331,7 +322,6 @@ def remote(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("Remote source with revoked privilege"):
-
         with When(f"I grant {privilege}"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -357,7 +347,6 @@ def MySQL_privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=MySQL,
             examples=Examples(
@@ -379,7 +368,6 @@ def MySQL_privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -433,7 +421,6 @@ def MySQL(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("MySQL source with privilege"):
-
         with When(f"I grant {privilege}"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -446,7 +433,6 @@ def MySQL(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("MySQL source with revoked privilege"):
-
         with When(f"I grant {privilege}"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -472,7 +458,6 @@ def ODBC_privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=ODBC,
             examples=Examples(
@@ -494,7 +479,6 @@ def ODBC_privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -548,7 +532,6 @@ def ODBC(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("ODBC source with privilege"):
-
         with When(f"I grant {privilege}"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -561,7 +544,6 @@ def ODBC(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("ODBC source with revoked privilege"):
-
         with When(f"I grant {privilege}"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -587,7 +569,6 @@ def JDBC_privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=JDBC,
             examples=Examples(
@@ -609,7 +590,6 @@ def JDBC_privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -663,7 +643,6 @@ def JDBC(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("JDBC source with privilege"):
-
         with When(f"I grant {privilege}"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -676,7 +655,6 @@ def JDBC(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("JDBC source with revoked privilege"):
-
         with When(f"I grant {privilege}"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -702,7 +680,6 @@ def HDFS_privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=HDFS,
             examples=Examples(
@@ -724,7 +701,6 @@ def HDFS_privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -760,7 +736,6 @@ def HDFS(self, privilege, grant_target_name, user_name, node=None):
     table_name = f"table_{getuid()}"
 
     with Scenario("HDFS source without privilege"):
-
         with Given("The user has table privilege"):
             node.query(f"GRANT CREATE TABLE ON {table_name} TO {grant_target_name}")
 
@@ -779,7 +754,6 @@ def HDFS(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("HDFS source with privilege"):
-
         with When(f"I grant {privilege}"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -790,7 +764,6 @@ def HDFS(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("HDFS source with revoked privilege"):
-
         with When(f"I grant {privilege}"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -816,7 +789,6 @@ def S3_privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=S3,
             examples=Examples(
@@ -838,7 +810,6 @@ def S3_privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -874,7 +845,6 @@ def S3(self, privilege, grant_target_name, user_name, node=None):
     table_name = f"table_{getuid()}"
 
     with Scenario("S3 source without privilege"):
-
         with Given("The user has table privilege"):
             node.query(f"GRANT CREATE TABLE ON {table_name} TO {grant_target_name}")
 
@@ -893,7 +863,6 @@ def S3(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("S3 source with privilege"):
-
         with When(f"I grant {privilege}"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -904,7 +873,6 @@ def S3(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("S3 source with revoked privilege"):
-
         with When(f"I grant {privilege}"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 

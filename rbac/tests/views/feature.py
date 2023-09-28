@@ -6,7 +6,6 @@ from rbac.helper.common import *
 @TestFeature
 @Name("views")
 def feature(self):
-
     with Pool(3) as pool:
         try:
             Feature(

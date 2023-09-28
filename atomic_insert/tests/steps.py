@@ -358,7 +358,6 @@ def simple_insert(
 ):
     """Second variation of simple insert for base table"""
     if failure_mode == "throwIf":
-
         self.context.cluster.node(node_name).query(
             (
                 f"BEGIN TRANSACTION;"

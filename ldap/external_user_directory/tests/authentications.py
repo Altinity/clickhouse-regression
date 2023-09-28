@@ -1193,7 +1193,6 @@ def valid_verification_cooldown_value_ldap_unavailable(self, server, rbac=False)
                 with ldap_external_user_directory(
                     server=server, roles=roles, restart=True
                 ):
-
                     with When("I login and execute a query"):
                         login_and_execute_query(
                             username=user["cn"], password=user["userpassword"]
@@ -1517,7 +1516,6 @@ def scenario(self, server, rbac=False):
                 with ldap_external_user_directory(
                     server=server, roles=roles, restart=True
                 ):
-
                     with When("I login and execute a query"):
                         login_and_execute_query(
                             username=user["cn"], password=user["userpassword"]

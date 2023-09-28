@@ -34,7 +34,6 @@ def round_int_inline(
         node = self.context.node
 
     if func == "roundDown":
-
         with When(f"I check roundDown with {int_type}"):
             node.query(
                 f"SELECT roundDown(to{int_type}(1), [0,2]), roundDown(to{int_type}('{max}'), [0,2]), roundDown(to{int_type}('{min}'), [0,2])",
@@ -43,7 +42,6 @@ def round_int_inline(
             )
 
     elif supported:
-
         with When(f"I check {func} with {int_type}"):
             output = node.query(f"SELECT {func}(to{int_type}(1))").output
             assert output == str(expected_result), error()
@@ -56,7 +54,6 @@ def round_int_inline(
             )
 
     else:
-
         with When(f"I check {func} with {int_type}"):
             node.query(
                 f"SELECT {func}(to{int_type}(1)), {func}(to{int_type}('{max}')), {func}(to{int_type}('{min}'))",
@@ -81,9 +78,7 @@ def round_int_table(
         table(name=table_name, data_type=int_type)
 
     if func == "roundDown":
-
         for value in [1, max, min]:
-
             with When(f"I check roundDown with {int_type} and {value}"):
                 node.query(
                     f"INSERT INTO {table_name} SELECT roundDown(to{int_type}('{value}'), [0,2])",
@@ -92,9 +87,7 @@ def round_int_table(
                 )
 
     elif supported:
-
         for value in [1, max, min]:
-
             with When(
                 f"I insert the output of {func} with {int_type} and {value} into the table"
             ):
@@ -110,9 +103,7 @@ def round_int_table(
             )
 
     else:
-
         for value in [1, max, min]:
-
             with When(
                 f"I insert the output of {func} with {int_type} and {value} into the table"
             ):
@@ -134,7 +125,6 @@ def round_dec_inline(self, func, expected_result, supported, node=None):
         node = self.context.node
 
     if func == "roundDown":
-
         with When(f"I check roundDown with Decimal256"):
             exitcode = 44
             message = "Exception: Illegal column Decimal256 of first argument of function roundDown"
@@ -151,7 +141,6 @@ def round_dec_inline(self, func, expected_result, supported, node=None):
             )
 
     elif func not in ["roundDuration", "roundAge", "roundToExp2"]:
-
         with When(f"I check {func} with Decimal256"):
             output = node.query(f"SELECT {func}(toDecimal256(1,0))").output
             assert output == str(expected_result), error()
@@ -164,7 +153,6 @@ def round_dec_inline(self, func, expected_result, supported, node=None):
             )
 
     else:
-
         with When(f"I check {func} with Decimal256"):
             node.query(
                 f"SELECT {func}(toDecimal256(1,0)), {func}(toDecimal256('{max}',0)), {func}(toDecimal256('{min}',0))",
@@ -196,7 +184,6 @@ def round_dec_table(self, func, expected_result, supported, node=None):
             message = ""
 
         for value in [1, max, min]:
-
             with When(f"I check roundDown with Decimal256 and {value}"):
                 node.query(
                     f"INSERT INTO {table_name} SELECT roundDown(toDecimal256('{value}',0), [toDecimal256(0,0),toDecimal256(2,0)])",
@@ -205,9 +192,7 @@ def round_dec_table(self, func, expected_result, supported, node=None):
                 )
 
     elif func not in ["roundDuration", "roundAge", "roundToExp2"]:
-
         for value in [1, max, min]:
-
             with When(
                 f"I insert the output of {func} with Decimal256 and {value} into the table"
             ):
@@ -223,9 +208,7 @@ def round_dec_table(self, func, expected_result, supported, node=None):
             )
 
     else:
-
         for value in [1, max, min]:
-
             with When(
                 f"I insert the output of {func} with Decimal256 and {value} into the table"
             ):

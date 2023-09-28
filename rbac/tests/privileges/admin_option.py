@@ -16,7 +16,6 @@ def privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(test=grant_role)(grant_target_name=user_name, user_name=user_name)
 
 
@@ -31,7 +30,6 @@ def privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -53,7 +51,6 @@ def grant_role(self, grant_target_name, user_name, node=None):
         target_user_name = f"target_user_{getuid()}"
 
         with user(node, target_user_name), role(node, grant_role_name):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -73,7 +70,6 @@ def grant_role(self, grant_target_name, user_name, node=None):
         target_user_name = f"target_user_{getuid()}"
 
         with user(node, target_user_name), role(node, grant_role_name):
-
             with When(f"I grant ADMIN OPTION"):
                 node.query(
                     f"GRANT {grant_role_name} TO {grant_target_name} WITH ADMIN OPTION"
@@ -118,7 +114,6 @@ def grant_role(self, grant_target_name, user_name, node=None):
         target_user_name = f"target_user_{getuid()}"
 
         with user(node, target_user_name), role(node, grant_role_name):
-
             with When(f"I grant ADMIN OPTION"):
                 node.query(
                     f"GRANT {grant_role_name} TO {grant_target_name} WITH ADMIN OPTION"

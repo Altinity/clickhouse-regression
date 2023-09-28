@@ -961,7 +961,6 @@ def local_and_s3_disk(self):
 
     with s3_storage(disks, policies, restart=True):
         for outline in loads(current_module(), Outline):
-
             with Given("I run the clean up"):
                 cleanup(storage=self.context.storage)
 
@@ -1002,7 +1001,6 @@ def local_and_s3_volumes(self):
 
     with s3_storage(disks, policies, restart=True):
         for outline in loads(current_module(), Outline):
-
             with Given("I run the clean up"):
                 cleanup(storage=self.context.storage)
 
@@ -1035,7 +1033,6 @@ def s3_disk(self):
 
     with s3_storage(disks, policies, restart=True):
         for outline in loads(current_module(), Outline):
-
             with Given("I run the clean up"):
                 cleanup(storage=self.context.storage)
 

@@ -213,7 +213,6 @@ def row_policy_filtering(self, node=None):
             assert output_one_row_pol == output_two_row_pol, error()
 
     finally:
-
         with Finally(f"I drop the row policy {pol_name}", flags=TE):
             node.query(f"DROP ROW POLICY IF EXISTS {pol_name} ON {table_name}")
 

@@ -160,14 +160,13 @@ def feature(self, node="clickhouse1"):
     """Check that clickhouse supports lightweight delete operations applied to acceptance dataset."""
     self.context.node = self.context.cluster.node(node)
 
-    for (i, delete_query) in enumerate(
+    for i, delete_query in enumerate(
         [
             delete_query_1_acceptance,
             delete_query_2_acceptance,
             delete_query_3_acceptance,
         ]
     ):
-
         # with Given("I check ontime exists"):
         #     output = self.context.node.query("EXISTS ontime").output
         #     assert output == "1", error()

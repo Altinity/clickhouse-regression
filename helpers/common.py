@@ -17,6 +17,15 @@ def current_cpu():
     return platform.processor()
 
 
+def check_current_cpu(arch):
+    """Check current cpu architecture."""
+
+    def check(test):
+        return current_cpu() == arch
+
+    return check
+
+
 def check_clickhouse_version(version):
     """Compare ClickHouse version."""
 

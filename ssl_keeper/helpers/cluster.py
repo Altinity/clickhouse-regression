@@ -786,7 +786,6 @@ class Cluster(object):
         collect_service_logs=False,
         use_zookeeper_nodes=False,
     ):
-
         self._bash = {}
         self._control_shell = None
         self.environ = {} if (environ is None) else environ

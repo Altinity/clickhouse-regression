@@ -42,7 +42,6 @@ def dictGet_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=dictGet_check,
             examples=Examples(
@@ -67,7 +66,6 @@ def dictGet_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -109,9 +107,7 @@ def dictGet_check(self, privilege, on, grant_target_name, user_name, node=None):
     exitcode, message = errors.not_enough_privileges(name=f"{user_name}")
 
     with Scenario("user without privilege"):
-
         with dict_setup(node, table_name, dict_name):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -127,9 +123,7 @@ def dictGet_check(self, privilege, on, grant_target_name, user_name, node=None):
                 )
 
     with Scenario("user with privilege"):
-
         with dict_setup(node, table_name, dict_name):
-
             with When(f"I grant privilege"):
                 node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
@@ -140,9 +134,7 @@ def dictGet_check(self, privilege, on, grant_target_name, user_name, node=None):
                 )
 
     with Scenario("user with revoked privilege"):
-
         with dict_setup(node, table_name, dict_name):
-
             with When("I grant privilege"):
                 node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
@@ -168,7 +160,6 @@ def dictGetOrDefault_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=dictGetOrDefault_check,
             examples=Examples(
@@ -193,7 +184,6 @@ def dictGetOrDefault_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -237,9 +227,7 @@ def dictGetOrDefault_check(
     exitcode, message = errors.not_enough_privileges(name=f"{user_name}")
 
     with Scenario("user without privilege"):
-
         with dict_setup(node, table_name, dict_name):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -255,9 +243,7 @@ def dictGetOrDefault_check(
                 )
 
     with Scenario("user with privilege"):
-
         with dict_setup(node, table_name, dict_name):
-
             with When(f"I grant privilege"):
                 node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
@@ -268,9 +254,7 @@ def dictGetOrDefault_check(
                 )
 
     with Scenario("user with revoked privilege"):
-
         with dict_setup(node, table_name, dict_name):
-
             with When("I grant privilege"):
                 node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
@@ -296,7 +280,6 @@ def dictHas_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=dictHas_check,
             examples=Examples(
@@ -321,7 +304,6 @@ def dictHas_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -363,9 +345,7 @@ def dictHas_check(self, privilege, on, grant_target_name, user_name, node=None):
     exitcode, message = errors.not_enough_privileges(name=f"{user_name}")
 
     with Scenario("user without privilege"):
-
         with dict_setup(node, table_name, dict_name):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -381,9 +361,7 @@ def dictHas_check(self, privilege, on, grant_target_name, user_name, node=None):
                 )
 
     with Scenario("user with privilege"):
-
         with dict_setup(node, table_name, dict_name):
-
             with When("I grant privilege"):
                 node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
@@ -394,9 +372,7 @@ def dictHas_check(self, privilege, on, grant_target_name, user_name, node=None):
                 )
 
     with Scenario("user with revoked privilege"):
-
         with dict_setup(node, table_name, dict_name):
-
             with When("I grant privilege"):
                 node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
@@ -446,7 +422,6 @@ def dictGetHierarchy_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -490,9 +465,7 @@ def dictGetHierarchy_check(
     exitcode, message = errors.not_enough_privileges(name=f"{user_name}")
 
     with Scenario("user without privilege"):
-
         with dict_setup(node, table_name, dict_name):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -508,9 +481,7 @@ def dictGetHierarchy_check(
                 )
 
     with Scenario("user with privilege"):
-
         with dict_setup(node, table_name, dict_name):
-
             with When("I grant privilege"):
                 node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
@@ -521,9 +492,7 @@ def dictGetHierarchy_check(
                 )
 
     with Scenario("user with revoked privilege"):
-
         with dict_setup(node, table_name, dict_name):
-
             with When("I grant privilege"):
                 node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
@@ -573,7 +542,6 @@ def dictIsIn_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -615,9 +583,7 @@ def dictIsIn_check(self, privilege, on, grant_target_name, user_name, node=None)
     exitcode, message = errors.not_enough_privileges(name=f"{user_name}")
 
     with Scenario("user without privilege"):
-
         with dict_setup(node, table_name, dict_name):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -633,9 +599,7 @@ def dictIsIn_check(self, privilege, on, grant_target_name, user_name, node=None)
                 )
 
     with Scenario("user with privilege"):
-
         with dict_setup(node, table_name, dict_name):
-
             with When("I grant privilege"):
                 node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
@@ -646,9 +610,7 @@ def dictIsIn_check(self, privilege, on, grant_target_name, user_name, node=None)
                 )
 
     with Scenario("user with revoked privilege"):
-
         with dict_setup(node, table_name, dict_name):
-
             with When("I grant privilege"):
                 node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
@@ -736,7 +698,6 @@ def dictGetType_granted_via_role(self, type, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -780,9 +741,7 @@ def dictGetType_check(
     exitcode, message = errors.not_enough_privileges(name=f"{user_name}")
 
     with Scenario("user without privilege"):
-
         with dict_setup(node, table_name, dict_name, type):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -798,9 +757,7 @@ def dictGetType_check(
                 )
 
     with Scenario("user with privilege"):
-
         with dict_setup(node, table_name, dict_name, type):
-
             with When("I grant privilege"):
                 node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
@@ -811,9 +768,7 @@ def dictGetType_check(
                 )
 
     with Scenario("user with revoked privilege"):
-
         with dict_setup(node, table_name, dict_name, type):
-
             with When("I grant privilege"):
                 node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 

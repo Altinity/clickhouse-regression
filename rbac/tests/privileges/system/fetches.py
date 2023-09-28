@@ -17,7 +17,6 @@ def replicated_privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=check_replicated_privilege,
             examples=Examples(
@@ -43,7 +42,6 @@ def replicated_privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -109,9 +107,7 @@ def start_replication_queues(
     on = on.replace("table", f"{table_name}")
 
     with table(node, table_name, "ReplicatedMergeTree-sharded_cluster"):
-
         with Scenario("SYSTEM START FETCHES without privilege"):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -127,7 +123,6 @@ def start_replication_queues(
                 )
 
         with Scenario("SYSTEM START FETCHES with privilege"):
-
             with When(f"I grant {privilege} on the table"):
                 node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
@@ -138,7 +133,6 @@ def start_replication_queues(
                 )
 
         with Scenario("SYSTEM START FETCHES with revoked privilege"):
-
             with When(f"I grant {privilege} on the table"):
                 node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
@@ -168,9 +162,7 @@ def stop_replication_queues(
     on = on.replace("table", f"{table_name}")
 
     with table(node, table_name, "ReplicatedMergeTree-sharded_cluster"):
-
         with Scenario("SYSTEM STOP FETCHES without privilege"):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -186,7 +178,6 @@ def stop_replication_queues(
                 )
 
         with Scenario("SYSTEM STOP FETCHES with privilege"):
-
             with When(f"I grant {privilege} on the table"):
                 node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
@@ -197,7 +188,6 @@ def stop_replication_queues(
                 )
 
         with Scenario("SYSTEM STOP FETCHES with revoked privilege"):
-
             with When(f"I grant {privilege} on the table"):
                 node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 

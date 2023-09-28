@@ -70,7 +70,6 @@ def migrate_from_zookeeper(self, use_standalone_keeper_server):
             --zookeeper-snapshots-dir /var/lib/zookeeper1/data/version-2
             --output-dir /var/lib/clickhouse/coordination/""",
         ):
-
             cluster.node("clickhouse1").cmd(
                 f"clickhouse keeper-converter"
                 f" --zookeeper-logs-dir /share/zookeeper3/datalog/version-2 --zookeeper-snapshots-dir "

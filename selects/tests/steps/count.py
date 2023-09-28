@@ -23,7 +23,6 @@ def count_with_final_clause(self, table, node=None):
         node = self.context.cluster.node("clickhouse1")
 
     with When(f"I make `SELECT count() ... FINAL` from table {table.name}"):
-
         node.query(
             f"SELECT count() FROM {table.name} {'FINAL' if table.final_modifier_available else ''} FORMAT JSONEachRow;",
             settings=[("final", 0)],

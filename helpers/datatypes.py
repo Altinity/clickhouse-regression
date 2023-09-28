@@ -164,7 +164,6 @@ class Float32(Float):
         super().__init__("Float32", max="3.4028235e38", min="-3.4028235e38")
 
     def rand_value(self, random):
-
         return f"toFloat32({random.uniform(float(self.min), float(self.max))})"
 
 

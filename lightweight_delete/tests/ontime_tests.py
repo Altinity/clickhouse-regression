@@ -158,7 +158,7 @@ def feature(self, node="clickhouse1"):
     """Check that clickhouse works right with delete operations applied to ontime dataset."""
     self.context.node = self.context.cluster.node(node)
 
-    for (i, delete_query) in enumerate(
+    for i, delete_query in enumerate(
         [
             delete_query_1_ontime,
             delete_query_2_ontime,
@@ -167,7 +167,6 @@ def feature(self, node="clickhouse1"):
             delete_query_5_ontime,
         ]
     ):
-
         # with Given("I check ontime exists"):
         #     output = self.context.node.query("EXISTS ontime").output
         #     assert output == "1", error()

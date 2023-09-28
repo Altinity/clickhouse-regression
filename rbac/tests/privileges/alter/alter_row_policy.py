@@ -16,7 +16,6 @@ def privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=alter_row_policy,
             examples=Examples(
@@ -41,7 +40,6 @@ def privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -193,7 +191,6 @@ def no_grants(self, node=None):
         node = self.context.node
 
     with table(node, table_name):
-
         with Given("I have a row policy"):
             row_policy(name=pol_name, table=table_name)
 
@@ -226,7 +223,6 @@ def permissive(self, node=None):
         node = self.context.node
 
     with table(node, table_name):
-
         with Given("I have a row policy"):
             row_policy(name=pol_name, table=table_name)
 
@@ -256,7 +252,6 @@ def restrictive(self, node=None):
         node = self.context.node
 
     with table(node, table_name):
-
         with Given("I have a row policy"):
             row_policy(name=pol_name, table=table_name)
 
@@ -295,7 +290,6 @@ def for_select(self, node=None):
         node = self.context.node
 
     with table(node, table_name):
-
         with Given("I have a row policy"):
             row_policy(name=pol_name, table=table_name)
 
@@ -324,7 +318,6 @@ def condition(self, node=None):
         node = self.context.node
 
     with table(node, table_name):
-
         with Given("I have a row policy"):
             row_policy(name=pol_name, table=table_name)
 
@@ -353,7 +346,6 @@ def remove_condition(self, node=None):
         node = self.context.node
 
     with table(node, table_name):
-
         with Given("I have a row policy"):
             row_policy(name=pol_name, table=table_name)
 
@@ -387,7 +379,6 @@ def if_exists(self, node=None):
         node = self.context.node
 
     with table(node, table_name):
-
         with Given("I have a row policy"):
             row_policy(name=pol_name, table=table_name)
 
@@ -560,7 +551,6 @@ def assignment(self, node=None):
         node = self.context.node
 
     with table(node, table_name):
-
         with Given("I have a row policy"):
             row_policy(name=pol_name, table=table_name)
 
@@ -594,7 +584,6 @@ def assignment_none(self, node=None):
         node = self.context.node
 
     with table(node, table_name):
-
         with Given("I have a row policy"):
             row_policy(name=pol_name, table=table_name)
 
@@ -628,7 +617,6 @@ def assignment_all(self, node=None):
         node = self.context.node
 
     with table(node, table_name):
-
         with Given("I have a row policy"):
             row_policy(name=pol_name, table=table_name)
 
@@ -662,7 +650,6 @@ def assignment_all_except(self, node=None):
         node = self.context.node
 
     with table(node, table_name):
-
         with Given("I have a row policy"):
             row_policy(name=pol_name, table=table_name)
 
@@ -699,7 +686,6 @@ def nested_view(self, node=None):
         node = self.context.node
 
     with table(node, table_name):
-
         try:
             with Given("I have a row policy"):
                 row_policy(name=pol_name, table=table_name)

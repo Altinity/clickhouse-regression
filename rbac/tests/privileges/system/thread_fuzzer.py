@@ -17,7 +17,6 @@ def privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=start_thread_fuzzer,
             examples=Examples(
@@ -55,7 +54,6 @@ def privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -101,7 +99,6 @@ def start_thread_fuzzer(self, privilege, grant_target_name, user_name, node=None
         node = self.context.node
 
     with Scenario("SYSTEM START THREAD FUZZER without privilege"):
-
         with When("I grant the user NONE privilege"):
             node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -117,7 +114,6 @@ def start_thread_fuzzer(self, privilege, grant_target_name, user_name, node=None
             )
 
     with Scenario("SYSTEM START THREAD FUZZER with privilege"):
-
         with When(f"I grant {privilege} on the table"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -127,7 +123,6 @@ def start_thread_fuzzer(self, privilege, grant_target_name, user_name, node=None
             )
 
     with Scenario("SYSTEM START THREAD FUZZER with revoked privilege"):
-
         with When(f"I grant {privilege} on the table"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -160,7 +155,6 @@ def stop_thread_fuzzer(self, privilege, grant_target_name, user_name, node=None)
         node = self.context.node
 
     with Scenario("SYSTEM STOP THREAD FUZZER without privilege"):
-
         with When("I grant the user NONE privilege"):
             node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -176,7 +170,6 @@ def stop_thread_fuzzer(self, privilege, grant_target_name, user_name, node=None)
             )
 
     with Scenario("SYSTEM STOP THREAD FUZZER with privilege"):
-
         with When(f"I grant {privilege} on the table"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -186,7 +179,6 @@ def stop_thread_fuzzer(self, privilege, grant_target_name, user_name, node=None)
             )
 
     with Scenario("SYSTEM STOP THREAD FUZZER with revoked privilege"):
-
         with When(f"I grant {privilege} on the table"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 

@@ -533,7 +533,8 @@ def group_order_by_multiple_alias_with_override_column(self, node=None):
 @TestScenario
 def group_order_by_multiple_alias_with_aggregate_new_alias(self, node=None):
     """Multiple aliases of expressions used to reference aggregate function results as well as calculating
-    new alias using an expression that contains other aliases with aliases used in GROUP BY and ORDER BY."""
+    new alias using an expression that contains other aliases with aliases used in GROUP BY and ORDER BY.
+    """
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 

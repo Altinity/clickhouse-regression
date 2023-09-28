@@ -53,7 +53,6 @@ def feature(self, stress=None, node="clickhouse1"):
             start = time.time()
 
             while time.time() - start < 10:
-
                 with When("I create another user"):
                     node.query(f"CREATE USER IF NOT EXISTS {user1_name} GRANTEES NONE")
 

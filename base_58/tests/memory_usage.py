@@ -91,7 +91,8 @@ def memory_usage_for_constant_input(self, node=None):
 
     with When("I check memory usage of base58 encode function"):
         r = node.query(
-            f"SELECT base58Encode('{string_of_all_askii_symbols()*1000}')", query_id=1000
+            f"SELECT base58Encode('{string_of_all_askii_symbols()*1000}')",
+            query_id=1000,
         )
         b58_encoded_string = r.output
         r = node.query(
@@ -101,7 +102,8 @@ def memory_usage_for_constant_input(self, node=None):
 
     with When("I check memory usage of base64 encode function"):
         r = node.query(
-            f"SELECT base64Encode('{string_of_all_askii_symbols()*1000}')", query_id=1001
+            f"SELECT base64Encode('{string_of_all_askii_symbols()*1000}')",
+            query_id=1001,
         )
         b64_encoded_string = r.output
         r = node.query(

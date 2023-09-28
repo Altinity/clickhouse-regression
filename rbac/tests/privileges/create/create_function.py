@@ -14,7 +14,6 @@ def privilege_granted_directly_or_via_role(self, node=None):
 
     with Suite("user with direct privilege"):
         with user(node, user_name):
-
             with When(
                 f"I run checks that {user_name} is only able to execute CREATE FUNCTION with required privileges"
             ):
@@ -24,7 +23,6 @@ def privilege_granted_directly_or_via_role(self, node=None):
 
     with Suite("user with privilege via role"):
         with user(node, user_name), role(node, role_name):
-
             with When("I grant the role to the user"):
                 node.query(f"GRANT {role_name} TO {user_name}")
 

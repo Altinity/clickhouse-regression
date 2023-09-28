@@ -37,7 +37,6 @@ def random_delete_by_partition_key(
         )
 
     with When("I delete rows from the table by random parts"):
-
         with By("creating a list of part identifier"):
             delete_order = list(range(num_partitions))
 
@@ -101,7 +100,6 @@ def random_delete_by_partition_key_and_value(
         )
 
     with When("I delete rows from the table by random parts"):
-
         with By("creating a list of rows"):
             delete_order = [
                 (i, j) for i in range(num_partitions) for j in range(block_size)
@@ -169,7 +167,6 @@ def random_delete_by_non_partition_key_modifying_all_partitions(
         )
 
     with When("I delete rows from the table by random parts"):
-
         with By("creating a list of part identifier"):
             delete_order = list(range(block_size))
 

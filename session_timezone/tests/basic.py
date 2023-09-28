@@ -206,7 +206,6 @@ def different_types(self):
             with Step(
                 f"I check that `session_timezone` is changing timezone to {time_zone}"
             ):
-
                 node.query(
                     f"SELECT Date('2000-01-01 01:00:00') SETTINGS session_timezone = '{time_zone}';",
                     message=f"2000-01-01",

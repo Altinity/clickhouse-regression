@@ -39,7 +39,6 @@ def addressToLine_privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=addressToLine,
             examples=Examples(
@@ -64,7 +63,6 @@ def addressToLine_privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -102,7 +100,6 @@ def addressToLine(self, privilege, grant_target_name, user_name, node=None):
         node = self.context.node
 
     with Scenario("addressToLine without privilege"):
-
         with When("I grant the user NONE privilege"):
             node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -118,7 +115,6 @@ def addressToLine(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("addressToLine with privilege"):
-
         with When(f"I grant {privilege}"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -129,7 +125,6 @@ def addressToLine(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("addressToLine with revoked privilege"):
-
         with When(f"I grant {privilege}"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -155,7 +150,6 @@ def addressToLineWithInlines_privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=addressToLineWithInlines,
             examples=Examples(
@@ -180,7 +174,6 @@ def addressToLineWithInlines_privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -218,7 +211,6 @@ def addressToLineWithInlines(self, privilege, grant_target_name, user_name, node
         node = self.context.node
 
     with Scenario("addressToLineWithInlines without privilege"):
-
         with When("I grant the user NONE privilege"):
             node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -234,7 +226,6 @@ def addressToLineWithInlines(self, privilege, grant_target_name, user_name, node
             )
 
     with Scenario("addressToLineWithInlines with privilege"):
-
         with When(f"I grant {privilege}"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -245,7 +236,6 @@ def addressToLineWithInlines(self, privilege, grant_target_name, user_name, node
             )
 
     with Scenario("addressToLineWithInlines with revoked privilege"):
-
         with When(f"I grant {privilege}"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -271,7 +261,6 @@ def addressToSymbol_privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=addressToSymbol,
             examples=Examples(
@@ -296,7 +285,6 @@ def addressToSymbol_privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -334,7 +322,6 @@ def addressToSymbol(self, privilege, grant_target_name, user_name, node=None):
         node = self.context.node
 
     with Scenario("addressToSymbol without privilege"):
-
         with When("I grant the user NONE privilege"):
             node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -350,7 +337,6 @@ def addressToSymbol(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("addressToSymbol with privilege"):
-
         with When(f"I grant {privilege}"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -361,7 +347,6 @@ def addressToSymbol(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("addressToSymbol with revoked privilege"):
-
         with When(f"I grant {privilege}"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -387,7 +372,6 @@ def demangle_privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=demangle,
             examples=Examples(
@@ -412,7 +396,6 @@ def demangle_privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -450,7 +433,6 @@ def demangle(self, privilege, grant_target_name, user_name, node=None):
         node = self.context.node
 
     with Scenario("demangle without privilege"):
-
         with When("I grant the user NONE privilege"):
             node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -466,7 +448,6 @@ def demangle(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("demangle with privilege"):
-
         with When(f"I grant {privilege}"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -477,7 +458,6 @@ def demangle(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("demangle with revoked privilege"):
-
         with When(f"I grant {privilege}"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 

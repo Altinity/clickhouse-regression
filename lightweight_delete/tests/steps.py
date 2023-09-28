@@ -128,7 +128,6 @@ def add_config_multi_disk_volume(self, number_of_disks):
     with Given("I set up parameters"):
         entries_in_this_test = deepcopy(entries)
         for i in range(number_of_disks):
-
             entries_in_this_test["storage_configuration"]["disks"].append(
                 {f"local{i}": {"path": f"/disk_local{i}/"}}
             )

@@ -19,7 +19,6 @@ def privilege_granted_directly_or_via_role(self, table_type, privilege, node=Non
 
     with Suite("user with direct privilege", setup=instrument_clickhouse_server_log):
         with user(node, user_name):
-
             with When(
                 f"I run checks that {user_name} is only able to execute ALTER FETCH PARTITION with required privileges"
             ):
@@ -33,7 +32,6 @@ def privilege_granted_directly_or_via_role(self, table_type, privilege, node=Non
 
     with Suite("user with privilege via role", setup=instrument_clickhouse_server_log):
         with user(node, user_name), role(node, role_name):
-
             with When("I grant the role to the user"):
                 node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -57,7 +55,6 @@ def privilege_check(grant_target_name, user_name, table_type, privilege, node=No
         table_name = f"merge_tree_{getuid()}"
 
         with table(node, table_name, table_type):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -75,7 +72,6 @@ def privilege_check(grant_target_name, user_name, table_type, privilege, node=No
     with Scenario("user with privilege", setup=instrument_clickhouse_server_log):
         table_name = f"merge_tree_{getuid()}"
         with table(node, table_name, table_type):
-
             with When("I grant the fetch privilege"):
                 node.query(f"GRANT {privilege} ON {table_name} TO {grant_target_name}")
 
@@ -92,7 +88,6 @@ def privilege_check(grant_target_name, user_name, table_type, privilege, node=No
     ):
         table_name = f"merge_tree_{getuid()}"
         with table(node, table_name, table_type):
-
             with When("I grant the fetch privilege"):
                 node.query(f"GRANT {privilege} ON {table_name} TO {grant_target_name}")
 

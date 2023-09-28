@@ -194,7 +194,8 @@ def clean_deleted_rows_without_is_deleted(self, node=None):
 def with_is_deleted(self, node=None):
     """Checking that the new ReplacingMergeTree engine, which includes the is_deleted parameter and excludes the
     clean_deleted_rows setting, will conceal all rows with is_deleted=1 and the same rows with is_deleted=0 with
-     --final=1 but `OPTIMIZE TABLE FINAL` doesn't influence result as clean_deleted_rows='Never'."""
+     --final=1 but `OPTIMIZE TABLE FINAL` doesn't influence result as clean_deleted_rows='Never'.
+    """
 
     if node is None:
         node = self.context.cluster.node("clickhouse1")

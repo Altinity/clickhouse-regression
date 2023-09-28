@@ -20,9 +20,7 @@ def without_privilege(self, table_type, node=None):
         node = self.context.node
 
     with table(node, table_name, table_type):
-
         with user(node, user_name):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {user_name}")
 
@@ -53,12 +51,10 @@ def user_with_privilege(self, table_type, node=None):
         node = self.context.node
 
     with table(node, table_name, table_type):
-
         with Given("I have some data inserted into table"):
             node.query(f"INSERT INTO {table_name} (d) VALUES ('2020-01-01')")
 
         with user(node, user_name):
-
             with When("I grant privilege"):
                 node.query(f"GRANT SELECT ON {table_name} TO {user_name}")
 
@@ -82,12 +78,10 @@ def user_with_all_privilege(self, table_type, node=None):
         node = self.context.node
 
     with table(node, table_name, table_type):
-
         with Given("I have some data inserted into table"):
             node.query(f"INSERT INTO {table_name} (d) VALUES ('2020-01-01')")
 
         with user(node, user_name):
-
             with When("I grant privilege"):
                 node.query(f"GRANT ALL ON *.* TO {user_name}")
 
@@ -115,9 +109,7 @@ def user_with_revoked_privilege(self, table_type, node=None):
         node = self.context.node
 
     with table(node, table_name, table_type):
-
         with user(node, user_name):
-
             with When("I grant privilege"):
                 node.query(f"GRANT SELECT ON {table_name} TO {user_name}")
 
@@ -146,9 +138,7 @@ def user_with_revoked_all_privilege(self, table_type, node=None):
         node = self.context.node
 
     with table(node, table_name, table_type):
-
         with user(node, user_name):
-
             with When("I grant privilege"):
                 node.query(f"GRANT SELECT ON {table_name} TO {user_name}")
 
@@ -212,7 +202,6 @@ def user_column_privileges(
         node = self.context.node
 
     with table(node, table_name, table_type), user(node, user_name):
-
         with Given("The table has some data on some columns"):
             node.query(
                 f"INSERT INTO {table_name} ({select_columns_pass}) VALUES ({data_pass})"
@@ -222,7 +211,6 @@ def user_column_privileges(
             node.query(f"GRANT SELECT({grant_columns}) ON {table_name} TO {user_name}")
 
         if select_columns_fail is not None:
-
             with And("I select from not granted column"):
                 exitcode, message = errors.not_enough_privileges(name=user_name)
                 node.query(
@@ -241,7 +229,6 @@ def user_column_privileges(
             assert user_select.output == default.output
 
         if revoke_columns is not None:
-
             with When("I revoke select privilege for columns from user"):
                 node.query(
                     f"REVOKE SELECT({revoke_columns}) ON {table_name} FROM {user_name}"
@@ -273,14 +260,11 @@ def role_with_privilege(self, table_type, node=None):
         node = self.context.node
 
     with table(node, table_name, table_type):
-
         with Given("I have some data inserted into table"):
             node.query(f"INSERT INTO {table_name} (d) VALUES ('2020-01-01')")
 
         with user(node, user_name):
-
             with role(node, role_name):
-
                 with When("I grant select privilege to a role"):
                     node.query(f"GRANT SELECT ON {table_name} TO {role_name}")
 
@@ -311,9 +295,7 @@ def role_with_revoked_privilege(self, table_type, node=None):
         node = self.context.node
 
     with table(node, table_name, table_type):
-
         with user(node, user_name), role(node, role_name):
-
             with When("I grant privilege to a role"):
                 node.query(f"GRANT SELECT ON {table_name} TO {role_name}")
 
@@ -346,9 +328,7 @@ def user_with_revoked_role(self, table_type, node=None):
         node = self.context.node
 
     with table(node, table_name, table_type):
-
         with user(node, user_name), role(node, role_name):
-
             with When("I grant privilege to a role"):
                 node.query(f"GRANT SELECT ON {table_name} TO {role_name}")
 
@@ -416,14 +396,12 @@ def role_column_privileges(
         node = self.context.node
 
     with table(node, table_name, table_type):
-
         with Given("The table has some data on some columns"):
             node.query(
                 f"INSERT INTO {table_name} ({select_columns_pass}) VALUES ({data_pass})"
             )
 
         with user(node, user_name), role(node, role_name):
-
             with When("I grant select privilege"):
                 node.query(
                     f"GRANT SELECT({grant_columns}) ON {table_name} TO {role_name}"
@@ -450,7 +428,6 @@ def role_column_privileges(
                 assert user_select.output == default.output, error()
 
             if revoke_columns is not None:
-
                 with When("I revoke select privilege for columns from role"):
                     node.query(
                         f"REVOKE SELECT({revoke_columns}) ON {table_name} FROM {role_name}"

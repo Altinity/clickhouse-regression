@@ -44,7 +44,6 @@ def array_func(self, data_type, node=None):
         f"arrayConcat([{to_data_type(data_type,3)}, {to_data_type(data_type,2)}, {to_data_type(data_type,1)}],",
         "arrayFilter(x -> x == 1, ",
     ]:
-
         with Scenario(f"Inline - {data_type} - {func})"):
             execute_query(
                 f"""
@@ -66,7 +65,6 @@ def array_func(self, data_type, node=None):
             execute_query(f"SELECT * FROM {table_name} ORDER BY a ASC")
 
     for func in ["arraySplit((x, y) -> x=y, [0, 0, 0],"]:
-
         with Scenario(f"Inline - {data_type} - {func})"):
             execute_query(
                 f"SELECT {func}array({to_data_type(data_type,3)}, {to_data_type(data_type,2)},"
@@ -87,7 +85,6 @@ def array_func(self, data_type, node=None):
             execute_query(f"SELECT * FROM {table_name} ORDER BY a ASC")
 
     for func in [f"arrayZip([{to_data_type(data_type,1)}],"]:
-
         with Scenario(f"Inline - {data_type} - {func})"):
             execute_query(f"SELECT {func}array({to_data_type(data_type,3)}))")
 
@@ -123,7 +120,6 @@ def array_func(self, data_type, node=None):
         f"hasAny([{to_data_type(data_type,2)}, {to_data_type(data_type,1)}], ",
         f"hasSubstr([{to_data_type(data_type,2)}, {to_data_type(data_type,1)}], ",
     ]:
-
         if func in [
             "arrayMin(",
             "arrayMax(",
@@ -159,9 +155,7 @@ def array_func(self, data_type, node=None):
                 execute_query(f"SELECT * FROM {table_name} ORDER BY a ASC")
 
         else:
-
             with Scenario(f"Inline - {data_type} - {func})"):
-
                 execute_query(
                     f"SELECT {func}array({to_data_type(data_type,3)}, {to_data_type(data_type,2)}, {to_data_type(data_type,1)}))"
                 )
@@ -180,7 +174,6 @@ def array_func(self, data_type, node=None):
                 execute_query(f"SELECT * FROM {table_name} ORDER BY a ASC")
 
     for func in ["arrayDifference(", "arrayCumSum(", "arrayCumSumNonNegative("]:
-
         if data_type in ["Decimal256(0)"]:
             exitcode = 44
         else:
@@ -225,9 +218,7 @@ def array_func(self, data_type, node=None):
             execute_query(f"SELECT * FROM {table_name} ORDER BY a ASC")
 
     for func in ["arrayElement"]:
-
         with Scenario(f"Inline - {data_type} - {func}"):
-
             execute_query(
                 f"""
                 SELECT {func}(array({to_data_type(data_type,3)}, {to_data_type(data_type,2)}, {to_data_type(data_type,1)}), 1)
@@ -248,9 +239,7 @@ def array_func(self, data_type, node=None):
             execute_query(f"SELECT * FROM {table_name} ORDER BY a ASC")
 
     for func in ["arrayPushBack", "arrayPushFront"]:
-
         with Scenario(f"Inline - {data_type} - {func}"):
-
             execute_query(
                 f"SELECT {func}(array({to_data_type(data_type,3)}, {to_data_type(data_type,2)},"
                 f"{to_data_type(data_type,1)}), {to_data_type(data_type,1)})"
@@ -270,9 +259,7 @@ def array_func(self, data_type, node=None):
             execute_query(f"SELECT * FROM {table_name} ORDER BY a ASC")
 
     for func in ["arrayResize", "arraySlice"]:
-
         with Scenario(f"Inline - {data_type} - {func}"):
-
             execute_query(
                 f"SELECT {func}(array({to_data_type(data_type,3)},"
                 f"{to_data_type(data_type,2)}, {to_data_type(data_type,1)}), 1)"
@@ -292,7 +279,6 @@ def array_func(self, data_type, node=None):
             execute_query(f"SELECT * FROM {table_name} ORDER BY a ASC")
 
     for func in ["has", "indexOf", "countEqual"]:
-
         with Scenario(f"Inline - {data_type} - {func}"):
             execute_query(
                 f"SELECT {func}(array({to_data_type(data_type,3)},"
@@ -510,7 +496,6 @@ def map_func(self, data_type, node=None):
         node.query(sql, exitcode=exitcode, message=message)
 
     with Scenario(f"mapPopulateSeries with {data_type} on a table"):
-
         table_name = get_table_name()
 
         table(
@@ -614,7 +599,6 @@ def feature(self, node="clickhouse1", stress=None, parallel=None):
             (data_type,) = example
 
             with Feature(data_type):
-
                 Suite(test=array_func)(data_type=data_type)
                 Suite(test=tuple_func)(data_type=data_type)
 

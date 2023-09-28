@@ -32,7 +32,6 @@ def new_role(self, server):
                         for user in users
                     ]
                 ):
-
                     with When(
                         f"I login and execute query simple query to cache the LDAP user"
                     ):
@@ -45,7 +44,6 @@ def new_role(self, server):
                         )
 
                     with rbac_roles(f"new_role0_{uid}") as new_roles:
-
                         message = "DB::Exception: Cannot update user `{user}` in ldap because this storage is readonly"
                         exitcode = 239
 
@@ -97,7 +95,6 @@ def add_privilege(self, server):
                         for user in users
                     ]
                 ):
-
                     with When(f"I login and execute query that requires no privileges"):
                         node.query(
                             f"SELECT 1",
@@ -171,7 +168,6 @@ def remove_privilege(self, server):
             f"table_{getuid()}",
             "CREATE TABLE {name} (d DATE, s String, i UInt8) ENGINE = Memory()",
         ) as table_name:
-
             with When(
                 f"I grant select privilege to one of the two roles assigned to LDAP users"
             ):
@@ -184,7 +180,6 @@ def remove_privilege(self, server):
                         for user in users
                     ]
                 ):
-
                     with When(
                         f"I login then LDAP user should be able to read from the table"
                     ):
@@ -308,7 +303,6 @@ def remove_privilege_by_removing_role(self, server):
             f"table_{getuid()}",
             "CREATE TABLE {name} (d DATE, s String, i UInt8) ENGINE = Memory()",
         ) as table_name:
-
             with When(
                 f"I grant select privilege to one of the two roles assigned to LDAP users"
             ):
@@ -321,7 +315,6 @@ def remove_privilege_by_removing_role(self, server):
                         for user in users
                     ]
                 ):
-
                     with When(
                         f"I login and expect that LDAP user can read from the table"
                     ):
@@ -374,7 +367,6 @@ def readd_privilege_by_readding_role(self, server):
             f"table_{getuid()}",
             "CREATE TABLE {name} (d DATE, s String, i UInt8) ENGINE = Memory()",
         ) as table_name:
-
             with When(
                 f"I grant select privilege to one of the two roles assigned to LDAP users"
             ):
@@ -387,7 +379,6 @@ def readd_privilege_by_readding_role(self, server):
                         for user in users
                     ]
                 ):
-
                     with When(
                         f"I login and expect that LDAP user can read from the table"
                     ):

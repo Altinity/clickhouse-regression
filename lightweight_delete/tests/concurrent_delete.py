@@ -47,7 +47,6 @@ def random_delete_without_overlap(self, table_name, del_list):
 def random_delete(self, num_partitions, table_name, block_size):
     """Delete percentage of the table in random order."""
     with When("I delete rows from the table by random parts"):
-
         with By("creating a list of part identifier"):
             delete_order = [
                 (i, j) for i in range(num_partitions) for j in range(block_size)
@@ -312,7 +311,6 @@ def random_delete_percentage_of_the_table_without_overlap(
         )
 
     with When("I generate random list of rows to remove"):
-
         with By("creating a list of rows"):
             delete_order = [
                 (i, j) for i in range(partitions) for j in range(block_size)
@@ -458,7 +456,6 @@ def feature(self, node="clickhouse1"):
         "VersionedCollapsingMergeTree",
         "GraphiteMergeTree",
     ]:
-
         with Feature(f"{table_engine}"):
             self.context.table_engine = table_engine
             for scenario in loads(current_module(), Scenario):

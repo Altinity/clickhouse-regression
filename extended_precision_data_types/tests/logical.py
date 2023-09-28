@@ -49,7 +49,6 @@ def log_int_table(self, func, int_type, min, max, node=None):
         table(name=table_name, data_type=int_type)
 
     for value in [1, min, max]:
-
         with When(f"Check {func} with {int_type} and {value}"):
             node.query(
                 f"INSERT INTO {table_name} SELECT {func}(to{int_type}('{value}'), to{int_type}('{value}'))",
@@ -92,7 +91,6 @@ def log_dec_table(self, func, node=None):
         table(name=table_name, data_type="Decimal256(0)")
 
     for value in [1, min, max]:
-
         with When(f"Check {func} with Decimal256 and {value}"):
             node.query(
                 f"INSERT INTO {table_name} SELECT {func}(toDecimal256('{value}',0), toDecimal256('{value}',0))",

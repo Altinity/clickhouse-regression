@@ -22,7 +22,14 @@ ffails = {
 @Name("clickhouse")
 @FFails(ffails)
 @ArgumentParser(argparser)
-def regression(self, local, clickhouse_binary_path, clickhouse_version, collect_service_logs, stress=None):
+def regression(
+    self,
+    local,
+    clickhouse_binary_path,
+    clickhouse_version,
+    collect_service_logs,
+    stress=None,
+):
     """ClickHouse regression."""
     args = {
         "local": local,

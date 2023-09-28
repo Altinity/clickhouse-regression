@@ -53,14 +53,12 @@ def create_with_create_table_privilege_granted_directly_or_via_role(self, node=N
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Scenario(
             test=create_with_create_table_privilege,
             name="create with create table privilege granted directly",
         )(grant_target_name=user_name, user_name=user_name)
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -106,14 +104,12 @@ def create_with_all_privilege_granted_directly_or_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Scenario(
             test=create_with_all_privilege,
             name="create with ALL privilege granted directly",
         )(grant_target_name=user_name, user_name=user_name)
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -159,14 +155,12 @@ def create_with_create_privilege_granted_directly_or_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Scenario(
             test=create_with_create_privilege,
             name="create with CREATE privilege granted directly",
         )(grant_target_name=user_name, user_name=user_name)
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -213,14 +207,12 @@ def create_with_revoked_create_table_privilege_revoked_directly_or_from_role(
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Scenario(
             test=create_with_revoked_create_table_privilege,
             name="create with create table privilege revoked directly",
         )(grant_target_name=user_name, user_name=user_name)
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -274,14 +266,12 @@ def create_with_all_privileges_revoked_directly_or_from_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Scenario(
             test=create_with_revoked_all_privilege,
             name="create with all privilege revoked directly",
         )(grant_target_name=user_name, user_name=user_name)
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -339,7 +329,6 @@ def create_without_source_table_privilege(self, node=None):
     with table(node, f"{source_table_name}"):
         with user(node, f"{user_name}"):
             try:
-
                 with When("I grant CREATE TABLE privilege to a user"):
                     node.query(f"GRANT CREATE TABLE ON {table_name} TO {user_name}")
 
@@ -376,7 +365,6 @@ def create_without_insert_privilege(self, node=None):
 
     with table(node, f"{source_table_name}"):
         with user(node, f"{user_name}"):
-
             try:
                 with When("I grant CREATE TABLE privilege to a user"):
                     node.query(f"GRANT CREATE TABLE ON {table_name} TO {user_name}")
@@ -410,14 +398,12 @@ def create_with_source_table_privilege_granted_directly_or_via_role(self, node=N
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Scenario(
             test=create_with_source_table_privilege,
             name="create with create table and select privilege granted directly",
         )(grant_target_name=user_name, user_name=user_name)
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -437,7 +423,6 @@ def create_with_source_table_privilege(self, user_name, grant_target_name, node=
         node = self.context.node
 
     with table(node, f"{source_table_name}"):
-
         try:
             with When("I grant CREATE table privilege"):
                 node.query(f"GRANT CREATE table ON {table_name} TO {grant_target_name}")
@@ -475,14 +460,12 @@ def create_with_subquery_privilege_granted_directly_or_via_role(self, node=None)
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Scenario(
             test=create_with_subquery,
             name="create with subquery, privilege granted directly",
         )(grant_target_name=user_name, user_name=user_name)
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -509,7 +492,6 @@ def create_with_subquery(self, user_name, grant_target_name, node=None):
         node = self.context.node
 
     with table(node, f"{table0_name},{table1_name},{table2_name}"):
-
         try:
             with When("I grant CREATE TABLE privilege"):
                 node.query(f"GRANT CREATE TABLE ON {table_name} TO {grant_target_name}")
@@ -539,11 +521,9 @@ def create_with_subquery(self, user_name, grant_target_name, node=None):
                     table1_name,
                     table2_name,
                 ) as tables_granted:
-
                     with When(
                         f"permutation={permutation}, tables granted = {tables_granted}"
                     ):
-
                         with When("I attempt to create a table as the user"):
                             node.query(
                                 create_table_query.format(
@@ -566,7 +546,6 @@ def create_with_subquery(self, user_name, grant_target_name, node=None):
                     table1_name,
                     table2_name,
                 ):
-
                     with When("I attempt to create a table as the user"):
                         node.query(
                             create_table_query.format(
@@ -596,14 +575,12 @@ def create_with_join_query_privilege_granted_directly_or_via_role(self, node=Non
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Scenario(
             test=create_with_join_query,
             name="create with join query, privilege granted directly",
         )(grant_target_name=user_name, user_name=user_name)
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -628,7 +605,6 @@ def create_with_join_query(self, grant_target_name, user_name, node=None):
         node = self.context.node
 
     with table(node, f"{table0_name},{table1_name}"):
-
         try:
             with When("I grant CREATE TABLE privilege"):
                 node.query(f"GRANT CREATE TABLE ON {table_name} TO {grant_target_name}")
@@ -652,11 +628,9 @@ def create_with_join_query(self, grant_target_name, user_name, node=None):
                 with grant_select_on_table(
                     node, permutation, grant_target_name, table0_name, table1_name
                 ) as tables_granted:
-
                     with When(
                         f"permutation={permutation}, tables granted = {tables_granted}"
                     ):
-
                         with When("I attempt to create a table as the user"):
                             node.query(
                                 create_table_query.format(
@@ -677,7 +651,6 @@ def create_with_join_query(self, grant_target_name, user_name, node=None):
                     table0_name,
                     table1_name,
                 ):
-
                     with When("I attempt to create a table as the user"):
                         node.query(
                             create_table_query.format(
@@ -706,14 +679,12 @@ def create_with_union_query_privilege_granted_directly_or_via_role(self, node=No
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Scenario(
             test=create_with_union_query,
             name="create with union query, privilege granted directly",
         )(grant_target_name=user_name, user_name=user_name)
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -738,7 +709,6 @@ def create_with_union_query(self, grant_target_name, user_name, node=None):
         node = self.context.node
 
     with table(node, f"{table0_name},{table1_name}"):
-
         try:
             with When("I grant CREATE TABLE privilege"):
                 node.query(f"GRANT CREATE TABLE ON {table_name} TO {grant_target_name}")
@@ -762,11 +732,9 @@ def create_with_union_query(self, grant_target_name, user_name, node=None):
                 with grant_select_on_table(
                     node, permutation, grant_target_name, table0_name, table1_name
                 ) as tables_granted:
-
                     with When(
                         f"permutation={permutation}, tables granted = {tables_granted}"
                     ):
-
                         with When("I attempt to create a table as the user"):
                             node.query(
                                 create_table_query.format(
@@ -787,7 +755,6 @@ def create_with_union_query(self, grant_target_name, user_name, node=None):
                     table0_name,
                     table1_name,
                 ):
-
                     with When("I attempt to create a table as the user"):
                         node.query(
                             create_table_query.format(
@@ -817,14 +784,12 @@ def create_with_join_union_subquery_privilege_granted_directly_or_via_role(
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Scenario(
             test=create_with_join_union_subquery,
             name="create with join union subquery, privilege granted directly",
         )(grant_target_name=user_name, user_name=user_name)
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -855,7 +820,6 @@ def create_with_join_union_subquery(self, grant_target_name, user_name, node=Non
         node, f"{table0_name},{table1_name},{table2_name},{table3_name},{table4_name}"
     ):
         with user(node, f"{user_name}"):
-
             try:
                 with When("I grant CREATE TABLE privilege"):
                     node.query(
@@ -892,11 +856,9 @@ def create_with_join_union_subquery(self, grant_target_name, user_name, node=Non
                         table3_name,
                         table4_name,
                     ) as tables_granted:
-
                         with When(
                             f"permutation={permutation}, tables granted = {tables_granted}"
                         ):
-
                             with Given("I don't have a table"):
                                 node.query(f"DROP TABLE IF EXISTS {table_name}")
 
@@ -926,7 +888,6 @@ def create_with_join_union_subquery(self, grant_target_name, user_name, node=Non
                         table3_name,
                         table4_name,
                     ):
-
                         with Given("I don't have a table"):
                             node.query(f"DROP TABLE IF EXISTS {table_name}")
 
@@ -960,14 +921,12 @@ def create_with_nested_tables_privilege_granted_directly_or_via_role(self, node=
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Scenario(
             test=create_with_nested_tables,
             name="create with nested tables, privilege granted directly",
         )(grant_target_name=user_name, user_name=user_name)
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -998,7 +957,6 @@ def create_with_nested_tables(self, grant_target_name, user_name, node=None):
         node = self.context.node
 
     with table(node, f"{table0_name},{table2_name},{table4_name},{table6_name}"):
-
         try:
             with Given("I have some tables"):
                 node.query(
@@ -1047,11 +1005,9 @@ def create_with_nested_tables(self, grant_target_name, user_name, node=None):
                     table2_name,
                     table0_name,
                 ) as tables_granted:
-
                     with When(
                         f"permutation={permutation}, tables granted = {tables_granted}"
                     ):
-
                         with Given("I don't have a table"):
                             node.query(f"DROP TABLE IF EXISTS {table3_name}")
 
@@ -1080,7 +1036,6 @@ def create_with_nested_tables(self, grant_target_name, user_name, node=None):
                     table5_name,
                     table6_name,
                 ):
-
                     with Given("I don't have a table"):
                         node.query(f"DROP TABLE IF EXISTS {table_name}")
 
@@ -1121,7 +1076,6 @@ def create_as_another_table(self, node=None):
 
     with table(node, f"{source_table_name}"):
         with user(node, f"{user_name}"):
-
             try:
                 with When("I grant CREATE TABLE privilege to a user"):
                     node.query(f"GRANT CREATE TABLE ON {table_name} TO {user_name}")
@@ -1148,7 +1102,6 @@ def create_as_numbers(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         try:
             with When("I grant CREATE TABLE privilege to a user"):
                 node.query(f"GRANT CREATE TABLE ON {table_name} TO {user_name}")
@@ -1180,7 +1133,6 @@ def create_as_merge(self, node=None):
 
     with table(node, f"{source_table_name}"):
         with user(node, f"{user_name}"):
-
             try:
                 with When("I grant CREATE TABLE privilege to a user"):
                     node.query(f"GRANT CREATE TABLE ON {table_name} TO {user_name}")

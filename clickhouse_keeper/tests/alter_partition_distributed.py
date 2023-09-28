@@ -54,7 +54,6 @@ def alter_detach_partition(self):
 
     cluster_name = "'Cluster_3shards_with_3replicas'"
     try:
-
         with Given("Receive UID"):
             uid = getuid()
             table_name = f"test_move{uid}"
@@ -318,7 +317,6 @@ def alter_clear_column_in_partition(self):
 
     cluster_name = "'Cluster_3shards_with_3replicas'"
     try:
-
         with Given("Receive UID"):
             uid = getuid()
             table_name = f"test_move{uid}"
@@ -375,7 +373,6 @@ def alter_clear_index_in_partition(self):
 
     cluster_name = "'Cluster_3shards_with_3replicas'"
     try:
-
         with Given("Receive UID"):
             uid = getuid()
             table_name = f"test_move{uid}"
@@ -531,7 +528,6 @@ def alter_update_in_partition(self):
 
     cluster_name = "'Cluster_3shards_with_3replicas'"
     try:
-
         with Given("Receive UID"):
             uid = getuid()
             table_name = f"test_move{uid}"
@@ -586,7 +582,6 @@ def alter_delete_in_partition(self):
 
     cluster_name = "'Cluster_3shards_with_3replicas'"
     try:
-
         with Given("Receive UID"):
             uid = getuid()
             table_name = f"test_move{uid}"

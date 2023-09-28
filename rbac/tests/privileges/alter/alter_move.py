@@ -25,7 +25,6 @@ def privilege_granted_directly_or_via_role(self, table_type, privilege, node=Non
 
     with Suite("user with direct privilege", setup=instrument_clickhouse_server_log):
         with user(node, user_name):
-
             with When(
                 f"I run checks that {user_name} is only able to execute ALTER MOVE PARTITION with required privileges"
             ):
@@ -39,7 +38,6 @@ def privilege_granted_directly_or_via_role(self, table_type, privilege, node=Non
 
     with Suite("user with privilege via role", setup=instrument_clickhouse_server_log):
         with user(node, user_name), role(node, role_name):
-
             with When("I grant the role to the user"):
                 node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -64,7 +62,6 @@ def privilege_check(grant_target_name, user_name, table_type, privilege, node=No
         target_table_name = f"target_merge_tree_{getuid()}"
 
         with table(node, f"{source_table_name},{target_table_name}", table_type):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -87,7 +84,6 @@ def privilege_check(grant_target_name, user_name, table_type, privilege, node=No
         target_table_name = f"target_merge_tree_{getuid()}"
 
         with table(node, f"{source_table_name},{target_table_name}", table_type):
-
             with When(
                 f"I grant SELECT and ALTER DELETE privileges on {source_table_name} to {grant_target_name}"
             ):
@@ -116,7 +112,6 @@ def privilege_check(grant_target_name, user_name, table_type, privilege, node=No
         target_table_name = f"target_merge_tree_{getuid()}"
 
         with table(node, f"{source_table_name},{target_table_name}", table_type):
-
             with When(
                 f"I grant SELECT, ALTER DELETE, and ALTER MOVE PARTITION privileges on {source_table_name} to {grant_target_name}"
             ):
@@ -143,7 +138,6 @@ def privilege_check(grant_target_name, user_name, table_type, privilege, node=No
         target_table_name = f"target_merge_tree_{getuid()}"
 
         with table(node, f"{source_table_name},{target_table_name}", table_type):
-
             with When(
                 f"I grant SELECT, ALTER DELETE, and ALTER MOVE PARTITION privileges on {source_table_name} to {grant_target_name}"
             ):
@@ -180,7 +174,6 @@ def privilege_check(grant_target_name, user_name, table_type, privilege, node=No
         with table(
             node, f"{source_table_name},{mat_view_source_table_name}", table_type
         ):
-
             try:
                 with Given("I have a materialized view"):
                     node.query(
@@ -223,7 +216,6 @@ def privilege_check(grant_target_name, user_name, table_type, privilege, node=No
         with table(
             node, f"{source_table_name},{mat_view_source_table_name}", table_type
         ):
-
             try:
                 with Given("I have a materialized view"):
                     node.query(
