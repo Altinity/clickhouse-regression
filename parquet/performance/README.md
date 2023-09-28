@@ -125,13 +125,13 @@ You also need docker in order to run the test program, for ubuntu refer to [Inst
 - `--rerun-queries` the number of times each query will be run (default: 3)
 - `--filename` determines the name of the CSV file that contains the results of the program run (default: performance.csv)
 - `--log` path to the log file where test program output will be stored
-- `--hits` determines weather the hits dataset will be used instead of the default ontime (default: False)
+- `--data` determines which dataset will be used for performance testing. Current possible values:  ontime, hits, nyc_taxi(default: ontime)
 - `--first-number` and `--last-number` these settings determine the size of the dataset for the parquet file with hits dataset. (default values are: first 1 and last 99)
 
 > [!IMPORTANT] 
 > - Please specify `--clickhouse-version` in order for the program to run without issues on any ClickHouse version.
 > - If you set `--threads` to 0 it will disable parallel execution when creating a parquet file, but this will significantly increase test program runtime and potentially result in a test timeout (this setting is only used to speed up the process of generating a parquet file using ClickHouse).
-> - If you change the `--compression` value make sure DuckDB supports reading from file with this compression type. Currently `none` and `snappy` are supported both by ClickHouse and DuckDB.
+> - If you change the `--compression` value make sure DuckDB supports reading from files with this compression type. Currently `none` and `snappy` are supported both by ClickHouse and DuckDB.
 > - `--duckdb-binary-path` is a required setting, test program will throw an error if it's not specified. 
 
 ### [Examples](#table-of-contents)
@@ -158,7 +158,7 @@ You also need docker in order to run the test program, for ubuntu refer to [Inst
 ./performance.py --clickhouse-binary-path docker://clickhouse/clickhouse-server:22.8 --clickhouse-version 22.8 --duckdb-binary-path https://github.com/duckdb/duckdb/releases/download/v0.7.1/duckdb_cli-linux-amd64.zip 
 ```
 > [!NOTE]
-> If you want to run the test program with different DuckDB version after already running it once, make sure to remove `duckdb` from the `/tmp` directory.
+> If you want to run the test program with a different DuckDB version after already running it once, make sure to remove `duckdb` from the `/tmp` directory.
 
 #### Get metrics using [TestFlows]:
 ```bash
@@ -171,7 +171,7 @@ cat test.log | tfs show metrics
 
 ### [Calculating Query Runtime](#table-of-contents)
 The set of queries is stored inside the [steps] file. both ClickHouse and DuckDB run each query `n` number of times based on the value of `--rerun-queries` setting.
-For each query we get samples containing the runtime of each query run, from the samples collected we take a minimal value and use it as a metric. 
+For each query we get samples containing the runtime of each query run, from the samples collected, we take a minimal value and use it as a metric. 
 
 For example, if we use the default value of `--rerun-queries` setting, which is 3, each query from the [steps] 
 file will be run 3 times and each one of these queries will produce samples like this: `[0.53, 0.52, 0.54]`. As a metric we will use the minimal value from this list:
