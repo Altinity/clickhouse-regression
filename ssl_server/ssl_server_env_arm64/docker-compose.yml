@@ -9,14 +9,6 @@ services:
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper/logs/:/logs/"
 
-  zookeeper-fips:
-    extends:
-      file: zookeeper-fips-service.yml
-      service: zookeeper-fips
-    hostname: zookeeper-fips
-    volumes:
-      - "${CLICKHOUSE_TESTS_DIR}/_instances/zookeeper-fips/logs/:/logs/"
-
   clickhouse1:
     extends:
       file: clickhouse-service.yml
@@ -86,6 +78,4 @@ services:
       non_fips_clickhouse:
         condition: service_healthy
       zookeeper:
-        condition: service_healthy
-      zookeeper-fips:
         condition: service_healthy

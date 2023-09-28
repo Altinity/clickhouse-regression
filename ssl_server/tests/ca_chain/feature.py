@@ -11,7 +11,8 @@ def with_caconfig(
     validate_certificate_using_ca_chain_crt=True,
 ):
     """Check secure connection using server certificate signed by a specified CA and CAs chain
-    when <caConfig> is explicitly specified in server and clickhouse-client SSL configurations."""
+    when <caConfig> is explicitly specified in server and clickhouse-client SSL configurations.
+    """
     if nodes is None:
         nodes = self.context.cluster.nodes["clickhouse"]
 
@@ -783,9 +784,7 @@ def use_second_intermediate_ca(self):
         )
 
     with Feature("server certificate with chain"):
-
         with Feature("with caconfig"):
-
             Scenario("all certificates present", test=server_certificate_with_chain)(
                 ca_store=ca_store,
                 ca_intermediate_chain_crt=ca_intermediate_chain_crt,
@@ -828,7 +827,6 @@ def use_second_intermediate_ca(self):
             )
 
         with Feature("without caconfig"):
-
             Scenario("all certificates present", test=server_certificate_with_chain)(
                 ca_store=ca_store,
                 ca_intermediate_chain_crt=ca_intermediate_chain_crt,
@@ -871,12 +869,10 @@ def use_second_intermediate_ca(self):
             )
 
     with Feature("server certificate without chain"):
-
         with Feature(
             "with caconfig",
             description="Check secure connection when caConfig parameter is set.",
         ):
-
             Scenario("all certificates present", test=with_caconfig)(
                 ca_store=ca_store, ca_chain_crt=ca_chain_crt
             )
@@ -901,7 +897,6 @@ def use_second_intermediate_ca(self):
             "without caconfig",
             description="Check secure connection when caConfig parameter is not set",
         ):
-
             Scenario("all certificates present", test=without_caconfig)(
                 ca_store=ca_store, ca_chain_crt=ca_chain_crt, trusted_cas=cas
             )

@@ -8,7 +8,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import Cluster
 from helpers.argparser import argparser as argparser_base
-from helpers.common import check_clickhouse_version
+from helpers.common import check_clickhouse_version, check_current_cpu, current_cpu
 
 from ssl_server.requirements import SRS017_ClickHouse_SSL
 
@@ -75,9 +75,7 @@ xfails = {
     "fips/:/:/connection with at least one FIPS compatible cipher should work, ciphers: ECDHE-ECDSA-AES128-GCM-SHA256 :": [
         (Fail, "not supported by SSL library")
     ],
-    "check certificate/system certificates": [
-        (Fail, "unstable test")
-    ],
+    "check certificate/system certificates": [(Fail, "unstable test")],
     # zookeeper ssl
     "zookeepe:/fips/ECDHE-ECDSA-AES128-GCM-SHA256": [
         (
@@ -136,6 +134,8 @@ ffails = {
         "supported on >=22.3",
         check_clickhouse_version("<22.3"),
     ),
+    # skip zookeeper fips on ARM
+    "zookeeper fips": (Skip, "not supported on ARM", check_current_cpu("aarch64")),
 }
 
 
@@ -160,13 +160,15 @@ def regression(
         "clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3"),
         "zookeeper": ("zookeeper", "zookeeper-fips"),
     }
+
+    if current_cpu() == "aarch64":
+        nodes["zookeeper"] = (("zookeeper"),)
+
     self.context.clickhouse_version = clickhouse_version
     self.context.fips_mode = False
 
     if stress is not None:
         self.context.stress = stress
-
-    from platform import processor as current_cpu
 
     folder_name = os.path.basename(current_dir())
     if current_cpu() == "aarch64":
