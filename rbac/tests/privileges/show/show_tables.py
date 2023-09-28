@@ -128,9 +128,7 @@ def show_tables(
     on = on.replace("table", f"{table_name}")
 
     with table(node, table_name):
-
         with Scenario("SHOW TABLES without privilege"):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -144,7 +142,6 @@ def show_tables(
                 assert output == "", error()
 
         with Scenario("SHOW TABLES with privilege"):
-
             with When(f"I grant {privilege} on the table"):
                 node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
@@ -156,7 +153,6 @@ def show_tables(
                 )
 
         with Scenario("SHOW TABLES with revoked privilege"):
-
             with When(f"I grant {privilege} on the table"):
                 node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
@@ -187,9 +183,7 @@ def exists(self, privilege, on, grant_target_name, user_name, table_name, node=N
         on = f"{table_name}"
 
     with table(node, table_name):
-
         with Scenario("EXISTS without privilege"):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -205,7 +199,6 @@ def exists(self, privilege, on, grant_target_name, user_name, table_name, node=N
                 )
 
         with Scenario("EXISTS with privilege"):
-
             with When(f"I grant {privilege} on the table"):
                 node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
@@ -213,7 +206,6 @@ def exists(self, privilege, on, grant_target_name, user_name, table_name, node=N
                 node.query(f"EXISTS {table_name}", settings=[("user", user_name)])
 
         with Scenario("EXISTS with revoked privilege"):
-
             with When(f"I grant {privilege} on the table"):
                 node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
@@ -246,9 +238,7 @@ def check(self, privilege, on, grant_target_name, user_name, table_name, node=No
         on = f"{table_name}"
 
     with table(node, table_name):
-
         with Scenario("CHECK without privilege"):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -264,7 +254,6 @@ def check(self, privilege, on, grant_target_name, user_name, table_name, node=No
                 )
 
         with Scenario("CHECK with privilege"):
-
             with When(f"I grant {privilege} on the table"):
                 node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
@@ -272,7 +261,6 @@ def check(self, privilege, on, grant_target_name, user_name, table_name, node=No
                 node.query(f"CHECK TABLE {table_name}", settings=[("user", user_name)])
 
         with Scenario("CHECK with revoked privilege"):
-
             with When(f"I grant {privilege} on the table"):
                 node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 

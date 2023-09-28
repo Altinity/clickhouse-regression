@@ -56,7 +56,6 @@ def privilege_check(grant_target_name, user_name, table_type, privilege, node=No
         table_name = f"merge_tree_{getuid()}"
 
         with table(node, table_name, table_type):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -75,7 +74,6 @@ def privilege_check(grant_target_name, user_name, table_type, privilege, node=No
         table_name = f"merge_tree_{getuid()}"
 
         with table(node, table_name, table_type):
-
             with When("I grant the freeze privilege"):
                 node.query(f"GRANT {privilege} ON {table_name} TO {grant_target_name}")
 
@@ -90,7 +88,6 @@ def privilege_check(grant_target_name, user_name, table_type, privilege, node=No
         table_name = f"merge_tree_{getuid()}"
 
         with table(node, table_name, table_type):
-
             with When("I grant the freeze privilege"):
                 node.query(f"GRANT {privilege} ON {table_name} TO {grant_target_name}")
             with And("I revoke the freeze privilege"):

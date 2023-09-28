@@ -780,11 +780,9 @@ def decryption(self):
 
     for mode, key_len, iv_len, aad_len in modes:
         for datatype, plaintext in plaintexts:
-
             with Example(
                 f"""mode={mode.strip("'")} datatype={datatype.strip("'")} iv={iv_len} aad={aad_len}"""
             ) as example:
-
                 with Given("I have ciphertext"):
                     example_name = basename(example.name)
                     ciphertext = getattr(

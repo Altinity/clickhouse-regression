@@ -41,7 +41,6 @@ def inline_check(self, arithmetic_func, expected_result, int_type, min, max, nod
         skip("divide is not supported for int types")
 
     if arithmetic_func in ["negate", "abs"]:
-
         with When(f"I check {arithmetic_func} with {int_type}"):
             output = node.query(f"SELECT {arithmetic_func}(to{int_type}(1))").output
             assert output == expected_result, error()
@@ -54,7 +53,6 @@ def inline_check(self, arithmetic_func, expected_result, int_type, min, max, nod
             )
 
     else:
-
         with When(f"I check {arithmetic_func} with {int_type}"):
             output = node.query(
                 f"SELECT {arithmetic_func}(to{int_type}(1), to{int_type}(1))"
@@ -62,7 +60,6 @@ def inline_check(self, arithmetic_func, expected_result, int_type, min, max, nod
             assert output == expected_result, error()
 
         if arithmetic_func in ["gcd", "lcm"]:
-
             if int_type in ["UInt128", "UInt256"]:
                 exitcode = 153
             else:
@@ -76,7 +73,6 @@ def inline_check(self, arithmetic_func, expected_result, int_type, min, max, nod
                 )
 
         else:
-
             with When(f"I check {arithmetic_func} with {int_type} max and min value"):
                 execute_query(
                     f"""
@@ -102,9 +98,7 @@ def table_check(self, arithmetic_func, expected_result, int_type, min, max, node
         table(name=table_name, data_type=int_type)
 
     if arithmetic_func in ["negate", "abs"]:
-
         for value in [1, min, max]:
-
             with When(
                 f"I insert {arithmetic_func} with {int_type} {value} into the table"
             ):
@@ -120,7 +114,6 @@ def table_check(self, arithmetic_func, expected_result, int_type, min, max, node
             )
 
     else:
-
         with When(f"I insert {arithmetic_func} with {int_type} into the table"):
             node.query(
                 f"INSERT INTO {table_name} SELECT round({arithmetic_func}(to{int_type}(1), to{int_type}(1)), {rounding_precision})"
@@ -131,9 +124,7 @@ def table_check(self, arithmetic_func, expected_result, int_type, min, max, node
             assert output == expected_result, error()
 
         if arithmetic_func in ["gcd", "lcm"]:
-
             if int_type in ["UInt128", "UInt256"]:
-
                 with When(
                     f"I insert {arithmetic_func} with {int_type} {min} into the table"
                 ):
@@ -151,9 +142,7 @@ def table_check(self, arithmetic_func, expected_result, int_type, min, max, node
                     )
 
             else:
-
                 for value in [min, max]:
-
                     with When(
                         f"I insert {arithmetic_func} with {int_type} {value} into the table"
                     ):
@@ -164,9 +153,7 @@ def table_check(self, arithmetic_func, expected_result, int_type, min, max, node
                         )
 
         else:
-
             for value in [min, max]:
-
                 with When(
                     f"I insert {arithmetic_func} with {int_type} {value} into the table"
                 ):
@@ -191,13 +178,11 @@ def inline_check_dec(self, arithmetic_func, expected_result, node=None):
         node = self.context.node
 
     if arithmetic_func in ["negate", "abs"]:
-
         with When(f"I check {arithmetic_func} with toDecimal256"):
             output = node.query(f"SELECT {arithmetic_func}(toDecimal256(1,0))").output
             assert output == expected_result, error()
 
     elif arithmetic_func in ["modulo", "moduloOrZero", "gcd", "lcm"]:
-
         with When(f"I check {arithmetic_func} with toDecimal256"):
             node.query(
                 f"SELECT {arithmetic_func}(toDecimal256(1,0), toDecimal256(1,0))",
@@ -206,7 +191,6 @@ def inline_check_dec(self, arithmetic_func, expected_result, node=None):
             )
 
     else:
-
         with When(f"I check {arithmetic_func} with toDecimal256"):
             output = node.query(
                 f"SELECT {arithmetic_func}(toDecimal256(1,0), toDecimal256(1,0))"
@@ -228,7 +212,6 @@ def table_check_dec(self, arithmetic_func, expected_result, node=None):
         table(name=table_name, data_type="Decimal256(0)")
 
     if arithmetic_func in ["negate", "abs"]:
-
         with When(f"I insert {arithmetic_func} with toDecimal256 into the table"):
             node.query(
                 f"INSERT INTO {table_name} SELECT {arithmetic_func}(toDecimal256(1,0))"
@@ -242,7 +225,6 @@ def table_check_dec(self, arithmetic_func, expected_result, node=None):
             )
 
     elif arithmetic_func in ["modulo", "moduloOrZero", "gcd", "lcm"]:
-
         with When(f"I check {arithmetic_func} with toDecimal256"):
             node.query(
                 f"INSERT INTO {table_name} SELECT {arithmetic_func}(toDecimal256(1,0), toDecimal256(1,0))",

@@ -16,7 +16,6 @@ def drop_user_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=drop_user,
             examples=Examples(
@@ -41,7 +40,6 @@ def drop_user_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -75,11 +73,9 @@ def drop_user(self, privilege, grant_target_name, user_name, node=None):
         node = self.context.node
 
     with Scenario("DROP USER without privilege"):
-
         drop_user_name = f"drop_user_{getuid()}"
 
         with user(node, drop_user_name):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 

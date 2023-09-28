@@ -241,7 +241,6 @@ def minio_regression(
         docker_compose_project_dir=os.path.join(current_dir(), env),
         environ={"MINIO_ROOT_PASSWORD": root_password, "MINIO_ROOT_USER": root_user},
     ) as cluster:
-
         self.context.cluster = cluster
 
         with Given("I have a minio client"):
@@ -329,7 +328,6 @@ def aws_s3_regression(
             "AWS_DEFAULT_REGION": region,
         },
     ) as cluster:
-
         uri = f"https://s3.{region}.amazonaws.com/{bucket}/data/"
 
         self.context.cluster = cluster
@@ -395,7 +393,6 @@ def gcs_regression(
         docker_compose_project_dir=os.path.join(current_dir(), env),
         environ={"GCS_KEY_SECRET": access_key, "GCS_KEY_ID": key_id},
     ) as cluster:
-
         self.context.cluster = cluster
 
         Feature(test=load("s3.tests.table_function", "gcs"))(

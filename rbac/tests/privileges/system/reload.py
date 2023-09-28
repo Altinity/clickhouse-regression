@@ -42,7 +42,6 @@ def config_privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=config,
             examples=Examples(
@@ -65,7 +64,6 @@ def config_privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -101,7 +99,6 @@ def config(self, privilege, grant_target_name, user_name, node=None):
         node = self.context.node
 
     with Scenario("SYSTEM RELOAD CONFIG without privilege"):
-
         with When("I grant the user NONE privilege"):
             node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -117,7 +114,6 @@ def config(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("SYSTEM RELOAD CONFIG with privilege"):
-
         with When(f"I grant {privilege} on the table"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -125,7 +121,6 @@ def config(self, privilege, grant_target_name, user_name, node=None):
             node.query("SYSTEM RELOAD CONFIG", settings=[("user", f"{user_name}")])
 
     with Scenario("SYSTEM RELOAD CONFIG with revoked privilege"):
-
         with When(f"I grant {privilege} on the table"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -152,7 +147,6 @@ def dictionary_privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=dictionary,
             examples=Examples(
@@ -178,7 +172,6 @@ def dictionary_privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -218,12 +211,10 @@ def dictionary(self, privilege, grant_target_name, user_name, node=None):
         node = self.context.node
 
     with Scenario("SYSTEM RELOAD DICTIONARY without privilege"):
-
         dict_name = f"dict_{getuid()}"
         table_name = f"table_{getuid()}"
 
         with dict_setup(node, table_name, dict_name):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -239,12 +230,10 @@ def dictionary(self, privilege, grant_target_name, user_name, node=None):
                 )
 
     with Scenario("SYSTEM RELOAD DICTIONARY with privilege"):
-
         dict_name = f"dict_{getuid()}"
         table_name = f"table_{getuid()}"
 
         with dict_setup(node, table_name, dict_name):
-
             with When(f"I grant {privilege} on the table"):
                 node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -255,12 +244,10 @@ def dictionary(self, privilege, grant_target_name, user_name, node=None):
                 )
 
     with Scenario("SYSTEM RELOAD DICTIONARY with revoked privilege"):
-
         dict_name = f"dict_{getuid()}"
         table_name = f"table_{getuid()}"
 
         with dict_setup(node, table_name, dict_name):
-
             with When(f"I grant {privilege} on the table"):
                 node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -287,7 +274,6 @@ def dictionaries_privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=dictionaries,
             examples=Examples(
@@ -313,7 +299,6 @@ def dictionaries_privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -353,7 +338,6 @@ def dictionaries(self, privilege, grant_target_name, user_name, node=None):
         node = self.context.node
 
     with Scenario("SYSTEM RELOAD DICTIONARIES without privilege"):
-
         with When("I grant the user NONE privilege"):
             node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -369,7 +353,6 @@ def dictionaries(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("SYSTEM RELOAD DICTIONARIES with privilege"):
-
         with When(f"I grant {privilege} on the table"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -379,7 +362,6 @@ def dictionaries(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("SYSTEM RELOAD DICTIONARIES with revoked privilege"):
-
         with When(f"I grant {privilege} on the table"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -406,7 +388,6 @@ def embedded_dictionaries_privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=embedded_dictionaries,
             examples=Examples(
@@ -432,7 +413,6 @@ def embedded_dictionaries_privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -471,7 +451,6 @@ def embedded_dictionaries(self, privilege, grant_target_name, user_name, node=No
         node = self.context.node
 
     with Scenario("SYSTEM RELOAD EMBEDDED DICTIONARIES without privilege"):
-
         with When("I grant the user NONE privilege"):
             node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -489,7 +468,6 @@ def embedded_dictionaries(self, privilege, grant_target_name, user_name, node=No
             )
 
     with Scenario("SYSTEM RELOAD EMBEDDED DICTIONARIES with privilege"):
-
         with When(f"I grant {privilege} on the table"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -502,7 +480,6 @@ def embedded_dictionaries(self, privilege, grant_target_name, user_name, node=No
             )
 
     with Scenario("SYSTEM RELOAD EMBEDDED DICTIONARIES with revoked privilege"):
-
         with When(f"I grant {privilege} on the table"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -531,7 +508,6 @@ def function_privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=function,
             examples=Examples(
@@ -557,7 +533,6 @@ def function_privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -600,7 +575,6 @@ def function(self, privilege, grant_target_name, user_name, node=None):
             node.query(f"CREATE FUNCTION {func_name} AS (x) -> 2*x;")
 
         with Scenario("SYSTEM RELOAD FUNCTION without privilege"):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -626,7 +600,6 @@ def function(self, privilege, grant_target_name, user_name, node=None):
             #     )
 
         with Scenario("SYSTEM RELOAD FUNCTION with privilege"):
-
             with When(f"I grant {privilege} on the table"):
                 node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -645,7 +618,6 @@ def function(self, privilege, grant_target_name, user_name, node=None):
             #     )
 
         with Scenario("SYSTEM RELOAD FUNCTION with revoked privilege"):
-
             with When(f"I grant {privilege} on the table"):
                 node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -685,7 +657,6 @@ def symbols_privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=symbols,
             examples=Examples(
@@ -708,7 +679,6 @@ def symbols_privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -743,7 +713,6 @@ def symbols(self, privilege, grant_target_name, user_name, node=None):
         node = self.context.node
 
     with Scenario("SYSTEM RELOAD SYMBOLS without privilege"):
-
         with When("I grant the user NONE privilege"):
             node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -759,7 +728,6 @@ def symbols(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("SYSTEM RELOAD SYMBOLS with privilege"):
-
         with When(f"I grant {privilege} on the table"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -770,7 +738,6 @@ def symbols(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("SYSTEM RELOAD SYMBOLS with revoked privilege"):
-
         with When(f"I grant {privilege} on the table"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 

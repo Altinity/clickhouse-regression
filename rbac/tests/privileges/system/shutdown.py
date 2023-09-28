@@ -18,7 +18,6 @@ def privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=check_privilege,
             examples=Examples(
@@ -43,7 +42,6 @@ def privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -96,7 +94,6 @@ def shutdown(self, privilege, grant_target_name, user_name, node=None):
         node = self.context.node
 
     with Scenario("SYSTEM SHUTDOWN without privilege"):
-
         with When("I grant the user NONE privilege"):
             node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -144,7 +141,6 @@ def shutdown(self, privilege, grant_target_name, user_name, node=None):
                 node.restart(safe=False)
 
     with Scenario("SYSTEM SHUTDOWN with revoked privilege"):
-
         with When(f"I grant {privilege}"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -171,7 +167,6 @@ def kill(self, privilege, grant_target_name, user_name, node=None):
         node = self.context.node
 
     with Scenario("SYSTEM KILL without privilege"):
-
         with When("I grant the user NONE privilege"):
             node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -221,7 +216,6 @@ def kill(self, privilege, grant_target_name, user_name, node=None):
                 node.restart(safe=False)
 
     with Scenario("SYSTEM KILL with revoked privilege"):
-
         with When(f"I grant {privilege}"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 

@@ -16,7 +16,6 @@ def privilege_check(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, "ALL"):
-
         with When("I grant the ALL role to the user"):
             node.query(f"GRANT ALL TO {user_name}")
 

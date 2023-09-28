@@ -18,7 +18,6 @@ def public_tables(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         with When("I check the user is able to select on system.one"):
             node.query(
                 "SELECT count(*) FROM system.one", settings=[("user", user_name)]

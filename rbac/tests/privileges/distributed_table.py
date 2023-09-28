@@ -1016,7 +1016,6 @@ def select_with_table_on_distributed_table(
             )
 
         for permutation in permutations(table_count=3):
-
             with grant_select_on_table(
                 node,
                 permutation,
@@ -1025,11 +1024,9 @@ def select_with_table_on_distributed_table(
                 table1_name,
                 table2_name,
             ) as tables_granted:
-
                 with When(
                     f"permutation={permutation}, tables granted = {tables_granted}"
                 ):
-
                     with Then(
                         "I attempt to select from the distributed table as the user"
                     ):
@@ -1041,7 +1038,6 @@ def select_with_table_on_distributed_table(
                         )
 
         with When("I grant select on all tables"):
-
             with grant_select_on_table(
                 node,
                 max(permutations(table_count=3)) + 1,
@@ -1050,7 +1046,6 @@ def select_with_table_on_distributed_table(
                 table1_name,
                 table2_name,
             ):
-
                 with Then("I attempt to select from the distributed table as the user"):
                     node.query(
                         f"SELECT * FROM {table2_name}",

@@ -101,7 +101,6 @@ def table(name, node, mysql_node):
                 )
 
         with And("table that uses MySQL table as the external source"):
-
             with When("I drop the table if exists"):
                 node.query(f"DROP TABLE IF EXISTS {name}")
             with And("I create the table"):
@@ -162,7 +161,6 @@ def table_func(name, node, mysql_node):
         yield f"mysql('{mysql_node.name}:3306', 'db', '{name}', 'user', 'password')"
 
     finally:
-
         with Finally("I drop the table", flags=TE):
             node.query(f"DROP TABLE IF EXISTS {name}")
 
@@ -241,13 +239,11 @@ def to_decimal256(self, node=None):
         node = self.context.node
 
     with When(f"I check toDecimal256 with 0 scale with 1, {max}, and {min}"):
-
         for value in [1, min, max]:
             output = node.query(f"SELECT toDecimal256('{value}',0)").output
             assert output == str(value), error()
 
     for scale in range(1, 76):
-
         with When(f"I check toDecimal256 with {scale} scale with its max"):
             output = node.query(
                 f"SELECT toDecimal256('{10**(76-scale)-1}',{scale})"
@@ -273,7 +269,6 @@ def MySQL_table(self, node=None):
     mysql_node = self.context.mysql_node
 
     with table(table_name, node, mysql_node):
-
         with When("I insert parameters values in MySQL"):
             sql = f"""
                 INSERT INTO {table_name}(int128, uint128, int256, uint256, dec256) VALUES (1,1,1,1,1);
@@ -299,7 +294,6 @@ def MySQL_func(self, node=None):
     mysql_node = self.context.mysql_node
 
     with table_func(table_name, node, mysql_node) as table_function:
-
         with When("I insert parameters values in MySQL"):
             sql = f"""
                 INSERT INTO {table_name}(int128, uint128, int256, uint256, dec256) VALUES (1,1,1,1,1);
@@ -338,7 +332,6 @@ def MySQL_dict(self, node=None):
     table_name = f"table_{getuid()}"
 
     with dictionary(table_name, node, mysql_node):
-
         with When("I insert parameters values in MySQL"):
             sql = f"""
                 INSERT INTO {table_name}(int128, uint128, int256, uint256, dec256) VALUES (1,1,1,1,1);

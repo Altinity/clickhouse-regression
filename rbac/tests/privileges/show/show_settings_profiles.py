@@ -29,7 +29,6 @@ def privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=check_privilege,
             examples=Examples(
@@ -54,7 +53,6 @@ def privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -110,7 +108,6 @@ def show_settings_profiles(self, privilege, grant_target_name, user_name, node=N
         node = self.context.node
 
     with Scenario("SHOW SETTINGS PROFILES without privilege"):
-
         with When("I grant the user NONE privilege"):
             node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -126,7 +123,6 @@ def show_settings_profiles(self, privilege, grant_target_name, user_name, node=N
             )
 
     with Scenario("SHOW SETTINGS PROFILES with privilege"):
-
         with When(f"I grant {privilege}"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -134,7 +130,6 @@ def show_settings_profiles(self, privilege, grant_target_name, user_name, node=N
             node.query(f"SHOW SETTINGS PROFILES", settings=[("user", f"{user_name}")])
 
     with Scenario("SHOW SETTINGS PROFILES with revoked privilege"):
-
         with When(f"I grant {privilege}"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -165,7 +160,6 @@ def show_create(self, privilege, grant_target_name, user_name, node=None):
         target_settings_profile_name = f"target_settings_profile_{getuid()}"
 
         with settings_profile(node, target_settings_profile_name):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -184,7 +178,6 @@ def show_create(self, privilege, grant_target_name, user_name, node=None):
         target_settings_profile_name = f"target_settings_profile_{getuid()}"
 
         with settings_profile(node, target_settings_profile_name):
-
             with When(f"I grant {privilege}"):
                 node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -198,7 +191,6 @@ def show_create(self, privilege, grant_target_name, user_name, node=None):
         target_settings_profile_name = f"target_settings_profile_{getuid()}"
 
         with settings_profile(node, target_settings_profile_name):
-
             with When(f"I grant {privilege}"):
                 node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 

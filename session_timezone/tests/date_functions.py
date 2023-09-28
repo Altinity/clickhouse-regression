@@ -131,7 +131,8 @@ def date_zero(self):
 )
 def snowflake_to_datetime(self):
     """Verify correctness of the extract time from Snowflake ID as DateTime and Datetime64 by the `snowflakeToDateTime`
-    and `snowflakeToDateTime64` functions when the `session_timezone` setting is applied."""
+    and `snowflakeToDateTime64` functions when the `session_timezone` setting is applied.
+    """
     node = self.context.cluster.node("clickhouse1")
 
     with Check("snowflakeToDateTime function"):
@@ -153,7 +154,8 @@ def snowflake_to_datetime(self):
 )
 def datetime_to_snowflake(self):
     """Verify correctness of the convert DateTime, DateTime64 value to the Snowflake ID at the giving time by
-    using `dateTimeToSnowflake` and `dateTime64ToSnowflake` when the `session_timezone` setting is applied."""
+    using `dateTimeToSnowflake` and `dateTime64ToSnowflake` when the `session_timezone` setting is applied.
+    """
     node = self.context.cluster.node("clickhouse1")
 
     with Check("dateTime64ToSnowflake function"):
@@ -363,7 +365,6 @@ def ulid_date(self):
 def feature(self):
     """Check Date functions."""
     with Pool(1) as executor:
-
         try:
             for feature in loads(current_module(), Feature):
                 if not feature.name.endswith("date functions"):

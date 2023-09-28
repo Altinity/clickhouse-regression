@@ -88,7 +88,6 @@ def regression(
             env = f"{folder_name}_performance_env"
 
         for ssl in ["false", "true"]:
-
             self.context.ssl = ssl
 
             if ssl == "true":

@@ -17,7 +17,6 @@ def dns_cache_privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=dns_cache,
             examples=Examples(
@@ -43,7 +42,6 @@ def dns_cache_privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -85,7 +83,6 @@ def dns_cache(self, privilege, grant_target_name, user_name, node=None):
         node = self.context.node
 
     with Scenario("SYSTEM DROP DNS CACHE without privilege"):
-
         with When("I grant the user NONE privilege"):
             node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -101,7 +98,6 @@ def dns_cache(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("SYSTEM DROP DNS CACHE with privilege"):
-
         with When(f"I grant {privilege} on the table"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -109,7 +105,6 @@ def dns_cache(self, privilege, grant_target_name, user_name, node=None):
             node.query("SYSTEM DROP DNS CACHE", settings=[("user", f"{user_name}")])
 
     with Scenario("SYSTEM DROP DNS CACHE with revoked privilege"):
-
         with When(f"I grant {privilege} on the table"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -136,7 +131,6 @@ def mark_cache_privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=mark_cache,
             examples=Examples(
@@ -162,7 +156,6 @@ def mark_cache_privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -204,7 +197,6 @@ def mark_cache(self, privilege, grant_target_name, user_name, node=None):
         node = self.context.node
 
     with Scenario("SYSTEM DROP MARK CACHE without privilege"):
-
         with When("I grant the user NONE privilege"):
             node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -220,7 +212,6 @@ def mark_cache(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("SYSTEM DROP MARK CACHE with privilege"):
-
         with When(f"I grant {privilege} on the table"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -228,7 +219,6 @@ def mark_cache(self, privilege, grant_target_name, user_name, node=None):
             node.query("SYSTEM DROP MARK CACHE", settings=[("user", f"{user_name}")])
 
     with Scenario("SYSTEM DROP MARK CACHE with revoked privilege"):
-
         with When(f"I grant {privilege} on the table"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -255,7 +245,6 @@ def uncompressed_cache_privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=uncompressed_cache,
             examples=Examples(
@@ -281,7 +270,6 @@ def uncompressed_cache_privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -323,7 +311,6 @@ def uncompressed_cache(self, privilege, grant_target_name, user_name, node=None)
         node = self.context.node
 
     with Scenario("SYSTEM DROP UNCOMPRESSED CACHE without privilege"):
-
         with When("I grant the user NONE privilege"):
             node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -341,7 +328,6 @@ def uncompressed_cache(self, privilege, grant_target_name, user_name, node=None)
             )
 
     with Scenario("SYSTEM DROP UNCOMPRESSED CACHE with privilege"):
-
         with When(f"I grant {privilege} on the table"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -351,7 +337,6 @@ def uncompressed_cache(self, privilege, grant_target_name, user_name, node=None)
             )
 
     with Scenario("SYSTEM DROP UNCOMPRESSED CACHE with revoked privilege"):
-
         with When(f"I grant {privilege} on the table"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -380,7 +365,6 @@ def mmap_cache_privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=mmap_cache,
             examples=Examples(
@@ -406,7 +390,6 @@ def mmap_cache_privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -448,7 +431,6 @@ def mmap_cache(self, privilege, grant_target_name, user_name, node=None):
         node = self.context.node
 
     with Scenario("SYSTEM DROP MMAP CACHE without privilege"):
-
         with When("I grant the user NONE privilege"):
             node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -464,7 +446,6 @@ def mmap_cache(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("SYSTEM DROP MMAP CACHE with privilege"):
-
         with When(f"I grant {privilege} on the table"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -472,7 +453,6 @@ def mmap_cache(self, privilege, grant_target_name, user_name, node=None):
             node.query("SYSTEM DROP MMAP CACHE", settings=[("user", f"{user_name}")])
 
     with Scenario("SYSTEM DROP MMAP CACHE with revoked privilege"):
-
         with When(f"I grant {privilege} on the table"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -499,7 +479,6 @@ def compiled_expression_cache_privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=compiled_expression_cache,
             examples=Examples(
@@ -525,7 +504,6 @@ def compiled_expression_cache_privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -567,7 +545,6 @@ def compiled_expression_cache(self, privilege, grant_target_name, user_name, nod
         node = self.context.node
 
     with Scenario("SYSTEM DROP COMPILED EXPRESSION CACHE without privilege"):
-
         with When("I grant the user NONE privilege"):
             node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -585,7 +562,6 @@ def compiled_expression_cache(self, privilege, grant_target_name, user_name, nod
             )
 
     with Scenario("SYSTEM DROP COMPILED EXPRESSION CACHE with privilege"):
-
         with When(f"I grant {privilege} on the table"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -598,7 +574,6 @@ def compiled_expression_cache(self, privilege, grant_target_name, user_name, nod
             )
 
     with Scenario("SYSTEM DROP COMPILED EXPRESSION CACHE with revoked privilege"):
-
         with When(f"I grant {privilege} on the table"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 

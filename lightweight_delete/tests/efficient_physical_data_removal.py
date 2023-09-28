@@ -43,7 +43,9 @@ def delete_and_check_size_of_the_table(self, node=None):
         for attempt in retries(timeout=100, delay=2):
             with attempt:
                 size_on_disk_before_deletion = int(
-                    node.command("du -s /var/lib/clickhouse/store | awk '{print $1}'").output
+                    node.command(
+                        "du -s /var/lib/clickhouse/store | awk '{print $1}'"
+                    ).output
                 )
 
     with When(f"I delete all rows from the table"):

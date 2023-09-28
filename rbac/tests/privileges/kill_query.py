@@ -14,7 +14,6 @@ def privilege_granted_directly_or_via_role(self, node=None):
 
     with Suite("user with direct privilege"):
         with user(node, user_name):
-
             with When(
                 f"I run checks that {user_name} is only able to execute KILL QUERY with required privileges"
             ):
@@ -24,7 +23,6 @@ def privilege_granted_directly_or_via_role(self, node=None):
 
     with Suite("user with privilege via role"):
         with user(node, user_name), role(node, role_name):
-
             with When("I grant the role to the user"):
                 node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -41,7 +39,6 @@ def privilege_check(grant_target_name, user_name, node=None):
     exitcode, message = errors.not_enough_privileges(name=f"{user_name}")
 
     with Scenario("user without privilege"):
-
         with When("I grant the user NONE privilege"):
             node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -57,7 +54,6 @@ def privilege_check(grant_target_name, user_name, node=None):
             )
 
     with Scenario("user with privilege"):
-
         with When("I grant kill query privilege"):
             node.query(f"GRANT KILL QUERY TO {grant_target_name}")
 
@@ -65,7 +61,6 @@ def privilege_check(grant_target_name, user_name, node=None):
             node.query(f"KILL QUERY WHERE 1", settings=[("user", user_name)])
 
     with Scenario("user with revoked privilege"):
-
         with When("I grant the kill query privilege"):
             node.query(f"GRANT KILL QUERY TO {grant_target_name}")
 
@@ -81,7 +76,6 @@ def privilege_check(grant_target_name, user_name, node=None):
             )
 
     with Scenario("user with revoked ALL privilege"):
-
         with When("I grant the kill query privilege"):
             node.query(f"GRANT KILL QUERY TO {grant_target_name}")
 
@@ -97,7 +91,6 @@ def privilege_check(grant_target_name, user_name, node=None):
             )
 
     with Scenario("execute on cluster"):
-
         with When("I grant the truncate privilege"):
             node.query(f"GRANT KILL QUERY TO {grant_target_name}")
 
@@ -107,7 +100,6 @@ def privilege_check(grant_target_name, user_name, node=None):
             )
 
     with Scenario("user with ALL privilege"):
-
         with When("I revoke ALL privilege"):
             node.query(f"REVOKE ALL ON *.* FROM {grant_target_name}")
 

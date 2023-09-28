@@ -17,7 +17,6 @@ def privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=flush_logs,
             examples=Examples(
@@ -43,7 +42,6 @@ def privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -82,7 +80,6 @@ def flush_logs(self, privilege, on, grant_target_name, user_name, node=None):
         node = self.context.node
 
     with Scenario("SYSTEM FLUSH LOGS without privilege"):
-
         with When("I grant the user NONE privilege"):
             node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -98,7 +95,6 @@ def flush_logs(self, privilege, on, grant_target_name, user_name, node=None):
             )
 
     with Scenario("SYSTEM FLUSH LOGS with privilege"):
-
         with When(f"I grant {privilege} on the table"):
             node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
@@ -106,7 +102,6 @@ def flush_logs(self, privilege, on, grant_target_name, user_name, node=None):
             node.query(f"SYSTEM FLUSH LOGS", settings=[("user", f"{user_name}")])
 
     with Scenario("SYSTEM FLUSH LOGS with revoked privilege"):
-
         with When(f"I grant {privilege} on the table"):
             node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
@@ -212,7 +207,6 @@ def flush_distributed(
                 )
 
             with Scenario("SYSTEM FLUSH DISTRIBUTED without privilege"):
-
                 with When("I grant the user NONE privilege"):
                     node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -228,7 +222,6 @@ def flush_distributed(
                     )
 
             with Scenario("SYSTEM FLUSH DISTRIBUTED with privilege"):
-
                 with When(f"I grant {privilege} on the table"):
                     node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 
@@ -239,7 +232,6 @@ def flush_distributed(
                     )
 
             with Scenario("SYSTEM FLUSH DISTRIBUTED with revoked privilege"):
-
                 with When(f"I grant {privilege} on the table"):
                     node.query(f"GRANT {privilege} ON {on} TO {grant_target_name}")
 

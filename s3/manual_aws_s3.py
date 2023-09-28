@@ -102,7 +102,6 @@ def regression(
         docker_compose_project_dir=os.path.join(current_dir(), "s3_env"),
         nodes=nodes,
     ) as cluster:
-
         self.context.cluster = cluster
         self.context.aws_s3_bucket = aws_s3_bucket
         self.context.aws_s3_region = aws_s3_region

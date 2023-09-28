@@ -116,9 +116,7 @@ xfails = {
     ":/ttl moves/defaults to delete": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/50060")
     ],
-    ":/alter move/concurrent/concurrent alter move and drop": [
-        (Fail, "unstable test")
-    ],
+    ":/alter move/concurrent/concurrent alter move and drop": [(Fail, "unstable test")],
     ":/alter move/concurrent/concurrent alter move insert and select": [
         (Fail, "unstable test")
     ],
@@ -164,7 +162,6 @@ def feature(
         environ=environ,
         docker_compose_project_dir=os.path.join(current_dir(), env),
     ) as cluster:
-
         cluster.with_minio = with_minio
         cluster.with_s3amazon = with_s3amazon
         cluster.with_s3gcs = with_s3gcs
@@ -174,7 +171,6 @@ def feature(
         common_args = dict(args=args, flags=TE)
 
         with add_storage_config(with_minio, with_s3amazon, with_s3gcs, environ):
-
             Scenario(
                 run=load("tiered_storage.tests.startup_and_queries", "scenario"),
                 **common_args,
@@ -349,7 +345,6 @@ def regression(
         self.skip.append(The("/tiered storage/:/manual move with downtime"))
 
     with Shell() as bash:
-
         if with_s3amazon:
             assert (
                 aws_s3_key_id.value is not None

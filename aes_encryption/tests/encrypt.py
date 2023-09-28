@@ -698,7 +698,6 @@ def encryption(self):
             with Example(
                 f"""mode={mode.strip("'")} datatype={datatype.strip("'")} iv={iv_len} aad={aad_len}"""
             ) as example:
-
                 r = encrypt(
                     plaintext=plaintext,
                     key=f"'{key[:key_len]}'",

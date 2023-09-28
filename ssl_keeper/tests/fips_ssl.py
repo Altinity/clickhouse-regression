@@ -449,7 +449,6 @@ def feature(self):
             join()
 
     with Pool(1) as executor:
-
         try:
             for feature in loads(current_module(), Feature):
                 if not feature.name.endswith("FIPS SSL"):

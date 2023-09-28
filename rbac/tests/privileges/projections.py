@@ -14,7 +14,6 @@ def privilege_granted_directly_or_via_role(self, node=None):
 
     with Suite("user with direct privilege"):
         with user(node, user_name):
-
             with When(
                 f"I run checks that {user_name} is only able to manipulate projections with required privileges"
             ):
@@ -25,7 +24,6 @@ def privilege_granted_directly_or_via_role(self, node=None):
 
     with Suite("user with privilege via role"):
         with user(node, user_name), role(node, role_name):
-
             with When("I grant the role to the user"):
                 node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -106,7 +104,6 @@ def drop_projection(self, grant_target_name, user_name, node=None):
     )
 
     with table(node, table_name):
-
         with Given("I have a projection"):
             node.query(
                 f"ALTER TABLE {table_name} ADD PROJECTION {proj_name} (SELECT y)"
@@ -164,7 +161,6 @@ def materialize_projection(self, grant_target_name, user_name, node=None):
     )
 
     with table(node, table_name, "ReplicatedMergeTree-one_shard_cluster"):
-
         with Given("I have a projection"):
             node.query(
                 f"ALTER TABLE {table_name} ADD PROJECTION {proj_name} (SELECT y)"
@@ -222,7 +218,6 @@ def clear_projection(self, grant_target_name, user_name, node=None):
     )
 
     with table(node, table_name, "ReplicatedMergeTree-one_shard_cluster"):
-
         with Given("I have a projection"):
             node.query(
                 f"ALTER TABLE {table_name} ADD PROJECTION {proj_name} (SELECT y)"
@@ -293,7 +288,6 @@ def feature(self, node="clickhouse1", stress=None, parallel=None):
                 )(grant_target_name=user_name, user_name=user_name)
 
             with user(self.context.node, user_name), role(self.context.node, role_name):
-
                 with When("I grant the role to the user"):
                     self.context.node.query(f"GRANT {role_name} TO {user_name}")
 

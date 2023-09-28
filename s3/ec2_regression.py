@@ -85,7 +85,6 @@ def regression(
             "AWS_SESSION_TOKEN": session_token,
         },
     ) as cluster:
-
         self.context.cluster = cluster
 
         with Given("I make sure the AWS credentials are set"):

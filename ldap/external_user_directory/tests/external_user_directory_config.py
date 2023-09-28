@@ -301,7 +301,6 @@ def defined_twice_roles(self):
             with table(f"table0_{getuid()}", create_statement) as table0_name, table(
                 f"table1_{getuid()}", create_statement
             ) as table1_name:
-
                 with Given(
                     "I grant select privilege for the first table to the first role"
                 ):
@@ -404,7 +403,6 @@ def missing_roles(self):
             f"table_{getuid()}",
             "CREATE TABLE {name} (d DATE, s String, i UInt8) ENGINE = Memory()",
         ) as table_name:
-
             config = create_entries_ldap_external_user_directory_config_content(entries)
 
             with ldap_external_user_directory(

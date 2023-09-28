@@ -265,7 +265,6 @@ def invalid_s3_storage_config(
             node.restart_clickhouse(safe=False, wait_healthy=False)
 
     finally:
-
         with When(f"I remove {config.name}"):
             with By("removing invalid configuration file"):
                 node.command(f"rm -rf {config.path}", timeout=timeout, exitcode=0)
@@ -1078,7 +1077,6 @@ def default_s3_disk_and_volume(
         settings = {}
 
     with Given("I have a disk configuration with a S3 storage disk, access id and key"):
-
         if check_clickhouse_version(">=22.8")(self):
             disks = {
                 disk_name: {

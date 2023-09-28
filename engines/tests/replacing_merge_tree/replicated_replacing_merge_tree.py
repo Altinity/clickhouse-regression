@@ -12,7 +12,8 @@ append_path(sys.path, "..")
 @TestScenario
 def without_is_deleted(self, cluster_name=None):
     """Checking that ReplicatedReplacingMergeTree engine created without `is_deleted` parameter setting works in the
-    same way as the old ReplacingMergeTree engine, and that it does not hide rows with is_deleted=1."""
+    same way as the old ReplacingMergeTree engine, and that it does not hide rows with is_deleted=1.
+    """
 
     if cluster_name is None:
         cluster_name = self.context.cluster_name
@@ -187,7 +188,8 @@ def with_is_deleted(self, cluster_name=None):
 @TestScenario
 def with_is_deleted_distributed(self, cluster_name=None):
     """Checking that Distributed engine on the new ReplacingMergeTree engine created with `is_deleted` parameter setting
-    works in the same way as the old ReplacingMergeTree engine,but it hides rows with is_deleted=1."""
+    works in the same way as the old ReplacingMergeTree engine,but it hides rows with is_deleted=1.
+    """
 
     if cluster_name is None:
         cluster_name = self.context.cluster_name

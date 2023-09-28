@@ -14,9 +14,7 @@ def no_privilege(self, node=None):
         table_name = f"merge_tree_{getuid()}"
 
         with table(node, table_name):
-
             with user(node, user_name):
-
                 with When("I grant the user NONE privilege"):
                     node.query(f"GRANT NONE TO {user_name}")
 
@@ -34,9 +32,7 @@ def no_privilege(self, node=None):
         table_name = f"merge_tree_{getuid()}"
 
         with table(node, table_name):
-
             with user(node, user_name):
-
                 with When("I grant the user NONE privilege"):
                     node.query(f"GRANT NONE TO {user_name}")
 
@@ -62,7 +58,6 @@ def privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(test=update)(user_name=user_name, grant_target_name=user_name)
         Suite(test=delete)(user_name=user_name, grant_target_name=user_name)
         Suite(test=drop_column)(user_name=user_name, grant_target_name=user_name)
@@ -81,7 +76,6 @@ def privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -108,7 +102,6 @@ def update(self, user_name, grant_target_name, node=None):
         table_name = f"merge_tree_{getuid()}"
 
         with table(node, table_name):
-
             with Given("I have an ALTER UPDATE mutation"):
                 node.query(f"ALTER TABLE {table_name} UPDATE a = x WHERE 1")
 
@@ -130,7 +123,6 @@ def update(self, user_name, grant_target_name, node=None):
         table_name = f"merge_tree_{getuid()}"
 
         with table(node, table_name):
-
             with Given("I have an ALTER UPDATE mutation"):
                 node.query(f"ALTER TABLE {table_name} UPDATE a = x WHERE 1")
 
@@ -147,7 +139,6 @@ def update(self, user_name, grant_target_name, node=None):
         table_name = f"merge_tree_{getuid()}"
 
         with table(node, table_name):
-
             with Given("I have an ALTER UPDATE mutation"):
                 node.query(f"ALTER TABLE {table_name} UPDATE a = x WHERE 1")
 
@@ -171,7 +162,6 @@ def update(self, user_name, grant_target_name, node=None):
         table_name = f"merge_tree_{getuid()}"
 
         with table(node, table_name):
-
             with Given("I have an ALTER UPDATE mutation"):
                 node.query(f"ALTER TABLE {table_name} UPDATE a = x WHERE 1")
 
@@ -193,7 +183,6 @@ def update(self, user_name, grant_target_name, node=None):
         table_name = f"merge_tree_{getuid()}"
 
         with table(node, table_name):
-
             with Given("I have an ALTER UPDATE mutation"):
                 node.query(f"ALTER TABLE {table_name} UPDATE a = x WHERE 1")
 
@@ -225,7 +214,6 @@ def delete(self, user_name, grant_target_name, node=None):
         table_name = f"merge_tree_{getuid()}"
 
         with table(node, table_name):
-
             with Given("I have an ALTER DELETE mutation"):
                 node.query(f"ALTER TABLE {table_name} DELETE WHERE 1")
 
@@ -247,7 +235,6 @@ def delete(self, user_name, grant_target_name, node=None):
         table_name = f"merge_tree_{getuid()}"
 
         with table(node, table_name):
-
             with Given("I have an ALTER DELETE mutation"):
                 node.query(f"ALTER TABLE {table_name} DELETE WHERE 1")
 
@@ -264,7 +251,6 @@ def delete(self, user_name, grant_target_name, node=None):
         table_name = f"merge_tree_{getuid()}"
 
         with table(node, table_name):
-
             with Given("I have an ALTER DELETE mutation"):
                 node.query(f"ALTER TABLE {table_name} DELETE WHERE 1")
 
@@ -288,7 +274,6 @@ def delete(self, user_name, grant_target_name, node=None):
         table_name = f"merge_tree_{getuid()}"
 
         with table(node, table_name):
-
             with Given("I have an ALTER DELETE mutation"):
                 node.query(f"ALTER TABLE {table_name} DELETE WHERE 1")
 
@@ -310,7 +295,6 @@ def delete(self, user_name, grant_target_name, node=None):
         table_name = f"merge_tree_{getuid()}"
 
         with table(node, table_name):
-
             with Given("I have an ALTER DELETE mutation"):
                 node.query(f"ALTER TABLE {table_name} DELETE WHERE 1")
 
@@ -342,7 +326,6 @@ def drop_column(self, user_name, grant_target_name, node=None):
         table_name = f"merge_tree_{getuid()}"
 
         with table(node, table_name):
-
             with Given("I have an ALTER DROP COLUMN mutation"):
                 node.query(f"ALTER TABLE {table_name} DROP COLUMN x")
 
@@ -364,7 +347,6 @@ def drop_column(self, user_name, grant_target_name, node=None):
         table_name = f"merge_tree_{getuid()}"
 
         with table(node, table_name):
-
             with Given("I have an ALTER DROP COLUMN mutation"):
                 node.query(f"ALTER TABLE {table_name} DROP COLUMN x")
 
@@ -383,7 +365,6 @@ def drop_column(self, user_name, grant_target_name, node=None):
         table_name = f"merge_tree_{getuid()}"
 
         with table(node, table_name):
-
             with Given("I have an ALTER DROP COLUMN mutation"):
                 node.query(f"ALTER TABLE {table_name} DROP COLUMN x")
 
@@ -409,7 +390,6 @@ def drop_column(self, user_name, grant_target_name, node=None):
         table_name = f"merge_tree_{getuid()}"
 
         with table(node, table_name):
-
             with Given("I have an ALTER DROP COLUMN mutation"):
                 node.query(f"ALTER TABLE {table_name} DROP COLUMN x")
 
@@ -433,7 +413,6 @@ def drop_column(self, user_name, grant_target_name, node=None):
         table_name = f"merge_tree_{getuid()}"
 
         with table(node, table_name):
-
             with Given("I have an ALTER DROP COLUMN mutation"):
                 node.query(f"ALTER TABLE {table_name} DROP COLUMN x")
 

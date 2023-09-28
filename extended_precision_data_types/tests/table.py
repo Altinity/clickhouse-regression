@@ -18,7 +18,6 @@ def feature(self, node="clickhouse1", mysql_node="mysql1", stress=None, parallel
     table_name = f"table_{getuid()}"
 
     with allow_experimental_bigint(node):
-
         try:
             with When(
                 "I create a table with Int128, UInt128, Int256, UInt256, Decimal256"

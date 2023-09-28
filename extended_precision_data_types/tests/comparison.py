@@ -50,7 +50,6 @@ def comp_int_table(self, func, int_type, min, max, node=None):
         table(name=table_name, data_type=int_type)
 
     for value in [1, max, min]:
-
         with When(
             f"I insert into a table the output {func} with {int_type} and {value}"
         ):
@@ -100,7 +99,6 @@ def comp_dec_table(self, func, node=None):
         table(name=table_name, data_type="Decimal256(0)")
 
     for value in [1, max, min]:
-
         with When(
             f"I insert into a table the output {func} with Decimal256 and {value}"
         ):

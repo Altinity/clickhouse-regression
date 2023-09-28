@@ -540,11 +540,9 @@ def encryption(self):
 
     for mode, key_len, iv_len in mysql_modes:
         for datatype, plaintext in plaintexts:
-
             with Example(
                 f"""mode={mode.strip("'")} datatype={datatype.strip("'")} key={key_len} iv={iv_len}"""
             ) as example:
-
                 r = aes_encrypt_mysql(
                     plaintext=plaintext,
                     key=f"'{key[:key_len]}'",

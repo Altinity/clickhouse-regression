@@ -373,7 +373,6 @@ def feature(self):
         "ReplicatedVersionedCollapsingMergeTree",
         "ReplicatedGraphiteMergeTree",
     ]:
-
         with Feature(f"{table_engine}"):
             self.context.table_engine = table_engine
             for scenario in loads(current_module(), Scenario):

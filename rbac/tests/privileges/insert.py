@@ -33,7 +33,6 @@ def without_privilege(self, table_type, node=None):
 
     with table(node, table_name, table_type):
         with user(node, user_name):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {user_name}")
 
@@ -65,7 +64,6 @@ def user_with_privilege(self, table_type, node=None):
 
     with table(node, table_name, table_type):
         with user(node, user_name):
-
             with When("I grant insert privilege"):
                 node.query(f"GRANT INSERT ON {table_name} TO {user_name}")
 
@@ -96,9 +94,7 @@ def all_privilege(self, table_type, node=None):
         node = self.context.node
 
     with table(node, table_name, table_type):
-
         with user(node, user_name):
-
             with When("I grant insert privilege"):
                 node.query(f"GRANT ALL ON *.* TO {user_name}")
 
@@ -129,7 +125,6 @@ def user_with_revoked_privilege(self, table_type, node=None):
 
     with table(node, table_name, table_type):
         with user(node, user_name):
-
             with When("I grant insert privilege"):
                 node.query(f"GRANT INSERT ON {table_name} TO {user_name}")
 
@@ -157,7 +152,6 @@ def user_with_all_revoked_privilege(self, table_type, node=None):
 
     with table(node, table_name, table_type):
         with user(node, user_name):
-
             with When("I grant insert privilege"):
                 node.query(f"GRANT INSERT ON {table_name} TO {user_name}")
 
@@ -222,9 +216,7 @@ def user_column_privileges(
         node = self.context.node
 
     with table(node, table_name, table_type):
-
         with user(node, user_name):
-
             with When("I grant insert privilege"):
                 node.query(
                     f"GRANT INSERT({grant_columns}) ON {table_name} TO {user_name}"
@@ -253,7 +245,6 @@ def user_column_privileges(
                 assert input_equals_output, error()
 
             if revoke_columns is not None:
-
                 with When("I revoke insert privilege from columns"):
                     node.query(
                         f"REVOKE INSERT({revoke_columns}) ON {table_name} FROM {user_name}"
@@ -285,9 +276,7 @@ def role_with_privilege(self, table_type, node=None):
         node = self.context.node
 
     with table(node, table_name, table_type):
-
         with user(node, user_name), role(node, role_name):
-
             with When("I grant insert privilege to a role"):
                 node.query(f"GRANT INSERT ON {table_name} TO {role_name}")
 
@@ -324,9 +313,7 @@ def role_with_revoked_privilege(self, table_type, node=None):
         node = self.context.node
 
     with table(node, table_name, table_type):
-
         with user(node, user_name), role(node, role_name):
-
             with When("I grant privilege to a role"):
                 node.query(f"GRANT INSERT ON {table_name} TO {role_name}")
 
@@ -359,9 +346,7 @@ def user_with_revoked_role(self, table_type, node=None):
         node = self.context.node
 
     with table(node, table_name, table_type):
-
         with user(node, user_name), role(node, role_name):
-
             with When("I grant privilege to a role"):
                 node.query(f"GRANT INSERT ON {table_name} TO {role_name}")
 
@@ -431,7 +416,6 @@ def role_column_privileges(
 
     with table(node, table_name, table_type):
         with user(node, user_name), role(node, role_name):
-
             with When("I grant insert privilege"):
                 node.query(
                     f"GRANT INSERT({grant_columns}) ON {table_name} TO {role_name}"
@@ -495,7 +479,6 @@ def user_with_privilege_on_cluster(self, table_type, node=None):
         node = self.context.node
 
     with table(node, table_name, table_type):
-
         try:
             with Given("I have a user on a cluster"):
                 node.query(
@@ -576,7 +559,6 @@ def role_with_privilege_on_cluster(self, table_type, node=None):
         node = self.context.node
 
     with table(node, table_name, table_type):
-
         try:
             with Given("I have a user on a cluster"):
                 node.query(

@@ -58,9 +58,7 @@ def describe(self, grant_target_name, user_name, table_name, node=None):
         node = self.context.node
 
     with table(node, table_name):
-
         with Scenario("DESCRIBE table without privilege"):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -76,7 +74,6 @@ def describe(self, grant_target_name, user_name, table_name, node=None):
                 )
 
         with Scenario("DESCRIBE with privilege"):
-
             with When(f"I grant SHOW COLUMNS on the table"):
                 node.query(f"GRANT SHOW COLUMNS ON {table_name} TO {grant_target_name}")
 
@@ -86,7 +83,6 @@ def describe(self, grant_target_name, user_name, table_name, node=None):
                 )
 
         with Scenario("DESCRIBE with revoked privilege"):
-
             with When(f"I grant SHOW COLUMNS on the table"):
                 node.query(f"GRANT SHOW COLUMNS ON {table_name} TO {grant_target_name}")
 
@@ -104,7 +100,6 @@ def describe(self, grant_target_name, user_name, table_name, node=None):
                 )
 
         with Scenario("DESCRIBE with revoked ALL privilege"):
-
             with When(f"I grant SHOW COLUMNS on the table"):
                 node.query(f"GRANT SHOW COLUMNS ON {table_name} TO {grant_target_name}")
 
@@ -120,7 +115,6 @@ def describe(self, grant_target_name, user_name, table_name, node=None):
                 )
 
         with Scenario("DESCRIBE with ALL privilege"):
-
             with When(f"I grant SHOW COLUMNS on the table"):
                 node.query(f"GRANT ALL ON *.* TO {grant_target_name}")
 
@@ -182,9 +176,7 @@ def show_create(self, grant_target_name, user_name, table_name, node=None):
         node = self.context.node
 
     with table(node, table_name):
-
         with Scenario("SHOW CREATE without privilege"):
-
             with When("I grant the user NONE privilege"):
                 node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -200,7 +192,6 @@ def show_create(self, grant_target_name, user_name, table_name, node=None):
                 )
 
         with Scenario("SHOW CREATE with privilege"):
-
             with When(f"I grant SHOW COLUMNS on the table"):
                 node.query(f"GRANT SHOW COLUMNS ON {table_name} TO {grant_target_name}")
 
@@ -210,7 +201,6 @@ def show_create(self, grant_target_name, user_name, table_name, node=None):
                 )
 
         with Scenario("SHOW CREATE with revoked privilege"):
-
             with When(f"I grant SHOW COLUMNS on the table"):
                 node.query(f"GRANT SHOW COLUMNS ON {table_name} TO {grant_target_name}")
 
@@ -228,7 +218,6 @@ def show_create(self, grant_target_name, user_name, table_name, node=None):
                 )
 
         with Scenario("SHOW CREATE with ALL privilege"):
-
             with When(f"I grant SHOW COLUMNS on the table"):
                 node.query(f"GRANT ALL ON *.* TO {grant_target_name}")
 

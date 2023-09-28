@@ -16,7 +16,6 @@ def privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=drop_row_policy,
             examples=Examples(
@@ -41,7 +40,6 @@ def privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -191,7 +189,6 @@ def drop_all_pol_with_conditions(self, node=None):
     pol_name = f"pol_{getuid()}"
 
     with table(node, table_name):
-
         with Given("I have a row policy"):
             row_policy(name=pol_name, table=table_name)
 
@@ -229,7 +226,6 @@ def drop_on(self, node=None):
     pol_name = f"pol_{getuid()}"
 
     with table(node, table_name):
-
         with Given("I have a row policy"):
             row_policy(name=pol_name, table=table_name)
 

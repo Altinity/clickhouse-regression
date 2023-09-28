@@ -8,12 +8,11 @@ from testflows.core import *
 
 append_path(sys.path, "..")
 
+
 @TestModule
 @Name("Alter")
 def regression(self):
     pass
-
-
 
 
 if main():

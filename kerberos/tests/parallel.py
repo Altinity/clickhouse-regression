@@ -50,7 +50,6 @@ def valid_requests_different_credentials(self):
         return cmd(test_select_query(node=ch_nodes[0]))
 
     for i in range(15):
-
         tasks = []
         with Pool(2) as pool:
             with And("add 2 kerberos users via RBAC"):

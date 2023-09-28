@@ -391,7 +391,6 @@ def zookeepers_3(self):
     """
     xfail("need to be fixed")
     if check_clickhouse_version("<23.3")(self):
-
         cluster = self.context.cluster
         zookeeper_cluster_nodes = cluster.nodes["zookeeper"][:3]
         clickhouse_cluster_nodes = cluster.nodes["clickhouse"][:9]

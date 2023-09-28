@@ -57,7 +57,6 @@ def math_int_inline(
         node = self.context.node
 
     if func in ["intExp2(", "intExp10(", "pow(1,", "power(1,", "atan2(1,", "hypot(1,"]:
-
         with When(f"I check {func} with {int_type} using 1, max, and min"):
             node.query(
                 f"SELECT {func} to{int_type}(1)), {func} to{int_type}('{max}')), {func} to{int_type}('{min}'))",
@@ -66,7 +65,6 @@ def math_int_inline(
             )
 
     else:
-
         with When(f"I check {func} with {int_type} using 1"):
             output = node.query(f"SELECT {func} to{int_type}(1))").output
             if output == "inf":
@@ -97,9 +95,7 @@ def math_int_table(
         table(name=table_name, data_type=f"Nullable({int_type})")
 
     if func in ["intExp2(", "intExp10(", "pow(1,", "power(1,", "atan2(1,", "hypot(1,"]:
-
         for value in [1, max, min]:
-
             with When(
                 f"I insert the output of {func} with {int_type} using {value} into a table"
             ):
@@ -110,9 +106,7 @@ def math_int_table(
                 )
 
     else:
-
         for value in [1, max, min]:
-
             with And(
                 f"I insert the output of {func} with {int_type} using {value} into a table"
             ):
@@ -139,7 +133,6 @@ def math_dec_inline(self, func, expected_result, exitcode, node=None):
         node = self.context.node
 
     if func in ["intExp2(", "intExp10(", "pow(1,", "power(1,", "atan2(1,", "hypot(1,"]:
-
         with When(f"I check {func} with Decimal256 using 1, max, and min"):
             node.query(
                 f"SELECT {func} toDecimal256(1,0)), {func} toDecimal256('{max}',0)), {func} toDecimal256('{min}',0))",
@@ -148,7 +141,6 @@ def math_dec_inline(self, func, expected_result, exitcode, node=None):
             )
 
     else:
-
         with When(f"I check {func} with Decimal256 using 1"):
             output = node.query(f"SELECT {func} toDecimal256(1,0))").output
             if output == "inf":
@@ -183,9 +175,7 @@ def math_dec_table(self, func, expected_result, exitcode, node=None):
         table(name=table_name, data_type="Decimal256(0)")
 
     if func in ["intExp2(", "intExp10(", "pow(1,", "power(1,", "atan2(1,", "hypot(1,"]:
-
         for value in [1, max, min]:
-
             with When(
                 f"I insert the output of {func} with Decimal256 using {value} into a table"
             ):
@@ -196,9 +186,7 @@ def math_dec_table(self, func, expected_result, exitcode, node=None):
                 )
 
     else:
-
         for value in [1, max, min]:
-
             with When(
                 f"I insert the output of {func} with Decimal256 using {value} into a table"
             ):

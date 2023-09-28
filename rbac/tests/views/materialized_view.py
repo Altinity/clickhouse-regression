@@ -967,14 +967,12 @@ def create_with_populate_privilege_granted_directly_or_via_role(self, node=None)
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Scenario(
             test=create_with_populate,
             name="create with populate privilege granted directly",
         )(grant_target_name=user_name, user_name=user_name)
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -995,7 +993,6 @@ def create_with_populate(self, user_name, grant_target_name, node=None):
         node = self.context.node
 
     try:
-
         with When("I grant CREATE VIEW privilege"):
             node.query(f"GRANT CREATE VIEW ON {view_name} TO {grant_target_name}")
 

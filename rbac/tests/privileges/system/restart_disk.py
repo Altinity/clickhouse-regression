@@ -17,7 +17,6 @@ def privileges_granted_directly(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"):
-
         Suite(
             run=restart_disk,
             examples=Examples(
@@ -43,7 +42,6 @@ def privileges_granted_via_role(self, node=None):
         node = self.context.node
 
     with user(node, f"{user_name}"), role(node, f"{role_name}"):
-
         with When("I grant the role to the user"):
             node.query(f"GRANT {role_name} TO {user_name}")
 
@@ -77,7 +75,6 @@ def restart_disk(self, privilege, grant_target_name, user_name, node=None):
         node = self.context.node
 
     with Scenario("SYSTEM RESTART DISK without privilege"):
-
         with When("I grant the user NONE privilege"):
             node.query(f"GRANT NONE TO {grant_target_name}")
 
@@ -93,7 +90,6 @@ def restart_disk(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("SYSTEM RESTART DISK with privilege"):
-
         with When(f"I grant {privilege} on the table"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 
@@ -106,7 +102,6 @@ def restart_disk(self, privilege, grant_target_name, user_name, node=None):
             )
 
     with Scenario("SYSTEM RESTART DISK with revoked privilege"):
-
         with When(f"I grant {privilege} on the table"):
             node.query(f"GRANT {privilege} ON *.* TO {grant_target_name}")
 

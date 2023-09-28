@@ -55,7 +55,6 @@ def null_int_table(self, func, expected_result, int_type, min, max, node=None):
         table(name=table_name, data_type=f"Nullable({int_type})")
 
     for value in [1, min, max]:
-
         with When(f"I insert the output of {func} with {int_type} and {value}"):
             node.query(
                 f"INSERT INTO {table_name} SELECT {func} to{int_type}('{value}'))"
@@ -107,7 +106,6 @@ def null_dec_table(self, func, expected_result, node=None):
         table(name=table_name, data_type="Nullable(Decimal256(0))")
 
     for value in [1, min, max]:
-
         with When(f"I insert the output of {func} with Decimal256 and {value}"):
             node.query(
                 f"INSERT INTO {table_name} SELECT {func} toDecimal256('{value}',0))"

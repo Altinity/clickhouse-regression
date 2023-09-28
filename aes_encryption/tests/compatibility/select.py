@@ -13,7 +13,6 @@ def table(name, sql):
     node = current().context.node
     try:
         with Given("table"):
-
             with By("dropping table if exists"):
                 node.query(f"DROP TABLE IF EXISTS {name}")
             with And("creating a table"):
@@ -48,7 +47,6 @@ def decrypt(self):
                         ENGINE = Memory()
                         """,
             ):
-
                 example_mode = mode
                 example_key = f"'{key[:key_len]}'"
                 example_iv = None if not iv_len else f"'{iv[:iv_len]}'"
@@ -105,7 +103,6 @@ def decrypt_multiple(self, count=1000):
                     ENGINE = Memory()
                     """,
             ):
-
                 example_mode = mode
                 example_key = f"'{key[:key_len]}'"
                 example_iv = None if not iv_len else f"'{iv[:iv_len]}'"
@@ -162,7 +159,6 @@ def decrypt_unique(self):
             ENGINE = Memory()
             """,
     ):
-
         user_modes = []
         user_keys = []
 
