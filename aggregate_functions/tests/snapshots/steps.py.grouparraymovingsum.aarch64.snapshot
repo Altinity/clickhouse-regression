@@ -1,0 +1,221 @@
+_aggregate_functions_groupArrayMovingSum_constant = r"""
+{"groupArrayMovingSum(1)":["1"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_zero_rows = r"""
+{"groupArrayMovingSum(number)":[]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_single_row = r"""
+{"groupArrayMovingSum(number)":["0"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_with_group_by = r"""
+{"even":0,"groupArrayMovingSum(number)":["0","2","6","12","20"]}
+{"even":1,"groupArrayMovingSum(number)":["1","4","9","16","25"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_some_negative_values = r"""
+{"groupArrayMovingSum(minus(number, 5))":["-4","-7","-9","-10","-10","-9","-7","-4","0","5"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_NULL_value_handling = r"""
+{"groupArrayMovingSum(x)":["0","1","4","8","13"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_single_NULL_value = r"""
+{"groupArrayMovingSum(x)":[]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_return_type = r"""
+{"toTypeName(groupArrayMovingSum(number))":"Array(UInt64)"}
+"""
+
+_aggregate_functions_groupArrayMovingSum_doc_example = r"""
+{"groupArrayMovingSum(x)":["0","1","3","6","10","15"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_inf = r"""
+{"groupArrayMovingSum(x)":[0,2.3,null,null,null,null]}
+"""
+
+_aggregate_functions_groupArrayMovingSum__inf = r"""
+{"groupArrayMovingSum(x)":[0,2.3,null,null,null,null]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_nan = r"""
+{"groupArrayMovingSum(x)":[0,2.3,null,null,null,null]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_inf___inf__nan = r"""
+{"groupArrayMovingSum(x)":[null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_UInt8 = r"""
+{"groupArrayMovingSum(uint8)":["255","255","255","418","619","794","1024","1143","1167","1293"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_UInt16 = r"""
+{"groupArrayMovingSum(uint16)":["65535","65535","65535","102608","128852","147298","202069","218976","245991","253563"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_UInt32 = r"""
+{"groupArrayMovingSum(uint32)":["4294967295","4294967295","4294967295","5201388286","7971904128","11201789835","15305635796","18388162128","20967578555","23295638031"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_UInt64 = r"""
+{"groupArrayMovingSum(uint64)":["18446744073709551615","18446744073709551615","18446744073709551615","4036797895307271798","12996538984620451119","10524324784281475734","15664708732320357057","284463738547969294","16992568870425486176","15750476061942512782"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_Int8 = r"""
+{"groupArrayMovingSum(int8)":["127","-1","-1","114","70","-30","-108","-25","-73","51"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_Int16 = r"""
+{"groupArrayMovingSum(int16)":["32767","-1","-1","1518","1913","33840","23071","32663","5099","-2464"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_Int32 = r"""
+{"groupArrayMovingSum(int32)":["2147483647","-1","-1","-484753349","1389039368","728309553","1182598959","2228069975","976806489","-180045811"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_Int64 = r"""
+{"groupArrayMovingSum(int64)":["9223372036854775807","-1","-1","4356085765667181328","85694020347079657","3727430283187439954","2899205173471436263","5616040967420843108","5625659131550567040","-8799195370699285409"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_Float32 = r"""
+{"groupArrayMovingSum(float32)":[3.4028234663852886e38,0,0,-2.9177846496970656e38,-5.157174823944664e38,-8.182844044212705e38,-7.579691629318097e38,-1.0835732919994527e39,-1.2830943773496051e39,-1.3695836729255912e39]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_Float64 = r"""
+{"groupArrayMovingSum(float64)":[1.7976909999999999e308,0,0,-1.57788503681046e49,-1.46719343084824e307,-1.46719343084824e307,-1.46719343084824e307,-1.46719343084824e307,-1.46719343084824e307,-1.46719343084824e307]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_Decimal128_38_ = r"""
+{"groupArrayMovingSum(decimal128_38_)":[0.99999999999999997752612184630461283328,0,0,-0.50400212076709862599204544485384036864,-0.14618645483375552212303573489643543552,-0.42667605214723064991484503551290023424,0.1632185802948754715691930651692242944,0.85613240188565430137022945503322371584,0.2587584538594195172845775127493536,-0.21468242760669401198252549218687803904]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_Nullable_UInt8_ = r"""
+{"groupArrayMovingSum(nullable_uint8_)":["255","255","489","552","617","645","842","1037","1052"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_Nullable_UInt16_ = r"""
+{"groupArrayMovingSum(nullable_uint16_)":["65535","65535","91441","135019","195077","226530","230992","280784","304868"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_Nullable_UInt32_ = r"""
+{"groupArrayMovingSum(nullable_uint32_)":["4294967295","4294967295","8346393699","9921930523","9988224405","11205113269","14689176118","15995107609","19274338894"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_Nullable_UInt64_ = r"""
+{"groupArrayMovingSum(nullable_uint64_)":["18446744073709551615","18446744073709551615","16869395978069752986","5529796479143772668","5488030837840935792","6999112927614513173","4309295066022188612","12140715323116189055","11096315630564658116"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_Nullable_Int8_ = r"""
+{"groupArrayMovingSum(nullable_int8_)":["127","-1","-59","-2","2","-71","1","-76","17"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_Nullable_Int16_ = r"""
+{"groupArrayMovingSum(nullable_int16_)":["32767","-1","-28562","-50889","-43982","-40254","-28770","-39880","-26631"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_Nullable_Int32_ = r"""
+{"groupArrayMovingSum(nullable_int32_)":["2147483647","-1","1440464616","1634733139","832110906","924249895","839360907","2364735450","4363604303"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_Nullable_Int64_ = r"""
+{"groupArrayMovingSum(nullable_int64_)":["9223372036854775807","-1","6993614660524502151","4208526626374620150","5420203529299964914","-601186268287725957","8074723589917171535","-9178154599577804102","3971456529792613218"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_Nullable_Float32_ = r"""
+{"groupArrayMovingSum(nullable_float32_)":[3.4028234663852886e38,0,-1.994648219459119e38,-3.272678342802017e38,-3.72041420810142e38,-6.464217565162938e38,-9.157899437260104e38,-1.1757285547572548e39,-1.0148602557198647e39]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_Nullable_Float64_ = r"""
+{"groupArrayMovingSum(nullable_float64_)":[1.7976909999999999e308,0,-6.284636282018519e153,-6.284636282018519e153,-6.284636282018519e153,-6.111330139222657e300,-6.111330139222657e300,-6.111330139222657e300,-6.104555798918726e300]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_Nullable_Decimal128_38__ = r"""
+{"groupArrayMovingSum(nullable_decimal128_38__)":[0.99999999999999997752612184630461283328,0,0.45865411970120442299973825669148102144,0.52482823159126737342078737613368414592,1.18180535491742145605167644262854027136,-1.35165842269280831733422164639217245312,1.13830931299260289077290290315415798656,1.50523329372305963331402762980873916288,1.35440455825179711885689928087407595392]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_LowCardinality_UInt8_ = r"""
+{"groupArrayMovingSum(lowcardinality_uint8_)":["255","255","255","421","649","865","1090","1329","1345","1517"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_LowCardinality_UInt16_ = r"""
+{"groupArrayMovingSum(lowcardinality_uint16_)":["65535","65535","65535","102645","167929","230226","245616","257873","281374","327072"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_LowCardinality_UInt32_ = r"""
+{"groupArrayMovingSum(lowcardinality_uint32_)":["4294967295","4294967295","4294967295","5958538995","9325294574","10717099232","13417132138","13598251069","16667229397","16915733198"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_LowCardinality_UInt64_ = r"""
+{"groupArrayMovingSum(lowcardinality_uint64_)":["18446744073709551615","18446744073709551615","18446744073709551615","15859874243171168901","7236438083192602743","6972395108983371781","10938387631475802008","12694188804854447657","17856877715479514286","16998933095029676984"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_LowCardinality_Int8_ = r"""
+{"groupArrayMovingSum(lowcardinality_int8_)":["127","-1","-1","70","52","-67","52","51","96","191"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_LowCardinality_Int16_ = r"""
+{"groupArrayMovingSum(lowcardinality_int16_)":["32767","-1","-1","-22429","249","20896","253","-27474","-6833","17437"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_LowCardinality_Int32_ = r"""
+{"groupArrayMovingSum(lowcardinality_int32_)":["2147483647","-1","-1","-1311807160","-2769260445","-1808755048","6689077","-1483630842","-584978332","-1592576550"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_LowCardinality_Int64_ = r"""
+{"groupArrayMovingSum(lowcardinality_int64_)":["9223372036854775807","-1","-1","-9041695014854556115","-1476516727225851386","1242353344273053901","4027284689733492613","-8227076208669311175","-3258844379096819742","-2335589518567405757"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_LowCardinality_Float32_ = r"""
+{"groupArrayMovingSum(lowcardinality_float32_)":[3.4028234663852886e38,0,0,-1.3459335010429156e38,-3.574390848041858e38,-2.583062928475474e38,-2.3553911820226796e38,-6.387008110876525e37,1.0339480313978613e38,3.159481276742593e38]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_LowCardinality_Float64_ = r"""
+{"groupArrayMovingSum(lowcardinality_float64_)":[1.7976909999999999e308,0,0,1.5130733709481816e217,1.5130733709481816e217,1.5130733709481816e217,1.5130733709481816e217,1.5130733709481816e217,2.3539363430883252e260,2.3539363430883252e260]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_LowCardinality_Nullable_UInt8__ = r"""
+{"groupArrayMovingSum(lowcardinality_nullable_uint8__)":["255","255","384","576","741","943","1018","1222","1334"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_LowCardinality_Nullable_UInt16__ = r"""
+{"groupArrayMovingSum(lowcardinality_nullable_uint16__)":["65535","65535","76434","137518","144250","199740","212444","228051","244404"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_LowCardinality_Nullable_UInt32__ = r"""
+{"groupArrayMovingSum(lowcardinality_nullable_uint32__)":["4294967295","4294967295","5722745056","9651681573","11878093495","15564229957","19024077171","20564264058","23052698064"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_LowCardinality_Nullable_UInt64__ = r"""
+{"groupArrayMovingSum(lowcardinality_nullable_uint64__)":["18446744073709551615","18446744073709551615","16629435390485869686","1874899071165233129","12896949690928026953","15809295344848074498","14488602313617213593","3760130650343231569","4529534376217169885"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_LowCardinality_Nullable_Int8__ = r"""
+{"groupArrayMovingSum(lowcardinality_nullable_int8__)":["127","-1","116","183","192","316","230","129","96"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_LowCardinality_Nullable_Int16__ = r"""
+{"groupArrayMovingSum(lowcardinality_nullable_int16__)":["32767","-1","4069","-2797","18745","-13411","-36570","-42864","-36493"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_LowCardinality_Nullable_Int32__ = r"""
+{"groupArrayMovingSum(lowcardinality_nullable_int32__)":["2147483647","-1","-242357357","-1288433543","-2885684677","-3554411627","-2889110646","-2266819012","-570614278"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_LowCardinality_Nullable_Int64__ = r"""
+{"groupArrayMovingSum(lowcardinality_nullable_int64__)":["9223372036854775807","-1","1732198740987194199","-8549113218262792387","-852533106997804008","-1482786822367655556","5001044153960109338","-3427132905855704859","-4055992635541734030"]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_LowCardinality_Nullable_Float32__ = r"""
+{"groupArrayMovingSum(lowcardinality_nullable_float32__)":[3.4028234663852886e38,0,2.383503184852617e38,1.6977764662133578e38,1.249424319898148e38,-1.4505635561688893e38,5.428498701935594e37,2.905594820113223e38,2.363335573687322e38]}
+"""
+
+_aggregate_functions_groupArrayMovingSum_LowCardinality_Nullable_Float64__ = r"""
+{"groupArrayMovingSum(lowcardinality_nullable_float64__)":[1.7976909999999999e308,0,4.432329389190481e298,4.432329389190481e298,4.432329389190481e298,4.432329389190783e298,4.432329389190783e298,4.432329389190783e298,4.432329389190783e298]}
+"""
+

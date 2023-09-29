@@ -1,0 +1,97 @@
+_aggregate_functions_state_groupBitXorState_constant = r"""
+{"hex(groupBitXorState(1))":"01"}
+"""
+
+_aggregate_functions_state_groupBitXorState_zero_rows = r"""
+{"hex(groupBitXorState(number))":"0000000000000000"}
+"""
+
+_aggregate_functions_state_groupBitXorState_single_row = r"""
+{"hex(groupBitXorState(number))":"0000000000000000"}
+"""
+
+_aggregate_functions_state_groupBitXorState_with_group_by = r"""
+{"even":0,"hex(groupBitXorState(number))":"0800000000000000"}
+{"even":1,"hex(groupBitXorState(number))":"0900000000000000"}
+"""
+
+_aggregate_functions_state_groupBitXorState_NULL_value_handling = r"""
+{"hex(groupBitXorState(x))":"0103"}
+"""
+
+_aggregate_functions_state_groupBitXorState_single_NULL_value = r"""
+{"hex(groupBitXorState(x))":"00"}
+"""
+
+_aggregate_functions_state_groupBitXorState_return_type = r"""
+{"toTypeName(hex(groupBitXorState(number)))":"String"}
+"""
+
+_aggregate_functions_state_groupBitXorState_doc_example = r"""
+{"hex(groupBitXorState(x))":"01"}
+"""
+
+_aggregate_functions_state_groupBitXorState_UInt8 = r"""
+{"hex(groupBitXorState(uint8))":"CD"}
+"""
+
+_aggregate_functions_state_groupBitXorState_UInt16 = r"""
+{"hex(groupBitXorState(uint16))":"4FA2"}
+"""
+
+_aggregate_functions_state_groupBitXorState_UInt32 = r"""
+{"hex(groupBitXorState(uint32))":"833202FC"}
+"""
+
+_aggregate_functions_state_groupBitXorState_UInt64 = r"""
+{"hex(groupBitXorState(uint64))":"4CCFBC4499E7D902"}
+"""
+
+_aggregate_functions_state_groupBitXorState_Nullable_UInt8_ = r"""
+{"hex(groupBitXorState(nullable_uint8_))":"017E"}
+"""
+
+_aggregate_functions_state_groupBitXorState_Nullable_UInt16_ = r"""
+{"hex(groupBitXorState(nullable_uint16_))":"014A2D"}
+"""
+
+_aggregate_functions_state_groupBitXorState_Nullable_UInt32_ = r"""
+{"hex(groupBitXorState(nullable_uint32_))":"012E581E59"}
+"""
+
+_aggregate_functions_state_groupBitXorState_Nullable_UInt64_ = r"""
+{"hex(groupBitXorState(nullable_uint64_))":"0186248E7B4F0B55DB"}
+"""
+
+_aggregate_functions_state_groupBitXorState_LowCardinality_UInt8_ = r"""
+{"hex(groupBitXorState(lowcardinality_uint8_))":"D7"}
+"""
+
+_aggregate_functions_state_groupBitXorState_LowCardinality_UInt16_ = r"""
+{"hex(groupBitXorState(lowcardinality_uint16_))":"E499"}
+"""
+
+_aggregate_functions_state_groupBitXorState_LowCardinality_UInt32_ = r"""
+{"hex(groupBitXorState(lowcardinality_uint32_))":"3A908914"}
+"""
+
+_aggregate_functions_state_groupBitXorState_LowCardinality_UInt64_ = r"""
+{"hex(groupBitXorState(lowcardinality_uint64_))":"880F70989A4B05CB"}
+"""
+
+_aggregate_functions_state_groupBitXorState_LowCardinality_Nullable_UInt8__ = r"""
+{"hex(groupBitXorState(lowcardinality_nullable_uint8__))":"0126"}
+"""
+
+_aggregate_functions_state_groupBitXorState_LowCardinality_Nullable_UInt16__ = r"""
+{"hex(groupBitXorState(lowcardinality_nullable_uint16__))":"01C8CB"}
+"""
+
+_aggregate_functions_state_groupBitXorState_LowCardinality_Nullable_UInt32__ = r"""
+{"hex(groupBitXorState(lowcardinality_nullable_uint32__))":"0138AE6C1E"}
+"""
+
+_aggregate_functions_state_groupBitXorState_LowCardinality_Nullable_UInt64__ = r"""
+{"hex(groupBitXorState(lowcardinality_nullable_uint64__))":"01815DD76746F28316"}
+"""
+

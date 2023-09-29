@@ -1,0 +1,76 @@
+_aggregate_functions_state_countState_distinct_expr_constant = r"""
+{"hex(countStateDistinct(1))":"01"}
+"""
+
+_aggregate_functions_state_countState_distinct_expr_NULL_for_some_rows = r"""
+{"hex(countStateDistinct(if(modulo(number, 2), NULL, 1)))":"01"}
+"""
+
+_aggregate_functions_state_countState_distinct_expr_NULL_for_all_rows = r"""
+{"hex(countStateDistinct(if(modulo(number, 2), NULL, NULL)))":"00"}
+"""
+
+_aggregate_functions_state_countState_distinct_expr_Nullable_type = r"""
+{"count":"01","toTypeName(hex(countStateDistinct(toNullable(if(modulo(number, 2), NULL, 1)))))":"String"}
+"""
+
+_aggregate_functions_state_countState_distinct_expr_returned_type_is_UInt64 = r"""
+{"toTypeName(hex(countStateDistinct(1)))":"String"}
+"""
+
+_aggregate_functions_state_countState_distinct_expr_default_function = r"""
+{"hex(countStateDistinct(1))":"01"}
+"""
+
+_aggregate_functions_state_countState_expr_constant = r"""
+{"hex(countState(1))":"01"}
+"""
+
+_aggregate_functions_state_countState_expr_NULL_for_some_rows = r"""
+{"hex(countState(if(modulo(number, 2), NULL, 1)))":"05"}
+"""
+
+_aggregate_functions_state_countState_expr_NULL_for_all_rows = r"""
+{"hex(countState(if(modulo(number, 2), NULL, NULL)))":"00"}
+"""
+
+_aggregate_functions_state_countState_expr_Nullable_type = r"""
+{"count":"01","toTypeName(hex(countState(toNullable(if(modulo(number, 2), NULL, 1)))))":"String"}
+"""
+
+_aggregate_functions_state_countState_expr_return_type = r"""
+{"toTypeName(hex(countState(1)))":"String"}
+"""
+
+_aggregate_functions_state_countState_zero_parameters_hex_countState____zero_rows = r"""
+{"hex(countState())":"00"}
+"""
+
+_aggregate_functions_state_countState_zero_parameters_hex_countState____one_row = r"""
+{"hex(countState())":"01"}
+"""
+
+_aggregate_functions_state_countState_zero_parameters_hex_countState____more_than_one_row = r"""
+{"hex(countState())":"0A"}
+"""
+
+_aggregate_functions_state_countState_zero_parameters_hex_countState____rows_with_Nullable = r"""
+{"hex(countState())":"0A"}
+"""
+
+_aggregate_functions_state_countState_zero_parameters_hex_countState_____zero_rows = r"""
+{"hex(countState())":"00"}
+"""
+
+_aggregate_functions_state_countState_zero_parameters_hex_countState_____one_row = r"""
+{"hex(countState())":"01"}
+"""
+
+_aggregate_functions_state_countState_zero_parameters_hex_countState_____more_than_one_row = r"""
+{"hex(countState())":"0A"}
+"""
+
+_aggregate_functions_state_countState_zero_parameters_hex_countState_____rows_with_Nullable = r"""
+{"hex(countState())":"0A"}
+"""
+

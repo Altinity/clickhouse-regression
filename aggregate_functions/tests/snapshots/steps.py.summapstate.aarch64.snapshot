@@ -1,0 +1,53 @@
+_aggregate_functions_state_sumMapState_constant = r"""
+{"hex(sumMapState(map(1, 1)))":"01010100000000000000"}
+"""
+
+_aggregate_functions_state_sumMapState_zero_rows = r"""
+{"hex(sumMapState(map(number, number)))":"00"}
+"""
+
+_aggregate_functions_state_sumMapState_with_group_by = r"""
+{"even":0,"hex(sumMapState(map(modulo(number, 2), number)))":"01001400000000000000"}
+{"even":1,"hex(sumMapState(map(modulo(number, 2), number)))":"01011900000000000000"}
+"""
+
+_aggregate_functions_state_sumMapState_some_negative_values = r"""
+{"hex(sumMapState(map(minus(number, 5), minus(number, 10))))":"0A050000000000000000000000000000000000000000000000FBFFFFFFFFFFFFFF0400000000000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFAFFFFFFFFFFFFFF0300000000000000FEFFFFFFFFFFFFFFFEFFFFFFFFFFFFFFF9FFFFFFFFFFFFFF0200000000000000FDFFFFFFFFFFFFFFFDFFFFFFFFFFFFFFF8FFFFFFFFFFFFFF0100000000000000FCFFFFFFFFFFFFFFFCFFFFFFFFFFFFFFF7FFFFFFFFFFFFFF"}
+"""
+
+_aggregate_functions_state_sumMapState_one_to_many = r"""
+{"hex(sumMapState(map(modulo(number, 2), number)))":"02001E00000000000000011900000000000000"}
+"""
+
+_aggregate_functions_state_sumMapState_NULL_value_handling = r"""
+{"hex(sumMapState(map(x, y)))":"040301040000000000000002010200000000000000010000010100000000000000"}
+"""
+
+_aggregate_functions_state_sumMapState_single_NULL_value = r"""
+{"hex(sumMapState(map(x, y)))":"010100"}
+"""
+
+_aggregate_functions_state_sumMapState_inf = r"""
+{"hex(sumMapState(map('a', x)))":"010161000000000000F07F"}
+"""
+
+_aggregate_functions_state_sumMapState__inf = r"""
+{"hex(sumMapState(map('a', x)))":"010161000000000000F0FF"}
+"""
+
+_aggregate_functions_state_sumMapState_nan = r"""
+{"hex(sumMapState(map('a', x)))":"010161000000000000F87F"}
+"""
+
+_aggregate_functions_state_sumMapState_inf___inf__nan = r"""
+{"hex(sumMapState(map('a', x)))":"010161000000000000F87F"}
+"""
+
+_aggregate_functions_state_sumMapState_return_type = r"""
+{"toTypeName(hex(sumMapState(map(number, plus(number, 1)))))":"String"}
+"""
+
+_aggregate_functions_state_sumMapState_NULL_in_strings = r"""
+{"hex(sumMapState(a, b))":"0404030000000100000000000000023100020000000000000003320000020000000000000001330100000000000000"}
+"""
+

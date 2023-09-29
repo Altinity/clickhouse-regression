@@ -1,0 +1,213 @@
+_aggregate_functions_state_stochasticLogisticRegressionState_constant = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(1, 0.1), multiply(1, 0.2)), 7), 1, multiply(1, 0.3)))":"3333333333330D40023333333333330D4085EB51B81E85F13F0100000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_zero_rows = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(number, 0.1), multiply(number, 0.2)), 7), number, multiply(number, 0.3)))":"000000000000000002000000000000000000000000000000000000000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_single_row = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(number, 0.1), multiply(number, 0.2)), 7), number, multiply(number, 0.3)))":"0000000000000C4002000000000000000000000000000000000100000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_with_group_by = r"""
+{"even":0,"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(number, 0.1), multiply(number, 0.2)), 7), number, multiply(number, 0.3)))":"E4D7000000000C40027EA59DAB213FC2BDFE2CBD9A5BE5A5BD0500000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+{"even":1,"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(number, 0.1), multiply(number, 0.2)), 7), number, multiply(number, 0.3)))":"9A99999999D93540026666666666AE604014AE47E17A0444400500000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_some_negative_values = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(minus(plus(minus(number, multiply(5, 0.1)), number), multiply(5, 0.2)), 7), minus(number, 5), minus(number, multiply(5, 0.3))))":"0000000000705240020000000000C057C000000000001276C00A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_NULL_value_handling = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(x, 0.1), multiply(x, 0.2)), 7), x, multiply(x, 0.3)))":"014AEA070000000C40021250FEFF40C7D43D7EC6CACC1AEFB83D0600000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_single_NULL_value = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(x, 0.1), multiply(x, 0.2)), 7), x, multiply(x, 0.3)))":"010000000000000C4002000000000000000000000000000000000100000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_return_type = r"""
+{"toTypeName(hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(number, 0.1), multiply(number, 0.2)), 7), number, multiply(number, 0.3))))":"String"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_doc_example = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(x, 0.1), multiply(x, 0.2)), 7), x, multiply(x, 0.3)))":"E223030000000C400239084B8C5120C23D0E3D8DDB61C0A53D0600000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_inf = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(x, 0.1), multiply(x, 0.2)), 7), x, multiply(x, 0.3)))":"000000000000F8FF02000000000000F8FF000000000000F8FF0600000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState__inf = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(x, 0.1), multiply(x, 0.2)), 7), x, multiply(x, 0.3)))":"000000000000F8FF02000000000000F8FF000000000000F8FF0600000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_nan = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(x, 0.1), multiply(x, 0.2)), 7), x, multiply(x, 0.3)))":"000000000000F87F02000000000000F87F000000000000F87F0600000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_inf___inf__nan = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(x, 0.1), multiply(x, 0.2)), 7), x, multiply(x, 0.3)))":"000000000000F87F02000000000000F87F000000000000F87F0600000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_UInt8 = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(uint8, 0.1), multiply(uint8, 0.2)), 7), uint8, multiply(uint8, 0.3)))":"0000000000E8684002343333334B81E4C0A5703D0A279BC8C00A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_UInt16 = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(uint16, 0.1), multiply(uint16, 0.2)), 7), uint16, multiply(uint16, 0.3)))":"00000000F8A2E44002676636EDC35DDDC13D0A87C1A89EC1C10A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_UInt32 = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(uint32, 0.1), multiply(uint32, 0.2)), 7), uint32, multiply(uint32, 0.3)))":"0000789B4BEEE9410281CF1B439205E5C3352CEEB6E239C9C30A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_UInt64 = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(uint64, 0.1), multiply(uint64, 0.2)), 7), uint64, multiply(uint64, 0.3)))":"A8200EE147D5E443025E2D54DC295FDFC7D2B465B7B2D2C2C70A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_Int8 = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(int8, 0.1), multiply(int8, 0.2)), 7), int8, multiply(int8, 0.3)))":"D0CCCCCCCCCC1DC002CECCCCCC0CA3B2C0F6285C8F425D96C00A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_Int16 = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(int16, 0.1), multiply(int16, 0.2)), 7), int16, multiply(int16, 0.3)))":"9A999999D929B9C002343373DEB440B9C1A370BDD7A54D9EC10A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_Int32 = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(int32, 0.1), multiply(int32, 0.2)), 7), int32, multiply(int32, 0.3)))":"343353113E3AC341020096C4817198BFC39BF375E710F5A2C30A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_Int64 = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(int64, 0.1), multiply(int64, 0.2)), 7), int64, multiply(int64, 0.3)))":"88886F10A0CB7FC3028EF451E7C7BDABC7EEC5CA8A11A590C70A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_Float32 = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(float32, 0.1), multiply(float32, 0.2)), 7), float32, multiply(float32, 0.3)))":"9A999979ACC7C5C7024CB9BC0E941ED9CF58DE48ABB124BECF0A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_Float64 = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(float64, 0.1), multiply(float64, 0.2)), 7), float64, multiply(float64, 0.3)))":"000000000000F8FF02000000000000F8FF000000000000F8FF0A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_Nullable_UInt8_ = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(nullable_uint8_, 0.1), multiply(nullable_uint8_, 0.2)), 7), nullable_uint8_, multiply(nullable_uint8_, 0.3)))":"019A99999999916240029A99999969E2D8C085EB51B87EDCBDC00A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_Nullable_UInt16_ = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(nullable_uint16_, 0.1), multiply(nullable_uint16_, 0.2)), 7), nullable_uint16_, multiply(nullable_uint16_, 0.3)))":"01CECCCCCCB418E740023433CBEF37CEE0C13E0A2786A92AC4C10A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_Nullable_UInt32_ = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(nullable_uint32_, 0.1), multiply(nullable_uint32_, 0.2)), 7), nullable_uint32_, multiply(nullable_uint32_, 0.3)))":"01CDCC1C34CCEBDB41021FCA815B0800CFC3ACDF4D9D9E99B2C30A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_Nullable_UInt64_ = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(nullable_uint64_, 0.1), multiply(nullable_uint64_, 0.2)), 7), nullable_uint64_, multiply(nullable_uint64_, 0.3)))":"016705A69AAAB8DA43025BE4A920170AD0C70612FFF34E3FB3C70A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_Nullable_Int8_ = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(nullable_int8_, 0.1), multiply(nullable_int8_, 0.2)), 7), nullable_int8_, multiply(nullable_int8_, 0.3)))":"01CECCCCCCCC4C2F400234333333F3A4B9C03C0AD7A3F0C59EC00A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_Nullable_Int16_ = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(nullable_int16_, 0.1), multiply(nullable_int16_, 0.2)), 7), nullable_int16_, multiply(nullable_int16_, 0.3)))":"01CDCCCCCC4C0AAFC0020000C0449AF6B4C101008052EC2799C10A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_Nullable_Int32_ = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(nullable_int32_, 0.1), multiply(nullable_int32_, 0.2)), 7), nullable_int32_, multiply(nullable_int32_, 0.3)))":"01676606B270CCC94102B4C72E2CC67AB3C372BCD101216097C30A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_Nullable_Int64_ = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(nullable_int64_, 0.1), multiply(nullable_int64_, 0.2)), 7), nullable_int64_, multiply(nullable_int64_, 0.3)))":"01069A60BDDBFCA8C302CF0128C2FADAB3C75E35634F93D397C70A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_Nullable_Float32_ = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(nullable_float32_, 0.1), multiply(nullable_float32_, 0.2)), 7), nullable_float32_, multiply(nullable_float32_, 0.3)))":"019A99996967C2DBC702EEB8D59268FFE1CFECDD66E3E398C5CF0A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_Nullable_Float64_ = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(nullable_float64_, 0.1), multiply(nullable_float64_, 0.2)), 7), nullable_float64_, multiply(nullable_float64_, 0.3)))":"01000000000000F8FF02000000000000F8FF000000000000F8FF0A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_LowCardinality_UInt8_ = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(lowcardinality_uint8_, 0.1), multiply(lowcardinality_uint8_, 0.2)), 7), lowcardinality_uint8_, multiply(lowcardinality_uint8_, 0.3)))":"67666666666E6940020000000098DEE5C000000000503ECAC00A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_LowCardinality_UInt16_ = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(lowcardinality_uint16_, 0.1), multiply(lowcardinality_uint16_, 0.2)), 7), lowcardinality_uint16_, multiply(lowcardinality_uint16_, 0.3)))":"000000006812E440023433CBC7E118E0C1D8A3C0EF0E51C3C10A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_LowCardinality_UInt32_ = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(lowcardinality_uint32_, 0.1), multiply(lowcardinality_uint32_, 0.2)), 7), lowcardinality_uint32_, multiply(lowcardinality_uint32_, 0.3)))":"CDCC54E75338E94102023F4FC1FD64E3C368185F4EFD45C7C30A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_LowCardinality_UInt64_ = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(lowcardinality_uint64_, 0.1), multiply(lowcardinality_uint64_, 0.2)), 7), lowcardinality_uint64_, multiply(lowcardinality_uint64_, 0.3)))":"B70A76A46C53DD43027954706DA56FD1C72C32ED1C60ECB4C70A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_LowCardinality_Int8_ = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(lowcardinality_int8_, 0.1), multiply(lowcardinality_int8_, 0.2)), 7), lowcardinality_int8_, multiply(lowcardinality_int8_, 0.3)))":"CDCCCCCCCC1C574002CDCCCCCC2C55C1C08FC2F5289CCCA4C00A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_LowCardinality_Int16_ = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(lowcardinality_int16_, 0.1), multiply(lowcardinality_int16_, 0.2)), 7), lowcardinality_int16_, multiply(lowcardinality_int16_, 0.3)))":"CCCCCCCC2CEFC64002666606286D06C1C17A146E961C6EA4C10A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_LowCardinality_Int32_ = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(lowcardinality_int32_, 0.1), multiply(lowcardinality_int32_, 0.2)), 7), lowcardinality_int32_, multiply(lowcardinality_int32_, 0.3)))":"6666461CD4D5C44102D821B4F985C3C1C36BF5A42B0751A5C30A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_LowCardinality_Int64_ = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(lowcardinality_int64_, 0.1), multiply(lowcardinality_int64_, 0.2)), 7), lowcardinality_int64_, multiply(lowcardinality_int64_, 0.3)))":"6C0E7C146DBED44302DE6F47769BD6BDC75176C4132AE7A1C70A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_LowCardinality_Float32_ = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(lowcardinality_float32_, 0.1), multiply(lowcardinality_float32_, 0.2)), 7), lowcardinality_float32_, multiply(lowcardinality_float32_, 0.3)))":"333333837EFEBE470285DD9A79358FD6CF6AA3862B4012BBCF0A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_LowCardinality_Float64_ = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(lowcardinality_float64_, 0.1), multiply(lowcardinality_float64_, 0.2)), 7), lowcardinality_float64_, multiply(lowcardinality_float64_, 0.3)))":"000000000000F8FF02000000000000F8FF000000000000F8FF0A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_LowCardinality_Nullable_UInt8__ = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(lowcardinality_nullable_uint8__, 0.1), multiply(lowcardinality_nullable_uint8__, 0.2)), 7), lowcardinality_nullable_uint8__, multiply(lowcardinality_nullable_uint8__, 0.3)))":"01CECCCCCCCC446E4002676666662EB7E8C048E17A149EA8CDC00A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_LowCardinality_Nullable_UInt16__ = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(lowcardinality_nullable_uint16__, 0.1), multiply(lowcardinality_nullable_uint16__, 0.2)), 7), lowcardinality_nullable_uint16__, multiply(lowcardinality_nullable_uint16__, 0.3)))":"0199999999A12CE84002000058E74793E4C1666636AFBCB0C8C10A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_LowCardinality_Nullable_UInt32__ = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(lowcardinality_nullable_uint32__, 0.1), multiply(lowcardinality_nullable_uint32__, 0.2)), 7), lowcardinality_nullable_uint32__, multiply(lowcardinality_nullable_uint32__, 0.3)))":"019A99D1547B43E941028DE6BF4DA123E5C3A714B3C3F45DC9C30A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_LowCardinality_Nullable_UInt64__ = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(lowcardinality_nullable_uint64__, 0.1), multiply(lowcardinality_nullable_uint64__, 0.2)), 7), lowcardinality_nullable_uint64__, multiply(lowcardinality_nullable_uint64__, 0.3)))":"01FA8D2CAAF781D843024E54BDF4046BCCC7C6653EF9020DB1C70A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_LowCardinality_Nullable_Int8__ = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(lowcardinality_nullable_int8__, 0.1), multiply(lowcardinality_nullable_int8__, 0.2)), 7), lowcardinality_nullable_int8__, multiply(lowcardinality_nullable_int8__, 0.3)))":"013433333333A351400232333333D370C8C03C0AD7A33054ADC00A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_LowCardinality_Nullable_Int16__ = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(lowcardinality_nullable_int16__, 0.1), multiply(lowcardinality_nullable_int16__, 0.2)), 7), lowcardinality_nullable_int16__, multiply(lowcardinality_nullable_int16__, 0.3)))":"0101000000A0E7C0C0020000403ED0A0BDC1CCCC8C58E3C6A1C10A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_LowCardinality_Nullable_Int32__ = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(lowcardinality_nullable_int32__, 0.1), multiply(lowcardinality_nullable_int32__, 0.2)), 7), lowcardinality_nullable_int32__, multiply(lowcardinality_nullable_int32__, 0.3)))":"01203333C3E77A55C10270E14F3D41A1B1C320A82CE3E72795C30A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_LowCardinality_Nullable_Int64__ = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(lowcardinality_nullable_int64__, 0.1), multiply(lowcardinality_nullable_int64__, 0.2)), 7), lowcardinality_nullable_int64__, multiply(lowcardinality_nullable_int64__, 0.3)))":"01ACE99FDEDBF6AE4302B19CE1158762C4C7D488DBB33B76A8C70A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_LowCardinality_Nullable_Float32__ = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(lowcardinality_nullable_float32__, 0.1), multiply(lowcardinality_nullable_float32__, 0.2)), 7), lowcardinality_nullable_float32__, multiply(lowcardinality_nullable_float32__, 0.3)))":"01606666A6CA9FAE470236D7D42362B9DFCFBA1AE67BD408C3CF0A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_stochasticLogisticRegressionState_LowCardinality_Nullable_Float64__ = r"""
+{"hex(stochasticLogisticRegressionState(1., 1., 1., 'SGD')(plus(plus(multiply(lowcardinality_nullable_float64__, 0.1), multiply(lowcardinality_nullable_float64__, 0.2)), 7), lowcardinality_nullable_float64__, multiply(lowcardinality_nullable_float64__, 0.3)))":"01000000000000F8FF02000000000000F8FF000000000000F8FF0A00000000000000030000000000000000000000000000000000000000000000000000000000000000"}
+"""
+
