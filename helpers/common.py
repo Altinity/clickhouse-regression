@@ -14,7 +14,10 @@ from testflows._core.testtype import TestSubType
 
 def current_cpu():
     """Return current cpu architecture."""
-    return platform.processor()
+    arch = platform.processor()
+    if arch not in ("x86_64", "aarch64"):
+        raise TypeError(f"unsupported CPU architecture {arch}")
+    return arch
 
 
 def check_current_cpu(arch):
