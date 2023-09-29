@@ -3,7 +3,12 @@ import itertools
 from testflows.core import *
 from testflows.asserts import values, error, snapshot
 
-from helpers.common import check_clickhouse_version, get_snapshot_id, getuid
+from helpers.common import (
+    check_clickhouse_version,
+    get_snapshot_id,
+    getuid,
+    current_cpu,
+)
 
 # exhaustive list of all aggregate functions
 aggregate_functions = [
@@ -200,7 +205,7 @@ def execute_query(
                     assert that(
                         snapshot(
                             "\n" + r.output.strip() + "\n",
-                            id=current().context.snapshot_id,
+                            id=current().context.snapshot_id + "." + current_cpu(),
                             name=snapshot_name,
                             encoder=str,
                         )
