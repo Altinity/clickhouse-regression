@@ -1,5 +1,9 @@
 # ClickHouse vs DuckDB (Runtime in Seconds)
 
+## Versions
+  * ClickHouse: 23.9.1
+  * DuckDB: 0.9.0
+
 ## Bar Chart
 ![Bar Chart](bar_chart.png)
 # query_0
