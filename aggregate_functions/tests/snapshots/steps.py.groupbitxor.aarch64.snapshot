@@ -1,0 +1,97 @@
+_aggregate_functions_groupBitXor_constant = r"""
+{"groupBitXor(1)":1}
+"""
+
+_aggregate_functions_groupBitXor_zero_rows = r"""
+{"groupBitXor(number)":"0"}
+"""
+
+_aggregate_functions_groupBitXor_single_row = r"""
+{"groupBitXor(number)":"0"}
+"""
+
+_aggregate_functions_groupBitXor_with_group_by = r"""
+{"even":0,"groupBitXor(number)":"8"}
+{"even":1,"groupBitXor(number)":"9"}
+"""
+
+_aggregate_functions_groupBitXor_NULL_value_handling = r"""
+{"groupBitXor(x)":3}
+"""
+
+_aggregate_functions_groupBitXor_single_NULL_value = r"""
+{"groupBitXor(x)":null}
+"""
+
+_aggregate_functions_groupBitXor_return_type = r"""
+{"toTypeName(groupBitXor(number))":"UInt64"}
+"""
+
+_aggregate_functions_groupBitXor_doc_example = r"""
+{"groupBitXor(x)":1}
+"""
+
+_aggregate_functions_groupBitXor_UInt8 = r"""
+{"groupBitXor(uint8)":205}
+"""
+
+_aggregate_functions_groupBitXor_UInt16 = r"""
+{"groupBitXor(uint16)":41551}
+"""
+
+_aggregate_functions_groupBitXor_UInt32 = r"""
+{"groupBitXor(uint32)":4228002435}
+"""
+
+_aggregate_functions_groupBitXor_UInt64 = r"""
+{"groupBitXor(uint64)":"205449903491305292"}
+"""
+
+_aggregate_functions_groupBitXor_Nullable_UInt8_ = r"""
+{"groupBitXor(nullable_uint8_)":126}
+"""
+
+_aggregate_functions_groupBitXor_Nullable_UInt16_ = r"""
+{"groupBitXor(nullable_uint16_)":11594}
+"""
+
+_aggregate_functions_groupBitXor_Nullable_UInt32_ = r"""
+{"groupBitXor(nullable_uint32_)":1495160878}
+"""
+
+_aggregate_functions_groupBitXor_Nullable_UInt64_ = r"""
+{"groupBitXor(nullable_uint64_)":"15804550903329858694"}
+"""
+
+_aggregate_functions_groupBitXor_LowCardinality_UInt8_ = r"""
+{"groupBitXor(lowcardinality_uint8_)":215}
+"""
+
+_aggregate_functions_groupBitXor_LowCardinality_UInt16_ = r"""
+{"groupBitXor(lowcardinality_uint16_)":39396}
+"""
+
+_aggregate_functions_groupBitXor_LowCardinality_UInt32_ = r"""
+{"groupBitXor(lowcardinality_uint32_)":344559674}
+"""
+
+_aggregate_functions_groupBitXor_LowCardinality_UInt64_ = r"""
+{"groupBitXor(lowcardinality_uint64_)":"14629182091937451912"}
+"""
+
+_aggregate_functions_groupBitXor_LowCardinality_Nullable_UInt8__ = r"""
+{"groupBitXor(lowcardinality_nullable_uint8__)":38}
+"""
+
+_aggregate_functions_groupBitXor_LowCardinality_Nullable_UInt16__ = r"""
+{"groupBitXor(lowcardinality_nullable_uint16__)":52168}
+"""
+
+_aggregate_functions_groupBitXor_LowCardinality_Nullable_UInt32__ = r"""
+{"groupBitXor(lowcardinality_nullable_uint32__)":510438968}
+"""
+
+_aggregate_functions_groupBitXor_LowCardinality_Nullable_UInt64__ = r"""
+{"groupBitXor(lowcardinality_nullable_uint64__)":"1622406674987310465"}
+"""
+
