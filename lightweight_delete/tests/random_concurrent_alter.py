@@ -62,7 +62,7 @@ def random_concurrent_alter(self, node=None):
         "I perform concurrent operations",
         description="deleting odd rows and random concurrent alter operations",
     ):
-        for retry in retries(count=5):
+        for retry in retries(count=20):
             with retry:
                 Step(
                     name="delete odd rows from all partitions",
