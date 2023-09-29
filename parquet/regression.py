@@ -283,7 +283,7 @@ ffails = {
     "/parquet/datatypes/string int list inconsistent offset multiple batches": (
         Skip,
         "The fix not implemented yet",
-        check_clickhouse_version("<23.9"),
+        check_clickhouse_version("<23.10.1"),
     ),
     "/parquet/aws s3/s3/compression type/=NONE /engine/insert into engine": (
         Skip,
