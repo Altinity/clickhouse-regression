@@ -48,11 +48,13 @@ def select_with_glob(self, query, snapshot_name):
                 """
             )
 
+            table_values = node.query(f"SELECT * FROM {table_name} ORDER BY tuple(*)")
+
         with Then("I check that the output is correct"):
             with values() as that:
                 assert that(
                     snapshot(
-                        create_table.output.strip(),
+                        table_values.output.strip(),
                         name=f"create_table_with_{snapshot_name}",
                     )
                 ), error()
@@ -98,8 +100,7 @@ def glob2(self):
 @TestScenario
 def glob_with_multiple_elements(self):
     select_with_glob(
-        query=f'SELECT * FROM file("{{{glob1}/t1, {glob3}/a/dir/x,{glob3}/c/dir/z, {glob3}/b/y}}.parquet") SETTINGS '
-        f"ignore_access_denied_multidirectory_globs=True",
+        query="file('{glob3/c/dir/z, glob/t1, glob3/a/dir/x, glob3/b/y}.parquet')",
         snapshot_name="glob_with_multiple_elements",
     )
 
