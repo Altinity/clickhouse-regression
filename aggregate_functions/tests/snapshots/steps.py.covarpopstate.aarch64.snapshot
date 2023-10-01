@@ -23,7 +23,7 @@ _aggregate_functions_state_covarPopState_datatypes_Float64_Int16 = r"""
 """
 
 _aggregate_functions_state_covarPopState_datatypes_Float64_Int32 = r"""
-{"hex(covarPopState(float64, int32))":"00000000000024401FD01440BEE4B4FF000000E68F76A5C1000000000000F8FF"}
+{"hex(covarPopState(float64, int32))":"00000000000024401FD01440BEE4B4FF000000E68F76A5C1000000000000F87F"}
 """
 
 _aggregate_functions_state_covarPopState_datatypes_Float64_Int64 = r"""
@@ -35,7 +35,7 @@ _aggregate_functions_state_covarPopState_datatypes_Float64_Int8 = r"""
 """
 
 _aggregate_functions_state_covarPopState_datatypes_Float64_LowCardinality_Float32_ = r"""
-{"hex(covarPopState(float64, lowcardinality_float32_))":"00000000000024401FD01440BEE4B4FF000000AC2CB6ED47000000000000F8FF"}
+{"hex(covarPopState(float64, lowcardinality_float32_))":"00000000000024401FD01440BEE4B4FF000000AC2CB6ED47000000000000F87F"}
 """
 
 _aggregate_functions_state_covarPopState_datatypes_Float64_LowCardinality_Float64_ = r"""
@@ -155,7 +155,7 @@ _aggregate_functions_state_covarPopState_datatypes_Float64_Nullable_UInt8_ = r""
 """
 
 _aggregate_functions_state_covarPopState_datatypes_Float64_UInt16 = r"""
-{"hex(covarPopState(float64, uint16))":"00000000000024401FD01440BEE4B4FF00000000D8F30E41000000000000F8FF"}
+{"hex(covarPopState(float64, uint16))":"00000000000024401FD01440BEE4B4FF00000000D8F30E41000000000000F87F"}
 """
 
 _aggregate_functions_state_covarPopState_datatypes_Float64_UInt32 = r"""
@@ -255,7 +255,7 @@ _aggregate_functions_state_covarPopState_datatypes_LowCardinality_UInt16__Float6
 """
 
 _aggregate_functions_state_covarPopState_datatypes_LowCardinality_UInt32__Float64 = r"""
-{"hex(covarPopState(lowcardinality_uint32_, float64))":"0000000000002440000070D60C820F421FD01440BEE4B4FF000000000000F8FF"}
+{"hex(covarPopState(lowcardinality_uint32_, float64))":"0000000000002440000070D60C820F421FD01440BEE4B4FF000000000000F87F"}
 """
 
 _aggregate_functions_state_covarPopState_datatypes_LowCardinality_UInt64__Float64 = r"""
@@ -531,7 +531,7 @@ _aggregate_functions_state_covarPopState_datatypes_permutations_Nullable_Float32
 """
 
 _aggregate_functions_state_covarPopState_datatypes_permutations_Nullable_Float32__Nullable_UInt64_ = r"""
-{"hex(covarPopState(nullable_float32_, nullable_uint64_))":"010000000000002240000000CEF7DB07C8AFCD1921F86716445C1265DA64AFDBCB"}
+{"hex(covarPopState(nullable_float32_, nullable_uint64_))":"010000000000002240000000CEF7DB07C8AFCD1921F8671644601265DA64AFDBCB"}
 """
 
 _aggregate_functions_state_covarPopState_datatypes_permutations_Nullable_Float32__UInt64 = r"""

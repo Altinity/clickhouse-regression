@@ -63,7 +63,7 @@ _aggregate_functions_state_covarPopStableState_datatypes_Float64_LowCardinality_
 """
 
 _aggregate_functions_state_covarPopStableState_datatypes_Float64_LowCardinality_Nullable_Float64__ = r"""
-{"hex(covarPopStableState(float64, lowcardinality_nullable_float64__))":"0109000000000000F8FF000000000000F8FF000000000000F8FF"}
+{"hex(covarPopStableState(float64, lowcardinality_nullable_float64__))":"0109000000000000F87F000000000000F87F000000000000F87F"}
 """
 
 _aggregate_functions_state_covarPopStableState_datatypes_Float64_LowCardinality_Nullable_Int16__ = r"""
@@ -267,7 +267,7 @@ _aggregate_functions_state_covarPopStableState_datatypes_LowCardinality_UInt8__F
 """
 
 _aggregate_functions_state_covarPopStableState_datatypes_Nullable_Float32__Float64 = r"""
-{"hex(covarPopStableState(nullable_float32_, float64))":"01091CC7710C4E35D5C7000000000000F8FF000000000000F8FF"}
+{"hex(covarPopStableState(nullable_float32_, float64))":"01091CC7710C4E35D5C7000000000000F87F000000000000F87F"}
 """
 
 _aggregate_functions_state_covarPopStableState_datatypes_Nullable_Float64__Float64 = r"""
@@ -459,7 +459,7 @@ _aggregate_functions_state_covarPopStableState_datatypes_permutations_LowCardina
 """
 
 _aggregate_functions_state_covarPopStableState_datatypes_permutations_LowCardinality_Int64__Nullable_UInt64_ = r"""
-{"hex(covarPopStableState(lowcardinality_int64_, nullable_uint64_))":"0109AC849030D0D7B8439C28A5ABA3EAE34303A3AFBA9087D147"}
+{"hex(covarPopStableState(lowcardinality_int64_, nullable_uint64_))":"0109AC849030D0D7B8439C28A5ABA3EAE34302A3AFBA9087D147"}
 """
 
 _aggregate_functions_state_covarPopStableState_datatypes_permutations_LowCardinality_Int64__UInt64 = r"""
