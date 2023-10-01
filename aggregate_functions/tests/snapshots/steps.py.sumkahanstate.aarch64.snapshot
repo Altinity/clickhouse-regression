@@ -199,7 +199,7 @@ _aggregate_functions_state_sumKahanState_UInt8 = r"""
 """
 
 _aggregate_functions_state_sumKahanState__inf = r"""
-{"hex(sumKahanState(x))":"000000000000F8FF000000000000F8FF"}
+{"hex(sumKahanState(x))":"000000000000F87F000000000000F87F"}
 """
 
 _aggregate_functions_state_sumKahanState_constant = r"""
@@ -207,7 +207,7 @@ _aggregate_functions_state_sumKahanState_constant = r"""
 """
 
 _aggregate_functions_state_sumKahanState_inf = r"""
-{"hex(sumKahanState(x))":"000000000000F8FF000000000000F8FF"}
+{"hex(sumKahanState(x))":"000000000000F87F000000000000F87F"}
 """
 
 _aggregate_functions_state_sumKahanState_inf___inf__nan = r"""
