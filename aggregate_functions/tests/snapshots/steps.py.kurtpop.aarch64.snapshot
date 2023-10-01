@@ -55,7 +55,7 @@ _aggregate_functions_kurtPop_LowCardinality_Nullable_Float64__ = r"""
 """
 
 _aggregate_functions_kurtPop_LowCardinality_Nullable_Int16__ = r"""
-{"kurtPop(lowcardinality_nullable_int16__)":1.9184051692442006}
+{"kurtPop(lowcardinality_nullable_int16__)":1.9184051692442012}
 """
 
 _aggregate_functions_kurtPop_LowCardinality_Nullable_Int32__ = r"""
@@ -63,7 +63,7 @@ _aggregate_functions_kurtPop_LowCardinality_Nullable_Int32__ = r"""
 """
 
 _aggregate_functions_kurtPop_LowCardinality_Nullable_Int64__ = r"""
-{"kurtPop(lowcardinality_nullable_int64__)":1.8391026989919812}
+{"kurtPop(lowcardinality_nullable_int64__)":1.8391026989919803}
 """
 
 _aggregate_functions_kurtPop_LowCardinality_Nullable_Int8__ = r"""
@@ -79,7 +79,7 @@ _aggregate_functions_kurtPop_LowCardinality_Nullable_UInt32__ = r"""
 """
 
 _aggregate_functions_kurtPop_LowCardinality_Nullable_UInt64__ = r"""
-{"kurtPop(lowcardinality_nullable_uint64__)":1.419154488700104}
+{"kurtPop(lowcardinality_nullable_uint64__)":1.4191544887001024}
 """
 
 _aggregate_functions_kurtPop_LowCardinality_Nullable_UInt8__ = r"""
@@ -115,15 +115,15 @@ _aggregate_functions_kurtPop_Nullable_Float64_ = r"""
 """
 
 _aggregate_functions_kurtPop_Nullable_Int16_ = r"""
-{"kurtPop(nullable_int16_)":1.868199975741603}
+{"kurtPop(nullable_int16_)":1.8681999757416035}
 """
 
 _aggregate_functions_kurtPop_Nullable_Int32_ = r"""
-{"kurtPop(nullable_int32_)":2.2557931381431375}
+{"kurtPop(nullable_int32_)":2.255793138143137}
 """
 
 _aggregate_functions_kurtPop_Nullable_Int64_ = r"""
-{"kurtPop(nullable_int64_)":1.6024692838531303}
+{"kurtPop(nullable_int64_)":1.6024692838531311}
 """
 
 _aggregate_functions_kurtPop_Nullable_Int8_ = r"""
@@ -135,7 +135,7 @@ _aggregate_functions_kurtPop_Nullable_UInt16_ = r"""
 """
 
 _aggregate_functions_kurtPop_Nullable_UInt32_ = r"""
-{"kurtPop(nullable_uint32_)":1.4794296969278102}
+{"kurtPop(nullable_uint32_)":1.4794296969278158}
 """
 
 _aggregate_functions_kurtPop_Nullable_UInt64_ = r"""
