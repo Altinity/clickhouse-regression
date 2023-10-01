@@ -1,650 +1,709 @@
-_aggregate_functions_deltaSumTimestamp_constant = r"""
-{"deltaSumTimestamp(1, 1)":0}
-"""
-
-_aggregate_functions_deltaSumTimestamp_zero_rows = r"""
-{"deltaSumTimestamp(number, plus(number, 1))":"0"}
-"""
-
-_aggregate_functions_deltaSumTimestamp_with_group_by = r"""
-{"even":0,"deltaSumTimestamp(number, plus(number, 1))":"8"}
-{"even":1,"deltaSumTimestamp(number, plus(number, 1))":"8"}
-"""
-
-_aggregate_functions_deltaSumTimestamp_some_negative_values = r"""
-{"deltaSumTimestamp(toInt64(minus(number, 5)), toInt64(plus(number, 10)))":"9"}
-"""
-
 _aggregate_functions_deltaSumTimestamp_NULL_value_handling = r"""
 {"deltaSumTimestamp(x, y)":5}
 """
 
-_aggregate_functions_deltaSumTimestamp_single_NULL_value = r"""
-{"deltaSumTimestamp(x, y)":0}
+_aggregate_functions_deltaSumTimestamp_constant = r"""
+{"deltaSumTimestamp(1, 1)":0}
 """
 
-_aggregate_functions_deltaSumTimestamp_inf___inf__nan_inf_inf = r"""
-{"deltaSumTimestamp(x, y)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_Date = r"""
+{"deltaSumTimestamp(datetime, date)":2009448503}
 """
 
-_aggregate_functions_deltaSumTimestamp_inf___inf__nan_inf__inf = r"""
-{"deltaSumTimestamp(x, y)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_DateTime = r"""
+{"deltaSumTimestamp(datetime, datetime)":2009448503}
 """
 
-_aggregate_functions_deltaSumTimestamp_inf___inf__nan_inf_nan = r"""
-{"deltaSumTimestamp(x, y)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_Float32 = r"""
+{"deltaSumTimestamp(datetime, float32)":2009448503}
 """
 
-_aggregate_functions_deltaSumTimestamp_inf___inf__nan__inf_inf = r"""
-{"deltaSumTimestamp(x, y)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_Float64 = r"""
+{"deltaSumTimestamp(datetime, float64)":2009448503}
 """
 
-_aggregate_functions_deltaSumTimestamp_inf___inf__nan__inf__inf = r"""
-{"deltaSumTimestamp(x, y)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_Int64 = r"""
+{"deltaSumTimestamp(datetime, int64)":2009448503}
 """
 
-_aggregate_functions_deltaSumTimestamp_inf___inf__nan__inf_nan = r"""
-{"deltaSumTimestamp(x, y)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_LowCardinality_DateTime_ = r"""
+{"deltaSumTimestamp(datetime, lowcardinality_datetime_)":2009448503}
 """
 
-_aggregate_functions_deltaSumTimestamp_inf___inf__nan_nan_inf = r"""
-{"deltaSumTimestamp(x, y)":2}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_LowCardinality_Date_ = r"""
+{"deltaSumTimestamp(datetime, lowcardinality_date_)":2009448503}
 """
 
-_aggregate_functions_deltaSumTimestamp_inf___inf__nan_nan__inf = r"""
-{"deltaSumTimestamp(x, y)":2}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_LowCardinality_Float32_ = r"""
+{"deltaSumTimestamp(datetime, lowcardinality_float32_)":2009448503}
 """
 
-_aggregate_functions_deltaSumTimestamp_inf___inf__nan_nan_nan = r"""
-{"deltaSumTimestamp(x, y)":2}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_LowCardinality_Float64_ = r"""
+{"deltaSumTimestamp(datetime, lowcardinality_float64_)":2009448503}
 """
 
-_aggregate_functions_deltaSumTimestamp_return_type = r"""
-{"toTypeName(deltaSumTimestamp(number, plus(number, 1)))":"UInt64"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_LowCardinality_Int64_ = r"""
+{"deltaSumTimestamp(datetime, lowcardinality_int64_)":2009448503}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_UInt64 = r"""
-{"deltaSumTimestamp(uint64, uint64)":"11665937984950438984"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_LowCardinality_UInt64_ = r"""
+{"deltaSumTimestamp(datetime, lowcardinality_uint64_)":2009448503}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_Nullable_UInt64_ = r"""
-{"deltaSumTimestamp(uint64, nullable_uint64_)":"11665937984950438984"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_Nullable_DateTime_ = r"""
+{"deltaSumTimestamp(datetime, nullable_datetime_)":844856254}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_Nullable_Int64_ = r"""
-{"deltaSumTimestamp(uint64, nullable_int64_)":"11665937984950438984"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_Nullable_Date_ = r"""
+{"deltaSumTimestamp(datetime, nullable_date_)":844856254}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_Nullable_Float32_ = r"""
-{"deltaSumTimestamp(uint64, nullable_float32_)":"11665937984950438984"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_Nullable_Float32_ = r"""
+{"deltaSumTimestamp(datetime, nullable_float32_)":844856254}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_Nullable_Float64_ = r"""
-{"deltaSumTimestamp(uint64, nullable_float64_)":"11665937984950438984"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_Nullable_Float64_ = r"""
+{"deltaSumTimestamp(datetime, nullable_float64_)":844856254}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_Nullable_DateTime_ = r"""
-{"deltaSumTimestamp(uint64, nullable_datetime_)":"11665937984950438984"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_Nullable_Int64_ = r"""
+{"deltaSumTimestamp(datetime, nullable_int64_)":844856254}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_Nullable_Date_ = r"""
-{"deltaSumTimestamp(uint64, nullable_date_)":"11665937984950438984"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_Nullable_UInt64_ = r"""
+{"deltaSumTimestamp(datetime, nullable_uint64_)":844856254}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_LowCardinality_UInt64_ = r"""
-{"deltaSumTimestamp(uint64, lowcardinality_uint64_)":"11665937984950438984"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_UInt64 = r"""
+{"deltaSumTimestamp(datetime, uint64)":2009448503}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_LowCardinality_Float32_ = r"""
-{"deltaSumTimestamp(uint64, lowcardinality_float32_)":"11665937984950438984"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_Date = r"""
+{"deltaSumTimestamp(date, date)":22415}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_LowCardinality_Float64_ = r"""
-{"deltaSumTimestamp(uint64, lowcardinality_float64_)":"11665937984950438984"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_DateTime = r"""
+{"deltaSumTimestamp(date, datetime)":22415}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_LowCardinality_Int64_ = r"""
-{"deltaSumTimestamp(uint64, lowcardinality_int64_)":"11665937984950438984"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_Float32 = r"""
+{"deltaSumTimestamp(date, float32)":22415}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_Int64 = r"""
-{"deltaSumTimestamp(uint64, int64)":"11665937984950438984"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_Float64 = r"""
+{"deltaSumTimestamp(date, float64)":22415}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_LowCardinality_Date_ = r"""
-{"deltaSumTimestamp(uint64, lowcardinality_date_)":"11665937984950438984"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_Int64 = r"""
+{"deltaSumTimestamp(date, int64)":22415}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_LowCardinality_DateTime_ = r"""
-{"deltaSumTimestamp(uint64, lowcardinality_datetime_)":"11665937984950438984"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_LowCardinality_DateTime_ = r"""
+{"deltaSumTimestamp(date, lowcardinality_datetime_)":22415}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_Float64 = r"""
-{"deltaSumTimestamp(uint64, float64)":"11665937984950438984"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_LowCardinality_Date_ = r"""
+{"deltaSumTimestamp(date, lowcardinality_date_)":22415}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_Float32 = r"""
-{"deltaSumTimestamp(uint64, float32)":"11665937984950438984"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_LowCardinality_Float32_ = r"""
+{"deltaSumTimestamp(date, lowcardinality_float32_)":22415}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_DateTime = r"""
-{"deltaSumTimestamp(uint64, datetime)":"11665937984950438984"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_LowCardinality_Float64_ = r"""
+{"deltaSumTimestamp(date, lowcardinality_float64_)":22415}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__UInt64 = r"""
-{"deltaSumTimestamp(nullable_uint64_, uint64)":"15090509934681463105"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_LowCardinality_Int64_ = r"""
+{"deltaSumTimestamp(date, lowcardinality_int64_)":22415}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_Date = r"""
-{"deltaSumTimestamp(uint64, date)":"11665937984950438984"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_LowCardinality_UInt64_ = r"""
+{"deltaSumTimestamp(date, lowcardinality_uint64_)":22415}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__Nullable_UInt64_ = r"""
-{"deltaSumTimestamp(nullable_uint64_, nullable_uint64_)":"15090509934681463105"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_Nullable_DateTime_ = r"""
+{"deltaSumTimestamp(date, nullable_datetime_)":22415}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__Nullable_Int64_ = r"""
-{"deltaSumTimestamp(nullable_uint64_, nullable_int64_)":"15090509934681463105"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_Nullable_Date_ = r"""
+{"deltaSumTimestamp(date, nullable_date_)":22415}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__Nullable_Float64_ = r"""
-{"deltaSumTimestamp(nullable_uint64_, nullable_float64_)":"15090509934681463105"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_Nullable_Float32_ = r"""
+{"deltaSumTimestamp(date, nullable_float32_)":22415}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__Nullable_Float32_ = r"""
-{"deltaSumTimestamp(nullable_uint64_, nullable_float32_)":"15090509934681463105"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_Nullable_Float64_ = r"""
+{"deltaSumTimestamp(date, nullable_float64_)":22415}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__Nullable_DateTime_ = r"""
-{"deltaSumTimestamp(nullable_uint64_, nullable_datetime_)":"15090509934681463105"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_Nullable_Int64_ = r"""
+{"deltaSumTimestamp(date, nullable_int64_)":22415}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__Nullable_Date_ = r"""
-{"deltaSumTimestamp(nullable_uint64_, nullable_date_)":"15090509934681463105"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_Nullable_UInt64_ = r"""
+{"deltaSumTimestamp(date, nullable_uint64_)":22415}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__LowCardinality_UInt64_ = r"""
-{"deltaSumTimestamp(nullable_uint64_, lowcardinality_uint64_)":"15090509934681463105"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_UInt64 = r"""
+{"deltaSumTimestamp(date, uint64)":22415}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__LowCardinality_Int64_ = r"""
-{"deltaSumTimestamp(nullable_uint64_, lowcardinality_int64_)":"15090509934681463105"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_Date = r"""
+{"deltaSumTimestamp(float32, date)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__LowCardinality_Float64_ = r"""
-{"deltaSumTimestamp(nullable_uint64_, lowcardinality_float64_)":"15090509934681463105"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_DateTime = r"""
+{"deltaSumTimestamp(float32, datetime)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__LowCardinality_Float32_ = r"""
-{"deltaSumTimestamp(nullable_uint64_, lowcardinality_float32_)":"15090509934681463105"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_Float32 = r"""
+{"deltaSumTimestamp(float32, float32)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__LowCardinality_Date_ = r"""
-{"deltaSumTimestamp(nullable_uint64_, lowcardinality_date_)":"15090509934681463105"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_Float64 = r"""
+{"deltaSumTimestamp(float32, float64)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__LowCardinality_DateTime_ = r"""
-{"deltaSumTimestamp(nullable_uint64_, lowcardinality_datetime_)":"15090509934681463105"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_Int64 = r"""
+{"deltaSumTimestamp(float32, int64)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__Int64 = r"""
-{"deltaSumTimestamp(nullable_uint64_, int64)":"15090509934681463105"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_LowCardinality_DateTime_ = r"""
+{"deltaSumTimestamp(float32, lowcardinality_datetime_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__Float64 = r"""
-{"deltaSumTimestamp(nullable_uint64_, float64)":"15090509934681463105"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_LowCardinality_Date_ = r"""
+{"deltaSumTimestamp(float32, lowcardinality_date_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__Float32 = r"""
-{"deltaSumTimestamp(nullable_uint64_, float32)":"15090509934681463105"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_LowCardinality_Float32_ = r"""
+{"deltaSumTimestamp(float32, lowcardinality_float32_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__DateTime = r"""
-{"deltaSumTimestamp(nullable_uint64_, datetime)":"15090509934681463105"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_LowCardinality_Float64_ = r"""
+{"deltaSumTimestamp(float32, lowcardinality_float64_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__Date = r"""
-{"deltaSumTimestamp(nullable_uint64_, date)":"15090509934681463105"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_LowCardinality_Int64_ = r"""
+{"deltaSumTimestamp(float32, lowcardinality_int64_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__UInt64 = r"""
-{"deltaSumTimestamp(nullable_int64_, uint64)":"-1982436857172010144"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_LowCardinality_UInt64_ = r"""
+{"deltaSumTimestamp(float32, lowcardinality_uint64_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__Nullable_UInt64_ = r"""
-{"deltaSumTimestamp(nullable_int64_, nullable_uint64_)":"-1982436857172010144"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_Nullable_DateTime_ = r"""
+{"deltaSumTimestamp(float32, nullable_datetime_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__Nullable_Int64_ = r"""
-{"deltaSumTimestamp(nullable_int64_, nullable_int64_)":"-1982436857172010144"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_Nullable_Date_ = r"""
+{"deltaSumTimestamp(float32, nullable_date_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__Nullable_Float64_ = r"""
-{"deltaSumTimestamp(nullable_int64_, nullable_float64_)":"-1982436857172010144"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_Nullable_Float32_ = r"""
+{"deltaSumTimestamp(float32, nullable_float32_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__Nullable_DateTime_ = r"""
-{"deltaSumTimestamp(nullable_int64_, nullable_datetime_)":"-1982436857172010144"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_Nullable_Float64_ = r"""
+{"deltaSumTimestamp(float32, nullable_float64_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__Nullable_Float32_ = r"""
-{"deltaSumTimestamp(nullable_int64_, nullable_float32_)":"-1982436857172010144"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_Nullable_Int64_ = r"""
+{"deltaSumTimestamp(float32, nullable_int64_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__Nullable_Date_ = r"""
-{"deltaSumTimestamp(nullable_int64_, nullable_date_)":"-1982436857172010144"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_Nullable_UInt64_ = r"""
+{"deltaSumTimestamp(float32, nullable_uint64_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__LowCardinality_UInt64_ = r"""
-{"deltaSumTimestamp(nullable_int64_, lowcardinality_uint64_)":"-1982436857172010144"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_UInt64 = r"""
+{"deltaSumTimestamp(float32, uint64)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__LowCardinality_Float64_ = r"""
-{"deltaSumTimestamp(nullable_int64_, lowcardinality_float64_)":"-1982436857172010144"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_Date = r"""
+{"deltaSumTimestamp(float64, date)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__LowCardinality_Int64_ = r"""
-{"deltaSumTimestamp(nullable_int64_, lowcardinality_int64_)":"-1982436857172010144"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_DateTime = r"""
+{"deltaSumTimestamp(float64, datetime)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__LowCardinality_Float32_ = r"""
-{"deltaSumTimestamp(nullable_int64_, lowcardinality_float32_)":"-1982436857172010144"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_Float32 = r"""
+{"deltaSumTimestamp(float64, float32)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__LowCardinality_Date_ = r"""
-{"deltaSumTimestamp(nullable_int64_, lowcardinality_date_)":"-1982436857172010144"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_Float64 = r"""
+{"deltaSumTimestamp(float64, float64)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__LowCardinality_DateTime_ = r"""
-{"deltaSumTimestamp(nullable_int64_, lowcardinality_datetime_)":"-1982436857172010144"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_Int64 = r"""
+{"deltaSumTimestamp(float64, int64)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__Int64 = r"""
-{"deltaSumTimestamp(nullable_int64_, int64)":"-1982436857172010144"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_LowCardinality_DateTime_ = r"""
+{"deltaSumTimestamp(float64, lowcardinality_datetime_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__DateTime = r"""
-{"deltaSumTimestamp(nullable_int64_, datetime)":"-1982436857172010144"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_LowCardinality_Date_ = r"""
+{"deltaSumTimestamp(float64, lowcardinality_date_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__Float32 = r"""
-{"deltaSumTimestamp(nullable_int64_, float32)":"-1982436857172010144"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_LowCardinality_Float32_ = r"""
+{"deltaSumTimestamp(float64, lowcardinality_float32_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__Float64 = r"""
-{"deltaSumTimestamp(nullable_int64_, float64)":"-1982436857172010144"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_LowCardinality_Float64_ = r"""
+{"deltaSumTimestamp(float64, lowcardinality_float64_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__Date = r"""
-{"deltaSumTimestamp(nullable_int64_, date)":"-1982436857172010144"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_LowCardinality_Int64_ = r"""
+{"deltaSumTimestamp(float64, lowcardinality_int64_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__UInt64 = r"""
-{"deltaSumTimestamp(nullable_float64_, uint64)":1.7976910611810447e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_LowCardinality_UInt64_ = r"""
+{"deltaSumTimestamp(float64, lowcardinality_uint64_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__Nullable_UInt64_ = r"""
-{"deltaSumTimestamp(nullable_float64_, nullable_uint64_)":1.7976910611810447e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_Nullable_DateTime_ = r"""
+{"deltaSumTimestamp(float64, nullable_datetime_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__Nullable_Int64_ = r"""
-{"deltaSumTimestamp(nullable_float64_, nullable_int64_)":1.7976910611810447e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_Nullable_Date_ = r"""
+{"deltaSumTimestamp(float64, nullable_date_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__Nullable_Float64_ = r"""
-{"deltaSumTimestamp(nullable_float64_, nullable_float64_)":1.7976910611810447e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_Nullable_Float32_ = r"""
+{"deltaSumTimestamp(float64, nullable_float32_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__Nullable_DateTime_ = r"""
-{"deltaSumTimestamp(nullable_float64_, nullable_datetime_)":1.7976910611810447e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_Nullable_Float64_ = r"""
+{"deltaSumTimestamp(float64, nullable_float64_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__Nullable_Float32_ = r"""
-{"deltaSumTimestamp(nullable_float64_, nullable_float32_)":1.7976910611810447e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_Nullable_Int64_ = r"""
+{"deltaSumTimestamp(float64, nullable_int64_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__Nullable_Date_ = r"""
-{"deltaSumTimestamp(nullable_float64_, nullable_date_)":1.7976910611810447e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_Nullable_UInt64_ = r"""
+{"deltaSumTimestamp(float64, nullable_uint64_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__LowCardinality_UInt64_ = r"""
-{"deltaSumTimestamp(nullable_float64_, lowcardinality_uint64_)":1.7976910611810447e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_UInt64 = r"""
+{"deltaSumTimestamp(float64, uint64)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__LowCardinality_Int64_ = r"""
-{"deltaSumTimestamp(nullable_float64_, lowcardinality_int64_)":1.7976910611810447e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_Date = r"""
+{"deltaSumTimestamp(int64, date)":"-7844570025741298356"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__LowCardinality_Float64_ = r"""
-{"deltaSumTimestamp(nullable_float64_, lowcardinality_float64_)":1.7976910611810447e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_DateTime = r"""
+{"deltaSumTimestamp(int64, datetime)":"-7844570025741298356"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__LowCardinality_Float32_ = r"""
-{"deltaSumTimestamp(nullable_float64_, lowcardinality_float32_)":1.7976910611810447e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_Float32 = r"""
+{"deltaSumTimestamp(int64, float32)":"-7844570025741298356"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__LowCardinality_DateTime_ = r"""
-{"deltaSumTimestamp(nullable_float64_, lowcardinality_datetime_)":1.7976910611810447e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_Float64 = r"""
+{"deltaSumTimestamp(int64, float64)":"-7844570025741298356"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__LowCardinality_Date_ = r"""
-{"deltaSumTimestamp(nullable_float64_, lowcardinality_date_)":1.7976910611810447e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_Int64 = r"""
+{"deltaSumTimestamp(int64, int64)":"-7844570025741298356"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__Int64 = r"""
-{"deltaSumTimestamp(nullable_float64_, int64)":1.7976910611810447e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_LowCardinality_DateTime_ = r"""
+{"deltaSumTimestamp(int64, lowcardinality_datetime_)":"-7844570025741298356"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__Float64 = r"""
-{"deltaSumTimestamp(nullable_float64_, float64)":1.7976910611810447e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_LowCardinality_Date_ = r"""
+{"deltaSumTimestamp(int64, lowcardinality_date_)":"-7844570025741298356"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__Float32 = r"""
-{"deltaSumTimestamp(nullable_float64_, float32)":1.7976910611810447e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_LowCardinality_Float32_ = r"""
+{"deltaSumTimestamp(int64, lowcardinality_float32_)":"-7844570025741298356"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__DateTime = r"""
-{"deltaSumTimestamp(nullable_float64_, datetime)":1.7976910611810447e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_LowCardinality_Float64_ = r"""
+{"deltaSumTimestamp(int64, lowcardinality_float64_)":"-7844570025741298356"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__Nullable_UInt64_ = r"""
-{"deltaSumTimestamp(nullable_float32_, nullable_uint64_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_LowCardinality_Int64_ = r"""
+{"deltaSumTimestamp(int64, lowcardinality_int64_)":"-7844570025741298356"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__Date = r"""
-{"deltaSumTimestamp(nullable_float64_, date)":1.7976910611810447e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_LowCardinality_UInt64_ = r"""
+{"deltaSumTimestamp(int64, lowcardinality_uint64_)":"-7844570025741298356"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__UInt64 = r"""
-{"deltaSumTimestamp(nullable_float32_, uint64)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_Nullable_DateTime_ = r"""
+{"deltaSumTimestamp(int64, nullable_datetime_)":"-7844570025741298356"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__Nullable_Float64_ = r"""
-{"deltaSumTimestamp(nullable_float32_, nullable_float64_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_Nullable_Date_ = r"""
+{"deltaSumTimestamp(int64, nullable_date_)":"-7844570025741298356"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__Nullable_Float32_ = r"""
-{"deltaSumTimestamp(nullable_float32_, nullable_float32_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_Nullable_Float32_ = r"""
+{"deltaSumTimestamp(int64, nullable_float32_)":"-7844570025741298356"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__Nullable_Int64_ = r"""
-{"deltaSumTimestamp(nullable_float32_, nullable_int64_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_Nullable_Float64_ = r"""
+{"deltaSumTimestamp(int64, nullable_float64_)":"-7844570025741298356"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__Nullable_Date_ = r"""
-{"deltaSumTimestamp(nullable_float32_, nullable_date_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_Nullable_Int64_ = r"""
+{"deltaSumTimestamp(int64, nullable_int64_)":"-7844570025741298356"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__Nullable_DateTime_ = r"""
-{"deltaSumTimestamp(nullable_float32_, nullable_datetime_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_Nullable_UInt64_ = r"""
+{"deltaSumTimestamp(int64, nullable_uint64_)":"-7844570025741298356"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__LowCardinality_UInt64_ = r"""
-{"deltaSumTimestamp(nullable_float32_, lowcardinality_uint64_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_UInt64 = r"""
+{"deltaSumTimestamp(int64, uint64)":"-7844570025741298356"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__LowCardinality_Int64_ = r"""
-{"deltaSumTimestamp(nullable_float32_, lowcardinality_int64_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__Date = r"""
+{"deltaSumTimestamp(lowcardinality_datetime_, date)":2093628363}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__LowCardinality_Float64_ = r"""
-{"deltaSumTimestamp(nullable_float32_, lowcardinality_float64_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__DateTime = r"""
+{"deltaSumTimestamp(lowcardinality_datetime_, datetime)":2093628363}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__LowCardinality_Float32_ = r"""
-{"deltaSumTimestamp(nullable_float32_, lowcardinality_float32_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__Float32 = r"""
+{"deltaSumTimestamp(lowcardinality_datetime_, float32)":2093628363}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__LowCardinality_DateTime_ = r"""
-{"deltaSumTimestamp(nullable_float32_, lowcardinality_datetime_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__Float64 = r"""
+{"deltaSumTimestamp(lowcardinality_datetime_, float64)":2093628363}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__LowCardinality_Date_ = r"""
-{"deltaSumTimestamp(nullable_float32_, lowcardinality_date_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__Int64 = r"""
+{"deltaSumTimestamp(lowcardinality_datetime_, int64)":2093628363}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__Int64 = r"""
-{"deltaSumTimestamp(nullable_float32_, int64)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__LowCardinality_DateTime_ = r"""
+{"deltaSumTimestamp(lowcardinality_datetime_, lowcardinality_datetime_)":2093628363}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__Float32 = r"""
-{"deltaSumTimestamp(nullable_float32_, float32)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Date_ = r"""
+{"deltaSumTimestamp(lowcardinality_datetime_, lowcardinality_date_)":2093628363}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__Float64 = r"""
-{"deltaSumTimestamp(nullable_float32_, float64)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Float32_ = r"""
+{"deltaSumTimestamp(lowcardinality_datetime_, lowcardinality_float32_)":2093628363}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__DateTime = r"""
-{"deltaSumTimestamp(nullable_float32_, datetime)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Float64_ = r"""
+{"deltaSumTimestamp(lowcardinality_datetime_, lowcardinality_float64_)":2093628363}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__Date = r"""
-{"deltaSumTimestamp(nullable_float32_, date)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Int64_ = r"""
+{"deltaSumTimestamp(lowcardinality_datetime_, lowcardinality_int64_)":2093628363}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__UInt64 = r"""
-{"deltaSumTimestamp(nullable_datetime_, uint64)":434380888}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__LowCardinality_UInt64_ = r"""
+{"deltaSumTimestamp(lowcardinality_datetime_, lowcardinality_uint64_)":2093628363}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__Nullable_UInt64_ = r"""
-{"deltaSumTimestamp(nullable_datetime_, nullable_uint64_)":434380888}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__Nullable_DateTime_ = r"""
+{"deltaSumTimestamp(lowcardinality_datetime_, nullable_datetime_)":461682635}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__Nullable_Int64_ = r"""
-{"deltaSumTimestamp(nullable_datetime_, nullable_int64_)":434380888}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__Nullable_Date_ = r"""
+{"deltaSumTimestamp(lowcardinality_datetime_, nullable_date_)":461682635}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__Nullable_Float64_ = r"""
-{"deltaSumTimestamp(nullable_datetime_, nullable_float64_)":434380888}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__Nullable_Float32_ = r"""
+{"deltaSumTimestamp(lowcardinality_datetime_, nullable_float32_)":461682635}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__Nullable_Float32_ = r"""
-{"deltaSumTimestamp(nullable_datetime_, nullable_float32_)":434380888}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__Nullable_Float64_ = r"""
+{"deltaSumTimestamp(lowcardinality_datetime_, nullable_float64_)":461682635}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__Nullable_DateTime_ = r"""
-{"deltaSumTimestamp(nullable_datetime_, nullable_datetime_)":434380888}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__Nullable_Int64_ = r"""
+{"deltaSumTimestamp(lowcardinality_datetime_, nullable_int64_)":461682635}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__Nullable_Date_ = r"""
-{"deltaSumTimestamp(nullable_datetime_, nullable_date_)":434380888}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__Nullable_UInt64_ = r"""
+{"deltaSumTimestamp(lowcardinality_datetime_, nullable_uint64_)":461682635}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__LowCardinality_UInt64_ = r"""
-{"deltaSumTimestamp(nullable_datetime_, lowcardinality_uint64_)":434380888}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__UInt64 = r"""
+{"deltaSumTimestamp(lowcardinality_datetime_, uint64)":2093628363}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__LowCardinality_Int64_ = r"""
-{"deltaSumTimestamp(nullable_datetime_, lowcardinality_int64_)":434380888}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__Date = r"""
+{"deltaSumTimestamp(lowcardinality_date_, date)":21443}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__LowCardinality_Float64_ = r"""
-{"deltaSumTimestamp(nullable_datetime_, lowcardinality_float64_)":434380888}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__DateTime = r"""
+{"deltaSumTimestamp(lowcardinality_date_, datetime)":21443}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__LowCardinality_Float32_ = r"""
-{"deltaSumTimestamp(nullable_datetime_, lowcardinality_float32_)":434380888}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__Float32 = r"""
+{"deltaSumTimestamp(lowcardinality_date_, float32)":21443}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__LowCardinality_DateTime_ = r"""
-{"deltaSumTimestamp(nullable_datetime_, lowcardinality_datetime_)":434380888}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__Float64 = r"""
+{"deltaSumTimestamp(lowcardinality_date_, float64)":21443}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__LowCardinality_Date_ = r"""
-{"deltaSumTimestamp(nullable_datetime_, lowcardinality_date_)":434380888}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__Int64 = r"""
+{"deltaSumTimestamp(lowcardinality_date_, int64)":21443}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__Int64 = r"""
-{"deltaSumTimestamp(nullable_datetime_, int64)":434380888}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__LowCardinality_DateTime_ = r"""
+{"deltaSumTimestamp(lowcardinality_date_, lowcardinality_datetime_)":21443}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__Float64 = r"""
-{"deltaSumTimestamp(nullable_datetime_, float64)":434380888}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__LowCardinality_Date_ = r"""
+{"deltaSumTimestamp(lowcardinality_date_, lowcardinality_date_)":21443}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__Float32 = r"""
-{"deltaSumTimestamp(nullable_datetime_, float32)":434380888}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__LowCardinality_Float32_ = r"""
+{"deltaSumTimestamp(lowcardinality_date_, lowcardinality_float32_)":21443}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__Date = r"""
-{"deltaSumTimestamp(nullable_datetime_, date)":434380888}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__LowCardinality_Float64_ = r"""
+{"deltaSumTimestamp(lowcardinality_date_, lowcardinality_float64_)":21443}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__DateTime = r"""
-{"deltaSumTimestamp(nullable_datetime_, datetime)":434380888}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__LowCardinality_Int64_ = r"""
+{"deltaSumTimestamp(lowcardinality_date_, lowcardinality_int64_)":21443}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__UInt64 = r"""
-{"deltaSumTimestamp(nullable_date_, uint64)":22314}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__LowCardinality_UInt64_ = r"""
+{"deltaSumTimestamp(lowcardinality_date_, lowcardinality_uint64_)":21443}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__Nullable_Int64_ = r"""
-{"deltaSumTimestamp(nullable_date_, nullable_int64_)":22314}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__Nullable_DateTime_ = r"""
+{"deltaSumTimestamp(lowcardinality_date_, nullable_datetime_)":21443}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__Nullable_UInt64_ = r"""
-{"deltaSumTimestamp(nullable_date_, nullable_uint64_)":22314}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__Nullable_Date_ = r"""
+{"deltaSumTimestamp(lowcardinality_date_, nullable_date_)":21443}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__Nullable_Float64_ = r"""
-{"deltaSumTimestamp(nullable_date_, nullable_float64_)":22314}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__Nullable_Float32_ = r"""
+{"deltaSumTimestamp(lowcardinality_date_, nullable_float32_)":21443}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__Nullable_Float32_ = r"""
-{"deltaSumTimestamp(nullable_date_, nullable_float32_)":22314}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__Nullable_Float64_ = r"""
+{"deltaSumTimestamp(lowcardinality_date_, nullable_float64_)":21443}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__Nullable_Date_ = r"""
-{"deltaSumTimestamp(nullable_date_, nullable_date_)":22314}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__Nullable_Int64_ = r"""
+{"deltaSumTimestamp(lowcardinality_date_, nullable_int64_)":21443}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__Nullable_DateTime_ = r"""
-{"deltaSumTimestamp(nullable_date_, nullable_datetime_)":22314}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__Nullable_UInt64_ = r"""
+{"deltaSumTimestamp(lowcardinality_date_, nullable_uint64_)":21443}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__LowCardinality_UInt64_ = r"""
-{"deltaSumTimestamp(nullable_date_, lowcardinality_uint64_)":22314}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__UInt64 = r"""
+{"deltaSumTimestamp(lowcardinality_date_, uint64)":21443}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__LowCardinality_Float64_ = r"""
-{"deltaSumTimestamp(nullable_date_, lowcardinality_float64_)":22314}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__Date = r"""
+{"deltaSumTimestamp(lowcardinality_float32_, date)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__LowCardinality_Int64_ = r"""
-{"deltaSumTimestamp(nullable_date_, lowcardinality_int64_)":22314}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__DateTime = r"""
+{"deltaSumTimestamp(lowcardinality_float32_, datetime)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__LowCardinality_DateTime_ = r"""
-{"deltaSumTimestamp(nullable_date_, lowcardinality_datetime_)":22314}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__Float32 = r"""
+{"deltaSumTimestamp(lowcardinality_float32_, float32)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__LowCardinality_Date_ = r"""
-{"deltaSumTimestamp(nullable_date_, lowcardinality_date_)":22314}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__Float64 = r"""
+{"deltaSumTimestamp(lowcardinality_float32_, float64)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__LowCardinality_Float32_ = r"""
-{"deltaSumTimestamp(nullable_date_, lowcardinality_float32_)":22314}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__Int64 = r"""
+{"deltaSumTimestamp(lowcardinality_float32_, int64)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__Int64 = r"""
-{"deltaSumTimestamp(nullable_date_, int64)":22314}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__LowCardinality_DateTime_ = r"""
+{"deltaSumTimestamp(lowcardinality_float32_, lowcardinality_datetime_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__Float32 = r"""
-{"deltaSumTimestamp(nullable_date_, float32)":22314}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__LowCardinality_Date_ = r"""
+{"deltaSumTimestamp(lowcardinality_float32_, lowcardinality_date_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__Float64 = r"""
-{"deltaSumTimestamp(nullable_date_, float64)":22314}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__LowCardinality_Float32_ = r"""
+{"deltaSumTimestamp(lowcardinality_float32_, lowcardinality_float32_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__Date = r"""
-{"deltaSumTimestamp(nullable_date_, date)":22314}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__LowCardinality_Float64_ = r"""
+{"deltaSumTimestamp(lowcardinality_float32_, lowcardinality_float64_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__DateTime = r"""
-{"deltaSumTimestamp(nullable_date_, datetime)":22314}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__LowCardinality_Int64_ = r"""
+{"deltaSumTimestamp(lowcardinality_float32_, lowcardinality_int64_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__UInt64 = r"""
-{"deltaSumTimestamp(lowcardinality_uint64_, uint64)":"3158777561402469531"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__LowCardinality_UInt64_ = r"""
+{"deltaSumTimestamp(lowcardinality_float32_, lowcardinality_uint64_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__Nullable_UInt64_ = r"""
-{"deltaSumTimestamp(lowcardinality_uint64_, nullable_uint64_)":"3158777561402469531"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__Nullable_DateTime_ = r"""
+{"deltaSumTimestamp(lowcardinality_float32_, nullable_datetime_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__Nullable_Int64_ = r"""
-{"deltaSumTimestamp(lowcardinality_uint64_, nullable_int64_)":"3158777561402469531"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__Nullable_Date_ = r"""
+{"deltaSumTimestamp(lowcardinality_float32_, nullable_date_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__Nullable_Float64_ = r"""
-{"deltaSumTimestamp(lowcardinality_uint64_, nullable_float64_)":"3158777561402469531"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__Nullable_Float32_ = r"""
+{"deltaSumTimestamp(lowcardinality_float32_, nullable_float32_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__Nullable_Float32_ = r"""
-{"deltaSumTimestamp(lowcardinality_uint64_, nullable_float32_)":"3158777561402469531"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__Nullable_Float64_ = r"""
+{"deltaSumTimestamp(lowcardinality_float32_, nullable_float64_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__Nullable_DateTime_ = r"""
-{"deltaSumTimestamp(lowcardinality_uint64_, nullable_datetime_)":"3158777561402469531"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__Nullable_Int64_ = r"""
+{"deltaSumTimestamp(lowcardinality_float32_, nullable_int64_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__LowCardinality_UInt64_ = r"""
-{"deltaSumTimestamp(lowcardinality_uint64_, lowcardinality_uint64_)":"3158777561402469531"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__Nullable_UInt64_ = r"""
+{"deltaSumTimestamp(lowcardinality_float32_, nullable_uint64_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__Nullable_Date_ = r"""
-{"deltaSumTimestamp(lowcardinality_uint64_, nullable_date_)":"3158777561402469531"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__UInt64 = r"""
+{"deltaSumTimestamp(lowcardinality_float32_, uint64)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__LowCardinality_Int64_ = r"""
-{"deltaSumTimestamp(lowcardinality_uint64_, lowcardinality_int64_)":"3158777561402469531"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__Date = r"""
+{"deltaSumTimestamp(lowcardinality_float64_, date)":1.7976909999999999e308}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__LowCardinality_Float64_ = r"""
-{"deltaSumTimestamp(lowcardinality_uint64_, lowcardinality_float64_)":"3158777561402469531"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__DateTime = r"""
+{"deltaSumTimestamp(lowcardinality_float64_, datetime)":1.7976909999999999e308}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__LowCardinality_Float32_ = r"""
-{"deltaSumTimestamp(lowcardinality_uint64_, lowcardinality_float32_)":"3158777561402469531"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__Float32 = r"""
+{"deltaSumTimestamp(lowcardinality_float64_, float32)":1.7976909999999999e308}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__LowCardinality_DateTime_ = r"""
-{"deltaSumTimestamp(lowcardinality_uint64_, lowcardinality_datetime_)":"3158777561402469531"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__Float64 = r"""
+{"deltaSumTimestamp(lowcardinality_float64_, float64)":1.7976909999999999e308}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__LowCardinality_Date_ = r"""
-{"deltaSumTimestamp(lowcardinality_uint64_, lowcardinality_date_)":"3158777561402469531"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__Int64 = r"""
+{"deltaSumTimestamp(lowcardinality_float64_, int64)":1.7976909999999999e308}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__Int64 = r"""
-{"deltaSumTimestamp(lowcardinality_uint64_, int64)":"3158777561402469531"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__LowCardinality_DateTime_ = r"""
+{"deltaSumTimestamp(lowcardinality_float64_, lowcardinality_datetime_)":1.7976909999999999e308}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__Float64 = r"""
-{"deltaSumTimestamp(lowcardinality_uint64_, float64)":"3158777561402469531"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__LowCardinality_Date_ = r"""
+{"deltaSumTimestamp(lowcardinality_float64_, lowcardinality_date_)":1.7976909999999999e308}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__Float32 = r"""
-{"deltaSumTimestamp(lowcardinality_uint64_, float32)":"3158777561402469531"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__LowCardinality_Float32_ = r"""
+{"deltaSumTimestamp(lowcardinality_float64_, lowcardinality_float32_)":1.7976909999999999e308}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__DateTime = r"""
-{"deltaSumTimestamp(lowcardinality_uint64_, datetime)":"3158777561402469531"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__LowCardinality_Float64_ = r"""
+{"deltaSumTimestamp(lowcardinality_float64_, lowcardinality_float64_)":1.7976909999999999e308}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__Date = r"""
-{"deltaSumTimestamp(lowcardinality_uint64_, date)":"3158777561402469531"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__LowCardinality_Int64_ = r"""
+{"deltaSumTimestamp(lowcardinality_float64_, lowcardinality_int64_)":1.7976909999999999e308}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__UInt64 = r"""
-{"deltaSumTimestamp(lowcardinality_int64_, uint64)":"-7589729704273224040"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__LowCardinality_UInt64_ = r"""
+{"deltaSumTimestamp(lowcardinality_float64_, lowcardinality_uint64_)":1.7976909999999999e308}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__Nullable_UInt64_ = r"""
-{"deltaSumTimestamp(lowcardinality_int64_, nullable_uint64_)":"1815319354581771462"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__Nullable_DateTime_ = r"""
+{"deltaSumTimestamp(lowcardinality_float64_, nullable_datetime_)":1.7976909999999999e308}
+"""
+
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__Nullable_Date_ = r"""
+{"deltaSumTimestamp(lowcardinality_float64_, nullable_date_)":1.7976909999999999e308}
+"""
+
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__Nullable_Float32_ = r"""
+{"deltaSumTimestamp(lowcardinality_float64_, nullable_float32_)":1.7976909999999999e308}
+"""
+
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__Nullable_Float64_ = r"""
+{"deltaSumTimestamp(lowcardinality_float64_, nullable_float64_)":1.7976909999999999e308}
+"""
+
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__Nullable_Int64_ = r"""
+{"deltaSumTimestamp(lowcardinality_float64_, nullable_int64_)":1.7976909999999999e308}
+"""
+
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__Nullable_UInt64_ = r"""
+{"deltaSumTimestamp(lowcardinality_float64_, nullable_uint64_)":1.7976909999999999e308}
+"""
+
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__UInt64 = r"""
+{"deltaSumTimestamp(lowcardinality_float64_, uint64)":1.7976909999999999e308}
+"""
+
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__Date = r"""
+{"deltaSumTimestamp(lowcardinality_int64_, date)":"-7589729704273224040"}
+"""
+
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__DateTime = r"""
+{"deltaSumTimestamp(lowcardinality_int64_, datetime)":"-7589729704273224040"}
+"""
+
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__Float32 = r"""
+{"deltaSumTimestamp(lowcardinality_int64_, float32)":"-7589729704273224040"}
+"""
+
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__Float64 = r"""
+{"deltaSumTimestamp(lowcardinality_int64_, float64)":"-7589729704273224040"}
+"""
+
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__Int64 = r"""
+{"deltaSumTimestamp(lowcardinality_int64_, int64)":"-7589729704273224040"}
+"""
+
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__LowCardinality_DateTime_ = r"""
+{"deltaSumTimestamp(lowcardinality_int64_, lowcardinality_datetime_)":"-7589729704273224040"}
+"""
+
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__LowCardinality_Date_ = r"""
+{"deltaSumTimestamp(lowcardinality_int64_, lowcardinality_date_)":"-7589729704273224040"}
+"""
+
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__LowCardinality_Float32_ = r"""
+{"deltaSumTimestamp(lowcardinality_int64_, lowcardinality_float32_)":"-7589729704273224040"}
+"""
+
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__LowCardinality_Float64_ = r"""
+{"deltaSumTimestamp(lowcardinality_int64_, lowcardinality_float64_)":"-7589729704273224040"}
+"""
+
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__LowCardinality_Int64_ = r"""
+{"deltaSumTimestamp(lowcardinality_int64_, lowcardinality_int64_)":"-7589729704273224040"}
+"""
+
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__LowCardinality_UInt64_ = r"""
+{"deltaSumTimestamp(lowcardinality_int64_, lowcardinality_uint64_)":"-7589729704273224040"}
+"""
+
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__Nullable_DateTime_ = r"""
+{"deltaSumTimestamp(lowcardinality_int64_, nullable_datetime_)":"1815319354581771462"}
+"""
+
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__Nullable_Date_ = r"""
+{"deltaSumTimestamp(lowcardinality_int64_, nullable_date_)":"1815319354581771462"}
 """
 
 _aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__Nullable_Float32_ = r"""
@@ -659,703 +718,644 @@ _aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int
 {"deltaSumTimestamp(lowcardinality_int64_, nullable_int64_)":"1815319354581771462"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__Nullable_Date_ = r"""
-{"deltaSumTimestamp(lowcardinality_int64_, nullable_date_)":"1815319354581771462"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__Nullable_UInt64_ = r"""
+{"deltaSumTimestamp(lowcardinality_int64_, nullable_uint64_)":"1815319354581771462"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__LowCardinality_UInt64_ = r"""
-{"deltaSumTimestamp(lowcardinality_int64_, lowcardinality_uint64_)":"-7589729704273224040"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__UInt64 = r"""
+{"deltaSumTimestamp(lowcardinality_int64_, uint64)":"-7589729704273224040"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__Nullable_DateTime_ = r"""
-{"deltaSumTimestamp(lowcardinality_int64_, nullable_datetime_)":"1815319354581771462"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__Date = r"""
+{"deltaSumTimestamp(lowcardinality_uint64_, date)":"3158777561402469531"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__LowCardinality_Int64_ = r"""
-{"deltaSumTimestamp(lowcardinality_int64_, lowcardinality_int64_)":"-7589729704273224040"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__DateTime = r"""
+{"deltaSumTimestamp(lowcardinality_uint64_, datetime)":"3158777561402469531"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__LowCardinality_Float64_ = r"""
-{"deltaSumTimestamp(lowcardinality_int64_, lowcardinality_float64_)":"-7589729704273224040"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__Float32 = r"""
+{"deltaSumTimestamp(lowcardinality_uint64_, float32)":"3158777561402469531"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__LowCardinality_Float32_ = r"""
-{"deltaSumTimestamp(lowcardinality_int64_, lowcardinality_float32_)":"-7589729704273224040"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__Float64 = r"""
+{"deltaSumTimestamp(lowcardinality_uint64_, float64)":"3158777561402469531"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__LowCardinality_DateTime_ = r"""
-{"deltaSumTimestamp(lowcardinality_int64_, lowcardinality_datetime_)":"-7589729704273224040"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__Int64 = r"""
+{"deltaSumTimestamp(lowcardinality_uint64_, int64)":"3158777561402469531"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__LowCardinality_Date_ = r"""
-{"deltaSumTimestamp(lowcardinality_int64_, lowcardinality_date_)":"-7589729704273224040"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__LowCardinality_DateTime_ = r"""
+{"deltaSumTimestamp(lowcardinality_uint64_, lowcardinality_datetime_)":"3158777561402469531"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__Int64 = r"""
-{"deltaSumTimestamp(lowcardinality_int64_, int64)":"-7589729704273224040"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__LowCardinality_Date_ = r"""
+{"deltaSumTimestamp(lowcardinality_uint64_, lowcardinality_date_)":"3158777561402469531"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__Float64 = r"""
-{"deltaSumTimestamp(lowcardinality_int64_, float64)":"-7589729704273224040"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__LowCardinality_Float32_ = r"""
+{"deltaSumTimestamp(lowcardinality_uint64_, lowcardinality_float32_)":"3158777561402469531"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__Float32 = r"""
-{"deltaSumTimestamp(lowcardinality_int64_, float32)":"-7589729704273224040"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__LowCardinality_Float64_ = r"""
+{"deltaSumTimestamp(lowcardinality_uint64_, lowcardinality_float64_)":"3158777561402469531"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__Date = r"""
-{"deltaSumTimestamp(lowcardinality_int64_, date)":"-7589729704273224040"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__LowCardinality_Int64_ = r"""
+{"deltaSumTimestamp(lowcardinality_uint64_, lowcardinality_int64_)":"3158777561402469531"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Int64__DateTime = r"""
-{"deltaSumTimestamp(lowcardinality_int64_, datetime)":"-7589729704273224040"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__LowCardinality_UInt64_ = r"""
+{"deltaSumTimestamp(lowcardinality_uint64_, lowcardinality_uint64_)":"3158777561402469531"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__Nullable_Int64_ = r"""
-{"deltaSumTimestamp(lowcardinality_float64_, nullable_int64_)":1.7976909999999999e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__Nullable_DateTime_ = r"""
+{"deltaSumTimestamp(lowcardinality_uint64_, nullable_datetime_)":"3158777561402469531"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__UInt64 = r"""
-{"deltaSumTimestamp(lowcardinality_float64_, uint64)":1.7976909999999999e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__Nullable_Date_ = r"""
+{"deltaSumTimestamp(lowcardinality_uint64_, nullable_date_)":"3158777561402469531"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__Nullable_UInt64_ = r"""
-{"deltaSumTimestamp(lowcardinality_float64_, nullable_uint64_)":1.7976909999999999e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__Nullable_Float32_ = r"""
+{"deltaSumTimestamp(lowcardinality_uint64_, nullable_float32_)":"3158777561402469531"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__Nullable_Float32_ = r"""
-{"deltaSumTimestamp(lowcardinality_float64_, nullable_float32_)":1.7976909999999999e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__Nullable_Float64_ = r"""
+{"deltaSumTimestamp(lowcardinality_uint64_, nullable_float64_)":"3158777561402469531"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__Nullable_Float64_ = r"""
-{"deltaSumTimestamp(lowcardinality_float64_, nullable_float64_)":1.7976909999999999e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__Nullable_Int64_ = r"""
+{"deltaSumTimestamp(lowcardinality_uint64_, nullable_int64_)":"3158777561402469531"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__Nullable_DateTime_ = r"""
-{"deltaSumTimestamp(lowcardinality_float64_, nullable_datetime_)":1.7976909999999999e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__Nullable_UInt64_ = r"""
+{"deltaSumTimestamp(lowcardinality_uint64_, nullable_uint64_)":"3158777561402469531"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__LowCardinality_UInt64_ = r"""
-{"deltaSumTimestamp(lowcardinality_float64_, lowcardinality_uint64_)":1.7976909999999999e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_UInt64__UInt64 = r"""
+{"deltaSumTimestamp(lowcardinality_uint64_, uint64)":"3158777561402469531"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__Nullable_Date_ = r"""
-{"deltaSumTimestamp(lowcardinality_float64_, nullable_date_)":1.7976909999999999e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__Date = r"""
+{"deltaSumTimestamp(nullable_datetime_, date)":434380888}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__LowCardinality_Int64_ = r"""
-{"deltaSumTimestamp(lowcardinality_float64_, lowcardinality_int64_)":1.7976909999999999e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__DateTime = r"""
+{"deltaSumTimestamp(nullable_datetime_, datetime)":434380888}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__LowCardinality_Float64_ = r"""
-{"deltaSumTimestamp(lowcardinality_float64_, lowcardinality_float64_)":1.7976909999999999e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__Float32 = r"""
+{"deltaSumTimestamp(nullable_datetime_, float32)":434380888}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__LowCardinality_DateTime_ = r"""
-{"deltaSumTimestamp(lowcardinality_float64_, lowcardinality_datetime_)":1.7976909999999999e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__Float64 = r"""
+{"deltaSumTimestamp(nullable_datetime_, float64)":434380888}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__LowCardinality_Float32_ = r"""
-{"deltaSumTimestamp(lowcardinality_float64_, lowcardinality_float32_)":1.7976909999999999e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__Int64 = r"""
+{"deltaSumTimestamp(nullable_datetime_, int64)":434380888}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__Int64 = r"""
-{"deltaSumTimestamp(lowcardinality_float64_, int64)":1.7976909999999999e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__LowCardinality_DateTime_ = r"""
+{"deltaSumTimestamp(nullable_datetime_, lowcardinality_datetime_)":434380888}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__LowCardinality_Date_ = r"""
-{"deltaSumTimestamp(lowcardinality_float64_, lowcardinality_date_)":1.7976909999999999e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__LowCardinality_Date_ = r"""
+{"deltaSumTimestamp(nullable_datetime_, lowcardinality_date_)":434380888}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__Float64 = r"""
-{"deltaSumTimestamp(lowcardinality_float64_, float64)":1.7976909999999999e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__LowCardinality_Float32_ = r"""
+{"deltaSumTimestamp(nullable_datetime_, lowcardinality_float32_)":434380888}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__DateTime = r"""
-{"deltaSumTimestamp(lowcardinality_float64_, datetime)":1.7976909999999999e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__LowCardinality_Float64_ = r"""
+{"deltaSumTimestamp(nullable_datetime_, lowcardinality_float64_)":434380888}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__Date = r"""
-{"deltaSumTimestamp(lowcardinality_float64_, date)":1.7976909999999999e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__LowCardinality_Int64_ = r"""
+{"deltaSumTimestamp(nullable_datetime_, lowcardinality_int64_)":434380888}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float64__Float32 = r"""
-{"deltaSumTimestamp(lowcardinality_float64_, float32)":1.7976909999999999e308}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__LowCardinality_UInt64_ = r"""
+{"deltaSumTimestamp(nullable_datetime_, lowcardinality_uint64_)":434380888}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__Nullable_UInt64_ = r"""
-{"deltaSumTimestamp(lowcardinality_float32_, nullable_uint64_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__Nullable_DateTime_ = r"""
+{"deltaSumTimestamp(nullable_datetime_, nullable_datetime_)":434380888}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__UInt64 = r"""
-{"deltaSumTimestamp(lowcardinality_float32_, uint64)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__Nullable_Date_ = r"""
+{"deltaSumTimestamp(nullable_datetime_, nullable_date_)":434380888}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__Nullable_Int64_ = r"""
-{"deltaSumTimestamp(lowcardinality_float32_, nullable_int64_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__Nullable_Float32_ = r"""
+{"deltaSumTimestamp(nullable_datetime_, nullable_float32_)":434380888}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__Nullable_Float32_ = r"""
-{"deltaSumTimestamp(lowcardinality_float32_, nullable_float32_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__Nullable_Float64_ = r"""
+{"deltaSumTimestamp(nullable_datetime_, nullable_float64_)":434380888}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__Nullable_DateTime_ = r"""
-{"deltaSumTimestamp(lowcardinality_float32_, nullable_datetime_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__Nullable_Int64_ = r"""
+{"deltaSumTimestamp(nullable_datetime_, nullable_int64_)":434380888}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__Nullable_Float64_ = r"""
-{"deltaSumTimestamp(lowcardinality_float32_, nullable_float64_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__Nullable_UInt64_ = r"""
+{"deltaSumTimestamp(nullable_datetime_, nullable_uint64_)":434380888}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__Nullable_Date_ = r"""
-{"deltaSumTimestamp(lowcardinality_float32_, nullable_date_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_DateTime__UInt64 = r"""
+{"deltaSumTimestamp(nullable_datetime_, uint64)":434380888}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__LowCardinality_UInt64_ = r"""
-{"deltaSumTimestamp(lowcardinality_float32_, lowcardinality_uint64_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__Date = r"""
+{"deltaSumTimestamp(nullable_date_, date)":22314}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__LowCardinality_Int64_ = r"""
-{"deltaSumTimestamp(lowcardinality_float32_, lowcardinality_int64_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__DateTime = r"""
+{"deltaSumTimestamp(nullable_date_, datetime)":22314}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__LowCardinality_Float64_ = r"""
-{"deltaSumTimestamp(lowcardinality_float32_, lowcardinality_float64_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__Float32 = r"""
+{"deltaSumTimestamp(nullable_date_, float32)":22314}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__LowCardinality_Float32_ = r"""
-{"deltaSumTimestamp(lowcardinality_float32_, lowcardinality_float32_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__Float64 = r"""
+{"deltaSumTimestamp(nullable_date_, float64)":22314}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__LowCardinality_DateTime_ = r"""
-{"deltaSumTimestamp(lowcardinality_float32_, lowcardinality_datetime_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__Int64 = r"""
+{"deltaSumTimestamp(nullable_date_, int64)":22314}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__LowCardinality_Date_ = r"""
-{"deltaSumTimestamp(lowcardinality_float32_, lowcardinality_date_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__LowCardinality_DateTime_ = r"""
+{"deltaSumTimestamp(nullable_date_, lowcardinality_datetime_)":22314}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__Float64 = r"""
-{"deltaSumTimestamp(lowcardinality_float32_, float64)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__LowCardinality_Date_ = r"""
+{"deltaSumTimestamp(nullable_date_, lowcardinality_date_)":22314}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__Int64 = r"""
-{"deltaSumTimestamp(lowcardinality_float32_, int64)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__LowCardinality_Float32_ = r"""
+{"deltaSumTimestamp(nullable_date_, lowcardinality_float32_)":22314}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__Float32 = r"""
-{"deltaSumTimestamp(lowcardinality_float32_, float32)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__LowCardinality_Float64_ = r"""
+{"deltaSumTimestamp(nullable_date_, lowcardinality_float64_)":22314}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__DateTime = r"""
-{"deltaSumTimestamp(lowcardinality_float32_, datetime)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__LowCardinality_Int64_ = r"""
+{"deltaSumTimestamp(nullable_date_, lowcardinality_int64_)":22314}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__UInt64 = r"""
-{"deltaSumTimestamp(lowcardinality_datetime_, uint64)":2093628363}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__LowCardinality_UInt64_ = r"""
+{"deltaSumTimestamp(nullable_date_, lowcardinality_uint64_)":22314}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Float32__Date = r"""
-{"deltaSumTimestamp(lowcardinality_float32_, date)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__Nullable_DateTime_ = r"""
+{"deltaSumTimestamp(nullable_date_, nullable_datetime_)":22314}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__Nullable_UInt64_ = r"""
-{"deltaSumTimestamp(lowcardinality_datetime_, nullable_uint64_)":461682635}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__Nullable_Date_ = r"""
+{"deltaSumTimestamp(nullable_date_, nullable_date_)":22314}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__Nullable_Float64_ = r"""
-{"deltaSumTimestamp(lowcardinality_datetime_, nullable_float64_)":461682635}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__Nullable_Float32_ = r"""
+{"deltaSumTimestamp(nullable_date_, nullable_float32_)":22314}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__Nullable_Int64_ = r"""
-{"deltaSumTimestamp(lowcardinality_datetime_, nullable_int64_)":461682635}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__Nullable_Float64_ = r"""
+{"deltaSumTimestamp(nullable_date_, nullable_float64_)":22314}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__Nullable_Float32_ = r"""
-{"deltaSumTimestamp(lowcardinality_datetime_, nullable_float32_)":461682635}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__Nullable_Int64_ = r"""
+{"deltaSumTimestamp(nullable_date_, nullable_int64_)":22314}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__Nullable_DateTime_ = r"""
-{"deltaSumTimestamp(lowcardinality_datetime_, nullable_datetime_)":461682635}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__Nullable_UInt64_ = r"""
+{"deltaSumTimestamp(nullable_date_, nullable_uint64_)":22314}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__Nullable_Date_ = r"""
-{"deltaSumTimestamp(lowcardinality_datetime_, nullable_date_)":461682635}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Date__UInt64 = r"""
+{"deltaSumTimestamp(nullable_date_, uint64)":22314}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__LowCardinality_UInt64_ = r"""
-{"deltaSumTimestamp(lowcardinality_datetime_, lowcardinality_uint64_)":2093628363}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__Date = r"""
+{"deltaSumTimestamp(nullable_float32_, date)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Float64_ = r"""
-{"deltaSumTimestamp(lowcardinality_datetime_, lowcardinality_float64_)":2093628363}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__DateTime = r"""
+{"deltaSumTimestamp(nullable_float32_, datetime)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Int64_ = r"""
-{"deltaSumTimestamp(lowcardinality_datetime_, lowcardinality_int64_)":2093628363}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__Float32 = r"""
+{"deltaSumTimestamp(nullable_float32_, float32)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Float32_ = r"""
-{"deltaSumTimestamp(lowcardinality_datetime_, lowcardinality_float32_)":2093628363}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__Float64 = r"""
+{"deltaSumTimestamp(nullable_float32_, float64)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Date_ = r"""
-{"deltaSumTimestamp(lowcardinality_datetime_, lowcardinality_date_)":2093628363}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__Int64 = r"""
+{"deltaSumTimestamp(nullable_float32_, int64)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__LowCardinality_DateTime_ = r"""
-{"deltaSumTimestamp(lowcardinality_datetime_, lowcardinality_datetime_)":2093628363}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__LowCardinality_DateTime_ = r"""
+{"deltaSumTimestamp(nullable_float32_, lowcardinality_datetime_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__Int64 = r"""
-{"deltaSumTimestamp(lowcardinality_datetime_, int64)":2093628363}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__LowCardinality_Date_ = r"""
+{"deltaSumTimestamp(nullable_float32_, lowcardinality_date_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__Float64 = r"""
-{"deltaSumTimestamp(lowcardinality_datetime_, float64)":2093628363}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__LowCardinality_Float32_ = r"""
+{"deltaSumTimestamp(nullable_float32_, lowcardinality_float32_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__Float32 = r"""
-{"deltaSumTimestamp(lowcardinality_datetime_, float32)":2093628363}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__LowCardinality_Float64_ = r"""
+{"deltaSumTimestamp(nullable_float32_, lowcardinality_float64_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__DateTime = r"""
-{"deltaSumTimestamp(lowcardinality_datetime_, datetime)":2093628363}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__LowCardinality_Int64_ = r"""
+{"deltaSumTimestamp(nullable_float32_, lowcardinality_int64_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_DateTime__Date = r"""
-{"deltaSumTimestamp(lowcardinality_datetime_, date)":2093628363}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__LowCardinality_UInt64_ = r"""
+{"deltaSumTimestamp(nullable_float32_, lowcardinality_uint64_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__UInt64 = r"""
-{"deltaSumTimestamp(lowcardinality_date_, uint64)":21443}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__Nullable_DateTime_ = r"""
+{"deltaSumTimestamp(nullable_float32_, nullable_datetime_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__Nullable_UInt64_ = r"""
-{"deltaSumTimestamp(lowcardinality_date_, nullable_uint64_)":21443}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__Nullable_Date_ = r"""
+{"deltaSumTimestamp(nullable_float32_, nullable_date_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__Nullable_Int64_ = r"""
-{"deltaSumTimestamp(lowcardinality_date_, nullable_int64_)":21443}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__Nullable_Float32_ = r"""
+{"deltaSumTimestamp(nullable_float32_, nullable_float32_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__Nullable_Float64_ = r"""
-{"deltaSumTimestamp(lowcardinality_date_, nullable_float64_)":21443}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__Nullable_Float64_ = r"""
+{"deltaSumTimestamp(nullable_float32_, nullable_float64_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__Nullable_Float32_ = r"""
-{"deltaSumTimestamp(lowcardinality_date_, nullable_float32_)":21443}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__Nullable_Int64_ = r"""
+{"deltaSumTimestamp(nullable_float32_, nullable_int64_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__Nullable_Date_ = r"""
-{"deltaSumTimestamp(lowcardinality_date_, nullable_date_)":21443}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__Nullable_UInt64_ = r"""
+{"deltaSumTimestamp(nullable_float32_, nullable_uint64_)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__Nullable_DateTime_ = r"""
-{"deltaSumTimestamp(lowcardinality_date_, nullable_datetime_)":21443}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float32__UInt64 = r"""
+{"deltaSumTimestamp(nullable_float32_, uint64)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__LowCardinality_Float64_ = r"""
-{"deltaSumTimestamp(lowcardinality_date_, lowcardinality_float64_)":21443}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__Date = r"""
+{"deltaSumTimestamp(nullable_float64_, date)":1.7976910611810447e308}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__LowCardinality_UInt64_ = r"""
-{"deltaSumTimestamp(lowcardinality_date_, lowcardinality_uint64_)":21443}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__DateTime = r"""
+{"deltaSumTimestamp(nullable_float64_, datetime)":1.7976910611810447e308}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__LowCardinality_Int64_ = r"""
-{"deltaSumTimestamp(lowcardinality_date_, lowcardinality_int64_)":21443}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__Float32 = r"""
+{"deltaSumTimestamp(nullable_float64_, float32)":1.7976910611810447e308}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__LowCardinality_DateTime_ = r"""
-{"deltaSumTimestamp(lowcardinality_date_, lowcardinality_datetime_)":21443}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__Float64 = r"""
+{"deltaSumTimestamp(nullable_float64_, float64)":1.7976910611810447e308}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__LowCardinality_Float32_ = r"""
-{"deltaSumTimestamp(lowcardinality_date_, lowcardinality_float32_)":21443}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__Int64 = r"""
+{"deltaSumTimestamp(nullable_float64_, int64)":1.7976910611810447e308}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__LowCardinality_Date_ = r"""
-{"deltaSumTimestamp(lowcardinality_date_, lowcardinality_date_)":21443}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__LowCardinality_DateTime_ = r"""
+{"deltaSumTimestamp(nullable_float64_, lowcardinality_datetime_)":1.7976910611810447e308}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__Int64 = r"""
-{"deltaSumTimestamp(lowcardinality_date_, int64)":21443}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__LowCardinality_Date_ = r"""
+{"deltaSumTimestamp(nullable_float64_, lowcardinality_date_)":1.7976910611810447e308}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__Float64 = r"""
-{"deltaSumTimestamp(lowcardinality_date_, float64)":21443}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__LowCardinality_Float32_ = r"""
+{"deltaSumTimestamp(nullable_float64_, lowcardinality_float32_)":1.7976910611810447e308}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__Float32 = r"""
-{"deltaSumTimestamp(lowcardinality_date_, float32)":21443}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__LowCardinality_Float64_ = r"""
+{"deltaSumTimestamp(nullable_float64_, lowcardinality_float64_)":1.7976910611810447e308}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__Date = r"""
-{"deltaSumTimestamp(lowcardinality_date_, date)":21443}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__LowCardinality_Int64_ = r"""
+{"deltaSumTimestamp(nullable_float64_, lowcardinality_int64_)":1.7976910611810447e308}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_UInt64 = r"""
-{"deltaSumTimestamp(int64, uint64)":"-7844570025741298356"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__LowCardinality_UInt64_ = r"""
+{"deltaSumTimestamp(nullable_float64_, lowcardinality_uint64_)":1.7976910611810447e308}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_LowCardinality_Date__DateTime = r"""
-{"deltaSumTimestamp(lowcardinality_date_, datetime)":21443}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__Nullable_DateTime_ = r"""
+{"deltaSumTimestamp(nullable_float64_, nullable_datetime_)":1.7976910611810447e308}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_Nullable_UInt64_ = r"""
-{"deltaSumTimestamp(int64, nullable_uint64_)":"-7844570025741298356"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__Nullable_Date_ = r"""
+{"deltaSumTimestamp(nullable_float64_, nullable_date_)":1.7976910611810447e308}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_Nullable_Int64_ = r"""
-{"deltaSumTimestamp(int64, nullable_int64_)":"-7844570025741298356"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__Nullable_Float32_ = r"""
+{"deltaSumTimestamp(nullable_float64_, nullable_float32_)":1.7976910611810447e308}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_Nullable_Float64_ = r"""
-{"deltaSumTimestamp(int64, nullable_float64_)":"-7844570025741298356"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__Nullable_Float64_ = r"""
+{"deltaSumTimestamp(nullable_float64_, nullable_float64_)":1.7976910611810447e308}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_Nullable_DateTime_ = r"""
-{"deltaSumTimestamp(int64, nullable_datetime_)":"-7844570025741298356"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__Nullable_Int64_ = r"""
+{"deltaSumTimestamp(nullable_float64_, nullable_int64_)":1.7976910611810447e308}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_Nullable_Float32_ = r"""
-{"deltaSumTimestamp(int64, nullable_float32_)":"-7844570025741298356"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__Nullable_UInt64_ = r"""
+{"deltaSumTimestamp(nullable_float64_, nullable_uint64_)":1.7976910611810447e308}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_LowCardinality_UInt64_ = r"""
-{"deltaSumTimestamp(int64, lowcardinality_uint64_)":"-7844570025741298356"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Float64__UInt64 = r"""
+{"deltaSumTimestamp(nullable_float64_, uint64)":1.7976910611810447e308}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_Nullable_Date_ = r"""
-{"deltaSumTimestamp(int64, nullable_date_)":"-7844570025741298356"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__Date = r"""
+{"deltaSumTimestamp(nullable_int64_, date)":"-1982436857172010144"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_LowCardinality_Int64_ = r"""
-{"deltaSumTimestamp(int64, lowcardinality_int64_)":"-7844570025741298356"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__DateTime = r"""
+{"deltaSumTimestamp(nullable_int64_, datetime)":"-1982436857172010144"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_LowCardinality_Float64_ = r"""
-{"deltaSumTimestamp(int64, lowcardinality_float64_)":"-7844570025741298356"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__Float32 = r"""
+{"deltaSumTimestamp(nullable_int64_, float32)":"-1982436857172010144"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_LowCardinality_Float32_ = r"""
-{"deltaSumTimestamp(int64, lowcardinality_float32_)":"-7844570025741298356"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__Float64 = r"""
+{"deltaSumTimestamp(nullable_int64_, float64)":"-1982436857172010144"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_LowCardinality_DateTime_ = r"""
-{"deltaSumTimestamp(int64, lowcardinality_datetime_)":"-7844570025741298356"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__Int64 = r"""
+{"deltaSumTimestamp(nullable_int64_, int64)":"-1982436857172010144"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_LowCardinality_Date_ = r"""
-{"deltaSumTimestamp(int64, lowcardinality_date_)":"-7844570025741298356"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__LowCardinality_DateTime_ = r"""
+{"deltaSumTimestamp(nullable_int64_, lowcardinality_datetime_)":"-1982436857172010144"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_Int64 = r"""
-{"deltaSumTimestamp(int64, int64)":"-7844570025741298356"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__LowCardinality_Date_ = r"""
+{"deltaSumTimestamp(nullable_int64_, lowcardinality_date_)":"-1982436857172010144"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_Float32 = r"""
-{"deltaSumTimestamp(int64, float32)":"-7844570025741298356"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__LowCardinality_Float32_ = r"""
+{"deltaSumTimestamp(nullable_int64_, lowcardinality_float32_)":"-1982436857172010144"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_Float64 = r"""
-{"deltaSumTimestamp(int64, float64)":"-7844570025741298356"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__LowCardinality_Float64_ = r"""
+{"deltaSumTimestamp(nullable_int64_, lowcardinality_float64_)":"-1982436857172010144"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_DateTime = r"""
-{"deltaSumTimestamp(int64, datetime)":"-7844570025741298356"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__LowCardinality_Int64_ = r"""
+{"deltaSumTimestamp(nullable_int64_, lowcardinality_int64_)":"-1982436857172010144"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Int64_Date = r"""
-{"deltaSumTimestamp(int64, date)":"-7844570025741298356"}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__LowCardinality_UInt64_ = r"""
+{"deltaSumTimestamp(nullable_int64_, lowcardinality_uint64_)":"-1982436857172010144"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_UInt64 = r"""
-{"deltaSumTimestamp(float64, uint64)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__Nullable_DateTime_ = r"""
+{"deltaSumTimestamp(nullable_int64_, nullable_datetime_)":"-1982436857172010144"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_Nullable_UInt64_ = r"""
-{"deltaSumTimestamp(float64, nullable_uint64_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__Nullable_Date_ = r"""
+{"deltaSumTimestamp(nullable_int64_, nullable_date_)":"-1982436857172010144"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_Nullable_Float64_ = r"""
-{"deltaSumTimestamp(float64, nullable_float64_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__Nullable_Float32_ = r"""
+{"deltaSumTimestamp(nullable_int64_, nullable_float32_)":"-1982436857172010144"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_Nullable_Int64_ = r"""
-{"deltaSumTimestamp(float64, nullable_int64_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__Nullable_Float64_ = r"""
+{"deltaSumTimestamp(nullable_int64_, nullable_float64_)":"-1982436857172010144"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_Nullable_Float32_ = r"""
-{"deltaSumTimestamp(float64, nullable_float32_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__Nullable_Int64_ = r"""
+{"deltaSumTimestamp(nullable_int64_, nullable_int64_)":"-1982436857172010144"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_Nullable_DateTime_ = r"""
-{"deltaSumTimestamp(float64, nullable_datetime_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__Nullable_UInt64_ = r"""
+{"deltaSumTimestamp(nullable_int64_, nullable_uint64_)":"-1982436857172010144"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_Nullable_Date_ = r"""
-{"deltaSumTimestamp(float64, nullable_date_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_Int64__UInt64 = r"""
+{"deltaSumTimestamp(nullable_int64_, uint64)":"-1982436857172010144"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_LowCardinality_Int64_ = r"""
-{"deltaSumTimestamp(float64, lowcardinality_int64_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__Date = r"""
+{"deltaSumTimestamp(nullable_uint64_, date)":"15090509934681463105"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_LowCardinality_UInt64_ = r"""
-{"deltaSumTimestamp(float64, lowcardinality_uint64_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__DateTime = r"""
+{"deltaSumTimestamp(nullable_uint64_, datetime)":"15090509934681463105"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_LowCardinality_Float64_ = r"""
-{"deltaSumTimestamp(float64, lowcardinality_float64_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__Float32 = r"""
+{"deltaSumTimestamp(nullable_uint64_, float32)":"15090509934681463105"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_LowCardinality_Float32_ = r"""
-{"deltaSumTimestamp(float64, lowcardinality_float32_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__Float64 = r"""
+{"deltaSumTimestamp(nullable_uint64_, float64)":"15090509934681463105"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_LowCardinality_DateTime_ = r"""
-{"deltaSumTimestamp(float64, lowcardinality_datetime_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__Int64 = r"""
+{"deltaSumTimestamp(nullable_uint64_, int64)":"15090509934681463105"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_LowCardinality_Date_ = r"""
-{"deltaSumTimestamp(float64, lowcardinality_date_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__LowCardinality_DateTime_ = r"""
+{"deltaSumTimestamp(nullable_uint64_, lowcardinality_datetime_)":"15090509934681463105"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_Float64 = r"""
-{"deltaSumTimestamp(float64, float64)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__LowCardinality_Date_ = r"""
+{"deltaSumTimestamp(nullable_uint64_, lowcardinality_date_)":"15090509934681463105"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_Int64 = r"""
-{"deltaSumTimestamp(float64, int64)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__LowCardinality_Float32_ = r"""
+{"deltaSumTimestamp(nullable_uint64_, lowcardinality_float32_)":"15090509934681463105"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_Float32 = r"""
-{"deltaSumTimestamp(float64, float32)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__LowCardinality_Float64_ = r"""
+{"deltaSumTimestamp(nullable_uint64_, lowcardinality_float64_)":"15090509934681463105"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_DateTime = r"""
-{"deltaSumTimestamp(float64, datetime)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__LowCardinality_Int64_ = r"""
+{"deltaSumTimestamp(nullable_uint64_, lowcardinality_int64_)":"15090509934681463105"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float64_Date = r"""
-{"deltaSumTimestamp(float64, date)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__LowCardinality_UInt64_ = r"""
+{"deltaSumTimestamp(nullable_uint64_, lowcardinality_uint64_)":"15090509934681463105"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_Nullable_UInt64_ = r"""
-{"deltaSumTimestamp(float32, nullable_uint64_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__Nullable_DateTime_ = r"""
+{"deltaSumTimestamp(nullable_uint64_, nullable_datetime_)":"15090509934681463105"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_UInt64 = r"""
-{"deltaSumTimestamp(float32, uint64)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__Nullable_Date_ = r"""
+{"deltaSumTimestamp(nullable_uint64_, nullable_date_)":"15090509934681463105"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_Nullable_Int64_ = r"""
-{"deltaSumTimestamp(float32, nullable_int64_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__Nullable_Float32_ = r"""
+{"deltaSumTimestamp(nullable_uint64_, nullable_float32_)":"15090509934681463105"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_Nullable_Float64_ = r"""
-{"deltaSumTimestamp(float32, nullable_float64_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__Nullable_Float64_ = r"""
+{"deltaSumTimestamp(nullable_uint64_, nullable_float64_)":"15090509934681463105"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_Nullable_DateTime_ = r"""
-{"deltaSumTimestamp(float32, nullable_datetime_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__Nullable_Int64_ = r"""
+{"deltaSumTimestamp(nullable_uint64_, nullable_int64_)":"15090509934681463105"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_Nullable_Float32_ = r"""
-{"deltaSumTimestamp(float32, nullable_float32_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__Nullable_UInt64_ = r"""
+{"deltaSumTimestamp(nullable_uint64_, nullable_uint64_)":"15090509934681463105"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_Nullable_Date_ = r"""
-{"deltaSumTimestamp(float32, nullable_date_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Nullable_UInt64__UInt64 = r"""
+{"deltaSumTimestamp(nullable_uint64_, uint64)":"15090509934681463105"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_LowCardinality_Int64_ = r"""
-{"deltaSumTimestamp(float32, lowcardinality_int64_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_Date = r"""
+{"deltaSumTimestamp(uint64, date)":"11665937984950438984"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_LowCardinality_UInt64_ = r"""
-{"deltaSumTimestamp(float32, lowcardinality_uint64_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_DateTime = r"""
+{"deltaSumTimestamp(uint64, datetime)":"11665937984950438984"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_LowCardinality_Float64_ = r"""
-{"deltaSumTimestamp(float32, lowcardinality_float64_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_Float32 = r"""
+{"deltaSumTimestamp(uint64, float32)":"11665937984950438984"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_LowCardinality_Float32_ = r"""
-{"deltaSumTimestamp(float32, lowcardinality_float32_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_Float64 = r"""
+{"deltaSumTimestamp(uint64, float64)":"11665937984950438984"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_LowCardinality_DateTime_ = r"""
-{"deltaSumTimestamp(float32, lowcardinality_datetime_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_Int64 = r"""
+{"deltaSumTimestamp(uint64, int64)":"11665937984950438984"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_LowCardinality_Date_ = r"""
-{"deltaSumTimestamp(float32, lowcardinality_date_)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_LowCardinality_DateTime_ = r"""
+{"deltaSumTimestamp(uint64, lowcardinality_datetime_)":"11665937984950438984"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_Int64 = r"""
-{"deltaSumTimestamp(float32, int64)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_LowCardinality_Date_ = r"""
+{"deltaSumTimestamp(uint64, lowcardinality_date_)":"11665937984950438984"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_Float64 = r"""
-{"deltaSumTimestamp(float32, float64)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_LowCardinality_Float32_ = r"""
+{"deltaSumTimestamp(uint64, lowcardinality_float32_)":"11665937984950438984"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_Float32 = r"""
-{"deltaSumTimestamp(float32, float32)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_LowCardinality_Float64_ = r"""
+{"deltaSumTimestamp(uint64, lowcardinality_float64_)":"11665937984950438984"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_DateTime = r"""
-{"deltaSumTimestamp(float32, datetime)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_LowCardinality_Int64_ = r"""
+{"deltaSumTimestamp(uint64, lowcardinality_int64_)":"11665937984950438984"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Float32_Date = r"""
-{"deltaSumTimestamp(float32, date)":null}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_LowCardinality_UInt64_ = r"""
+{"deltaSumTimestamp(uint64, lowcardinality_uint64_)":"11665937984950438984"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_Nullable_UInt64_ = r"""
-{"deltaSumTimestamp(datetime, nullable_uint64_)":844856254}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_Nullable_DateTime_ = r"""
+{"deltaSumTimestamp(uint64, nullable_datetime_)":"11665937984950438984"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_UInt64 = r"""
-{"deltaSumTimestamp(datetime, uint64)":2009448503}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_Nullable_Date_ = r"""
+{"deltaSumTimestamp(uint64, nullable_date_)":"11665937984950438984"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_Nullable_Int64_ = r"""
-{"deltaSumTimestamp(datetime, nullable_int64_)":844856254}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_Nullable_Float32_ = r"""
+{"deltaSumTimestamp(uint64, nullable_float32_)":"11665937984950438984"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_Nullable_Float32_ = r"""
-{"deltaSumTimestamp(datetime, nullable_float32_)":844856254}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_Nullable_Float64_ = r"""
+{"deltaSumTimestamp(uint64, nullable_float64_)":"11665937984950438984"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_Nullable_Float64_ = r"""
-{"deltaSumTimestamp(datetime, nullable_float64_)":844856254}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_Nullable_Int64_ = r"""
+{"deltaSumTimestamp(uint64, nullable_int64_)":"11665937984950438984"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_Nullable_DateTime_ = r"""
-{"deltaSumTimestamp(datetime, nullable_datetime_)":844856254}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_Nullable_UInt64_ = r"""
+{"deltaSumTimestamp(uint64, nullable_uint64_)":"11665937984950438984"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_Nullable_Date_ = r"""
-{"deltaSumTimestamp(datetime, nullable_date_)":844856254}
+_aggregate_functions_deltaSumTimestamp_datatypes_permutations_UInt64_UInt64 = r"""
+{"deltaSumTimestamp(uint64, uint64)":"11665937984950438984"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_LowCardinality_Int64_ = r"""
-{"deltaSumTimestamp(datetime, lowcardinality_int64_)":2009448503}
+_aggregate_functions_deltaSumTimestamp_inf___inf__nan__inf__inf = r"""
+{"deltaSumTimestamp(x, y)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_LowCardinality_UInt64_ = r"""
-{"deltaSumTimestamp(datetime, lowcardinality_uint64_)":2009448503}
+_aggregate_functions_deltaSumTimestamp_inf___inf__nan__inf_inf = r"""
+{"deltaSumTimestamp(x, y)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_LowCardinality_Float64_ = r"""
-{"deltaSumTimestamp(datetime, lowcardinality_float64_)":2009448503}
+_aggregate_functions_deltaSumTimestamp_inf___inf__nan__inf_nan = r"""
+{"deltaSumTimestamp(x, y)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_LowCardinality_Float32_ = r"""
-{"deltaSumTimestamp(datetime, lowcardinality_float32_)":2009448503}
+_aggregate_functions_deltaSumTimestamp_inf___inf__nan_inf__inf = r"""
+{"deltaSumTimestamp(x, y)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_LowCardinality_Date_ = r"""
-{"deltaSumTimestamp(datetime, lowcardinality_date_)":2009448503}
+_aggregate_functions_deltaSumTimestamp_inf___inf__nan_inf_inf = r"""
+{"deltaSumTimestamp(x, y)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_LowCardinality_DateTime_ = r"""
-{"deltaSumTimestamp(datetime, lowcardinality_datetime_)":2009448503}
+_aggregate_functions_deltaSumTimestamp_inf___inf__nan_inf_nan = r"""
+{"deltaSumTimestamp(x, y)":null}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_Int64 = r"""
-{"deltaSumTimestamp(datetime, int64)":2009448503}
+_aggregate_functions_deltaSumTimestamp_inf___inf__nan_nan__inf = r"""
+{"deltaSumTimestamp(x, y)":2}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_Float64 = r"""
-{"deltaSumTimestamp(datetime, float64)":2009448503}
+_aggregate_functions_deltaSumTimestamp_inf___inf__nan_nan_inf = r"""
+{"deltaSumTimestamp(x, y)":2}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_Float32 = r"""
-{"deltaSumTimestamp(datetime, float32)":2009448503}
+_aggregate_functions_deltaSumTimestamp_inf___inf__nan_nan_nan = r"""
+{"deltaSumTimestamp(x, y)":2}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_DateTime = r"""
-{"deltaSumTimestamp(datetime, datetime)":2009448503}
+_aggregate_functions_deltaSumTimestamp_return_type = r"""
+{"toTypeName(deltaSumTimestamp(number, plus(number, 1)))":"UInt64"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_UInt64 = r"""
-{"deltaSumTimestamp(date, uint64)":22415}
+_aggregate_functions_deltaSumTimestamp_single_NULL_value = r"""
+{"deltaSumTimestamp(x, y)":0}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_DateTime_Date = r"""
-{"deltaSumTimestamp(datetime, date)":2009448503}
+_aggregate_functions_deltaSumTimestamp_some_negative_values = r"""
+{"deltaSumTimestamp(toInt64(minus(number, 5)), toInt64(plus(number, 10)))":"9"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_Nullable_Int64_ = r"""
-{"deltaSumTimestamp(date, nullable_int64_)":22415}
+_aggregate_functions_deltaSumTimestamp_with_group_by = r"""
+{"even":0,"deltaSumTimestamp(number, plus(number, 1))":"8"}
+{"even":1,"deltaSumTimestamp(number, plus(number, 1))":"8"}
 """
 
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_Nullable_Float64_ = r"""
-{"deltaSumTimestamp(date, nullable_float64_)":22415}
-"""
-
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_Nullable_UInt64_ = r"""
-{"deltaSumTimestamp(date, nullable_uint64_)":22415}
-"""
-
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_Nullable_Float32_ = r"""
-{"deltaSumTimestamp(date, nullable_float32_)":22415}
-"""
-
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_Nullable_DateTime_ = r"""
-{"deltaSumTimestamp(date, nullable_datetime_)":22415}
-"""
-
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_Nullable_Date_ = r"""
-{"deltaSumTimestamp(date, nullable_date_)":22415}
-"""
-
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_LowCardinality_UInt64_ = r"""
-{"deltaSumTimestamp(date, lowcardinality_uint64_)":22415}
-"""
-
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_LowCardinality_Int64_ = r"""
-{"deltaSumTimestamp(date, lowcardinality_int64_)":22415}
-"""
-
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_LowCardinality_Float64_ = r"""
-{"deltaSumTimestamp(date, lowcardinality_float64_)":22415}
-"""
-
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_LowCardinality_Float32_ = r"""
-{"deltaSumTimestamp(date, lowcardinality_float32_)":22415}
-"""
-
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_LowCardinality_DateTime_ = r"""
-{"deltaSumTimestamp(date, lowcardinality_datetime_)":22415}
-"""
-
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_LowCardinality_Date_ = r"""
-{"deltaSumTimestamp(date, lowcardinality_date_)":22415}
-"""
-
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_Int64 = r"""
-{"deltaSumTimestamp(date, int64)":22415}
-"""
-
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_Float64 = r"""
-{"deltaSumTimestamp(date, float64)":22415}
-"""
-
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_Float32 = r"""
-{"deltaSumTimestamp(date, float32)":22415}
-"""
-
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_DateTime = r"""
-{"deltaSumTimestamp(date, datetime)":22415}
-"""
-
-_aggregate_functions_deltaSumTimestamp_datatypes_permutations_Date_Date = r"""
-{"deltaSumTimestamp(date, date)":22415}
+_aggregate_functions_deltaSumTimestamp_zero_rows = r"""
+{"deltaSumTimestamp(number, plus(number, 1))":"0"}
 """
 
