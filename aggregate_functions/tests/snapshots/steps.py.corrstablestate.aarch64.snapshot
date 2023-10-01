@@ -163,7 +163,7 @@ _aggregate_functions_state_corrStableState_datatypes_Float64_UInt32 = r"""
 """
 
 _aggregate_functions_state_corrStableState_datatypes_Float64_UInt64 = r"""
-{"hex(corrStableState(float64, uint64))":"0A000000000000F8FF037C95F68510DF43000000000000F8FF000000000000F8FF0FFA8D439392F747"}
+{"hex(corrStableState(float64, uint64))":"0A000000000000F87F037C95F68510DF43000000000000F87F000000000000F87F0FFA8D439392F747"}
 """
 
 _aggregate_functions_state_corrStableState_datatypes_Float64_UInt8 = r"""
@@ -195,7 +195,7 @@ _aggregate_functions_state_corrStableState_datatypes_LowCardinality_Float64__Flo
 """
 
 _aggregate_functions_state_corrStableState_datatypes_LowCardinality_Int16__Float64 = r"""
-{"hex(corrStableState(lowcardinality_int16_, float64))":"0ACECCCCCCCC3E9B40000000000000F8FF000000000000F8FF9999415F4B7FF541000000000000F8FF"}
+{"hex(corrStableState(lowcardinality_int16_, float64))":"0ACECCCCCCCC3E9B40000000000000F87F000000000000F87F9999415F4B7FF541000000000000F87F"}
 """
 
 _aggregate_functions_state_corrStableState_datatypes_LowCardinality_Int32__Float64 = r"""
@@ -255,7 +255,7 @@ _aggregate_functions_state_corrStableState_datatypes_LowCardinality_UInt16__Floa
 """
 
 _aggregate_functions_state_corrStableState_datatypes_LowCardinality_UInt32__Float64 = r"""
-{"hex(corrStableState(lowcardinality_uint32_, float64))":"0A3333F311D734D941000000000000F8FF000000000000F8FFFA8FF82AFBAAF343000000000000F8FF"}
+{"hex(corrStableState(lowcardinality_uint32_, float64))":"0A3333F311D734D941000000000000F87F000000000000F87FFA8FF82AFBAAF343000000000000F87F"}
 """
 
 _aggregate_functions_state_corrStableState_datatypes_LowCardinality_UInt64__Float64 = r"""
@@ -303,7 +303,7 @@ _aggregate_functions_state_corrStableState_datatypes_Nullable_UInt64__Float64 = 
 """
 
 _aggregate_functions_state_corrStableState_datatypes_Nullable_UInt8__Float64 = r"""
-{"hex(corrStableState(nullable_uint8_, float64))":"01098EE3388EE3385D40000000000000F8FF000000000000F8FF398EE3382E3AF440000000000000F8FF"}
+{"hex(corrStableState(nullable_uint8_, float64))":"01098EE3388EE3385D40000000000000F87F000000000000F87F398EE3382E3AF440000000000000F87F"}
 """
 
 _aggregate_functions_state_corrStableState_datatypes_UInt16_Float64 = r"""

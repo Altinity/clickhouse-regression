@@ -66,6 +66,10 @@ _aggregate_functions_simpleLinearRegression_datatypes_Float64_LowCardinality_Nul
 {"simpleLinearRegression(float64, lowcardinality_nullable_float64__)":{"k":null,"b":null}}
 """
 
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_LowCardinality_Nullable_Int16__ = r"""
+{"simpleLinearRegression(float64, lowcardinality_nullable_int16__)":{"k":null,"b":null}}
+"""
+
 _aggregate_functions_simpleLinearRegression_datatypes_Float64_LowCardinality_Nullable_Int32__ = r"""
 {"simpleLinearRegression(float64, lowcardinality_nullable_int32__)":{"k":null,"b":null}}
 """
@@ -206,6 +210,14 @@ _aggregate_functions_simpleLinearRegression_datatypes_LowCardinality_Int8__Float
 {"simpleLinearRegression(lowcardinality_int8_, float64)":{"k":null,"b":null}}
 """
 
+_aggregate_functions_simpleLinearRegression_datatypes_LowCardinality_Nullable_Float32___Float64 = r"""
+{"simpleLinearRegression(lowcardinality_nullable_float32__, float64)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_LowCardinality_Nullable_Float64___Float64 = r"""
+{"simpleLinearRegression(lowcardinality_nullable_float64__, float64)":{"k":null,"b":null}}
+"""
+
 _aggregate_functions_simpleLinearRegression_datatypes_LowCardinality_Nullable_Int16___Float64 = r"""
 {"simpleLinearRegression(lowcardinality_nullable_int16__, float64)":{"k":null,"b":null}}
 """
@@ -254,6 +266,10 @@ _aggregate_functions_simpleLinearRegression_datatypes_LowCardinality_UInt8__Floa
 {"simpleLinearRegression(lowcardinality_uint8_, float64)":{"k":null,"b":null}}
 """
 
+_aggregate_functions_simpleLinearRegression_datatypes_Nullable_Float32__Float64 = r"""
+{"simpleLinearRegression(nullable_float32_, float64)":{"k":null,"b":null}}
+"""
+
 _aggregate_functions_simpleLinearRegression_datatypes_Nullable_Float64__Float64 = r"""
 {"simpleLinearRegression(nullable_float64_, float64)":{"k":null,"b":null}}
 """
@@ -288,6 +304,10 @@ _aggregate_functions_simpleLinearRegression_datatypes_Nullable_UInt64__Float64 =
 
 _aggregate_functions_simpleLinearRegression_datatypes_Nullable_UInt8__Float64 = r"""
 {"simpleLinearRegression(nullable_uint8_, float64)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_UInt16_Float64 = r"""
+{"simpleLinearRegression(uint16, float64)":{"k":null,"b":null}}
 """
 
 _aggregate_functions_simpleLinearRegression_datatypes_UInt32_Float64 = r"""
@@ -466,8 +486,20 @@ _aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinalit
 {"simpleLinearRegression(lowcardinality_uint64_, lowcardinality_uint64_)":{"k":1,"b":0}}
 """
 
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_UInt64__Nullable_Float32_ = r"""
+{"simpleLinearRegression(lowcardinality_uint64_, nullable_float32_)":{"k":18531401493753795000,"b":-2.697250392599059e38}}
+"""
+
 _aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_UInt64__Nullable_Int64_ = r"""
 {"simpleLinearRegression(lowcardinality_uint64_, nullable_int64_)":{"k":0.2620736642654278,"b":-1982113940767916800}}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_UInt64__Nullable_UInt64_ = r"""
+{"simpleLinearRegression(lowcardinality_uint64_, nullable_uint64_)":{"k":0.8268273275838797,"b":2826576515601571000}}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_UInt64__UInt64 = r"""
+{"simpleLinearRegression(lowcardinality_uint64_, uint64)":{"k":0.69974609260144,"b":2601036699795228700}}
 """
 
 _aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_Float32__Float32 = r"""
@@ -556,6 +588,10 @@ _aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_UInt
 
 _aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_UInt64__LowCardinality_Int64_ = r"""
 {"simpleLinearRegression(nullable_uint64_, lowcardinality_int64_)":{"k":0.19905963873837987,"b":-445768508166495740}}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_UInt64__LowCardinality_UInt64_ = r"""
+{"simpleLinearRegression(nullable_uint64_, lowcardinality_uint64_)":{"k":0.8097470689035089,"b":711471560989254300}}
 """
 
 _aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_UInt64__Nullable_Float32_ = r"""

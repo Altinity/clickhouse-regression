@@ -27,7 +27,7 @@ _aggregate_functions_state_covarSampStableState_datatypes_Float64_Int32 = r"""
 """
 
 _aggregate_functions_state_covarSampStableState_datatypes_Float64_Int64 = r"""
-{"hex(covarSampStableState(float64, int64))":"0A000000000000F8FFD33DD7E2FEC6AA43000000000000F8FF"}
+{"hex(covarSampStableState(float64, int64))":"0A000000000000F87FD33DD7E2FEC6AA43000000000000F87F"}
 """
 
 _aggregate_functions_state_covarSampStableState_datatypes_Float64_Int8 = r"""
@@ -119,7 +119,7 @@ _aggregate_functions_state_covarSampStableState_datatypes_Float64_Nullable_Float
 """
 
 _aggregate_functions_state_covarSampStableState_datatypes_Float64_Nullable_Float64_ = r"""
-{"hex(covarSampStableState(float64, nullable_float64_))":"0109000000000000F8FF000000000000F8FF000000000000F8FF"}
+{"hex(covarSampStableState(float64, nullable_float64_))":"0109000000000000F87F000000000000F87F000000000000F87F"}
 """
 
 _aggregate_functions_state_covarSampStableState_datatypes_Float64_Nullable_Int16_ = r"""
@@ -139,7 +139,7 @@ _aggregate_functions_state_covarSampStableState_datatypes_Float64_Nullable_Int8_
 """
 
 _aggregate_functions_state_covarSampStableState_datatypes_Float64_Nullable_UInt16_ = r"""
-{"hex(covarSampStableState(float64, nullable_uint16_))":"0109000000000000F8FF1CC7711C478AE040000000000000F8FF"}
+{"hex(covarSampStableState(float64, nullable_uint16_))":"0109000000000000F87F1CC7711C478AE040000000000000F87F"}
 """
 
 _aggregate_functions_state_covarSampStableState_datatypes_Float64_Nullable_UInt32_ = r"""
@@ -151,7 +151,7 @@ _aggregate_functions_state_covarSampStableState_datatypes_Float64_Nullable_UInt6
 """
 
 _aggregate_functions_state_covarSampStableState_datatypes_Float64_Nullable_UInt8_ = r"""
-{"hex(covarSampStableState(float64, nullable_uint8_))":"0109000000000000F8FF8EE3388EE3385D40000000000000F8FF"}
+{"hex(covarSampStableState(float64, nullable_uint8_))":"0109000000000000F87F8EE3388EE3385D40000000000000F87F"}
 """
 
 _aggregate_functions_state_covarSampStableState_datatypes_Float64_UInt16 = r"""
@@ -283,7 +283,7 @@ _aggregate_functions_state_covarSampStableState_datatypes_Nullable_Int32__Float6
 """
 
 _aggregate_functions_state_covarSampStableState_datatypes_Nullable_Int64__Float64 = r"""
-{"hex(covarSampStableState(nullable_int64_, float64))":"010952A4CFA1DD7E9843000000000000F8FF000000000000F8FF"}
+{"hex(covarSampStableState(nullable_int64_, float64))":"010952A4CFA1DD7E9843000000000000F87F000000000000F87F"}
 """
 
 _aggregate_functions_state_covarSampStableState_datatypes_Nullable_Int8__Float64 = r"""

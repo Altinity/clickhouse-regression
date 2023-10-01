@@ -163,7 +163,7 @@ _aggregate_functions_state_covarSampState_datatypes_Float64_UInt32 = r"""
 """
 
 _aggregate_functions_state_covarSampState_datatypes_Float64_UInt64 = r"""
-{"hex(covarSampState(float64, uint64))":"00000000000024401FD01440BEE4B4FF826D1DBA536A1344000000000000F8FF"}
+{"hex(covarSampState(float64, uint64))":"00000000000024401FD01440BEE4B4FF826D1DBA536A1344000000000000F87F"}
 """
 
 _aggregate_functions_state_covarSampState_datatypes_Float64_UInt8 = r"""
@@ -195,7 +195,7 @@ _aggregate_functions_state_covarSampState_datatypes_LowCardinality_Float64__Floa
 """
 
 _aggregate_functions_state_covarSampState_datatypes_LowCardinality_Int16__Float64 = r"""
-{"hex(covarSampState(lowcardinality_int16_, float64))":"0000000000002440000000004007D1401FD01440BEE4B4FF000000000000F8FF"}
+{"hex(covarSampState(lowcardinality_int16_, float64))":"0000000000002440000000004007D1401FD01440BEE4B4FF000000000000F87F"}
 """
 
 _aggregate_functions_state_covarSampState_datatypes_LowCardinality_Int32__Float64 = r"""
@@ -291,11 +291,11 @@ _aggregate_functions_state_covarSampState_datatypes_Nullable_Int8__Float64 = r""
 """
 
 _aggregate_functions_state_covarSampState_datatypes_Nullable_UInt16__Float64 = r"""
-{"hex(covarSampState(nullable_uint16_, float64))":"01000000000000224000000000909B12411FD01440BEE4B4FF000000000000F8FF"}
+{"hex(covarSampState(nullable_uint16_, float64))":"01000000000000224000000000909B12411FD01440BEE4B4FF000000000000F07F"}
 """
 
 _aggregate_functions_state_covarSampState_datatypes_Nullable_UInt32__Float64 = r"""
-{"hex(covarSampState(nullable_uint32_, float64))":"010000000000002240000038495CF311421FD01440BEE4B4FF000000000000F8FF"}
+{"hex(covarSampState(nullable_uint32_, float64))":"010000000000002240000038495CF311421FD01440BEE4B4FF000000000000F07F"}
 """
 
 _aggregate_functions_state_covarSampState_datatypes_Nullable_UInt64__Float64 = r"""
@@ -311,7 +311,7 @@ _aggregate_functions_state_covarSampState_datatypes_UInt16_Float64 = r"""
 """
 
 _aggregate_functions_state_covarSampState_datatypes_UInt32_Float64 = r"""
-{"hex(covarSampState(uint32, float64))":"000000000000244000003CE81CB215421FD01440BEE4B4FF000000000000F8FF"}
+{"hex(covarSampState(uint32, float64))":"000000000000244000003CE81CB215421FD01440BEE4B4FF000000000000F87F"}
 """
 
 _aggregate_functions_state_covarSampState_datatypes_UInt64_Float64 = r"""
