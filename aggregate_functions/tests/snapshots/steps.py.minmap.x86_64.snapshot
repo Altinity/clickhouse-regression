@@ -1,41 +1,20 @@
-_aggregate_functions_minMap_constant = r"""
-{"minMap(map(1, 1))":{"1":1}}
-"""
-
-_aggregate_functions_minMap_zero_rows = r"""
-{"minMap(map(number, number))":{}}
-"""
-
-_aggregate_functions_minMap_with_group_by = r"""
-{"even":0,"minMap(map(modulo(number, 2), number))":{"0":"0"}}
-{"even":1,"minMap(map(modulo(number, 2), number))":{"1":"1"}}
-"""
-
-_aggregate_functions_minMap_some_negative_values = r"""
-{"minMap(map(minus(number, 5), minus(number, 10)))":{"-4":"-9","-3":"-8","-2":"-7","-1":"-6","0":"-5","1":"-4","2":"-3","3":"-2","4":"-1","5":"0"}}
-"""
-
-_aggregate_functions_minMap_one_to_many = r"""
-{"minMap(map(modulo(number, 2), number))":{"0":"2","1":"1"}}
+_aggregate_functions_minMap_NULL_in_strings = r"""
+{"minMap(a, b)":[["\u0003\u0000\u0000\u0000","1\u0000","2\u0000\u0000","3"],["1","2","2","1"]]}
 """
 
 _aggregate_functions_minMap_NULL_value_handling = r"""
 {"minMap(map(x, y))":{"0":1,"1":null,"2":1,"3":4}}
 """
 
-_aggregate_functions_minMap_single_NULL_value = r"""
-{"minMap(map(x, y))":{"1":null}}
-"""
-
-_aggregate_functions_minMap_inf = r"""
-{"minMap(map('a', x))":{"a":0}}
-"""
-
 _aggregate_functions_minMap__inf = r"""
 {"minMap(map('a', x))":{"a":null}}
 """
 
-_aggregate_functions_minMap_nan = r"""
+_aggregate_functions_minMap_constant = r"""
+{"minMap(map(1, 1))":{"1":1}}
+"""
+
+_aggregate_functions_minMap_inf = r"""
 {"minMap(map('a', x))":{"a":0}}
 """
 
@@ -43,11 +22,32 @@ _aggregate_functions_minMap_inf___inf__nan = r"""
 {"minMap(map('a', x))":{"a":null}}
 """
 
+_aggregate_functions_minMap_nan = r"""
+{"minMap(map('a', x))":{"a":0}}
+"""
+
+_aggregate_functions_minMap_one_to_many = r"""
+{"minMap(map(modulo(number, 2), number))":{"0":"2","1":"1"}}
+"""
+
 _aggregate_functions_minMap_return_type = r"""
 {"toTypeName(minMap(map(number, plus(number, 1))))":"Map(UInt64, UInt64)"}
 """
 
-_aggregate_functions_minMap_NULL_in_strings = r"""
-{"minMap(a, b)":[["\u0003\u0000\u0000\u0000","1\u0000","2\u0000\u0000","3"],["1","2","2","1"]]}
+_aggregate_functions_minMap_single_NULL_value = r"""
+{"minMap(map(x, y))":{"1":null}}
+"""
+
+_aggregate_functions_minMap_some_negative_values = r"""
+{"minMap(map(minus(number, 5), minus(number, 10)))":{"-4":"-9","-3":"-8","-2":"-7","-1":"-6","0":"-5","1":"-4","2":"-3","3":"-2","4":"-1","5":"0"}}
+"""
+
+_aggregate_functions_minMap_with_group_by = r"""
+{"even":0,"minMap(map(modulo(number, 2), number))":{"0":"0"}}
+{"even":1,"minMap(map(modulo(number, 2), number))":{"1":"1"}}
+"""
+
+_aggregate_functions_minMap_zero_rows = r"""
+{"minMap(map(number, number))":{}}
 """
 

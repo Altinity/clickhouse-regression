@@ -1,74 +1,17 @@
-_aggregate_functions_quantilesExactHigh_constant = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(1)":[1,1,1,1,1,1,1]}
+_aggregate_functions_quantilesExactHigh_Date = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(date)":["2004-01-05","2006-11-06","2015-01-26","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
 """
 
-_aggregate_functions_quantilesExactHigh_zero_rows = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(number)":["0","0","0","0","0","0","0"]}
+_aggregate_functions_quantilesExactHigh_DateTime = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(datetime)":["2009-06-14 11:12:39","2017-02-11 09:09:25","2020-01-24 15:10:50","2106-02-07 06:28:16","2106-02-07 06:28:16","2106-02-07 06:28:16","2106-02-07 06:28:16"]}
 """
 
-_aggregate_functions_quantilesExactHigh_single_row = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(number)":["0","0","0","0","0","0","0"]}
+_aggregate_functions_quantilesExactHigh_Float32 = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float32)":[-3.0256692e38,-1.9952109e38,0,3.4028235e38,3.4028235e38,3.4028235e38,3.4028235e38]}
 """
 
-_aggregate_functions_quantilesExactHigh_with_group_by = r"""
-{"even":0,"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(number)":["2","4","6","8","8","8","8"]}
-{"even":1,"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(number)":["3","5","7","9","9","9","9"]}
-"""
-
-_aggregate_functions_quantilesExactHigh_some_negative_values = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(minus(number, 5))":["-2","1","3","5","5","5","5"]}
-"""
-
-_aggregate_functions_quantilesExactHigh_NULL_value_handling = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(x)":[1,3,4,5,5,5,5]}
-"""
-
-_aggregate_functions_quantilesExactHigh_single_NULL_value = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(x)":[0,0,0,0,0,0,0]}
-"""
-
-_aggregate_functions_quantilesExactHigh_return_type = r"""
-{"toTypeName(quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(number))":"Array(UInt64)"}
-"""
-
-_aggregate_functions_quantilesExactHigh_doc_example = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(x)":[1,3,4,5,5,5,5]}
-"""
-
-_aggregate_functions_quantilesExactHigh_inf = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(x)":[2.3,5,6.7,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesExactHigh__inf = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(x)":[0,4,5,6.7,6.7,6.7,6.7]}
-"""
-
-_aggregate_functions_quantilesExactHigh_nan = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(x)":[2.3,4,5,6.7,6.7,6.7,6.7]}
-"""
-
-_aggregate_functions_quantilesExactHigh_inf___inf__nan = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(x)":[2.3,5,6.7,null,null,null,null]}
-"""
-
-_aggregate_functions_quantilesExactHigh_UInt8 = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint8)":[24,163,201,255,255,255,255]}
-"""
-
-_aggregate_functions_quantilesExactHigh_UInt16 = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint16)":[7572,26244,37073,65535,65535,65535,65535]}
-"""
-
-_aggregate_functions_quantilesExactHigh_UInt32 = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint32)":[906420991,2770515842,3229885707,4294967295,4294967295,4294967295,4294967295]}
-"""
-
-_aggregate_functions_quantilesExactHigh_UInt64 = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint64)":["3066499079937163853","8959741089313179321","16708105131877516882","18446744073709551615","18446744073709551615","18446744073709551615","18446744073709551615"]}
-"""
-
-_aggregate_functions_quantilesExactHigh_Int8 = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int8)":[-78,0,115,127,127,127,127]}
+_aggregate_functions_quantilesExactHigh_Float64 = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float64)":[-1.7543896230671985e271,-1.57788503681046e49,1.16845612310205e66,1.7976909999999999e308,1.7976909999999999e308,1.7976909999999999e308,1.7976909999999999e308]}
 """
 
 _aggregate_functions_quantilesExactHigh_Int16 = r"""
@@ -83,88 +26,24 @@ _aggregate_functions_quantilesExactHigh_Int64 = r"""
 {"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int64)":["-828225109716003691","2716835793949406845","4021889571459699167","9223372036854775807","9223372036854775807","9223372036854775807","9223372036854775807"]}
 """
 
-_aggregate_functions_quantilesExactHigh_Float32 = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float32)":[-3.0256692e38,-1.9952109e38,0,3.4028235e38,3.4028235e38,3.4028235e38,3.4028235e38]}
+_aggregate_functions_quantilesExactHigh_Int8 = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(int8)":[-78,0,115,127,127,127,127]}
 """
 
-_aggregate_functions_quantilesExactHigh_Float64 = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(float64)":[-1.7543896230671985e271,-1.57788503681046e49,1.16845612310205e66,1.7976909999999999e308,1.7976909999999999e308,1.7976909999999999e308,1.7976909999999999e308]}
+_aggregate_functions_quantilesExactHigh_LowCardinality_DateTime_ = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_datetime_)":["2011-09-29 03:43:51","2016-11-27 12:16:37","2021-09-18 08:15:28","2106-02-07 06:28:16","2106-02-07 06:28:16","2106-02-07 06:28:16","2106-02-07 06:28:16"]}
 """
 
-_aggregate_functions_quantilesExactHigh_Date = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(date)":["2004-01-05","2006-11-06","2015-01-26","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+_aggregate_functions_quantilesExactHigh_LowCardinality_Date_ = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_date_)":["2004-01-29","2009-11-18","2020-01-11","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
 """
 
-_aggregate_functions_quantilesExactHigh_DateTime = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(datetime)":["2009-06-14 11:12:39","2017-02-11 09:09:25","2020-01-24 15:10:50","2106-02-07 06:28:16","2106-02-07 06:28:16","2106-02-07 06:28:16","2106-02-07 06:28:16"]}
+_aggregate_functions_quantilesExactHigh_LowCardinality_Float32_ = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float32_)":[-1.3459335e38,9.913279e37,1.7166904e38,3.4028235e38,3.4028235e38,3.4028235e38,3.4028235e38]}
 """
 
-_aggregate_functions_quantilesExactHigh_Nullable_UInt8_ = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint8_)":[28,65,197,255,255,255,255]}
-"""
-
-_aggregate_functions_quantilesExactHigh_Nullable_UInt16_ = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint16_)":[24084,31453,49792,65535,65535,65535,65535]}
-"""
-
-_aggregate_functions_quantilesExactHigh_Nullable_UInt32_ = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint32_)":[1216888864,1575536824,3484062849,4294967295,4294967295,4294967295,4294967295]}
-"""
-
-_aggregate_functions_quantilesExactHigh_Nullable_UInt64_ = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint64_)":["7107144574783571298","15756926212117227055","17402344381158020677","18446744073709551615","18446744073709551615","18446744073709551615","18446744073709551615"]}
-"""
-
-_aggregate_functions_quantilesExactHigh_Nullable_Int8_ = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int8_)":[-73,4,72,127,127,127,127]}
-"""
-
-_aggregate_functions_quantilesExactHigh_Nullable_Int16_ = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int16_)":[-22327,3728,11484,32767,32767,32767,32767]}
-"""
-
-_aggregate_functions_quantilesExactHigh_Nullable_Int32_ = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int32_)":[-84888988,194268523,1525374543,2147483647,2147483647,2147483647,2147483647]}
-"""
-
-_aggregate_functions_quantilesExactHigh_Nullable_Int64_ = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int64_)":["-5297132944339134296","1193865884214575979","6993614660524502152","9223372036854775807","9223372036854775807","9223372036854775807","9223372036854775807"]}
-"""
-
-_aggregate_functions_quantilesExactHigh_Nullable_Float32_ = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_float32_)":[-2.6936819e38,-1.9946482e38,-4.4773587e37,3.4028235e38,3.4028235e38,3.4028235e38,3.4028235e38]}
-"""
-
-_aggregate_functions_quantilesExactHigh_Nullable_Float64_ = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_float64_)":[-1.0799483518274516e240,-1.361161047663063e43,1.811436225548946e259,1.7976909999999999e308,1.7976909999999999e308,1.7976909999999999e308,1.7976909999999999e308]}
-"""
-
-_aggregate_functions_quantilesExactHigh_Nullable_Date_ = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_date_)":["2005-10-25","2012-02-07","2018-10-13","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
-"""
-
-_aggregate_functions_quantilesExactHigh_Nullable_DateTime_ = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_datetime_)":["2006-08-10 21:14:26","2014-04-10 09:39:46","2017-06-27 03:09:51","2106-02-07 06:28:16","2106-02-07 06:28:16","2106-02-07 06:28:16","2106-02-07 06:28:16"]}
-"""
-
-_aggregate_functions_quantilesExactHigh_LowCardinality_UInt8_ = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint8_)":[16,216,228,255,255,255,255]}
-"""
-
-_aggregate_functions_quantilesExactHigh_LowCardinality_UInt16_ = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint16_)":[12257,37110,62297,65535,65535,65535,65535]}
-"""
-
-_aggregate_functions_quantilesExactHigh_LowCardinality_UInt32_ = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint32_)":[181118931,1663571700,3068978328,4294967295,4294967295,4294967295,4294967295]}
-"""
-
-_aggregate_functions_quantilesExactHigh_LowCardinality_UInt64_ = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint64_)":["1755801173378645649","9823307913730985458","17588799453259714314","18446744073709551615","18446744073709551615","18446744073709551615","18446744073709551615"]}
-"""
-
-_aggregate_functions_quantilesExactHigh_LowCardinality_Int8_ = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int8_)":[-18,45,95,127,127,127,127]}
+_aggregate_functions_quantilesExactHigh_LowCardinality_Float64_ = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float64_)":[0,1.6626711733296566e135,1.5130733709481816e217,1.7976909999999999e308,1.7976909999999999e308,1.7976909999999999e308,1.7976909999999999e308]}
 """
 
 _aggregate_functions_quantilesExactHigh_LowCardinality_Int16_ = r"""
@@ -179,40 +58,24 @@ _aggregate_functions_quantilesExactHigh_LowCardinality_Int64_ = r"""
 {"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int64_)":["0","2784931345460438712","6192383175306747828","9223372036854775807","9223372036854775807","9223372036854775807","9223372036854775807"]}
 """
 
-_aggregate_functions_quantilesExactHigh_LowCardinality_Float32_ = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float32_)":[-1.3459335e38,9.913279e37,1.7166904e38,3.4028235e38,3.4028235e38,3.4028235e38,3.4028235e38]}
+_aggregate_functions_quantilesExactHigh_LowCardinality_Int8_ = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_int8_)":[-18,45,95,127,127,127,127]}
 """
 
-_aggregate_functions_quantilesExactHigh_LowCardinality_Float64_ = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_float64_)":[0,1.6626711733296566e135,1.5130733709481816e217,1.7976909999999999e308,1.7976909999999999e308,1.7976909999999999e308,1.7976909999999999e308]}
+_aggregate_functions_quantilesExactHigh_LowCardinality_Nullable_DateTime__ = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_datetime__)":["2012-08-21 19:37:58","2013-08-28 12:39:09","2020-04-15 15:09:40","2106-02-07 06:28:16","2106-02-07 06:28:16","2106-02-07 06:28:16","2106-02-07 06:28:16"]}
 """
 
-_aggregate_functions_quantilesExactHigh_LowCardinality_Date_ = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_date_)":["2004-01-29","2009-11-18","2020-01-11","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+_aggregate_functions_quantilesExactHigh_LowCardinality_Nullable_Date__ = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_date__)":["2007-03-04","2013-09-28","2018-12-01","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
 """
 
-_aggregate_functions_quantilesExactHigh_LowCardinality_DateTime_ = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_datetime_)":["2011-09-29 03:43:51","2016-11-27 12:16:37","2021-09-18 08:15:28","2106-02-07 06:28:16","2106-02-07 06:28:16","2106-02-07 06:28:16","2106-02-07 06:28:16"]}
+_aggregate_functions_quantilesExactHigh_LowCardinality_Nullable_Float32__ = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_float32__)":[-6.857267e37,-4.4835215e37,2.362745e38,3.4028235e38,3.4028235e38,3.4028235e38,3.4028235e38]}
 """
 
-_aggregate_functions_quantilesExactHigh_LowCardinality_Nullable_UInt8__ = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_uint8__)":[112,165,202,255,255,255,255]}
-"""
-
-_aggregate_functions_quantilesExactHigh_LowCardinality_Nullable_UInt16__ = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_uint16__)":[10899,15607,55490,65535,65535,65535,65535]}
-"""
-
-_aggregate_functions_quantilesExactHigh_LowCardinality_Nullable_UInt32__ = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_uint32__)":[1540186887,2488434006,3686136462,4294967295,4294967295,4294967295,4294967295]}
-"""
-
-_aggregate_functions_quantilesExactHigh_LowCardinality_Nullable_UInt64__ = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_uint64__)":["2912345653920047545","7718272410435569592","16629435390485869687","18446744073709551615","18446744073709551615","18446744073709551615","18446744073709551615"]}
-"""
-
-_aggregate_functions_quantilesExactHigh_LowCardinality_Nullable_Int8__ = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_int8__)":[-86,9,117,127,127,127,127]}
+_aggregate_functions_quantilesExactHigh_LowCardinality_Nullable_Float64__ = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_float64__)":[-1.3724029909877588e195,1.7674632094597634e89,3.01733034930727e285,1.7976909999999999e308,1.7976909999999999e308,1.7976909999999999e308,1.7976909999999999e308]}
 """
 
 _aggregate_functions_quantilesExactHigh_LowCardinality_Nullable_Int16__ = r"""
@@ -227,19 +90,156 @@ _aggregate_functions_quantilesExactHigh_LowCardinality_Nullable_Int64__ = r"""
 {"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_int64__)":["-630253715369851548","1732198740987194200","7696580111264988379","9223372036854775807","9223372036854775807","9223372036854775807","9223372036854775807"]}
 """
 
-_aggregate_functions_quantilesExactHigh_LowCardinality_Nullable_Float32__ = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_float32__)":[-6.857267e37,-4.4835215e37,2.362745e38,3.4028235e38,3.4028235e38,3.4028235e38,3.4028235e38]}
+_aggregate_functions_quantilesExactHigh_LowCardinality_Nullable_Int8__ = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_int8__)":[-86,9,117,127,127,127,127]}
 """
 
-_aggregate_functions_quantilesExactHigh_LowCardinality_Nullable_Float64__ = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_float64__)":[-1.3724029909877588e195,1.7674632094597634e89,3.01733034930727e285,1.7976909999999999e308,1.7976909999999999e308,1.7976909999999999e308,1.7976909999999999e308]}
+_aggregate_functions_quantilesExactHigh_LowCardinality_Nullable_UInt16__ = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_uint16__)":[10899,15607,55490,65535,65535,65535,65535]}
 """
 
-_aggregate_functions_quantilesExactHigh_LowCardinality_Nullable_Date__ = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_date__)":["2007-03-04","2013-09-28","2018-12-01","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+_aggregate_functions_quantilesExactHigh_LowCardinality_Nullable_UInt32__ = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_uint32__)":[1540186887,2488434006,3686136462,4294967295,4294967295,4294967295,4294967295]}
 """
 
-_aggregate_functions_quantilesExactHigh_LowCardinality_Nullable_DateTime__ = r"""
-{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_datetime__)":["2012-08-21 19:37:58","2013-08-28 12:39:09","2020-04-15 15:09:40","2106-02-07 06:28:16","2106-02-07 06:28:16","2106-02-07 06:28:16","2106-02-07 06:28:16"]}
+_aggregate_functions_quantilesExactHigh_LowCardinality_Nullable_UInt64__ = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_uint64__)":["2912345653920047545","7718272410435569592","16629435390485869687","18446744073709551615","18446744073709551615","18446744073709551615","18446744073709551615"]}
+"""
+
+_aggregate_functions_quantilesExactHigh_LowCardinality_Nullable_UInt8__ = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_nullable_uint8__)":[112,165,202,255,255,255,255]}
+"""
+
+_aggregate_functions_quantilesExactHigh_LowCardinality_UInt16_ = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint16_)":[12257,37110,62297,65535,65535,65535,65535]}
+"""
+
+_aggregate_functions_quantilesExactHigh_LowCardinality_UInt32_ = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint32_)":[181118931,1663571700,3068978328,4294967295,4294967295,4294967295,4294967295]}
+"""
+
+_aggregate_functions_quantilesExactHigh_LowCardinality_UInt64_ = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint64_)":["1755801173378645649","9823307913730985458","17588799453259714314","18446744073709551615","18446744073709551615","18446744073709551615","18446744073709551615"]}
+"""
+
+_aggregate_functions_quantilesExactHigh_LowCardinality_UInt8_ = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(lowcardinality_uint8_)":[16,216,228,255,255,255,255]}
+"""
+
+_aggregate_functions_quantilesExactHigh_NULL_value_handling = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(x)":[1,3,4,5,5,5,5]}
+"""
+
+_aggregate_functions_quantilesExactHigh_Nullable_DateTime_ = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_datetime_)":["2006-08-10 21:14:26","2014-04-10 09:39:46","2017-06-27 03:09:51","2106-02-07 06:28:16","2106-02-07 06:28:16","2106-02-07 06:28:16","2106-02-07 06:28:16"]}
+"""
+
+_aggregate_functions_quantilesExactHigh_Nullable_Date_ = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_date_)":["2005-10-25","2012-02-07","2018-10-13","2149-06-06","2149-06-06","2149-06-06","2149-06-06"]}
+"""
+
+_aggregate_functions_quantilesExactHigh_Nullable_Float32_ = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_float32_)":[-2.6936819e38,-1.9946482e38,-4.4773587e37,3.4028235e38,3.4028235e38,3.4028235e38,3.4028235e38]}
+"""
+
+_aggregate_functions_quantilesExactHigh_Nullable_Float64_ = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_float64_)":[-1.0799483518274516e240,-1.361161047663063e43,1.811436225548946e259,1.7976909999999999e308,1.7976909999999999e308,1.7976909999999999e308,1.7976909999999999e308]}
+"""
+
+_aggregate_functions_quantilesExactHigh_Nullable_Int16_ = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int16_)":[-22327,3728,11484,32767,32767,32767,32767]}
+"""
+
+_aggregate_functions_quantilesExactHigh_Nullable_Int32_ = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int32_)":[-84888988,194268523,1525374543,2147483647,2147483647,2147483647,2147483647]}
+"""
+
+_aggregate_functions_quantilesExactHigh_Nullable_Int64_ = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int64_)":["-5297132944339134296","1193865884214575979","6993614660524502152","9223372036854775807","9223372036854775807","9223372036854775807","9223372036854775807"]}
+"""
+
+_aggregate_functions_quantilesExactHigh_Nullable_Int8_ = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_int8_)":[-73,4,72,127,127,127,127]}
+"""
+
+_aggregate_functions_quantilesExactHigh_Nullable_UInt16_ = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint16_)":[24084,31453,49792,65535,65535,65535,65535]}
+"""
+
+_aggregate_functions_quantilesExactHigh_Nullable_UInt32_ = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint32_)":[1216888864,1575536824,3484062849,4294967295,4294967295,4294967295,4294967295]}
+"""
+
+_aggregate_functions_quantilesExactHigh_Nullable_UInt64_ = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint64_)":["7107144574783571298","15756926212117227055","17402344381158020677","18446744073709551615","18446744073709551615","18446744073709551615","18446744073709551615"]}
+"""
+
+_aggregate_functions_quantilesExactHigh_Nullable_UInt8_ = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(nullable_uint8_)":[28,65,197,255,255,255,255]}
+"""
+
+_aggregate_functions_quantilesExactHigh_UInt16 = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint16)":[7572,26244,37073,65535,65535,65535,65535]}
+"""
+
+_aggregate_functions_quantilesExactHigh_UInt32 = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint32)":[906420991,2770515842,3229885707,4294967295,4294967295,4294967295,4294967295]}
+"""
+
+_aggregate_functions_quantilesExactHigh_UInt64 = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint64)":["3066499079937163853","8959741089313179321","16708105131877516882","18446744073709551615","18446744073709551615","18446744073709551615","18446744073709551615"]}
+"""
+
+_aggregate_functions_quantilesExactHigh_UInt8 = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(uint8)":[24,163,201,255,255,255,255]}
+"""
+
+_aggregate_functions_quantilesExactHigh__inf = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(x)":[0,4,5,6.7,6.7,6.7,6.7]}
+"""
+
+_aggregate_functions_quantilesExactHigh_constant = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(1)":[1,1,1,1,1,1,1]}
+"""
+
+_aggregate_functions_quantilesExactHigh_doc_example = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(x)":[1,3,4,5,5,5,5]}
+"""
+
+_aggregate_functions_quantilesExactHigh_inf = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(x)":[2.3,5,6.7,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesExactHigh_inf___inf__nan = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(x)":[2.3,5,6.7,null,null,null,null]}
+"""
+
+_aggregate_functions_quantilesExactHigh_nan = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(x)":[2.3,4,5,6.7,6.7,6.7,6.7]}
+"""
+
+_aggregate_functions_quantilesExactHigh_return_type = r"""
+{"toTypeName(quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(number))":"Array(UInt64)"}
+"""
+
+_aggregate_functions_quantilesExactHigh_single_NULL_value = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(x)":[0,0,0,0,0,0,0]}
+"""
+
+_aggregate_functions_quantilesExactHigh_single_row = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(number)":["0","0","0","0","0","0","0"]}
+"""
+
+_aggregate_functions_quantilesExactHigh_some_negative_values = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(minus(number, 5))":["-2","1","3","5","5","5","5"]}
+"""
+
+_aggregate_functions_quantilesExactHigh_with_group_by = r"""
+{"even":0,"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(number)":["2","4","6","8","8","8","8"]}
+{"even":1,"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(number)":["3","5","7","9","9","9","9"]}
+"""
+
+_aggregate_functions_quantilesExactHigh_zero_rows = r"""
+{"quantilesExactHigh(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(number)":["0","0","0","0","0","0","0"]}
 """
 

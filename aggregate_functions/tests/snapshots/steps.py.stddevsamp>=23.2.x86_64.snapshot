@@ -1,74 +1,9 @@
-_aggregate_functions_stddevSamp_constant = r"""
-{"stddevSamp(1)":null}
+_aggregate_functions_stddevSamp_Float32 = r"""
+{"stddevSamp(float32)":0}
 """
 
-_aggregate_functions_stddevSamp_zero_rows = r"""
-{"stddevSamp(number)":null}
-"""
-
-_aggregate_functions_stddevSamp_single_row = r"""
-{"stddevSamp(number)":null}
-"""
-
-_aggregate_functions_stddevSamp_with_group_by = r"""
-{"even":0,"stddevSamp(number)":3.1622776601683795}
-{"even":1,"stddevSamp(number)":3.1622776601683795}
-"""
-
-_aggregate_functions_stddevSamp_some_negative_values = r"""
-{"stddevSamp(minus(number, 5))":3.0276503540974917}
-"""
-
-_aggregate_functions_stddevSamp_NULL_value_handling = r"""
-{"stddevSamp(x)":2.0736441353327724}
-"""
-
-_aggregate_functions_stddevSamp_single_NULL_value = r"""
-{"stddevSamp(x)":null}
-"""
-
-_aggregate_functions_stddevSamp_return_type = r"""
-{"toTypeName(stddevSamp(number))":"Float64"}
-"""
-
-_aggregate_functions_stddevSamp_doc_example = r"""
-{"stddevSamp(x)":1.8708286933869707}
-"""
-
-_aggregate_functions_stddevSamp_inf = r"""
-{"stddevSamp(x)":0}
-"""
-
-_aggregate_functions_stddevSamp__inf = r"""
-{"stddevSamp(x)":0}
-"""
-
-_aggregate_functions_stddevSamp_nan = r"""
-{"stddevSamp(x)":0}
-"""
-
-_aggregate_functions_stddevSamp_inf___inf__nan = r"""
-{"stddevSamp(x)":0}
-"""
-
-_aggregate_functions_stddevSamp_UInt8 = r"""
-{"stddevSamp(uint8)":93.65901510859011}
-"""
-
-_aggregate_functions_stddevSamp_UInt16 = r"""
-{"stddevSamp(uint16)":21963.81116518716}
-"""
-
-_aggregate_functions_stddevSamp_UInt32 = r"""
-{"stddevSamp(uint32)":1546478363.1321762}
-"""
-
-_aggregate_functions_stddevSamp_UInt64 = r"""
-{"stddevSamp(uint64)":7463488146179071000}
-"""
-
-_aggregate_functions_stddevSamp_Int8 = r"""
-{"stddevSamp(int8)":98.9202259960576}
+_aggregate_functions_stddevSamp_Float64 = r"""
+{"stddevSamp(float64)":0}
 """
 
 _aggregate_functions_stddevSamp_Int16 = r"""
@@ -83,72 +18,16 @@ _aggregate_functions_stddevSamp_Int64 = r"""
 {"stddevSamp(int64)":5115884603912632000}
 """
 
-_aggregate_functions_stddevSamp_Float32 = r"""
-{"stddevSamp(float32)":0}
+_aggregate_functions_stddevSamp_Int8 = r"""
+{"stddevSamp(int8)":98.9202259960576}
 """
 
-_aggregate_functions_stddevSamp_Float64 = r"""
-{"stddevSamp(float64)":0}
+_aggregate_functions_stddevSamp_LowCardinality_Float32_ = r"""
+{"stddevSamp(lowcardinality_float32_)":0}
 """
 
-_aggregate_functions_stddevSamp_Nullable_UInt8_ = r"""
-{"stddevSamp(nullable_uint8_)":101.76620810028794}
-"""
-
-_aggregate_functions_stddevSamp_Nullable_UInt16_ = r"""
-{"stddevSamp(nullable_uint16_)":22949.071608551934}
-"""
-
-_aggregate_functions_stddevSamp_Nullable_UInt32_ = r"""
-{"stddevSamp(nullable_uint32_)":1663882701.1819515}
-"""
-
-_aggregate_functions_stddevSamp_Nullable_UInt64_ = r"""
-{"stddevSamp(nullable_uint64_)":7437291265129714000}
-"""
-
-_aggregate_functions_stddevSamp_Nullable_Int8_ = r"""
-{"stddevSamp(nullable_int8_)":89.58298449544485}
-"""
-
-_aggregate_functions_stddevSamp_Nullable_Int16_ = r"""
-{"stddevSamp(nullable_int16_)":22009.366256210105}
-"""
-
-_aggregate_functions_stddevSamp_Nullable_Int32_ = r"""
-{"stddevSamp(nullable_int32_)":1423135692.07559}
-"""
-
-_aggregate_functions_stddevSamp_Nullable_Int64_ = r"""
-{"stddevSamp(nullable_int64_)":6778068397111039000}
-"""
-
-_aggregate_functions_stddevSamp_Nullable_Float32_ = r"""
-{"stddevSamp(nullable_float32_)":0}
-"""
-
-_aggregate_functions_stddevSamp_Nullable_Float64_ = r"""
-{"stddevSamp(nullable_float64_)":0}
-"""
-
-_aggregate_functions_stddevSamp_LowCardinality_UInt8_ = r"""
-{"stddevSamp(lowcardinality_uint8_)":104.71023509348709}
-"""
-
-_aggregate_functions_stddevSamp_LowCardinality_UInt16_ = r"""
-{"stddevSamp(lowcardinality_uint16_)":26129.987510308707}
-"""
-
-_aggregate_functions_stddevSamp_LowCardinality_UInt32_ = r"""
-{"stddevSamp(lowcardinality_uint32_)":1587294662.6894317}
-"""
-
-_aggregate_functions_stddevSamp_LowCardinality_UInt64_ = r"""
-{"stddevSamp(lowcardinality_uint64_)":7814153815290251000}
-"""
-
-_aggregate_functions_stddevSamp_LowCardinality_Int8_ = r"""
-{"stddevSamp(lowcardinality_int8_)":90.4328480144245}
+_aggregate_functions_stddevSamp_LowCardinality_Float64_ = r"""
+{"stddevSamp(lowcardinality_float64_)":0}
 """
 
 _aggregate_functions_stddevSamp_LowCardinality_Int16_ = r"""
@@ -163,32 +42,16 @@ _aggregate_functions_stddevSamp_LowCardinality_Int64_ = r"""
 {"stddevSamp(lowcardinality_int64_)":6343832158702280000}
 """
 
-_aggregate_functions_stddevSamp_LowCardinality_Float32_ = r"""
-{"stddevSamp(lowcardinality_float32_)":0}
+_aggregate_functions_stddevSamp_LowCardinality_Int8_ = r"""
+{"stddevSamp(lowcardinality_int8_)":90.4328480144245}
 """
 
-_aggregate_functions_stddevSamp_LowCardinality_Float64_ = r"""
-{"stddevSamp(lowcardinality_float64_)":0}
+_aggregate_functions_stddevSamp_LowCardinality_Nullable_Float32__ = r"""
+{"stddevSamp(lowcardinality_nullable_float32__)":0}
 """
 
-_aggregate_functions_stddevSamp_LowCardinality_Nullable_UInt8__ = r"""
-{"stddevSamp(lowcardinality_nullable_uint8__)":77.95475895956862}
-"""
-
-_aggregate_functions_stddevSamp_LowCardinality_Nullable_UInt16__ = r"""
-{"stddevSamp(lowcardinality_nullable_uint16__)":25750.473432541003}
-"""
-
-_aggregate_functions_stddevSamp_LowCardinality_Nullable_UInt32__ = r"""
-{"stddevSamp(lowcardinality_nullable_uint32__)":1412176414.59253}
-"""
-
-_aggregate_functions_stddevSamp_LowCardinality_Nullable_UInt64__ = r"""
-{"stddevSamp(lowcardinality_nullable_uint64__)":7351770730073589000}
-"""
-
-_aggregate_functions_stddevSamp_LowCardinality_Nullable_Int8__ = r"""
-{"stddevSamp(lowcardinality_nullable_int8__)":102.35355391973451}
+_aggregate_functions_stddevSamp_LowCardinality_Nullable_Float64__ = r"""
+{"stddevSamp(lowcardinality_nullable_float64__)":0}
 """
 
 _aggregate_functions_stddevSamp_LowCardinality_Nullable_Int16__ = r"""
@@ -203,11 +66,148 @@ _aggregate_functions_stddevSamp_LowCardinality_Nullable_Int64__ = r"""
 {"stddevSamp(lowcardinality_nullable_int64__)":6981312787042097000}
 """
 
-_aggregate_functions_stddevSamp_LowCardinality_Nullable_Float32__ = r"""
-{"stddevSamp(lowcardinality_nullable_float32__)":0}
+_aggregate_functions_stddevSamp_LowCardinality_Nullable_Int8__ = r"""
+{"stddevSamp(lowcardinality_nullable_int8__)":102.35355391973451}
 """
 
-_aggregate_functions_stddevSamp_LowCardinality_Nullable_Float64__ = r"""
-{"stddevSamp(lowcardinality_nullable_float64__)":0}
+_aggregate_functions_stddevSamp_LowCardinality_Nullable_UInt16__ = r"""
+{"stddevSamp(lowcardinality_nullable_uint16__)":25750.473432541003}
+"""
+
+_aggregate_functions_stddevSamp_LowCardinality_Nullable_UInt32__ = r"""
+{"stddevSamp(lowcardinality_nullable_uint32__)":1412176414.59253}
+"""
+
+_aggregate_functions_stddevSamp_LowCardinality_Nullable_UInt64__ = r"""
+{"stddevSamp(lowcardinality_nullable_uint64__)":7351770730073589000}
+"""
+
+_aggregate_functions_stddevSamp_LowCardinality_Nullable_UInt8__ = r"""
+{"stddevSamp(lowcardinality_nullable_uint8__)":77.95475895956862}
+"""
+
+_aggregate_functions_stddevSamp_LowCardinality_UInt16_ = r"""
+{"stddevSamp(lowcardinality_uint16_)":26129.987510308707}
+"""
+
+_aggregate_functions_stddevSamp_LowCardinality_UInt32_ = r"""
+{"stddevSamp(lowcardinality_uint32_)":1587294662.6894317}
+"""
+
+_aggregate_functions_stddevSamp_LowCardinality_UInt64_ = r"""
+{"stddevSamp(lowcardinality_uint64_)":7814153815290251000}
+"""
+
+_aggregate_functions_stddevSamp_LowCardinality_UInt8_ = r"""
+{"stddevSamp(lowcardinality_uint8_)":104.71023509348709}
+"""
+
+_aggregate_functions_stddevSamp_NULL_value_handling = r"""
+{"stddevSamp(x)":2.0736441353327724}
+"""
+
+_aggregate_functions_stddevSamp_Nullable_Float32_ = r"""
+{"stddevSamp(nullable_float32_)":0}
+"""
+
+_aggregate_functions_stddevSamp_Nullable_Float64_ = r"""
+{"stddevSamp(nullable_float64_)":0}
+"""
+
+_aggregate_functions_stddevSamp_Nullable_Int16_ = r"""
+{"stddevSamp(nullable_int16_)":22009.366256210105}
+"""
+
+_aggregate_functions_stddevSamp_Nullable_Int32_ = r"""
+{"stddevSamp(nullable_int32_)":1423135692.07559}
+"""
+
+_aggregate_functions_stddevSamp_Nullable_Int64_ = r"""
+{"stddevSamp(nullable_int64_)":6778068397111039000}
+"""
+
+_aggregate_functions_stddevSamp_Nullable_Int8_ = r"""
+{"stddevSamp(nullable_int8_)":89.58298449544485}
+"""
+
+_aggregate_functions_stddevSamp_Nullable_UInt16_ = r"""
+{"stddevSamp(nullable_uint16_)":22949.071608551934}
+"""
+
+_aggregate_functions_stddevSamp_Nullable_UInt32_ = r"""
+{"stddevSamp(nullable_uint32_)":1663882701.1819515}
+"""
+
+_aggregate_functions_stddevSamp_Nullable_UInt64_ = r"""
+{"stddevSamp(nullable_uint64_)":7437291265129714000}
+"""
+
+_aggregate_functions_stddevSamp_Nullable_UInt8_ = r"""
+{"stddevSamp(nullable_uint8_)":101.76620810028794}
+"""
+
+_aggregate_functions_stddevSamp_UInt16 = r"""
+{"stddevSamp(uint16)":21963.81116518716}
+"""
+
+_aggregate_functions_stddevSamp_UInt32 = r"""
+{"stddevSamp(uint32)":1546478363.1321762}
+"""
+
+_aggregate_functions_stddevSamp_UInt64 = r"""
+{"stddevSamp(uint64)":7463488146179071000}
+"""
+
+_aggregate_functions_stddevSamp_UInt8 = r"""
+{"stddevSamp(uint8)":93.65901510859011}
+"""
+
+_aggregate_functions_stddevSamp__inf = r"""
+{"stddevSamp(x)":0}
+"""
+
+_aggregate_functions_stddevSamp_constant = r"""
+{"stddevSamp(1)":null}
+"""
+
+_aggregate_functions_stddevSamp_doc_example = r"""
+{"stddevSamp(x)":1.8708286933869707}
+"""
+
+_aggregate_functions_stddevSamp_inf = r"""
+{"stddevSamp(x)":0}
+"""
+
+_aggregate_functions_stddevSamp_inf___inf__nan = r"""
+{"stddevSamp(x)":0}
+"""
+
+_aggregate_functions_stddevSamp_nan = r"""
+{"stddevSamp(x)":0}
+"""
+
+_aggregate_functions_stddevSamp_return_type = r"""
+{"toTypeName(stddevSamp(number))":"Float64"}
+"""
+
+_aggregate_functions_stddevSamp_single_NULL_value = r"""
+{"stddevSamp(x)":null}
+"""
+
+_aggregate_functions_stddevSamp_single_row = r"""
+{"stddevSamp(number)":null}
+"""
+
+_aggregate_functions_stddevSamp_some_negative_values = r"""
+{"stddevSamp(minus(number, 5))":3.0276503540974917}
+"""
+
+_aggregate_functions_stddevSamp_with_group_by = r"""
+{"even":0,"stddevSamp(number)":3.1622776601683795}
+{"even":1,"stddevSamp(number)":3.1622776601683795}
+"""
+
+_aggregate_functions_stddevSamp_zero_rows = r"""
+{"stddevSamp(number)":null}
 """
 

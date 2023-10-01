@@ -1,74 +1,9 @@
-_aggregate_functions_state_varSampState_constant = r"""
-{"hex(varSampState(1))":"000000000000F03F000000000000F03F000000000000F03F"}
+_aggregate_functions_state_varSampState_Float32 = r"""
+{"hex(varSampState(float32))":"00002041000080FF0000807F"}
 """
 
-_aggregate_functions_state_varSampState_zero_rows = r"""
-{"hex(varSampState(number))":"000000000000000000000000000000000000000000000000"}
-"""
-
-_aggregate_functions_state_varSampState_single_row = r"""
-{"hex(varSampState(number))":"000000000000F03F00000000000000000000000000000000"}
-"""
-
-_aggregate_functions_state_varSampState_with_group_by = r"""
-{"even":0,"hex(varSampState(number))":"000000000000144000000000000034400000000000005E40"}
-{"even":1,"hex(varSampState(number))":"000000000000144000000000000039400000000000A06440"}
-"""
-
-_aggregate_functions_state_varSampState_some_negative_values = r"""
-{"hex(varSampState(minus(number, 5)))":"000000000000244000000000000014400000000000405540"}
-"""
-
-_aggregate_functions_state_varSampState_NULL_value_handling = r"""
-{"hex(varSampState(x))":"0100000000000014400000000000002A400000000000804940"}
-"""
-
-_aggregate_functions_state_varSampState_single_NULL_value = r"""
-{"hex(varSampState(x))":"00"}
-"""
-
-_aggregate_functions_state_varSampState_return_type = r"""
-{"toTypeName(hex(varSampState(number)))":"String"}
-"""
-
-_aggregate_functions_state_varSampState_doc_example = r"""
-{"hex(varSampState(x))":"00000000000018400000000000002E400000000000804B40"}
-"""
-
-_aggregate_functions_state_varSampState_inf = r"""
-{"hex(varSampState(x))":"0000000000001840000000000000F07F000000000000F07F"}
-"""
-
-_aggregate_functions_state_varSampState__inf = r"""
-{"hex(varSampState(x))":"0000000000001840000000000000F0FF000000000000F07F"}
-"""
-
-_aggregate_functions_state_varSampState_nan = r"""
-{"hex(varSampState(x))":"0000000000001840000000000000F87F000000000000F87F"}
-"""
-
-_aggregate_functions_state_varSampState_inf___inf__nan = r"""
-{"hex(varSampState(x))":"0000000000001840000000000000F87F000000000000F87F"}
-"""
-
-_aggregate_functions_state_varSampState_UInt8 = r"""
-{"hex(varSampState(uint8))":"0000000000002440000000000034944000000000A80B0E41"}
-"""
-
-_aggregate_functions_state_varSampState_UInt16 = r"""
-{"hex(varSampState(uint16))":"000000000000244000000000D8F30E410000C89A0F100442"}
-"""
-
-_aggregate_functions_state_varSampState_UInt32 = r"""
-{"hex(varSampState(uint32))":"000000000000244000003CE81CB215428A200EC85B6F1044"}
-"""
-
-_aggregate_functions_state_varSampState_UInt64 = r"""
-{"hex(varSampState(uint64))":"0000000000002440826D1DBA536A13445AA1782F51A20E48"}
-"""
-
-_aggregate_functions_state_varSampState_Int8 = r"""
-{"hex(varSampState(int8))":"00000000000024400000000000804940000000007090F540"}
+_aggregate_functions_state_varSampState_Float64 = r"""
+{"hex(varSampState(float64))":"00000000000024401FD01440BEE4B4FF000000000000F07F"}
 """
 
 _aggregate_functions_state_varSampState_Int16 = r"""
@@ -83,72 +18,16 @@ _aggregate_functions_state_varSampState_Int64 = r"""
 {"hex(varSampState(int64))":"0000000000002440A486C64D5FBCE043768485EABD06E747"}
 """
 
-_aggregate_functions_state_varSampState_Float32 = r"""
-{"hex(varSampState(float32))":"00002041000080FF0000807F"}
+_aggregate_functions_state_varSampState_Int8 = r"""
+{"hex(varSampState(int8))":"00000000000024400000000000804940000000007090F540"}
 """
 
-_aggregate_functions_state_varSampState_Float64 = r"""
-{"hex(varSampState(float64))":"00000000000024401FD01440BEE4B4FF000000000000F07F"}
+_aggregate_functions_state_varSampState_LowCardinality_Float32_ = r"""
+{"hex(varSampState(lowcardinality_float32_))":"00002041000080FF0000807F"}
 """
 
-_aggregate_functions_state_varSampState_Nullable_UInt8_ = r"""
-{"hex(varSampState(nullable_uint8_))":"010000000000002240000000000070904000000000D01F0941"}
-"""
-
-_aggregate_functions_state_varSampState_Nullable_UInt16_ = r"""
-{"hex(varSampState(nullable_uint16_))":"01000000000000224000000000909B1241000050B96C150B42"}
-"""
-
-_aggregate_functions_state_varSampState_Nullable_UInt32_ = r"""
-{"hex(varSampState(nullable_uint32_))":"010000000000002240000038495CF31142F9D542C0AE810B44"}
-"""
-
-_aggregate_functions_state_varSampState_Nullable_UInt64_ = r"""
-{"hex(varSampState(nullable_uint64_))":"010000000000002240AFCD1921F86716444E0DD8BDA4251348"}
-"""
-
-_aggregate_functions_state_varSampState_Nullable_Int8_ = r"""
-{"hex(varSampState(nullable_int8_))":"010000000000002240000000000000314000000000205DEF40"}
-"""
-
-_aggregate_functions_state_varSampState_Nullable_Int16_ = r"""
-{"hex(varSampState(nullable_int16_))":"01000000000000224000000000C001DAC000002048D875ED41"}
-"""
-
-_aggregate_functions_state_varSampState_Nullable_Int32_ = r"""
-{"hex(varSampState(nullable_int32_))":"0100000000000022400000F0147541F04194F39C6EE9C6EF43"}
-"""
-
-_aggregate_functions_state_varSampState_Nullable_Int64_ = r"""
-{"hex(varSampState(nullable_int64_))":"010000000000002240DC980956B98ECB43C805563E2B5DF147"}
-"""
-
-_aggregate_functions_state_varSampState_Nullable_Float32_ = r"""
-{"hex(varSampState(nullable_float32_))":"0100001041000080FF0000807F"}
-"""
-
-_aggregate_functions_state_varSampState_Nullable_Float64_ = r"""
-{"hex(varSampState(nullable_float64_))":"0100000000000022400F419A031D3B62FE000000000000F07F"}
-"""
-
-_aggregate_functions_state_varSampState_LowCardinality_UInt8_ = r"""
-{"hex(varSampState(lowcardinality_uint8_))":"00000000000024400000000000B49740000000009C111441"}
-"""
-
-_aggregate_functions_state_varSampState_LowCardinality_UInt16_ = r"""
-{"hex(varSampState(lowcardinality_uint16_))":"00000000000024400000000080F613410000C0E62C5F0F42"}
-"""
-
-_aggregate_functions_state_varSampState_LowCardinality_UInt32_ = r"""
-{"hex(varSampState(lowcardinality_uint32_))":"0000000000002440000070D60C820F42C4A967254E3E0644"}
-"""
-
-_aggregate_functions_state_varSampState_LowCardinality_UInt64_ = r"""
-{"hex(varSampState(lowcardinality_uint64_))":"000000000000244080C7575EA1AF1344B94AE0FFFF251048"}
-"""
-
-_aggregate_functions_state_varSampState_LowCardinality_Int8_ = r"""
-{"hex(varSampState(lowcardinality_int8_))":"00000000000024400000000000E067400000000030DCF240"}
+_aggregate_functions_state_varSampState_LowCardinality_Float64_ = r"""
+{"hex(varSampState(lowcardinality_float64_))":"000000000000244069558A29999EFE75000000000000F07F"}
 """
 
 _aggregate_functions_state_varSampState_LowCardinality_Int16_ = r"""
@@ -163,32 +42,16 @@ _aggregate_functions_state_varSampState_LowCardinality_Int64_ = r"""
 {"hex(varSampState(lowcardinality_int64_))":"00000000000024404195A236CAF2EB436EE89B493E40F247"}
 """
 
-_aggregate_functions_state_varSampState_LowCardinality_Float32_ = r"""
-{"hex(varSampState(lowcardinality_float32_))":"00002041000080FF0000807F"}
+_aggregate_functions_state_varSampState_LowCardinality_Int8_ = r"""
+{"hex(varSampState(lowcardinality_int8_))":"00000000000024400000000000E067400000000030DCF240"}
 """
 
-_aggregate_functions_state_varSampState_LowCardinality_Float64_ = r"""
-{"hex(varSampState(lowcardinality_float64_))":"000000000000244069558A29999EFE75000000000000F07F"}
+_aggregate_functions_state_varSampState_LowCardinality_Nullable_Float32__ = r"""
+{"hex(varSampState(lowcardinality_nullable_float32__))":"010000104130CC317F0000807F"}
 """
 
-_aggregate_functions_state_varSampState_LowCardinality_Nullable_UInt8__ = r"""
-{"hex(varSampState(lowcardinality_nullable_uint8__))":"0100000000000022400000000000D894400000000040120E41"}
-"""
-
-_aggregate_functions_state_varSampState_LowCardinality_Nullable_UInt16__ = r"""
-{"hex(varSampState(lowcardinality_nullable_uint16__))":"01000000000000224000000000A0D50D41000000B9423E0642"}
-"""
-
-_aggregate_functions_state_varSampState_LowCardinality_Nullable_UInt32__ = r"""
-{"hex(varSampState(lowcardinality_nullable_uint32__))":"0100000000000022400000400731781542C2DCDF9169431044"}
-"""
-
-_aggregate_functions_state_varSampState_LowCardinality_Nullable_UInt64__ = r"""
-{"hex(varSampState(lowcardinality_nullable_uint64__))":"0100000000000022406111118E70FB10443F520B79F42F0A48"}
-"""
-
-_aggregate_functions_state_varSampState_LowCardinality_Nullable_Int8__ = r"""
-{"hex(varSampState(lowcardinality_nullable_int8__))":"01000000000000224000000000000058400000000020B6F440"}
+_aggregate_functions_state_varSampState_LowCardinality_Nullable_Float64__ = r"""
+{"hex(varSampState(lowcardinality_nullable_float64__))":"010000000000002240C3A355CA77F1F07D000000000000F07F"}
 """
 
 _aggregate_functions_state_varSampState_LowCardinality_Nullable_Int16__ = r"""
@@ -203,11 +66,148 @@ _aggregate_functions_state_varSampState_LowCardinality_Nullable_Int64__ = r"""
 {"hex(varSampState(lowcardinality_nullable_int64__))":"010000000000002240E85D0006C7F6E8433C7045BA586AF347"}
 """
 
-_aggregate_functions_state_varSampState_LowCardinality_Nullable_Float32__ = r"""
-{"hex(varSampState(lowcardinality_nullable_float32__))":"010000104130CC317F0000807F"}
+_aggregate_functions_state_varSampState_LowCardinality_Nullable_Int8__ = r"""
+{"hex(varSampState(lowcardinality_nullable_int8__))":"01000000000000224000000000000058400000000020B6F440"}
 """
 
-_aggregate_functions_state_varSampState_LowCardinality_Nullable_Float64__ = r"""
-{"hex(varSampState(lowcardinality_nullable_float64__))":"010000000000002240C3A355CA77F1F07D000000000000F07F"}
+_aggregate_functions_state_varSampState_LowCardinality_Nullable_UInt16__ = r"""
+{"hex(varSampState(lowcardinality_nullable_uint16__))":"01000000000000224000000000A0D50D41000000B9423E0642"}
+"""
+
+_aggregate_functions_state_varSampState_LowCardinality_Nullable_UInt32__ = r"""
+{"hex(varSampState(lowcardinality_nullable_uint32__))":"0100000000000022400000400731781542C2DCDF9169431044"}
+"""
+
+_aggregate_functions_state_varSampState_LowCardinality_Nullable_UInt64__ = r"""
+{"hex(varSampState(lowcardinality_nullable_uint64__))":"0100000000000022406111118E70FB10443F520B79F42F0A48"}
+"""
+
+_aggregate_functions_state_varSampState_LowCardinality_Nullable_UInt8__ = r"""
+{"hex(varSampState(lowcardinality_nullable_uint8__))":"0100000000000022400000000000D894400000000040120E41"}
+"""
+
+_aggregate_functions_state_varSampState_LowCardinality_UInt16_ = r"""
+{"hex(varSampState(lowcardinality_uint16_))":"00000000000024400000000080F613410000C0E62C5F0F42"}
+"""
+
+_aggregate_functions_state_varSampState_LowCardinality_UInt32_ = r"""
+{"hex(varSampState(lowcardinality_uint32_))":"0000000000002440000070D60C820F42C4A967254E3E0644"}
+"""
+
+_aggregate_functions_state_varSampState_LowCardinality_UInt64_ = r"""
+{"hex(varSampState(lowcardinality_uint64_))":"000000000000244080C7575EA1AF1344B94AE0FFFF251048"}
+"""
+
+_aggregate_functions_state_varSampState_LowCardinality_UInt8_ = r"""
+{"hex(varSampState(lowcardinality_uint8_))":"00000000000024400000000000B49740000000009C111441"}
+"""
+
+_aggregate_functions_state_varSampState_NULL_value_handling = r"""
+{"hex(varSampState(x))":"0100000000000014400000000000002A400000000000804940"}
+"""
+
+_aggregate_functions_state_varSampState_Nullable_Float32_ = r"""
+{"hex(varSampState(nullable_float32_))":"0100001041000080FF0000807F"}
+"""
+
+_aggregate_functions_state_varSampState_Nullable_Float64_ = r"""
+{"hex(varSampState(nullable_float64_))":"0100000000000022400F419A031D3B62FE000000000000F07F"}
+"""
+
+_aggregate_functions_state_varSampState_Nullable_Int16_ = r"""
+{"hex(varSampState(nullable_int16_))":"01000000000000224000000000C001DAC000002048D875ED41"}
+"""
+
+_aggregate_functions_state_varSampState_Nullable_Int32_ = r"""
+{"hex(varSampState(nullable_int32_))":"0100000000000022400000F0147541F04194F39C6EE9C6EF43"}
+"""
+
+_aggregate_functions_state_varSampState_Nullable_Int64_ = r"""
+{"hex(varSampState(nullable_int64_))":"010000000000002240DC980956B98ECB43C805563E2B5DF147"}
+"""
+
+_aggregate_functions_state_varSampState_Nullable_Int8_ = r"""
+{"hex(varSampState(nullable_int8_))":"010000000000002240000000000000314000000000205DEF40"}
+"""
+
+_aggregate_functions_state_varSampState_Nullable_UInt16_ = r"""
+{"hex(varSampState(nullable_uint16_))":"01000000000000224000000000909B1241000050B96C150B42"}
+"""
+
+_aggregate_functions_state_varSampState_Nullable_UInt32_ = r"""
+{"hex(varSampState(nullable_uint32_))":"010000000000002240000038495CF31142F9D542C0AE810B44"}
+"""
+
+_aggregate_functions_state_varSampState_Nullable_UInt64_ = r"""
+{"hex(varSampState(nullable_uint64_))":"010000000000002240AFCD1921F86716444E0DD8BDA4251348"}
+"""
+
+_aggregate_functions_state_varSampState_Nullable_UInt8_ = r"""
+{"hex(varSampState(nullable_uint8_))":"010000000000002240000000000070904000000000D01F0941"}
+"""
+
+_aggregate_functions_state_varSampState_UInt16 = r"""
+{"hex(varSampState(uint16))":"000000000000244000000000D8F30E410000C89A0F100442"}
+"""
+
+_aggregate_functions_state_varSampState_UInt32 = r"""
+{"hex(varSampState(uint32))":"000000000000244000003CE81CB215428A200EC85B6F1044"}
+"""
+
+_aggregate_functions_state_varSampState_UInt64 = r"""
+{"hex(varSampState(uint64))":"0000000000002440826D1DBA536A13445AA1782F51A20E48"}
+"""
+
+_aggregate_functions_state_varSampState_UInt8 = r"""
+{"hex(varSampState(uint8))":"0000000000002440000000000034944000000000A80B0E41"}
+"""
+
+_aggregate_functions_state_varSampState__inf = r"""
+{"hex(varSampState(x))":"0000000000001840000000000000F0FF000000000000F07F"}
+"""
+
+_aggregate_functions_state_varSampState_constant = r"""
+{"hex(varSampState(1))":"000000000000F03F000000000000F03F000000000000F03F"}
+"""
+
+_aggregate_functions_state_varSampState_doc_example = r"""
+{"hex(varSampState(x))":"00000000000018400000000000002E400000000000804B40"}
+"""
+
+_aggregate_functions_state_varSampState_inf = r"""
+{"hex(varSampState(x))":"0000000000001840000000000000F07F000000000000F07F"}
+"""
+
+_aggregate_functions_state_varSampState_inf___inf__nan = r"""
+{"hex(varSampState(x))":"0000000000001840000000000000F87F000000000000F87F"}
+"""
+
+_aggregate_functions_state_varSampState_nan = r"""
+{"hex(varSampState(x))":"0000000000001840000000000000F87F000000000000F87F"}
+"""
+
+_aggregate_functions_state_varSampState_return_type = r"""
+{"toTypeName(hex(varSampState(number)))":"String"}
+"""
+
+_aggregate_functions_state_varSampState_single_NULL_value = r"""
+{"hex(varSampState(x))":"00"}
+"""
+
+_aggregate_functions_state_varSampState_single_row = r"""
+{"hex(varSampState(number))":"000000000000F03F00000000000000000000000000000000"}
+"""
+
+_aggregate_functions_state_varSampState_some_negative_values = r"""
+{"hex(varSampState(minus(number, 5)))":"000000000000244000000000000014400000000000405540"}
+"""
+
+_aggregate_functions_state_varSampState_with_group_by = r"""
+{"even":0,"hex(varSampState(number))":"000000000000144000000000000034400000000000005E40"}
+{"even":1,"hex(varSampState(number))":"000000000000144000000000000039400000000000A06440"}
+"""
+
+_aggregate_functions_state_varSampState_zero_rows = r"""
+{"hex(varSampState(number))":"000000000000000000000000000000000000000000000000"}
 """
 
