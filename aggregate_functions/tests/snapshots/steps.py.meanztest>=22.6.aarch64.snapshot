@@ -11,67 +11,67 @@ _aggregate_functions_meanZTest_constant = r"""
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_decimal128_38__lowcardinality_nullable_uint16__ = r"""
-{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, lowcardinality_nullable_uint16__)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377637,"confidence_interval_high":0.6510721288394371}}
+{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, lowcardinality_nullable_uint16__)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377635,"confidence_interval_high":0.651072128839437}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_decimal128_38__lowcardinality_nullable_uint32__ = r"""
-{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, lowcardinality_nullable_uint32__)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377637,"confidence_interval_high":0.6510721288394371}}
+{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, lowcardinality_nullable_uint32__)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377635,"confidence_interval_high":0.651072128839437}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_decimal128_38__lowcardinality_nullable_uint64__ = r"""
-{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, lowcardinality_nullable_uint64__)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377637,"confidence_interval_high":0.6510721288394371}}
+{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, lowcardinality_nullable_uint64__)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377635,"confidence_interval_high":0.651072128839437}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_decimal128_38__lowcardinality_nullable_uint8__ = r"""
-{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, lowcardinality_nullable_uint8__)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377637,"confidence_interval_high":0.6510721288394371}}
+{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, lowcardinality_nullable_uint8__)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377635,"confidence_interval_high":0.651072128839437}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_decimal128_38__lowcardinality_uint16_ = r"""
-{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, lowcardinality_uint16_)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377637,"confidence_interval_high":0.6510721288394371}}
+{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, lowcardinality_uint16_)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377635,"confidence_interval_high":0.651072128839437}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_decimal128_38__lowcardinality_uint32_ = r"""
-{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, lowcardinality_uint32_)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377637,"confidence_interval_high":0.6510721288394371}}
+{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, lowcardinality_uint32_)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377635,"confidence_interval_high":0.651072128839437}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_decimal128_38__lowcardinality_uint64_ = r"""
-{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, lowcardinality_uint64_)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377637,"confidence_interval_high":0.6510721288394371}}
+{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, lowcardinality_uint64_)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377635,"confidence_interval_high":0.651072128839437}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_decimal128_38__lowcardinality_uint8_ = r"""
-{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, lowcardinality_uint8_)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377637,"confidence_interval_high":0.6510721288394371}}
+{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, lowcardinality_uint8_)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377635,"confidence_interval_high":0.651072128839437}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_decimal128_38__nullable_uint16_ = r"""
-{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, nullable_uint16_)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377637,"confidence_interval_high":0.6510721288394371}}
+{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, nullable_uint16_)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377635,"confidence_interval_high":0.651072128839437}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_decimal128_38__nullable_uint32_ = r"""
-{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, nullable_uint32_)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377637,"confidence_interval_high":0.6510721288394371}}
+{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, nullable_uint32_)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377635,"confidence_interval_high":0.651072128839437}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_decimal128_38__nullable_uint64_ = r"""
-{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, nullable_uint64_)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377637,"confidence_interval_high":0.6510721288394371}}
+{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, nullable_uint64_)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377635,"confidence_interval_high":0.651072128839437}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_decimal128_38__nullable_uint8_ = r"""
-{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, nullable_uint8_)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377637,"confidence_interval_high":0.6510721288394371}}
+{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, nullable_uint8_)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377635,"confidence_interval_high":0.651072128839437}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_decimal128_38__uint16 = r"""
-{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, uint16)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377637,"confidence_interval_high":0.6510721288394371}}
+{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, uint16)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377635,"confidence_interval_high":0.651072128839437}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_decimal128_38__uint32 = r"""
-{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, uint32)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377637,"confidence_interval_high":0.6510721288394371}}
+{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, uint32)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377635,"confidence_interval_high":0.651072128839437}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_decimal128_38__uint64 = r"""
-{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, uint64)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377637,"confidence_interval_high":0.6510721288394371}}
+{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, uint64)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377635,"confidence_interval_high":0.651072128839437}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_decimal128_38__uint8 = r"""
-{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, uint8)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377637,"confidence_interval_high":0.6510721288394371}}
+{"meanZTest(0.7, 0.45, 0.95)(decimal128_38_, uint8)":{"z_statistic":-0.9384779877066124,"p_value":0.34799882404194193,"confidence_interval_low":-1.8474015219377635,"confidence_interval_high":0.651072128839437}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_float32_lowcardinality_nullable_uint16__ = r"""
@@ -1739,67 +1739,67 @@ _aggregate_functions_meanZTest_datatypes_permutations_lowcardinality_uint8__uint
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_nullable_decimal128_38___lowcardinality_nullable_uint16__ = r"""
-{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, lowcardinality_nullable_uint16__)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071257}}
+{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, lowcardinality_nullable_uint16__)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071256}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_nullable_decimal128_38___lowcardinality_nullable_uint32__ = r"""
-{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, lowcardinality_nullable_uint32__)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071257}}
+{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, lowcardinality_nullable_uint32__)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071256}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_nullable_decimal128_38___lowcardinality_nullable_uint64__ = r"""
-{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, lowcardinality_nullable_uint64__)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071257}}
+{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, lowcardinality_nullable_uint64__)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071256}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_nullable_decimal128_38___lowcardinality_nullable_uint8__ = r"""
-{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, lowcardinality_nullable_uint8__)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071257}}
+{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, lowcardinality_nullable_uint8__)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071256}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_nullable_decimal128_38___lowcardinality_uint16_ = r"""
-{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, lowcardinality_uint16_)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071257}}
+{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, lowcardinality_uint16_)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071256}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_nullable_decimal128_38___lowcardinality_uint32_ = r"""
-{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, lowcardinality_uint32_)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071257}}
+{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, lowcardinality_uint32_)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071256}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_nullable_decimal128_38___lowcardinality_uint64_ = r"""
-{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, lowcardinality_uint64_)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071257}}
+{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, lowcardinality_uint64_)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071256}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_nullable_decimal128_38___lowcardinality_uint8_ = r"""
-{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, lowcardinality_uint8_)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071257}}
+{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, lowcardinality_uint8_)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071256}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_nullable_decimal128_38___nullable_uint16_ = r"""
-{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, nullable_uint16_)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071257}}
+{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, nullable_uint16_)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071256}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_nullable_decimal128_38___nullable_uint32_ = r"""
-{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, nullable_uint32_)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071257}}
+{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, nullable_uint32_)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071256}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_nullable_decimal128_38___nullable_uint64_ = r"""
-{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, nullable_uint64_)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071257}}
+{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, nullable_uint64_)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071256}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_nullable_decimal128_38___nullable_uint8_ = r"""
-{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, nullable_uint8_)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071257}}
+{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, nullable_uint8_)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071256}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_nullable_decimal128_38___uint16 = r"""
-{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, uint16)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071257}}
+{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, uint16)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071256}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_nullable_decimal128_38___uint32 = r"""
-{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, uint32)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071257}}
+{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, uint32)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071256}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_nullable_decimal128_38___uint64 = r"""
-{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, uint64)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071257}}
+{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, uint64)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071256}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_nullable_decimal128_38___uint8 = r"""
-{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, uint8)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071257}}
+{"meanZTest(0.7, 0.45, 0.95)(nullable_decimal128_38__, uint8)":{"z_statistic":-1.2462012630688022,"p_value":0.21269051548227239,"confidence_interval_low":-2.043537395170075,"confidence_interval_high":0.4549362556071256}}
 """
 
 _aggregate_functions_meanZTest_datatypes_permutations_nullable_float32__lowcardinality_nullable_uint16__ = r"""
@@ -2735,7 +2735,7 @@ _aggregate_functions_meanZTest_single_value_in_0_population = r"""
 """
 
 _aggregate_functions_meanZTest_single_value_in_1_population = r"""
-{"meanZTest(0.7, 0.45, 0.95)(sample_data, sample_index)":{"z_statistic":-5.4679342611946025,"p_value":4.553106736990268e-8,"confidence_interval_low":-5.705476902582546,"confidence_interval_high":-2.6945230974174548}}
+{"meanZTest(0.7, 0.45, 0.95)(sample_data, sample_index)":{"z_statistic":-5.4679342611946025,"p_value":4.553106736990268e-8,"confidence_interval_low":-5.705476902582546,"confidence_interval_high":-2.694523097417455}}
 """
 
 _aggregate_functions_meanZTest_some_negative_values = r"""

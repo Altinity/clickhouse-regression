@@ -67,7 +67,7 @@ _aggregate_functions_stddevPopStable_LowCardinality_Nullable_Int64__ = r"""
 """
 
 _aggregate_functions_stddevPopStable_LowCardinality_Nullable_Int8__ = r"""
-{"stddevPopStable(lowcardinality_nullable_int8__)":96.49985607358295}
+{"stddevPopStable(lowcardinality_nullable_int8__)":96.49985607358293}
 """
 
 _aggregate_functions_stddevPopStable_LowCardinality_Nullable_UInt16__ = r"""
@@ -139,7 +139,7 @@ _aggregate_functions_stddevPopStable_Nullable_UInt32_ = r"""
 """
 
 _aggregate_functions_stddevPopStable_Nullable_UInt64_ = r"""
-{"stddevPopStable(nullable_uint64_)":7011945449643598000}
+{"stddevPopStable(nullable_uint64_)":7011945449643597000}
 """
 
 _aggregate_functions_stddevPopStable_Nullable_UInt8_ = r"""

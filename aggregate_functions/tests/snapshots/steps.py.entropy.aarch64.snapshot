@@ -103,7 +103,7 @@ _aggregate_functions_entropy_Array_LowCardinality_Int8__ = r"""
 """
 
 _aggregate_functions_entropy_Array_LowCardinality_Nullable_Bool___ = r"""
-{"entropy(array_lowcardinality_nullable_bool___)":1.360964047443681}
+{"entropy(array_lowcardinality_nullable_bool___)":1.3609640474436813}
 """
 
 _aggregate_functions_entropy_Array_LowCardinality_Nullable_DateTime___ = r"""
@@ -627,7 +627,7 @@ _aggregate_functions_entropy_Map_Bool_LowCardinality_Int8__ = r"""
 """
 
 _aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_Bool___ = r"""
-{"entropy(map_bool_lowcardinality_nullable_bool___)":1.6854752972273346}
+{"entropy(map_bool_lowcardinality_nullable_bool___)":1.6854752972273344}
 """
 
 _aggregate_functions_entropy_Map_Bool_LowCardinality_Nullable_DateTime___ = r"""
@@ -731,7 +731,7 @@ _aggregate_functions_entropy_Map_Bool_Map_String_LowCardinality_Float64___ = r""
 """
 
 _aggregate_functions_entropy_Map_Bool_Nullable_Bool__ = r"""
-{"entropy(map_bool_nullable_bool__)":1.721928094887362}
+{"entropy(map_bool_nullable_bool__)":1.7219280948873623}
 """
 
 _aggregate_functions_entropy_Map_Bool_Nullable_DateTime64_3___ = r"""
@@ -6359,7 +6359,7 @@ _aggregate_functions_entropy_NULL_for_all_rows = r"""
 """
 
 _aggregate_functions_entropy_Nullable_Bool_ = r"""
-{"entropy(nullable_bool_)":0.9910760598382222}
+{"entropy(nullable_bool_)":0.9910760598382221}
 """
 
 _aggregate_functions_entropy_Nullable_DateTime64_3__ = r"""
@@ -6487,7 +6487,7 @@ _aggregate_functions_entropy_constant = r"""
 """
 
 _aggregate_functions_entropy_first_non_NULL_value = r"""
-{"entropy(x)":1.584962500721156}
+{"entropy(x)":1.5849625007211563}
 """
 
 _aggregate_functions_entropy_inf = r"""
@@ -6511,7 +6511,7 @@ _aggregate_functions_entropy_string_that_ends_with__0 = r"""
 """
 
 _aggregate_functions_entropy_with_another_aggregate_function = r"""
-{"entropy(x)":1.584962500721156,"max(y)":"you"}
+{"entropy(x)":1.5849625007211563,"max(y)":"you"}
 """
 
 _aggregate_functions_entropy_with_another_aggregate_function_and_group_by = r"""
