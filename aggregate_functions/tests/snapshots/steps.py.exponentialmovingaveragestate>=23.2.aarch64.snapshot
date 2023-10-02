@@ -827,7 +827,7 @@ _aggregate_functions_state_exponentialMovingAverageState_example = r"""
 """
 
 _aggregate_functions_state_exponentialMovingAverageState_inf___inf__nan__inf__inf = r"""
-{"hex(exponentialMovingAverageState(0.5)(x, y))":"000000000000F8FF0000000000001040"}
+{"hex(exponentialMovingAverageState(0.5)(x, y))":"000000000000F87F0000000000001040"}
 """
 
 _aggregate_functions_state_exponentialMovingAverageState_inf___inf__nan__inf_inf = r"""
@@ -839,7 +839,7 @@ _aggregate_functions_state_exponentialMovingAverageState_inf___inf__nan__inf_nan
 """
 
 _aggregate_functions_state_exponentialMovingAverageState_inf___inf__nan_inf__inf = r"""
-{"hex(exponentialMovingAverageState(0.5)(x, y))":"000000000000F8FF0000000000001040"}
+{"hex(exponentialMovingAverageState(0.5)(x, y))":"000000000000F87F0000000000001040"}
 """
 
 _aggregate_functions_state_exponentialMovingAverageState_inf___inf__nan_inf_inf = r"""
