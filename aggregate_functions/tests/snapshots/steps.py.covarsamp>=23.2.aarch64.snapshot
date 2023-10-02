@@ -539,7 +539,7 @@ _aggregate_functions_covarSamp_datatypes_permutations_Nullable_Float32__UInt64 =
 """
 
 _aggregate_functions_covarSamp_datatypes_permutations_Nullable_Int64__Float32 = r"""
-{"covarSamp(nullable_int64_, float32)":2.6622527366333443e56}
+{"covarSamp(nullable_int64_, float32)":2.662252736633344e56}
 """
 
 _aggregate_functions_covarSamp_datatypes_permutations_Nullable_Int64__Int64 = r"""
