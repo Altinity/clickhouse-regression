@@ -46,6 +46,9 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_UserActions = Requirement(
         "| `MODIFY COLUMN`                | ``                                                                                                                           |\n"
         "| `MODIFY COLUMN REMOVE`         | ``                                                                                                                           |\n"
         "| `MATERIALIZE COLUMN`           | ``                                                                                                                           |\n"
+        "| `OPTIMIZE PARTITION`           | ``                                                                                                                           |\n"
+        "| `OPTIMIZE FINAL`               | ``                                                                                                                           |\n"
+        "| `OPTIMIZE DEDUPLICATE`         | ``                                                                                                                           |\n"
         "\n"
     ),
     link=None,
@@ -657,6 +660,9 @@ version: 1.0
 | `MODIFY COLUMN`                | ``                                                                                                                           |
 | `MODIFY COLUMN REMOVE`         | ``                                                                                                                           |
 | `MATERIALIZE COLUMN`           | ``                                                                                                                           |
+| `OPTIMIZE PARTITION`           | ``                                                                                                                           |
+| `OPTIMIZE FINAL`               | ``                                                                                                                           |
+| `OPTIMIZE DEDUPLICATE`         | ``                                                                                                                           |
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition
 version: 1.0
