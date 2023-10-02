@@ -175,7 +175,7 @@ _aggregate_functions_state_covarSampState_datatypes_Int16_Float64 = r"""
 """
 
 _aggregate_functions_state_covarSampState_datatypes_Int32_Float64 = r"""
-{"hex(covarSampState(int32, float64))":"0000000000002440000000E68F76A5C11FD01440BEE4B4FF000000000000F8FF"}
+{"hex(covarSampState(int32, float64))":"0000000000002440000000E68F76A5C11FD01440BEE4B4FF000000000000F87F"}
 """
 
 _aggregate_functions_state_covarSampState_datatypes_Int64_Float64 = r"""
@@ -235,7 +235,7 @@ _aggregate_functions_state_covarSampState_datatypes_LowCardinality_Nullable_Int8
 """
 
 _aggregate_functions_state_covarSampState_datatypes_LowCardinality_Nullable_UInt16___Float64 = r"""
-{"hex(covarSampState(lowcardinality_nullable_uint16__, float64))":"01000000000000224000000000A0D50D411FD01440BEE4B4FF000000000000F8FF"}
+{"hex(covarSampState(lowcardinality_nullable_uint16__, float64))":"01000000000000224000000000A0D50D411FD01440BEE4B4FF000000000000F07F"}
 """
 
 _aggregate_functions_state_covarSampState_datatypes_LowCardinality_Nullable_UInt32___Float64 = r"""

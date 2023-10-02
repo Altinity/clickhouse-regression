@@ -111,7 +111,7 @@ _aggregate_functions_state_simpleLinearRegressionState_datatypes_Float64_LowCard
 """
 
 _aggregate_functions_state_simpleLinearRegressionState_datatypes_Float64_LowCardinality_UInt8_ = r"""
-{"hex(simpleLinearRegressionState(float64, lowcardinality_uint8_))":"0A000000000000001FD01440BEE4B4FF0000000000B49740000000000000F07F000000000000F8FF"}
+{"hex(simpleLinearRegressionState(float64, lowcardinality_uint8_))":"0A000000000000001FD01440BEE4B4FF0000000000B49740000000000000F07F000000000000F87F"}
 """
 
 _aggregate_functions_state_simpleLinearRegressionState_datatypes_Float64_Nullable_Float32_ = r"""
@@ -151,11 +151,11 @@ _aggregate_functions_state_simpleLinearRegressionState_datatypes_Float64_Nullabl
 """
 
 _aggregate_functions_state_simpleLinearRegressionState_datatypes_Float64_Nullable_UInt8_ = r"""
-{"hex(simpleLinearRegressionState(float64, nullable_uint8_))":"0109000000000000001FD01440BEE4B4FF0000000000709040000000000000F07F000000000000F8FF"}
+{"hex(simpleLinearRegressionState(float64, nullable_uint8_))":"0109000000000000001FD01440BEE4B4FF0000000000709040000000000000F07F000000000000F07F"}
 """
 
 _aggregate_functions_state_simpleLinearRegressionState_datatypes_Float64_UInt16 = r"""
-{"hex(simpleLinearRegressionState(float64, uint16))":"0A000000000000001FD01440BEE4B4FF00000000D8F30E41000000000000F07F000000000000F8FF"}
+{"hex(simpleLinearRegressionState(float64, uint16))":"0A000000000000001FD01440BEE4B4FF00000000D8F30E41000000000000F07F000000000000F87F"}
 """
 
 _aggregate_functions_state_simpleLinearRegressionState_datatypes_Float64_UInt32 = r"""
@@ -163,7 +163,7 @@ _aggregate_functions_state_simpleLinearRegressionState_datatypes_Float64_UInt32 
 """
 
 _aggregate_functions_state_simpleLinearRegressionState_datatypes_Float64_UInt64 = r"""
-{"hex(simpleLinearRegressionState(float64, uint64))":"0A000000000000001FD01440BEE4B4FF826D1DBA536A1344000000000000F07F000000000000F8FF"}
+{"hex(simpleLinearRegressionState(float64, uint64))":"0A000000000000001FD01440BEE4B4FF826D1DBA536A1344000000000000F07F000000000000F87F"}
 """
 
 _aggregate_functions_state_simpleLinearRegressionState_datatypes_Float64_UInt8 = r"""
@@ -255,7 +255,7 @@ _aggregate_functions_state_simpleLinearRegressionState_datatypes_LowCardinality_
 """
 
 _aggregate_functions_state_simpleLinearRegressionState_datatypes_LowCardinality_UInt32__Float64 = r"""
-{"hex(simpleLinearRegressionState(lowcardinality_uint32_, float64))":"0A00000000000000000070D60C820F421FD01440BEE4B4FFC4A967254E3E0644000000000000F8FF"}
+{"hex(simpleLinearRegressionState(lowcardinality_uint32_, float64))":"0A00000000000000000070D60C820F421FD01440BEE4B4FFC4A967254E3E0644000000000000F87F"}
 """
 
 _aggregate_functions_state_simpleLinearRegressionState_datatypes_LowCardinality_UInt64__Float64 = r"""
@@ -263,7 +263,7 @@ _aggregate_functions_state_simpleLinearRegressionState_datatypes_LowCardinality_
 """
 
 _aggregate_functions_state_simpleLinearRegressionState_datatypes_LowCardinality_UInt8__Float64 = r"""
-{"hex(simpleLinearRegressionState(lowcardinality_uint8_, float64))":"0A000000000000000000000000B497401FD01440BEE4B4FF000000009C111441000000000000F8FF"}
+{"hex(simpleLinearRegressionState(lowcardinality_uint8_, float64))":"0A000000000000000000000000B497401FD01440BEE4B4FF000000009C111441000000000000F87F"}
 """
 
 _aggregate_functions_state_simpleLinearRegressionState_datatypes_Nullable_Float32__Float64 = r"""
@@ -295,7 +295,7 @@ _aggregate_functions_state_simpleLinearRegressionState_datatypes_Nullable_UInt16
 """
 
 _aggregate_functions_state_simpleLinearRegressionState_datatypes_Nullable_UInt32__Float64 = r"""
-{"hex(simpleLinearRegressionState(nullable_uint32_, float64))":"010900000000000000000038495CF311421FD01440BEE4B4FFF9D542C0AE810B44000000000000F8FF"}
+{"hex(simpleLinearRegressionState(nullable_uint32_, float64))":"010900000000000000000038495CF311421FD01440BEE4B4FFF9D542C0AE810B44000000000000F07F"}
 """
 
 _aggregate_functions_state_simpleLinearRegressionState_datatypes_Nullable_UInt64__Float64 = r"""
@@ -315,7 +315,7 @@ _aggregate_functions_state_simpleLinearRegressionState_datatypes_UInt32_Float64 
 """
 
 _aggregate_functions_state_simpleLinearRegressionState_datatypes_UInt64_Float64 = r"""
-{"hex(simpleLinearRegressionState(uint64, float64))":"0A00000000000000826D1DBA536A13441FD01440BEE4B4FF5AA1782F51A20E48000000000000F8FF"}
+{"hex(simpleLinearRegressionState(uint64, float64))":"0A00000000000000826D1DBA536A13441FD01440BEE4B4FF5AA1782F51A20E48000000000000F87F"}
 """
 
 _aggregate_functions_state_simpleLinearRegressionState_datatypes_UInt8_Float64 = r"""
@@ -547,7 +547,7 @@ _aggregate_functions_state_simpleLinearRegressionState_datatypes_permutations_Nu
 """
 
 _aggregate_functions_state_simpleLinearRegressionState_datatypes_permutations_Nullable_Int64__LowCardinality_Float32_ = r"""
-{"hex(simpleLinearRegressionState(nullable_int64_, lowcardinality_float32_))":"010900000000000000DC980956B98ECB43000000AC2CB6ED47C805563E2B5DF1479DAD8D7C2A93F04B"}
+{"hex(simpleLinearRegressionState(nullable_int64_, lowcardinality_float32_))":"010900000000000000DC980956B98ECB43000000AC2CB6ED47C705563E2B5DF1479DAD8D7C2A93F04B"}
 """
 
 _aggregate_functions_state_simpleLinearRegressionState_datatypes_permutations_Nullable_Int64__LowCardinality_Int64_ = r"""
@@ -571,7 +571,7 @@ _aggregate_functions_state_simpleLinearRegressionState_datatypes_permutations_Nu
 """
 
 _aggregate_functions_state_simpleLinearRegressionState_datatypes_permutations_Nullable_Int64__UInt64 = r"""
-{"hex(simpleLinearRegressionState(nullable_int64_, uint64))":"010900000000000000DC980956B98ECB43826D1DBA536A1344C805563E2B5DF1471E7A36E1E10CD647"}
+{"hex(simpleLinearRegressionState(nullable_int64_, uint64))":"010900000000000000DC980956B98ECB43826D1DBA536A1344C705563E2B5DF1471E7A36E1E10CD647"}
 """
 
 _aggregate_functions_state_simpleLinearRegressionState_datatypes_permutations_Nullable_UInt64__Float32 = r"""
