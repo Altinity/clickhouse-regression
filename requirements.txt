@@ -10,5 +10,5 @@ awscli==1.27.36
 python-gitlab==3.6.0
 docker-compose==1.29.2
 base58==2.1.1
-flask==2.2.2
+flask==2.3.2
 matplotlib
