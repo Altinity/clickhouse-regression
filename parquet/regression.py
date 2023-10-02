@@ -290,6 +290,11 @@ ffails = {
         "Unsupported on 22.8",
         check_clickhouse_version("<23.3"),
     ),
+    "/parquet/glob/glob with multiple elements": (
+        Skip,
+        "Multi directory globs are not introduced for these versions",
+        check_clickhouse_version("<23.8"),
+    ),
 }
 
 
