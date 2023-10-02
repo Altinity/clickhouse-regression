@@ -157,17 +157,17 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_TableEngines = Requirement(
     description=(
         "[ClickHouse] SHALL support the usage of `REPLACE PARTITION` for the following table engines,\n"
         "\n"
-        "| Engines                        |\n"
-        "|--------------------------------|\n"
-        "| `MergeTree`                    |\n"
-        "| `ReplicatedMergeTree`          |\n"
-        "| `ReplacingMergeTree`           |\n"
-        "| `AggregatingMergeTree`         |\n"
-        "| `CollapsingMergeTree`          |\n"
+        "|            Engines             |\n"
+        "|:------------------------------:|\n"
+        "|          `MergeTree`           |\n"
+        "|     `ReplicatedMergeTree`      |\n"
+        "|      `ReplacingMergeTree`      |\n"
+        "|     `AggregatingMergeTree`     |\n"
+        "|     `CollapsingMergeTree`      |\n"
         "| `VersionedCollapsingMergeTree` |\n"
-        "| `GraphiteMergeTree`            |\n"
-        "| `DistributedTable`             |\n"
-        "| `MaterializedView`             |\n"
+        "|      `GraphiteMergeTree`       |\n"
+        "|       `DistributedTable`       |\n"
+        "|       `MaterializedView`       |\n"
         "\n"
         "\n"
     ),
@@ -486,17 +486,17 @@ version: 1.0
 
 [ClickHouse] SHALL support the usage of `REPLACE PARTITION` for the following table engines,
 
-| Engines                        |
-|--------------------------------|
-| `MergeTree`                    |
-| `ReplicatedMergeTree`          |
-| `ReplacingMergeTree`           |
-| `AggregatingMergeTree`         |
-| `CollapsingMergeTree`          |
+|            Engines             |
+|:------------------------------:|
+|          `MergeTree`           |
+|     `ReplicatedMergeTree`      |
+|      `ReplacingMergeTree`      |
+|     `AggregatingMergeTree`     |
+|     `CollapsingMergeTree`      |
 | `VersionedCollapsingMergeTree` |
-| `GraphiteMergeTree`            |
-| `DistributedTable`             |
-| `MaterializedView`             |
+|      `GraphiteMergeTree`       |
+|       `DistributedTable`       |
+|       `MaterializedView`       |
 
 
 ## Concurrent Actions
