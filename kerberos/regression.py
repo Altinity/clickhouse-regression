@@ -46,6 +46,7 @@ def regression(
         env = f"{folder_name}_env_arm64"
     else:
         env = f"{folder_name}_env"
+    self.context.env = env
 
     with Cluster(
         local,
