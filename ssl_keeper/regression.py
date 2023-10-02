@@ -9,7 +9,6 @@ append_path(sys.path, "..")
 from ssl_keeper.helpers.cluster import Cluster
 from helpers.argparser import argparser as base_argparser
 from helpers.common import check_clickhouse_version
-from platform import processor as current_cpu
 
 
 def argparser(parser):
@@ -62,15 +61,13 @@ def regression(
     if stress is not None:
         self.context.stress = stress
 
-    env = "ssl_keeper_env"
-
     with Cluster(
         local,
         clickhouse_binary_path,
         collect_service_logs=collect_service_logs,
         thread_fuzzer=thread_fuzzer,
         nodes=nodes,
-        docker_compose_project_dir=os.path.join(current_dir(), env),
+        docker_compose_project_dir=os.path.join(current_dir(), "ssl_keeper_env"),
     ) as cluster:
         self.context.cluster = cluster
 

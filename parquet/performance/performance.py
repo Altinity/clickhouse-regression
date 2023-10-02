@@ -51,19 +51,10 @@ def performance_cluster(
 
             duckdb_binary_path = os.path.abspath("/tmp/duckdb")
 
-    from platform import processor as current_cpu
-
-    folder_name = os.path.basename(current_dir())
-
     self.context.clickhouse_version = clickhouse_version
 
     if stress is not None:
         self.context.stress = stress
-
-    if current_cpu() == "aarch64":
-        env = f"parquet_{folder_name}_env_arm64"
-    else:
-        env = f"parquet_{folder_name}_env"
 
     with Cluster(
         local=True,
@@ -71,7 +62,9 @@ def performance_cluster(
         nodes=nodes,
         clickhouse_binary_path=clickhouse_binary_path,
         environ={"DUCKDB_TESTS_BIN_PATH": duckdb_binary_path},
-        docker_compose_project_dir=os.path.join(current_dir(), env),
+        docker_compose_project_dir=os.path.join(
+            current_dir(), "parquet_performance_env"
+        ),
     ) as cluster:
         yield cluster
 

@@ -7,7 +7,6 @@ append_path(sys.path, "..")
 
 from helpers.cluster import Cluster
 from helpers.argparser import argparser
-from platform import processor as current_cpu
 from requirements.requirements import (
     SRS_001_ClickHouse_Software_Requirements_Specification_Template,
 )
