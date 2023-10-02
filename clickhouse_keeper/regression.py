@@ -107,7 +107,7 @@ def regression(
             "zookeeper2",
             "zookeeper3",
             "zookeeper",
-            "zookeeper-fips",
+            # "zookeeper-fips",
         ),
         "bash_tools": ("bash_tools"),
         "clickhouse": (
@@ -151,6 +151,7 @@ def regression(
         env = f"{folder_name}_env_arm64"
     else:
         env = f"{folder_name}_env"
+        nodes["zookeeper"] += ("zookeeper-fips",)
 
     with Cluster(
         local,
