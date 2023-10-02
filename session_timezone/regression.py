@@ -41,14 +41,6 @@ def regression(
     if stress is not None:
         self.context.stress = stress
 
-    from platform import processor as current_cpu
-
-    folder_name = os.path.basename(current_dir())
-    if current_cpu() == "aarch64":
-        env = f"{folder_name}_env_arm64"
-    else:
-        env = f"{folder_name}_env"
-
     with Cluster(
         local,
         clickhouse_binary_path,

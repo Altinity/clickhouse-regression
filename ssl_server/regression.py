@@ -170,18 +170,14 @@ def regression(
     if stress is not None:
         self.context.stress = stress
 
-    folder_name = os.path.basename(current_dir())
-    if current_cpu() == "aarch64":
-        env = f"{folder_name}_env_arm64"
-    else:
-        env = f"{folder_name}_env"
-
     with Cluster(
         local,
         clickhouse_binary_path,
         collect_service_logs=collect_service_logs,
         nodes=nodes,
-        docker_compose_project_dir=os.path.join(current_dir(), env),
+        docker_compose_project_dir=os.path.join(
+            current_dir(), os.path.basename(current_dir()) + "_env"
+        ),
         use_zookeeper_nodes=True,
     ) as cluster:
         self.context.cluster = cluster
