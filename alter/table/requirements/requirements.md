@@ -172,17 +172,17 @@ version: 1.0
 
 [ClickHouse] SHALL support the usage of `REPLACE PARTITION` for the following table engines,
 
-| Engines                        |
-|--------------------------------|
-| `MergeTree`                    |
-| `ReplicatedMergeTree`          |
-| `ReplacingMergeTree`           |
-| `AggregatingMergeTree`         |
-| `CollapsingMergeTree`          |
+|            Engines             |
+|:------------------------------:|
+|          `MergeTree`           |
+|     `ReplicatedMergeTree`      |
+|      `ReplacingMergeTree`      |
+|     `AggregatingMergeTree`     |
+|     `CollapsingMergeTree`      |
 | `VersionedCollapsingMergeTree` |
-| `GraphiteMergeTree`            |
-| `DistributedTable`             |
-| `MaterializedView`             |
+|      `GraphiteMergeTree`       |
+|       `DistributedTable`       |
+|       `MaterializedView`       |
 
 
 ## Concurrent Actions
