@@ -451,7 +451,7 @@ _aggregate_functions_corr_datatypes_permutations_LowCardinality_Int64__LowCardin
 """
 
 _aggregate_functions_corr_datatypes_permutations_LowCardinality_Int64__Nullable_Float32_ = r"""
-{"corr(lowcardinality_int64_, nullable_float32_)":0.42778947431150044}
+{"corr(lowcardinality_int64_, nullable_float32_)":0.4277894743115005}
 """
 
 _aggregate_functions_corr_datatypes_permutations_LowCardinality_Int64__Nullable_Int64_ = r"""
@@ -627,7 +627,7 @@ _aggregate_functions_corr_datatypes_permutations_UInt64_LowCardinality_Int64_ = 
 """
 
 _aggregate_functions_corr_datatypes_permutations_UInt64_LowCardinality_UInt64_ = r"""
-{"corr(uint64, lowcardinality_uint64_)":0.732623070090262}
+{"corr(uint64, lowcardinality_uint64_)":0.7326230700902618}
 """
 
 _aggregate_functions_corr_datatypes_permutations_UInt64_Nullable_Float32_ = r"""
