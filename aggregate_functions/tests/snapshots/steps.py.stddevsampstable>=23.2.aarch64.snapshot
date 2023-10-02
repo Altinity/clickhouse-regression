@@ -23,7 +23,7 @@ _aggregate_functions_stddevSampStable_Int8 = r"""
 """
 
 _aggregate_functions_stddevSampStable_LowCardinality_Float32_ = r"""
-{"stddevSampStable(lowcardinality_float32_)":2.1143682811452702e38}
+{"stddevSampStable(lowcardinality_float32_)":2.1143682811452706e38}
 """
 
 _aggregate_functions_stddevSampStable_LowCardinality_Float64_ = r"""
@@ -139,7 +139,7 @@ _aggregate_functions_stddevSampStable_Nullable_UInt32_ = r"""
 """
 
 _aggregate_functions_stddevSampStable_Nullable_UInt64_ = r"""
-{"stddevSampStable(nullable_uint64_)":7437291265129715000}
+{"stddevSampStable(nullable_uint64_)":7437291265129714000}
 """
 
 _aggregate_functions_stddevSampStable_Nullable_UInt8_ = r"""

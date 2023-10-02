@@ -7,7 +7,7 @@ _aggregate_functions_stochasticLinearRegression_Float64 = r"""
 """
 
 _aggregate_functions_stochasticLinearRegression_Int16 = r"""
-{"stochasticLinearRegression(0.1, 0., 5, 'SGD')(plus(plus(multiply(int16, 0.1), multiply(int16, 0.2)), 7), int16, multiply(int16, 0.3))":[-2299495378896836.5,-689848613669050.8,4923430575.61015]}
+{"stochasticLinearRegression(0.1, 0., 5, 'SGD')(plus(plus(multiply(int16, 0.1), multiply(int16, 0.2)), 7), int16, multiply(int16, 0.3))":[-2299495378896836.5,-689848613669050.8,4923430575.610162]}
 """
 
 _aggregate_functions_stochasticLinearRegression_Int32 = r"""
@@ -19,7 +19,7 @@ _aggregate_functions_stochasticLinearRegression_Int64 = r"""
 """
 
 _aggregate_functions_stochasticLinearRegression_Int8 = r"""
-{"stochasticLinearRegression(0.1, 0., 5, 'SGD')(plus(plus(multiply(int8, 0.1), multiply(int8, 0.2)), 7), int8, multiply(int8, 0.3))":[-1047673.7963104004,-314302.13889312,493.11833920000123]}
+{"stochasticLinearRegression(0.1, 0., 5, 'SGD')(plus(plus(multiply(int8, 0.1), multiply(int8, 0.2)), 7), int8, multiply(int8, 0.3))":[-1047673.7963104004,-314302.13889312005,493.11833920000004]}
 """
 
 _aggregate_functions_stochasticLinearRegression_LowCardinality_Float32_ = r"""
@@ -43,7 +43,7 @@ _aggregate_functions_stochasticLinearRegression_LowCardinality_Int64_ = r"""
 """
 
 _aggregate_functions_stochasticLinearRegression_LowCardinality_Int8_ = r"""
-{"stochasticLinearRegression(0.1, 0., 5, 'SGD')(plus(plus(multiply(lowcardinality_int8_, 0.1), multiply(lowcardinality_int8_, 0.2)), 7), lowcardinality_int8_, multiply(lowcardinality_int8_, 0.3))":[-804310.4142688002,-241293.12428063998,-2838.222198400001]}
+{"stochasticLinearRegression(0.1, 0., 5, 'SGD')(plus(plus(multiply(lowcardinality_int8_, 0.1), multiply(lowcardinality_int8_, 0.2)), 7), lowcardinality_int8_, multiply(lowcardinality_int8_, 0.3))":[-804310.4142688003,-241293.12428063998,-2838.222198400001]}
 """
 
 _aggregate_functions_stochasticLinearRegression_LowCardinality_Nullable_Float32__ = r"""
@@ -99,7 +99,7 @@ _aggregate_functions_stochasticLinearRegression_LowCardinality_UInt64_ = r"""
 """
 
 _aggregate_functions_stochasticLinearRegression_LowCardinality_UInt8_ = r"""
-{"stochasticLinearRegression(0.1, 0., 5, 'SGD')(plus(plus(multiply(lowcardinality_uint8_, 0.1), multiply(lowcardinality_uint8_, 0.2)), 7), lowcardinality_uint8_, multiply(lowcardinality_uint8_, 0.3))":[-15391099.53816,-4617329.861448001,-72510.39280000002]}
+{"stochasticLinearRegression(0.1, 0., 5, 'SGD')(plus(plus(multiply(lowcardinality_uint8_, 0.1), multiply(lowcardinality_uint8_, 0.2)), 7), lowcardinality_uint8_, multiply(lowcardinality_uint8_, 0.3))":[-15391099.53816,-4617329.861447999,-72510.39280000002]}
 """
 
 _aggregate_functions_stochasticLinearRegression_NULL_value_handling = r"""
@@ -147,7 +147,7 @@ _aggregate_functions_stochasticLinearRegression_Nullable_UInt8_ = r"""
 """
 
 _aggregate_functions_stochasticLinearRegression_UInt16 = r"""
-{"stochasticLinearRegression(0.1, 0., 5, 'SGD')(plus(plus(multiply(uint16, 0.1), multiply(uint16, 0.2)), 7), uint16, multiply(uint16, 0.3))":[-14687154420551896,-4406146326165570,-415047429326.5163]}
+{"stochasticLinearRegression(0.1, 0., 5, 'SGD')(plus(plus(multiply(uint16, 0.1), multiply(uint16, 0.2)), 7), uint16, multiply(uint16, 0.3))":[-14687154420551896,-4406146326165570,-415047429326.51624]}
 """
 
 _aggregate_functions_stochasticLinearRegression_UInt32 = r"""
@@ -199,7 +199,7 @@ _aggregate_functions_stochasticLinearRegression_single_row = r"""
 """
 
 _aggregate_functions_stochasticLinearRegression_some_negative_values = r"""
-{"stochasticLinearRegression(0.1, 0., 5, 'SGD')(plus(minus(plus(minus(number, multiply(5, 0.1)), number), multiply(5, 0.2)), 7), minus(number, 5), minus(number, multiply(5, 0.3)))":[-1.3949999999999996,8.737499999999999,2.8949999999999996]}
+{"stochasticLinearRegression(0.1, 0., 5, 'SGD')(plus(minus(plus(minus(number, multiply(5, 0.1)), number), multiply(5, 0.2)), 7), minus(number, 5), minus(number, multiply(5, 0.3)))":[-1.3950000000000014,8.737499999999997,2.8949999999999996]}
 """
 
 _aggregate_functions_stochasticLinearRegression_with_group_by = r"""
