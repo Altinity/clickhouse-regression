@@ -117,6 +117,9 @@ version: 1.0
 | `MODIFY COLUMN`                | ``                                                                                                                           |
 | `MODIFY COLUMN REMOVE`         | ``                                                                                                                           |
 | `MATERIALIZE COLUMN`           | ``                                                                                                                           |
+| `OPTIMIZE PARTITION`           | ``                                                                                                                           |
+| `OPTIMIZE FINAL`               | ``                                                                                                                           |
+| `OPTIMIZE DEDUPLICATE`         | ``                                                                                                                           |
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition
 version: 1.0
