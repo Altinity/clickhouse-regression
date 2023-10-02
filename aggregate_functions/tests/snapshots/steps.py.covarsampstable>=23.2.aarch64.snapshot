@@ -335,7 +335,7 @@ _aggregate_functions_covarSampStable_datatypes_permutations_Float32_LowCardinali
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_Float32_LowCardinality_Int64_ = r"""
-{"covarSampStable(float32, lowcardinality_int64_)":6.31737949080507e56}
+{"covarSampStable(float32, lowcardinality_int64_)":6.3173794908050695e56}
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_Float32_LowCardinality_UInt64_ = r"""
@@ -351,7 +351,7 @@ _aggregate_functions_covarSampStable_datatypes_permutations_Float32_Nullable_Int
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_Float32_Nullable_UInt64_ = r"""
-{"covarSampStable(float32, nullable_uint64_)":2.264986403038836e56}
+{"covarSampStable(float32, nullable_uint64_)":2.2649864030388365e56}
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_Float32_UInt64 = r"""
@@ -375,7 +375,7 @@ _aggregate_functions_covarSampStable_datatypes_permutations_Int64_LowCardinality
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_Int64_LowCardinality_UInt64_ = r"""
-{"covarSampStable(int64, lowcardinality_uint64_)":2.7576065572156986e37}
+{"covarSampStable(int64, lowcardinality_uint64_)":2.757606557215698e37}
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_Int64_Nullable_Float32_ = r"""
@@ -403,7 +403,7 @@ _aggregate_functions_covarSampStable_datatypes_permutations_LowCardinality_Float
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_LowCardinality_Float32__LowCardinality_Float32_ = r"""
-{"covarSampStable(lowcardinality_float32_, lowcardinality_float32_)":4.470553228313205e76}
+{"covarSampStable(lowcardinality_float32_, lowcardinality_float32_)":4.470553228313206e76}
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_LowCardinality_Float32__LowCardinality_Int64_ = r"""
@@ -435,7 +435,7 @@ _aggregate_functions_covarSampStable_datatypes_permutations_LowCardinality_Int64
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_LowCardinality_Int64__Int64 = r"""
-{"covarSampStable(lowcardinality_int64_, int64)":1.234275056259866e37}
+{"covarSampStable(lowcardinality_int64_, int64)":1.2342750562598657e37}
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_LowCardinality_Int64__LowCardinality_Float32_ = r"""
@@ -455,19 +455,19 @@ _aggregate_functions_covarSampStable_datatypes_permutations_LowCardinality_Int64
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_LowCardinality_Int64__Nullable_Int64_ = r"""
-{"covarSampStable(lowcardinality_int64_, nullable_int64_)":1.5002317540408585e37}
+{"covarSampStable(lowcardinality_int64_, nullable_int64_)":1.5002317540408588e37}
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_LowCardinality_Int64__Nullable_UInt64_ = r"""
-{"covarSampStable(lowcardinality_int64_, nullable_uint64_)":1.1650385731011935e37}
+{"covarSampStable(lowcardinality_int64_, nullable_uint64_)":1.1650385731011933e37}
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_LowCardinality_Int64__UInt64 = r"""
-{"covarSampStable(lowcardinality_int64_, uint64)":2.586664399693326e37}
+{"covarSampStable(lowcardinality_int64_, uint64)":2.5866643996933266e37}
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_LowCardinality_UInt64__Float32 = r"""
-{"covarSampStable(lowcardinality_uint64_, float32)":3.8870235673839135e56}
+{"covarSampStable(lowcardinality_uint64_, float32)":3.887023567383914e56}
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_LowCardinality_UInt64__Int64 = r"""
@@ -487,11 +487,11 @@ _aggregate_functions_covarSampStable_datatypes_permutations_LowCardinality_UInt6
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_LowCardinality_UInt64__Nullable_Float32_ = r"""
-{"covarSampStable(lowcardinality_uint64_, nullable_float32_)":1.400954435148605e57}
+{"covarSampStable(lowcardinality_uint64_, nullable_float32_)":1.4009544351486048e57}
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_LowCardinality_UInt64__Nullable_Int64_ = r"""
-{"covarSampStable(lowcardinality_uint64_, nullable_int64_)":1.7502022897771642e37}
+{"covarSampStable(lowcardinality_uint64_, nullable_int64_)":1.750202289777164e37}
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_LowCardinality_UInt64__Nullable_UInt64_ = r"""
@@ -511,7 +511,7 @@ _aggregate_functions_covarSampStable_datatypes_permutations_Nullable_Float32__In
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_Nullable_Float32__LowCardinality_Float32_ = r"""
-{"covarSampStable(nullable_float32_, lowcardinality_float32_)":3.204063559079676e76}
+{"covarSampStable(nullable_float32_, lowcardinality_float32_)":3.204063559079675e76}
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_Nullable_Float32__LowCardinality_Int64_ = r"""
@@ -519,7 +519,7 @@ _aggregate_functions_covarSampStable_datatypes_permutations_Nullable_Float32__Lo
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_Nullable_Float32__LowCardinality_UInt64_ = r"""
-{"covarSampStable(nullable_float32_, lowcardinality_uint64_)":1.4009544351486047e57}
+{"covarSampStable(nullable_float32_, lowcardinality_uint64_)":1.400954435148605e57}
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_Nullable_Float32__Nullable_Float32_ = r"""
@@ -539,7 +539,7 @@ _aggregate_functions_covarSampStable_datatypes_permutations_Nullable_Float32__UI
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_Nullable_Int64__Float32 = r"""
-{"covarSampStable(nullable_int64_, float32)":2.6622527366333456e56}
+{"covarSampStable(nullable_int64_, float32)":2.6622527366333447e56}
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_Nullable_Int64__Int64 = r"""
@@ -551,7 +551,7 @@ _aggregate_functions_covarSampStable_datatypes_permutations_Nullable_Int64__LowC
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_Nullable_Int64__LowCardinality_Int64_ = r"""
-{"covarSampStable(nullable_int64_, lowcardinality_int64_)":1.5002317540408585e37}
+{"covarSampStable(nullable_int64_, lowcardinality_int64_)":1.5002317540408583e37}
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_Nullable_Int64__LowCardinality_UInt64_ = r"""
@@ -567,7 +567,7 @@ _aggregate_functions_covarSampStable_datatypes_permutations_Nullable_Int64__Null
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_Nullable_Int64__Nullable_UInt64_ = r"""
-{"covarSampStable(nullable_int64_, nullable_uint64_)":3.622541797286278e37}
+{"covarSampStable(nullable_int64_, nullable_uint64_)":3.6225417972862777e37}
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_Nullable_Int64__UInt64 = r"""
@@ -575,7 +575,7 @@ _aggregate_functions_covarSampStable_datatypes_permutations_Nullable_Int64__UInt
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_Nullable_UInt64__Float32 = r"""
-{"covarSampStable(nullable_uint64_, float32)":2.2649864030388356e56}
+{"covarSampStable(nullable_uint64_, float32)":2.2649864030388347e56}
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_Nullable_UInt64__Int64 = r"""
@@ -603,7 +603,7 @@ _aggregate_functions_covarSampStable_datatypes_permutations_Nullable_UInt64__Nul
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_Nullable_UInt64__Nullable_UInt64_ = r"""
-{"covarSampStable(nullable_uint64_, nullable_uint64_)":5.531330136237475e37}
+{"covarSampStable(nullable_uint64_, nullable_uint64_)":5.531330136237474e37}
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_Nullable_UInt64__UInt64 = r"""
@@ -623,7 +623,7 @@ _aggregate_functions_covarSampStable_datatypes_permutations_UInt64_LowCardinalit
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_UInt64_LowCardinality_Int64_ = r"""
-{"covarSampStable(uint64, lowcardinality_int64_)":2.586664399693326e37}
+{"covarSampStable(uint64, lowcardinality_int64_)":2.5866643996933257e37}
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_UInt64_LowCardinality_UInt64_ = r"""
@@ -635,7 +635,7 @@ _aggregate_functions_covarSampStable_datatypes_permutations_UInt64_Nullable_Floa
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_UInt64_Nullable_Int64_ = r"""
-{"covarSampStable(uint64, nullable_int64_)":9.716145485473168e36}
+{"covarSampStable(uint64, nullable_int64_)":9.71614548547317e36}
 """
 
 _aggregate_functions_covarSampStable_datatypes_permutations_UInt64_Nullable_UInt64_ = r"""

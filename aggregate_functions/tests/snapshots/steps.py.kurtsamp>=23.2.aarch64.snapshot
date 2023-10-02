@@ -55,7 +55,7 @@ _aggregate_functions_kurtSamp_LowCardinality_Nullable_Float64__ = r"""
 """
 
 _aggregate_functions_kurtSamp_LowCardinality_Nullable_Int16__ = r"""
-{"kurtSamp(lowcardinality_nullable_int16__)":1.5157769238472696}
+{"kurtSamp(lowcardinality_nullable_int16__)":1.51577692384727}
 """
 
 _aggregate_functions_kurtSamp_LowCardinality_Nullable_Int32__ = r"""
@@ -63,7 +63,7 @@ _aggregate_functions_kurtSamp_LowCardinality_Nullable_Int32__ = r"""
 """
 
 _aggregate_functions_kurtSamp_LowCardinality_Nullable_Int64__ = r"""
-{"kurtSamp(lowcardinality_nullable_int64__)":1.4531181819195897}
+{"kurtSamp(lowcardinality_nullable_int64__)":1.453118181919589}
 """
 
 _aggregate_functions_kurtSamp_LowCardinality_Nullable_Int8__ = r"""
@@ -79,7 +79,7 @@ _aggregate_functions_kurtSamp_LowCardinality_Nullable_UInt32__ = r"""
 """
 
 _aggregate_functions_kurtSamp_LowCardinality_Nullable_UInt64__ = r"""
-{"kurtSamp(lowcardinality_nullable_uint64__)":1.1213072503309465}
+{"kurtSamp(lowcardinality_nullable_uint64__)":1.1213072503309451}
 """
 
 _aggregate_functions_kurtSamp_LowCardinality_Nullable_UInt8__ = r"""
@@ -115,7 +115,7 @@ _aggregate_functions_kurtSamp_Nullable_Float64_ = r"""
 """
 
 _aggregate_functions_kurtSamp_Nullable_Int16_ = r"""
-{"kurtSamp(nullable_int16_)":1.4761086228081801}
+{"kurtSamp(nullable_int16_)":1.4761086228081803}
 """
 
 _aggregate_functions_kurtSamp_Nullable_Int32_ = r"""
@@ -123,7 +123,7 @@ _aggregate_functions_kurtSamp_Nullable_Int32_ = r"""
 """
 
 _aggregate_functions_kurtSamp_Nullable_Int64_ = r"""
-{"kurtSamp(nullable_int64_)":1.2661485699580288}
+{"kurtSamp(nullable_int64_)":1.2661485699580295}
 """
 
 _aggregate_functions_kurtSamp_Nullable_Int8_ = r"""
@@ -135,7 +135,7 @@ _aggregate_functions_kurtSamp_Nullable_UInt16_ = r"""
 """
 
 _aggregate_functions_kurtSamp_Nullable_UInt32_ = r"""
-{"kurtSamp(nullable_uint32_)":1.1689321062145661}
+{"kurtSamp(nullable_uint32_)":1.1689321062145703}
 """
 
 _aggregate_functions_kurtSamp_Nullable_UInt64_ = r"""
