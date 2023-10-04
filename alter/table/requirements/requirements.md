@@ -12,6 +12,7 @@
   * 5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition](#rqsrs-032clickhousealtertablereplacepartition)
   * 5.2 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.KeepData](#rqsrs-032clickhousealtertablereplacepartitionkeepdata)
   * 5.3 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TemporaryTable](#rqsrs-032clickhousealtertablereplacepartitiontemporarytable)
+  * 5.4 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited](#rqsrs-032clickhousealtertablereplacepartitionprohibited)
 * 6 [Conditions](#conditions)
   * 6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions](#rqsrs-032clickhousealtertablereplacepartitionconditions)
   * 6.2 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.Structure](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentstructure)
@@ -124,18 +125,33 @@ version: 1.0
 
 [ClickHouse] SHALL support copying the data partition from the temporary table.
 
+> A table that disappears when the session ends, including if the connection is lost, is considered a temporary table.
+
 For example,
 
-A table that disappears when the session ends, including if the connection is lost, is considered a temporary table. To create such a table the following query can be run.
+Let's say we have a MergeTree table named `destination`. If we create a temporary table and insert some values into it.
 
 ```sql
-CREATE TEMPORARY TABLE [IF NOT EXISTS] table_name
-(
-    name1 [type1] [DEFAULT|MATERIALIZED|ALIAS expr1],
-    name2 [type2] [DEFAULT|MATERIALIZED|ALIAS expr2],
-    ...
-) [ENGINE = engine]
+CREATE TEMPORARY TABLE temporary_table (p UInt64, k String, d UInt64) ENGINE = MergeTree PARTITION BY p ORDER BY k;
+
+INSERT INTO temporary_table VALUES (0, '0', 1);
+INSERT INTO temporary_table VALUES (1, '0', 1);
+INSERT INTO temporary_table VALUES (1, '1', 1);
+INSERT INTO temporary_table VALUES (2, '0', 1);
+INSERT INTO temporary_table VALUES (3, '0', 1);
+INSERT INTO temporary_table VALUES (3, '1', 1);
 ```
+
+We can use `REPLACE PARTITION` on the `destinaton` table from `temporary_table`,
+
+```sql
+ALTER TABLE destinaton REPLACE PARTITION 1 FROM temporary_table;
+```
+
+### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited
+version: 1.0
+
+[ClickHouse] SHALL output an error when using `ORDER BY` or `PARTITION BY`
 
 ## Conditions
 
