@@ -7,12 +7,15 @@ append_path(sys.path, "..")
 
 from helpers.cluster import Cluster
 from helpers.argparser import argparser
-from platform import processor as current_cpu
+from requirements.requirements import (
+    SRS_001_ClickHouse_Software_Requirements_Specification_Template,
+)
 
 
 @TestFeature
 @Name("example")
 @ArgumentParser(argparser)
+@Specifications(SRS_001_ClickHouse_Software_Requirements_Specification_Template)
 def regression(
     self,
     local,
@@ -31,18 +34,11 @@ def regression(
     if stress is not None:
         self.context.stress = stress
 
-    folder_name = os.path.basename(current_dir())
-    if current_cpu() == "aarch64":
-        env = f"{folder_name}_env_arm64"
-    else:
-        env = f"{folder_name}_env"
-
     with Cluster(
         local,
         clickhouse_binary_path,
         collect_service_logs=collect_service_logs,
         nodes=nodes,
-        docker_compose_project_dir=os.path.join(current_dir(), env),
     ) as cluster:
         self.context.cluster = cluster
 

@@ -225,20 +225,11 @@ def minio_regression(
     """Setup and run minio tests."""
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
-    from platform import processor as current_cpu
-
-    folder_name = os.path.basename(current_dir())
-    if current_cpu() == "aarch64":
-        env = f"{folder_name}_env_arm64"
-    else:
-        env = f"{folder_name}_env"
-
     with Cluster(
         local,
         clickhouse_binary_path,
         collect_service_logs=collect_service_logs,
         nodes=nodes,
-        docker_compose_project_dir=os.path.join(current_dir(), env),
         environ={"MINIO_ROOT_PASSWORD": root_password, "MINIO_ROOT_USER": root_user},
     ) as cluster:
         self.context.cluster = cluster
@@ -306,20 +297,11 @@ def aws_s3_regression(
         fail("AWS S3 region needs to be set")
     region = region.value
 
-    from platform import processor as current_cpu
-
-    folder_name = os.path.basename(current_dir())
-    if current_cpu() == "aarch64":
-        env = f"{folder_name}_env_arm64"
-    else:
-        env = f"{folder_name}_env"
-
     with Cluster(
         local,
         clickhouse_binary_path,
         collect_service_logs=collect_service_logs,
         nodes=nodes,
-        docker_compose_project_dir=os.path.join(current_dir(), env),
         environ={
             "S3_AMAZON_ACCESS_KEY": access_key,
             "S3_AMAZON_KEY_ID": key_id,
@@ -377,20 +359,11 @@ def gcs_regression(
         fail("GCS key id needs to be set")
     key_id = key_id.value
 
-    from platform import processor as current_cpu
-
-    folder_name = os.path.basename(current_dir())
-    if current_cpu() == "aarch64":
-        env = f"{folder_name}_env_arm64"
-    else:
-        env = f"{folder_name}_env"
-
     with Cluster(
         local,
         clickhouse_binary_path,
         collect_service_logs=collect_service_logs,
         nodes=nodes,
-        docker_compose_project_dir=os.path.join(current_dir(), env),
         environ={"GCS_KEY_SECRET": access_key, "GCS_KEY_ID": key_id},
     ) as cluster:
         self.context.cluster = cluster

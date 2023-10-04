@@ -107,7 +107,6 @@ def regression(
                     clickhouse_binary_path=clickhouse_binary_path,
                     collect_service_logs=collect_service_logs,
                     nodes=nodes,
-                    docker_compose_project_dir=os.path.join(current_dir(), env),
                 ) as cluster:
                     self.context.cluster = cluster
 

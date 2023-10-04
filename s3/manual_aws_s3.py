@@ -99,7 +99,6 @@ def regression(
     with Cluster(
         local,
         clickhouse_binary_path,
-        docker_compose_project_dir=os.path.join(current_dir(), "s3_env"),
         nodes=nodes,
     ) as cluster:
         self.context.cluster = cluster
