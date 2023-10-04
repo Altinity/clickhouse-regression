@@ -87,20 +87,52 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_TemporaryTable = Requirement(
     num="6.3",
 )
 
-RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited = Requirement(
-    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited",
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_OrderAndPartition = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition",
     version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL output an error when using `ORDER BY` or `PARTITION BY`\n"
+        "[ClickHouse] SHALL output an error when executing `ORDER BY` or `PARTITION BY` with the `REPLACE PARTITION` clause.\n"
         "\n"
     ),
     link=None,
-    level=2,
-    num="6.4",
+    level=4,
+    num="6.4.1.1",
+)
+
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Merges = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Merges",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL output an error when trying to run any merges before the executed `REPLACE PARTITION` is finished.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="6.4.2.1",
+)
+
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Mutations = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Mutations",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL output an error when trying to run any mutations before the executed `REPLACE PARTITION` is finished.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="6.4.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions = Requirement(
@@ -210,7 +242,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL stop all merges and mutations when running the `REPLACE PARTITION` only on a selected partition of the table.\n"
+        "[ClickHouse] SHALL make `REPLACE PARTITION` to wait for the ongoing mutations and partitions if they are running on the same partition as executed `REPLACE PARTITION`.\n"
         "\n"
         "For example,\n"
         "\n"
@@ -227,7 +259,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent = Requirement(
         "ORDER BY tuple();\n"
         "```\n"
         "\n"
-        "The following insertion will result in two partitions\n"
+        "Run the `INESRT` that will result in two partitions.\n"
         "\n"
         "```sql\n"
         "INSERT INTO table_1 VALUES (1, 1), (2, 2);\n"
@@ -422,6 +454,122 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Materialize 
     description=(
         "[ClickHouse] SHALL stop background mutations, that are still in progress, for the partition `MATERIALIZE REMOVE` is used on, when `REPLACE PARTITION` is executed on this partition.\n"
         "\n"
+    ),
+    link=None,
+    level=4,
+    num="9.7.6.1",
+)
+
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL wait for `REPLACE PARTITION` to finish when another operation related to partition manipulation is being executed.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="9.8.1",
+)
+
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Detach = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Detach",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL wait for `REPLACE PARTITION` to finish before executing `DETACH PARTITION` on the same partition.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="9.8.2.1",
+)
+
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Drop = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Drop",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL wait for `REPLACE PARTITION` to finish before executing `DROP PARTITION` on the same partition.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="9.8.3.1",
+)
+
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Attach = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Attach",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL wait for `REPLACE PARTITION` to finish before executing `ATTACH PARTITION` on the same partition.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="9.8.4.1",
+)
+
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_AttachFrom = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.AttachFrom",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL wait for `REPLACE PARTITION` to finish before executing `ATTACH PARTITION FROM` on the same partition.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="9.8.5.1",
+)
+
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Replace = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Replace",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL wait for `REPLACE PARTITION` to finish before executing another `REPLACE PARTITION` on the same partition.\n"
+        "\n"
+        "For example,\n"
+        "\n"
+        "If we run `REPLACE PARTITION` to replace the data partition from the `table1` to `table2` and replaces existing partition in the `table2`, \n"
+        "but at the same time try to replace partition of another table from `table2`, the first process should finish and only after that the second `REPLACE PARTITION` SHALL be executed.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="9.8.6.1",
+)
+
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_MoveToTable = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.MoveToTable",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL wait for `REPLACE PARTITION` to finish before executing `MOVE PARTITION TO TABLE` on the same partition.\n"
         "\n"
         "\n"
         "\n"
@@ -437,7 +585,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Materialize 
     ),
     link=None,
     level=4,
-    num="9.7.6.1",
+    num="9.8.7.1",
 )
 
 SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
@@ -479,10 +627,24 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
             level=2,
             num="6.3",
         ),
+        Heading(name="Prohibited Actions", level=2, num="6.4"),
+        Heading(name="Order and Partition", level=3, num="6.4.1"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited",
-            level=2,
-            num="6.4",
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition",
+            level=4,
+            num="6.4.1.1",
+        ),
+        Heading(name="Merges", level=3, num="6.4.2"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Merges",
+            level=4,
+            num="6.4.2.1",
+        ),
+        Heading(name="Mutations", level=3, num="6.4.3"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Mutations",
+            level=4,
+            num="6.4.3.1",
         ),
         Heading(name="Conditions", level=1, num="7"),
         Heading(
@@ -517,62 +679,62 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
             level=2,
             num="9.1",
         ),
-        Heading(name="Insert", level=2, num="9.2"),
+        Heading(name="Insert Into Table", level=2, num="9.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Insert",
             level=3,
             num="9.2.1",
         ),
-        Heading(name="Delete", level=2, num="9.3"),
+        Heading(name="Delete Table", level=2, num="9.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Delete",
             level=3,
             num="9.3.1",
         ),
-        Heading(name="Attach", level=2, num="9.4"),
+        Heading(name="Attach Table", level=2, num="9.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Attach",
             level=3,
             num="9.4.1",
         ),
-        Heading(name="Detach", level=2, num="9.5"),
+        Heading(name="Detach Table", level=2, num="9.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Detach",
             level=3,
             num="9.5.1",
         ),
-        Heading(name="Optimize", level=2, num="9.6"),
+        Heading(name="Optimize Table", level=2, num="9.6"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Optimize",
             level=3,
             num="9.6.1",
         ),
         Heading(name="Alter", level=2, num="9.7"),
-        Heading(name="Add", level=3, num="9.7.1"),
+        Heading(name="Add Column", level=3, num="9.7.1"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Add",
             level=4,
             num="9.7.1.1",
         ),
-        Heading(name="Drop", level=3, num="9.7.2"),
+        Heading(name="Drop Column", level=3, num="9.7.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Drop",
             level=4,
             num="9.7.2.1",
         ),
-        Heading(name="Clear", level=3, num="9.7.3"),
+        Heading(name="Clear Column", level=3, num="9.7.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Clear",
             level=4,
             num="9.7.3.1",
         ),
-        Heading(name="Modify", level=3, num="9.7.4"),
+        Heading(name="Modify Column", level=3, num="9.7.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Modify",
             level=4,
             num="9.7.4.1",
         ),
-        Heading(name="Modify Remove", level=3, num="9.7.5"),
+        Heading(name="Modify Column Remove", level=3, num="9.7.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.ModifyRemove",
             level=4,
@@ -584,12 +746,56 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
             level=4,
             num="9.7.6.1",
         ),
+        Heading(name="Manipulating", level=2, num="9.8"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions",
+            level=3,
+            num="9.8.1",
+        ),
+        Heading(name="Detach", level=3, num="9.8.2"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Detach",
+            level=4,
+            num="9.8.2.1",
+        ),
+        Heading(name="Drop", level=3, num="9.8.3"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Drop",
+            level=4,
+            num="9.8.3.1",
+        ),
+        Heading(name="Attach", level=3, num="9.8.4"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Attach",
+            level=4,
+            num="9.8.4.1",
+        ),
+        Heading(name="Attach From", level=3, num="9.8.5"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.AttachFrom",
+            level=4,
+            num="9.8.5.1",
+        ),
+        Heading(name="Replace", level=3, num="9.8.6"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Replace",
+            level=4,
+            num="9.8.6.1",
+        ),
+        Heading(name="Move To Table", level=3, num="9.8.7"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.MoveToTable",
+            level=4,
+            num="9.8.7.1",
+        ),
     ),
     requirements=(
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_KeepData,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_TemporaryTable,
-        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_OrderAndPartition,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Merges,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Mutations,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions_Different_Structure,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions_Different_Key,
@@ -607,6 +813,13 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Modify,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_ModifyRemove,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Materialize,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Detach,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Drop,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Attach,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_AttachFrom,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Replace,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_MoveToTable,
     ),
     content="""
 # SRS032 ClickHouse Alter Table Replace Partition
@@ -623,7 +836,13 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
   * 5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition](#rqsrs-032clickhousealtertablereplacepartition)
   * 5.2 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.KeepData](#rqsrs-032clickhousealtertablereplacepartitionkeepdata)
   * 5.3 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TemporaryTable](#rqsrs-032clickhousealtertablereplacepartitiontemporarytable)
-  * 5.4 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited](#rqsrs-032clickhousealtertablereplacepartitionprohibited)
+  * 5.4 [Prohibited Actions](#prohibited-actions)
+    * 5.4.1 [Order and Partition](#order-and-partition)
+      * 5.4.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition](#rqsrs-032clickhousealtertablereplacepartitionprohibitedorderandpartition)
+    * 5.4.2 [Merges](#merges)
+      * 5.4.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Merges](#rqsrs-032clickhousealtertablereplacepartitionprohibitedmerges)
+    * 5.4.3 [Mutations](#mutations)
+      * 5.4.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Mutations](#rqsrs-032clickhousealtertablereplacepartitionprohibitedmutations)
 * 6 [Conditions](#conditions)
   * 6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions](#rqsrs-032clickhousealtertablereplacepartitionconditions)
   * 6.2 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.Structure](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentstructure)
@@ -633,29 +852,43 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
   * 7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TableEngines](#rqsrs-032clickhousealtertablereplacepartitiontableengines)
 * 8 [Concurrent Actions](#concurrent-actions)
   * 8.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent](#rqsrs-032clickhousealtertablereplacepartitionconcurrent)
-  * 8.2 [Insert](#insert)
+  * 8.2 [Insert Into Table](#insert-into-table)
     * 8.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Insert](#rqsrs-032clickhousealtertablereplacepartitionconcurrentinsert)
-  * 8.3 [Delete](#delete)
+  * 8.3 [Delete Table](#delete-table)
     * 8.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Delete](#rqsrs-032clickhousealtertablereplacepartitionconcurrentdelete)
-  * 8.4 [Attach](#attach)
+  * 8.4 [Attach Table](#attach-table)
     * 8.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Attach](#rqsrs-032clickhousealtertablereplacepartitionconcurrentattach)
-  * 8.5 [Detach](#detach)
+  * 8.5 [Detach Table](#detach-table)
     * 8.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Detach](#rqsrs-032clickhousealtertablereplacepartitionconcurrentdetach)
-  * 8.6 [Optimize](#optimize)
+  * 8.6 [Optimize Table](#optimize-table)
     * 8.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Optimize](#rqsrs-032clickhousealtertablereplacepartitionconcurrentoptimize)
   * 8.7 [Alter](#alter)
-    * 8.7.1 [Add](#add)
+    * 8.7.1 [Add Column](#add-column)
       * 8.7.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Add](#rqsrs-032clickhousealtertablereplacepartitionconcurrentalteradd)
-    * 8.7.2 [Drop](#drop)
+    * 8.7.2 [Drop Column](#drop-column)
       * 8.7.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Drop](#rqsrs-032clickhousealtertablereplacepartitionconcurrentalterdrop)
-    * 8.7.3 [Clear](#clear)
+    * 8.7.3 [Clear Column](#clear-column)
       * 8.7.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Clear](#rqsrs-032clickhousealtertablereplacepartitionconcurrentalterclear)
-    * 8.7.4 [Modify](#modify)
+    * 8.7.4 [Modify Column](#modify-column)
       * 8.7.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Modify](#rqsrs-032clickhousealtertablereplacepartitionconcurrentaltermodify)
-    * 8.7.5 [Modify Remove](#modify-remove)
+    * 8.7.5 [Modify Column Remove](#modify-column-remove)
       * 8.7.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.ModifyRemove](#rqsrs-032clickhousealtertablereplacepartitionconcurrentaltermodifyremove)
     * 8.7.6 [Materialize](#materialize)
       * 8.7.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Materialize](#rqsrs-032clickhousealtertablereplacepartitionconcurrentaltermaterialize)
+  * 8.8 [Manipulating](#manipulating)
+    * 8.8.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitions)
+    * 8.8.2 [Detach](#detach)
+      * 8.8.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Detach](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsdetach)
+    * 8.8.3 [Drop](#drop)
+      * 8.8.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Drop](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsdrop)
+    * 8.8.4 [Attach](#attach)
+      * 8.8.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Attach](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsattach)
+    * 8.8.5 [Attach From](#attach-from)
+      * 8.8.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.AttachFrom](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsattachfrom)
+    * 8.8.6 [Replace](#replace)
+      * 8.8.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Replace](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsreplace)
+    * 8.8.7 [Move To Table](#move-to-table)
+      * 8.8.7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.MoveToTable](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsmovetotable)
 
 ## Revision History
 
@@ -781,10 +1014,28 @@ We can use `REPLACE PARTITION` on the `destinaton` table from `temporary_table`,
 ALTER TABLE destinaton REPLACE PARTITION 1 FROM temporary_table;
 ```
 
-### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited
+### Prohibited Actions
+
+#### Order and Partition
+
+##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition
 version: 1.0
 
-[ClickHouse] SHALL output an error when using `ORDER BY` or `PARTITION BY`
+[ClickHouse] SHALL output an error when executing `ORDER BY` or `PARTITION BY` with the `REPLACE PARTITION` clause.
+
+#### Merges
+
+##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Merges
+version: 1.0
+
+[ClickHouse] SHALL output an error when trying to run any merges before the executed `REPLACE PARTITION` is finished.
+
+#### Mutations
+
+##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Mutations
+version: 1.0
+
+[ClickHouse] SHALL output an error when trying to run any mutations before the executed `REPLACE PARTITION` is finished.
 
 ## Conditions
 
@@ -839,7 +1090,7 @@ version: 1.0
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent
 version: 1.0
 
-[ClickHouse] SHALL stop all merges and mutations when running the `REPLACE PARTITION` only on a selected partition of the table.
+[ClickHouse] SHALL make `REPLACE PARTITION` to wait for the ongoing mutations and partitions if they are running on the same partition as executed `REPLACE PARTITION`.
 
 For example,
 
@@ -856,7 +1107,7 @@ PARTITION BY p
 ORDER BY tuple();
 ```
 
-The following insertion will result in two partitions
+Run the `INESRT` that will result in two partitions.
 
 ```sql
 INSERT INTO table_1 VALUES (1, 1), (2, 2);
@@ -875,35 +1126,35 @@ ALTER TABLE table_1 REPLACE PARTITION id '2' FROM t2;
 
 `REPLACE PARTITION` SHALL complete right away since there are no merges happening on this partition at the moment.
 
-### Insert
+### Insert Into Table
 
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Insert
 version: 1.0
 
 [ClickHouse] SHALL stop background merges, that are still in progress, for the partition `INSERT INTO TABLE` is used on, when `REPLACE PARTITION` is executed on this partition.
 
-### Delete
+### Delete Table
 
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Delete
 version: 1.0
 
 [ClickHouse] SHALL stop background mutations, that are still in progress, for the partition `DELETE FROM` is used on, when `REPLACE PARTITION` is executed on this partition.
 
-### Attach
+### Attach Table
 
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Attach
 version: 1.0
 
 [ClickHouse] SHALL stop background merges, that are still in progress, for the partition `ATTACH TABLE` is used on, when `REPLACE PARTITION` is executed on this partition.
 
-### Detach
+### Detach Table
 
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Detach
 version: 1.0
 
 [ClickHouse] SHALL stop background merges, that are still in progress, for the partition `DETACH TABLE` is used on, when `REPLACE PARTITION` is executed on this partition.
 
-### Optimize
+### Optimize Table
 
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Optimize
 version: 1.0
@@ -912,35 +1163,35 @@ version: 1.0
 
 ### Alter
 
-#### Add
+#### Add Column
 
 ##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Add
 version: 1.0
 
 [ClickHouse] SHALL stop background mutations, that are still in progress, for the partition `ADD COLUMN` is used on, when `REPLACE PARTITION` is executed on this partition.
 
-#### Drop
+#### Drop Column
 
 ##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Drop
 version: 1.0
 
 [ClickHouse] SHALL stop background mutations, that are still in progress, for the partition `DROP COLUMN` is used on, when `REPLACE PARTITION` is executed on this partition.
 
-#### Clear
+#### Clear Column
 
 ##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Clear
 version: 1.0
 
 [ClickHouse] SHALL stop background mutations, that are still in progress, for the partition `DROP COLUMN` is used on, when `REPLACE PARTITION` is executed on this partition.
 
-#### Modify
+#### Modify Column
 
 ##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Modify
 version: 1.0
 
 [ClickHouse] SHALL stop background mutations, that are still in progress, for the partition `MODIFY COLUMN` is used on, when `REPLACE PARTITION` is executed on this partition.
 
-#### Modify Remove
+#### Modify Column Remove
 
 ##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.ModifyRemove
 version: 1.0
@@ -954,6 +1205,59 @@ version: 1.0
 
 [ClickHouse] SHALL stop background mutations, that are still in progress, for the partition `MATERIALIZE REMOVE` is used on, when `REPLACE PARTITION` is executed on this partition.
 
+### Manipulating
+
+#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions
+version: 1.0
+
+[ClickHouse] SHALL wait for `REPLACE PARTITION` to finish when another operation related to partition manipulation is being executed.
+
+#### Detach
+
+##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Detach
+version: 1.0
+
+[ClickHouse] SHALL wait for `REPLACE PARTITION` to finish before executing `DETACH PARTITION` on the same partition.
+
+#### Drop
+
+##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Drop
+version: 1.0
+
+[ClickHouse] SHALL wait for `REPLACE PARTITION` to finish before executing `DROP PARTITION` on the same partition.
+
+#### Attach
+
+##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Attach
+version: 1.0
+
+[ClickHouse] SHALL wait for `REPLACE PARTITION` to finish before executing `ATTACH PARTITION` on the same partition.
+
+#### Attach From
+
+##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.AttachFrom
+version: 1.0
+
+[ClickHouse] SHALL wait for `REPLACE PARTITION` to finish before executing `ATTACH PARTITION FROM` on the same partition.
+
+#### Replace
+
+##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Replace
+version: 1.0
+
+[ClickHouse] SHALL wait for `REPLACE PARTITION` to finish before executing another `REPLACE PARTITION` on the same partition.
+
+For example,
+
+If we run `REPLACE PARTITION` to replace the data partition from the `table1` to `table2` and replaces existing partition in the `table2`, 
+but at the same time try to replace partition of another table from `table2`, the first process should finish and only after that the second `REPLACE PARTITION` SHALL be executed.
+
+#### Move To Table
+
+##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.MoveToTable
+version: 1.0
+
+[ClickHouse] SHALL wait for `REPLACE PARTITION` to finish before executing `MOVE PARTITION TO TABLE` on the same partition.
 
 
 
