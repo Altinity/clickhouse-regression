@@ -1212,7 +1212,7 @@ def configured_https_server_dictionary_connection(
             options=https_server_options, port=port, server_file_path=server_file_path
         )
 
-    for retry in retries(count=10, delay=0.5):
+    for retry in retries(timeout=60, delay=0.5):
         with retry:
             with Then("I check the connection using a dictionary"):
                 https_server_https_dictionary_connection(port=port, success=success)
