@@ -77,7 +77,7 @@ xfails = {
     ],
     "check certificate/system certificates": [(Fail, "unstable test")],
     # zookeeper ssl
-    "zookeepe:/fips/ECDHE-ECDSA-AES128-GCM-SHA256": [
+    "zookeepe:/fips/ECDHE-ECDSA-AES128-GCM-SHA256/:": [
         (
             Fail,
             "SSLV3_ALERT_HANDSHAKE_FAILURE",
@@ -85,7 +85,7 @@ xfails = {
             r".*SSLV3_ALERT_HANDSHAKE_FAILURE.*",
         )
     ],
-    "zookeepe:/fips/ECDHE-ECDSA-AES256-GCM-SHA384": [
+    "zookeepe:/fips/ECDHE-ECDSA-AES256-GCM-SHA384/:": [
         (
             Fail,
             "SSLV3_ALERT_HANDSHAKE_FAILURE",
@@ -93,7 +93,7 @@ xfails = {
             r".*SSLV3_ALERT_HANDSHAKE_FAILURE.*",
         )
     ],
-    "zookeepe:/fips/AES128-GCM-SHA256": [
+    "zookeepe:/fips/AES128-GCM-SHA256/:": [
         (
             Fail,
             "SSLV3_ALERT_HANDSHAKE_FAILURE",
@@ -101,7 +101,7 @@ xfails = {
             r".*SSLV3_ALERT_HANDSHAKE_FAILURE.*",
         )
     ],
-    "zookeepe:/fips/AES256-GCM-SHA384": [
+    "zookeepe:/fips/AES256-GCM-SHA384/:": [
         (
             Fail,
             "SSLV3_ALERT_HANDSHAKE_FAILURE",
