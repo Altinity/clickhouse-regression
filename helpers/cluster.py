@@ -799,6 +799,7 @@ class Cluster(object):
         thread_fuzzer=False,
         collect_service_logs=False,
         use_zookeeper_nodes=False,
+        frame=None,
     ):
         self._bash = {}
         self._control_shell = None
@@ -813,9 +814,9 @@ class Cluster(object):
         self.running = False
         self.collect_service_logs = collect_service_logs
         self.use_zookeeper_nodes = use_zookeeper_nodes
-
-        frame = inspect.currentframe().f_back
-        caller_dir = os.path.dirname(os.path.abspath(frame.f_globals["__file__"]))
+        if frame is None:
+            frame = inspect.currentframe().f_back
+        caller_dir = current_dir(frame=frame)
 
         # auto set configs directory
         if self.configs_dir is None:
@@ -826,8 +827,13 @@ class Cluster(object):
         if not os.path.exists(self.configs_dir):
             raise TypeError(f"configs directory '{self.configs_dir}' does not exist")
 
+        if docker_compose_project_dir is None:
+            docker_compose_project_dir = os.path.join(
+                caller_dir, os.path.basename(caller_dir) + "_env"
+            )
+
         if not docker_compose_project_dir:
-            raise TypeError("docker compose directory must be specified.")
+            raise TypeError("docker compose project directory must be specified")
 
         if current_cpu() == "aarch64":
             if not docker_compose_project_dir.endswith("_arm64"):

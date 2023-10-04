@@ -8,7 +8,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import Cluster
 from helpers.argparser import argparser as base_argparser
-from helpers.common import check_clickhouse_version
+from helpers.common import check_clickhouse_version, current_cpu
 from clickhouse_keeper.requirements import *
 from clickhouse_keeper.tests.steps import *
 
@@ -144,13 +144,7 @@ def regression(
         self.context.ssl = "false"
         self.context.port = "2181"
 
-    from platform import processor as current_cpu
-
-    folder_name = os.path.basename(current_dir())
-    if current_cpu() == "aarch64":
-        env = f"{folder_name}_env_arm64"
-    else:
-        env = f"{folder_name}_env"
+    if not current_cpu() == "aarch64":
         nodes["zookeeper"] += ("zookeeper-fips",)
 
     with Cluster(
@@ -158,7 +152,6 @@ def regression(
         clickhouse_binary_path,
         collect_service_logs=collect_service_logs,
         nodes=nodes,
-        docker_compose_project_dir=os.path.join(current_dir(), env),
     ) as cluster:
         self.context.cluster = cluster
 
