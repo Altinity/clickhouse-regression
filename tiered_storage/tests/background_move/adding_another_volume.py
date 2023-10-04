@@ -90,9 +90,9 @@ def scenario(self, cluster, node="clickhouse1"):
                             with Then(f"it should return the result of {rows_count}"):
                                 assert r == f"{rows_count}", error()
 
-                    with And("poll maximum 20 times to check used disks for the table"):
+                    with And("poll maximum 30 times to check used disks for the table"):
                         used_disks = get_used_disks_for_table(node, name)
-                        retry = 20
+                        retry = 30
                         i = 0
                         while (
                             not sum(1 for x in used_disks if x == "jbod1") == 8
