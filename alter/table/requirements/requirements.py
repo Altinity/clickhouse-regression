@@ -135,54 +135,6 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Settings = Requirement(
     num="6.6",
 )
 
-RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_OrderAndPartition = Requirement(
-    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL output an error when executing `ORDER BY` or `PARTITION BY` with the `REPLACE PARTITION` clause.\n"
-        "\n"
-    ),
-    link=None,
-    level=4,
-    num="6.7.1.1",
-)
-
-RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Merges = Requirement(
-    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Merges",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL output an error when trying to run any merges before the executed `REPLACE PARTITION` is finished.\n"
-        "\n"
-    ),
-    link=None,
-    level=4,
-    num="6.7.2.1",
-)
-
-RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Mutations = Requirement(
-    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Mutations",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL output an error when trying to run any mutations before the executed `REPLACE PARTITION` is finished.\n"
-        "\n"
-    ),
-    link=None,
-    level=4,
-    num="6.7.3.1",
-)
-
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions = Requirement(
     name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions",
     version="1.0",
@@ -251,6 +203,56 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions_Different_StorageP
     link=None,
     level=2,
     num="7.4",
+)
+
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_OrderAndPartition = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL output an error when executing `ORDER BY` or `PARTITION BY` with the `REPLACE PARTITION` clause.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.5.1.1",
+)
+
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Merges = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Merges",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL output an error when trying to run any merges before the executed `REPLACE PARTITION` is finished.\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.5.2.1",
+)
+
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Mutations = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Mutations",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL output an error when trying to run any mutations before the executed `REPLACE PARTITION` is finished.\n"
+        "\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=4,
+    num="7.5.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_TableEngines = Requirement(
@@ -817,25 +819,6 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
             level=2,
             num="6.6",
         ),
-        Heading(name="Prohibited Actions", level=2, num="6.7"),
-        Heading(name="Order and Partition", level=3, num="6.7.1"),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition",
-            level=4,
-            num="6.7.1.1",
-        ),
-        Heading(name="Merges", level=3, num="6.7.2"),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Merges",
-            level=4,
-            num="6.7.2.1",
-        ),
-        Heading(name="Mutations", level=3, num="6.7.3"),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Mutations",
-            level=4,
-            num="6.7.3.1",
-        ),
         Heading(name="Conditions", level=1, num="7"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions",
@@ -856,6 +839,25 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.StoragePolicy",
             level=2,
             num="7.4",
+        ),
+        Heading(name="Prohibited Actions", level=2, num="7.5"),
+        Heading(name="Order and Partition", level=3, num="7.5.1"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition",
+            level=4,
+            num="7.5.1.1",
+        ),
+        Heading(name="Merges", level=3, num="7.5.2"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Merges",
+            level=4,
+            num="7.5.2.1",
+        ),
+        Heading(name="Mutations", level=3, num="7.5.3"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Mutations",
+            level=4,
+            num="7.5.3.1",
         ),
         Heading(name="Table Engines", level=1, num="8"),
         Heading(
@@ -1034,13 +1036,13 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_IntoOutfile,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Format,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Settings,
-        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_OrderAndPartition,
-        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Merges,
-        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Mutations,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions_Different_Structure,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions_Different_Key,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions_Different_StoragePolicy,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_OrderAndPartition,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Merges,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Mutations,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_TableEngines,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Insert,
@@ -1088,18 +1090,18 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
   * 5.4 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.IntoOutfile](#rqsrs-032clickhousealtertablereplacepartitionintooutfile)
   * 5.5 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Format](#rqsrs-032clickhousealtertablereplacepartitionformat)
   * 5.6 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Settings](#rqsrs-032clickhousealtertablereplacepartitionsettings)
-  * 5.7 [Prohibited Actions](#prohibited-actions)
-    * 5.7.1 [Order and Partition](#order-and-partition)
-      * 5.7.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition](#rqsrs-032clickhousealtertablereplacepartitionprohibitedorderandpartition)
-    * 5.7.2 [Merges](#merges)
-      * 5.7.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Merges](#rqsrs-032clickhousealtertablereplacepartitionprohibitedmerges)
-    * 5.7.3 [Mutations](#mutations)
-      * 5.7.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Mutations](#rqsrs-032clickhousealtertablereplacepartitionprohibitedmutations)
 * 6 [Conditions](#conditions)
   * 6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions](#rqsrs-032clickhousealtertablereplacepartitionconditions)
   * 6.2 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.Structure](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentstructure)
   * 6.3 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.Key](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentkey)
   * 6.4 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.StoragePolicy](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentstoragepolicy)
+  * 6.5 [Prohibited Actions](#prohibited-actions)
+    * 6.5.1 [Order and Partition](#order-and-partition)
+      * 6.5.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition](#rqsrs-032clickhousealtertablereplacepartitionprohibitedorderandpartition)
+    * 6.5.2 [Merges](#merges)
+      * 6.5.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Merges](#rqsrs-032clickhousealtertablereplacepartitionprohibitedmerges)
+    * 6.5.3 [Mutations](#mutations)
+      * 6.5.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Mutations](#rqsrs-032clickhousealtertablereplacepartitionprohibitedmutations)
 * 7 [Table Engines](#table-engines)
   * 7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TableEngines](#rqsrs-032clickhousealtertablereplacepartitiontableengines)
 * 8 [Concurrent Actions](#concurrent-actions)
@@ -1297,29 +1299,6 @@ version: 1.0
 
 [ClickHouse] SHALL support the usage of the `SETTINGS` with `REPLACE PARTITION` and SHALL not output any errors.
 
-### Prohibited Actions
-
-#### Order and Partition
-
-##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition
-version: 1.0
-
-[ClickHouse] SHALL output an error when executing `ORDER BY` or `PARTITION BY` with the `REPLACE PARTITION` clause.
-
-#### Merges
-
-##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Merges
-version: 1.0
-
-[ClickHouse] SHALL output an error when trying to run any merges before the executed `REPLACE PARTITION` is finished.
-
-#### Mutations
-
-##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Mutations
-version: 1.0
-
-[ClickHouse] SHALL output an error when trying to run any mutations before the executed `REPLACE PARTITION` is finished.
-
 ## Conditions
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions
@@ -1347,6 +1326,31 @@ version: 1.0
 
 [ClickHouse] SHALL not support the usage of `REPLACE PARTITION` between two tables when tables have different storage
 policy.
+
+### Prohibited Actions
+
+#### Order and Partition
+
+##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition
+version: 1.0
+
+[ClickHouse] SHALL output an error when executing `ORDER BY` or `PARTITION BY` with the `REPLACE PARTITION` clause.
+
+#### Merges
+
+##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Merges
+version: 1.0
+
+[ClickHouse] SHALL output an error when trying to run any merges before the executed `REPLACE PARTITION` is finished.
+
+#### Mutations
+
+##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Mutations
+version: 1.0
+
+[ClickHouse] SHALL output an error when trying to run any mutations before the executed `REPLACE PARTITION` is finished.
+
+
 
 ## Table Engines
 
