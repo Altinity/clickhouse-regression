@@ -6365,3 +6365,542 @@ _aggregate_functions_anyLast_zero_rows = r"""
 {"anyLast(number)":"0"}
 """
 
+_clickhouse_aggregate_functions_anyLast_constant = r"""
+{"anyLast(1)":1}
+"""
+
+_clickhouse_aggregate_functions_anyLast_zero_rows = r"""
+{"anyLast(number)":"0"}
+"""
+
+_clickhouse_aggregate_functions_anyLast_with_group_by = r"""
+{"even":0,"anyLast(number)":"8"}
+{"even":1,"anyLast(number)":"9"}
+"""
+
+_clickhouse_aggregate_functions_anyLast_some_negative_values = r"""
+{"anyLast(minus(number, 5))":"5"}
+"""
+
+_clickhouse_aggregate_functions_anyLast_first_non_NULL_value = r"""
+{"anyLast(x)":5}
+"""
+
+_clickhouse_aggregate_functions_anyLast_NULL_for_all_rows = r"""
+{"anyLastDistinct(if(modulo(number, 2), NULL, NULL))":null}
+"""
+
+_clickhouse_aggregate_functions_anyLast_return_type = r"""
+{"toTypeName(anyLast(number))":"UInt64"}
+"""
+
+_clickhouse_aggregate_functions_anyLast_with_another_aggregate_function = r"""
+{"anyLast(x)":5,"max(y)":"you"}
+"""
+
+_clickhouse_aggregate_functions_anyLast_with_another_aggregate_function_and_group_by = r"""
+{"anyLast(x)":1,"y":null}
+{"anyLast(x)":3,"y":"hello"}
+{"anyLast(x)":5,"y":"you"}
+"""
+
+_clickhouse_aggregate_functions_anyLast_string_that_ends_with__0 = r"""
+{"anyLast(x)":"hello"}
+"""
+
+_clickhouse_aggregate_functions_anyLast_inf = r"""
+{"anyLast(x)":null}
+"""
+
+_clickhouse_aggregate_functions_anyLast__inf = r"""
+{"anyLast(x)":null}
+"""
+
+_clickhouse_aggregate_functions_anyLast_nan = r"""
+{"anyLast(x)":null}
+"""
+
+_clickhouse_aggregate_functions_anyLast_UInt8 = r"""
+{"anyLast(uint8)":126}
+"""
+
+_clickhouse_aggregate_functions_anyLast_UInt16 = r"""
+{"anyLast(uint16)":7572}
+"""
+
+_clickhouse_aggregate_functions_anyLast_UInt32 = r"""
+{"anyLast(uint32)":2328059476}
+"""
+
+_clickhouse_aggregate_functions_anyLast_UInt64 = r"""
+{"anyLast(uint64)":"17204651265226578222"}
+"""
+
+_clickhouse_aggregate_functions_anyLast_UInt128 = r"""
+{"anyLast(uint128)":"231175023550848433681885773659102550015"}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Int8 = r"""
+{"anyLast(int8)":124}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Int16 = r"""
+{"anyLast(int16)":-7563}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Int32 = r"""
+{"anyLast(int32)":-1156852300}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Int64 = r"""
+{"anyLast(int64)":"4021889571459699167"}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Int128 = r"""
+{"anyLast(int128)":"145991069960133738940971463242489571328"}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Float32 = r"""
+{"anyLast(float32)":-8.64893e37}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Float64 = r"""
+{"anyLast(float64)":-1.6042622652400174e182}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Decimal128_38_ = r"""
+{"anyLast(decimal128_38_)":-0.47344088146611352926710300493623163904}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Date = r"""
+{"anyLast(date)":"2004-01-05"}
+"""
+
+_clickhouse_aggregate_functions_anyLast_DateTime = r"""
+{"anyLast(datetime)":"2020-01-24 15:10:50"}
+"""
+
+_clickhouse_aggregate_functions_anyLast_DateTime64_3___22_8 = r"""
+{"anyLast(datetime64_3_)":"2017-05-14 17:28:11.000"}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Bool = r"""
+{"anyLast(bool)":false}
+"""
+
+_clickhouse_aggregate_functions_anyLast_String = r"""
+{"anyLast(string)":"gggggggggggggggggggggggggggggggggggg"}
+"""
+
+_clickhouse_aggregate_functions_anyLast_FixedString_51_ = r"""
+{"anyLast(fixedstring_51_)":"wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww\u0000\u0000"}
+"""
+
+_clickhouse_aggregate_functions_anyLast_UUID = r"""
+{"anyLast(uuid)":"70a0fe21-e8b3-5465-6a69-098bf9947629"}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_UInt8_ = r"""
+{"anyLast(map_uint8_uint8_)":{"219":134}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_UInt16_ = r"""
+{"anyLast(map_uint8_uint16_)":{"80":49067}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_UInt32_ = r"""
+{"anyLast(map_uint8_uint32_)":{"181":1600750112}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_UInt64_ = r"""
+{"anyLast(map_uint8_uint64_)":{"192":"858866241486312693"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_UInt128_ = r"""
+{"anyLast(map_uint8_uint128_)":{"114":"88854459428856999163742875259928439808"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Int8_ = r"""
+{"anyLast(map_uint8_int8_)":{"142":55}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Int16_ = r"""
+{"anyLast(map_uint8_int16_)":{"193":17906}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Int32_ = r"""
+{"anyLast(map_uint8_int32_)":{"225":1615272817}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Int64_ = r"""
+{"anyLast(map_uint8_int64_)":{"188":"7395619091237178374"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Int128_ = r"""
+{"anyLast(map_uint8_int128_)":{"77":"81046057146862043121431423987599734784"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Float32_ = r"""
+{"anyLast(map_uint8_float32_)":{"167":-2.5954377e38}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Float64_ = r"""
+{"anyLast(map_uint8_float64_)":{"68":8.9803700468014e33}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Decimal128_38__ = r"""
+{"anyLast(map_uint8_decimal128_38__)":{"65":-0.54107450947496474277464884413756012544}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Date_ = r"""
+{"anyLast(map_uint8_date_)":{"36":"2008-03-03"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_DateTime_ = r"""
+{"anyLast(map_uint8_datetime_)":{"9":"2017-11-26 06:28:21"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_DateTime64_3____22_8 = r"""
+{"anyLast(map_uint8_datetime64_3__)":{"31":"2022-04-12 14:18:47.000"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Bool_ = r"""
+{"anyLast(map_uint8_bool_)":{"31":true}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_String_ = r"""
+{"anyLast(map_uint8_string_)":{"32":"TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_FixedString_51__ = r"""
+{"anyLast(map_uint8_fixedstring_51__)":{"114":"hhhhhhhhhhhhhhhhhhhhhhhhhhh\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_UUID_ = r"""
+{"anyLast(map_uint8_uuid_)":{"220":"a92279d7-0452-ac61-eb4f-ed01728f9bd5"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Nullable_UInt8__ = r"""
+{"anyLast(map_uint8_nullable_uint8__)":{"4":50}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Nullable_UInt16__ = r"""
+{"anyLast(map_uint8_nullable_uint16__)":{"128":2217}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Nullable_UInt32__ = r"""
+{"anyLast(map_uint8_nullable_uint32__)":{"186":1564204740}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Nullable_UInt64__ = r"""
+{"anyLast(map_uint8_nullable_uint64__)":{"169":"10671863224636296718"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Nullable_UInt128__ = r"""
+{"anyLast(map_uint8_nullable_uint128__)":{"100":"134450851028662977140398421277847236608"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Nullable_Int8__ = r"""
+{"anyLast(map_uint8_nullable_int8__)":{"225":75}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Nullable_Int16__ = r"""
+{"anyLast(map_uint8_nullable_int16__)":{"5":19327}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Nullable_Int32__ = r"""
+{"anyLast(map_uint8_nullable_int32__)":{"63":-1486588333}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Nullable_Int64__ = r"""
+{"anyLast(map_uint8_nullable_int64__)":{"222":"-8954890310582767706"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Nullable_Int128__ = r"""
+{"anyLast(map_uint8_nullable_int128__)":{"103":"59116273097936484055006852242256221184"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Nullable_Float32__ = r"""
+{"anyLast(map_uint8_nullable_float32__)":{"99":8.866311e37}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Nullable_Float64__ = r"""
+{"anyLast(map_uint8_nullable_float64__)":{"110":-5.002073004641205e207}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Nullable_Decimal128_38___ = r"""
+{"anyLast(map_uint8_nullable_decimal128_38___)":{"163":-0.84388386268879853570119283503090791424}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Nullable_Date__ = r"""
+{"anyLast(map_uint8_nullable_date__)":{"88":"2014-03-08"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Nullable_DateTime__ = r"""
+{"anyLast(map_uint8_nullable_datetime__)":{"251":"2019-06-26 17:21:35"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Nullable_DateTime64_3_____22_8 = r"""
+{"anyLast(map_uint8_nullable_datetime64_3___)":{"233":"2009-05-01 15:18:03.000"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Nullable_Bool__ = r"""
+{"anyLast(map_uint8_nullable_bool__)":{"56":false}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Nullable_String__ = r"""
+{"anyLast(map_uint8_nullable_string__)":{"197":"qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Nullable_FixedString_51___ = r"""
+{"anyLast(map_uint8_nullable_fixedstring_51___)":{"149":"fff\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Nullable_UUID__ = r"""
+{"anyLast(map_uint8_nullable_uuid__)":{"197":"4861362f-f65a-6791-d0a8-c93e330eec9b"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_UInt8__ = r"""
+{"anyLast(map_uint8_lowcardinality_uint8__)":{"143":200}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_UInt16__ = r"""
+{"anyLast(map_uint8_lowcardinality_uint16__)":{"23":35080}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_UInt32__ = r"""
+{"anyLast(map_uint8_lowcardinality_uint32__)":{"102":3750805073}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_UInt64__ = r"""
+{"anyLast(map_uint8_lowcardinality_uint64__)":{"110":"14451006825216721463"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_UInt128__ = r"""
+{"anyLast(map_uint8_lowcardinality_uint128__)":{"218":"5357532779816857109532477550288841408"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_Int8__ = r"""
+{"anyLast(map_uint8_lowcardinality_int8__)":{"234":-75}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_Int16__ = r"""
+{"anyLast(map_uint8_lowcardinality_int16__)":{"146":31648}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_Int32__ = r"""
+{"anyLast(map_uint8_lowcardinality_int32__)":{"65":238350546}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_Int64__ = r"""
+{"anyLast(map_uint8_lowcardinality_int64__)":{"170":"-6818746462270688518"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_Int128__ = r"""
+{"anyLast(map_uint8_lowcardinality_int128__)":{"69":"-163213124903661778101904765101981252608"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_Float32__ = r"""
+{"anyLast(map_uint8_lowcardinality_float32__)":{"8":4.990349e37}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_Float64__ = r"""
+{"anyLast(map_uint8_lowcardinality_float64__)":{"189":12132.020938130087}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_Date__ = r"""
+{"anyLast(map_uint8_lowcardinality_date__)":{"147":"2014-04-01"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_DateTime__ = r"""
+{"anyLast(map_uint8_lowcardinality_datetime__)":{"144":"2009-05-12 17:22:22"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_Bool__ = r"""
+{"anyLast(map_uint8_lowcardinality_bool__)":{"131":true}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_String__ = r"""
+{"anyLast(map_uint8_lowcardinality_string__)":{"156":"zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_FixedString_51___ = r"""
+{"anyLast(map_uint8_lowcardinality_fixedstring_51___)":{"156":"dddddddddddddddddddddddddddddddddddddd\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_UUID__ = r"""
+{"anyLast(map_uint8_lowcardinality_uuid__)":{"212":"40a4a8b8-9e08-a7dd-ba3e-d4c5553c94e8"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_Nullable_UInt8___ = r"""
+{"anyLast(map_uint8_lowcardinality_nullable_uint8___)":{"131":127}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_Nullable_UInt16___ = r"""
+{"anyLast(map_uint8_lowcardinality_nullable_uint16___)":{"12":55732}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_Nullable_UInt32___ = r"""
+{"anyLast(map_uint8_lowcardinality_nullable_uint32___)":{"215":2270040664}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_Nullable_UInt64___ = r"""
+{"anyLast(map_uint8_lowcardinality_nullable_uint64___)":{"35":"4312615478911154062"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_Nullable_UInt128___ = r"""
+{"anyLast(map_uint8_lowcardinality_nullable_uint128___)":{"189":"6444088350908045785343270706008690048"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_Nullable_Int8___ = r"""
+{"anyLast(map_uint8_lowcardinality_nullable_int8___)":{"94":-58}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_Nullable_Int16___ = r"""
+{"anyLast(map_uint8_lowcardinality_nullable_int16___)":{"216":25360}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_Nullable_Int32___ = r"""
+{"anyLast(map_uint8_lowcardinality_nullable_int32___)":{"111":-691313170}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_Nullable_Int64___ = r"""
+{"anyLast(map_uint8_lowcardinality_nullable_int64___)":{"228":"2690779471950775999"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_Nullable_Int128___ = r"""
+{"anyLast(map_uint8_lowcardinality_nullable_int128___)":{"205":"-24031321873915006874051475716524212992"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_Nullable_Float32___ = r"""
+{"anyLast(map_uint8_lowcardinality_nullable_float32___)":{"214":3.230825e38}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_Nullable_Float64___ = r"""
+{"anyLast(map_uint8_lowcardinality_nullable_float64___)":{"219":1.1317548522741687e91}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_Nullable_Date___ = r"""
+{"anyLast(map_uint8_lowcardinality_nullable_date___)":{"17":"2013-10-01"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_Nullable_DateTime___ = r"""
+{"anyLast(map_uint8_lowcardinality_nullable_datetime___)":{"178":"2014-09-01 22:44:43"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_Nullable_Bool___ = r"""
+{"anyLast(map_uint8_lowcardinality_nullable_bool___)":{"218":false}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_Nullable_String___ = r"""
+{"anyLast(map_uint8_lowcardinality_nullable_string___)":{"197":"mmmmmmmmmmmm"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_Nullable_FixedString_51____ = r"""
+{"anyLast(map_uint8_lowcardinality_nullable_fixedstring_51____)":{"2":"bbbbbbbbbbbbbbbbb\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_LowCardinality_Nullable_UUID___ = r"""
+{"anyLast(map_uint8_lowcardinality_nullable_uuid___)":{"18":"4dba7268-e48c-eaf3-3c94-a62b1984563d"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Array_String__ = r"""
+{"anyLast(map_uint8_array_string__)":{"170":["oooooooooooooooooooooooooooooooooooooooo"]}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Map_String_LowCardinality_Float64___ = r"""
+{"anyLast(map_uint8_map_string_lowcardinality_float64___)":{"78":{"lllll":-5.663924100038489e52}}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt8_Tuple_String__ = r"""
+{"anyLast(map_uint8_tuple_string__)":{"10":["vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"]}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt16_UInt8_ = r"""
+{"anyLast(map_uint16_uint8_)":{"20633":112}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt16_UInt16_ = r"""
+{"anyLast(map_uint16_uint16_)":{"12845":34865}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt16_UInt32_ = r"""
+{"anyLast(map_uint16_uint32_)":{"64981":2006090362}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt16_UInt64_ = r"""
+{"anyLast(map_uint16_uint64_)":{"61301":"10289351290757904944"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt16_UInt128_ = r"""
+{"anyLast(map_uint16_uint128_)":{"20583":"160404510721215955884126307450067084288"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt16_Int8_ = r"""
+{"anyLast(map_uint16_int8_)":{"10634":-81}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt16_Int16_ = r"""
+{"anyLast(map_uint16_int16_)":{"8313":-1248}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt16_Int32_ = r"""
+{"anyLast(map_uint16_int32_)":{"26950":-1792143947}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt16_Int64_ = r"""
+{"anyLast(map_uint16_int64_)":{"64495":"8629703221583379062"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt16_Int128_ = r"""
+{"anyLast(map_uint16_int128_)":{"41574":"140202455624864060922721520856353358848"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt16_Float32_ = r"""
+{"anyLast(map_uint16_float32_)":{"8745":-2.2701742e38}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt16_Float64_ = r"""
+{"anyLast(map_uint16_float64_)":{"20321":4.5123071411946535e115}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt16_Decimal128_38__ = r"""
+{"anyLast(map_uint16_decimal128_38__)":{"24697":0.66064863302192814068450505646247517184}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt16_Date_ = r"""
+{"anyLast(map_uint16_date_)":{"50873":"2011-11-24"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt16_DateTime_ = r"""
+{"anyLast(map_uint16_datetime_)":{"18085":"2008-04-25 20:43:44"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt16_DateTime64_3____22_8 = r"""
+{"anyLast(map_uint16_datetime64_3__)":{"64879":"2009-03-12 21:51:07.000"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt16_Bool_ = r"""
+{"anyLast(map_uint16_bool_)":{"6490":false}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt16_String_ = r"""
+{"anyLast(map_uint16_string_)":{"65497":"IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt16_FixedString_51__ = r"""
+{"anyLast(map_uint16_fixedstring_51__)":{"53755":"NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN\u0000\u0000"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt16_UUID_ = r"""
+{"anyLast(map_uint16_uuid_)":{"21583":"76ab4333-3a46-b686-7a05-cbe7143d1611"}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt16_Nullable_UInt8__ = r"""
+{"anyLast(map_uint16_nullable_uint8__)":{"6193":145}}
+"""
+
+_clickhouse_aggregate_functions_anyLast_Map_UInt16_Nullable_UInt16__ = r"""
+{"anyLast(map_uint16_nullable_uint16__)":{"56283":53342}}
+"""
+

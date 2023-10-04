@@ -62,9 +62,6 @@ def performance_cluster(
         nodes=nodes,
         clickhouse_binary_path=clickhouse_binary_path,
         environ={"DUCKDB_TESTS_BIN_PATH": duckdb_binary_path},
-        docker_compose_project_dir=os.path.join(
-            current_dir(), "parquet_performance_env"
-        ),
     ) as cluster:
         yield cluster
 

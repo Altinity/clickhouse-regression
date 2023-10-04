@@ -120,7 +120,7 @@ xfails = {
     ":/alter move/concurrent/concurrent alter move insert and select": [
         (Fail, "unstable test")
     ],
-    ":/alter move/concurrent/concurrent alter move and select" : [
+    ":/alter move/concurrent/concurrent alter move and select": [
         (Fail, "unstable test")
     ],
 }
@@ -155,9 +155,6 @@ def feature(
         collect_service_logs=collect_service_logs,
         nodes=nodes,
         environ=environ,
-        docker_compose_project_dir=os.path.join(
-            current_dir(), os.path.basename(current_dir()) + "_env"
-        ),
     ) as cluster:
         cluster.with_minio = with_minio
         cluster.with_s3amazon = with_s3amazon

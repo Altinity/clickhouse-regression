@@ -62,7 +62,6 @@ def regression(
         collect_service_logs=collect_service_logs,
         thread_fuzzer=thread_fuzzer,
         nodes=nodes,
-        docker_compose_project_dir=os.path.join(current_dir(), "part_moves_env"),
     ) as cluster:
         self.context.cluster = cluster
         self.context.node = cluster.node("clickhouse1")

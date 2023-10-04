@@ -67,7 +67,6 @@ def regression(
         collect_service_logs=collect_service_logs,
         thread_fuzzer=thread_fuzzer,
         nodes=nodes,
-        docker_compose_project_dir=os.path.join(current_dir(), "ssl_keeper_env"),
     ) as cluster:
         self.context.cluster = cluster
 

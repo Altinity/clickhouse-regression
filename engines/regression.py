@@ -9,7 +9,6 @@ append_path(sys.path, "..")
 from helpers.cluster import Cluster
 from helpers.argparser import argparser as base_argparser
 from helpers.common import check_clickhouse_version
-from platform import processor as current_cpu
 
 from engines.requirements import *
 
@@ -53,18 +52,12 @@ def regression(
     if stress is not None:
         self.context.stress = stress
 
-    if current_cpu() == "aarch64":
-        env = "engines_env_arm64"
-    else:
-        env = "engines_env"
-
     with Cluster(
         local,
         clickhouse_binary_path,
         collect_service_logs=collect_service_logs,
         thread_fuzzer=thread_fuzzer,
         nodes=nodes,
-        docker_compose_project_dir=os.path.join(current_dir(), env),
     ) as cluster:
         self.context.cluster = cluster
         self.context.node = cluster.node("clickhouse1")
