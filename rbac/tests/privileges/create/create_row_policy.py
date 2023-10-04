@@ -1117,10 +1117,12 @@ def no_table(self, node=None):
         )
 
     with And("I try to create a row policy on a database"):
+        exitcode = 0 if check_clickhouse_version("=23.3.13.7.altinitystable") else 62
+        message = "" if check_clickhouse_version("=23.3.13.7.altinitystable") else "Exception: Syntax error"
         node.query(
             f"CREATE ROW POLICY {pol_name} ON default.*",
-            exitcode=62,
-            message="Exception: Syntax error",
+            exitcode=exitcode,
+            message=message,
         )
 
 
