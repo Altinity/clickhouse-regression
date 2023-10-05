@@ -51,28 +51,28 @@
 * 19 [Concurrent Actions](#concurrent-actions)
   * 19.1 [Moving Partitions During Merges and Mutations ](#moving-partitions-during-merges-and-mutations-)
     * 19.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent](#rqsrs-032clickhousealtertablereplacepartitionconcurrent)
-  * 19.2 [Insert Into Table](#insert-into-table)
+  * 19.2 [Moving Partitions During In Progress Insert Into Table](#moving-partitions-during-in-progress-insert-into-table)
     * 19.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Insert](#rqsrs-032clickhousealtertablereplacepartitionconcurrentinsert)
-  * 19.3 [Delete Table](#delete-table)
+  * 19.3 [Moving Partitions During In Progress Delete Table](#moving-partitions-during-in-progress-delete-table)
     * 19.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Delete](#rqsrs-032clickhousealtertablereplacepartitionconcurrentdelete)
-  * 19.4 [Attach Table](#attach-table)
+  * 19.4 [Moving Partitions During In Progress Attach Table](#moving-partitions-during-in-progress-attach-table)
     * 19.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Attach](#rqsrs-032clickhousealtertablereplacepartitionconcurrentattach)
-  * 19.5 [Detach Table](#detach-table)
+  * 19.5 [Moving Partitions During In Progress Detach Table](#moving-partitions-during-in-progress-detach-table)
     * 19.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Detach](#rqsrs-032clickhousealtertablereplacepartitionconcurrentdetach)
-  * 19.6 [Optimize Table](#optimize-table)
+  * 19.6 [Moving Partitions During In Progress Optimize Table](#moving-partitions-during-in-progress-optimize-table)
     * 19.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Optimize](#rqsrs-032clickhousealtertablereplacepartitionconcurrentoptimize)
   * 19.7 [Alter](#alter)
-    * 19.7.1 [Add Column](#add-column)
+    * 19.7.1 [Moving Partitions During In Progress Add Column](#moving-partitions-during-in-progress-add-column)
       * 19.7.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Add](#rqsrs-032clickhousealtertablereplacepartitionconcurrentalteradd)
-    * 19.7.2 [Drop Column](#drop-column)
+    * 19.7.2 [Moving Partitions During In Progress Drop Column](#moving-partitions-during-in-progress-drop-column)
       * 19.7.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Drop](#rqsrs-032clickhousealtertablereplacepartitionconcurrentalterdrop)
-    * 19.7.3 [Clear Column](#clear-column)
+    * 19.7.3 [Moving Partitions During In Progress Clear Column](#moving-partitions-during-in-progress-clear-column)
       * 19.7.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Clear](#rqsrs-032clickhousealtertablereplacepartitionconcurrentalterclear)
-    * 19.7.4 [Modify Column](#modify-column)
+    * 19.7.4 [Moving Partitions During In Progress Modify Column](#moving-partitions-during-in-progress-modify-column)
       * 19.7.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Modify](#rqsrs-032clickhousealtertablereplacepartitionconcurrentaltermodify)
-    * 19.7.5 [Modify Column Remove](#modify-column-remove)
+    * 19.7.5 [Moving Partitions During In Progress Modify Column Remove](#moving-partitions-during-in-progress-modify-column-remove)
       * 19.7.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.ModifyRemove](#rqsrs-032clickhousealtertablereplacepartitionconcurrentaltermodifyremove)
-    * 19.7.6 [Materialize](#materialize)
+    * 19.7.6 [Moving Partitions During In Progress Materialize](#moving-partitions-during-in-progress-materialize)
       * 19.7.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Materialize](#rqsrs-032clickhousealtertablereplacepartitionconcurrentaltermaterialize)
   * 19.8 [Manipulating Partitions](#manipulating-partitions)
     * 19.8.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitions)
@@ -423,35 +423,35 @@ ALTER TABLE table_1 REPLACE PARTITION id '2' FROM t2;
 
 `REPLACE PARTITION` SHALL complete right away since there are no merges happening on this partition at the moment.
 
-### Insert Into Table
+### Moving Partitions During In Progress Insert Into Table
 
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Insert
 version: 1.0
 
 [ClickHouse] SHALL stop background merges, that are still in progress, for the partition `INSERT INTO TABLE` is used on, when `REPLACE PARTITION` is executed on this partition.
 
-### Delete Table
+### Moving Partitions During In Progress Delete Table
 
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Delete
 version: 1.0
 
 [ClickHouse] SHALL stop background mutations, that are still in progress, for the partition `DELETE FROM` is used on, when `REPLACE PARTITION` is executed on this partition.
 
-### Attach Table
+### Moving Partitions During In Progress Attach Table
 
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Attach
 version: 1.0
 
 [ClickHouse] SHALL stop background merges, that are still in progress, for the partition `ATTACH TABLE` is used on, when `REPLACE PARTITION` is executed on this partition.
 
-### Detach Table
+### Moving Partitions During In Progress Detach Table
 
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Detach
 version: 1.0
 
 [ClickHouse] SHALL stop background merges, that are still in progress, for the partition `DETACH TABLE` is used on, when `REPLACE PARTITION` is executed on this partition.
 
-### Optimize Table
+### Moving Partitions During In Progress Optimize Table
 
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Optimize
 version: 1.0
@@ -460,42 +460,42 @@ version: 1.0
 
 ### Alter
 
-#### Add Column
+#### Moving Partitions During In Progress Add Column
 
 ##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Add
 version: 1.0
 
 [ClickHouse] SHALL stop background mutations, that are still in progress, for the partition `ADD COLUMN` is used on, when `REPLACE PARTITION` is executed on this partition.
 
-#### Drop Column
+#### Moving Partitions During In Progress Drop Column
 
 ##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Drop
 version: 1.0
 
 [ClickHouse] SHALL stop background mutations, that are still in progress, for the partition `DROP COLUMN` is used on, when `REPLACE PARTITION` is executed on this partition.
 
-#### Clear Column
+#### Moving Partitions During In Progress Clear Column
 
 ##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Clear
 version: 1.0
 
 [ClickHouse] SHALL stop background mutations, that are still in progress, for the partition `DROP COLUMN` is used on, when `REPLACE PARTITION` is executed on this partition.
 
-#### Modify Column
+#### Moving Partitions During In Progress Modify Column
 
 ##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Modify
 version: 1.0
 
 [ClickHouse] SHALL stop background mutations, that are still in progress, for the partition `MODIFY COLUMN` is used on, when `REPLACE PARTITION` is executed on this partition.
 
-#### Modify Column Remove
+#### Moving Partitions During In Progress Modify Column Remove
 
 ##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.ModifyRemove
 version: 1.0
 
 [ClickHouse] SHALL stop background mutations, that are still in progress, for the partition `MODIFY COLUMN REMOVE` is used on, when `REPLACE PARTITION` is executed on this partition.
 
-#### Materialize
+#### Moving Partitions During In Progress Materialize
 
 ##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Materialize
 version: 1.0
