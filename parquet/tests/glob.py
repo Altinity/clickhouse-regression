@@ -105,6 +105,38 @@ def glob_with_multiple_elements(self):
     )
 
 
+@TestScenario
+@Examples(
+    "query snapshot_name",
+    rows=[
+        (f"file('glob_million/z.parquet', Parquet)", "glob_million_files_1"),
+        (f"file('glob_million/*.parquet', Parquet)", "glob_million_files_2"),
+        (f"file('glob_million/z.*', Parquet)", "glob_million_files_3"),
+        (f"file('glob_million/{{z,a,h}}.parquet', Parquet)", "glob_million_files_4"),
+        (f"file('glob_million/t1.parquet', Parquet)", "glob_million_files_5"),
+    ],
+)
+def million_extensions(self):
+    """Check that glob patterns can pick up a parquet file between one million files with all possible three letter extensions."""
+    node = self.context.node
+    directory = "/var/lib/clickhouse/user_files/glob_million"
+    try:
+        with Given(
+            "I generate million files with all possible three letter extensions"
+        ):
+            node.command(f"cd {directory}")
+            node.command("./generate_million_files.sh")
+
+        for example in self.examples:
+            select_with_glob(
+                query=example[0],
+                snapshot_name=example[1],
+            )
+    finally:
+        with Finally("I clean up generated files"):
+            node.command("rm -rf file.*")
+
+
 @TestFeature
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Import_Glob("1.0"))
 @Name("glob")
