@@ -58,7 +58,7 @@
         * 23.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Merges](#rqsrs-032clickhousealtertablereplacepartitionprohibitedmerges)
     * 23.3 [Staring New Mutations With Ongoing Replace Partition](#staring-new-mutations-with-ongoing-replace-partition)
         * 23.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Mutations](#rqsrs-032clickhousealtertablereplacepartitionprohibitedmutations)
-* 24 [Moving Partitions During Ongoing Merges and Mutations ](#moving-partitions-during-ongoing-merges-and-mutations-)
+* 24 [Moving Partitions During Ongoing Merges and Mutations](#moving-partitions-during-ongoing-merges-and-mutations)
         * 24.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent](#rqsrs-032clickhousealtertablereplacepartitionconcurrent)
     * 24.4 [Insert Into Table](#insert-into-table)
         * 24.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Insert](#rqsrs-032clickhousealtertablereplacepartitionconcurrentinsert)
@@ -427,7 +427,7 @@ version: 1.0
 
 [ClickHouse] SHALL output an error when trying to run any mutations before the executed `REPLACE PARTITION` is finished.
 
-## Moving Partitions During Ongoing Merges and Mutations 
+## Moving Partitions During Ongoing Merges and Mutations
 
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent
 version: 1.0
