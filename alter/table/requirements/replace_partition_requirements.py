@@ -66,7 +66,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_NonExistentPartition = Requir
         "ALTER TABLE table2 REPLACE PARTITION 21 FROM table1\n"
         "```\n"
         "\n"
-        "The data on table2 should not be deleted and an exception should be raised.\n"
+        "The data on `table2` should not be deleted and an exception should be raised.\n"
         "\n"
     ),
     link=None,
@@ -1448,7 +1448,7 @@ If we try to copy the data partition from the `table1` to `table2` and replace e
 ALTER TABLE table2 REPLACE PARTITION 21 FROM table1
 ```
 
-The data on table2 should not be deleted and an exception should be raised.
+The data on `table2` should not be deleted and an exception should be raised.
 
 ## Moving Partitions Form Temporary Table
 
