@@ -217,7 +217,7 @@ If we try to copy the data partition from the `table1` to `table2` and replace e
 ALTER TABLE table2 REPLACE PARTITION 21 FROM table1
 ```
 
-The data on table2 should not be deleted and an exception should be raised.
+The data on `table2` should not be deleted and an exception should be raised.
 
 ## Moving Partitions Form Temporary Table
 
