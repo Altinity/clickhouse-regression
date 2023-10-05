@@ -10,40 +10,40 @@
 * 4 [User Actions](#user-actions)
 * 5 [Replace Partition](#replace-partition)
   * 5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition](#rqsrs-032clickhousealtertablereplacepartition)
-* 6 [Keeping Data When Replacing Partitions](#keeping-data-when-replacing-partitions)
-  * 6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.KeepData](#rqsrs-032clickhousealtertablereplacepartitionkeepdata)
-* 7 [Keeping Data When Replacing Partition From Non-Existent Partition](#keeping-data-when-replacing-partition-from-non-existent-partition)
-  * 7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.NonExistentPartition](#rqsrs-032clickhousealtertablereplacepartitionnonexistentpartition)
-* 8 [Moving Partitions Form Temporary Table](#moving-partitions-form-temporary-table)
-  * 8.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TemporaryTable](#rqsrs-032clickhousealtertablereplacepartitiontemporarytable)
-* 9 [Moving Partitions Between Temporary Tables](#moving-partitions-between-temporary-tables)
-  * 9.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.BetweenTemporaryTables](#rqsrs-032clickhousealtertablereplacepartitionbetweentemporarytables)
-* 10 [Using Into Outfile With Replace Partition](#using-into-outfile-with-replace-partition)
-  * 10.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.IntoOutfile](#rqsrs-032clickhousealtertablereplacepartitionintooutfile)
-* 11 [Using Format With Replace Partition](#using-format-with-replace-partition)
-  * 11.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Format](#rqsrs-032clickhousealtertablereplacepartitionformat)
-* 12 [Using Settings With Replace Partition](#using-settings-with-replace-partition)
-  * 12.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Settings](#rqsrs-032clickhousealtertablereplacepartitionsettings)
-* 13 [Moving Partitions From One Disk To Another In The Same Table](#moving-partitions-from-one-disk-to-another-in-the-same-table)
-  * 13.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Disks](#rqsrs-032clickhousealtertablereplacepartitionbetweendisks)
-* 14 [Conditions](#conditions)
-  * 14.1 [Rules For Moving Partitions Between Tables](#rules-for-moving-partitions-between-tables)
-    * 14.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions](#rqsrs-032clickhousealtertablereplacepartitionconditions)
-  * 14.2 [Moving Partitions Between Tables With Different Structure](#moving-partitions-between-tables-with-different-structure)
-    * 14.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.Structure](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentstructure)
-  * 14.3 [Moving Partitions Between Tables With Different Partition Key](#moving-partitions-between-tables-with-different-partition-key)
-    * 14.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.Key](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentkey)
-  * 14.4 [Moving Partitions Between Tables With Different Storage Policy](#moving-partitions-between-tables-with-different-storage-policy)
-    * 14.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.StoragePolicy](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentstoragepolicy)
-* 15 [Prohibited Actions](#prohibited-actions)
-  * 15.1 [Order and Partition](#order-and-partition)
-    * 15.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition](#rqsrs-032clickhousealtertablereplacepartitionprohibitedorderandpartition)
-  * 15.2 [Merges](#merges)
-    * 15.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Merges](#rqsrs-032clickhousealtertablereplacepartitionprohibitedmerges)
-  * 15.3 [Mutations](#mutations)
-    * 15.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Mutations](#rqsrs-032clickhousealtertablereplacepartitionprohibitedmutations)
-* 16 [Table Engines](#table-engines)
-  * 16.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TableEngines](#rqsrs-032clickhousealtertablereplacepartitiontableengines)
+* 6 [Table Engines](#table-engines)
+  * 6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TableEngines](#rqsrs-032clickhousealtertablereplacepartitiontableengines)
+* 7 [Keeping Data When Replacing Partitions](#keeping-data-when-replacing-partitions)
+  * 7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.KeepData](#rqsrs-032clickhousealtertablereplacepartitionkeepdata)
+* 8 [Keeping Data When Replacing Partition From Non-Existent Partition](#keeping-data-when-replacing-partition-from-non-existent-partition)
+  * 8.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.NonExistentPartition](#rqsrs-032clickhousealtertablereplacepartitionnonexistentpartition)
+* 9 [Moving Partitions Form Temporary Table](#moving-partitions-form-temporary-table)
+  * 9.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TemporaryTable](#rqsrs-032clickhousealtertablereplacepartitiontemporarytable)
+* 10 [Moving Partitions Between Temporary Tables](#moving-partitions-between-temporary-tables)
+  * 10.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.BetweenTemporaryTables](#rqsrs-032clickhousealtertablereplacepartitionbetweentemporarytables)
+* 11 [Using Into Outfile With Replace Partition](#using-into-outfile-with-replace-partition)
+  * 11.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.IntoOutfile](#rqsrs-032clickhousealtertablereplacepartitionintooutfile)
+* 12 [Using Format With Replace Partition](#using-format-with-replace-partition)
+  * 12.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Format](#rqsrs-032clickhousealtertablereplacepartitionformat)
+* 13 [Using Settings With Replace Partition](#using-settings-with-replace-partition)
+  * 13.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Settings](#rqsrs-032clickhousealtertablereplacepartitionsettings)
+* 14 [Moving Partitions From One Disk To Another In The Same Table](#moving-partitions-from-one-disk-to-another-in-the-same-table)
+  * 14.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Disks](#rqsrs-032clickhousealtertablereplacepartitionbetweendisks)
+* 15 [Conditions](#conditions)
+  * 15.1 [Rules For Moving Partitions Between Tables](#rules-for-moving-partitions-between-tables)
+    * 15.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions](#rqsrs-032clickhousealtertablereplacepartitionconditions)
+  * 15.2 [Moving Partitions Between Tables With Different Structure](#moving-partitions-between-tables-with-different-structure)
+    * 15.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.Structure](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentstructure)
+  * 15.3 [Moving Partitions Between Tables With Different Partition Key](#moving-partitions-between-tables-with-different-partition-key)
+    * 15.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.Key](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentkey)
+  * 15.4 [Moving Partitions Between Tables With Different Storage Policy](#moving-partitions-between-tables-with-different-storage-policy)
+    * 15.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.StoragePolicy](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentstoragepolicy)
+* 16 [Prohibited Actions](#prohibited-actions)
+  * 16.1 [Order and Partition](#order-and-partition)
+    * 16.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition](#rqsrs-032clickhousealtertablereplacepartitionprohibitedorderandpartition)
+  * 16.2 [Merges](#merges)
+    * 16.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Merges](#rqsrs-032clickhousealtertablereplacepartitionprohibitedmerges)
+  * 16.3 [Mutations](#mutations)
+    * 16.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Mutations](#rqsrs-032clickhousealtertablereplacepartitionprohibitedmutations)
 * 17 [Moving Partitions Between Replicas](#moving-partitions-between-replicas)
   * 17.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Replicas](#rqsrs-032clickhousealtertablereplacepartitionmovebetweenreplicas)
 * 18 [Moving Partitions Between Shards](#moving-partitions-between-shards)
@@ -196,6 +196,26 @@ This query copies the data partition from the `table1` to `table2` and replaces 
 ALTER TABLE table2 [ON CLUSTER cluster] REPLACE PARTITION partition_expr FROM table1
 ```
 
+## Table Engines
+
+### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TableEngines
+version: 1.0
+
+[ClickHouse] SHALL support the usage of `REPLACE PARTITION` for the following table engines,
+
+|            Engines             |
+|:------------------------------:|
+|          `MergeTree`           |
+|     `ReplicatedMergeTree`      |
+|      `ReplacingMergeTree`      |
+|     `AggregatingMergeTree`     |
+|     `CollapsingMergeTree`      |
+| `VersionedCollapsingMergeTree` |
+|      `GraphiteMergeTree`       |
+|       `DistributedTable`       |
+|       `MaterializedView`       |
+
+
 ## Keeping Data When Replacing Partitions
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.KeepData
@@ -345,26 +365,6 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to run any mutations before the executed `REPLACE PARTITION` is finished.
-
-## Table Engines
-
-### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TableEngines
-version: 1.0
-
-[ClickHouse] SHALL support the usage of `REPLACE PARTITION` for the following table engines,
-
-|            Engines             |
-|:------------------------------:|
-|          `MergeTree`           |
-|     `ReplicatedMergeTree`      |
-|      `ReplacingMergeTree`      |
-|     `AggregatingMergeTree`     |
-|     `CollapsingMergeTree`      |
-| `VersionedCollapsingMergeTree` |
-|      `GraphiteMergeTree`       |
-|       `DistributedTable`       |
-|       `MaterializedView`       |
-
 
 ## Moving Partitions Between Replicas
 
