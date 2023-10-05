@@ -38,7 +38,7 @@
     * 18.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Versions](#rqsrs-032clickhousealtertablereplacepartitionmovebetweenversions)
 * 19 [Moving Partitions Between Different Encodings](#moving-partitions-between-different-encodings)
     * 19.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Encodings](#rqsrs-032clickhousealtertablereplacepartitionmovebetweenencodings)
-* 20 [Moving Partitions Between Encrypted And Unencrypted Columns](#moving-partitions-between-encrypted-and-unencrypted-columns)
+* 20 [Moving Partitions Between Encrypted And Unencrypted Tables](#moving-partitions-between-encrypted-and-unencrypted-tables)
     * 20.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Encryption](#rqsrs-032clickhousealtertablereplacepartitionmovebetweenencryption)
 * 21 [Moving Partitions To Deduplication Tables](#moving-partitions-to-deduplication-tables)
     * 21.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Deduplication](#rqsrs-032clickhousealtertablereplacepartitionmovebetweendeduplication)
@@ -354,7 +354,7 @@ version: 1.0
 
 [ClickHouse] SHALL support using `REPLACE PARTITION` to move partitions between tables with different encodings.
 
-## Moving Partitions Between Encrypted And Unencrypted Columns
+## Moving Partitions Between Encrypted And Unencrypted Tables
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Encryption
 version: 1.0
