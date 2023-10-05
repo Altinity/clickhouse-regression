@@ -503,8 +503,8 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent = Requirement(
         "\n"
     ),
     link=None,
-    level=3,
-    num="25.3.1",
+    level=2,
+    num="25.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Insert = Requirement(
@@ -520,7 +520,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Insert = Requireme
     ),
     link=None,
     level=3,
-    num="25.4.1",
+    num="25.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Delete = Requirement(
@@ -536,7 +536,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Delete = Requireme
     ),
     link=None,
     level=3,
-    num="25.5.1",
+    num="25.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Attach = Requirement(
@@ -552,7 +552,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Attach = Requireme
     ),
     link=None,
     level=3,
-    num="25.6.1",
+    num="25.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Detach = Requirement(
@@ -568,7 +568,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Detach = Requireme
     ),
     link=None,
     level=3,
-    num="25.7.1",
+    num="25.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Optimize = Requirement(
@@ -584,7 +584,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Optimize = Require
     ),
     link=None,
     level=3,
-    num="25.8.1",
+    num="25.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Add = Requirement(
@@ -600,7 +600,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Add = Requir
     ),
     link=None,
     level=4,
-    num="25.9.1.1",
+    num="25.7.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Drop = Requirement(
@@ -616,7 +616,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Drop = Requi
     ),
     link=None,
     level=4,
-    num="25.9.2.1",
+    num="25.7.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Clear = Requirement(
@@ -632,7 +632,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Clear = Requ
     ),
     link=None,
     level=4,
-    num="25.9.3.1",
+    num="25.7.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Modify = Requirement(
@@ -648,7 +648,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Modify = Req
     ),
     link=None,
     level=4,
-    num="25.9.4.1",
+    num="25.7.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_ModifyRemove = Requirement(
@@ -664,7 +664,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_ModifyRemove
     ),
     link=None,
     level=4,
-    num="25.9.5.1",
+    num="25.7.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Materialize = Requirement(
@@ -680,7 +680,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Materialize 
     ),
     link=None,
     level=4,
-    num="25.9.6.1",
+    num="25.7.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions = Requirement(
@@ -696,7 +696,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     ),
     link=None,
     level=3,
-    num="25.10.1",
+    num="25.8.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Detach = Requirement(
@@ -712,7 +712,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     ),
     link=None,
     level=4,
-    num="25.10.2.1",
+    num="25.8.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Drop = Requirement(
@@ -728,7 +728,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     ),
     link=None,
     level=4,
-    num="25.10.3.1",
+    num="25.8.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Attach = Requirement(
@@ -744,7 +744,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     ),
     link=None,
     level=4,
-    num="25.10.4.1",
+    num="25.8.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_AttachFrom = Requirement(
@@ -760,7 +760,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     ),
     link=None,
     level=4,
-    num="25.10.5.1",
+    num="25.8.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Replace = Requirement(
@@ -781,7 +781,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     ),
     link=None,
     level=4,
-    num="25.10.6.1",
+    num="25.8.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_MoveToTable = Requirement(
@@ -797,7 +797,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     ),
     link=None,
     level=4,
-    num="25.10.7.1",
+    num="25.8.7.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_ClearColumnInPartition = Requirement(
@@ -813,7 +813,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     ),
     link=None,
     level=4,
-    num="25.10.8.1",
+    num="25.8.8.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Freeze = Requirement(
@@ -829,7 +829,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     ),
     link=None,
     level=4,
-    num="25.10.9.1",
+    num="25.8.9.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Unfreeze = Requirement(
@@ -845,7 +845,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     ),
     link=None,
     level=4,
-    num="25.10.10.1",
+    num="25.8.10.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_ClearIndex = Requirement(
@@ -861,7 +861,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     ),
     link=None,
     level=4,
-    num="25.10.11.1",
+    num="25.8.11.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Fetch = Requirement(
@@ -877,7 +877,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     ),
     link=None,
     level=4,
-    num="25.10.12.1",
+    num="25.8.12.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Move = Requirement(
@@ -893,7 +893,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     ),
     link=None,
     level=4,
-    num="25.10.13.1",
+    num="25.8.13.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_UpdateInPartition = Requirement(
@@ -909,7 +909,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     ),
     link=None,
     level=4,
-    num="25.10.14.1",
+    num="25.8.14.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_DeleteInPartition = Requirement(
@@ -935,7 +935,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     ),
     link=None,
     level=4,
-    num="25.10.15.1",
+    num="25.8.15.1",
 )
 
 SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
@@ -1156,165 +1156,165 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent",
-            level=3,
-            num="25.3.1",
+            level=2,
+            num="25.1",
         ),
-        Heading(name="Insert Into Table", level=2, num="25.4"),
+        Heading(name="Insert Into Table", level=2, num="25.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Insert",
             level=3,
-            num="25.4.1",
+            num="25.2.1",
         ),
-        Heading(name="Delete Table", level=2, num="25.5"),
+        Heading(name="Delete Table", level=2, num="25.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Delete",
             level=3,
-            num="25.5.1",
+            num="25.3.1",
         ),
-        Heading(name="Attach Table", level=2, num="25.6"),
+        Heading(name="Attach Table", level=2, num="25.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Attach",
             level=3,
-            num="25.6.1",
+            num="25.4.1",
         ),
-        Heading(name="Detach Table", level=2, num="25.7"),
+        Heading(name="Detach Table", level=2, num="25.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Detach",
             level=3,
-            num="25.7.1",
+            num="25.5.1",
         ),
-        Heading(name="Optimize Table", level=2, num="25.8"),
+        Heading(name="Optimize Table", level=2, num="25.6"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Optimize",
             level=3,
-            num="25.8.1",
+            num="25.6.1",
         ),
-        Heading(name="Alter", level=2, num="25.9"),
-        Heading(name="Add Column", level=3, num="25.9.1"),
+        Heading(name="Alter", level=2, num="25.7"),
+        Heading(name="Add Column", level=3, num="25.7.1"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Add",
             level=4,
-            num="25.9.1.1",
+            num="25.7.1.1",
         ),
-        Heading(name="Drop Column", level=3, num="25.9.2"),
+        Heading(name="Drop Column", level=3, num="25.7.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Drop",
             level=4,
-            num="25.9.2.1",
+            num="25.7.2.1",
         ),
-        Heading(name="Clear Column", level=3, num="25.9.3"),
+        Heading(name="Clear Column", level=3, num="25.7.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Clear",
             level=4,
-            num="25.9.3.1",
+            num="25.7.3.1",
         ),
-        Heading(name="Modify Column", level=3, num="25.9.4"),
+        Heading(name="Modify Column", level=3, num="25.7.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Modify",
             level=4,
-            num="25.9.4.1",
+            num="25.7.4.1",
         ),
-        Heading(name="Modify Column Remove", level=3, num="25.9.5"),
+        Heading(name="Modify Column Remove", level=3, num="25.7.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.ModifyRemove",
             level=4,
-            num="25.9.5.1",
+            num="25.7.5.1",
         ),
-        Heading(name="Materialize", level=3, num="25.9.6"),
+        Heading(name="Materialize", level=3, num="25.7.6"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Materialize",
             level=4,
-            num="25.9.6.1",
+            num="25.7.6.1",
         ),
-        Heading(name="Manipulating Partitions", level=2, num="25.10"),
+        Heading(name="Manipulating Partitions", level=2, num="25.8"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions",
             level=3,
-            num="25.10.1",
+            num="25.8.1",
         ),
-        Heading(name="Detach", level=3, num="25.10.2"),
+        Heading(name="Detach", level=3, num="25.8.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Detach",
             level=4,
-            num="25.10.2.1",
+            num="25.8.2.1",
         ),
-        Heading(name="Drop", level=3, num="25.10.3"),
+        Heading(name="Drop", level=3, num="25.8.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Drop",
             level=4,
-            num="25.10.3.1",
+            num="25.8.3.1",
         ),
-        Heading(name="Attach", level=3, num="25.10.4"),
+        Heading(name="Attach", level=3, num="25.8.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Attach",
             level=4,
-            num="25.10.4.1",
+            num="25.8.4.1",
         ),
-        Heading(name="Attach From", level=3, num="25.10.5"),
+        Heading(name="Attach From", level=3, num="25.8.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.AttachFrom",
             level=4,
-            num="25.10.5.1",
+            num="25.8.5.1",
         ),
-        Heading(name="Replace", level=3, num="25.10.6"),
+        Heading(name="Replace", level=3, num="25.8.6"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Replace",
             level=4,
-            num="25.10.6.1",
+            num="25.8.6.1",
         ),
-        Heading(name="Move To Table", level=3, num="25.10.7"),
+        Heading(name="Move To Table", level=3, num="25.8.7"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.MoveToTable",
             level=4,
-            num="25.10.7.1",
+            num="25.8.7.1",
         ),
-        Heading(name="Clear Column In Partition", level=3, num="25.10.8"),
+        Heading(name="Clear Column In Partition", level=3, num="25.8.8"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.ClearColumnInPartition",
             level=4,
-            num="25.10.8.1",
+            num="25.8.8.1",
         ),
-        Heading(name="Freeze", level=3, num="25.10.9"),
+        Heading(name="Freeze", level=3, num="25.8.9"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Freeze",
             level=4,
-            num="25.10.9.1",
+            num="25.8.9.1",
         ),
-        Heading(name="Unfreeze", level=3, num="25.10.10"),
+        Heading(name="Unfreeze", level=3, num="25.8.10"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Unfreeze",
             level=4,
-            num="25.10.10.1",
+            num="25.8.10.1",
         ),
-        Heading(name="Clear Index", level=3, num="25.10.11"),
+        Heading(name="Clear Index", level=3, num="25.8.11"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.ClearIndex",
             level=4,
-            num="25.10.11.1",
+            num="25.8.11.1",
         ),
-        Heading(name="Fetch", level=3, num="25.10.12"),
+        Heading(name="Fetch", level=3, num="25.8.12"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Fetch",
             level=4,
-            num="25.10.12.1",
+            num="25.8.12.1",
         ),
-        Heading(name="Move", level=3, num="25.10.13"),
+        Heading(name="Move", level=3, num="25.8.13"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Move",
             level=4,
-            num="25.10.13.1",
+            num="25.8.13.1",
         ),
-        Heading(name="Update In", level=3, num="25.10.14"),
+        Heading(name="Update In", level=3, num="25.8.14"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.UpdateInPartition",
             level=4,
-            num="25.10.14.1",
+            num="25.8.14.1",
         ),
-        Heading(name="Delete In", level=3, num="25.10.15"),
+        Heading(name="Delete In", level=3, num="25.8.15"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.DeleteInPartition",
             level=4,
-            num="25.10.15.1",
+            num="25.8.15.1",
         ),
     ),
     requirements=(
@@ -1432,60 +1432,60 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
     * 23.3 [Staring New Mutations With Ongoing Replace Partition](#staring-new-mutations-with-ongoing-replace-partition)
         * 23.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Mutations](#rqsrs-032clickhousealtertablereplacepartitionprohibitedmutations)
 * 24 [Moving Partitions During Ongoing Merges and Mutations](#moving-partitions-during-ongoing-merges-and-mutations)
-        * 24.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent](#rqsrs-032clickhousealtertablereplacepartitionconcurrent)
-    * 24.4 [Insert Into Table](#insert-into-table)
-        * 24.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Insert](#rqsrs-032clickhousealtertablereplacepartitionconcurrentinsert)
-    * 24.5 [Delete Table](#delete-table)
-        * 24.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Delete](#rqsrs-032clickhousealtertablereplacepartitionconcurrentdelete)
-    * 24.6 [Attach Table](#attach-table)
-        * 24.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Attach](#rqsrs-032clickhousealtertablereplacepartitionconcurrentattach)
-    * 24.7 [Detach Table](#detach-table)
-        * 24.7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Detach](#rqsrs-032clickhousealtertablereplacepartitionconcurrentdetach)
-    * 24.8 [Optimize Table](#optimize-table)
-        * 24.8.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Optimize](#rqsrs-032clickhousealtertablereplacepartitionconcurrentoptimize)
-    * 24.9 [Alter](#alter)
-        * 24.9.1 [Add Column](#add-column)
-            * 24.9.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Add](#rqsrs-032clickhousealtertablereplacepartitionconcurrentalteradd)
-        * 24.9.2 [Drop Column](#drop-column)
-            * 24.9.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Drop](#rqsrs-032clickhousealtertablereplacepartitionconcurrentalterdrop)
-        * 24.9.3 [Clear Column](#clear-column)
-            * 24.9.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Clear](#rqsrs-032clickhousealtertablereplacepartitionconcurrentalterclear)
-        * 24.9.4 [Modify Column](#modify-column)
-            * 24.9.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Modify](#rqsrs-032clickhousealtertablereplacepartitionconcurrentaltermodify)
-        * 24.9.5 [Modify Column Remove](#modify-column-remove)
-            * 24.9.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.ModifyRemove](#rqsrs-032clickhousealtertablereplacepartitionconcurrentaltermodifyremove)
-        * 24.9.6 [Materialize](#materialize)
-            * 24.9.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Materialize](#rqsrs-032clickhousealtertablereplacepartitionconcurrentaltermaterialize)
-    * 24.10 [Manipulating Partitions](#manipulating-partitions)
-        * 24.10.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitions)
-        * 24.10.2 [Detach](#detach)
-            * 24.10.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Detach](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsdetach)
-        * 24.10.3 [Drop](#drop)
-            * 24.10.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Drop](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsdrop)
-        * 24.10.4 [Attach](#attach)
-            * 24.10.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Attach](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsattach)
-        * 24.10.5 [Attach From](#attach-from)
-            * 24.10.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.AttachFrom](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsattachfrom)
-        * 24.10.6 [Replace](#replace)
-            * 24.10.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Replace](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsreplace)
-        * 24.10.7 [Move To Table](#move-to-table)
-            * 24.10.7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.MoveToTable](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsmovetotable)
-        * 24.10.8 [Clear Column In Partition](#clear-column-in-partition)
-            * 24.10.8.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.ClearColumnInPartition](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsclearcolumninpartition)
-        * 24.10.9 [Freeze](#freeze)
-            * 24.10.9.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Freeze](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsfreeze)
-        * 24.10.10 [Unfreeze](#unfreeze)
-            * 24.10.10.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Unfreeze](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsunfreeze)
-        * 24.10.11 [Clear Index](#clear-index)
-            * 24.10.11.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.ClearIndex](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsclearindex)
-        * 24.10.12 [Fetch](#fetch)
-            * 24.10.12.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Fetch](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsfetch)
-        * 24.10.13 [Move](#move)
-            * 24.10.13.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Move](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsmove)
-        * 24.10.14 [Update In](#update-in)
-            * 24.10.14.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.UpdateInPartition](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsupdateinpartition)
-        * 24.10.15 [Delete In](#delete-in)
-            * 24.10.15.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.DeleteInPartition](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsdeleteinpartition)
+    * 24.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent](#rqsrs-032clickhousealtertablereplacepartitionconcurrent)
+    * 24.2 [Insert Into Table](#insert-into-table)
+        * 24.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Insert](#rqsrs-032clickhousealtertablereplacepartitionconcurrentinsert)
+    * 24.3 [Delete Table](#delete-table)
+        * 24.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Delete](#rqsrs-032clickhousealtertablereplacepartitionconcurrentdelete)
+    * 24.4 [Attach Table](#attach-table)
+        * 24.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Attach](#rqsrs-032clickhousealtertablereplacepartitionconcurrentattach)
+    * 24.5 [Detach Table](#detach-table)
+        * 24.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Detach](#rqsrs-032clickhousealtertablereplacepartitionconcurrentdetach)
+    * 24.6 [Optimize Table](#optimize-table)
+        * 24.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Optimize](#rqsrs-032clickhousealtertablereplacepartitionconcurrentoptimize)
+    * 24.7 [Alter](#alter)
+        * 24.7.1 [Add Column](#add-column)
+            * 24.7.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Add](#rqsrs-032clickhousealtertablereplacepartitionconcurrentalteradd)
+        * 24.7.2 [Drop Column](#drop-column)
+            * 24.7.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Drop](#rqsrs-032clickhousealtertablereplacepartitionconcurrentalterdrop)
+        * 24.7.3 [Clear Column](#clear-column)
+            * 24.7.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Clear](#rqsrs-032clickhousealtertablereplacepartitionconcurrentalterclear)
+        * 24.7.4 [Modify Column](#modify-column)
+            * 24.7.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Modify](#rqsrs-032clickhousealtertablereplacepartitionconcurrentaltermodify)
+        * 24.7.5 [Modify Column Remove](#modify-column-remove)
+            * 24.7.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.ModifyRemove](#rqsrs-032clickhousealtertablereplacepartitionconcurrentaltermodifyremove)
+        * 24.7.6 [Materialize](#materialize)
+            * 24.7.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Materialize](#rqsrs-032clickhousealtertablereplacepartitionconcurrentaltermaterialize)
+    * 24.8 [Manipulating Partitions](#manipulating-partitions)
+        * 24.8.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitions)
+        * 24.8.2 [Detach](#detach)
+            * 24.8.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Detach](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsdetach)
+        * 24.8.3 [Drop](#drop)
+            * 24.8.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Drop](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsdrop)
+        * 24.8.4 [Attach](#attach)
+            * 24.8.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Attach](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsattach)
+        * 24.8.5 [Attach From](#attach-from)
+            * 24.8.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.AttachFrom](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsattachfrom)
+        * 24.8.6 [Replace](#replace)
+            * 24.8.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Replace](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsreplace)
+        * 24.8.7 [Move To Table](#move-to-table)
+            * 24.8.7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.MoveToTable](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsmovetotable)
+        * 24.8.8 [Clear Column In Partition](#clear-column-in-partition)
+            * 24.8.8.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.ClearColumnInPartition](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsclearcolumninpartition)
+        * 24.8.9 [Freeze](#freeze)
+            * 24.8.9.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Freeze](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsfreeze)
+        * 24.8.10 [Unfreeze](#unfreeze)
+            * 24.8.10.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Unfreeze](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsunfreeze)
+        * 24.8.11 [Clear Index](#clear-index)
+            * 24.8.11.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.ClearIndex](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsclearindex)
+        * 24.8.12 [Fetch](#fetch)
+            * 24.8.12.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Fetch](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsfetch)
+        * 24.8.13 [Move](#move)
+            * 24.8.13.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Move](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsmove)
+        * 24.8.14 [Update In](#update-in)
+            * 24.8.14.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.UpdateInPartition](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsupdateinpartition)
+        * 24.8.15 [Delete In](#delete-in)
+            * 24.8.15.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.DeleteInPartition](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsdeleteinpartition)
 
 ## Revision History
 
@@ -1802,7 +1802,7 @@ version: 1.0
 
 ## Moving Partitions During Ongoing Merges and Mutations
 
-#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent
+### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent
 version: 1.0
 
 [ClickHouse] SHALL make `REPLACE PARTITION` to wait for the ongoing mutations and partitions if they are running on the same partition as executed `REPLACE PARTITION`.
