@@ -1,3 +1,23 @@
+select_from_file_with_glob_million_files_1 = r"""'3\tc'"""
+
+create_table_with_glob_million_files_1 = r"""'3\tc'"""
+
+select_from_file_with_glob_million_files_2 = r"""'1\ta\n1\ta\n3\tc'"""
+
+create_table_with_glob_million_files_2 = r"""'1\ta\n1\ta\n3\tc'"""
+
+select_from_file_with_glob_million_files_3 = r"""'3\tc'"""
+
+create_table_with_glob_million_files_3 = r"""'3\tc'"""
+
+select_from_file_with_glob_million_files_4 = r"""'3\tc'"""
+
+create_table_with_glob_million_files_4 = r"""'3\tc'"""
+
+select_from_file_with_glob_million_files_5 = r"""'1\ta'"""
+
+create_table_with_glob_million_files_5 = r"""'1\ta'"""
+
 select_from_file_with_asterisk = r"""'1\ta\n2\tb'"""
 
 create_table_with_asterisk = r"""'1\ta\n2\tb'"""
