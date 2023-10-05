@@ -211,8 +211,8 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions = Requirement(
         "\n"
     ),
     link=None,
-    level=2,
-    num="15.1",
+    level=3,
+    num="15.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions_Different_Structure = Requirement(
@@ -941,10 +941,11 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
             num="14.1",
         ),
         Heading(name="Conditions", level=1, num="15"),
+        Heading(name="Rules For Moving Partitions Between Tables", level=2, num="15.1"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions",
-            level=2,
-            num="15.1",
+            level=3,
+            num="15.1.1",
         ),
         Heading(
             name="Moving Partitions Between Tables With Different Structure",
@@ -1258,7 +1259,8 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
 * 13 [Moving Partitions From One Disk To Another In The Same Table](#moving-partitions-from-one-disk-to-another-in-the-same-table)
   * 13.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Disks](#rqsrs-032clickhousealtertablereplacepartitionbetweendisks)
 * 14 [Conditions](#conditions)
-  * 14.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions](#rqsrs-032clickhousealtertablereplacepartitionconditions)
+  * 14.1 [Rules For Moving Partitions Between Tables](#rules-for-moving-partitions-between-tables)
+    * 14.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions](#rqsrs-032clickhousealtertablereplacepartitionconditions)
   * 14.2 [Moving Partitions Between Tables With Different Structure](#moving-partitions-between-tables-with-different-structure)
     * 14.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.Structure](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentstructure)
   * 14.3 [Moving Partitions Between Tables With Different Partition Key](#moving-partitions-between-tables-with-different-partition-key)
@@ -1519,7 +1521,9 @@ version: 1.0
 
 ## Conditions
 
-### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions
+### Rules For Moving Partitions Between Tables
+
+#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions
 version: 1.0
 
 [ClickHouse] SHALL support the usage of `REPLACE PARTITION` between two tables only when,
