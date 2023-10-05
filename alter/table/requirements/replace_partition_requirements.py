@@ -32,6 +32,35 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition = Requirement(
     num="6.1",
 )
 
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_TableEngines = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TableEngines",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support the usage of `REPLACE PARTITION` for the following table engines,\n"
+        "\n"
+        "|            Engines             |\n"
+        "|:------------------------------:|\n"
+        "|          `MergeTree`           |\n"
+        "|     `ReplicatedMergeTree`      |\n"
+        "|      `ReplacingMergeTree`      |\n"
+        "|     `AggregatingMergeTree`     |\n"
+        "|     `CollapsingMergeTree`      |\n"
+        "| `VersionedCollapsingMergeTree` |\n"
+        "|      `GraphiteMergeTree`       |\n"
+        "|       `DistributedTable`       |\n"
+        "|       `MaterializedView`       |\n"
+        "\n"
+        "\n"
+    ),
+    link=None,
+    level=2,
+    num="7.1",
+)
+
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_KeepData = Requirement(
     name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.KeepData",
     version="1.0",
@@ -45,7 +74,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_KeepData = Requirement(
     ),
     link=None,
     level=2,
-    num="7.1",
+    num="8.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_NonExistentPartition = Requirement(
@@ -71,7 +100,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_NonExistentPartition = Requir
     ),
     link=None,
     level=2,
-    num="8.1",
+    num="9.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_TemporaryTable = Requirement(
@@ -110,7 +139,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_TemporaryTable = Requirement(
     ),
     link=None,
     level=2,
-    num="9.1",
+    num="10.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_BetweenTemporaryTables = Requirement(
@@ -126,7 +155,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_BetweenTemporaryTables = Requ
     ),
     link=None,
     level=2,
-    num="10.1",
+    num="11.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_IntoOutfile = Requirement(
@@ -142,7 +171,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_IntoOutfile = Requirement(
     ),
     link=None,
     level=2,
-    num="11.1",
+    num="12.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Format = Requirement(
@@ -158,7 +187,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Format = Requirement(
     ),
     link=None,
     level=2,
-    num="12.1",
+    num="13.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Settings = Requirement(
@@ -174,7 +203,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Settings = Requirement(
     ),
     link=None,
     level=2,
-    num="13.1",
+    num="14.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Between_Disks = Requirement(
@@ -192,7 +221,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Between_Disks = Requirement(
     ),
     link=None,
     level=2,
-    num="14.1",
+    num="15.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions = Requirement(
@@ -212,7 +241,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions = Requirement(
     ),
     link=None,
     level=3,
-    num="15.1.1",
+    num="16.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions_Different_Structure = Requirement(
@@ -228,7 +257,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions_Different_Structur
     ),
     link=None,
     level=3,
-    num="15.2.1",
+    num="16.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions_Different_Key = Requirement(
@@ -245,7 +274,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions_Different_Key = Re
     ),
     link=None,
     level=3,
-    num="15.3.1",
+    num="16.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions_Different_StoragePolicy = Requirement(
@@ -262,7 +291,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions_Different_StorageP
     ),
     link=None,
     level=3,
-    num="15.4.1",
+    num="16.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_OrderAndPartition = Requirement(
@@ -278,7 +307,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_OrderAndPartition 
     ),
     link=None,
     level=3,
-    num="16.1.1",
+    num="17.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Merges = Requirement(
@@ -294,7 +323,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Merges = Requireme
     ),
     link=None,
     level=3,
-    num="16.2.1",
+    num="17.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Mutations = Requirement(
@@ -310,36 +339,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Mutations = Requir
     ),
     link=None,
     level=3,
-    num="16.3.1",
-)
-
-RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_TableEngines = Requirement(
-    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TableEngines",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL support the usage of `REPLACE PARTITION` for the following table engines,\n"
-        "\n"
-        "|            Engines             |\n"
-        "|:------------------------------:|\n"
-        "|          `MergeTree`           |\n"
-        "|     `ReplicatedMergeTree`      |\n"
-        "|      `ReplacingMergeTree`      |\n"
-        "|     `AggregatingMergeTree`     |\n"
-        "|     `CollapsingMergeTree`      |\n"
-        "| `VersionedCollapsingMergeTree` |\n"
-        "|      `GraphiteMergeTree`       |\n"
-        "|       `DistributedTable`       |\n"
-        "|       `MaterializedView`       |\n"
-        "\n"
-        "\n"
-    ),
-    link=None,
-    level=2,
-    num="17.1",
+    num="17.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Move_Between_Replicas = Requirement(
@@ -884,123 +884,123 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
             level=2,
             num="6.1",
         ),
-        Heading(name="Keeping Data When Replacing Partitions", level=1, num="7"),
+        Heading(name="Table Engines", level=1, num="7"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TableEngines",
+            level=2,
+            num="7.1",
+        ),
+        Heading(name="Keeping Data When Replacing Partitions", level=1, num="8"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.KeepData",
             level=2,
-            num="7.1",
+            num="8.1",
         ),
         Heading(
             name="Keeping Data When Replacing Partition From Non-Existent Partition",
             level=1,
-            num="8",
+            num="9",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.NonExistentPartition",
             level=2,
-            num="8.1",
+            num="9.1",
         ),
-        Heading(name="Moving Partitions Form Temporary Table", level=1, num="9"),
+        Heading(name="Moving Partitions Form Temporary Table", level=1, num="10"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TemporaryTable",
             level=2,
-            num="9.1",
+            num="10.1",
         ),
-        Heading(name="Moving Partitions Between Temporary Tables", level=1, num="10"),
+        Heading(name="Moving Partitions Between Temporary Tables", level=1, num="11"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.BetweenTemporaryTables",
             level=2,
-            num="10.1",
+            num="11.1",
         ),
-        Heading(name="Using Into Outfile With Replace Partition", level=1, num="11"),
+        Heading(name="Using Into Outfile With Replace Partition", level=1, num="12"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.IntoOutfile",
             level=2,
-            num="11.1",
+            num="12.1",
         ),
-        Heading(name="Using Format With Replace Partition", level=1, num="12"),
+        Heading(name="Using Format With Replace Partition", level=1, num="13"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Format",
             level=2,
-            num="12.1",
+            num="13.1",
         ),
-        Heading(name="Using Settings With Replace Partition", level=1, num="13"),
+        Heading(name="Using Settings With Replace Partition", level=1, num="14"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Settings",
             level=2,
-            num="13.1",
+            num="14.1",
         ),
         Heading(
             name="Moving Partitions From One Disk To Another In The Same Table",
             level=1,
-            num="14",
+            num="15",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Disks",
             level=2,
-            num="14.1",
+            num="15.1",
         ),
-        Heading(name="Conditions", level=1, num="15"),
-        Heading(name="Rules For Moving Partitions Between Tables", level=2, num="15.1"),
+        Heading(name="Conditions", level=1, num="16"),
+        Heading(name="Rules For Moving Partitions Between Tables", level=2, num="16.1"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions",
             level=3,
-            num="15.1.1",
+            num="16.1.1",
         ),
         Heading(
             name="Moving Partitions Between Tables With Different Structure",
             level=2,
-            num="15.2",
+            num="16.2",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.Structure",
             level=3,
-            num="15.2.1",
+            num="16.2.1",
         ),
         Heading(
             name="Moving Partitions Between Tables With Different Partition Key",
             level=2,
-            num="15.3",
+            num="16.3",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.Key",
             level=3,
-            num="15.3.1",
+            num="16.3.1",
         ),
         Heading(
             name="Moving Partitions Between Tables With Different Storage Policy",
             level=2,
-            num="15.4",
+            num="16.4",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.StoragePolicy",
             level=3,
-            num="15.4.1",
+            num="16.4.1",
         ),
-        Heading(name="Prohibited Actions", level=1, num="16"),
-        Heading(name="Order and Partition", level=2, num="16.1"),
+        Heading(name="Prohibited Actions", level=1, num="17"),
+        Heading(name="Order and Partition", level=2, num="17.1"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition",
             level=3,
-            num="16.1.1",
+            num="17.1.1",
         ),
-        Heading(name="Merges", level=2, num="16.2"),
+        Heading(name="Merges", level=2, num="17.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Merges",
             level=3,
-            num="16.2.1",
+            num="17.2.1",
         ),
-        Heading(name="Mutations", level=2, num="16.3"),
+        Heading(name="Mutations", level=2, num="17.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Mutations",
             level=3,
-            num="16.3.1",
-        ),
-        Heading(name="Table Engines", level=1, num="17"),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TableEngines",
-            level=2,
-            num="17.1",
+            num="17.3.1",
         ),
         Heading(name="Moving Partitions Between Replicas", level=1, num="18"),
         Heading(
@@ -1227,6 +1227,7 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
     ),
     requirements=(
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_TableEngines,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_KeepData,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_NonExistentPartition,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_TemporaryTable,
@@ -1242,7 +1243,6 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_OrderAndPartition,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Merges,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Mutations,
-        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_TableEngines,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Move_Between_Replicas,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Move_Between_Shards,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent,
@@ -1286,40 +1286,40 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
 * 4 [User Actions](#user-actions)
 * 5 [Replace Partition](#replace-partition)
   * 5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition](#rqsrs-032clickhousealtertablereplacepartition)
-* 6 [Keeping Data When Replacing Partitions](#keeping-data-when-replacing-partitions)
-  * 6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.KeepData](#rqsrs-032clickhousealtertablereplacepartitionkeepdata)
-* 7 [Keeping Data When Replacing Partition From Non-Existent Partition](#keeping-data-when-replacing-partition-from-non-existent-partition)
-  * 7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.NonExistentPartition](#rqsrs-032clickhousealtertablereplacepartitionnonexistentpartition)
-* 8 [Moving Partitions Form Temporary Table](#moving-partitions-form-temporary-table)
-  * 8.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TemporaryTable](#rqsrs-032clickhousealtertablereplacepartitiontemporarytable)
-* 9 [Moving Partitions Between Temporary Tables](#moving-partitions-between-temporary-tables)
-  * 9.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.BetweenTemporaryTables](#rqsrs-032clickhousealtertablereplacepartitionbetweentemporarytables)
-* 10 [Using Into Outfile With Replace Partition](#using-into-outfile-with-replace-partition)
-  * 10.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.IntoOutfile](#rqsrs-032clickhousealtertablereplacepartitionintooutfile)
-* 11 [Using Format With Replace Partition](#using-format-with-replace-partition)
-  * 11.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Format](#rqsrs-032clickhousealtertablereplacepartitionformat)
-* 12 [Using Settings With Replace Partition](#using-settings-with-replace-partition)
-  * 12.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Settings](#rqsrs-032clickhousealtertablereplacepartitionsettings)
-* 13 [Moving Partitions From One Disk To Another In The Same Table](#moving-partitions-from-one-disk-to-another-in-the-same-table)
-  * 13.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Disks](#rqsrs-032clickhousealtertablereplacepartitionbetweendisks)
-* 14 [Conditions](#conditions)
-  * 14.1 [Rules For Moving Partitions Between Tables](#rules-for-moving-partitions-between-tables)
-    * 14.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions](#rqsrs-032clickhousealtertablereplacepartitionconditions)
-  * 14.2 [Moving Partitions Between Tables With Different Structure](#moving-partitions-between-tables-with-different-structure)
-    * 14.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.Structure](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentstructure)
-  * 14.3 [Moving Partitions Between Tables With Different Partition Key](#moving-partitions-between-tables-with-different-partition-key)
-    * 14.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.Key](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentkey)
-  * 14.4 [Moving Partitions Between Tables With Different Storage Policy](#moving-partitions-between-tables-with-different-storage-policy)
-    * 14.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.StoragePolicy](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentstoragepolicy)
-* 15 [Prohibited Actions](#prohibited-actions)
-  * 15.1 [Order and Partition](#order-and-partition)
-    * 15.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition](#rqsrs-032clickhousealtertablereplacepartitionprohibitedorderandpartition)
-  * 15.2 [Merges](#merges)
-    * 15.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Merges](#rqsrs-032clickhousealtertablereplacepartitionprohibitedmerges)
-  * 15.3 [Mutations](#mutations)
-    * 15.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Mutations](#rqsrs-032clickhousealtertablereplacepartitionprohibitedmutations)
-* 16 [Table Engines](#table-engines)
-  * 16.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TableEngines](#rqsrs-032clickhousealtertablereplacepartitiontableengines)
+* 6 [Table Engines](#table-engines)
+  * 6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TableEngines](#rqsrs-032clickhousealtertablereplacepartitiontableengines)
+* 7 [Keeping Data When Replacing Partitions](#keeping-data-when-replacing-partitions)
+  * 7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.KeepData](#rqsrs-032clickhousealtertablereplacepartitionkeepdata)
+* 8 [Keeping Data When Replacing Partition From Non-Existent Partition](#keeping-data-when-replacing-partition-from-non-existent-partition)
+  * 8.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.NonExistentPartition](#rqsrs-032clickhousealtertablereplacepartitionnonexistentpartition)
+* 9 [Moving Partitions Form Temporary Table](#moving-partitions-form-temporary-table)
+  * 9.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TemporaryTable](#rqsrs-032clickhousealtertablereplacepartitiontemporarytable)
+* 10 [Moving Partitions Between Temporary Tables](#moving-partitions-between-temporary-tables)
+  * 10.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.BetweenTemporaryTables](#rqsrs-032clickhousealtertablereplacepartitionbetweentemporarytables)
+* 11 [Using Into Outfile With Replace Partition](#using-into-outfile-with-replace-partition)
+  * 11.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.IntoOutfile](#rqsrs-032clickhousealtertablereplacepartitionintooutfile)
+* 12 [Using Format With Replace Partition](#using-format-with-replace-partition)
+  * 12.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Format](#rqsrs-032clickhousealtertablereplacepartitionformat)
+* 13 [Using Settings With Replace Partition](#using-settings-with-replace-partition)
+  * 13.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Settings](#rqsrs-032clickhousealtertablereplacepartitionsettings)
+* 14 [Moving Partitions From One Disk To Another In The Same Table](#moving-partitions-from-one-disk-to-another-in-the-same-table)
+  * 14.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Disks](#rqsrs-032clickhousealtertablereplacepartitionbetweendisks)
+* 15 [Conditions](#conditions)
+  * 15.1 [Rules For Moving Partitions Between Tables](#rules-for-moving-partitions-between-tables)
+    * 15.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions](#rqsrs-032clickhousealtertablereplacepartitionconditions)
+  * 15.2 [Moving Partitions Between Tables With Different Structure](#moving-partitions-between-tables-with-different-structure)
+    * 15.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.Structure](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentstructure)
+  * 15.3 [Moving Partitions Between Tables With Different Partition Key](#moving-partitions-between-tables-with-different-partition-key)
+    * 15.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.Key](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentkey)
+  * 15.4 [Moving Partitions Between Tables With Different Storage Policy](#moving-partitions-between-tables-with-different-storage-policy)
+    * 15.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.StoragePolicy](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentstoragepolicy)
+* 16 [Prohibited Actions](#prohibited-actions)
+  * 16.1 [Order and Partition](#order-and-partition)
+    * 16.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition](#rqsrs-032clickhousealtertablereplacepartitionprohibitedorderandpartition)
+  * 16.2 [Merges](#merges)
+    * 16.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Merges](#rqsrs-032clickhousealtertablereplacepartitionprohibitedmerges)
+  * 16.3 [Mutations](#mutations)
+    * 16.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Mutations](#rqsrs-032clickhousealtertablereplacepartitionprohibitedmutations)
 * 17 [Moving Partitions Between Replicas](#moving-partitions-between-replicas)
   * 17.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Replicas](#rqsrs-032clickhousealtertablereplacepartitionmovebetweenreplicas)
 * 18 [Moving Partitions Between Shards](#moving-partitions-between-shards)
@@ -1472,6 +1472,26 @@ This query copies the data partition from the `table1` to `table2` and replaces 
 ALTER TABLE table2 [ON CLUSTER cluster] REPLACE PARTITION partition_expr FROM table1
 ```
 
+## Table Engines
+
+### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TableEngines
+version: 1.0
+
+[ClickHouse] SHALL support the usage of `REPLACE PARTITION` for the following table engines,
+
+|            Engines             |
+|:------------------------------:|
+|          `MergeTree`           |
+|     `ReplicatedMergeTree`      |
+|      `ReplacingMergeTree`      |
+|     `AggregatingMergeTree`     |
+|     `CollapsingMergeTree`      |
+| `VersionedCollapsingMergeTree` |
+|      `GraphiteMergeTree`       |
+|       `DistributedTable`       |
+|       `MaterializedView`       |
+
+
 ## Keeping Data When Replacing Partitions
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.KeepData
@@ -1621,26 +1641,6 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to run any mutations before the executed `REPLACE PARTITION` is finished.
-
-## Table Engines
-
-### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TableEngines
-version: 1.0
-
-[ClickHouse] SHALL support the usage of `REPLACE PARTITION` for the following table engines,
-
-|            Engines             |
-|:------------------------------:|
-|          `MergeTree`           |
-|     `ReplicatedMergeTree`      |
-|      `ReplacingMergeTree`      |
-|     `AggregatingMergeTree`     |
-|     `CollapsingMergeTree`      |
-| `VersionedCollapsingMergeTree` |
-|      `GraphiteMergeTree`       |
-|       `DistributedTable`       |
-|       `MaterializedView`       |
-
 
 ## Moving Partitions Between Replicas
 
