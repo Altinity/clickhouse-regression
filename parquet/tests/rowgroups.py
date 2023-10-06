@@ -9,7 +9,6 @@ from helpers.common import *
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_Parquet_Import_RowGroupSize("1.0"))
 def manyrowgroups(self):
     """Checking that ClickHouse can import and export parquet files that are  written such that every row has its own row group."""
     with Given("I have a large Parquet file in which every row has its own row group"):
@@ -19,7 +18,6 @@ def manyrowgroups(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_Parquet_Import_RowGroupSize("1.0"))
 def manyrowgroups2(self):
     """Checking that ClickHouse can import and export parquet files that are  written such that every row has its own row group."""
     with Given("I have a large Parquet file in which every row has its own row group"):
@@ -29,6 +27,7 @@ def manyrowgroups2(self):
 
 
 @TestFeature
+@Requirements(RQ_SRS_032_ClickHouse_Parquet_Import_RowGroupSize("1.0"))
 @Name("rowgroups")
 def feature(self, node="clickhouse1"):
     """Check importing and exporting parquet files with the query cache functionality."""

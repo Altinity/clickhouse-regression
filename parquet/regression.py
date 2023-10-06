@@ -132,8 +132,10 @@ xfails = {
         )
     ],
     "/parquet/rowgroups/*": [
-        Fail,
-        "Needs Investigation. The issue seems to be from the tests side, not a bug.",
+        (
+            Fail,
+            "Needs Investigation. The issue seems to be from the tests side, not a bug.",
+        )
     ],
 }
 xflags = {}
