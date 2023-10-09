@@ -20,7 +20,9 @@ def import_export(self, snapshot_name, import_file, snapshot_id=None):
         snapshot_id = self.context.snapshot_id
 
     with Given("I save file structure"):
-        import_column_structure = node.query(f"DESCRIBE TABLE file('{import_file}')")
+        import_column_structure = node.query(
+            f"DESCRIBE TABLE file('{import_file}', Parquet)"
+        )
 
     with And("I try to import the binary Parquet file into the table"):
         node.query(

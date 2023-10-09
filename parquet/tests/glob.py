@@ -12,7 +12,7 @@ glob3 = os.path.join("glob3")
 
 
 @TestOutline
-def select_with_glob(self, query, snapshot_name):
+def select_with_glob(self, query, snapshot_name, order_by=None):
     node = self.context.node
     table_name = "table_" + getuid()
 
@@ -20,9 +20,12 @@ def select_with_glob(self, query, snapshot_name):
         with When(
             "I run the SELECT query with the glob pattern inside the Parquet file path"
         ):
+            if order_by is None:
+                order_by = "j"
+
             select_file = node.query(
                 f"""
-            SELECT * FROM {query} ORDER BY j
+            SELECT * FROM {query} ORDER BY {order_by}
             """
             )
 
@@ -135,6 +138,25 @@ def million_extensions(self):
     finally:
         with Finally("I clean up generated files"):
             node.command("rm -rf file.*")
+
+
+@TestScenario
+@Examples(
+    "query snapshot_name",
+    rows=[
+        (f"file('fastparquet/split/cat=fred/catnum=?/*.parquet', Parquet)", "cat_fred"),
+        (
+            f"file('fastparquet/split/cat=freda/catnum=?/*.parquet', Parquet)",
+            "cat_freda",
+        ),
+    ],
+)
+def fastparquet_globs(self):
+    """Importing multiple Parquet files using the glob patterns from a single directory."""
+    for example in self.examples:
+        select_with_glob(
+            query=example[0], snapshot_name=example[1], order_by="tuple(*)"
+        )
 
 
 @TestFeature

@@ -43,6 +43,7 @@ services:
       - "${CLICKHOUSE_TESTS_DIR}/data/glob3:/var/lib/clickhouse/user_files/glob3"
       - "${CLICKHOUSE_TESTS_DIR}/data/glob_million:/var/lib/clickhouse/user_files/glob_million"
       - "${CLICKHOUSE_TESTS_DIR}/data/datatypes:/var/lib/clickhouse/user_files/datatypes"
+      - "${CLICKHOUSE_TESTS_DIR}/data/fastparquet:/var/lib/clickhouse/user_files/fastparquet"
       - "${CLICKHOUSE_TESTS_DIR}/data/encodings:/var/lib/clickhouse/user_files/encodings"
       - "${CLICKHOUSE_TESTS_DIR}/data/hive-partitioning:/var/lib/clickhouse/user_files/hive-partitioning"
       - "${CLICKHOUSE_TESTS_DIR}/data/h2oai:/var/lib/clickhouse/user_files/h2oai"
