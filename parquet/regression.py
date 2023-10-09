@@ -508,6 +508,12 @@ def regression(
                 executor=executor,
                 flags=parallel,
             )
+            Feature(
+                run=load("parquet.tests.fastparquet", "feature"),
+                parallel=True,
+                executor=executor,
+                flags=parallel,
+            )
             join()
 
         if storages is None:
