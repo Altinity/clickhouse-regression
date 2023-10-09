@@ -1,0 +1,58 @@
+nation_dict_parquet_structure = r"""'nation_key\tNullable(Int32)\t\t\t\t\t\nname\tNullable(String)\t\t\t\t\t\nregion_key\tNullable(Int32)\t\t\t\t\t\ncomment_col\tNullable(String)'"""
+
+gzip_nation_impala_parquet_structure = r"""'n_nationkey\tNullable(Int32)\t\t\t\t\t\nn_name\tNullable(String)\t\t\t\t\t\nn_regionkey\tNullable(Int32)\t\t\t\t\t\nn_comment\tNullable(String)'"""
+
+nation_impala_parquet_structure = r"""'n_nationkey\tNullable(Int32)\t\t\t\t\t\nn_name\tNullable(String)\t\t\t\t\t\nn_regionkey\tNullable(Int32)\t\t\t\t\t\nn_comment\tNullable(String)'"""
+
+decimals_parquet_structure = r"""'PatId\tNullable(Int64)\t\t\t\t\t\nEventDate\tNullable(DateTime64(9))\t\t\t\t\t\nweight measure:WEIGHT(KG, 0)\tNullable(Decimal(38, 18))'"""
+
+test_null_parquet_structure = r"""'foo\tNullable(Int32)\t\t\t\t\t\nbar\tNullable(Int32)'"""
+
+non_std_kvm_fp_0_8_2_parquet_structure = r"""'a\tNullable(Int64)'"""
+
+test_map_last_row_split_parquet_structure = r"""'topics\tMap(String, Nullable(Float32))'"""
+
+nation_plain_parquet_structure = r"""'nation_key\tNullable(Int32)\t\t\t\t\t\nname\tNullable(String)\t\t\t\t\t\nregion_key\tNullable(Int32)\t\t\t\t\t\ncomment_col\tNullable(String)'"""
+
+repeated_no_annotation_parquet_structure = r"""'id\tNullable(Int32)\t\t\t\t\t\nphoneNumbers\tTuple(phone Array(Tuple(number Nullable(Int64), kind Nullable(String))))'"""
+
+nested1_parquet_structure = r"""'_adobe_corpnew\tTuple(id Nullable(Int32), vocab Nullable(String), frequency Nullable(Int32), max_len Nullable(Float64), reduced_max_len Nullable(Int32))'"""
+
+snappy_nation_impala_parquet_structure = r"""'n_nationkey\tNullable(Int32)\t\t\t\t\t\nn_name\tNullable(String)\t\t\t\t\t\nn_regionkey\tNullable(Int32)\t\t\t\t\t\nn_comment\tNullable(String)'"""
+
+map_test_snappy_parquet_structure = r"""'topics\tMap(String, Nullable(Float32))'"""
+
+test_converted_type_null_parquet_structure = r"""'foo\tNullable(String)'"""
+
+test_null_dictionary_parquet_structure = r"""'foo\tNullable(String)'"""
+
+test_parquet_structure = r"""'bhello\tNullable(String)\t\t\t\t\t\nf\tNullable(Float64)\t\t\t\t\t\ni32\tNullable(Int32)\t\t\t\t\t\ni64\tNullable(Int64)\t\t\t\t\t\nhello\tNullable(String)'"""
+
+customer_impala_parquet_structure = r"""'c_custkey\tNullable(Int64)\t\t\t\t\t\nc_name\tNullable(String)\t\t\t\t\t\nc_address\tNullable(String)\t\t\t\t\t\nc_nationkey\tNullable(Int32)\t\t\t\t\t\nc_phone\tNullable(String)\t\t\t\t\t\nc_acctbal\tNullable(Float64)\t\t\t\t\t\nc_mktsegment\tNullable(String)\t\t\t\t\t\nc_comment\tNullable(String)'"""
+
+fastparquet_airlines_parquet_4345e5eef217aa1b_c8f16177f35fd983_1150363067_data_1_parquet_structure = r"""'year\tNullable(Int32)\t\t\t\t\t\nmonth\tNullable(Int32)\t\t\t\t\t\nday\tNullable(Int32)\t\t\t\t\t\ndayofweek\tNullable(Int32)\t\t\t\t\t\ndep_time\tNullable(Int32)\t\t\t\t\t\ncrs_dep_time\tNullable(Int32)\t\t\t\t\t\narr_time\tNullable(Int32)\t\t\t\t\t\ncrs_arr_time\tNullable(Int32)\t\t\t\t\t\ncarrier\tNullable(String)\t\t\t\t\t\nflight_num\tNullable(Int32)\t\t\t\t\t\ntail_num\tNullable(Int32)\t\t\t\t\t\nactual_elapsed_time\tNullable(Int32)\t\t\t\t\t\ncrs_elapsed_time\tNullable(Int32)\t\t\t\t\t\nairtime\tNullable(Int32)\t\t\t\t\t\narrdelay\tNullable(Int32)\t\t\t\t\t\ndepdelay\tNullable(Int32)\t\t\t\t\t\norigin\tNullable(String)\t\t\t\t\t\ndest\tNullable(String)\t\t\t\t\t\ndistance\tNullable(Int32)\t\t\t\t\t\ntaxi_in\tNullable(Int32)\t\t\t\t\t\ntaxi_out\tNullable(Int32)\t\t\t\t\t\ncancelled\tNullable(Int32)\t\t\t\t\t\ncancellation_code\tNullable(String)\t\t\t\t\t\ndiverted\tNullable(Int32)\t\t\t\t\t\ncarrier_delay\tNullable(Int32)\t\t\t\t\t\nweather_delay\tNullable(Int32)\t\t\t\t\t\nnas_delay\tNullable(Int32)\t\t\t\t\t\nsecurity_delay\tNullable(Int32)\t\t\t\t\t\nlate_aircraft_delay\tNullable(Int32)'"""
+
+fastparquet_baz_parquet_part_00000_f689190d_8470_4dba_80ca_b8674fa9f15d_c000_snappy_parquet_structure = r"""'id\tNullable(Int64)'"""
+
+_206_1427d50c_e5c0_401a_9f54_b37b943b98c3_00001_parquet_structure = r"""'name\tNullable(String)\t\t\t\t\t\nage\tNullable(Int32)\t\t\t\t\t\nemail\tNullable(String)'"""
+
+_0_b5ea8b58_1686_4d25_af1d_9349b2d29fd0_00001_parquet_structure = r"""'name\tNullable(String)\t\t\t\t\t\nage\tNullable(Int32)'"""
+
+_2_e5685594_0967_42ad_b306_2128ad35e716_00001_parquet_structure = r"""'name\tNullable(String)\t\t\t\t\t\nage\tNullable(Int32)'"""
+
+_1_b7c7ea31_7ce3_4bd6_9d86_7e96dbffb589_00001_parquet_structure = r"""'name\tNullable(String)\t\t\t\t\t\nage\tNullable(Int32)'"""
+
+_3_2a454a5e_dc13_4075_a9ad_91181d5ac450_00001_parquet_structure = r"""'name\tNullable(String)\t\t\t\t\t\nage\tNullable(Int32)'"""
+
+_6_db4a5dc9_8fdc_4b1f_b88e_05e954a966f7_00001_parquet_structure = r"""'name\tNullable(String)\t\t\t\t\t\nage\tNullable(Int32)'"""
+
+part_00000_b2b1875e_3f87_46b5_a3bc_31bca366bbcc_c000_snappy_parquet_structure = r"""'id\tNullable(Int64)\t\t\t\t\t\nDate\tNullable(Date32)'"""
+
+part_00005_b2b1875e_3f87_46b5_a3bc_31bca366bbcc_c000_snappy_parquet_structure = r"""'id\tNullable(Int64)\t\t\t\t\t\nDate\tNullable(Date32)'"""
+
+part_00011_b2b1875e_3f87_46b5_a3bc_31bca366bbcc_c000_snappy_parquet_structure = r"""'id\tNullable(Int64)\t\t\t\t\t\nDate\tNullable(Date32)'"""
+
+bc139247874a0aa9e0e541f2eec497_parquet_structure = r"""'a\tNullable(Int64)'"""
+
+a97cc141d16f4014a59e5b234dddf07c_parquet_structure = r"""'a\tNullable(Int64)'"""
+
