@@ -216,7 +216,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Between_Disks = Requirement(
     description=(
         "[ClickHouse] SHALL support Replacing partitions from one disk to another in the same table when tired storage is used.\n"
         "\n"
-        "> When we have one table stored on different disks, and we want to move partitions between partitions that are on different disks with `REPLACE PARTITION`.  \n"
+        "> When we have one table stored on different disks, and we want to replace partitions between partitions that are on different disks with `REPLACE PARTITION`.  \n"
         "\n"
     ),
     link=None,
@@ -232,7 +232,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Between_S3 = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support using `REPLACE PARTITION` to move partitions between tables that are placed inside the S3 storage.\n"
+        "[ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions between tables that are placed inside the S3 storage.\n"
         "\n"
     ),
     link=None,
@@ -240,15 +240,15 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Between_S3 = Requirement(
     num="16.1",
 )
 
-RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Move_Between_Replicas = Requirement(
-    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Replicas",
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Between_Replicas = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Replicas",
     version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support using `REPLACE PARTITION` to move partitions between replicas for tables with `ReplicatedMergeTree` engine.\n"
+        "[ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions between replicas for tables with `ReplicatedMergeTree` engine.\n"
         "\n"
     ),
     link=None,
@@ -256,15 +256,15 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Move_Between_Replicas = Requi
     num="17.1",
 )
 
-RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Move_Between_Shards = Requirement(
-    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Shards",
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Between_Shards = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Shards",
     version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support using `REPLACE PARTITION` to move partitions between shards for tables with `DistributedTable` engine.\n"
+        "[ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions between shards for tables with `DistributedTable` engine.\n"
         "\n"
     ),
     link=None,
@@ -272,15 +272,15 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Move_Between_Shards = Require
     num="18.1",
 )
 
-RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Move_Between_Versions = Requirement(
-    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Versions",
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Between_Versions = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Versions",
     version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support using `REPLACE PARTITION` to move partitions between different ClickHouse versions.\n"
+        "[ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions between different ClickHouse versions.\n"
         "\n"
         "> Users can create a new database with the target version and use `REPLACE PARTITION` to transfer data from the \n"
         "> old database to the new one, ensuring compatibility and benefits from new features.\n"
@@ -291,15 +291,15 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Move_Between_Versions = Requi
     num="19.1",
 )
 
-RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Move_Between_Encodings = Requirement(
-    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Encodings",
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Between_Encodings = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Encodings",
     version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support using `REPLACE PARTITION` to move partitions between tables with different encodings.\n"
+        "[ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions between tables with different encodings.\n"
         "\n"
     ),
     link=None,
@@ -307,15 +307,15 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Move_Between_Encodings = Requ
     num="20.1",
 )
 
-RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Move_Between_Encryption = Requirement(
-    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Encryption",
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Between_Encryption = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Encryption",
     version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support using `REPLACE PARTITION` to move partitions between encrypted and not encrypted tables.\n"
+        "[ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions between encrypted and not encrypted tables.\n"
         "\n"
     ),
     link=None,
@@ -323,15 +323,15 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Move_Between_Encryption = Req
     num="21.1",
 )
 
-RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Move_Between_Deduplication = Requirement(
-    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Deduplication",
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Between_Deduplication = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Deduplication",
     version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support using `REPLACE PARTITION` to move data to a deduplication table, where duplicates are identified and eliminated.\n"
+        "[ClickHouse] SHALL support using `REPLACE PARTITION` to replace data to a deduplication table, where duplicates are identified and eliminated.\n"
         "\n"
     ),
     link=None,
@@ -339,8 +339,8 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Move_Between_Deduplication = 
     num="22.1",
 )
 
-RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Move_Between_WideAndCompact = Requirement(
-    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.WideAndCompact",
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Between_WideAndCompact = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.WideAndCompact",
     version="1.0",
     priority=None,
     group=None,
@@ -1055,13 +1055,13 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
         ),
         Heading(name="Replacing Partitions Between Replicas", level=1, num="17"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Replicas",
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Replicas",
             level=2,
             num="17.1",
         ),
         Heading(name="Replacing Partitions Between Shards", level=1, num="18"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Shards",
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Shards",
             level=2,
             num="18.1",
         ),
@@ -1071,7 +1071,7 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
             num="19",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Versions",
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Versions",
             level=2,
             num="19.1",
         ),
@@ -1079,7 +1079,7 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
             name="Replacing Partitions Between Different Encodings", level=1, num="20"
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Encodings",
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Encodings",
             level=2,
             num="20.1",
         ),
@@ -1089,13 +1089,13 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
             num="21",
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Encryption",
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Encryption",
             level=2,
             num="21.1",
         ),
         Heading(name="Replacing Partitions To Deduplication Tables", level=1, num="22"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Deduplication",
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Deduplication",
             level=2,
             num="22.1",
         ),
@@ -1104,7 +1104,7 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
             name="Replace Partition Between Compact and Wide Parts", level=2, num="23.1"
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.WideAndCompact",
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.WideAndCompact",
             level=3,
             num="23.1.1",
         ),
@@ -1358,13 +1358,13 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Settings,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Between_Disks,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Between_S3,
-        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Move_Between_Replicas,
-        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Move_Between_Shards,
-        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Move_Between_Versions,
-        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Move_Between_Encodings,
-        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Move_Between_Encryption,
-        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Move_Between_Deduplication,
-        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Move_Between_WideAndCompact,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Between_Replicas,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Between_Shards,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Between_Versions,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Between_Encodings,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Between_Encryption,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Between_Deduplication,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Between_WideAndCompact,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions_Different_Structure,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions_Different_Key,
@@ -1434,20 +1434,20 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
 * 15 [Replacing Partitions Between Tables On S3](#replacing-partitions-between-tables-on-s3)
     * 15.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.S3](#rqsrs-032clickhousealtertablereplacepartitionbetweens3)
 * 16 [Replacing Partitions Between Replicas](#replacing-partitions-between-replicas)
-    * 16.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Replicas](#rqsrs-032clickhousealtertablereplacepartitionmovebetweenreplicas)
+    * 16.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Replicas](#rqsrs-032clickhousealtertablereplacepartitionbetweenreplicas)
 * 17 [Replacing Partitions Between Shards](#replacing-partitions-between-shards)
-    * 17.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Shards](#rqsrs-032clickhousealtertablereplacepartitionmovebetweenshards)
+    * 17.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Shards](#rqsrs-032clickhousealtertablereplacepartitionbetweenshards)
 * 18 [Replacing Partitions Between Different ClickHouse versions](#replacing-partitions-between-different-clickhouse-versions)
-    * 18.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Versions](#rqsrs-032clickhousealtertablereplacepartitionmovebetweenversions)
+    * 18.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Versions](#rqsrs-032clickhousealtertablereplacepartitionbetweenversions)
 * 19 [Replacing Partitions Between Different Encodings](#replacing-partitions-between-different-encodings)
-    * 19.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Encodings](#rqsrs-032clickhousealtertablereplacepartitionmovebetweenencodings)
+    * 19.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Encodings](#rqsrs-032clickhousealtertablereplacepartitionbetweenencodings)
 * 20 [Replacing Partitions Between Encrypted And Unencrypted Tables](#replacing-partitions-between-encrypted-and-unencrypted-tables)
-    * 20.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Encryption](#rqsrs-032clickhousealtertablereplacepartitionmovebetweenencryption)
+    * 20.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Encryption](#rqsrs-032clickhousealtertablereplacepartitionbetweenencryption)
 * 21 [Replacing Partitions To Deduplication Tables](#replacing-partitions-to-deduplication-tables)
-    * 21.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Deduplication](#rqsrs-032clickhousealtertablereplacepartitionmovebetweendeduplication)
+    * 21.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Deduplication](#rqsrs-032clickhousealtertablereplacepartitionbetweendeduplication)
 * 22 [Compact and Wide Parts](#compact-and-wide-parts)
     * 22.1 [Replace Partition Between Compact and Wide Parts](#replace-partition-between-compact-and-wide-parts)
-        * 22.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.WideAndCompact](#rqsrs-032clickhousealtertablereplacepartitionmovebetweenwideandcompact)
+        * 22.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.WideAndCompact](#rqsrs-032clickhousealtertablereplacepartitionbetweenwideandcompact)
 * 23 [Conditions](#conditions)
     * 23.1 [Rules For Replacing Partitions Between Tables](#rules-for-replacing-partitions-between-tables)
         * 23.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions](#rqsrs-032clickhousealtertablereplacepartitionconditions)
@@ -1720,65 +1720,65 @@ version: 1.0
 
 [ClickHouse] SHALL support Replacing partitions from one disk to another in the same table when tired storage is used.
 
-> When we have one table stored on different disks, and we want to move partitions between partitions that are on different disks with `REPLACE PARTITION`.  
+> When we have one table stored on different disks, and we want to replace partitions between partitions that are on different disks with `REPLACE PARTITION`.  
 
 ## Replacing Partitions Between Tables On S3
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.S3
 version: 1.0
 
-[ClickHouse] SHALL support using `REPLACE PARTITION` to move partitions between tables that are placed inside the S3 storage.
+[ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions between tables that are placed inside the S3 storage.
 
 ## Replacing Partitions Between Replicas
 
-### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Replicas
+### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Replicas
 version: 1.0
 
-[ClickHouse] SHALL support using `REPLACE PARTITION` to move partitions between replicas for tables with `ReplicatedMergeTree` engine.
+[ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions between replicas for tables with `ReplicatedMergeTree` engine.
 
 ## Replacing Partitions Between Shards
 
-### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Shards
+### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Shards
 version: 1.0
 
-[ClickHouse] SHALL support using `REPLACE PARTITION` to move partitions between shards for tables with `DistributedTable` engine.
+[ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions between shards for tables with `DistributedTable` engine.
 
 ## Replacing Partitions Between Different ClickHouse versions
 
-### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Versions
+### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Versions
 version: 1.0
 
-[ClickHouse] SHALL support using `REPLACE PARTITION` to move partitions between different ClickHouse versions.
+[ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions between different ClickHouse versions.
 
 > Users can create a new database with the target version and use `REPLACE PARTITION` to transfer data from the 
 > old database to the new one, ensuring compatibility and benefits from new features.
 
 ## Replacing Partitions Between Different Encodings
 
-### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Encodings
+### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Encodings
 version: 1.0
 
-[ClickHouse] SHALL support using `REPLACE PARTITION` to move partitions between tables with different encodings.
+[ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions between tables with different encodings.
 
 ## Replacing Partitions Between Encrypted And Unencrypted Tables
 
-### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Encryption
+### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Encryption
 version: 1.0
 
-[ClickHouse] SHALL support using `REPLACE PARTITION` to move partitions between encrypted and not encrypted tables.
+[ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions between encrypted and not encrypted tables.
 
 ## Replacing Partitions To Deduplication Tables
 
-### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.Deduplication
+### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Deduplication
 version: 1.0
 
-[ClickHouse] SHALL support using `REPLACE PARTITION` to move data to a deduplication table, where duplicates are identified and eliminated.
+[ClickHouse] SHALL support using `REPLACE PARTITION` to replace data to a deduplication table, where duplicates are identified and eliminated.
 
 ## Compact and Wide Parts
 
 ### Replace Partition Between Compact and Wide Parts
 
-#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Move.Between.WideAndCompact
+#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.WideAndCompact
 version: 1.0
 
 [ClickHouse] SHALL output an error when using `REPLACE PARTITION` between `wide` partition and `compact` partition columns.
