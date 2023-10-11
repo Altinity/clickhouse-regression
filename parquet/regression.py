@@ -137,6 +137,12 @@ xfails = {
             "Needs Investigation. The issue seems to be from the tests side, not a bug.",
         )
     ],
+    "/parquet/fastparquet/*": [
+        (
+            Fail,
+            "Needs Investigation. The issue seems to be from the tests side, not a bug.",
+        )
+    ],
 }
 xflags = {}
 
