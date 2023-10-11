@@ -35,6 +35,7 @@ def fastparquet(self):
 
 @TestScenario
 def airlines(self):
+    """Checking if ClickHouse can import and export files from the fastparquet/airlines directory."""
     import_file = os.path.join(
         "fastparquet",
         "airlines_parquet",
@@ -46,17 +47,7 @@ def airlines(self):
 
 @TestScenario
 def baz(self):
-    import_file = os.path.join(
-        "fastparquet",
-        "baz.parquet",
-        "part-00000-f689190d-8470-4dba-80ca-b8674fa9f15d-c000.snappy.parquet",
-    )
-
-    import_export(snapshot_name=f"{import_file}_structure", import_file=import_file)
-
-
-@TestScenario
-def baz(self):
+    """Checking if ClickHouse can import and export files from the fastparquet/baz directory."""
     import_file = os.path.join(
         "fastparquet",
         "baz.parquet",
@@ -83,7 +74,7 @@ def evo(self):
 
 @TestScenario
 def empty_date(self):
-    """Checking if ClickHouse can import and export files from the fastparquet/evo directory."""
+    """Checking if ClickHouse can import and export files from the fastparquet/empty_date directory."""
     path = os.path.join("data", "fastparquet", "spark-date-empty-rg.parq")
     files = list_files(path)
     with Given("I import and export parquet files from the fastparquet/evo directory"):
@@ -99,8 +90,8 @@ def empty_date(self):
 
 
 @TestScenario
-def empty_date(self):
-    """Checking if ClickHouse can import and export files from the fastparquet/evo directory."""
+def spark_empty_date(self):
+    """Checking if ClickHouse can import and export files from the fastparquet/spark-date-empty directory."""
     path = os.path.join("data", "fastparquet", "spark-date-empty-rg.parq")
     files = list_files(path)
     with Given("I import and export parquet files from the fastparquet/evo directory"):
@@ -119,7 +110,7 @@ def empty_date(self):
 @Requirements(RQ_SRS_032_ClickHouse_Parquet_Import_DataTypes_Conversion("1.0"))
 @Name("fastparquet")
 def feature(self, node="clickhouse1"):
-    """Check importing and exporting parquet files form  the fastparquet directory."""
+    """Check that ClickHouse can import and export parquet files that were generated/used by fastparquet."""
     self.context.node = self.context.cluster.node(node)
     self.context.snapshot_id = "fastparquet"
 
