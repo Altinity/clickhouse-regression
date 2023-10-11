@@ -45,6 +45,7 @@
 * 22 [Compact and Wide Parts](#compact-and-wide-parts)
     * 22.1 [Replace Partition Between Compact and Wide Parts](#replace-partition-between-compact-and-wide-parts)
         * 22.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.WideAndCompact](#rqsrs-032clickhousealtertablereplacepartitionbetweenwideandcompact)
+        * 22.1.2 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Updated.WideAndCompact](#rqsrs-032clickhousealtertablereplacepartitionbetweenupdatedwideandcompact)
 * 23 [Conditions](#conditions)
     * 23.1 [Rules For Replacing Partitions Between Tables](#rules-for-replacing-partitions-between-tables)
         * 23.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions](#rqsrs-032clickhousealtertablereplacepartitionconditions)
@@ -379,6 +380,17 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL output an error when using `REPLACE PARTITION` between `wide` partition and `compact` partition columns.
+
+#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.Updated.WideAndCompact
+version: 1.0
+
+[ClickHouse] SHALL support the usage of `REPLACE PARTITION` between `wide` partition and `compact` partition type tables, if the partition type is changed for one of them to correspond to the other.
+
+For example,
+
+If we have two tables on different partitions. `table1` is partitioned with type `wide` and `table2` with `compact`. 
+If we update the partition type for `table2` to be `wide` instead of `compact`, then the usage of `REPLACE PARTITION` 
+SHALL be possible between these two tables.  
 
 ## Conditions
 
