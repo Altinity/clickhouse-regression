@@ -10,6 +10,8 @@
 * 4 [User Actions](#user-actions)
 * 5 [Replace Partition](#replace-partition)
     * 5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition](#rqsrs-032clickhousealtertablereplacepartition)
+    * 5.2 [Check Partitions From The Parts Table](#check-partitions-from-the-parts-table)
+        * 5.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.System.Parts](#rqsrs-032clickhousealtertablereplacepartitionsystemparts)
 * 6 [Table Engines](#table-engines)
     * 6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TableEngines](#rqsrs-032clickhousealtertablereplacepartitiontableengines)
 * 7 [Keeping Data When Replacing Partitions](#keeping-data-when-replacing-partitions)
@@ -207,6 +209,22 @@ This query copies the data partition from the `table1` to `table2` and replaces 
 
 ```sql
 ALTER TABLE table2 [ON CLUSTER cluster] REPLACE PARTITION partition_expr FROM table1
+```
+
+### Check Partitions From The Parts Table
+
+#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.System.Parts
+version: 1.0
+
+[ClickHouse] SHALL support checking the partition values from the `system.parts` table.
+
+For example,
+
+```sql
+SELECT partition, formatReadableSize(sum(bytes))
+FROM system.parts
+WHERE table = 'table_1'
+GROUP BY partition
 ```
 
 ## Table Engines
