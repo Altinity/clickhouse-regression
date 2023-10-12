@@ -32,6 +32,31 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition = Requirement(
     num="6.1",
 )
 
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_System_Parts = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.System.Parts",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL support checking the partition values from the `system.parts` table.\n"
+        "\n"
+        "For example,\n"
+        "\n"
+        "```sql\n"
+        "SELECT partition, formatReadableSize(sum(bytes))\n"
+        "FROM system.parts\n"
+        "WHERE table = 'table_1'\n"
+        "GROUP BY partition\n"
+        "```\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="6.2.1",
+)
+
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_TableEngines = Requirement(
     name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TableEngines",
     version="1.0",
@@ -1005,6 +1030,12 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
             level=2,
             num="6.1",
         ),
+        Heading(name="Check Partitions From The Parts Table", level=2, num="6.2"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.System.Parts",
+            level=3,
+            num="6.2.1",
+        ),
         Heading(name="Table Engines", level=1, num="7"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TableEngines",
@@ -1375,6 +1406,7 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
     ),
     requirements=(
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_System_Parts,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_TableEngines,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_KeepData,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_NonExistentPartition,
@@ -1441,6 +1473,8 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
 * 4 [User Actions](#user-actions)
 * 5 [Replace Partition](#replace-partition)
     * 5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition](#rqsrs-032clickhousealtertablereplacepartition)
+    * 5.2 [Check Partitions From The Parts Table](#check-partitions-from-the-parts-table)
+        * 5.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.System.Parts](#rqsrs-032clickhousealtertablereplacepartitionsystemparts)
 * 6 [Table Engines](#table-engines)
     * 6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TableEngines](#rqsrs-032clickhousealtertablereplacepartitiontableengines)
 * 7 [Keeping Data When Replacing Partitions](#keeping-data-when-replacing-partitions)
@@ -1638,6 +1672,22 @@ This query copies the data partition from the `table1` to `table2` and replaces 
 
 ```sql
 ALTER TABLE table2 [ON CLUSTER cluster] REPLACE PARTITION partition_expr FROM table1
+```
+
+### Check Partitions From The Parts Table
+
+#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.System.Parts
+version: 1.0
+
+[ClickHouse] SHALL support checking the partition values from the `system.parts` table.
+
+For example,
+
+```sql
+SELECT partition, formatReadableSize(sum(bytes))
+FROM system.parts
+WHERE table = 'table_1'
+GROUP BY partition
 ```
 
 ## Table Engines
