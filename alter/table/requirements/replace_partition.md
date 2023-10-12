@@ -64,6 +64,12 @@
         * 24.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Merges](#rqsrs-032clickhousealtertablereplacepartitionprohibitedmerges)
     * 24.3 [Staring New Mutations With Ongoing Replace Partition](#staring-new-mutations-with-ongoing-replace-partition)
         * 24.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Mutations](#rqsrs-032clickhousealtertablereplacepartitionprohibitedmutations)
+    * 24.4 [Replacing Partitions With Table Functions](#replacing-partitions-with-table-functions)
+        * 24.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.TableFunctions](#rqsrs-032clickhousealtertablereplacepartitionprohibitedtablefunctions)
+    * 24.5 [Replacing Partitions With Subquery](#replacing-partitions-with-subquery)
+        * 24.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Subquery](#rqsrs-032clickhousealtertablereplacepartitionprohibitedsubquery)
+    * 24.6 [Replacing Partitions With Join Clause](#replacing-partitions-with-join-clause)
+        * 24.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Join](#rqsrs-032clickhousealtertablereplacepartitionprohibitedjoin)
 * 25 [Replacing Partitions During Ongoing Merges and Mutations](#replacing-partitions-during-ongoing-merges-and-mutations)
     * 25.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent](#rqsrs-032clickhousealtertablereplacepartitionconcurrent)
     * 25.2 [Insert Into Table](#insert-into-table)
@@ -468,6 +474,70 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to run any mutations before the executed `REPLACE PARTITION` is finished.
+
+### Replacing Partitions With Table Functions
+
+#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.TableFunctions
+version: 1.0
+
+[ClickHouse] SHALL output an error when trying to use table functions after the `FROM` clause to replace partition of a table.
+
+For Example,
+
+```sql
+ALTER TABLE table_1 REPLACE PARTITION 2 FROM file(table_2.parquet)
+```
+
+The list of possible table functions,
+
+| Table Engines             |
+|---------------------------|
+| `azureBlobStorage`        |
+| `cluster`                 |
+| `deltaLake`               |
+| `dictionary`              |
+| `executable`              |
+| `azureBlobStorageCluster` |
+| `file`                    |
+| `format`                  |
+| `gcs`                     |
+| `generateRandom`          |
+| `hdfs`                    |
+| `hdfsCluster`             |
+| `hudi`                    |
+| `iceberg`                 |
+| `input`                   |
+| `jdbc`                    |
+| `merge`                   |
+| `mongodb`                 |
+| `mysql`                   |
+| `null function`           |
+| `numbers`                 |
+| `odbc`                    |
+| `postgresql`              |
+| `redis`                   |
+| `remote`                  |
+| `s3`                      |
+| `s3Cluster`               |
+| `sqlite`                  |
+| `url`                     |
+| `urlCluster`              |
+| `view`                    |
+
+
+### Replacing Partitions With Subquery
+
+#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Subquery
+version: 1.0
+
+[ClickHouse] SHALL output an error when trying to use subquery after the `FROM` clause to replace partition of a table.
+
+### Replacing Partitions With Join Clause
+
+#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Join
+version: 1.0
+
+[ClickHouse] SHALL output an error when trying to use the `JOIN` clause after the `FROM` clause to replace partition of a table.
 
 ## Replacing Partitions During Ongoing Merges and Mutations
 
