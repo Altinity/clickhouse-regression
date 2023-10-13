@@ -21,7 +21,7 @@
 * 9 [Replacing Partitions Form Temporary Table](#replacing-partitions-form-temporary-table)
     * 9.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TemporaryTable](#rqsrs-032clickhousealtertablereplacepartitiontemporarytable)
 * 10 [Replacing Partitions Between Temporary Tables](#replacing-partitions-between-temporary-tables)
-    * 10.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.BetweenTemporaryTables](#rqsrs-032clickhousealtertablereplacepartitionbetweentemporarytables)
+    * 10.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.TemporaryTables](#rqsrs-032clickhousealtertablereplacepartitionbetweentemporarytables)
 * 11 [Using Into Outfile With Replace Partition](#using-into-outfile-with-replace-partition)
     * 11.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.IntoOutfile](#rqsrs-032clickhousealtertablereplacepartitionintooutfile)
 * 12 [Using Format With Replace Partition](#using-format-with-replace-partition)
@@ -314,7 +314,7 @@ ALTER TABLE destinaton REPLACE PARTITION 1 FROM temporary_table;
 
 ## Replacing Partitions Between Temporary Tables
 
-### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.BetweenTemporaryTables
+### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.TemporaryTables
 version: 1.0
 
 [ClickHouse] SHALL support copying the data partition from the temporary table into another temporary table.

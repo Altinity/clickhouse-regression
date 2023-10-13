@@ -417,6 +417,62 @@ def create_table(
         with Finally(f"drop the table {name}"):
             node.query(f"DROP TABLE IF EXISTS {name}{' SYNC' if drop_sync else ''}")
 
+@TestStep(Given)
+def create_temporary_table(
+    self,
+    engine,
+    columns,
+    name=None,
+    path=None,
+    drop_sync=False,
+    order_by=None,
+    partition_by=None,
+    comment=None,
+    as_select=None,
+    settings=None,
+    empty=None,
+):
+    """Create a table with specified name and engine."""
+    if settings is None:
+        settings = [("allow_suspicious_low_cardinality_types", 1)]
+
+    if name is None:
+        name = f"table_{getuid()}"
+
+    node = current().context.node
+
+    columns_def = "(" + ",".join([column.full_definition() for column in columns]) + ")"
+
+    try:
+        with By(f"creating table {name}"):
+            query = f"CREATE TEMPORARY TABLE {name} {columns_def}\n" f"ENGINE = {engine}"
+
+            if partition_by is not None:
+                query += f"\nPARTITION BY {partition_by}"
+
+            if order_by is not None:
+                query += f"\nORDER BY {order_by}"
+
+            if comment is not None:
+                query += f"\nCOMMENT '{comment}'"
+
+            if empty is not None:
+                query += f"\nEMPTY AS {empty}"
+
+            if as_select is not None:
+                query += f"\nAS SELECT {as_select}"
+
+            node.query(
+                query,
+                settings=settings,
+            )
+
+            yield Table(name, columns, engine)
+
+    finally:
+        with Finally(f"drop the table {name}"):
+            node.query(f"DROP TABLE IF EXISTS {name}{' SYNC' if drop_sync else ''}")
+
 
 @TestStep(Given)
 def attach_table(self, engine, columns, name=None, path=None, drop_sync=False):

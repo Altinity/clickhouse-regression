@@ -14,7 +14,20 @@ from alter.table.requirements.replace_partition import *
 from helpers.datatypes import *
 
 
-xfails = {}
+xfails = {
+    "/alter/replace partition/between temporary and regular tables": [
+        (
+            Fail,
+            "Temporary table gets deleted before we can insert data, needs to be fixed in tests",
+        )
+    ],
+    "/alter/replace partition/between temporary tables": [
+        (
+            Fail,
+            "Temporary table gets deleted before we can insert data, needs to be fixed in tests",
+        )
+    ],
+}
 
 xflags = {}
 
@@ -61,7 +74,7 @@ def regression(
     ) as cluster:
         self.context.cluster = cluster
 
-        Feature(run=load("alter.table.tests.replace_partition", "feature"))
+        Feature(run=load("alter.table.tests.replace_partition.feature", "feature"))
 
 
 if main():

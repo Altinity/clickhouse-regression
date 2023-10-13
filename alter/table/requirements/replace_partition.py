@@ -167,8 +167,8 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_TemporaryTable = Requirement(
     num="10.1",
 )
 
-RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_BetweenTemporaryTables = Requirement(
-    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.BetweenTemporaryTables",
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Between_TemporaryTables = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.TemporaryTables",
     version="1.0",
     priority=None,
     group=None,
@@ -1194,7 +1194,7 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
             name="Replacing Partitions Between Temporary Tables", level=1, num="11"
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.BetweenTemporaryTables",
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.TemporaryTables",
             level=2,
             num="11.1",
         ),
@@ -1574,7 +1574,7 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_KeepData,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_NonExistentPartition,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_TemporaryTable,
-        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_BetweenTemporaryTables,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Between_TemporaryTables,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_IntoOutfile,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Format,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Settings,
@@ -1652,7 +1652,7 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
 * 9 [Replacing Partitions Form Temporary Table](#replacing-partitions-form-temporary-table)
     * 9.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TemporaryTable](#rqsrs-032clickhousealtertablereplacepartitiontemporarytable)
 * 10 [Replacing Partitions Between Temporary Tables](#replacing-partitions-between-temporary-tables)
-    * 10.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.BetweenTemporaryTables](#rqsrs-032clickhousealtertablereplacepartitionbetweentemporarytables)
+    * 10.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.TemporaryTables](#rqsrs-032clickhousealtertablereplacepartitionbetweentemporarytables)
 * 11 [Using Into Outfile With Replace Partition](#using-into-outfile-with-replace-partition)
     * 11.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.IntoOutfile](#rqsrs-032clickhousealtertablereplacepartitionintooutfile)
 * 12 [Using Format With Replace Partition](#using-format-with-replace-partition)
@@ -1945,7 +1945,7 @@ ALTER TABLE destinaton REPLACE PARTITION 1 FROM temporary_table;
 
 ## Replacing Partitions Between Temporary Tables
 
-### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.BetweenTemporaryTables
+### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Between.TemporaryTables
 version: 1.0
 
 [ClickHouse] SHALL support copying the data partition from the temporary table into another temporary table.
