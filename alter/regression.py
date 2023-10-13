@@ -59,7 +59,9 @@ def regression(
         collect_service_logs=collect_service_logs,
         nodes=nodes,
     ) as cluster:
-        pass
+        self.context.cluster = cluster
+
+        Feature(run=load("alter.table.tests.replace_partition", "feature"))
 
 
 if main():
