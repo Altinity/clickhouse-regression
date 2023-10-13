@@ -10,7 +10,7 @@
 * 4 [User Actions](#user-actions)
 * 5 [Replace Partition](#replace-partition)
     * 5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition](#rqsrs-032clickhousealtertablereplacepartition)
-    * 5.2 [Check Partitions From The Parts Table](#check-partitions-from-the-parts-table)
+    * 5.2 [Check Existing Partitions From The Parts Table](#check-existing-partitions-from-the-parts-table)
         * 5.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.System.Parts](#rqsrs-032clickhousealtertablereplacepartitionsystemparts)
 * 6 [Table Engines](#table-engines)
     * 6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TableEngines](#rqsrs-032clickhousealtertablereplacepartitiontableengines)
@@ -125,6 +125,11 @@
             * 25.8.14.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.UpdateInPartition](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsupdateinpartition)
         * 25.8.15 [Delete In](#delete-in)
             * 25.8.15.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.DeleteInPartition](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsdeleteinpartition)
+* 26 [Role Based Access Control](#role-based-access-control)
+    * 26.1 [Replacing Partition Without Alter Privileges  ](#replacing-partition-without-alter-privileges-)
+        * 26.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC](#rqsrs-032clickhousealtertablereplacepartitionrbac)
+    * 26.2 [Replacing Partition Without Read Access To The Table](#replacing-partition-without-read-access-to-the-table)
+        * 26.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.ReadTable](#rqsrs-032clickhousealtertablereplacepartitionrbacreadtable)
 
 ## Revision History
 
@@ -217,7 +222,7 @@ This query copies the data partition from the `table1` to `table2` and replaces 
 ALTER TABLE table2 [ON CLUSTER cluster] REPLACE PARTITION partition_expr FROM table1
 ```
 
-### Check Partitions From The Parts Table
+### Check Existing Partitions From The Parts Table
 
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.System.Parts
 version: 1.0
@@ -769,6 +774,23 @@ version: 1.0
 
 [ClickHouse] SHALL wait for `REPLACE PARTITION` to finish before executing `DELETE IN PARTITION` on the same partition.
 
+
+## Role Based Access Control
+
+### Replacing Partition Without Alter Privileges  
+
+#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC
+version: 1.0
+
+[ClickHouse] SHALL output an error when a specific user without `ALTER TABLE` privileges ties to execute query with `REPLACE PARTITION`.
+
+
+### Replacing Partition Without Read Access To The Table
+
+#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.ReadTable
+version: 1.0
+
+[ClickHouse] SHALL output an error when a specific user executes `REPLACE PARTITION` on a table they do not have read access to. 
 
 [ClickHouse]: https://clickhouse.com
 

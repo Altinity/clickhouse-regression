@@ -370,6 +370,7 @@ def create_table(
     path=None,
     drop_sync=False,
     order_by=None,
+    partition_by=None,
     comment=None,
     as_select=None,
     settings=None,
@@ -389,6 +390,9 @@ def create_table(
     try:
         with By(f"creating table {name}"):
             query = f"CREATE TABLE {name} {columns_def}\n" f"ENGINE = {engine}"
+
+            if partition_by is not None:
+                query += f"\nPARTITION BY {partition_by}"
 
             if order_by is not None:
                 query += f"\nORDER BY {order_by}"
