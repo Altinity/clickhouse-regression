@@ -364,23 +364,23 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Deduplication = Requirement(
     num="23.1",
 )
 
-RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_SameTypes = Requirement(
-    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.SameTypes",
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Parts = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Parts",
     version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support the usage of `REPLACE PARTITION` between tables that have the same partition types.\n"
+        "[ClickHouse] The `REPLACE PARTITION` command works with both source and destination tables. Each table can have its own part types.\n"
         "\n"
-        "For example,\n"
+        "| Part Types       |\n"
+        "|------------------|\n"
+        "| Wide             |\n"
+        "| Compact          |\n"
+        "| Compact And Wide |\n"
         "\n"
-        "If we have two tables, `table_1` and `table_2` and the partition we are replacing is the `wide` partition on both tables,\n"
-        "the partition on the destination table should be replaced after the usage of,\n"
-        "```sql\n"
-        "ALTER TABLE table_1 REPLACE PARTITION partition_expr FROM table_2;\n"
-        "```\n"
+        "The `REPLACE PARTITION` SHALL work for any combination of part types on both destination and source tables.\n"
         "\n"
     ),
     link=None,
@@ -1312,13 +1312,9 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
             num="23.1",
         ),
         Heading(name="Compact and Wide Parts", level=1, num="24"),
+        Heading(name="Replace Partition Between Part Types", level=2, num="24.1"),
         Heading(
-            name="Replace Partition Between The Same Partition Types",
-            level=2,
-            num="24.1",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.SameTypes",
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Parts",
             level=3,
             num="24.1.1",
         ),
@@ -1632,7 +1628,7 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Encodings,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Encryption,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Deduplication,
-        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_SameTypes,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Parts,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_WideAndCompact,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Corrupted_Wide,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Corrupted_Compact,
@@ -1724,8 +1720,8 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
 * 22 [Replacing Partitions To Deduplication Tables](#replacing-partitions-to-deduplication-tables)
     * 22.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Deduplication](#rqsrs-032clickhousealtertablereplacepartitiondeduplication)
 * 23 [Compact and Wide Parts](#compact-and-wide-parts)
-    * 23.1 [Replace Partition Between The Same Partition Types](#replace-partition-between-the-same-partition-types)
-        * 23.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.SameTypes](#rqsrs-032clickhousealtertablereplacepartitionsametypes)
+    * 23.1 [Replace Partition Between Part Types](#replace-partition-between-part-types)
+        * 23.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Parts](#rqsrs-032clickhousealtertablereplacepartitionparts)
     * 23.2 [Replace Partition Between Compact and Wide Parts](#replace-partition-between-compact-and-wide-parts)
         * 23.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.WideAndCompact](#rqsrs-032clickhousealtertablereplacepartitionwideandcompact)
 * 24 [Corrupted Parts](#corrupted-parts)
@@ -2118,20 +2114,20 @@ Data storing format is controlled by the `min_bytes_for_wide_part` and `min_rows
 
 When a specific part is less than the values of `min_bytes_for_wide_part` or `min_rows_for_wide_part`, then it's considered a compact part.
 
-### Replace Partition Between The Same Partition Types
+### Replace Partition Between Part Types
 
-#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.SameTypes
+#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Parts
 version: 1.0
 
-[ClickHouse] SHALL support the usage of `REPLACE PARTITION` between tables that have the same partition types.
+[ClickHouse] The `REPLACE PARTITION` command works with both source and destination tables. Each table can have its own part types.
 
-For example,
+| Part Types       |
+|------------------|
+| Wide             |
+| Compact          |
+| Compact And Wide |
 
-If we have two tables, `table_1` and `table_2` and the partition we are replacing is the `wide` partition on both tables,
-the partition on the destination table should be replaced after the usage of,
-```sql
-ALTER TABLE table_1 REPLACE PARTITION partition_expr FROM table_2;
-```
+The `REPLACE PARTITION` SHALL work for any combination of part types on both destination and source tables.
 
 ### Replace Partition Between Compact and Wide Parts
 
