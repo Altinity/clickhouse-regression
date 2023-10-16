@@ -852,41 +852,32 @@ version: 1.0
 
 ## Role Based Access Control
 
-### Replacing Partition Without Alter Privileges On a Destination Table  
-
-#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Alter.Destination
+### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC
 version: 1.0
 
-[ClickHouse] SHALL output an error when a specific user without `ALTER TABLE` privileges on a destination table tries to execute query with `REPLACE PARTITION`.
+The `REPLACE PARTITION` command works with both source and destination tables. Each table can have its own privileges.
 
-### Replacing Partition Without Alter Privileges On a Source Table
+```sql
+ALTER TABLE table2 REPLACE PARTITION 21 FROM table1
+```
 
-#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Alter.Source
-version: 1.0
+| Privileges |
+| --- |
+| No privileges |
+| SELECT |
+| INSERT |
+| ALTER |
+| ALTER TABLE |
+| ALTER REPLACE PARTITION |
 
-[ClickHouse] SHALL output an error when a specific user without `ALTER TABLE` privileges on a source table tries to execute query with `REPLACE PARTITION`.
+The `REPLACE PARTITION` SHALL only work when the user has the following privileges for the source and destination tables:
 
-### Replacing Partition Without Select Privileges On a Source Table
-
-#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Select.Source
-version: 1.0
-
-[ClickHouse] SHALL output an error when a specific user executes `REPLACE PARTITION` and does not have select privileges to read data from a source table. 
-
-### Replacing Partition Without Insert Privileges On a Destination Table
-
-#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Insert.Destination
-version: 1.0
-
-[ClickHouse] SHALL output an error when a specific user executes `REPLACE PARTITION` and does not have insert privileges to insert data into a destination table. 
-
+| Source | Destination
+| --- | --- |
+| ALTER | SELECT |
 
 [ClickHouse]: https://clickhouse.com
-
 [GitHub Repository]: https://github.com/Altinity/clickhouse-regression/blob/main/alter/requirements/requirements.md
-
 [Revision History]: https://github.com/Altinity/clickhouse-regression/commits/main/alter/requirements/requirements.md
-
 [Git]: https://git-scm.com/
-
 [GitHub]: https://github.com
