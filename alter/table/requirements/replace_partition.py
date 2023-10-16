@@ -1140,78 +1140,44 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     num="27.8.15.1",
 )
 
-RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_RBAC_Alter_Destination = Requirement(
-    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Alter.Destination",
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_RBAC = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC",
     version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL output an error when a specific user without `ALTER TABLE` privileges on a destination table tries to execute query with `REPLACE PARTITION`.\n"
+        "The `REPLACE PARTITION` command works with both source and destination tables. Each table can have its own privileges.\n"
         "\n"
-    ),
-    link=None,
-    level=3,
-    num="28.1.1",
-)
-
-RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_RBAC_Alter_Source = Requirement(
-    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Alter.Source",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL output an error when a specific user without `ALTER TABLE` privileges on a source table tries to execute query with `REPLACE PARTITION`.\n"
+        "```sql\n"
+        "ALTER TABLE table2 REPLACE PARTITION 21 FROM table1\n"
+        "```\n"
         "\n"
-    ),
-    link=None,
-    level=3,
-    num="28.2.1",
-)
-
-RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_RBAC_Select_Source = Requirement(
-    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Select.Source",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL output an error when a specific user executes `REPLACE PARTITION` and does not have select privileges to read data from a source table. \n"
+        "| Privileges              |\n"
+        "|-------------------------|\n"
+        "| No privileges           |\n"
+        "| SELECT                  |\n"
+        "| INSERT                  |\n"
+        "| ALTER                   |\n"
+        "| ALTER TABLE             |\n"
+        "| ALTER REPLACE PARTITION |\n"
         "\n"
-    ),
-    link=None,
-    level=3,
-    num="28.3.1",
-)
-
-RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_RBAC_Insert_Destination = Requirement(
-    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Insert.Destination",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL output an error when a specific user executes `REPLACE PARTITION` and does not have insert privileges to insert data into a destination table. \n"
+        "The `REPLACE PARTITION` SHALL only work when the user has the following privileges for the source and destination tables:\n"
         "\n"
+        "| Source | Destination |\n"
+        "|--------|-------------|\n"
+        "| ALTER  | SELECT      |\n"
         "\n"
         "[ClickHouse]: https://clickhouse.com\n"
-        "\n"
         "[GitHub Repository]: https://github.com/Altinity/clickhouse-regression/blob/main/alter/requirements/requirements.md\n"
-        "\n"
         "[Revision History]: https://github.com/Altinity/clickhouse-regression/commits/main/alter/requirements/requirements.md\n"
-        "\n"
         "[Git]: https://git-scm.com/\n"
-        "\n"
         "[GitHub]: https://github.com\n"
     ),
     link=None,
-    level=3,
-    num="28.4.1",
+    level=2,
+    num="28.1",
 )
 
 SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
@@ -1674,44 +1640,9 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
         ),
         Heading(name="Role Based Access Control", level=1, num="28"),
         Heading(
-            name="Replacing Partition Without Alter Privileges On a Destination Table  ",
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC",
             level=2,
             num="28.1",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Alter.Destination",
-            level=3,
-            num="28.1.1",
-        ),
-        Heading(
-            name="Replacing Partition Without Alter Privileges On a Source Table",
-            level=2,
-            num="28.2",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Alter.Source",
-            level=3,
-            num="28.2.1",
-        ),
-        Heading(
-            name="Replacing Partition Without Select Privileges On a Source Table",
-            level=2,
-            num="28.3",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Select.Source",
-            level=3,
-            num="28.3.1",
-        ),
-        Heading(
-            name="Replacing Partition Without Insert Privileges On a Destination Table",
-            level=2,
-            num="28.4",
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Insert.Destination",
-            level=3,
-            num="28.4.1",
         ),
     ),
     requirements=(
@@ -1775,10 +1706,7 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Move,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_UpdateInPartition,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_DeleteInPartition,
-        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_RBAC_Alter_Destination,
-        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_RBAC_Alter_Source,
-        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_RBAC_Select_Source,
-        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_RBAC_Insert_Destination,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_RBAC,
     ),
     content="""
 # SRS032 ClickHouse Alter Table Replace Partition
@@ -1917,14 +1845,7 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
         * 26.8.15 [Delete In](#delete-in)
             * 26.8.15.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.DeleteInPartition](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsdeleteinpartition)
 * 27 [Role Based Access Control](#role-based-access-control)
-    * 27.1 [Replacing Partition Without Alter Privileges On a Destination Table  ](#replacing-partition-without-alter-privileges-on-a-destination-table-)
-        * 27.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Alter.Destination](#rqsrs-032clickhousealtertablereplacepartitionrbacalterdestination)
-    * 27.2 [Replacing Partition Without Alter Privileges On a Source Table](#replacing-partition-without-alter-privileges-on-a-source-table)
-        * 27.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Alter.Source](#rqsrs-032clickhousealtertablereplacepartitionrbacaltersource)
-    * 27.3 [Replacing Partition Without Select Privileges On a Source Table](#replacing-partition-without-select-privileges-on-a-source-table)
-        * 27.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Select.Source](#rqsrs-032clickhousealtertablereplacepartitionrbacselectsource)
-    * 27.4 [Replacing Partition Without Insert Privileges On a Destination Table](#replacing-partition-without-insert-privileges-on-a-destination-table)
-        * 27.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Insert.Destination](#rqsrs-032clickhousealtertablereplacepartitionrbacinsertdestination)
+    * 27.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC](#rqsrs-032clickhousealtertablereplacepartitionrbac)
 
 ## Revision History
 
@@ -2206,23 +2127,23 @@ version: 1.0
 
 In ClickHouse, a physical file on a disk that stores a portion of the table’s data is called a “part”. There are two types of parts
 * `Wide Parts` - Each column is stored in a separate file in a filesystem.
-
-```mermaid
-flowchart TD
-    A[ClickHouse Table] -->|Partition| B[Parts]
-    B --> C{File system}
-    C --> D[fas:fa-file File1]
-    C --> E[fas:fa-file File2]
-    C --> F[fas:fa-file File3]
-```
-
+* 
 * `Compact Parts` - All columns are stored in one file in a filesystem.
 
 ```mermaid
-flowchart TD
-    A[ClickHouse Table] -->|Partition| B[Parts]
-    B --> C{File system}
-    C --> D[fas:fa-file File]
+graph TD
+    subgraph Wide
+    A1[ClickHouse Table] -->|Partition| B1[Parts]
+    B1 --> C1{File system}
+    C1 --> |Column| D1[fas:fa-file File1]
+    C1 --> |Column| E1[fas:fa-file File2]
+    C1 --> |Column| F1[fas:fa-file File3]
+    end
+    subgraph Compact
+    A2[ClickHouse Table] -->|Partition| B2[Parts]
+    B2 --> C2{File system}
+    C2 --> |All Columns| D2[fas:fa-file File]
+    end
 ```
 
 Data storing format is controlled by the `min_bytes_for_wide_part` and `min_rows_for_wide_part` settings of the `MergeTree` table.
@@ -2635,43 +2556,34 @@ version: 1.0
 
 ## Role Based Access Control
 
-### Replacing Partition Without Alter Privileges On a Destination Table  
-
-#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Alter.Destination
+### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC
 version: 1.0
 
-[ClickHouse] SHALL output an error when a specific user without `ALTER TABLE` privileges on a destination table tries to execute query with `REPLACE PARTITION`.
+The `REPLACE PARTITION` command works with both source and destination tables. Each table can have its own privileges.
 
-### Replacing Partition Without Alter Privileges On a Source Table
+```sql
+ALTER TABLE table2 REPLACE PARTITION 21 FROM table1
+```
 
-#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Alter.Source
-version: 1.0
+| Privileges              |
+|-------------------------|
+| No privileges           |
+| SELECT                  |
+| INSERT                  |
+| ALTER                   |
+| ALTER TABLE             |
+| ALTER REPLACE PARTITION |
 
-[ClickHouse] SHALL output an error when a specific user without `ALTER TABLE` privileges on a source table tries to execute query with `REPLACE PARTITION`.
+The `REPLACE PARTITION` SHALL only work when the user has the following privileges for the source and destination tables:
 
-### Replacing Partition Without Select Privileges On a Source Table
-
-#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Select.Source
-version: 1.0
-
-[ClickHouse] SHALL output an error when a specific user executes `REPLACE PARTITION` and does not have select privileges to read data from a source table. 
-
-### Replacing Partition Without Insert Privileges On a Destination Table
-
-#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Insert.Destination
-version: 1.0
-
-[ClickHouse] SHALL output an error when a specific user executes `REPLACE PARTITION` and does not have insert privileges to insert data into a destination table. 
-
+| Source | Destination |
+|--------|-------------|
+| ALTER  | SELECT      |
 
 [ClickHouse]: https://clickhouse.com
-
 [GitHub Repository]: https://github.com/Altinity/clickhouse-regression/blob/main/alter/requirements/requirements.md
-
 [Revision History]: https://github.com/Altinity/clickhouse-regression/commits/main/alter/requirements/requirements.md
-
 [Git]: https://git-scm.com/
-
 [GitHub]: https://github.com
 """,
 )

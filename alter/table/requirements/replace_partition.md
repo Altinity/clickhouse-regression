@@ -134,14 +134,7 @@
         * 26.8.15 [Delete In](#delete-in)
             * 26.8.15.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.DeleteInPartition](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsdeleteinpartition)
 * 27 [Role Based Access Control](#role-based-access-control)
-    * 27.1 [Replacing Partition Without Alter Privileges On a Destination Table  ](#replacing-partition-without-alter-privileges-on-a-destination-table-)
-        * 27.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Alter.Destination](#rqsrs-032clickhousealtertablereplacepartitionrbacalterdestination)
-    * 27.2 [Replacing Partition Without Alter Privileges On a Source Table](#replacing-partition-without-alter-privileges-on-a-source-table)
-        * 27.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Alter.Source](#rqsrs-032clickhousealtertablereplacepartitionrbacaltersource)
-    * 27.3 [Replacing Partition Without Select Privileges On a Source Table](#replacing-partition-without-select-privileges-on-a-source-table)
-        * 27.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Select.Source](#rqsrs-032clickhousealtertablereplacepartitionrbacselectsource)
-    * 27.4 [Replacing Partition Without Insert Privileges On a Destination Table](#replacing-partition-without-insert-privileges-on-a-destination-table)
-        * 27.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Insert.Destination](#rqsrs-032clickhousealtertablereplacepartitionrbacinsertdestination)
+    * 27.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC](#rqsrs-032clickhousealtertablereplacepartitionrbac)
 
 ## Revision History
 
@@ -423,23 +416,23 @@ version: 1.0
 
 In ClickHouse, a physical file on a disk that stores a portion of the table’s data is called a “part”. There are two types of parts
 * `Wide Parts` - Each column is stored in a separate file in a filesystem.
-
-```mermaid
-flowchart TD
-    A[ClickHouse Table] -->|Partition| B[Parts]
-    B --> C{File system}
-    C --> D[fas:fa-file File1]
-    C --> E[fas:fa-file File2]
-    C --> F[fas:fa-file File3]
-```
-
+* 
 * `Compact Parts` - All columns are stored in one file in a filesystem.
 
 ```mermaid
-flowchart TD
-    A[ClickHouse Table] -->|Partition| B[Parts]
-    B --> C{File system}
-    C --> D[fas:fa-file File]
+graph TD
+    subgraph Wide
+    A1[ClickHouse Table] -->|Partition| B1[Parts]
+    B1 --> C1{File system}
+    C1 --> |Column| D1[fas:fa-file File1]
+    C1 --> |Column| E1[fas:fa-file File2]
+    C1 --> |Column| F1[fas:fa-file File3]
+    end
+    subgraph Compact
+    A2[ClickHouse Table] -->|Partition| B2[Parts]
+    B2 --> C2{File system}
+    C2 --> |All Columns| D2[fas:fa-file File]
+    end
 ```
 
 Data storing format is controlled by the `min_bytes_for_wide_part` and `min_rows_for_wide_part` settings of the `MergeTree` table.
@@ -861,20 +854,20 @@ The `REPLACE PARTITION` command works with both source and destination tables. E
 ALTER TABLE table2 REPLACE PARTITION 21 FROM table1
 ```
 
-| Privileges |
-| --- |
-| No privileges |
-| SELECT |
-| INSERT |
-| ALTER |
-| ALTER TABLE |
+| Privileges              |
+|-------------------------|
+| No privileges           |
+| SELECT                  |
+| INSERT                  |
+| ALTER                   |
+| ALTER TABLE             |
 | ALTER REPLACE PARTITION |
 
 The `REPLACE PARTITION` SHALL only work when the user has the following privileges for the source and destination tables:
 
-| Source | Destination
-| --- | --- |
-| ALTER | SELECT |
+| Source | Destination |
+|--------|-------------|
+| ALTER  | SELECT      |
 
 [ClickHouse]: https://clickhouse.com
 [GitHub Repository]: https://github.com/Altinity/clickhouse-regression/blob/main/alter/requirements/requirements.md
