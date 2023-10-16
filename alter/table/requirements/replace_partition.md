@@ -411,8 +411,8 @@ version: 1.0
 ## Compact and Wide Parts
 
 In ClickHouse, a physical file on a disk that stores a portion of the table’s data is called a “part”. There are two types of parts
-* Wide Parts - Each column is stored in a separate file in a filesystem.
-* Compact Parts - All columns are stored in one file in a filesystem.
+* `Wide Parts` - Each column is stored in a separate file in a filesystem.
+* `Compact Parts` - All columns are stored in one file in a filesystem.
 
 Data storing format is controlled by the `min_bytes_for_wide_part` and `min_rows_for_wide_part` settings of the `MergeTree` table.
 
