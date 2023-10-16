@@ -46,8 +46,8 @@
 * 22 [Replacing Partitions To Deduplication Tables](#replacing-partitions-to-deduplication-tables)
     * 22.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Deduplication](#rqsrs-032clickhousealtertablereplacepartitiondeduplication)
 * 23 [Compact and Wide Parts](#compact-and-wide-parts)
-    * 23.1 [Replace Partition Between The Same Partition Types](#replace-partition-between-the-same-partition-types)
-        * 23.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.SameTypes](#rqsrs-032clickhousealtertablereplacepartitionsametypes)
+    * 23.1 [Replace Partition Between Part Types](#replace-partition-between-part-types)
+        * 23.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Parts](#rqsrs-032clickhousealtertablereplacepartitionparts)
     * 23.2 [Replace Partition Between Compact and Wide Parts](#replace-partition-between-compact-and-wide-parts)
         * 23.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.WideAndCompact](#rqsrs-032clickhousealtertablereplacepartitionwideandcompact)
 * 24 [Corrupted Parts](#corrupted-parts)
@@ -440,20 +440,20 @@ Data storing format is controlled by the `min_bytes_for_wide_part` and `min_rows
 
 When a specific part is less than the values of `min_bytes_for_wide_part` or `min_rows_for_wide_part`, then it's considered a compact part.
 
-### Replace Partition Between The Same Partition Types
+### Replace Partition Between Part Types
 
-#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.SameTypes
+#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Parts
 version: 1.0
 
-[ClickHouse] SHALL support the usage of `REPLACE PARTITION` between tables that have the same partition types.
+[ClickHouse] The `REPLACE PARTITION` command works with both source and destination tables. Each table can have its own part types.
 
-For example,
+| Part Types       |
+|------------------|
+| Wide             |
+| Compact          |
+| Compact And Wide |
 
-If we have two tables, `table_1` and `table_2` and the partition we are replacing is the `wide` partition on both tables,
-the partition on the destination table should be replaced after the usage of,
-```sql
-ALTER TABLE table_1 REPLACE PARTITION partition_expr FROM table_2;
-```
+The `REPLACE PARTITION` SHALL work for any combination of part types on both destination and source tables.
 
 ### Replace Partition Between Compact and Wide Parts
 
