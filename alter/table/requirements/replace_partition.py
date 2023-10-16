@@ -2044,6 +2044,16 @@ version: 1.0
 
 In ClickHouse, a physical file on a disk that stores a portion of the table’s data is called a “part”. There are two types of parts
 * `Wide Parts` - Each column is stored in a separate file in a filesystem.
+
+```mermaid
+flowchart TD
+    A[ClickHouse Table] -->|Partition| B[Parts]
+    B --> C{File system}
+    C --> D[fas:fa-file File1]
+    C --> E[fas:fa-file File2]
+    C --> F[fas:fa-file File3]
+```
+
 * `Compact Parts` - All columns are stored in one file in a filesystem.
 
 Data storing format is controlled by the `min_bytes_for_wide_part` and `min_rows_for_wide_part` settings of the `MergeTree` table.
