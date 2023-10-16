@@ -19,10 +19,10 @@
     * 8.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.KeepData](#rqsrs-032clickhousealtertablereplacepartitionkeepdata)
 * 9 [Keeping Data When Replacing Partition From Non-Existent Partition](#keeping-data-when-replacing-partition-from-non-existent-partition)
     * 9.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.NonExistentPartition](#rqsrs-032clickhousealtertablereplacepartitionnonexistentpartition)
-* 10 [Replacing Partitions Form Temporary Table](#replacing-partitions-form-temporary-table)
-    * 10.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TemporaryTable](#rqsrs-032clickhousealtertablereplacepartitiontemporarytable)
+* 10 [Replacing Partitions From Temporary Table](#replacing-partitions-from-temporary-table)
+    * 10.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.FromTemporaryTable](#rqsrs-032clickhousealtertablereplacepartitionfromtemporarytable)
 * 11 [Replacing Partitions Between Temporary Tables](#replacing-partitions-between-temporary-tables)
-    * 11.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartitionTemporaryTables](#rqsrs-032clickhousealtertablereplacepartitiontemporarytables)
+    * 11.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TemporaryTables](#rqsrs-032clickhousealtertablereplacepartitiontemporarytables)
 * 12 [Using Into Outfile With Replace Partition](#using-into-outfile-with-replace-partition)
     * 12.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.IntoOutfile](#rqsrs-032clickhousealtertablereplacepartitionintooutfile)
 * 13 [Using Format With Replace Partition](#using-format-with-replace-partition)
@@ -30,21 +30,21 @@
 * 14 [Using Settings With Replace Partition](#using-settings-with-replace-partition)
     * 14.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Settings](#rqsrs-032clickhousealtertablereplacepartitionsettings)
 * 15 [Replacing Partitions From One Disk To Another In The Same Table](#replacing-partitions-from-one-disk-to-another-in-the-same-table)
-    * 15.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartitionDisks](#rqsrs-032clickhousealtertablereplacepartitiondisks)
+    * 15.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Disks](#rqsrs-032clickhousealtertablereplacepartitiondisks)
 * 16 [Replacing Partitions Between Tables On S3](#replacing-partitions-between-tables-on-s3)
-    * 16.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartitionS3](#rqsrs-032clickhousealtertablereplacepartitions3)
+    * 16.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.S3](#rqsrs-032clickhousealtertablereplacepartitions3)
 * 17 [Replacing Partitions Between Replicas](#replacing-partitions-between-replicas)
-    * 17.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartitionReplicas](#rqsrs-032clickhousealtertablereplacepartitionreplicas)
+    * 17.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Replicas](#rqsrs-032clickhousealtertablereplacepartitionreplicas)
 * 18 [Replacing Partitions Between Shards](#replacing-partitions-between-shards)
-    * 18.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartitionShards](#rqsrs-032clickhousealtertablereplacepartitionshards)
+    * 18.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Shards](#rqsrs-032clickhousealtertablereplacepartitionshards)
 * 19 [Replacing Partitions Between Different ClickHouse versions](#replacing-partitions-between-different-clickhouse-versions)
-    * 19.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartitionVersions](#rqsrs-032clickhousealtertablereplacepartitionversions)
+    * 19.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Versions](#rqsrs-032clickhousealtertablereplacepartitionversions)
 * 20 [Replacing Partitions Between Different Encodings](#replacing-partitions-between-different-encodings)
-    * 20.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartitionEncodings](#rqsrs-032clickhousealtertablereplacepartitionencodings)
+    * 20.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Encodings](#rqsrs-032clickhousealtertablereplacepartitionencodings)
 * 21 [Replacing Partitions Between Encrypted And Unencrypted Tables](#replacing-partitions-between-encrypted-and-unencrypted-tables)
-    * 21.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartitionEncryption](#rqsrs-032clickhousealtertablereplacepartitionencryption)
+    * 21.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Encryption](#rqsrs-032clickhousealtertablereplacepartitionencryption)
 * 22 [Replacing Partitions To Deduplication Tables](#replacing-partitions-to-deduplication-tables)
-    * 22.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartitionDeduplication](#rqsrs-032clickhousealtertablereplacepartitiondeduplication)
+    * 22.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Deduplication](#rqsrs-032clickhousealtertablereplacepartitiondeduplication)
 * 23 [Compact and Wide Parts](#compact-and-wide-parts)
     * 23.1 [Replace Partition Between Compact and Wide Parts](#replace-partition-between-compact-and-wide-parts)
         * 23.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.WideAndCompact](#rqsrs-032clickhousealtertablereplacepartitionwideandcompact)
@@ -298,9 +298,9 @@ ALTER TABLE table2 REPLACE PARTITION 21 FROM table1
 
 The data on `table2` should not be deleted and an exception should be raised.
 
-## Replacing Partitions Form Temporary Table
+## Replacing Partitions From Temporary Table
 
-### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TemporaryTable
+### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.FromTemporaryTable
 version: 1.0
 
 [ClickHouse] SHALL support copying the data partition from the temporary table.
@@ -330,7 +330,7 @@ ALTER TABLE destinaton REPLACE PARTITION 1 FROM temporary_table;
 
 ## Replacing Partitions Between Temporary Tables
 
-### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartitionTemporaryTables
+### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TemporaryTables
 version: 1.0
 
 [ClickHouse] SHALL support copying the data partition from the temporary table into another temporary table.
@@ -358,7 +358,7 @@ version: 1.0
 
 ## Replacing Partitions From One Disk To Another In The Same Table
 
-### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartitionDisks
+### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Disks
 version: 1.0
 
 [ClickHouse] SHALL support Replacing partitions from one disk to another in the same table when tired storage is used.
@@ -367,28 +367,28 @@ version: 1.0
 
 ## Replacing Partitions Between Tables On S3
 
-### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartitionS3
+### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.S3
 version: 1.0
 
 [ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions between tables that are placed inside the S3 storage.
 
 ## Replacing Partitions Between Replicas
 
-### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartitionReplicas
+### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Replicas
 version: 1.0
 
 [ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions between replicas for tables with `ReplicatedMergeTree` engine.
 
 ## Replacing Partitions Between Shards
 
-### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartitionShards
+### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Shards
 version: 1.0
 
 [ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions between shards for tables with `DistributedTable` engine.
 
 ## Replacing Partitions Between Different ClickHouse versions
 
-### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartitionVersions
+### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Versions
 version: 1.0
 
 [ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions between different ClickHouse versions.
@@ -398,21 +398,21 @@ version: 1.0
 
 ## Replacing Partitions Between Different Encodings
 
-### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartitionEncodings
+### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Encodings
 version: 1.0
 
 [ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions between tables with different encodings.
 
 ## Replacing Partitions Between Encrypted And Unencrypted Tables
 
-### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartitionEncryption
+### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Encryption
 version: 1.0
 
 [ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions between encrypted and not encrypted tables.
 
 ## Replacing Partitions To Deduplication Tables
 
-### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartitionDeduplication
+### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Deduplication
 version: 1.0
 
 [ClickHouse] SHALL support using `REPLACE PARTITION` to replace data to a deduplication table, where duplicates are identified and eliminated.
