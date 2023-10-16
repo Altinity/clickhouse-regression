@@ -2056,6 +2056,13 @@ flowchart TD
 
 * `Compact Parts` - All columns are stored in one file in a filesystem.
 
+```mermaid
+flowchart TD
+    A[ClickHouse Table] -->|Partition| B[Parts]
+    B --> C{File system}
+    C --> D[fas:fa-file File]
+```
+
 Data storing format is controlled by the `min_bytes_for_wide_part` and `min_rows_for_wide_part` settings of the `MergeTree` table.
 
 ### Replace Partition Between Compact and Wide Parts
