@@ -132,10 +132,14 @@
         * 26.8.15 [Delete In](#delete-in)
             * 26.8.15.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.DeleteInPartition](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsdeleteinpartition)
 * 27 [Role Based Access Control](#role-based-access-control)
-    * 27.1 [Replacing Partition Without Alter Privileges  ](#replacing-partition-without-alter-privileges-)
-        * 27.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC](#rqsrs-032clickhousealtertablereplacepartitionrbac)
-    * 27.2 [Replacing Partition Without Read Access To The Table](#replacing-partition-without-read-access-to-the-table)
-        * 27.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.ReadTable](#rqsrs-032clickhousealtertablereplacepartitionrbacreadtable)
+    * 27.1 [Replacing Partition Without Alter Privileges On a Destination Table  ](#replacing-partition-without-alter-privileges-on-a-destination-table-)
+        * 27.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Alter.Destination](#rqsrs-032clickhousealtertablereplacepartitionrbacalterdestination)
+    * 27.2 [Replacing Partition Without Alter Privileges On a Source Table](#replacing-partition-without-alter-privileges-on-a-source-table)
+        * 27.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Alter.Source](#rqsrs-032clickhousealtertablereplacepartitionrbacaltersource)
+    * 27.3 [Replacing Partition Without Select Privileges On a Source Table](#replacing-partition-without-select-privileges-on-a-source-table)
+        * 27.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Select.Source](#rqsrs-032clickhousealtertablereplacepartitionrbacselectsource)
+    * 27.4 [Replacing Partition Without Insert Privileges On a Destination Table](#replacing-partition-without-insert-privileges-on-a-destination-table)
+        * 27.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Insert.Destination](#rqsrs-032clickhousealtertablereplacepartitionrbacinsertdestination)
 
 ## Revision History
 
@@ -829,20 +833,34 @@ version: 1.0
 
 ## Role Based Access Control
 
-### Replacing Partition Without Alter Privileges  
+### Replacing Partition Without Alter Privileges On a Destination Table  
 
-#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC
+#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Alter.Destination
 version: 1.0
 
-[ClickHouse] SHALL output an error when a specific user without `ALTER TABLE` privileges tries to execute query with `REPLACE PARTITION`.
+[ClickHouse] SHALL output an error when a specific user without `ALTER TABLE` privileges on a destination table tries to execute query with `REPLACE PARTITION`.
 
+### Replacing Partition Without Alter Privileges On a Source Table
 
-### Replacing Partition Without Read Access To The Table
-
-#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.ReadTable
+#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Alter.Source
 version: 1.0
 
-[ClickHouse] SHALL output an error when a specific user executes `REPLACE PARTITION` on a table they do not have read access to. 
+[ClickHouse] SHALL output an error when a specific user without `ALTER TABLE` privileges on a source table tries to execute query with `REPLACE PARTITION`.
+
+### Replacing Partition Without Select Privileges On a Source Table
+
+#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Select.Source
+version: 1.0
+
+[ClickHouse] SHALL output an error when a specific user executes `REPLACE PARTITION` and does not have select privileges to read data from a source table. 
+
+### Replacing Partition Without Insert Privileges On a Destination Table
+
+#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC.Insert.Destination
+version: 1.0
+
+[ClickHouse] SHALL output an error when a specific user executes `REPLACE PARTITION` and does not have insert privileges to insert data into a destination table. 
+
 
 [ClickHouse]: https://clickhouse.com
 
