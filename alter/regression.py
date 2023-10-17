@@ -75,7 +75,9 @@ def regression(
         self.context.cluster = cluster
 
         Feature(run=load("alter.table.tests.replace_partition.feature", "feature"))
-        Feature(run=load("alter.table.tests.replace_partition.parts", "feature"))
+        Feature(
+            run=load("alter.table.tests.replace_partition.partition_types", "feature")
+        )
 
 
 if main():

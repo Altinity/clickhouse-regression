@@ -106,8 +106,8 @@ def test_parts(self):
 
 
 @TestFeature
-@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Parts("1.0"))
-@Name("parts")
+@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_PartitionTypes("1.0"))
+@Name("replace partition types")
 def feature(self, node="clickhouse1"):
     """Check that it is possible to use the replace partition between different part types."""
     self.context.node = self.context.cluster.node(node)
