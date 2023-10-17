@@ -374,6 +374,7 @@ def create_table(
     comment=None,
     as_select=None,
     settings=None,
+    query_settings=None,
     empty=None,
 ):
     """Create a table with specified name and engine."""
@@ -405,7 +406,8 @@ def create_table(
 
             if as_select is not None:
                 query += f"\nAS SELECT {as_select}"
-
+            if query_settings is not None:
+                query += f"\nSETTINGS {query_settings}"
             node.query(
                 query,
                 settings=settings,
@@ -416,6 +418,7 @@ def create_table(
     finally:
         with Finally(f"drop the table {name}"):
             node.query(f"DROP TABLE IF EXISTS {name}{' SYNC' if drop_sync else ''}")
+
 
 @TestStep(Given)
 def create_temporary_table(
@@ -445,7 +448,9 @@ def create_temporary_table(
 
     try:
         with By(f"creating table {name}"):
-            query = f"CREATE TEMPORARY TABLE {name} {columns_def}\n" f"ENGINE = {engine}"
+            query = (
+                f"CREATE TEMPORARY TABLE {name} {columns_def}\n" f"ENGINE = {engine}"
+            )
 
             if partition_by is not None:
                 query += f"\nPARTITION BY {partition_by}"
