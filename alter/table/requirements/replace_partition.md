@@ -48,8 +48,6 @@
 * 23 [Compact and Wide Parts](#compact-and-wide-parts)
     * 23.1 [Replace Partition Between Part Types](#replace-partition-between-part-types)
         * 23.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Parts](#rqsrs-032clickhousealtertablereplacepartitionparts)
-    * 23.2 [Replace Partition Between Compact and Wide Parts](#replace-partition-between-compact-and-wide-parts)
-        * 23.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.WideAndCompact](#rqsrs-032clickhousealtertablereplacepartitionwideandcompact)
 * 24 [Corrupted Parts](#corrupted-parts)
     * 24.1 [Replacing Partition Between Tables With Corrupted Wide Parts](#replacing-partition-between-tables-with-corrupted-wide-parts)
         * 24.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Corrupted.Wide](#rqsrs-032clickhousealtertablereplacepartitioncorruptedwide)
@@ -454,13 +452,6 @@ version: 1.0
 | Compact And Wide |
 
 The `REPLACE PARTITION` SHALL work for any combination of part types on both destination and source tables.
-
-### Replace Partition Between Compact and Wide Parts
-
-#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.WideAndCompact
-version: 1.0
-
-[ClickHouse] SHALL output an error when using `REPLACE PARTITION` between tables with `wide` partition and `compact` partition.
 
 ## Corrupted Parts
 
