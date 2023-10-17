@@ -10,7 +10,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import Cluster
 from s3.regression import argparser
-from alter.table.requirements.replace_partition import *
+from alter.table.replace_partition.requirements.requirements import *
 from helpers.datatypes import *
 
 
@@ -74,9 +74,9 @@ def regression(
     ) as cluster:
         self.context.cluster = cluster
 
-        Feature(run=load("alter.table.tests.replace_partition.feature", "feature"))
+        Feature(run=load("alter.table.replace_partition.tests.feature", "feature"))
         Feature(
-            run=load("alter.table.tests.replace_partition.partition_types", "feature")
+            run=load("alter.table.replace_partition.tests.partition_types", "feature")
         )
 
 
