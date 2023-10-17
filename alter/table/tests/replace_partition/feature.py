@@ -20,7 +20,7 @@ def create_merge_tree_tables(self, node, table1, table2):
                 Column(name="i", datatype=UInt64()),
             ],
         )
-    with And("Creating a new temporary table with the same structure as the table_1"):
+    with And("Creating a new table with the same structure as the table_1"):
         node.query(f"CREATE TABLE {table2} AS {table1}")
 
     with When("I insert the data into table_1"):
@@ -76,7 +76,9 @@ def keep_data_after_replacing(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_TemporaryTable("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_FromTemporaryTable("1.0")
+)
 def between_temporary_and_regular_tables(self):
     """Replacing partition from temporary MergeTree table into a regular MergeTree table."""
     node = self.context.node
@@ -94,9 +96,7 @@ def between_temporary_and_regular_tables(self):
 
 
 @TestScenario
-@Requirements(
-    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Between_TemporaryTables("1.0")
-)
+@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_TemporaryTables("1.0"))
 def between_temporary_tables(self):
     """Replacing partition from temporary MergeTree table to another temporary table."""
     node = self.context.node
