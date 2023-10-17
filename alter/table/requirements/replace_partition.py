@@ -388,22 +388,6 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Parts = Requirement(
     num="24.1.1",
 )
 
-RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_WideAndCompact = Requirement(
-    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.WideAndCompact",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL output an error when using `REPLACE PARTITION` between tables with `wide` partition and `compact` partition.\n"
-        "\n"
-    ),
-    link=None,
-    level=3,
-    num="24.2.1",
-)
-
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Corrupted_Wide = Requirement(
     name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Corrupted.Wide",
     version="1.0",
@@ -1318,14 +1302,6 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
             level=3,
             num="24.1.1",
         ),
-        Heading(
-            name="Replace Partition Between Compact and Wide Parts", level=2, num="24.2"
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.WideAndCompact",
-            level=3,
-            num="24.2.1",
-        ),
         Heading(name="Corrupted Parts", level=1, num="25"),
         Heading(
             name="Replacing Partition Between Tables With Corrupted Wide Parts",
@@ -1629,7 +1605,6 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Encryption,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Deduplication,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Parts,
-        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_WideAndCompact,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Corrupted_Wide,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Corrupted_Compact,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions,
@@ -1722,8 +1697,6 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
 * 23 [Compact and Wide Parts](#compact-and-wide-parts)
     * 23.1 [Replace Partition Between Part Types](#replace-partition-between-part-types)
         * 23.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Parts](#rqsrs-032clickhousealtertablereplacepartitionparts)
-    * 23.2 [Replace Partition Between Compact and Wide Parts](#replace-partition-between-compact-and-wide-parts)
-        * 23.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.WideAndCompact](#rqsrs-032clickhousealtertablereplacepartitionwideandcompact)
 * 24 [Corrupted Parts](#corrupted-parts)
     * 24.1 [Replacing Partition Between Tables With Corrupted Wide Parts](#replacing-partition-between-tables-with-corrupted-wide-parts)
         * 24.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Corrupted.Wide](#rqsrs-032clickhousealtertablereplacepartitioncorruptedwide)
@@ -2128,13 +2101,6 @@ version: 1.0
 | Compact And Wide |
 
 The `REPLACE PARTITION` SHALL work for any combination of part types on both destination and source tables.
-
-### Replace Partition Between Compact and Wide Parts
-
-#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.WideAndCompact
-version: 1.0
-
-[ClickHouse] SHALL output an error when using `REPLACE PARTITION` between tables with `wide` partition and `compact` partition.
 
 ## Corrupted Parts
 
