@@ -364,23 +364,25 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Deduplication = Requirement(
     num="23.1",
 )
 
-RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Parts = Requirement(
-    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Parts",
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_PartitionTypes = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.PartitionTypes",
     version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] The `REPLACE PARTITION` command works with both source and destination tables. Each table can have its own part types.\n"
+        "The `REPLACE PARTITION` command works with both source and destination tables. Each table can have its own partition type.\n"
         "\n"
-        "| Part Types       |\n"
-        "|------------------|\n"
-        "| Wide             |\n"
-        "| Compact          |\n"
-        "| Compact And Wide |\n"
+        "| Partition Types                               |\n"
+        "|-----------------------------------------------|\n"
+        "| Partition with only compact parts             |\n"
+        "| Partition with only wide parts                |\n"
+        "| Partition with compact and wide parts (mixed) |\n"
+        "| Partition with no parts                       |\n"
+        "| Partition with empty parts                    |\n"
         "\n"
-        "The `REPLACE PARTITION` SHALL work for any combination of part types on both destination and source tables.\n"
+        "The `REPLACE PARTITION` SHALL work for any combination of partition types on both destination and source tables.\n"
         "\n"
     ),
     link=None,
@@ -1296,9 +1298,13 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
             num="23.1",
         ),
         Heading(name="Compact and Wide Parts", level=1, num="24"),
-        Heading(name="Replace Partition Between Part Types", level=2, num="24.1"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Parts",
+            name="Replace Partition Between Different Partition Types",
+            level=2,
+            num="24.1",
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.PartitionTypes",
             level=3,
             num="24.1.1",
         ),
@@ -1604,7 +1610,7 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Encodings,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Encryption,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Deduplication,
-        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Parts,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_PartitionTypes,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Corrupted_Wide,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Corrupted_Compact,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions,
@@ -1695,8 +1701,8 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
 * 22 [Replacing Partitions To Deduplication Tables](#replacing-partitions-to-deduplication-tables)
     * 22.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Deduplication](#rqsrs-032clickhousealtertablereplacepartitiondeduplication)
 * 23 [Compact and Wide Parts](#compact-and-wide-parts)
-    * 23.1 [Replace Partition Between Part Types](#replace-partition-between-part-types)
-        * 23.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Parts](#rqsrs-032clickhousealtertablereplacepartitionparts)
+    * 23.1 [Replace Partition Between Different Partition Types](#replace-partition-between-different-partition-types)
+        * 23.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.PartitionTypes](#rqsrs-032clickhousealtertablereplacepartitionpartitiontypes)
 * 24 [Corrupted Parts](#corrupted-parts)
     * 24.1 [Replacing Partition Between Tables With Corrupted Wide Parts](#replacing-partition-between-tables-with-corrupted-wide-parts)
         * 24.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Corrupted.Wide](#rqsrs-032clickhousealtertablereplacepartitioncorruptedwide)
@@ -2087,20 +2093,22 @@ Data storing format is controlled by the `min_bytes_for_wide_part` and `min_rows
 
 When a specific part is less than the values of `min_bytes_for_wide_part` or `min_rows_for_wide_part`, then it's considered a compact part.
 
-### Replace Partition Between Part Types
+### Replace Partition Between Different Partition Types
 
-#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Parts
+#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.PartitionTypes
 version: 1.0
 
-[ClickHouse] The `REPLACE PARTITION` command works with both source and destination tables. Each table can have its own part types.
+The `REPLACE PARTITION` command works with both source and destination tables. Each table can have its own partition type.
 
-| Part Types       |
-|------------------|
-| Wide             |
-| Compact          |
-| Compact And Wide |
+| Partition Types                               |
+|-----------------------------------------------|
+| Partition with only compact parts             |
+| Partition with only wide parts                |
+| Partition with compact and wide parts (mixed) |
+| Partition with no parts                       |
+| Partition with empty parts                    |
 
-The `REPLACE PARTITION` SHALL work for any combination of part types on both destination and source tables.
+The `REPLACE PARTITION` SHALL work for any combination of partition types on both destination and source tables.
 
 ## Corrupted Parts
 
