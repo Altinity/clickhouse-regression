@@ -1,6 +1,6 @@
 from testflows.core import *
 from testflows.asserts import *
-from alter.table.requirements.replace_partition import *
+from alter.table.replace_partition.requirements.requirements import *
 from helpers.common import getuid
 from helpers.tables import create_table, create_temporary_table, Column
 from helpers.datatypes import *
