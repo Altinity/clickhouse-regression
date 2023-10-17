@@ -78,6 +78,7 @@ def regression(
         Feature(
             run=load("alter.table.replace_partition.tests.partition_types", "feature")
         )
+        Feature(run=load("alter.table.replace_partition.tests.rbac", "feature"))
 
 
 if main():
