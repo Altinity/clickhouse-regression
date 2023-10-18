@@ -73,7 +73,7 @@ def partition_with_empty_parts(self, table_name):
 
 @TestCheck
 def check_partition_types(self, destination_table, source_table):
-    """Check that it is possible to use the replace partition command between partitions with all types of parts."""
+    """Check that it is possible to use the replace partition command between partitions with different types of parts."""
     node = self.context.node
     table1 = "table" + getuid()
     table2 = "table2_" + getuid()
