@@ -1428,6 +1428,12 @@ class Cluster(object):
                     node=node,
                     command=f'echo -e "\n-- sending stop to: {node} --\n" >> /var/log/clickhouse-server/clickhouse-server.log',
                 )
+
+        # Edit permissions on server files for external manipulation
+        for node in self.nodes["clickhouse"]:
+            self.command(node=node, command="chmod a+rwX -R /var/lib/clickhouse")
+            self.command(node=node, command="chmod a+rwX -R /var/log/clickhouse-server")
+
         try:
             bash = self.bash(None)
             with self.lock:
