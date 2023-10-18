@@ -8,47 +8,54 @@ from time import sleep
 
 
 @TestStep
-def create_partitioned_table(self, table_name):
-    """Create a partitioned table that has specific settings in order to get both wide and compact parts."""
+def create_partitioned_table_with_compact_and_wide_parts(self, table_name, min_rows_for_wide_part=10, min_bytes_for_wide_part=100, engine="MergeTree"):
+    """Create a partitioned table that has specific settings in order
+    to get both wide and compact parts."""
     create_table(
         name=table_name,
-        engine="MergeTree",
+        engine=engine,
         partition_by="p",
         order_by="tuple()",
         columns=[
             Column(name="p", datatype=UInt8()),
             Column(name="i", datatype=UInt64()),
         ],
-        query_settings="min_rows_for_wide_part = 10, min_bytes_for_wide_part = 100",
+        query_settings=f"min_rows_for_wide_part={min_rows_for_wide_part}, min_bytes_for_wide_part={min_bytes_for_wide_part}",
     )
 
 
 @TestStep(Given)
-def partition_with_compact_parts(self, table_name):
+def table_with_compact_parts(self, table_name):
     """Create a table that has partition with only compact parts."""
     node = self.context.node
-    with Given("I create a table with partition consisting of compact parts"):
+    
+    with By("creating a partitioned table"):
         create_partitioned_table(table_name=table_name)
 
+    with And("inserting data that will create one compact part"):
         node.query(f"INSERT INTO {table_name} (p, i) SELECT 1, number FROM numbers(1)")
+        node.query(f"INSERT INTO {table_name} (p, i) SELECT 1, number FROM numbers(2,3)")
+        node.query(f"INSERT INTO {table_name} (p, i) SELECT 1, number FROM numbers(3,4)")
 
 
 @TestStep(Given)
-def partition_with_wide_parts(self, table_name):
+def table_with_wide_parts(self, table_name):
     """Create a table that has partition with only wide parts."""
     node = self.context.node
-    with Given("I create a MergeTree table partitioned by column p"):
+    with By("creating a partitioned table"):
         create_partitioned_table(table_name=table_name)
 
+    with And("inserting data that will create one wide part"):
         node.query(
             f"INSERT INTO {table_name} (p, i) SELECT 1, number FROM numbers(100)"
         )
 
 
 @TestStep(Given)
-def partition_with_compact_and_wide_parts(self, table_name):
+def table_with_compact_and_wide_parts(self, table_name):
     """Create a table that has partition with both wide and compact parts."""
     node = self.context.node
+    
     with Given("I create a MergeTree table partitioned by column p"):
         create_partitioned_table(table_name=table_name)
 
@@ -72,21 +79,24 @@ def partition_with_empty_parts(self, table_name):
 
 
 @TestCheck
-def check_partition_types(self, destination_table, source_table):
-    """Check that it is possible to use the replace partition command between partitions with different types of parts."""
+def check_replace_partition(self, destination_table, source_table):
+    """Check that it is possible to use the replace partition command between tables that have
+    partitions with different types of parts.
+    """
     node = self.context.node
-    table1 = "table" + getuid()
-    table2 = "table2_" + getuid()
+    destination_table_name = "destination_" + getuid()
+    source_table_name = "source_" + getuid()
 
     with Given("I create two tables that have partitions with specific part types"):
-        destination_table(table_name=table1)
+        destination_table(table_name=destination_table_name)
+        source_table(table_name=source_table_name)
 
-        source_table(table_name=table2)
     with Then(
-        "I use the replace partition clause to replace the partition from table_2 into table_1 and wait for the process to finish"
+        "replace partition clause to replace the partition from table_2 into table_1 and wait for the process to finish???"
     ):
         node.query(f"ALTER TABLE {table1} REPLACE PARTITION 1 FROM {table2}")
-        sleep(10)
+        sleep(10) # FIXME use retries!!!
+
     with And("I select and save the partition values from the source table_2"):
         partition_values_2 = node.query(
             f"SELECT part_type FROM system.parts WHERE table = '{table2}' AND partition = '1' ORDER "
@@ -98,7 +108,6 @@ def check_partition_types(self, destination_table, source_table):
             f"SELECT part_type FROM system.parts WHERE table = '{table1}' AND partition = '1' ORDER "
             "BY part_type"
         )
-
         assert (
             partition_values_1.output.strip() == partition_values_2.output.strip()
         ), error()
@@ -113,6 +122,7 @@ def replace_partition_with_different_partition_types(self):
         partition_with_wide_parts,
         partition_with_compact_and_wide_parts,
         partition_with_empty_parts,
+        # FIXME partition with no parts
     }
 
     check_partition_types(
@@ -125,7 +135,15 @@ def replace_partition_with_different_partition_types(self):
 @Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_PartitionTypes("1.0"))
 @Name("partition types")
 def feature(self, node="clickhouse1"):
-    """Check that it is possible to use the replace partition between different part types."""
+    """Check replace partition with different partition types.
+    
+    Partition types:
+    * partition containing only compact parts
+    * partition containing only wide parts
+    * partition containing mix of compact and wide parts
+    * partition containing empty parts
+    * partition containing no parts (empty)
+    """
     self.context.node = self.context.cluster.node(node)
 
     Scenario(run=replace_partition_with_different_partition_types)
