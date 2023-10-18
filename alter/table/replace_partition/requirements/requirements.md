@@ -11,69 +11,69 @@
 * 5 [User Actions](#user-actions)
 * 6 [Replace Partition](#replace-partition)
     * 6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition](#rqsrs-032clickhousealtertablereplacepartition)
-    * 6.2 [Check Existing Partitions From The Parts Table](#check-existing-partitions-from-the-parts-table)
+    * 6.2 [Changes In Table Partitions](#changes-in-table-partitions)
         * 6.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.System.Parts](#rqsrs-032clickhousealtertablereplacepartitionsystemparts)
 * 7 [Table Engines](#table-engines)
     * 7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TableEngines](#rqsrs-032clickhousealtertablereplacepartitiontableengines)
-* 8 [Keeping Data When Replacing Partitions](#keeping-data-when-replacing-partitions)
+* 8 [Keeping Data On The Source Table After Replace Partition](#keeping-data-on-the-source-table-after-replace-partition)
     * 8.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.KeepData](#rqsrs-032clickhousealtertablereplacepartitionkeepdata)
-* 9 [Keeping Data When Replacing Partition From Non-Existent Partition](#keeping-data-when-replacing-partition-from-non-existent-partition)
+* 9 [Table With Non-Existent Partition](#table-with-non-existent-partition)
     * 9.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.NonExistentPartition](#rqsrs-032clickhousealtertablereplacepartitionnonexistentpartition)
-* 10 [Replacing Partitions From Temporary Table](#replacing-partitions-from-temporary-table)
+* 10 [From Temporary Table](#from-temporary-table)
     * 10.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.FromTemporaryTable](#rqsrs-032clickhousealtertablereplacepartitionfromtemporarytable)
-* 11 [Replacing Partitions Between Temporary Tables](#replacing-partitions-between-temporary-tables)
+* 11 [From Temporary Table To Temporary Table](#from-temporary-table-to-temporary-table)
     * 11.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TemporaryTables](#rqsrs-032clickhousealtertablereplacepartitiontemporarytables)
-* 12 [Using Into Outfile With Replace Partition](#using-into-outfile-with-replace-partition)
+* 12 [Using Into Outfile Clause With Replace Partition Clause](#using-into-outfile-clause-with-replace-partition-clause)
     * 12.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.IntoOutfile](#rqsrs-032clickhousealtertablereplacepartitionintooutfile)
-* 13 [Using Format With Replace Partition](#using-format-with-replace-partition)
+* 13 [Using The Format Clause With Replace Partition Clause](#using-the-format-clause-with-replace-partition-clause)
     * 13.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Format](#rqsrs-032clickhousealtertablereplacepartitionformat)
-* 14 [Using Settings With Replace Partition](#using-settings-with-replace-partition)
+* 14 [Using Settings With Replace Partition Clause](#using-settings-with-replace-partition-clause)
     * 14.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Settings](#rqsrs-032clickhousealtertablereplacepartitionsettings)
-* 15 [Replacing Partitions From One Disk To Another In The Same Table](#replacing-partitions-from-one-disk-to-another-in-the-same-table)
+* 15 [Table Is On A Separate Disk](#table-is-on-a-separate-disk)
     * 15.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Disks](#rqsrs-032clickhousealtertablereplacepartitiondisks)
-* 16 [Replacing Partitions Between Tables On S3](#replacing-partitions-between-tables-on-s3)
+* 16 [Table That Is Stored On S3](#table-that-is-stored-on-s3)
     * 16.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.S3](#rqsrs-032clickhousealtertablereplacepartitions3)
-* 17 [Replacing Partitions Between Replicas](#replacing-partitions-between-replicas)
+* 17 [Destination Table That is On a Different Replica](#destination-table-that-is-on-a-different-replica)
     * 17.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Replicas](#rqsrs-032clickhousealtertablereplacepartitionreplicas)
-* 18 [Replacing Partitions Between Shards](#replacing-partitions-between-shards)
+* 18 [Destination Table That is On a Different Shard](#destination-table-that-is-on-a-different-shard)
     * 18.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Shards](#rqsrs-032clickhousealtertablereplacepartitionshards)
-* 19 [Replacing Partitions Between Different ClickHouse versions](#replacing-partitions-between-different-clickhouse-versions)
+* 19 [Table That Is Stored On a Database With Different ClickHouse Version](#table-that-is-stored-on-a-database-with-different-clickhouse-version)
     * 19.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Versions](#rqsrs-032clickhousealtertablereplacepartitionversions)
-* 20 [Replacing Partitions Between Different Encodings](#replacing-partitions-between-different-encodings)
+* 20 [Table That Has a Different Encoding](#table-that-has-a-different-encoding)
     * 20.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Encodings](#rqsrs-032clickhousealtertablereplacepartitionencodings)
-* 21 [Replacing Partitions Between Encrypted And Unencrypted Tables](#replacing-partitions-between-encrypted-and-unencrypted-tables)
+* 21 [Encrypted Tables And Unencrypted Tables](#encrypted-tables-and-unencrypted-tables)
     * 21.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Encryption](#rqsrs-032clickhousealtertablereplacepartitionencryption)
-* 22 [Replacing Partitions To Deduplication Tables](#replacing-partitions-to-deduplication-tables)
+* 22 [Deduplication Tables](#deduplication-tables)
     * 22.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Deduplication](#rqsrs-032clickhousealtertablereplacepartitiondeduplication)
 * 23 [Compact and Wide Parts](#compact-and-wide-parts)
-    * 23.1 [Replace Partition Between Different Partition Types](#replace-partition-between-different-partition-types)
+    * 23.1 [Tables With Different Partition Types](#tables-with-different-partition-types)
         * 23.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.PartitionTypes](#rqsrs-032clickhousealtertablereplacepartitionpartitiontypes)
 * 24 [Corrupted Parts](#corrupted-parts)
-    * 24.1 [Replacing Partition Between Tables With Corrupted Wide Parts](#replacing-partition-between-tables-with-corrupted-wide-parts)
+    * 24.1 [Tables With Corrupted Wide Parts](#tables-with-corrupted-wide-parts)
         * 24.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Corrupted.Wide](#rqsrs-032clickhousealtertablereplacepartitioncorruptedwide)
-    * 24.2 [Replacing Partition Between Tables With Corrupted Compact Parts](#replacing-partition-between-tables-with-corrupted-compact-parts)
+    * 24.2 [Tables With Corrupted Compact Parts](#tables-with-corrupted-compact-parts)
         * 24.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Corrupted.Compact](#rqsrs-032clickhousealtertablereplacepartitioncorruptedcompact)
 * 25 [Conditions](#conditions)
-    * 25.1 [Rules For Replacing Partitions Between Tables](#rules-for-replacing-partitions-between-tables)
+    * 25.1 [Rules For Replacing Partitions On Tables](#rules-for-replacing-partitions-on-tables)
         * 25.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions](#rqsrs-032clickhousealtertablereplacepartitionconditions)
-    * 25.2 [Replacing Partitions Between Tables With Different Structure](#replacing-partitions-between-tables-with-different-structure)
+    * 25.2 [Tables With Different Structure](#tables-with-different-structure)
         * 25.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.Structure](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentstructure)
-    * 25.3 [Replacing Partitions Between Tables With Different Partition Key](#replacing-partitions-between-tables-with-different-partition-key)
+    * 25.3 [Tables With Different Partition Key](#tables-with-different-partition-key)
         * 25.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.Key](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentkey)
-    * 25.4 [Replacing Partitions Between Tables With Different Storage Policy](#replacing-partitions-between-tables-with-different-storage-policy)
+    * 25.4 [Tables With Different Storage Policy](#tables-with-different-storage-policy)
         * 25.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.StoragePolicy](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentstoragepolicy)
 * 26 [Prohibited Actions](#prohibited-actions)
-    * 26.1 [Using Order By and Partition By When Replacing Partitions Between Tables](#using-order-by-and-partition-by-when-replacing-partitions-between-tables)
+    * 26.1 [Using Order By and Partition By When Replacing Partitions On Tables](#using-order-by-and-partition-by-when-replacing-partitions-on-tables)
         * 26.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition](#rqsrs-032clickhousealtertablereplacepartitionprohibitedorderandpartition)
     * 26.2 [Staring New Merges With Ongoing Replace Partition](#staring-new-merges-with-ongoing-replace-partition)
         * 26.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Merges](#rqsrs-032clickhousealtertablereplacepartitionprohibitedmerges)
     * 26.3 [Staring New Mutations With Ongoing Replace Partition](#staring-new-mutations-with-ongoing-replace-partition)
         * 26.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Mutations](#rqsrs-032clickhousealtertablereplacepartitionprohibitedmutations)
-    * 26.4 [Replacing Partitions With Table Functions](#replacing-partitions-with-table-functions)
+    * 26.4 [Table Functions](#table-functions)
         * 26.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.TableFunctions](#rqsrs-032clickhousealtertablereplacepartitionprohibitedtablefunctions)
-    * 26.5 [Replacing Partitions With Subquery](#replacing-partitions-with-subquery)
+    * 26.5 [Subquery](#subquery)
         * 26.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Subquery](#rqsrs-032clickhousealtertablereplacepartitionprohibitedsubquery)
-    * 26.6 [Replacing Partitions With Join Clause](#replacing-partitions-with-join-clause)
+    * 26.6 [Join Clause](#join-clause)
         * 26.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Join](#rqsrs-032clickhousealtertablereplacepartitionprohibitedjoin)
 * 27 [Replacing Partitions During Ongoing Merges and Mutations](#replacing-partitions-during-ongoing-merges-and-mutations)
     * 27.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent](#rqsrs-032clickhousealtertablereplacepartitionconcurrent)
@@ -220,30 +220,27 @@ Destination Table - The table in which a specific partition is going to be repla
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition
 version: 1.0
 
-[ClickHouse] SHALL support the usage of the `REPLACE PARTITION`.
+[ClickHouse] SHALL support the usage of the `REPLACE PARTITION`. The `REPLACE PARTITION` copies the data partition from the `source table` to `destination table` and replaces existing partition in the `destination table`.
 
 For example,
-
-This query copies the data partition from the `table1` to `table2` and replaces existing partition in the `table2`.
 
 ```sql
 ALTER TABLE table2 [ON CLUSTER cluster] REPLACE PARTITION partition_expr FROM table1
 ```
 
-### Check Existing Partitions From The Parts Table
+### Changes In Table Partitions
 
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.System.Parts
 version: 1.0
 
-[ClickHouse] SHALL support checking the partition values from the `system.parts` table.
+[ClickHouse] SHALL reflect the changes in `system.parts` table, when the `REPLACE PARTITION` is executed on the `destination table`. 
 
 For example,
 
 ```sql
-SELECT partition, formatReadableSize(sum(bytes))
+SELECT partition, part_types
 FROM system.parts
 WHERE table = 'table_1'
-GROUP BY partition
 ```
 
 ## Table Engines
@@ -266,19 +263,19 @@ version: 1.0
 |       `MaterializedView`       |
 
 
-## Keeping Data When Replacing Partitions
+## Keeping Data On The Source Table After Replace Partition
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.KeepData
 version: 1.0
 
 [ClickHouse] SHALL keep the data of the table from which the partition is copied from.
 
-## Keeping Data When Replacing Partition From Non-Existent Partition
+## Table With Non-Existent Partition
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.NonExistentPartition
 version: 1.0
 
-[ClickHouse] SHALL keep the data of the destination partition when replacing partition form the non-existent partition.
+[ClickHouse] SHALL keep the data of the destination table when replacing partition form the non-existent partition of a source table.
 
 For example,
 
@@ -290,7 +287,7 @@ ALTER TABLE table2 REPLACE PARTITION 21 FROM table1
 
 The data on `table2` should not be deleted and an exception should be raised.
 
-## Replacing Partitions From Temporary Table
+## From Temporary Table
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.FromTemporaryTable
 version: 1.0
@@ -320,89 +317,89 @@ We can use `REPLACE PARTITION` on the `destinaton` table from `temporary_table`,
 ALTER TABLE destinaton REPLACE PARTITION 1 FROM temporary_table;
 ```
 
-## Replacing Partitions Between Temporary Tables
+## From Temporary Table To Temporary Table
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TemporaryTables
 version: 1.0
 
 [ClickHouse] SHALL support copying the data partition from the temporary table into another temporary table.
 
-## Using Into Outfile With Replace Partition
+## Using Into Outfile Clause With Replace Partition Clause
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.IntoOutfile
 version: 1.0
 
 [ClickHouse] SHALL support the usage of the `INTO OUTFILE` with `REPLACE PARTITION` and SHALL not output any errors.
 
-## Using Format With Replace Partition
+## Using The Format Clause With Replace Partition Clause
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Format
 version: 1.0
 
 [ClickHouse] SHALL support the usage of the `FORMAT` with `REPLACE PARTITION` and SHALL not output any errors.
 
-## Using Settings With Replace Partition
+## Using Settings With Replace Partition Clause
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Settings
 version: 1.0
 
 [ClickHouse] SHALL support the usage of the `SETTINGS` with `REPLACE PARTITION` and SHALL not output any errors.
 
-## Replacing Partitions From One Disk To Another In The Same Table
+## Table Is On A Separate Disk
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Disks
 version: 1.0
 
-[ClickHouse] SHALL support Replacing partitions from one disk to another in the same table when tired storage is used.
+[ClickHouse] SHALL support Replacing partitions from the table on disk to another in the same table when tired storage is used.
 
 > When we have one table stored on different disks, and we want to replace partitions between partitions that are on different disks with `REPLACE PARTITION`.  
 
-## Replacing Partitions Between Tables On S3
+## Table That Is Stored On S3
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.S3
 version: 1.0
 
 [ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions between tables that are placed inside the S3 storage.
 
-## Replacing Partitions Between Replicas
+## Destination Table That is On a Different Replica
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Replicas
 version: 1.0
 
-[ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions between replicas for tables with `ReplicatedMergeTree` engine.
+[ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions on a destination table that is on a different replica than the source table.
 
-## Replacing Partitions Between Shards
+## Destination Table That is On a Different Shard
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Shards
 version: 1.0
 
 [ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions between shards for tables with `DistributedTable` engine.
 
-## Replacing Partitions Between Different ClickHouse versions
+## Table That Is Stored On a Database With Different ClickHouse Version
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Versions
 version: 1.0
 
-[ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions between different ClickHouse versions.
+[ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions between tables on a different clickhouse version.
 
 > Users can create a new database with the target version and use `REPLACE PARTITION` to transfer data from the 
-> old database to the new one, ensuring compatibility and benefits from new features.
+> old database to the new one.
 
-## Replacing Partitions Between Different Encodings
+## Table That Has a Different Encoding
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Encodings
 version: 1.0
 
 [ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions between tables with different encodings.
 
-## Replacing Partitions Between Encrypted And Unencrypted Tables
+## Encrypted Tables And Unencrypted Tables
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Encryption
 version: 1.0
 
-[ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions between encrypted and not encrypted tables.
+[ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions on encrypted and not encrypted tables.
 
-## Replacing Partitions To Deduplication Tables
+## Deduplication Tables
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Deduplication
 version: 1.0
@@ -438,7 +435,7 @@ Data storing format is controlled by the `min_bytes_for_wide_part` and `min_rows
 
 When a specific part is less than the values of `min_bytes_for_wide_part` or `min_rows_for_wide_part`, then it's considered a compact part.
 
-### Replace Partition Between Different Partition Types
+### Tables With Different Partition Types
 
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.PartitionTypes
 version: 1.0
@@ -457,14 +454,14 @@ The `REPLACE PARTITION` SHALL work for any combination of partition types on bot
 
 ## Corrupted Parts
 
-### Replacing Partition Between Tables With Corrupted Wide Parts
+### Tables With Corrupted Wide Parts
 
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Corrupted.Wide
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to `REPLACE PARTITION` when wide parts are corrupted for a destination table or a source table.
 
-### Replacing Partition Between Tables With Corrupted Compact Parts
+### Tables With Corrupted Compact Parts
 
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Corrupted.Compact
 version: 1.0
@@ -473,25 +470,25 @@ version: 1.0
 
 ## Conditions
 
-### Rules For Replacing Partitions Between Tables
+### Rules For Replacing Partitions On Tables
 
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions
 version: 1.0
 
-[ClickHouse] SHALL support the usage of `REPLACE PARTITION` between two tables only when,
+[ClickHouse] SHALL support the usage of `REPLACE PARTITION` only when,
 
 * Both tables have the same structure.
 * Both tables have the same partition key, the same `ORDER BY` key, and the same primary key.
 * Both tables have the same storage policy.
 
-### Replacing Partitions Between Tables With Different Structure
+### Tables With Different Structure
 
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.Structure
 version: 1.0
 
-[ClickHouse] SHALL not support the usage of `REPLACE PARTITION` between two tables when tables have different structure.
+[ClickHouse] SHALL not support the usage of `REPLACE PARTITION` when tables have different structure.
 
-### Replacing Partitions Between Tables With Different Partition Key
+### Tables With Different Partition Key
 
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.Key
 version: 1.0
@@ -499,7 +496,7 @@ version: 1.0
 [ClickHouse] SHALL not support the usage of `REPLACE PARTITION` between two tables when tables have different partition
 key, `ORDER BY` key and primary key.
 
-### Replacing Partitions Between Tables With Different Storage Policy
+### Tables With Different Storage Policy
 
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.StoragePolicy
 version: 1.0
@@ -509,7 +506,7 @@ policy.
 
 ## Prohibited Actions
 
-### Using Order By and Partition By When Replacing Partitions Between Tables
+### Using Order By and Partition By When Replacing Partitions On Tables
 
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition
 version: 1.0
@@ -530,7 +527,7 @@ version: 1.0
 
 [ClickHouse] SHALL output an error when trying to run any mutations before the executed `REPLACE PARTITION` is finished.
 
-### Replacing Partitions With Table Functions
+### Table Functions
 
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.TableFunctions
 version: 1.0
@@ -580,14 +577,14 @@ The list of possible table functions,
 | `view`                    |
 
 
-### Replacing Partitions With Subquery
+### Subquery
 
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Subquery
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to use subquery after the `FROM` clause to replace partition of a table.
 
-### Replacing Partitions With Join Clause
+### Join Clause
 
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Join
 version: 1.0
@@ -836,20 +833,22 @@ The `REPLACE PARTITION` command works with both source and destination tables. E
 ALTER TABLE table2 REPLACE PARTITION 21 FROM table1
 ```
 
-| Privileges              |
-|-------------------------|
-| No privileges           |
-| SELECT                  |
-| INSERT                  |
-| ALTER                   |
-| ALTER TABLE             |
-| ALTER REPLACE PARTITION |
+| Privileges     |
+|----------------|
+| No privileges  |
+| All Privileges |
+| SELECT         |
+| INSERT         |
+| ALTER          |
+| ALTER TABLE    |
+
 
 The `REPLACE PARTITION` SHALL only work when the user has the following privileges for the source and destination tables:
 
-| Source | Destination |
-|--------|-------------|
-| ALTER  | SELECT      |
+| Source               | Destination    |
+|----------------------|----------------|
+| ALTER DELETE, INSERT | SELECT         |
+| All Privileges       | All Privileges |
 
 [ClickHouse]: https://clickhouse.com
 [GitHub Repository]: https://github.com/Altinity/clickhouse-regression/blob/main/alter/requirements/requirements.md
