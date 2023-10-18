@@ -106,11 +106,12 @@ def user_replace_partition_with_privileges(
         privilege_source_table(node=node, name=user_name, on=source)
 
     with Check(
-        f"I try to replace partition on a destination table as a user with set of privileges"
+        f"Replace Partition when destination table has {privilege_destination_table.__name__} and source has {privilege_source_table.__name__}"
     ):
         node.query(
             f"ALTER TABLE {destination} REPLACE PARTITION 1 FROM {source}",
             settings=[("user", user_name)],
+            exitcode=0,
         )
 
 
@@ -137,7 +138,7 @@ def check_replace_partition_with_privileges(self):
 @Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_RBAC("1.0"))
 @Name("rbac")
 def feature(self, node="clickhouse1"):
-    """Check that it is possible to use the replace partition between different part types."""
+    """Check that it is possible to use the replace partition as a user with different privileges."""
     self.context.node = self.context.cluster.node(node)
 
     Scenario(run=check_replace_partition_with_privileges)
