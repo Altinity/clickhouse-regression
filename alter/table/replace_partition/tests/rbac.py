@@ -8,24 +8,56 @@ from helpers.datatypes import *
 
 @TestStep(Given)
 def create_user(self, node, name):
+    """Create a user to grant privileges."""
     node.query(f"CREATE USER OR REPLACE {name}")
 
 
 @TestStep(Given)
 def all_privileges(self, node, name, on):
+    """Grant all privileges to a user."""
     with Given("I grant the user all privileges"):
         node.query(f"GRANT ALL ON {on} TO {name}")
 
 
 @TestStep(Given)
 def no_privileges(self, node, name, on):
-    with Given("I grant the user all privileges"):
+    """Grant no privileges to a user."""
+    with Given("I grant the user no privileges"):
         node.query(f"GRANT NONE ON {on} TO {name}")
+
+
+@TestStep(Given)
+def select_privileges(self, node, name, on):
+    """Grant only select privileges to a user."""
+    with Given("I grant the user only select privileges"):
+        node.query(f"GRANT SELECT ON {on} TO {name}")
+
+
+@TestStep(Given)
+def insert_privileges(self, node, name, on):
+    """Grant only insert privileges to a user."""
+    with Given("I grant the user only insert privileges"):
+        node.query(f"GRANT INSERT ON {on} TO {name}")
+
+
+@TestStep(Given)
+def alter_privileges(self, node, name, on):
+    """Grant only alter privileges to a user."""
+    with Given("I grant the user only alter privileges"):
+        node.query(f"GRANT ALTER ON {on} TO {name}")
+
+
+@TestStep(Given)
+def alter_table_privileges(self, node, name, on):
+    """Grant only alter table privileges to a user."""
+    with Given("I grant the user only alter table privileges"):
+        node.query(f"GRANT ALTER TABLE ON {on} TO {name}")
 
 
 @TestOutline
 def create_tables_with_partitions(self, node, destination, source):
-    """An outline to create two tables with the same structure and insert values needed for test scenarios."""
+    """An outline to create two tables with partitions, with the same structure and insert values needed for test
+    scenarios."""
     with By("Creating a MergeTree table partitioned by column p"):
         create_table(
             name=destination,
@@ -50,11 +82,13 @@ def create_tables_with_partitions(self, node, destination, source):
 
 
 @TestCheck
-def test_user(
+def user_replace_partition_with_privileges(
     self,
     privilege_destination_table,
     privilege_source_table,
 ):
+    """A test check to grant a user a set of privileges on both destination and source tables to see if replace
+    partition is possible with these privileges."""
     node = self.context.node
     user_name = f"user_{getuid()}"
     destination = f"destination_{getuid()}"
@@ -64,7 +98,7 @@ def test_user(
         create_tables_with_partitions(node=node, destination=destination, source=source)
 
     with When(
-        "I create user with specific privileges for destination and source tables"
+        "I create s user with specific privileges for destination and source tables"
     ):
         create_user(node=node, name=user_name)
 
@@ -72,7 +106,7 @@ def test_user(
         privilege_source_table(node=node, name=user_name, on=source)
 
     with Then(
-        "I try to replace partition on a destination table as a user with set privileges"
+        f"I try to replace partition on a destination table as a user with set of privileges"
     ):
         node.query(
             f"ALTER TABLE {destination} REPLACE PARTITION 1 FROM {source}",
@@ -83,9 +117,16 @@ def test_user(
 @TestSketch(Scenario)
 @Flags(TE)
 def check_replace_partition_with_privileges(self):
-    values = {all_privileges, no_privileges}
+    """Run the test check with different privileges combinations."""
+    values = {
+        all_privileges,
+        no_privileges,
+        select_privileges,
+        alter_privileges,
+        alter_table_privileges,
+    }
 
-    test_user(
+    user_replace_partition_with_privileges(
         privilege_destination_table=either(*values, i="privilege_destination_table"),
         privilege_source_table=either(*values, i="privilege_source_table"),
     )
@@ -93,7 +134,7 @@ def check_replace_partition_with_privileges(self):
 
 @TestFeature
 @Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_RBAC("1.0"))
-@Name("replace partition rbac")
+@Name("rbac")
 def feature(self, node="clickhouse1"):
     """Check that it is possible to use the replace partition between different part types."""
     self.context.node = self.context.cluster.node(node)
