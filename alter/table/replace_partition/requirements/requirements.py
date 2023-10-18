@@ -1265,7 +1265,7 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
             num="19.1",
         ),
         Heading(
-            name="Table That Is Stored On a Database With Different ClickHouse Version",
+            name="Table That Is Stored On a Server With Different ClickHouse Version",
             level=1,
             num="20",
         ),
@@ -1661,7 +1661,7 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
     * 17.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Replicas](#rqsrs-032clickhousealtertablereplacepartitionreplicas)
 * 18 [Destination Table That is On a Different Shard](#destination-table-that-is-on-a-different-shard)
     * 18.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Shards](#rqsrs-032clickhousealtertablereplacepartitionshards)
-* 19 [Table That Is Stored On a Database With Different ClickHouse Version](#table-that-is-stored-on-a-database-with-different-clickhouse-version)
+* 19 [Table That Is Stored On a Server With Different ClickHouse Version](#table-that-is-stored-on-a-server-with-different-clickhouse-version)
     * 19.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Versions](#rqsrs-032clickhousealtertablereplacepartitionversions)
 * 20 [Table That Has a Different Encoding](#table-that-has-a-different-encoding)
     * 20.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Encodings](#rqsrs-032clickhousealtertablereplacepartitionencodings)
@@ -1997,7 +1997,7 @@ version: 1.0
 
 [ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions on tables that are on different shards.
 
-## Table That Is Stored On a Database With Different ClickHouse Version
+## Table That Is Stored On a Server With Different ClickHouse Version
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Versions
 version: 1.0
