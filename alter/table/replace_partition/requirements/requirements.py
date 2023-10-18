@@ -1126,10 +1126,10 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_RBAC = Requirement(
         "\n"
         "The `REPLACE PARTITION` SHALL only work when the user has the following privileges for the source and destination tables:\n"
         "\n"
-        "| Source               | Destination    |\n"
-        "|----------------------|----------------|\n"
-        "| ALTER DELETE, INSERT | SELECT         |\n"
-        "| All Privileges       | All Privileges |\n"
+        "| Source         | Destination          |\n"
+        "|----------------|----------------------|\n"
+        "| SELECT         | ALTER DELETE, INSERT |\n"
+        "| All Privileges | All Privileges       |\n"
         "\n"
         "[ClickHouse]: https://clickhouse.com\n"
         "[GitHub Repository]: https://github.com/Altinity/clickhouse-regression/blob/main/alter/requirements/requirements.md\n"
@@ -2471,10 +2471,10 @@ ALTER TABLE table2 REPLACE PARTITION 21 FROM table1
 
 The `REPLACE PARTITION` SHALL only work when the user has the following privileges for the source and destination tables:
 
-| Source               | Destination    |
-|----------------------|----------------|
-| ALTER DELETE, INSERT | SELECT         |
-| All Privileges       | All Privileges |
+| Source         | Destination          |
+|----------------|----------------------|
+| SELECT         | ALTER DELETE, INSERT |
+| All Privileges | All Privileges       |
 
 [ClickHouse]: https://clickhouse.com
 [GitHub Repository]: https://github.com/Altinity/clickhouse-regression/blob/main/alter/requirements/requirements.md

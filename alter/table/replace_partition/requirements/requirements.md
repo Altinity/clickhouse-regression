@@ -845,10 +845,10 @@ ALTER TABLE table2 REPLACE PARTITION 21 FROM table1
 
 The `REPLACE PARTITION` SHALL only work when the user has the following privileges for the source and destination tables:
 
-| Source               | Destination    |
-|----------------------|----------------|
-| ALTER DELETE, INSERT | SELECT         |
-| All Privileges       | All Privileges |
+| Source         | Destination          |
+|----------------|----------------------|
+| SELECT         | ALTER DELETE, INSERT |
+| All Privileges | All Privileges       |
 
 [ClickHouse]: https://clickhouse.com
 [GitHub Repository]: https://github.com/Altinity/clickhouse-regression/blob/main/alter/requirements/requirements.md
