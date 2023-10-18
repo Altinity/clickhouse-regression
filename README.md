@@ -240,7 +240,7 @@ For more information, please see the [Filtering](https://testflows.com/handbook/
 
 #### [Step 1: Find Which Tests Failed](#table-of-contents)
 
-If the [TestFlows] check does not pass you should look at the end of the `test_run.txt.out.log` to find the list
+If the [TestFlows] check does not pass, you should look at the end of the `test_run.txt.out.log` to find the list
 of failing tests. For example,
 
 ```bash
