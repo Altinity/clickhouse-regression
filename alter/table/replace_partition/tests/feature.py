@@ -1,13 +1,13 @@
 from testflows.core import *
 from testflows.asserts import *
-from alter.table.requirements.replace_partition import *
+from alter.table.replace_partition.requirements.requirements import *
 from helpers.common import getuid
 from helpers.tables import create_table, create_temporary_table, Column
 from helpers.datatypes import *
 
 
 @TestOutline
-def create_merge_tree_tables(self, node, table1, table2):
+def create_tables_with_partitions(self, node, table1, table2):
     """An outline to create two tables with the same structure and insert values needed for test scenarios."""
     with By("Creating a MergeTree table partitioned by column p"):
         create_table(
@@ -20,7 +20,7 @@ def create_merge_tree_tables(self, node, table1, table2):
                 Column(name="i", datatype=UInt64()),
             ],
         )
-    with And("Creating a new temporary table with the same structure as the table_1"):
+    with And("Creating a new table with the same structure as the table_1"):
         node.query(f"CREATE TABLE {table2} AS {table1}")
 
     with When("I insert the data into table_1"):
@@ -42,7 +42,7 @@ def between_two_tables(self):
     table_2 = "table_" + getuid()
 
     with Given("I have two tables with the same structure"):
-        create_merge_tree_tables(node=node, table1=table_1, table2=table_2)
+        create_tables_with_partitions(node=node, table1=table_1, table2=table_2)
 
     with Then("I replace partition for table_1 from table_2"):
         node.query(f"ALTER TABLE {table_1} REPLACE PARTITION 2 FROM {table_2}")
@@ -63,7 +63,7 @@ def keep_data_after_replacing(self):
     table_2 = "table_" + getuid()
 
     with Given("I have two tables with the same structure"):
-        create_merge_tree_tables(node=node, table1=table_1, table2=table_2)
+        create_tables_with_partitions(node=node, table1=table_1, table2=table_2)
 
     with Then("I replace partition for table_1 from table_2"):
         node.query(f"ALTER TABLE {table_1} REPLACE PARTITION 2 FROM {table_2}")
@@ -76,7 +76,9 @@ def keep_data_after_replacing(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_TemporaryTable("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_FromTemporaryTable("1.0")
+)
 def between_temporary_and_regular_tables(self):
     """Replacing partition from temporary MergeTree table into a regular MergeTree table."""
     node = self.context.node
@@ -94,9 +96,7 @@ def between_temporary_and_regular_tables(self):
 
 
 @TestScenario
-@Requirements(
-    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Between_TemporaryTables("1.0")
-)
+@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_TemporaryTables("1.0"))
 def between_temporary_tables(self):
     """Replacing partition from temporary MergeTree table to another temporary table."""
     node = self.context.node
@@ -155,7 +155,7 @@ def into_outfile(self):
     with Given(
         "I have two tables with a MergeTree engine, with the same structure partitioned by the same column"
     ):
-        create_merge_tree_tables(node=node, table1=table_1, table2=table_2)
+        create_tables_with_partitions(node=node, table1=table_1, table2=table_2)
 
     with Check("I check tha the INTO OUTFILE clause does not output any errors"):
         node.query(
@@ -175,7 +175,7 @@ def format(self):
     with Given(
         "I have two tables with a MergeTree engine, with the same structure partitioned by the same column"
     ):
-        create_merge_tree_tables(node=node, table1=table_1, table2=table_2)
+        create_tables_with_partitions(node=node, table1=table_1, table2=table_2)
 
     with Check("I check tha the FORMAT clause does not output any errors"):
         node.query(
@@ -195,7 +195,7 @@ def settings(self):
     with Given(
         "I have two tables with a MergeTree engine, with the same structure partitioned by the same column"
     ):
-        create_merge_tree_tables(node=node, table1=table_1, table2=table_2)
+        create_tables_with_partitions(node=node, table1=table_1, table2=table_2)
 
     with Check("I check tha the SETTINGS clause does not output any errors"):
         node.query(
@@ -217,7 +217,7 @@ def table_functions(self):
     with Given(
         "I have two tables with a MergeTree engine, with the same structure partitioned by the same column"
     ):
-        create_merge_tree_tables(node=node, table1=table_1, table2=table_2)
+        create_tables_with_partitions(node=node, table1=table_1, table2=table_2)
 
     with Check("I check tha the usage of table functions outputs an expected errors"):
         node.query(
@@ -240,7 +240,7 @@ def join(self):
     with Given(
         "I have two tables with a MergeTree engine, with the same structure partitioned by the same column"
     ):
-        create_merge_tree_tables(node=node, table1=table_1, table2=table_2)
+        create_tables_with_partitions(node=node, table1=table_1, table2=table_2)
 
     with Check("I check tha the SETTINGS clause does not output any errors"):
         node.query(
