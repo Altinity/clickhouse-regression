@@ -106,7 +106,7 @@ def check_partition_types(self, destination_table, source_table):
 
 @TestSketch(Scenario)
 @Flags(TE)
-def test_partition_types(self):
+def replace_partition_with_different_partition_types(self):
     """Run test check with different partition types to see if replace partition is possible."""
     values = {
         partition_with_compact_parts,
@@ -128,4 +128,4 @@ def feature(self, node="clickhouse1"):
     """Check that it is possible to use the replace partition between different part types."""
     self.context.node = self.context.cluster.node(node)
 
-    Scenario(run=test_partition_types)
+    Scenario(run=replace_partition_with_different_partition_types)
