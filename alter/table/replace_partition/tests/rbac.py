@@ -105,7 +105,7 @@ def user_replace_partition_with_privileges(
         privilege_destination_table(node=node, name=user_name, on=destination)
         privilege_source_table(node=node, name=user_name, on=source)
 
-    with Then(
+    with Check(
         f"I try to replace partition on a destination table as a user with set of privileges"
     ):
         node.query(
@@ -124,6 +124,7 @@ def check_replace_partition_with_privileges(self):
         select_privileges,
         alter_privileges,
         alter_table_privileges,
+        insert_privileges,
     }
 
     user_replace_partition_with_privileges(

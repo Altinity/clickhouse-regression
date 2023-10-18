@@ -8,7 +8,7 @@ from time import sleep
 
 
 @TestStep
-def create_partitioned_table(table_name):
+def create_partitioned_table(self, table_name):
     """Create a partitioned table that has specific settings in order to get both wide and compact parts."""
     create_table(
         name=table_name,
@@ -86,7 +86,7 @@ def check_partition_types(self, destination_table, source_table):
         "I use the replace partition clause to replace the partition from table_2 into table_1 and wait for the process to finish"
     ):
         node.query(f"ALTER TABLE {table1} REPLACE PARTITION 1 FROM {table2}")
-        sleep(3)
+        sleep(10)
     with And("I select and save the partition values from the source table_2"):
         partition_values_2 = node.query(
             f"SELECT part_type FROM system.parts WHERE table = '{table2}' AND partition = '1' ORDER "
