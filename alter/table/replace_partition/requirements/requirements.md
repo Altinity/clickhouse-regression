@@ -350,16 +350,14 @@ version: 1.0
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Disks
 version: 1.0
 
-[ClickHouse] SHALL support Replacing partitions from the table on disk to another in the same table when tired storage is used.
-
-> When we have one table stored on different disks, and we want to replace partitions between partitions that are on different disks with `REPLACE PARTITION`.  
+[ClickHouse] SHALL support Replacing partitions from the source table that is on one disk to the destination table that is on another disk.
 
 ## Table That Is Stored On S3
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.S3
 version: 1.0
 
-[ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions between tables that are placed inside the S3 storage.
+[ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions on tables that are stored inside the S3 storage.
 
 ## Destination Table That is On a Different Replica
 
@@ -373,14 +371,14 @@ version: 1.0
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Shards
 version: 1.0
 
-[ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions between shards for tables with `DistributedTable` engine.
+[ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions on tables that are on different shards.
 
 ## Table That Is Stored On a Database With Different ClickHouse Version
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Versions
 version: 1.0
 
-[ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions between tables on a different clickhouse version.
+[ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions on tables that are stored on servers with different clickhouse versions.
 
 > Users can create a new database with the target version and use `REPLACE PARTITION` to transfer data from the 
 > old database to the new one.
@@ -390,7 +388,7 @@ version: 1.0
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Encodings
 version: 1.0
 
-[ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions between tables with different encodings.
+[ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions on tables with different encodings.
 
 ## Encrypted Tables And Unencrypted Tables
 
@@ -493,7 +491,7 @@ version: 1.0
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.Key
 version: 1.0
 
-[ClickHouse] SHALL not support the usage of `REPLACE PARTITION` between two tables when tables have different partition
+[ClickHouse] SHALL not support the usage of `REPLACE PARTITION` when tables have different partition
 key, `ORDER BY` key and primary key.
 
 ### Tables With Different Storage Policy
@@ -501,7 +499,7 @@ key, `ORDER BY` key and primary key.
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.StoragePolicy
 version: 1.0
 
-[ClickHouse] SHALL not support the usage of `REPLACE PARTITION` between two tables when tables have different storage
+[ClickHouse] SHALL not support the usage of `REPLACE PARTITION` when tables have different storage
 policy.
 
 ## Prohibited Actions
