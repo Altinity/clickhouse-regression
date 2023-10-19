@@ -480,6 +480,29 @@ def create_temporary_table(
 
 
 @TestStep(Given)
+def create_partitioned_table_with_compact_and_wide_parts(
+    self,
+    table_name,
+    min_rows_for_wide_part=10,
+    min_bytes_for_wide_part=100,
+    engine="MergeTree",
+):
+    """Create a partitioned table that has specific settings in order
+    to get both wide and compact parts."""
+    create_table(
+        name=table_name,
+        engine=engine,
+        partition_by="p",
+        order_by="tuple()",
+        columns=[
+            Column(name="p", datatype=UInt8()),
+            Column(name="i", datatype=UInt64()),
+        ],
+        query_settings=f"min_rows_for_wide_part={min_rows_for_wide_part}, min_bytes_for_wide_part={min_bytes_for_wide_part}",
+    )
+
+
+@TestStep(Given)
 def attach_table(self, engine, columns, name=None, path=None, drop_sync=False):
     """Attach a table with specified name and engine."""
     if name is None:
