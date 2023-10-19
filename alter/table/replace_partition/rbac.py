@@ -7,13 +7,6 @@ from helpers.datatypes import *
 
 
 @TestStep(Given)
-def two_privileges(self, node, name, on, privilege1, privilege2):
-    """Grant two privileges to a user."""
-    with By(f"Granting the user {privilege1} and {privilege2} privileges"):
-        node.query(f"GRANT {privilege1}, {privilege2} ON {on} TO {name}")
-
-
-@TestStep(Given)
 def all_privileges(self, node, name, on, privilege):
     """Grant all privileges to a user."""
     with By("Granting the user all privileges"):
@@ -77,16 +70,16 @@ def create_tables_with_partitions(self, node, destination, source):
         node.query(f"INSERT INTO {destination} VALUES (1, 1), (2, 2)")
 
     with And(
-        "I insert the same data into source but with the different value for column i"
+            "I insert the same data into source but with the different value for column i"
     ):
         node.query(f"INSERT INTO {source} VALUES (1, 1) (2, 3)")
 
 
 @TestCheck
 def user_replace_partition_with_privileges(
-    self,
-    privilege_destination_table,
-    privilege_source_table,
+        self,
+        privilege_destination_table,
+        privilege_source_table,
 ):
     """A test check to grant a user a set of privileges on both destination and source tables to see if replace
     partition is possible with these privileges."""
@@ -99,7 +92,7 @@ def user_replace_partition_with_privileges(
         create_tables_with_partitions(node=node, destination=destination, source=source)
 
     with When(
-        "I create s user with specific privileges for destination and source tables"
+            "I create s user with specific privileges for destination and source tables"
     ):
         create_user(node=node, name=user_name)
 
@@ -107,7 +100,7 @@ def user_replace_partition_with_privileges(
         privilege_source_table(node=node, name=user_name, on=source)
 
     with Check(
-        f"Replace Partition when destination table has {privilege_destination_table.__name__} and source has {privilege_source_table.__name__}"
+            f"Replace Partition when destination table has {privilege_destination_table.__name__} and source has {privilege_source_table.__name__}"
     ):
         node.query(
             f"ALTER TABLE {destination} REPLACE PARTITION 1 FROM {source}",
