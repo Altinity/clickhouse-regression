@@ -581,6 +581,21 @@ def create_file_on_node(self, path, content, node=None):
 
 
 @TestStep(Given)
+def create_user(self, name, node=None):
+    """Create a user."""
+    if node is None:
+        node = self.context.node
+
+    try:
+        with Given("I create a user"):
+            node.query(f"CREATE USER OR REPLACE {name}")
+        yield
+    finally:
+        with Finally(f"I delete the user {name}"):
+            node.query(f"DROP USER IF EXISTS {name}")
+
+
+@TestStep(Given)
 def set_envs_on_node(self, envs, node=None):
     """Set environment variables on node.
 
