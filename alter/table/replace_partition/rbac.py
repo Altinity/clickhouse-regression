@@ -1,21 +1,22 @@
 from testflows.core import *
 from testflows.asserts import *
 from alter.table.replace_partition.requirements.requirements import *
-from helpers.common import getuid
+from helpers.common import getuid, create_user
 from helpers.tables import create_table, Column
 from helpers.datatypes import *
 
 
 @TestStep(Given)
-def create_user(self, node, name):
-    """Create a user to grant privileges."""
-    node.query(f"CREATE USER OR REPLACE {name}")
+def two_privileges(self, node, name, on, privilege1, privilege2):
+    """Grant two privileges to a user."""
+    with By(f"Granting the user {privilege1} and {privilege2} privileges"):
+        node.query(f"GRANT {privilege1}, {privilege2} ON {on} TO {name}")
 
 
 @TestStep(Given)
-def all_privileges(self, node, name, on):
+def all_privileges(self, node, name, on, privilege):
     """Grant all privileges to a user."""
-    with Given("I grant the user all privileges"):
+    with By("Granting the user all privileges"):
         node.query(f"GRANT ALL ON {on} TO {name}")
 
 
@@ -29,28 +30,28 @@ def no_privileges(self, node, name, on):
 @TestStep(Given)
 def select_privileges(self, node, name, on):
     """Grant only select privileges to a user."""
-    with Given("I grant the user only select privileges"):
+    with By("Granting the user only select privileges"):
         node.query(f"GRANT SELECT ON {on} TO {name}")
 
 
 @TestStep(Given)
 def insert_privileges(self, node, name, on):
     """Grant only insert privileges to a user."""
-    with Given("I grant the user only insert privileges"):
+    with By("Granting the user only insert privileges"):
         node.query(f"GRANT INSERT ON {on} TO {name}")
 
 
 @TestStep(Given)
 def alter_privileges(self, node, name, on):
     """Grant only alter privileges to a user."""
-    with Given("I grant the user only alter privileges"):
+    with By("Granting the user only alter privileges"):
         node.query(f"GRANT ALTER ON {on} TO {name}")
 
 
 @TestStep(Given)
 def alter_table_privileges(self, node, name, on):
     """Grant only alter table privileges to a user."""
-    with Given("I grant the user only alter table privileges"):
+    with By("Granting the user only alter table privileges"):
         node.query(f"GRANT ALTER TABLE ON {on} TO {name}")
 
 
