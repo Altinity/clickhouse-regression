@@ -385,20 +385,29 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_PartitionTypes = Requirement(
     num="23.2.1",
 )
 
-RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Corrupted_Wide = Requirement(
-    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Corrupted.Wide",
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Corrupted = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Corrupted",
     version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL output an error when trying to `REPLACE PARTITION` when wide parts are corrupted for a destination table or a source table.\n"
+        "[ClickHouse] SHALL output an error when trying to `REPLACE PARTITION` when parts of a specific partition are corrupted for a destination table or a source table.\n"
+        "\n"
+        "Possible partition types that can be corrupted are,\n"
+        "\n"
+        "| Partition Types                               |\n"
+        "|-----------------------------------------------|\n"
+        "| Partition with compact parts                  |\n"
+        "| Partition with wide parts                     |\n"
+        "| Partition with compact and wide parts (mixed) |\n"
+        "\n"
         "\n"
     ),
     link=None,
-    level=3,
-    num="24.1.1",
+    level=2,
+    num="24.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Corrupted_Compact = Requirement(
@@ -1183,7 +1192,7 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
             num="8.1",
         ),
         Heading(
-            name="Keeping Data On The Source Table After Replace Partition",
+            name="Keeping Data on the Source Table After Replace Partition",
             level=1,
             num="9",
         ),
@@ -1236,20 +1245,20 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
             level=2,
             num="15.1",
         ),
-        Heading(name="Table Is On A Separate Disk", level=1, num="16"),
+        Heading(name="Table Is on a Separate Disk", level=1, num="16"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Disks",
             level=2,
             num="16.1",
         ),
-        Heading(name="Table That Is Stored On S3", level=1, num="17"),
+        Heading(name="Table That Is Stored on S3", level=1, num="17"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.S3",
             level=2,
             num="17.1",
         ),
         Heading(
-            name="Destination Table That is On a Different Replica", level=1, num="18"
+            name="Destination Table That Is on a Different Replica", level=1, num="18"
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Replicas",
@@ -1257,7 +1266,7 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
             num="18.1",
         ),
         Heading(
-            name="Destination Table That is On a Different Shard", level=1, num="19"
+            name="Destination Table That Is on a Different Shard", level=1, num="19"
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Shards",
@@ -1265,7 +1274,7 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
             num="19.1",
         ),
         Heading(
-            name="Table That Is Stored On a Server With Different ClickHouse Version",
+            name="Table That Is Stored on a Server With Different ClickHouse Version",
             level=1,
             num="20",
         ),
@@ -1298,12 +1307,11 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
             level=3,
             num="23.2.1",
         ),
-        Heading(name="Corrupted Parts", level=1, num="24"),
-        Heading(name="Tables With Corrupted Wide Parts", level=2, num="24.1"),
+        Heading(name="Corrupted Parts on a Specific Partition", level=1, num="24"),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Corrupted.Wide",
-            level=3,
-            num="24.1.1",
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Corrupted",
+            level=2,
+            num="24.1",
         ),
         Heading(name="Tables With Corrupted Compact Parts", level=2, num="24.2"),
         Heading(
@@ -1312,7 +1320,7 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
             num="24.2.1",
         ),
         Heading(name="Conditions", level=1, num="25"),
-        Heading(name="Rules For Replacing Partitions On Tables", level=2, num="25.1"),
+        Heading(name="Rules for Replacing Partitions on Tables", level=2, num="25.1"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions",
             level=3,
@@ -1338,7 +1346,7 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
         ),
         Heading(name="Prohibited Actions", level=1, num="26"),
         Heading(
-            name="Using Order By and Partition By When Replacing Partitions On Tables",
+            name="Using Order By and Partition By When Replacing Partitions on Tables",
             level=2,
             num="26.1",
         ),
@@ -1579,7 +1587,7 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Encryption,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Deduplication,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_PartitionTypes,
-        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Corrupted_Wide,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Corrupted,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Corrupted_Compact,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions_Different_Structure,
@@ -1638,7 +1646,7 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
         * 6.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.System.Parts](#rqsrs-032clickhousealtertablereplacepartitionsystemparts)
 * 7 [Table Engines](#table-engines)
     * 7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TableEngines](#rqsrs-032clickhousealtertablereplacepartitiontableengines)
-* 8 [Keeping Data On The Source Table After Replace Partition](#keeping-data-on-the-source-table-after-replace-partition)
+* 8 [Keeping Data on the Source Table After Replace Partition](#keeping-data-on-the-source-table-after-replace-partition)
     * 8.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.KeepData](#rqsrs-032clickhousealtertablereplacepartitionkeepdata)
 * 9 [Table With Non-Existent Partition](#table-with-non-existent-partition)
     * 9.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.NonExistentPartition](#rqsrs-032clickhousealtertablereplacepartitionnonexistentpartition)
@@ -1652,15 +1660,15 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
     * 13.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Format](#rqsrs-032clickhousealtertablereplacepartitionformat)
 * 14 [Using Settings With Replace Partition Clause](#using-settings-with-replace-partition-clause)
     * 14.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Settings](#rqsrs-032clickhousealtertablereplacepartitionsettings)
-* 15 [Table Is On A Separate Disk](#table-is-on-a-separate-disk)
+* 15 [Table Is on a Separate Disk](#table-is-on-a-separate-disk)
     * 15.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Disks](#rqsrs-032clickhousealtertablereplacepartitiondisks)
-* 16 [Table That Is Stored On S3](#table-that-is-stored-on-s3)
+* 16 [Table That Is Stored on S3](#table-that-is-stored-on-s3)
     * 16.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.S3](#rqsrs-032clickhousealtertablereplacepartitions3)
-* 17 [Destination Table That is On a Different Replica](#destination-table-that-is-on-a-different-replica)
+* 17 [Destination Table That Is on a Different Replica](#destination-table-that-is-on-a-different-replica)
     * 17.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Replicas](#rqsrs-032clickhousealtertablereplacepartitionreplicas)
-* 18 [Destination Table That is On a Different Shard](#destination-table-that-is-on-a-different-shard)
+* 18 [Destination Table That Is on a Different Shard](#destination-table-that-is-on-a-different-shard)
     * 18.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Shards](#rqsrs-032clickhousealtertablereplacepartitionshards)
-* 19 [Table That Is Stored On a Server With Different ClickHouse Version](#table-that-is-stored-on-a-server-with-different-clickhouse-version)
+* 19 [Table That Is Stored on a Server With Different ClickHouse Version](#table-that-is-stored-on-a-server-with-different-clickhouse-version)
     * 19.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Versions](#rqsrs-032clickhousealtertablereplacepartitionversions)
 * 20 [Table That Has a Different Encoding](#table-that-has-a-different-encoding)
     * 20.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Encodings](#rqsrs-032clickhousealtertablereplacepartitionencodings)
@@ -1670,13 +1678,12 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
     * 22.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Deduplication](#rqsrs-032clickhousealtertablereplacepartitiondeduplication)
     * 22.2 [Tables With Different Partition Types](#tables-with-different-partition-types)
         * 22.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.PartitionTypes](#rqsrs-032clickhousealtertablereplacepartitionpartitiontypes)
-* 23 [Corrupted Parts](#corrupted-parts)
-    * 23.1 [Tables With Corrupted Wide Parts](#tables-with-corrupted-wide-parts)
-        * 23.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Corrupted.Wide](#rqsrs-032clickhousealtertablereplacepartitioncorruptedwide)
+* 23 [Corrupted Parts on a Specific Partition](#corrupted-parts-on-a-specific-partition)
+    * 23.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Corrupted](#rqsrs-032clickhousealtertablereplacepartitioncorrupted)
     * 23.2 [Tables With Corrupted Compact Parts](#tables-with-corrupted-compact-parts)
         * 23.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Corrupted.Compact](#rqsrs-032clickhousealtertablereplacepartitioncorruptedcompact)
 * 24 [Conditions](#conditions)
-    * 24.1 [Rules For Replacing Partitions On Tables](#rules-for-replacing-partitions-on-tables)
+    * 24.1 [Rules for Replacing Partitions on Tables](#rules-for-replacing-partitions-on-tables)
         * 24.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions](#rqsrs-032clickhousealtertablereplacepartitionconditions)
     * 24.2 [Tables With Different Structure](#tables-with-different-structure)
         * 24.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.Structure](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentstructure)
@@ -1685,7 +1692,7 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
     * 24.4 [Tables With Different Storage Policy](#tables-with-different-storage-policy)
         * 24.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.StoragePolicy](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentstoragepolicy)
 * 25 [Prohibited Actions](#prohibited-actions)
-    * 25.1 [Using Order By and Partition By When Replacing Partitions On Tables](#using-order-by-and-partition-by-when-replacing-partitions-on-tables)
+    * 25.1 [Using Order By and Partition By When Replacing Partitions on Tables](#using-order-by-and-partition-by-when-replacing-partitions-on-tables)
         * 25.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition](#rqsrs-032clickhousealtertablereplacepartitionprohibitedorderandpartition)
     * 25.2 [Staring New Merges With Ongoing Replace Partition](#staring-new-merges-with-ongoing-replace-partition)
         * 25.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Merges](#rqsrs-032clickhousealtertablereplacepartitionprohibitedmerges)
@@ -1885,7 +1892,7 @@ version: 1.0
 |       `MaterializedView`       |
 
 
-## Keeping Data On The Source Table After Replace Partition
+## Keeping Data on the Source Table After Replace Partition
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.KeepData
 version: 1.0
@@ -1967,35 +1974,35 @@ version: 1.0
 
 [ClickHouse] SHALL support the usage of the `SETTINGS` with `REPLACE PARTITION` and SHALL not output any errors.
 
-## Table Is On A Separate Disk
+## Table Is on a Separate Disk
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Disks
 version: 1.0
 
 [ClickHouse] SHALL support Replacing partitions from the source table that is on one disk to the destination table that is on another disk.
 
-## Table That Is Stored On S3
+## Table That Is Stored on S3
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.S3
 version: 1.0
 
 [ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions on tables that are stored inside the S3 storage.
 
-## Destination Table That is On a Different Replica
+## Destination Table That Is on a Different Replica
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Replicas
 version: 1.0
 
 [ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions on a destination table that is on a different replica than the source table.
 
-## Destination Table That is On a Different Shard
+## Destination Table That Is on a Different Shard
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Shards
 version: 1.0
 
 [ClickHouse] SHALL support using `REPLACE PARTITION` to replace partitions on tables that are on different shards.
 
-## Table That Is Stored On a Server With Different ClickHouse Version
+## Table That Is Stored on a Server With Different ClickHouse Version
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Versions
 version: 1.0
@@ -2071,14 +2078,21 @@ The `REPLACE PARTITION` command works with both source and destination tables. E
 
 The `REPLACE PARTITION` SHALL work for any combination of partition types on both destination and source tables.
 
-## Corrupted Parts
+## Corrupted Parts on a Specific Partition
 
-### Tables With Corrupted Wide Parts
-
-#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Corrupted.Wide
+### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Corrupted
 version: 1.0
 
-[ClickHouse] SHALL output an error when trying to `REPLACE PARTITION` when wide parts are corrupted for a destination table or a source table.
+[ClickHouse] SHALL output an error when trying to `REPLACE PARTITION` when parts of a specific partition are corrupted for a destination table or a source table.
+
+Possible partition types that can be corrupted are,
+
+| Partition Types                               |
+|-----------------------------------------------|
+| Partition with compact parts                  |
+| Partition with wide parts                     |
+| Partition with compact and wide parts (mixed) |
+
 
 ### Tables With Corrupted Compact Parts
 
@@ -2089,7 +2103,7 @@ version: 1.0
 
 ## Conditions
 
-### Rules For Replacing Partitions On Tables
+### Rules for Replacing Partitions on Tables
 
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions
 version: 1.0
@@ -2125,7 +2139,7 @@ policy.
 
 ## Prohibited Actions
 
-### Using Order By and Partition By When Replacing Partitions On Tables
+### Using Order By and Partition By When Replacing Partitions on Tables
 
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition
 version: 1.0
