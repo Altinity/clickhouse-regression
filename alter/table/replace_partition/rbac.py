@@ -11,7 +11,7 @@ from helpers.tables import (
 @TestStep(Given)
 def no_privileges(self, node, name, on):
     """Grant no privileges to a user."""
-    with Given("I grant the user no privileges"):
+    with By("Granting the user no privileges"):
         node.query(f"GRANT NONE ON {on} TO {name}")
 
 
