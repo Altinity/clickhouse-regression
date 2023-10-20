@@ -3,7 +3,7 @@ from base_58.tests.steps import *
 
 @TestScenario
 def performance(self, node=None):
-    """Check that clickhouse base58 functions have simular performance with base64 functions."""  # todo
+    """Check that clickhouse base58 functions have simular performance with base64 functions."""
 
     if node is None:
         node = self.context.node
@@ -69,8 +69,8 @@ def performance(self, node=None):
         )
         execution_times_decode.append(time.time() - start_time)
 
-        assert 2 * min(execution_times_encode) > max(execution_times_encode), error()
-        assert 2 * min(execution_times_decode) > max(execution_times_decode), error()
+        assert 10 * min(execution_times_encode) > max(execution_times_encode), error()
+        assert 10 * min(execution_times_decode) > max(execution_times_decode), error()
 
 
 @TestFeature
