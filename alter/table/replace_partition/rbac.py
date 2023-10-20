@@ -43,23 +43,6 @@ def alter_table_privileges(self, node, name, on):
         node.query(f"GRANT ALTER TABLE ON {on} TO {name}")
 
 
-@TestOutline
-def create_tables_with_partitions(self, node, destination_table, source_table):
-    """An outline to create two tables with partitions, with the same structure and insert values needed for test
-    scenarios."""
-    with By("Creating a MergeTree table partitioned by column p"):
-        create_table_partitioned_by_column(table_name=source_table)
-
-    with And("Creating a new table with the same structure as the destination table"):
-        create_table_partitioned_by_column(table_name=destination_table)
-
-    with And("Inserting the data into destination and source tables"):
-        insert_into_table_random_uint64(table_name=source_table, number_of_values=10)
-        insert_into_table_random_uint64(
-            table_name=destination_table, number_of_values=10
-        )
-
-
 @TestCheck
 def user_replace_partition_with_privileges(
     self,
@@ -74,7 +57,7 @@ def user_replace_partition_with_privileges(
     source_table = f"source_{getuid()}"
 
     with Given(
-        "I create a destination table table and a source table that are partitioned by the same column"
+        "I create a destination table and a source table that are partitioned by the same column"
     ):
         create_table_partitioned_by_column(table_name=source_table)
         create_table_partitioned_by_column(table_name=destination_table)
