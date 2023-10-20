@@ -502,6 +502,33 @@ def create_partitioned_table_with_compact_and_wide_parts(
     )
 
 
+@TestStep
+def create_table_partitioned_by_column(self, table_name, engine="MergeTree"):
+    """Create a table that is partitioned by a specific column."""
+    create_table(
+        name=table_name,
+        engine=engine,
+        partition_by="p",
+        order_by="tuple()",
+        columns=[
+            Column(name="p", datatype=UInt8()),
+            Column(name="i", datatype=UInt64()),
+        ],
+    )
+
+
+@TestStep(Given)
+def insert_into_table_random_uint64(self, table_name, number_of_values, node=None):
+    """Insert random UInt64 values into a column."""
+    if node is None:
+        node = self.context.node
+
+    with By("Inserting random values into a column with uint64 datatype"):
+        node.query(
+            f"INSERT INTO {table_name} (p, i) SELECT 1, rand64() FROM numbers({number_of_values})"
+        )
+
+
 @TestStep(Given)
 def attach_table(self, engine, columns, name=None, path=None, drop_sync=False):
     """Attach a table with specified name and engine."""

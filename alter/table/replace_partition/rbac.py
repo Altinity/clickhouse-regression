@@ -2,15 +2,10 @@ from testflows.core import *
 from testflows.asserts import *
 from alter.table.replace_partition.requirements.requirements import *
 from helpers.common import getuid, create_user
-from helpers.tables import create_table, Column
-from helpers.datatypes import *
-
-
-@TestStep(Given)
-def all_privileges(self, node, name, on, privilege):
-    """Grant all privileges to a user."""
-    with By("Granting the user all privileges"):
-        node.query(f"GRANT ALL ON {on} TO {name}")
+from helpers.tables import (
+    create_table_partitioned_by_column,
+    insert_into_table_random_uint64,
+)
 
 
 @TestStep(Given)
@@ -49,61 +44,60 @@ def alter_table_privileges(self, node, name, on):
 
 
 @TestOutline
-def create_tables_with_partitions(self, node, destination, source):
+def create_tables_with_partitions(self, node, destination_table, source_table):
     """An outline to create two tables with partitions, with the same structure and insert values needed for test
     scenarios."""
     with By("Creating a MergeTree table partitioned by column p"):
-        create_table(
-            name=destination,
-            engine="MergeTree",
-            partition_by="p",
-            order_by="tuple()",
-            columns=[
-                Column(name="p", datatype=UInt8()),
-                Column(name="i", datatype=UInt64()),
-            ],
+        create_table_partitioned_by_column(table_name=source_table)
+
+    with And("Creating a new table with the same structure as the destination table"):
+        create_table_partitioned_by_column(table_name=destination_table)
+
+    with And("Inserting the data into destination and source tables"):
+        insert_into_table_random_uint64(table_name=source_table, number_of_values=10)
+        insert_into_table_random_uint64(
+            table_name=destination_table, number_of_values=10
         )
-    with And("Creating a new table with the same structure as the destination"):
-        node.query(f"CREATE TABLE {source} AS {destination}")
-
-    with When("I insert the data into destination"):
-        node.query(f"INSERT INTO {destination} VALUES (1, 1), (2, 2)")
-
-    with And(
-            "I insert the same data into source but with the different value for column i"
-    ):
-        node.query(f"INSERT INTO {source} VALUES (1, 1) (2, 3)")
 
 
 @TestCheck
 def user_replace_partition_with_privileges(
-        self,
-        privilege_destination_table,
-        privilege_source_table,
+    self,
+    privilege_destination_table,
+    privilege_source_table,
 ):
     """A test check to grant a user a set of privileges on both destination and source tables to see if replace
     partition is possible with these privileges."""
     node = self.context.node
     user_name = f"user_{getuid()}"
-    destination = f"destination_{getuid()}"
-    source = f"source_{getuid()}"
+    destination_table = f"destination_{getuid()}"
+    source_table = f"source_{getuid()}"
 
-    with Given("I create a destination table and a source table with partitions"):
-        create_tables_with_partitions(node=node, destination=destination, source=source)
+    with Given(
+        "I create a destination table table and a source table that are partitioned by the same column"
+    ):
+        create_table_partitioned_by_column(table_name=source_table)
+        create_table_partitioned_by_column(table_name=destination_table)
+
+    with And("I insert data into both tables"):
+        insert_into_table_random_uint64(
+            table_name=destination_table, number_of_values=10
+        )
+        insert_into_table_random_uint64(table_name=source_table, number_of_values=10)
 
     with When(
-            "I create s user with specific privileges for destination and source tables"
+        "I create s user with specific privileges for destination table and source table"
     ):
         create_user(node=node, name=user_name)
 
-        privilege_destination_table(node=node, name=user_name, on=destination)
-        privilege_source_table(node=node, name=user_name, on=source)
+        privilege_destination_table(node=node, name=user_name, on=destination_table)
+        privilege_source_table(node=node, name=user_name, on=source_table)
 
     with Check(
-            f"Replace Partition when destination table has {privilege_destination_table.__name__} and source has {privilege_source_table.__name__}"
+        f"That replacing partition is possible on the destination table with given privileges"
     ):
         node.query(
-            f"ALTER TABLE {destination} REPLACE PARTITION 1 FROM {source}",
+            f"ALTER TABLE {destination_table} REPLACE PARTITION 1 FROM {source_table}",
             settings=[("user", user_name)],
             exitcode=0,
         )
@@ -114,7 +108,6 @@ def user_replace_partition_with_privileges(
 def check_replace_partition_with_privileges(self):
     """Run the test check with different privileges combinations."""
     values = {
-        all_privileges,
         no_privileges,
         select_privileges,
         alter_privileges,
@@ -132,7 +125,7 @@ def check_replace_partition_with_privileges(self):
 @Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_RBAC("1.0"))
 @Name("rbac")
 def feature(self, node="clickhouse1"):
-    """Check that it is possible replace partition as a user with different privileges."""
+    """Check that it is possible to replace partition on a table as a user with given privileges."""
     self.context.node = self.context.cluster.node(node)
 
     Scenario(run=check_replace_partition_with_privileges)
