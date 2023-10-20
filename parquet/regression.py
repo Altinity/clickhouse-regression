@@ -180,7 +180,7 @@ ffails = {
     "/parquet/encrypted/": (
         Skip,
         "Different error message on 23.8",
-        check_clickhouse_version("<=23.8.2"),
+        check_clickhouse_version("<=23.9"),
     ),
     "/parquet/compression/*": (
         Skip,
