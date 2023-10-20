@@ -838,7 +838,6 @@ ALTER TABLE table2 REPLACE PARTITION 21 FROM table1
 | Privileges     |
 |----------------|
 | No privileges  |
-| All Privileges |
 | SELECT         |
 | INSERT         |
 | ALTER          |
