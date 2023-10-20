@@ -1124,7 +1124,6 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_RBAC = Requirement(
         "| Privileges     |\n"
         "|----------------|\n"
         "| No privileges  |\n"
-        "| All Privileges |\n"
         "| SELECT         |\n"
         "| INSERT         |\n"
         "| ALTER          |\n"
@@ -2469,7 +2468,6 @@ ALTER TABLE table2 REPLACE PARTITION 21 FROM table1
 | Privileges     |
 |----------------|
 | No privileges  |
-| All Privileges |
 | SELECT         |
 | INSERT         |
 | ALTER          |
