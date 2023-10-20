@@ -25,8 +25,8 @@ def table_with_compact_parts(self, table_name):
 
     with And("inserting data that will create multiple compact parts"):
         for _ in range(3):
-            node.query(
-                f"INSERT INTO {table_name} (p, i) SELECT 1, rand64() FROM numbers(1)"
+            insert_into_table_random_uint64(
+                node=node, table_name=table_name, number_of_values=1
             )
 
 
@@ -70,8 +70,8 @@ def partition_with_empty_parts(self, table_name):
         create_partitioned_table_with_compact_and_wide_parts(table_name=table_name)
 
         for _ in range(3):
-            node.query(
-                f"INSERT INTO {table_name} (p, i) SELECT 1, rand64() FROM numbers(100)"
+            insert_into_table_random_uint64(
+                node=node, table_name=table_name, number_of_values=100
             )
         node.query(f"DELETE FROM {table_name} WHERE p == 1;")
 
@@ -107,22 +107,23 @@ def check_replace_partition(self, destination_table, source_table):
         destination_table(table_name=destination_table_name)
         source_table(table_name=source_table_name)
 
-    with Then(
-        "replace partition clause to replace the partition from table_2 into table_1 and wait for the process to finish???"
-    ):
+    with Then("I replace partition from the source table into the destination table"):
         node.query(
             f"ALTER TABLE {destination_table_name} REPLACE PARTITION 1 FROM {source_table_name}"
         )
 
     with And("I select and save the partition values from the source table"):
-        partition_values_2 = node.query(f"SELECT i FROM {source_table_name} ORDER BY i")
+        partition_values_source = node.query(
+            f"SELECT i FROM {source_table_name} ORDER BY i"
+        )
 
     with Check("I check that the partition was replaced on the destination table"):
-        partition_values_1 = node.query(
+        partition_values_destination = node.query(
             f"SELECT i FROM {destination_table_name} ORDER BY i"
         )
         assert (
-            partition_values_1.output.strip() == partition_values_2.output.strip()
+            partition_values_destination.output.strip()
+            == partition_values_source.output.strip()
         ), error()
 
 
