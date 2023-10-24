@@ -51,44 +51,55 @@ def alter_table_privileges(self, node, name, on):
         node.query(f"GRANT ALTER TABLE ON {on} TO {name}")
 
 
-@TestStep
+@TestStep(Given)
 def replace_partition(
     self, destination_table, source_table, user_name, exitcode=0, message=None
 ):
-    """Replace partition 1 of the destination table from the source table."""
+    """Replace partition 1 of the destination table from the source table. If message is not None, we expect that the
+    usage of replace partition should output an error.
+    """
     node = self.context.node
-    query = f"ALTER TABLE {destination_table} REPLACE PARTITION 1 FROM {source_table}"
-    params = {"settings": [("user", user_name)]}
 
-    if message is not None:
-        params["message"] = message
-    else:
-        params["exitcode"] = exitcode
+    with By("Executing the replace partition command"):
+        query = (
+            f"ALTER TABLE {destination_table} REPLACE PARTITION 1 FROM {source_table}"
+        )
+        params = {"settings": [("user", user_name)]}
 
-    node.query(query, **params)
+        if message is not None:
+            params["message"] = message
+        else:
+            params["exitcode"] = exitcode
+
+        node.query(query, **params)
 
 
 @TestStep
 def check_if_partition_values_on_destination_changed(
     self, source_table, destination_table, changed=True
 ):
+    """Assert two possabilities:
+    - When we expect that replace partition was successful due to valid privileges.
+    - When we expect that replace partition was not successful due to invalid privileges.
+    """
     node = self.context.node
 
     partition_values_source = node.query(f"SELECT i FROM {source_table} ORDER BY i")
-
     partition_values_destination = node.query(
         f"SELECT i FROM {destination_table} ORDER BY i"
     )
-    if changed:
-        assert (
-            partition_values_source.output.strip()
-            == partition_values_destination.output.strip()
-        )
-    else:
-        assert (
-            partition_values_source.output.strip()
-            != partition_values_destination.output.strip()
-        )
+
+    with By("Checking if the values on the specific partition were replaced or not"):
+        if changed:
+            assert (
+                partition_values_source.output.strip()
+                == partition_values_destination.output.strip()
+            )
+        else:
+            assert (
+                partition_values_source.output.strip()
+                != partition_values_destination.output.strip()
+            )
 
 
 @TestCheck
@@ -178,7 +189,7 @@ def user_replace_partition_with_privileges(
 @TestSketch(Scenario)
 @Flags(TE)
 def check_replace_partition_with_privileges(self):
-    """Run the test check with different privileges combinations."""
+    """Run the test check with different privilege combinations."""
     values = {
         no_privileges,
         select_privileges,
