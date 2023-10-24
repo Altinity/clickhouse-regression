@@ -76,7 +76,7 @@ def replace_partition(
 
 @TestStep
 def check_if_partition_values_on_destination_changed(
-    self, source_table, destination_table, changed=True
+    self, source_table, destination_table, user_name, changed=True
 ):
     """Assert two possabilities:
     - When we expect that replace partition was successful due to valid privileges.
@@ -84,22 +84,39 @@ def check_if_partition_values_on_destination_changed(
     """
     node = self.context.node
 
-    partition_values_source = node.query(f"SELECT i FROM {source_table} ORDER BY i")
-    partition_values_destination = node.query(
-        f"SELECT i FROM {destination_table} ORDER BY i"
-    )
+    with Given(
+        "I try to replace partition on the destination table as a user with set privileges"
+    ):
+        if changed:
+            replace_partition(
+                destination_table=destination_table,
+                source_table=source_table,
+                user_name=user_name,
+            )
+        else:
+            replace_partition(
+                destination_table=destination_table,
+                source_table=source_table,
+                user_name=user_name,
+                message=f"Exception: {user_name}: Not enough privileges.",
+            )
 
     with By("Checking if the values on the specific partition were replaced or not"):
+        partition_values_source = node.query(f"SELECT i FROM {source_table} ORDER BY i")
+        partition_values_destination = node.query(
+            f"SELECT i FROM {destination_table} ORDER BY i"
+        )
+
         if changed:
             assert (
                 partition_values_source.output.strip()
                 == partition_values_destination.output.strip()
-            )
+            ), error()
         else:
             assert (
                 partition_values_source.output.strip()
                 != partition_values_destination.output.strip()
-            )
+            ), error()
 
 
 @TestCheck
@@ -162,26 +179,16 @@ def user_replace_partition_with_privileges(
                 and "insert_privileges" in destination_privileges
             )
         ):
-            replace_partition(
+            check_if_partition_values_on_destination_changed(
                 destination_table=destination_table,
                 source_table=source_table,
                 user_name=user_name,
-            )
-
-            check_if_partition_values_on_destination_changed(
-                destination_table=destination_table, source_table=source_table
             )
         else:
-            replace_partition(
-                destination_table=destination_table,
-                source_table=source_table,
-                user_name=user_name,
-                message=f"Exception: {user_name}: Not enough privileges.",
-            )
-
             check_if_partition_values_on_destination_changed(
                 destination_table=destination_table,
                 source_table=source_table,
+                user_name=user_name,
                 changed=False,
             )
 
