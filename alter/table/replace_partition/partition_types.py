@@ -10,9 +10,10 @@ from helpers.tables import (
 @TestStep(Given)
 def insert_into_table_random_uint64(self, node, table_name, number_of_values):
     with By("Inserting random values into a column with uint64 datatype"):
-        node.query(
-            f"INSERT INTO {table_name} (p, i) SELECT 1, rand64() FROM numbers({number_of_values})"
-        )
+        for i in range(10):
+            node.query(
+                f"INSERT INTO {table_name} (p, i) SELECT {i}, rand64() FROM numbers({number_of_values})"
+            )
 
 
 @TestStep(Given)
@@ -78,6 +79,7 @@ def partition_with_empty_parts(self, table_name):
 
 @TestStep(Given)
 def partition_with_no_parts(self, table_name):
+    """Deleting all parts of the partition by dropping the partition."""
     node = self.context.node
     with Given("I create a MergeTree table partitioned by column p"):
         create_partitioned_table_with_compact_and_wide_parts(table_name=table_name)
@@ -114,17 +116,20 @@ def check_replace_partition(self, destination_table, source_table):
 
     with And("I select and save the partition values from the source table"):
         partition_values_source = node.query(
-            f"SELECT i FROM {source_table_name} ORDER BY i"
+            f"SELECT i FROM {source_table_name} WHERE p = 1 ORDER BY i"
         )
 
     with Check("I check that the partition was replaced on the destination table"):
         partition_values_destination = node.query(
-            f"SELECT i FROM {destination_table_name} ORDER BY i"
+            f"SELECT i FROM {destination_table_name} WHERE p = 1 ORDER BY i"
         )
-        assert (
-            partition_values_destination.output.strip()
-            == partition_values_source.output.strip()
-        ), error()
+        with By(
+            "Validating that the values of the replaced partition on the destination table are the same as on the source table"
+        ):
+            assert (
+                partition_values_destination.output.strip()
+                == partition_values_source.output.strip()
+            ), error()
 
 
 @TestSketch(Scenario)

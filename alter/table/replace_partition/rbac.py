@@ -8,6 +8,14 @@ from helpers.tables import (
 )
 
 
+def get_list_of_privileges_as_string(privileges: list):
+    privilege_name = []
+    for privilege in privileges:
+        privilege_name.append(privilege.__name__)
+
+    return privilege_name
+
+
 @TestStep(Given)
 def no_privileges(self, node, name, on):
     """Grant no privileges to a user."""
@@ -43,11 +51,51 @@ def alter_table_privileges(self, node, name, on):
         node.query(f"GRANT ALTER TABLE ON {on} TO {name}")
 
 
+@TestStep
+def replace_partition(
+    self, destination_table, source_table, user_name, exitcode=0, message=None
+):
+    """Replace partition 1 of the destination table from the source table."""
+    node = self.context.node
+    query = f"ALTER TABLE {destination_table} REPLACE PARTITION 1 FROM {source_table}"
+    params = {"settings": [("user", user_name)]}
+
+    if message is not None:
+        params["message"] = message
+    else:
+        params["exitcode"] = exitcode
+
+    node.query(query, **params)
+
+
+@TestStep
+def check_if_partition_values_on_destination_changed(
+    self, source_table, destination_table, changed=True
+):
+    node = self.context.node
+
+    partition_values_source = node.query(f"SELECT i FROM {source_table} ORDER BY i")
+
+    partition_values_destination = node.query(
+        f"SELECT i FROM {destination_table} ORDER BY i"
+    )
+    if changed:
+        assert (
+            partition_values_source.output.strip()
+            == partition_values_destination.output.strip()
+        )
+    else:
+        assert (
+            partition_values_source.output.strip()
+            != partition_values_destination.output.strip()
+        )
+
+
 @TestCheck
 def user_replace_partition_with_privileges(
     self,
-    privilege_destination_table,
-    privilege_source_table,
+    destination_table_privileges,
+    source_table_privileges,
 ):
     """A test check to grant a user a set of privileges on both destination and source tables to see if replace
     partition is possible with these privileges."""
@@ -68,22 +116,63 @@ def user_replace_partition_with_privileges(
         )
         insert_into_table_random_uint64(table_name=source_table, number_of_values=10)
 
-    with When(
-        "I create s user with specific privileges for destination table and source table"
-    ):
+    with And("I create a user"):
         create_user(node=node, name=user_name)
 
-        privilege_destination_table(node=node, name=user_name, on=destination_table)
-        privilege_source_table(node=node, name=user_name, on=source_table)
+    with When(
+        "I grant specific privileges for destination table and source table to a created user"
+    ):
+        for grant_privilege in destination_table_privileges:
+            grant_privilege(node=node, name=user_name, on=destination_table)
+
+        for grant_privilege in source_table_privileges:
+            grant_privilege(node=node, name=user_name, on=source_table)
+
+    with And("I save the list of privileges"):
+        destination_privileges = get_list_of_privileges_as_string(
+            destination_table_privileges
+        )
+        source_privileges = get_list_of_privileges_as_string(source_table_privileges)
 
     with Check(
-        f"That replacing partition is possible on the destination table with given privileges"
+        f"That replacing partition is possible on the destination table when correct privileges are set",
+        description=f"""
+            Destination table privileges: {destination_privileges}
+            Source table privileges: {source_privileges}
+            """,
     ):
-        node.query(
-            f"ALTER TABLE {destination_table} REPLACE PARTITION 1 FROM {source_table}",
-            settings=[("user", user_name)],
-            exitcode=0,
-        )
+        if ("select_privileges" in source_privileges) and (
+            (
+                "alter_privileges" in destination_privileges
+                and "insert_privileges" in destination_privileges
+            )
+            or (
+                "alter_table_privileges" in destination_privileges
+                and "insert_privileges" in destination_privileges
+            )
+        ):
+            replace_partition(
+                destination_table=destination_table,
+                source_table=source_table,
+                user_name=user_name,
+            )
+
+            check_if_partition_values_on_destination_changed(
+                destination_table=destination_table, source_table=source_table
+            )
+        else:
+            replace_partition(
+                destination_table=destination_table,
+                source_table=source_table,
+                user_name=user_name,
+                message=f"Exception: {user_name}: Not enough privileges.",
+            )
+
+            check_if_partition_values_on_destination_changed(
+                destination_table=destination_table,
+                source_table=source_table,
+                changed=False,
+            )
 
 
 @TestSketch(Scenario)
@@ -98,9 +187,18 @@ def check_replace_partition_with_privileges(self):
         insert_privileges,
     }
 
+    destination_table_privileges = [
+        either(*values, i="first_privilege"),
+        either(*values, i="second_privileges"),
+    ]
+    source_table_privileges = [
+        either(*values, i="first_privilege"),
+        either(*values, i="second_privileges"),
+    ]
+
     user_replace_partition_with_privileges(
-        privilege_destination_table=either(*values, i="privilege_destination_table"),
-        privilege_source_table=either(*values, i="privilege_source_table"),
+        destination_table_privileges=destination_table_privileges,
+        source_table_privileges=source_table_privileges,
     )
 
 
@@ -108,7 +206,15 @@ def check_replace_partition_with_privileges(self):
 @Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_RBAC("1.0"))
 @Name("rbac")
 def feature(self, node="clickhouse1"):
-    """Check that it is possible to replace partition on a table as a user with given privileges."""
+    """Check that it is possible to replace partition on a table as a user with given privileges.
+
+    Privileges:
+    * None
+    * Select
+    * Insert
+    * Alter
+    * Alter Table
+    """
     self.context.node = self.context.cluster.node(node)
 
     Scenario(run=check_replace_partition_with_privileges)
