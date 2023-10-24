@@ -159,7 +159,7 @@ def user_replace_partition_with_privileges(
         for grant_privilege in source_table_privileges:
             grant_privilege(node=node, name=user_name, on=source_table)
 
-    with And("I save the list of privileges"):
+    with And("I save the list of privileges that I granted on both tables"):
         destination_privileges = get_privileges_as_list_of_strings(
             destination_table_privileges
         )
