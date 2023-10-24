@@ -8,7 +8,7 @@ from helpers.tables import (
 )
 
 
-def get_list_of_privileges_as_string(privileges: list):
+def get_privileges_as_list_of_strings(privileges: list):
     privilege_name = []
     for privilege in privileges:
         privilege_name.append(privilege.__name__)
@@ -129,10 +129,10 @@ def user_replace_partition_with_privileges(
             grant_privilege(node=node, name=user_name, on=source_table)
 
     with And("I save the list of privileges"):
-        destination_privileges = get_list_of_privileges_as_string(
+        destination_privileges = get_privileges_as_list_of_strings(
             destination_table_privileges
         )
-        source_privileges = get_list_of_privileges_as_string(source_table_privileges)
+        source_privileges = get_privileges_as_list_of_strings(source_table_privileges)
 
     with Check(
         f"That replacing partition is possible on the destination table when correct privileges are set",
