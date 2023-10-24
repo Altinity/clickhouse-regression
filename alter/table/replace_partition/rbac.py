@@ -9,11 +9,14 @@ from helpers.tables import (
 
 
 def get_privileges_as_list_of_strings(privileges: list):
-    privilege_name = []
+    """The test check takes a list of privileges to assign to a specific table for a user. This function takes the list
+    of test steps that grant privilege and converts it to the list of privilege names as strings.
+    """
+    privilege_names = []
     for privilege in privileges:
-        privilege_name.append(privilege.__name__)
+        privilege_names.append(privilege.__name__)
 
-    return privilege_name
+    return privilege_names
 
 
 @TestStep(Given)
