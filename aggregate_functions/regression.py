@@ -24,6 +24,7 @@ issue_48917 = (
     "https://github.com/ClickHouse/ClickHouse/issues/48917",
     check_clickhouse_version(">=23.2"),
 )
+issue_55997 = "https://github.com/ClickHouse/ClickHouse/issues/55997"
 
 xfails = {
     "/aggregate functions/singleValueOrNull/Map:": [(Fail, issue_43140)],
@@ -58,6 +59,9 @@ xfails = {
     ],
     "/aggregate functions/quantileTDigestWeighted/datatypes/permutations/:_date_:": [
         (Fail, "DECIMAL_OVERFLOW error that needs to be investigated")
+    ],
+    "/aggregate functions/state/topKWeightedState/datatypes/permutations/*": [
+        (Fail, *issue_55997)
     ],
     # 23.2
     "/aggregate functions/state/singleValueOrNullState/:": [
