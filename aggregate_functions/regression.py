@@ -61,7 +61,7 @@ xfails = {
         (Fail, "DECIMAL_OVERFLOW error that needs to be investigated")
     ],
     "/aggregate functions/state/topKWeightedState/datatypes/permutations/*": [
-        (Fail, *issue_55997)
+        (Fail, issue_55997)
     ],
     # 23.2
     "/aggregate functions/state/singleValueOrNullState/:": [
