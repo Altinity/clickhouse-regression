@@ -2,9 +2,8 @@ from testflows.core import *
 from testflows.asserts import *
 from alter.table.replace_partition.requirements.requirements import *
 from helpers.common import getuid
-from helpers.tables import (
-    create_table_partitioned_by_column,
-    insert_into_table_random_uint64,
+from alter.table.replace_partition.common import (
+    create_two_tables_partitioned_by_column_with_data,
 )
 
 
@@ -16,14 +15,9 @@ def keep_data_on_a_source_table(self):
     destination_table = "destination" + getuid()
 
     with Given("I have two tables with the same structure"):
-        create_table_partitioned_by_column(table_name=source_table)
-        create_table_partitioned_by_column(table_name=destination_table)
-
-    with And("I insert data into both tables"):
-        insert_into_table_random_uint64(
-            table_name=destination_table, number_of_values=10
+        create_two_tables_partitioned_by_column_with_data(
+            destination_table=destination_table, source_table=source_table
         )
-        insert_into_table_random_uint64(table_name=source_table, number_of_values=10)
 
     with Then("I select and store the data from the source table"):
         source_table_data = node.query(f"SELECT * FROM {source_table} ORDER BY i")
