@@ -224,7 +224,7 @@ def materialized_view(self):
 @TestSuite
 def from_clause(self):
     """Check that the ClickHouse outputs an error and does not replace partition when prohibited actions are being
-    used with from clause"""
+    used with from clause."""
     Scenario(run=table_functions)
     Scenario(run=join)
     Scenario(run=subquery)
