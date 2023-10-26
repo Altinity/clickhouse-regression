@@ -594,14 +594,18 @@ version: 1.0
 configuration changes except some special cases.
 
 ##### RQ.SRS-015.S3.Disk.Configuration.Access
-version: 1.0
+version: 1.1
 
 [ClickHouse] SHALL support the `<skip_access_check>` parameter in the `<disks>`
 section of the `<storage_configuration>` section of the config.xml file or the
 storage.xml file in the config.d directory to toggle a runtime check for access
 to the corresponding [S3] disk. If this runtime check fails, [ClickHouse] SHALL
-return an "Access Denied" error in the log files in the folder
-/var/log/clickhouse-server.
+return an "Access Denied" error. The specifics of the error depend on version:
+ - In [Clickhouse] < 22.9 the error message SHALL be `DB::Exception: Access Denied.`
+else `DB::Exception: Message: Access Denied`
+ - In [Clickhouse] >= 23.8 the error SHALL be returned from CREATE TABLE,
+else CREATE TABLE SHALL succeed and the error SHALL be returned from INSERT INTO
+
 
 ##### RQ.SRS-015.S3.Disk.Configuration.Access.Default
 version: 1.0

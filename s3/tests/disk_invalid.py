@@ -115,7 +115,7 @@ def invalid_endpoint(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_015_S3_Disk_Configuration_Access("1.0"))
+@Requirements(RQ_SRS_015_S3_Disk_Configuration_Access("1.1"))
 def access_failed(self):
     """Check that ClickHouse S3 disk can be configured with the
     skip_access_check parameter set to 0 when ClickHouse does not have access
@@ -151,7 +151,7 @@ def access_failed(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_015_S3_Disk_Configuration_Access("1.0"))
+@Requirements(RQ_SRS_015_S3_Disk_Configuration_Access("1.1"))
 def access_failed_skip_check(self):
     """Check that ClickHouse S3 disk can be configured with the
     skip_access_check parameter set to 1 when ClickHouse does not have access
@@ -184,35 +184,52 @@ def access_failed_skip_check(self):
 
     with s3_storage(disks, policies, restart=True):
         try:
-            with Given(
-                f"""I create table using S3 storage policy external,
-                       expecting success because there is no access check to this
-                       disk"""
-            ):
-                node.query(
-                    f"""
-                    CREATE TABLE {name} (
-                        d UInt64
-                    ) ENGINE = MergeTree()
-                    ORDER BY d
-                    SETTINGS storage_policy='external'
-                """
-                )
+            if check_clickhouse_version(">=23.8")(self):
+                with Given(
+                    f"""I create table using S3 storage policy external,
+                        expecting failure because there is no access to the S3 bucket"""
+                ):
+                    node.query(
+                        f"""
+                        CREATE TABLE {name} (
+                            d UInt64
+                        ) ENGINE = MergeTree()
+                        ORDER BY d
+                        SETTINGS storage_policy='external'
+                    """,
+                        message="""DB::Exception: Message: Access Denied""",
+                        exitcode=243,
+                    )
+            else:
+                with Given(
+                    f"""I create table using S3 storage policy external,
+                        expecting success because there is no access check to this
+                        disk"""
+                ):
+                    node.query(
+                        f"""
+                        CREATE TABLE {name} (
+                            d UInt64
+                        ) ENGINE = MergeTree()
+                        ORDER BY d
+                        SETTINGS storage_policy='external'
+                    """
+                    )
 
-            with Then(
-                """I store simple data in the table, expecting failure
-                      because there is no access to the S3 bucket"""
-            ):
-                message = (
-                    """DB::Exception: Access Denied."""
-                    if check_clickhouse_version("<22.9")(self)
-                    else """DB::Exception: Message: Access Denied"""
-                )
-                node.query(
-                    f"INSERT INTO {name} VALUES (427)",
-                    message=message,
-                    exitcode=243,
-                )
+                with Then(
+                    """I store simple data in the table, expecting failure
+                        because there is no access to the S3 bucket"""
+                ):
+                    message = (
+                        """DB::Exception: Access Denied."""
+                        if check_clickhouse_version("<22.9")(self)
+                        else """DB::Exception: Message: Access Denied"""
+                    )
+                    node.query(
+                        f"INSERT INTO {name} VALUES (427)",
+                        message=message,
+                        exitcode=243,
+                    )
 
         finally:
             with Finally("I drop the table"):
