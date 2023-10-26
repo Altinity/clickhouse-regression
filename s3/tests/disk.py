@@ -960,7 +960,7 @@ def syntax(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_015_S3_Disk_Configuration_Access("1.0"))
+@Requirements(RQ_SRS_015_S3_Disk_Configuration_Access("1.1"))
 def access(self):
     """Check that ClickHouse S3 disk can be configured with the
     skip_access_check parameter set to 0 when ClickHouse has access to
@@ -975,7 +975,7 @@ def access(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_015_S3_Disk_Configuration_Access("1.0"))
+@Requirements(RQ_SRS_015_S3_Disk_Configuration_Access("1.1"))
 def access_skip_check(self):
     """Check that ClickHouse S3 disk can be configured with the
     skip_access_check parameter set to 1 when ClickHouse has access to
