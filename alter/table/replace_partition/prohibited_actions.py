@@ -223,6 +223,8 @@ def materialized_view(self):
 
 @TestSuite
 def from_clause(self):
+    """Check that the ClickHouse outputs an error and does not replace partition when prohibited actions are being
+    used with from clause"""
     Scenario(run=table_functions)
     Scenario(run=join)
     Scenario(run=subquery)
@@ -235,7 +237,8 @@ def from_clause(self):
 @Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited("1.0"))
 @Name("prohibited actions")
 def feature(self, node="clickhouse1"):
-    """Check that the ClickHouse doesn't crash when using table functions with replace partition clause."""
+    """Check that the ClickHouse doesn't crash amd outputs an error when doing prohibited actions with replace
+    partition."""
     self.context.node = self.context.cluster.node(node)
 
     Feature(run=from_clause)
