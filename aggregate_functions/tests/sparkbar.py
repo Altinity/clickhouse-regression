@@ -23,7 +23,10 @@ from aggregate_functions.tests.steps import (
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_Sparkbar("1.0"))
 def scenario(self, func="sparkbar({params})", table=None):
     """Check sparkbar aggregate function by using the same tests as for quantileWeighted."""
-    self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=23.2")
+    clickhouse_version = (
+        ">=23.2" if check_clickhouse_version("<23.4")(self) else ">=23.4"
+    )
+    self.context.snapshot_id = get_snapshot_id(clickhouse_version=clickhouse_version)
 
     if table is None:
         table = self.context.table
