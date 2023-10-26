@@ -184,11 +184,16 @@ def inline_check_dec(self, arithmetic_func, expected_result, node=None):
 
     elif arithmetic_func in ["modulo", "moduloOrZero", "gcd", "lcm"]:
         with When(f"I check {arithmetic_func} with toDecimal256"):
-            node.query(
-                f"SELECT {arithmetic_func}(toDecimal256(1,0), toDecimal256(1,0))",
-                exitcode=43,
-                message="Exception:",
-            )
+            if arithmetic_func == "modulo" and check_clickhouse_version(">=23.8")(self):
+                node.query(
+                    f"SELECT {arithmetic_func}(toDecimal256(1,0), toDecimal256(1,0))",
+                )
+            else:
+                node.query(
+                    f"SELECT {arithmetic_func}(toDecimal256(1,0), toDecimal256(1,0))",
+                    exitcode=43,
+                    message="Exception:",
+                )
 
     else:
         with When(f"I check {arithmetic_func} with toDecimal256"):
@@ -226,11 +231,16 @@ def table_check_dec(self, arithmetic_func, expected_result, node=None):
 
     elif arithmetic_func in ["modulo", "moduloOrZero", "gcd", "lcm"]:
         with When(f"I check {arithmetic_func} with toDecimal256"):
-            node.query(
-                f"INSERT INTO {table_name} SELECT {arithmetic_func}(toDecimal256(1,0), toDecimal256(1,0))",
-                exitcode=43,
-                message="Exception:",
-            )
+            if arithmetic_func == "modulo" and check_clickhouse_version(">=23.8")(self):
+                node.query(
+                    f"INSERT INTO {table_name} SELECT {arithmetic_func}(toDecimal256(1,0), toDecimal256(1,0))",
+                )
+            else:
+                node.query(
+                    f"INSERT INTO {table_name} SELECT {arithmetic_func}(toDecimal256(1,0), toDecimal256(1,0))",
+                    exitcode=43,
+                    message="Exception:",
+                )
 
     else:
         with When(f"I insert {arithmetic_func} with toDecimal256 into the table"):
