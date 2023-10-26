@@ -67,6 +67,10 @@
             * 25.1.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Join](#rqsrs-032clickhousealtertablereplacepartitionprohibitedjoin)
         * 25.1.5 [Replace Partition From Tables That Do Not Have Partitions](#replace-partition-from-tables-that-do-not-have-partitions)
             * 25.1.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.IncorrectTableEngines](#rqsrs-032clickhousealtertablereplacepartitionprohibitedincorrecttableengines)
+        * 25.1.6 [View](#view)
+            * 25.1.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.View.Normal](#rqsrs-032clickhousealtertablereplacepartitionprohibitedviewnormal)
+        * 25.1.7 [Materialized View](#materialized-view)
+            * 25.1.7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.View.Materialized](#rqsrs-032clickhousealtertablereplacepartitionprohibitedviewmaterialized)
     * 25.2 [Using Order By and Partition By](#using-order-by-and-partition-by)
         * 25.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition](#rqsrs-032clickhousealtertablereplacepartitionprohibitedorderandpartition)
 * 26 [Replacing Partitions During Ongoing Merges and Mutations](#replacing-partitions-during-ongoing-merges-and-mutations)
@@ -572,6 +576,20 @@ Table engines that have partitions,
 |       `DistributedTable`       |
 |       `MaterializedView`       |
 
+
+#### View
+
+##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.View.Normal
+version: 1.0
+
+[ClickHouse] SHALL output an error when trying to replace partition on the destination table from the `normal view`.
+
+#### Materialized View
+
+##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.View.Materialized
+version: 1.0
+
+[ClickHouse] SHALL output an error when trying to replace partition on the destination table from the `materialized view`.
 
 ### Using Order By and Partition By
 
