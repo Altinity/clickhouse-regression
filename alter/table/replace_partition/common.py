@@ -40,7 +40,7 @@ def create_two_tables_partitioned_by_column_with_data(
 
 @TestStep(Given)
 def create_merge_tree_and_memory_tables(self, merge_tree_table, memory_table):
-    """Creating two tables, one is a MergeTree table partitioned by a column and the other is a Memory table"""
+    """Creating two tables, one is a MergeTree table partitioned by a column and the other is a Memory table."""
 
     with By(
         "I create a destination table with a MergeTree engine partitioned by a column"
