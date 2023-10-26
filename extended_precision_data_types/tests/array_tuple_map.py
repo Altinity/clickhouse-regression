@@ -191,6 +191,15 @@ def array_func(self, data_type, node=None):
                 exitcode = 0
                 message = ""
 
+            if check_clickhouse_version(">=23.4")(self) and data_type in [
+                "UInt256",
+                "UInt128",
+                "Int256",
+                "Int128",
+            ]:
+                exitcode = 0
+                message = ""
+
             node.query(
                 f"SELECT {func}array({to_data_type(data_type,3)}, {to_data_type(data_type,2)}, {to_data_type(data_type,1)}))",
                 exitcode=exitcode,
@@ -204,6 +213,15 @@ def array_func(self, data_type, node=None):
                 "Decimal256(0)"
             ]:
                 exitcode = 70
+
+            if check_clickhouse_version(">=23.4")(self) and data_type in [
+                "UInt256",
+                "UInt128",
+                "Int256",
+                "Int128",
+            ]:
+                exitcode = 43
+                message = "Exception:"
 
             table(name=table_name, data_type=data_type)
 
