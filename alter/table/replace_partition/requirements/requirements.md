@@ -56,18 +56,19 @@
         * 24.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.Key](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentkey)
     * 24.4 [Tables With Different Storage Policy](#tables-with-different-storage-policy)
         * 24.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.StoragePolicy](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentstoragepolicy)
-* 25 [Prohibited Actions After From Clause](#prohibited-actions-after-from-clause)
-    * 25.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited](#rqsrs-032clickhousealtertablereplacepartitionprohibited)
-    * 25.2 [Using Order By and Partition By](#using-order-by-and-partition-by)
-        * 25.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition](#rqsrs-032clickhousealtertablereplacepartitionprohibitedorderandpartition)
-    * 25.3 [Table Functions](#table-functions)
-        * 25.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.TableFunctions](#rqsrs-032clickhousealtertablereplacepartitionprohibitedtablefunctions)
-    * 25.4 [Subquery](#subquery)
-        * 25.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Subquery](#rqsrs-032clickhousealtertablereplacepartitionprohibitedsubquery)
-    * 25.5 [Join Clause](#join-clause)
-        * 25.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Join](#rqsrs-032clickhousealtertablereplacepartitionprohibitedjoin)
-    * 25.6 [Replace Partition From Tables That Do Not Have Partitions](#replace-partition-from-tables-that-do-not-have-partitions)
-        * 25.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.IncorrectTableEngines](#rqsrs-032clickhousealtertablereplacepartitionprohibitedincorrecttableengines)
+* 25 [Prohibited Actions](#prohibited-actions)
+    * 25.1 [Actions With From Clause](#actions-with-from-clause)
+        * 25.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited](#rqsrs-032clickhousealtertablereplacepartitionprohibited)
+    * 25.2 [Table Functions](#table-functions)
+        * 25.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.TableFunctions](#rqsrs-032clickhousealtertablereplacepartitionprohibitedtablefunctions)
+        * 25.2.2 [Subquery](#subquery)
+            * 25.2.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Subquery](#rqsrs-032clickhousealtertablereplacepartitionprohibitedsubquery)
+        * 25.2.3 [Join Clause](#join-clause)
+            * 25.2.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Join](#rqsrs-032clickhousealtertablereplacepartitionprohibitedjoin)
+        * 25.2.4 [Replace Partition From Tables That Do Not Have Partitions](#replace-partition-from-tables-that-do-not-have-partitions)
+            * 25.2.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.IncorrectTableEngines](#rqsrs-032clickhousealtertablereplacepartitionprohibitedincorrecttableengines)
+    * 25.3 [Using Order By and Partition By](#using-order-by-and-partition-by)
+        * 25.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition](#rqsrs-032clickhousealtertablereplacepartitionprohibitedorderandpartition)
 * 26 [Replacing Partitions During Ongoing Merges and Mutations](#replacing-partitions-during-ongoing-merges-and-mutations)
     * 26.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent](#rqsrs-032clickhousealtertablereplacepartitionconcurrent)
     * 26.2 [Staring New Merges With Ongoing Replace Partition](#staring-new-merges-with-ongoing-replace-partition)
@@ -477,19 +478,14 @@ version: 1.0
 [ClickHouse] SHALL not support the usage of `REPLACE PARTITION` when tables have different storage
 policy.
 
-## Prohibited Actions After From Clause
+## Prohibited Actions
 
-### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited
+### Actions With From Clause
+
+#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited
 version: 1.0
 
-[ClickHouse] SHALL only support replacing partition from the table that has partitions. Trying to replace partition from anything else SHALL output an exception. 
-
-### Using Order By and Partition By
-
-#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition
-version: 1.0
-
-[ClickHouse] SHALL output an error when executing `ORDER BY` or `PARTITION BY` with the `REPLACE PARTITION` clause.
+[ClickHouse] SHALL only support replacing partition from the table. Trying to replace partition from anything other than table SHALL output an error. 
 
 ### Table Functions
 
@@ -541,23 +537,23 @@ The list of possible table functions,
 | `view`                    |
 
 
-### Subquery
+#### Subquery
 
-#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Subquery
+##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Subquery
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to use subquery after the `FROM` clause to replace partition of a table.
 
-### Join Clause
+#### Join Clause
 
-#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Join
+##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Join
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to use the `JOIN` clause after the `FROM` clause to replace partition of a table.
 
-### Replace Partition From Tables That Do Not Have Partitions
+#### Replace Partition From Tables That Do Not Have Partitions
 
-#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.IncorrectTableEngines
+##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.IncorrectTableEngines
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to replace partition on the destination table from the table that does not have partitions.
@@ -576,6 +572,13 @@ Table engines that have partitions,
 |       `DistributedTable`       |
 |       `MaterializedView`       |
 
+
+### Using Order By and Partition By
+
+#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition
+version: 1.0
+
+[ClickHouse] SHALL output an error when executing `ORDER BY` or `PARTITION BY` with the `REPLACE PARTITION` clause.
 
 ## Replacing Partitions During Ongoing Merges and Mutations
 
