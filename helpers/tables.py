@@ -502,19 +502,30 @@ def create_partitioned_table_with_compact_and_wide_parts(
     )
 
 
-@TestStep
-def create_table_partitioned_by_column(self, table_name, engine="MergeTree"):
+@TestStep(Given)
+def create_table_partitioned_by_column(
+    self,
+    table_name,
+    engine="MergeTree",
+    partition_by="p",
+    columns=None,
+):
     """Create a table that is partitioned by a specific column."""
-    create_table(
-        name=table_name,
-        engine=engine,
-        partition_by="p",
-        order_by="tuple()",
-        columns=[
+
+    if columns is None:
+        columns = [
             Column(name="p", datatype=UInt8()),
             Column(name="i", datatype=UInt64()),
-        ],
-    )
+        ]
+
+    with By(f"Creating a table that is partitioned by a '{partition_by}' column "):
+        create_table(
+            name=table_name,
+            engine=engine,
+            partition_by=partition_by,
+            order_by="tuple()",
+            columns=columns,
+        )
 
 
 @TestStep(Given)

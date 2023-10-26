@@ -54,7 +54,7 @@ def alter_table_privileges(self, node, name, on):
         node.query(f"GRANT ALTER TABLE ON {on} TO {name}")
 
 
-@TestStep(Given)
+@TestStep(When)
 def replace_partition(
     self, destination_table, source_table, user_name, exitcode=0, message=None
 ):
@@ -77,7 +77,7 @@ def replace_partition(
         node.query(query, **params)
 
 
-@TestStep
+@TestStep(Check)
 def check_if_partition_values_on_destination_changed(
     self, source_table, destination_table, user_name, changed=True
 ):
@@ -87,8 +87,8 @@ def check_if_partition_values_on_destination_changed(
     """
     node = self.context.node
 
-    with Given(
-        "I try to replace partition on the destination table as a user with set privileges"
+    with By(
+        "Trying to replace partition on the destination table as a user with set privileges"
     ):
         if changed:
             replace_partition(
@@ -104,7 +104,11 @@ def check_if_partition_values_on_destination_changed(
                 message=f"Exception: {user_name}: Not enough privileges.",
             )
 
-    with By("Checking if the values on the specific partition were replaced or not"):
+    with And(
+        "Checking if the data on the specific partition was replaced or not",
+        description="The data on the destination table should only be replaced if the user has privileges needed"
+        " for that action",
+    ):
         partition_values_source = node.query(f"SELECT i FROM {source_table} ORDER BY i")
         partition_values_destination = node.query(
             f"SELECT i FROM {destination_table} ORDER BY i"
@@ -165,8 +169,8 @@ def user_replace_partition_with_privileges(
         )
         source_privileges = get_privileges_as_list_of_strings(source_table_privileges)
 
-    with Check(
-        f"That replacing partition is possible on the destination table when correct privileges are set",
+    with Then(
+        f"I check that replacing partition is possible on the destination table when correct privileges are set",
         description=f"""
             Destination table privileges: {destination_privileges}
             Source table privileges: {source_privileges}
