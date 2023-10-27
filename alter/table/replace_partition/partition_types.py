@@ -1,7 +1,7 @@
 from testflows.core import *
 from testflows.asserts import *
 from alter.table.replace_partition.requirements.requirements import *
-from helpers.common import getuid
+from helpers.common import getuid, replace_partition
 from helpers.tables import (
     create_partitioned_table_with_compact_and_wide_parts,
 )
@@ -110,8 +110,10 @@ def check_replace_partition(self, destination_table, source_table):
         source_table(table_name=source_table_name)
 
     with Then("I replace partition from the source table into the destination table"):
-        node.query(
-            f"ALTER TABLE {destination_table_name} REPLACE PARTITION 1 FROM {source_table_name}"
+        replace_partition(
+            destination_table=destination_table_name,
+            source_table=source_table_name,
+            partition=1,
         )
 
     with And("I select and save the partition values from the source table"):
