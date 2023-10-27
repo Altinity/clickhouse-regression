@@ -8,17 +8,6 @@ from helpers.tables import (
 )
 
 
-def get_privileges_as_list_of_strings(privileges: list):
-    """The test check takes a list of privileges to assign to a specific table for a user. This function takes the list
-    of test steps that grant privilege and converts it to the list of privilege names as strings.
-    """
-    privilege_names = []
-    for privilege in privileges:
-        privilege_names.append(privilege.__name__)
-
-    return privilege_names
-
-
 @TestStep(Given)
 def no_privileges(self, node, name, on):
     """Grant no privileges to a user."""
@@ -52,6 +41,18 @@ def alter_table_privileges(self, node, name, on):
     """Grant only alter table privileges to a user."""
     with By("Granting the user only alter table privileges"):
         node.query(f"GRANT ALTER TABLE ON {on} TO {name}")
+
+
+@TestStep(When)
+def get_privileges_as_list_of_strings(self, privileges: list):
+    """The test check takes a list of privileges to assign to a specific table for a user. This function takes the list
+    of test steps that grant privilege and converts it to the list of privilege names as strings.
+    """
+    privilege_names = []
+    for privilege in privileges:
+        privilege_names.append(privilege.__name__)
+
+    return privilege_names
 
 
 @TestStep(Check)
@@ -143,9 +144,11 @@ def user_replace_partition_with_privileges(
 
     with And("I save the list of privileges that I granted on both tables"):
         destination_privileges = get_privileges_as_list_of_strings(
-            destination_table_privileges
+            privileges=destination_table_privileges
         )
-        source_privileges = get_privileges_as_list_of_strings(source_table_privileges)
+        source_privileges = get_privileges_as_list_of_strings(
+            privileges=source_table_privileges
+        )
 
     with Then(
         f"I check that replacing partition is possible on the destination table when correct privileges are set",
