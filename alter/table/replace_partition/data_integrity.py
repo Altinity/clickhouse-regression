@@ -1,7 +1,7 @@
 from testflows.core import *
 from testflows.asserts import *
 from alter.table.replace_partition.requirements.requirements import *
-from helpers.common import getuid
+from helpers.common import getuid, replace_partition
 from alter.table.replace_partition.common import (
     create_two_tables_partitioned_by_column_with_data,
 )
@@ -23,8 +23,10 @@ def keep_data_on_a_source_table(self):
         source_table_data = node.query(f"SELECT * FROM {source_table} ORDER BY i")
 
     with And("I replace partition for destination table from the source table"):
-        node.query(
-            f"ALTER TABLE {destination_table} REPLACE PARTITION 1 FROM {source_table}"
+        replace_partition(
+            destination_table=destination_table,
+            source_table=source_table,
+            partition=1,
         )
 
     with Check("I check that the values on the source table are not deleted"):
