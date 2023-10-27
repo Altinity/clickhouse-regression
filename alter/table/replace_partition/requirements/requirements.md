@@ -574,7 +574,7 @@ Table engines that SHALL support replacing partition,
 | `VersionedCollapsingMergeTree` |
 |      `GraphiteMergeTree`       |
 
-Table engines that SHALL NOT support replacing partition,
+Table engines that MAY support replacing partition,
 
 | Unsupported Engines |
 |:-------------------:|

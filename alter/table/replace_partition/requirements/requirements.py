@@ -579,7 +579,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_IncorrectTableEngi
         "| `VersionedCollapsingMergeTree` |\n"
         "|      `GraphiteMergeTree`       |\n"
         "\n"
-        "Table engines that SHALL NOT support replacing partition,\n"
+        "Table engines that MAY support replacing partition,\n"
         "\n"
         "| Unsupported Engines |\n"
         "|:-------------------:|\n"
@@ -2262,7 +2262,7 @@ Table engines that SHALL support replacing partition,
 | `VersionedCollapsingMergeTree` |
 |      `GraphiteMergeTree`       |
 
-Table engines that SHALL NOT support replacing partition,
+Table engines that MAY support replacing partition,
 
 | Unsupported Engines |
 |:-------------------:|
