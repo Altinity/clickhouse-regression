@@ -74,6 +74,7 @@ def partition_with_empty_parts(self, table_name):
             insert_into_table_random_uint64(
                 node=node, table_name=table_name, number_of_values=100
             )
+
         node.query(f"DELETE FROM {table_name} WHERE p == 1;")
 
 
@@ -81,7 +82,7 @@ def partition_with_empty_parts(self, table_name):
 def partition_with_no_parts(self, table_name):
     """Deleting all parts of the partition by dropping the partition."""
     node = self.context.node
-    with Given("I create a MergeTree table partitioned by column p"):
+    with By("creating a MergeTree table partitioned by column p"):
         create_partitioned_table_with_compact_and_wide_parts(table_name=table_name)
 
     with And("inserting data that will create multiple compact and wide parts"):
@@ -92,7 +93,8 @@ def partition_with_no_parts(self, table_name):
             insert_into_table_random_uint64(
                 node=node, table_name=table_name, number_of_values=1
             )
-    with Then("I delete all of parts inside the partition"):
+
+    with Then("I delete all parts inside the partition"):
         node.query(f"ALTER TABLE {table_name} DROP PARTITION 1")
 
 
@@ -126,7 +128,8 @@ def check_replace_partition(self, destination_table, source_table):
             f"SELECT i FROM {destination_table_name} WHERE p = 1 ORDER BY i"
         )
         with By(
-            "Validating that the values of the replaced partition on the destination table are the same as on the source table"
+            "Validating that the data of the replaced partition on the destination table is the same as on the source "
+            "table"
         ):
             assert (
                 partition_values_destination.output.strip()
