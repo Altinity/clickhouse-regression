@@ -1,7 +1,7 @@
 from testflows.core import *
 from testflows.asserts import *
 from alter.table.replace_partition.requirements.requirements import *
-from helpers.common import getuid, create_user
+from helpers.common import getuid, create_user, replace_partition
 from helpers.tables import (
     create_table_partitioned_by_column,
     insert_into_table_random_uint64,
@@ -54,29 +54,6 @@ def alter_table_privileges(self, node, name, on):
         node.query(f"GRANT ALTER TABLE ON {on} TO {name}")
 
 
-@TestStep(When)
-def replace_partition(
-    self, destination_table, source_table, user_name, exitcode=0, message=None
-):
-    """Replace partition 1 of the destination table from the source table. If message is not None, we expect that the
-    usage of replace partition should output an error.
-    """
-    node = self.context.node
-
-    with By("Executing the replace partition command"):
-        query = (
-            f"ALTER TABLE {destination_table} REPLACE PARTITION 1 FROM {source_table}"
-        )
-        params = {"settings": [("user", user_name)]}
-
-        if message is not None:
-            params["message"] = message
-        else:
-            params["exitcode"] = exitcode
-
-        node.query(query, **params)
-
-
 @TestStep(Check)
 def check_if_partition_values_on_destination_changed(
     self, source_table, destination_table, user_name, changed=True
@@ -102,6 +79,7 @@ def check_if_partition_values_on_destination_changed(
                 source_table=source_table,
                 user_name=user_name,
                 message=f"Exception: {user_name}: Not enough privileges.",
+                exitcode=241,
             )
 
     with And(
