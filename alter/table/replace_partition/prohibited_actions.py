@@ -1,7 +1,7 @@
 from testflows.core import *
 from testflows.asserts import *
 from helpers.common import getuid, replace_partition
-from helpers.tables import create_table_partitioned_by_column, create_table
+from helpers.tables import create_table_partitioned_by_column
 from alter.table.replace_partition.requirements.requirements import *
 from alter.table.replace_partition.common import (
     create_two_tables_partitioned_by_column_with_data,
