@@ -9,7 +9,7 @@ from helpers.tables import (
 
 @TestStep(Given)
 def insert_into_table_random_uint64(self, node, table_name, number_of_values):
-    with By("Inserting random values into a column with uint64 datatype"):
+    with By("Inserting random data into a column with uint64 datatype"):
         for i in range(10):
             node.query(
                 f"INSERT INTO {table_name} (p, i) SELECT {i}, rand64() FROM numbers({number_of_values})"
@@ -118,7 +118,7 @@ def check_replace_partition(self, destination_table, source_table):
             partition=1,
         )
 
-    with And("I select and save the partition values from the source table"):
+    with And("I select and save the partition data from the source table"):
         partition_values_source = node.query(
             f"SELECT i FROM {source_table_name} WHERE p = 1 ORDER BY i"
         )
