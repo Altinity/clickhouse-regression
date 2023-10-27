@@ -45,8 +45,10 @@ def alter_table_privileges(self, node, name, on):
 
 @TestStep(When)
 def get_privileges_as_list_of_strings(self, privileges: list):
-    """The test check takes a list of privileges to assign to a specific table for a user. This function takes the list
-    of test steps that grant privilege and converts it to the list of privilege names as strings.
+    """The test check takes a list of privileges to assign to a specific table for a user.
+
+    This test step takes the list of test steps that grant privilege and converts it to the list of privilege names as
+    strings.
     """
     privilege_names = []
     for privilege in privileges:
