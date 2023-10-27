@@ -1,6 +1,6 @@
 from testflows.core import *
 from testflows.asserts import *
-from helpers.common import getuid
+from helpers.common import getuid, replace_partition
 from helpers.tables import create_table_partitioned_by_column, create_table
 from alter.table.replace_partition.requirements.requirements import *
 from alter.table.replace_partition.common import (
@@ -36,10 +36,12 @@ def table_functions(self):
     with Check(
         "I check that the usage of table function after from clause outputs an expected error"
     ):
-        node.query(
-            f"ALTER TABLE {destination_table} REPLACE PARTITION 2 FROM file('file.parquet')",
-            exitcode=exitcode,
+        replace_partition(
+            destination_table=destination_table,
+            source_table="file('file.parquet')",
+            partition=2,
             message=message,
+            exitcode=exitcode,
         )
 
 
@@ -62,10 +64,12 @@ def join(self):
     with Check(
         "I check that the usage of join after from clause outputs an expected error"
     ):
-        node.query(
-            f"ALTER TABLE {destination_table} REPLACE PARTITION 2 FROM JOIN table_2 ON table_1.p",
-            exitcode=exitcode,
+        replace_partition(
+            destination_table=destination_table,
+            source_table="JOIN table_2 ON table_1.p",
+            partition=2,
             message=message,
+            exitcode=exitcode,
         )
 
 
@@ -88,10 +92,12 @@ def subquery(self):
     with Check(
         "I check that the usage of subquery after from clause outputs an expected error"
     ):
-        node.query(
-            f"ALTER TABLE {destination_table} REPLACE PARTITION 2 FROM (SELECT 1)",
-            exitcode=exitcode,
+        replace_partition(
+            destination_table=destination_table,
+            source_table="(SELECT 1)",
+            partition=2,
             message=message,
+            exitcode=exitcode,
         )
 
 
@@ -118,10 +124,12 @@ def order_by_partition_by(self):
     with Check(
         "I check that the usage of subquery after from clause outputs an expected error"
     ):
-        node.query(
-            f"ALTER TABLE {destination_table} REPLACE PARTITION 2 FROM {source_table} ORDER BY p PARTITION BY p",
-            exitcode=exitcode,
+        replace_partition(
+            destination_table=destination_table,
+            source_table="ORDER BY p PARTITION BY p",
+            partition=2,
             message=message,
+            exitcode=exitcode,
         )
 
 
@@ -146,10 +154,12 @@ def non_mergetree_table(self):
     with Check(
         "That it is not possible to replace a partition on a mergetree table from a memory table"
     ):
-        node.query(
-            f"ALTER TABLE {destination_table} REPLACE PARTITION 2 FROM {source_table}",
-            exitcode=exitcode,
+        replace_partition(
+            destination_table=destination_table,
+            source_table=source_table,
+            partition=2,
             message=message,
+            exitcode=exitcode,
         )
 
     with But("Check that partition was not replaced on the destination table"):
@@ -182,10 +192,11 @@ def view(self):
     with Check(
         "I check that replacing partition on the destination table from the normal view outputs an error"
     ):
-        node.query(
-            f"ALTER TABLE {destination_table} REPLACE PARTITION 1 FROM {view_name}",
-            exitcode=exitcode,
+        replace_partition(
+            destination_table=destination_table,
+            source_table=view_name,
             message=message,
+            exitcode=exitcode,
         )
 
 
@@ -214,10 +225,11 @@ def materialized_view(self):
     with Check(
         "I check that replacing partition on the destination table from the normal view outputs an error"
     ):
-        node.query(
-            f"ALTER TABLE {destination_table} REPLACE PARTITION 1 FROM {view_name}",
-            exitcode=exitcode,
+        replace_partition(
+            destination_table=destination_table,
+            source_table=view_name,
             message=message,
+            exitcode=exitcode,
         )
 
 
