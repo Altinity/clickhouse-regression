@@ -595,6 +595,38 @@ def create_user(self, name, node=None):
             node.query(f"DROP USER IF EXISTS {name}")
 
 
+@TestStep(When)
+def replace_partition(
+    self,
+    destination_table,
+    source_table,
+    partition=1,
+    exitcode=0,
+    user_name=None,
+    message=None,
+    node=None,
+):
+    """Replace partition of the destination table from the source table. If message is not None, we expect that the
+    usage of replace partition should output an error.
+    """
+    if node is None:
+        node = self.context.node
+
+    params = {}
+
+    with By("Executing the replace partition command"):
+        query = f"ALTER TABLE {destination_table} REPLACE PARTITION {partition} FROM {source_table}"
+
+        if user_name is not None:
+            params["settings"] = [("user", user_name)]
+        if message is not None:
+            params["message"] = message
+        if exitcode is not None:
+            params["exitcode"] = exitcode
+
+        node.query(query, **params)
+
+
 @TestStep(Given)
 def set_envs_on_node(self, envs, node=None):
     """Set environment variables on node.
