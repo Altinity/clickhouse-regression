@@ -560,11 +560,11 @@ version: 1.0
 ##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.IncorrectTableEngines
 version: 1.0
 
-[ClickHouse] SHALL output an error when trying to replace partition on the destination table from the table that does not have partitions.
+[ClickHouse] SHALL output an error when trying to replace partition on the destination table from the source table with unsupported engine.
 
-Table engines that have partitions,
+Table engines that SHALL support replacing partition,
 
-|            Engines             |
+|       Supported Engines        |
 |:------------------------------:|
 |          `MergeTree`           |
 |     `ReplicatedMergeTree`      |
@@ -573,8 +573,13 @@ Table engines that have partitions,
 |     `CollapsingMergeTree`      |
 | `VersionedCollapsingMergeTree` |
 |      `GraphiteMergeTree`       |
-|       `DistributedTable`       |
-|       `MaterializedView`       |
+
+Table engines that SHALL NOT support replacing partition,
+
+| Unsupported Engines |
+|:-------------------:|
+| `DistributedTable`  |
+| `MaterializedView`  |
 
 
 #### View
@@ -582,14 +587,14 @@ Table engines that have partitions,
 ##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.View.Normal
 version: 1.0
 
-[ClickHouse] SHALL output an error when trying to replace partition on the destination table from the `normal view`.
+[ClickHouse] SHALL output an error when trying to replace partition on the destination table from the `Normal View`.
 
 #### Materialized View
 
 ##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.View.Materialized
 version: 1.0
 
-[ClickHouse] SHALL output an error when trying to replace partition on the destination table from the `materialized view`.
+[ClickHouse] SHALL output an error when trying to replace partition on the destination table from the `Materialized View`.
 
 ### Using Order By and Partition By
 
@@ -597,6 +602,12 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL output an error when executing `ORDER BY` or `PARTITION BY` with the `REPLACE PARTITION` clause.
+
+For example,
+
+```sql
+ALTER TABLE table2 REPLACE PARTITION 1 FROM table1 ORDER BY column1 PARTITION BY column1
+```
 
 ## Replacing Partitions During Ongoing Merges and Mutations
 

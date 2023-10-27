@@ -565,11 +565,11 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_IncorrectTableEngi
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL output an error when trying to replace partition on the destination table from the table that does not have partitions.\n"
+        "[ClickHouse] SHALL output an error when trying to replace partition on the destination table from the source table with unsupported engine.\n"
         "\n"
-        "Table engines that have partitions,\n"
+        "Table engines that SHALL support replacing partition,\n"
         "\n"
-        "|            Engines             |\n"
+        "|       Supported Engines        |\n"
         "|:------------------------------:|\n"
         "|          `MergeTree`           |\n"
         "|     `ReplicatedMergeTree`      |\n"
@@ -578,8 +578,13 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_IncorrectTableEngi
         "|     `CollapsingMergeTree`      |\n"
         "| `VersionedCollapsingMergeTree` |\n"
         "|      `GraphiteMergeTree`       |\n"
-        "|       `DistributedTable`       |\n"
-        "|       `MaterializedView`       |\n"
+        "\n"
+        "Table engines that SHALL NOT support replacing partition,\n"
+        "\n"
+        "| Unsupported Engines |\n"
+        "|:-------------------:|\n"
+        "| `DistributedTable`  |\n"
+        "| `MaterializedView`  |\n"
         "\n"
         "\n"
     ),
@@ -596,7 +601,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_View_Normal = Requ
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL output an error when trying to replace partition on the destination table from the `normal view`.\n"
+        "[ClickHouse] SHALL output an error when trying to replace partition on the destination table from the `Normal View`.\n"
         "\n"
     ),
     link=None,
@@ -612,7 +617,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_View_Materialized 
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL output an error when trying to replace partition on the destination table from the `materialized view`.\n"
+        "[ClickHouse] SHALL output an error when trying to replace partition on the destination table from the `Materialized View`.\n"
         "\n"
     ),
     link=None,
@@ -629,6 +634,12 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_OrderAndPartition 
     uid=None,
     description=(
         "[ClickHouse] SHALL output an error when executing `ORDER BY` or `PARTITION BY` with the `REPLACE PARTITION` clause.\n"
+        "\n"
+        "For example,\n"
+        "\n"
+        "```sql\n"
+        "ALTER TABLE table2 REPLACE PARTITION 1 FROM table1 ORDER BY column1 PARTITION BY column1\n"
+        "```\n"
         "\n"
     ),
     link=None,
@@ -2237,11 +2248,11 @@ version: 1.0
 ##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.IncorrectTableEngines
 version: 1.0
 
-[ClickHouse] SHALL output an error when trying to replace partition on the destination table from the table that does not have partitions.
+[ClickHouse] SHALL output an error when trying to replace partition on the destination table from the source table with unsupported engine.
 
-Table engines that have partitions,
+Table engines that SHALL support replacing partition,
 
-|            Engines             |
+|       Supported Engines        |
 |:------------------------------:|
 |          `MergeTree`           |
 |     `ReplicatedMergeTree`      |
@@ -2250,8 +2261,13 @@ Table engines that have partitions,
 |     `CollapsingMergeTree`      |
 | `VersionedCollapsingMergeTree` |
 |      `GraphiteMergeTree`       |
-|       `DistributedTable`       |
-|       `MaterializedView`       |
+
+Table engines that SHALL NOT support replacing partition,
+
+| Unsupported Engines |
+|:-------------------:|
+| `DistributedTable`  |
+| `MaterializedView`  |
 
 
 #### View
@@ -2259,14 +2275,14 @@ Table engines that have partitions,
 ##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.View.Normal
 version: 1.0
 
-[ClickHouse] SHALL output an error when trying to replace partition on the destination table from the `normal view`.
+[ClickHouse] SHALL output an error when trying to replace partition on the destination table from the `Normal View`.
 
 #### Materialized View
 
 ##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.View.Materialized
 version: 1.0
 
-[ClickHouse] SHALL output an error when trying to replace partition on the destination table from the `materialized view`.
+[ClickHouse] SHALL output an error when trying to replace partition on the destination table from the `Materialized View`.
 
 ### Using Order By and Partition By
 
@@ -2274,6 +2290,12 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL output an error when executing `ORDER BY` or `PARTITION BY` with the `REPLACE PARTITION` clause.
+
+For example,
+
+```sql
+ALTER TABLE table2 REPLACE PARTITION 1 FROM table1 ORDER BY column1 PARTITION BY column1
+```
 
 ## Replacing Partitions During Ongoing Merges and Mutations
 
