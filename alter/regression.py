@@ -15,16 +15,10 @@ from helpers.datatypes import *
 
 
 xfails = {
-    "/alter/replace partition/between temporary and regular tables": [
+    "/alter/replace partition/temporary table/": [
         (
             Fail,
-            "Temporary table gets deleted before we can insert data, needs to be fixed in tests",
-        )
-    ],
-    "/alter/replace partition/between temporary tables": [
-        (
-            Fail,
-            "Temporary table gets deleted before we can insert data, needs to be fixed in tests",
+            "Not implemented yet",
         )
     ],
 }
