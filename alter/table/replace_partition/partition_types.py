@@ -24,7 +24,9 @@ def table_with_compact_parts(self, table_name):
     with By("creating a partitioned table"):
         create_partitioned_table_with_compact_and_wide_parts(table_name=table_name)
 
-    with And("inserting data that will create multiple compact parts"):
+    with And(
+        f"inserting data into {table_name} that will create multiple compact parts"
+    ):
         for _ in range(3):
             insert_into_table_random_uint64(
                 node=node, table_name=table_name, number_of_values=1
@@ -38,7 +40,7 @@ def table_with_wide_parts(self, table_name):
     with By("creating a partitioned table"):
         create_partitioned_table_with_compact_and_wide_parts(table_name=table_name)
 
-    with And("inserting data that will create multiple wide parts"):
+    with And(f"inserting data into {table_name} that will create multiple wide parts"):
         for _ in range(3):
             insert_into_table_random_uint64(
                 node=node, table_name=table_name, number_of_values=100
@@ -53,7 +55,9 @@ def table_with_compact_and_wide_parts(self, table_name):
     with By("creating a partitioned table"):
         create_partitioned_table_with_compact_and_wide_parts(table_name=table_name)
 
-    with And("inserting data that will create multiple compact and wide parts"):
+    with And(
+        f"inserting data into {table_name} that will create multiple compact and wide parts"
+    ):
         for _ in range(3):
             insert_into_table_random_uint64(
                 node=node, table_name=table_name, number_of_values=100
@@ -67,14 +71,18 @@ def table_with_compact_and_wide_parts(self, table_name):
 def partition_with_empty_parts(self, table_name):
     """Create a table that has a partition with empty parts."""
     node = self.context.node
-    with Given("I create a MergeTree table partitioned by column p"):
+    with By("creating a partitioned table"):
         create_partitioned_table_with_compact_and_wide_parts(table_name=table_name)
 
+    with And(
+        f"inserting data into {table_name} that will create multiple compact and wide parts"
+    ):
         for _ in range(3):
             insert_into_table_random_uint64(
                 node=node, table_name=table_name, number_of_values=100
             )
 
+    with And("deleting all data from evey part in the partition"):
         node.query(f"DELETE FROM {table_name} WHERE p == 1;")
 
 
@@ -94,7 +102,7 @@ def partition_with_no_parts(self, table_name):
                 node=node, table_name=table_name, number_of_values=1
             )
 
-    with Then("I delete all parts inside the partition"):
+    with And("deleting all parts inside the partition"):
         node.query(f"ALTER TABLE {table_name} DROP PARTITION 1")
 
 
