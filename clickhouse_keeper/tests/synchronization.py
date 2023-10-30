@@ -87,10 +87,17 @@ def drop(self):
         join()
 
     with Then("I check the table doesn't exist."):
+
+        message = (
+            "DB::Exception: Table default.{table_name} doesn't exist."
+            if check_clickhouse_version("<23.8")(self)
+            else "DB::Exception: Table default.{table_name} does not exist."
+        )
+
         self.context.cluster.node("clickhouse2").query(
             f"insert into {table_name}(id, partition) values (1,1)",
             exitcode=60,
-            message=f"DB::Exception: Table default.{table_name} doesn't exist.",
+            message=message.format(table_name=table_name),
         )
 
 
@@ -250,10 +257,16 @@ def detach(self):
         )
 
     with Then("I check that table detached on all shards"):
+        message = (
+            "DB::Exception: Table default.{table_name} doesn't exist."
+            if check_clickhouse_version("<23.8")(self)
+            else "DB::Exception: Table default.{table_name} does not exist."
+        )
+
         for name in self.context.cluster.nodes["clickhouse"][:9]:
             retry(self.context.cluster.node(name).query, timeout=100, delay=1)(
                 f"select * from {table_name}",
-                message=f"DB::Exception: Table default.{table_name} doesn't exist.",
+                message=message.format(table_name=table_name),
                 exitcode=60,
                 steps=False,
             )
