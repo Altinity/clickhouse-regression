@@ -9,42 +9,41 @@ from helpers.tables import (
 
 
 @TestStep(Given)
-def no_privileges(self, node, name, on):
+def no_privileges(self, node, user, table):
     """Grant no privileges to a user."""
-    with By("Granting the user no privileges"):
-        node.query(f"GRANT NONE ON {on} TO {name}")
+    with By(f"granting the user no privileges on the {table} table"):
+        node.query(f"GRANT NONE ON {table} TO {user}")
 
 
 @TestStep(Given)
-def select_privileges(self, node, name, on):
+def select_privileges(self, node, user, table):
     """Grant only select privileges to a user."""
-    with By("Granting the user only select privileges"):
-        node.query(f"GRANT SELECT ON {on} TO {name}")
+    with By(f"granting the user only select privileges on the {table} table"):
+        node.query(f"GRANT SELECT ON {table} TO {user}")
 
 
 @TestStep(Given)
-def insert_privileges(self, node, name, on):
+def insert_privileges(self, node, user, table):
     """Grant only insert privileges to a user."""
-    with By("Granting the user only insert privileges"):
-        node.query(f"GRANT INSERT ON {on} TO {name}")
+    with By(f"granting the user only insert privileges on the {table} table"):
+        node.query(f"GRANT INSERT ON {table} TO {user}")
 
 
 @TestStep(Given)
-def alter_privileges(self, node, name, on):
+def alter_privileges(self, node, user, table):
     """Grant only alter privileges to a user."""
-    with By("Granting the user only alter privileges"):
-        node.query(f"GRANT ALTER ON {on} TO {name}")
+    with By(f"granting the user only alter privileges on the {table} table"):
+        node.query(f"GRANT ALTER ON {table} TO {user}")
 
 
 @TestStep(Given)
-def alter_table_privileges(self, node, name, on):
+def alter_table_privileges(self, node, user, table):
     """Grant only alter table privileges to a user."""
-    with By("Granting the user only alter table privileges"):
-        node.query(f"GRANT ALTER TABLE ON {on} TO {name}")
+    with By(f"granting the user only alter table privileges on the {table} table"):
+        node.query(f"GRANT ALTER TABLE ON {table} TO {user}")
 
 
-@TestStep(When)
-def get_privileges_as_list_of_strings(self, privileges: list):
+def get_privileges_as_list_of_strings(privileges: list):
     """The test check takes a list of privileges to assign to a specific table for a user.
 
     This test step takes the list of test steps that grant privilege and converts it to the list of privilege names as
@@ -68,7 +67,7 @@ def check_if_partition_values_on_destination_changed(
     node = self.context.node
 
     with By(
-        "Trying to replace partition on the destination table as a user with set privileges"
+        "trying to replace partition on the destination table as a user with set privileges"
     ):
         if changed:
             replace_partition(
@@ -85,11 +84,7 @@ def check_if_partition_values_on_destination_changed(
                 exitcode=241,
             )
 
-    with And(
-        "Checking if the data on the specific partition was replaced or not",
-        description="The data on the destination table should only be replaced if the user has privileges needed"
-        " for that action",
-    ):
+    with And("checking if the data on the specific partition was replaced or not"):
         partition_values_source = node.query(f"SELECT i FROM {source_table} ORDER BY i")
         partition_values_destination = node.query(
             f"SELECT i FROM {destination_table} ORDER BY i"
@@ -121,7 +116,16 @@ def user_replace_partition_with_privileges(
     source_table = f"source_{getuid()}"
 
     with Given(
-        "I create a destination table and a source table that are partitioned by the same column"
+        "I create a destination table and a source table that are partitioned by the same column",
+        description=f"""
+        Privileges:
+        Destination table: {get_privileges_as_list_of_strings(
+            privileges=destination_table_privileges
+        )}
+        Source table: {get_privileges_as_list_of_strings(
+            privileges=source_table_privileges
+        )}
+        """,
     ):
         create_table_partitioned_by_column(table_name=source_table)
         create_table_partitioned_by_column(table_name=destination_table)
@@ -139,12 +143,14 @@ def user_replace_partition_with_privileges(
         "I grant specific privileges for destination table and source table to a created user"
     ):
         for grant_privilege in destination_table_privileges:
-            grant_privilege(node=node, name=user_name, on=destination_table)
+            grant_privilege(node=node, user=user_name, table=destination_table)
 
         for grant_privilege in source_table_privileges:
-            grant_privilege(node=node, name=user_name, on=source_table)
+            grant_privilege(node=node, user=user_name, table=source_table)
 
-    with And("I save the list of privileges that I granted on both tables"):
+    with And(
+        "I determine the privileges needed to replace partition on the destination table"
+    ):
         destination_privileges = get_privileges_as_list_of_strings(
             privileges=destination_table_privileges
         )
@@ -152,13 +158,6 @@ def user_replace_partition_with_privileges(
             privileges=source_table_privileges
         )
 
-    with Then(
-        f"I check that replacing partition is possible on the destination table when correct privileges are set",
-        description=f"""
-            Destination table privileges: {destination_privileges}
-            Source table privileges: {source_privileges}
-            """,
-    ):
         if ("select_privileges" in source_privileges) and (
             (
                 "alter_privileges" in destination_privileges
@@ -169,24 +168,31 @@ def user_replace_partition_with_privileges(
                 and "insert_privileges" in destination_privileges
             )
         ):
-            check_if_partition_values_on_destination_changed(
-                destination_table=destination_table,
-                source_table=source_table,
-                user_name=user_name,
-            )
+            with Then(
+                f"I check that replacing partition is possible on the destination table when the user has enough privileges"
+            ):
+                check_if_partition_values_on_destination_changed(
+                    destination_table=destination_table,
+                    source_table=source_table,
+                    user_name=user_name,
+                )
         else:
-            check_if_partition_values_on_destination_changed(
-                destination_table=destination_table,
-                source_table=source_table,
-                user_name=user_name,
-                changed=False,
-            )
+            with Then(
+                f"I check that replacing partition on the destination table outputs an error when the user does not "
+                f"have enough privileges",
+            ):
+                check_if_partition_values_on_destination_changed(
+                    destination_table=destination_table,
+                    source_table=source_table,
+                    user_name=user_name,
+                    changed=False,
+                )
 
 
 @TestSketch(Scenario)
 @Flags(TE)
 def check_replace_partition_with_privileges(self):
-    """Run the test check with different privilege combinations."""
+    """Check replace partition with different combination of privileges on source and destination tables."""
     values = {
         no_privileges,
         select_privileges,
