@@ -8,7 +8,7 @@ from helpers.tables import create_table_partitioned_by_column, create_table, Col
 
 @TestStep(Given)
 def insert_into_table_random_uint64(
-    self, table_name, number_of_values, number_of_partitions=5, node=None
+    self, table_name, number_of_values=3, number_of_partitions=5, node=None
 ):
     """Insert random UInt64 values into a column and create multiple partitions based on the value of number_of_partitions."""
     if node is None:
