@@ -518,7 +518,7 @@ def create_table_partitioned_by_column(
             Column(name="i", datatype=UInt64()),
         ]
 
-    with By(f"Creating a table that is partitioned by a '{partition_by}' column "):
+    with By(f"creating a table that is partitioned by a '{partition_by}' column "):
         create_table(
             name=table_name,
             engine=engine,

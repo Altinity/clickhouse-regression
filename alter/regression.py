@@ -15,7 +15,7 @@ from helpers.datatypes import *
 
 
 xfails = {
-    "/alter/replace partition/temporary table/": [
+    "/alter/replace partition/temporary table/from temporary to temporary table": [
         (
             Fail,
             "Not implemented yet",
