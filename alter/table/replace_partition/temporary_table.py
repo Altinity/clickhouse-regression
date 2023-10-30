@@ -37,8 +37,7 @@ def from_temporary_to_regular(self):
             3. Replace the partition on the destination table from the temporary source table. 
             4. Create a reference table that copies the data from the temporary table, so that when the 
             temporary table is deleted we can assert that the values on the partition of the destination table 
-            were changed.
-                    """,
+            were changed.""",
     ):
         node.query(
             f"""
