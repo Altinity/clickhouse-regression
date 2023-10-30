@@ -22,7 +22,7 @@ def keep_data_on_a_source_table(self):
     with Then("I select and store the data from the source table"):
         source_table_data = node.query(f"SELECT * FROM {source_table} ORDER BY i")
 
-    with And("I replace partition for destination table from the source table"):
+    with And("I replace partition on destination table from the source table"):
         replace_partition(
             destination_table=destination_table,
             source_table=source_table,
