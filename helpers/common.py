@@ -587,8 +587,7 @@ def create_user(self, name, node=None):
         node = self.context.node
 
     try:
-        with Given("I create a user"):
-            node.query(f"CREATE USER OR REPLACE {name}")
+        node.query(f"CREATE USER OR REPLACE {name}")
         yield
     finally:
         with Finally(f"I delete the user {name}"):

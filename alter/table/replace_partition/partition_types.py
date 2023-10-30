@@ -9,7 +9,7 @@ from helpers.tables import (
 
 @TestStep(Given)
 def insert_into_table_random_uint64(self, node, table_name, number_of_values):
-    with By("Inserting random data into a column with uint64 datatype"):
+    with By("inserting random data into a column with uint64 datatype"):
         for i in range(10):
             node.query(
                 f"INSERT INTO {table_name} (p, i) SELECT {i}, rand64() FROM numbers({number_of_values})"
@@ -107,7 +107,14 @@ def check_replace_partition(self, destination_table, source_table):
     destination_table_name = "destination_" + getuid()
     source_table_name = "source_" + getuid()
 
-    with Given("I create two tables that have partitions with specific part types"):
+    with Given(
+        "I create two tables that have partitions with specific part types",
+        description=f"""
+               partition types:
+               destination table: {destination_table.__name__}
+               source table: {source_table.__name__}
+               """,
+    ):
         destination_table(table_name=destination_table_name)
         source_table(table_name=source_table_name)
 
@@ -128,7 +135,7 @@ def check_replace_partition(self, destination_table, source_table):
             f"SELECT i FROM {destination_table_name} WHERE p = 1 ORDER BY i"
         )
         with By(
-            "Validating that the data of the replaced partition on the destination table is the same as on the source "
+            "validating that the data of the replaced partition on the destination table is the same as on the source "
             "table"
         ):
             assert (
