@@ -31,13 +31,13 @@ def from_temporary_to_regular(self):
         description=f"""temporary table gets deleted when the clickhouse session ends, to complete all test steps the 
         actions are preformed with the help of --multiquery."
                     
-                    Actions performed with the temporary table: 
-                        1. Create a temporary table with the same structure as the destination table.
-                        2. Populate the temporary table with the data to create multiple partitions.
-                        3. Replace the partition on the destination table from the temporary source table. 
-                        4. Create a reference table that copies the data from the temporary table, so that when the 
-                        temporary table is deleted we can assert that the values on the partition of the destination table 
-                        were changed.
+        Actions performed with the temporary table: 
+            1. Create a temporary table with the same structure as the destination table.
+            2. Populate the temporary table with the data to create multiple partitions.
+            3. Replace the partition on the destination table from the temporary source table. 
+            4. Create a reference table that copies the data from the temporary table, so that when the 
+            temporary table is deleted we can assert that the values on the partition of the destination table 
+            were changed.
                     """,
     ):
         node.query(
