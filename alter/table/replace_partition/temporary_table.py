@@ -53,7 +53,7 @@ def from_temporary_to_regular(self):
         "I check that the data on the destination table's partition was replaced with the data from the temporary table"
     ):
         with By(
-            "Selecting the data from the reference table which has the same data as the temporary table"
+            "selecting the data from the reference table which has the same data as the temporary table"
         ):
             data_from_temporary = node.query(
                 f"SELECT * FROM {reference_table} WHERE p = 1 ORDER BY i"
