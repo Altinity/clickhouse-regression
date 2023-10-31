@@ -1,11 +1,9 @@
 from testflows.core import *
 from testflows.asserts import *
 from alter.table.replace_partition.requirements.requirements import *
+from alter.table.replace_partition.common import create_partitions_with_random_uint64
 from helpers.common import getuid, create_user, replace_partition
-from helpers.tables import (
-    create_table_partitioned_by_column,
-    insert_into_table_random_uint64,
-)
+from helpers.tables import create_table_partitioned_by_column
 from helpers.rbac import *
 
 
@@ -97,10 +95,12 @@ def user_replace_partition_with_privileges(
         create_table_partitioned_by_column(table_name=destination_table)
 
     with And("I insert data into both tables"):
-        insert_into_table_random_uint64(
+        create_partitions_with_random_uint64(
             table_name=destination_table, number_of_values=10
         )
-        insert_into_table_random_uint64(table_name=source_table, number_of_values=10)
+        create_partitions_with_random_uint64(
+            table_name=source_table, number_of_values=10
+        )
 
     with And("I create a user"):
         create_user(node=node, name=user_name)
