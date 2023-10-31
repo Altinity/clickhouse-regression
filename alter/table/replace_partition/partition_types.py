@@ -5,15 +5,10 @@ from helpers.common import getuid, replace_partition
 from helpers.tables import (
     create_partitioned_table_with_compact_and_wide_parts,
 )
-
-
-@TestStep(Given)
-def insert_into_table_random_uint64(self, node, table_name, number_of_values):
-    with By("inserting random data into a column with uint64 datatype"):
-        for i in range(10):
-            node.query(
-                f"INSERT INTO {table_name} (p, i) SELECT {i}, rand64() FROM numbers({number_of_values})"
-            )
+from alter.table.replace_partition.common import (
+    check_partition_was_replaced,
+    create_partitions_with_random_uint64,
+)
 
 
 @TestStep(Given)
@@ -27,10 +22,9 @@ def table_with_compact_parts(self, table_name):
     with And(
         f"inserting data into {table_name} that will create multiple compact parts"
     ):
-        for _ in range(3):
-            insert_into_table_random_uint64(
-                node=node, table_name=table_name, number_of_values=1
-            )
+        create_partitions_with_random_uint64(
+            node=node, table_name=table_name, number_of_values=1
+        )
 
 
 @TestStep(Given)
@@ -41,10 +35,9 @@ def table_with_wide_parts(self, table_name):
         create_partitioned_table_with_compact_and_wide_parts(table_name=table_name)
 
     with And(f"inserting data into {table_name} that will create multiple wide parts"):
-        for _ in range(3):
-            insert_into_table_random_uint64(
-                node=node, table_name=table_name, number_of_values=100
-            )
+        create_partitions_with_random_uint64(
+            node=node, table_name=table_name, number_of_values=100
+        )
 
 
 @TestStep(Given)
@@ -58,13 +51,12 @@ def table_with_compact_and_wide_parts(self, table_name):
     with And(
         f"inserting data into {table_name} that will create multiple compact and wide parts"
     ):
-        for _ in range(3):
-            insert_into_table_random_uint64(
-                node=node, table_name=table_name, number_of_values=100
-            )
-            insert_into_table_random_uint64(
-                node=node, table_name=table_name, number_of_values=1
-            )
+        create_partitions_with_random_uint64(
+            node=node, table_name=table_name, number_of_values=100
+        )
+        create_partitions_with_random_uint64(
+            node=node, table_name=table_name, number_of_values=1
+        )
 
 
 @TestStep(Given)
@@ -77,10 +69,9 @@ def partition_with_empty_parts(self, table_name):
     with And(
         f"inserting data into {table_name} that will create multiple compact and wide parts"
     ):
-        for _ in range(3):
-            insert_into_table_random_uint64(
-                node=node, table_name=table_name, number_of_values=100
-            )
+        create_partitions_with_random_uint64(
+            node=node, table_name=table_name, number_of_values=100
+        )
 
     with And("deleting all data from evey part in the partition"):
         node.query(f"DELETE FROM {table_name} WHERE p == 1;")
@@ -94,13 +85,12 @@ def partition_with_no_parts(self, table_name):
         create_partitioned_table_with_compact_and_wide_parts(table_name=table_name)
 
     with And("inserting data that will create multiple compact and wide parts"):
-        for _ in range(3):
-            insert_into_table_random_uint64(
-                node=node, table_name=table_name, number_of_values=100
-            )
-            insert_into_table_random_uint64(
-                node=node, table_name=table_name, number_of_values=1
-            )
+        create_partitions_with_random_uint64(
+            node=node, table_name=table_name, number_of_values=100
+        )
+        create_partitions_with_random_uint64(
+            node=node, table_name=table_name, number_of_values=1
+        )
 
     with And("deleting all parts inside the partition"):
         node.query(f"ALTER TABLE {table_name} DROP PARTITION 1")
@@ -126,30 +116,17 @@ def check_replace_partition(self, destination_table, source_table):
         destination_table(table_name=destination_table_name)
         source_table(table_name=source_table_name)
 
-    with Then("I replace partition from the source table into the destination table"):
+    with When("I replace partition from the source table into the destination table"):
         replace_partition(
             destination_table=destination_table_name,
             source_table=source_table_name,
             partition=1,
         )
 
-    with And("I select and save the partition data from the source table"):
-        partition_values_source = node.query(
-            f"SELECT i FROM {source_table_name} WHERE p = 1 ORDER BY i"
+    with Then("I check that the partition on the destination table was replaced"):
+        check_partition_was_replaced(
+            destination_table=destination_table_name, source_table=source_table_name
         )
-
-    with Check("I check that the partition was replaced on the destination table"):
-        partition_values_destination = node.query(
-            f"SELECT i FROM {destination_table_name} WHERE p = 1 ORDER BY i"
-        )
-        with By(
-            "validating that the data of the replaced partition on the destination table is the same as on the source "
-            "table"
-        ):
-            assert (
-                partition_values_destination.output.strip()
-                == partition_values_source.output.strip()
-            ), error()
 
 
 @TestSketch(Scenario)
