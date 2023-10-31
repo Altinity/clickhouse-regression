@@ -7,7 +7,7 @@ from helpers.tables import create_table_partitioned_by_column, create_table, Col
 
 
 @TestStep(Given)
-def insert_into_table_random_uint64(
+def create_partitions_with_random_uint64(
     self, table_name, number_of_values=3, number_of_partitions=5, node=None
 ):
     """Insert random UInt64 values into a column and create multiple partitions based on the value of number_of_partitions."""
@@ -15,7 +15,7 @@ def insert_into_table_random_uint64(
         node = self.context.node
 
     with By("Inserting random values into a column with uint64 datatype"):
-        for i in range(number_of_partitions):
+        for i in range(1, number_of_partitions):
             node.query(
                 f"INSERT INTO {table_name} (p, i) SELECT {i}, rand64() FROM numbers({number_of_values})"
             )
@@ -25,17 +25,19 @@ def insert_into_table_random_uint64(
 def create_two_tables_partitioned_by_column_with_data(
     self, destination_table, source_table
 ):
-    """Creating two tables that are partitioned by the same column and arr filled with random data."""
+    """Creating two tables that are partitioned by the same column and are filled with random data."""
 
-    with By("I create two tables with the same structure"):
+    with By("creating two tables with the same structure"):
         create_table_partitioned_by_column(table_name=source_table)
         create_table_partitioned_by_column(table_name=destination_table)
 
-    with And("I insert data into both tables"):
-        insert_into_table_random_uint64(
+    with And("inserting data into both tables"):
+        create_partitions_with_random_uint64(
             table_name=destination_table, number_of_values=10
         )
-        insert_into_table_random_uint64(table_name=source_table, number_of_values=10)
+        create_partitions_with_random_uint64(
+            table_name=source_table, number_of_values=10
+        )
 
 
 @TestStep(Given)
@@ -57,10 +59,41 @@ def create_merge_tree_and_memory_tables(self, merge_tree_table, memory_table):
             name=memory_table,
         )
 
-        with And("I insert data into both tables"):
-            insert_into_table_random_uint64(
-                table_name=merge_tree_table, number_of_values=10
-            )
-            insert_into_table_random_uint64(
-                table_name=memory_table, number_of_values=10
-            )
+    with And("I insert data into both tables"):
+        create_partitions_with_random_uint64(
+            table_name=merge_tree_table, number_of_values=10
+        )
+        create_partitions_with_random_uint64(
+            table_name=memory_table, number_of_values=10
+        )
+
+
+@TestStep(Then)
+def check_partition_was_replaced(
+    self,
+    destination_table,
+    source_table,
+    node=None,
+    sort_column="p",
+):
+    """Check that the partition on the destination table was replaced from the source table."""
+    if node is None:
+        node = self.context.node
+
+    with By(
+        "selecting and saving the partition data from the source table and destination table"
+    ):
+        partition_values_source = node.query(
+            f"SELECT * FROM {source_table} WHERE {sort_column} = 1 ORDER BY tuple(*)"
+        )
+        partition_values_destination = node.query(
+            f"SELECT * FROM {destination_table} WHERE {sort_column} = 1 ORDER BY tuple(*)"
+        )
+
+    with Check(
+        "I check that the data on the partition of the destination table is the same as the data on the source table partition"
+    ):
+        assert (
+            partition_values_destination.output.strip()
+            == partition_values_source.output.strip()
+        ), error()
