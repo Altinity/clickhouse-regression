@@ -3,7 +3,6 @@ import os
 import sys
 import boto3
 
-
 from testflows.core import *
 
 append_path(sys.path, "..")
@@ -13,19 +12,17 @@ from s3.regression import argparser
 from alter.table.replace_partition.requirements.requirements import *
 from helpers.datatypes import *
 
-
-xfails = {
-    "/alter/replace partition/temporary table/from temporary to temporary table": [
-        (
-            Fail,
-            "Not implemented yet",
-        )
-    ],
-}
+xfails = {}
 
 xflags = {}
 
-ffails = {}
+ffails = {
+    "/alter/replace partition/temporary table": (
+        Skip,
+        "Not implemented before 23.5",
+        check_clickhouse_version("<23.5"),
+    ),
+}
 
 
 @TestModule
