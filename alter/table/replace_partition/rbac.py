@@ -6,41 +6,7 @@ from helpers.tables import (
     create_table_partitioned_by_column,
     insert_into_table_random_uint64,
 )
-
-
-@TestStep(Given)
-def no_privileges(self, node, user, table):
-    """Grant no privileges to a user."""
-    with By(f"granting the user no privileges on the {table} table"):
-        node.query(f"GRANT NONE ON {table} TO {user}")
-
-
-@TestStep(Given)
-def select_privileges(self, node, user, table):
-    """Grant only select privileges to a user."""
-    with By(f"granting the user only select privileges on the {table} table"):
-        node.query(f"GRANT SELECT ON {table} TO {user}")
-
-
-@TestStep(Given)
-def insert_privileges(self, node, user, table):
-    """Grant only insert privileges to a user."""
-    with By(f"granting the user only insert privileges on the {table} table"):
-        node.query(f"GRANT INSERT ON {table} TO {user}")
-
-
-@TestStep(Given)
-def alter_privileges(self, node, user, table):
-    """Grant only alter privileges to a user."""
-    with By(f"granting the user only alter privileges on the {table} table"):
-        node.query(f"GRANT ALTER ON {table} TO {user}")
-
-
-@TestStep(Given)
-def alter_table_privileges(self, node, user, table):
-    """Grant only alter table privileges to a user."""
-    with By(f"granting the user only alter table privileges on the {table} table"):
-        node.query(f"GRANT ALTER TABLE ON {table} TO {user}")
+from helpers.rbac import *
 
 
 def get_privileges_as_list_of_strings(privileges: list):
