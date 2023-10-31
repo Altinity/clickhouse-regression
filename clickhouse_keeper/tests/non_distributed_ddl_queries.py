@@ -75,10 +75,15 @@ def drop(self):
             )
 
         with And("I check that table dropped only on this node"):
+            message = (
+                "DB::Exception: Table default.{table_name} doesn't exist."
+                if check_clickhouse_version("<23.8")(self)
+                else "DB::Exception: Table default.{table_name} does not exist."
+            )
             self.context.cluster.node("clickhouse1").query(
                 f"insert into {table_name}(id, partition) values (1,1)",
                 exitcode=60,
-                message=f"DB::Exception: Table default.{table_name} doesn't exist.",
+                message=message.format(table_name=table_name),
             )
             retry(self.context.cluster.node("clickhouse2").query, timeout=100, delay=1)(
                 "SHOW TABLES", message=f"{table_name}", exitcode=0, steps=False
