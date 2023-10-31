@@ -22,6 +22,7 @@ def snapshot(self):
 
     with Given("I check --zookeeper-snapshots-dir option work correct"):
         message = "Magic deserialized, looks OK"
+        self.context.cluster.node("clickhouse1").cmd(f"mkdir -p /share/{uid}/snapshots")
         self.context.cluster.node("clickhouse1").cmd(
             f"clickhouse keeper-converter"
             f" --zookeeper-logs-dir /share/zookeeper3/datalog/version-2"
@@ -29,6 +30,36 @@ def snapshot(self):
             f"/share/zookeeper3/data/version-2"
             f" --output-dir /share/{uid}/snapshots",
             exitcode=0,
+            message=message,
+        )
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_024_ClickHouse_Keeper_Converter_CommandLineOptions_ZookeeperSnapshotsDir(
+        "1.0"
+    )
+)
+def snapshot_invalid_dir(self):
+    """Check --zookeeper-snapshots-dir option"""
+    with Given("I connect ZooKeeper to cluster"):
+        connect_zookeeper()
+
+    with And("I create simple table"):
+        create_simple_table()
+
+    with Then("Receive UID"):
+        uid = getuid()
+
+    with Given("I check --zookeeper-snapshots-dir option work correct"):
+        message = "No such file or directory"
+        self.context.cluster.node("clickhouse1").cmd(f"mkdir -p /share/{uid}/snapshots")
+        self.context.cluster.node("clickhouse1").cmd(
+            f"clickhouse keeper-converter"
+            f" --zookeeper-logs-dir /share/zookeeper3/datalog/version-2"
+            f" --zookeeper-snapshots-dir /share/notexists"
+            f" --output-dir /share/{uid}/snapshots",
+            exitcode=233,
             message=message,
         )
 
@@ -50,6 +81,7 @@ def logs(self):
 
     with Given("I check --zookeeper-logs-dir option work correct"):
         message = "Header looks OK"
+        self.context.cluster.node("clickhouse1").cmd(f"mkdir -p /share/{uid}/snapshots")
         self.context.cluster.node("clickhouse1").cmd(
             f"clickhouse keeper-converter"
             f" --zookeeper-logs-dir /share/zookeeper3/datalog/version-2"
@@ -57,6 +89,35 @@ def logs(self):
             f"/share/zookeeper3/data/version-2"
             f" --output-dir /share/{uid}/snapshots",
             exitcode=0,
+            message=message,
+        )
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_024_ClickHouse_Keeper_Converter_CommandLineOptions_ZookeeperLogsDir("1.0")
+)
+def logs_invalid_dir(self):
+    """Check --zookeeper-logs-dir option"""
+    with Given("I connect ZooKeeper to cluster"):
+        connect_zookeeper()
+
+    with And("I create simple table"):
+        create_simple_table()
+
+    with Then("Receive UID"):
+        uid = getuid()
+
+    with Given("I check --zookeeper-logs-dir option work correct"):
+        message = "No such file or directory"
+        self.context.cluster.node("clickhouse1").cmd(f"mkdir -p /share/{uid}/snapshots")
+        self.context.cluster.node("clickhouse1").cmd(
+            f"clickhouse keeper-converter"
+            f" --zookeeper-logs-dir /share/notexists"
+            f" --zookeeper-snapshots-dir "
+            f"/share/zookeeper3/data/version-2"
+            f" --output-dir /share/{uid}/snapshots",
+            exitcode=233,
             message=message,
         )
 
@@ -77,7 +138,12 @@ def output_dir(self):
         uid = getuid()
 
     with Given("I check --output-dir option work correct"):
-        message = "Snapshot serialized to path:/share"
+        message = (
+            "Snapshot serialized to path:/share"
+            if check_clickhouse_version("<23.8")(self)
+            else 'Snapshot serialized to path:"/share'
+        )
+        self.context.cluster.node("clickhouse1").cmd(f"mkdir -p /share/{uid}/snapshots")
         self.context.cluster.node("clickhouse1").cmd(
             f"clickhouse keeper-converter"
             f" --zookeeper-logs-dir /share/zookeeper3/datalog/version-2"
@@ -85,6 +151,31 @@ def output_dir(self):
             f"/share/zookeeper3/data/version-2"
             f" --output-dir /share/{uid}/snapshots",
             exitcode=0,
+            message=message,
+        )
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_024_ClickHouse_Keeper_Converter_CommandLineOptions_OutputDir("1.0")
+)
+def output_dir_invalid(self):
+    """Check correct Keeper snapshot creation from ZooKeeper snapshots and logs"""
+    with Given("I connect ZooKeeper to cluster"):
+        connect_zookeeper()
+
+    with And("I create simple table"):
+        create_simple_table()
+
+    with Given("I check --output-dir option work correct"):
+        message = "No such file or directory"
+        self.context.cluster.node("clickhouse1").cmd(
+            f"clickhouse keeper-converter"
+            f" --zookeeper-logs-dir /share/zookeeper3/datalog/version-2"
+            f" --zookeeper-snapshots-dir "
+            f"/share/zookeeper3/data/version-2"
+            f" --output-dir /share/notexists",
+            exitcode=107,
             message=message,
         )
 

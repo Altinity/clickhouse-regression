@@ -75,6 +75,12 @@ xfails = {
     "ports ssl fips/:/:/just disabling TLSv1.1 suite connection should work": [
         (Fail, "needs to be reviewed")
     ],
+    "/clickhouse keeper/cli converter/output dir invalid": [
+        (Fail, "Improper behaviour <23.8", check_clickhouse_version("<23.8"))
+    ],
+    "/clickhouse keeper/cli converter/snapshot invalid dir": [
+        (Fail, "Improper behaviour <23.8", check_clickhouse_version("<23.8"))
+    ],
 }
 
 
