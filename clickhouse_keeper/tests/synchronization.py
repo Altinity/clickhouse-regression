@@ -87,7 +87,6 @@ def drop(self):
         join()
 
     with Then("I check the table doesn't exist."):
-
         message = (
             "DB::Exception: Table default.{table_name} doesn't exist."
             if check_clickhouse_version("<23.8")(self)
