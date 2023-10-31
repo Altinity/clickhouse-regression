@@ -529,18 +529,6 @@ def create_table_partitioned_by_column(
 
 
 @TestStep(Given)
-def insert_into_table_random_uint64(self, table_name, number_of_values, node=None):
-    """Insert random UInt64 values into a column."""
-    if node is None:
-        node = self.context.node
-
-    with By("Inserting random values into a column with uint64 datatype"):
-        node.query(
-            f"INSERT INTO {table_name} (p, i) SELECT 1, rand64() FROM numbers({number_of_values})"
-        )
-
-
-@TestStep(Given)
 def attach_table(self, engine, columns, name=None, path=None, drop_sync=False):
     """Attach a table with specified name and engine."""
     if name is None:

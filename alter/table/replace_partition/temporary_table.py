@@ -1,7 +1,7 @@
 from testflows.core import *
 from testflows.asserts import *
 from alter.table.replace_partition.requirements.requirements import *
-from alter.table.replace_partition.common import insert_into_table_random_uint64
+from alter.table.replace_partition.common import create_partitions_with_random_uint64
 from helpers.common import getuid
 from helpers.tables import create_table_partitioned_by_column
 
@@ -21,7 +21,7 @@ def from_temporary_to_regular(self):
         "I have a destination table partitioned by a column and filled with random data"
     ):
         create_table_partitioned_by_column(table_name=destination_table)
-        insert_into_table_random_uint64(table_name=destination_table)
+        create_partitions_with_random_uint64(table_name=destination_table)
 
     with When(
         "I create a temporary table with the same structure and populate it with data that creates multiple partitions",
