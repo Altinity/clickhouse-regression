@@ -158,12 +158,28 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ToTemporaryTable = Requiremen
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support copying the data partition from the temporary table into another temporary table.\n"
+        "[ClickHouse] SHALL support replacing partition from the temporary table into another temporary table.\n"
         "\n"
     ),
     link=None,
     level=3,
     num="10.3.1",
+)
+
+RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_FromRegularTable = Requirement(
+    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.FromRegularTable",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[ClickHouse] SHALL not support replacing partition from the regular table into temporary table.\n"
+        "\n"
+    ),
+    link=None,
+    level=3,
+    num="10.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_IntoOutfile = Requirement(
@@ -1277,6 +1293,12 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
             level=3,
             num="10.3.1",
         ),
+        Heading(name="From Regular Table To Temporary Table", level=2, num="10.4"),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.FromRegularTable",
+            level=3,
+            num="10.4.1",
+        ),
         Heading(
             name="Using Into Outfile Clause With Replace Partition Clause",
             level=1,
@@ -1651,6 +1673,7 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_TemporaryTable,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_FromTemporaryTable,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ToTemporaryTable,
+        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_FromRegularTable,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_IntoOutfile,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Format,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Settings,
@@ -1733,6 +1756,8 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
         * 9.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.FromTemporaryTable](#rqsrs-032clickhousealtertablereplacepartitionfromtemporarytable)
     * 9.3 [From Temporary Table To Temporary Table](#from-temporary-table-to-temporary-table)
         * 9.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ToTemporaryTable](#rqsrs-032clickhousealtertablereplacepartitiontotemporarytable)
+    * 9.4 [From Regular Table To Temporary Table](#from-regular-table-to-temporary-table)
+        * 9.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.FromRegularTable](#rqsrs-032clickhousealtertablereplacepartitionfromregulartable)
 * 10 [Using Into Outfile Clause With Replace Partition Clause](#using-into-outfile-clause-with-replace-partition-clause)
     * 10.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.IntoOutfile](#rqsrs-032clickhousealtertablereplacepartitionintooutfile)
 * 11 [Using The Format Clause With Replace Partition Clause](#using-the-format-clause-with-replace-partition-clause)
@@ -2023,7 +2048,14 @@ ALTER TABLE destinaton REPLACE PARTITION 1 FROM temporary_table;
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ToTemporaryTable
 version: 1.0
 
-[ClickHouse] SHALL support copying the data partition from the temporary table into another temporary table.
+[ClickHouse] SHALL support replacing partition from the temporary table into another temporary table.
+
+### From Regular Table To Temporary Table
+
+#### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.FromRegularTable
+version: 1.0
+
+[ClickHouse] SHALL not support replacing partition from the regular table into temporary table.
 
 ## Using Into Outfile Clause With Replace Partition Clause
 
