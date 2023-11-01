@@ -11,7 +11,6 @@ def clickhouse_client_tty():
         query = input("[clickhouse1] :) ")
 
         if query.lower() in ["exit", "quit"]:
-            print("Exiting...")
             sys.exit(0)
 
         try:
