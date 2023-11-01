@@ -810,21 +810,21 @@ metadata SHALL create identical metadata files which refer to the same object
 keys in S3.
 
 ###### RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Alter
-version: 1.0
+version: 1.1
 
 [ClickHouse] SHALL support modifying replicated tables. If a replicated table
-is modified, the changes SHALL be reproduced on all existing replicas, and
-in [S3] storage.
+is modified, the changes SHALL be reproduced without data loss on all existing 
+replicas, and in [S3] storage.
 
 ###### RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Delete
-version: 1.0
+version: 1.1
 
 [ClickHouse] SHALL support dropping a replicated table with no changes to any
 other replicas of the table. If the table is dropped normally, [ClickHouse]
 SHALL delete only local metadata associated with the replicated table. If the
-table is dropped using the SYNC keyword, [ClickHouse] SHALL delete the local
-metadata and all associated data stored in [S3]. Other replicas will no
-longer be able to access this data.
+table is dropped using the SYNC keyword, [ClickHouse] SHALL immediately delete 
+the local metadata and eventually delete all associated data stored in [S3]. 
+Other replicas will no longer be able to access this data.
 
     ```sql
     DROP TABLE table_name SYNC;
@@ -840,6 +840,11 @@ removed from [S3], data must be dropped using the SYNC keyword.
     ```sql
     DROP TABLE table_name SYNC;
     ```
+
+###### RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DataPreservedAfterMutation
+version: 1.0
+
+[Clickhouse] SHALL propagate mutations to all replicas without data loss.
 
 ###### RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DropReplica
 version: 1.0
