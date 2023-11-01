@@ -728,7 +728,7 @@ def metadata(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Alter("1.0"))
+@Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Alter("1.1"))
 def alter(self):
     """Check that when replicated tables with allow zero copy are altered,
     the changes are reflected on all replicas.
@@ -884,7 +884,7 @@ def alter(self):
 
 @TestScenario
 @Requirements(
-    RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Alter("1.0"),
+    RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Alter("1.1"),
     RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_NoDataDuplication("1.0"),
 )
 def alter_repeat(self):
@@ -1216,7 +1216,7 @@ def insert_multiple_replicas(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Delete("1.0"))
+@Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Delete("1.1"))
 def delete(self):
     """Check that when replicated tables are removed, they are not
     removed from S3 until all replicas are removed.
@@ -1298,7 +1298,7 @@ def delete(self):
                 ), error()
 
             with When("I drop the table on the other node"):
-                nodes[1].query("DROP TABLE IF EXISTS zero_copy_replication no delay")
+                nodes[1].query("DROP TABLE IF EXISTS zero_copy_replication SYNC")
 
             with Then(
                 """The size of the s3 bucket should be very close to the size
@@ -2042,6 +2042,12 @@ def performance_alter(self):
 
 
 @TestScenario
+@Requirements(
+    RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Alter("1.1"),
+    RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_DataPreservedAfterMutation(
+        "1.0"
+    ),
+)
 def lost_data_during_mutation(self):
     """Check that clickhouse correctly updates ref_count when updating metadata across replicas."""
     cluster = self.context.cluster
