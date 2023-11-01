@@ -164,6 +164,7 @@ def insert_ontime_data(self, year, node=None):
     if node is None:
         node = self.context.node
 
+
     if check_clickhouse_version("<23.3")(self):
         node.query(
             f"INSERT INTO ontime SELECT * FROM s3('https://clickhouse-public-datasets.s3.amazonaws.com/ontime/csv_by_year/{year}.csv.gz', CSVWithNames) SETTINGS max_insert_threads = 40;"
@@ -172,6 +173,7 @@ def insert_ontime_data(self, year, node=None):
         node.query(
             f"INSERT INTO ontime SELECT * FROM s3('https://clickhouse-public-datasets.s3.amazonaws.com/ontime/csv_by_year/{year}.csv.gz', CSVWithNames) SETTINGS max_insert_threads = 20;"
         )
+
 
 
 @TestStep(Given)
