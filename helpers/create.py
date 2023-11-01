@@ -1,5 +1,7 @@
 from testflows.core import *
 
+from alter.table.replace_partition.common import create_partitions_with_random_uint64
+
 
 @TestStep(Given)
 def create_table(
@@ -38,6 +40,13 @@ def create_table(
         comment (str, optional): Comment for the table.
         settings (list, optional): query level settings.
         partition_by (str, optional): partition key for the MergeTree tables with partitions.
+
+        Example how to define columns:
+            columns_example = [
+                {"name": "id", "type": "UInt64"},
+                {"name": "name", "type": "String", "null": "NULL", "comment": "'user name'"},
+                {"name": "created_at", "type": "DateTime", "default": "now()"},
+            ]
     """
     node = current().context.node
 
@@ -332,8 +341,124 @@ def create_replicated_merge_tree_table(
     )
 
 
-columns_example = [
-    {"name": "id", "type": "UInt64"},
-    {"name": "name", "type": "String", "null": "NULL", "comment": "'user name'"},
-    {"name": "created_at", "type": "DateTime", "default": "now()"},
-]
+@TestStep(Given)
+def partitioned_merge_tree_table(self, table_name, partition, columns):
+    """Create a MergeTree table partitioned by a specific column."""
+    with By(f"creating a partitioned {table_name} table with a MergeTree engine"):
+        create_merge_tree_table(
+            table_name=table_name, columns=columns, partition_by=partition
+        )
+
+    with And("populating it with the data needed to create multiple partitions"):
+        create_partitions_with_random_uint64(table_name=table_name)
+
+
+@TestStep(Given)
+def partitioned_replicated_merge_tree_table(self, table_name, partition, columns):
+    """Create a ReplicatedMergeTree table partitioned by a specific column."""
+    with By(
+        f"creating a partitioned {table_name} table with a ReplicatedMergeTree engine"
+    ):
+        create_replicated_merge_tree_table(
+            table_name=table_name, columns=columns, partition_by=partition
+        )
+
+    with And("populating it with the data needed to create multiple partitions"):
+        create_partitions_with_random_uint64(table_name=table_name)
+
+
+@TestStep(Given)
+def partitioned_replacing_merge_tree_table(self, table_name, partition, columns):
+    """Create a ReplacingMergeTree table partitioned by a specific column."""
+    with By(
+        f"creating a partitioned {table_name} table with a ReplacingMergeTree engine"
+    ):
+        create_replacing_merge_tree_table(
+            table_name=table_name, columns=columns, partition_by=partition
+        )
+
+    with And("populating it with the data needed to create multiple partitions"):
+        create_partitions_with_random_uint64(table_name=table_name)
+
+
+@TestStep(Given)
+def partitioned_summing_merge_tree_table(self, table_name, partition, columns):
+    """Create a SummingMergeTree table partitioned by a specific column."""
+    with By(
+        f"creating a partitioned {table_name} table with a SummingMergeTree engine"
+    ):
+        create_aggregating_merge_tree_table(
+            table_name=table_name, columns=columns, partition_by=partition
+        )
+
+    with And("populating it with the data needed to create multiple partitions"):
+        create_partitions_with_random_uint64(table_name=table_name)
+
+
+@TestStep(Given)
+def partitioned_collapsing_merge_tree_table(self, table_name, partition, columns):
+    """Create a CollapsingMergeTree table partitioned by a specific column."""
+    with By(
+        f"creating a partitioned {table_name} table with a CollapsingMergeTree engine"
+    ):
+        create_collapsing_merge_tree_table(
+            table_name=table_name, columns=columns, partition_by=partition, sign="p"
+        )
+
+    with And("populating it with the data needed to create multiple partitions"):
+        create_partitions_with_random_uint64(
+            table_name=table_name, number_of_partitions=1
+        )
+
+
+@TestStep(Given)
+def partitioned_versioned_collapsing_merge_tree_table(
+    self, table_name, partition, columns
+):
+    """Create a VersionedCollapsingMergeTree table partitioned by a specific column."""
+    with By(
+        f"creating a partitioned {table_name} table with a VersionedCollapsingMergeTree engine"
+    ):
+        create_versioned_collapsing_merge_tree_table(
+            table_name=table_name,
+            columns=columns,
+            partition_by=partition,
+            sign="p",
+            version="i",
+        )
+
+    with And("populating it with the data needed to create multiple partitions"):
+        create_partitions_with_random_uint64(
+            table_name=table_name, number_of_partitions=1
+        )
+
+
+@TestStep(Given)
+def partitioned_aggregating_merge_tree_table(self, table_name, partition, columns):
+    """Create a AggregatingMergeTree table partitioned by a specific column."""
+    with By(
+        f"creating a partitioned {table_name} table with a AggregatingMergeTree engine"
+    ):
+        create_summing_merge_tree_table(
+            table_name=table_name, columns=columns, partition_by=partition
+        )
+
+    with And("populating it with the data needed to create multiple partitions"):
+        create_partitions_with_random_uint64(table_name=table_name)
+
+
+@TestStep(Given)
+def partitioned_graphite_merge_tree_table(self, table_name, partition, columns):
+    """Create a GraphiteMergeTree table partitioned by a specific column."""
+    with By(
+        f"creating a partitioned {table_name} table with a GraphiteMergeTree engine"
+    ):
+        create_graphite_merge_tree_table(
+            table_name=table_name,
+            columns=columns,
+            partition_by=partition,
+            config="graphite_rollup_example",
+        )
+
+    with And("populating it with the data needed to create multiple partitions"):
+        create_partitions_with_random_uint64(table_name=table_name)
