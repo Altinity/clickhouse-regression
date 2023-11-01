@@ -504,9 +504,11 @@ def not_present_role_added(self, server):
                                     "I add the role and grant the select privilege to it for the table"
                                 ):
                                     node.query(f"CREATE ROLE {roles[0]}")
+                                    debug(node.query(f"SHOW ACCESS").output)
                                     node.query(
                                         f"GRANT SELECT ON {table_name} TO {roles[0]}"
                                     )
+                                    debug(node.query(f"SHOW ACCESS").output)
 
                                 with When("I re-execute select on the table"):
                                     client.app.send(
