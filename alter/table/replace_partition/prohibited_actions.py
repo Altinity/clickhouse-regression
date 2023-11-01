@@ -74,7 +74,9 @@ def join(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Join("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Subquery("1.0")
+)
 def subquery(self):
     """Checking that the usage of subquery does output an expected error and does not crash the ClickHouse."""
     node = self.context.node
@@ -134,7 +136,11 @@ def order_by_partition_by(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_IncorrectTableEngines(
+        "1.0"
+    )
+)
 def non_mergetree_table(self):
     """Checking that it is not possible to replace partition on a destination table from a table that is not a MergeTree table."""
     node = self.context.node
@@ -152,7 +158,7 @@ def non_mergetree_table(self):
         )
 
     with Check(
-        "That it is not possible to replace a partition on a mergetree table from a memory table"
+        "that it is not possible to replace a partition on a MergeTree table from a Memory table"
     ):
         replace_partition(
             destination_table=destination_table,
@@ -162,7 +168,7 @@ def non_mergetree_table(self):
             exitcode=exitcode,
         )
 
-    with But("Check that partition was not replaced on the destination table"):
+    with But("check that partition was not replaced on the destination table"):
         destination_data = node.query(
             f"SELECT * FROM {destination_table} WHERE p = 2 ORDER BY p"
         )

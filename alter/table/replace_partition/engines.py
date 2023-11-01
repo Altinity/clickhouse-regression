@@ -206,9 +206,7 @@ def replace_partition_with_different_engines(self):
 
 @TestFeature
 @Requirements(
-    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_IncorrectTableEngines(
-        "1.0"
-    )
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Supported_Engines("1.0")
 )
 @Name("engines")
 def feature(self, node="clickhouse1"):
