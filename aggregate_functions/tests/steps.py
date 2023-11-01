@@ -68,7 +68,6 @@ aggregate_functions = [
     "maxIntersectionsPosition",
     "maxMappedArrays",
     "meanZTest",
-    "merge",
     "min",
     "minMappedArrays",
     "nonNegativeDerivative",
