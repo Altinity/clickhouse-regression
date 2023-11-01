@@ -602,7 +602,7 @@ version: 1.0
 
 [ClickHouse] SHALL output an error when trying to replace partition on the destination table from the source table with unsupported engine.
 
-Table engines that SHALL support replacing partition,
+Replacing partition SHALL only be supported using the following engines,
 
 |       Supported Engines        |
 |:------------------------------:|
@@ -613,13 +613,6 @@ Table engines that SHALL support replacing partition,
 |     `CollapsingMergeTree`      |
 | `VersionedCollapsingMergeTree` |
 |      `GraphiteMergeTree`       |
-
-Table engines that MAY support replacing partition,
-
-| Unsupported Engines |
-|:-------------------:|
-| `DistributedTable`  |
-| `MaterializedView`  |
 
 
 #### View
