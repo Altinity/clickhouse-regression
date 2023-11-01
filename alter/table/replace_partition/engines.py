@@ -3,14 +3,14 @@ from testflows.asserts import *
 from alter.table.replace_partition.requirements.requirements import *
 from helpers.common import getuid, replace_partition
 from helpers.create import (
-    create_merge_tree_table,
-    create_replacing_merge_tree_table,
-    create_summing_merge_tree_table,
-    create_aggregating_merge_tree_table,
-    create_collapsing_merge_tree_table,
-    create_versioned_collapsing_merge_tree_table,
-    create_graphite_merge_tree_table,
-    create_replicated_merge_tree_table,
+    partitioned_merge_tree_table,
+    partitioned_replacing_merge_tree_table,
+    partitioned_summing_merge_tree_table,
+    partitioned_collapsing_merge_tree_table,
+    partitioned_versioned_collapsing_merge_tree_table,
+    partitioned_graphite_merge_tree_table,
+    partitioned_aggregating_merge_tree_table,
+    partitioned_replicated_merge_tree_table,
 )
 from alter.table.replace_partition.common import (
     create_partitions_with_random_uint64,
@@ -31,127 +31,6 @@ def columns():
     return partition_columns
 
 
-@TestStep(Given)
-def partitioned_merge_tree_table(self, table_name, partition):
-    """Create a MergeTree table partitioned by a specific column."""
-    with By(f"creating a partitioned {table_name} table with a MergeTree engine"):
-        create_merge_tree_table(
-            table_name=table_name, columns=columns(), partition_by=partition
-        )
-
-    with And("populating it with the data needed to create multiple partitions"):
-        create_partitions_with_random_uint64(table_name=table_name)
-
-
-@TestStep(Given)
-def partitioned_replicated_merge_tree_table(self, table_name, partition):
-    """Create a ReplicatedMergeTree table partitioned by a specific column."""
-    with By(
-        f"creating a partitioned {table_name} table with a ReplicatedMergeTree engine"
-    ):
-        create_replicated_merge_tree_table(
-            table_name=table_name, columns=columns(), partition_by=partition
-        )
-
-    with And("populating it with the data needed to create multiple partitions"):
-        create_partitions_with_random_uint64(table_name=table_name)
-
-
-@TestStep(Given)
-def partitioned_replacing_merge_tree_table(self, table_name, partition):
-    """Create a ReplacingMergeTree table partitioned by a specific column."""
-    with By(
-        f"creating a partitioned {table_name} table with a ReplacingMergeTree engine"
-    ):
-        create_replacing_merge_tree_table(
-            table_name=table_name, columns=columns(), partition_by=partition
-        )
-
-    with And("populating it with the data needed to create multiple partitions"):
-        create_partitions_with_random_uint64(table_name=table_name)
-
-
-@TestStep(Given)
-def partitioned_summing_merge_tree_table(self, table_name, partition):
-    """Create a SummingMergeTree table partitioned by a specific column."""
-    with By(
-        f"creating a partitioned {table_name} table with a SummingMergeTree engine"
-    ):
-        create_aggregating_merge_tree_table(
-            table_name=table_name, columns=columns(), partition_by=partition
-        )
-
-    with And("populating it with the data needed to create multiple partitions"):
-        create_partitions_with_random_uint64(table_name=table_name)
-
-
-@TestStep(Given)
-def partitioned_collapsing_merge_tree_table(self, table_name, partition):
-    """Create a CollapsingMergeTree table partitioned by a specific column."""
-    with By(
-        f"creating a partitioned {table_name} table with a CollapsingMergeTree engine"
-    ):
-        create_collapsing_merge_tree_table(
-            table_name=table_name, columns=columns(), partition_by=partition, sign="p"
-        )
-
-    with And("populating it with the data needed to create multiple partitions"):
-        create_partitions_with_random_uint64(
-            table_name=table_name, number_of_partitions=1
-        )
-
-
-@TestStep(Given)
-def partitioned_versioned_collapsing_merge_tree_table(self, table_name, partition):
-    """Create a VersionedCollapsingMergeTree table partitioned by a specific column."""
-    with By(
-        f"creating a partitioned {table_name} table with a VersionedCollapsingMergeTree engine"
-    ):
-        create_versioned_collapsing_merge_tree_table(
-            table_name=table_name,
-            columns=columns(),
-            partition_by=partition,
-            sign="p",
-            version="i",
-        )
-
-    with And("populating it with the data needed to create multiple partitions"):
-        create_partitions_with_random_uint64(
-            table_name=table_name, number_of_partitions=1
-        )
-
-
-@TestStep(Given)
-def partitioned_aggregating_merge_tree_table(self, table_name, partition):
-    """Create a AggregatingMergeTree table partitioned by a specific column."""
-    with By(
-        f"creating a partitioned {table_name} table with a AggregatingMergeTree engine"
-    ):
-        create_summing_merge_tree_table(
-            table_name=table_name, columns=columns(), partition_by=partition
-        )
-
-    with And("populating it with the data needed to create multiple partitions"):
-        create_partitions_with_random_uint64(table_name=table_name)
-
-
-@TestStep(Given)
-def partitioned_graphite_merge_tree_table(self, table_name, partition):
-    """Create a GraphiteMergeTree table partitioned by a specific column."""
-    with By(
-        f"creating a partitioned {table_name} table with a GraphiteMergeTree engine"
-    ):
-        create_graphite_merge_tree_table(
-            table_name=table_name,
-            columns=columns(),
-            partition_by=partition,
-            config="graphite_rollup_example",
-        )
-
-    with And("populating it with the data needed to create multiple partitions"):
-        create_partitions_with_random_uint64(table_name=table_name)
-
-
 @TestCheck
 def check_replace_partition(self, destination_table, source_table):
     """Check that it is possible to use the replace partition command on tables with different table engines."""
@@ -167,8 +46,8 @@ def check_replace_partition(self, destination_table, source_table):
                Source table: {source_table.__name__}
                """,
     ):
-        destination_table(table_name=destination_table_name, partition="p")
-        source_table(table_name=source_table_name, partition="p")
+        destination_table(table_name=destination_table_name, partition="p", columns=columns())
+        source_table(table_name=source_table_name, partition="p", columns=columns())
 
     with When("I replace partition from the source table to the destination table"):
         replace_partition(
