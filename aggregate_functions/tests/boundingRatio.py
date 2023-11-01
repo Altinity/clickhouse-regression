@@ -17,7 +17,7 @@ def datatype(self, func, table, col1_name, col2_name):
 
 
 @TestScenario
-@Name("BoundingRatio")
+@Name("boundingRatio")
 @Requirements(
     RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_BoundingRatio("1.0")
 )
