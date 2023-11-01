@@ -627,7 +627,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_IncorrectTableEngi
     description=(
         "[ClickHouse] SHALL output an error when trying to replace partition on the destination table from the source table with unsupported engine.\n"
         "\n"
-        "Table engines that SHALL support replacing partition,\n"
+        "Replacing partition SHALL only be supported using the following engines,\n"
         "\n"
         "|       Supported Engines        |\n"
         "|:------------------------------:|\n"
@@ -638,13 +638,6 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_IncorrectTableEngi
         "|     `CollapsingMergeTree`      |\n"
         "| `VersionedCollapsingMergeTree` |\n"
         "|      `GraphiteMergeTree`       |\n"
-        "\n"
-        "Table engines that MAY support replacing partition,\n"
-        "\n"
-        "| Unsupported Engines |\n"
-        "|:-------------------:|\n"
-        "| `DistributedTable`  |\n"
-        "| `MaterializedView`  |\n"
         "\n"
         "\n"
     ),
@@ -2371,7 +2364,7 @@ version: 1.0
 
 [ClickHouse] SHALL output an error when trying to replace partition on the destination table from the source table with unsupported engine.
 
-Table engines that SHALL support replacing partition,
+Replacing partition SHALL only be supported using the following engines,
 
 |       Supported Engines        |
 |:------------------------------:|
@@ -2382,13 +2375,6 @@ Table engines that SHALL support replacing partition,
 |     `CollapsingMergeTree`      |
 | `VersionedCollapsingMergeTree` |
 |      `GraphiteMergeTree`       |
-
-Table engines that MAY support replacing partition,
-
-| Unsupported Engines |
-|:-------------------:|
-| `DistributedTable`  |
-| `MaterializedView`  |
 
 
 #### View
