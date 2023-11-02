@@ -21,8 +21,10 @@ def merge(self, func):
         snapshot_module = SourceFileLoader("snapshot", snapshot_path).load_module()
         snapshot_attrs = {k:v for k,v in vars(snapshot_module).items() if not k.startswith('__')}
         for key,value in snapshot_attrs.items():
-            value = json.loads(value)
-            note(f"{key}, {value}")
+            value = dict(value)
+            note(value)
+            #value_obj = json.loads(value)
+            #note(f"{key}, {value}, {value_obj}")
     else:
         xfail(reason=f"No snapshots for {func}State")
 
