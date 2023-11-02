@@ -509,6 +509,7 @@ def create_table_partitioned_by_column(
     engine="MergeTree",
     partition_by="p",
     columns=None,
+    query_settings=None,
 ):
     """Create a table that is partitioned by a specific column."""
 
@@ -525,6 +526,7 @@ def create_table_partitioned_by_column(
             partition_by=partition_by,
             order_by="tuple()",
             columns=columns,
+            query_settings=query_settings,
         )
 
 
