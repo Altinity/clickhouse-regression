@@ -67,38 +67,6 @@ def alter_table_comment_column(self, table_name, column_name, comment, node=None
 
 
 @TestStep(Given)
-def alter_table_add_index(
-    self,
-    table_name,
-    index_name,
-    expression,
-    index_type,
-    partition_name=None,
-    granularity=None,
-    node=None,
-):
-    if node is None:
-        node = self.context.node
-
-    query = f"ALTER TABLE {table_name} ADD INDEX {index_name} {expression} TYPE {index_type}"
-    if partition_name:
-        query += f" IN PARTITION {partition_name}"
-    if granularity:
-        query += f" GRANULARITY {granularity}"
-
-    node.query(query)
-
-
-@TestStep(Given)
-def alter_table_drop_index(self, table_name, index_name, node=None):
-    if node is None:
-        node = self.context.node
-
-    query = f"ALTER TABLE {table_name} DROP INDEX {index_name}"
-    node.query(query)
-
-
-@TestStep(Given)
 def alter_table_add_constraint(
     self, table_name, constraint_name, expression, node=None
 ):
@@ -132,16 +100,6 @@ def alter_table_modify_ttl(self, table_name, ttl_expression, node=None):
 
 
 @TestStep(Given)
-def alter_table_modify_settings(self, table_name, key, value, node=None):
-    if node is None:
-        node = self.context.node
-
-    query = f"ALTER TABLE {table_name} MODIFY SETTINGS {key}={value}"
-
-    node.query(query)
-
-
-@TestStep(Given)
 def alter_table_detach_partition(self, table_name, partition_name, node=None):
     if node is None:
         node = self.context.node
@@ -156,7 +114,49 @@ def alter_table_attach_partition(self, table_name, partition_name, node=None):
         node = self.context.node
 
     query = f"ALTER TABLE {table_name} ATTACH PARTITION {partition_name}"
-    node.quer(query)
+    node.query(query)
+
+
+@TestStep(Given)
+def alter_table_attach_partition_from(
+    self, table_name, partition_name, path_to_backup, node=None
+):
+    if node is None:
+        node = self.context.node
+
+    query = f"ALTER TABLE {table_name} ATTACH PARTITION {partition_name} FROM {path_to_backup}"
+    node.query(query)
+
+
+@TestStep(Given)
+def alter_table_move_partition_to_table(
+    self, table_name, partition_name, path_to_backup, node=None
+):
+    if node is None:
+        node = self.context.node
+
+    query = f"ALTER TABLE {table_name} MOVE PARTITION {partition_name} TO TABLE {path_to_backup}"
+    node.query(query)
+
+
+@TestStep(Given)
+def alter_table_move_partition(self, table_name, partition_name, disk_name, node=None):
+    if node is None:
+        node = self.context.node
+
+    query = f"ALTER TABLE {table_name} MOVE PARTITION {partition_name} TO VOLUME '{disk_name}'"
+    node.query(query)
+
+
+@TestStep(Given)
+def alter_table_clear_column_in_partition(
+    self, table_name, partition_name, column_name, node=None
+):
+    if node is None:
+        node = self.context.node
+
+    query = f"ALTER TABLE {table_name} CLEAR COLUMN {column_name} IN PARTITION {partition_name}"
+    node.query(query)
 
 
 @TestStep(Given)
@@ -189,15 +189,6 @@ def alter_table_freeze_partition_with_name(self, table_name, backup_name, node=N
 
 
 @TestStep(Given)
-def alter_table_unfreeze_partition(self, table_name, partition_name, node=None):
-    if node is None:
-        node = self.context.node
-
-    query = f"ALTER TABLE {table_name} UNFREEZE PARTITION {partition_name}"
-    node.query(query)
-
-
-@TestStep(Given)
 def alter_table_unfreeze_partition_with_name(self, table_name, backup_name, node=None):
     if node is None:
         node = self.context.node
@@ -213,7 +204,7 @@ def alter_table_replace_partition(
     if node is None:
         node = self.context.node
 
-    query = f"ALTER TABLE {table_name} REPLACE PARTITION {partition_name} FROM '{path_to_backup}'"
+    query = f"ALTER TABLE {table_name} REPLACE PARTITION {partition_name} FROM {path_to_backup}"
     node.query(query)
 
 
@@ -238,82 +229,9 @@ def alter_table_delete_rows(self, table_name, condition, node=None):
 
 
 @TestStep(Given)
-def alter_table_update_ttl(self, table_name, ttl_expression, node=None):
-    if node is None:
-        node = self.context.node
-
-    query = f"ALTER TABLE {table_name} UPDATE TTL {ttl_expression}"
-    node.query(query)
-
-
-@TestStep(Given)
 def alter_table_modify_comment(self, table_name, comment, node=None):
     if node is None:
         node = self.context.node
 
     query = f"ALTER TABLE {table_name} MODIFY COMMENT '{comment}'"
-    node.query(query)
-
-
-@TestStep(Given)
-def alter_table_modify_codec_compression(self, table_name, param1, value1, node=None):
-    if node is None:
-        node = self.context.node
-
-    query = f"ALTER TABLE {table_name} MODIFY CODEC COMPRESSION {param1}={value1}"
-
-    node.query(query)
-
-
-@TestStep(Given)
-def alter_table_modify_ttl_to_future(self, table_name, interval, node=None):
-    if node is None:
-        node = self.context.node
-
-    query = f"ALTER TABLE {table_name} MODIFY TTL now() TO now() + INTERVAL {interval}"
-    node.query(query)
-
-
-@TestStep(Given)
-def alter_table_modify_ttl_to_past(self, table_name, interval, node=None):
-    if node is None:
-        node = self.context.node
-
-    query = f"ALTER TABLE {table_name} MODIFY TTL now() - INTERVAL {interval}"
-    node.query(query)
-
-
-@TestStep(Given)
-def alter_table_modify_ttl_to_now(self, table_name, node=None):
-    if node is None:
-        node = self.context.node
-
-    query = f"ALTER TABLE {table_name} MODIFY TTL now()"
-    node.query(query)
-
-
-@TestStep(Given)
-def alter_table_modify_ttl_clear(self, table_name, node=None):
-    if node is None:
-        node = self.context.node
-
-    query = f"ALTER TABLE {table_name} MODIFY TTL CLEAR"
-    node.query(query)
-
-
-@TestStep(Given)
-def alter_table_modify_codec_delete_compression(self, table_name, node=None):
-    if node is None:
-        node = self.context.node
-
-    query = f"ALTER TABLE {table_name} MODIFY CODEC DELETE COMPRESSION"
-    node.query(query)
-
-
-@TestStep(Given)
-def alter_table_modify_codec_recompress(self, table_name, node=None):
-    if node is None:
-        node = self.context.node
-
-    query = f"ALTER TABLE {table_name} MODIFY CODEC RECOMPRESS"
     node.query(query)
