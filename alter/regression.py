@@ -12,7 +12,14 @@ from s3.regression import argparser
 from alter.table.replace_partition.requirements.requirements import *
 from helpers.datatypes import *
 
-xfails = {}
+xfails = {
+    "/alter/replace partition/concurrent actions/alter modify ttl": [
+        (
+            Fail,
+            "modify ttl expression `+ INTERVAL 1 YEAR` deletes all data when date is empty",
+        )
+    ],
+}
 
 xflags = {}
 
