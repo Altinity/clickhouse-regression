@@ -2,7 +2,6 @@ import os
 import json
 from importlib.machinery import SourceFileLoader
 
-
 from testflows.core import *
 
 from aggregate_functions.tests.steps import *
@@ -20,11 +19,19 @@ def merge(self, func):
     if os.path.exists(snapshot_path):
         snapshot_module = SourceFileLoader("snapshot", snapshot_path).load_module()
         snapshot_attrs = {k:v for k,v in vars(snapshot_module).items() if not k.startswith('__')}
+        cnt = 0
+        cnt2 = 0
         for key,value in snapshot_attrs.items():
-            value = dict(value)
-            note(value)
-            #value_obj = json.loads(value)
-            #note(f"{key}, {value}, {value_obj}")
+            cnt += 1
+            #note(f"{type(value)}, {key}, {value}")
+            if value.strip() == value.split()[0].strip():
+                value_obj = json.loads(value)
+                #note(f"{key}, {value_obj}")
+            else:
+                cnt2 += 1
+                note(f"{type(value)}, {key}, {value}, {value.split()}")
+                note(f"If the same {value}, {str(value.split()[0])}, {len(value.split())}")
+        note(f"{cnt}, {cnt2}")
     else:
         xfail(reason=f"No snapshots for {func}State")
 
