@@ -28,9 +28,7 @@ def merge(self, func):
                 value_obj = json.loads(value)
                 #note(f"{key}, {value_obj}")
             else:
-                cnt2 += 1
-                note(f"{type(value)}, {key}, {value}, {value.split()}")
-                note(f"If the same {value}, {str(value.split()[0])}, {len(value.split())}")
+                xfail(reason=f"Not implemented")
         note(f"{cnt}, {cnt2}")
     else:
         xfail(reason=f"No snapshots for {func}State")
