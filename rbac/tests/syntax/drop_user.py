@@ -77,7 +77,7 @@ def feature(self, node="clickhouse1"):
         requirements=[RQ_SRS_006_RBAC_User_Drop("1.0")],
     ):
         with When("I drop user"):
-            exitcode, message = errors.cannot_remove_user_default()
+            exitcode, message = errors.cannot_remove_user_default(self)
             node.query("DROP USER default", exitcode=exitcode, message=message)
 
     with Scenario(
@@ -113,7 +113,7 @@ def feature(self, node="clickhouse1"):
         requirements=[RQ_SRS_006_RBAC_User_Drop_OnCluster("1.0")],
     ):
         with When("I drop a user from the fake cluster"):
-            exitcode, message = errors.cluster_not_found("fake_cluster")
+            exitcode, message = errors.cluster_not_found(self, "fake_cluster")
             node.query(
                 "DROP USER user5 ON CLUSTER fake_cluster",
                 exitcode=exitcode,

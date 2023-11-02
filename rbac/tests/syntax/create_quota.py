@@ -310,7 +310,7 @@ def feature(self, node="clickhouse1"):
             requirements=[RQ_SRS_006_RBAC_Quota_Create_Cluster("1.0")],
         ):
             with When("I run create quota on a cluster"):
-                exitcode, message = errors.cluster_not_found("fake_cluster")
+                exitcode, message = errors.cluster_not_found(self, "fake_cluster")
                 node.query(
                     "CREATE QUOTA quota0 ON CLUSTER fake_cluster",
                     exitcode=exitcode,

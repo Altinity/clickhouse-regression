@@ -1,3 +1,5 @@
+from helpers.common import check_clickhouse_version
+
 ## Syntax
 
 # Errors: not found
@@ -107,26 +109,40 @@ cannot_remove_default = "Exception: Cannot remove {type} `default` from users.xm
 cannot_remove_default_exitcode = 239
 
 
-def cannot_update_default():
+def cannot_update_default(self):
+    if check_clickhouse_version("<23.8")(self):
+        message = "Exception: Cannot update user `default` in users.xml because this storage is readonly"
+    else:
+        message = "Exception: Cannot update user `default` in users_xml because this storage is readonly"
+
     return (
         cannot_remove_default_exitcode,
-        "Exception: Cannot update user `default` in users.xml because this storage is readonly",
+        message,
     )
 
 
-def cannot_remove_user_default():
-    return (cannot_remove_default_exitcode, cannot_remove_default.format(type="user"))
+def cannot_remove_user_default(self):
+    message = cannot_remove_default.format(type="user")
+    if check_clickhouse_version(">=23.8")(self):
+        message = message.replace(".", "_")
+
+    return (cannot_remove_default_exitcode, message)
 
 
-def cannot_remove_settings_profile_default():
-    return (
-        cannot_remove_default_exitcode,
-        cannot_remove_default.format(type="settings profile"),
-    )
+def cannot_remove_settings_profile_default(self):
+    message = cannot_remove_default.format(type="settings profile")
+    if check_clickhouse_version(">=23.8")(self):
+        message = message.replace(".", "_")
+
+    return (cannot_remove_default_exitcode, message)
 
 
-def cannot_remove_quota_default():
-    return (cannot_remove_default_exitcode, cannot_remove_default.format(type="quota"))
+def cannot_remove_quota_default(self):
+    message = cannot_remove_default.format(type="quota")
+    if check_clickhouse_version(">=23.8")(self):
+        message = message.replace(".", "_")
+
+    return (cannot_remove_default_exitcode, message)
 
 
 # Other syntax errors
@@ -136,8 +152,11 @@ def unknown_setting(setting):
     return (115, f"Exception: Unknown setting {setting}.")
 
 
-def cluster_not_found(cluster):
-    return (170, f"Exception: Requested cluster '{cluster}' not found.")
+def cluster_not_found(self, cluster):
+    if check_clickhouse_version("<23.8")(self):
+        return (170, f"Exception: Requested cluster '{cluster}' not found.")
+    else:
+        return (189, f"Exception: Requested cluster '{cluster}' not found.")
 
 
 ## Privileges

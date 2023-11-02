@@ -229,7 +229,7 @@ def feature(self, node="clickhouse1"):
     ):
         with setup(node):
             with When("I grant privilege ON CLUSTER"):
-                exitcode, message = errors.cluster_not_found("fake_cluster")
+                exitcode, message = errors.cluster_not_found(self, "fake_cluster")
                 node.query(
                     "GRANT ON CLUSTER fake_cluster NONE TO user0",
                     exitcode=exitcode,
@@ -267,7 +267,7 @@ def feature(self, node="clickhouse1"):
     ):
         with setup(node):
             with When("I grant privilege to current user"):
-                exitcode, message = errors.cannot_update_default()
+                exitcode, message = errors.cannot_update_default(self)
                 node.query(
                     "GRANT NONE TO CURRENT_USER", exitcode=exitcode, message=message
                 )

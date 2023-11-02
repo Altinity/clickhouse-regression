@@ -23,6 +23,7 @@ def privilege_granted_directly_or_via_role(self, table_type, privilege, node=Non
                 f"I run checks that {user_name} is only able to execute ALTER FETCH PARTITION with required privileges"
             ):
                 privilege_check(
+                    self=self,
                     grant_target_name=user_name,
                     user_name=user_name,
                     table_type=table_type,
@@ -39,6 +40,7 @@ def privilege_granted_directly_or_via_role(self, table_type, privilege, node=Non
                 f"I run checks that {user_name} with {role_name} is only able to execute ALTER FETCH PARTITION with required privileges"
             ):
                 privilege_check(
+                    self=self,
                     grant_target_name=role_name,
                     user_name=user_name,
                     table_type=table_type,
@@ -47,7 +49,9 @@ def privilege_granted_directly_or_via_role(self, table_type, privilege, node=Non
                 )
 
 
-def privilege_check(grant_target_name, user_name, table_type, privilege, node=None):
+def privilege_check(
+    self, grant_target_name, user_name, table_type, privilege, node=None
+):
     """Run scenarios to check the user's access with different privileges."""
     exitcode, message = errors.not_enough_privileges(name=f"{user_name}")
 
@@ -80,7 +84,11 @@ def privilege_check(grant_target_name, user_name, table_type, privilege, node=No
                     f"ALTER TABLE {table_name} FETCH PARTITION 1 FROM '/clickhouse/'",
                     settings=[("user", user_name)],
                     exitcode=231,
-                    message="Exception: No node",
+                    message=(
+                        "Exception: No node"
+                        if check_clickhouse_version("<23.8")(self)
+                        else "Exception: Coordination error: No node"
+                    ),
                 )
 
     with Scenario(

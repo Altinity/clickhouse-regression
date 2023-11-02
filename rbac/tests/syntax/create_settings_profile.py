@@ -399,7 +399,7 @@ def feature(self, node="clickhouse1"):
             requirements=[RQ_SRS_006_RBAC_SettingsProfile_Create_OnCluster("1.0")],
         ):
             with When("I run create settings profile command"):
-                exitcode, message = errors.cluster_not_found("fake_cluster")
+                exitcode, message = errors.cluster_not_found(self, "fake_cluster")
                 node.query(
                     "CREATE SETTINGS PROFILE profile1 ON CLUSTER fake_cluster",
                     exitcode=exitcode,
