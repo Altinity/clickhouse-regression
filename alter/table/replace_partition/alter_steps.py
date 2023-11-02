@@ -142,15 +142,6 @@ def alter_table_modify_settings(self, table_name, key, value, node=None):
 
 
 @TestStep(Given)
-def alter_table_modify_partition_by(self, table_name, expression, node=None):
-    if node is None:
-        node = self.context.node
-
-    query = f"ALTER TABLE {table_name} MODIFY PARTITION BY {expression}"
-    node.query(query)
-
-
-@TestStep(Given)
 def alter_table_detach_partition(self, table_name, partition_name, node=None):
     if node is None:
         node = self.context.node
@@ -265,15 +256,12 @@ def alter_table_modify_comment(self, table_name, comment, node=None):
 
 
 @TestStep(Given)
-def alter_table_modify_codec_compression(
-    self, table_name, param1, value1, param2=None, value2=None, node=None
-):
+def alter_table_modify_codec_compression(self, table_name, param1, value1, node=None):
     if node is None:
         node = self.context.node
 
     query = f"ALTER TABLE {table_name} MODIFY CODEC COMPRESSION {param1}={value1}"
-    if param2 and value2:
-        query += f", {param2}={value2}"
+
     node.query(query)
 
 
