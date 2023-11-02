@@ -94,7 +94,7 @@ def feature(self, node="clickhouse1"):
         requirements=[RQ_SRS_006_RBAC_Role_Drop_Cluster("1.0")],
     ):
         with When("I run drop role command"):
-            exitcode, message = errors.cluster_not_found("fake_cluster")
+            exitcode, message = errors.cluster_not_found(self, "fake_cluster")
             node.query(
                 "DROP ROLE role2 ON CLUSTER fake_cluster",
                 exitcode=exitcode,

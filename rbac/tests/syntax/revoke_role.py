@@ -123,7 +123,7 @@ def feature(self, node="clickhouse1"):
     ):
         with setup():
             with When("I revoke a role from default user"):
-                exitcode, message = errors.cannot_update_default()
+                exitcode, message = errors.cannot_update_default(self)
                 node.query(
                     "REVOKE role0 FROM CURRENT_USER", exitcode=exitcode, message=message
                 )
@@ -152,7 +152,7 @@ def feature(self, node="clickhouse1"):
     ):
         with setup():
             with When("I revoke a role from all"):
-                exitcode, message = errors.cannot_update_default()
+                exitcode, message = errors.cannot_update_default(self)
                 node.query("REVOKE role0 FROM ALL", exitcode=exitcode, message=message)
 
     # user is default, expect exception
@@ -165,7 +165,7 @@ def feature(self, node="clickhouse1"):
     ):
         with setup():
             with When("I revoke multiple roles from all"):
-                exitcode, message = errors.cannot_update_default()
+                exitcode, message = errors.cannot_update_default(self)
                 node.query(
                     "REVOKE role0, role1 FROM ALL", exitcode=exitcode, message=message
                 )
@@ -244,7 +244,7 @@ def feature(self, node="clickhouse1"):
             node.query("CREATE USER OR REPLACE user0")
             node.query("CREATE ROLE OR REPLACE role0")
         with When("I revoke a role from user on a cluster"):
-            exitcode, message = errors.cluster_not_found("fake_cluster")
+            exitcode, message = errors.cluster_not_found(self, "fake_cluster")
             node.query(
                 "REVOKE ON CLUSTER fake_cluster role0 FROM user0",
                 exitcode=exitcode,

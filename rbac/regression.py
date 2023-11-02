@@ -273,6 +273,11 @@ ffails = {
         "No longer supported",
         (lambda test: check_clickhouse_version(">=23.2")(test)),
     ),
+    "privileges/system reload/:/symbols/*": (
+        Skip,
+        "SYMBOLS was removed https://github.com/ClickHouse/ClickHouse/pull/51873",
+        (lambda test: check_clickhouse_version(">=23.8")(test)),
+    ),
 }
 
 

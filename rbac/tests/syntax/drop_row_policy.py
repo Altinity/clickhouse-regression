@@ -191,7 +191,7 @@ def feature(self, node="clickhouse1"):
             ],
         ):
             with When("I run drop row policy command"):
-                exitcode, message = errors.cluster_not_found("fake_cluster")
+                exitcode, message = errors.cluster_not_found(self, "fake_cluster")
                 node.query(
                     "DROP ROW POLICY IF EXISTS policy14 ON default.foo ON CLUSTER fake_cluster",
                     exitcode=exitcode,

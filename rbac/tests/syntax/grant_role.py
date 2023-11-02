@@ -106,7 +106,7 @@ def feature(self, node="clickhouse1"):
     ):
         with setup(1, 1):
             with When("I grant role to default user"):
-                exitcode, message = errors.cannot_update_default()
+                exitcode, message = errors.cannot_update_default(self)
                 node.query(
                     "GRANT role0 TO CURRENT_USER", exitcode=exitcode, message=message
                 )
@@ -140,7 +140,7 @@ def feature(self, node="clickhouse1"):
     ):
         with setup(1, 1):
             with When("I grant the role to the user"):
-                exitcode, message = errors.cluster_not_found("fake_cluster")
+                exitcode, message = errors.cluster_not_found(self, "fake_cluster")
                 node.query(
                     "GRANT ON CLUSTER fake_cluster role0 TO user0",
                     exitcode=exitcode,

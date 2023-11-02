@@ -217,7 +217,7 @@ def feature(self, node="clickhouse1"):
     ):
         with setup(node):
             with When("I revoke privilege ON CLUSTER"):
-                exitcode, message = errors.cluster_not_found("fake_cluster")
+                exitcode, message = errors.cluster_not_found(self, "fake_cluster")
                 node.query(
                     "REVOKE ON CLUSTER fake_cluster NONE FROM user0",
                     exitcode=exitcode,
@@ -257,7 +257,7 @@ def feature(self, node="clickhouse1"):
     ):
         with setup(node):
             with When("I revoke privilege from all users"):
-                exitcode, message = errors.cannot_update_default()
+                exitcode, message = errors.cannot_update_default(self)
                 node.query("REVOKE NONE FROM ALL", exitcode=exitcode, message=message)
 
     with Scenario(
@@ -269,7 +269,7 @@ def feature(self, node="clickhouse1"):
     ):
         with setup(node):
             with When("I revoke privilege from default user"):
-                exitcode, message = errors.cannot_update_default()
+                exitcode, message = errors.cannot_update_default(self)
                 node.query(
                     "REVOKE NONE FROM default", exitcode=exitcode, message=message
                 )

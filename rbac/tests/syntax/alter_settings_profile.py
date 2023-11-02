@@ -382,7 +382,7 @@ def feature(self, node="clickhouse1"):
             ],
         ):
             with When("I run alter settings profile command"):
-                exitcode, message = errors.cluster_not_found("fake_cluster")
+                exitcode, message = errors.cluster_not_found(self, "fake_cluster")
                 node.query(
                     "ALTER SETTINGS PROFILE profile1 ON CLUSTER fake_cluster",
                     exitcode=exitcode,

@@ -70,7 +70,7 @@ def feature(self, node="clickhouse1"):
         requirements=[RQ_SRS_006_RBAC_Quota_Drop("1.0")],
     ):
         with When("I drop default quota"):
-            exitcode, message = errors.cannot_remove_quota_default()
+            exitcode, message = errors.cannot_remove_quota_default(self)
             node.query("DROP QUOTA default", exitcode=exitcode, message=message)
 
     with Scenario(
@@ -98,7 +98,7 @@ def feature(self, node="clickhouse1"):
         requirements=[RQ_SRS_006_RBAC_Quota_Drop_Cluster("1.0")],
     ):
         with When("I run drop quota command"):
-            exitcode, message = errors.cluster_not_found("fake_cluster")
+            exitcode, message = errors.cluster_not_found(self, "fake_cluster")
             node.query(
                 "DROP QUOTA quota5 ON CLUSTER fake_cluster",
                 exitcode=exitcode,
