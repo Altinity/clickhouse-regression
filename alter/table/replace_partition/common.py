@@ -23,7 +23,7 @@ def create_partitions_with_random_uint64(
 
 @TestStep(Given)
 def create_two_tables_partitioned_by_column_with_data(
-    self, destination_table, source_table
+    self, destination_table, source_table, number_of_partitions=5, number_of_values=10
 ):
     """Creating two tables that are partitioned by the same column and are filled with random data."""
 
@@ -33,10 +33,29 @@ def create_two_tables_partitioned_by_column_with_data(
 
     with And("inserting data into both tables"):
         create_partitions_with_random_uint64(
-            table_name=destination_table, number_of_values=10
+            table_name=destination_table,
+            number_of_values=number_of_values,
+            number_of_partitions=number_of_partitions,
         )
         create_partitions_with_random_uint64(
-            table_name=source_table, number_of_values=10
+            table_name=source_table,
+            number_of_values=number_of_values,
+            number_of_partitions=number_of_partitions,
+        )
+
+
+@TestStep(Given)
+def create_table_partitioned_by_column_with_data(
+    self, table_name, number_of_partitions=5, number_of_values=10
+):
+    with By("creating two tables with the same structure"):
+        create_table_partitioned_by_column(table_name=table_name)
+
+    with And("inserting data into both tables"):
+        create_partitions_with_random_uint64(
+            table_name=table_name,
+            number_of_values=number_of_values,
+            number_of_partitions=number_of_partitions,
         )
 
 
@@ -75,6 +94,8 @@ def check_partition_was_replaced(
     source_table,
     node=None,
     sort_column="p",
+    partition=1,
+    column="*",
 ):
     """Check that the partition on the destination table was replaced from the source table."""
     if node is None:
@@ -84,10 +105,10 @@ def check_partition_was_replaced(
         "selecting and saving the partition data from the source table and destination table"
     ):
         partition_values_source = node.query(
-            f"SELECT * FROM {source_table} WHERE {sort_column} = 1 ORDER BY tuple(*)"
+            f"SELECT {column} FROM {source_table} WHERE {sort_column} = {partition} ORDER BY tuple(*)"
         )
         partition_values_destination = node.query(
-            f"SELECT * FROM {destination_table} WHERE {sort_column} = 1 ORDER BY tuple(*)"
+            f"SELECT {column} FROM {destination_table} WHERE {sort_column} = {partition} ORDER BY tuple(*)"
         )
 
     with Check(
