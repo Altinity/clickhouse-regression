@@ -3,7 +3,7 @@
 from clickhouse_driver import Client
 import sys
 
-#test
+
 def clickhouse_client_tty():
     client = Client("localhost")
 
