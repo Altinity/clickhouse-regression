@@ -625,7 +625,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_IncorrectTableEngi
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL output an error when trying to replace partition on the destination table from the source table with unsupported engine.\n"
+        "[ClickHouse] SHALL output an error when trying to replace partition from source or into the destination table with unsupported engine.\n"
         "\n"
         "Replacing partition SHALL only be supported using the following engines,\n"
         "\n"
@@ -2487,7 +2487,7 @@ version: 1.0
 ##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.IncorrectTableEngines
 version: 1.0
 
-[ClickHouse] SHALL output an error when trying to replace partition on the destination table from the source table with unsupported engine.
+[ClickHouse] SHALL output an error when trying to replace partition from source or into the destination table with unsupported engine.
 
 Replacing partition SHALL only be supported using the following engines,
 
