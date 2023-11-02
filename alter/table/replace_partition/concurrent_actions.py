@@ -260,7 +260,11 @@ def alter_comment_column(self):
 
 
 @TestScenario
-@Requirements()  # TODO ADD CONSTRAINT REQUIREMENTS
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_AddConstraint(
+        "1.0"
+    )
+)
 def alter_add_constraint(self):
     """Check that it is possible to add constraint on the table while replacing partition."""
     destination_table = "destination_" + getuid()
@@ -280,7 +284,11 @@ def alter_add_constraint(self):
 
 
 @TestScenario
-@Requirements()  # TODO ADD DROP CONSTRAINT REQUIREMENTS
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_DropConstraint(
+        "1.0"
+    )
+)
 def alter_drop_constraint(self):
     """Check that it is possible to drop constraint on the table while replacing partition."""
     destination_table = "destination_" + getuid()
@@ -301,7 +309,9 @@ def alter_drop_constraint(self):
 
 
 @TestScenario
-@Requirements()  # TODO ADD MODIFY TTL REQUIREMENTS
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_ModifyTTL("1.0")
+)
 def alter_modify_ttl(self):
     """Check that it is possible to modify ttl on the table while replacing partition."""
     destination_table = "destination_" + getuid()
