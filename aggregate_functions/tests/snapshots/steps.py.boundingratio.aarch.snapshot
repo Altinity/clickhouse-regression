@@ -70,16 +70,16 @@ _aggregate_functions_boundingRatio_datatypes_permutations_UInt64_Nullable_UInt64
 {"boundingRatio(uint64, nullable_uint64_)":1}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_UInt64_Nullable_Float64_ = r"""
-{"boundingRatio(uint64, nullable_float64_)":null}
+_aggregate_functions_boundingRatio_datatypes_permutations_UInt64_Nullable_Int64_ = r"""
+{"boundingRatio(uint64, nullable_int64_)":1}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_UInt64_Nullable_Float32_ = r"""
 {"boundingRatio(uint64, nullable_float32_)":36893485948395848000}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_UInt64_Nullable_Int64_ = r"""
-{"boundingRatio(uint64, nullable_int64_)":1}
+_aggregate_functions_boundingRatio_datatypes_permutations_UInt64_Nullable_Float64_ = r"""
+{"boundingRatio(uint64, nullable_float64_)":null}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_UInt64_Nullable_Decimal128_38__ = r"""
@@ -94,16 +94,16 @@ _aggregate_functions_boundingRatio_datatypes_permutations_UInt64_Nullable_DateTi
 {"boundingRatio(uint64, nullable_datetime_)":-5.421010862427522e-20}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_UInt64_LowCardinality_UInt64_ = r"""
-{"boundingRatio(uint64, lowcardinality_uint64_)":1}
+_aggregate_functions_boundingRatio_datatypes_permutations_UInt64_LowCardinality_Float64_ = r"""
+{"boundingRatio(uint64, lowcardinality_float64_)":null}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_UInt64_LowCardinality_Int64_ = r"""
 {"boundingRatio(uint64, lowcardinality_int64_)":1}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_UInt64_LowCardinality_Float64_ = r"""
-{"boundingRatio(uint64, lowcardinality_float64_)":null}
+_aggregate_functions_boundingRatio_datatypes_permutations_UInt64_LowCardinality_UInt64_ = r"""
+{"boundingRatio(uint64, lowcardinality_uint64_)":1}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_UInt64_LowCardinality_Float32_ = r"""
@@ -146,16 +146,12 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_UInt64__UInt6
 {"boundingRatio(nullable_uint64_, uint64)":1}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_UInt64__Nullable_Int64_ = r"""
-{"boundingRatio(nullable_uint64_, nullable_int64_)":1}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_UInt64__Nullable_UInt64_ = r"""
 {"boundingRatio(nullable_uint64_, nullable_uint64_)":1}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_UInt64__Nullable_Float32_ = r"""
-{"boundingRatio(nullable_uint64_, nullable_float32_)":36893485948395848000}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_UInt64__Nullable_Int64_ = r"""
+{"boundingRatio(nullable_uint64_, nullable_int64_)":1}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_UInt64__Nullable_Float64_ = r"""
@@ -166,32 +162,36 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_UInt64__Nulla
 {"boundingRatio(nullable_uint64_, nullable_decimal128_38__)":1.0842021724855044e-19}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_UInt64__Nullable_Date_ = r"""
-{"boundingRatio(nullable_uint64_, nullable_date_)":3.5526594686918767e-15}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_UInt64__Nullable_Float32_ = r"""
+{"boundingRatio(nullable_uint64_, nullable_float32_)":36893485948395848000}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_UInt64__Nullable_DateTime_ = r"""
 {"boundingRatio(nullable_uint64_, nullable_datetime_)":-5.421010862427522e-20}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_UInt64__LowCardinality_UInt64_ = r"""
-{"boundingRatio(nullable_uint64_, lowcardinality_uint64_)":1}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_UInt64__Nullable_Date_ = r"""
+{"boundingRatio(nullable_uint64_, nullable_date_)":3.5526594686918767e-15}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_UInt64__LowCardinality_Float64_ = r"""
-{"boundingRatio(nullable_uint64_, lowcardinality_float64_)":null}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_UInt64__LowCardinality_UInt64_ = r"""
+{"boundingRatio(nullable_uint64_, lowcardinality_uint64_)":1}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_UInt64__LowCardinality_Int64_ = r"""
 {"boundingRatio(nullable_uint64_, lowcardinality_int64_)":1}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_UInt64__LowCardinality_Float32_ = r"""
-{"boundingRatio(nullable_uint64_, lowcardinality_float32_)":36893485948395848000}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_UInt64__LowCardinality_Float64_ = r"""
+{"boundingRatio(nullable_uint64_, lowcardinality_float64_)":null}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_UInt64__LowCardinality_DateTime_ = r"""
 {"boundingRatio(nullable_uint64_, lowcardinality_datetime_)":-5.421010862427522e-20}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_UInt64__LowCardinality_Float32_ = r"""
+{"boundingRatio(nullable_uint64_, lowcardinality_float32_)":36893485948395848000}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_UInt64__LowCardinality_Date_ = r"""
@@ -202,36 +202,32 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_UInt64__Int64
 {"boundingRatio(nullable_uint64_, int64)":1}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_UInt64__Decimal128_38_ = r"""
-{"boundingRatio(nullable_uint64_, decimal128_38_)":1.0842021724855044e-19}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_UInt64__Float64 = r"""
+{"boundingRatio(nullable_uint64_, float64)":null}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_UInt64__Float32 = r"""
 {"boundingRatio(nullable_uint64_, float32)":36893485948395848000}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_UInt64__Float64 = r"""
-{"boundingRatio(nullable_uint64_, float64)":null}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_UInt64__DateTime = r"""
 {"boundingRatio(nullable_uint64_, datetime)":-5.421010862427522e-20}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Int64__UInt64 = r"""
-{"boundingRatio(nullable_int64_, uint64)":1}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_UInt64__Decimal128_38_ = r"""
+{"boundingRatio(nullable_uint64_, decimal128_38_)":1.0842021724855044e-19}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_UInt64__Date = r"""
 {"boundingRatio(nullable_uint64_, date)":3.5526594686918767e-15}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Int64__Nullable_UInt64_ = r"""
-{"boundingRatio(nullable_int64_, nullable_uint64_)":1}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Int64__UInt64 = r"""
+{"boundingRatio(nullable_int64_, uint64)":1}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Int64__Nullable_Float64_ = r"""
-{"boundingRatio(nullable_int64_, nullable_float64_)":null}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Int64__Nullable_UInt64_ = r"""
+{"boundingRatio(nullable_int64_, nullable_uint64_)":1}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Int64__Nullable_Int64_ = r"""
@@ -242,8 +238,8 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Int64__Nullab
 {"boundingRatio(nullable_int64_, nullable_float32_)":36893485948395848000}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Int64__Nullable_DateTime_ = r"""
-{"boundingRatio(nullable_int64_, nullable_datetime_)":-5.421010862427522e-20}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Int64__Nullable_Float64_ = r"""
+{"boundingRatio(nullable_int64_, nullable_float64_)":null}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Int64__Nullable_Decimal128_38__ = r"""
@@ -254,16 +250,16 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Int64__Nullab
 {"boundingRatio(nullable_int64_, nullable_date_)":3.5526594686918767e-15}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Int64__LowCardinality_Int64_ = r"""
-{"boundingRatio(nullable_int64_, lowcardinality_int64_)":1}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Int64__Nullable_DateTime_ = r"""
+{"boundingRatio(nullable_int64_, nullable_datetime_)":-5.421010862427522e-20}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Int64__LowCardinality_UInt64_ = r"""
 {"boundingRatio(nullable_int64_, lowcardinality_uint64_)":1}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Int64__LowCardinality_DateTime_ = r"""
-{"boundingRatio(nullable_int64_, lowcardinality_datetime_)":-5.421010862427522e-20}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Int64__LowCardinality_Int64_ = r"""
+{"boundingRatio(nullable_int64_, lowcardinality_int64_)":1}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Int64__LowCardinality_Float64_ = r"""
@@ -274,16 +270,16 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Int64__LowCar
 {"boundingRatio(nullable_int64_, lowcardinality_float32_)":36893485948395848000}
 """
 
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Int64__LowCardinality_DateTime_ = r"""
+{"boundingRatio(nullable_int64_, lowcardinality_datetime_)":-5.421010862427522e-20}
+"""
+
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Int64__LowCardinality_Date_ = r"""
 {"boundingRatio(nullable_int64_, lowcardinality_date_)":3.5526594686918767e-15}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Int64__Int64 = r"""
 {"boundingRatio(nullable_int64_, int64)":1}
-"""
-
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Int64__Float64 = r"""
-{"boundingRatio(nullable_int64_, float64)":null}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Int64__Float32 = r"""
@@ -294,8 +290,8 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Int64__Decima
 {"boundingRatio(nullable_int64_, decimal128_38_)":1.0842021724855044e-19}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Int64__DateTime = r"""
-{"boundingRatio(nullable_int64_, datetime)":-5.421010862427522e-20}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Int64__Float64 = r"""
+{"boundingRatio(nullable_int64_, float64)":null}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float64__UInt64 = r"""
@@ -306,44 +302,52 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Int64__Date =
 {"boundingRatio(nullable_int64_, date)":3.5526594686918767e-15}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float64__Nullable_UInt64_ = r"""
-{"boundingRatio(nullable_float64_, nullable_uint64_)":0}
-"""
-
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float64__Nullable_Int64_ = r"""
-{"boundingRatio(nullable_float64_, nullable_int64_)":0}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Int64__DateTime = r"""
+{"boundingRatio(nullable_int64_, datetime)":-5.421010862427522e-20}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float64__Nullable_Float64_ = r"""
 {"boundingRatio(nullable_float64_, nullable_float64_)":null}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float64__Nullable_Float32_ = r"""
-{"boundingRatio(nullable_float64_, nullable_float32_)":0}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float64__Nullable_Int64_ = r"""
+{"boundingRatio(nullable_float64_, nullable_int64_)":0}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float64__Nullable_DateTime_ = r"""
-{"boundingRatio(nullable_float64_, nullable_datetime_)":-0}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float64__Nullable_UInt64_ = r"""
+{"boundingRatio(nullable_float64_, nullable_uint64_)":0}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float64__Nullable_Float32_ = r"""
+{"boundingRatio(nullable_float64_, nullable_float32_)":0}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float64__Nullable_Decimal128_38__ = r"""
 {"boundingRatio(nullable_float64_, nullable_decimal128_38__)":0}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float64__Nullable_Date_ = r"""
-{"boundingRatio(nullable_float64_, nullable_date_)":0}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float64__Nullable_DateTime_ = r"""
+{"boundingRatio(nullable_float64_, nullable_datetime_)":-0}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float64__LowCardinality_Float64_ = r"""
-{"boundingRatio(nullable_float64_, lowcardinality_float64_)":null}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float64__LowCardinality_UInt64_ = r"""
+{"boundingRatio(nullable_float64_, lowcardinality_uint64_)":0}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float64__Nullable_Date_ = r"""
+{"boundingRatio(nullable_float64_, nullable_date_)":0}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float64__LowCardinality_Int64_ = r"""
 {"boundingRatio(nullable_float64_, lowcardinality_int64_)":0}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float64__LowCardinality_UInt64_ = r"""
-{"boundingRatio(nullable_float64_, lowcardinality_uint64_)":0}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float64__LowCardinality_Float64_ = r"""
+{"boundingRatio(nullable_float64_, lowcardinality_float64_)":null}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float64__LowCardinality_DateTime_ = r"""
+{"boundingRatio(nullable_float64_, lowcardinality_datetime_)":-0}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float64__LowCardinality_Float32_ = r"""
@@ -352,10 +356,6 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float64__LowC
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float64__LowCardinality_Date_ = r"""
 {"boundingRatio(nullable_float64_, lowcardinality_date_)":0}
-"""
-
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float64__LowCardinality_DateTime_ = r"""
-{"boundingRatio(nullable_float64_, lowcardinality_datetime_)":-0}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float64__Int64 = r"""
@@ -370,16 +370,12 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float64__Floa
 {"boundingRatio(nullable_float64_, float32)":0}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float64__Decimal128_38_ = r"""
-{"boundingRatio(nullable_float64_, decimal128_38_)":0}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float64__DateTime = r"""
 {"boundingRatio(nullable_float64_, datetime)":-0}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float64__Date = r"""
-{"boundingRatio(nullable_float64_, date)":0}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float64__Decimal128_38_ = r"""
+{"boundingRatio(nullable_float64_, decimal128_38_)":0}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float32__UInt64 = r"""
@@ -388,6 +384,10 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float32__UInt
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float32__Nullable_UInt64_ = r"""
 {"boundingRatio(nullable_float32_, nullable_uint64_)":2.710505592772484e-20}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float64__Date = r"""
+{"boundingRatio(nullable_float64_, date)":0}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float32__Nullable_Int64_ = r"""
@@ -402,36 +402,36 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float32__Null
 {"boundingRatio(nullable_float32_, nullable_float32_)":1}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float32__Nullable_Decimal128_38__ = r"""
-{"boundingRatio(nullable_float32_, nullable_decimal128_38__)":2.938736052218037e-39}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float32__Nullable_DateTime_ = r"""
 {"boundingRatio(nullable_float32_, nullable_datetime_)":-1.4693680261090186e-39}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float32__Nullable_Decimal128_38__ = r"""
+{"boundingRatio(nullable_float32_, nullable_decimal128_38__)":2.938736052218037e-39}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float32__Nullable_Date_ = r"""
 {"boundingRatio(nullable_float32_, nullable_date_)":9.629503359105454e-35}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float32__LowCardinality_Int64_ = r"""
-{"boundingRatio(nullable_float32_, lowcardinality_int64_)":2.710505592772484e-20}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float32__LowCardinality_UInt64_ = r"""
 {"boundingRatio(nullable_float32_, lowcardinality_uint64_)":2.710505592772484e-20}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float32__LowCardinality_Int64_ = r"""
+{"boundingRatio(nullable_float32_, lowcardinality_int64_)":2.710505592772484e-20}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float32__LowCardinality_Float64_ = r"""
 {"boundingRatio(nullable_float32_, lowcardinality_float64_)":null}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float32__LowCardinality_DateTime_ = r"""
-{"boundingRatio(nullable_float32_, lowcardinality_datetime_)":-1.4693680261090186e-39}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float32__LowCardinality_Float32_ = r"""
 {"boundingRatio(nullable_float32_, lowcardinality_float32_)":1}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float32__LowCardinality_DateTime_ = r"""
+{"boundingRatio(nullable_float32_, lowcardinality_datetime_)":-1.4693680261090186e-39}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float32__LowCardinality_Date_ = r"""
@@ -442,16 +442,12 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float32__Floa
 {"boundingRatio(nullable_float32_, float64)":null}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float32__Float32 = r"""
-{"boundingRatio(nullable_float32_, float32)":1}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float32__Int64 = r"""
 {"boundingRatio(nullable_float32_, int64)":2.710505592772484e-20}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float32__Decimal128_38_ = r"""
-{"boundingRatio(nullable_float32_, decimal128_38_)":2.938736052218037e-39}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float32__Float32 = r"""
+{"boundingRatio(nullable_float32_, float32)":1}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float32__Date = r"""
@@ -462,8 +458,8 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float32__Date
 {"boundingRatio(nullable_float32_, datetime)":-1.4693680261090186e-39}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Decimal128_38___UInt64 = r"""
-{"boundingRatio(nullable_decimal128_38__, uint64)":9223372036854776000}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Float32__Decimal128_38_ = r"""
+{"boundingRatio(nullable_float32_, decimal128_38_)":2.938736052218037e-39}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Decimal128_38___Nullable_UInt64_ = r"""
@@ -474,20 +470,20 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Decimal128_38
 {"boundingRatio(nullable_decimal128_38__, nullable_int64_)":9223372036854776000}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Decimal128_38___Nullable_Float64_ = r"""
-{"boundingRatio(nullable_decimal128_38__, nullable_float64_)":null}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Decimal128_38___UInt64 = r"""
+{"boundingRatio(nullable_decimal128_38__, uint64)":9223372036854776000}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Decimal128_38___Nullable_Float32_ = r"""
-{"boundingRatio(nullable_decimal128_38__, nullable_float32_)":3.4028234663852886e38}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Decimal128_38___Nullable_Float64_ = r"""
+{"boundingRatio(nullable_decimal128_38__, nullable_float64_)":null}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Decimal128_38___Nullable_Decimal128_38__ = r"""
 {"boundingRatio(nullable_decimal128_38__, nullable_decimal128_38__)":1}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Decimal128_38___Nullable_DateTime_ = r"""
-{"boundingRatio(nullable_decimal128_38__, nullable_datetime_)":-0.5}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Decimal128_38___Nullable_Float32_ = r"""
+{"boundingRatio(nullable_decimal128_38__, nullable_float32_)":3.4028234663852886e38}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Decimal128_38___Nullable_Date_ = r"""
@@ -496,6 +492,10 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Decimal128_38
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Decimal128_38___LowCardinality_UInt64_ = r"""
 {"boundingRatio(nullable_decimal128_38__, lowcardinality_uint64_)":9223372036854776000}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Decimal128_38___Nullable_DateTime_ = r"""
+{"boundingRatio(nullable_decimal128_38__, nullable_datetime_)":-0.5}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Decimal128_38___LowCardinality_Float32_ = r"""
@@ -510,16 +510,20 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Decimal128_38
 {"boundingRatio(nullable_decimal128_38__, lowcardinality_int64_)":9223372036854776000}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Decimal128_38___LowCardinality_DateTime_ = r"""
-{"boundingRatio(nullable_decimal128_38__, lowcardinality_datetime_)":-0.5}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Decimal128_38___LowCardinality_Date_ = r"""
 {"boundingRatio(nullable_decimal128_38__, lowcardinality_date_)":32767.5}
 """
 
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Decimal128_38___LowCardinality_DateTime_ = r"""
+{"boundingRatio(nullable_decimal128_38__, lowcardinality_datetime_)":-0.5}
+"""
+
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Decimal128_38___Int64 = r"""
 {"boundingRatio(nullable_decimal128_38__, int64)":9223372036854776000}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Decimal128_38___Float32 = r"""
+{"boundingRatio(nullable_decimal128_38__, float32)":3.4028234663852886e38}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Decimal128_38___Float64 = r"""
@@ -528,10 +532,6 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Decimal128_38
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Decimal128_38___Decimal128_38_ = r"""
 {"boundingRatio(nullable_decimal128_38__, decimal128_38_)":1}
-"""
-
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Decimal128_38___Float32 = r"""
-{"boundingRatio(nullable_decimal128_38__, float32)":3.4028234663852886e38}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Decimal128_38___DateTime = r"""
@@ -546,6 +546,10 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Decimal128_38
 {"boundingRatio(nullable_decimal128_38__, date)":32767.5}
 """
 
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_DateTime__Nullable_Float64_ = r"""
+{"boundingRatio(nullable_datetime_, nullable_float64_)":-5.593662095274436e298}
+"""
+
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_DateTime__Nullable_UInt64_ = r"""
 {"boundingRatio(nullable_datetime_, nullable_uint64_)":-2211445972.2834578}
 """
@@ -554,48 +558,40 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_DateTime__Nul
 {"boundingRatio(nullable_datetime_, nullable_int64_)":-2003324552.692434}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_DateTime__Nullable_Float64_ = r"""
-{"boundingRatio(nullable_datetime_, nullable_float64_)":-5.593662095274436e298}
-"""
-
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_DateTime__Nullable_DateTime_ = r"""
-{"boundingRatio(nullable_datetime_, nullable_datetime_)":1}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_DateTime__Nullable_Decimal128_38__ = r"""
+{"boundingRatio(nullable_datetime_, nullable_decimal128_38__)":-3.3174876642550537e-10}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_DateTime__Nullable_Float32_ = r"""
 {"boundingRatio(nullable_datetime_, nullable_float32_)":-6.611467701216546e28}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_DateTime__Nullable_Decimal128_38__ = r"""
-{"boundingRatio(nullable_datetime_, nullable_decimal128_38__)":-3.3174876642550537e-10}
-"""
-
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_DateTime__LowCardinality_UInt64_ = r"""
-{"boundingRatio(nullable_datetime_, lowcardinality_uint64_)":-3056602337.512199}
-"""
-
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_DateTime__LowCardinality_Int64_ = r"""
-{"boundingRatio(nullable_datetime_, lowcardinality_int64_)":-5223894294.66302}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_DateTime__Nullable_DateTime_ = r"""
+{"boundingRatio(nullable_datetime_, nullable_datetime_)":1}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_DateTime__Nullable_Date_ = r"""
 {"boundingRatio(nullable_datetime_, nullable_date_)":-0.000004070259787042651}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_DateTime__LowCardinality_Float32_ = r"""
-{"boundingRatio(nullable_datetime_, lowcardinality_float32_)":-3.654135915452622e28}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_DateTime__LowCardinality_Int64_ = r"""
+{"boundingRatio(nullable_datetime_, lowcardinality_int64_)":-5223894294.66302}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_DateTime__LowCardinality_UInt64_ = r"""
+{"boundingRatio(nullable_datetime_, lowcardinality_uint64_)":-3056602337.512199}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_DateTime__LowCardinality_Float64_ = r"""
 {"boundingRatio(nullable_datetime_, lowcardinality_float64_)":-5.593662095274436e298}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_DateTime__LowCardinality_DateTime_ = r"""
-{"boundingRatio(nullable_datetime_, lowcardinality_datetime_)":0.9239749070018138}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_DateTime__LowCardinality_Float32_ = r"""
+{"boundingRatio(nullable_datetime_, lowcardinality_float32_)":-3.654135915452622e28}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_DateTime__LowCardinality_Date_ = r"""
-{"boundingRatio(nullable_datetime_, lowcardinality_date_)":-0.000005957122821109362}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_DateTime__LowCardinality_DateTime_ = r"""
+{"boundingRatio(nullable_datetime_, lowcardinality_datetime_)":0.9239749070018138}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_DateTime__Int64 = r"""
@@ -606,28 +602,32 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_DateTime__Flo
 {"boundingRatio(nullable_datetime_, float64)":-5.137132898623206e298}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_DateTime__Float32 = r"""
-{"boundingRatio(nullable_datetime_, float32)":-3.620117532218244e28}
-"""
-
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_DateTime__Decimal128_38_ = r"""
-{"boundingRatio(nullable_datetime_, decimal128_38_)":-4.2249541344431045e-10}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_DateTime__LowCardinality_Date_ = r"""
+{"boundingRatio(nullable_datetime_, lowcardinality_date_)":-0.000005957122821109362}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_DateTime__DateTime = r"""
 {"boundingRatio(nullable_datetime_, datetime)":0.8897255916731226}
 """
 
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_DateTime__Decimal128_38_ = r"""
+{"boundingRatio(nullable_datetime_, decimal128_38_)":-4.2249541344431045e-10}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_DateTime__Float32 = r"""
+{"boundingRatio(nullable_datetime_, float32)":-3.620117532218244e28}
+"""
+
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_DateTime__Date = r"""
 {"boundingRatio(nullable_datetime_, date)":-0.000004187566410367709}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Date__UInt64 = r"""
-{"boundingRatio(nullable_date_, uint64)":281479271743489}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Date__Nullable_UInt64_ = r"""
 {"boundingRatio(nullable_date_, nullable_uint64_)":281479271743489}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Date__UInt64 = r"""
+{"boundingRatio(nullable_date_, uint64)":281479271743489}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Date__Nullable_Float64_ = r"""
@@ -646,28 +646,32 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Date__Nullabl
 {"boundingRatio(nullable_date_, nullable_decimal128_38__)":0.000030518043793392844}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Date__Nullable_Date_ = r"""
-{"boundingRatio(nullable_date_, nullable_date_)":1}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Date__Nullable_DateTime_ = r"""
 {"boundingRatio(nullable_date_, nullable_datetime_)":-0.000015259021896696422}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Date__Nullable_Date_ = r"""
+{"boundingRatio(nullable_date_, nullable_date_)":1}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Date__LowCardinality_UInt64_ = r"""
 {"boundingRatio(nullable_date_, lowcardinality_uint64_)":281479271743489}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Date__LowCardinality_Float64_ = r"""
-{"boundingRatio(nullable_date_, lowcardinality_float64_)":null}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Date__LowCardinality_Int64_ = r"""
 {"boundingRatio(nullable_date_, lowcardinality_int64_)":281479271743489}
 """
 
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Date__LowCardinality_Float64_ = r"""
+{"boundingRatio(nullable_date_, lowcardinality_float64_)":null}
+"""
+
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Date__LowCardinality_Float32_ = r"""
 {"boundingRatio(nullable_date_, lowcardinality_float32_)":1.0384751556833108e34}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Date__Int64 = r"""
+{"boundingRatio(nullable_date_, int64)":281479271743489}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Date__LowCardinality_DateTime_ = r"""
@@ -678,56 +682,48 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Date__LowCard
 {"boundingRatio(nullable_date_, lowcardinality_date_)":1}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Date__Int64 = r"""
-{"boundingRatio(nullable_date_, int64)":281479271743489}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Date__Float64 = r"""
 {"boundingRatio(nullable_date_, float64)":null}
-"""
-
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Date__Float32 = r"""
-{"boundingRatio(nullable_date_, float32)":1.0384751556833108e34}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Date__Decimal128_38_ = r"""
 {"boundingRatio(nullable_date_, decimal128_38_)":0.000030518043793392844}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Date__DateTime = r"""
-{"boundingRatio(nullable_date_, datetime)":-0.000015259021896696422}
-"""
-
-_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Date__Date = r"""
-{"boundingRatio(nullable_date_, date)":1}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Date__Float32 = r"""
+{"boundingRatio(nullable_date_, float32)":1.0384751556833108e34}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_UInt64__UInt64 = r"""
 {"boundingRatio(lowcardinality_uint64_, uint64)":1}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_UInt64__Nullable_UInt64_ = r"""
-{"boundingRatio(lowcardinality_uint64_, nullable_uint64_)":1}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Date__Date = r"""
+{"boundingRatio(nullable_date_, date)":1}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_UInt64__Nullable_Int64_ = r"""
-{"boundingRatio(lowcardinality_uint64_, nullable_int64_)":1}
+_aggregate_functions_boundingRatio_datatypes_permutations_Nullable_Date__DateTime = r"""
+{"boundingRatio(nullable_date_, datetime)":-0.000015259021896696422}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_UInt64__Nullable_UInt64_ = r"""
+{"boundingRatio(lowcardinality_uint64_, nullable_uint64_)":1}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_UInt64__Nullable_Float64_ = r"""
 {"boundingRatio(lowcardinality_uint64_, nullable_float64_)":null}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_UInt64__Nullable_Float32_ = r"""
-{"boundingRatio(lowcardinality_uint64_, nullable_float32_)":36893485948395848000}
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_UInt64__Nullable_Int64_ = r"""
+{"boundingRatio(lowcardinality_uint64_, nullable_int64_)":1}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_UInt64__Nullable_Decimal128_38__ = r"""
 {"boundingRatio(lowcardinality_uint64_, nullable_decimal128_38__)":1.0842021724855044e-19}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_UInt64__Nullable_Date_ = r"""
-{"boundingRatio(lowcardinality_uint64_, nullable_date_)":3.5526594686918767e-15}
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_UInt64__Nullable_Float32_ = r"""
+{"boundingRatio(lowcardinality_uint64_, nullable_float32_)":36893485948395848000}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_UInt64__Nullable_DateTime_ = r"""
@@ -740,6 +736,10 @@ _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_UInt64_
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_UInt64__LowCardinality_Int64_ = r"""
 {"boundingRatio(lowcardinality_uint64_, lowcardinality_int64_)":1}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_UInt64__Nullable_Date_ = r"""
+{"boundingRatio(lowcardinality_uint64_, nullable_date_)":3.5526594686918767e-15}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_UInt64__LowCardinality_Float64_ = r"""
@@ -758,24 +758,20 @@ _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_UInt64_
 {"boundingRatio(lowcardinality_uint64_, lowcardinality_date_)":3.5526594686918767e-15}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_UInt64__Int64 = r"""
-{"boundingRatio(lowcardinality_uint64_, int64)":1}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_UInt64__Float64 = r"""
 {"boundingRatio(lowcardinality_uint64_, float64)":null}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_UInt64__Float32 = r"""
-{"boundingRatio(lowcardinality_uint64_, float32)":36893485948395848000}
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_UInt64__Int64 = r"""
+{"boundingRatio(lowcardinality_uint64_, int64)":1}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_UInt64__Decimal128_38_ = r"""
 {"boundingRatio(lowcardinality_uint64_, decimal128_38_)":1.0842021724855044e-19}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_UInt64__Date = r"""
-{"boundingRatio(lowcardinality_uint64_, date)":3.5526594686918767e-15}
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_UInt64__Float32 = r"""
+{"boundingRatio(lowcardinality_uint64_, float32)":36893485948395848000}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_UInt64__DateTime = r"""
@@ -784,6 +780,10 @@ _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_UInt64_
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Int64__UInt64 = r"""
 {"boundingRatio(lowcardinality_int64_, uint64)":1}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_UInt64__Date = r"""
+{"boundingRatio(lowcardinality_uint64_, date)":3.5526594686918767e-15}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Int64__Nullable_UInt64_ = r"""
@@ -802,28 +802,32 @@ _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Int64__
 {"boundingRatio(lowcardinality_int64_, nullable_float32_)":36893485948395848000}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Int64__Nullable_Decimal128_38__ = r"""
-{"boundingRatio(lowcardinality_int64_, nullable_decimal128_38__)":1.0842021724855044e-19}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Int64__Nullable_DateTime_ = r"""
 {"boundingRatio(lowcardinality_int64_, nullable_datetime_)":-5.421010862427522e-20}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Int64__Nullable_Decimal128_38__ = r"""
+{"boundingRatio(lowcardinality_int64_, nullable_decimal128_38__)":1.0842021724855044e-19}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Int64__Nullable_Date_ = r"""
 {"boundingRatio(lowcardinality_int64_, nullable_date_)":3.5526594686918767e-15}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Int64__LowCardinality_Int64_ = r"""
-{"boundingRatio(lowcardinality_int64_, lowcardinality_int64_)":1}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Int64__LowCardinality_UInt64_ = r"""
 {"boundingRatio(lowcardinality_int64_, lowcardinality_uint64_)":1}
 """
 
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Int64__LowCardinality_Int64_ = r"""
+{"boundingRatio(lowcardinality_int64_, lowcardinality_int64_)":1}
+"""
+
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Int64__LowCardinality_Float64_ = r"""
 {"boundingRatio(lowcardinality_int64_, lowcardinality_float64_)":null}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Int64__LowCardinality_Date_ = r"""
+{"boundingRatio(lowcardinality_int64_, lowcardinality_date_)":3.5526594686918767e-15}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Int64__LowCardinality_DateTime_ = r"""
@@ -832,10 +836,6 @@ _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Int64__
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Int64__LowCardinality_Float32_ = r"""
 {"boundingRatio(lowcardinality_int64_, lowcardinality_float32_)":36893485948395848000}
-"""
-
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Int64__LowCardinality_Date_ = r"""
-{"boundingRatio(lowcardinality_int64_, lowcardinality_date_)":3.5526594686918767e-15}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Int64__Float64 = r"""
@@ -850,10 +850,6 @@ _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Int64__
 {"boundingRatio(lowcardinality_int64_, float32)":36893485948395848000}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Int64__Date = r"""
-{"boundingRatio(lowcardinality_int64_, date)":3.5526594686918767e-15}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Int64__DateTime = r"""
 {"boundingRatio(lowcardinality_int64_, datetime)":-5.421010862427522e-20}
 """
@@ -862,12 +858,16 @@ _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Int64__
 {"boundingRatio(lowcardinality_int64_, decimal128_38_)":1.0842021724855044e-19}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float64__Nullable_UInt64_ = r"""
-{"boundingRatio(lowcardinality_float64_, nullable_uint64_)":0}
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Int64__Date = r"""
+{"boundingRatio(lowcardinality_int64_, date)":3.5526594686918767e-15}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float64__UInt64 = r"""
 {"boundingRatio(lowcardinality_float64_, uint64)":0}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float64__Nullable_UInt64_ = r"""
+{"boundingRatio(lowcardinality_float64_, nullable_uint64_)":0}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float64__Nullable_Int64_ = r"""
@@ -886,10 +886,6 @@ _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float64
 {"boundingRatio(lowcardinality_float64_, nullable_float64_)":null}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float64__Nullable_Date_ = r"""
-{"boundingRatio(lowcardinality_float64_, nullable_date_)":0}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float64__Nullable_DateTime_ = r"""
 {"boundingRatio(lowcardinality_float64_, nullable_datetime_)":-0}
 """
@@ -898,16 +894,24 @@ _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float64
 {"boundingRatio(lowcardinality_float64_, lowcardinality_uint64_)":0}
 """
 
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float64__Nullable_Date_ = r"""
+{"boundingRatio(lowcardinality_float64_, nullable_date_)":0}
+"""
+
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float64__LowCardinality_Int64_ = r"""
 {"boundingRatio(lowcardinality_float64_, lowcardinality_int64_)":0}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float64__LowCardinality_Float32_ = r"""
+{"boundingRatio(lowcardinality_float64_, lowcardinality_float32_)":0}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float64__LowCardinality_Float64_ = r"""
 {"boundingRatio(lowcardinality_float64_, lowcardinality_float64_)":null}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float64__LowCardinality_Float32_ = r"""
-{"boundingRatio(lowcardinality_float64_, lowcardinality_float32_)":0}
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float64__Int64 = r"""
+{"boundingRatio(lowcardinality_float64_, int64)":0}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float64__LowCardinality_DateTime_ = r"""
@@ -916,10 +920,6 @@ _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float64
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float64__LowCardinality_Date_ = r"""
 {"boundingRatio(lowcardinality_float64_, lowcardinality_date_)":0}
-"""
-
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float64__Int64 = r"""
-{"boundingRatio(lowcardinality_float64_, int64)":0}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float64__Float64 = r"""
@@ -938,12 +938,12 @@ _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float64
 {"boundingRatio(lowcardinality_float64_, datetime)":-0}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float64__Date = r"""
-{"boundingRatio(lowcardinality_float64_, date)":0}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float32__UInt64 = r"""
 {"boundingRatio(lowcardinality_float32_, uint64)":2.710505592772484e-20}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float64__Date = r"""
+{"boundingRatio(lowcardinality_float64_, date)":0}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float32__Nullable_UInt64_ = r"""
@@ -954,12 +954,16 @@ _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float32
 {"boundingRatio(lowcardinality_float32_, nullable_int64_)":2.710505592772484e-20}
 """
 
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float32__Nullable_Float64_ = r"""
+{"boundingRatio(lowcardinality_float32_, nullable_float64_)":null}
+"""
+
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float32__Nullable_Float32_ = r"""
 {"boundingRatio(lowcardinality_float32_, nullable_float32_)":1}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float32__Nullable_Float64_ = r"""
-{"boundingRatio(lowcardinality_float32_, nullable_float64_)":null}
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float32__Nullable_DateTime_ = r"""
+{"boundingRatio(lowcardinality_float32_, nullable_datetime_)":-1.4693680261090186e-39}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float32__Nullable_Decimal128_38__ = r"""
@@ -970,16 +974,16 @@ _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float32
 {"boundingRatio(lowcardinality_float32_, nullable_date_)":9.629503359105454e-35}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float32__Nullable_DateTime_ = r"""
-{"boundingRatio(lowcardinality_float32_, nullable_datetime_)":-1.4693680261090186e-39}
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float32__LowCardinality_Int64_ = r"""
+{"boundingRatio(lowcardinality_float32_, lowcardinality_int64_)":2.710505592772484e-20}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float32__LowCardinality_UInt64_ = r"""
 {"boundingRatio(lowcardinality_float32_, lowcardinality_uint64_)":2.710505592772484e-20}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float32__LowCardinality_Int64_ = r"""
-{"boundingRatio(lowcardinality_float32_, lowcardinality_int64_)":2.710505592772484e-20}
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float32__LowCardinality_DateTime_ = r"""
+{"boundingRatio(lowcardinality_float32_, lowcardinality_datetime_)":-1.4693680261090186e-39}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float32__LowCardinality_Float32_ = r"""
@@ -990,8 +994,8 @@ _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float32
 {"boundingRatio(lowcardinality_float32_, lowcardinality_float64_)":null}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float32__LowCardinality_DateTime_ = r"""
-{"boundingRatio(lowcardinality_float32_, lowcardinality_datetime_)":-1.4693680261090186e-39}
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float32__Float64 = r"""
+{"boundingRatio(lowcardinality_float32_, float64)":null}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float32__Int64 = r"""
@@ -1002,44 +1006,40 @@ _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float32
 {"boundingRatio(lowcardinality_float32_, lowcardinality_date_)":9.629503359105454e-35}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float32__Float32 = r"""
-{"boundingRatio(lowcardinality_float32_, float32)":1}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float32__Decimal128_38_ = r"""
 {"boundingRatio(lowcardinality_float32_, decimal128_38_)":2.938736052218037e-39}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float32__Float64 = r"""
-{"boundingRatio(lowcardinality_float32_, float64)":null}
-"""
-
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float32__Date = r"""
-{"boundingRatio(lowcardinality_float32_, date)":9.629503359105454e-35}
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float32__Float32 = r"""
+{"boundingRatio(lowcardinality_float32_, float32)":1}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float32__DateTime = r"""
 {"boundingRatio(lowcardinality_float32_, datetime)":-1.4693680261090186e-39}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_DateTime__UInt64 = r"""
-{"boundingRatio(lowcardinality_datetime_, uint64)":0}
-"""
-
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_DateTime__Nullable_Int64_ = r"""
-{"boundingRatio(lowcardinality_datetime_, nullable_int64_)":-3311323747.886593}
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Float32__Date = r"""
+{"boundingRatio(lowcardinality_float32_, date)":9.629503359105454e-35}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_DateTime__Nullable_UInt64_ = r"""
 {"boundingRatio(lowcardinality_datetime_, nullable_uint64_)":-2489370798.0448503}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_DateTime__Nullable_Float64_ = r"""
-{"boundingRatio(lowcardinality_datetime_, nullable_float64_)":-5.71431404827791e298}
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_DateTime__UInt64 = r"""
+{"boundingRatio(lowcardinality_datetime_, uint64)":0}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_DateTime__Nullable_Float32_ = r"""
 {"boundingRatio(lowcardinality_datetime_, nullable_float32_)":-2.5538834931689113e28}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_DateTime__Nullable_Int64_ = r"""
+{"boundingRatio(lowcardinality_datetime_, nullable_int64_)":-3311323747.886593}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_DateTime__Nullable_Float64_ = r"""
+{"boundingRatio(lowcardinality_datetime_, nullable_float64_)":-5.71431404827791e298}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_DateTime__Nullable_Decimal128_38__ = r"""
@@ -1070,16 +1070,12 @@ _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_DateTim
 {"boundingRatio(lowcardinality_datetime_, lowcardinality_float32_)":-7.922822420022822e28}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Date_ = r"""
-{"boundingRatio(lowcardinality_datetime_, lowcardinality_date_)":0}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_DateTime__LowCardinality_DateTime_ = r"""
 {"boundingRatio(lowcardinality_datetime_, lowcardinality_datetime_)":1}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_DateTime__Int64 = r"""
-{"boundingRatio(lowcardinality_datetime_, int64)":-2147485448.0015087}
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_DateTime__LowCardinality_Date_ = r"""
+{"boundingRatio(lowcardinality_datetime_, lowcardinality_date_)":0}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_DateTime__Float64 = r"""
@@ -1090,20 +1086,20 @@ _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_DateTim
 {"boundingRatio(lowcardinality_datetime_, float32)":-7.922822420022822e28}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_DateTime__Decimal128_38_ = r"""
-{"boundingRatio(lowcardinality_datetime_, decimal128_38_)":-2.3283083881042425e-10}
-"""
-
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_DateTime__DateTime = r"""
-{"boundingRatio(lowcardinality_datetime_, datetime)":1}
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_DateTime__Int64 = r"""
+{"boundingRatio(lowcardinality_datetime_, int64)":-2147485448.0015087}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_DateTime__Date = r"""
 {"boundingRatio(lowcardinality_datetime_, date)":0}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Date__UInt64 = r"""
-{"boundingRatio(lowcardinality_date_, uint64)":281479271743489}
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_DateTime__Decimal128_38_ = r"""
+{"boundingRatio(lowcardinality_datetime_, decimal128_38_)":-2.3283083881042425e-10}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_DateTime__DateTime = r"""
+{"boundingRatio(lowcardinality_datetime_, datetime)":1}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Date__Nullable_Int64_ = r"""
@@ -1114,20 +1110,20 @@ _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Date__N
 {"boundingRatio(lowcardinality_date_, nullable_uint64_)":281479271743489}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Date__Nullable_Decimal128_38__ = r"""
-{"boundingRatio(lowcardinality_date_, nullable_decimal128_38__)":0.000030518043793392844}
-"""
-
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Date__Nullable_Float64_ = r"""
-{"boundingRatio(lowcardinality_date_, nullable_float64_)":null}
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Date__UInt64 = r"""
+{"boundingRatio(lowcardinality_date_, uint64)":281479271743489}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Date__Nullable_Float32_ = r"""
 {"boundingRatio(lowcardinality_date_, nullable_float32_)":1.0384751556833108e34}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Date__LowCardinality_UInt64_ = r"""
-{"boundingRatio(lowcardinality_date_, lowcardinality_uint64_)":281479271743489}
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Date__Nullable_Float64_ = r"""
+{"boundingRatio(lowcardinality_date_, nullable_float64_)":null}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Date__Nullable_Decimal128_38__ = r"""
+{"boundingRatio(lowcardinality_date_, nullable_decimal128_38__)":0.000030518043793392844}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Date__Nullable_DateTime_ = r"""
@@ -1138,24 +1134,28 @@ _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Date__N
 {"boundingRatio(lowcardinality_date_, nullable_date_)":1}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Date__LowCardinality_Int64_ = r"""
-{"boundingRatio(lowcardinality_date_, lowcardinality_int64_)":281479271743489}
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Date__LowCardinality_UInt64_ = r"""
+{"boundingRatio(lowcardinality_date_, lowcardinality_uint64_)":281479271743489}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Date__LowCardinality_Float32_ = r"""
-{"boundingRatio(lowcardinality_date_, lowcardinality_float32_)":1.0384751556833108e34}
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Date__LowCardinality_Int64_ = r"""
+{"boundingRatio(lowcardinality_date_, lowcardinality_int64_)":281479271743489}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Date__LowCardinality_Float64_ = r"""
 {"boundingRatio(lowcardinality_date_, lowcardinality_float64_)":null}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Date__LowCardinality_Date_ = r"""
-{"boundingRatio(lowcardinality_date_, lowcardinality_date_)":1}
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Date__LowCardinality_Float32_ = r"""
+{"boundingRatio(lowcardinality_date_, lowcardinality_float32_)":1.0384751556833108e34}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Date__LowCardinality_DateTime_ = r"""
 {"boundingRatio(lowcardinality_date_, lowcardinality_datetime_)":-0.000015259021896696422}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Date__LowCardinality_Date_ = r"""
+{"boundingRatio(lowcardinality_date_, lowcardinality_date_)":1}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Date__Int64 = r"""
@@ -1174,12 +1174,12 @@ _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Date__D
 {"boundingRatio(lowcardinality_date_, decimal128_38_)":0.000030518043793392844}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Date__Date = r"""
-{"boundingRatio(lowcardinality_date_, date)":1}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Date__DateTime = r"""
 {"boundingRatio(lowcardinality_date_, datetime)":-0.000015259021896696422}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_LowCardinality_Date__Date = r"""
+{"boundingRatio(lowcardinality_date_, date)":1}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Int64_UInt64 = r"""
@@ -1214,12 +1214,12 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Int64_Nullable_Date_ =
 {"boundingRatio(int64, nullable_date_)":3.5526594686918767e-15}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Int64_LowCardinality_Int64_ = r"""
-{"boundingRatio(int64, lowcardinality_int64_)":1}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_Int64_LowCardinality_UInt64_ = r"""
 {"boundingRatio(int64, lowcardinality_uint64_)":1}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_Int64_LowCardinality_Int64_ = r"""
+{"boundingRatio(int64, lowcardinality_int64_)":1}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Int64_LowCardinality_Float64_ = r"""
@@ -1238,12 +1238,12 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Int64_LowCardinality_D
 {"boundingRatio(int64, lowcardinality_date_)":3.5526594686918767e-15}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Int64_Float64 = r"""
-{"boundingRatio(int64, float64)":null}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_Int64_Int64 = r"""
 {"boundingRatio(int64, int64)":1}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_Int64_Float64 = r"""
+{"boundingRatio(int64, float64)":null}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Int64_Float32 = r"""
@@ -1262,16 +1262,20 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Int64_Date = r"""
 {"boundingRatio(int64, date)":3.5526594686918767e-15}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Float64_Nullable_UInt64_ = r"""
-{"boundingRatio(float64, nullable_uint64_)":0}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_Float64_UInt64 = r"""
 {"boundingRatio(float64, uint64)":0}
 """
 
+_aggregate_functions_boundingRatio_datatypes_permutations_Float64_Nullable_UInt64_ = r"""
+{"boundingRatio(float64, nullable_uint64_)":0}
+"""
+
 _aggregate_functions_boundingRatio_datatypes_permutations_Float64_Nullable_Int64_ = r"""
 {"boundingRatio(float64, nullable_int64_)":0}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_Float64_Nullable_Float64_ = r"""
+{"boundingRatio(float64, nullable_float64_)":null}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Float64_Nullable_Float32_ = r"""
@@ -1282,20 +1286,16 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Float64_Nullable_Decim
 {"boundingRatio(float64, nullable_decimal128_38__)":0}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Float64_Nullable_Float64_ = r"""
-{"boundingRatio(float64, nullable_float64_)":null}
-"""
-
-_aggregate_functions_boundingRatio_datatypes_permutations_Float64_LowCardinality_UInt64_ = r"""
-{"boundingRatio(float64, lowcardinality_uint64_)":0}
+_aggregate_functions_boundingRatio_datatypes_permutations_Float64_Nullable_DateTime_ = r"""
+{"boundingRatio(float64, nullable_datetime_)":-0}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Float64_Nullable_Date_ = r"""
 {"boundingRatio(float64, nullable_date_)":0}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Float64_Nullable_DateTime_ = r"""
-{"boundingRatio(float64, nullable_datetime_)":-0}
+_aggregate_functions_boundingRatio_datatypes_permutations_Float64_LowCardinality_UInt64_ = r"""
+{"boundingRatio(float64, lowcardinality_uint64_)":0}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Float64_LowCardinality_Float64_ = r"""
@@ -1310,16 +1310,16 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Float64_LowCardinality
 {"boundingRatio(float64, lowcardinality_float32_)":0}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Float64_Int64 = r"""
-{"boundingRatio(float64, int64)":0}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_Float64_LowCardinality_DateTime_ = r"""
 {"boundingRatio(float64, lowcardinality_datetime_)":-0}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Float64_LowCardinality_Date_ = r"""
 {"boundingRatio(float64, lowcardinality_date_)":0}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_Float64_Int64 = r"""
+{"boundingRatio(float64, int64)":0}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Float64_Float32 = r"""
@@ -1334,56 +1334,52 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Float64_Decimal128_38_
 {"boundingRatio(float64, decimal128_38_)":0}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Float32_UInt64 = r"""
-{"boundingRatio(float32, uint64)":2.710505592772484e-20}
+_aggregate_functions_boundingRatio_datatypes_permutations_Float64_DateTime = r"""
+{"boundingRatio(float64, datetime)":-0}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Float64_Date = r"""
 {"boundingRatio(float64, date)":0}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Float64_DateTime = r"""
-{"boundingRatio(float64, datetime)":-0}
-"""
-
-_aggregate_functions_boundingRatio_datatypes_permutations_Float32_Nullable_Float64_ = r"""
-{"boundingRatio(float32, nullable_float64_)":null}
-"""
-
-_aggregate_functions_boundingRatio_datatypes_permutations_Float32_Nullable_UInt64_ = r"""
-{"boundingRatio(float32, nullable_uint64_)":2.710505592772484e-20}
+_aggregate_functions_boundingRatio_datatypes_permutations_Float32_UInt64 = r"""
+{"boundingRatio(float32, uint64)":2.710505592772484e-20}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Float32_Nullable_Int64_ = r"""
 {"boundingRatio(float32, nullable_int64_)":2.710505592772484e-20}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Float32_Nullable_Float32_ = r"""
-{"boundingRatio(float32, nullable_float32_)":1}
+_aggregate_functions_boundingRatio_datatypes_permutations_Float32_Nullable_UInt64_ = r"""
+{"boundingRatio(float32, nullable_uint64_)":2.710505592772484e-20}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Float32_Nullable_Decimal128_38__ = r"""
-{"boundingRatio(float32, nullable_decimal128_38__)":2.938736052218037e-39}
+_aggregate_functions_boundingRatio_datatypes_permutations_Float32_Nullable_Float64_ = r"""
+{"boundingRatio(float32, nullable_float64_)":null}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_Float32_Nullable_Float32_ = r"""
+{"boundingRatio(float32, nullable_float32_)":1}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Float32_Nullable_DateTime_ = r"""
 {"boundingRatio(float32, nullable_datetime_)":-1.4693680261090186e-39}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Float32_Nullable_Date_ = r"""
-{"boundingRatio(float32, nullable_date_)":9.629503359105454e-35}
+_aggregate_functions_boundingRatio_datatypes_permutations_Float32_Nullable_Decimal128_38__ = r"""
+{"boundingRatio(float32, nullable_decimal128_38__)":2.938736052218037e-39}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Float32_LowCardinality_Int64_ = r"""
-{"boundingRatio(float32, lowcardinality_int64_)":2.710505592772484e-20}
+_aggregate_functions_boundingRatio_datatypes_permutations_Float32_Nullable_Date_ = r"""
+{"boundingRatio(float32, nullable_date_)":9.629503359105454e-35}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Float32_LowCardinality_UInt64_ = r"""
 {"boundingRatio(float32, lowcardinality_uint64_)":2.710505592772484e-20}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Float32_LowCardinality_DateTime_ = r"""
-{"boundingRatio(float32, lowcardinality_datetime_)":-1.4693680261090186e-39}
+_aggregate_functions_boundingRatio_datatypes_permutations_Float32_LowCardinality_Int64_ = r"""
+{"boundingRatio(float32, lowcardinality_int64_)":2.710505592772484e-20}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Float32_LowCardinality_Float64_ = r"""
@@ -1392,6 +1388,10 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Float32_LowCardinality
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Float32_LowCardinality_Float32_ = r"""
 {"boundingRatio(float32, lowcardinality_float32_)":1}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_Float32_LowCardinality_DateTime_ = r"""
+{"boundingRatio(float32, lowcardinality_datetime_)":-1.4693680261090186e-39}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Float32_LowCardinality_Date_ = r"""
@@ -1406,16 +1406,16 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Float32_Float64 = r"""
 {"boundingRatio(float32, float64)":null}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Float32_DateTime = r"""
-{"boundingRatio(float32, datetime)":-1.4693680261090186e-39}
+_aggregate_functions_boundingRatio_datatypes_permutations_Float32_Float32 = r"""
+{"boundingRatio(float32, float32)":1}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Float32_Decimal128_38_ = r"""
 {"boundingRatio(float32, decimal128_38_)":2.938736052218037e-39}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Float32_Float32 = r"""
-{"boundingRatio(float32, float32)":1}
+_aggregate_functions_boundingRatio_datatypes_permutations_Float32_DateTime = r"""
+{"boundingRatio(float32, datetime)":-1.4693680261090186e-39}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Float32_Date = r"""
@@ -1430,12 +1430,12 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Decimal128_38__Nullabl
 {"boundingRatio(decimal128_38_, nullable_uint64_)":9223372036854776000}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Decimal128_38__Nullable_Float64_ = r"""
-{"boundingRatio(decimal128_38_, nullable_float64_)":null}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_Decimal128_38__Nullable_Int64_ = r"""
 {"boundingRatio(decimal128_38_, nullable_int64_)":9223372036854776000}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_Decimal128_38__Nullable_Float64_ = r"""
+{"boundingRatio(decimal128_38_, nullable_float64_)":null}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Decimal128_38__Nullable_Float32_ = r"""
@@ -1446,16 +1446,20 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Decimal128_38__Nullabl
 {"boundingRatio(decimal128_38_, nullable_decimal128_38__)":1}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Decimal128_38__Nullable_DateTime_ = r"""
-{"boundingRatio(decimal128_38_, nullable_datetime_)":-0.5}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_Decimal128_38__Nullable_Date_ = r"""
 {"boundingRatio(decimal128_38_, nullable_date_)":32767.5}
 """
 
+_aggregate_functions_boundingRatio_datatypes_permutations_Decimal128_38__Nullable_DateTime_ = r"""
+{"boundingRatio(decimal128_38_, nullable_datetime_)":-0.5}
+"""
+
 _aggregate_functions_boundingRatio_datatypes_permutations_Decimal128_38__LowCardinality_UInt64_ = r"""
 {"boundingRatio(decimal128_38_, lowcardinality_uint64_)":9223372036854776000}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_Decimal128_38__LowCardinality_Float32_ = r"""
+{"boundingRatio(decimal128_38_, lowcardinality_float32_)":3.4028234663852886e38}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Decimal128_38__LowCardinality_Float64_ = r"""
@@ -1466,8 +1470,8 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Decimal128_38__LowCard
 {"boundingRatio(decimal128_38_, lowcardinality_int64_)":9223372036854776000}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Decimal128_38__LowCardinality_Float32_ = r"""
-{"boundingRatio(decimal128_38_, lowcardinality_float32_)":3.4028234663852886e38}
+_aggregate_functions_boundingRatio_datatypes_permutations_Decimal128_38__Int64 = r"""
+{"boundingRatio(decimal128_38_, int64)":9223372036854776000}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Decimal128_38__LowCardinality_DateTime_ = r"""
@@ -1478,36 +1482,28 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Decimal128_38__LowCard
 {"boundingRatio(decimal128_38_, lowcardinality_date_)":32767.5}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Decimal128_38__Int64 = r"""
-{"boundingRatio(decimal128_38_, int64)":9223372036854776000}
-"""
-
-_aggregate_functions_boundingRatio_datatypes_permutations_Decimal128_38__Float64 = r"""
-{"boundingRatio(decimal128_38_, float64)":null}
+_aggregate_functions_boundingRatio_datatypes_permutations_Decimal128_38__Decimal128_38_ = r"""
+{"boundingRatio(decimal128_38_, decimal128_38_)":1}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Decimal128_38__Float32 = r"""
 {"boundingRatio(decimal128_38_, float32)":3.4028234663852886e38}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Decimal128_38__Decimal128_38_ = r"""
-{"boundingRatio(decimal128_38_, decimal128_38_)":1}
-"""
-
-_aggregate_functions_boundingRatio_datatypes_permutations_Decimal128_38__DateTime = r"""
-{"boundingRatio(decimal128_38_, datetime)":-0.5}
-"""
-
-_aggregate_functions_boundingRatio_datatypes_permutations_Decimal128_38__Date = r"""
-{"boundingRatio(decimal128_38_, date)":32767.5}
+_aggregate_functions_boundingRatio_datatypes_permutations_Decimal128_38__Float64 = r"""
+{"boundingRatio(decimal128_38_, float64)":null}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_DateTime_UInt64 = r"""
 {"boundingRatio(datetime, uint64)":0}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_DateTime_Nullable_Int64_ = r"""
-{"boundingRatio(datetime, nullable_int64_)":-5180531119.692161}
+_aggregate_functions_boundingRatio_datatypes_permutations_Decimal128_38__Date = r"""
+{"boundingRatio(decimal128_38_, date)":32767.5}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_Decimal128_38__DateTime = r"""
+{"boundingRatio(decimal128_38_, datetime)":-0.5}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_DateTime_Nullable_UInt64_ = r"""
@@ -1516,6 +1512,10 @@ _aggregate_functions_boundingRatio_datatypes_permutations_DateTime_Nullable_UInt
 
 _aggregate_functions_boundingRatio_datatypes_permutations_DateTime_Nullable_Float64_ = r"""
 {"boundingRatio(datetime, nullable_float64_)":-5.742740216094233e298}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_DateTime_Nullable_Int64_ = r"""
+{"boundingRatio(datetime, nullable_int64_)":-5180531119.692161}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_DateTime_Nullable_Float32_ = r"""
@@ -1530,12 +1530,12 @@ _aggregate_functions_boundingRatio_datatypes_permutations_DateTime_Nullable_Date
 {"boundingRatio(datetime, nullable_datetime_)":0.9257202089474591}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_DateTime_Nullable_Date_ = r"""
-{"boundingRatio(datetime, nullable_date_)":-0.000004125069570378049}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_DateTime_LowCardinality_UInt64_ = r"""
 {"boundingRatio(datetime, lowcardinality_uint64_)":0}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_DateTime_Nullable_Date_ = r"""
+{"boundingRatio(datetime, nullable_date_)":-0.000004125069570378049}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_DateTime_LowCardinality_Int64_ = r"""
@@ -1546,12 +1546,16 @@ _aggregate_functions_boundingRatio_datatypes_permutations_DateTime_LowCardinalit
 {"boundingRatio(datetime, lowcardinality_float64_)":-4.1855790345195034e298}
 """
 
+_aggregate_functions_boundingRatio_datatypes_permutations_DateTime_LowCardinality_Float32_ = r"""
+{"boundingRatio(datetime, lowcardinality_float32_)":-7.922822420022822e28}
+"""
+
 _aggregate_functions_boundingRatio_datatypes_permutations_DateTime_LowCardinality_DateTime_ = r"""
 {"boundingRatio(datetime, lowcardinality_datetime_)":1}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_DateTime_LowCardinality_Float32_ = r"""
-{"boundingRatio(datetime, lowcardinality_float32_)":-7.922822420022822e28}
+_aggregate_functions_boundingRatio_datatypes_permutations_DateTime_Float64 = r"""
+{"boundingRatio(datetime, float64)":-4.1855790345195034e298}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_DateTime_LowCardinality_Date_ = r"""
@@ -1566,10 +1570,6 @@ _aggregate_functions_boundingRatio_datatypes_permutations_DateTime_Float32 = r""
 {"boundingRatio(datetime, float32)":-7.922822420022822e28}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_DateTime_Float64 = r"""
-{"boundingRatio(datetime, float64)":-4.1855790345195034e298}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_DateTime_Decimal128_38_ = r"""
 {"boundingRatio(datetime, decimal128_38_)":-2.3283083881042425e-10}
 """
@@ -1578,12 +1578,12 @@ _aggregate_functions_boundingRatio_datatypes_permutations_DateTime_DateTime = r"
 {"boundingRatio(datetime, datetime)":1}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_DateTime_Date = r"""
-{"boundingRatio(datetime, date)":0}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_Date_UInt64 = r"""
 {"boundingRatio(date, uint64)":281479271743489}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_DateTime_Date = r"""
+{"boundingRatio(datetime, date)":0}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Date_Nullable_UInt64_ = r"""
@@ -1602,40 +1602,36 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Date_Nullable_Float32_
 {"boundingRatio(date, nullable_float32_)":1.0384751556833108e34}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Date_Nullable_Decimal128_38__ = r"""
-{"boundingRatio(date, nullable_decimal128_38__)":0.000030518043793392844}
+_aggregate_functions_boundingRatio_datatypes_permutations_Date_Nullable_Date_ = r"""
+{"boundingRatio(date, nullable_date_)":1}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Date_Nullable_DateTime_ = r"""
 {"boundingRatio(date, nullable_datetime_)":-0.000015259021896696422}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Date_Nullable_Date_ = r"""
-{"boundingRatio(date, nullable_date_)":1}
-"""
-
-_aggregate_functions_boundingRatio_datatypes_permutations_Date_LowCardinality_UInt64_ = r"""
-{"boundingRatio(date, lowcardinality_uint64_)":281479271743489}
-"""
-
-_aggregate_functions_boundingRatio_datatypes_permutations_Date_LowCardinality_Int64_ = r"""
-{"boundingRatio(date, lowcardinality_int64_)":281479271743489}
+_aggregate_functions_boundingRatio_datatypes_permutations_Date_Nullable_Decimal128_38__ = r"""
+{"boundingRatio(date, nullable_decimal128_38__)":0.000030518043793392844}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Date_LowCardinality_Float64_ = r"""
 {"boundingRatio(date, lowcardinality_float64_)":null}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Date_LowCardinality_Float32_ = r"""
-{"boundingRatio(date, lowcardinality_float32_)":1.0384751556833108e34}
+_aggregate_functions_boundingRatio_datatypes_permutations_Date_LowCardinality_Int64_ = r"""
+{"boundingRatio(date, lowcardinality_int64_)":281479271743489}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_Date_LowCardinality_UInt64_ = r"""
+{"boundingRatio(date, lowcardinality_uint64_)":281479271743489}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Date_LowCardinality_DateTime_ = r"""
 {"boundingRatio(date, lowcardinality_datetime_)":-0.000015259021896696422}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Date_Int64 = r"""
-{"boundingRatio(date, int64)":281479271743489}
+_aggregate_functions_boundingRatio_datatypes_permutations_Date_LowCardinality_Float32_ = r"""
+{"boundingRatio(date, lowcardinality_float32_)":1.0384751556833108e34}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Date_LowCardinality_Date_ = r"""
@@ -1646,16 +1642,20 @@ _aggregate_functions_boundingRatio_datatypes_permutations_Date_Float64 = r"""
 {"boundingRatio(date, float64)":null}
 """
 
-_aggregate_functions_boundingRatio_datatypes_permutations_Date_DateTime = r"""
-{"boundingRatio(date, datetime)":-0.000015259021896696422}
-"""
-
 _aggregate_functions_boundingRatio_datatypes_permutations_Date_Float32 = r"""
 {"boundingRatio(date, float32)":1.0384751556833108e34}
 """
 
+_aggregate_functions_boundingRatio_datatypes_permutations_Date_Int64 = r"""
+{"boundingRatio(date, int64)":281479271743489}
+"""
+
 _aggregate_functions_boundingRatio_datatypes_permutations_Date_Decimal128_38_ = r"""
 {"boundingRatio(date, decimal128_38_)":0.000030518043793392844}
+"""
+
+_aggregate_functions_boundingRatio_datatypes_permutations_Date_DateTime = r"""
+{"boundingRatio(date, datetime)":-0.000015259021896696422}
 """
 
 _aggregate_functions_boundingRatio_datatypes_permutations_Date_Date = r"""
