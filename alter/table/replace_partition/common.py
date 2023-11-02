@@ -23,13 +23,23 @@ def create_partitions_with_random_uint64(
 
 @TestStep(Given)
 def create_two_tables_partitioned_by_column_with_data(
-    self, destination_table, source_table, number_of_partitions=5, number_of_values=10
+    self,
+    destination_table,
+    source_table,
+    number_of_partitions=5,
+    number_of_values=10,
+    columns=None,
+    query_settings=None,
 ):
     """Creating two tables that are partitioned by the same column and are filled with random data."""
 
     with By("creating two tables with the same structure"):
-        create_table_partitioned_by_column(table_name=source_table)
-        create_table_partitioned_by_column(table_name=destination_table)
+        create_table_partitioned_by_column(
+            table_name=source_table, columns=columns, query_settings=query_settings
+        )
+        create_table_partitioned_by_column(
+            table_name=destination_table, columns=columns, query_settings=query_settings
+        )
 
     with And("inserting data into both tables"):
         create_partitions_with_random_uint64(
