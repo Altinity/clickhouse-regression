@@ -1,0 +1,35 @@
+<clickhouse>
+
+<storage_configuration>
+    <disks>
+        <default>
+            <keep_free_space_bytes>1024</keep_free_space_bytes>
+        </default>
+        <new_disk>
+            <path>/mnt/new_disk/</path>
+            <keep_free_space_bytes>10485760</keep_free_space_bytes>
+        </new_disk>
+    </disks>
+    <policies>
+        <default>
+            <volumes>
+                <default>
+                    <disk>default</disk>
+                </default>
+            </volumes>
+        </default>
+        <my_policy>
+            <volumes>
+                <main>
+                    <disk>default</disk>
+                    <max_data_part_size_bytes>1073741824</max_data_part_size_bytes>
+                </main>
+                <external>
+                    <disk>new_disk</disk>
+                </external>
+            </volumes>
+        </my_policy>
+    </policies>
+</storage_configuration>
+
+</clickhouse>
