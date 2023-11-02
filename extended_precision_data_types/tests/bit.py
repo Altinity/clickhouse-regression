@@ -38,6 +38,9 @@ def bit_int_inline(self, func, supported, error, int_type, min, max, node=None):
     if node is None:
         node = self.context.node
 
+    if check_clickhouse_version(">=23.5")(self):
+        self.context.snapshot_id = "tests.post23.5"
+
     if func in ["bitNot", "bitCount"]:
         with When(f"Check {func} with {int_type}"):
             execute_query(
@@ -75,6 +78,9 @@ def bit_int_table(self, func, supported, error, int_type, min, max, node=None):
 
     if error is not None:
         exitcode, message = error
+
+    if check_clickhouse_version(">=23.5")(self):
+        self.context.snapshot_id = "tests.post23.5"
 
     with Given(f"I have a table"):
         table(name=table_name, data_type=int_type)
