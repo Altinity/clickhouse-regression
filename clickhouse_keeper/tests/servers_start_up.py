@@ -152,70 +152,68 @@ def different_start_up(self):
 def different_shared_start_up(self):
     """Check 9 nodes ClickHouse server with different 3 nodes Keeper clusters for each shard with one shared start up
     and synchronization"""
-    if check_clickhouse_version("<23.3")(self):
-        if self.context.ssl == "true":
-            xfail("was not created for the SSL configuration")
-        cluster = self.context.cluster
-        cluster_nodes = cluster.nodes["clickhouse"][:9]
-        control_nodes = cluster.nodes["clickhouse"][6:9]
-        try:
-            with Given("I stop all ClickHouse server nodes"):
-                for name in cluster_nodes:
-                    cluster.node(name).stop_clickhouse(safe=False)
 
-            with And("I clean ClickHouse Keeper server nodes"):
-                clean_coordination_on_all_nodes()
+    if self.context.ssl == "true":
+        xfail("was not created for the SSL configuration")
+    cluster = self.context.cluster
+    cluster_nodes = cluster.nodes["clickhouse"][:9]
+    control_nodes = cluster.nodes["clickhouse"][6:9]
+    try:
+        with Given("I stop all ClickHouse server nodes"):
+            for name in cluster_nodes:
+                cluster.node(name).stop_clickhouse(safe=False)
 
-            with And("I create server Keeper config"):
-                create_config_section(
-                    control_nodes=control_nodes,
-                    cluster_nodes=cluster_nodes,
-                    check_preprocessed=False,
-                    restart=False,
-                    modify=False,
-                )
+        with And("I clean ClickHouse Keeper server nodes"):
+            clean_coordination_on_all_nodes()
 
-            with And("I create main mixed 3 nodes Keeper server config file"):
-                create_keeper_cluster_configuration(
-                    nodes=control_nodes,
-                    check_preprocessed=False,
-                    restart=False,
-                    modify=False,
-                )
+        with And("I create server Keeper config"):
+            create_config_section(
+                control_nodes=control_nodes,
+                cluster_nodes=cluster_nodes,
+                check_preprocessed=False,
+                restart=False,
+                modify=False,
+            )
 
-            with And("I create first sub mixed 3 nodes Keeper server config file"):
-                create_keeper_cluster_configuration(
-                    nodes=cluster.nodes["clickhouse"][:3],
-                    check_preprocessed=False,
-                    restart=False,
-                    modify=False,
-                )
+        with And("I create main mixed 3 nodes Keeper server config file"):
+            create_keeper_cluster_configuration(
+                nodes=control_nodes,
+                check_preprocessed=False,
+                restart=False,
+                modify=False,
+            )
 
-            with And("I create second sub mixed 3 nodes Keeper server config file"):
-                create_keeper_cluster_configuration(
-                    nodes=cluster.nodes["clickhouse"][3:6],
-                    check_preprocessed=False,
-                    restart=False,
-                    modify=False,
-                )
+        with And("I create first sub mixed 3 nodes Keeper server config file"):
+            create_keeper_cluster_configuration(
+                nodes=cluster.nodes["clickhouse"][:3],
+                check_preprocessed=False,
+                restart=False,
+                modify=False,
+            )
 
-            with And("I start mixed ClickHouse server nodes"):
-                for name in control_nodes:
-                    cluster.node(name).start_clickhouse(wait_healthy=False)
+        with And("I create second sub mixed 3 nodes Keeper server config file"):
+            create_keeper_cluster_configuration(
+                nodes=cluster.nodes["clickhouse"][3:6],
+                check_preprocessed=False,
+                restart=False,
+                modify=False,
+            )
 
-            with And("I start first 3 ClickHouse server nodes"):
-                for name in cluster.nodes["clickhouse"][:3]:
-                    retry(cluster.node(name).start_clickhouse, timeout=100, delay=1)()
+        with And("I start mixed ClickHouse server nodes"):
+            for name in control_nodes:
+                cluster.node(name).start_clickhouse(wait_healthy=False)
 
-            with And("I start second 3 ClickHouse server nodes"):
-                for name in cluster.nodes["clickhouse"][3:6]:
-                    retry(cluster.node(name).start_clickhouse, timeout=100, delay=1)()
+        with And("I start first 3 ClickHouse server nodes"):
+            for name in cluster.nodes["clickhouse"][:3]:
+                retry(cluster.node(name).start_clickhouse, timeout=100, delay=1)()
 
-        finally:
-            with Finally("I clean up"):
-                clean_coordination_on_all_nodes()
-    else:
-        xfail("test doesn't work from 23.3")
+        with And("I start second 3 ClickHouse server nodes"):
+            for name in cluster.nodes["clickhouse"][3:6]:
+                retry(cluster.node(name).start_clickhouse, timeout=100, delay=1)()
+
+    finally:
+        with Finally("I clean up"):
+            clean_coordination_on_all_nodes()
 
 
 @TestFeature
@@ -223,6 +221,5 @@ def different_shared_start_up(self):
 @Name("servers start up")
 def feature(self):
     """Check different ClickHouse server configurations"""
-    xfail("unstable fix check")
     for scenario in loads(current_module(), Scenario):
         scenario()

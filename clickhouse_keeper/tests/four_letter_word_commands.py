@@ -112,15 +112,10 @@ def wchc_command(
     self, four_letter_word_command="wchc", output="/clickhouse/task_queue/ddl"
 ):
     """Check 'wchc' has in output "/clickhouse/task_queue/ddl"."""
-    if check_clickhouse_version("<22.8")(self):
-        four_letter_word_commands(
-            four_letter_word_command=four_letter_word_command, output=output
-        )
-    else:
-        xfail("doesn't work from 22.8")
-        four_letter_word_commands(
-            four_letter_word_command=four_letter_word_command, output=output
-        )
+
+    four_letter_word_commands(
+        four_letter_word_command=four_letter_word_command, output=output
+    )
 
 
 @TestScenario

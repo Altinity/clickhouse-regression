@@ -86,7 +86,49 @@ xfails = {
 
 xflags = {}
 
-ffails = {}
+ffails = {
+    "/clickhouse keeper/migration/migrate from zookeeper to standalone keeper": (
+        XFail,
+        "test doesn't work from 23.3",
+        check_clickhouse_version(">=23.3"),
+    ),
+    "/clickhouse keeper/keeper cluster tests/zookeepers 3": (
+        XFail,
+        "unstable from 23.3",
+        check_clickhouse_version(">=23.3"),
+    ),
+    "/clickhouse keeper/keeper cluster tests/standalone keepers 3": (
+        XFail,
+        "Not stable",
+    ),
+    "/clickhouse keeper/four letter word commands/wchc command": (
+        XFail,
+        "test doesn't work from 22.8",
+        check_clickhouse_version(">=22.8"),
+    ),
+    "/clickhouse keeper/coordination settings": (
+        XFail,
+        "test doesn't work from 23.3",
+        check_clickhouse_version(">=23.3"),
+    ),
+    "/clickhouse keeper/coordination settings/server id": (
+        XFail,
+        "doesn't function beyond version 22.3",
+        check_clickhouse_version(">=22.3"),
+    ),
+    "/clickhouse keeper/coordination settings/startup timeout": (
+        XFail,
+        "doesn't function beyond version 22.3",
+        check_clickhouse_version(">=22.3"),
+    ),
+    "/clickhouse keeper/*/tcp connection all ports": (XFail, "duplication test"),
+    "/clickhouse keeper/servers start up": (XFail, "unstable fix check"),
+    "/clickhouse keeper/servers start up/different shared start up": (
+        XFail,
+        "test doesn't work from 23.3",
+        check_clickhouse_version(">=23.3"),
+    ),
+}
 
 
 @TestModule
