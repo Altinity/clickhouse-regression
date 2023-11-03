@@ -1,11 +1,13 @@
 from testflows.core import *
 from testflows.asserts import *
 from helpers.common import getuid, replace_partition
-from helpers.tables import create_table_partitioned_by_column
+from helpers.datatypes import UInt64, UInt8
+from helpers.tables import create_table_partitioned_by_column, Column
 from alter.table.replace_partition.requirements.requirements import *
 from alter.table.replace_partition.common import (
     create_two_tables_partitioned_by_column_with_data,
     create_merge_tree_and_memory_tables,
+    create_table_partitioned_by_column_with_data,
 )
 
 
@@ -21,7 +23,7 @@ def io_error_message(exitcode=62, message="Syntax error"):
     RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_TableFunctions("1.0")
 )
 def table_functions(self):
-    """Checking that the usage of table functions after from clause outputs an expected error and does not crash the
+    """Checking that the usage of table functions after FROM clause on replace partition outputs an expected error and does not crash the
     ClickHouse."""
     node = self.context.node
     destination_table = "destination_" + getuid()
@@ -48,7 +50,7 @@ def table_functions(self):
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Join("1.0"))
 def join(self):
-    """Checking that the usage of JOIN does output an expected error and does not crash the ClickHouse."""
+    """Checking that the usage of JOIN after FROM clause on replace partition does output an expected error and does not crash the ClickHouse."""
     node = self.context.node
     destination_table = "destination_" + getuid()
     source_table = "source_" + getuid()
@@ -74,9 +76,11 @@ def join(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Join("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Subquery("1.0")
+)
 def subquery(self):
-    """Checking that the usage of subquery does output an expected error and does not crash the ClickHouse."""
+    """Checking that the usage of subquery after FROM clause on replace partition does output an expected error and does not crash the ClickHouse."""
     node = self.context.node
     destination_table = "destination_" + getuid()
     source_table = "source_" + getuid()
@@ -134,7 +138,11 @@ def order_by_partition_by(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_IncorrectTableEngines(
+        "1.0"
+    )
+)
 def non_mergetree_table(self):
     """Checking that it is not possible to replace partition on a destination table from a table that is not a MergeTree table."""
     node = self.context.node
@@ -152,7 +160,7 @@ def non_mergetree_table(self):
         )
 
     with Check(
-        "That it is not possible to replace a partition on a mergetree table from a memory table"
+        "that it is not possible to replace a partition on a MergeTree table from a Memory table"
     ):
         replace_partition(
             destination_table=destination_table,
@@ -162,7 +170,7 @@ def non_mergetree_table(self):
             exitcode=exitcode,
         )
 
-    with But("Check that partition was not replaced on the destination table"):
+    with But("check that partition was not replaced on the destination table"):
         destination_data = node.query(
             f"SELECT * FROM {destination_table} WHERE p = 2 ORDER BY p"
         )
@@ -233,6 +241,153 @@ def materialized_view(self):
         )
 
 
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions_Different_StoragePolicy(
+        "1.0"
+    )
+)
+def storage_policy(self):
+    """Check that it is not possible to replace partition on the destination table when the destination table and
+    source table have different storage policies."""
+    destination_table = "destination_" + getuid()
+    source_table = "source_" + getuid()
+
+    exitcode, message = io_error_message(
+        exitcode=36, message="Could not clone and load part"
+    )
+
+    with Given("I have a partitioned destination table with a policy1"):
+        create_table_partitioned_by_column_with_data(
+            table_name=destination_table, query_settings="storage_policy = 'policy1'"
+        )
+
+    with And("I have a partitioned source table with a different policy"):
+        create_table_partitioned_by_column_with_data(
+            table_name=source_table, query_settings="storage_policy = 'policy2'"
+        )
+
+    with Then(
+        "I try to replace partition on the destination table with a different policy from the source table"
+    ):
+        replace_partition(
+            destination_table=destination_table,
+            source_table=source_table,
+            exitcode=exitcode,
+            message=message,
+        )
+
+
+@TestStep
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions_Different_Key("1.0")
+)
+def partition_by(self):
+    """Check that it is not possible to replace partition on the destination table when destination table and source
+    table have different partition by key."""
+    destination_table = "destination_" + getuid()
+    source_table = "source_" + getuid()
+
+    exitcode, message = io_error_message(
+        exitcode=36, message="Tables have different partition key"
+    )
+
+    with Given("I have a partitioned destination table"):
+        create_table_partitioned_by_column_with_data(table_name=destination_table)
+
+    with And("I have a partitioned source table with a different partition key"):
+        create_table_partitioned_by_column_with_data(
+            table_name=source_table, partition_by="i"
+        )
+
+    with Then(
+        "I try to replace partition on the destination table with a different partition key from the source table"
+    ):
+        replace_partition(
+            destination_table=destination_table,
+            source_table=source_table,
+            exitcode=exitcode,
+            message=message,
+        )
+
+
+@TestStep
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions_Different_Key("1.0")
+)
+def order_by(self):
+    """Check that it is not possible to replace partition on the destination table when destination table and source
+    table have different order by key."""
+    destination_table = "destination_" + getuid()
+    source_table = "source_" + getuid()
+
+    exitcode, message = io_error_message(
+        exitcode=36, message="Tables have different ordering"
+    )
+
+    with Given("I have a partitioned destination table"):
+        create_table_partitioned_by_column_with_data(table_name=destination_table)
+
+    with And("I have a partitioned source table with a different order key"):
+        create_table_partitioned_by_column_with_data(
+            table_name=source_table, order_by="i"
+        )
+
+    with Then(
+        "I try to replace partition on the destination table with a different order key from the source table"
+    ):
+        replace_partition(
+            destination_table=destination_table,
+            source_table=source_table,
+            exitcode=exitcode,
+            message=message,
+        )
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions_Different_Structure(
+        "1.0"
+    )
+)
+def structure(self):
+    """Check that it is not possible to replace partition on the destination table when the destination and source
+    table have different structure."""
+    destination_table = "destination_" + getuid()
+    source_table = "source_" + getuid()
+
+    exitcode, message = io_error_message(
+        exitcode=122, message="Tables have different structure"
+    )
+
+    columns = [
+        Column(name="p", datatype=UInt8()),
+        Column(name="i", datatype=UInt64()),
+        Column(name="extra_column", datatype=UInt64()),
+    ]
+
+    with Given("I have a partitioned destination table"):
+        create_table_partitioned_by_column_with_data(table_name=destination_table)
+
+    with And(
+        "I have a partitioned source table with a different structure",
+        description="this table has an extra column compared to the destination table",
+    ):
+        create_table_partitioned_by_column_with_data(
+            table_name=source_table, columns=columns
+        )
+
+    with Then(
+        "I try to replace partition on the destination table with a different structure from the source table"
+    ):
+        replace_partition(
+            destination_table=destination_table,
+            source_table=source_table,
+            exitcode=exitcode,
+            message=message,
+        )
+
+
 @TestSuite
 def from_clause(self):
     """Check that the ClickHouse outputs an error and does not replace partition when prohibited actions are being
@@ -245,6 +400,23 @@ def from_clause(self):
     Scenario(run=materialized_view)
 
 
+@TestSuite
+@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions("1.0"))
+def conditions(self):
+    """Check that it is not possible to replace partition from source table to destination table when these two tables
+    have different:
+    * Storage Policy
+    * Structure
+    * Partition key
+    * Order By key
+    """
+
+    Scenario(run=storage_policy)
+    Scenario(run=partition_by)
+    Scenario(run=order_by)
+    Scenario(run=structure)
+
+
 @TestFeature
 @Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited("1.0"))
 @Name("prohibited actions")
@@ -254,4 +426,5 @@ def feature(self, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
 
     Feature(run=from_clause)
+    Feature(run=conditions)
     Scenario(run=order_by_partition_by)

@@ -322,7 +322,7 @@ def feature(self, node="clickhouse1"):
             ],
         ):
             with When("I run create row policy command"):
-                exitcode, message = errors.cluster_not_found("fake_cluster")
+                exitcode, message = errors.cluster_not_found(self, "fake_cluster")
                 node.query(
                     "CREATE ROW POLICY policy13 ON CLUSTER fake_cluster ON default.foo",
                     exitcode=exitcode,

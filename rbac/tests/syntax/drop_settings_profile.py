@@ -81,7 +81,7 @@ def feature(self, node="clickhouse1"):
         requirements=[RQ_SRS_006_RBAC_SettingsProfile_Drop("1.0")],
     ):
         with When("I drop default profile"):
-            exitcode, message = errors.cannot_remove_settings_profile_default()
+            exitcode, message = errors.cannot_remove_settings_profile_default(self)
             node.query(
                 "DROP SETTINGS PROFILE default", exitcode=exitcode, message=message
             )
@@ -116,7 +116,7 @@ def feature(self, node="clickhouse1"):
         requirements=[RQ_SRS_006_RBAC_SettingsProfile_Drop_OnCluster("1.0")],
     ):
         with When("I run drop settings profile command"):
-            exitcode, message = errors.cluster_not_found("fake_cluster")
+            exitcode, message = errors.cluster_not_found(self, "fake_cluster")
             node.query(
                 "DROP SETTINGS PROFILE profile6 ON CLUSTER fake_cluster",
                 exitcode=exitcode,

@@ -117,7 +117,7 @@ def feature(self, node="clickhouse1"):
         requirements=[RQ_SRS_006_RBAC_Role_Create("1.0")],
     ):
         with When("I run create role on a cluster"):
-            exitcode, message = errors.cluster_not_found("fake_cluster")
+            exitcode, message = errors.cluster_not_found(self, "fake_cluster")
             node.query(
                 "CREATE ROLE role1 ON CLUSTER fake_cluster",
                 exitcode=exitcode,

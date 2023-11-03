@@ -1,7 +1,11 @@
 from testflows.core import *
 
+from alter.table.replace_partition.common import create_partitions_with_random_uint64
 
+
+@TestStep(Given)
 def create_table(
+    self,
     table_name,
     columns=None,
     engine=None,
@@ -15,6 +19,8 @@ def create_table(
     as_table=None,
     order_by=None,
     comment=None,
+    settings=None,
+    partition_by=None,
 ):
     """
     Generates a query to create a table in ClickHouse.
@@ -32,124 +38,427 @@ def create_table(
         as_table_function (str, optional): Table function to create a table based on its result.
         as_table (str, optional): Another table to copy the schema from.
         comment (str, optional): Comment for the table.
+        settings (list, optional): query level settings.
+        partition_by (str, optional): partition key for the MergeTree tables with partitions.
 
-    Returns:
-        str: ClickHouse query to create a table.
+        Example how to define columns:
+            columns_example = [
+                {"name": "id", "type": "UInt64"},
+                {"name": "name", "type": "String", "null": "NULL", "comment": "'user name'"},
+                {"name": "created_at", "type": "DateTime", "default": "now()"},
+            ]
     """
-    query = "CREATE TABLE"
-    if if_not_exists:
-        query += " IF NOT EXISTS"
-    if db:
-        query += f" {db}."
-        query += f"{table_name}"
-    else:
-        query += f" {table_name}"
+    node = current().context.node
 
-    if cluster:
-        query += f" ON CLUSTER {cluster}"
+    if settings is None:
+        settings = [("allow_suspicious_low_cardinality_types", 1)]
 
-    if columns:
-        query += " (\n"
-        for col in columns:
-            query += f"    {col['name']} {col['type']}"
-            for modifier in [
-                "null",
-                "default",
-                "materialized",
-                "alias",
-                "codec",
-                "ttl",
-                "comment",
-            ]:
-                if modifier in col:
-                    query += f" {modifier.upper()} {col[modifier]}"
-            query += ",\n"
-        if primary_key:
-            query += f"    PRIMARY KEY({primary_key}),\n"
-        if constraints:
-            for constraint in constraints:
-                query += f"    CONSTRAINT {constraint},\n"
-        query = query.rstrip(",\n") + "\n) "
-    elif as_table:
-        query += f" AS {as_table}"
-    elif as_table_function:
-        query += f" AS {as_table_function}()"
-    elif as_select_query:
-        query += f" AS {as_select_query}"
+    try:
+        query = "CREATE TABLE"
+        if if_not_exists:
+            query += " IF NOT EXISTS"
+        if db is not None:
+            query += f" {db}."
+            query += f"{table_name}"
+        else:
+            query += f" {table_name}"
 
-    if engine:
-        query += f" ENGINE = {engine}"
+        if cluster:
+            query += f" ON CLUSTER {cluster}"
 
-    if order_by:
-        query += f" ORDER BY {order_by}"
-    if comment:
-        query += f" COMMENT '{comment}'"
+        if columns:
+            query += " (\n"
+            for col in columns:
+                query += f"    {col['name']} {col['type']}"
+                for modifier in [
+                    "null",
+                    "default",
+                    "materialized",
+                    "alias",
+                    "codec",
+                    "ttl",
+                    "comment",
+                ]:
+                    if modifier in col:
+                        query += f" {modifier.upper()} {col[modifier]}"
+                query += ",\n"
+            if primary_key:
+                query += f"    PRIMARY KEY({primary_key}),\n"
+            if constraints:
+                for constraint in constraints:
+                    query += f"    CONSTRAINT {constraint},\n"
+            query = query.rstrip(",\n") + "\n) "
+        elif as_table:
+            query += f" AS {as_table}"
+        elif as_table_function:
+            query += f" AS {as_table_function}()"
+        elif as_select_query:
+            query += f" AS {as_select_query}"
 
-    query += ";"
+        if engine:
+            query += f" ENGINE = {engine}"
+
+        if order_by:
+            query += f" ORDER BY {order_by}"
+        if partition_by:
+            query += f" PARTITION BY {partition_by}"
+        if comment:
+            query += f" COMMENT '{comment}'"
+
+        query += ";"
+
+        node.query(query)
+        yield
+    finally:
+        with Finally(f"drop the table {table_name}"):
+            node.query(f"DROP TABLE IF EXISTS {table_name}")
 
     return query
 
 
-@TestStep
-def create_merge_tree(
+@TestStep(Given)
+def create_merge_tree_table(
     self,
-    node,
-    name: str,
+    table_name: str,
     columns: list[dict],
-    order_by: str,
-    if_not_exists: bool,
-    db: str,
-    comment: str,
+    if_not_exists: bool = False,
+    db: str = None,
+    comment: str = None,
     primary_key=None,
+    order_by: str = "tuple()",
+    partition_by: str = None,
 ):
-    with Given(
-        "I execute a ClickHouse query to create a table with a MergeTree engine"
+    """Create a table with the MergeTree engine."""
+    create_table(
+        table_name=table_name,
+        columns=columns,
+        engine="MergeTree",
+        order_by=order_by,
+        primary_key=primary_key,
+        if_not_exists=if_not_exists,
+        db=db,
+        comment=comment,
+        partition_by=partition_by,
+    )
+
+
+@TestStep(Given)
+def create_replacing_merge_tree_table(
+    self,
+    table_name: str,
+    columns: list[dict],
+    if_not_exists: bool = False,
+    db: str = None,
+    comment: str = None,
+    primary_key=None,
+    order_by: str = "tuple()",
+    partition_by: str = None,
+):
+    """Create a table with the ReplacingMergeTree engine."""
+    create_table(
+        table_name=table_name,
+        columns=columns,
+        engine="ReplacingMergeTree",
+        order_by=order_by,
+        primary_key=primary_key,
+        if_not_exists=if_not_exists,
+        db=db,
+        comment=comment,
+        partition_by=partition_by,
+    )
+
+
+@TestStep(Given)
+def create_summing_merge_tree_table(
+    self,
+    table_name: str,
+    columns: list[dict],
+    if_not_exists: bool = False,
+    db: str = None,
+    comment: str = None,
+    primary_key=None,
+    order_by: str = "tuple()",
+    partition_by: str = None,
+):
+    """Create a table with the SummingMergeTree engine."""
+    create_table(
+        table_name=table_name,
+        columns=columns,
+        engine="SummingMergeTree",
+        order_by=order_by,
+        primary_key=primary_key,
+        if_not_exists=if_not_exists,
+        db=db,
+        comment=comment,
+        partition_by=partition_by,
+    )
+
+
+@TestStep(Given)
+def create_aggregating_merge_tree_table(
+    self,
+    table_name: str,
+    columns: list[dict],
+    if_not_exists: bool = False,
+    db: str = None,
+    comment: str = None,
+    primary_key=None,
+    order_by: str = "tuple()",
+    partition_by: str = None,
+):
+    """Create a table with the AggregatingMergeTree engine."""
+    create_table(
+        table_name=table_name,
+        columns=columns,
+        engine="AggregatingMergeTree",
+        order_by=order_by,
+        primary_key=primary_key,
+        if_not_exists=if_not_exists,
+        db=db,
+        comment=comment,
+        partition_by=partition_by,
+    )
+
+
+@TestStep(Given)
+def create_collapsing_merge_tree_table(
+    self,
+    table_name: str,
+    columns: list[dict],
+    if_not_exists: bool = False,
+    db: str = None,
+    comment: str = None,
+    primary_key=None,
+    order_by: str = "tuple()",
+    partition_by: str = None,
+    sign: str = "Sign",
+):
+    """Create a table with the CollapsingMergeTree engine.
+
+    Description:
+        Sign must be an Int8 datatype with either value of 1 or -1.
+    """
+    create_table(
+        table_name=table_name,
+        columns=columns,
+        engine=f"CollapsingMergeTree({sign})",
+        order_by=order_by,
+        primary_key=primary_key,
+        if_not_exists=if_not_exists,
+        db=db,
+        comment=comment,
+        partition_by=partition_by,
+    )
+
+
+@TestStep(Given)
+def create_versioned_collapsing_merge_tree_table(
+    self,
+    table_name: str,
+    columns: list[dict],
+    if_not_exists: bool = False,
+    db: str = None,
+    comment: str = None,
+    primary_key=None,
+    order_by: str = "tuple()",
+    partition_by: str = None,
+    sign: str = "Sign",
+    version: str = "Version",
+):
+    """Create a table with the VersionedCollapsingMergeTree engine.
+
+    Description:
+        Sign must be an Int8 datatype with either value of 1 or -1.
+        Version can be any UInt datatype value
+    """
+    create_table(
+        table_name=table_name,
+        columns=columns,
+        engine=f"VersionedCollapsingMergeTree({sign}, {version})",
+        order_by=order_by,
+        primary_key=primary_key,
+        if_not_exists=if_not_exists,
+        db=db,
+        comment=comment,
+        partition_by=partition_by,
+    )
+
+
+@TestStep(Given)
+def create_graphite_merge_tree_table(
+    self,
+    table_name: str,
+    columns: list[dict],
+    config: str,
+    if_not_exists: bool = False,
+    db: str = None,
+    comment: str = None,
+    primary_key=None,
+    order_by: str = "tuple()",
+    partition_by: str = None,
+):
+    """Create a table with the GraphiteMergeTree engine.
+
+    Description:
+        config should be a name of the section in the configuration file, where are the rules of rollup set.
+    """
+    create_table(
+        table_name=table_name,
+        columns=columns,
+        engine=f"GraphiteMergeTree('{config}')",
+        order_by=order_by,
+        primary_key=primary_key,
+        if_not_exists=if_not_exists,
+        db=db,
+        comment=comment,
+        partition_by=partition_by,
+    )
+
+
+@TestStep(Given)
+def create_replicated_merge_tree_table(
+    self,
+    table_name: str,
+    columns: list[dict],
+    if_not_exists: bool = False,
+    db: str = None,
+    comment: str = None,
+    primary_key=None,
+    order_by: str = "tuple()",
+    partition_by: str = None,
+):
+    """Create a table with the MergeTree engine."""
+    create_table(
+        table_name=table_name,
+        columns=columns,
+        engine=f"ReplicatedMergeTree('/clickhouse/tables/shard0/{table_name}', 'replica0')",
+        order_by=order_by,
+        primary_key=primary_key,
+        if_not_exists=if_not_exists,
+        db=db,
+        comment=comment,
+        partition_by=partition_by,
+    )
+
+
+@TestStep(Given)
+def partitioned_merge_tree_table(self, table_name, partition, columns):
+    """Create a MergeTree table partitioned by a specific column."""
+    with By(f"creating a partitioned {table_name} table with a MergeTree engine"):
+        create_merge_tree_table(
+            table_name=table_name, columns=columns, partition_by=partition
+        )
+
+    with And("populating it with the data needed to create multiple partitions"):
+        create_partitions_with_random_uint64(table_name=table_name)
+
+
+@TestStep(Given)
+def partitioned_replicated_merge_tree_table(self, table_name, partition, columns):
+    """Create a ReplicatedMergeTree table partitioned by a specific column."""
+    with By(
+        f"creating a partitioned {table_name} table with a ReplicatedMergeTree engine"
     ):
-        node.query(
-            create_table(
-                table_name=name,
-                columns=columns,
-                engine="MergeTree",
-                order_by=order_by,
-                primary_key=primary_key,
-                if_not_exists=if_not_exists,
-                db=db,
-                comment=comment,
-            )
+        create_replicated_merge_tree_table(
+            table_name=table_name, columns=columns, partition_by=partition
+        )
+
+    with And("populating it with the data needed to create multiple partitions"):
+        create_partitions_with_random_uint64(table_name=table_name)
+
+
+@TestStep(Given)
+def partitioned_replacing_merge_tree_table(self, table_name, partition, columns):
+    """Create a ReplacingMergeTree table partitioned by a specific column."""
+    with By(
+        f"creating a partitioned {table_name} table with a ReplacingMergeTree engine"
+    ):
+        create_replacing_merge_tree_table(
+            table_name=table_name, columns=columns, partition_by=partition
+        )
+
+    with And("populating it with the data needed to create multiple partitions"):
+        create_partitions_with_random_uint64(table_name=table_name)
+
+
+@TestStep(Given)
+def partitioned_summing_merge_tree_table(self, table_name, partition, columns):
+    """Create a SummingMergeTree table partitioned by a specific column."""
+    with By(
+        f"creating a partitioned {table_name} table with a SummingMergeTree engine"
+    ):
+        create_aggregating_merge_tree_table(
+            table_name=table_name, columns=columns, partition_by=partition
+        )
+
+    with And("populating it with the data needed to create multiple partitions"):
+        create_partitions_with_random_uint64(table_name=table_name)
+
+
+@TestStep(Given)
+def partitioned_collapsing_merge_tree_table(self, table_name, partition, columns):
+    """Create a CollapsingMergeTree table partitioned by a specific column."""
+    with By(
+        f"creating a partitioned {table_name} table with a CollapsingMergeTree engine"
+    ):
+        create_collapsing_merge_tree_table(
+            table_name=table_name, columns=columns, partition_by=partition, sign="p"
+        )
+
+    with And("populating it with the data needed to create multiple partitions"):
+        create_partitions_with_random_uint64(
+            table_name=table_name, number_of_partitions=1
         )
 
 
-@TestStep
-def create_replicated_merge_tree(
-    self,
-    node,
-    name: str,
-    columns: list[dict],
-    order_by: str,
-    if_not_exists: bool,
-    db: str,
-    comment: str,
-    primary_key=None,
+@TestStep(Given)
+def partitioned_versioned_collapsing_merge_tree_table(
+    self, table_name, partition, columns
 ):
-    with Given(
-        "I execute a ClickHouse query to create a table with a ReplicatedMergeTree engine"
+    """Create a VersionedCollapsingMergeTree table partitioned by a specific column."""
+    with By(
+        f"creating a partitioned {table_name} table with a VersionedCollapsingMergeTree engine"
     ):
-        node.query(
-            create_table(
-                table_name=name,
-                columns=columns,
-                engine="ReplicatedMergeTree",
-                order_by=order_by,
-                primary_key=primary_key,
-                if_not_exists=if_not_exists,
-                db=db,
-                comment=comment,
-            )
+        create_versioned_collapsing_merge_tree_table(
+            table_name=table_name,
+            columns=columns,
+            partition_by=partition,
+            sign="p",
+            version="i",
+        )
+
+    with And("populating it with the data needed to create multiple partitions"):
+        create_partitions_with_random_uint64(
+            table_name=table_name, number_of_partitions=1
         )
 
 
-columns_example = [
-    {"name": "id", "type": "UInt64"},
-    {"name": "name", "type": "String", "null": "NULL", "comment": "'user name'"},
-    {"name": "created_at", "type": "DateTime", "default": "now()"},
-]
+@TestStep(Given)
+def partitioned_aggregating_merge_tree_table(self, table_name, partition, columns):
+    """Create a AggregatingMergeTree table partitioned by a specific column."""
+    with By(
+        f"creating a partitioned {table_name} table with a AggregatingMergeTree engine"
+    ):
+        create_summing_merge_tree_table(
+            table_name=table_name, columns=columns, partition_by=partition
+        )
+
+    with And("populating it with the data needed to create multiple partitions"):
+        create_partitions_with_random_uint64(table_name=table_name)
+
+
+@TestStep(Given)
+def partitioned_graphite_merge_tree_table(self, table_name, partition, columns):
+    """Create a GraphiteMergeTree table partitioned by a specific column."""
+    with By(
+        f"creating a partitioned {table_name} table with a GraphiteMergeTree engine"
+    ):
+        create_graphite_merge_tree_table(
+            table_name=table_name,
+            columns=columns,
+            partition_by=partition,
+            config="graphite_rollup_example",
+        )
+
+    with And("populating it with the data needed to create multiple partitions"):
+        create_partitions_with_random_uint64(table_name=table_name)

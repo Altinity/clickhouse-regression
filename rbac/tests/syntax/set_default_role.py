@@ -115,7 +115,7 @@ def feature(self, node="clickhouse1"):
             requirements=[RQ_SRS_006_RBAC_SetDefaultRole("1.0")],
         ):
             with When("I set a default role for default"):
-                exitcode, message = errors.cannot_update_default()
+                exitcode, message = errors.cannot_update_default(self)
                 node.query(
                     "SET DEFAULT ROLE role0 TO default",
                     exitcode=exitcode,

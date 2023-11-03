@@ -509,6 +509,8 @@ def create_table_partitioned_by_column(
     engine="MergeTree",
     partition_by="p",
     columns=None,
+    query_settings=None,
+    order_by="tuple()",
 ):
     """Create a table that is partitioned by a specific column."""
 
@@ -523,20 +525,9 @@ def create_table_partitioned_by_column(
             name=table_name,
             engine=engine,
             partition_by=partition_by,
-            order_by="tuple()",
+            order_by=order_by,
             columns=columns,
-        )
-
-
-@TestStep(Given)
-def insert_into_table_random_uint64(self, table_name, number_of_values, node=None):
-    """Insert random UInt64 values into a column."""
-    if node is None:
-        node = self.context.node
-
-    with By("Inserting random values into a column with uint64 datatype"):
-        node.query(
-            f"INSERT INTO {table_name} (p, i) SELECT 1, rand64() FROM numbers({number_of_values})"
+            query_settings=query_settings,
         )
 
 

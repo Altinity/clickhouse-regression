@@ -1,46 +1,10 @@
 from testflows.core import *
 from testflows.asserts import *
 from alter.table.replace_partition.requirements.requirements import *
+from alter.table.replace_partition.common import create_partitions_with_random_uint64
 from helpers.common import getuid, create_user, replace_partition
-from helpers.tables import (
-    create_table_partitioned_by_column,
-    insert_into_table_random_uint64,
-)
-
-
-@TestStep(Given)
-def no_privileges(self, node, user, table):
-    """Grant no privileges to a user."""
-    with By(f"granting the user no privileges on the {table} table"):
-        node.query(f"GRANT NONE ON {table} TO {user}")
-
-
-@TestStep(Given)
-def select_privileges(self, node, user, table):
-    """Grant only select privileges to a user."""
-    with By(f"granting the user only select privileges on the {table} table"):
-        node.query(f"GRANT SELECT ON {table} TO {user}")
-
-
-@TestStep(Given)
-def insert_privileges(self, node, user, table):
-    """Grant only insert privileges to a user."""
-    with By(f"granting the user only insert privileges on the {table} table"):
-        node.query(f"GRANT INSERT ON {table} TO {user}")
-
-
-@TestStep(Given)
-def alter_privileges(self, node, user, table):
-    """Grant only alter privileges to a user."""
-    with By(f"granting the user only alter privileges on the {table} table"):
-        node.query(f"GRANT ALTER ON {table} TO {user}")
-
-
-@TestStep(Given)
-def alter_table_privileges(self, node, user, table):
-    """Grant only alter table privileges to a user."""
-    with By(f"granting the user only alter table privileges on the {table} table"):
-        node.query(f"GRANT ALTER TABLE ON {table} TO {user}")
+from helpers.tables import create_table_partitioned_by_column
+from helpers.rbac import *
 
 
 def get_privileges_as_list_of_strings(privileges: list):
@@ -85,16 +49,20 @@ def check_if_partition_values_on_destination_changed(
             )
 
     with And("checking if the data on the specific partition was replaced or not"):
-        partition_values_source = node.query(f"SELECT i FROM {source_table} ORDER BY i")
+        partition_values_source = node.query(
+            f"SELECT * FROM {source_table} WHERE p == 1 ORDER BY tuple(*)"
+        )
         partition_values_destination = node.query(
-            f"SELECT i FROM {destination_table} ORDER BY i"
+            f"SELECT * FROM {destination_table} WHERE p == 1 ORDER BY tuple(*)"
         )
 
         if changed:
-            assert (
-                partition_values_source.output.strip()
-                == partition_values_destination.output.strip()
-            ), error()
+            for retry in retries(count=5, delay=1):
+                with retry:
+                    assert (
+                        partition_values_source.output.strip()
+                        == partition_values_destination.output.strip()
+                    ), error()
         else:
             assert (
                 partition_values_source.output.strip()
@@ -131,10 +99,12 @@ def user_replace_partition_with_privileges(
         create_table_partitioned_by_column(table_name=destination_table)
 
     with And("I insert data into both tables"):
-        insert_into_table_random_uint64(
+        create_partitions_with_random_uint64(
             table_name=destination_table, number_of_values=10
         )
-        insert_into_table_random_uint64(table_name=source_table, number_of_values=10)
+        create_partitions_with_random_uint64(
+            table_name=source_table, number_of_values=10
+        )
 
     with And("I create a user"):
         create_user(node=node, name=user_name)

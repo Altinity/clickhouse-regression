@@ -3,7 +3,6 @@ import os
 import sys
 import boto3
 
-
 from testflows.core import *
 
 append_path(sys.path, "..")
@@ -13,19 +12,24 @@ from s3.regression import argparser
 from alter.table.replace_partition.requirements.requirements import *
 from helpers.datatypes import *
 
-
 xfails = {
-    "/alter/replace partition/temporary table/from temporary to temporary table": [
+    "/alter/replace partition/concurrent actions/alter modify ttl": [
         (
             Fail,
-            "Not implemented yet",
+            "modify ttl expression `+ INTERVAL 1 YEAR` deletes all data when date is empty",
         )
     ],
 }
 
 xflags = {}
 
-ffails = {}
+ffails = {
+    "/alter/replace partition/temporary table": (
+        Skip,
+        "Not implemented before 23.5",
+        check_clickhouse_version("<23.5"),
+    ),
+}
 
 
 @TestModule
