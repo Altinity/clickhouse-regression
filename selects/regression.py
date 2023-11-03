@@ -33,7 +33,6 @@ xfails = {
             " https://github.com/ClickHouse/ClickHouse/issues/8655",
         )
     ],
-    "final/modifier": [(Fail, "not implemented")],
     "final/force/general/with experimental analyzer/simple select group by/*": [
         (Fail, "group by conflict analyzer")
     ],
