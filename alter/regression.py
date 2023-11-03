@@ -19,6 +19,18 @@ xfails = {
             "modify ttl expression `+ INTERVAL 1 YEAR` deletes all data when date is empty",
         )
     ],
+    "/alter/replace partition/concurrent merges and mutations/mutations on unrelated partition": [
+        (
+            Fail,
+            "The pr is not done yet: https://github.com/ClickHouse/ClickHouse/pull/54272",
+        )
+    ],
+    "/alter/replace partition/concurrent merges and mutations/merges on unrelated partition": [
+        (
+            Fail,
+            "The pr is not done yet: https://github.com/ClickHouse/ClickHouse/pull/54272",
+        )
+    ],
 }
 
 xflags = {}
