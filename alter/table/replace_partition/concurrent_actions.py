@@ -203,7 +203,11 @@ def alter_modify(self):
 
 
 @TestScenario
-@Requirements()  # TODO ADD RENAME REQUIREMENTS
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_RenameColumn(
+        "1.0"
+    )
+)
 def alter_rename_column(self):
     """Check that it is possible to rename column on the table while replacing partition."""
     destination_table = "destination_" + getuid()
@@ -232,7 +236,11 @@ def alter_rename_column(self):
 
 
 @TestScenario
-@Requirements()  # TODO ADD COMMENT REQUIREMENTS
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_CommentColumn(
+        "1.0"
+    )
+)
 def alter_comment_column(self):
     """Check that it is possible to comment column on the table while replacing partition."""
     destination_table = "destination_" + getuid()
