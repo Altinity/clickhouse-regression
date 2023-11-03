@@ -13,7 +13,6 @@ from helpers.create import (
     partitioned_replicated_merge_tree_table,
 )
 from alter.table.replace_partition.common import (
-    create_partitions_with_random_uint64,
     check_partition_was_replaced,
 )
 
@@ -34,7 +33,6 @@ def columns():
 @TestCheck
 def check_replace_partition(self, destination_table, source_table):
     """Check that it is possible to use the replace partition command on tables with different table engines."""
-    node = self.context.node
     destination_table_name = "destination_" + getuid()
     source_table_name = "source_" + getuid()
 
