@@ -1298,7 +1298,7 @@ def create_keeper_cluster_configuration_ssl(
                 )
 
             if invalid_config:
-                xfail("need to finsh")
+                xfail("TODO: need to finsh")
 
             else:
                 with And(f"I add config to {name}"):
