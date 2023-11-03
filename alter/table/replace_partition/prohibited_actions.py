@@ -403,8 +403,8 @@ def from_clause(self):
 @TestSuite
 @Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions("1.0"))
 def conditions(self):
-    """Check that it is not possible to replace partition from source table to destination table when these two tables
-    have different:
+    """Check that it is not possible to replace the partition from the source table to the destination table when these two tables have
+    different:
     * Storage Policy
     * Structure
     * Partition key
@@ -421,7 +421,7 @@ def conditions(self):
 @Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited("1.0"))
 @Name("prohibited actions")
 def feature(self, node="clickhouse1"):
-    """Check that the ClickHouse doesn't crash amd outputs an error when doing prohibited actions with replace
+    """Check that the ClickHouse doesn't crash and outputs an error when doing prohibited actions with replace
     partition."""
     self.context.node = self.context.cluster.node(node)
 
