@@ -23,7 +23,7 @@ def io_error_message(exitcode=62, message="Syntax error"):
     RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_TableFunctions("1.0")
 )
 def table_functions(self):
-    """Checking that the usage of table functions after from clause outputs an expected error and does not crash the
+    """Checking that the usage of table functions after FROM clause on replace partition outputs an expected error and does not crash the
     ClickHouse."""
     node = self.context.node
     destination_table = "destination_" + getuid()
@@ -50,7 +50,7 @@ def table_functions(self):
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Join("1.0"))
 def join(self):
-    """Checking that the usage of JOIN does output an expected error and does not crash the ClickHouse."""
+    """Checking that the usage of JOIN after FROM clause on replace partition does output an expected error and does not crash the ClickHouse."""
     node = self.context.node
     destination_table = "destination_" + getuid()
     source_table = "source_" + getuid()
@@ -80,7 +80,7 @@ def join(self):
     RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Subquery("1.0")
 )
 def subquery(self):
-    """Checking that the usage of subquery does output an expected error and does not crash the ClickHouse."""
+    """Checking that the usage of subquery after FROM clause on replace partition does output an expected error and does not crash the ClickHouse."""
     node = self.context.node
     destination_table = "destination_" + getuid()
     source_table = "source_" + getuid()
@@ -351,6 +351,8 @@ def order_by(self):
     )
 )
 def structure(self):
+    """Check that it is not possible to replace partition on the destination table when the destination and source
+    table have different structure."""
     destination_table = "destination_" + getuid()
     source_table = "source_" + getuid()
 
