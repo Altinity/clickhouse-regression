@@ -16,6 +16,7 @@ def alter_table_add_column(
 
     with By("executing alter add column command on the table"):
         query = f"ALTER TABLE {table_name} ADD COLUMN {column_name} {column_type}"
+
         if column_name_after:
             query += f" AFTER {column_name_after}"
 
