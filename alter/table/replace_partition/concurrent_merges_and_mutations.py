@@ -49,8 +49,13 @@ def merges_on_unrelated_partition(self):
         create_partitions_with_random_uint64(table_name=destination_table)
         create_partitions_with_random_uint64(table_name=source_table)
 
-    with Then("I start merges on the destination table"):
+    with Then(
+        "I start merges on the destination table and execute optimize deduplicate to initiate merges on the destination table"
+    ):
         node.query(f"SYSTEM START MERGES {destination_table}")
+        node.query(
+            f"OPTIMIZE TABLE {destination_table} PARTITION id '1' DEDUPLICATE BY p;"
+        )
 
     with And(
         "I replace partition on the destination table from the source table's partition on which no merges are happening"
