@@ -56,10 +56,23 @@ def create_two_tables_partitioned_by_column_with_data(
 
 @TestStep(Given)
 def create_table_partitioned_by_column_with_data(
-    self, table_name, number_of_partitions=5, number_of_values=10
+    self,
+    table_name,
+    number_of_partitions=5,
+    number_of_values=10,
+    query_settings=None,
+    columns=None,
+    partition_by="p",
+    order_by="tuple()",
 ):
     with By("creating two tables with the same structure"):
-        create_table_partitioned_by_column(table_name=table_name)
+        create_table_partitioned_by_column(
+            table_name=table_name,
+            query_settings=query_settings,
+            partition_by=partition_by,
+            columns=columns,
+            order_by=order_by,
+        )
 
     with And("inserting data into both tables"):
         create_partitions_with_random_uint64(
