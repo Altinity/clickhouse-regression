@@ -389,72 +389,69 @@ def zookeepers_3(self):
     """Check that 3 nodes ZooKeeper Cluster work in write mode
     with 1 node down and in read mode only with 2 nodes down.
     """
-    xfail("need to be fixed")
-    if check_clickhouse_version("<23.3")(self):
-        cluster = self.context.cluster
-        zookeeper_cluster_nodes = cluster.nodes["zookeeper"][:3]
-        clickhouse_cluster_nodes = cluster.nodes["clickhouse"][:9]
 
-        if self.context.ssl == "true":
-            xfail("zookeeper ssl is not supported by tests")
+    cluster = self.context.cluster
+    zookeeper_cluster_nodes = cluster.nodes["zookeeper"][:3]
+    clickhouse_cluster_nodes = cluster.nodes["clickhouse"][:9]
 
-        with Given("I add ZooKeeper server configuration file to ClickHouse servers"):
-            create_config_section(
-                control_nodes=zookeeper_cluster_nodes,
-                cluster_nodes=clickhouse_cluster_nodes,
+    if self.context.ssl == "true":
+        xfail("zookeeper ssl is not supported by tests")
+
+    with Given("I add ZooKeeper server configuration file to ClickHouse servers"):
+        create_config_section(
+            control_nodes=zookeeper_cluster_nodes,
+            cluster_nodes=clickhouse_cluster_nodes,
+        )
+
+    with And("Receive UID"):
+        uid = getuid()
+
+    try:
+        with And("I create some replicated table"):
+            table_name = f"test{uid}"
+            create_simple_table(table_name=table_name)
+
+        with And("I stop maximum available ZooKeeper nodes for such configuration"):
+            self.context.cluster.node("zookeeper1").stop()
+
+        with And("I check that table in write mode"):
+            retry(cluster.node("clickhouse1").query, timeout=250, delay=1)(
+                f"insert into {table_name} values (1,1)", exitcode=0
             )
 
-        with And("Receive UID"):
-            uid = getuid()
+        with And("I stop one more ZooKeeper node"):
+            self.context.cluster.node("zookeeper2").stop()
 
-        try:
-            with And("I create some replicated table"):
-                table_name = f"test{uid}"
-                create_simple_table(table_name=table_name)
-
-            with And("I stop maximum available ZooKeeper nodes for such configuration"):
-                self.context.cluster.node("zookeeper1").stop()
-
-            with And("I check that table in write mode"):
-                retry(cluster.node("clickhouse1").query, timeout=250, delay=1)(
-                    f"insert into {table_name} values (1,1)", exitcode=0
+        if check_clickhouse_version(">23")(self):
+            with And("I check that table in read only mode"):
+                retry(cluster.node("clickhouse1").query, timeout=300, delay=10)(
+                    f"insert into {table_name} values (1,2)",
+                    exitcode=242,
+                    message="DB::Exception: Table is in readonly mode",
+                    steps=False,
+                    settings=[("insert_keeper_max_retries", 0)],
                 )
 
-            with And("I stop one more ZooKeeper node"):
-                self.context.cluster.node("zookeeper2").stop()
+        else:
+            with And("I check that table in read only mode"):
+                retry(cluster.node("clickhouse1").query, timeout=300, delay=10)(
+                    f"insert into {table_name} values (1,2)",
+                    exitcode=242,
+                    message="DB::Exception: Table is in readonly mode",
+                    steps=False,
+                )
 
-            if check_clickhouse_version(">23")(self):
-                with And("I check that table in read only mode"):
-                    retry(cluster.node("clickhouse1").query, timeout=300, delay=10)(
-                        f"insert into {table_name} values (1,2)",
-                        exitcode=242,
-                        message="DB::Exception: Table is in readonly mode",
-                        steps=False,
-                        settings=[("insert_keeper_max_retries", 0)],
-                    )
+        with And("I start dropped nodes"):
+            self.context.cluster.node("zookeeper1").start()
+            self.context.cluster.node("zookeeper2").start()
 
-            else:
-                with And("I check that table in read only mode"):
-                    retry(cluster.node("clickhouse1").query, timeout=300, delay=10)(
-                        f"insert into {table_name} values (1,2)",
-                        exitcode=242,
-                        message="DB::Exception: Table is in readonly mode",
-                        steps=False,
-                    )
+        with And("I check clean ability"):
+            table_insert(table_name=table_name, node_name="clickhouse1")
 
-            with And("I start dropped nodes"):
-                self.context.cluster.node("zookeeper1").start()
-                self.context.cluster.node("zookeeper2").start()
-
-            with And("I check clean ability"):
-                table_insert(table_name=table_name, node_name="clickhouse1")
-
-        finally:
-            with Finally("I clean up files"):
-                clean_coordination_on_all_nodes()
-                self.context.cluster.node("clickhouse1").cmd(f"rm -rf /share/")
-    else:
-        xfail("unstable from 23.3")
+    finally:
+        with Finally("I clean up files"):
+            clean_coordination_on_all_nodes()
+            self.context.cluster.node("clickhouse1").cmd(f"rm -rf /share/")
 
 
 @TestScenario
@@ -462,7 +459,6 @@ def standalone_keepers_3(self):
     """Check that 3 nodes Clickhouse Keeper Cluster work in write mode
     with 1 node down and in read mode only with 2 nodes down.
     """
-    xfail("not stable")
 
     cluster = self.context.cluster
     control_nodes = cluster.nodes["clickhouse"][9:12]
