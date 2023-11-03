@@ -238,10 +238,7 @@ def migrate_from_zookeeper_to_standalone_keeper(self):
     available after Zookeeper cluster is down and `clickhouse-keeper`
     is available.
     """
-    if check_clickhouse_version("<23.3")(self):
-        migrate_from_zookeeper(use_standalone_keeper_server=True)
-    else:
-        xfail("test doesn't work from 23.3")
+    migrate_from_zookeeper(use_standalone_keeper_server=True)
 
 
 @TestFeature
