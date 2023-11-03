@@ -510,6 +510,7 @@ def create_table_partitioned_by_column(
     partition_by="p",
     columns=None,
     query_settings=None,
+    order_by="tuple()",
 ):
     """Create a table that is partitioned by a specific column."""
 
@@ -524,7 +525,7 @@ def create_table_partitioned_by_column(
             name=table_name,
             engine=engine,
             partition_by=partition_by,
-            order_by="tuple()",
+            order_by=order_by,
             columns=columns,
             query_settings=query_settings,
         )
