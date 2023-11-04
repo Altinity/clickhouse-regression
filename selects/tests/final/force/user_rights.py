@@ -2,6 +2,7 @@ import tests.steps as select
 from helpers.common import check_clickhouse_version
 from selects.requirements import *
 from tests.steps.main_steps import *
+import rbac.helper.errors as errors
 
 
 @TestScenario
@@ -15,29 +16,30 @@ def test_alias_columns(self, node=None):
     for table in self.context.tables:
         with Example(f"{table.name}", flags=TE):
             with Given("I make select as user without rights"):
+                exitcode, message = errors.not_enough_privileges("some_user")
                 node.query(
                     f"SELECT * FROM default.{table.name}",
                     settings=[("user", "some_user"), ("final", 1)],
-                    message="Received from localhost:9000."
-                    " DB::Exception: some_user: "
-                    "Not enough privileges. To execute"
-                    " this query it's necessary",
+                    message=message,
+                    exitcode=exitcode
                 )
 
             with And("I give rights"):
                 node.query(
-                    f"GRANT SELECT(id,x) ON default.{table.name} TO some_user",
+                    f"GRANT SELECT ON default.{table.name} TO some_user",
                     settings=[("final", 1)],
                 )
 
             with Then("I check select is passing"):
+                tmp = node.query(f"SELECT * FROM default.{table.name}", settings=[("user", "some_user"), ("final", 1)]).output
+                note(tmp)
                 node.query(
-                    f"SELECT * FROM default.{table.name} FORMAT JSONEachRow;",
+                    f"SELECT id,x FROM default.{table.name} FORMAT JSONEachRow;",
                     settings=[("user", "some_user"), ("final", 1)],
-                    message='{"id":1,"x":2}',
+                    message='{"id":"1","x":"2"}',
                 )
 
-            with And("I give rights"):
+            with And("I revoke rights"):
                 node.query(
                     f"REVOKE SELECT(id,x) ON default.{table.name} FROM some_user",
                     settings=[("final", 1)],
@@ -59,10 +61,7 @@ def test_alias_columns_alias_column(self, node=None):
                 node.query(
                     f"SELECT(s) FROM default.{table.name}",
                     settings=[("user", "some_user"), ("final", 1)],
-                    message="Received from localhost:9000."
-                    " DB::Exception: some_user: "
-                    "Not enough privileges. To execute"
-                    " this query it's necessary",
+                    message="Not enough privileges",
                 )
 
             with And("I give privileges to some_user"):
