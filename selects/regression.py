@@ -26,7 +26,7 @@ def argparser(parser):
 
 
 xfails = {
-    "final/force/general/without experimental analyzer/select join clause/*": [
+    "final/force/general/without experimental analyzer/run tests/select join clause/*": [
         (
             Fail,
             "doesn't work in clickhouse"
@@ -36,37 +36,37 @@ xfails = {
     "final/force/general/with experimental analyzer/simple select group by/*": [
         (Fail, "group by conflict analyzer")
     ],
-    "final/force/general/with experimental analyzer/simple select count/simple select count/distr_*": [
+    "final/force/general/with experimental analyzer/run tests/simple select count/simple select count/distr_*": [
         (Fail, "column fail for distributed tables")
     ],
-    "final/force/general/with experimental analyzer/simple select as/simple select as/distr_*": [
+    "final/force/general/with experimental analyzer/run tests/simple select as/simple select as/distr_*": [
         (Fail, "column fail for distributed tables")
     ],
-    "final/force/general/with experimental analyzer/simple select limit/simple select limit/distr_*": [
+    "final/force/general/with experimental analyzer/run tests/simple select limit/simple select limit/distr_*": [
         (Fail, "column fail for distributed tables")
     ],
-    "final/force/general/with experimental analyzer/simple select limit by/simple select limit by/distr_*": [
+    "final/force/general/with experimental analyzer/run tests/simple select limit by/simple select limit by/distr_*": [
         (Fail, "column fail for distributed tables")
     ],
-    "final/force/general/with experimental analyzer/simple select distinct/simple select distinct/distr_*": [
+    "final/force/general/with experimental analyzer/run tests/simple select distinct/simple select distinct/distr_*": [
         (Fail, "column fail for distributed tables")
     ],
-    "final/force/general/with experimental analyzer/simple select where/simple select where/distr_*": [
+    "final/force/general/with experimental analyzer/run tests/simple select where/simple select where/distr_*": [
         (Fail, "column fail for distributed tables")
     ],
-    "final/force/general/with experimental analyzer/select multiple join clause select/AggregatingMergeTree*": [
+    "final/force/general/with experimental analyzer/run tests/select multiple join clause select/AggregatingMergeTree*": [
         (Fail, "AggregatingFunction problem with analyzer")
     ],
-    "final/force/general/with experimental analyzer/select nested join clause select/AggregatingMergeTree*": [
+    "final/force/general/with experimental analyzer/run tests/select nested join clause select/AggregatingMergeTree*": [
         (Fail, "AggregatingFunction problem with analyzer")
     ],
-    "final/force/general/with experimental analyzer/select nested subquery/select nested subquery/distr_*": [
+    "final/force/general/with experimental analyzer/run tests/select nested subquery/select nested subquery/distr_*": [
         (Fail, "column fail for distributed tables")
     ],
-    "final/force/general/with experimental analyzer/select where subquery/select where subquery/distr_*": [
+    "final/force/general/with experimental analyzer/run_tests/select where subquery/select where subquery/distr_*": [
         (Fail, "column fail for distributed tables")
     ],
-    "final/force/general/with experimental analyzer/select subquery/select subquery/distr_*": [
+    "final/force/general/with experimental analyzer/run tests/select subquery/select subquery/distr_*": [
         (Fail, "column fail for distributed tables")
     ],
 }
