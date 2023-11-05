@@ -115,6 +115,7 @@ def check_partition_was_replaced(
     self,
     destination_table,
     source_table,
+    source_table_before_replace,
     node=None,
     sort_column="p",
     partition=1,
@@ -139,5 +140,11 @@ def check_partition_was_replaced(
     ):
         assert (
             partition_values_destination.output.strip()
+            == partition_values_source.output.strip()
+        ), error()
+
+    with Check("I check that the data on the source table was preserved"):
+        assert (
+            source_table_before_replace.output.strip()
             == partition_values_source.output.strip()
         ), error()

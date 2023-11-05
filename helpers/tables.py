@@ -376,6 +376,7 @@ def create_table(
     settings=None,
     query_settings=None,
     empty=None,
+    if_not_exists=False,
 ):
     """Create a table with specified name and engine."""
     if settings is None:
@@ -388,9 +389,17 @@ def create_table(
 
     columns_def = "(" + ",".join([column.full_definition() for column in columns]) + ")"
 
+    if if_not_exists:
+        if_not_exists = "IF NOT EXISTS "
+    else:
+        if_not_exists = ""
+
     try:
         with By(f"creating table {name}"):
-            query = f"CREATE TABLE {name} {columns_def}\n" f"ENGINE = {engine}"
+            query = (
+                f"CREATE TABLE {if_not_exists}{name} {columns_def}\n"
+                f"ENGINE = {engine}"
+            )
 
             if partition_by is not None:
                 query += f"\nPARTITION BY {partition_by}"
@@ -528,6 +537,7 @@ def create_table_partitioned_by_column(
             order_by=order_by,
             columns=columns,
             query_settings=query_settings,
+            if_not_exists=True,
         )
 
 

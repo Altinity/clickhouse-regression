@@ -19,6 +19,11 @@ def feature(self):
     Feature(run=load("alter.table.replace_partition.concurrent_actions", "feature"))
     Feature(
         run=load(
+            "alter.table.replace_partition.concurrent_replace_partitions", "feature"
+        )
+    )
+    Feature(
+        run=load(
             "alter.table.replace_partition.concurrent_merges_and_mutations",
             "feature",
         )
