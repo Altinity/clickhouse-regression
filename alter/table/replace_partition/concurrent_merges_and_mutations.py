@@ -50,7 +50,7 @@ def merges_on_unrelated_partition(self):
         create_partitions_with_random_uint64(table_name=source_table)
 
     with Then(
-        "I start merges on the destination table and execute optimize deduplicate to initiate merges on the destination table"
+        "I execute optimize deduplicate to initiate merges on the destination table"
     ):
         node.query(f"SYSTEM START MERGES {destination_table}")
         node.query(
@@ -68,13 +68,6 @@ def merges_on_unrelated_partition(self):
         check_partition_was_replaced(
             destination_table=destination_table, source_table=source_table, partition=2
         )
-
-    with Check("that the merge was finished"):
-        node.query(
-            f"SELECT is_mutation, partition_id FROM system.merges WHERE database==currentDatabase() AND table=='{destination_table}';"
-        )
-
-        fail()
 
 
 @TestScenario
