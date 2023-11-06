@@ -1046,7 +1046,7 @@ def select_array_join_subquery(self, node=None):
                 node.query(f"DROP TABLE {name}")
 
 
-@TestOutline
+@TestOutline(Feature)
 def run_tests(self):
     """Outline to run all tests."""
     with Pool(1) as executor:
