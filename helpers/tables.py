@@ -525,7 +525,7 @@ def create_table_partitioned_by_column(
 
     if columns is None:
         columns = [
-            Column(name="p", datatype=UInt8()),
+            Column(name="p", datatype=UInt16()),
             Column(name="i", datatype=UInt64()),
             Column(name="extra", datatype=UInt8()),
         ]
