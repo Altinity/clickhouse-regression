@@ -10,7 +10,7 @@ from helpers.tables import Column, create_table_partitioned_by_column
 import random
 
 
-@TestStep
+@TestStep(Given)
 def create_partitions_with_random_parts(self, table_name, number_of_partitions):
     """Create a number of partitions inside the table with random number of parts."""
     node = self.context.node
@@ -81,6 +81,8 @@ def concurrent_replace(
 
     with And("I replace partition on the destination table"):
         for _ in range(number_of_concurrent_queries):
+            partition_to_replace = random.randrange(1, 100)
+
             Step(
                 name="replace partition on the destination table",
                 test=replace_partition,
@@ -102,8 +104,15 @@ def concurrent_replace(
 @TestSketch
 @Flags(TE)
 def check_replace_partition_concurrently(self, destination_table, source_table):
-    partitions = [2, 4, 8]
-    number_of_concurrent_queries = [2, 3, 4]
+    """
+    Concurrently execute replace partition on a destination table with different combinations.
+    Combinations used:
+        * Different amount of partitions both on destination and source table.
+        * Different number of concurrent replace partitions being executed on the destination table.
+        * The partition which shall be replaced is set randomly.
+    """
+    partitions = [3, 50, 100]
+    number_of_concurrent_queries = [random.randint(1, 100) for _ in range(10)]
 
     concurrent_replace(
         destination_table=destination_table,
@@ -116,7 +125,11 @@ def check_replace_partition_concurrently(self, destination_table, source_table):
 
 
 @TestFeature
-@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Replace(
+        "1.0"
+    )
+)
 @Name("concurrent replace partitions")
 def feature(self, node="clickhouse1"):
     """Check that it is possible to perform other actions at the same time as replace partitions is being triggered."""
