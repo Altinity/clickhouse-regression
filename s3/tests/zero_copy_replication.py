@@ -761,7 +761,8 @@ def alter(self):
         nodes = [cluster.node(name) for name in nodes]
 
     with And("I have merge tree configuration set to use zero copy replication"):
-        settings = {self.context.zero_copy_replication_setting: "1"}
+        settings = {self.context.zero_copy_replication_setting: "1",
+                    "old_parts_lifetime": "5"}
 
     with And("I set the minio_enabled parameter before checking bucket sizes"):
         if self.context.storage == "minio":
@@ -947,7 +948,8 @@ def alter_repeat(self):
         nodes = [cluster.node(name) for name in nodes]
 
     with And("I have merge tree configuration set to use zero copy replication"):
-        settings = {self.context.zero_copy_replication_setting: "1"}
+        settings = {self.context.zero_copy_replication_setting: "1",
+                    "old_parts_lifetime": "5"}
 
     with And("I set the minio_enabled parameter before checking bucket sizes"):
         if self.context.storage == "minio":
@@ -1434,7 +1436,8 @@ def ttl_move(self):
         nodes = [cluster.node(name) for name in nodes]
 
     with And("I have merge tree configuration set to use zero copy replication"):
-        settings = {self.context.zero_copy_replication_setting: "1"}
+        settings = {self.context.zero_copy_replication_setting: "1",
+                    "old_parts_lifetime": "5"}
 
     with And("I set the minio_enabled parameter before checking bucket sizes"):
         if self.context.storage == "minio":
