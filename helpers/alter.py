@@ -59,7 +59,7 @@ def alter_table_rename_column(
         node = self.context.node
 
     with By("renaming column in the table"):
-        query = f"ALTER TABLE {table_name} RENAME COLUMN {column_name_old} TO {column_name_new}"
+        query = f"ALTER TABLE {table_name} RENAME COLUMN IF EXISTS {column_name_old} TO {column_name_new}"
         node.query(query)
 
 
