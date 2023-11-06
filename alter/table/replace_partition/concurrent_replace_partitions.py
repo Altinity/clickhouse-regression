@@ -53,24 +53,43 @@ def source_table_with_partitions(self, table_name, number_of_partitions):
 
 
 @TestStep(Given)
-def create_two_tables_with_100_partitions(self, destination_table, source_table):
-    """Create two tables, each has 100 partitions with random number of parts."""
-    with Given("I have two partitioned tables with the same structure"):
+def create_two_tables(
+    self, destination_table_name, source_table_name, number_of_partitions=100
+):
+    """Create two tables with the same structure having the specified number of partitions.
+    The destination table will be used as the table where replace partition command will be
+    replacing the partition and the source table will be used as the table from which partitions will be taken.
+    """
+
+    with By("creating destination table"):
         destination_table_with_partitions(
-            table_name=destination_table, number_of_partitions=100
+            table_name=destination_table_name, number_of_partitions=number_of_partitions
         )
-        source_table_with_partitions(table_name=source_table, number_of_partitions=100)
+
+    with And("creating source table"):
+        source_table_with_partitions(
+            table_name=source_table_name, number_of_partitions=number_of_partitions
+        )
 
 
 @TestStep(Then)
 def replace_partition_and_validate_data(
-    self, destination_table, source_table, partition_to_replace
+    self,
+    partition_to_replace,
+    destination_table=None,
+    source_table=None,
 ):
     """
     Replace partition and validate that the data on the destination table is the same data as on the source table.
     Also check that the data on the source table was not lost during replace partition.
     """
     node = self.context.node
+
+    if destination_table is None:
+        destination_table = self.context.destination_table
+
+    if source_table is None:
+        source_table = self.context.source_table
 
     with By(
         "saving the data from the source table before replacing partitions on the destination table"
@@ -86,7 +105,7 @@ def replace_partition_and_validate_data(
             partition=partition_to_replace,
         )
 
-    with Check("I check that the partition was replaced on the destination table"):
+    with Then("checking that the partition was replaced on the destination table"):
         check_partition_was_replaced(
             destination_table=destination_table,
             source_table=source_table,
@@ -97,25 +116,35 @@ def replace_partition_and_validate_data(
 
 @TestScenario
 def concurrent_replace(
-    self, number_of_concurrent_queries, destination_table, source_table
+    self,
+    number_of_partitions=None,
+    number_of_concurrent_queries=None,
+    destination_table=None,
+    source_table=None,
 ):
-    """Concurrently run the number of replace partition on the destination table."""
-    with Given(
-        "concurrently run multiple replace partitions on the destination table and validate that the data on both "
-        "destination and source tables is the same."
-    ):
-        for _ in range(number_of_concurrent_queries):
-            partition_to_replace = random.randrange(1, 100)
+    """ "Concurrently run multiple replace partitions on the destination table and
+    validate that the data on both destination and source tables is the same."""
 
-            Step(
-                name="replace partition on the destination table",
-                test=replace_partition_and_validate_data,
-                parallel=True,
-            )(
-                destination_table=destination_table,
-                source_table=source_table,
-                partition_to_replace=partition_to_replace,
-            )
+    if number_of_partitions is None:
+        number_of_partitions = self.context.number_of_partitions
+
+    if number_of_concurrent_queries is None:
+        number_of_concurrent_queries = self.context.number_of_concurrent_queries
+
+    if destination_table is None:
+        destination_table = self.context.destination_table
+
+    if source_table is None:
+        source_table = self.context.source_table
+
+    for i in range(number_of_concurrent_queries):
+        partition_to_replace = random.randrange(1, number_of_partitions)
+
+        Check(
+            name=f"replace partition #{i} partition {partition_to_replace}",
+            test=replace_partition_and_validate_data,
+            parallel=True,
+        )(partition_to_replace=partition_to_replace)
 
 
 @TestFeature
@@ -125,24 +154,24 @@ def concurrent_replace(
     )
 )
 @Name("concurrent replace partitions")
-def feature(self, node="clickhouse1"):
+def feature(
+    self, node="clickhouse1", number_of_partitions=100, number_of_concurrent_queries=100
+):
     """
-    Concurrently execute replace partition on a destination table with different combinations.
-    Combinations used:
-        * Different number of concurrent replace partitions being executed on the destination table.
-        * The partition which shall be replaced is set randomly.
+    Concurrently execute replace partition on a destination table with
+    different number of concurrent replace partitions being executed in parallel and
+    using a randomly picked partition.
     """
     self.context.node = self.context.cluster.node(node)
-    destination_table = "destination_" + getuid()
-    source_table = "source_" + getuid()
-    number_of_concurrent_queries = 15
 
-    create_two_tables_with_100_partitions(
-        destination_table=destination_table, source_table=source_table
-    )
+    self.context.destination_table = "destination_" + getuid()
+    self.context.source_table = "source_" + getuid()
+    self.context.number_of_partitions = number_of_partitions
+    self.context.number_of_concurrent_queries = number_of_concurrent_queries
 
-    Scenario(test=concurrent_replace)(
-        number_of_concurrent_queries=number_of_concurrent_queries,
-        destination_table=destination_table,
-        source_table=source_table,
-    )
+    with Given(
+        "I create destination and source tables for the replace partition command"
+    ):
+        create_two_tables()
+
+    Scenario(test=concurrent_replace)()

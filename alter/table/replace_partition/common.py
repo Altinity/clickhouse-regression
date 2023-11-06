@@ -135,7 +135,7 @@ def check_partition_was_replaced(
             f"SELECT {column} FROM {destination_table} WHERE {sort_column} = {partition} ORDER BY tuple(*)"
         )
 
-    with Check(
+    with Then(
         "I check that the data on the partition of the destination table is the same as the data on the source table partition"
     ):
         assert (
@@ -143,7 +143,7 @@ def check_partition_was_replaced(
             == partition_values_source.output.strip()
         ), error()
 
-    with Check("I check that the data on the source table was preserved"):
+    with And("I check that the data on the source table was preserved"):
         assert (
             source_table_before_replace.output.strip()
             == partition_values_source.output.strip()
