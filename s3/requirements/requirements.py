@@ -1396,15 +1396,7 @@ RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Delete = Requirement(
     uid=None,
     description=(
         '[ClickHouse] SHALL support dropping a replicated table with no changes to any\n'
-        'other replicas of the table. If the table is dropped normally, [ClickHouse]\n'
-        'SHALL delete only local metadata associated with the replicated table. If the\n'
-        'table is dropped using the SYNC keyword, [ClickHouse] SHALL immediately delete \n'
-        'the local metadata and eventually delete all associated data stored in [S3]. \n'
-        'Other replicas will no longer be able to access this data.\n'
-        '\n'
-        '    ```sql\n'
-        '    DROP TABLE table_name SYNC;\n'
-        '    ```\n'
+        'other replicas of the table.\n'
         '\n'
     ),
     link=None,
@@ -1421,12 +1413,7 @@ RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_DeleteAll = Requirement(
     uid=None,
     description=(
         '[ClickHouse] SHALL support deleting replicated tables from [S3] by dropping\n'
-        'all replicas of the table from each [ClickHouse] instance. For data to be\n'
-        'removed from [S3], data must be dropped using the SYNC keyword.\n'
-        '\n'
-        '    ```sql\n'
-        '    DROP TABLE table_name SYNC;\n'
-        '    ```\n'
+        'all replicas of the table from each [ClickHouse] instance.\n'
         '\n'
     ),
     link=None,
@@ -1442,7 +1429,7 @@ RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_DataPreservedAfterMutati
     type=None,
     uid=None,
     description=(
-        '[Clickhouse] SHALL propagate mutations to all replicas without data loss.\n'
+        '[Clickhouse] SHALL distribute mutations to all replicas without data loss.\n'
         '\n'
     ),
     link=None,
@@ -3547,31 +3534,18 @@ replicas, and in [S3] storage.
 version: 1.1
 
 [ClickHouse] SHALL support dropping a replicated table with no changes to any
-other replicas of the table. If the table is dropped normally, [ClickHouse]
-SHALL delete only local metadata associated with the replicated table. If the
-table is dropped using the SYNC keyword, [ClickHouse] SHALL immediately delete 
-the local metadata and eventually delete all associated data stored in [S3]. 
-Other replicas will no longer be able to access this data.
-
-    ```sql
-    DROP TABLE table_name SYNC;
-    ```
+other replicas of the table.
 
 ###### RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DeleteAll
 version: 1.0
 
 [ClickHouse] SHALL support deleting replicated tables from [S3] by dropping
-all replicas of the table from each [ClickHouse] instance. For data to be
-removed from [S3], data must be dropped using the SYNC keyword.
-
-    ```sql
-    DROP TABLE table_name SYNC;
-    ```
+all replicas of the table from each [ClickHouse] instance.
 
 ###### RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DataPreservedAfterMutation
 version: 1.0
 
-[Clickhouse] SHALL propagate mutations to all replicas without data loss.
+[Clickhouse] SHALL distribute mutations to all replicas without data loss.
 
 ###### RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DropReplica
 version: 1.0
