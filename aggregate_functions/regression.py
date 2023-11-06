@@ -132,7 +132,7 @@ def regression(
         join()
 
     Feature(run=load("aggregate_functions.tests.state", "feature"))
-    
+
     Feature(run=load("aggregate_functions.tests.aggThrow", "scenario"))
 
 
