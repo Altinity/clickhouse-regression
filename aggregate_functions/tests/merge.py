@@ -10,11 +10,13 @@ from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Combinator_Merge,
 )
 
-def get_data_type(key, func):
+def get_data_type(key, func, query):
     #_aggregate_functions_state_anyState_Array_Array_String__ 
     # Array(Array(String))
     key = [i for i in key.split(f"{func}State")[-1].split('_') if len(i) > 0]
-
+    note(key)
+    if "number" in query:
+        return "UInt64"
 
     return ''
 
@@ -35,32 +37,10 @@ def merge(self, func):
             continue
 
         value_dict = json.loads(value)
-        for _, v in value_dict.items():
+        for query, v in value_dict.items():
             hex_repr = v
-            data_type = get_data_type(key, func)
-            
-
-            if "State" in query_data.split()[-2]:
-                note(f"{key}")
-                note(f"{hex_repr}, {data_type}")
-                params = data_type
-                with Given("create temporary table"):
-                    datatype_name = f"AggregateFunction({func}, {params})"
-                    self.context.table = create_table(engine="MergeTree", 
-                                                        columns=[Column(name="state", 
-                                                        datatype=DataType(name=datatype_name))], 
-                                                        order_by="tuple()")
-                with When("insert data in temporary table"):
-                    values = (f"(unhex('{hex_repr}'))")
-                    node = self.context.node
-                    node.query(f"INSERT INTO {self.context.table.name} VALUES {values}")
-
-                with Then(""):
-                    self.context.snapshot_id = get_snapshot_id(f"{func}")
-                    query = f"SELECT {func}Merge(state) FROM {self.context.table.name}"
-                    execute_query(
-                        query, snapshot_name=f"_aggregate_functions_any_Bool"
-                    )
+            data_type = get_data_type(key, func, query)
+        
         
 
 
@@ -80,7 +60,23 @@ def feature(self):
 
 
 
+# with Given("create temporary table"):
+#     datatype_name = f"AggregateFunction({func}, {params})"
+#     self.context.table = create_table(engine="MergeTree", 
+#                                         columns=[Column(name="state", 
+#                                         datatype=DataType(name=datatype_name))], 
+#                                         order_by="tuple()")
+# with When("insert data in temporary table"):
+#     values = (f"(unhex('{hex_repr}'))")
+#     node = self.context.node
+#     node.query(f"INSERT INTO {self.context.table.name} VALUES {values}")
 
+# with Then(""):
+#     self.context.snapshot_id = get_snapshot_id(f"{func}")
+#     query = f"SELECT {func}Merge(state) FROM {self.context.table.name}"
+#     execute_query(
+#         query, snapshot_name=f"_aggregate_functions_any_Bool"
+#     )
 
 
 
