@@ -197,6 +197,13 @@ xfails = {
         (Fail, issue_38716)
     ],
     "privileges/orphaned role": [(Fail, pull_47002)],
+    "privileges/projections/ : privilege, : PROJECTION, privilege granted to :": [
+        (
+            Fail,
+            "https://github.com/ClickHouse/ClickHouse/issues/56378",
+            check_clickhouse_version(">=23.7"),
+        )
+    ],
 }
 
 xflags = {
