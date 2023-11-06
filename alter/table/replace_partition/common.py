@@ -119,7 +119,7 @@ def check_partition_was_replaced(
     node=None,
     sort_column="p",
     partition=1,
-    column="*",
+    column="i",
 ):
     """Check that the partition on the destination table was replaced from the source table."""
     if node is None:

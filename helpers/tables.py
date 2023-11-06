@@ -527,6 +527,7 @@ def create_table_partitioned_by_column(
         columns = [
             Column(name="p", datatype=UInt8()),
             Column(name="i", datatype=UInt64()),
+            Column(name="extra", datatype=UInt8()),
         ]
 
     with By(f"creating a table that is partitioned by a '{partition_by}' column "):
@@ -536,7 +537,7 @@ def create_table_partitioned_by_column(
             partition_by=partition_by,
             order_by=order_by,
             columns=columns,
-            query_settings=query_settings,
+            query_settings="storage_policy = 'my_policy'",
             if_not_exists=True,
         )
 

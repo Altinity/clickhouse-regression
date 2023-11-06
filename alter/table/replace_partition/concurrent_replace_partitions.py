@@ -33,7 +33,6 @@ def create_partitions_with_random_parts(self, table_name, number_of_partitions):
 @TestStep(Given)
 def destination_table_with_partitions(self, table_name, number_of_partitions):
     """Create a destination table with set number of partitions and parts."""
-    node = self.context.node
 
     with By(f"creating a {table_name} table with {number_of_partitions} partitions"):
         create_table_partitioned_by_column(table_name=table_name)
@@ -45,7 +44,6 @@ def destination_table_with_partitions(self, table_name, number_of_partitions):
 @TestStep(Given)
 def source_table_with_partitions(self, table_name, number_of_partitions):
     """Create a source table with set number of partitions and parts."""
-    node = self.context.node
 
     with By(f"creating a {table_name} table with {number_of_partitions} partitions"):
         create_table_partitioned_by_column(table_name=table_name)
