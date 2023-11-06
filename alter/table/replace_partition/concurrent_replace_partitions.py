@@ -62,7 +62,7 @@ def create_two_tables_with_100_partitions(self, destination_table, source_table)
         source_table_with_partitions(table_name=source_table, number_of_partitions=100)
 
 
-@TestStep(When)
+@TestStep(Then)
 def replace_partition_and_validate_data(
     self, destination_table, source_table, partition_to_replace
 ):
