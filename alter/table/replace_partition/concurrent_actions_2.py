@@ -27,18 +27,29 @@ def add_column(self, table_name):
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Add("1.0")
+)
 def add_column_to_destination_table(self):
     """Alter add column to the destination table."""
     add_column(table_name=destination_table)
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Add("1.0")
+)
 def add_column_to_source_table(self):
     """Alter add column to the source table."""
     add_column(table_name=destination_table)
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Replace(
+        "1.0"
+    )
+)
 def replace_partition_on_source_table(self):
     """Replace partition on the source table while using this source table to replace partition on another
     destination table."""
@@ -60,12 +71,18 @@ def drop_column(self, table_name):
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Drop("1.0")
+)
 def drop_column_on_destination_table(self):
     """Drop column on the destination table."""
     drop_column(table_name=destination_table)
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Drop("1.0")
+)
 def drop_column_on_source_table(self):
     """Drop table on the source table."""
     drop_column(table_name=source_table)
@@ -80,12 +97,18 @@ def modify_column(self, table_name):
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Modify("1.0")
+)
 def modify_destination_table_column(self):
     """Modify column on the destination table."""
     modify_column(table_name=destination_table)
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Modify("1.0")
+)
 def modify_source_table_column(self):
     """Modify column on the source table."""
     modify_column(table_name=source_table)
@@ -100,12 +123,22 @@ def rename_column(self, table_name):
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_RenameColumn(
+        "1.0"
+    )
+)
 def rename_destination_table_column(self):
     """Rename the column on the destination table."""
     rename_column(table_name=destination_table)
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_RenameColumn(
+        "1.0"
+    )
+)
 def rename_source_table_column(self):
     """Rename the column on the source table."""
     rename_column(table_name=source_table)
@@ -120,12 +153,22 @@ def comment_column(self, table_name):
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_CommentColumn(
+        "1.0"
+    )
+)
 def comment_destination_table_column(self):
     """Comment column on the destination table."""
     comment_column(table_name=destination_table)
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_CommentColumn(
+        "1.0"
+    )
+)
 def comment_source_table_column(self):
     """Comment column on the source table."""
     comment_column(table_name=source_table)
@@ -142,12 +185,22 @@ def add_constraint(self, table_name):
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_AddConstraint(
+        "1.0"
+    )
+)
 def add_constraint_to_the_destination_table(self):
     """Add constraint to the destination table."""
     add_constraint(table_name=destination_table)
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_AddConstraint(
+        "1.0"
+    )
+)
 def add_constraint_to_the_source_table(self):
     """Add constraint to the source table."""
     add_constraint(table_name=source_table)
@@ -161,12 +214,22 @@ def detach_partition(self, table_name):
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Detach(
+        "1.0"
+    )
+)
 def detach_partition_from_destination_table(self):
     """Detach partition from the destination table."""
     detach_partition(table_name=destination_table)
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Detach(
+        "1.0"
+    )
+)
 def detach_partition_from_source_table(self):
     """Detach partition from the source table."""
     detach_partition(table_name=source_table)
@@ -179,12 +242,22 @@ def attach_partition(self, table_name):
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Attach(
+        "1.0"
+    )
+)
 def attach_partition_to_destination_table(self):
     """Attach partition to the destination table."""
     attach_partition(table_name=destination_table)
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Attach(
+        "1.0"
+    )
+)
 def attach_partition_to_source_table(self):
     """Attach partition to the source table."""
     attach_partition(table_name=source_table)
@@ -199,12 +272,22 @@ def attach_partition_from(self, table_name, source_table):
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_AttachFrom(
+        "1.0"
+    )
+)
 def attach_partition_from_destination_to_source(self):
     """Attach partition on the source table from the destination table."""
     attach_partition_from(table_name=source_table, source_table=destination_table)
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_AttachFrom(
+        "1.0"
+    )
+)
 def attach_partition_from_source_to_destination(self):
     """Attach partition on the destination table from the source table."""
     attach_partition_from(table_name=destination_table, source_table=source_table)
@@ -218,12 +301,22 @@ def move_partition(self, table_name, source_table):
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_MoveToTable(
+        "1.0"
+    )
+)
 def move_partition_to_destination_table(self):
     """Move partition from the source table to the destination table."""
     move_partition(table_name=destination_table, source_table=source_table)
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_MoveToTable(
+        "1.0"
+    )
+)
 def move_partition_to_source_table(self):
     """Move partition from the destination table to the source table."""
     move_partition(table_name=source_table, source_table=destination_table)
@@ -240,12 +333,22 @@ def move_partition_to_volume(self, table_name):
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Move(
+        "1.0"
+    )
+)
 def move_destination_partition(self):
     """Move the partition from the destination table to external volume."""
     move_partition_to_volume(table_name=destination_table)
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Move(
+        "1.0"
+    )
+)
 def move_source_partition(self):
     """Move the partition from the source table to external volume."""
     move_partition_to_volume(table_name=source_table)
@@ -262,12 +365,22 @@ def clear_column(self, table_name):
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_ClearColumnInPartition(
+        "1.0"
+    )
+)
 def clear_destination_table_column(self):
     """Clear column on the destination table."""
     clear_column(table_name=destination_table)
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_ClearColumnInPartition(
+        "1.0"
+    )
+)
 def clear_source_table_column(self):
     """Clear column on the source table."""
     clear_column(table_name=source_table)
@@ -290,12 +403,22 @@ def fetch_partition(self, table_name, source_table):
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Fetch(
+        "1.0"
+    )
+)
 def fetch_partition_from_destination_table(self):
     """Fetch partition from the destination table into a source table."""
     fetch_partition(table_name=source_table, source_table=destination_table)
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Fetch(
+        "1.0"
+    )
+)
 def fetch_partition_from_source_table(self):
     """Fetch partition from the destination table into a source table."""
     fetch_partition(table_name=destination_table, source_table=source_table)
@@ -310,12 +433,22 @@ def freeze_partition(self, table_name):
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Freeze(
+        "1.0"
+    )
+)
 def freeze_destination_partition(self):
     """Freeze partition on the destination table."""
     freeze_partition(table_name=destination_table)
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Freeze(
+        "1.0"
+    )
+)
 def freeze_source_partition(self):
     """Freeze partition on the destination table."""
     freeze_partition(table_name=source_table)
@@ -332,12 +465,22 @@ def freeze_partition_with_name(self, table_name):
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Freeze(
+        "1.0"
+    )
+)
 def freeze_destination_partition_with_name(self):
     """Freeze partition on the destination table using name of the partition."""
     freeze_partition_with_name(table_name=destination_table)
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Freeze(
+        "1.0"
+    )
+)
 def freeze_source_partition_with_name(self):
     """Freeze partition on the source table using name of the partition."""
     freeze_partition_with_name(table_name=source_table)

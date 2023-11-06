@@ -107,7 +107,7 @@ def check_replace_partition_concurrently(self, destination_table, source_table):
     """
     Concurrently execute replace partition on a destination table with different combinations.
     Combinations used:
-        * Different amount of partitions both on destination and source table.
+        * Different number of partitions both on the destination and source tables.
         * Different number of concurrent replace partitions being executed on the destination table.
         * The partition which shall be replaced is set randomly.
     """
