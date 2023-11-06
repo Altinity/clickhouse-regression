@@ -444,9 +444,12 @@ def freeze_partition(self, table_name, number_of_partitions=None):
     if number_of_partitions is None:
         number_of_partitions = self.context.number_of_partitions
 
-    partition_name = random.randrange(5, number_of_partitions)
-
-    alter_table_freeze_partition(table_name=table_name, partition_name=partition_name)
+    for retry in retries(count=5):
+        with retry:
+            partition_name = random.randrange(5, number_of_partitions)
+            alter_table_freeze_partition(
+                table_name=table_name, partition_name=partition_name
+            )
 
 
 @TestStep(When)
@@ -474,11 +477,12 @@ def freeze_source_partition(self):
 @TestStep(When)
 def freeze_partition_with_name(self, table_name):
     """Freeze partition with name on the table."""
-    partition_name = random.randrange(5, 100)
-
-    alter_table_freeze_partition_with_name(
-        table_name=table_name, backup_name=partition_name
-    )
+    for retry in retries(count=5):
+        with retry:
+            partition_name = random.randrange(5, 100)
+            alter_table_freeze_partition_with_name(
+                table_name=table_name, backup_name=partition_name
+            )
 
 
 @TestStep(When)
