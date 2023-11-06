@@ -34,7 +34,7 @@ def merges_on_unrelated_partition(self):
 
     with And("I insert data into the destination table to create new parts"):
         node.query(
-            f"insert into {destination_table} (p, i) select 1, number from numbers(100);"
+            f"INSERT INTO {destination_table} (p, i) SELECT 1, number from numbers(100);"
         )
         node.query(
             f"ALTER TABLE {destination_table} ADD COLUMN make_merge_slower UInt8 DEFAULT sleepEachRow(0.03);"
@@ -82,7 +82,7 @@ def merges_on_unrelated_partition(self):
     RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Mutations("1.0")
 )
 def mutations_on_unrelated_partition(self):
-    """Check that replace partition is not stopped when concurrent mutations happen on another partition."""
+    """Check that it is possible to replace partition on the destination table when long mutations happen on unrelated partition."""
     destination_table = "destination_" + getuid()
     source_table = "source_" + getuid()
     node = self.context.node
@@ -108,14 +108,6 @@ def mutations_on_unrelated_partition(self):
             condition="p == 1",
         )
 
-    with And("I check that the mutation was started"):
-        node.query(
-            f"SELECT is_done, latest_fail_reason, parts_to_do FROM system.mutations WHERE database==currentDatabase() "
-            f"AND table=='{destination_table}';"
-        )
-
-        fail()
-
     with And(
         "I replace partition on the destination table from the source table's partition on which no mutations are "
         "happening"
@@ -124,14 +116,12 @@ def mutations_on_unrelated_partition(self):
             destination_table=destination_table, source_table=source_table, partition=2
         )
 
-    with Check("I check that partition on the destination table was replaced"):
+    with Then("I check that partition on the destination table was replaced"):
         check_partition_was_replaced(
             destination_table=destination_table, source_table=source_table, partition=2
         )
 
-    with Check(
-        "that the mutation is still running as the replace partition stopped it"
-    ):
+    with And("that the mutation is still running as the replace partition stopped it"):
         with By(
             "confirming that the the i column, which mutation should've changed still has the old data"
         ):
@@ -147,7 +137,7 @@ def mutations_on_unrelated_partition(self):
 @Name("concurrent merges and mutations")
 def feature(self, node="clickhouse1"):
     """Check that replace partition does not wait for the ongoing merges and mutations that are not happening on the
-    source table."""
+    same partition."""
     self.context.node = self.context.cluster.node(node)
 
     for scenario in loads(current_module(), Scenario):
