@@ -184,3 +184,8 @@ def cannot_add_index(name):
 
 def cannot_add_constraint(name):
     return (cannot_add_exitcode, cannot_add.format(name=name))
+
+# Errors: special
+
+def aggregate_function_throw(name=None):
+    return (247, f"DB::Exception: Aggregate function aggThrow has thrown exception successfully")

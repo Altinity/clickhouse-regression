@@ -12,7 +12,6 @@ from helpers.common import (
 
 # exhaustive list of all aggregate functions
 aggregate_functions = [
-    "aggThrow",
     "any",
     "anyHeavy",
     "anyLast",
