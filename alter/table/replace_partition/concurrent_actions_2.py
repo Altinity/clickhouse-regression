@@ -17,6 +17,7 @@ source_table = "source_" + getuid()
 
 @TestStep(When)
 def add_column(self, table_name):
+    """Add column to the table."""
     alter_table_add_column(
         table_name=table_name,
         column_name="column_" + getuid(),
@@ -53,6 +54,7 @@ def replace_partition_on_source_table(self):
 
 @TestStep(When)
 def drop_column(self, table_name):
+    """Drop column on the table."""
     alter_table_drop_column(table_name=table_name, column_name="extra")
 
 
@@ -90,6 +92,7 @@ def modify_source_table_column(self):
 
 @TestStep(When)
 def rename_column(self, table_name):
+    """Rename column on the table."""
     alter_table_rename_column(
         table_name=table_name, column_name_old="extra", column_name_new="extra_new"
     )
@@ -107,6 +110,151 @@ def rename_source_table_column(self):
     rename_column(table_name=source_table)
 
 
+@TestStep(When)
+def comment_column(self, table_name):
+    """Comment column on the table."""
+    alter_table_comment_column(
+        table_name=table_name, column_name="extra", comment="test_comment"
+    )
+
+
+@TestStep(When)
+def comment_destination_table_column(self):
+    """Comment column on the destination table."""
+    comment_column(table_name=destination_table)
+
+
+@TestStep(When)
+def comment_source_table_column(self):
+    """Comment column on the source table."""
+    comment_column(table_name=source_table)
+
+
+@TestStep(When)
+def add_constraint(self, table_name):
+    """Add constraint to the table."""
+    constraint_name = "constraint_" + getuid()
+
+    alter_table_add_constraint(
+        table_name=table_name, constraint_name=constraint_name, expression="(i > 1)"
+    )
+
+
+@TestStep(When)
+def add_constraint_to_the_destination_table(self):
+    """Add constraint to the destination table."""
+    add_constraint(table_name=destination_table)
+
+
+@TestStep(When)
+def add_constraint_to_the_source_table(self):
+    """Add constraint to the source table."""
+    add_constraint(table_name=source_table)
+
+
+@TestStep(When)
+def detach_partition(self, table_name):
+    """Detach partition from the table."""
+    partition_name = random.randrange(5, 100)
+    alter_table_detach_partition(table_name=table_name, partition_name=partition_name)
+
+
+@TestStep(When)
+def detach_partition_from_destination_table(self):
+    """Detach partition from the destination table."""
+    detach_partition(table_name=destination_table)
+
+
+@TestStep(When)
+def detach_partition_from_source_table(self):
+    """Detach partition from the source table."""
+    detach_partition(table_name=source_table)
+
+
+@TestStep(When)
+def attach_partition(self, table_name):
+    """Attach partition to the table."""
+    alter_table_attach_partition(table_name=table_name, partition_name=12)
+
+
+@TestStep(When)
+def attach_partition_to_destination_table(self):
+    """Attach partition to the destination table."""
+    attach_partition(table_name=destination_table)
+
+
+@TestStep(When)
+def attach_partition_to_source_table(self):
+    """Attach partition to the source table."""
+    attach_partition(table_name=source_table)
+
+
+@TestStep(When)
+def attach_partition_from(self, table_name, source_table):
+    """Attach partition from another table."""
+    alter_table_attach_partition_from(
+        table_name=table_name, partition_name=2, path_to_backup=source_table
+    )
+
+
+@TestStep(When)
+def attach_partition_from_destination_to_source(self):
+    """Attach partition on the source table from the destination table."""
+    attach_partition_from(table_name=source_table, source_table=destination_table)
+
+
+@TestStep(When)
+def attach_partition_from_source_to_destination(self):
+    """Attach partition on the destination table from the source table."""
+    attach_partition_from(table_name=destination_table, source_table=source_table)
+
+
+@TestStep(When)
+def move_partition(self, table_name, source_table):
+    alter_table_move_partition_to_table(
+        table_name=table_name, partition_name=2, path_to_backup=source_table
+    )
+
+
+@TestStep(When)
+def move_partition_to_destination_table(self):
+    """Move partition from the source table to the destination table."""
+    move_partition(table_name=destination_table, source_table=source_table)
+
+
+@TestStep(When)
+def move_partition_to_source_table(self):
+    """Move partition from the destination table to the source table."""
+    move_partition(table_name=source_table, source_table=destination_table)
+
+
+@Retry(5)
+@TestStep(When)
+def move_partition_to_volume(self, table_name):
+    """Move partition to another volume."""
+    partition_name = random.randrange(5, 100)
+    alter_table_move_partition(
+        table_name=table_name, partition_name=partition_name, disk_name="external"
+    )
+
+
+@TestStep(When)
+def move_destination_partition(self):
+    """Move the partition from the destination table to external volume."""
+    move_partition_to_volume(table_name=destination_table)
+
+
+@TestStep(When)
+def move_source_partition(self):
+    """Move the partition from the source table to external volume."""
+    move_partition_to_volume(table_name=source_table)
+
+
+@TestStep(When)
+def clear_column(self, table_name):
+    """Clear column in a specific partition of the table."""
+
+
 @TestCheck
 def concurrent_replace(
     self,
@@ -121,6 +269,7 @@ def concurrent_replace(
             create_two_tables_partitioned_by_column_with_data(
                 destination_table=destination_table,
                 source_table=source_table,
+                number_of_partitions=100,
             )
 
         with When(
@@ -177,6 +326,20 @@ def feature(self, node="clickhouse1"):
         modify_source_table_column,
         rename_destination_table_column,
         rename_source_table_column,
+        comment_destination_table_column,
+        comment_source_table_column,
+        add_constraint_to_the_destination_table,
+        add_constraint_to_the_source_table,
+        detach_partition_from_destination_table,
+        detach_partition_from_source_table,
+        attach_partition_to_destination_table,
+        attach_partition_to_source_table,
+        attach_partition_from_destination_to_source,
+        attach_partition_from_source_to_destination,
+        move_partition_to_destination_table,
+        move_partition_to_source_table,
+        move_destination_partition,
+        move_source_partition,
     ]
 
     for action in actions:
