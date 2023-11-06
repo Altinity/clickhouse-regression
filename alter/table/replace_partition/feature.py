@@ -17,6 +17,7 @@ def feature(self):
     Feature(run=load("alter.table.replace_partition.temporary_table", "feature"))
     Feature(run=load("alter.table.replace_partition.engines", "feature"))
     Feature(run=load("alter.table.replace_partition.concurrent_actions", "feature"))
+    Feature(run=load("alter.table.replace_partition.concurrent_actions_2", "feature"))
     Feature(
         run=load(
             "alter.table.replace_partition.concurrent_replace_partitions", "feature"
