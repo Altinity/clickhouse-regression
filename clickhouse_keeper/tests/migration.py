@@ -74,7 +74,13 @@ def migrate_from_zookeeper(self, use_standalone_keeper_server):
             cluster.node("clickhouse1").cmd(
                 f"clickhouse keeper-converter"
                 f" --zookeeper-logs-dir /share/zookeeper3/datalog/version-2 --zookeeper-snapshots-dir "
-                f"/share/zookeeper3/data/version-2 --output-dir /share/{uid}/snapshots"
+                f"/share/zookeeper3/data/version-2 --output-dir /share/{uid}/snapshots",
+                exitcode=0,
+                message=(
+                    "Snapshot serialized to path:/share"
+                    if check_clickhouse_version("<23.8")(self)
+                    else 'Snapshot serialized to path:"/share'
+                ),
             )
 
         if use_standalone_keeper_server:
