@@ -5,6 +5,7 @@ from helpers.common import getuid, replace_partition
 from alter.table.replace_partition.common import (
     check_partition_was_replaced,
     create_two_tables_partitioned_by_column_with_data,
+    create_table_partitioned_by_column_with_data,
 )
 from helpers.alter import *
 from helpers.tables import Column, create_table_partitioned_by_column
@@ -36,10 +37,74 @@ def add_column_to_source_table(self):
 
 
 @TestStep(When)
-def add_drop_column(self, table_name):
-    alter_table_add_column(
-        table_name=table_name, column_name="additional_column", column_type="String"
+def replace_partition_on_source_table(self):
+    """Replace partition on the source table while using this source table to replace partition on another
+    destination table."""
+    new_table = "new_" + getuid()
+
+    with By(
+        "creating a new table and replacing a partition on the source table from that new table"
+    ):
+        create_table_partitioned_by_column_with_data(table_name=new_table)
+        replace_partition(
+            destination_table=source_table, source_table=new_table, partition=2
+        )
+
+
+@TestStep(When)
+def drop_column(self, table_name):
+    alter_table_drop_column(table_name=table_name, column_name="extra")
+
+
+@TestStep(When)
+def drop_column_on_destination_table(self):
+    """Drop column on the destination table."""
+    drop_column(table_name=destination_table)
+
+
+@TestStep(When)
+def drop_column_on_source_table(self):
+    """Drop table on the source table."""
+    drop_column(table_name=source_table)
+
+
+@TestStep(When)
+def modify_column(self, table_name):
+    """Modify column type of the table."""
+    alter_table_modify_column(
+        table_name=table_name, column_name="extra", column_type="String"
     )
+
+
+@TestStep(When)
+def modify_destination_table_column(self):
+    """Modify column on the destination table."""
+    modify_column(table_name=destination_table)
+
+
+@TestStep(When)
+def modify_source_table_column(self):
+    """Modify column on the source table."""
+    modify_column(table_name=source_table)
+
+
+@TestStep(When)
+def rename_column(self, table_name):
+    alter_table_rename_column(
+        table_name=table_name, column_name_old="extra", column_name_new="extra_new"
+    )
+
+
+@TestStep(When)
+def rename_destination_table_column(self):
+    """Rename the column on the destination table."""
+    rename_column(table_name=destination_table)
+
+
+@TestStep(When)
+def rename_source_table_column(self):
+    """Rename the column on the source table."""
+    rename_column(table_name=source_table)
 
 
 @TestCheck
@@ -102,10 +167,20 @@ def feature(self, node="clickhouse1"):
     self.context.node = self.context.cluster.node(node)
     partition_to_replace = 1
     number_of_concurrent_queries = 5
-    actions = [add_column_to_destination_table, add_column_to_source_table]
+    actions = [
+        add_column_to_destination_table,
+        add_column_to_source_table,
+        replace_partition_on_source_table,
+        drop_column_on_destination_table,
+        drop_column_on_source_table,
+        modify_destination_table_column,
+        modify_source_table_column,
+        rename_destination_table_column,
+        rename_source_table_column,
+    ]
 
     for action in actions:
-        Scenario(test=concurrent_replace)(
+        Scenario(test=concurrent_replace, name=f"{action.__name__}")(
             partition_to_replace=partition_to_replace,
             number_of_concurrent_queries=number_of_concurrent_queries,
             action=action,
