@@ -129,7 +129,6 @@ def feature(self, node="clickhouse1"):
     """
     Concurrently execute replace partition on a destination table with different combinations.
     Combinations used:
-        * Different number of partitions both on the destination and source tables.
         * Different number of concurrent replace partitions being executed on the destination table.
         * The partition which shall be replaced is set randomly.
     """
