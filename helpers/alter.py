@@ -35,7 +35,7 @@ def alter_table_drop_column(
         node = self.context.node
 
     with By("dropping column from the table"):
-        query = f"ALTER TABLE {table_name} DROP COLUMN {column_name}"
+        query = f"ALTER TABLE {table_name} DROP COLUMN IF EXISTS {column_name}"
         node.query(query)
 
 
