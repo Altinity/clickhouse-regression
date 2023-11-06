@@ -6,7 +6,7 @@ from alter.table.replace_partition.common import (
     check_partition_was_replaced,
 )
 from helpers.alter import *
-from helpers.tables import Column, create_table_partitioned_by_column
+from helpers.tables import create_table_partitioned_by_column
 import random
 
 
@@ -52,76 +52,70 @@ def source_table_with_partitions(self, table_name, number_of_partitions):
         )
 
 
-@TestCheck
-def concurrent_replace(
-    self,
-    destination_table,
-    source_table,
-    destination_partitions,
-    source_partitions,
-    partition_to_replace,
-    number_of_concurrent_queries,
-):
-    node = self.context.node
-
+@TestStep(Given)
+def create_two_tables_with_100_partitions(self, destination_table, source_table):
+    """Create two tables, each has 100 partitions with random number of parts."""
     with Given("I have two partitioned tables with the same structure"):
         destination_table_with_partitions(
-            table_name=destination_table, number_of_partitions=destination_partitions
+            table_name=destination_table, number_of_partitions=100
         )
-        source_table_with_partitions(
-            table_name=source_table, number_of_partitions=source_partitions
-        )
+        source_table_with_partitions(table_name=source_table, number_of_partitions=100)
 
-    with When(
-        "I save the data from the source table before replacing partitions on the destination table"
+
+@TestStep(When)
+def replace_partition_and_validate_data(
+    self, destination_table, source_table, partition_to_replace
+):
+    """
+    Replace partition and validate that the data on the destination table is the same data as on the source table.
+    Also check that the data on the source table was not lost during replace partition.
+    """
+    node = self.context.node
+
+    with By(
+        "saving the data from the source table before replacing partitions on the destination table"
     ):
         source_data_before = node.query(
-            f"SELECT * FROM {source_table} WHERE p = {partition_to_replace} ORDER BY tuple(*)"
+            f"SELECT i FROM {source_table} WHERE p = {partition_to_replace} ORDER BY tuple(*)"
         )
 
-    with And("I replace partition on the destination table"):
-        for _ in range(number_of_concurrent_queries):
-            partition_to_replace = random.randrange(1, 100)
-
-            Step(
-                name="replace partition on the destination table",
-                test=replace_partition,
-                parallel=True,
-            )(
-                destination_table=destination_table,
-                source_table=source_table,
-                partition=partition_to_replace,
-            )
+    with And("replacing partition on the destination table"):
+        replace_partition(
+            destination_table=destination_table,
+            source_table=source_table,
+            partition=partition_to_replace,
+        )
 
     with Check("I check that the partition was replaced on the destination table"):
         check_partition_was_replaced(
             destination_table=destination_table,
             source_table=source_table,
             source_table_before_replace=source_data_before,
+            partition=partition_to_replace,
         )
 
 
-@TestSketch
-@Flags(TE)
-def check_replace_partition_concurrently(self, destination_table, source_table):
-    """
-    Concurrently execute replace partition on a destination table with different combinations.
-    Combinations used:
-        * Different number of partitions both on the destination and source tables.
-        * Different number of concurrent replace partitions being executed on the destination table.
-        * The partition which shall be replaced is set randomly.
-    """
-    partitions = [3, 50, 100]
-    number_of_concurrent_queries = [random.randint(1, 100) for _ in range(10)]
+@TestScenario
+def concurrent_replace(
+    self, number_of_concurrent_queries, destination_table, source_table
+):
+    """Concurrently run the number of replace partition on the destination table."""
+    with Given(
+        "concurrently run multiple replace partitions on the destination table and validate that the data on both "
+        "destination and source tables is the same."
+    ):
+        for _ in range(number_of_concurrent_queries):
+            partition_to_replace = random.randrange(1, 100)
 
-    concurrent_replace(
-        destination_table=destination_table,
-        source_table=source_table,
-        destination_partitions=either(*partitions),
-        source_partitions=either(*partitions),
-        partition_to_replace=1,
-        number_of_concurrent_queries=either(*number_of_concurrent_queries),
-    )
+            Step(
+                name="replace partition on the destination table",
+                test=replace_partition_and_validate_data,
+                parallel=True,
+            )(
+                destination_table=destination_table,
+                source_table=source_table,
+                partition_to_replace=partition_to_replace,
+            )
 
 
 @TestFeature
@@ -132,11 +126,24 @@ def check_replace_partition_concurrently(self, destination_table, source_table):
 )
 @Name("concurrent replace partitions")
 def feature(self, node="clickhouse1"):
-    """Check that it is possible to perform other actions at the same time as replace partitions is being triggered."""
+    """
+    Concurrently execute replace partition on a destination table with different combinations.
+    Combinations used:
+        * Different number of partitions both on the destination and source tables.
+        * Different number of concurrent replace partitions being executed on the destination table.
+        * The partition which shall be replaced is set randomly.
+    """
     self.context.node = self.context.cluster.node(node)
     destination_table = "destination_" + getuid()
     source_table = "source_" + getuid()
+    number_of_concurrent_queries = 15
 
-    Scenario(test=check_replace_partition_concurrently)(
+    create_two_tables_with_100_partitions(
         destination_table=destination_table, source_table=source_table
+    )
+
+    Scenario(test=concurrent_replace)(
+        number_of_concurrent_queries=number_of_concurrent_queries,
+        destination_table=destination_table,
+        source_table=source_table,
     )
