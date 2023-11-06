@@ -122,7 +122,7 @@ def concurrent_replace(
     destination_table=None,
     source_table=None,
 ):
-    """ "Concurrently run multiple replace partitions on the destination table and
+    """Concurrently run multiple replace partitions on the destination table and
     validate that the data on both destination and source tables is the same."""
 
     if number_of_partitions is None:
