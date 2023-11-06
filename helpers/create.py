@@ -328,6 +328,13 @@ def create_replicated_merge_tree_table(
     partition_by: str = None,
 ):
     """Create a table with the MergeTree engine."""
+    if columns is None:
+        columns = [
+            {"name": "p", "type": "Int8"},
+            {"name": "i", "type": "UInt64"},
+            {"name": "extra", "type": "Int8"},
+        ]
+
     create_table(
         table_name=table_name,
         columns=columns,
@@ -354,7 +361,7 @@ def partitioned_merge_tree_table(self, table_name, partition, columns):
 
 
 @TestStep(Given)
-def partitioned_replicated_merge_tree_table(self, table_name, partition, columns):
+def partitioned_replicated_merge_tree_table(self, table_name, partition, columns=None):
     """Create a ReplicatedMergeTree table partitioned by a specific column."""
     with By(
         f"creating a partitioned {table_name} table with a ReplicatedMergeTree engine"

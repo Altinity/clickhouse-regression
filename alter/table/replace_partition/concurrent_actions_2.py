@@ -8,6 +8,7 @@ from alter.table.replace_partition.common import (
     create_table_partitioned_by_column_with_data,
 )
 from helpers.alter import *
+from helpers.create import partitioned_replicated_merge_tree_table
 from helpers.tables import Column, create_table_partitioned_by_column
 import random
 
@@ -253,6 +254,93 @@ def move_source_partition(self):
 @TestStep(When)
 def clear_column(self, table_name):
     """Clear column in a specific partition of the table."""
+    partition_name = random.randrange(5, 100)
+
+    alter_table_clear_column_in_partition(
+        table_name=table_name, partition_name=partition_name, column_name="i"
+    )
+
+
+@TestStep(When)
+def clear_destination_table_column(self):
+    """Clear column on the destination table."""
+    clear_column(table_name=destination_table)
+
+
+@TestStep(When)
+def clear_source_table_column(self):
+    """Clear column on the source table."""
+    clear_column(table_name=source_table)
+
+
+@TestStep(When)
+def fetch_partition(self, table_name, source_table):
+    """Fetch partition from the replicated table."""
+    partition_name = random.randrange(5, 100)
+
+    partitioned_replicated_merge_tree_table(
+        table_name=source_table + "_replica", partition="p"
+    )
+
+    alter_table_fetch_partition(
+        table_name=table_name,
+        partition_name=partition_name,
+        path_to_backup=f"/clickhouse/tables/shard0/{source_table}_replica",
+    )
+
+
+@TestStep(When)
+def fetch_partition_from_destination_table(self):
+    """Fetch partition from the destination table into a source table."""
+    fetch_partition(table_name=source_table, source_table=destination_table)
+
+
+@TestStep(When)
+def fetch_partition_from_source_table(self):
+    """Fetch partition from the destination table into a source table."""
+    fetch_partition(table_name=destination_table, source_table=source_table)
+
+
+@TestStep(When)
+def freeze_partition(self, table_name):
+    """Freeze a random partition of the table."""
+    partition_name = random.randrange(5, 100)
+
+    alter_table_freeze_partition(table_name=table_name, partition_name=partition_name)
+
+
+@TestStep(When)
+def freeze_destination_partition(self):
+    """Freeze partition on the destination table."""
+    freeze_partition(table_name=destination_table)
+
+
+@TestStep(When)
+def freeze_source_partition(self):
+    """Freeze partition on the destination table."""
+    freeze_partition(table_name=source_table)
+
+
+@TestStep(When)
+def freeze_partition_with_name(self, table_name):
+    """Freeze partition with name on the table."""
+    partition_name = random.randrange(5, 100)
+
+    alter_table_freeze_partition_with_name(
+        table_name=table_name, backup_name=partition_name
+    )
+
+
+@TestStep(When)
+def freeze_destination_partition_with_name(self):
+    """Freeze partition on the destination table using name of the partition."""
+    freeze_partition_with_name(table_name=destination_table)
+
+
+@TestStep(When)
+def freeze_source_partition_with_name(self):
+    """Freeze partition on the source table using name of the partition."""
+    freeze_partition_with_name(table_name=source_table)
 
 
 @TestCheck
@@ -340,10 +428,18 @@ def feature(self, node="clickhouse1"):
         move_partition_to_source_table,
         move_destination_partition,
         move_source_partition,
+        clear_destination_table_column,
+        clear_source_table_column,
+        fetch_partition_from_destination_table,
+        fetch_partition_from_source_table,
+        freeze_source_partition,
+        freeze_destination_partition,
+        freeze_destination_partition_with_name,
+        freeze_source_partition_with_name,
     ]
 
     for action in actions:
-        Scenario(test=concurrent_replace, name=f"{action.__name__}")(
+        Scenario(test=concurrent_replace, name=f"{action.__name__}".replace("_", " "))(
             partition_to_replace=partition_to_replace,
             number_of_concurrent_queries=number_of_concurrent_queries,
             action=action,

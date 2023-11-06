@@ -31,6 +31,12 @@ xfails = {
             "The pr is not done yet: https://github.com/ClickHouse/ClickHouse/pull/54272",
         )
     ],
+    "/alter/replace partition/concurrent actions2/fetch partition from * table": [
+        (
+            Fail,
+            "Test requires a fix",
+        )
+    ],
 }
 
 xflags = {}
