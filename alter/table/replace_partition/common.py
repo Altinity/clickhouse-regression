@@ -115,24 +115,30 @@ def check_partition_was_replaced(
     self,
     destination_table,
     source_table,
-    source_table_before_replace,
+    source_table_before_replace=None,
     node=None,
     sort_column="p",
     partition=1,
     column="i",
+    list=False,
 ):
     """Check that the partition on the destination table was replaced from the source table."""
     if node is None:
         node = self.context.node
 
+    if not list:
+        condition = "="
+    else:
+        condition = "IN"
+
     with By(
         "selecting and saving the partition data from the source table and destination table"
     ):
         partition_values_source = node.query(
-            f"SELECT {column} FROM {source_table} WHERE {sort_column} = {partition} ORDER BY tuple(*)"
+            f"SELECT {column} FROM {source_table} WHERE {sort_column} {condition} {partition} ORDER BY tuple(*)"
         )
         partition_values_destination = node.query(
-            f"SELECT {column} FROM {destination_table} WHERE {sort_column} = {partition} ORDER BY tuple(*)"
+            f"SELECT {column} FROM {destination_table} WHERE {sort_column} {condition} {partition} ORDER BY tuple(*)"
         )
 
     with Then(
@@ -143,8 +149,9 @@ def check_partition_was_replaced(
             == partition_values_source.output.strip()
         ), error()
 
-    with And("I check that the data on the source table was preserved"):
-        assert (
-            source_table_before_replace.output.strip()
-            == partition_values_source.output.strip()
-        ), error()
+    if source_table_before_replace is not None:
+        with And("I check that the data on the source table was preserved"):
+            assert (
+                source_table_before_replace.output.strip()
+                == partition_values_source.output.strip()
+            ), error()
