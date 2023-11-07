@@ -1,3 +1,4 @@
+import json
 from selects.tests.steps.main_steps import *
 
 
@@ -72,14 +73,21 @@ def limit_result_check(self, table, node=None):
         node = self.context.cluster.node("clickhouse1")
 
     with Then("I check that compare results are the same"):
+        describe_query = node.query(
+            f"DESCRIBE {table.name} FORMAT JSONEachRow;"
+        ).output.split("\n")
+        columns = []
+        for row in describe_query:
+            columns.append(json.loads(row)["name"])
+        columns = ",".join(column_name for column_name in columns)
         assert (
             node.query(
-                f"SELECT * FROM  {table.name} {'FINAL' if table.final_modifier_available else ''} ORDER BY (id,x)"
+                f"SELECT * FROM  {table.name} {'FINAL' if table.final_modifier_available else ''} ORDER BY ({columns})"
                 f" LIMIT 1 FORMAT JSONEachRow;",
                 settings=[("final", 0)],
             ).output.strip()
             == node.query(
-                f"SELECT * FROM  {table.name} ORDER BY (id,x) LIMIT 1 FORMAT JSONEachRow;",
+                f"SELECT * FROM  {table.name} ORDER BY ({columns}) LIMIT 1 FORMAT JSONEachRow;",
                 settings=[("final", 1)],
             ).output.strip()
         )
