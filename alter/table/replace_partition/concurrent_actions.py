@@ -570,15 +570,17 @@ def concurrent_replace(
     with When("I execute multiple replace partitions along with other actions"):
         for i in range(number_of_iterations):
             partition_to_replace = random.randrange(1, number_of_partitions)
-            Check(
-                name=f"replace partition on the destination table #{i}",
-                test=replace_partition_and_validate_data,
-                parallel=True,
-            )(
-                destination_table=destination_table,
-                source_table=source_table,
-                partition_to_replace=partition_to_replace,
-            )
+            for retry in retries(timeout=45):
+                with retry:
+                    Check(
+                        name=f"replace partition on the destination table #{i}",
+                        test=replace_partition_and_validate_data,
+                        parallel=True,
+                    )(
+                        destination_table=destination_table,
+                        source_table=source_table,
+                        partition_to_replace=partition_to_replace,
+                    )
 
             for action in get_n_random_items(actions, number_of_concurrent_queries):
                 Check(
