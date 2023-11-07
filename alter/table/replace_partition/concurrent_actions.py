@@ -18,6 +18,14 @@ destination_table = "destination_" + getuid()
 source_table = "source_" + getuid()
 
 
+def get_n_random_items(lst, n):
+    """get n random elements from the list"""
+    if n >= len(lst):
+        return lst
+    else:
+        return random.sample(lst, n)
+
+
 @TestStep(When)
 def add_column(self, table_name):
     """Add column to the table."""
@@ -44,6 +52,25 @@ def add_column_to_destination_table(self):
 def add_column_to_source_table(self):
     """Alter add column to the source table."""
     add_column(table_name=destination_table)
+
+
+@TestStep(When)
+def add_column_to_destination_and_source(self):
+    """Add column with the same name to both destination and source tables."""
+
+    column_name = "column_" + getuid()
+
+    alter_table_add_column(
+        table_name=destination_table,
+        column_name=column_name,
+        column_type="String",
+    )
+
+    alter_table_add_column(
+        table_name=source_table,
+        column_name=column_name,
+        column_type="String",
+    )
 
 
 @TestStep(When)
@@ -510,6 +537,58 @@ def freeze_source_partition_with_name(self):
 @TestCheck
 def concurrent_replace(
     self,
+    number_of_concurrent_queries=None,
+    number_of_partitions=None,
+    number_of_iterations=None,
+):
+    node = self.context.node
+    actions = self.context.actions
+
+    if number_of_concurrent_queries is None:
+        number_of_concurrent_queries = self.context.number_of_concurrent_queries
+
+    if number_of_partitions is None:
+        number_of_partitions = self.context.number_of_partitions
+
+    if number_of_iterations is None:
+        number_of_iterations = self.context.number_of_iterations
+
+    with Given("I have two partitioned tables with the same structure"):
+        create_two_tables_partitioned_by_column_with_data(
+            destination_table=destination_table,
+            source_table=source_table,
+            number_of_partitions=number_of_partitions,
+        )
+
+    with When(
+        "I save the data from the source table before replacing partitions on the destination table"
+    ):
+        source_data_before = node.query(
+            f"SELECT i FROM {source_table} WHERE p = 1 ORDER BY tuple(*)"
+        )
+
+    with And("I execute multiple replace partitions along with other actions"):
+        for i in range(1, number_of_iterations):
+            Check(
+                name=f"replace partition on the destination table #{i}",
+                test=replace_partition_and_validate_data,
+                parallel=True,
+            )(
+                destination_table=destination_table,
+                source_table=source_table,
+                partition_to_replace=1,
+            )
+        for action in get_n_random_items(actions, number_of_concurrent_queries):
+            Check(
+                name=f"{action.__name__} #{i}",
+                test=action,
+                parallel=True,
+            )()
+
+
+@TestCheck
+def concurrent_single_replace(
+    self,
     action,
     number_of_concurrent_queries=None,
     number_of_partitions=None,
@@ -565,20 +644,9 @@ def concurrent_replace(
             node.query(f"DROP TABLE {source_table}")
 
 
-@TestFeature
-@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent("1.0"))
-@Name("concurrent actions2")
-def feature(
-    self,
-    node="clickhouse1",
-    number_of_concurrent_queries=100,
-    number_of_partitions=500,
-):
-    """Check that it is possible to perform other actions at the same time as replace partitions is being triggered."""
-    self.context.node = self.context.cluster.node(node)
-    self.context.number_of_concurrent_queries = number_of_concurrent_queries
-    self.context.number_of_partitions = number_of_partitions
-
+@TestScenario
+def one_replace_partition(self):
+    """Check that it is possible to execute a single replace partition while the number of other actions is being executed."""
     actions = [
         add_column_to_destination_table,
         add_column_to_source_table,
@@ -616,7 +684,42 @@ def feature(
     for action in actions:
         Scenario(
             name=f"{action.__name__}".replace("_", " "),
-            test=concurrent_replace,
+            test=concurrent_single_replace,
         )(
             action=action,
         )
+
+
+@TestScenario
+def replace_partition_along_other_actions(self):
+    """Check that when we run multiple replace partitions in a loop along with other actions, replace partitions
+    executes successfully."""
+    self.context.actions = [add_column_to_destination_and_source]
+
+    Scenario(run=concurrent_replace)
+
+
+@TestFeature
+@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent("1.0"))
+@Name("concurrent actions")
+def feature(
+    self,
+    node="clickhouse1",
+    number_of_concurrent_queries=3,
+    number_of_partitions=500,
+    number_of_iterations=50,
+    delay_before=None,
+    delay_after=None,
+    validate=True,
+):
+    """Check that it is possible to perform other actions at the same time as replace partitions is being triggered."""
+    self.context.node = self.context.cluster.node(node)
+    self.context.number_of_concurrent_queries = number_of_concurrent_queries
+    self.context.number_of_partitions = number_of_partitions
+    self.context.number_of_iterations = number_of_iterations
+    self.context.delay_before = delay_before
+    self.context.delay_after = delay_after
+    self.context.validate = validate
+
+    Scenario(run=one_replace_partition)
+    Scenario(run=replace_partition_along_other_actions)
