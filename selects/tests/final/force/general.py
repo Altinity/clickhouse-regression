@@ -1046,15 +1046,17 @@ def select_array_join_subquery(self, node=None):
                 node.query(f"DROP TABLE {name}")
 
 
-@TestOutline
+@TestOutline(Feature)
 def run_tests(self):
     """Outline to run all tests."""
     with Pool(1) as executor:
         try:
             for feature in loads(current_module(), Feature):
-                if not feature.name.endswith(
-                    "experimental analyzer"
-                ) and not feature.name.endswith("general"):
+                if (
+                    not feature.name.endswith("experimental analyzer")
+                    and not feature.name.endswith("general")
+                    and not feature.name.endswith("run tests")
+                ):
                     Feature(test=feature, parallel=True, executor=executor)()
         finally:
             join()
