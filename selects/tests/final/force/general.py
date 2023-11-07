@@ -694,10 +694,10 @@ def select_multiple_join_clause_select(self, node=None):
                     ):
                         join_statement = define(
                             "Multiple join query",
-                            f"SELECT count() FROM {table1.name} c"
+                            f"SELECT count() FROM {table1.name} t"
                             f"{' FINAL' if table1.final_modifier_available else ''}  {join_type} "
                             f"(SELECT * FROM {table2.name} "
-                            f"{' FINAL' if table2.final_modifier_available else ''}) a on c.id = a.id"
+                            f"{' FINAL' if table2.final_modifier_available else ''}) a on t.id = a.id"
                             f" {join_type} "
                             f"(SELECT * FROM {table2.name} "
                             f"{' FINAL' if table2.final_modifier_available else ''}) b on"
