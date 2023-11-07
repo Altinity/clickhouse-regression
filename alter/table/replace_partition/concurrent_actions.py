@@ -118,6 +118,13 @@ def drop_column_on_source_table(self):
 
 
 @TestStep(When)
+def drop_column_on_destination_and_source(self):
+    """Drop the same column on destination and source tables."""
+    drop_column_on_destination_table()
+    drop_column_on_source_table()
+
+
+@TestStep(When)
 def modify_column(self, table_name):
     """Modify column type of the table."""
     alter_table_modify_column(
@@ -560,15 +567,9 @@ def concurrent_replace(
             number_of_partitions=number_of_partitions,
         )
 
-    with When(
-        "I save the data from the source table before replacing partitions on the destination table"
-    ):
-        source_data_before = node.query(
-            f"SELECT i FROM {source_table} WHERE p = 1 ORDER BY tuple(*)"
-        )
-
-    with And("I execute multiple replace partitions along with other actions"):
-        for i in range(1, number_of_iterations):
+    with When("I execute multiple replace partitions along with other actions"):
+        for i in range(number_of_iterations):
+            partition_to_replace = random.randrange(1, number_of_partitions)
             Check(
                 name=f"replace partition on the destination table #{i}",
                 test=replace_partition_and_validate_data,
@@ -576,14 +577,15 @@ def concurrent_replace(
             )(
                 destination_table=destination_table,
                 source_table=source_table,
-                partition_to_replace=1,
+                partition_to_replace=partition_to_replace,
             )
-        for action in get_n_random_items(actions, number_of_concurrent_queries):
-            Check(
-                name=f"{action.__name__} #{i}",
-                test=action,
-                parallel=True,
-            )()
+
+            for action in get_n_random_items(actions, number_of_concurrent_queries):
+                Check(
+                    name=f"{action.__name__} #{i}",
+                    test=action,
+                    parallel=True,
+                )()
 
 
 @TestCheck
@@ -600,48 +602,44 @@ def concurrent_single_replace(
 
     if number_of_partitions is None:
         number_of_partitions = self.context.number_of_partitions
-    try:
-        with Given("I have two partitioned tables with the same structure"):
-            create_two_tables_partitioned_by_column_with_data(
-                destination_table=destination_table,
-                source_table=source_table,
-                number_of_partitions=number_of_partitions,
-            )
 
-        with When(
-            "I save the data from the source table before replacing partitions on the destination table"
-        ):
-            source_data_before = node.query(
-                f"SELECT i FROM {source_table} WHERE p = 1 ORDER BY tuple(*)"
-            )
+    with Given("I have two partitioned tables with the same structure"):
+        create_two_tables_partitioned_by_column_with_data(
+            destination_table=destination_table,
+            source_table=source_table,
+            number_of_partitions=number_of_partitions,
+        )
 
-        with And("I execute replace partition concurrently with another action"):
+    with When(
+        "I save the data from the source table before replacing partitions on the destination table"
+    ):
+        source_data_before = node.query(
+            f"SELECT i FROM {source_table} WHERE p = 1 ORDER BY tuple(*)"
+        )
+
+    with And("I execute replace partition concurrently with another action"):
+        Check(
+            name="replace partition on the destination table",
+            test=replace_partition,
+            parallel=True,
+        )(
+            destination_table=destination_table,
+            source_table=source_table,
+            partition=1,
+        )
+        for i in range(number_of_concurrent_queries):
             Check(
-                name="replace partition on the destination table",
-                test=replace_partition,
+                name=f"{action.__name__} #{i}",
+                test=action,
                 parallel=True,
-            )(
-                destination_table=destination_table,
-                source_table=source_table,
-                partition=1,
-            )
-            for i in range(number_of_concurrent_queries):
-                Check(
-                    name=f"{action.__name__} #{i}",
-                    test=action,
-                    parallel=True,
-                )()
+            )()
 
-        with Then("I check that the partition was replaced on the destination table"):
-            check_partition_was_replaced(
-                destination_table=destination_table,
-                source_table=source_table,
-                source_table_before_replace=source_data_before,
-            )
-    finally:
-        with Finally("I delete both source and destination tables"):
-            node.query(f"DROP TABLE {destination_table}")
-            node.query(f"DROP TABLE {source_table}")
+    with Then("I check that the partition was replaced on the destination table"):
+        check_partition_was_replaced(
+            destination_table=destination_table,
+            source_table=source_table,
+            source_table_before_replace=source_data_before,
+        )
 
 
 @TestScenario
@@ -694,7 +692,10 @@ def one_replace_partition(self):
 def replace_partition_along_other_actions(self):
     """Check that when we run multiple replace partitions in a loop along with other actions, replace partitions
     executes successfully."""
-    self.context.actions = [add_column_to_destination_and_source]
+    self.context.actions = [
+        add_column_to_destination_and_source,
+        drop_column_on_destination_and_source,
+    ]
 
     Scenario(run=concurrent_replace)
 
