@@ -168,7 +168,7 @@ def replace_partition_and_validate_data(
     source_table=None,
     delay_before=None,
     delay_after=None,
-    validate=True,
+    validate=None,
 ):
     """
     Replace partition and validate that the data on the destination table is the same data as on the source table.
@@ -188,6 +188,11 @@ def replace_partition_and_validate_data(
         Defaults to True.
     """
     node = self.context.node
+
+    if validate is None:
+        validate = True
+    else:
+        validate = self.context.validate
 
     if destination_table is None:
         destination_table = self.context.destination_table
@@ -211,11 +216,13 @@ def replace_partition_and_validate_data(
     with And("replacing partition on the destination table"):
         sleep(delay_before)
 
-        replace_partition(
-            destination_table=destination_table,
-            source_table=source_table,
-            partition=partition_to_replace,
-        )
+        for retry in retries(count=5):
+            with retry:
+                replace_partition(
+                    destination_table=destination_table,
+                    source_table=source_table,
+                    partition=partition_to_replace,
+                )
 
         sleep(delay_after)
 
