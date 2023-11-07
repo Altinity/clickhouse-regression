@@ -96,7 +96,7 @@ def replace_partition_on_source_table(self):
 @TestStep(When)
 def drop_column(self, table_name):
     """Drop column on the table."""
-    alter_table_drop_column(table_name=table_name, column_name="extra")
+    alter_table_drop_column(table_name=table_name, column_name="extra1")
 
 
 @TestStep(When)
@@ -151,10 +151,17 @@ def modify_source_table_column(self):
 
 
 @TestStep(When)
+def modify_column_destination_and_source(self):
+    """Modify column on destination and source tables."""
+    modify_destination_table_column()
+    modify_source_table_column()
+
+
+@TestStep(When)
 def rename_column(self, table_name):
     """Rename column on the table."""
     alter_table_rename_column(
-        table_name=table_name, column_name_old="extra", column_name_new="extra_new"
+        table_name=table_name, column_name_old="extra2", column_name_new="extra_new"
     )
 
 
@@ -178,6 +185,13 @@ def rename_destination_table_column(self):
 def rename_source_table_column(self):
     """Rename the column on the source table."""
     rename_column(table_name=source_table)
+
+
+@TestStep
+def rename_column_destination_and_source(self):
+    """Rename column on destination and source tables."""
+    rename_source_table_column()
+    rename_destination_table_column()
 
 
 @TestStep(When)
@@ -570,7 +584,7 @@ def concurrent_replace(
     with When("I execute multiple replace partitions along with other actions"):
         for i in range(number_of_iterations):
             partition_to_replace = random.randrange(1, number_of_partitions)
-            for retry in retries(timeout=45):
+            for retry in retries(timeout=60):
                 with retry:
                     Check(
                         name=f"replace partition on the destination table #{i}",
@@ -697,6 +711,8 @@ def replace_partition_along_other_actions(self):
     self.context.actions = [
         add_column_to_destination_and_source,
         drop_column_on_destination_and_source,
+        modify_column_destination_and_source,
+        rename_column_destination_and_source,
     ]
 
     Scenario(run=concurrent_replace)
