@@ -216,13 +216,11 @@ def replace_partition_and_validate_data(
     with And("replacing partition on the destination table"):
         sleep(delay_before)
 
-        for retry in retries(count=5):
-            with retry:
-                replace_partition(
-                    destination_table=destination_table,
-                    source_table=source_table,
-                    partition=partition_to_replace,
-                )
+        replace_partition(
+            destination_table=destination_table,
+            source_table=source_table,
+            partition=partition_to_replace,
+        )
 
         sleep(delay_after)
 
