@@ -31,7 +31,7 @@ def scenario(
     snapshot_id=None,
 ):
     """Check maxIntersections aggregate function."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id, clickhouse_version=">=23.2")
+    self.context.snapshot_id = get_snapshot_id(snapshot_id)
 
     if table is None:
         table = self.context.table
@@ -47,12 +47,14 @@ def scenario(
 
     with Check("with group by"):
         execute_query(
-            f"SELECT number % 2 AS even, {func.format(params='number,even')} FROM numbers(10) GROUP BY even"
+            f"SELECT number % 2 AS even, {func.format(params='number,even')} FROM numbers(10) GROUP BY even",
+            message=f"DB::Exception: {func.format(params='')[:-2]}: arguments must have the same type.",
+            exitcode=43
         )
 
     with Check("some negative values"):
         execute_query(
-            f"SELECT {func.format(params='number-5,number+10')} FROM numbers(1, 10)"
+            f"SELECT {func.format(params='number-5,number-10')} FROM numbers(1, 10)"
         )
 
     with Check("NULL value handling"):
@@ -78,40 +80,17 @@ def scenario(
             f"SELECT toTypeName({func.format(params='number, number+1')}) FROM numbers(1, 10)"
         )
 
-    with Check("example"):
+    with Check("example_1"):
         execute_query(
-            f"SELECT {func.format(params='y,x')} FROM values('x Int8, y Float64', (0,0.1), (1,0.34), (2,.88), (3,-1.23), (4,-3.3), (5,5.4))"
+            f"SELECT {func.format(params='y,x')} FROM values('x Float64, y Float64', (0,0.1), (1,0.34), (2,.88), (3,-1.23), (4,-3.3), (5,5.4))"
+        )
+
+    with Check("example_2"):
+        execute_query(
+            f"SELECT {func.format(params='x,y')} FROM values('x UInt32, y UInt32', (1,3), (1,6), (2,5), (3,7))"
         )
 
     with Check("datatypes"):
-        with Pool(3) as executor:
-            for column in table.columns:
-                col_name, col_type = column.name, column.datatype.name
-
-                if not is_numeric(
-                    column.datatype,
-                    decimal=decimal,
-                    date=date,
-                    datetime=datetime,
-                    extended_precision=extended_precision,
-                ):
-                    continue
-
-                Check(
-                    f"Float64,{col_type}",
-                    test=datatype,
-                    parallel=True,
-                    executor=executor,
-                )(func=func, table=table, col1_name="float64", col2_name=col_name)
-                Check(
-                    f"{col_type},Float64",
-                    test=datatype,
-                    parallel=True,
-                    executor=executor,
-                )(func=func, table=table, col1_name=col_name, col2_name="float64")
-
-            join()
-
         with Check(
             "permutations",
             description="sanity check most common column type permutations",
@@ -131,14 +110,12 @@ def scenario(
                 ]
                 permutations = list(permutations_with_replacement(columns, 2))
                 permutations.sort()
+                note(permutation)
 
                 for col1, col2 in permutations:
                     col1_name, col1_type = col1.name, col1.datatype.name
                     col2_name, col2_type = col2.name, col2.datatype.name
-                    # we already cover Float64 data type above so skip it here
-                    if isinstance(unwrap(col1.datatype), Float64) or isinstance(
-                        unwrap(col2.datatype), Float64
-                    ):
+                    if col1_type != col2_type:
                         continue
                     Check(
                         f"{col1_type},{col2_type}",
