@@ -57,8 +57,9 @@ def scenario(self, cluster, node="clickhouse1"):
                     assert that(snapshot(disk_data, id=name)), error()
 
         with When("I read system.storage_policies"):
+            policy_fields = "policy_name, volume_name, volume_priority, disks, volume_type, max_data_part_size, move_factor, prefer_not_to_merge"
             result = node.query(
-                "SELECT * FROM system.storage_policies WHERE policy_name != 'default' FORMAT JSON"
+                f"SELECT {policy_fields} FROM system.storage_policies WHERE policy_name != 'default' FORMAT JSON"
             ).output
 
             with And("convert result data to JSON"):
