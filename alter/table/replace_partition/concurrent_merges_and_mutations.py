@@ -130,7 +130,10 @@ def mutations_on_unrelated_partition(self):
 @Name("concurrent merges and mutations")
 def feature(self, node="clickhouse1"):
     """Check that replace partition does not wait for the ongoing merges and mutations that are not happening on the
-    same partition."""
+    same partition.
+
+    The tests are taken from the PR: https://github.com/ClickHouse/ClickHouse/pull/54272/files#diff-fd168251057021c372f350b5045e8793368b4a9020981f8466bd77fa338ec96c
+    """
     self.context.node = self.context.cluster.node(node)
 
     for scenario in loads(current_module(), Scenario):
