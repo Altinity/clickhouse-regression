@@ -9,1813 +9,1808 @@ from testflows.core import Requirement
 Heading = Specification.Heading
 
 RQ_SRS_015_S3 = Requirement(
-    name='RQ.SRS-015.S3',
-    version='1.0',
+    name="RQ.SRS-015.S3",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support external object storage using [AWS S3] and\n'
-        'S3-compatible storage.\n'
-        '\n'
+        "[ClickHouse] SHALL support external object storage using [AWS S3] and\n"
+        "S3-compatible storage.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.1.1'
+    num="4.1.1",
 )
 
 RQ_SRS_015_S3_Import = Requirement(
-    name='RQ.SRS-015.S3.Import',
-    version='1.0',
+    name="RQ.SRS-015.S3.Import",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support importing files from [S3] external storage using\n'
-        'the [S3] table function or storage disks configured for [S3] storage.\n'
-        '\n'
+        "[ClickHouse] SHALL support importing files from [S3] external storage using\n"
+        "the [S3] table function or storage disks configured for [S3] storage.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.1.2'
+    num="4.1.2",
 )
 
 RQ_SRS_015_S3_Export = Requirement(
-    name='RQ.SRS-015.S3.Export',
-    version='1.0',
+    name="RQ.SRS-015.S3.Export",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support exporting files to [S3] external storage using\n'
-        'the [S3] table function or storage disks configured for [S3] storage.\n'
-        '\n'
+        "[ClickHouse] SHALL support exporting files to [S3] external storage using\n"
+        "the [S3] table function or storage disks configured for [S3] storage.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.1.3'
+    num="4.1.3",
 )
 
 RQ_SRS_015_S3_Disk = Requirement(
-    name='RQ.SRS-015.S3.Disk',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support [S3] external storage via one or more storage disks.\n'
-        '\n'
+        "[ClickHouse] SHALL support [S3] external storage via one or more storage disks.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.1.4'
+    num="4.1.4",
 )
 
 RQ_SRS_015_S3_Policy = Requirement(
-    name='RQ.SRS-015.S3.Policy',
-    version='1.0',
+    name="RQ.SRS-015.S3.Policy",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support selection of [S3] disks using policies defined in the\n'
-        '`<policies>` section of the `<storage_configuration>` section of the config.xml\n'
-        'file or the storage.xml file in the config.d directory.\n'
-        '\n'
+        "[ClickHouse] SHALL support selection of [S3] disks using policies defined in the\n"
+        "`<policies>` section of the `<storage_configuration>` section of the config.xml\n"
+        "file or the storage.xml file in the config.d directory.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.1.5'
+    num="4.1.5",
 )
 
 RQ_SRS_015_S3_TableFunction = Requirement(
-    name='RQ.SRS-015.S3.TableFunction',
-    version='1.0',
+    name="RQ.SRS-015.S3.TableFunction",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support [S3] external storage via a call to the [S3] table\n'
-        'function. Using the table function, [ClickHouse] SHALL provide read and write\n'
-        'functionality. Upon a write to a location with data already stored, [ClickHouse]\n'
-        'SHALL overwrite existing data.\n'
-        '\n'
+        "[ClickHouse] SHALL support [S3] external storage via a call to the [S3] table\n"
+        "function. Using the table function, [ClickHouse] SHALL provide read and write\n"
+        "functionality. Upon a write to a location with data already stored, [ClickHouse]\n"
+        "SHALL overwrite existing data.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.1.6'
+    num="4.1.6",
 )
 
 RQ_SRS_015_S3_DataParts = Requirement(
-    name='RQ.SRS-015.S3.DataParts',
-    version='1.0',
+    name="RQ.SRS-015.S3.DataParts",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support [S3] external storage of data parts as Wide parts,\n'
-        'Compact parts, or a combination of both types. The user may view the full storage\n'
-        'of data parts in the system.parts table.\n'
-        '\n'
+        "[ClickHouse] SHALL support [S3] external storage of data parts as Wide parts,\n"
+        "Compact parts, or a combination of both types. The user may view the full storage\n"
+        "of data parts in the system.parts table.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.1.7'
+    num="4.1.7",
 )
 
 RQ_SRS_015_S3_Security_Encryption = Requirement(
-    name='RQ.SRS-015.S3.Security.Encryption',
-    version='1.0',
+    name="RQ.SRS-015.S3.Security.Encryption",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support sending the `x-amz-server-side-encryption-customer-key`\n'
-        'header and the `x-amz-server-side-encryption-customer-key-md5` header as part of\n'
-        'the query when the S3 resouce is server-side encrypted.\n'
-        '\n'
+        "[ClickHouse] SHALL support sending the `x-amz-server-side-encryption-customer-key`\n"
+        "header and the `x-amz-server-side-encryption-customer-key-md5` header as part of\n"
+        "the query when the S3 resouce is server-side encrypted.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.1.8'
+    num="4.1.8",
 )
 
 RQ_SRS_015_S3_RemoteHostFilter = Requirement(
-    name='RQ.SRS-015.S3.RemoteHostFilter',
-    version='1.0',
+    name="RQ.SRS-015.S3.RemoteHostFilter",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support a remote host filter to prevent access to untrusted URL\n'
-        'addresses. The remote host filter configuration SHALL be similar to the following:\n'
-        '\n'
-        '``` xml\n'
-        '<yandex>\n'
-        '    <!-- The list of hosts allowed to use in URL-related storage engines and table functions.\n'
-        '        If this section is not present in configuration, all hosts are allowed.\n'
-        '    -->\n'
-        '    <remote_url_allow_hosts>\n'
-        '        <!-- Host should be specified exactly as in URL. The name is checked before DNS resolution.\n'
+        "[ClickHouse] SHALL support a remote host filter to prevent access to untrusted URL\n"
+        "addresses. The remote host filter configuration SHALL be similar to the following:\n"
+        "\n"
+        "``` xml\n"
+        "<yandex>\n"
+        "    <!-- The list of hosts allowed to use in URL-related storage engines and table functions.\n"
+        "        If this section is not present in configuration, all hosts are allowed.\n"
+        "    -->\n"
+        "    <remote_url_allow_hosts>\n"
+        "        <!-- Host should be specified exactly as in URL. The name is checked before DNS resolution.\n"
         '            Example: "yandex.ru", "yandex.ru." and "www.yandex.ru" are different hosts.\n'
-        '                If port is explicitly specified in URL, the host:port is checked as a whole.\n'
-        '                If host specified here without port, any port with this host allowed.\n'
+        "                If port is explicitly specified in URL, the host:port is checked as a whole.\n"
+        "                If host specified here without port, any port with this host allowed.\n"
         '                "yandex.ru" -> "yandex.ru:443", "yandex.ru:80" etc. is allowed, but "yandex.ru:80" -> only "yandex.ru:80" is allowed.\n'
         '                If the host is specified as IP address, it is checked as specified in URL. Example: "[2a02:6b8:a::a]".\n'
-        '                If there are redirects and support for redirects is enabled, every redirect (the Location field) is checked.\n'
-        '        -->\n'
-        '        <host>www.myhost.com</host>\n'
-        '\n'
-        '        <!-- Regular expression can be specified. RE2 engine is used for regexps.\n'
+        "                If there are redirects and support for redirects is enabled, every redirect (the Location field) is checked.\n"
+        "        -->\n"
+        "        <host>www.myhost.com</host>\n"
+        "\n"
+        "        <!-- Regular expression can be specified. RE2 engine is used for regexps.\n"
         "            Regexps are not aligned: don't forget to add ^ and $. Also don't forget to escape dot (.) metacharacter\n"
-        '            (forgetting to do so is a common source of error).\n'
-        '        -->\n'
-        '        <host_regexp>^.*\\.myhost\\.com$</host_regexp>\n'
-        '    </remote_url_allow_hosts>\n'
-        '</yandex>\n'
-        '```\n'
+        "            (forgetting to do so is a common source of error).\n"
+        "        -->\n"
+        "        <host_regexp>^.*\\.myhost\\.com$</host_regexp>\n"
+        "    </remote_url_allow_hosts>\n"
+        "</yandex>\n"
+        "```\n"
     ),
     link=None,
     level=3,
-    num='4.1.9'
+    num="4.1.9",
 )
 
 RQ_SRS_015_S3_Backup_MinIOBackup = Requirement(
-    name='RQ.SRS-015.S3.Backup.MinIOBackup',
-    version='1.0',
+    name="RQ.SRS-015.S3.Backup.MinIOBackup",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support manual backups of tables that use minio storage.\n'
-        '\n'
+        "[ClickHouse] SHALL support manual backups of tables that use minio storage.\n"
+        "\n"
     ),
     link=None,
     level=5,
-    num='4.1.10.1.1'
+    num="4.1.10.1.1",
 )
 
 RQ_SRS_015_S3_Backup_AWSS3Backup = Requirement(
-    name='RQ.SRS-015.S3.Backup.AWSS3Backup',
-    version='1.0',
+    name="RQ.SRS-015.S3.Backup.AWSS3Backup",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support manual backups of tables that use aws s3 storage.\n'
-        '\n'
+        "[ClickHouse] SHALL support manual backups of tables that use aws s3 storage.\n"
+        "\n"
     ),
     link=None,
     level=5,
-    num='4.1.10.2.1'
+    num="4.1.10.2.1",
 )
 
 RQ_SRS_015_S3_Backup_GCSBackup = Requirement(
-    name='RQ.SRS-015.S3.Backup.GCSBackup',
-    version='1.0',
+    name="RQ.SRS-015.S3.Backup.GCSBackup",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support manual backups of tables that use gcs storage.\n'
-        '\n'
+        "[ClickHouse] SHALL support manual backups of tables that use gcs storage.\n"
+        "\n"
     ),
     link=None,
     level=5,
-    num='4.1.10.3.1'
+    num="4.1.10.3.1",
 )
 
 RQ_SRS_015_S3_Backup_StoragePolicies = Requirement(
-    name='RQ.SRS-015.S3.Backup.StoragePolicies',
-    version='1.0',
+    name="RQ.SRS-015.S3.Backup.StoragePolicies",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support using creating manual backups of tables that use storage policies containing:\n'
-        '* one volume with s3 disk\n'
-        '* one volume with s3 and local disk\n'
-        '* multiple volumes with s3 and local disks\n'
-        '\n'
+        "[ClickHouse] SHALL support using creating manual backups of tables that use storage policies containing:\n"
+        "* one volume with s3 disk\n"
+        "* one volume with s3 and local disk\n"
+        "* multiple volumes with s3 and local disks\n"
+        "\n"
     ),
     link=None,
     level=5,
-    num='4.1.10.4.1'
+    num="4.1.10.4.1",
 )
 
 RQ_SRS_015_S3_Backup_AlterFreeze = Requirement(
-    name='RQ.SRS-015.S3.Backup.AlterFreeze',
-    version='1.0',
+    name="RQ.SRS-015.S3.Backup.AlterFreeze",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support using `ALTER TABLE FREEZE` on tables that use S3 in the storage policy. If the policy includes a local disk,\n'
-        'the query will create a local backup in the `shadow/` directory of the working ClickHouse directory (`/var/lib/clickhouse` by default).\n'
-        '\n'
+        "[ClickHouse] SHALL support using `ALTER TABLE FREEZE` on tables that use S3 in the storage policy. If the policy includes a local disk,\n"
+        "the query will create a local backup in the `shadow/` directory of the working ClickHouse directory (`/var/lib/clickhouse` by default).\n"
+        "\n"
     ),
     link=None,
     level=5,
-    num='4.1.10.5.1'
+    num="4.1.10.5.1",
 )
 
 RQ_SRS_015_S3_Backup_AlterDetach = Requirement(
-    name='RQ.SRS-015.S3.Backup.AlterDetach',
-    version='1.0',
+    name="RQ.SRS-015.S3.Backup.AlterDetach",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support using `ALTER TABLE DETACH PARTITION` on partitions of tables that use S3.\n'
-        '\n'
+        "[ClickHouse] SHALL support using `ALTER TABLE DETACH PARTITION` on partitions of tables that use S3.\n"
+        "\n"
     ),
     link=None,
     level=5,
-    num='4.1.10.6.1'
+    num="4.1.10.6.1",
 )
 
 RQ_SRS_015_S3_Backup_AlterAttach = Requirement(
-    name='RQ.SRS-015.S3.Backup.AlterAttach',
-    version='1.0',
+    name="RQ.SRS-015.S3.Backup.AlterAttach",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support restoring backups of tables using `ALTER TABLE ATTACH PARTITION` from data inside\n'
-        '`/var/lib/clickhouse/data/database/table/detached/`.\n'
-        '\n'
+        "[ClickHouse] SHALL support restoring backups of tables using `ALTER TABLE ATTACH PARTITION` from data inside\n"
+        "`/var/lib/clickhouse/data/database/table/detached/`.\n"
+        "\n"
     ),
     link=None,
     level=5,
-    num='4.1.10.7.1'
+    num="4.1.10.7.1",
 )
 
 RQ_SRS_015_S3_Metadata = Requirement(
-    name='RQ.SRS-015.S3.Metadata',
-    version='1.0',
+    name="RQ.SRS-015.S3.Metadata",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL store disk metadata of tables with S3 disk\n'
-        'if and only if they have `<send_metadata>` set to `true` in the disk config.\n'
-        'The disk metadata is stored in `/var/lib/clickhouse/disks/{disk name}/`.\n'
-        'The metadata is stored in the s3 bucket.\n'
-        '\n'
+        "[ClickHouse] SHALL store disk metadata of tables with S3 disk\n"
+        "if and only if they have `<send_metadata>` set to `true` in the disk config.\n"
+        "The disk metadata is stored in `/var/lib/clickhouse/disks/{disk name}/`.\n"
+        "The metadata is stored in the s3 bucket.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.1.11.1'
+    num="4.1.11.1",
 )
 
 RQ_SRS_015_S3_Metadata_Revisions = Requirement(
-    name='RQ.SRS-015.S3.Metadata.Revisions',
-    version='1.0',
+    name="RQ.SRS-015.S3.Metadata.Revisions",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL keep a revision counter for each table and change the counter for\n'
-        'every insert, merge, or remove operation. The revision counter in stored in\n'
-        '`/var/lib/clickhouse/disks/s3/shadow/{backup number}/revision.txt`, where\n'
-        'the backup number indicated how many times `ALTER FREEZE` has been used on the table.\n'
-        '\n'
+        "[ClickHouse] SHALL keep a revision counter for each table and change the counter for\n"
+        "every insert, merge, or remove operation. The revision counter in stored in\n"
+        "`/var/lib/clickhouse/disks/s3/shadow/{backup number}/revision.txt`, where\n"
+        "the backup number indicated how many times `ALTER FREEZE` has been used on the table.\n"
+        "\n"
     ),
     link=None,
     level=5,
-    num='4.1.11.2.1'
+    num="4.1.11.2.1",
 )
 
 RQ_SRS_015_S3_Metadata_BadBackupNumber = Requirement(
-    name='RQ.SRS-015.S3.Metadata.BadBackupNumber',
-    version='1.0',
+    name="RQ.SRS-015.S3.Metadata.BadBackupNumber",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
-    description=(
-        '[ClickHouse] SHALL\n'
-        '\n'
-    ),
+    description=("[ClickHouse] SHALL\n" "\n"),
     link=None,
     level=5,
-    num='4.1.11.3.1'
+    num="4.1.11.3.1",
 )
 
 RQ_SRS_0_5_S3_MetadataRestore_RestoreFile = Requirement(
-    name='RQ.SRS-0.5.S3.MetadataRestore.RestoreFile',
-    version='1.0',
+    name="RQ.SRS-0.5.S3.MetadataRestore.RestoreFile",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support restoring tables using a restore file\n'
-        'located in `/var/lib/clickhouse/disks/{disk name}/restore` and executing\n'
-        '`SYSTEM RESTART DISK` and reattaching the table.\n'
-        '\n'
+        "[ClickHouse] SHALL support restoring tables using a restore file\n"
+        "located in `/var/lib/clickhouse/disks/{disk name}/restore` and executing\n"
+        "`SYSTEM RESTART DISK` and reattaching the table.\n"
+        "\n"
     ),
     link=None,
     level=5,
-    num='4.1.12.1.1'
+    num="4.1.12.1.1",
 )
 
 RQ_SRS_0_5_S3_MetadataRestore_BadRestoreFile = Requirement(
-    name='RQ.SRS-0.5.S3.MetadataRestore.BadRestoreFile',
-    version='1.0',
+    name="RQ.SRS-0.5.S3.MetadataRestore.BadRestoreFile",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL not support restoring tables using a restore file\n'
-        'located in `/var/lib/clickhouse/disks/{disk name}/restore` that contains\n'
-        'a wrong bucket, path, or revision value.\n'
-        '\n'
+        "[ClickHouse] SHALL not support restoring tables using a restore file\n"
+        "located in `/var/lib/clickhouse/disks/{disk name}/restore` that contains\n"
+        "a wrong bucket, path, or revision value.\n"
+        "\n"
     ),
     link=None,
     level=5,
-    num='4.1.12.2.1'
+    num="4.1.12.2.1",
 )
 
 RQ_SRS_0_5_S3_MetadataRestore_HugeRestoreFile = Requirement(
-    name='RQ.SRS-0.5.S3.MetadataRestore.HugeRestoreFile',
-    version='1.0',
+    name="RQ.SRS-0.5.S3.MetadataRestore.HugeRestoreFile",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL not support restoring tables using a restore file\n'
-        'located in `/var/lib/clickhouse/disks/{disk name}/restore` that contains\n'
-        'a large amount of not usable information.\n'
-        '\n'
+        "[ClickHouse] SHALL not support restoring tables using a restore file\n"
+        "located in `/var/lib/clickhouse/disks/{disk name}/restore` that contains\n"
+        "a large amount of not usable information.\n"
+        "\n"
     ),
     link=None,
     level=5,
-    num='4.1.12.3.1'
+    num="4.1.12.3.1",
 )
 
 RQ_SRS_015_S3_MetadataRestore_NoLocalMetadata = Requirement(
-    name='RQ.SRS-015.S3.MetadataRestore.NoLocalMetadata',
-    version='1.0',
+    name="RQ.SRS-015.S3.MetadataRestore.NoLocalMetadata",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support restoring a table from the restore file\n'
-        'located in `/var/lib/clickhouse/disks/{disk name}/restore` even\n'
-        'if the local metadata has been purged.\n'
-        '\n'
+        "[ClickHouse] SHALL support restoring a table from the restore file\n"
+        "located in `/var/lib/clickhouse/disks/{disk name}/restore` even\n"
+        "if the local metadata has been purged.\n"
+        "\n"
     ),
     link=None,
     level=5,
-    num='4.1.12.4.1'
+    num="4.1.12.4.1",
 )
 
 RQ_SRS_015_S3_MetadataRestore_BucketPath = Requirement(
-    name='RQ.SRS-015.S3.MetadataRestore.BucketPath',
-    version='1.0',
+    name="RQ.SRS-015.S3.MetadataRestore.BucketPath",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support restoring a table to a specific bucket and path by indicating them\n'
-        'in the restore file located in `/var/lib/clickhouse/disks/{disk name}/restore`\n'
-        'using the following syntax:\n'
-        '```\n'
+        "[ClickHouse] SHALL support restoring a table to a specific bucket and path by indicating them\n"
+        "in the restore file located in `/var/lib/clickhouse/disks/{disk name}/restore`\n"
+        "using the following syntax:\n"
+        "```\n"
         "'source_path' = {path}\n"
         "'source_bucket' = {bucket}\n"
-        '```\n'
-        '\n'
+        "```\n"
+        "\n"
     ),
     link=None,
     level=5,
-    num='4.1.12.5.1'
+    num="4.1.12.5.1",
 )
 
 RQ_SRS_015_S3_MetadataRestore_RevisionRestore = Requirement(
-    name='RQ.SRS-015.S3.MetadataRestore.RevisionRestore',
-    version='1.0',
+    name="RQ.SRS-015.S3.MetadataRestore.RevisionRestore",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support restoring a table to a specific revision version.\n'
-        'The table shall restore to the original bucket and path if and only if it is the latest revision.\n'
-        'The revision can be indicated in the restore file located in `/var/lib/clickhouse/disks/{disk name}/restore`:\n'
-        '```\n'
+        "[ClickHouse] SHALL support restoring a table to a specific revision version.\n"
+        "The table shall restore to the original bucket and path if and only if it is the latest revision.\n"
+        "The revision can be indicated in the restore file located in `/var/lib/clickhouse/disks/{disk name}/restore`:\n"
+        "```\n"
         "'revision' = {revision number}\n"
-        '```\n'
-        '\n'
+        "```\n"
+        "\n"
     ),
     link=None,
     level=5,
-    num='4.1.12.6.1'
+    num="4.1.12.6.1",
 )
 
 RQ_SRS_015_S3_MetadataRestore_Mutations = Requirement(
-    name='RQ.SRS-015.S3.MetadataRestore.Mutations',
-    version='1.0',
+    name="RQ.SRS-015.S3.MetadataRestore.Mutations",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support restoring a table to a state before, during, or after a mutation.\n'
-        '\n'
+        "[ClickHouse] SHALL support restoring a table to a state before, during, or after a mutation.\n"
+        "\n"
     ),
     link=None,
     level=5,
-    num='4.1.12.7.1'
+    num="4.1.12.7.1",
 )
 
 RQ_SRS_015_S3_MetadataRestore_ParallelMutations = Requirement(
-    name='RQ.SRS-015.S3.MetadataRestore.ParallelMutations',
-    version='1.0',
+    name="RQ.SRS-015.S3.MetadataRestore.ParallelMutations",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support restoring a table correctly even when mutations\n'
-        'are being added in parallel with the restore process.\n'
-        '\n'
+        "[ClickHouse] SHALL support restoring a table correctly even when mutations\n"
+        "are being added in parallel with the restore process.\n"
+        "\n"
     ),
     link=None,
     level=5,
-    num='4.1.12.8.1'
+    num="4.1.12.8.1",
 )
 
 RQ_SRS_015_S3_MetadataRestore_Detached = Requirement(
-    name='RQ.SRS-015.S3.MetadataRestore.Detached',
-    version='1.0',
+    name="RQ.SRS-015.S3.MetadataRestore.Detached",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support restoring tables with a detached partition and\n'
-        'the ability to reattach that partition even if it was detached before the `ALTER FREEZE` backup.\n'
-        'It can be indicated in the restore file located in `/var/lib/clickhouse/disks/{disk name}/restore`:\n'
-        '```\n'
+        "[ClickHouse] SHALL support restoring tables with a detached partition and\n"
+        "the ability to reattach that partition even if it was detached before the `ALTER FREEZE` backup.\n"
+        "It can be indicated in the restore file located in `/var/lib/clickhouse/disks/{disk name}/restore`:\n"
+        "```\n"
         "'detached' = true\n"
-        '```\n'
-        '\n'
+        "```\n"
+        "\n"
     ),
     link=None,
     level=5,
-    num='4.1.12.9.1'
+    num="4.1.12.9.1",
 )
 
 RQ_SRS_015_S3_AWS = Requirement(
-    name='RQ.SRS-015.S3.AWS',
-    version='1.0',
+    name="RQ.SRS-015.S3.AWS",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support [S3] external storage using [AWS S3].\n'
-        '\n'
+        "[ClickHouse] SHALL support [S3] external storage using [AWS S3].\n" "\n"
     ),
     link=None,
     level=3,
-    num='4.1.13'
+    num="4.1.13",
 )
 
 RQ_SRS_015_S3_MinIO = Requirement(
-    name='RQ.SRS-015.S3.MinIO',
-    version='1.0',
+    name="RQ.SRS-015.S3.MinIO",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support [S3] external storage using MinIO.\n'
-        '\n'
+        "[ClickHouse] SHALL support [S3] external storage using MinIO.\n" "\n"
     ),
     link=None,
     level=3,
-    num='4.1.14'
+    num="4.1.14",
 )
 
 RQ_SRS_015_S3_GCS = Requirement(
-    name='RQ.SRS-015.S3.GCS',
-    version='1.0',
+    name="RQ.SRS-015.S3.GCS",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support [S3] external storage using Google Cloud Storage.\n'
-        '\n'
+        "[ClickHouse] SHALL support [S3] external storage using Google Cloud Storage.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.1.15'
+    num="4.1.15",
 )
 
 RQ_SRS_015_S3_AutomaticReconnects_GCS = Requirement(
-    name='RQ.SRS-015.S3.AutomaticReconnects.GCS',
-    version='1.0',
+    name="RQ.SRS-015.S3.AutomaticReconnects.GCS",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support automatically reconnecting to GCS if the network connection has been interrupted.\n'
-        '\n'
+        "[ClickHouse] SHALL support automatically reconnecting to GCS if the network connection has been interrupted.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.1.16.1'
+    num="4.1.16.1",
 )
 
 RQ_SRS_015_S3_AutomaticReconnects_AWS = Requirement(
-    name='RQ.SRS-015.S3.AutomaticReconnects.AWS',
-    version='1.0',
+    name="RQ.SRS-015.S3.AutomaticReconnects.AWS",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support automatically reconnecting to AWS S3 if the network connection has been interrupted.\n'
-        '\n'
+        "[ClickHouse] SHALL support automatically reconnecting to AWS S3 if the network connection has been interrupted.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.1.16.2'
+    num="4.1.16.2",
 )
 
 RQ_SRS_015_S3_AutomaticReconnects_MinIO = Requirement(
-    name='RQ.SRS-015.S3.AutomaticReconnects.MinIO',
-    version='1.0',
+    name="RQ.SRS-015.S3.AutomaticReconnects.MinIO",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support automatically reconnecting to MinIO if the network connection has been interrupted.\n'
-        '\n'
+        "[ClickHouse] SHALL support automatically reconnecting to MinIO if the network connection has been interrupted.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.1.16.3'
+    num="4.1.16.3",
 )
 
 RQ_SRS_015_S3_User_Configuration_Cache_22_8_EnableFilesystemCache = Requirement(
-    name='RQ.SRS-015.S3.User.Configuration.Cache.22.8.EnableFilesystemCache',
-    version='1.0',
+    name="RQ.SRS-015.S3.User.Configuration.Cache.22.8.EnableFilesystemCache",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support setting `<enable_filesystem_cache>` parameter\n'
-        'when defining a user in the `<profiles>` section.\n'
-        'This is only available in versions 22.8 and later.\n'
-        '\n'
+        "[ClickHouse] SHALL support setting `<enable_filesystem_cache>` parameter\n"
+        "when defining a user in the `<profiles>` section.\n"
+        "This is only available in versions 22.8 and later.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.2.1'
+    num="4.2.1",
 )
 
 RQ_SRS_015_S3_User_Configuration_Cache_22_8_EnableFilesystemCacheOnWriteOperations = Requirement(
-    name='RQ.SRS-015.S3.User.Configuration.Cache.22.8.EnableFilesystemCacheOnWriteOperations',
-    version='1.0',
+    name="RQ.SRS-015.S3.User.Configuration.Cache.22.8.EnableFilesystemCacheOnWriteOperations",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support setting `<enable_filesystem_cache_on_write_operations>` parameter\n'
-        'when defining a user in the `<profiles>` section.\n'
-        'This is only available in versions 22.8 and later.\n'
-        '\n'
+        "[ClickHouse] SHALL support setting `<enable_filesystem_cache_on_write_operations>` parameter\n"
+        "when defining a user in the `<profiles>` section.\n"
+        "This is only available in versions 22.8 and later.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.2.2'
+    num="4.2.2",
 )
 
 RQ_SRS_015_S3_FilesystemCacheLog_22_8 = Requirement(
-    name='RQ.SRS-015.S3.FilesystemCacheLog.22.8',
-    version='1.0',
+    name="RQ.SRS-015.S3.FilesystemCacheLog.22.8",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support setting `<database>` and `<table`> parameters\n'
-        'in the `<filesystem_cache_log>` section of configs.xml or any other xml in the config.d directory.\n'
-        'This is only available in versions 22.8 and later.\n'
-        '\n'
+        "[ClickHouse] SHALL support setting `<database>` and `<table`> parameters\n"
+        "in the `<filesystem_cache_log>` section of configs.xml or any other xml in the config.d directory.\n"
+        "This is only available in versions 22.8 and later.\n"
+        "\n"
     ),
     link=None,
     level=2,
-    num='4.3'
+    num="4.3",
 )
 
 RQ_SRS_015_S3_Disk_AddingMoreStorageDevices = Requirement(
-    name='RQ.SRS-015.S3.Disk.AddingMoreStorageDevices',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.AddingMoreStorageDevices",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support adding more storage devices to the existing [ClickHouse] server.\n'
-        '\n'
+        "[ClickHouse] SHALL support adding more storage devices to the existing [ClickHouse] server.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.4.1'
+    num="4.4.1",
 )
 
 RQ_SRS_015_S3_Disk_Endpoints = Requirement(
-    name='RQ.SRS-015.S3.Disk.Endpoints',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.Endpoints",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support configuration of [S3] endpoints in the config.xml file\n'
-        'using credentials accessible to the entire ClickHouse server, with syntax similar\n'
-        'to the following:\n'
-        '\n'
-        '``` xml\n'
-        '<yandex>\n'
-        '    <s3>\n'
-        '       <my_endpoint>\n'
-        '           <endpoint>http://s3.us-east-1.amazonaws.com/my-bucket/</endpoint>\n'
-        '           <access_key_id>*****</access_key_id>\n'
-        '           <secret_access_key>*****</secret_access_key>\n'
-        '           <header>Authorization: Bearer TOKEN</header>\n'
-        '       </my_endpoint>\n'
-        '   </s3>\n'
-        '</yandex>\n'
-        '```\n'
-        '\n'
+        "[ClickHouse] SHALL support configuration of [S3] endpoints in the config.xml file\n"
+        "using credentials accessible to the entire ClickHouse server, with syntax similar\n"
+        "to the following:\n"
+        "\n"
+        "``` xml\n"
+        "<yandex>\n"
+        "    <s3>\n"
+        "       <my_endpoint>\n"
+        "           <endpoint>http://s3.us-east-1.amazonaws.com/my-bucket/</endpoint>\n"
+        "           <access_key_id>*****</access_key_id>\n"
+        "           <secret_access_key>*****</secret_access_key>\n"
+        "           <header>Authorization: Bearer TOKEN</header>\n"
+        "       </my_endpoint>\n"
+        "   </s3>\n"
+        "</yandex>\n"
+        "```\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.4.2'
+    num="4.4.2",
 )
 
 RQ_SRS_015_S3_Disk_MultipleStorageDevices = Requirement(
-    name='RQ.SRS-015.S3.Disk.MultipleStorageDevices',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.MultipleStorageDevices",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support storing data to multiple [S3] storage devices.\n'
-        '\n'
+        "[ClickHouse] SHALL support storing data to multiple [S3] storage devices.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.4.3'
+    num="4.4.3",
 )
 
 RQ_SRS_015_S3_Disk_MultipleStorageDevices_NoChangesForQuerying = Requirement(
-    name='RQ.SRS-015.S3.Disk.MultipleStorageDevices.NoChangesForQuerying',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.MultipleStorageDevices.NoChangesForQuerying",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL require no changes to query statements when querying data\n'
-        'from a table that supports multiple [S3] storage devices.\n'
-        '\n'
+        "[ClickHouse] SHALL require no changes to query statements when querying data\n"
+        "from a table that supports multiple [S3] storage devices.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.4.4'
+    num="4.4.4",
 )
 
 RQ_SRS_015_S3_Disk_Metadata = Requirement(
-    name='RQ.SRS-015.S3.Disk.Metadata',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.Metadata",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL create a metadata file for each [S3] disk which tracks the total\n'
-        'number of objects stored in the disk, the aggregate size of the objects, and for each\n'
-        'object stored in the disk, tracks the path to the object and the object size.\n'
-        '\n'
+        "[ClickHouse] SHALL create a metadata file for each [S3] disk which tracks the total\n"
+        "number of objects stored in the disk, the aggregate size of the objects, and for each\n"
+        "object stored in the disk, tracks the path to the object and the object size.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.4.5'
+    num="4.4.5",
 )
 
 RQ_SRS_015_S3_Disk_Configuration = Requirement(
-    name='RQ.SRS-015.S3.Disk.Configuration',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.Configuration",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support configuration of one or more [S3] disks in the `<disks>`\n'
-        'section of the `<storage_configuration>` section of the config.xml file or the\n'
-        'storage.xml file in the config.d directory.\n'
-        '\n'
+        "[ClickHouse] SHALL support configuration of one or more [S3] disks in the `<disks>`\n"
+        "section of the `<storage_configuration>` section of the config.xml file or the\n"
+        "storage.xml file in the config.d directory.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.6.1'
+    num="4.4.6.1",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_Syntax = Requirement(
-    name='RQ.SRS-015.S3.Disk.Configuration.Syntax',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.Configuration.Syntax",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support [S3] disk configuration using syntax similar to the\n'
-        'following:\n'
-        '\n'
-        '``` xml\n'
-        '<yandex>\n'
-        '  <storage_configuration>\n'
-        '    <disks>\n'
-        '      <s3>\n'
-        '        <type>s3</type>\n'
-        '        <endpoint>http://s3.us-east-1.amazonaws.com/my-bucket/</endpoint>\n'
-        '        <access_key_id>*****</access_key_id>\n'
-        '        <secret_access_key>*****</secret_access_key>\n'
-        '      </s3>\n'
-        '    </disks>\n'
-        '...\n'
-        '</yandex>\n'
-        '```\n'
-        '\n'
+        "[ClickHouse] SHALL support [S3] disk configuration using syntax similar to the\n"
+        "following:\n"
+        "\n"
+        "``` xml\n"
+        "<yandex>\n"
+        "  <storage_configuration>\n"
+        "    <disks>\n"
+        "      <s3>\n"
+        "        <type>s3</type>\n"
+        "        <endpoint>http://s3.us-east-1.amazonaws.com/my-bucket/</endpoint>\n"
+        "        <access_key_id>*****</access_key_id>\n"
+        "        <secret_access_key>*****</secret_access_key>\n"
+        "      </s3>\n"
+        "    </disks>\n"
+        "...\n"
+        "</yandex>\n"
+        "```\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.6.2'
+    num="4.4.6.2",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_Invalid = Requirement(
-    name='RQ.SRS-015.S3.Disk.Configuration.Invalid',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.Configuration.Invalid",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL return an error if the [S3] disk configuration is not valid.\n'
-        '\n'
+        "[ClickHouse] SHALL return an error if the [S3] disk configuration is not valid.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.6.3'
+    num="4.4.6.3",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_Changes_NoRestart = Requirement(
-    name='RQ.SRS-015.S3.Disk.Configuration.Changes.NoRestart',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.Configuration.Changes.NoRestart",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] server SHALL not need to be restarted when storage device\n'
-        'configuration changes except some special cases.\n'
-        '\n'
+        "[ClickHouse] server SHALL not need to be restarted when storage device\n"
+        "configuration changes except some special cases.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.6.4'
+    num="4.4.6.4",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_Access = Requirement(
-    name='RQ.SRS-015.S3.Disk.Configuration.Access',
-    version='1.1',
+    name="RQ.SRS-015.S3.Disk.Configuration.Access",
+    version="1.1",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support the `<skip_access_check>` parameter in the `<disks>`\n'
-        'section of the `<storage_configuration>` section of the config.xml file or the\n'
-        'storage.xml file in the config.d directory to toggle a runtime check for access\n'
-        'to the corresponding [S3] disk. If this runtime check fails, [ClickHouse] SHALL\n'
+        "[ClickHouse] SHALL support the `<skip_access_check>` parameter in the `<disks>`\n"
+        "section of the `<storage_configuration>` section of the config.xml file or the\n"
+        "storage.xml file in the config.d directory to toggle a runtime check for access\n"
+        "to the corresponding [S3] disk. If this runtime check fails, [ClickHouse] SHALL\n"
         'return an "Access Denied" error. The specifics of the error depend on version:\n'
-        ' - In [Clickhouse] < 22.9 the error message SHALL be `DB::Exception: Access Denied.`\n'
-        'else `DB::Exception: Message: Access Denied`\n'
-        ' - In [Clickhouse] >= 23.8 the error SHALL be returned from CREATE TABLE,\n'
-        'else CREATE TABLE SHALL succeed and the error SHALL be returned from INSERT INTO\n'
-        '\n'
-        '\n'
+        " - In [Clickhouse] < 22.9 the error message SHALL be `DB::Exception: Access Denied.`\n"
+        "else `DB::Exception: Message: Access Denied`\n"
+        " - In [Clickhouse] >= 23.8 the error SHALL be returned from CREATE TABLE,\n"
+        "else CREATE TABLE SHALL succeed and the error SHALL be returned from INSERT INTO\n"
+        "\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.6.5'
+    num="4.4.6.5",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_Access_Default = Requirement(
-    name='RQ.SRS-015.S3.Disk.Configuration.Access.Default',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.Configuration.Access.Default",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL set the `<skip_access_check>` parameter to 0 by default to\n'
-        'perform an access check.\n'
-        '\n'
+        "[ClickHouse] SHALL set the `<skip_access_check>` parameter to 0 by default to\n"
+        "perform an access check.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.6.6'
+    num="4.4.6.6",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_CacheEnabled = Requirement(
-    name='RQ.SRS-015.S3.Disk.Configuration.CacheEnabled',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.Configuration.CacheEnabled",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support the `<cache_enabled>` parameter in the `<disks>`\n'
-        'section of the `<storage_configuration>` section of the config.xml file or the\n'
-        'storage.xml file in the config.d directory to toggle caching for the\n'
-        'corresponding [S3] disk.\n'
-        '\n'
-        'In 22.8 and later, this parameter has been renamed to `<data_cache_enabled>`.\n'
-        '\n'
+        "[ClickHouse] SHALL support the `<cache_enabled>` parameter in the `<disks>`\n"
+        "section of the `<storage_configuration>` section of the config.xml file or the\n"
+        "storage.xml file in the config.d directory to toggle caching for the\n"
+        "corresponding [S3] disk.\n"
+        "\n"
+        "In 22.8 and later, this parameter has been renamed to `<data_cache_enabled>`.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.6.7'
+    num="4.4.6.7",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_CacheEnabled_Default = Requirement(
-    name='RQ.SRS-015.S3.Disk.Configuration.CacheEnabled.Default',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.Configuration.CacheEnabled.Default",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL set the `<cache_enabled>` parameter to 1 by default to\n'
-        'enable caching.\n'
-        '\n'
+        "[ClickHouse] SHALL set the `<cache_enabled>` parameter to 1 by default to\n"
+        "enable caching.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.6.8'
+    num="4.4.6.8",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_Cache_22_8 = Requirement(
-    name='RQ.SRS-015.S3.Disk.Configuration.Cache.22.8',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.Configuration.Cache.22.8",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support defining cache storage in the in the `<disks>`\n'
-        'section of the `<storage_configuration>` section of the config.xml file or the\n'
-        'storage.xml file in the config.d directory to toggle caching for the\n'
-        'corresponding [S3] disk in version 22.8 and later.\n'
-        '\n'
-        'The definition requires `<type>`, `<disk>`, `<path>`, `<max_size>`, and `<do_not_evict_index_and_mark_files>` parameters.\n'
-        '\n'
-        'Example:\n'
-        '```\n'
-        '<s3_cache>\n'
-        '    <type>cache</type>\n'
-        '    <disk>s3_disk</disk>\n'
-        '    <path>s3_disk_cache/</path>\n'
-        '    <max_size>22548578304</max_size>\n'
-        '    <do_not_evict_index_and_mark_files>0</do_not_evict_index_and_mark_files>\n'
-        '</s3_cache>\n'
-        '```\n'
-        '\n'
+        "[ClickHouse] SHALL support defining cache storage in the in the `<disks>`\n"
+        "section of the `<storage_configuration>` section of the config.xml file or the\n"
+        "storage.xml file in the config.d directory to toggle caching for the\n"
+        "corresponding [S3] disk in version 22.8 and later.\n"
+        "\n"
+        "The definition requires `<type>`, `<disk>`, `<path>`, `<max_size>`, and `<do_not_evict_index_and_mark_files>` parameters.\n"
+        "\n"
+        "Example:\n"
+        "```\n"
+        "<s3_cache>\n"
+        "    <type>cache</type>\n"
+        "    <disk>s3_disk</disk>\n"
+        "    <path>s3_disk_cache/</path>\n"
+        "    <max_size>22548578304</max_size>\n"
+        "    <do_not_evict_index_and_mark_files>0</do_not_evict_index_and_mark_files>\n"
+        "</s3_cache>\n"
+        "```\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.6.9'
+    num="4.4.6.9",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_Cache_22_8_CacheOnWriteOperations = Requirement(
-    name='RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.CacheOnWriteOperations',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.CacheOnWriteOperations",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support setting `<cache_on_write_operations>` parameter\n'
-        'when defining a cache. This is only available in versions 22.8 and later.\n'
-        '\n'
+        "[ClickHouse] SHALL support setting `<cache_on_write_operations>` parameter\n"
+        "when defining a cache. This is only available in versions 22.8 and later.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.6.10'
+    num="4.4.6.10",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_Cache_22_8_DataCacheMaxSize = Requirement(
-    name='RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.DataCacheMaxSize',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.DataCacheMaxSize",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support setting `<data_cache_max_size>` parameter\n'
-        'when defining a cache. This is only available in versions 22.8 and later.\n'
-        '\n'
+        "[ClickHouse] SHALL support setting `<data_cache_max_size>` parameter\n"
+        "when defining a cache. This is only available in versions 22.8 and later.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.6.11'
+    num="4.4.6.11",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_Cache_22_8_EnableCacheHitsThreshold = Requirement(
-    name='RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.EnableCacheHitsThreshold',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.EnableCacheHitsThreshold",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support setting `<enable_cache_hits_threshold>` parameter\n'
-        'when defining a cache. This is only available in versions 22.8 and later.\n'
-        '\n'
+        "[ClickHouse] SHALL support setting `<enable_cache_hits_threshold>` parameter\n"
+        "when defining a cache. This is only available in versions 22.8 and later.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.6.12'
+    num="4.4.6.12",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_Cache_22_8_FileSystemQueryCacheLimit = Requirement(
-    name='RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.FileSystemQueryCacheLimit',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.FileSystemQueryCacheLimit",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support setting `<enable_filesystem_query_cache_limit>` parameter\n'
-        'when defining a cache. This is only available in versions 22.8 and later.\n'
-        '\n'
+        "[ClickHouse] SHALL support setting `<enable_filesystem_query_cache_limit>` parameter\n"
+        "when defining a cache. This is only available in versions 22.8 and later.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.6.13'
+    num="4.4.6.13",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_CachePath = Requirement(
-    name='RQ.SRS-015.S3.Disk.Configuration.CachePath',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.Configuration.CachePath",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support the `<cache_path>` parameter in the `<disks>`\n'
-        'section of the `<storage_configuration>` section of the config.xml file or the\n'
-        'storage.xml file in the config.d directory to set the path to the disk cache.\n'
-        'This will have no effect if the `<cache_enabled>` parameter is set to 0.\n'
-        '\n'
+        "[ClickHouse] SHALL support the `<cache_path>` parameter in the `<disks>`\n"
+        "section of the `<storage_configuration>` section of the config.xml file or the\n"
+        "storage.xml file in the config.d directory to set the path to the disk cache.\n"
+        "This will have no effect if the `<cache_enabled>` parameter is set to 0.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.6.14'
+    num="4.4.6.14",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_CachePath_Conflict = Requirement(
-    name='RQ.SRS-015.S3.Disk.Configuration.CachePath.Conflict',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.Configuration.CachePath.Conflict",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL throw an error if the `<cache_path>` parameter in the\n'
-        '`<disks>` section of the `<storage_configuration>` section of the config.xml\n'
-        'file or the storage.xml file in the config.d directory is set such that the\n'
-        'path to the disk metadata and the path to the disk cache are the same.\n'
-        'The error SHALL be similar to the following:\n'
-        '\n'
+        "[ClickHouse] SHALL throw an error if the `<cache_path>` parameter in the\n"
+        "`<disks>` section of the `<storage_configuration>` section of the config.xml\n"
+        "file or the storage.xml file in the config.d directory is set such that the\n"
+        "path to the disk metadata and the path to the disk cache are the same.\n"
+        "The error SHALL be similar to the following:\n"
+        "\n"
         '    "DB::Exception: Metadata and cache path should be different"\n'
-        '\n'
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.6.15'
+    num="4.4.6.15",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_MinBytesForSeek = Requirement(
-    name='RQ.SRS-015.S3.Disk.Configuration.MinBytesForSeek',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.Configuration.MinBytesForSeek",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support the `<min_bytes_for_seek>` parameter in the `<disks>`\n'
-        'section of the `<storage_configuration>` section of the config.xml file or the\n'
-        'storage.xml file in the config.d directory to set the minimum number of\n'
-        'bytes to seek forward through the file.\n'
-        '\n'
+        "[ClickHouse] SHALL support the `<min_bytes_for_seek>` parameter in the `<disks>`\n"
+        "section of the `<storage_configuration>` section of the config.xml file or the\n"
+        "storage.xml file in the config.d directory to set the minimum number of\n"
+        "bytes to seek forward through the file.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.6.16'
+    num="4.4.6.16",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_MinBytesForSeek_Syntax = Requirement(
-    name='RQ.SRS-015.S3.Disk.Configuration.MinBytesForSeek.Syntax',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.Configuration.MinBytesForSeek.Syntax",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL run with no errors when the `<min_bytes_for_seek>` parameter\n'
-        'in the `<disks>` section of the `<storage_configuration>` section of the\n'
-        'config.xml file or the storage.xml file in the config.d directory is configured\n'
-        'with correct syntax.\n'
-        '\n'
+        "[ClickHouse] SHALL run with no errors when the `<min_bytes_for_seek>` parameter\n"
+        "in the `<disks>` section of the `<storage_configuration>` section of the\n"
+        "config.xml file or the storage.xml file in the config.d directory is configured\n"
+        "with correct syntax.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.6.17'
+    num="4.4.6.17",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_S3MaxSinglePartUploadSize = Requirement(
-    name='RQ.SRS-015.S3.Disk.Configuration.S3MaxSinglePartUploadSize',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.Configuration.S3MaxSinglePartUploadSize",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support the `<s3_max_single_part_upload_size>` parameter in\n'
-        'the `<disks>` section of the `<storage_configuration>` section of the config.xml\n'
-        'file or the storage.xml file in the config.d directory to set the maximum\n'
-        'size, in bytes, of single part uploads to S3.\n'
-        '\n'
+        "[ClickHouse] SHALL support the `<s3_max_single_part_upload_size>` parameter in\n"
+        "the `<disks>` section of the `<storage_configuration>` section of the config.xml\n"
+        "file or the storage.xml file in the config.d directory to set the maximum\n"
+        "size, in bytes, of single part uploads to S3.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.6.18'
+    num="4.4.6.18",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_S3MaxSinglePartUploadSize_Syntax = Requirement(
-    name='RQ.SRS-015.S3.Disk.Configuration.S3MaxSinglePartUploadSize.Syntax',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.Configuration.S3MaxSinglePartUploadSize.Syntax",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL run with no errors when the\n'
-        '`<s3_max_single_part_upload_size>` parameter in the `<disks>` section of the\n'
-        '`<storage_configuration>` section of the config.xml file or the storage.xml\n'
-        'file in the config.d directory is configured with correct syntax.\n'
-        '\n'
+        "[ClickHouse] SHALL run with no errors when the\n"
+        "`<s3_max_single_part_upload_size>` parameter in the `<disks>` section of the\n"
+        "`<storage_configuration>` section of the config.xml file or the storage.xml\n"
+        "file in the config.d directory is configured with correct syntax.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.6.19'
+    num="4.4.6.19",
 )
 
 RQ_SRS_015_S3_Disk_Configuration_S3UseEnvironmentCredentials = Requirement(
-    name='RQ.SRS-015.S3.Disk.Configuration.S3UseEnvironmentCredentials',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.Configuration.S3UseEnvironmentCredentials",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support the `<s3_use_environment_credentials>` parameter in\n'
-        'the `<disks>` section of the `<storage_configuration>` section of the config.xml\n'
-        'file or the storage.xml file in the config.d directory to use the server\n'
-        'environment credentials set in the config.xml file.\n'
-        '\n'
+        "[ClickHouse] SHALL support the `<s3_use_environment_credentials>` parameter in\n"
+        "the `<disks>` section of the `<storage_configuration>` section of the config.xml\n"
+        "file or the storage.xml file in the config.d directory to use the server\n"
+        "environment credentials set in the config.xml file.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.6.20'
+    num="4.4.6.20",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree = Requirement(
-    name='RQ.SRS-015.S3.Disk.MergeTree',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.MergeTree",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support selection of one or more [S3] external storage disks using\n'
-        'engines in the MergeTree engine family.\n'
-        '\n'
+        "[ClickHouse] SHALL support selection of one or more [S3] external storage disks using\n"
+        "engines in the MergeTree engine family.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.7.1'
+    num="4.4.7.1",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_MergeTree = Requirement(
-    name='RQ.SRS-015.S3.Disk.MergeTree.MergeTree',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.MergeTree.MergeTree",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support selection of one or more [S3] external storage disks using\n'
-        'the MergeTree engine.\n'
-        '\n'
+        "[ClickHouse] SHALL support selection of one or more [S3] external storage disks using\n"
+        "the MergeTree engine.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.7.2'
+    num="4.4.7.2",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_ReplacingMergeTree = Requirement(
-    name='RQ.SRS-015.S3.Disk.MergeTree.ReplacingMergeTree',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.MergeTree.ReplacingMergeTree",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support selection of one or more [S3] external storage disks using\n'
-        'the ReplacingMergeTree engine.\n'
-        '\n'
+        "[ClickHouse] SHALL support selection of one or more [S3] external storage disks using\n"
+        "the ReplacingMergeTree engine.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.7.3'
+    num="4.4.7.3",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_SummingMergeTree = Requirement(
-    name='RQ.SRS-015.S3.Disk.MergeTree.SummingMergeTree',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.MergeTree.SummingMergeTree",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support selection of one or more [S3] external storage disks using\n'
-        'the SummingMergeTree engine.\n'
-        '\n'
+        "[ClickHouse] SHALL support selection of one or more [S3] external storage disks using\n"
+        "the SummingMergeTree engine.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.7.4'
+    num="4.4.7.4",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AggregatingMergeTree = Requirement(
-    name='RQ.SRS-015.S3.Disk.MergeTree.AggregatingMergeTree',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.MergeTree.AggregatingMergeTree",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support selection of one or more [S3] external storage disks using\n'
-        'the AggregatingMergeTree engine.\n'
-        '\n'
+        "[ClickHouse] SHALL support selection of one or more [S3] external storage disks using\n"
+        "the AggregatingMergeTree engine.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.7.5'
+    num="4.4.7.5",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_CollapsingMergeTree = Requirement(
-    name='RQ.SRS-015.S3.Disk.MergeTree.CollapsingMergeTree',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.MergeTree.CollapsingMergeTree",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support selection of one or more [S3] external storage disks using\n'
-        'the CollapsingMergeTree engine.\n'
-        '\n'
+        "[ClickHouse] SHALL support selection of one or more [S3] external storage disks using\n"
+        "the CollapsingMergeTree engine.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.7.6'
+    num="4.4.7.6",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_VersionedCollapsingMergeTree = Requirement(
-    name='RQ.SRS-015.S3.Disk.MergeTree.VersionedCollapsingMergeTree',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.MergeTree.VersionedCollapsingMergeTree",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support selection of one or more [S3] external storage disks using\n'
-        'the VersionedCollapsingMergeTree engine.\n'
-        '\n'
+        "[ClickHouse] SHALL support selection of one or more [S3] external storage disks using\n"
+        "the VersionedCollapsingMergeTree engine.\n"
+        "\n"
     ),
     link=None,
     level=4,
-    num='4.4.7.7'
+    num="4.4.7.7",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication = Requirement(
-    name='RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support `<allow_s3_zero_copy_replication>` as a MergeTree\n'
-        'table engine setting for the ReplicatedMergeTree engine to toggle data\n'
-        'replication via S3 for replicated tables.\n'
-        '\n'
+        "[ClickHouse] SHALL support `<allow_s3_zero_copy_replication>` as a MergeTree\n"
+        "table engine setting for the ReplicatedMergeTree engine to toggle data\n"
+        "replication via S3 for replicated tables.\n"
+        "\n"
     ),
     link=None,
     level=5,
-    num='4.4.7.8.1'
+    num="4.4.7.8.1",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Default = Requirement(
-    name='RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Default',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Default",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL set the `<allow_s3_zero_copy_replication>` parameter to 0 by\n'
-        'default to disable data replication via S3 and replicate data directly when using\n'
-        'the ReplicatedMergeTree table engine.\n'
-        '\n'
+        "[ClickHouse] SHALL set the `<allow_s3_zero_copy_replication>` parameter to 0 by\n"
+        "default to disable data replication via S3 and replicate data directly when using\n"
+        "the ReplicatedMergeTree table engine.\n"
+        "\n"
     ),
     link=None,
     level=5,
-    num='4.4.7.8.2'
+    num="4.4.7.8.2",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Global = Requirement(
-    name='RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Global',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Global",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support the `<allow_s3_zero_copy_replication>` setting to the\n'
-        '`<merge_tree>` section of the config.xml file or the merge_tree.xml file in\n'
-        'the config.d directory to configure the ReplicatedMergeTree engine globally. This\n'
-        'setting SHALL be applied to all ReplicatedMergeTree tables.\n'
-        '\n'
+        "[ClickHouse] SHALL support the `<allow_s3_zero_copy_replication>` setting to the\n"
+        "`<merge_tree>` section of the config.xml file or the merge_tree.xml file in\n"
+        "the config.d directory to configure the ReplicatedMergeTree engine globally. This\n"
+        "setting SHALL be applied to all ReplicatedMergeTree tables.\n"
+        "\n"
     ),
     link=None,
     level=5,
-    num='4.4.7.8.3'
+    num="4.4.7.8.3",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Metadata = Requirement(
-    name='RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Metadata',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Metadata",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL replicate only S3 metadata when the\n'
-        '`<allow_s3_zero_copy_replication>` parameter is set to 1. The receiver of the\n'
-        'metadata SHALL create identical metadata files which refer to the same object\n'
-        'keys in S3.\n'
-        '\n'
+        "[ClickHouse] SHALL replicate only S3 metadata when the\n"
+        "`<allow_s3_zero_copy_replication>` parameter is set to 1. The receiver of the\n"
+        "metadata SHALL create identical metadata files which refer to the same object\n"
+        "keys in S3.\n"
+        "\n"
     ),
     link=None,
     level=5,
-    num='4.4.7.8.4'
+    num="4.4.7.8.4",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Alter = Requirement(
-    name='RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Alter',
-    version='1.1',
+    name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Alter",
+    version="1.1",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support modifying replicated tables. If a replicated table\n'
-        'is modified, the changes SHALL be reproduced without data loss on all existing \n'
-        'replicas, and in [S3] storage.\n'
-        '\n'
+        "[ClickHouse] SHALL support modifying replicated tables. If a replicated table\n"
+        "is modified, the changes SHALL be reproduced without data loss on all existing \n"
+        "replicas, and in [S3] storage.\n"
+        "\n"
     ),
     link=None,
     level=5,
-    num='4.4.7.8.5'
+    num="4.4.7.8.5",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Delete = Requirement(
-    name='RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Delete',
-    version='1.1',
+    name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Delete",
+    version="1.1",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support dropping a replicated table with no changes to any\n'
-        'other replicas of the table.\n'
-        '\n'
+        "[ClickHouse] SHALL support dropping a replicated table with no changes to any\n"
+        "other replicas of the table.\n"
+        "\n"
     ),
     link=None,
     level=5,
-    num='4.4.7.8.6'
+    num="4.4.7.8.6",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_DeleteAll = Requirement(
-    name='RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DeleteAll',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DeleteAll",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support deleting replicated tables from [S3] by dropping\n'
-        'all replicas of the table from each [ClickHouse] instance.\n'
-        '\n'
+        "[ClickHouse] SHALL support deleting replicated tables from [S3] by dropping\n"
+        "all replicas of the table from each [ClickHouse] instance.\n"
+        "\n"
     ),
     link=None,
     level=5,
-    num='4.4.7.8.7'
+    num="4.4.7.8.7",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_DataPreservedAfterMutation = Requirement(
-    name='RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DataPreservedAfterMutation',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DataPreservedAfterMutation",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[Clickhouse] SHALL distribute mutations to all replicas without data loss.\n'
-        '\n'
+        "[Clickhouse] SHALL distribute mutations to all replicas without data loss.\n"
+        "\n"
     ),
     link=None,
     level=5,
-    num='4.4.7.8.8'
+    num="4.4.7.8.8",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_DropReplica = Requirement(
-    name='RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DropReplica',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DropReplica",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support stopping and starting an instance of [ClickHouse]\n'
-        'with no changes to data in replicated tables. If the table is altered while\n'
-        'the instance restarts, [ClickHouse] SHALL update the table from [S3] when\n'
-        'the instance restarts.\n'
-        '\n'
+        "[ClickHouse] SHALL support stopping and starting an instance of [ClickHouse]\n"
+        "with no changes to data in replicated tables. If the table is altered while\n"
+        "the instance restarts, [ClickHouse] SHALL update the table from [S3] when\n"
+        "the instance restarts.\n"
+        "\n"
     ),
     link=None,
     level=5,
-    num='4.4.7.8.9'
+    num="4.4.7.8.9",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_AddReplica = Requirement(
-    name='RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.AddReplica',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.AddReplica",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support adding a replica of an existing replicated table\n'
-        'with no changes to the data in the table. When the replica is added, the\n'
-        'existing data SHALL be downloaded from [S3] to match the other replicas.\n'
-        '\n'
+        "[ClickHouse] SHALL support adding a replica of an existing replicated table\n"
+        "with no changes to the data in the table. When the replica is added, the\n"
+        "existing data SHALL be downloaded from [S3] to match the other replicas.\n"
+        "\n"
     ),
     link=None,
     level=5,
-    num='4.4.7.8.10'
+    num="4.4.7.8.10",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_NoDataDuplication = Requirement(
-    name='RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.NoDataDuplication',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.NoDataDuplication",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support zero copy replication such that data is not\n'
-        'duplicated in [S3] storage during any operations on replicated tables (ALTER,\n'
-        'SELECT, INSERT, etc...).  Data SHALL be fully removed from [S3] via DELETE\n'
-        'operations.\n'
-        '\n'
+        "[ClickHouse] SHALL support zero copy replication such that data is not\n"
+        "duplicated in [S3] storage during any operations on replicated tables (ALTER,\n"
+        "SELECT, INSERT, etc...).  Data SHALL be fully removed from [S3] via DELETE\n"
+        "operations.\n"
+        "\n"
     ),
     link=None,
     level=5,
-    num='4.4.7.8.11'
+    num="4.4.7.8.11",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_TTL_Move = Requirement(
-    name='RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.TTL.Move',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.TTL.Move",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support TTL moves to other hard disks or [S3] disks when the\n'
-        '`<allow_s3_zero_copy_replication>` setting is used with the MergeTree engine.\n'
-        'When TTL moves are used, data will not be duplicated in [S3]. All objects in\n'
-        'a table SHALL be accessible with no errors, even if they have been moved\n'
-        'to a different disk.\n'
-        '\n'
+        "[ClickHouse] SHALL support TTL moves to other hard disks or [S3] disks when the\n"
+        "`<allow_s3_zero_copy_replication>` setting is used with the MergeTree engine.\n"
+        "When TTL moves are used, data will not be duplicated in [S3]. All objects in\n"
+        "a table SHALL be accessible with no errors, even if they have been moved\n"
+        "to a different disk.\n"
+        "\n"
     ),
     link=None,
     level=5,
-    num='4.4.7.8.12'
+    num="4.4.7.8.12",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_TTL_Delete = Requirement(
-    name='RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.TTL.Delete',
-    version='1.0',
+    name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.TTL.Delete",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support TTL object deletion when the\n'
-        '`<allow_s3_zero_copy_replication>` setting is used with the MergeTree engine.\n'
-        'When objects are removed, all other objects SHALL be accessible with no errors.\n'
-        '\n'
+        "[ClickHouse] SHALL support TTL object deletion when the\n"
+        "`<allow_s3_zero_copy_replication>` setting is used with the MergeTree engine.\n"
+        "When objects are removed, all other objects SHALL be accessible with no errors.\n"
+        "\n"
     ),
     link=None,
     level=5,
-    num='4.4.7.8.13'
+    num="4.4.7.8.13",
 )
 
 RQ_SRS_015_S3_Policy_Syntax = Requirement(
-    name='RQ.SRS-015.S3.Policy.Syntax',
-    version='1.0',
+    name="RQ.SRS-015.S3.Policy.Syntax",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support selection of an [S3] disk for a volume using policies\n'
-        'with syntax similar to the following examples.\n'
-        '\n'
-        '`<tiered>` shows a policy with an [S3] volume alongside another volume.\n'
-        '\n'
-        '`<s3only>` shows a policy with only an [S3] volume.\n'
-        '\n'
-        '``` xml\n'
-        '<yandex>\n'
-        '  <storage_configuration>\n'
-        '...\n'
-        '    <policies>\n'
-        '      <tiered>\n'
-        '        <volumes>\n'
-        '          <default>\n'
-        '            <disk>default</disk>\n'
-        '          </default>\n'
-        '          <s3>\n'
-        '            <disk>s3</disk>\n'
-        '          </s3>\n'
-        '        </volumes>\n'
-        '      </tiered>\n'
-        '      <s3only>\n'
-        '        <volumes>\n'
-        '          <s3>\n'
-        '            <disk>s3</disk>\n'
-        '          </s3>\n'
-        '        </volumes>\n'
-        '      </s3only>\n'
-        '    </policies>\n'
-        '  </storage_configuration>\n'
-        '</yandex>\n'
-        '```\n'
-        '\n'
+        "[ClickHouse] SHALL support selection of an [S3] disk for a volume using policies\n"
+        "with syntax similar to the following examples.\n"
+        "\n"
+        "`<tiered>` shows a policy with an [S3] volume alongside another volume.\n"
+        "\n"
+        "`<s3only>` shows a policy with only an [S3] volume.\n"
+        "\n"
+        "``` xml\n"
+        "<yandex>\n"
+        "  <storage_configuration>\n"
+        "...\n"
+        "    <policies>\n"
+        "      <tiered>\n"
+        "        <volumes>\n"
+        "          <default>\n"
+        "            <disk>default</disk>\n"
+        "          </default>\n"
+        "          <s3>\n"
+        "            <disk>s3</disk>\n"
+        "          </s3>\n"
+        "        </volumes>\n"
+        "      </tiered>\n"
+        "      <s3only>\n"
+        "        <volumes>\n"
+        "          <s3>\n"
+        "            <disk>s3</disk>\n"
+        "          </s3>\n"
+        "        </volumes>\n"
+        "      </s3only>\n"
+        "    </policies>\n"
+        "  </storage_configuration>\n"
+        "</yandex>\n"
+        "```\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.5.1'
+    num="4.5.1",
 )
 
 RQ_SRS_015_S3_Policy_PerformTTLMoveOnInsert = Requirement(
-    name='RQ.SRS-015.S3.Policy.PerformTTLMoveOnInsert',
-    version='1.0',
+    name="RQ.SRS-015.S3.Policy.PerformTTLMoveOnInsert",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support the `<perform_ttl_move_on_insert>` parameter to the\n'
-        '`<volume>` section of the desired [S3] disk in the `<policies>` section of the\n'
-        '`<storage_configuration>` section of the config.xml file or the storage.xml file\n'
-        'in the config.d directory to toggle TTL moves to the [S3] disk on insert\n'
-        'operations. If `<perform_ttl_move_on_insert>` is set to 0, insert will go to the\n'
-        'first disk in the storage policy, and TTL moves to the [S3] volume will occur in\n'
-        'the background.\n'
-        '\n'
+        "[ClickHouse] SHALL support the `<perform_ttl_move_on_insert>` parameter to the\n"
+        "`<volume>` section of the desired [S3] disk in the `<policies>` section of the\n"
+        "`<storage_configuration>` section of the config.xml file or the storage.xml file\n"
+        "in the config.d directory to toggle TTL moves to the [S3] disk on insert\n"
+        "operations. If `<perform_ttl_move_on_insert>` is set to 0, insert will go to the\n"
+        "first disk in the storage policy, and TTL moves to the [S3] volume will occur in\n"
+        "the background.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.5.2'
+    num="4.5.2",
 )
 
 RQ_SRS_015_S3_Policy_PerformTTLMoveOnInsert_Default = Requirement(
-    name='RQ.SRS-015.S3.Policy.PerformTTLMoveOnInsert.Default',
-    version='1.0',
+    name="RQ.SRS-015.S3.Policy.PerformTTLMoveOnInsert.Default",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL set the `<perform_ttl_move_on_insert>` parameter to 1 by\n'
-        'default to perform TTL moves immediately upon an insert operation.\n'
-        '\n'
+        "[ClickHouse] SHALL set the `<perform_ttl_move_on_insert>` parameter to 1 by\n"
+        "default to perform TTL moves immediately upon an insert operation.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.5.3'
+    num="4.5.3",
 )
 
 RQ_SRS_015_S3_TableFunction_Syntax = Requirement(
-    name='RQ.SRS-015.S3.TableFunction.Syntax',
-    version='1.0',
+    name="RQ.SRS-015.S3.TableFunction.Syntax",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support the following syntax for the [S3] table function.\n'
-        '\n'
-        '``` sql\n'
-        's3(path, [access_key_id, secret_access_key,] format, structure, [compression])\n'
-        '```\n'
-        '\n'
+        "[ClickHouse] SHALL support the following syntax for the [S3] table function.\n"
+        "\n"
+        "``` sql\n"
+        "s3(path, [access_key_id, secret_access_key,] format, structure, [compression])\n"
+        "```\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.6.1'
+    num="4.6.1",
 )
 
 RQ_SRS_015_S3_TableFunction_Path = Requirement(
-    name='RQ.SRS-015.S3.TableFunction.Path',
-    version='1.0',
+    name="RQ.SRS-015.S3.TableFunction.Path",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support the `<path>` parameter to the [S3] table function to\n'
-        'specify the url of the [S3] bucket and the path to the file. This parameter SHALL\n'
-        'be mandatory.\n'
-        '\n'
+        "[ClickHouse] SHALL support the `<path>` parameter to the [S3] table function to\n"
+        "specify the url of the [S3] bucket and the path to the file. This parameter SHALL\n"
+        "be mandatory.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.6.2'
+    num="4.6.2",
 )
 
 RQ_SRS_015_S3_TableFunction_Credentials = Requirement(
-    name='RQ.SRS-015.S3.TableFunction.Credentials',
-    version='1.0',
+    name="RQ.SRS-015.S3.TableFunction.Credentials",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support the `<access_key_id>` and `<secret_access_key>`\n'
-        'parameters to the [S3] table function to authorize access to the [S3] bucket url\n'
-        'specified in the `<path>` parameter.\n'
-        '\n'
+        "[ClickHouse] SHALL support the `<access_key_id>` and `<secret_access_key>`\n"
+        "parameters to the [S3] table function to authorize access to the [S3] bucket url\n"
+        "specified in the `<path>` parameter.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.6.3'
+    num="4.6.3",
 )
 
 RQ_SRS_015_S3_TableFunction_Credentials_Invalid = Requirement(
-    name='RQ.SRS-015.S3.TableFunction.Credentials.Invalid',
-    version='1.0',
+    name="RQ.SRS-015.S3.TableFunction.Credentials.Invalid",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL return an error if the `<aws_access_key_id>` and\n'
-        '`<aws_secret_access_key>` parameters do not provide correct authentication to\n'
-        'the [S3] bucket.\n'
-        '\n'
+        "[ClickHouse] SHALL return an error if the `<aws_access_key_id>` and\n"
+        "`<aws_secret_access_key>` parameters do not provide correct authentication to\n"
+        "the [S3] bucket.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.6.4'
+    num="4.6.4",
 )
 
 RQ_SRS_015_S3_TableFunction_Path_Wildcard = Requirement(
-    name='RQ.SRS-015.S3.TableFunction.Path.Wildcard',
-    version='1.0',
+    name="RQ.SRS-015.S3.TableFunction.Path.Wildcard",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support the following wildcards for the `<path>` parameter\n'
+        "[ClickHouse] SHALL support the following wildcards for the `<path>` parameter\n"
         "to the [S3] table function, where 'abc', 'def' SHALL be strings and 'N', 'M' SHALL\n"
-        'be numbers. Note: the `?` wildcard must be encoded as `%3F`.\n'
-        '\n'
-        '* `*`\n'
-        '* `?`\n'
-        '* `{abc,def}`\n'
-        '* `{N..M}`\n'
-        '\n'
+        "be numbers. Note: the `?` wildcard must be encoded as `%3F`.\n"
+        "\n"
+        "* `*`\n"
+        "* `?`\n"
+        "* `{abc,def}`\n"
+        "* `{N..M}`\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.6.5'
+    num="4.6.5",
 )
 
 RQ_SRS_015_S3_TableFunction_ReadFromFile = Requirement(
-    name='RQ.SRS-015.S3.TableFunction.ReadFromFile',
-    version='1.0',
+    name="RQ.SRS-015.S3.TableFunction.ReadFromFile",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support reading data into the [S3] table function from a file,\n'
-        'with syntax similar to the following:\n'
-        '\n'
-        '``` bash\n'
-        '    cat test.csv | INSERT INTO TABLE FUNCTION s3(...)\n'
-        '```\n'
-        '\n'
+        "[ClickHouse] SHALL support reading data into the [S3] table function from a file,\n"
+        "with syntax similar to the following:\n"
+        "\n"
+        "``` bash\n"
+        "    cat test.csv | INSERT INTO TABLE FUNCTION s3(...)\n"
+        "```\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.6.6'
+    num="4.6.6",
 )
 
 RQ_SRS_015_S3_TableFunction_Redirect = Requirement(
-    name='RQ.SRS-015.S3.TableFunction.Redirect',
-    version='1.0',
+    name="RQ.SRS-015.S3.TableFunction.Redirect",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support [S3] table function urls which cause redirects with\n'
-        'no errors.\n'
-        '\n'
+        "[ClickHouse] SHALL support [S3] table function urls which cause redirects with\n"
+        "no errors.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.6.7'
+    num="4.6.7",
 )
 
 RQ_SRS_015_S3_TableFunction_Format = Requirement(
-    name='RQ.SRS-015.S3.TableFunction.Format',
-    version='1.0',
+    name="RQ.SRS-015.S3.TableFunction.Format",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support the `<format>` parameter to the [S3] table function to\n'
-        'specify the format of the data using one of the following [data formats].\n'
-        '\n'
+        "[ClickHouse] SHALL support the `<format>` parameter to the [S3] table function to\n"
+        "specify the format of the data using one of the following [data formats].\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.6.8'
+    num="4.6.8",
 )
 
 RQ_SRS_015_S3_TableFunction_Structure = Requirement(
-    name='RQ.SRS-015.S3.TableFunction.Structure',
-    version='1.0',
+    name="RQ.SRS-015.S3.TableFunction.Structure",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support the `<structure>` parameter to the [S3] table function to\n'
-        'specify the structure of the data. The structure SHALL use the following format:\n'
-        '\n'
+        "[ClickHouse] SHALL support the `<structure>` parameter to the [S3] table function to\n"
+        "specify the structure of the data. The structure SHALL use the following format:\n"
+        "\n"
         "    'column1_name column1_type, column2_name column2_type, ...'\n"
-        '\n'
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.6.9'
+    num="4.6.9",
 )
 
 RQ_SRS_015_S3_TableFunction_Compression = Requirement(
-    name='RQ.SRS-015.S3.TableFunction.Compression',
-    version='1.0',
+    name="RQ.SRS-015.S3.TableFunction.Compression",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support the `<compression>` parameter as an optional parameter\n'
-        'to the [S3] table function to specify the compression method used with the data.\n'
-        'The following compression methods are supported:\n'
-        '\n'
-        '* `gzip`\n'
-        '* `zlib`\n'
-        '* `brotli`\n'
-        '* `xz`\n'
-        '* `zstd`\n'
-        '\n'
+        "[ClickHouse] SHALL support the `<compression>` parameter as an optional parameter\n"
+        "to the [S3] table function to specify the compression method used with the data.\n"
+        "The following compression methods are supported:\n"
+        "\n"
+        "* `gzip`\n"
+        "* `zlib`\n"
+        "* `brotli`\n"
+        "* `xz`\n"
+        "* `zstd`\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.6.10'
+    num="4.6.10",
 )
 
 RQ_SRS_015_S3_TableFunction_Compression_Auto = Requirement(
-    name='RQ.SRS-015.S3.TableFunction.Compression.Auto',
-    version='1.0',
+    name="RQ.SRS-015.S3.TableFunction.Compression.Auto",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
@@ -1823,590 +1818,590 @@ RQ_SRS_015_S3_TableFunction_Compression_Auto = Requirement(
     description=(
         "[ClickHouse] SHALL support 'auto' as an input to the `<compression>` parameter of\n"
         "the [S3] table function. If 'auto' is specified, [ClickHouse] SHALL deduce the\n"
-        'compression algorithm from the endpoint URL extension. The following URL extensions\n'
-        'are supported:\n'
-        '\n'
-        '* `gzip`\n'
-        '* `gz`\n'
-        '* `deflate`\n'
-        '* `brotli`\n'
-        '* `br`\n'
-        '* `LZMA`\n'
-        '* `xz`\n'
-        '* `zstd`\n'
-        '* `zst`\n'
-        '\n'
+        "compression algorithm from the endpoint URL extension. The following URL extensions\n"
+        "are supported:\n"
+        "\n"
+        "* `gzip`\n"
+        "* `gz`\n"
+        "* `deflate`\n"
+        "* `brotli`\n"
+        "* `br`\n"
+        "* `LZMA`\n"
+        "* `xz`\n"
+        "* `zstd`\n"
+        "* `zst`\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.6.11'
+    num="4.6.11",
 )
 
 RQ_SRS_015_S3_TableFunction_S3Cluster = Requirement(
-    name='RQ.SRS-015.S3.TableFunction.S3Cluster',
-    version='1.0',
+    name="RQ.SRS-015.S3.TableFunction.S3Cluster",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support reading from AWS [S3] clusters using the\n'
-        '`s3Cluster` table function. The table function can be used with the following syntax:\n'
-        '\n'
-        '``` sql\n'
-        's3Cluster(cluster_name, source, [access_key_id, secret_access_key,] format, structure)\n'
-        '```\n'
-        '\n'
+        "[ClickHouse] SHALL support reading from AWS [S3] clusters using the\n"
+        "`s3Cluster` table function. The table function can be used with the following syntax:\n"
+        "\n"
+        "``` sql\n"
+        "s3Cluster(cluster_name, source, [access_key_id, secret_access_key,] format, structure)\n"
+        "```\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.6.12'
+    num="4.6.12",
 )
 
 RQ_SRS_015_S3_MinIO_Disk_Configuration = Requirement(
-    name='RQ.SRS-015.S3.MinIO.Disk.Configuration',
-    version='1.0',
+    name="RQ.SRS-015.S3.MinIO.Disk.Configuration",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support configuration of [S3] disks using the MinIO server\n'
-        'with syntax similar to the following:\n'
-        '\n'
-        '``` xml\n'
-        '<yandex>\n'
-        '  <storage_configuration>\n'
-        '    <disks>\n'
-        '      <minio>\n'
-        '        <type>s3</type>\n'
-        '        <endpoint>http://minio:9000/my-bucket/object-key/</endpoint>\n'
-        '        <access_key_id>*****</access_key_id>\n'
-        '        <secret_access_key>*****</secret_access_key>\n'
-        '      </minio>\n'
-        '    </disks>\n'
-        '...\n'
-        '</yandex>\n'
-        '```\n'
-        '\n'
+        "[ClickHouse] SHALL support configuration of [S3] disks using the MinIO server\n"
+        "with syntax similar to the following:\n"
+        "\n"
+        "``` xml\n"
+        "<yandex>\n"
+        "  <storage_configuration>\n"
+        "    <disks>\n"
+        "      <minio>\n"
+        "        <type>s3</type>\n"
+        "        <endpoint>http://minio:9000/my-bucket/object-key/</endpoint>\n"
+        "        <access_key_id>*****</access_key_id>\n"
+        "        <secret_access_key>*****</secret_access_key>\n"
+        "      </minio>\n"
+        "    </disks>\n"
+        "...\n"
+        "</yandex>\n"
+        "```\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.7.1'
+    num="4.7.1",
 )
 
 RQ_SRS_015_S3_MinIO_TableFunction = Requirement(
-    name='RQ.SRS-015.S3.MinIO.TableFunction',
-    version='1.0',
+    name="RQ.SRS-015.S3.MinIO.TableFunction",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support importing and exporting data to/from MinIO\n'
-        'using the [S3] table function with the following syntax:\n'
-        '\n'
-        '``` sql\n'
-        's3(http://minio:9000/my-bucket/object-key, [access_key_id, secret_access_key,] format, structure, [compression])\n'
-        '```\n'
-        '\n'
+        "[ClickHouse] SHALL support importing and exporting data to/from MinIO\n"
+        "using the [S3] table function with the following syntax:\n"
+        "\n"
+        "``` sql\n"
+        "s3(http://minio:9000/my-bucket/object-key, [access_key_id, secret_access_key,] format, structure, [compression])\n"
+        "```\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.7.2'
+    num="4.7.2",
 )
 
 RQ_SRS_015_S3_MinIO_AllowS3ZeroCopyReplication = Requirement(
-    name='RQ.SRS-015.S3.MinIO.AllowS3ZeroCopyReplication',
-    version='1.0',
+    name="RQ.SRS-015.S3.MinIO.AllowS3ZeroCopyReplication",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support importing and exporting data to/from the MinIO\n'
-        'server using replicated tables with the ReplicatedMergeTree engine and\n'
-        'the `<allow_s3_zero_copy_replication>` parameter set to 1.\n'
-        '\n'
+        "[ClickHouse] SHALL support importing and exporting data to/from the MinIO\n"
+        "server using replicated tables with the ReplicatedMergeTree engine and\n"
+        "the `<allow_s3_zero_copy_replication>` parameter set to 1.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.7.3'
+    num="4.7.3",
 )
 
 RQ_SRS_015_S3_AWS_Disk_Configuration = Requirement(
-    name='RQ.SRS-015.S3.AWS.Disk.Configuration',
-    version='1.0',
+    name="RQ.SRS-015.S3.AWS.Disk.Configuration",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support [S3] disk configuration using [AWS S3] with syntax\n'
-        'similar to the following:\n'
-        '\n'
-        '``` xml\n'
-        '<yandex>\n'
-        '  <storage_configuration>\n'
-        '    <disks>\n'
-        '      <aws>\n'
-        '        <type>s3</type>\n'
-        '        <endpoint>http://s3.us-east-1.amazonaws.com/my-bucket/object-key/</endpoint>\n'
-        '        <access_key_id>*****</access_key_id>\n'
-        '        <secret_access_key>*****</secret_access_key>\n'
-        '      </aws>\n'
-        '    </disks>\n'
-        '...\n'
-        '</yandex>\n'
-        '```\n'
-        '\n'
+        "[ClickHouse] SHALL support [S3] disk configuration using [AWS S3] with syntax\n"
+        "similar to the following:\n"
+        "\n"
+        "``` xml\n"
+        "<yandex>\n"
+        "  <storage_configuration>\n"
+        "    <disks>\n"
+        "      <aws>\n"
+        "        <type>s3</type>\n"
+        "        <endpoint>http://s3.us-east-1.amazonaws.com/my-bucket/object-key/</endpoint>\n"
+        "        <access_key_id>*****</access_key_id>\n"
+        "        <secret_access_key>*****</secret_access_key>\n"
+        "      </aws>\n"
+        "    </disks>\n"
+        "...\n"
+        "</yandex>\n"
+        "```\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.8.1'
+    num="4.8.1",
 )
 
 RQ_SRS_015_S3_AWS_TableFunction = Requirement(
-    name='RQ.SRS-015.S3.AWS.TableFunction',
-    version='1.0',
+    name="RQ.SRS-015.S3.AWS.TableFunction",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support importing and exporting data to/from [AWS S3]\n'
-        'using the [S3] table function with the following syntax:\n'
-        '\n'
-        '``` sql\n'
-        's3(http://s3.us-east-1.amazonaws.com/my-bucket/object-key, [access_key_id, secret_access_key,] format, structure, [compression])\n'
-        '```\n'
-        '\n'
+        "[ClickHouse] SHALL support importing and exporting data to/from [AWS S3]\n"
+        "using the [S3] table function with the following syntax:\n"
+        "\n"
+        "``` sql\n"
+        "s3(http://s3.us-east-1.amazonaws.com/my-bucket/object-key, [access_key_id, secret_access_key,] format, structure, [compression])\n"
+        "```\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.8.2'
+    num="4.8.2",
 )
 
 RQ_SRS_015_S3_AWS_Disk_URL = Requirement(
-    name='RQ.SRS-015.S3.AWS.Disk.URL',
-    version='1.0',
+    name="RQ.SRS-015.S3.AWS.Disk.URL",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support [AWS S3] disks with the endpoint configured using\n'
-        'both generic and region-specific bucket URLs.\n'
-        '\n'
+        "[ClickHouse] SHALL support [AWS S3] disks with the endpoint configured using\n"
+        "both generic and region-specific bucket URLs.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.8.3'
+    num="4.8.3",
 )
 
 RQ_SRS_015_S3_AWS_Disk_URL_Generic = Requirement(
-    name='RQ.SRS-015.S3.AWS.Disk.URL.Generic',
-    version='1.0',
+    name="RQ.SRS-015.S3.AWS.Disk.URL.Generic",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support [AWS S3] disks with the endpoint configured using\n'
-        'generic bucket URLs with syntax similar to the following:\n'
-        '\n'
-        '    “https://altinity-clickhouse-data.s3.amazonaws.com/”\n'
-        '\n'
+        "[ClickHouse] SHALL support [AWS S3] disks with the endpoint configured using\n"
+        "generic bucket URLs with syntax similar to the following:\n"
+        "\n"
+        "    “https://altinity-clickhouse-data.s3.amazonaws.com/”\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.8.4'
+    num="4.8.4",
 )
 
 RQ_SRS_015_S3_AWS_Disk_URL_Specific = Requirement(
-    name='RQ.SRS-015.S3.AWS.Disk.URL.Specific',
-    version='1.0',
+    name="RQ.SRS-015.S3.AWS.Disk.URL.Specific",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support [AWS S3] disks with the endpoint configured using\n'
-        'region-specific bucket URLs with syntax similar to the following:\n'
-        '\n'
-        '    “https://s3.us-east-1.amazonaws.com/altinity-clickhouse-data/”\n'
-        '\n'
+        "[ClickHouse] SHALL support [AWS S3] disks with the endpoint configured using\n"
+        "region-specific bucket URLs with syntax similar to the following:\n"
+        "\n"
+        "    “https://s3.us-east-1.amazonaws.com/altinity-clickhouse-data/”\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.8.5'
+    num="4.8.5",
 )
 
 RQ_SRS_015_S3_AWS_EC2_Disk = Requirement(
-    name='RQ.SRS-015.S3.AWS.EC2.Disk',
-    version='1.0',
+    name="RQ.SRS-015.S3.AWS.EC2.Disk",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support [S3] external storage via one or more disks when\n'
-        'running on an AWS EC2 instance.\n'
-        '\n'
+        "[ClickHouse] SHALL support [S3] external storage via one or more disks when\n"
+        "running on an AWS EC2 instance.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.8.6'
+    num="4.8.6",
 )
 
 RQ_SRS_015_S3_AWS_EC2_TableFunction = Requirement(
-    name='RQ.SRS-015.S3.AWS.EC2.TableFunction',
-    version='1.0',
+    name="RQ.SRS-015.S3.AWS.EC2.TableFunction",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support [S3] external storage via a call to the [S3] table\n'
-        'function when running on an EC2 instance. Using the table function, [ClickHouse]\n'
-        'SHALL provide read and write functionality. Upon a write, [ClickHouse] SHALL overwrite\n'
-        'existing data.\n'
-        '\n'
+        "[ClickHouse] SHALL support [S3] external storage via a call to the [S3] table\n"
+        "function when running on an EC2 instance. Using the table function, [ClickHouse]\n"
+        "SHALL provide read and write functionality. Upon a write, [ClickHouse] SHALL overwrite\n"
+        "existing data.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.8.7'
+    num="4.8.7",
 )
 
 RQ_SRS_015_S3_AWS_EC2_Endpoints = Requirement(
-    name='RQ.SRS-015.S3.AWS.EC2.Endpoints',
-    version='1.0',
+    name="RQ.SRS-015.S3.AWS.EC2.Endpoints",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support configuration of [S3] endpoints in the config.xml file\n'
-        'using credentials accessible to the entire ClickHouse server, when running on an\n'
-        'EC2 instance, with syntax similar to the following:\n'
-        '\n'
-        '``` xml\n'
-        '<yandex>\n'
-        '    <s3>\n'
-        '       <my_endpoint>\n'
-        '           <endpoint>http://s3.us-east-1.amazonaws.com/my-bucket/object-key/</endpoint>\n'
-        '           <access_key_id>*****</access_key_id>\n'
-        '           <secret_access_key>*****</secret_access_key>\n'
-        '           <header>Authorization: Bearer TOKEN</header>\n'
-        '       </my_endpoint>\n'
-        '   </s3>\n'
-        '</yandex>\n'
-        '```\n'
-        '\n'
+        "[ClickHouse] SHALL support configuration of [S3] endpoints in the config.xml file\n"
+        "using credentials accessible to the entire ClickHouse server, when running on an\n"
+        "EC2 instance, with syntax similar to the following:\n"
+        "\n"
+        "``` xml\n"
+        "<yandex>\n"
+        "    <s3>\n"
+        "       <my_endpoint>\n"
+        "           <endpoint>http://s3.us-east-1.amazonaws.com/my-bucket/object-key/</endpoint>\n"
+        "           <access_key_id>*****</access_key_id>\n"
+        "           <secret_access_key>*****</secret_access_key>\n"
+        "           <header>Authorization: Bearer TOKEN</header>\n"
+        "       </my_endpoint>\n"
+        "   </s3>\n"
+        "</yandex>\n"
+        "```\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.8.8'
+    num="4.8.8",
 )
 
 RQ_SRS_015_S3_AWS_AllowS3ZeroCopyReplication = Requirement(
-    name='RQ.SRS-015.S3.AWS.AllowS3ZeroCopyReplication',
-    version='1.0',
+    name="RQ.SRS-015.S3.AWS.AllowS3ZeroCopyReplication",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support importing and exporting data to/from [AWS S3]\n'
-        'using replicated tables with the ReplicatedMergeTree engine and the\n'
-        '`<allow_s3_zero_copy_replication>` parameter set to 1.\n'
-        '\n'
+        "[ClickHouse] SHALL support importing and exporting data to/from [AWS S3]\n"
+        "using replicated tables with the ReplicatedMergeTree engine and the\n"
+        "`<allow_s3_zero_copy_replication>` parameter set to 1.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.8.9'
+    num="4.8.9",
 )
 
 RQ_SRS_015_S3_AWS_SSEC = Requirement(
-    name='RQ.SRS-015.S3.AWS.SSEC',
-    version='1.0',
+    name="RQ.SRS-015.S3.AWS.SSEC",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support using the provided SSEC keys in order to perform\n'
-        'server-side encryption and decryption when writing and reading from AWS S3 endpoints.\n'
-        '\n'
-        'The SSEC key can be specified using the `<server_side_encryption_customer_key_base64>` parameter.\n'
-        'Example:\n'
-        '```\n'
-        '<s3>\n'
-        '  <s3-bucket>\n'
-        '    <endpoint>masked</endpoint>\n'
-        '    <access_key_id>masked</access_key_id>\n'
-        '    <secret_access_key>masked</secret_access_key>\n'
-        '    <server_side_encryption_customer_key_base64>Wp+aNxm8EkYtL6myH99DYg==</server_side_encryption_customer_key_base64>\n'
-        '  </s3-bucket>\n'
-        '</s3>\n'
-        '```\n'
-        '\n'
+        "[ClickHouse] SHALL support using the provided SSEC keys in order to perform\n"
+        "server-side encryption and decryption when writing and reading from AWS S3 endpoints.\n"
+        "\n"
+        "The SSEC key can be specified using the `<server_side_encryption_customer_key_base64>` parameter.\n"
+        "Example:\n"
+        "```\n"
+        "<s3>\n"
+        "  <s3-bucket>\n"
+        "    <endpoint>masked</endpoint>\n"
+        "    <access_key_id>masked</access_key_id>\n"
+        "    <secret_access_key>masked</secret_access_key>\n"
+        "    <server_side_encryption_customer_key_base64>Wp+aNxm8EkYtL6myH99DYg==</server_side_encryption_customer_key_base64>\n"
+        "  </s3-bucket>\n"
+        "</s3>\n"
+        "```\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.8.10'
+    num="4.8.10",
 )
 
 RQ_SRS_015_S3_GCS_Disk_Configuration = Requirement(
-    name='RQ.SRS-015.S3.GCS.Disk.Configuration',
-    version='1.0',
+    name="RQ.SRS-015.S3.GCS.Disk.Configuration",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support configuration of [S3] disks using Google Cloud Storage\n'
-        'with syntax similar to the following:\n'
-        '\n'
-        '``` xml\n'
-        '<yandex>\n'
-        '  <storage_configuration>\n'
-        '    <disks>\n'
-        '      <gcs>\n'
-        '        <type>s3</type>\n'
-        '        <endpoint>https://storage.googleapis.com/my-bucket/object-key/</endpoint>\n'
-        '        <access_key_id>*****</access_key_id>\n'
-        '        <secret_access_key>*****</secret_access_key>\n'
-        '      </gcs>\n'
-        '    </disks>\n'
-        '...\n'
-        '</yandex>\n'
-        '```\n'
-        '\n'
+        "[ClickHouse] SHALL support configuration of [S3] disks using Google Cloud Storage\n"
+        "with syntax similar to the following:\n"
+        "\n"
+        "``` xml\n"
+        "<yandex>\n"
+        "  <storage_configuration>\n"
+        "    <disks>\n"
+        "      <gcs>\n"
+        "        <type>s3</type>\n"
+        "        <endpoint>https://storage.googleapis.com/my-bucket/object-key/</endpoint>\n"
+        "        <access_key_id>*****</access_key_id>\n"
+        "        <secret_access_key>*****</secret_access_key>\n"
+        "      </gcs>\n"
+        "    </disks>\n"
+        "...\n"
+        "</yandex>\n"
+        "```\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.9.1'
+    num="4.9.1",
 )
 
 RQ_SRS_015_S3_GCS_TableFunction = Requirement(
-    name='RQ.SRS-015.S3.GCS.TableFunction',
-    version='1.0',
+    name="RQ.SRS-015.S3.GCS.TableFunction",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support importing and exporting data to/from Google Cloud\n'
-        'Storage using the [S3] table function with the following syntax:\n'
-        '\n'
-        '``` sql\n'
-        's3(https://storage.googleapis.com/my-bucket/object-key, [access_key_id, secret_access_key,] format, structure, [compression])\n'
-        '```\n'
-        '\n'
+        "[ClickHouse] SHALL support importing and exporting data to/from Google Cloud\n"
+        "Storage using the [S3] table function with the following syntax:\n"
+        "\n"
+        "``` sql\n"
+        "s3(https://storage.googleapis.com/my-bucket/object-key, [access_key_id, secret_access_key,] format, structure, [compression])\n"
+        "```\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.9.2'
+    num="4.9.2",
 )
 
 RQ_SRS_015_S3_GCS_AllowS3ZeroCopyReplication = Requirement(
-    name='RQ.SRS-015.S3.GCS.AllowS3ZeroCopyReplication',
-    version='1.0',
+    name="RQ.SRS-015.S3.GCS.AllowS3ZeroCopyReplication",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support importing and exporting data to/from GCS\n'
-        'using replicated tables with the ReplicatedMergeTree engine and the\n'
-        '`<allow_s3_zero_copy_replication>` parameter set to 1.\n'
-        '\n'
+        "[ClickHouse] SHALL support importing and exporting data to/from GCS\n"
+        "using replicated tables with the ReplicatedMergeTree engine and the\n"
+        "`<allow_s3_zero_copy_replication>` parameter set to 1.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.9.3'
+    num="4.9.3",
 )
 
 RQ_SRS_015_S3_Settings_MaxThreads = Requirement(
-    name='RQ.SRS-015.S3.Settings.MaxThreads',
-    version='1.0',
+    name="RQ.SRS-015.S3.Settings.MaxThreads",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL read files from S3 in parallel when the value of `max_threads`\n'
-        'is greater than 1.\n'
-        '\n'
+        "[ClickHouse] SHALL read files from S3 in parallel when the value of `max_threads`\n"
+        "is greater than 1.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.10.1'
+    num="4.10.1",
 )
 
 RQ_SRS_015_S3_Settings_MaxDownloadThreads = Requirement(
-    name='RQ.SRS-015.S3.Settings.MaxDownloadThreads',
-    version='1.0',
+    name="RQ.SRS-015.S3.Settings.MaxDownloadThreads",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL download files from S3 in parallel using multiple threads \n'
-        'specified by `max_download_threads`. Default is 1.\n'
-        '\n'
+        "[ClickHouse] SHALL download files from S3 in parallel using multiple threads \n"
+        "specified by `max_download_threads`. Default is 1.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.10.2'
+    num="4.10.2",
 )
 
 RQ_SRS_015_S3_Settings_MaxDownloadBufferSize = Requirement(
-    name='RQ.SRS-015.S3.Settings.MaxDownloadBufferSize',
-    version='1.0',
+    name="RQ.SRS-015.S3.Settings.MaxDownloadBufferSize",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL download files from S3 with a maximum buffer size \n'
-        'specified by `max_download_buffer_size`.\n'
-        '\n'
+        "[ClickHouse] SHALL download files from S3 with a maximum buffer size \n"
+        "specified by `max_download_buffer_size`.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.10.3'
+    num="4.10.3",
 )
 
 RQ_SRS_015_S3_Settings_PartitionBy = Requirement(
-    name='RQ.SRS-015.S3.Settings.PartitionBy',
-    version='1.0',
+    name="RQ.SRS-015.S3.Settings.PartitionBy",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support PARTITION BY expression for the S3 table engine to\n'
-        'partition writes to the S3 table into multiple files. These file names SHALL\n'
-        'be prefixed by the partition key.\n'
-        '\n'
+        "[ClickHouse] SHALL support PARTITION BY expression for the S3 table engine to\n"
+        "partition writes to the S3 table into multiple files. These file names SHALL\n"
+        "be prefixed by the partition key.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.10.4'
+    num="4.10.4",
 )
 
 RQ_SRS_015_S3_Settings_S3UploadPartSizeMultiplyFactor = Requirement(
-    name='RQ.SRS-015.S3.Settings.S3UploadPartSizeMultiplyFactor',
-    version='1.0',
+    name="RQ.SRS-015.S3.Settings.S3UploadPartSizeMultiplyFactor",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support specifying `s3_upload_part_size_multiply_factor` setting to\n'
-        'specifying how much `s3_min_upload_part_size` should be increased.\n'
-        '\n'
+        "[ClickHouse] SHALL support specifying `s3_upload_part_size_multiply_factor` setting to\n"
+        "specifying how much `s3_min_upload_part_size` should be increased.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.10.5'
+    num="4.10.5",
 )
 
 RQ_SRS_015_S3_Settings_S3UploadPartSizeMultiplyPartsCountThreshold = Requirement(
-    name='RQ.SRS-015.S3.Settings.S3UploadPartSizeMultiplyPartsCountThreshold',
-    version='1.0',
+    name="RQ.SRS-015.S3.Settings.S3UploadPartSizeMultiplyPartsCountThreshold",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL support specifying `s3_upload_part_size_multiply_parts_count_threshold` setting\n'
-        'to specifying after how many parts the minimum part size should be increased by `s3_upload_part_size_multiply_factor`.\n'
-        '\n'
+        "[ClickHouse] SHALL support specifying `s3_upload_part_size_multiply_parts_count_threshold` setting\n"
+        "to specifying after how many parts the minimum part size should be increased by `s3_upload_part_size_multiply_factor`.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.10.6'
+    num="4.10.6",
 )
 
 RQ_SRS_015_S3_Performance_PerformTTLMoveOnInsert = Requirement(
-    name='RQ.SRS-015.S3.Performance.PerformTTLMoveOnInsert',
-    version='1.0',
+    name="RQ.SRS-015.S3.Performance.PerformTTLMoveOnInsert",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL provide better insert performance of tiered storage policies\n'
-        'with [S3] volumes when the `<perform_ttl_move_on_insert>` parameter of the\n'
-        '`<volume>` section of the desired [S3] disk in the `<policies>` section of the\n'
-        '`<storage_configuration>` section of the config.xml file or the storage.xml file\n'
-        'in the config.d directory is set to 0.\n'
-        '\n'
+        "[ClickHouse] SHALL provide better insert performance of tiered storage policies\n"
+        "with [S3] volumes when the `<perform_ttl_move_on_insert>` parameter of the\n"
+        "`<volume>` section of the desired [S3] disk in the `<policies>` section of the\n"
+        "`<storage_configuration>` section of the config.xml file or the storage.xml file\n"
+        "in the config.d directory is set to 0.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.11.1'
+    num="4.11.1",
 )
 
 RQ_SRS_015_S3_Performance_AllowS3ZeroCopyReplication_Select = Requirement(
-    name='RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Select',
-    version='1.0',
+    name="RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Select",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL provide similar performance of SELECT operations on tables on\n'
-        '[S3] disks when the `<allow_s3_zero_copy_replication>` parameter is set, and when\n'
-        'it is not set.\n'
-        '\n'
+        "[ClickHouse] SHALL provide similar performance of SELECT operations on tables on\n"
+        "[S3] disks when the `<allow_s3_zero_copy_replication>` parameter is set, and when\n"
+        "it is not set.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.11.2'
+    num="4.11.2",
 )
 
 RQ_SRS_015_S3_Performance_AllowS3ZeroCopyReplication_Insert = Requirement(
-    name='RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Insert',
-    version='1.0',
+    name="RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Insert",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL provide similar performance of INSERT operations on tables on\n'
-        '[S3] disks when the `<allow_s3_zero_copy_replication>` parameter is set, and when\n'
-        'it is not set.\n'
-        '\n'
+        "[ClickHouse] SHALL provide similar performance of INSERT operations on tables on\n"
+        "[S3] disks when the `<allow_s3_zero_copy_replication>` parameter is set, and when\n"
+        "it is not set.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.11.3'
+    num="4.11.3",
 )
 
 RQ_SRS_015_S3_Performance_AllowS3ZeroCopyReplication_Alter = Requirement(
-    name='RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Alter',
-    version='1.0',
+    name="RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Alter",
+    version="1.0",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
-        '[ClickHouse] SHALL provide similar performance of ALTER operations on tables on\n'
-        '[S3] disks when the `<allow_s3_zero_copy_replication>` parameter is set, and when\n'
-        'it is not set.\n'
-        '\n'
+        "[ClickHouse] SHALL provide similar performance of ALTER operations on tables on\n"
+        "[S3] disks when the `<allow_s3_zero_copy_replication>` parameter is set, and when\n"
+        "it is not set.\n"
+        "\n"
     ),
     link=None,
     level=3,
-    num='4.11.4'
+    num="4.11.4",
 )
 
 SRS_015_ClickHouse_S3_External_Storage = Specification(
-    name='SRS-015 ClickHouse S3 External Storage',
+    name="SRS-015 ClickHouse S3 External Storage",
     description=None,
     author=None,
     date=None,
@@ -2422,170 +2417,390 @@ SRS_015_ClickHouse_S3_External_Storage = Specification(
     parent=None,
     children=None,
     headings=(
-        Heading(name='Revision History', level=1, num='1'),
-        Heading(name='Introduction', level=1, num='2'),
-        Heading(name='Terminology', level=1, num='3'),
-        Heading(name='Requirements', level=1, num='4'),
-        Heading(name='Generic', level=2, num='4.1'),
-        Heading(name='RQ.SRS-015.S3', level=3, num='4.1.1'),
-        Heading(name='RQ.SRS-015.S3.Import', level=3, num='4.1.2'),
-        Heading(name='RQ.SRS-015.S3.Export', level=3, num='4.1.3'),
-        Heading(name='RQ.SRS-015.S3.Disk', level=3, num='4.1.4'),
-        Heading(name='RQ.SRS-015.S3.Policy', level=3, num='4.1.5'),
-        Heading(name='RQ.SRS-015.S3.TableFunction', level=3, num='4.1.6'),
-        Heading(name='RQ.SRS-015.S3.DataParts', level=3, num='4.1.7'),
-        Heading(name='RQ.SRS-015.S3.Security.Encryption', level=3, num='4.1.8'),
-        Heading(name='RQ.SRS-015.S3.RemoteHostFilter', level=3, num='4.1.9'),
-        Heading(name='Backup', level=3, num='4.1.10'),
-        Heading(name='MinIO Backup', level=4, num='4.1.10.1'),
-        Heading(name='RQ.SRS-015.S3.Backup.MinIOBackup', level=5, num='4.1.10.1.1'),
-        Heading(name='AWS S3 Backup', level=4, num='4.1.10.2'),
-        Heading(name='RQ.SRS-015.S3.Backup.AWSS3Backup', level=5, num='4.1.10.2.1'),
-        Heading(name='GCS Backup', level=4, num='4.1.10.3'),
-        Heading(name='RQ.SRS-015.S3.Backup.GCSBackup', level=5, num='4.1.10.3.1'),
-        Heading(name='Storage Policies', level=4, num='4.1.10.4'),
-        Heading(name='RQ.SRS-015.S3.Backup.StoragePolicies', level=5, num='4.1.10.4.1'),
-        Heading(name='Alter Freeze', level=4, num='4.1.10.5'),
-        Heading(name='RQ.SRS-015.S3.Backup.AlterFreeze', level=5, num='4.1.10.5.1'),
-        Heading(name='Alter Detach', level=4, num='4.1.10.6'),
-        Heading(name='RQ.SRS-015.S3.Backup.AlterDetach', level=5, num='4.1.10.6.1'),
-        Heading(name='Alter Attach', level=4, num='4.1.10.7'),
-        Heading(name='RQ.SRS-015.S3.Backup.AlterAttach', level=5, num='4.1.10.7.1'),
-        Heading(name='Metadata', level=3, num='4.1.11'),
-        Heading(name='RQ.SRS-015.S3.Metadata', level=4, num='4.1.11.1'),
-        Heading(name='Revisions', level=4, num='4.1.11.2'),
-        Heading(name='RQ.SRS-015.S3.Metadata.Revisions', level=5, num='4.1.11.2.1'),
-        Heading(name='Bad Backup Number', level=4, num='4.1.11.3'),
-        Heading(name='RQ.SRS-015.S3.Metadata.BadBackupNumber', level=5, num='4.1.11.3.1'),
-        Heading(name='Metadata Restore', level=3, num='4.1.12'),
-        Heading(name='Restore File', level=4, num='4.1.12.1'),
-        Heading(name='RQ.SRS-0.5.S3.MetadataRestore.RestoreFile', level=5, num='4.1.12.1.1'),
-        Heading(name='Bad Restore File', level=4, num='4.1.12.2'),
-        Heading(name='RQ.SRS-0.5.S3.MetadataRestore.BadRestoreFile', level=5, num='4.1.12.2.1'),
-        Heading(name='Huge Restore File', level=4, num='4.1.12.3'),
-        Heading(name='RQ.SRS-0.5.S3.MetadataRestore.HugeRestoreFile', level=5, num='4.1.12.3.1'),
-        Heading(name='No Local Metadata', level=4, num='4.1.12.4'),
-        Heading(name='RQ.SRS-015.S3.MetadataRestore.NoLocalMetadata', level=5, num='4.1.12.4.1'),
-        Heading(name='Bucket Path', level=4, num='4.1.12.5'),
-        Heading(name='RQ.SRS-015.S3.MetadataRestore.BucketPath', level=5, num='4.1.12.5.1'),
-        Heading(name='Revision Restore', level=4, num='4.1.12.6'),
-        Heading(name='RQ.SRS-015.S3.MetadataRestore.RevisionRestore', level=5, num='4.1.12.6.1'),
-        Heading(name='Mutations', level=4, num='4.1.12.7'),
-        Heading(name='RQ.SRS-015.S3.MetadataRestore.Mutations', level=5, num='4.1.12.7.1'),
-        Heading(name='Parallel Mutations', level=4, num='4.1.12.8'),
-        Heading(name='RQ.SRS-015.S3.MetadataRestore.ParallelMutations', level=5, num='4.1.12.8.1'),
-        Heading(name='Detached', level=4, num='4.1.12.9'),
-        Heading(name='RQ.SRS-015.S3.MetadataRestore.Detached', level=5, num='4.1.12.9.1'),
-        Heading(name='RQ.SRS-015.S3.AWS', level=3, num='4.1.13'),
-        Heading(name='RQ.SRS-015.S3.MinIO', level=3, num='4.1.14'),
-        Heading(name='RQ.SRS-015.S3.GCS', level=3, num='4.1.15'),
-        Heading(name='Automatic Reconnects', level=3, num='4.1.16'),
-        Heading(name='RQ.SRS-015.S3.AutomaticReconnects.GCS', level=4, num='4.1.16.1'),
-        Heading(name='RQ.SRS-015.S3.AutomaticReconnects.AWS', level=4, num='4.1.16.2'),
-        Heading(name='RQ.SRS-015.S3.AutomaticReconnects.MinIO', level=4, num='4.1.16.3'),
-        Heading(name='Users', level=2, num='4.2'),
-        Heading(name='RQ.SRS-015.S3.User.Configuration.Cache.22.8.EnableFilesystemCache', level=3, num='4.2.1'),
-        Heading(name='RQ.SRS-015.S3.User.Configuration.Cache.22.8.EnableFilesystemCacheOnWriteOperations', level=3, num='4.2.2'),
-        Heading(name='RQ.SRS-015.S3.FilesystemCacheLog.22.8', level=2, num='4.3'),
-        Heading(name='Disk', level=2, num='4.4'),
-        Heading(name='RQ.SRS-015.S3.Disk.AddingMoreStorageDevices', level=3, num='4.4.1'),
-        Heading(name='RQ.SRS-015.S3.Disk.Endpoints', level=3, num='4.4.2'),
-        Heading(name='RQ.SRS-015.S3.Disk.MultipleStorageDevices', level=3, num='4.4.3'),
-        Heading(name='RQ.SRS-015.S3.Disk.MultipleStorageDevices.NoChangesForQuerying', level=3, num='4.4.4'),
-        Heading(name='RQ.SRS-015.S3.Disk.Metadata', level=3, num='4.4.5'),
-        Heading(name='Disk Configuration', level=3, num='4.4.6'),
-        Heading(name='RQ.SRS-015.S3.Disk.Configuration', level=4, num='4.4.6.1'),
-        Heading(name='RQ.SRS-015.S3.Disk.Configuration.Syntax', level=4, num='4.4.6.2'),
-        Heading(name='RQ.SRS-015.S3.Disk.Configuration.Invalid', level=4, num='4.4.6.3'),
-        Heading(name='RQ.SRS-015.S3.Disk.Configuration.Changes.NoRestart', level=4, num='4.4.6.4'),
-        Heading(name='RQ.SRS-015.S3.Disk.Configuration.Access', level=4, num='4.4.6.5'),
-        Heading(name='RQ.SRS-015.S3.Disk.Configuration.Access.Default', level=4, num='4.4.6.6'),
-        Heading(name='RQ.SRS-015.S3.Disk.Configuration.CacheEnabled', level=4, num='4.4.6.7'),
-        Heading(name='RQ.SRS-015.S3.Disk.Configuration.CacheEnabled.Default', level=4, num='4.4.6.8'),
-        Heading(name='RQ.SRS-015.S3.Disk.Configuration.Cache.22.8', level=4, num='4.4.6.9'),
-        Heading(name='RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.CacheOnWriteOperations', level=4, num='4.4.6.10'),
-        Heading(name='RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.DataCacheMaxSize', level=4, num='4.4.6.11'),
-        Heading(name='RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.EnableCacheHitsThreshold', level=4, num='4.4.6.12'),
-        Heading(name='RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.FileSystemQueryCacheLimit', level=4, num='4.4.6.13'),
-        Heading(name='RQ.SRS-015.S3.Disk.Configuration.CachePath', level=4, num='4.4.6.14'),
-        Heading(name='RQ.SRS-015.S3.Disk.Configuration.CachePath.Conflict', level=4, num='4.4.6.15'),
-        Heading(name='RQ.SRS-015.S3.Disk.Configuration.MinBytesForSeek', level=4, num='4.4.6.16'),
-        Heading(name='RQ.SRS-015.S3.Disk.Configuration.MinBytesForSeek.Syntax', level=4, num='4.4.6.17'),
-        Heading(name='RQ.SRS-015.S3.Disk.Configuration.S3MaxSinglePartUploadSize', level=4, num='4.4.6.18'),
-        Heading(name='RQ.SRS-015.S3.Disk.Configuration.S3MaxSinglePartUploadSize.Syntax', level=4, num='4.4.6.19'),
-        Heading(name='RQ.SRS-015.S3.Disk.Configuration.S3UseEnvironmentCredentials', level=4, num='4.4.6.20'),
-        Heading(name='MergeTree Engine Family', level=3, num='4.4.7'),
-        Heading(name='RQ.SRS-015.S3.Disk.MergeTree', level=4, num='4.4.7.1'),
-        Heading(name='RQ.SRS-015.S3.Disk.MergeTree.MergeTree', level=4, num='4.4.7.2'),
-        Heading(name='RQ.SRS-015.S3.Disk.MergeTree.ReplacingMergeTree', level=4, num='4.4.7.3'),
-        Heading(name='RQ.SRS-015.S3.Disk.MergeTree.SummingMergeTree', level=4, num='4.4.7.4'),
-        Heading(name='RQ.SRS-015.S3.Disk.MergeTree.AggregatingMergeTree', level=4, num='4.4.7.5'),
-        Heading(name='RQ.SRS-015.S3.Disk.MergeTree.CollapsingMergeTree', level=4, num='4.4.7.6'),
-        Heading(name='RQ.SRS-015.S3.Disk.MergeTree.VersionedCollapsingMergeTree', level=4, num='4.4.7.7'),
-        Heading(name='S3 Zero Copy Replication', level=4, num='4.4.7.8'),
-        Heading(name='RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication', level=5, num='4.4.7.8.1'),
-        Heading(name='RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Default', level=5, num='4.4.7.8.2'),
-        Heading(name='RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Global', level=5, num='4.4.7.8.3'),
-        Heading(name='RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Metadata', level=5, num='4.4.7.8.4'),
-        Heading(name='RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Alter', level=5, num='4.4.7.8.5'),
-        Heading(name='RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Delete', level=5, num='4.4.7.8.6'),
-        Heading(name='RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DeleteAll', level=5, num='4.4.7.8.7'),
-        Heading(name='RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DataPreservedAfterMutation', level=5, num='4.4.7.8.8'),
-        Heading(name='RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DropReplica', level=5, num='4.4.7.8.9'),
-        Heading(name='RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.AddReplica', level=5, num='4.4.7.8.10'),
-        Heading(name='RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.NoDataDuplication', level=5, num='4.4.7.8.11'),
-        Heading(name='RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.TTL.Move', level=5, num='4.4.7.8.12'),
-        Heading(name='RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.TTL.Delete', level=5, num='4.4.7.8.13'),
-        Heading(name='Policy', level=2, num='4.5'),
-        Heading(name='RQ.SRS-015.S3.Policy.Syntax', level=3, num='4.5.1'),
-        Heading(name='RQ.SRS-015.S3.Policy.PerformTTLMoveOnInsert', level=3, num='4.5.2'),
-        Heading(name='RQ.SRS-015.S3.Policy.PerformTTLMoveOnInsert.Default', level=3, num='4.5.3'),
-        Heading(name='Table Function', level=2, num='4.6'),
-        Heading(name='RQ.SRS-015.S3.TableFunction.Syntax', level=3, num='4.6.1'),
-        Heading(name='RQ.SRS-015.S3.TableFunction.Path', level=3, num='4.6.2'),
-        Heading(name='RQ.SRS-015.S3.TableFunction.Credentials', level=3, num='4.6.3'),
-        Heading(name='RQ.SRS-015.S3.TableFunction.Credentials.Invalid', level=3, num='4.6.4'),
-        Heading(name='RQ.SRS-015.S3.TableFunction.Path.Wildcard', level=3, num='4.6.5'),
-        Heading(name='RQ.SRS-015.S3.TableFunction.ReadFromFile', level=3, num='4.6.6'),
-        Heading(name='RQ.SRS-015.S3.TableFunction.Redirect', level=3, num='4.6.7'),
-        Heading(name='RQ.SRS-015.S3.TableFunction.Format', level=3, num='4.6.8'),
-        Heading(name='RQ.SRS-015.S3.TableFunction.Structure', level=3, num='4.6.9'),
-        Heading(name='RQ.SRS-015.S3.TableFunction.Compression', level=3, num='4.6.10'),
-        Heading(name='RQ.SRS-015.S3.TableFunction.Compression.Auto', level=3, num='4.6.11'),
-        Heading(name='RQ.SRS-015.S3.TableFunction.S3Cluster', level=3, num='4.6.12'),
-        Heading(name='MinIO', level=2, num='4.7'),
-        Heading(name='RQ.SRS-015.S3.MinIO.Disk.Configuration', level=3, num='4.7.1'),
-        Heading(name='RQ.SRS-015.S3.MinIO.TableFunction', level=3, num='4.7.2'),
-        Heading(name='RQ.SRS-015.S3.MinIO.AllowS3ZeroCopyReplication', level=3, num='4.7.3'),
-        Heading(name='AWS', level=2, num='4.8'),
-        Heading(name='RQ.SRS-015.S3.AWS.Disk.Configuration', level=3, num='4.8.1'),
-        Heading(name='RQ.SRS-015.S3.AWS.TableFunction', level=3, num='4.8.2'),
-        Heading(name='RQ.SRS-015.S3.AWS.Disk.URL', level=3, num='4.8.3'),
-        Heading(name='RQ.SRS-015.S3.AWS.Disk.URL.Generic', level=3, num='4.8.4'),
-        Heading(name='RQ.SRS-015.S3.AWS.Disk.URL.Specific', level=3, num='4.8.5'),
-        Heading(name='RQ.SRS-015.S3.AWS.EC2.Disk', level=3, num='4.8.6'),
-        Heading(name='RQ.SRS-015.S3.AWS.EC2.TableFunction', level=3, num='4.8.7'),
-        Heading(name='RQ.SRS-015.S3.AWS.EC2.Endpoints', level=3, num='4.8.8'),
-        Heading(name='RQ.SRS-015.S3.AWS.AllowS3ZeroCopyReplication', level=3, num='4.8.9'),
-        Heading(name='RQ.SRS-015.S3.AWS.SSEC', level=3, num='4.8.10'),
-        Heading(name='GCS', level=2, num='4.9'),
-        Heading(name='RQ.SRS-015.S3.GCS.Disk.Configuration', level=3, num='4.9.1'),
-        Heading(name='RQ.SRS-015.S3.GCS.TableFunction', level=3, num='4.9.2'),
-        Heading(name='RQ.SRS-015.S3.GCS.AllowS3ZeroCopyReplication', level=3, num='4.9.3'),
-        Heading(name='Settings', level=2, num='4.10'),
-        Heading(name='RQ.SRS-015.S3.Settings.MaxThreads', level=3, num='4.10.1'),
-        Heading(name='RQ.SRS-015.S3.Settings.MaxDownloadThreads', level=3, num='4.10.2'),
-        Heading(name='RQ.SRS-015.S3.Settings.MaxDownloadBufferSize', level=3, num='4.10.3'),
-        Heading(name='RQ.SRS-015.S3.Settings.PartitionBy', level=3, num='4.10.4'),
-        Heading(name='RQ.SRS-015.S3.Settings.S3UploadPartSizeMultiplyFactor', level=3, num='4.10.5'),
-        Heading(name='RQ.SRS-015.S3.Settings.S3UploadPartSizeMultiplyPartsCountThreshold', level=3, num='4.10.6'),
-        Heading(name='Performance', level=2, num='4.11'),
-        Heading(name='RQ.SRS-015.S3.Performance.PerformTTLMoveOnInsert', level=3, num='4.11.1'),
-        Heading(name='RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Select', level=3, num='4.11.2'),
-        Heading(name='RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Insert', level=3, num='4.11.3'),
-        Heading(name='RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Alter', level=3, num='4.11.4'),
-        Heading(name='References', level=1, num='5'),
+        Heading(name="Revision History", level=1, num="1"),
+        Heading(name="Introduction", level=1, num="2"),
+        Heading(name="Terminology", level=1, num="3"),
+        Heading(name="Requirements", level=1, num="4"),
+        Heading(name="Generic", level=2, num="4.1"),
+        Heading(name="RQ.SRS-015.S3", level=3, num="4.1.1"),
+        Heading(name="RQ.SRS-015.S3.Import", level=3, num="4.1.2"),
+        Heading(name="RQ.SRS-015.S3.Export", level=3, num="4.1.3"),
+        Heading(name="RQ.SRS-015.S3.Disk", level=3, num="4.1.4"),
+        Heading(name="RQ.SRS-015.S3.Policy", level=3, num="4.1.5"),
+        Heading(name="RQ.SRS-015.S3.TableFunction", level=3, num="4.1.6"),
+        Heading(name="RQ.SRS-015.S3.DataParts", level=3, num="4.1.7"),
+        Heading(name="RQ.SRS-015.S3.Security.Encryption", level=3, num="4.1.8"),
+        Heading(name="RQ.SRS-015.S3.RemoteHostFilter", level=3, num="4.1.9"),
+        Heading(name="Backup", level=3, num="4.1.10"),
+        Heading(name="MinIO Backup", level=4, num="4.1.10.1"),
+        Heading(name="RQ.SRS-015.S3.Backup.MinIOBackup", level=5, num="4.1.10.1.1"),
+        Heading(name="AWS S3 Backup", level=4, num="4.1.10.2"),
+        Heading(name="RQ.SRS-015.S3.Backup.AWSS3Backup", level=5, num="4.1.10.2.1"),
+        Heading(name="GCS Backup", level=4, num="4.1.10.3"),
+        Heading(name="RQ.SRS-015.S3.Backup.GCSBackup", level=5, num="4.1.10.3.1"),
+        Heading(name="Storage Policies", level=4, num="4.1.10.4"),
+        Heading(name="RQ.SRS-015.S3.Backup.StoragePolicies", level=5, num="4.1.10.4.1"),
+        Heading(name="Alter Freeze", level=4, num="4.1.10.5"),
+        Heading(name="RQ.SRS-015.S3.Backup.AlterFreeze", level=5, num="4.1.10.5.1"),
+        Heading(name="Alter Detach", level=4, num="4.1.10.6"),
+        Heading(name="RQ.SRS-015.S3.Backup.AlterDetach", level=5, num="4.1.10.6.1"),
+        Heading(name="Alter Attach", level=4, num="4.1.10.7"),
+        Heading(name="RQ.SRS-015.S3.Backup.AlterAttach", level=5, num="4.1.10.7.1"),
+        Heading(name="Metadata", level=3, num="4.1.11"),
+        Heading(name="RQ.SRS-015.S3.Metadata", level=4, num="4.1.11.1"),
+        Heading(name="Revisions", level=4, num="4.1.11.2"),
+        Heading(name="RQ.SRS-015.S3.Metadata.Revisions", level=5, num="4.1.11.2.1"),
+        Heading(name="Bad Backup Number", level=4, num="4.1.11.3"),
+        Heading(
+            name="RQ.SRS-015.S3.Metadata.BadBackupNumber", level=5, num="4.1.11.3.1"
         ),
+        Heading(name="Metadata Restore", level=3, num="4.1.12"),
+        Heading(name="Restore File", level=4, num="4.1.12.1"),
+        Heading(
+            name="RQ.SRS-0.5.S3.MetadataRestore.RestoreFile", level=5, num="4.1.12.1.1"
+        ),
+        Heading(name="Bad Restore File", level=4, num="4.1.12.2"),
+        Heading(
+            name="RQ.SRS-0.5.S3.MetadataRestore.BadRestoreFile",
+            level=5,
+            num="4.1.12.2.1",
+        ),
+        Heading(name="Huge Restore File", level=4, num="4.1.12.3"),
+        Heading(
+            name="RQ.SRS-0.5.S3.MetadataRestore.HugeRestoreFile",
+            level=5,
+            num="4.1.12.3.1",
+        ),
+        Heading(name="No Local Metadata", level=4, num="4.1.12.4"),
+        Heading(
+            name="RQ.SRS-015.S3.MetadataRestore.NoLocalMetadata",
+            level=5,
+            num="4.1.12.4.1",
+        ),
+        Heading(name="Bucket Path", level=4, num="4.1.12.5"),
+        Heading(
+            name="RQ.SRS-015.S3.MetadataRestore.BucketPath", level=5, num="4.1.12.5.1"
+        ),
+        Heading(name="Revision Restore", level=4, num="4.1.12.6"),
+        Heading(
+            name="RQ.SRS-015.S3.MetadataRestore.RevisionRestore",
+            level=5,
+            num="4.1.12.6.1",
+        ),
+        Heading(name="Mutations", level=4, num="4.1.12.7"),
+        Heading(
+            name="RQ.SRS-015.S3.MetadataRestore.Mutations", level=5, num="4.1.12.7.1"
+        ),
+        Heading(name="Parallel Mutations", level=4, num="4.1.12.8"),
+        Heading(
+            name="RQ.SRS-015.S3.MetadataRestore.ParallelMutations",
+            level=5,
+            num="4.1.12.8.1",
+        ),
+        Heading(name="Detached", level=4, num="4.1.12.9"),
+        Heading(
+            name="RQ.SRS-015.S3.MetadataRestore.Detached", level=5, num="4.1.12.9.1"
+        ),
+        Heading(name="RQ.SRS-015.S3.AWS", level=3, num="4.1.13"),
+        Heading(name="RQ.SRS-015.S3.MinIO", level=3, num="4.1.14"),
+        Heading(name="RQ.SRS-015.S3.GCS", level=3, num="4.1.15"),
+        Heading(name="Automatic Reconnects", level=3, num="4.1.16"),
+        Heading(name="RQ.SRS-015.S3.AutomaticReconnects.GCS", level=4, num="4.1.16.1"),
+        Heading(name="RQ.SRS-015.S3.AutomaticReconnects.AWS", level=4, num="4.1.16.2"),
+        Heading(
+            name="RQ.SRS-015.S3.AutomaticReconnects.MinIO", level=4, num="4.1.16.3"
+        ),
+        Heading(name="Users", level=2, num="4.2"),
+        Heading(
+            name="RQ.SRS-015.S3.User.Configuration.Cache.22.8.EnableFilesystemCache",
+            level=3,
+            num="4.2.1",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.User.Configuration.Cache.22.8.EnableFilesystemCacheOnWriteOperations",
+            level=3,
+            num="4.2.2",
+        ),
+        Heading(name="RQ.SRS-015.S3.FilesystemCacheLog.22.8", level=2, num="4.3"),
+        Heading(name="Disk", level=2, num="4.4"),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.AddingMoreStorageDevices", level=3, num="4.4.1"
+        ),
+        Heading(name="RQ.SRS-015.S3.Disk.Endpoints", level=3, num="4.4.2"),
+        Heading(name="RQ.SRS-015.S3.Disk.MultipleStorageDevices", level=3, num="4.4.3"),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.MultipleStorageDevices.NoChangesForQuerying",
+            level=3,
+            num="4.4.4",
+        ),
+        Heading(name="RQ.SRS-015.S3.Disk.Metadata", level=3, num="4.4.5"),
+        Heading(name="Disk Configuration", level=3, num="4.4.6"),
+        Heading(name="RQ.SRS-015.S3.Disk.Configuration", level=4, num="4.4.6.1"),
+        Heading(name="RQ.SRS-015.S3.Disk.Configuration.Syntax", level=4, num="4.4.6.2"),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.Invalid", level=4, num="4.4.6.3"
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.Changes.NoRestart",
+            level=4,
+            num="4.4.6.4",
+        ),
+        Heading(name="RQ.SRS-015.S3.Disk.Configuration.Access", level=4, num="4.4.6.5"),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.Access.Default",
+            level=4,
+            num="4.4.6.6",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.CacheEnabled", level=4, num="4.4.6.7"
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.CacheEnabled.Default",
+            level=4,
+            num="4.4.6.8",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.Cache.22.8", level=4, num="4.4.6.9"
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.CacheOnWriteOperations",
+            level=4,
+            num="4.4.6.10",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.DataCacheMaxSize",
+            level=4,
+            num="4.4.6.11",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.EnableCacheHitsThreshold",
+            level=4,
+            num="4.4.6.12",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.Cache.22.8.FileSystemQueryCacheLimit",
+            level=4,
+            num="4.4.6.13",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.CachePath", level=4, num="4.4.6.14"
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.CachePath.Conflict",
+            level=4,
+            num="4.4.6.15",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.MinBytesForSeek",
+            level=4,
+            num="4.4.6.16",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.MinBytesForSeek.Syntax",
+            level=4,
+            num="4.4.6.17",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.S3MaxSinglePartUploadSize",
+            level=4,
+            num="4.4.6.18",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.S3MaxSinglePartUploadSize.Syntax",
+            level=4,
+            num="4.4.6.19",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.Configuration.S3UseEnvironmentCredentials",
+            level=4,
+            num="4.4.6.20",
+        ),
+        Heading(name="MergeTree Engine Family", level=3, num="4.4.7"),
+        Heading(name="RQ.SRS-015.S3.Disk.MergeTree", level=4, num="4.4.7.1"),
+        Heading(name="RQ.SRS-015.S3.Disk.MergeTree.MergeTree", level=4, num="4.4.7.2"),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.MergeTree.ReplacingMergeTree",
+            level=4,
+            num="4.4.7.3",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.MergeTree.SummingMergeTree", level=4, num="4.4.7.4"
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.MergeTree.AggregatingMergeTree",
+            level=4,
+            num="4.4.7.5",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.MergeTree.CollapsingMergeTree",
+            level=4,
+            num="4.4.7.6",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.MergeTree.VersionedCollapsingMergeTree",
+            level=4,
+            num="4.4.7.7",
+        ),
+        Heading(name="S3 Zero Copy Replication", level=4, num="4.4.7.8"),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication",
+            level=5,
+            num="4.4.7.8.1",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Default",
+            level=5,
+            num="4.4.7.8.2",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Global",
+            level=5,
+            num="4.4.7.8.3",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Metadata",
+            level=5,
+            num="4.4.7.8.4",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Alter",
+            level=5,
+            num="4.4.7.8.5",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Delete",
+            level=5,
+            num="4.4.7.8.6",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DeleteAll",
+            level=5,
+            num="4.4.7.8.7",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DataPreservedAfterMutation",
+            level=5,
+            num="4.4.7.8.8",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DropReplica",
+            level=5,
+            num="4.4.7.8.9",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.AddReplica",
+            level=5,
+            num="4.4.7.8.10",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.NoDataDuplication",
+            level=5,
+            num="4.4.7.8.11",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.TTL.Move",
+            level=5,
+            num="4.4.7.8.12",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.TTL.Delete",
+            level=5,
+            num="4.4.7.8.13",
+        ),
+        Heading(name="Policy", level=2, num="4.5"),
+        Heading(name="RQ.SRS-015.S3.Policy.Syntax", level=3, num="4.5.1"),
+        Heading(
+            name="RQ.SRS-015.S3.Policy.PerformTTLMoveOnInsert", level=3, num="4.5.2"
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Policy.PerformTTLMoveOnInsert.Default",
+            level=3,
+            num="4.5.3",
+        ),
+        Heading(name="Table Function", level=2, num="4.6"),
+        Heading(name="RQ.SRS-015.S3.TableFunction.Syntax", level=3, num="4.6.1"),
+        Heading(name="RQ.SRS-015.S3.TableFunction.Path", level=3, num="4.6.2"),
+        Heading(name="RQ.SRS-015.S3.TableFunction.Credentials", level=3, num="4.6.3"),
+        Heading(
+            name="RQ.SRS-015.S3.TableFunction.Credentials.Invalid", level=3, num="4.6.4"
+        ),
+        Heading(name="RQ.SRS-015.S3.TableFunction.Path.Wildcard", level=3, num="4.6.5"),
+        Heading(name="RQ.SRS-015.S3.TableFunction.ReadFromFile", level=3, num="4.6.6"),
+        Heading(name="RQ.SRS-015.S3.TableFunction.Redirect", level=3, num="4.6.7"),
+        Heading(name="RQ.SRS-015.S3.TableFunction.Format", level=3, num="4.6.8"),
+        Heading(name="RQ.SRS-015.S3.TableFunction.Structure", level=3, num="4.6.9"),
+        Heading(name="RQ.SRS-015.S3.TableFunction.Compression", level=3, num="4.6.10"),
+        Heading(
+            name="RQ.SRS-015.S3.TableFunction.Compression.Auto", level=3, num="4.6.11"
+        ),
+        Heading(name="RQ.SRS-015.S3.TableFunction.S3Cluster", level=3, num="4.6.12"),
+        Heading(name="MinIO", level=2, num="4.7"),
+        Heading(name="RQ.SRS-015.S3.MinIO.Disk.Configuration", level=3, num="4.7.1"),
+        Heading(name="RQ.SRS-015.S3.MinIO.TableFunction", level=3, num="4.7.2"),
+        Heading(
+            name="RQ.SRS-015.S3.MinIO.AllowS3ZeroCopyReplication", level=3, num="4.7.3"
+        ),
+        Heading(name="AWS", level=2, num="4.8"),
+        Heading(name="RQ.SRS-015.S3.AWS.Disk.Configuration", level=3, num="4.8.1"),
+        Heading(name="RQ.SRS-015.S3.AWS.TableFunction", level=3, num="4.8.2"),
+        Heading(name="RQ.SRS-015.S3.AWS.Disk.URL", level=3, num="4.8.3"),
+        Heading(name="RQ.SRS-015.S3.AWS.Disk.URL.Generic", level=3, num="4.8.4"),
+        Heading(name="RQ.SRS-015.S3.AWS.Disk.URL.Specific", level=3, num="4.8.5"),
+        Heading(name="RQ.SRS-015.S3.AWS.EC2.Disk", level=3, num="4.8.6"),
+        Heading(name="RQ.SRS-015.S3.AWS.EC2.TableFunction", level=3, num="4.8.7"),
+        Heading(name="RQ.SRS-015.S3.AWS.EC2.Endpoints", level=3, num="4.8.8"),
+        Heading(
+            name="RQ.SRS-015.S3.AWS.AllowS3ZeroCopyReplication", level=3, num="4.8.9"
+        ),
+        Heading(name="RQ.SRS-015.S3.AWS.SSEC", level=3, num="4.8.10"),
+        Heading(name="GCS", level=2, num="4.9"),
+        Heading(name="RQ.SRS-015.S3.GCS.Disk.Configuration", level=3, num="4.9.1"),
+        Heading(name="RQ.SRS-015.S3.GCS.TableFunction", level=3, num="4.9.2"),
+        Heading(
+            name="RQ.SRS-015.S3.GCS.AllowS3ZeroCopyReplication", level=3, num="4.9.3"
+        ),
+        Heading(name="Settings", level=2, num="4.10"),
+        Heading(name="RQ.SRS-015.S3.Settings.MaxThreads", level=3, num="4.10.1"),
+        Heading(
+            name="RQ.SRS-015.S3.Settings.MaxDownloadThreads", level=3, num="4.10.2"
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Settings.MaxDownloadBufferSize", level=3, num="4.10.3"
+        ),
+        Heading(name="RQ.SRS-015.S3.Settings.PartitionBy", level=3, num="4.10.4"),
+        Heading(
+            name="RQ.SRS-015.S3.Settings.S3UploadPartSizeMultiplyFactor",
+            level=3,
+            num="4.10.5",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Settings.S3UploadPartSizeMultiplyPartsCountThreshold",
+            level=3,
+            num="4.10.6",
+        ),
+        Heading(name="Performance", level=2, num="4.11"),
+        Heading(
+            name="RQ.SRS-015.S3.Performance.PerformTTLMoveOnInsert",
+            level=3,
+            num="4.11.1",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Select",
+            level=3,
+            num="4.11.2",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Insert",
+            level=3,
+            num="4.11.3",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Performance.AllowS3ZeroCopyReplication.Alter",
+            level=3,
+            num="4.11.4",
+        ),
+        Heading(name="References", level=1, num="5"),
+    ),
     requirements=(
         RQ_SRS_015_S3,
         RQ_SRS_015_S3_Import,
@@ -2710,8 +2925,8 @@ SRS_015_ClickHouse_S3_External_Storage = Specification(
         RQ_SRS_015_S3_Performance_AllowS3ZeroCopyReplication_Select,
         RQ_SRS_015_S3_Performance_AllowS3ZeroCopyReplication_Insert,
         RQ_SRS_015_S3_Performance_AllowS3ZeroCopyReplication_Alter,
-        ),
-    content='''
+    ),
+    content="""
 # SRS-015 ClickHouse S3 External Storage
 # Software Requirements Specification
 
@@ -4041,5 +4256,5 @@ it is not set.
 [GitLab Repository]: https://gitlab.com/altinity-qa/documents/qa-srs015-clickhouse-s3-support/-/blob/master/QA_SRS_015_ClickHouse_S3_Support.md
 [Revision History]: https://gitlab.com/altinity-qa/documents/qa-srs015-clickhouse-s3-support/-/commits/master/QA_SRS_015_ClickHouse_S3_Support.md
 [S3]: https://en.wikipedia.org/wiki/Amazon_S3
-'''
+""",
 )
