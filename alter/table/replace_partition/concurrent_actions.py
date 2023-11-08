@@ -870,7 +870,10 @@ def feature(
     delay_after=None,
     validate=True,
 ):
-    """Check that it is possible to perform other actions at the same time as replace partitions is being triggered."""
+    """
+    Concurrently execute replace partition on a destination table with
+    different number of concurrent alter actions being executed in parallel.
+    """
     self.context.node = self.context.cluster.node(node)
     self.context.number_of_concurrent_queries = number_of_concurrent_queries
     self.context.number_of_partitions = number_of_partitions
