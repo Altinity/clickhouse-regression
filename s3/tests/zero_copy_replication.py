@@ -2148,7 +2148,7 @@ def consistency_during_double_mutation(self):
                 nodes[0].query(
                     f"ALTER TABLE {table_name} ADD COLUMN valueX String materialized value1"
                 )
-                
+
             with And("I delete a column on the second node"):
                 nodes[1].query(f"ALTER TABLE {table_name} DROP COLUMN value3")
 
