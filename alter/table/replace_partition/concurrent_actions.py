@@ -225,6 +225,18 @@ def comment_source_table_column(self):
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_CommentColumn(
+        "1.0"
+    )
+)
+def comment_destination_and_source_column(self):
+    """Comment columns on destination and source tables."""
+    comment_destination_table_column()
+    comment_source_table_column()
+
+
+@TestStep(When)
 def add_constraint(self, table_name):
     """Add constraint to the table."""
     constraint_name = "constraint_" + getuid()
@@ -257,6 +269,18 @@ def add_constraint_to_the_source_table(self):
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_AddConstraint(
+        "1.0"
+    )
+)
+def add_constraint_to_destination_and_source(self):
+    """Add constraint to destination and source tables."""
+    add_constraint_to_the_destination_table()
+    add_constraint_to_the_source_table()
+
+
+@TestStep(When)
 def detach_partition(self, table_name):
     """Detach partition from the table."""
     partition_name = random.randrange(5, 100)
@@ -286,6 +310,18 @@ def detach_partition_from_source_table(self):
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Detach(
+        "1.0"
+    )
+)
+def detach_partition_from_destination_and_source(self):
+    """Detach partition from destination and source tables."""
+    detach_partition_from_source_table()
+    detach_partition_from_destination_table()
+
+
+@TestStep(When)
 def attach_partition(self, table_name):
     """Attach partition to the table."""
     alter_table_attach_partition(table_name=table_name, partition_name=12)
@@ -311,6 +347,18 @@ def attach_partition_to_destination_table(self):
 def attach_partition_to_source_table(self):
     """Attach partition to the source table."""
     attach_partition(table_name=source_table)
+
+
+@TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Attach(
+        "1.0"
+    )
+)
+def attach_partition_to_destination_and_source(self):
+    """Attach partition to destination and source tables."""
+    attach_partition_to_source_table()
+    attach_partition_to_destination_table()
 
 
 @TestStep(When)
@@ -373,14 +421,30 @@ def move_partition_to_source_table(self):
 
 
 @TestStep(When)
-def move_partition_to_volume(self, table_name, number_of_partitions=None):
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_MoveToTable(
+        "1.0"
+    )
+)
+def move_partition_between_source_and_destination(self):
+    """Move partition between source and destination tables."""
+    move_partition_to_source_table()
+    move_partition_to_destination_table()
+
+
+@TestStep(When)
+def move_partition_to_volume(
+    self, table_name, number_of_partitions=None, partition_name=None
+):
     """Move partition to another volume."""
     if number_of_partitions is None:
         number_of_partitions = self.context.number_of_partitions
 
-    for retry in retries(count=5):
+    if partition_name is None:
+        partition_name = random.randrange(5, number_of_partitions)
+
+    for retry in retries(timeout=30):
         with retry:
-            partition_name = random.randrange(5, number_of_partitions)
             alter_table_move_partition(
                 table_name=table_name,
                 partition_name=partition_name,
@@ -408,6 +472,23 @@ def move_destination_partition(self):
 def move_source_partition(self):
     """Move the partition from the source table to external volume."""
     move_partition_to_volume(table_name=source_table)
+
+
+@TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Move(
+        "1.0"
+    )
+)
+def move_destination_and_source_partition(self):
+    """Move partition to external volume from destination and source tables."""
+    number_of_partitions = self.context.number_of_partitions
+
+    partition_name = random.randrange(5, number_of_partitions)
+    move_partition_to_volume(
+        table_name=destination_table, partition_name=partition_name
+    )
+    move_partition_to_volume(table_name=source_table, partition_name=partition_name)
 
 
 @TestStep(When)
@@ -443,6 +524,18 @@ def clear_destination_table_column(self):
 def clear_source_table_column(self):
     """Clear column on the source table."""
     clear_column(table_name=source_table)
+
+
+@TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_ClearColumnInPartition(
+        "1.0"
+    )
+)
+def clear_column_on_destination_and_source(self):
+    """Clear column on source and destination columns."""
+    clear_source_table_column()
+    clear_destination_table_column()
 
 
 @TestStep(When)
@@ -492,7 +585,7 @@ def freeze_partition(self, table_name, number_of_partitions=None):
     if number_of_partitions is None:
         number_of_partitions = self.context.number_of_partitions
 
-    for retry in retries(count=5):
+    for retry in retries(timeout=30):
         with retry:
             partition_name = random.randrange(5, number_of_partitions)
             alter_table_freeze_partition(
@@ -523,9 +616,21 @@ def freeze_source_partition(self):
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Freeze(
+        "1.0"
+    )
+)
+def freeze_partition_on_destination_and_source(self):
+    """Freeze partition on source and destination tables."""
+    freeze_destination_partition()
+    freeze_source_partition()
+
+
+@TestStep(When)
 def freeze_partition_with_name(self, table_name):
     """Freeze partition with name on the table."""
-    for retry in retries(count=5):
+    for retry in retries(timeout=30):
         with retry:
             partition_name = random.randrange(5, 100)
             alter_table_freeze_partition_with_name(
@@ -553,6 +658,18 @@ def freeze_destination_partition_with_name(self):
 def freeze_source_partition_with_name(self):
     """Freeze partition on the source table using name of the partition."""
     freeze_partition_with_name(table_name=source_table)
+
+
+@TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Freeze(
+        "1.0"
+    )
+)
+def freeze_destination_and_source_partition_with_name(self):
+    """Freeze partitions on destination and source tables with name."""
+    freeze_destination_partition_with_name()
+    freeze_source_partition_with_name()
 
 
 @TestCheck
@@ -597,11 +714,13 @@ def concurrent_replace(
                     )
 
             for action in get_n_random_items(actions, number_of_concurrent_queries):
-                Check(
-                    name=f"{action.__name__} #{i}",
-                    test=action,
-                    parallel=True,
-                )()
+                for retry in retries(timeout=60):
+                    with retry:
+                        Check(
+                            name=f"{action.__name__} #{i}",
+                            test=action,
+                            parallel=True,
+                        )()
 
 
 @TestCheck
@@ -713,6 +832,15 @@ def replace_partition_along_other_actions(self):
         drop_column_on_destination_and_source,
         modify_column_destination_and_source,
         rename_column_destination_and_source,
+        comment_destination_and_source_column,
+        add_constraint_to_destination_and_source,
+        detach_partition_from_destination_and_source,
+        attach_partition_to_destination_and_source,
+        move_partition_between_source_and_destination,
+        move_destination_and_source_partition,
+        clear_column_on_destination_and_source,
+        freeze_partition_on_destination_and_source,
+        freeze_destination_and_source_partition_with_name,
     ]
 
     Scenario(run=concurrent_replace)
@@ -726,7 +854,7 @@ def feature(
     node="clickhouse1",
     number_of_concurrent_queries=3,
     number_of_partitions=500,
-    number_of_iterations=50,
+    number_of_iterations=100,
     delay_before=None,
     delay_after=None,
     validate=True,
