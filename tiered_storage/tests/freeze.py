@@ -77,16 +77,16 @@ def scenario(self, cluster, node="clickhouse1"):
 
             with Then("shadow files (backups) should exist"):
                 node.command(
-                    "find /jbod1/shadow -name '*.mrk2' | grep '.*'", exitcode=0
+                    "find /jbod1/shadow -name '*mrk2' | grep '.*'", exitcode=0
                 )
                 if cluster.with_minio or cluster.with_s3amazon or cluster.with_s3gcs:
                     node.command(
-                        "find /var/lib/clickhouse/disks/external/shadow -name '*.mrk2' | grep '.*'",
+                        "find /var/lib/clickhouse/disks/external/shadow -name '*mrk2' | grep '.*'",
                         exitcode=0,
                     )
                 else:
                     node.command(
-                        "find /external/shadow -name '*.mrk2' | grep '.*'", exitcode=0
+                        "find /external/shadow -name '*mrk2' | grep '.*'", exitcode=0
                     )
     finally:
         with Finally("I remove any shadow files if any"):
