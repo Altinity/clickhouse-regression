@@ -96,7 +96,7 @@ def scenario(self, cluster, node="clickhouse1"):
 
                 with When("I try to modify storage policy setting"):
                     exitcode = 36
-                    message = "Exception: New storage policy `default` shall contain volumes of old one"
+                    message = "Exception: New storage policy `moving_jbod_with_external` shall contain volumes of the old storage policy `default`."
                     sql = "ALTER TABLE table_with_normal_policy MODIFY SETTING storage_policy='moving_jbod_with_external'"
                     node.query(sql, message, exitcode)
             finally:
