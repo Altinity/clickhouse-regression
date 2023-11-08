@@ -76,9 +76,7 @@ def scenario(self, cluster, node="clickhouse1"):
                 node.query("ALTER TABLE freezing_table FREEZE PARTITION 201903")
 
             with Then("shadow files (backups) should exist"):
-                node.command(
-                    "find /jbod1/shadow -name '*mrk2' | grep '.*'", exitcode=0
-                )
+                node.command("find /jbod1/shadow -name '*mrk2' | grep '.*'", exitcode=0)
                 if cluster.with_minio or cluster.with_s3amazon or cluster.with_s3gcs:
                     node.command(
                         "find /var/lib/clickhouse/disks/external/shadow -name '*mrk2' | grep '.*'",

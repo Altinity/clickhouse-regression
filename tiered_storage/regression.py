@@ -123,7 +123,7 @@ xfails = {
     ":/alter move/concurrent/concurrent alter move and select": [
         (Fail, "unstable test")
     ],
-    "/tiered storage/normal/query parser": [
+    ":/query parser": [
         (
             Fail,
             "Incorrect message https://github.com/ClickHouse/ClickHouse/pull/51854",
