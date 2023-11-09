@@ -2057,7 +2057,7 @@ def performance_alter(self):
         "1.0"
     ),
 )
-def chedk_refcount_after_mutation(self):
+def check_refcount_after_mutation(self):
     """Check that clickhouse correctly updates ref_count when updating metadata across replicas."""
     cluster = self.context.cluster
     node = current().context.node
