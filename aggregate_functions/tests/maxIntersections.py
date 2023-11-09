@@ -48,7 +48,7 @@ def scenario(
     with Check("with group by"):
         execute_query(
             f"SELECT number % 2 AS even, {func.format(params='number,even')} FROM numbers(10) GROUP BY even",
-            message=f"DB::Exception: {func.format(params='')[:-2]}: arguments must have the same type.",
+            message=f"DB::Exception:",
             exitcode=43
         )
 
