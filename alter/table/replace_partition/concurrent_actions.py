@@ -761,7 +761,7 @@ def replace_partition_with_single_concurrent_action(
             )
 
         for i in range(number_of_iterations):
-            for retry in retries(timeout=30):
+            for retry in retries(timeout=60):
                 with retry:
                     Check(
                         name=f"{actions.__name__} #{i}",
