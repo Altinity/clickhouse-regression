@@ -1,0 +1,120 @@
+_aggregate_functions_maxIntersectionsPosition_NULL_value_handling = r"""
+{"maxIntersectionsPosition(x, y)":0}
+"""
+
+_aggregate_functions_maxIntersectionsPosition_constant = r"""
+{"maxIntersectionsPosition(1, 1)":0}
+"""
+
+_aggregate_functions_maxIntersectionsPosition_datatypes_permutations_Float32_Float32 = r"""
+{"maxIntersectionsPosition(float32, float32)":0}
+"""
+
+_aggregate_functions_maxIntersectionsPosition_datatypes_permutations_Float64_Float64 = r"""
+{"maxIntersectionsPosition(float64, float64)":0}
+"""
+
+_aggregate_functions_maxIntersectionsPosition_datatypes_permutations_Int64_Int64 = r"""
+{"maxIntersectionsPosition(int64, int64)":"0"}
+"""
+
+_aggregate_functions_maxIntersectionsPosition_datatypes_permutations_LowCardinality_Float32__LowCardinality_Float32_ = r"""
+{"maxIntersectionsPosition(lowcardinality_float32_, lowcardinality_float32_)":0}
+"""
+
+_aggregate_functions_maxIntersectionsPosition_datatypes_permutations_LowCardinality_Float64__LowCardinality_Float64_ = r"""
+{"maxIntersectionsPosition(lowcardinality_float64_, lowcardinality_float64_)":0}
+"""
+
+_aggregate_functions_maxIntersectionsPosition_datatypes_permutations_LowCardinality_Int64__LowCardinality_Int64_ = r"""
+{"maxIntersectionsPosition(lowcardinality_int64_, lowcardinality_int64_)":"0"}
+"""
+
+_aggregate_functions_maxIntersectionsPosition_datatypes_permutations_LowCardinality_UInt64__LowCardinality_UInt64_ = r"""
+{"maxIntersectionsPosition(lowcardinality_uint64_, lowcardinality_uint64_)":"0"}
+"""
+
+_aggregate_functions_maxIntersectionsPosition_datatypes_permutations_Nullable_Float32__Nullable_Float32_ = r"""
+{"maxIntersectionsPosition(nullable_float32_, nullable_float32_)":0}
+"""
+
+_aggregate_functions_maxIntersectionsPosition_datatypes_permutations_Nullable_Float64__Nullable_Float64_ = r"""
+{"maxIntersectionsPosition(nullable_float64_, nullable_float64_)":0}
+"""
+
+_aggregate_functions_maxIntersectionsPosition_datatypes_permutations_Nullable_Int64__Nullable_Int64_ = r"""
+{"maxIntersectionsPosition(nullable_int64_, nullable_int64_)":"0"}
+"""
+
+_aggregate_functions_maxIntersectionsPosition_datatypes_permutations_Nullable_UInt64__Nullable_UInt64_ = r"""
+{"maxIntersectionsPosition(nullable_uint64_, nullable_uint64_)":"0"}
+"""
+
+_aggregate_functions_maxIntersectionsPosition_datatypes_permutations_UInt64_UInt64 = r"""
+{"maxIntersectionsPosition(uint64, uint64)":"0"}
+"""
+
+_aggregate_functions_maxIntersectionsPosition_example_1 = r"""
+{"maxIntersectionsPosition(y, x)":0.88}
+"""
+
+_aggregate_functions_maxIntersectionsPosition_example_2 = r"""
+{"maxIntersectionsPosition(x, y)":2}
+"""
+
+_aggregate_functions_maxIntersectionsPosition_inf___inf__nan__inf__inf = r"""
+{"maxIntersectionsPosition(x, y)":0}
+"""
+
+_aggregate_functions_maxIntersectionsPosition_inf___inf__nan__inf_inf = r"""
+{"maxIntersectionsPosition(x, y)":0}
+"""
+
+_aggregate_functions_maxIntersectionsPosition_inf___inf__nan__inf_nan = r"""
+{"maxIntersectionsPosition(x, y)":0}
+"""
+
+_aggregate_functions_maxIntersectionsPosition_inf___inf__nan_inf__inf = r"""
+{"maxIntersectionsPosition(x, y)":0}
+"""
+
+_aggregate_functions_maxIntersectionsPosition_inf___inf__nan_inf_inf = r"""
+{"maxIntersectionsPosition(x, y)":0}
+"""
+
+_aggregate_functions_maxIntersectionsPosition_inf___inf__nan_inf_nan = r"""
+{"maxIntersectionsPosition(x, y)":0}
+"""
+
+_aggregate_functions_maxIntersectionsPosition_inf___inf__nan_nan__inf = r"""
+{"maxIntersectionsPosition(x, y)":0}
+"""
+
+_aggregate_functions_maxIntersectionsPosition_inf___inf__nan_nan_inf = r"""
+{"maxIntersectionsPosition(x, y)":0}
+"""
+
+_aggregate_functions_maxIntersectionsPosition_inf___inf__nan_nan_nan = r"""
+{"maxIntersectionsPosition(x, y)":0}
+"""
+
+_aggregate_functions_maxIntersectionsPosition_return_type = r"""
+{"toTypeName(maxIntersectionsPosition(number, plus(number, 1)))":"UInt64"}
+"""
+
+_aggregate_functions_maxIntersectionsPosition_single_NULL_value = r"""
+{"maxIntersectionsPosition(x, y)":null}
+"""
+
+_aggregate_functions_maxIntersectionsPosition_single_row = r"""
+{"maxIntersectionsPosition(number, plus(number, 1))":"0"}
+"""
+
+_aggregate_functions_maxIntersectionsPosition_some_negative_values = r"""
+{"maxIntersectionsPosition(minus(number, 5), minus(number, 10))":"0"}
+"""
+
+_aggregate_functions_maxIntersectionsPosition_zero_rows = r"""
+{"maxIntersectionsPosition(number, number)":"0"}
+"""
+
