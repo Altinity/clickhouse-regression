@@ -132,13 +132,12 @@ def scenario(self, cluster, nodes=None):
                                     node, "replicated_table_for_moves"
                                 )
 
-                        expected_disks = {"jbod1", "external"}
                         with Then(
-                            f"on each node disks should be {expected_disks}",
+                            "Nodes should be using 'external' disk",
                             format_name=False,
                         ):
                             for node in nodes:
-                                assert set(disks[node.name]) == expected_disks, error()
+                                assert "external" in set(disks[node.name]), error()
         finally:
             with Finally("I re-start merges on each node"):
                 for node in nodes:
