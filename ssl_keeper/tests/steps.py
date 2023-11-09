@@ -417,15 +417,15 @@ def start_keepers(self, standalone_keeper_nodes=None, manual_cleanup=False):
             node = self.context.cluster.node(name)
             with When(f"I start {name}"):
                 with By("starting keeper process"):
-                    node.cmd("rm -rf /tmp/clickhouse-keeper.pid")
-                    node.cmd(
+                    node.command("rm -rf /tmp/clickhouse-keeper.pid")
+                    node.command(
                         "clickhouse keeper --config /etc/clickhouse-server/config.xml"
                         " --pidfile=/tmp/clickhouse-keeper.pid --daemon",
                         exitcode=0,
                     )
 
                 with And("checking that keeper pid file was created"):
-                    node.cmd(
+                    node.command(
                         "ls /tmp/clickhouse-keeper.pid",
                         exitcode=0,
                         message="/tmp/clickhouse-keeper.pid",
@@ -438,13 +438,13 @@ def start_keepers(self, standalone_keeper_nodes=None, manual_cleanup=False):
                     node = self.context.cluster.node(name)
                     with When(f"I stop {name}"):
                         with By("sending kill -TERM to keeper process"):
-                            if node.cmd("ls /tmp/clickhouse-keeper.pid", exitcode=0):
-                                pid = node.cmd(
+                            if node.command("ls /tmp/clickhouse-keeper.pid", exitcode=0):
+                                pid = node.command(
                                     "cat /tmp/clickhouse-keeper.pid"
                                 ).output.strip()
-                                node.cmd(f"kill -TERM {pid}", exitcode=0)
+                                node.command(f"kill -TERM {pid}", exitcode=0)
                         with And("checking pid does not exist"):
-                            retry(node.cmd, timeout=100, delay=1)(
+                            retry(node.command, timeout=100, delay=1)(
                                 f"ps {pid}", exitcode=1, steps=False
                             )
 
@@ -464,11 +464,11 @@ def stop_keepers(self, cluster_nodes=None):
         node = self.context.cluster.node(name)
         with When(f"I stop {name}"):
             with By("sending kill -TERM to keeper process"):
-                if node.cmd("ls /tmp/clickhouse-keeper.pid", exitcode=0):
-                    pid = node.cmd("cat /tmp/clickhouse-keeper.pid").output.strip()
-                    node.cmd(f"kill -TERM {pid}", exitcode=0)
+                if node.command("ls /tmp/clickhouse-keeper.pid", exitcode=0):
+                    pid = node.command("cat /tmp/clickhouse-keeper.pid").output.strip()
+                    node.command(f"kill -TERM {pid}", exitcode=0)
             with And("checking pid does not exist"):
-                retry(node.cmd, timeout=100, delay=1)(
+                retry(node.command, timeout=100, delay=1)(
                     f"ps {pid}", exitcode=1, steps=False
                 )
 
@@ -507,7 +507,7 @@ def clean_coordination_on_all_nodes(self, cluster_nodes=None):
     )
     for name in cluster_nodes:
         node = self.context.cluster.node(name)
-        node.cmd(
+        node.command(
             f"rm -rf /var/lib/clickhouse/coordination/snapshots "
             f"&& rm -rf /var/lib/clickhouse/coordination/log "
         )
@@ -689,7 +689,7 @@ def start_mixed_keeper(
 
         with And(f"I check that ruok returns imok"):
             for name in control_nodes:
-                retry(cluster.node("bash-tools").cmd, timeout=100, delay=1)(
+                retry(cluster.node("bash-tools").command, timeout=100, delay=1)(
                     f"echo ruok | nc {name} 2181",
                     exitcode=0,
                     message="imok",
@@ -812,7 +812,7 @@ def connect_zookeeper(self):
     finally:
         with Finally("I clean up"):
             with By("Clear Zookeeper meta information and keeper configs"):
-                self.context.cluster.node("zookeeper1").cmd("rm -rf ../share/")
+                self.context.cluster.node("zookeeper1").command("rm -rf ../share/")
 
 
 @TestStep(Given)
@@ -986,7 +986,7 @@ def openssl_check_step(self, node=None, port="9440"):
     if node is None:
         node = self.context.cluster.node("clickhouse1")
 
-    node.cmd(
+    node.command(
         f"openssl s_client -connect clickhouse1:{port}",
         no_checks=True,
     )

@@ -70,8 +70,8 @@ def migrate_from_zookeeper(self, use_standalone_keeper_server):
             --zookeeper-snapshots-dir /var/lib/zookeeper1/data/version-2
             --output-dir /var/lib/clickhouse/coordination/""",
         ):
-            cluster.node("clickhouse1").cmd(f"mkdir -p /share/{uid}/snapshots")
-            cluster.node("clickhouse1").cmd(
+            cluster.node("clickhouse1").command(f"mkdir -p /share/{uid}/snapshots")
+            cluster.node("clickhouse1").command(
                 f"clickhouse keeper-converter"
                 f" --zookeeper-logs-dir /share/zookeeper3/datalog/version-2 --zookeeper-snapshots-dir "
                 f"/share/zookeeper3/data/version-2 --output-dir /share/{uid}/snapshots",
@@ -87,7 +87,7 @@ def migrate_from_zookeeper(self, use_standalone_keeper_server):
             with Given("I copy configured snapshot to all Keeper nodes"):
                 for name in cluster.nodes["clickhouse"][9:12]:
                     node = cluster.node(name)
-                    node.cmd(
+                    node.command(
                         f"rm -rf /var/lib/clickhouse/coordination/snapshots "
                         f"&& rm -rf /var/lib/clickhouse/coordination/log && cp -r /share/{uid}/snapshots/ "
                         f"/var/lib/clickhouse/coordination"
@@ -124,7 +124,7 @@ def migrate_from_zookeeper(self, use_standalone_keeper_server):
             with Given("I copy configured snapshot to all server Keeper nodes"):
                 for name in self.context.cluster.nodes["clickhouse"][6:9]:
                     node = self.context.cluster.node(name)
-                    node.cmd(
+                    node.command(
                         f"rm -rf /var/lib/clickhouse/coordination/snapshots "
                         f"&& rm -rf /var/lib/clickhouse/coordination/log && cp -r /share/{uid}/snapshots/ "
                         f"/var/lib/clickhouse/coordination"
@@ -170,7 +170,7 @@ def migrate_from_zookeeper(self, use_standalone_keeper_server):
     finally:
         with Finally("I clean up"):
             with By("Clear Zookeeper meta information", flags=TE):
-                self.context.cluster.node("clickhouse1").cmd(f"rm -rf /share/")
+                self.context.cluster.node("clickhouse1").command(f"rm -rf /share/")
                 clean_coordination_on_all_nodes()
 
             with By("I restart ZooKeepers back up", flags=TE):
@@ -207,7 +207,7 @@ def migrate_from_zookeeper(self, use_standalone_keeper_server):
                 stop_all_zookeepers()
 
             with By("Clear Zookeeper meta information", flags=TE):
-                self.context.cluster.node("clickhouse1").cmd(f"rm -rf /share/")
+                self.context.cluster.node("clickhouse1").command(f"rm -rf /share/")
                 clean_coordination_on_all_nodes()
 
             with By("I restart ZooKeepers back up", flags=TE):

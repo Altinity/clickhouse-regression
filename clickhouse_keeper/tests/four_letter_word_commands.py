@@ -11,7 +11,7 @@ def four_letter_word_commands(
     cluster = self.context.cluster
     try:
         with Given(f"I check that {four_letter_word_command} returns {output}"):
-            retry(cluster.node("bash-tools").cmd, timeout=100, delay=1)(
+            retry(cluster.node("bash-tools").command, timeout=100, delay=1)(
                 f"echo {four_letter_word_command} | nc {node_name} 2181",
                 exitcode=0,
                 message=f"{output}",

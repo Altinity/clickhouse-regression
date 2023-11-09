@@ -22,8 +22,8 @@ def snapshot(self):
 
     with Given("I check --zookeeper-snapshots-dir option work correct"):
         message = "Magic deserialized, looks OK"
-        self.context.cluster.node("clickhouse1").cmd(f"mkdir -p /share/{uid}/snapshots")
-        self.context.cluster.node("clickhouse1").cmd(
+        self.context.cluster.node("clickhouse1").command(f"mkdir -p /share/{uid}/snapshots")
+        self.context.cluster.node("clickhouse1").command(
             f"clickhouse keeper-converter"
             f" --zookeeper-logs-dir /share/zookeeper3/datalog/version-2"
             f" --zookeeper-snapshots-dir "
@@ -53,8 +53,8 @@ def snapshot_invalid_dir(self):
 
     with Given("I check --zookeeper-snapshots-dir option work correct"):
         message = "No such file or directory"
-        self.context.cluster.node("clickhouse1").cmd(f"mkdir -p /share/{uid}/snapshots")
-        self.context.cluster.node("clickhouse1").cmd(
+        self.context.cluster.node("clickhouse1").command(f"mkdir -p /share/{uid}/snapshots")
+        self.context.cluster.node("clickhouse1").command(
             f"clickhouse keeper-converter"
             f" --zookeeper-logs-dir /share/zookeeper3/datalog/version-2"
             f" --zookeeper-snapshots-dir /share/notexists"
@@ -81,8 +81,8 @@ def logs(self):
 
     with Given("I check --zookeeper-logs-dir option work correct"):
         message = "Header looks OK"
-        self.context.cluster.node("clickhouse1").cmd(f"mkdir -p /share/{uid}/snapshots")
-        self.context.cluster.node("clickhouse1").cmd(
+        self.context.cluster.node("clickhouse1").command(f"mkdir -p /share/{uid}/snapshots")
+        self.context.cluster.node("clickhouse1").command(
             f"clickhouse keeper-converter"
             f" --zookeeper-logs-dir /share/zookeeper3/datalog/version-2"
             f" --zookeeper-snapshots-dir "
@@ -110,8 +110,8 @@ def logs_invalid_dir(self):
 
     with Given("I check --zookeeper-logs-dir option work correct"):
         message = "No such file or directory"
-        self.context.cluster.node("clickhouse1").cmd(f"mkdir -p /share/{uid}/snapshots")
-        self.context.cluster.node("clickhouse1").cmd(
+        self.context.cluster.node("clickhouse1").command(f"mkdir -p /share/{uid}/snapshots")
+        self.context.cluster.node("clickhouse1").command(
             f"clickhouse keeper-converter"
             f" --zookeeper-logs-dir /share/notexists"
             f" --zookeeper-snapshots-dir "
@@ -143,8 +143,8 @@ def output_dir(self):
             if check_clickhouse_version("<23.8")(self)
             else 'Snapshot serialized to path:"/share'
         )
-        self.context.cluster.node("clickhouse1").cmd(f"mkdir -p /share/{uid}/snapshots")
-        self.context.cluster.node("clickhouse1").cmd(
+        self.context.cluster.node("clickhouse1").command(f"mkdir -p /share/{uid}/snapshots")
+        self.context.cluster.node("clickhouse1").command(
             f"clickhouse keeper-converter"
             f" --zookeeper-logs-dir /share/zookeeper3/datalog/version-2"
             f" --zookeeper-snapshots-dir "
@@ -169,7 +169,7 @@ def output_dir_invalid(self):
 
     with Given("I check --output-dir option work correct"):
         message = "No such file or directory"
-        self.context.cluster.node("clickhouse1").cmd(
+        self.context.cluster.node("clickhouse1").command(
             f"clickhouse keeper-converter"
             f" --zookeeper-logs-dir /share/zookeeper3/datalog/version-2"
             f" --zookeeper-snapshots-dir "
@@ -199,7 +199,7 @@ def missing_arg_values(self):
 
     with Given("I check error message when missing arg values inputted"):
         message = "std::exception. Code: 1001, type:"
-        self.context.cluster.node("clickhouse1").cmd(
+        self.context.cluster.node("clickhouse1").command(
             f"clickhouse keeper-converter " f"--zookeeper-snapshots-dir smth wrong",
             exitcode=233,
             message=message,
@@ -219,10 +219,10 @@ def help_option(self, node=None):
     )
 
     with When("using -h"):
-        node.cmd("clickhouse keeper-converter -h", exitcode=exitcode, message=message)
+        node.command("clickhouse keeper-converter -h", exitcode=exitcode, message=message)
 
     with When("using --help"):
-        node.cmd(
+        node.command(
             "clickhouse keeper-converter --help", exitcode=exitcode, message=message
         )
 

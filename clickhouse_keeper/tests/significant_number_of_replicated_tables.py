@@ -43,7 +43,7 @@ def mixed_keepers_3(self, number_of_tables=100):
     finally:
         with Finally("I clean up"):
             clean_coordination_on_all_nodes()
-            self.context.cluster.node("clickhouse1").cmd(f"rm -rf /share/")
+            self.context.cluster.node("clickhouse1").command(f"rm -rf /share/")
 
 
 @TestScenario
@@ -82,7 +82,7 @@ def zookeepers_3(self, number_of_tables=100):
     finally:
         with Finally("I clean up files"):
             clean_coordination_on_all_nodes()
-            self.context.cluster.node("clickhouse1").cmd(f"rm -rf /share/")
+            self.context.cluster.node("clickhouse1").command(f"rm -rf /share/")
 
 
 @TestFeature
