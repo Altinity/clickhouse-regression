@@ -747,23 +747,23 @@ def replace_partition_with_single_concurrent_action(
         number_of_iterations = self.context.number_of_iterations
 
     partition_to_replace = random.randrange(1, number_of_partitions)
-    for action in actions:
-        for retry in retries(timeout=30):
-            with retry:
-                Check(
-                    name=f"replace partition on the destination table",
-                    test=replace_partition_and_validate_data,
-                    parallel=True,
-                )(
-                    destination_table=destination_table,
-                    source_table=source_table,
-                    partition_to_replace=partition_to_replace,
-                )
+
+    for retry in retries(timeout=30):
+        with retry:
+            Check(
+                name=f"replace partition on the destination table",
+                test=replace_partition_and_validate_data,
+                parallel=True,
+            )(
+                destination_table=destination_table,
+                source_table=source_table,
+                partition_to_replace=partition_to_replace,
+            )
 
         for i in range(number_of_iterations):
             Check(
-                name=f"{action.__name__} #{i}",
-                test=action,
+                name=f"{actions.__name__} #{i}",
+                test=actions,
                 parallel=True,
             )()
 
@@ -776,6 +776,9 @@ def concurrent_replace(
     number_of_partitions=None,
 ):
     """Concurrently run multiple actions along with replace partition."""
+    if number_of_partitions is None:
+        number_of_partitions = self.context.number_of_partitions
+
     with Given("I have two partitioned tables with the same structure"):
         create_two_tables_partitioned_by_column_with_data(
             destination_table=destination_table,
@@ -822,10 +825,14 @@ def one_replace_partition(self):
         freeze_source_partition_with_name,
     ]
 
-    Scenario(test=concurrent_replace,)(
-        actions=actions,
-        concurrent_scenario=replace_partition_with_single_concurrent_action,
-    )
+    for action in actions:
+        Scenario(
+            name=f"{action.__name__}".replace("_", " "),
+            test=concurrent_replace,
+        )(
+            actions=action,
+            concurrent_scenario=replace_partition_with_single_concurrent_action,
+        )
 
 
 @TestScenario
