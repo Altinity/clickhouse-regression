@@ -11,4 +11,6 @@ def clickhouse_local(
         node = self.context.cluster.node("clickhouse1")
 
     with When("I make clickhouse local query"):
-        node.command(f'TZ={timezone} clickhouse local -q  "{query}"', message=f"{message}")
+        node.command(
+            f'TZ={timezone} clickhouse local -q  "{query}"', message=f"{message}"
+        )

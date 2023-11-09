@@ -10,7 +10,11 @@ from aggregate_functions.tests.maxIntersections import scenario as checks
 
 @TestScenario
 @Name("maxIntersectionsPosition")
-@Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_MaxIntersectionsPosition("1.0"))
+@Requirements(
+    RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_MaxIntersectionsPosition(
+        "1.0"
+    )
+)
 def scenario(self, func="maxIntersectionsPosition({params})", table=None):
     """Check maxIntersectionsPosition aggregate function by using the same tests as for maxIntersections."""
     self.context.snapshot_id = get_snapshot_id()

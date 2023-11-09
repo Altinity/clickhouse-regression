@@ -75,11 +75,7 @@ def create_and_populate_table(
         node = current().context.node
     try:
         with By(f"creating table {name}"):
-            retry(
-                node.query,
-                timeout=100,
-                delay=5,
-            )(
+            retry(node.query, timeout=100, delay=5,)(
                 f"CREATE TABLE {name} "
                 f"{' ON CLUSTER {cluster_name}'.format(cluster_name=cluster_name) if cluster_name is not None else ''}"
                 f"(id Int64, x Int64, {extra_table_col})"
