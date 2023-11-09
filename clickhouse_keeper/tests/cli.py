@@ -47,7 +47,9 @@ def config(self, node=None):
         node.command("clickhouse keeper -C", exitcode=exitcode, message=message)
 
     with When("using --config-file"):
-        node.command("clickhouse keeper --config-file", exitcode=exitcode, message=message)
+        node.command(
+            "clickhouse keeper --config-file", exitcode=exitcode, message=message
+        )
 
 
 @TestScenario
@@ -74,7 +76,9 @@ def daemon(self, node=None):
             with When(f"I stop stop keeper process"):
                 with By("sending kill -TERM to keeper process"):
                     if node.command("ls /tmp/clickhouse-keeper.pid", exitcode=0):
-                        pid = node.command("cat /tmp/clickhouse-keeper.pid").output.strip()
+                        pid = node.command(
+                            "cat /tmp/clickhouse-keeper.pid"
+                        ).output.strip()
                         node.command(f"kill -TERM {pid}", exitcode=0)
                 with And("checking pid does not exist"):
                     retry(node.command, timeout=100, delay=1)(

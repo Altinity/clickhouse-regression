@@ -173,7 +173,9 @@ def kerberos_and_nonkerberos(self):
                 tasks.append(
                     pool.submit(helper, (ch_nodes[1].command, False))
                 )  # non-kerberos
-                tasks.append(pool.submit(helper, (ch_nodes[2].command, True)))  # kerberos
+                tasks.append(
+                    pool.submit(helper, (ch_nodes[2].command, True))
+                )  # kerberos
 
             with Then(f"I expect have auth failure"):
                 assert tasks[1].result(timeout=300).output == "kerberos_user", error()

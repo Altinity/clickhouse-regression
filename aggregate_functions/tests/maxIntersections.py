@@ -19,7 +19,9 @@ def datatype(self, func, table, col1_name, col2_name):
 
 @TestScenario
 @Name("maxIntersections")
-@Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_MaxIntersections("1.0"))
+@Requirements(
+    RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_MaxIntersections("1.0")
+)
 def scenario(
     self,
     func="maxIntersections({params})",
@@ -49,7 +51,7 @@ def scenario(
         execute_query(
             f"SELECT number % 2 AS even, {func.format(params='number,even')} FROM numbers(10) GROUP BY even",
             message=f"DB::Exception:",
-            exitcode=43
+            exitcode=43,
         )
 
     with Check("some negative values"):

@@ -822,9 +822,7 @@ def one_replace_partition(self):
         freeze_source_partition_with_name,
     ]
 
-    Scenario(
-        test=concurrent_replace,
-    )(
+    Scenario(test=concurrent_replace,)(
         actions=actions,
         concurrent_scenario=replace_partition_with_single_concurrent_action,
     )

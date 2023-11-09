@@ -438,7 +438,9 @@ def start_keepers(self, standalone_keeper_nodes=None, manual_cleanup=False):
                     node = self.context.cluster.node(name)
                     with When(f"I stop {name}"):
                         with By("sending kill -TERM to keeper process"):
-                            if node.command("ls /tmp/clickhouse-keeper.pid", exitcode=0):
+                            if node.command(
+                                "ls /tmp/clickhouse-keeper.pid", exitcode=0
+                            ):
                                 pid = node.command(
                                     "cat /tmp/clickhouse-keeper.pid"
                                 ).output.strip()

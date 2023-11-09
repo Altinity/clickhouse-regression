@@ -22,7 +22,9 @@ def snapshot(self):
 
     with Given("I check --zookeeper-snapshots-dir option work correct"):
         message = "Magic deserialized, looks OK"
-        self.context.cluster.node("clickhouse1").command(f"mkdir -p /share/{uid}/snapshots")
+        self.context.cluster.node("clickhouse1").command(
+            f"mkdir -p /share/{uid}/snapshots"
+        )
         self.context.cluster.node("clickhouse1").command(
             f"clickhouse keeper-converter"
             f" --zookeeper-logs-dir /share/zookeeper3/datalog/version-2"
@@ -53,7 +55,9 @@ def snapshot_invalid_dir(self):
 
     with Given("I check --zookeeper-snapshots-dir option work correct"):
         message = "No such file or directory"
-        self.context.cluster.node("clickhouse1").command(f"mkdir -p /share/{uid}/snapshots")
+        self.context.cluster.node("clickhouse1").command(
+            f"mkdir -p /share/{uid}/snapshots"
+        )
         self.context.cluster.node("clickhouse1").command(
             f"clickhouse keeper-converter"
             f" --zookeeper-logs-dir /share/zookeeper3/datalog/version-2"
@@ -81,7 +85,9 @@ def logs(self):
 
     with Given("I check --zookeeper-logs-dir option work correct"):
         message = "Header looks OK"
-        self.context.cluster.node("clickhouse1").command(f"mkdir -p /share/{uid}/snapshots")
+        self.context.cluster.node("clickhouse1").command(
+            f"mkdir -p /share/{uid}/snapshots"
+        )
         self.context.cluster.node("clickhouse1").command(
             f"clickhouse keeper-converter"
             f" --zookeeper-logs-dir /share/zookeeper3/datalog/version-2"
@@ -110,7 +116,9 @@ def logs_invalid_dir(self):
 
     with Given("I check --zookeeper-logs-dir option work correct"):
         message = "No such file or directory"
-        self.context.cluster.node("clickhouse1").command(f"mkdir -p /share/{uid}/snapshots")
+        self.context.cluster.node("clickhouse1").command(
+            f"mkdir -p /share/{uid}/snapshots"
+        )
         self.context.cluster.node("clickhouse1").command(
             f"clickhouse keeper-converter"
             f" --zookeeper-logs-dir /share/notexists"
@@ -143,7 +151,9 @@ def output_dir(self):
             if check_clickhouse_version("<23.8")(self)
             else 'Snapshot serialized to path:"/share'
         )
-        self.context.cluster.node("clickhouse1").command(f"mkdir -p /share/{uid}/snapshots")
+        self.context.cluster.node("clickhouse1").command(
+            f"mkdir -p /share/{uid}/snapshots"
+        )
         self.context.cluster.node("clickhouse1").command(
             f"clickhouse keeper-converter"
             f" --zookeeper-logs-dir /share/zookeeper3/datalog/version-2"
@@ -219,7 +229,9 @@ def help_option(self, node=None):
     )
 
     with When("using -h"):
-        node.command("clickhouse keeper-converter -h", exitcode=exitcode, message=message)
+        node.command(
+            "clickhouse keeper-converter -h", exitcode=exitcode, message=message
+        )
 
     with When("using --help"):
         node.command(
