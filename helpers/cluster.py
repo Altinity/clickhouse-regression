@@ -1361,6 +1361,7 @@ class Cluster(object):
         bash=None,
         no_checks=False,
         use_error=True,
+        shell_command="bash --noediting",
         *args,
         **kwargs,
     ):
@@ -1376,7 +1377,7 @@ class Cluster(object):
             "executing command", description=command, format_description=False
         ) if steps else NullStep():
             if bash is None:
-                bash = self.bash(node)
+                bash = self.bash(node, command=shell_command)
             try:
                 r = bash(command, *args, **kwargs)
             except ExpectTimeoutError:

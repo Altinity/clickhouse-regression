@@ -29,7 +29,7 @@ def fips_build_check(self, node=None):
 
     if version.endswith('altinityfips"'):
         with Then("I check that in logs that Fips mode is enabled"):
-            node.cmd(
+            node.command(
                 "grep 'FIPS mode' /var/log/clickhouse-server/clickhouse-server.log",
                 message="<Information> Application: Starting in \x1b[01;31m\x1b[KFIPS mode\x1b[m\x1b[K, KAT test result: 1",
             )

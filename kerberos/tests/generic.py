@@ -31,7 +31,7 @@ def xml_configured_user(self):
         create_server_principal(node=ch_nodes[0])
 
     with When("I attempt to authenticate"):
-        r = ch_nodes[2].cmd(test_select_query(node=ch_nodes[0]))
+        r = ch_nodes[2].command(test_select_query(node=ch_nodes[0]))
 
     with Then(f"I expect 'kerberos_user'"):
         assert r.output == "kerberos_user", error()
@@ -55,7 +55,7 @@ def rbac_configured_user(self):
         )
 
     with When("I attempt to authenticate"):
-        r = ch_nodes[2].cmd(test_select_query(node=ch_nodes[0]))
+        r = ch_nodes[2].command(test_select_query(node=ch_nodes[0]))
 
     with Then("I restore server original state"):
         ch_nodes[0].query("DROP USER krb_rbac")
@@ -82,18 +82,18 @@ def invalid_server_ticket(self):
         self.context.krb_server.stop()
 
     with When("I attempt to authenticate as kerberos_user"):
-        r = ch_nodes[2].cmd(test_select_query(node=ch_nodes[0]))
+        r = ch_nodes[2].command(test_select_query(node=ch_nodes[0]))
 
     with Then("I start kerberos server again"):
         self.context.krb_server.start()
-        ch_nodes[2].cmd("kdestroy")
+        ch_nodes[2].command("kdestroy")
         attempts = 0
         while attempts < 20:
             attempts += 1
             kinit_no_keytab(node=ch_nodes[2])
             create_server_principal(node=ch_nodes[0])
             if (
-                ch_nodes[2].cmd(test_select_query(node=ch_nodes[0])).output
+                ch_nodes[2].command(test_select_query(node=ch_nodes[0])).output
                 == "kerberos_user"
             ):
                 break
@@ -101,7 +101,7 @@ def invalid_server_ticket(self):
             debug(test_select_query(node=ch_nodes[0]))
         else:
             assert False, error()
-        ch_nodes[2].cmd("kdestroy")
+        ch_nodes[2].command("kdestroy")
 
     with And("I expect the user to be default"):
         assert r.output == "default", error()
@@ -125,26 +125,26 @@ def invalid_client_ticket(self):
         time.sleep(10)
 
     with When("I attempt to authenticate as kerberos_user"):
-        r = ch_nodes[2].cmd(test_select_query(node=ch_nodes[0]))
+        r = ch_nodes[2].command(test_select_query(node=ch_nodes[0]))
 
     with Then("I expect the user to be default"):
         assert r.output == "default", error()
 
     with Finally(""):
         try:
-            retry(ch_nodes[2].cmd, timeout=30, delay=1)(
+            retry(ch_nodes[2].command, timeout=30, delay=1)(
                 f"echo pwd | kinit -l 10:00 kerberos_user", exitcode=0
             )
 
             for attempt in retries(timeout=30, delay=1):
                 with attempt:
                     if (
-                        ch_nodes[2].cmd(test_select_query(node=ch_nodes[0])).output
+                        ch_nodes[2].command(test_select_query(node=ch_nodes[0])).output
                         == "kerberos_user"
                     ):
                         break
         finally:
-            ch_nodes[2].cmd("kdestroy")
+            ch_nodes[2].command("kdestroy")
 
 
 @TestCase
@@ -162,33 +162,33 @@ def kerberos_unreachable_valid_tickets(self):
         create_server_principal(node=ch_nodes[0])
 
     with And("make sure server obtained ticket"):
-        ch_nodes[2].cmd(test_select_query(node=ch_nodes[0]))
+        ch_nodes[2].command(test_select_query(node=ch_nodes[0]))
 
     with And("I kill kerberos-server"):
         self.context.krb_server.stop()
 
     with When("I attempt to authenticate as kerberos_user"):
-        r = ch_nodes[2].cmd(test_select_query(node=ch_nodes[0]))
+        r = ch_nodes[2].command(test_select_query(node=ch_nodes[0]))
 
     with Then("I expect the user to be default"):
         assert r.output == "kerberos_user", error()
 
     with Finally("I start kerberos server again"):
         self.context.krb_server.start()
-        ch_nodes[2].cmd("kdestroy")
+        ch_nodes[2].command("kdestroy")
         attempts = 0
         while attempts < 20:
             attempts += 1
             kinit_no_keytab(node=ch_nodes[2])
             if (
-                ch_nodes[2].cmd(test_select_query(node=ch_nodes[0])).output
+                ch_nodes[2].command(test_select_query(node=ch_nodes[0])).output
                 == "kerberos_user"
             ):
                 break
             time.sleep(1)
         else:
             assert False, error()
-        ch_nodes[2].cmd("kdestroy")
+        ch_nodes[2].command("kdestroy")
 
 
 @TestScenario
@@ -209,7 +209,7 @@ def kerberos_not_configured(self):
         )
 
     with When("I attempt to authenticate"):
-        r = ch_nodes[2].cmd(test_select_query(node=ch_nodes[0]), no_checks=True)
+        r = ch_nodes[2].command(test_select_query(node=ch_nodes[0]), no_checks=True)
 
     with Then("I expect authentication failure"):
         assert "Authentication failed" in r.output, error()
@@ -230,23 +230,23 @@ def kerberos_server_restarted(self):
     with And("I create server principal"):
         create_server_principal(node=ch_nodes[0])
     with And("I obtain server ticket"):
-        ch_nodes[2].cmd(test_select_query(node=ch_nodes[0]), no_checks=True)
+        ch_nodes[2].command(test_select_query(node=ch_nodes[0]), no_checks=True)
     with By("I dump, restart and restore kerberos server"):
-        krb_server.cmd("kdb5_util dump dump.dmp", shell_command="/bin/sh")
+        krb_server.command("kdb5_util dump dump.dmp", shell_command="/bin/sh")
         krb_server.restart()
-        krb_server.cmd("kdb5_util load dump.dmp", shell_command="/bin/sh")
+        krb_server.command("kdb5_util load dump.dmp", shell_command="/bin/sh")
 
     with When("I attempt to authenticate"):
-        r = ch_nodes[2].cmd(test_select_query(node=ch_nodes[0]))
+        r = ch_nodes[2].command(test_select_query(node=ch_nodes[0]))
 
     with And("I wait for kerberos to be healthy"):
-        ch_nodes[2].cmd("kdestroy")
+        ch_nodes[2].command("kdestroy")
         attempts = 0
         while attempts < 20:
             attempts += 1
             kinit_no_keytab(node=ch_nodes[2])
             if (
-                ch_nodes[2].cmd(test_select_query(node=ch_nodes[0])).output
+                ch_nodes[2].command(test_select_query(node=ch_nodes[0])).output
                 == "kerberos_user"
             ):
                 break
@@ -271,7 +271,7 @@ def invalid_user(self):
         create_server_principal(node=ch_nodes[0])
 
     with When("I attempt to authenticate"):
-        r = ch_nodes[2].cmd(test_select_query(node=ch_nodes[0]), no_checks=True)
+        r = ch_nodes[2].command(test_select_query(node=ch_nodes[0]), no_checks=True)
 
     with Then(f"I expect default"):
         assert ("Authentication failed: password is incorrect" in r.output) and (
@@ -298,7 +298,7 @@ def user_deleted(self):
         ch_nodes[0].query("DROP USER krb_rbac")
 
     with When("I attempt to authenticate"):
-        r = ch_nodes[2].cmd(test_select_query(node=ch_nodes[0]), no_checks=True)
+        r = ch_nodes[2].command(test_select_query(node=ch_nodes[0]), no_checks=True)
 
     with Then(f"I expect error"):
         assert ("Authentication failed: password is incorrect" in r.output) and (
@@ -326,13 +326,13 @@ def authentication_performance(self):
     with When("I measure kerberos auth time"):
         start_time_krb = time.time()
         for i in range(100):
-            ch_nodes[2].cmd(test_select_query(node=ch_nodes[0]))
+            ch_nodes[2].command(test_select_query(node=ch_nodes[0]))
         krb_time = (time.time() - start_time_krb) / 100
 
     with And("I measure password auth time"):
         start_time_usual = time.time()
         for i in range(100):
-            ch_nodes[2].cmd(
+            ch_nodes[2].command(
                 f"echo 'SELECT 1' | curl 'http://pwd_user:pwd@clickhouse1:8123/' -d @-"
             )
         usual_time = (time.time() - start_time_usual) / 100

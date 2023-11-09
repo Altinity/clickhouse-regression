@@ -36,7 +36,7 @@ def openssl_all_ports(self, node=None, message="New, TLSv1.2, Cipher is "):
     for port in ports_list:
         with Check(f"port:{port}"):
             with Then(f"I make openssl check"):
-                node.cmd(
+                node.command(
                     f'openssl s_client -connect clickhouse1:{port} <<< "Q"',
                     message=message,
                 )

@@ -43,8 +43,8 @@ def arrow_format(self):
                             with Check("reading and writing one-line arrow file"):
                                 with When("I create .arrow file"):
                                     query = f"SELECT toDateTime64('{dt_str}', {precision}, '{tz}') FORMAT Arrow"
-                                    node.cmd(
-                                        cmd=f'clickhouse client --query="{query}" > /var/lib/ch-files/a.arrow'
+                                    node.command(
+                                        command=f'clickhouse client --query="{query}" > /var/lib/ch-files/a.arrow'
                                     )
 
                                 with When("I check recorded values"):
@@ -86,15 +86,15 @@ def arrow_format(self):
                                     exec_query(
                                         request=f"INSERT INTO t_src VALUES (1, toDateTime64('{dt_str}', {precision}, '{tz}'))"
                                     )
-                                    node.cmd(
-                                        cmd=f'clickhouse client --query="SELECT * FROM t_src FORMAT Arrow" > /var/lib/ch-files/a.arrow'
+                                    node.command(
+                                        command=f'clickhouse client --query="SELECT * FROM t_src FORMAT Arrow" > /var/lib/ch-files/a.arrow'
                                     )
 
                                 with Then(
                                     "I read file into table with implicit DT conversion"
                                 ):
-                                    node.cmd(
-                                        cmd=f"cat /var/lib/ch-files/a.arrow | "
+                                    node.command(
+                                        command=f"cat /var/lib/ch-files/a.arrow | "
                                         f'clickhouse client --query="INSERT INTO t_dst FORMAT Arrow"',
                                         exitcode=0,
                                     )
@@ -108,7 +108,7 @@ def arrow_format(self):
 
     finally:
         exec_query(request="DROP TABLE IF EXISTS t SYNC")
-        node.cmd("rm /var/lib/ch-files/a.arrow")
+        node.command("rm /var/lib/ch-files/a.arrow")
 
 
 @TestFeature

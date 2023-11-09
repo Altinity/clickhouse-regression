@@ -63,7 +63,7 @@ def wide_permission(self, node=None):
             node.stop_clickhouse()
 
         with And("I try to start server process back up"):
-            r = node.cmd(
+            r = node.command(
                 "clickhouse server --config-file=/etc/clickhouse-server/config.xml"
                 " --log-file=/var/log/clickhouse-server/clickhouse-server.log"
                 " --errorlog-file=/var/log/clickhouse-server/clickhouse-server.err.log"
@@ -77,7 +77,7 @@ def wide_permission(self, node=None):
             assert False, "Expected server not to start"
     finally:
         with Finally(f"I remove {name}"):
-            node.cmd(f"rm -rf {config_path}", timeout=10, exitcode=0)
+            node.command(f"rm -rf {config_path}", timeout=10, exitcode=0)
             node.restart_clickhouse()
 
 
