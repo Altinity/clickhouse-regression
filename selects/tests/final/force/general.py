@@ -1052,7 +1052,7 @@ def run_tests(self):
     with Pool(3) as executor:
         try:
             for scenario in loads(current_module(), Scenario):
-                Feature(test=scenario, parallel=True, executor=executor)()
+                Scenario(test=scenario, parallel=True, executor=executor)()
         finally:
             join()
 
