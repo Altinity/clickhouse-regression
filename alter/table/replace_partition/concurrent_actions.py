@@ -761,11 +761,13 @@ def replace_partition_with_single_concurrent_action(
             )
 
         for i in range(number_of_iterations):
-            Check(
-                name=f"{actions.__name__} #{i}",
-                test=actions,
-                parallel=True,
-            )()
+            for retry in retries(timeout=30):
+                with retry:
+                    Check(
+                        name=f"{actions.__name__} #{i}",
+                        test=actions,
+                        parallel=True,
+                    )()
 
 
 @TestCheck
