@@ -1392,7 +1392,7 @@ class Cluster(object):
         command,
         message=None,
         messages=None,
-        exitcode=None,
+        exitcode=0,
         steps=True,
         bash=None,
         no_checks=False,
