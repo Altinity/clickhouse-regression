@@ -1049,7 +1049,7 @@ def select_array_join_subquery(self, node=None):
 @TestFeature
 def run_tests(self):
     """Feature to run all scenarios in this module."""
-    with Pool(1) as executor:
+    with Pool(3) as executor:
         try:
             for scenario in loads(current_module(), Scenario):
                 Feature(test=scenario, parallel=True, executor=executor)()
