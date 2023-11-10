@@ -21,6 +21,7 @@ on:
           - aes_encryption
           - aggregate_functions
           - atomic_insert
+          - alter
           - base_58
           - benchmark_all
           - benchmark_aws
@@ -39,7 +40,6 @@ on:
           - key_value
           - ldap
           - lightweight_delete
-          - alter
           - parquet_all
           - parquet
           - parquet_minio
