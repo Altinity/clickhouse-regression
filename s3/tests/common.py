@@ -38,7 +38,7 @@ def add_config(
         command = f"cat /var/lib/clickhouse/preprocessed_configs/{config.preprocessed_name} | grep {config.uid}{' > /dev/null' if not settings.debug else ''}"
 
         while time.time() - started < timeout:
-            exitcode = node.command(command, steps=False).exitcode
+            exitcode = node.command(command, steps=False, exitcode=None).exitcode
             if after_removal:
                 if exitcode == 1:
                     break
