@@ -33,9 +33,6 @@ def scenario(self, func="sparkbar({params})", table=None):
 
     func = func.replace("({params})", f"(9)({{params}})")
 
-    if table is None:
-        table = self.context.table
-
     with Check("constant"):
         execute_query(f"SELECT {func.format(params='1,2')}")
 
