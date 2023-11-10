@@ -559,7 +559,7 @@ def add_group_on_node(self, node=None, groupname="clickhouse"):
         node.command(f"groupadd {groupname}", exitcode=0)
         yield
     finally:
-        node.command(f"delgroup clickhouse")
+        node.command(f"delgroup clickhouse", exitcode=None)
 
 
 @TestStep(Given)
