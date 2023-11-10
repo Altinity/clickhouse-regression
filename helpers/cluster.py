@@ -342,7 +342,7 @@ class ClickHouseNode(Node):
         """Return ClickHouse server pid if present
         otherwise return None.
         """
-        if self.command("ls /tmp/clickhouse-server.pid").exitcode == 0:
+        if self.command("ls /tmp/clickhouse-server.pid", exitcode=None).exitcode == 0:
             return self.command("cat /tmp/clickhouse-server.pid").output.strip()
         return None
 
@@ -1406,7 +1406,7 @@ class Cluster(object):
         :param command: command
         :param message: expected message that should be in the output, default: None
         :param messages: expected messages that should be in the output, default: None
-        :param exitcode: expected exitcode, default: None
+        :param exitcode: expected exitcode, set to None to ignore, default: 0
         :param steps: don't break command into steps, default: True
         """
         with By(
