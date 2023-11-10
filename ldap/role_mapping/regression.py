@@ -43,7 +43,27 @@ ffails = {
         Skip,
         "feature available on 20.10+",
         check_clickhouse_version("<20.10"),
-    )
+    ),
+    "/role mapping/user dn detection/mapping/role removed and readded": (
+        XFail,
+        "roles are not being applied to active clickhouse-client connections in 23.8 ",
+        check_clickhouse_version(">=23.8"),
+    ),
+    "/role mapping/user dn detection/mapping/role added": (
+        XFail,
+        "roles are not being applied to active clickhouse-client connections in 23.8 ",
+        check_clickhouse_version(">=23.8"),
+    ),
+    "/role mapping/mapping/role removed and readded": (
+        XFail,
+        "roles are not being applied to active clickhouse-client connections in 23.8 ",
+        check_clickhouse_version(">=23.8"),
+    ),
+    "/role mapping/mapping/role added": (
+        XFail,
+        "roles are not being applied to active clickhouse-client connections in 23.8 ",
+        check_clickhouse_version(">=23.8"),
+    ),
 }
 
 
