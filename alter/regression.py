@@ -31,10 +31,16 @@ xfails = {
             "The pr is not done yet: https://github.com/ClickHouse/ClickHouse/pull/54272",
         )
     ],
-    "/alter/replace partition/concurrent actions2/fetch partition from * table": [
+    "/alter/replace partition/concurrent actions/one replace partition/fetch partition from * table": [
         (
             Fail,
             "Test requires a fix",
+        )
+    ],
+    "/alter/replace partition/prohibited actions/conditions/storage policy": [
+        (
+            Fail,
+            "it should not be possible to replace partition from a table that has a different storage policy",
         )
     ],
 }
