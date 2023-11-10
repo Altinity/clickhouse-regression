@@ -433,7 +433,7 @@ def move_partition_to_destination_table(self):
 
 @TestStep(When)
 @Requirements(
-    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_MoveToTable(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulanon_existent_partition_destinationting_Partitions_MoveToTable(
         "1.0"
     )
 )
@@ -455,6 +455,7 @@ def move_partition_between_source_and_destination(self):
 
 
 @TestStep(When)
+@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Disks("1.0"))
 def move_partition_to_volume(
     self, table_name, number_of_partitions=None, partition_name=None
 ):
@@ -559,6 +560,7 @@ def clear_column_on_destination_and_source(self):
 
 
 @TestStep(When)
+@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Replicas("1.0"))
 def fetch_partition(self, table_name, source_table, number_of_partitions=None):
     """Fetch partition from the replicated table."""
     if number_of_partitions is None:
