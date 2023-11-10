@@ -433,7 +433,7 @@ def move_partition_to_destination_table(self):
 
 @TestStep(When)
 @Requirements(
-    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulanon_existent_partition_destinationting_Partitions_MoveToTable(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_MoveToTable(
         "1.0"
     )
 )

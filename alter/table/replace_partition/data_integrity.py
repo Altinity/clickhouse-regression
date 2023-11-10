@@ -30,23 +30,26 @@ def keep_data_on_a_source_table(self):
         )
 
 
-@TestScenario
+@TestOutline
 @Requirements(
     RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_NonExistentPartition("1.0")
 )
-def non_existent_partition_destination(self):
-    """Check that it is possible to replace partition on the destination table from the non-existent partition on the source table."""
+def non_existent_partition(
+    self, destination_partitions, source_partitions, partition_to_replace
+):
     source_table = "source" + getuid()
     destination_table = "destination" + getuid()
 
-    with Given("I have a destination table that has 5 partitions"):
+    with Given(
+        f"I have a destination table that has {destination_partitions} partitions"
+    ):
         create_table_partitioned_by_column_with_data(
-            table_name=destination_table, number_of_partitions=5
+            table_name=destination_table, number_of_partitions=destination_partitions
         )
 
-    with And("I have a source table that has 10 partitions"):
+    with And(f"I have a source table that has {source_partitions} partitions"):
         create_table_partitioned_by_column_with_data(
-            table_name=source_table, number_of_partitions=10
+            table_name=source_table, number_of_partitions=source_partitions
         )
 
     with Then(
@@ -55,8 +58,20 @@ def non_existent_partition_destination(self):
         replace_partition_and_validate_data(
             destination_table=destination_table,
             source_table=source_table,
-            partition_to_replace=10,
+            partition_to_replace=partition_to_replace,
         )
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_NonExistentPartition("1.0")
+)
+def non_existent_partition_destination(self):
+    """Check that it is possible to replace partition on the destination table from the non-existent partition on the source table."""
+
+    non_existent_partition(
+        destination_partitions=5, source_partitions=10, partition_to_replace=9
+    )
 
 
 @TestScenario
@@ -65,27 +80,9 @@ def non_existent_partition_destination(self):
 )
 def non_existent_partition_source(self):
     """Check that it is possible to replace partition on the destination table from the non-existent partition on the source table."""
-    source_table = "source" + getuid()
-    destination_table = "destination" + getuid()
-
-    with Given("I have a destination table that has 10 partitions"):
-        create_table_partitioned_by_column_with_data(
-            table_name=destination_table, number_of_partitions=10
-        )
-
-    with And("I have a source table that has 5 partitions"):
-        create_table_partitioned_by_column_with_data(
-            table_name=source_table, number_of_partitions=5
-        )
-
-    with Then(
-        "I replace partition that does not exist on the destination table but exists on the source table"
-    ):
-        replace_partition_and_validate_data(
-            destination_table=destination_table,
-            source_table=source_table,
-            partition_to_replace=10,
-        )
+    non_existent_partition(
+        destination_partitions=10, source_partitions=5, partition_to_replace=9
+    )
 
 
 @TestFeature
