@@ -18,7 +18,8 @@ from helpers.create import (
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Merges("1.0")
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Insert("1.0"),
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Optimize("1.0"),
 )
 def merges_on_unrelated_partition(self):
     """Check that replace partition is not stopped when concurrent merges happen on another partition."""
@@ -72,7 +73,9 @@ def merges_on_unrelated_partition(self):
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Mutations("1.0")
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_UpdateInPartition(
+        "1.0"
+    )
 )
 def mutations_on_unrelated_partition(self):
     """Check that it is possible to replace partition on the destination table when long mutations happen on unrelated partition."""
@@ -126,7 +129,10 @@ def mutations_on_unrelated_partition(self):
 
 
 @TestFeature
-@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Mutations("1.0"),
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Merges("1.0"),
+)
 @Name("concurrent merges and mutations")
 def feature(self, node="clickhouse1"):
     """Check that replace partition does not wait for the ongoing merges and mutations that are not happening on the

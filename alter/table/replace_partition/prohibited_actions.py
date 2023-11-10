@@ -388,6 +388,72 @@ def structure(self):
         )
 
 
+@TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_IntoOutfile("1.0"))
+def into_outfile(self):
+    """Checking that the usage of INTO OUTFILE does output any errors and does not crash the ClickHouse."""
+    destination_table = "destination_" + getuid()
+    source_table = "source_" + getuid()
+
+    with Given(
+        "I have two tables with a MergeTree engine, with the same structure partitioned by the same column"
+    ):
+        create_two_tables_partitioned_by_column_with_data(
+            destination_table=destination_table, source_table=source_table
+        )
+
+    with Check("I check tha the INTO OUTFILE clause does not output any errors"):
+        replace_partition(
+            destination_table=destination_table,
+            source_table=source_table,
+            additional_parameters="INTO OUTFILE 'test.file'",
+        )
+
+
+@TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Format("1.0"))
+def format(self):
+    """Checking that the usage of FORMAT does output any errors and does not crash the ClickHouse."""
+    destination_table = "table_" + getuid()
+    source_table = "table_" + getuid()
+
+    with Given(
+        "I have two tables with a MergeTree engine, with the same structure partitioned by the same column"
+    ):
+        create_two_tables_partitioned_by_column_with_data(
+            destination_table=destination_table, source_table=source_table
+        )
+
+    with Check("I check tha the FORMAT clause does not output any errors"):
+        replace_partition(
+            destination_table=destination_table,
+            source_table=source_table,
+            additional_parameters="FORMAT CSV",
+        )
+
+
+@TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Settings("1.0"))
+def settings(self):
+    """Checking that the usage of SETTINGS does not output any errors and does not crash the ClickHouse."""
+    destination_table = "table_" + getuid()
+    source_table = "table_" + getuid()
+
+    with Given(
+        "I have two tables with a MergeTree engine, with the same structure partitioned by the same column"
+    ):
+        create_two_tables_partitioned_by_column_with_data(
+            destination_table=destination_table, source_table=source_table
+        )
+
+    with Check("I check tha the SETTINGS clause does not output any errors"):
+        replace_partition(
+            destination_table=destination_table,
+            source_table=source_table,
+            additional_parameters="SETTINGS async_insert = 1",
+        )
+
+
 @TestSuite
 def from_clause(self):
     """Check that the ClickHouse outputs an error and does not replace partition when prohibited actions are being
@@ -417,6 +483,15 @@ def conditions(self):
     Scenario(run=structure)
 
 
+@TestSuite
+def miscellaneous(self):
+    """Check replace partition with some miscellaneous actions."""
+    Scenario(run=order_by_partition_by)
+    Scenario(run=into_outfile)
+    Scenario(run=format)
+    Scenario(run=settings)
+
+
 @TestFeature
 @Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited("1.0"))
 @Name("prohibited actions")
@@ -427,4 +502,4 @@ def feature(self, node="clickhouse1"):
 
     Feature(run=from_clause)
     Feature(run=conditions)
-    Scenario(run=order_by_partition_by)
+    Feature(run=miscellaneous)
