@@ -46,22 +46,22 @@ ffails = {
     ),
     "/role mapping/user dn detection/mapping/role removed and readded": (
         XFail,
-        "roles are not being applied to active clickhouse-client connections in 23.8 ",
+        "roles are not being applied to active clickhouse-client connections in 23.8: https://github.com/ClickHouse/ClickHouse/issues/56646",
         check_clickhouse_version(">=23.8"),
     ),
     "/role mapping/user dn detection/mapping/role added": (
         XFail,
-        "roles are not being applied to active clickhouse-client connections in 23.8 ",
+        "roles are not being applied to active clickhouse-client connections in 23.8: https://github.com/ClickHouse/ClickHouse/issues/56646",
         check_clickhouse_version(">=23.8"),
     ),
     "/role mapping/mapping/role removed and readded": (
         XFail,
-        "roles are not being applied to active clickhouse-client connections in 23.8 ",
+        "roles are not being applied to active clickhouse-client connections in 23.8: https://github.com/ClickHouse/ClickHouse/issues/56646",
         check_clickhouse_version(">=23.8"),
     ),
     "/role mapping/mapping/role added": (
         XFail,
-        "roles are not being applied to active clickhouse-client connections in 23.8 ",
+        "roles are not being applied to active clickhouse-client connections in 23.8: https://github.com/ClickHouse/ClickHouse/issues/56646",
         check_clickhouse_version(">=23.8"),
     ),
 }
