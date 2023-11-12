@@ -8,15 +8,15 @@ import datetime
 
 
 @TestStep(Given)
-def insert_ontime_data(self, year, table_name, node=None):
+def insert_ontime_data(self, from_year, to_year, table_name, node=None):
     """Insert data into ontime table from s3 disk with specified year"""
 
     if node is None:
         node = self.context.node
 
     node.query(
-        f"INSERT INTO {table_name} SELECT * FROM s3('https://clickhouse-public-datasets.s3.amazonaws.com/ontime/csv_by_year/{year}.csv.gz', CSVWithNames) SETTINGS max_insert_threads = 20, receive_timeout=600, max_memory_usage=0;",
-        timeout=600,
+        f"INSERT INTO {table_name} SELECT * FROM s3('https://clickhouse-public-datasets.s3.amazonaws.com/ontime/csv_by_year/{{{from_year}..{to_year}}}.csv.gz', CSVWithNames) SETTINGS max_insert_threads = 20, receive_timeout=600, max_memory_usage=0;",
+        timeout=1200,
     )
 
 
@@ -178,14 +178,14 @@ def benchmark(self, table_name, table_settings, nodes=None, format=None):
                     )
 
         with When("I insert data into the ontime table in parallel"):
-            for year in range(1987, 2023):
-                for retry in retries(timeout=60, delay=0.1):
-                    with retry:
-                        Step(
-                            name="insert 1 year into ontime table",
-                            test=insert_ontime_data,
-                            parallel=True,
-                        )(year=year, table_name=table_name)
+            start_year = 1987
+            end_year = 2023
+            for retry in retries(timeout=60, delay=0.1):
+                with retry:
+                    Step(
+                        name=f"insert data from {start_year} to {end_year} into ontime table",
+                        test=insert_ontime_data,
+                    )(from_year=start_year, to_year=end_year, table_name=table_name)
 
             join()
 
