@@ -151,29 +151,29 @@ Regressions:
 [GitHub is:issue is:open label:v23.8-affected](https://github.com/ClickHouse/ClickHouse/issues?q=is%3Aissue+is%3Aopen+label%3Av23.8-affected+) as of Nov 13, 2023
 
 * allow_nullable_key + Final = incorrect result  
-  https://api.github.com/repos/ClickHouse/ClickHouse/issues/56417
+  https://github.com/ClickHouse/ClickHouse/issues/56417
 * List of CTEs in IN clause not recognized when used in subquery  
-  https://api.github.com/repos/ClickHouse/ClickHouse/issues/55981
+  https://github.com/ClickHouse/ClickHouse/issues/55981
 * JSONEachRow format is incorrect when used with select from parameterized view  
-  https://api.github.com/repos/ClickHouse/ClickHouse/issues/55709
+  https://github.com/ClickHouse/ClickHouse/issues/55709
 * Versions 23.4-23.8: Parquet files importing issue  
-  https://api.github.com/repos/ClickHouse/ClickHouse/issues/55487
+  https://github.com/ClickHouse/ClickHouse/issues/55487
 * v23.3.13.6-lts Unexpected behaviour : NOT FOUND COLUMN IN BLOCK exception  
-  https://api.github.com/repos/ClickHouse/ClickHouse/issues/55466
+  https://github.com/ClickHouse/ClickHouse/issues/55466
 * 23.1+ join disables PREWHERE optimization  
-  https://api.github.com/repos/ClickHouse/ClickHouse/issues/55265
+  https://github.com/ClickHouse/ClickHouse/issues/55265
 * Light Weight Delete does not works well with limit  
-  https://api.github.com/repos/ClickHouse/ClickHouse/issues/54392
+  https://github.com/ClickHouse/ClickHouse/issues/54392
 * clickhouse starts with readonly table without try to fix it and reports ReplicasMaxAbsoluteDelay / ReadonlyReplica incorrectly  
-  https://api.github.com/repos/ClickHouse/ClickHouse/issues/53479
+  https://github.com/ClickHouse/ClickHouse/issues/53479
 * Some queries does not respect max_threads and can make server non-resposible by starting too many threads  
-  https://api.github.com/repos/ClickHouse/ClickHouse/issues/53287
+  https://github.com/ClickHouse/ClickHouse/issues/53287
 * Column is not under aggregate function and not in GROUP BY in mat view in 23.5  
-  https://api.github.com/repos/ClickHouse/ClickHouse/issues/50928
+  https://github.com/ClickHouse/ClickHouse/issues/50928
 * Regression in nested SELECT (might be related to WINDOW function)  
-  https://api.github.com/repos/ClickHouse/ClickHouse/issues/47217
+  https://github.com/ClickHouse/ClickHouse/issues/47217
 * Segfault after alter table on target of nullable materialized column  
-  https://api.github.com/repos/ClickHouse/ClickHouse/issues/42918
+  https://github.com/ClickHouse/ClickHouse/issues/42918
 
 ## New Features
 
