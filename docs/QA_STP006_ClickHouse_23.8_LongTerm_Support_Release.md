@@ -134,7 +134,7 @@ The following team members SHALL be dedicated to the release:
     SELECT arrayCumSumNonNegative(array(toInt128('3'), toInt128('2'), toInt128('1')));
     ```
 * `SELECT bitCount(toInt128('170141183460469231731687303715884105727'));` now shows correct 127 bits instead of 64.
-* `SELECT modulo(toDecimal256(1,0), toDecimal256(1,0))` no longer results in a `Exception: Illegal types`.
+* `SELECT modulo(toDecimal256(1,0), toDecimal256(1,0));` no longer results in a `Exception: Illegal types`.
 * When granting roles to a user that is in an active clickhouse-client session, the role is not applied until the clickhouse-client instance is restarted.
 ### Summary of Main Regressions
 
