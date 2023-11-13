@@ -1,3 +1,4 @@
+from helpers.common import getuid
 from clickhouse_keeper.requirements import *
 from clickhouse_keeper.tests.steps import *
 
@@ -59,25 +60,26 @@ def daemon(self, node=None):
     node = self.context.node if node is None else node
     try:
         with When("I start `clickhouse-keeper` cluster with --daemon option."):
+            pidfilepath = f"/tmp/clickhouse-keeper-{getuid()}.pid"
             with By("starting keeper process"):
                 node.command(
                     "clickhouse keeper --config /etc/clickhouse-keeper/config.xml"
-                    " --pidfile=/tmp/clickhouse-keeper.pid --daemon",
+                    f" --pidfile={pidfilepath} --daemon",
                     exitcode=0,
                 )
                 with And("checking that keeper pid file was created"):
                     node.command(
-                        "ls /tmp/clickhouse-keeper.pid",
+                        f"ls {pidfilepath}",
                         exitcode=0,
-                        message="/tmp/clickhouse-keeper.pid",
+                        message=pidfilepath,
                     )
     finally:
         with Finally("I stop keeper"):
             with When(f"I stop stop keeper process"):
                 with By("sending kill -TERM to keeper process"):
-                    if node.command("ls /tmp/clickhouse-keeper.pid", exitcode=0):
+                    if node.command(f"ls {pidfilepath}", exitcode=0):
                         pid = node.command(
-                            "cat /tmp/clickhouse-keeper.pid"
+                            f"cat {pidfilepath}"
                         ).output.strip()
                         node.command(f"kill -TERM {pid}", exitcode=0)
                 with And("checking pid does not exist"):
