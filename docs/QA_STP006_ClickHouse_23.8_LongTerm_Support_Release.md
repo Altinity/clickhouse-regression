@@ -110,7 +110,7 @@ The following team members SHALL be dedicated to the release:
 * Vitaliy Zakaznikov (manager, regression)
 * Davit Mnatobishvili (parquet, LDAP, benchmarks, alter)
 * Alsu Giliazova (aggregate functions, selects, lightweight_delete)
-* Stuart Gibb (clickhouse-keeper)
+* Stuart Gibb (clickhouse-keeper, RBAC, S3, tiered_storage)
 * Andrey Antipov (clickhouse-operator, disk level encryption, Python clickhouse-driver, JDBC driver, ODBC driver, clickhouse-sqlalchemy)
 * Vitalii Sviderskyi (clickhouse-backup, ACM, ACM backup)
 * Dima Borovstov (Tableau)
