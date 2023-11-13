@@ -123,9 +123,9 @@ The following team members SHALL be dedicated to the release:
 
 * Insert from s3 requieres more memory, so max_insert_thread in tests was lowered.
 * Sparkbar aggregate function overflow was fixed after 23.8.
-* Different result of topKWeightedMerge aggregate function in versions 23.3.2.37 and 23.8.4.69
+* Different result of topKWeightedMerge aggregate function in versions 23.3.2.37 and 23.8.4.69  
   https://github.com/ClickHouse/ClickHouse/issues/55997
-* Column name and table name conflict when allow_experimental_analyzer=1
+* Column name and table name conflict when allow_experimental_analyzer=1  
   https://github.com/ClickHouse/ClickHouse/issues/56371
 
 ### Summary of Main Regressions
@@ -138,10 +138,10 @@ Regressions:
 
 ### Reported By Altinity
 
-* Different result of topKWeightedMerge aggregate function in versions 23.3.2.37 and 23.8.4.69<br>  
+* Different result of topKWeightedMerge aggregate function in versions 23.3.2.37 and 23.8.4.69   
   https://github.com/ClickHouse/ClickHouse/issues/55997
   
-* Column name and table name conflict when allow_experimental_analyzer=1<br>
+* Column name and table name conflict when allow_experimental_analyzer=1  
   https://github.com/ClickHouse/ClickHouse/issues/56371
 
 * TBD
