@@ -108,7 +108,7 @@ by Nov 30, 2023.
 The following team members SHALL be dedicated to the release:
 
 * Vitaliy Zakaznikov (manager, regression)
-* Davit Mnatobishvili (parquet, LDAP, benchmarks, alter)
+* Davit Mnatobishvili (parquet, LDAP, benchmarks, alter, extended precision data types)
 * Alsu Giliazova (aggregate functions, selects, lightweight_delete)
 * Stuart Gibb (clickhouse-keeper, RBAC, S3, tiered_storage)
 * Andrey Antipov (clickhouse-operator, disk level encryption, Python clickhouse-driver, JDBC driver, ODBC driver, clickhouse-sqlalchemy)
@@ -121,13 +121,21 @@ The following team members SHALL be dedicated to the release:
 
 ### Notable Differences in Behavior
 
-* Insert from s3 requieres more memory, so max_insert_thread in tests was lowered.
+* Insert from s3 requires more memory, so max_insert_thread in tests was lowered.
 * Sparkbar aggregate function overflow was fixed after 23.8.
 * Different result of topKWeightedMerge aggregate function in versions 23.3.2.37 and 23.8.4.69  
   https://github.com/ClickHouse/ClickHouse/issues/55997
 * Column name and table name conflict when allow_experimental_analyzer=1  
   https://github.com/ClickHouse/ClickHouse/issues/56371
-
+* Using the array of `Int128` inside the following `arrayDifference`, `arrayCumSum` and `arrayCumSumNonNegative` functions no longer results in the exception.
+    ```sql
+    SELECT arrayDifference(array(toInt128('3'), toInt128('2'), toInt128('1')));
+    SELECT arrayCumSum(array(toInt128('3'), toInt128('2'), toInt128('1')));
+    SELECT arrayCumSumNonNegative(array(toInt128('3'), toInt128('2'), toInt128('1')));
+    ```
+* `SELECT bitCount(toInt128('170141183460469231731687303715884105727'));` now shows correct 127 bits instead of 64.
+* `SELECT modulo(toDecimal256(1,0), toDecimal256(1,0))` no longer results in a `Exception: Illegal types`.
+* When granting roles to a user that is in an active clickhouse-client session, the role is not applied until the clickhouse-client instance is restarted.
 ### Summary of Main Regressions
 
 Regressions:
@@ -143,6 +151,13 @@ Regressions:
   
 * Column name and table name conflict when allow_experimental_analyzer=1  
   https://github.com/ClickHouse/ClickHouse/issues/56371
+
+* Roles are not being applied to active clickhouse-client connections  
+  https://github.com/ClickHouse/ClickHouse/issues/56646
+
+* Net Exception: Cannot assign requested address when trying to insert data from the s3 storage  
+  https://github.com/ClickHouse/ClickHouse/issues/56678
+
 
 * TBD
 
