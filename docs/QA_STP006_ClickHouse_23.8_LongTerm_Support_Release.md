@@ -137,10 +137,10 @@ Regressions:
 
 ### Reported By Altinity
 
-* Different result of topKWeightedMerge aggregate function in versions 23.3.2.37 and 23.8.4.69
+* Different result of topKWeightedMerge aggregate function in versions 23.3.2.37 and 23.8.4.69  
   https://github.com/ClickHouse/ClickHouse/issues/55997
   
-* Column name and table name conflict when allow_experimental_analyzer=1
+* Column name and table name conflict when allow_experimental_analyzer=1  
   https://github.com/ClickHouse/ClickHouse/issues/56371
 
 * TBD
