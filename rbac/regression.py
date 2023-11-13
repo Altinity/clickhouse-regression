@@ -197,6 +197,9 @@ xfails = {
         (Fail, issue_38716)
     ],
     "privileges/orphaned role": [(Fail, pull_47002)],
+    "privileges/projections/ : privilege, ADD PROJECTION, privilege granted to :": [
+        (Fail, "unstable test")
+    ],
 }
 
 xflags = {

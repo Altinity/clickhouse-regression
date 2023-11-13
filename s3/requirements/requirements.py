@@ -1366,15 +1366,15 @@ RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Metadata = Requirement(
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Alter = Requirement(
     name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Alter",
-    version="1.0",
+    version="1.1",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
         "[ClickHouse] SHALL support modifying replicated tables. If a replicated table\n"
-        "is modified, the changes SHALL be reproduced on all existing replicas, and\n"
-        "in [S3] storage.\n"
+        "is modified, the changes SHALL be reproduced without data loss on all existing \n"
+        "replicas, and in [S3] storage.\n"
         "\n"
     ),
     link=None,
@@ -1384,22 +1384,14 @@ RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Alter = Requirement(
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Delete = Requirement(
     name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Delete",
-    version="1.0",
+    version="1.1",
     priority=None,
     group=None,
     type=None,
     uid=None,
     description=(
         "[ClickHouse] SHALL support dropping a replicated table with no changes to any\n"
-        "other replicas of the table. If the table is dropped normally, [ClickHouse]\n"
-        "SHALL delete only local metadata associated with the replicated table. If the\n"
-        "table is dropped using the SYNC keyword, [ClickHouse] SHALL delete the local\n"
-        "metadata and all associated data stored in [S3]. Other replicas will no\n"
-        "longer be able to access this data.\n"
-        "\n"
-        "    ```sql\n"
-        "    DROP TABLE table_name SYNC;\n"
-        "    ```\n"
+        "other replicas of the table.\n"
         "\n"
     ),
     link=None,
@@ -1416,17 +1408,28 @@ RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_DeleteAll = Requirement(
     uid=None,
     description=(
         "[ClickHouse] SHALL support deleting replicated tables from [S3] by dropping\n"
-        "all replicas of the table from each [ClickHouse] instance. For data to be\n"
-        "removed from [S3], data must be dropped using the SYNC keyword.\n"
-        "\n"
-        "    ```sql\n"
-        "    DROP TABLE table_name SYNC;\n"
-        "    ```\n"
+        "all replicas of the table from each [ClickHouse] instance.\n"
         "\n"
     ),
     link=None,
     level=5,
     num="4.4.7.8.7",
+)
+
+RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_DataPreservedAfterMutation = Requirement(
+    name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DataPreservedAfterMutation",
+    version="1.0",
+    priority=None,
+    group=None,
+    type=None,
+    uid=None,
+    description=(
+        "[Clickhouse] SHALL distribute mutations to all replicas without data loss.\n"
+        "\n"
+    ),
+    link=None,
+    level=5,
+    num="4.4.7.8.8",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_DropReplica = Requirement(
@@ -1445,7 +1448,7 @@ RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_DropReplica = Requiremen
     ),
     link=None,
     level=5,
-    num="4.4.7.8.8",
+    num="4.4.7.8.9",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_AddReplica = Requirement(
@@ -1463,7 +1466,7 @@ RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_AddReplica = Requirement
     ),
     link=None,
     level=5,
-    num="4.4.7.8.9",
+    num="4.4.7.8.10",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_NoDataDuplication = Requirement(
@@ -1482,7 +1485,7 @@ RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_NoDataDuplication = Requ
     ),
     link=None,
     level=5,
-    num="4.4.7.8.10",
+    num="4.4.7.8.11",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_TTL_Move = Requirement(
@@ -1502,7 +1505,7 @@ RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_TTL_Move = Requirement(
     ),
     link=None,
     level=5,
-    num="4.4.7.8.11",
+    num="4.4.7.8.12",
 )
 
 RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_TTL_Delete = Requirement(
@@ -1520,7 +1523,7 @@ RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_TTL_Delete = Requirement
     ),
     link=None,
     level=5,
-    num="4.4.7.8.12",
+    num="4.4.7.8.13",
 )
 
 RQ_SRS_015_S3_Policy_Syntax = Requirement(
@@ -2675,29 +2678,34 @@ SRS_015_ClickHouse_S3_External_Storage = Specification(
             num="4.4.7.8.7",
         ),
         Heading(
-            name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DropReplica",
+            name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DataPreservedAfterMutation",
             level=5,
             num="4.4.7.8.8",
         ),
         Heading(
-            name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.AddReplica",
+            name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DropReplica",
             level=5,
             num="4.4.7.8.9",
         ),
         Heading(
-            name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.NoDataDuplication",
+            name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.AddReplica",
             level=5,
             num="4.4.7.8.10",
         ),
         Heading(
-            name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.TTL.Move",
+            name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.NoDataDuplication",
             level=5,
             num="4.4.7.8.11",
         ),
         Heading(
-            name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.TTL.Delete",
+            name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.TTL.Move",
             level=5,
             num="4.4.7.8.12",
+        ),
+        Heading(
+            name="RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.TTL.Delete",
+            level=5,
+            num="4.4.7.8.13",
         ),
         Heading(name="Policy", level=2, num="4.5"),
         Heading(name="RQ.SRS-015.S3.Policy.Syntax", level=3, num="4.5.1"),
@@ -2870,6 +2878,7 @@ SRS_015_ClickHouse_S3_External_Storage = Specification(
         RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Alter,
         RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Delete,
         RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_DeleteAll,
+        RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_DataPreservedAfterMutation,
         RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_DropReplica,
         RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_AddReplica,
         RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_NoDataDuplication,
@@ -3730,36 +3739,28 @@ metadata SHALL create identical metadata files which refer to the same object
 keys in S3.
 
 ###### RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Alter
-version: 1.0
+version: 1.1
 
 [ClickHouse] SHALL support modifying replicated tables. If a replicated table
-is modified, the changes SHALL be reproduced on all existing replicas, and
-in [S3] storage.
+is modified, the changes SHALL be reproduced without data loss on all existing 
+replicas, and in [S3] storage.
 
 ###### RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.Delete
-version: 1.0
+version: 1.1
 
 [ClickHouse] SHALL support dropping a replicated table with no changes to any
-other replicas of the table. If the table is dropped normally, [ClickHouse]
-SHALL delete only local metadata associated with the replicated table. If the
-table is dropped using the SYNC keyword, [ClickHouse] SHALL delete the local
-metadata and all associated data stored in [S3]. Other replicas will no
-longer be able to access this data.
-
-    ```sql
-    DROP TABLE table_name SYNC;
-    ```
+other replicas of the table.
 
 ###### RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DeleteAll
 version: 1.0
 
 [ClickHouse] SHALL support deleting replicated tables from [S3] by dropping
-all replicas of the table from each [ClickHouse] instance. For data to be
-removed from [S3], data must be dropped using the SYNC keyword.
+all replicas of the table from each [ClickHouse] instance.
 
-    ```sql
-    DROP TABLE table_name SYNC;
-    ```
+###### RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DataPreservedAfterMutation
+version: 1.0
+
+[Clickhouse] SHALL distribute mutations to all replicas without data loss.
 
 ###### RQ.SRS-015.S3.Disk.MergeTree.AllowS3ZeroCopyReplication.DropReplica
 version: 1.0

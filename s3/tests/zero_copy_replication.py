@@ -728,7 +728,7 @@ def metadata(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Alter("1.0"))
+@Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Alter("1.1"))
 def alter(self):
     """Check that when replicated tables with allow zero copy are altered,
     the changes are reflected on all replicas.
@@ -761,7 +761,10 @@ def alter(self):
         nodes = [cluster.node(name) for name in nodes]
 
     with And("I have merge tree configuration set to use zero copy replication"):
-        settings = {self.context.zero_copy_replication_setting: "1"}
+        settings = {
+            self.context.zero_copy_replication_setting: "1",
+            "old_parts_lifetime": "5",
+        }
 
     with And("I set the minio_enabled parameter before checking bucket sizes"):
         if self.context.storage == "minio":
@@ -884,7 +887,7 @@ def alter(self):
 
 @TestScenario
 @Requirements(
-    RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Alter("1.0"),
+    RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Alter("1.1"),
     RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_NoDataDuplication("1.0"),
 )
 def alter_repeat(self):
@@ -947,7 +950,10 @@ def alter_repeat(self):
         nodes = [cluster.node(name) for name in nodes]
 
     with And("I have merge tree configuration set to use zero copy replication"):
-        settings = {self.context.zero_copy_replication_setting: "1"}
+        settings = {
+            self.context.zero_copy_replication_setting: "1",
+            "old_parts_lifetime": "5",
+        }
 
     with And("I set the minio_enabled parameter before checking bucket sizes"):
         if self.context.storage == "minio":
@@ -1216,7 +1222,7 @@ def insert_multiple_replicas(self):
 
 
 @TestScenario
-@Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Delete("1.0"))
+@Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Delete("1.1"))
 def delete(self):
     """Check that when replicated tables are removed, they are not
     removed from S3 until all replicas are removed.
@@ -1298,7 +1304,7 @@ def delete(self):
                 ), error()
 
             with When("I drop the table on the other node"):
-                nodes[1].query("DROP TABLE IF EXISTS zero_copy_replication no delay")
+                nodes[1].query("DROP TABLE IF EXISTS zero_copy_replication SYNC")
 
             with Then(
                 """The size of the s3 bucket should be very close to the size
@@ -1434,7 +1440,10 @@ def ttl_move(self):
         nodes = [cluster.node(name) for name in nodes]
 
     with And("I have merge tree configuration set to use zero copy replication"):
-        settings = {self.context.zero_copy_replication_setting: "1"}
+        settings = {
+            self.context.zero_copy_replication_setting: "1",
+            "old_parts_lifetime": "5",
+        }
 
     with And("I set the minio_enabled parameter before checking bucket sizes"):
         if self.context.storage == "minio":
@@ -2042,7 +2051,13 @@ def performance_alter(self):
 
 
 @TestScenario
-def lost_data_during_mutation(self):
+@Requirements(
+    RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Alter("1.1"),
+    RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_DataPreservedAfterMutation(
+        "1.0"
+    ),
+)
+def check_refcount_after_mutation(self):
     """Check that clickhouse correctly updates ref_count when updating metadata across replicas."""
     cluster = self.context.cluster
     node = current().context.node
@@ -2072,7 +2087,7 @@ def lost_data_during_mutation(self):
         with And(f"I materialize the new column"):
             node.query(f"ALTER TABLE {table_name} MATERIALIZE COLUMN valueX")
 
-        with Then("Check both replicas"):
+        with Then("Check refs"):
             output = node.command(
                 "grep -A 1 r00000000000000000000 -R /var/lib/clickhouse/disks/external/store/ | grep -B 1 '\-0' | grep r00000000000000000000 | sort -k 2 | uniq -df 1"
             ).output
@@ -2083,6 +2098,77 @@ def lost_data_during_mutation(self):
             node.query(
                 f"DROP TABLE IF EXISTS {table_name} ON CLUSTER 'sharded_cluster' "
             )
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_Alter("1.1"),
+    RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_DataPreservedAfterMutation(
+        "1.0"
+    ),
+)
+def consistency_during_double_mutation(self):
+    """Check that clickhouse correctly handles simultaneous metadata updates on different replicas."""
+    cluster = self.context.cluster
+    node = current().context.node
+    table_name = "table_" + getuid()
+
+    with Given("I set the nodes to replicate the table"):
+        nodes = cluster.nodes["clickhouse"][:2]
+
+    with And(f"cluster nodes {nodes}"):
+        nodes = [cluster.node(name) for name in nodes]
+
+    with And("I have merge tree configuration set to use zero copy replication"):
+        settings = {self.context.zero_copy_replication_setting: "1"}
+
+    with And("I set the minio_enabled parameter before checking bucket sizes"):
+        if self.context.storage == "minio":
+            minio_enabled = True
+
+    with mergetree_config(settings):
+        try:
+            with Given("I have a table"):
+                node.query(
+                    f"""
+                CREATE TABLE IF NOT EXISTS {table_name} ON CLUSTER 'sharded_cluster' (key UInt32, value1 String, value2 String, value3 String) engine=ReplicatedMergeTree('/{table_name}', '{{replica}}')
+                ORDER BY key
+                PARTITION BY (key % 4)
+                SETTINGS storage_policy='external'
+                """,
+                    settings=[("distributed_ddl_task_timeout ", 360)],
+                )
+
+            with And("I insert some data"):
+                node.query(
+                    f"INSERT INTO {table_name} SELECT * FROM generateRandom('key UInt32, value1 String, value2 String, value3 String') LIMIT 1000000"
+                )
+
+            with When("I add a new column on the first node"):
+                nodes[0].query(
+                    f"ALTER TABLE {table_name} ADD COLUMN valueX String materialized value1"
+                )
+
+            with And("I delete a column on the second node"):
+                nodes[1].query(f"ALTER TABLE {table_name} DROP COLUMN value3")
+
+            with And(f"I materialize the new column on the first node"):
+                nodes[0].query(f"ALTER TABLE {table_name} MATERIALIZE COLUMN valueX")
+
+            with Given("I run DESCRIBE TABLE"):
+                r = node.query(f"DESCRIBE TABLE {table_name}")
+
+            with Then("The output should contain my new column"):
+                assert "valueX" in r.output, error(r)
+
+            with And("The output should not contain the deleted column"):
+                assert "value3" not in r.output, error(r)
+
+        finally:
+            with Finally(f"I drop the table"):
+                node.query(
+                    f"DROP TABLE IF EXISTS {table_name} ON CLUSTER 'sharded_cluster' "
+                )
 
 
 @TestOutline(Feature)

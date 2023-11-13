@@ -11,6 +11,8 @@ from testflows.core import TestScenario, Name
 from testflows.core import Given, When, And, By, Then, Finally, current
 from testflows.asserts import error
 
+from helpers.common import check_clickhouse_version
+
 
 @TestScenario
 @Name("rename")
@@ -69,7 +71,10 @@ def scenario(self, cluster, node="clickhouse1"):
 
             with When("I get the number of rows for the old table"):
                 exitcode = 60
-                message = "Exception: Table default.renaming_table doesn't exist"
+                if check_clickhouse_version("<23.8")(self):
+                    message = "Exception: Table default.renaming_table doesn't exist"
+                else:
+                    message = "Exception: Table default.renaming_table does not exist"
                 node.query(
                     "SELECT COUNT() FROM default.renaming_table", message, exitcode
                 )
@@ -89,7 +94,10 @@ def scenario(self, cluster, node="clickhouse1"):
 
             with When("I get the number of rows for the old table"):
                 exitcode = 60
-                message = "Exception: Table default.renaming_table1 doesn't exist"
+                if check_clickhouse_version("<23.8")(self):
+                    message = "Exception: Table default.renaming_table1 doesn't exist"
+                else:
+                    message = "Exception: Table default.renaming_table1 does not exist"
                 node.query(
                     "SELECT COUNT() FROM default.renaming_table1", message, exitcode
                 )

@@ -126,52 +126,6 @@ class Node(object):
     def command(self, *args, **kwargs):
         return self.cluster.command(self.name, *args, **kwargs)
 
-    def cmd(
-        self,
-        cmd,
-        message=None,
-        exitcode=None,
-        steps=True,
-        shell_command="bash --noediting",
-        no_checks=False,
-        raise_on_exception=False,
-        step=By,
-        *args,
-        **kwargs,
-    ):
-        """Execute and check command.
-        :param cmd: command
-        :param message: expected message that should be in the output, default: None
-        :param exitcode: expected exitcode, default: None
-        """
-
-        command = f"{cmd}"
-        with step(
-            "executing command", description=command, format_description=False
-        ) if steps else NullStep():
-            try:
-                r = self.cluster.bash(self.name, command=shell_command)(
-                    command, *args, **kwargs
-                )
-            except ExpectTimeoutError:
-                self.cluster.close_bash(self.name)
-                raise
-
-        if no_checks:
-            return r
-
-        if exitcode is not None:
-            with Then(f"exitcode should be {exitcode}") if steps else NullStep():
-                assert r.exitcode == exitcode, error(r.output)
-
-        if message is not None:
-            with Then(
-                f"output should contain message", description=message
-            ) if steps else NullStep():
-                assert message in r.output, error(r.output)
-
-        return r
-
 
 class ZooKeeperNode(Node):
     """Node with ZooKeeper server."""
@@ -1361,6 +1315,7 @@ class Cluster(object):
         bash=None,
         no_checks=False,
         use_error=True,
+        shell_command="bash --noediting",
         *args,
         **kwargs,
     ):
@@ -1376,7 +1331,7 @@ class Cluster(object):
             "executing command", description=command, format_description=False
         ) if steps else NullStep():
             if bash is None:
-                bash = self.bash(node)
+                bash = self.bash(node, command=shell_command)
             try:
                 r = bash(command, *args, **kwargs)
             except ExpectTimeoutError:

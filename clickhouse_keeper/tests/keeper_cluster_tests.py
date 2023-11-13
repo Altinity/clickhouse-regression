@@ -69,7 +69,7 @@ def mixed_keepers_5(self):
 
         with And(f"I check that ruok returns imok"):
             for name in cluster.nodes["clickhouse"][0:5]:
-                retry(cluster.node("bash-tools").cmd, timeout=500, delay=1)(
+                retry(cluster.node("bash-tools").command, timeout=500, delay=1)(
                     f"echo ruok | nc {name} {self.context.port}",
                     exitcode=0,
                     message="F" if self.context.ssl == "true" else "imok",
@@ -147,7 +147,7 @@ def mixed_keepers_4(self):
 
         with And(f"I check that ruok returns imok"):
             for name in cluster.nodes["clickhouse"][0:4]:
-                retry(cluster.node("bash-tools").cmd, timeout=100, delay=1)(
+                retry(cluster.node("bash-tools").command, timeout=100, delay=1)(
                     f"echo ruok | nc {name} {self.context.port}",
                     exitcode=0,
                     message="F" if self.context.ssl == "true" else "imok",
@@ -223,7 +223,7 @@ def mixed_keepers_3(self):
 
         with And(f"I check that ruok returns imok"):
             for name in cluster.nodes["clickhouse"][0:3]:
-                retry(cluster.node("bash-tools").cmd, timeout=500, delay=1)(
+                retry(cluster.node("bash-tools").command, timeout=500, delay=1)(
                     f"echo ruok | nc {name} {self.context.port}",
                     exitcode=0,
                     message="F" if self.context.ssl == "true" else "imok",
@@ -297,7 +297,7 @@ def mixed_keepers_2(self):
 
         with And(f"I check that ruok returns imok"):
             for name in cluster.nodes["clickhouse"][0:2]:
-                retry(cluster.node("bash-tools").cmd, timeout=500, delay=1)(
+                retry(cluster.node("bash-tools").command, timeout=500, delay=1)(
                     f"echo ruok | nc {name} {self.context.port}",
                     exitcode=0,
                     message="F" if self.context.ssl == "true" else "imok",
@@ -370,7 +370,7 @@ def mixed_keepers_1(self):
 
         with And(f"I check that ruok returns imok"):
             for name in cluster.nodes["clickhouse"][0:1]:
-                retry(cluster.node("bash-tools").cmd, timeout=100, delay=1)(
+                retry(cluster.node("bash-tools").command, timeout=100, delay=1)(
                     f"echo ruok | nc {name} {self.context.port}",
                     exitcode=0,
                     message="F" if self.context.ssl == "true" else "imok",
@@ -451,7 +451,7 @@ def zookeepers_3(self):
     finally:
         with Finally("I clean up files"):
             clean_coordination_on_all_nodes()
-            self.context.cluster.node("clickhouse1").cmd(f"rm -rf /share/")
+            self.context.cluster.node("clickhouse1").command(f"rm -rf /share/")
 
 
 @TestScenario
@@ -516,7 +516,7 @@ def standalone_keepers_3(self):
 
         with And(f"I check that ruok returns imok"):
             for name in cluster.nodes["clickhouse"][9:12]:
-                retry(cluster.node("bash-tools").cmd, timeout=500, delay=1)(
+                retry(cluster.node("bash-tools").command, timeout=500, delay=1)(
                     f"echo ruok | nc {name} {self.context.port}",
                     exitcode=0,
                     message="F" if self.context.ssl == "true" else "imok",
@@ -528,7 +528,7 @@ def standalone_keepers_3(self):
     finally:
         with Finally("I clean up files"):
             clean_coordination_on_all_nodes()
-            self.context.cluster.node("clickhouse1").cmd(f"rm -rf /share/")
+            self.context.cluster.node("clickhouse1").command(f"rm -rf /share/")
 
 
 @TestScenario
@@ -587,7 +587,7 @@ def standalone_keepers_2(self):
 
         with And(f"I check that ruok returns imok"):
             for name in cluster.nodes["clickhouse"][9:11]:
-                retry(cluster.node("bash-tools").cmd, timeout=500, delay=1)(
+                retry(cluster.node("bash-tools").command, timeout=500, delay=1)(
                     f"echo ruok | nc {name} {self.context.port}",
                     exitcode=0,
                     message="F" if self.context.ssl == "true" else "imok",
@@ -599,7 +599,7 @@ def standalone_keepers_2(self):
     finally:
         with Finally("I clean up files"):
             clean_coordination_on_all_nodes()
-            self.context.cluster.node("clickhouse1").cmd(f"rm -rf /share/")
+            self.context.cluster.node("clickhouse1").command(f"rm -rf /share/")
 
 
 @TestScenario
@@ -658,7 +658,7 @@ def standalone_keepers_1(self):
 
         with And(f"I check that ruok returns imok"):
             for name in cluster.nodes["clickhouse"][9:10]:
-                retry(cluster.node("bash-tools").cmd, timeout=500, delay=1)(
+                retry(cluster.node("bash-tools").command, timeout=500, delay=1)(
                     f"echo ruok | nc {name} {self.context.port}",
                     exitcode=0,
                     message="F" if self.context.ssl == "true" else "imok",
@@ -670,7 +670,7 @@ def standalone_keepers_1(self):
     finally:
         with Finally("I clean up files"):
             clean_coordination_on_all_nodes()
-            self.context.cluster.node("clickhouse1").cmd(f"rm -rf /share/")
+            self.context.cluster.node("clickhouse1").command(f"rm -rf /share/")
 
 
 @TestFeature

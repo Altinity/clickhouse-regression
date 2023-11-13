@@ -1,7 +1,10 @@
+import random
+from time import sleep
+
 from testflows.core import *
 from testflows.asserts import *
 from alter.table.replace_partition.requirements.requirements import *
-from helpers.common import getuid
+from helpers.common import getuid, replace_partition
 from helpers.datatypes import UInt8, UInt64
 from helpers.tables import create_table_partitioned_by_column, create_table, Column
 
@@ -115,24 +118,30 @@ def check_partition_was_replaced(
     self,
     destination_table,
     source_table,
-    source_table_before_replace,
+    source_table_before_replace=None,
     node=None,
     sort_column="p",
     partition=1,
     column="i",
+    list=False,
 ):
     """Check that the partition on the destination table was replaced from the source table."""
     if node is None:
         node = self.context.node
 
+    if not list:
+        condition = "="
+    else:
+        condition = "IN"
+
     with By(
         "selecting and saving the partition data from the source table and destination table"
     ):
         partition_values_source = node.query(
-            f"SELECT {column} FROM {source_table} WHERE {sort_column} = {partition} ORDER BY tuple(*)"
+            f"SELECT {column} FROM {source_table} WHERE {sort_column} {condition} {partition} ORDER BY tuple(*)"
         )
         partition_values_destination = node.query(
-            f"SELECT {column} FROM {destination_table} WHERE {sort_column} = {partition} ORDER BY tuple(*)"
+            f"SELECT {column} FROM {destination_table} WHERE {sort_column} {condition} {partition} ORDER BY tuple(*)"
         )
 
     with Then(
@@ -143,8 +152,83 @@ def check_partition_was_replaced(
             == partition_values_source.output.strip()
         ), error()
 
-    with And("I check that the data on the source table was preserved"):
-        assert (
-            source_table_before_replace.output.strip()
-            == partition_values_source.output.strip()
-        ), error()
+    if source_table_before_replace is not None:
+        with And("I check that the data on the source table was preserved"):
+            assert (
+                source_table_before_replace.output.strip()
+                == partition_values_source.output.strip()
+            ), error()
+
+
+@TestStep(Then)
+def replace_partition_and_validate_data(
+    self,
+    partition_to_replace,
+    destination_table=None,
+    source_table=None,
+    delay_before=None,
+    delay_after=None,
+    validate=None,
+):
+    """
+    Replace partition and validate that the data on the destination table is the same data as on the source table.
+    Also check that the data on the source table was not lost during replace partition.
+
+     Args:
+        partition_to_replace (str): The partition identifier that needs to be replaced in the destination table.
+        destination_table (str, optional): The name of the destination table where the partition is to be replaced.
+        Defaults to None, in which case the table name is taken from the test context.
+        source_table (str, optional): The name of the source table from which to take the replacement partition.
+        Defaults to None, in which case the table name is taken from the test context.
+        delay_before (float, optional): The delay in seconds to wait before performing the partition replacement.
+        Defaults to None, which causes a random delay.
+        delay_after (float, optional): The delay in seconds to wait after performing the partition replacement.
+        Defaults to None, which causes a random delay.
+        validate (bool, optional): A flag determining whether to perform validation checks after the partition replacement.
+        Defaults to True.
+    """
+    node = self.context.node
+
+    if validate is None:
+        validate = True
+    else:
+        validate = self.context.validate
+
+    if destination_table is None:
+        destination_table = self.context.destination_table
+
+    if source_table is None:
+        source_table = self.context.source_table
+
+    if delay_before is None:
+        delay_before = random.random()
+
+    if delay_after is None:
+        delay_after = random.random()
+
+    with By(
+        "saving the data from the source table before replacing partitions on the destination table"
+    ):
+        source_data_before = node.query(
+            f"SELECT i FROM {source_table} WHERE p = {partition_to_replace} ORDER BY tuple(*)"
+        )
+
+    with And("replacing partition on the destination table"):
+        sleep(delay_before)
+
+        replace_partition(
+            destination_table=destination_table,
+            source_table=source_table,
+            partition=partition_to_replace,
+        )
+
+        sleep(delay_after)
+
+    if validate:
+        with Then("checking that the partition was replaced on the destination table"):
+            check_partition_was_replaced(
+                destination_table=destination_table,
+                source_table=source_table,
+                source_table_before_replace=source_data_before,
+                partition=partition_to_replace,
+            )

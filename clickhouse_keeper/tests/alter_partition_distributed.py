@@ -440,7 +440,7 @@ def alter_freeze_partition(self):
             node.query(f"OPTIMIZE TABLE {table_name} FINAL")
 
         with And("I check partition froze"):
-            node.cmd("ls var/lib/clickhouse/shadow/", message="freeze_test")
+            node.command("ls var/lib/clickhouse/shadow/", message="freeze_test")
 
     finally:
         with Finally("I drop table if exists"):

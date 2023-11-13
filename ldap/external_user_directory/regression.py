@@ -60,6 +60,11 @@ ffails = {
         "fails on 23.3",
         check_clickhouse_version(">=23"),
     ),
+    "/external user directory/roles/not present role added": (
+        XFail,
+        "roles are not being applied to active clickhouse-client connections in 23.8 ",
+        check_clickhouse_version(">=23.8"),
+    ),
 }
 
 

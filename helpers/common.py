@@ -604,6 +604,7 @@ def replace_partition(
     user_name=None,
     message=None,
     node=None,
+    additional_parameters=None,
 ):
     """Replace partition of the destination table from the source table. If message is not None, we expect that the
     usage of replace partition should output an error.
@@ -612,10 +613,12 @@ def replace_partition(
         node = self.context.node
 
     params = {}
+    query = f"ALTER TABLE {destination_table} REPLACE PARTITION {partition} FROM {source_table}"
+
+    if additional_parameters is not None:
+        query += f" {additional_parameters}"
 
     with By("Executing the replace partition command"):
-        query = f"ALTER TABLE {destination_table} REPLACE PARTITION {partition} FROM {source_table}"
-
         if user_name is not None:
             params["settings"] = [("user", user_name)]
         if message is not None:

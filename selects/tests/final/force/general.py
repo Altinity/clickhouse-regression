@@ -357,7 +357,7 @@ def select_join_clause(self, node=None):
                         )
 
 
-@TestFeature
+@TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join_Select("1.0")
 )
@@ -418,7 +418,7 @@ def select_join_clause_select_all_types(self, node=None):
                         )
 
 
-@TestFeature
+@TestScenario
 def select_join_clause_select_all_engine_combinations(self, node=None):
     """Check SELECT query with `INNER JOIN` clause for all table engines."""
     if node is None:
@@ -575,7 +575,7 @@ def select_except_clause(self):
         select_family_union_clause(clause="EXCEPT", negative=True)
 
 
-@TestFeature
+@TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join_Nested("1.0")
 )
@@ -650,7 +650,7 @@ def select_nested_join_clause_select(self, node=None):
                         assert explicit_final == force_select_final
 
 
-@TestFeature
+@TestScenario
 @Requirements(
     RQ_SRS_032_ClickHouse_AutomaticFinalModifier_SelectQueries_Join_Multiple("1.0")
 )
@@ -694,10 +694,10 @@ def select_multiple_join_clause_select(self, node=None):
                     ):
                         join_statement = define(
                             "Multiple join query",
-                            f"SELECT count() FROM {table1.name} c"
+                            f"SELECT count() FROM {table1.name} t"
                             f"{' FINAL' if table1.final_modifier_available else ''}  {join_type} "
                             f"(SELECT * FROM {table2.name} "
-                            f"{' FINAL' if table2.final_modifier_available else ''}) a on c.id = a.id"
+                            f"{' FINAL' if table2.final_modifier_available else ''}) a on t.id = a.id"
                             f" {join_type} "
                             f"(SELECT * FROM {table2.name} "
                             f"{' FINAL' if table2.final_modifier_available else ''}) b on"
@@ -1046,23 +1046,13 @@ def select_array_join_subquery(self, node=None):
                 node.query(f"DROP TABLE {name}")
 
 
-@TestOutline
+@TestFeature
 def run_tests(self):
-    """Outline to run all tests."""
-    with Pool(1) as executor:
-        try:
-            for feature in loads(current_module(), Feature):
-                if not feature.name.endswith(
-                    "experimental analyzer"
-                ) and not feature.name.endswith("general"):
-                    Feature(test=feature, parallel=True, executor=executor)()
-        finally:
-            join()
-
-    with Pool(1) as executor:
+    """Feature to run all scenarios in this module."""
+    with Pool(3) as executor:
         try:
             for scenario in loads(current_module(), Scenario):
-                Feature(test=scenario, parallel=True, executor=executor)()
+                Scenario(test=scenario, parallel=True, executor=executor)()
         finally:
             join()
 
@@ -1072,7 +1062,6 @@ def with_experimental_analyzer(self):
     """Run all tests with allow_experimental_analyzer=1."""
     with Given("I set allow_experimental_analyzer=1"):
         allow_experimental_analyzer()
-
     run_tests()
 
 

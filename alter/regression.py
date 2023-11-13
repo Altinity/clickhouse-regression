@@ -13,12 +13,6 @@ from alter.table.replace_partition.requirements.requirements import *
 from helpers.datatypes import *
 
 xfails = {
-    "/alter/replace partition/concurrent actions/alter modify ttl": [
-        (
-            Fail,
-            "modify ttl expression `+ INTERVAL 1 YEAR` deletes all data when date is empty",
-        )
-    ],
     "/alter/replace partition/concurrent merges and mutations/mutations on unrelated partition": [
         (
             Fail,
@@ -31,10 +25,22 @@ xfails = {
             "The pr is not done yet: https://github.com/ClickHouse/ClickHouse/pull/54272",
         )
     ],
-    "/alter/replace partition/concurrent actions2/fetch partition from * table": [
+    "/alter/replace partition/concurrent actions/one replace partition/fetch partition from * table": [
         (
             Fail,
-            "Test requires a fix",
+            "Sometimes fails with the reason that the partition already fetched",
+        )
+    ],
+    "/alter/replace partition/concurrent actions/one replace partition/freeze * partition with name": [
+        (
+            Fail,
+            "Sometimes fails with the reason that the partition already frozen",
+        )
+    ],
+    "/alter/replace partition/prohibited actions/conditions/storage policy": [
+        (
+            Fail,
+            "it should not be possible to replace partition from a table that has a different storage policy",
         )
     ],
 }

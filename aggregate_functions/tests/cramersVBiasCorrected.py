@@ -10,7 +10,9 @@ from aggregate_functions.tests.covarPop import scenario as checks
 
 @TestScenario
 @Name("cramersVBiasCorrected")
-@Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_CramersVBiasCorrected("1.0"))
+@Requirements(
+    RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_CramersVBiasCorrected("1.0")
+)
 def scenario(self, func="cramersVBiasCorrected({params})", table=None):
     """Check cramersVBiasCorrected aggregate function by using the same checks as for covarPop."""
     self.context.snapshot_id = get_snapshot_id()
@@ -18,7 +20,13 @@ def scenario(self, func="cramersVBiasCorrected({params})", table=None):
     if table is None:
         table = self.context.table
 
-    checks(func=func, table=table, decimal=False, extended_precision=False, snapshot_id=self.context.snapshot_id)
+    checks(
+        func=func,
+        table=table,
+        decimal=False,
+        extended_precision=False,
+        snapshot_id=self.context.snapshot_id,
+    )
 
     with Check("example_2"):
         execute_query(

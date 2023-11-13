@@ -1,0 +1,120 @@
+_aggregate_functions_maxIntersections_NULL_value_handling = r"""
+{"maxIntersections(x, y)":"1"}
+"""
+
+_aggregate_functions_maxIntersections_constant = r"""
+{"maxIntersections(1, 1)":"0"}
+"""
+
+_aggregate_functions_maxIntersections_datatypes_permutations_Float32_Float32 = r"""
+{"maxIntersections(float32, float32)":"0"}
+"""
+
+_aggregate_functions_maxIntersections_datatypes_permutations_Float64_Float64 = r"""
+{"maxIntersections(float64, float64)":"0"}
+"""
+
+_aggregate_functions_maxIntersections_datatypes_permutations_Int64_Int64 = r"""
+{"maxIntersections(int64, int64)":"0"}
+"""
+
+_aggregate_functions_maxIntersections_datatypes_permutations_LowCardinality_Float32__LowCardinality_Float32_ = r"""
+{"maxIntersections(lowcardinality_float32_, lowcardinality_float32_)":"0"}
+"""
+
+_aggregate_functions_maxIntersections_datatypes_permutations_LowCardinality_Float64__LowCardinality_Float64_ = r"""
+{"maxIntersections(lowcardinality_float64_, lowcardinality_float64_)":"0"}
+"""
+
+_aggregate_functions_maxIntersections_datatypes_permutations_LowCardinality_Int64__LowCardinality_Int64_ = r"""
+{"maxIntersections(lowcardinality_int64_, lowcardinality_int64_)":"0"}
+"""
+
+_aggregate_functions_maxIntersections_datatypes_permutations_LowCardinality_UInt64__LowCardinality_UInt64_ = r"""
+{"maxIntersections(lowcardinality_uint64_, lowcardinality_uint64_)":"0"}
+"""
+
+_aggregate_functions_maxIntersections_datatypes_permutations_Nullable_Float32__Nullable_Float32_ = r"""
+{"maxIntersections(nullable_float32_, nullable_float32_)":"0"}
+"""
+
+_aggregate_functions_maxIntersections_datatypes_permutations_Nullable_Float64__Nullable_Float64_ = r"""
+{"maxIntersections(nullable_float64_, nullable_float64_)":"0"}
+"""
+
+_aggregate_functions_maxIntersections_datatypes_permutations_Nullable_Int64__Nullable_Int64_ = r"""
+{"maxIntersections(nullable_int64_, nullable_int64_)":"0"}
+"""
+
+_aggregate_functions_maxIntersections_datatypes_permutations_Nullable_UInt64__Nullable_UInt64_ = r"""
+{"maxIntersections(nullable_uint64_, nullable_uint64_)":"0"}
+"""
+
+_aggregate_functions_maxIntersections_datatypes_permutations_UInt64_UInt64 = r"""
+{"maxIntersections(uint64, uint64)":"0"}
+"""
+
+_aggregate_functions_maxIntersections_example_1 = r"""
+{"maxIntersections(y, x)":"4"}
+"""
+
+_aggregate_functions_maxIntersections_example_2 = r"""
+{"maxIntersections(x, y)":"3"}
+"""
+
+_aggregate_functions_maxIntersections_inf___inf__nan__inf__inf = r"""
+{"maxIntersections(x, y)":"1"}
+"""
+
+_aggregate_functions_maxIntersections_inf___inf__nan__inf_inf = r"""
+{"maxIntersections(x, y)":"2"}
+"""
+
+_aggregate_functions_maxIntersections_inf___inf__nan__inf_nan = r"""
+{"maxIntersections(x, y)":"2"}
+"""
+
+_aggregate_functions_maxIntersections_inf___inf__nan_inf__inf = r"""
+{"maxIntersections(x, y)":"0"}
+"""
+
+_aggregate_functions_maxIntersections_inf___inf__nan_inf_inf = r"""
+{"maxIntersections(x, y)":"1"}
+"""
+
+_aggregate_functions_maxIntersections_inf___inf__nan_inf_nan = r"""
+{"maxIntersections(x, y)":"1"}
+"""
+
+_aggregate_functions_maxIntersections_inf___inf__nan_nan__inf = r"""
+{"maxIntersections(x, y)":"0"}
+"""
+
+_aggregate_functions_maxIntersections_inf___inf__nan_nan_inf = r"""
+{"maxIntersections(x, y)":"1"}
+"""
+
+_aggregate_functions_maxIntersections_inf___inf__nan_nan_nan = r"""
+{"maxIntersections(x, y)":"1"}
+"""
+
+_aggregate_functions_maxIntersections_return_type = r"""
+{"toTypeName(maxIntersections(number, plus(number, 1)))":"UInt64"}
+"""
+
+_aggregate_functions_maxIntersections_single_NULL_value = r"""
+{"maxIntersections(x, y)":null}
+"""
+
+_aggregate_functions_maxIntersections_single_row = r"""
+{"maxIntersections(number, plus(number, 1))":"1"}
+"""
+
+_aggregate_functions_maxIntersections_some_negative_values = r"""
+{"maxIntersections(minus(number, 5), minus(number, 10))":"0"}
+"""
+
+_aggregate_functions_maxIntersections_zero_rows = r"""
+{"maxIntersections(number, number)":"0"}
+"""
+

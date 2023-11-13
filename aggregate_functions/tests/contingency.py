@@ -18,4 +18,10 @@ def scenario(self, func="contingency({params})", table=None):
     if table is None:
         table = self.context.table
 
-    checks(func=func, table=table, decimal=False, extended_precision=False,snapshot_id=self.context.snapshot_id)
+    checks(
+        func=func,
+        table=table,
+        decimal=False,
+        extended_precision=False,
+        snapshot_id=self.context.snapshot_id,
+    )

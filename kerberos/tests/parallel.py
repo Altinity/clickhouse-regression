@@ -23,8 +23,8 @@ def valid_requests_same_credentials(self):
         tasks = []
         with Pool(2) as pool:
             with When("I try simultaneous authentication"):
-                tasks.append(pool.submit(helper, (ch_nodes[1].cmd,)))
-                tasks.append(pool.submit(helper, (ch_nodes[2].cmd,)))
+                tasks.append(pool.submit(helper, (ch_nodes[1].command,)))
+                tasks.append(pool.submit(helper, (ch_nodes[2].command,)))
                 tasks[0].result(timeout=200)
                 tasks[1].result(timeout=200)
 
@@ -61,8 +61,8 @@ def valid_requests_different_credentials(self):
                 )
 
             with When("I try simultaneous authentication for valid and invalid"):
-                tasks.append(pool.submit(helper, (ch_nodes[1].cmd,)))
-                tasks.append(pool.submit(helper, (ch_nodes[2].cmd,)))
+                tasks.append(pool.submit(helper, (ch_nodes[1].command,)))
+                tasks.append(pool.submit(helper, (ch_nodes[2].command,)))
                 tasks[0].result(timeout=200)
                 tasks[1].result(timeout=200)
 
@@ -95,8 +95,8 @@ def valid_invalid(self):
         tasks = []
         with Pool(2) as pool:
             with When("I try simultaneous authentication for valid and invalid"):
-                tasks.append(pool.submit(helper, (ch_nodes[1].cmd,)))  # invalid
-                tasks.append(pool.submit(helper, (ch_nodes[2].cmd,)))  # valid
+                tasks.append(pool.submit(helper, (ch_nodes[1].command,)))  # invalid
+                tasks.append(pool.submit(helper, (ch_nodes[2].command,)))  # valid
 
             with Then(f"I expect have auth failure"):
                 assert tasks[1].result(timeout=300).output == "kerberos_user", error()
@@ -136,8 +136,8 @@ def deletion(self):
                 ch_nodes[0].query("GRANT ACCESS MANAGEMENT ON *.* TO krb2")
 
             with When("I try simultaneous authentication for valid and invalid"):
-                tasks.append(pool.submit(helper, (ch_nodes[1].cmd, "krb2")))
-                tasks.append(pool.submit(helper, (ch_nodes[2].cmd, "krb1")))
+                tasks.append(pool.submit(helper, (ch_nodes[1].command, "krb2")))
+                tasks.append(pool.submit(helper, (ch_nodes[2].command, "krb1")))
                 tasks[0].result(timeout=200)
                 tasks[1].result(timeout=200)
 
@@ -171,9 +171,11 @@ def kerberos_and_nonkerberos(self):
         with Pool(2) as pool:
             with When("I try simultaneous authentication for valid and invalid"):
                 tasks.append(
-                    pool.submit(helper, (ch_nodes[1].cmd, False))
+                    pool.submit(helper, (ch_nodes[1].command, False))
                 )  # non-kerberos
-                tasks.append(pool.submit(helper, (ch_nodes[2].cmd, True)))  # kerberos
+                tasks.append(
+                    pool.submit(helper, (ch_nodes[2].command, True))
+                )  # kerberos
 
             with Then(f"I expect have auth failure"):
                 assert tasks[1].result(timeout=300).output == "kerberos_user", error()
