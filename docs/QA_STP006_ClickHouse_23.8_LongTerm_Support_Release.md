@@ -29,7 +29,7 @@ Started to execute test plan on Nov 1, 2023.
     * 5.1 [Notable Differences in Behavior](#notable-differences-in-behavior)
     * 5.2 [Summary of Main Regressions](#summary-of-main-regressions)
 * 6 [Known Issues](#known-issues)
-    * 6.1 [Reported By Altinity:](#reported-by-altinity)
+    * 6.1 [Reported By Altinity](#reported-by-altinity)
     * 6.2 [Open Issues](#open-issues)
 * 7 [New Features](#new-features)
     * 7.1 [Altinity Stable Backports](#altinity-stable-backports)
@@ -131,7 +131,7 @@ Regressions:
 
 ## Known Issues
 
-### Reported By Altinity:
+### Reported By Altinity
 
 * TBD
 
