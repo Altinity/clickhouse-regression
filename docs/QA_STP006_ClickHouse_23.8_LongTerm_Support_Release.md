@@ -136,6 +136,10 @@ The following team members SHALL be dedicated to the release:
 * `SELECT bitCount(toInt128('170141183460469231731687303715884105727'));` now shows correct 127 bits instead of 64.
 * `SELECT modulo(toDecimal256(1,0), toDecimal256(1,0));` no longer results in a `Exception: Illegal types`.
 * When granting roles to a user that is in an active clickhouse-client session, the role is not applied until the clickhouse-client instance is restarted.
+* When using clickhouse keeper-converter, the output directory for the snapshots must exist and will not be created automatically
+* SYSTEM RELOAD SYMBOLS has been removed
+* Access error with skip_access_check=1 now raises on CREATE instead of waiting for INSERT
+
 ### Summary of Main Regressions
 
 Regressions:
