@@ -132,7 +132,7 @@ def mixed_keepers_3(self):
 
         with And(f"I check that ruok returns imok"):
             for name in cluster.nodes["clickhouse"][0:3]:
-                retry(cluster.node("bash-tools").cmd, timeout=500, delay=1)(
+                retry(cluster.node("bash-tools").command, timeout=500, delay=1)(
                     f"echo ruok | nc {name} 9281",
                     exitcode=0,
                     message="F",
@@ -172,7 +172,7 @@ def openssl_check_simple(self, node=None, message="New, TLSv1.2, Cipher is "):
     for port in ports_list:
         with Check(f"port:{port}"):
             with Then(f"I make openssl check"):
-                with node.cmd(
+                with node.command(
                     f"openssl s_client -connect clickhouse1:{port}",
                     no_checks=True,
                     asynchronous=True,
@@ -194,7 +194,7 @@ def openssl_check_v2_simple(self, node=None, message="New, TLSv1.2, Cipher is ")
     for port in ports_list:
         with Check(f"port:{port}"):
             with Then(f"I make openssl check"):
-                node.cmd(
+                node.command(
                     f'openssl s_client -connect clickhouse1:{port} <<< "Q"',
                     message=message,
                 )

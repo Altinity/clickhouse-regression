@@ -60,6 +60,6 @@ def performance_check(
                         f"DROP TABLE IF EXISTS {table_name} ON CLUSTER {self.context.cluster_name} SYNC"
                     )
                     clean_coordination_on_all_nodes()
-                    self.context.cluster.node("clickhouse1").cmd(f"rm -rf /share/")
+                    self.context.cluster.node("clickhouse1").command(f"rm -rf /share/")
 
     return insert_time_list

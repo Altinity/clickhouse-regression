@@ -10,22 +10,51 @@ append_path(sys.path, "../../..")
 @Name("replace partition")
 def feature(self):
     """Run features from the replace partition suite."""
-    Feature(run=load("alter.table.replace_partition.partition_types", "feature"))
-    Feature(run=load("alter.table.replace_partition.rbac", "feature"))
-    Feature(run=load("alter.table.replace_partition.data_integrity", "feature"))
-    Feature(run=load("alter.table.replace_partition.prohibited_actions", "feature"))
-    Feature(run=load("alter.table.replace_partition.temporary_table", "feature"))
-    Feature(run=load("alter.table.replace_partition.engines", "feature"))
-    Feature(run=load("alter.table.replace_partition.concurrent_actions", "feature"))
-    Feature(run=load("alter.table.replace_partition.concurrent_actions_2", "feature"))
-    Feature(
-        run=load(
-            "alter.table.replace_partition.concurrent_replace_partitions", "feature"
+    with Pool(2) as pool:
+        Feature(
+            run=load("alter.table.replace_partition.partition_types", "feature"),
+            parallel=True,
+            executor=pool,
         )
-    )
-    Feature(
-        run=load(
-            "alter.table.replace_partition.concurrent_merges_and_mutations",
-            "feature",
+        Feature(
+            run=load("alter.table.replace_partition.rbac", "feature"),
+            parallel=True,
+            executor=pool,
         )
-    )
+        Feature(
+            run=load("alter.table.replace_partition.data_integrity", "feature"),
+            parallel=True,
+            executor=pool,
+        )
+        Feature(
+            run=load("alter.table.replace_partition.prohibited_actions", "feature"),
+            parallel=True,
+            executor=pool,
+        )
+        Feature(
+            run=load("alter.table.replace_partition.temporary_table", "feature"),
+            parallel=True,
+            executor=pool,
+        )
+        Feature(
+            run=load("alter.table.replace_partition.engines", "feature"),
+            parallel=True,
+            executor=pool,
+        )
+        Feature(
+            run=load("alter.table.replace_partition.concurrent_actions", "feature"),
+            parallel=True,
+            executor=pool,
+        )
+        Feature(
+            run=load(
+                "alter.table.replace_partition.concurrent_replace_partitions", "feature"
+            )
+        )
+        Feature(
+            run=load(
+                "alter.table.replace_partition.concurrent_merges_and_mutations",
+                "feature",
+            )
+        )
+        join()

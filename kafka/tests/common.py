@@ -16,14 +16,14 @@ def delete_any_old_topic_and_consumer_group(
             f"kafka-topics "
             f"--bootstrap-server {bootstrap_server} --delete --topic {topic}"
         )
-        node.cmd(command)
+        node.command(command)
 
     with By("deleting consumer group"):
         command = (
             f"kafka-consumer-groups "
             f"--bootstrap-server {bootstrap_server} --delete --group {consumer_group}"
         )
-        node.cmd(command)
+        node.command(command)
 
 
 @TestStep(Given)
@@ -45,7 +45,7 @@ def create_topic(
             f"kafka-topics --create --bootstrap-server {bootstrap_server} "
             f"--replication-factor {replication_factor} --partitions {partitions} --topic {topic}"
         )
-        node.cmd(command, exitcode=0)
+        node.command(command, exitcode=0)
 
         yield topic
     finally:
@@ -54,13 +54,13 @@ def create_topic(
                 f"kafka-topics "
                 f"--bootstrap-server {bootstrap_server} --delete --topic {topic}"
             )
-            node.cmd(command)
+            node.command(command)
 
             command = (
                 f"kafka-consumer-groups "
                 f"--bootstrap-server {bootstrap_server} --delete --group {consumer_group}"
             )
-            node.cmd(command)
+            node.command(command)
 
 
 def check_counts(counts, timeout, node="clickhouse1", steps=True):

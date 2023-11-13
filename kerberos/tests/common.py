@@ -54,29 +54,29 @@ def test_select_query(node, krb_auth=True, req="SELECT currentUser()"):
 def kinit_no_keytab(self, node, principal="kerberos_user", lifetime_option="-l 10:00"):
     """Helper for obtaining Kerberos ticket for client"""
     try:
-        node.cmd("echo pwd | kinit admin/admin")
-        node.cmd(f'kadmin -w pwd -q "add_principal -pw pwd {principal}"')
-        node.cmd(f"echo pwd | kinit {lifetime_option} {principal}")
+        node.command("echo pwd | kinit admin/admin")
+        node.command(f'kadmin -w pwd -q "add_principal -pw pwd {principal}"')
+        node.command(f"echo pwd | kinit {lifetime_option} {principal}")
         yield
     finally:
-        node.cmd("kdestroy")
+        node.command("kdestroy")
 
 
 @TestStep(Given)
 def create_server_principal(self, node):
     """Helper for obtaining Kerberos ticket for server"""
     try:
-        node.cmd("echo pwd | kinit admin/admin")
-        node.cmd(
+        node.command("echo pwd | kinit admin/admin")
+        node.command(
             f'kadmin -w pwd -q "add_principal -randkey HTTP/{self.context.env}_{node.name}_1.krbnet"'
         )
-        node.cmd(
+        node.command(
             f'kadmin -w pwd -q "ktadd -k /etc/krb5.keytab HTTP/{self.context.env}_{node.name}_1.krbnet"'
         )
         yield
     finally:
-        node.cmd("kdestroy")
-        node.cmd("rm /etc/krb5.keytab")
+        node.command("kdestroy")
+        node.command("rm /etc/krb5.keytab")
 
 
 @TestStep(Given)
@@ -217,7 +217,7 @@ def check_wrong_config(
             assert exitcode == 0, error()
 
         with When("I restart ClickHouse to apply the config changes"):
-            node.cmd("kdestroy")
+            node.command("kdestroy")
             # time.sleep(1)
             if output:
                 node.restart(safe=False, wait_healthy=True)
@@ -231,7 +231,7 @@ def check_wrong_config(
                 while time.time() - started < timeout:
                     kinit_no_keytab(node=client)
                     create_server_principal(node=node)
-                    r = client.cmd(test_select_query(node=node), no_checks=True)
+                    r = client.command(test_select_query(node=node), no_checks=True)
                     if output in r.output:
                         assert True, error()
                         break

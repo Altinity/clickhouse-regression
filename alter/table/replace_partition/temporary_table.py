@@ -38,7 +38,7 @@ def from_temporary_to_regular(self):
     ):
         node.query(
             f"""
-        CREATE TEMPORARY TABLE {source_table} (p UInt8,i UInt64) ENGINE = MergeTree PARTITION BY p ORDER BY tuple();
+        CREATE TEMPORARY TABLE {source_table} (p UInt16,i UInt64,extra UInt8) ENGINE = MergeTree PARTITION BY p ORDER BY tuple();
         INSERT INTO {source_table} (p, i) SELECT number, rand64() FROM (SELECT arrayJoin([1,2,3,4,5,6,7,8,9,10]) AS number FROM numbers(3)); 
         ALTER TABLE {destination_table} REPLACE PARTITION 1 FROM {source_table};
         CREATE TABLE {reference_table} ENGINE = MergeTree PARTITION BY p ORDER BY tuple() AS SELECT * FROM {source_table};
@@ -90,8 +90,8 @@ def from_temporary_to_temporary_table(self):
     ):
         node.query(
             f"""
-        CREATE TEMPORARY TABLE {destination_table} (p UInt8,i UInt64) ENGINE = MergeTree PARTITION BY p ORDER BY tuple();
-        CREATE TEMPORARY TABLE {source_table} (p UInt8,i UInt64) ENGINE = MergeTree PARTITION BY p ORDER BY tuple();
+        CREATE TEMPORARY TABLE {destination_table} (p UInt16,i UInt64,extra UInt8) ENGINE = MergeTree PARTITION BY p ORDER BY tuple();
+        CREATE TEMPORARY TABLE {source_table} (p UInt16,i UInt64,extra UInt8) ENGINE = MergeTree PARTITION BY p ORDER BY tuple();
         INSERT INTO {source_table} (p, i) SELECT number, rand64() FROM (SELECT arrayJoin([1,2,3,4,5,6,7,8,9,10]) AS number FROM numbers(3)); 
         INSERT INTO {destination_table} (p, i) SELECT number, rand64() FROM (SELECT arrayJoin([1,2,3,4,5,6,7,8,9,10]) AS number FROM numbers(3)); 
         ALTER TABLE {destination_table} REPLACE PARTITION 1 FROM {source_table};
@@ -123,7 +123,7 @@ def from_regular_to_temporary(self):
     ):
         node.query(
             f"""
-        CREATE TEMPORARY TABLE {destination_table} (p UInt8,i UInt64) ENGINE = MergeTree PARTITION BY p ORDER BY tuple();
+        CREATE TEMPORARY TABLE {destination_table} (p UInt16,i UInt64,extra UInt8) ENGINE = MergeTree PARTITION BY p ORDER BY tuple();
         CREATE TABLE {source_table} (p UInt8,i UInt64) ENGINE = MergeTree PARTITION BY p ORDER BY tuple();
         INSERT INTO {source_table} (p, i) SELECT number, rand64() FROM (SELECT arrayJoin([1,2,3,4,5,6,7,8,9,10]) AS number FROM numbers(3)); 
         INSERT INTO {destination_table} (p, i) SELECT number, rand64() FROM (SELECT arrayJoin([1,2,3,4,5,6,7,8,9,10]) AS number FROM numbers(3)); 

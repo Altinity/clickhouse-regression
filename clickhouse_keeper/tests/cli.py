@@ -17,7 +17,7 @@ def unknown_option(self, option, node=None):
     message = f"Unknown option specified"
 
     with When(f"using unknown option '{option}'"):
-        node.cmd(f"clickhouse keeper {option}", exitcode=exitcode, message=message)
+        node.command(f"clickhouse keeper {option}", exitcode=exitcode, message=message)
 
 
 @TestScenario
@@ -29,10 +29,10 @@ def version(self, node=None):
     message = "ClickHouse keeper version"
 
     with When("using -V"):
-        node.cmd("clickhouse keeper -V", exitcode=exitcode, message=message)
+        node.command("clickhouse keeper -V", exitcode=exitcode, message=message)
 
     with When("using --version"):
-        node.cmd("clickhouse keeper --version", exitcode=exitcode, message=message)
+        node.command("clickhouse keeper --version", exitcode=exitcode, message=message)
 
 
 @TestScenario
@@ -44,10 +44,12 @@ def config(self, node=None):
     message = "Missing option argument: config-file requires <file>"
 
     with When("using -C"):
-        node.cmd("clickhouse keeper -C", exitcode=exitcode, message=message)
+        node.command("clickhouse keeper -C", exitcode=exitcode, message=message)
 
     with When("using --config-file"):
-        node.cmd("clickhouse keeper --config-file", exitcode=exitcode, message=message)
+        node.command(
+            "clickhouse keeper --config-file", exitcode=exitcode, message=message
+        )
 
 
 @TestScenario
@@ -58,13 +60,13 @@ def daemon(self, node=None):
     try:
         with When("I start `clickhouse-keeper` cluster with --daemon option."):
             with By("starting keeper process"):
-                node.cmd(
+                node.command(
                     "clickhouse keeper --config /etc/clickhouse-keeper/config.xml"
                     " --pidfile=/tmp/clickhouse-keeper.pid --daemon",
                     exitcode=0,
                 )
                 with And("checking that keeper pid file was created"):
-                    node.cmd(
+                    node.command(
                         "ls /tmp/clickhouse-keeper.pid",
                         exitcode=0,
                         message="/tmp/clickhouse-keeper.pid",
@@ -73,11 +75,13 @@ def daemon(self, node=None):
         with Finally("I stop keeper"):
             with When(f"I stop stop keeper process"):
                 with By("sending kill -TERM to keeper process"):
-                    if node.cmd("ls /tmp/clickhouse-keeper.pid", exitcode=0):
-                        pid = node.cmd("cat /tmp/clickhouse-keeper.pid").output.strip()
-                        node.cmd(f"kill -TERM {pid}", exitcode=0)
+                    if node.command("ls /tmp/clickhouse-keeper.pid", exitcode=0):
+                        pid = node.command(
+                            "cat /tmp/clickhouse-keeper.pid"
+                        ).output.strip()
+                        node.command(f"kill -TERM {pid}", exitcode=0)
                 with And("checking pid does not exist"):
-                    retry(node.cmd, timeout=100, delay=1)(
+                    retry(node.command, timeout=100, delay=1)(
                         f"ps {pid}", exitcode=1, steps=False
                     )
 

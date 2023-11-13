@@ -37,7 +37,7 @@ def startup_timeout(self):
                     keeper exits with exitcode: {exitcode} and shows message: {message} cause
                     startup_timeout failed""",
         ) as start_keeper:
-            cluster.node("clickhouse1").cmd(
+            cluster.node("clickhouse1").command(
                 "clickhouse keeper --config /etc/clickhouse-server/config.xml",
                 exitcode=exitcode,
                 message=message,
@@ -78,7 +78,7 @@ def server_id(self):
                 retry(cluster.node(name).stop_clickhouse, timeout=100, delay=1)()
 
         with Then("I wait  keeper message: {message}"):
-            cluster.node("clickhouse1").cmd(
+            cluster.node("clickhouse1").command(
                 "clickhouse keeper --config /etc/clickhouse-server/config.xml",
                 message=message,
             )
@@ -124,7 +124,7 @@ def election_timeout_upper_bound_ms(self):
             description=f"""keeper ping that
                     election_timeout_upper_bound_ms timed out""",
         ) as start_keeper:
-            with cluster.node("clickhouse1").cmd(
+            with cluster.node("clickhouse1").command(
                 "clickhouse keeper --config /etc/clickhouse-server/config.xml"
                 " --pidfile=/tmp/clickhouse-keeper.pid",
                 no_checks=True,
@@ -179,7 +179,7 @@ def election_timeout_lower_bound_ms(self):
             description=f"""keeper ping that
                     election_timeout_lower_bound_ms timed out""",
         ) as start_keeper:
-            with cluster.node("clickhouse1").cmd(
+            with cluster.node("clickhouse1").command(
                 "clickhouse keeper --config /etc/clickhouse-server/config.xml"
                 " --pidfile=/tmp/clickhouse-keeper.pid",
                 no_checks=True,
@@ -219,7 +219,7 @@ def log_storage_path(self):
         )
 
         with When("I check log file has been created on the correct path"):
-            retry(node.cmd, timeout=100, delay=1)(
+            retry(node.command, timeout=100, delay=1)(
                 "ls var/lib/clickhouse/coordination/log/",
                 exitcode=0,
                 message="changelog_1_10000.bin.zstd",
@@ -246,7 +246,7 @@ def snapshot_storage_path(self):
             )
 
         with Then("I check snapshot file has been created on the correct path"):
-            retry(cluster.node("clickhouse1").cmd, timeout=100, delay=2)(
+            retry(cluster.node("clickhouse1").command, timeout=100, delay=2)(
                 "ls " "/var/lib/clickhouse/coordination/snapshots",
                 exitcode=0,
                 message="snapshot_10.bin.zstd",
@@ -275,7 +275,7 @@ def snapshots_to_keep(self):
             )
 
         with And("I check that there are only 3 snapshot files in the folder"):
-            retry(cluster.node("clickhouse1").cmd, timeout=100, delay=1)(
+            retry(cluster.node("clickhouse1").command, timeout=100, delay=1)(
                 "ls " "/var/lib/clickhouse/coordination/snapshots" " | wc -l",
                 exitcode=0,
                 message="3",
@@ -285,7 +285,7 @@ def snapshots_to_keep(self):
             "I wait 10 sec and check again that there are steal only 3 snapshot files in the folder"
         ):
             time.sleep(10)
-            cluster.node("clickhouse1").cmd(
+            cluster.node("clickhouse1").command(
                 "ls /var/lib/clickhouse/coordination/snapshots | wc -l",
                 exitcode=0,
                 message="3",
@@ -605,7 +605,7 @@ def coordination_option_values(
                 retry(cluster.node(name).stop_clickhouse, timeout=100, delay=1)()
 
         with Then("I start keeper and wait for message: {message}"):
-            with cluster.node("clickhouse1").cmd(
+            with cluster.node("clickhouse1").command(
                 "clickhouse keeper --config /etc/clickhouse-server/config.xml",
                 no_checks=True,
                 asynchronous=True,

@@ -56,7 +56,7 @@ def add_projection(self, grant_target_name, user_name, node=None):
     with table(node, table_name):
         with When("I check that user is unable to add a projection"):
             node.query(
-                f"ALTER TABLE {table_name} ADD PROJECTION {proj_name} (SELECT y)",
+                f"ALTER TABLE {table_name} ADD PROJECTION {proj_name} (SELECT y GROUP BY y)",
                 settings=[("user", user_name)],
                 exitcode=exitcode,
                 message=message,
@@ -67,7 +67,7 @@ def add_projection(self, grant_target_name, user_name, node=None):
 
         with When("I check the user is able to add a projection"):
             node.query(
-                f"ALTER TABLE {table_name} ADD PROJECTION {proj_name} (SELECT y)",
+                f"ALTER TABLE {table_name} ADD PROJECTION {proj_name} (SELECT y GROUP BY y)",
                 settings=[("user", user_name)],
             )
 
@@ -79,7 +79,7 @@ def add_projection(self, grant_target_name, user_name, node=None):
 
         with When("I check that user is unable to add a projection"):
             node.query(
-                f"ALTER TABLE {table_name} ADD PROJECTION {proj_name} (SELECT y)",
+                f"ALTER TABLE {table_name} ADD PROJECTION {proj_name} (SELECT y GROUP BY y)",
                 settings=[("user", user_name)],
                 exitcode=exitcode,
                 message=message,
@@ -106,7 +106,7 @@ def drop_projection(self, grant_target_name, user_name, node=None):
     with table(node, table_name):
         with Given("I have a projection"):
             node.query(
-                f"ALTER TABLE {table_name} ADD PROJECTION {proj_name} (SELECT y)"
+                f"ALTER TABLE {table_name} ADD PROJECTION {proj_name} (SELECT y GROUP BY y)"
             )
 
         with When("I check that user is unable to drop a projection"):
@@ -128,7 +128,7 @@ def drop_projection(self, grant_target_name, user_name, node=None):
 
         with Then(f"I add the projection back"):
             node.query(
-                f"ALTER TABLE {table_name} ADD PROJECTION {proj_name} (SELECT y)"
+                f"ALTER TABLE {table_name} ADD PROJECTION {proj_name} (SELECT y GROUP BY y)"
             )
 
         with And(f"I revoke the {privilege} from {grant_target_name}"):
@@ -163,7 +163,7 @@ def materialize_projection(self, grant_target_name, user_name, node=None):
     with table(node, table_name, "ReplicatedMergeTree-one_shard_cluster"):
         with Given("I have a projection"):
             node.query(
-                f"ALTER TABLE {table_name} ADD PROJECTION {proj_name} (SELECT y)"
+                f"ALTER TABLE {table_name} ADD PROJECTION {proj_name} (SELECT y GROUP BY y)"
             )
 
         with And("I have some data on the table"):
@@ -220,7 +220,7 @@ def clear_projection(self, grant_target_name, user_name, node=None):
     with table(node, table_name, "ReplicatedMergeTree-one_shard_cluster"):
         with Given("I have a projection"):
             node.query(
-                f"ALTER TABLE {table_name} ADD PROJECTION {proj_name} (SELECT y)"
+                f"ALTER TABLE {table_name} ADD PROJECTION {proj_name} (SELECT y GROUP BY y)"
             )
 
         with And("I have some data on the table"):
