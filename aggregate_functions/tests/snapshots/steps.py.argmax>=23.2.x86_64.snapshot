@@ -14615,437 +14615,568 @@ _aggregate_functions_argMax_zero_rows = r"""
 {"argMax(number, plus(number, 1))":"0"}
 """
 
-_clickhouse_aggregate_functions_argMax_constant = r"""
-{"argMax(1, 2)":1}
-"""
-
-_clickhouse_aggregate_functions_argMax_zero_rows = r"""
-{"argMax(number, plus(number, 1))":"0"}
-"""
-
-_clickhouse_aggregate_functions_argMax_with_group_by = r"""
-{"even":0,"argMax(number, modulo(number, 2))":"0"}
-{"even":1,"argMax(number, modulo(number, 2))":"1"}
-"""
-
 _clickhouse_aggregate_functions_argMax_NULL_value_handling = r"""
 {"argMax(x, y)":5}
 """
 
-_clickhouse_aggregate_functions_argMax_doc_example = r"""
-{"argMax(user, salary)":"director"}
-"""
-
-_clickhouse_aggregate_functions_argMax_inf___inf__nan_inf_inf = r"""
-{"argMax(x, y)":null}
-"""
-
-_clickhouse_aggregate_functions_argMax_inf___inf__nan_inf__inf = r"""
-{"argMax(x, y)":4}
-"""
-
-_clickhouse_aggregate_functions_argMax_inf___inf__nan_inf_nan = r"""
-{"argMax(x, y)":4}
-"""
-
-_clickhouse_aggregate_functions_argMax_inf___inf__nan__inf_inf = r"""
-{"argMax(x, y)":null}
-"""
-
-_clickhouse_aggregate_functions_argMax_inf___inf__nan__inf__inf = r"""
-{"argMax(x, y)":4}
-"""
-
-_clickhouse_aggregate_functions_argMax_inf___inf__nan__inf_nan = r"""
-{"argMax(x, y)":4}
-"""
-
-_clickhouse_aggregate_functions_argMax_inf___inf__nan_nan_inf = r"""
-{"argMax(x, y)":null}
-"""
-
-_clickhouse_aggregate_functions_argMax_inf___inf__nan_nan__inf = r"""
-{"argMax(x, y)":4}
-"""
-
-_clickhouse_aggregate_functions_argMax_inf___inf__nan_nan_nan = r"""
-{"argMax(x, y)":4}
-"""
-
-_clickhouse_aggregate_functions_argMax_string_that_ends_with__0 = r"""
-{"argMax(x, y)":"5"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_UInt8 = r"""
-{"argMax(string, uint8)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_UInt8_String = r"""
-{"argMax(uint8, string)":24}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_UInt32 = r"""
-{"argMax(string, uint32)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_UInt16 = r"""
-{"argMax(string, uint16)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_UInt16_String = r"""
-{"argMax(uint16, string)":27015}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_UInt32_String = r"""
-{"argMax(uint32, string)":2579416427}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_UInt64 = r"""
-{"argMax(string, uint64)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_UInt64_String = r"""
-{"argMax(uint64, string)":"16708105131877516882"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_UInt128 = r"""
-{"argMax(string, uint128)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_UInt128_String = r"""
-{"argMax(uint128, string)":"155026605108871518024784770416974189568"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Int8 = r"""
-{"argMax(string, int8)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Int16_String = r"""
-{"argMax(int16, string)":-27564}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Int8_String = r"""
-{"argMax(int8, string)":-48}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Int16 = r"""
-{"argMax(string, int16)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Int32 = r"""
-{"argMax(string, int32)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Int32_String = r"""
-{"argMax(int32, string)":-1251263486}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Int64 = r"""
-{"argMax(string, int64)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Int128 = r"""
-{"argMax(string, int128)":""}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Int64_String = r"""
-{"argMax(int64, string)":"9618164129723932"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Int128_String = r"""
-{"argMax(int128, string)":"-12512132438545739920093208663622361216"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Float32 = r"""
-{"argMax(string, float32)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Float32_String = r"""
-{"argMax(float32, string)":-1.9952109e38}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Float64 = r"""
-{"argMax(string, float64)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Float64_String = r"""
-{"argMax(float64, string)":-1.022441982597651e98}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Decimal128_38_ = r"""
-{"argMax(string, decimal128_38_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Decimal128_38__String = r"""
-{"argMax(decimal128_38_, string)":-0.59737394802623478408565194228387011584}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Date = r"""
-{"argMax(string, date)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Date_String = r"""
-{"argMax(date, string)":"2021-09-25"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_DateTime = r"""
-{"argMax(string, datetime)":""}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_DateTime_String = r"""
-{"argMax(datetime, string)":"2009-06-14 11:12:39"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_DateTime64_3___22_8 = r"""
-{"argMax(string, datetime64_3_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_DateTime64_3__String__22_8 = r"""
-{"argMax(datetime64_3_, string)":"2014-02-11 18:05:25.000"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Bool = r"""
-{"argMax(string, bool)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_constant = r"""
+{"argMax(1, 2)":1}
 """
 
 _clickhouse_aggregate_functions_argMax_datatypes_Bool_String = r"""
 {"argMax(bool, string)":true}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_String = r"""
-{"argMax(string, string)":"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr"}
+_clickhouse_aggregate_functions_argMax_datatypes_DateTime64_3__String__22_8 = r"""
+{"argMax(datetime64_3_, string)":"2014-02-11 18:05:25.000"}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_FixedString_51_ = r"""
-{"argMax(string, fixedstring_51_)":"gggggggggggggggggggggggggggggggggggg"}
+_clickhouse_aggregate_functions_argMax_datatypes_DateTime_String = r"""
+{"argMax(datetime, string)":"2009-06-14 11:12:39"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Date_String = r"""
+{"argMax(date, string)":"2021-09-25"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Decimal128_38__String = r"""
+{"argMax(decimal128_38_, string)":-0.59737394802623478408565194228387011584}
 """
 
 _clickhouse_aggregate_functions_argMax_datatypes_FixedString_51__String = r"""
 {"argMax(fixedstring_51_, string)":"mmmmmmmmmmmmmmm\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_UUID = r"""
-{"argMax(string, uuid)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Float32_String = r"""
+{"argMax(float32, string)":-1.9952109e38}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_UUID_String = r"""
-{"argMax(uuid, string)":"dd4aea94-cfc8-e0e6-bafa-3ea3cc2c8b4c"}
+_clickhouse_aggregate_functions_argMax_datatypes_Float64_String = r"""
+{"argMax(float64, string)":-1.022441982597651e98}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_UInt8_ = r"""
-{"argMax(string, map_uint8_uint8_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Int128_String = r"""
+{"argMax(int128, string)":"-12512132438545739920093208663622361216"}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_UInt16_ = r"""
-{"argMax(string, map_uint8_uint16_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Int16_String = r"""
+{"argMax(int16, string)":-27564}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_UInt8__String = r"""
-{"argMax(map_uint8_uint8_, string)":{"228":15}}
+_clickhouse_aggregate_functions_argMax_datatypes_Int32_String = r"""
+{"argMax(int32, string)":-1251263486}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_UInt16__String = r"""
-{"argMax(map_uint8_uint16_, string)":{"202":61509}}
+_clickhouse_aggregate_functions_argMax_datatypes_Int64_String = r"""
+{"argMax(int64, string)":"9618164129723932"}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_UInt32__String = r"""
-{"argMax(map_uint8_uint32_, string)":{"73":1693759690}}
+_clickhouse_aggregate_functions_argMax_datatypes_Int8_String = r"""
+{"argMax(int8, string)":-48}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_UInt32_ = r"""
-{"argMax(string, map_uint8_uint32_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Bool__String = r"""
+{"argMax(map_uint16_bool_, string)":{"18077":true}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_UInt64_ = r"""
-{"argMax(string, map_uint8_uint64_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_DateTime64_3___String__22_8 = r"""
+{"argMax(map_uint16_datetime64_3__, string)":{"11275":"2003-12-30 05:38:31.000"}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_UInt64__String = r"""
-{"argMax(map_uint8_uint64_, string)":{"40":"17977195514044898073"}}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_DateTime__String = r"""
+{"argMax(map_uint16_datetime_, string)":{"9458":"2019-07-26 02:49:06"}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_UInt128__String = r"""
-{"argMax(map_uint8_uint128_, string)":{"118":"22253556170389316770372721039676680192"}}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Date__String = r"""
+{"argMax(map_uint16_date_, string)":{"2991":"2010-02-25"}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_UInt128_ = r"""
-{"argMax(string, map_uint8_uint128_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Decimal128_38___String = r"""
+{"argMax(map_uint16_decimal128_38__, string)":{"5240":0.26393860217323504416356431289236282112}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Int8_ = r"""
-{"argMax(string, map_uint8_int8_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_FixedString_51___String = r"""
+{"argMax(map_uint16_fixedstring_51__, string)":{"45567":"kkkkkkkkkkkkkkkkk\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Int16_ = r"""
-{"argMax(string, map_uint8_int16_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Float32__String = r"""
+{"argMax(map_uint16_float32_, string)":{"58020":-1.941485e38}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Int16__String = r"""
-{"argMax(map_uint8_int16_, string)":{"88":-20221}}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Float64__String = r"""
+{"argMax(map_uint16_float64_, string)":{"18398":1.1338462229697857e179}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Int8__String = r"""
-{"argMax(map_uint8_int8_, string)":{"206":-60}}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Int128__String = r"""
+{"argMax(map_uint16_int128_, string)":{"29253":"138729869046760396280012930387303164928"}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Int32__String = r"""
-{"argMax(map_uint8_int32_, string)":{"52":560395299}}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Int16__String = r"""
+{"argMax(map_uint16_int16_, string)":{"60144":-11116}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Int64_ = r"""
-{"argMax(string, map_uint8_int64_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Int32__String = r"""
+{"argMax(map_uint16_int32_, string)":{"49447":-424912009}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Int32_ = r"""
-{"argMax(string, map_uint8_int32_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Int64__String = r"""
+{"argMax(map_uint16_int64_, string)":{"50858":"8245538123542300862"}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Int64__String = r"""
-{"argMax(map_uint8_int64_, string)":{"18":"2485774855989276446"}}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Int8__String = r"""
+{"argMax(map_uint16_int8_, string)":{"34415":-49}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Int128_ = r"""
-{"argMax(string, map_uint8_int128_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Bool___String = r"""
+{"argMax(map_uint16_lowcardinality_bool__, string)":{"31559":false}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Int128__String = r"""
-{"argMax(map_uint8_int128_, string)":{"28":"-118992197944039203611632983148656232448"}}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_DateTime___String = r"""
+{"argMax(map_uint16_lowcardinality_datetime__, string)":{"33105":"2019-01-16 22:40:40"}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Float32__String = r"""
-{"argMax(map_uint8_float32_, string)":{"117":-2.1093448e38}}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Date___String = r"""
+{"argMax(map_uint16_lowcardinality_date__, string)":{"65516":"2016-06-04"}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Float32_ = r"""
-{"argMax(string, map_uint8_float32_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_FixedString_51____String = r"""
+{"argMax(map_uint16_lowcardinality_fixedstring_51___, string)":{"17597":"AAAAAAAAAAAAAAAAAAAAAAAAAA\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Float64_ = r"""
-{"argMax(string, map_uint8_float64_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Float32___String = r"""
+{"argMax(map_uint16_lowcardinality_float32__, string)":{"27705":9.29951e37}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Decimal128_38__ = r"""
-{"argMax(string, map_uint8_decimal128_38__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Float64___String = r"""
+{"argMax(map_uint16_lowcardinality_float64__, string)":{"11480":9.548947396936731e142}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Float64__String = r"""
-{"argMax(map_uint8_float64_, string)":{"70":4.173034544945289e282}}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Int128___String = r"""
+{"argMax(map_uint16_lowcardinality_int128__, string)":{"58098":"-38668994447776144887876454720644507392"}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Decimal128_38___String = r"""
-{"argMax(map_uint8_decimal128_38__, string)":{"166":0.68256015788919200143223190038403395584}}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Int16___String = r"""
+{"argMax(map_uint16_lowcardinality_int16__, string)":{"58749":14107}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Date__String = r"""
-{"argMax(map_uint8_date_, string)":{"59":"2012-03-14"}}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Int32___String = r"""
+{"argMax(map_uint16_lowcardinality_int32__, string)":{"36664":1966181492}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Date_ = r"""
-{"argMax(string, map_uint8_date_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Int64___String = r"""
+{"argMax(map_uint16_lowcardinality_int64__, string)":{"64778":"-2813855346965564321"}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_DateTime_ = r"""
-{"argMax(string, map_uint8_datetime_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Int8___String = r"""
+{"argMax(map_uint16_lowcardinality_int8__, string)":{"35914":-91}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_DateTime__String = r"""
-{"argMax(map_uint8_datetime_, string)":{"42":"2019-04-22 07:34:49"}}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Nullable_Int16____String = r"""
+{"argMax(map_uint16_lowcardinality_nullable_int16___, string)":{"6952":30520}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_DateTime64_3____22_8 = r"""
-{"argMax(string, map_uint8_datetime64_3__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Nullable_Int32____String = r"""
+{"argMax(map_uint16_lowcardinality_nullable_int32___, string)":{"10296":-891631863}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_DateTime64_3___String__22_8 = r"""
-{"argMax(map_uint8_datetime64_3__, string)":{"79":"2010-05-07 11:42:46.000"}}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Nullable_Int8____String = r"""
+{"argMax(map_uint16_lowcardinality_nullable_int8___, string)":{"44296":-106}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Bool_ = r"""
-{"argMax(string, map_uint8_bool_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Nullable_UInt128____String = r"""
+{"argMax(map_uint16_lowcardinality_nullable_uint128___, string)":{"42224":"217678758996361988956827639036747606015"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Nullable_UInt16____String = r"""
+{"argMax(map_uint16_lowcardinality_nullable_uint16___, string)":{"55381":25006}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Nullable_UInt32____String = r"""
+{"argMax(map_uint16_lowcardinality_nullable_uint32___, string)":{"62673":172276317}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Nullable_UInt64____String = r"""
+{"argMax(map_uint16_lowcardinality_nullable_uint64___, string)":{"35188":"17519329835466777749"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Nullable_UInt8____String = r"""
+{"argMax(map_uint16_lowcardinality_nullable_uint8___, string)":{"15023":118}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_String___String = r"""
+{"argMax(map_uint16_lowcardinality_string__, string)":{"34728":"qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_UInt128___String = r"""
+{"argMax(map_uint16_lowcardinality_uint128__, string)":{"27940":"87433299564116192848376650018638921728"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_UInt16___String = r"""
+{"argMax(map_uint16_lowcardinality_uint16__, string)":{"10932":63639}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_UInt32___String = r"""
+{"argMax(map_uint16_lowcardinality_uint32__, string)":{"60273":3930235902}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_UInt64___String = r"""
+{"argMax(map_uint16_lowcardinality_uint64__, string)":{"25309":"11630761581041979288"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_UInt8___String = r"""
+{"argMax(map_uint16_lowcardinality_uint8__, string)":{"55778":219}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_UUID___String = r"""
+{"argMax(map_uint16_lowcardinality_uuid__, string)":{"62428":"2fc51153-0d37-7425-535a-6357f9f6b6bf"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_Bool___String = r"""
+{"argMax(map_uint16_nullable_bool__, string)":{"15049":true}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_DateTime64_3____String__22_8 = r"""
+{"argMax(map_uint16_nullable_datetime64_3___, string)":{"32288":"2017-03-07 20:03:56.000"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_DateTime___String = r"""
+{"argMax(map_uint16_nullable_datetime__, string)":{"12217":"2015-11-22 19:54:35"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_Date___String = r"""
+{"argMax(map_uint16_nullable_date__, string)":{"4286":"2006-06-13"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_Decimal128_38____String = r"""
+{"argMax(map_uint16_nullable_decimal128_38___, string)":{"36624":0.03229604992507750534341819794942664544}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_FixedString_51____String = r"""
+{"argMax(map_uint16_nullable_fixedstring_51___, string)":{"11447":"BBBBBBBBB\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_Float32___String = r"""
+{"argMax(map_uint16_nullable_float32__, string)":{"7848":2.7548147e37}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_Float64___String = r"""
+{"argMax(map_uint16_nullable_float64__, string)":{"2147":-1.2068551473755578e151}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_Int128___String = r"""
+{"argMax(map_uint16_nullable_int128__, string)":{"56775":"100013475550782431677069996644580886528"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_Int16___String = r"""
+{"argMax(map_uint16_nullable_int16__, string)":{"60794":5497}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_Int32___String = r"""
+{"argMax(map_uint16_nullable_int32__, string)":{"40258":-727522132}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_Int64___String = r"""
+{"argMax(map_uint16_nullable_int64__, string)":{"3585":"-8169971599862632532"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_Int8___String = r"""
+{"argMax(map_uint16_nullable_int8__, string)":{"54054":29}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_String___String = r"""
+{"argMax(map_uint16_nullable_string__, string)":{"44458":"N"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_UInt128___String = r"""
+{"argMax(map_uint16_nullable_uint128__, string)":{"60578":"52728311829422083182276507849516619264"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_UInt16___String = r"""
+{"argMax(map_uint16_nullable_uint16__, string)":{"48771":55737}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_UInt32___String = r"""
+{"argMax(map_uint16_nullable_uint32__, string)":{"63404":3084913669}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_UInt64___String = r"""
+{"argMax(map_uint16_nullable_uint64__, string)":{"23910":"11063392895571091501"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_UInt8___String = r"""
+{"argMax(map_uint16_nullable_uint8__, string)":{"18796":150}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_UUID___String = r"""
+{"argMax(map_uint16_nullable_uuid__, string)":{"43825":"0817463f-b1f9-da57-420b-b2f2b9d99e0c"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_String__String = r"""
+{"argMax(map_uint16_string_, string)":{"18001":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_UInt128__String = r"""
+{"argMax(map_uint16_uint128_, string)":{"55421":"237111563439191530084757026603210602495"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_UInt16__String = r"""
+{"argMax(map_uint16_uint16_, string)":{"30363":34949}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_UInt32__String = r"""
+{"argMax(map_uint16_uint32_, string)":{"56795":2223690039}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_UInt64__String = r"""
+{"argMax(map_uint16_uint64_, string)":{"37260":"15411459696102444188"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_UInt8__String = r"""
+{"argMax(map_uint16_uint8_, string)":{"35127":203}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_UUID__String = r"""
+{"argMax(map_uint16_uuid_, string)":{"39665":"8053325d-18c7-4111-c444-849a15952286"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Array_String___String = r"""
+{"argMax(map_uint8_array_string__, string)":{"0":["NNNNNNNNNNNNNNNNNNN"]}}
 """
 
 _clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Bool__String = r"""
 {"argMax(map_uint8_bool_, string)":{"154":false}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_String_ = r"""
-{"argMax(string, map_uint8_string_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_DateTime64_3___String__22_8 = r"""
+{"argMax(map_uint8_datetime64_3__, string)":{"79":"2010-05-07 11:42:46.000"}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_FixedString_51__ = r"""
-{"argMax(string, map_uint8_fixedstring_51__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_DateTime__String = r"""
+{"argMax(map_uint8_datetime_, string)":{"42":"2019-04-22 07:34:49"}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_String__String = r"""
-{"argMax(map_uint8_string_, string)":{"80":"kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"}}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Date__String = r"""
+{"argMax(map_uint8_date_, string)":{"59":"2012-03-14"}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_UUID_ = r"""
-{"argMax(string, map_uint8_uuid_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Decimal128_38___String = r"""
+{"argMax(map_uint8_decimal128_38__, string)":{"166":0.68256015788919200143223190038403395584}}
 """
 
 _clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_FixedString_51___String = r"""
 {"argMax(map_uint8_fixedstring_51__, string)":{"132":"zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_UUID__String = r"""
-{"argMax(map_uint8_uuid_, string)":{"238":"5ee7db4f-e55c-b16f-09f2-bf011dcc1138"}}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Float32__String = r"""
+{"argMax(map_uint8_float32_, string)":{"117":-2.1093448e38}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_UInt8___String = r"""
-{"argMax(map_uint8_nullable_uint8__, string)":{"78":125}}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Float64__String = r"""
+{"argMax(map_uint8_float64_, string)":{"70":4.173034544945289e282}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_UInt8__ = r"""
-{"argMax(string, map_uint8_nullable_uint8__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Int128__String = r"""
+{"argMax(map_uint8_int128_, string)":{"28":"-118992197944039203611632983148656232448"}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_UInt16__ = r"""
-{"argMax(string, map_uint8_nullable_uint16__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Int16__String = r"""
+{"argMax(map_uint8_int16_, string)":{"88":-20221}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_UInt32__ = r"""
-{"argMax(string, map_uint8_nullable_uint32__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Int32__String = r"""
+{"argMax(map_uint8_int32_, string)":{"52":560395299}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_UInt16___String = r"""
-{"argMax(map_uint8_nullable_uint16__, string)":{"108":6518}}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Int64__String = r"""
+{"argMax(map_uint8_int64_, string)":{"18":"2485774855989276446"}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_UInt32___String = r"""
-{"argMax(map_uint8_nullable_uint32__, string)":{"64":1789672691}}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Int8__String = r"""
+{"argMax(map_uint8_int8_, string)":{"206":-60}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_UInt64__ = r"""
-{"argMax(string, map_uint8_nullable_uint64__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Bool___String = r"""
+{"argMax(map_uint8_lowcardinality_bool__, string)":{"145":true}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_UInt64___String = r"""
-{"argMax(map_uint8_nullable_uint64__, string)":{"198":"4097836274008676595"}}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_DateTime___String = r"""
+{"argMax(map_uint8_lowcardinality_datetime__, string)":{"74":"2014-09-09 07:49:10"}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_UInt128__ = r"""
-{"argMax(string, map_uint8_nullable_uint128__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Date___String = r"""
+{"argMax(map_uint8_lowcardinality_date__, string)":{"28":"2009-06-06"}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_Int8__ = r"""
-{"argMax(string, map_uint8_nullable_int8__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_FixedString_51____String = r"""
+{"argMax(map_uint8_lowcardinality_fixedstring_51___, string)":{"200":"NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_UInt128___String = r"""
-{"argMax(map_uint8_nullable_uint128__, string)":{"5":"135230718491946621335672925723991313408"}}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Float32___String = r"""
+{"argMax(map_uint8_lowcardinality_float32__, string)":{"73":8.4401455e37}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_Int8___String = r"""
-{"argMax(map_uint8_nullable_int8__, string)":{"32":-24}}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Float64___String = r"""
+{"argMax(map_uint8_lowcardinality_float64__, string)":{"113":-4.815202766272624e151}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_Int16__ = r"""
-{"argMax(string, map_uint8_nullable_int16__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Int128___String = r"""
+{"argMax(map_uint8_lowcardinality_int128__, string)":{"215":"-3142330523352552403781004886382029024"}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_Int32__ = r"""
-{"argMax(string, map_uint8_nullable_int32__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Int16___String = r"""
+{"argMax(map_uint8_lowcardinality_int16__, string)":{"202":1787}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Int32___String = r"""
+{"argMax(map_uint8_lowcardinality_int32__, string)":{"167":1652441867}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Int64___String = r"""
+{"argMax(map_uint8_lowcardinality_int64__, string)":{"19":"2779956066439030974"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Int8___String = r"""
+{"argMax(map_uint8_lowcardinality_int8__, string)":{"249":-116}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_Bool____String = r"""
+{"argMax(map_uint8_lowcardinality_nullable_bool___, string)":{"80":false}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_DateTime____String = r"""
+{"argMax(map_uint8_lowcardinality_nullable_datetime___, string)":{"234":"2008-03-15 22:26:49"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_Date____String = r"""
+{"argMax(map_uint8_lowcardinality_nullable_date___, string)":{"151":"2021-02-12"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_FixedString_51_____String = r"""
+{"argMax(map_uint8_lowcardinality_nullable_fixedstring_51____, string)":{"145":"nnnnnnnnnnnnnnnnnnnnn\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_Float32____String = r"""
+{"argMax(map_uint8_lowcardinality_nullable_float32___, string)":{"171":2.3632865e38}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_Float64____String = r"""
+{"argMax(map_uint8_lowcardinality_nullable_float64___, string)":{"36":2.31155518572556e293}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_Int128____String = r"""
+{"argMax(map_uint8_lowcardinality_nullable_int128___, string)":{"46":"162816129245198745648663049882852103168"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_Int16____String = r"""
+{"argMax(map_uint8_lowcardinality_nullable_int16___, string)":{"249":-32423}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_Int32____String = r"""
+{"argMax(map_uint8_lowcardinality_nullable_int32___, string)":{"133":-1650068558}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_Int64____String = r"""
+{"argMax(map_uint8_lowcardinality_nullable_int64___, string)":{"150":"-5233152823394528447"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_Int8____String = r"""
+{"argMax(map_uint8_lowcardinality_nullable_int8___, string)":{"213":34}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_String____String = r"""
+{"argMax(map_uint8_lowcardinality_nullable_string___, string)":{"195":"sssssssssssssssssssssssssssssssssssssssssssssssss"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_UInt128____String = r"""
+{"argMax(map_uint8_lowcardinality_nullable_uint128___, string)":{"129":"124525806292583314635970554300757787648"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_UInt16____String = r"""
+{"argMax(map_uint8_lowcardinality_nullable_uint16___, string)":{"154":5634}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_UInt32____String = r"""
+{"argMax(map_uint8_lowcardinality_nullable_uint32___, string)":{"158":3460638698}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_UInt64____String = r"""
+{"argMax(map_uint8_lowcardinality_nullable_uint64___, string)":{"173":"10687464379509247417"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_UInt8____String = r"""
+{"argMax(map_uint8_lowcardinality_nullable_uint8___, string)":{"106":12}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_UUID____String = r"""
+{"argMax(map_uint8_lowcardinality_nullable_uuid___, string)":{"47":"3da9c1ea-19e3-b1d5-daef-7077b921bee1"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_String___String = r"""
+{"argMax(map_uint8_lowcardinality_string__, string)":{"131":"dddddddddddddddddddddddd"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_UInt128___String = r"""
+{"argMax(map_uint8_lowcardinality_uint128__, string)":{"167":"311036409932251109345546742961165428735"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_UInt16___String = r"""
+{"argMax(map_uint8_lowcardinality_uint16__, string)":{"127":39498}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_UInt32___String = r"""
+{"argMax(map_uint8_lowcardinality_uint32__, string)":{"17":1180990854}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_UInt64___String = r"""
+{"argMax(map_uint8_lowcardinality_uint64__, string)":{"244":"719380919739804115"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_UInt8___String = r"""
+{"argMax(map_uint8_lowcardinality_uint8__, string)":{"156":150}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_UUID___String = r"""
+{"argMax(map_uint8_lowcardinality_uuid__, string)":{"52":"97fdc665-c03b-2296-bea2-bb58b97f5919"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Map_String_LowCardinality_Float64____String = r"""
+{"argMax(map_uint8_map_string_lowcardinality_float64___, string)":{"68":{"JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ":-5.227752743970613e127}}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_Bool___String = r"""
+{"argMax(map_uint8_nullable_bool__, string)":{"216":true}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_DateTime64_3____String__22_8 = r"""
+{"argMax(map_uint8_nullable_datetime64_3___, string)":{"160":"2008-01-24 04:41:56.000"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_DateTime___String = r"""
+{"argMax(map_uint8_nullable_datetime__, string)":{"95":"2007-12-31 07:43:47"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_Date___String = r"""
+{"argMax(map_uint8_nullable_date__, string)":{"162":"2005-01-18"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_Decimal128_38____String = r"""
+{"argMax(map_uint8_nullable_decimal128_38___, string)":{"17":0.31601972505289529991776224295644474112}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_FixedString_51____String = r"""
+{"argMax(map_uint8_nullable_fixedstring_51___, string)":{"6":"dddddddddddddddddddddddddddddddd\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_Float32___String = r"""
+{"argMax(map_uint8_nullable_float32__, string)":{"174":-2.1947573e38}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_Float64___String = r"""
+{"argMax(map_uint8_nullable_float64__, string)":{"180":-1.9387710496729604e75}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_Int128___String = r"""
+{"argMax(map_uint8_nullable_int128__, string)":{"12":"11394509538840621226991005405136584576"}}
 """
 
 _clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_Int16___String = r"""
@@ -15060,460 +15191,156 @@ _clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_Int64___Stri
 {"argMax(map_uint8_nullable_int64__, string)":{"111":"883657256340306648"}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_Int64__ = r"""
-{"argMax(string, map_uint8_nullable_int64__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_Int128__ = r"""
-{"argMax(string, map_uint8_nullable_int128__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_Int128___String = r"""
-{"argMax(map_uint8_nullable_int128__, string)":{"12":"11394509538840621226991005405136584576"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_Float32__ = r"""
-{"argMax(string, map_uint8_nullable_float32__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_Float32___String = r"""
-{"argMax(map_uint8_nullable_float32__, string)":{"174":-2.1947573e38}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_Float64___String = r"""
-{"argMax(map_uint8_nullable_float64__, string)":{"180":-1.9387710496729604e75}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_Float64__ = r"""
-{"argMax(string, map_uint8_nullable_float64__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_Decimal128_38___ = r"""
-{"argMax(string, map_uint8_nullable_decimal128_38___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_Date__ = r"""
-{"argMax(string, map_uint8_nullable_date__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_Decimal128_38____String = r"""
-{"argMax(map_uint8_nullable_decimal128_38___, string)":{"17":0.31601972505289529991776224295644474112}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_Date___String = r"""
-{"argMax(map_uint8_nullable_date__, string)":{"162":"2005-01-18"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_DateTime64_3_____22_8 = r"""
-{"argMax(string, map_uint8_nullable_datetime64_3___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_DateTime___String = r"""
-{"argMax(map_uint8_nullable_datetime__, string)":{"95":"2007-12-31 07:43:47"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_DateTime__ = r"""
-{"argMax(string, map_uint8_nullable_datetime__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_DateTime64_3____String__22_8 = r"""
-{"argMax(map_uint8_nullable_datetime64_3___, string)":{"160":"2008-01-24 04:41:56.000"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_Bool___String = r"""
-{"argMax(map_uint8_nullable_bool__, string)":{"216":true}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_Bool__ = r"""
-{"argMax(string, map_uint8_nullable_bool__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_String__ = r"""
-{"argMax(string, map_uint8_nullable_string__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_FixedString_51___ = r"""
-{"argMax(string, map_uint8_nullable_fixedstring_51___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_Int8___String = r"""
+{"argMax(map_uint8_nullable_int8__, string)":{"32":-24}}
 """
 
 _clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_String___String = r"""
 {"argMax(map_uint8_nullable_string__, string)":{"145":"RRRRRRRRRRRRRRRRRRRRR"}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_FixedString_51____String = r"""
-{"argMax(map_uint8_nullable_fixedstring_51___, string)":{"6":"dddddddddddddddddddddddddddddddd\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_UInt128___String = r"""
+{"argMax(map_uint8_nullable_uint128__, string)":{"5":"135230718491946621335672925723991313408"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_UInt16___String = r"""
+{"argMax(map_uint8_nullable_uint16__, string)":{"108":6518}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_UInt32___String = r"""
+{"argMax(map_uint8_nullable_uint32__, string)":{"64":1789672691}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_UInt64___String = r"""
+{"argMax(map_uint8_nullable_uint64__, string)":{"198":"4097836274008676595"}}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_UInt8___String = r"""
+{"argMax(map_uint8_nullable_uint8__, string)":{"78":125}}
 """
 
 _clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Nullable_UUID___String = r"""
 {"argMax(map_uint8_nullable_uuid__, string)":{"247":"68bb4ea2-456e-de2c-b580-b463427fb31c"}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_UUID__ = r"""
-{"argMax(string, map_uint8_nullable_uuid__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_UInt8__ = r"""
-{"argMax(string, map_uint8_lowcardinality_uint8__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_UInt16__ = r"""
-{"argMax(string, map_uint8_lowcardinality_uint16__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_UInt8___String = r"""
-{"argMax(map_uint8_lowcardinality_uint8__, string)":{"156":150}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_UInt16___String = r"""
-{"argMax(map_uint8_lowcardinality_uint16__, string)":{"127":39498}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_UInt32__ = r"""
-{"argMax(string, map_uint8_lowcardinality_uint32__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_UInt32___String = r"""
-{"argMax(map_uint8_lowcardinality_uint32__, string)":{"17":1180990854}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_UInt64__ = r"""
-{"argMax(string, map_uint8_lowcardinality_uint64__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_UInt64___String = r"""
-{"argMax(map_uint8_lowcardinality_uint64__, string)":{"244":"719380919739804115"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_UInt128__ = r"""
-{"argMax(string, map_uint8_lowcardinality_uint128__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_UInt128___String = r"""
-{"argMax(map_uint8_lowcardinality_uint128__, string)":{"167":"311036409932251109345546742961165428735"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Int8__ = r"""
-{"argMax(string, map_uint8_lowcardinality_int8__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Int8___String = r"""
-{"argMax(map_uint8_lowcardinality_int8__, string)":{"249":-116}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Int16__ = r"""
-{"argMax(string, map_uint8_lowcardinality_int16__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Int16___String = r"""
-{"argMax(map_uint8_lowcardinality_int16__, string)":{"202":1787}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Int32__ = r"""
-{"argMax(string, map_uint8_lowcardinality_int32__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Int64__ = r"""
-{"argMax(string, map_uint8_lowcardinality_int64__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Int32___String = r"""
-{"argMax(map_uint8_lowcardinality_int32__, string)":{"167":1652441867}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Int128__ = r"""
-{"argMax(string, map_uint8_lowcardinality_int128__)":"PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Int64___String = r"""
-{"argMax(map_uint8_lowcardinality_int64__, string)":{"19":"2779956066439030974"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Int128___String = r"""
-{"argMax(map_uint8_lowcardinality_int128__, string)":{"215":"-3142330523352552403781004886382029024"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Float32__ = r"""
-{"argMax(string, map_uint8_lowcardinality_float32__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Float32___String = r"""
-{"argMax(map_uint8_lowcardinality_float32__, string)":{"73":8.4401455e37}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Float64__ = r"""
-{"argMax(string, map_uint8_lowcardinality_float64__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Float64___String = r"""
-{"argMax(map_uint8_lowcardinality_float64__, string)":{"113":-4.815202766272624e151}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Date__ = r"""
-{"argMax(string, map_uint8_lowcardinality_date__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Date___String = r"""
-{"argMax(map_uint8_lowcardinality_date__, string)":{"28":"2009-06-06"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_DateTime__ = r"""
-{"argMax(string, map_uint8_lowcardinality_datetime__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Bool__ = r"""
-{"argMax(string, map_uint8_lowcardinality_bool__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_DateTime___String = r"""
-{"argMax(map_uint8_lowcardinality_datetime__, string)":{"74":"2014-09-09 07:49:10"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Bool___String = r"""
-{"argMax(map_uint8_lowcardinality_bool__, string)":{"145":true}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_String___String = r"""
-{"argMax(map_uint8_lowcardinality_string__, string)":{"131":"dddddddddddddddddddddddd"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_String__ = r"""
-{"argMax(string, map_uint8_lowcardinality_string__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_FixedString_51____String = r"""
-{"argMax(map_uint8_lowcardinality_fixedstring_51___, string)":{"200":"NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_FixedString_51___ = r"""
-{"argMax(string, map_uint8_lowcardinality_fixedstring_51___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_UUID__ = r"""
-{"argMax(string, map_uint8_lowcardinality_uuid__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_UUID___String = r"""
-{"argMax(map_uint8_lowcardinality_uuid__, string)":{"52":"97fdc665-c03b-2296-bea2-bb58b97f5919"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_UInt8___ = r"""
-{"argMax(string, map_uint8_lowcardinality_nullable_uint8___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_UInt8____String = r"""
-{"argMax(map_uint8_lowcardinality_nullable_uint8___, string)":{"106":12}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_UInt16___ = r"""
-{"argMax(string, map_uint8_lowcardinality_nullable_uint16___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_UInt16____String = r"""
-{"argMax(map_uint8_lowcardinality_nullable_uint16___, string)":{"154":5634}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_UInt32___ = r"""
-{"argMax(string, map_uint8_lowcardinality_nullable_uint32___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_UInt64____String = r"""
-{"argMax(map_uint8_lowcardinality_nullable_uint64___, string)":{"173":"10687464379509247417"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_UInt64___ = r"""
-{"argMax(string, map_uint8_lowcardinality_nullable_uint64___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_UInt32____String = r"""
-{"argMax(map_uint8_lowcardinality_nullable_uint32___, string)":{"158":3460638698}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_UInt128___ = r"""
-{"argMax(string, map_uint8_lowcardinality_nullable_uint128___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_UInt128____String = r"""
-{"argMax(map_uint8_lowcardinality_nullable_uint128___, string)":{"129":"124525806292583314635970554300757787648"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_Int8___ = r"""
-{"argMax(string, map_uint8_lowcardinality_nullable_int8___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_Int8____String = r"""
-{"argMax(map_uint8_lowcardinality_nullable_int8___, string)":{"213":34}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_Int16___ = r"""
-{"argMax(string, map_uint8_lowcardinality_nullable_int16___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_Int16____String = r"""
-{"argMax(map_uint8_lowcardinality_nullable_int16___, string)":{"249":-32423}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_Int32___ = r"""
-{"argMax(string, map_uint8_lowcardinality_nullable_int32___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_Int32____String = r"""
-{"argMax(map_uint8_lowcardinality_nullable_int32___, string)":{"133":-1650068558}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_Int64___ = r"""
-{"argMax(string, map_uint8_lowcardinality_nullable_int64___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_Int64____String = r"""
-{"argMax(map_uint8_lowcardinality_nullable_int64___, string)":{"150":"-5233152823394528447"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_Int128____String = r"""
-{"argMax(map_uint8_lowcardinality_nullable_int128___, string)":{"46":"162816129245198745648663049882852103168"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_Int128___ = r"""
-{"argMax(string, map_uint8_lowcardinality_nullable_int128___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_Float64___ = r"""
-{"argMax(string, map_uint8_lowcardinality_nullable_float64___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_Float32____String = r"""
-{"argMax(map_uint8_lowcardinality_nullable_float32___, string)":{"171":2.3632865e38}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_Float32___ = r"""
-{"argMax(string, map_uint8_lowcardinality_nullable_float32___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_Float64____String = r"""
-{"argMax(map_uint8_lowcardinality_nullable_float64___, string)":{"36":2.31155518572556e293}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_Date___ = r"""
-{"argMax(string, map_uint8_lowcardinality_nullable_date___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_Date____String = r"""
-{"argMax(map_uint8_lowcardinality_nullable_date___, string)":{"151":"2021-02-12"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_DateTime___ = r"""
-{"argMax(string, map_uint8_lowcardinality_nullable_datetime___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_DateTime____String = r"""
-{"argMax(map_uint8_lowcardinality_nullable_datetime___, string)":{"234":"2008-03-15 22:26:49"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_Bool___ = r"""
-{"argMax(string, map_uint8_lowcardinality_nullable_bool___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_Bool____String = r"""
-{"argMax(map_uint8_lowcardinality_nullable_bool___, string)":{"80":false}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_String___ = r"""
-{"argMax(string, map_uint8_lowcardinality_nullable_string___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_FixedString_51____ = r"""
-{"argMax(string, map_uint8_lowcardinality_nullable_fixedstring_51____)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_String____String = r"""
-{"argMax(map_uint8_lowcardinality_nullable_string___, string)":{"195":"sssssssssssssssssssssssssssssssssssssssssssssssss"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_FixedString_51_____String = r"""
-{"argMax(map_uint8_lowcardinality_nullable_fixedstring_51____, string)":{"145":"nnnnnnnnnnnnnnnnnnnnn\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_UUID___ = r"""
-{"argMax(string, map_uint8_lowcardinality_nullable_uuid___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_LowCardinality_Nullable_UUID____String = r"""
-{"argMax(map_uint8_lowcardinality_nullable_uuid___, string)":{"47":"3da9c1ea-19e3-b1d5-daef-7077b921bee1"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Array_String__ = r"""
-{"argMax(string, map_uint8_array_string__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Array_String___String = r"""
-{"argMax(map_uint8_array_string__, string)":{"0":["NNNNNNNNNNNNNNNNNNN"]}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Map_String_LowCardinality_Float64___ = r"""
-{"argMax(string, map_uint8_map_string_lowcardinality_float64___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Map_String_LowCardinality_Float64____String = r"""
-{"argMax(map_uint8_map_string_lowcardinality_float64___, string)":{"68":{"JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ":-5.227752743970613e127}}}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_String__String = r"""
+{"argMax(map_uint8_string_, string)":{"80":"kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"}}
 """
 
 _clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_Tuple_String___String = r"""
 {"argMax(map_uint8_tuple_string__, string)":{"24":["TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT"]}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Tuple_String__ = r"""
-{"argMax(string, map_uint8_tuple_string__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_UInt128__String = r"""
+{"argMax(map_uint8_uint128_, string)":{"118":"22253556170389316770372721039676680192"}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_UInt8_ = r"""
-{"argMax(string, map_uint16_uint8_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_UInt16__String = r"""
+{"argMax(map_uint8_uint16_, string)":{"202":61509}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_UInt8__String = r"""
-{"argMax(map_uint16_uint8_, string)":{"35127":203}}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_UInt32__String = r"""
+{"argMax(map_uint8_uint32_, string)":{"73":1693759690}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_UInt16_ = r"""
-{"argMax(string, map_uint16_uint16_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_UInt64__String = r"""
+{"argMax(map_uint8_uint64_, string)":{"40":"17977195514044898073"}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_UInt16__String = r"""
-{"argMax(map_uint16_uint16_, string)":{"30363":34949}}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_UInt8__String = r"""
+{"argMax(map_uint8_uint8_, string)":{"228":15}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_UInt32_ = r"""
-{"argMax(string, map_uint16_uint32_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt8_UUID__String = r"""
+{"argMax(map_uint8_uuid_, string)":{"238":"5ee7db4f-e55c-b16f-09f2-bf011dcc1138"}}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_UInt64_ = r"""
-{"argMax(string, map_uint16_uint64_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_String_Bool = r"""
+{"argMax(string, bool)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_UInt32__String = r"""
-{"argMax(map_uint16_uint32_, string)":{"56795":2223690039}}
+_clickhouse_aggregate_functions_argMax_datatypes_String_Date = r"""
+{"argMax(string, date)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_UInt128_ = r"""
-{"argMax(string, map_uint16_uint128_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_String_DateTime = r"""
+{"argMax(string, datetime)":""}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_UInt64__String = r"""
-{"argMax(map_uint16_uint64_, string)":{"37260":"15411459696102444188"}}
+_clickhouse_aggregate_functions_argMax_datatypes_String_DateTime64_3___22_8 = r"""
+{"argMax(string, datetime64_3_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_UInt128__String = r"""
-{"argMax(map_uint16_uint128_, string)":{"55421":"237111563439191530084757026603210602495"}}
+_clickhouse_aggregate_functions_argMax_datatypes_String_Decimal128_38_ = r"""
+{"argMax(string, decimal128_38_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Int8_ = r"""
-{"argMax(string, map_uint16_int8_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_String_FixedString_51_ = r"""
+{"argMax(string, fixedstring_51_)":"gggggggggggggggggggggggggggggggggggg"}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Int8__String = r"""
-{"argMax(map_uint16_int8_, string)":{"34415":-49}}
+_clickhouse_aggregate_functions_argMax_datatypes_String_Float32 = r"""
+{"argMax(string, float32)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Int16__String = r"""
-{"argMax(map_uint16_int16_, string)":{"60144":-11116}}
+_clickhouse_aggregate_functions_argMax_datatypes_String_Float64 = r"""
+{"argMax(string, float64)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Int128 = r"""
+{"argMax(string, int128)":""}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Int16 = r"""
+{"argMax(string, int16)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Int32 = r"""
+{"argMax(string, int32)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Int64 = r"""
+{"argMax(string, int64)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Int8 = r"""
+{"argMax(string, int8)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Bool_ = r"""
+{"argMax(string, map_uint16_bool_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_DateTime64_3____22_8 = r"""
+{"argMax(string, map_uint16_datetime64_3__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_DateTime_ = r"""
+{"argMax(string, map_uint16_datetime_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Date_ = r"""
+{"argMax(string, map_uint16_date_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Decimal128_38__ = r"""
+{"argMax(string, map_uint16_decimal128_38__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_FixedString_51__ = r"""
+{"argMax(string, map_uint16_fixedstring_51__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Float32_ = r"""
+{"argMax(string, map_uint16_float32_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Float64_ = r"""
+{"argMax(string, map_uint16_float64_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Int128_ = r"""
+{"argMax(string, map_uint16_int128_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
 """
 
 _clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Int16_ = r"""
@@ -15524,348 +15351,28 @@ _clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Int32_ = r"""
 {"argMax(string, map_uint16_int32_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Int32__String = r"""
-{"argMax(map_uint16_int32_, string)":{"49447":-424912009}}
-"""
-
 _clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Int64_ = r"""
 {"argMax(string, map_uint16_int64_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Int64__String = r"""
-{"argMax(map_uint16_int64_, string)":{"50858":"8245538123542300862"}}
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Int8_ = r"""
+{"argMax(string, map_uint16_int8_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Int128_ = r"""
-{"argMax(string, map_uint16_int128_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_Bool__ = r"""
+{"argMax(string, map_uint16_lowcardinality_bool__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Int128__String = r"""
-{"argMax(map_uint16_int128_, string)":{"29253":"138729869046760396280012930387303164928"}}
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_DateTime__ = r"""
+{"argMax(string, map_uint16_lowcardinality_datetime__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Float32_ = r"""
-{"argMax(string, map_uint16_float32_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_Date__ = r"""
+{"argMax(string, map_uint16_lowcardinality_date__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Float32__String = r"""
-{"argMax(map_uint16_float32_, string)":{"58020":-1.941485e38}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Float64__String = r"""
-{"argMax(map_uint16_float64_, string)":{"18398":1.1338462229697857e179}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Float64_ = r"""
-{"argMax(string, map_uint16_float64_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Decimal128_38__ = r"""
-{"argMax(string, map_uint16_decimal128_38__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Decimal128_38___String = r"""
-{"argMax(map_uint16_decimal128_38__, string)":{"5240":0.26393860217323504416356431289236282112}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Date_ = r"""
-{"argMax(string, map_uint16_date_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Date__String = r"""
-{"argMax(map_uint16_date_, string)":{"2991":"2010-02-25"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_DateTime_ = r"""
-{"argMax(string, map_uint16_datetime_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_DateTime__String = r"""
-{"argMax(map_uint16_datetime_, string)":{"9458":"2019-07-26 02:49:06"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_DateTime64_3____22_8 = r"""
-{"argMax(string, map_uint16_datetime64_3__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_DateTime64_3___String__22_8 = r"""
-{"argMax(map_uint16_datetime64_3__, string)":{"11275":"2003-12-30 05:38:31.000"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Bool_ = r"""
-{"argMax(string, map_uint16_bool_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Bool__String = r"""
-{"argMax(map_uint16_bool_, string)":{"18077":true}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_String_ = r"""
-{"argMax(string, map_uint16_string_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_String__String = r"""
-{"argMax(map_uint16_string_, string)":{"18001":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_FixedString_51___String = r"""
-{"argMax(map_uint16_fixedstring_51__, string)":{"45567":"kkkkkkkkkkkkkkkkk\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_FixedString_51__ = r"""
-{"argMax(string, map_uint16_fixedstring_51__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_UInt8__ = r"""
-{"argMax(string, map_uint16_nullable_uint8__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_UUID__String = r"""
-{"argMax(map_uint16_uuid_, string)":{"39665":"8053325d-18c7-4111-c444-849a15952286"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_UUID_ = r"""
-{"argMax(string, map_uint16_uuid_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_UInt8___String = r"""
-{"argMax(map_uint16_nullable_uint8__, string)":{"18796":150}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_UInt16___String = r"""
-{"argMax(map_uint16_nullable_uint16__, string)":{"48771":55737}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_UInt16__ = r"""
-{"argMax(string, map_uint16_nullable_uint16__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_UInt32__ = r"""
-{"argMax(string, map_uint16_nullable_uint32__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_UInt32___String = r"""
-{"argMax(map_uint16_nullable_uint32__, string)":{"63404":3084913669}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_UInt64__ = r"""
-{"argMax(string, map_uint16_nullable_uint64__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_UInt64___String = r"""
-{"argMax(map_uint16_nullable_uint64__, string)":{"23910":"11063392895571091501"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_UInt128___String = r"""
-{"argMax(map_uint16_nullable_uint128__, string)":{"60578":"52728311829422083182276507849516619264"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_UInt128__ = r"""
-{"argMax(string, map_uint16_nullable_uint128__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_Int8__ = r"""
-{"argMax(string, map_uint16_nullable_int8__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_Int8___String = r"""
-{"argMax(map_uint16_nullable_int8__, string)":{"54054":29}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_Int16__ = r"""
-{"argMax(string, map_uint16_nullable_int16__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_Int32__ = r"""
-{"argMax(string, map_uint16_nullable_int32__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_Int16___String = r"""
-{"argMax(map_uint16_nullable_int16__, string)":{"60794":5497}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_Int32___String = r"""
-{"argMax(map_uint16_nullable_int32__, string)":{"40258":-727522132}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_Int64__ = r"""
-{"argMax(string, map_uint16_nullable_int64__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_Int64___String = r"""
-{"argMax(map_uint16_nullable_int64__, string)":{"3585":"-8169971599862632532"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_Int128___String = r"""
-{"argMax(map_uint16_nullable_int128__, string)":{"56775":"100013475550782431677069996644580886528"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_Int128__ = r"""
-{"argMax(string, map_uint16_nullable_int128__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_Float32__ = r"""
-{"argMax(string, map_uint16_nullable_float32__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_Float32___String = r"""
-{"argMax(map_uint16_nullable_float32__, string)":{"7848":2.7548147e37}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_Float64__ = r"""
-{"argMax(string, map_uint16_nullable_float64__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_Float64___String = r"""
-{"argMax(map_uint16_nullable_float64__, string)":{"2147":-1.2068551473755578e151}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_Date__ = r"""
-{"argMax(string, map_uint16_nullable_date__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_Decimal128_38___ = r"""
-{"argMax(string, map_uint16_nullable_decimal128_38___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_Decimal128_38____String = r"""
-{"argMax(map_uint16_nullable_decimal128_38___, string)":{"36624":0.03229604992507750534341819794942664544}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_Date___String = r"""
-{"argMax(map_uint16_nullable_date__, string)":{"4286":"2006-06-13"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_DateTime__ = r"""
-{"argMax(string, map_uint16_nullable_datetime__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_DateTime___String = r"""
-{"argMax(map_uint16_nullable_datetime__, string)":{"12217":"2015-11-22 19:54:35"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_DateTime64_3_____22_8 = r"""
-{"argMax(string, map_uint16_nullable_datetime64_3___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_DateTime64_3____String__22_8 = r"""
-{"argMax(map_uint16_nullable_datetime64_3___, string)":{"32288":"2017-03-07 20:03:56.000"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_Bool__ = r"""
-{"argMax(string, map_uint16_nullable_bool__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_Bool___String = r"""
-{"argMax(map_uint16_nullable_bool__, string)":{"15049":true}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_String__ = r"""
-{"argMax(string, map_uint16_nullable_string__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_String___String = r"""
-{"argMax(map_uint16_nullable_string__, string)":{"44458":"N"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_FixedString_51____String = r"""
-{"argMax(map_uint16_nullable_fixedstring_51___, string)":{"11447":"BBBBBBBBB\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_FixedString_51___ = r"""
-{"argMax(string, map_uint16_nullable_fixedstring_51___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_UUID__ = r"""
-{"argMax(string, map_uint16_nullable_uuid__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_UInt8___String = r"""
-{"argMax(map_uint16_lowcardinality_uint8__, string)":{"55778":219}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_Nullable_UUID___String = r"""
-{"argMax(map_uint16_nullable_uuid__, string)":{"43825":"0817463f-b1f9-da57-420b-b2f2b9d99e0c"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_UInt8__ = r"""
-{"argMax(string, map_uint16_lowcardinality_uint8__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_UInt16__ = r"""
-{"argMax(string, map_uint16_lowcardinality_uint16__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_UInt16___String = r"""
-{"argMax(map_uint16_lowcardinality_uint16__, string)":{"10932":63639}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_UInt32___String = r"""
-{"argMax(map_uint16_lowcardinality_uint32__, string)":{"60273":3930235902}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_UInt32__ = r"""
-{"argMax(string, map_uint16_lowcardinality_uint32__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_UInt64__ = r"""
-{"argMax(string, map_uint16_lowcardinality_uint64__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_UInt64___String = r"""
-{"argMax(map_uint16_lowcardinality_uint64__, string)":{"25309":"11630761581041979288"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_UInt128__ = r"""
-{"argMax(string, map_uint16_lowcardinality_uint128__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_UInt128___String = r"""
-{"argMax(map_uint16_lowcardinality_uint128__, string)":{"27940":"87433299564116192848376650018638921728"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Int8___String = r"""
-{"argMax(map_uint16_lowcardinality_int8__, string)":{"35914":-91}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_Int16__ = r"""
-{"argMax(string, map_uint16_lowcardinality_int16__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_Int8__ = r"""
-{"argMax(string, map_uint16_lowcardinality_int8__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Int16___String = r"""
-{"argMax(map_uint16_lowcardinality_int16__, string)":{"58749":14107}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Int32___String = r"""
-{"argMax(map_uint16_lowcardinality_int32__, string)":{"36664":1966181492}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_Int32__ = r"""
-{"argMax(string, map_uint16_lowcardinality_int32__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_Int64__ = r"""
-{"argMax(string, map_uint16_lowcardinality_int64__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_Int128__ = r"""
-{"argMax(string, map_uint16_lowcardinality_int128__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Int64___String = r"""
-{"argMax(map_uint16_lowcardinality_int64__, string)":{"64778":"-2813855346965564321"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Int128___String = r"""
-{"argMax(map_uint16_lowcardinality_int128__, string)":{"58098":"-38668994447776144887876454720644507392"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Float32___String = r"""
-{"argMax(map_uint16_lowcardinality_float32__, string)":{"27705":9.29951e37}}
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_FixedString_51___ = r"""
+{"argMax(string, map_uint16_lowcardinality_fixedstring_51___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
 """
 
 _clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_Float32__ = r"""
@@ -15876,108 +15383,24 @@ _clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinalit
 {"argMax(string, map_uint16_lowcardinality_float64__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Float64___String = r"""
-{"argMax(map_uint16_lowcardinality_float64__, string)":{"11480":9.548947396936731e142}}
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_Int128__ = r"""
+{"argMax(string, map_uint16_lowcardinality_int128__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_Date__ = r"""
-{"argMax(string, map_uint16_lowcardinality_date__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_Int16__ = r"""
+{"argMax(string, map_uint16_lowcardinality_int16__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Date___String = r"""
-{"argMax(map_uint16_lowcardinality_date__, string)":{"65516":"2016-06-04"}}
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_Int32__ = r"""
+{"argMax(string, map_uint16_lowcardinality_int32__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_DateTime__ = r"""
-{"argMax(string, map_uint16_lowcardinality_datetime__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_Int64__ = r"""
+{"argMax(string, map_uint16_lowcardinality_int64__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_DateTime___String = r"""
-{"argMax(map_uint16_lowcardinality_datetime__, string)":{"33105":"2019-01-16 22:40:40"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_Bool__ = r"""
-{"argMax(string, map_uint16_lowcardinality_bool__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Bool___String = r"""
-{"argMax(map_uint16_lowcardinality_bool__, string)":{"31559":false}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_String___String = r"""
-{"argMax(map_uint16_lowcardinality_string__, string)":{"34728":"qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_String__ = r"""
-{"argMax(string, map_uint16_lowcardinality_string__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_FixedString_51___ = r"""
-{"argMax(string, map_uint16_lowcardinality_fixedstring_51___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_UUID__ = r"""
-{"argMax(string, map_uint16_lowcardinality_uuid__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_FixedString_51____String = r"""
-{"argMax(map_uint16_lowcardinality_fixedstring_51___, string)":{"17597":"AAAAAAAAAAAAAAAAAAAAAAAAAA\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_Nullable_UInt8___ = r"""
-{"argMax(string, map_uint16_lowcardinality_nullable_uint8___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_UUID___String = r"""
-{"argMax(map_uint16_lowcardinality_uuid__, string)":{"62428":"2fc51153-0d37-7425-535a-6357f9f6b6bf"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Nullable_UInt8____String = r"""
-{"argMax(map_uint16_lowcardinality_nullable_uint8___, string)":{"15023":118}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_Nullable_UInt16___ = r"""
-{"argMax(string, map_uint16_lowcardinality_nullable_uint16___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Nullable_UInt16____String = r"""
-{"argMax(map_uint16_lowcardinality_nullable_uint16___, string)":{"55381":25006}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_Nullable_UInt32___ = r"""
-{"argMax(string, map_uint16_lowcardinality_nullable_uint32___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Nullable_UInt32____String = r"""
-{"argMax(map_uint16_lowcardinality_nullable_uint32___, string)":{"62673":172276317}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Nullable_UInt64____String = r"""
-{"argMax(map_uint16_lowcardinality_nullable_uint64___, string)":{"35188":"17519329835466777749"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_Nullable_UInt64___ = r"""
-{"argMax(string, map_uint16_lowcardinality_nullable_uint64___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Nullable_UInt128____String = r"""
-{"argMax(map_uint16_lowcardinality_nullable_uint128___, string)":{"42224":"217678758996361988956827639036747606015"}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_Nullable_Int8___ = r"""
-{"argMax(string, map_uint16_lowcardinality_nullable_int8___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_Nullable_UInt128___ = r"""
-{"argMax(string, map_uint16_lowcardinality_nullable_uint128___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Nullable_Int8____String = r"""
-{"argMax(map_uint16_lowcardinality_nullable_int8___, string)":{"44296":-106}}
-"""
-
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Nullable_Int16____String = r"""
-{"argMax(map_uint16_lowcardinality_nullable_int16___, string)":{"6952":30520}}
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_Int8__ = r"""
+{"argMax(string, map_uint16_lowcardinality_int8__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
 """
 
 _clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_Nullable_Int16___ = r"""
@@ -15988,11 +15411,588 @@ _clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinalit
 {"argMax(string, map_uint16_lowcardinality_nullable_int32___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
 """
 
-_clickhouse_aggregate_functions_argMax_datatypes_Map_UInt16_LowCardinality_Nullable_Int32____String = r"""
-{"argMax(map_uint16_lowcardinality_nullable_int32___, string)":{"10296":-891631863}}
-"""
-
 _clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_Nullable_Int64___ = r"""
 {"argMax(string, map_uint16_lowcardinality_nullable_int64___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_Nullable_Int8___ = r"""
+{"argMax(string, map_uint16_lowcardinality_nullable_int8___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_Nullable_UInt128___ = r"""
+{"argMax(string, map_uint16_lowcardinality_nullable_uint128___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_Nullable_UInt16___ = r"""
+{"argMax(string, map_uint16_lowcardinality_nullable_uint16___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_Nullable_UInt32___ = r"""
+{"argMax(string, map_uint16_lowcardinality_nullable_uint32___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_Nullable_UInt64___ = r"""
+{"argMax(string, map_uint16_lowcardinality_nullable_uint64___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_Nullable_UInt8___ = r"""
+{"argMax(string, map_uint16_lowcardinality_nullable_uint8___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_String__ = r"""
+{"argMax(string, map_uint16_lowcardinality_string__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_UInt128__ = r"""
+{"argMax(string, map_uint16_lowcardinality_uint128__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_UInt16__ = r"""
+{"argMax(string, map_uint16_lowcardinality_uint16__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_UInt32__ = r"""
+{"argMax(string, map_uint16_lowcardinality_uint32__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_UInt64__ = r"""
+{"argMax(string, map_uint16_lowcardinality_uint64__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_UInt8__ = r"""
+{"argMax(string, map_uint16_lowcardinality_uint8__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_LowCardinality_UUID__ = r"""
+{"argMax(string, map_uint16_lowcardinality_uuid__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_Bool__ = r"""
+{"argMax(string, map_uint16_nullable_bool__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_DateTime64_3_____22_8 = r"""
+{"argMax(string, map_uint16_nullable_datetime64_3___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_DateTime__ = r"""
+{"argMax(string, map_uint16_nullable_datetime__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_Date__ = r"""
+{"argMax(string, map_uint16_nullable_date__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_Decimal128_38___ = r"""
+{"argMax(string, map_uint16_nullable_decimal128_38___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_FixedString_51___ = r"""
+{"argMax(string, map_uint16_nullable_fixedstring_51___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_Float32__ = r"""
+{"argMax(string, map_uint16_nullable_float32__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_Float64__ = r"""
+{"argMax(string, map_uint16_nullable_float64__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_Int128__ = r"""
+{"argMax(string, map_uint16_nullable_int128__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_Int16__ = r"""
+{"argMax(string, map_uint16_nullable_int16__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_Int32__ = r"""
+{"argMax(string, map_uint16_nullable_int32__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_Int64__ = r"""
+{"argMax(string, map_uint16_nullable_int64__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_Int8__ = r"""
+{"argMax(string, map_uint16_nullable_int8__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_String__ = r"""
+{"argMax(string, map_uint16_nullable_string__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_UInt128__ = r"""
+{"argMax(string, map_uint16_nullable_uint128__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_UInt16__ = r"""
+{"argMax(string, map_uint16_nullable_uint16__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_UInt32__ = r"""
+{"argMax(string, map_uint16_nullable_uint32__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_UInt64__ = r"""
+{"argMax(string, map_uint16_nullable_uint64__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_UInt8__ = r"""
+{"argMax(string, map_uint16_nullable_uint8__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_Nullable_UUID__ = r"""
+{"argMax(string, map_uint16_nullable_uuid__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_String_ = r"""
+{"argMax(string, map_uint16_string_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_UInt128_ = r"""
+{"argMax(string, map_uint16_uint128_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_UInt16_ = r"""
+{"argMax(string, map_uint16_uint16_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_UInt32_ = r"""
+{"argMax(string, map_uint16_uint32_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_UInt64_ = r"""
+{"argMax(string, map_uint16_uint64_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_UInt8_ = r"""
+{"argMax(string, map_uint16_uint8_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt16_UUID_ = r"""
+{"argMax(string, map_uint16_uuid_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Array_String__ = r"""
+{"argMax(string, map_uint8_array_string__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Bool_ = r"""
+{"argMax(string, map_uint8_bool_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_DateTime64_3____22_8 = r"""
+{"argMax(string, map_uint8_datetime64_3__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_DateTime_ = r"""
+{"argMax(string, map_uint8_datetime_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Date_ = r"""
+{"argMax(string, map_uint8_date_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Decimal128_38__ = r"""
+{"argMax(string, map_uint8_decimal128_38__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_FixedString_51__ = r"""
+{"argMax(string, map_uint8_fixedstring_51__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Float32_ = r"""
+{"argMax(string, map_uint8_float32_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Float64_ = r"""
+{"argMax(string, map_uint8_float64_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Int128_ = r"""
+{"argMax(string, map_uint8_int128_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Int16_ = r"""
+{"argMax(string, map_uint8_int16_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Int32_ = r"""
+{"argMax(string, map_uint8_int32_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Int64_ = r"""
+{"argMax(string, map_uint8_int64_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Int8_ = r"""
+{"argMax(string, map_uint8_int8_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Bool__ = r"""
+{"argMax(string, map_uint8_lowcardinality_bool__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_DateTime__ = r"""
+{"argMax(string, map_uint8_lowcardinality_datetime__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Date__ = r"""
+{"argMax(string, map_uint8_lowcardinality_date__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_FixedString_51___ = r"""
+{"argMax(string, map_uint8_lowcardinality_fixedstring_51___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Float32__ = r"""
+{"argMax(string, map_uint8_lowcardinality_float32__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Float64__ = r"""
+{"argMax(string, map_uint8_lowcardinality_float64__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Int128__ = r"""
+{"argMax(string, map_uint8_lowcardinality_int128__)":"PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Int16__ = r"""
+{"argMax(string, map_uint8_lowcardinality_int16__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Int32__ = r"""
+{"argMax(string, map_uint8_lowcardinality_int32__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Int64__ = r"""
+{"argMax(string, map_uint8_lowcardinality_int64__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Int8__ = r"""
+{"argMax(string, map_uint8_lowcardinality_int8__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_Bool___ = r"""
+{"argMax(string, map_uint8_lowcardinality_nullable_bool___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_DateTime___ = r"""
+{"argMax(string, map_uint8_lowcardinality_nullable_datetime___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_Date___ = r"""
+{"argMax(string, map_uint8_lowcardinality_nullable_date___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_FixedString_51____ = r"""
+{"argMax(string, map_uint8_lowcardinality_nullable_fixedstring_51____)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_Float32___ = r"""
+{"argMax(string, map_uint8_lowcardinality_nullable_float32___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_Float64___ = r"""
+{"argMax(string, map_uint8_lowcardinality_nullable_float64___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_Int128___ = r"""
+{"argMax(string, map_uint8_lowcardinality_nullable_int128___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_Int16___ = r"""
+{"argMax(string, map_uint8_lowcardinality_nullable_int16___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_Int32___ = r"""
+{"argMax(string, map_uint8_lowcardinality_nullable_int32___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_Int64___ = r"""
+{"argMax(string, map_uint8_lowcardinality_nullable_int64___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_Int8___ = r"""
+{"argMax(string, map_uint8_lowcardinality_nullable_int8___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_String___ = r"""
+{"argMax(string, map_uint8_lowcardinality_nullable_string___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_UInt128___ = r"""
+{"argMax(string, map_uint8_lowcardinality_nullable_uint128___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_UInt16___ = r"""
+{"argMax(string, map_uint8_lowcardinality_nullable_uint16___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_UInt32___ = r"""
+{"argMax(string, map_uint8_lowcardinality_nullable_uint32___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_UInt64___ = r"""
+{"argMax(string, map_uint8_lowcardinality_nullable_uint64___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_UInt8___ = r"""
+{"argMax(string, map_uint8_lowcardinality_nullable_uint8___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_Nullable_UUID___ = r"""
+{"argMax(string, map_uint8_lowcardinality_nullable_uuid___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_String__ = r"""
+{"argMax(string, map_uint8_lowcardinality_string__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_UInt128__ = r"""
+{"argMax(string, map_uint8_lowcardinality_uint128__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_UInt16__ = r"""
+{"argMax(string, map_uint8_lowcardinality_uint16__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_UInt32__ = r"""
+{"argMax(string, map_uint8_lowcardinality_uint32__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_UInt64__ = r"""
+{"argMax(string, map_uint8_lowcardinality_uint64__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_UInt8__ = r"""
+{"argMax(string, map_uint8_lowcardinality_uint8__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_LowCardinality_UUID__ = r"""
+{"argMax(string, map_uint8_lowcardinality_uuid__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Map_String_LowCardinality_Float64___ = r"""
+{"argMax(string, map_uint8_map_string_lowcardinality_float64___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_Bool__ = r"""
+{"argMax(string, map_uint8_nullable_bool__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_DateTime64_3_____22_8 = r"""
+{"argMax(string, map_uint8_nullable_datetime64_3___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_DateTime__ = r"""
+{"argMax(string, map_uint8_nullable_datetime__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_Date__ = r"""
+{"argMax(string, map_uint8_nullable_date__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_Decimal128_38___ = r"""
+{"argMax(string, map_uint8_nullable_decimal128_38___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_FixedString_51___ = r"""
+{"argMax(string, map_uint8_nullable_fixedstring_51___)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_Float32__ = r"""
+{"argMax(string, map_uint8_nullable_float32__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_Float64__ = r"""
+{"argMax(string, map_uint8_nullable_float64__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_Int128__ = r"""
+{"argMax(string, map_uint8_nullable_int128__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_Int16__ = r"""
+{"argMax(string, map_uint8_nullable_int16__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_Int32__ = r"""
+{"argMax(string, map_uint8_nullable_int32__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_Int64__ = r"""
+{"argMax(string, map_uint8_nullable_int64__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_Int8__ = r"""
+{"argMax(string, map_uint8_nullable_int8__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_String__ = r"""
+{"argMax(string, map_uint8_nullable_string__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_UInt128__ = r"""
+{"argMax(string, map_uint8_nullable_uint128__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_UInt16__ = r"""
+{"argMax(string, map_uint8_nullable_uint16__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_UInt32__ = r"""
+{"argMax(string, map_uint8_nullable_uint32__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_UInt64__ = r"""
+{"argMax(string, map_uint8_nullable_uint64__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_UInt8__ = r"""
+{"argMax(string, map_uint8_nullable_uint8__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Nullable_UUID__ = r"""
+{"argMax(string, map_uint8_nullable_uuid__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_String_ = r"""
+{"argMax(string, map_uint8_string_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_Tuple_String__ = r"""
+{"argMax(string, map_uint8_tuple_string__)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_UInt128_ = r"""
+{"argMax(string, map_uint8_uint128_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_UInt16_ = r"""
+{"argMax(string, map_uint8_uint16_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_UInt32_ = r"""
+{"argMax(string, map_uint8_uint32_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_UInt64_ = r"""
+{"argMax(string, map_uint8_uint64_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_UInt8_ = r"""
+{"argMax(string, map_uint8_uint8_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_Map_UInt8_UUID_ = r"""
+{"argMax(string, map_uint8_uuid_)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_String = r"""
+{"argMax(string, string)":"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_UInt128 = r"""
+{"argMax(string, uint128)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_UInt16 = r"""
+{"argMax(string, uint16)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_UInt32 = r"""
+{"argMax(string, uint32)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_UInt64 = r"""
+{"argMax(string, uint64)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_UInt8 = r"""
+{"argMax(string, uint8)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_String_UUID = r"""
+{"argMax(string, uuid)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_UInt128_String = r"""
+{"argMax(uint128, string)":"155026605108871518024784770416974189568"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_UInt16_String = r"""
+{"argMax(uint16, string)":27015}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_UInt32_String = r"""
+{"argMax(uint32, string)":2579416427}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_UInt64_String = r"""
+{"argMax(uint64, string)":"16708105131877516882"}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_UInt8_String = r"""
+{"argMax(uint8, string)":24}
+"""
+
+_clickhouse_aggregate_functions_argMax_datatypes_UUID_String = r"""
+{"argMax(uuid, string)":"dd4aea94-cfc8-e0e6-bafa-3ea3cc2c8b4c"}
+"""
+
+_clickhouse_aggregate_functions_argMax_doc_example = r"""
+{"argMax(user, salary)":"director"}
+"""
+
+_clickhouse_aggregate_functions_argMax_inf___inf__nan__inf__inf = r"""
+{"argMax(x, y)":4}
+"""
+
+_clickhouse_aggregate_functions_argMax_inf___inf__nan__inf_inf = r"""
+{"argMax(x, y)":null}
+"""
+
+_clickhouse_aggregate_functions_argMax_inf___inf__nan__inf_nan = r"""
+{"argMax(x, y)":4}
+"""
+
+_clickhouse_aggregate_functions_argMax_inf___inf__nan_inf__inf = r"""
+{"argMax(x, y)":4}
+"""
+
+_clickhouse_aggregate_functions_argMax_inf___inf__nan_inf_inf = r"""
+{"argMax(x, y)":null}
+"""
+
+_clickhouse_aggregate_functions_argMax_inf___inf__nan_inf_nan = r"""
+{"argMax(x, y)":4}
+"""
+
+_clickhouse_aggregate_functions_argMax_inf___inf__nan_nan__inf = r"""
+{"argMax(x, y)":4}
+"""
+
+_clickhouse_aggregate_functions_argMax_inf___inf__nan_nan_inf = r"""
+{"argMax(x, y)":null}
+"""
+
+_clickhouse_aggregate_functions_argMax_inf___inf__nan_nan_nan = r"""
+{"argMax(x, y)":4}
+"""
+
+_clickhouse_aggregate_functions_argMax_string_that_ends_with__0 = r"""
+{"argMax(x, y)":"5"}
+"""
+
+_clickhouse_aggregate_functions_argMax_with_group_by = r"""
+{"even":0,"argMax(number, modulo(number, 2))":"0"}
+{"even":1,"argMax(number, modulo(number, 2))":"1"}
+"""
+
+_clickhouse_aggregate_functions_argMax_zero_rows = r"""
+{"argMax(number, plus(number, 1))":"0"}
 """
 
