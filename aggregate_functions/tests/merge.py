@@ -10,21 +10,48 @@ from aggregate_functions.requirements import (
     RQ_SRS_031_ClickHouse_AggregateFunctions_Combinator_Merge,
 )
 
-def get_data_type(key, func, query):
-    #_aggregate_functions_state_anyState_Array_Array_String__ 
-    # Array(Array(String))
-    key = [i for i in key.split(f"{func}State")[-1].split('_') if len(i) > 0]
-    note(key)
-    if "number" in query:
-        return "UInt64"
+def array_on_duplicate_keys(ordered_pairs):
+    """Convert duplicate keys to arrays."""
+    d = {}
+    for k, v in ordered_pairs:
+        if k in d:
+            d[k].append(v)
+        else:
+           d[k] = [v]
+    return d
 
-    return ''
+
+@TestCheck
+def check(self, func, datatypes, hex_repr, snapshot_name, is_low_cardinality=False):
+    if is_low_cardinality:
+        self.context.node.query(f"SET allow_suspicious_low_cardinality_types = 1")
+
+    with Given("I create temporary table"):
+        datatype_name = f"AggregateFunction({func}, {datatypes})"
+        self.context.table = create_table(
+                                        engine="MergeTree", 
+                                        columns=[Column(name="state", datatype=DataType(name=datatype_name))], 
+                                        order_by="tuple()"
+                                        )
+        
+    with When("I insert data in temporary table"):
+        if is_low_cardinality:
+            values = f"(CAST(unhex('{hex_repr}'), 'AggregateFunction({func}, {datatypes})'))"
+        else:
+            values = (f"(unhex('{hex_repr}'))")
+        self.context.node.query(f"INSERT INTO {self.context.table.name} VALUES {values}")
+
+    with Then("I check the result"):
+        execute_query(
+            f"SELECT {func}Merge(state) FROM {self.context.table.name}", snapshot_name=snapshot_name
+        )
 
 
 @TestScenario
-def merge(self, func):
-    """Check -Merge combinator function."""
-    snapshot_path = os.path.join(current_dir(), "snapshots", f"steps.py.{func.lower()}state.{current_cpu()}.snapshot")
+def merge(self, func, snapshot_id):
+    """Check aggregate function -Merge combinator."""
+    snapshot_path = os.path.join(current_dir(), "snapshots", f"steps.py.{snapshot_id}.{current_cpu()}.snapshot")
+  
     if not os.path.exists(snapshot_path):
         xfail(reason=f"no snapshot found {snapshot_path}")
 
@@ -32,18 +59,28 @@ def merge(self, func):
     snapshot_attrs = {k:v for k,v in vars(snapshot_module).items() if not k.startswith('__')}
 
     for key, value in snapshot_attrs.items():
-        if value.strip() != value.split()[0].strip(): # add for loop with split lines
-            note("Not implemented")
-            continue
-
-        value_dict = json.loads(value)
-        for query, v in value_dict.items():
-            hex_repr = v
-            data_type = get_data_type(key, func, query)
+        data = value.strip().split('\n')
+        idx = 0
+        for hex_and_datatype in data:
+            value_dict = json.loads(hex_and_datatype, object_pairs_hook=array_on_duplicate_keys)
+            hex_repr = ''
+            datatypes = ''
+            note(value_dict)
+            for k, val in value_dict.items():
+                if 'hex(' in k and 'toTypeName' not in k:
+                    hex_repr = val[0]
+                elif 'toTypeName' in k:
+                    if len(datatypes) == 0:
+                        datatypes += ' ,'.join(datatype for datatype in val if len(datatype) > 0)
+                    else:
+                        datatypes += ' ,'+ ' ,'.join(datatype for datatype in val if len(datatype) > 0)
+            if hex_repr is not None and len(hex_repr) > 0 and len(datatypes) > 0:
+                name = key.replace('state_', 'merge_')
+                name = name.replace('State', 'Merge') + '_' + str(idx)
+                idx += 1 
+                Check(test=check)(func=func, datatypes=datatypes, hex_repr=hex_repr, snapshot_name=name, 
+                                  is_low_cardinality='LowCardinality' in datatypes)
         
-        
-
-
 
 @TestFeature
 @Name("merge")
@@ -51,50 +88,13 @@ def merge(self, func):
 def feature(self):
     """Check aggregate functions `-Merge` combinator."""
     for name in aggregate_functions:
-        Scenario(f"{name}Merge", test=merge)(func=name)
-        
-    
-
-
-
-
-
-
-# with Given("create temporary table"):
-#     datatype_name = f"AggregateFunction({func}, {params})"
-#     self.context.table = create_table(engine="MergeTree", 
-#                                         columns=[Column(name="state", 
-#                                         datatype=DataType(name=datatype_name))], 
-#                                         order_by="tuple()")
-# with When("insert data in temporary table"):
-#     values = (f"(unhex('{hex_repr}'))")
-#     node = self.context.node
-#     node.query(f"INSERT INTO {self.context.table.name} VALUES {values}")
-
-# with Then(""):
-#     self.context.snapshot_id = get_snapshot_id(f"{func}")
-#     query = f"SELECT {func}Merge(state) FROM {self.context.table.name}"
-#     execute_query(
-#         query, snapshot_name=f"_aggregate_functions_any_Bool"
-#     )
-
-
-
-# with Given("create temporary table"):
-#     datatype_name = "AggregateFunction(topKWeighted, UInt64, UInt64)"
-#     self.context.table = create_table(engine="MergeTree", 
-#                            columns=[Column(name="state", 
-#                                            datatype=DataType(name=datatype_name))], 
-#                                            order_by="tuple()")
-    
-# with When("insert data in temporary table"):
-#     values = ("(unhex('09FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF01002E194EEC2B33C3EEAEB2B8E2BEE5CCE1EE010052C67017181DDFE7D28CC3BB81A3C7EFE7010067751E7C48EEB0DDE7EAF9E087C9BBD8DD0100B9C6FBCB0C65577CB98DEFDFCCA1D9AB7C002B40FA3FF74F5647AB80E9FFF3FE93AB4700779ED5434C960538F7BCD69EC4C9E58238004D82B78BAA648E2ACD84DEDDA89599C72A0000000000000000000000800200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'))")
-#     node = self.context.node
-#     node.query(f"INSERT INTO {self.context.table.name} VALUES {values}")
-
-# with Then("check the result"):
-#     query = f"SELECT topKWeightedMerge(state) FROM {self.context.table.name}"
-#     execute_query(
-#         query
-#     )
+        try:
+            scenario = load(f"aggregate_functions.tests.{name}", "scenario")
+        except ModuleNotFoundError as e:
+            with Scenario(f"{name}Merge"):
+                skip(reason=f"{name}State() test is not implemented")
+        else:
+            with Scenario(f"{name}Merge", description=f"Get snapshot name to retrieve state of {name} function"):
+                snapshot_id = scenario(func=name).lower().replace("merge", "state")
+                merge(func=name, snapshot_id=snapshot_id)
 
