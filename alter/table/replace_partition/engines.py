@@ -1,5 +1,8 @@
 from testflows.core import *
-from testflows.asserts import *
+
+from alter.table.replace_partition.common import (
+    check_partition_was_replaced,
+)
 from alter.table.replace_partition.requirements.requirements import *
 from helpers.common import getuid, replace_partition
 from helpers.create import (
@@ -11,9 +14,6 @@ from helpers.create import (
     partitioned_graphite_merge_tree_table,
     partitioned_aggregating_merge_tree_table,
     partitioned_replicated_merge_tree_table,
-)
-from alter.table.replace_partition.common import (
-    check_partition_was_replaced,
 )
 
 

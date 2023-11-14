@@ -1,18 +1,13 @@
 import random
 
-from testflows.core import *
-from testflows.asserts import *
-from alter.table.replace_partition.requirements.requirements import *
-from helpers.common import getuid, replace_partition
 from alter.table.replace_partition.common import (
-    check_partition_was_replaced,
     create_two_tables_partitioned_by_column_with_data,
-    create_table_partitioned_by_column_with_data,
     replace_partition_and_validate_data,
 )
+from alter.table.replace_partition.requirements.requirements import *
 from helpers.alter import *
+from helpers.common import getuid, replace_partition
 from helpers.create import partitioned_replicated_merge_tree_table
-from helpers.tables import Column, create_table_partitioned_by_column
 
 destination_table = "destination_" + getuid()
 source_table = "source_" + getuid()

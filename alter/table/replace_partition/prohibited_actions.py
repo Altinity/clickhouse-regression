@@ -1,14 +1,14 @@
 from testflows.core import *
-from testflows.asserts import *
-from helpers.common import getuid, replace_partition
-from helpers.datatypes import UInt64, UInt8
-from helpers.tables import create_table_partitioned_by_column, Column
-from alter.table.replace_partition.requirements.requirements import *
+
 from alter.table.replace_partition.common import (
     create_two_tables_partitioned_by_column_with_data,
     create_merge_tree_and_memory_tables,
     create_table_partitioned_by_column_with_data,
 )
+from alter.table.replace_partition.requirements.requirements import *
+from helpers.common import getuid, replace_partition
+from helpers.datatypes import UInt64, UInt8
+from helpers.tables import create_table_partitioned_by_column, Column
 
 
 def io_error_message(exitcode=62, message="Syntax error"):

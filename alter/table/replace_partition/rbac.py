@@ -1,10 +1,10 @@
-from testflows.core import *
 from testflows.asserts import *
-from alter.table.replace_partition.requirements.requirements import *
+
 from alter.table.replace_partition.common import create_partitions_with_random_uint64
+from alter.table.replace_partition.requirements.requirements import *
 from helpers.common import getuid, create_user, replace_partition
-from helpers.tables import create_table_partitioned_by_column
 from helpers.rbac import *
+from helpers.tables import create_table_partitioned_by_column
 
 
 def get_privileges_as_list_of_strings(privileges: list):
