@@ -1,7 +1,8 @@
-from testflows.core import *
 from testflows.asserts import *
-from alter.table.replace_partition.requirements.requirements import *
+from testflows.core import *
+
 from alter.table.replace_partition.common import create_partitions_with_random_uint64
+from alter.table.replace_partition.requirements.requirements import *
 from helpers.common import getuid
 from helpers.tables import create_table_partitioned_by_column
 

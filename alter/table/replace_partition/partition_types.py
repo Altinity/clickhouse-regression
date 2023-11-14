@@ -1,13 +1,13 @@
 from testflows.core import *
-from testflows.asserts import *
+
+from alter.table.replace_partition.common import (
+    check_partition_was_replaced,
+    create_partitions_with_random_uint64,
+)
 from alter.table.replace_partition.requirements.requirements import *
 from helpers.common import getuid, replace_partition
 from helpers.tables import (
     create_partitioned_table_with_compact_and_wide_parts,
-)
-from alter.table.replace_partition.common import (
-    check_partition_was_replaced,
-    create_partitions_with_random_uint64,
 )
 
 

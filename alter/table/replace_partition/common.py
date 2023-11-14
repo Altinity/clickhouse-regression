@@ -1,10 +1,10 @@
 import random
 from time import sleep
 
-from testflows.core import *
 from testflows.asserts import *
-from alter.table.replace_partition.requirements.requirements import *
-from helpers.common import getuid, replace_partition
+from testflows.core import *
+
+from helpers.common import replace_partition
 from helpers.datatypes import UInt8, UInt64
 from helpers.tables import create_table_partitioned_by_column, create_table, Column
 
