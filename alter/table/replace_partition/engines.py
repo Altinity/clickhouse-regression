@@ -2,6 +2,7 @@ from testflows.core import *
 
 from alter.table.replace_partition.common import (
     check_partition_was_replaced,
+    create_partitions_with_random_uint64,
 )
 from alter.table.replace_partition.requirements.requirements import *
 from helpers.common import getuid, replace_partition
@@ -13,8 +14,23 @@ from helpers.create import (
     partitioned_versioned_collapsing_merge_tree_table,
     partitioned_graphite_merge_tree_table,
     partitioned_aggregating_merge_tree_table,
-    partitioned_replicated_merge_tree_table,
+    create_replicated_merge_tree_table,
 )
+
+
+@TestStep(Given)
+@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Replicas("1.0"))
+def partitioned_replicated_merge_tree_table(self, table_name, partition, columns=None):
+    """Create a ReplicatedMergeTree table partitioned by a specific column."""
+    with By(
+        f"creating a partitioned {table_name} table with a ReplicatedMergeTree engine"
+    ):
+        create_replicated_merge_tree_table(
+            table_name=table_name, columns=columns, partition_by=partition
+        )
+
+    with And("populating it with the data needed to create multiple partitions"):
+        create_partitions_with_random_uint64(table_name=table_name)
 
 
 def columns():
