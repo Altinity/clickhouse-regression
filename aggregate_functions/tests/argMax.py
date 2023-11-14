@@ -18,4 +18,4 @@ def scenario(self, func="argMax({params})", table=None):
     if table is None:
         table = self.context.table
 
-    checks(func=func, table=table)
+    checks(func=func, table=table, snapshot_id=self.context.snapshot_id)
