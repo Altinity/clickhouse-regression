@@ -122,7 +122,7 @@ The following team members SHALL be dedicated to the release:
 ### Notable Differences in Behavior
 
 * Insert from s3 requires more memory, so max_insert_thread in tests was lowered.
-* Sparkbar aggregate function overflow was fixed after 23.8.
+* Sparkbar aggregate function overflow was fixed after 23.4.
 * Different result of topKWeightedMerge aggregate function in versions 23.3.2.37 and 23.8.4.69  
   https://github.com/ClickHouse/ClickHouse/issues/55997
 * Column name and table name conflict when allow_experimental_analyzer=1  
