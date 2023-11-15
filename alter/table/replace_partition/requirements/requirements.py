@@ -1502,7 +1502,11 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
             level=3,
             num="23.4.1",
         ),
-        Heading(name="Prohibited Actions", level=1, num="24"),
+        Heading(
+            name="Actions That Can Not Be Used Along Replace Partition Operation",
+            level=1,
+            num="24",
+        ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited",
             level=2,
@@ -1910,7 +1914,7 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
         * 22.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.Key](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentkey)
     * 22.4 [Tables With Different Storage Policy](#tables-with-different-storage-policy)
         * 22.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.StoragePolicy](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentstoragepolicy)
-* 23 [Prohibited Actions](#prohibited-actions)
+* 23 [Actions That Can Not Be Used Along Replace Partition Operation](#actions-that-can-not-be-used-along-replace-partition-operation)
     * 23.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited](#rqsrs-032clickhousealtertablereplacepartitionprohibited)
     * 23.2 [Actions That Can Not Be Used After From Clause](#actions-that-can-not-be-used-after-from-clause)
         * 23.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.From](#rqsrs-032clickhousealtertablereplacepartitionprohibitedfrom)
@@ -2370,7 +2374,7 @@ version: 1.0
 [ClickHouse] SHALL not support the usage of `REPLACE PARTITION` when tables have different storage
 policy.
 
-## Prohibited Actions
+## Actions That Can Not Be Used Along Replace Partition Operation
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited
 version: 1.0
