@@ -393,6 +393,9 @@ def add_constraint_to_destination_and_source(self):
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Detach("1.0")
+)
 def detach_partition(self, table_name):
     """Detach partition from the table."""
     partition_name = random.randrange(5, 100)
@@ -434,6 +437,9 @@ def detach_partition_from_destination_and_source(self):
 
 
 @TestStep(When)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Attach("1.0")
+)
 def attach_partition(self, table_name):
     """Attach partition to the table."""
     alter_table_attach_partition(table_name=table_name, partition_name=12)
