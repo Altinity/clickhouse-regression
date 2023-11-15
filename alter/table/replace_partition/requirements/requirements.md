@@ -9,9 +9,9 @@
 * 3 [Flowchart](#flowchart)
 * 4 [Definitions](#definitions)
 * 5 [User Actions](#user-actions)
-* 6 [Replace Partition on the Table](#replace-partition-on-the-table)
+* 6 [Replace Partition on the Table From Another Table](#replace-partition-on-the-table-from-another-table)
     * 6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition](#rqsrs-032clickhousealtertablereplacepartition)
-    * 6.2 [Changes In Table Partitions](#changes-in-table-partitions)
+    * 6.2 [Reflect Changes in Table Partitions Inside the System Table](#reflect-changes-in-table-partitions-inside-the-system-table)
         * 6.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.System.Parts](#rqsrs-032clickhousealtertablereplacepartitionsystemparts)
 * 7 [Table Engines on Which Replace Partition Can Be Performed](#table-engines-on-which-replace-partition-can-be-performed)
     * 7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Supported.Engines](#rqsrs-032clickhousealtertablereplacepartitionsupportedengines)
@@ -228,7 +228,7 @@ Destination Table - The table in which a specific partition is going to be repla
 | `RENAME COLUMN`                | `RENAME COLUMN [IF EXISTS] name to new_name`                                                                                 |
 | `OPTIMIZE`                     | `OPTIMIZE TABLE [db.]name [ON CLUSTER cluster] [PARTITION partition] [FINAL] [DEDUPLICATE [BY expression]]`                  |
 
-## Replace Partition on the Table
+## Replace Partition on the Table From Another Table
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition
 version: 1.0
@@ -244,7 +244,7 @@ For instance, the following SQL command exemplifies this feature:
 ALTER TABLE table2 [ON CLUSTER cluster] REPLACE PARTITION partition_expr FROM table1
 ```
 
-### Changes In Table Partitions
+### Reflect Changes in Table Partitions Inside the System Table
 
 #### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.System.Parts
 version: 1.0
