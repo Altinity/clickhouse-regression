@@ -99,6 +99,16 @@ def alter_table_drop_constraint(self, table_name, constraint_name, node=None):
 
 
 @TestStep(Given)
+def alter_table_drop_partition(self, table_name, partition_name, node=None):
+    """Drop partition from the table using alter."""
+    if node is None:
+        node = self.context.node
+
+    with By("dropping partition from the table"):
+        query = f"ALTER TABLE {table_name} DROP PARTITION {partition_name}"
+        node.query(query)
+
+@TestStep(Given)
 def alter_table_modify_ttl(self, table_name, ttl_expression, node=None):
     """Modify TTL in the table using alter."""
     if node is None:
