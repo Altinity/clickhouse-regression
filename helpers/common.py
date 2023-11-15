@@ -267,7 +267,7 @@ def add_invalid_config(
             started = time.time()
             command = f"cat /var/lib/clickhouse/preprocessed_configs/{config.preprocessed_name} | grep {config.uid}{' > /dev/null' if not settings.debug else ''}"
             while time.time() - started < timeout:
-                exitcode = node.command(command, steps=False).exitcode
+                exitcode = node.command(command, steps=False, exitcode=0).exitcode
                 if exitcode == 0:
                     break
                 time.sleep(1)
@@ -326,7 +326,7 @@ def add_invalid_config(
         started = time.time()
         command = f'tail -n {tail} /var/log/clickhouse-server/clickhouse-server.err.log | grep "{message}"'
         while time.time() - started < timeout:
-            exitcode = node.command(command, steps=False).exitcode
+            exitcode = node.command(command, steps=False, exitcode=None).exitcode
             if exitcode == 0:
                 break
             time.sleep(1)
