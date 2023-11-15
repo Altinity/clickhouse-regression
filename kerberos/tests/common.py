@@ -55,7 +55,9 @@ def kinit_no_keytab(self, node, principal="kerberos_user", lifetime_option="-l 1
     """Helper for obtaining Kerberos ticket for client"""
     try:
         node.command("echo pwd | kinit admin/admin", exitcode=None)
-        node.command(f'kadmin -w pwd -q "add_principal -pw pwd {principal}"', exitcode=None)
+        node.command(
+            f'kadmin -w pwd -q "add_principal -pw pwd {principal}"', exitcode=None
+        )
         node.command(f"echo pwd | kinit {lifetime_option} {principal}", exitcode=None)
         yield
     finally:
@@ -66,7 +68,7 @@ def kinit_no_keytab(self, node, principal="kerberos_user", lifetime_option="-l 1
 def create_server_principal(self, node):
     """Helper for obtaining Kerberos ticket for server"""
     try:
-        node.command("echo pwd | kinit admin/admin")
+        node.command("echo pwd | kinit admin/admin", exitcode=None)
         node.command(
             f'kadmin -w pwd -q "add_principal -randkey HTTP/{self.context.env}-{node.name}-1.krbnet"'
         )
@@ -75,8 +77,8 @@ def create_server_principal(self, node):
         )
         yield
     finally:
-        node.command("kdestroy")
-        node.command("rm /etc/krb5.keytab")
+        node.command("kdestroy", exitcode=None)
+        node.command("rm /etc/krb5.keytab", exitcode=None)
 
 
 @TestStep(Given)
