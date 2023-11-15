@@ -534,7 +534,6 @@ version: 1.0
 
 [ClickHouse] SHALL support [groupArrayLast] specific aggregate function.
 
-
 ##### groupUniqArray
 
 ###### RQ.SRS-031.ClickHouse.AggregateFunctions.Specific.GroupUniqArray
