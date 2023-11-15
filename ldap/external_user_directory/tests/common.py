@@ -89,7 +89,7 @@ def verify_ldap_user_exists(server, username, password):
     with By("searching LDAP database"):
         ldap_node = current().context.cluster.node(server)
         r = ldap_node.command(
-            f"ldapwhoami -H ldap://localhost -D 'cn={user_name},ou=users,dc=company,dc=com' -w {password}"
+            f"ldapwhoami -H ldap://localhost -D 'cn={username},ou=users,dc=company,dc=com' -w {password}"
         )
         assert r.exitcode == 0, error()
 
@@ -191,7 +191,7 @@ def invalid_ldap_external_user_directory_config(
             started = time.time()
             command = f"cat /var/lib/clickhouse/preprocessed_configs/{config.preprocessed_name} | grep {config.uid}{' > /dev/null' if not settings.debug else ''}"
             while time.time() - started < timeout:
-                exitcode = node.command(command, steps=False).exitcode
+                exitcode = node.command(command, steps=False, exitcode=None).exitcode
                 if exitcode == 0:
                     break
                 time.sleep(1)
@@ -222,7 +222,7 @@ def invalid_ldap_external_user_directory_config(
         started = time.time()
         command = f'tail -n {tail} /var/log/clickhouse-server/clickhouse-server.err.log | grep "{message}"'
         while time.time() - started < timeout:
-            exitcode = node.command(command, steps=False).exitcode
+            exitcode = node.command(command, steps=False, exitcode=None).exitcode
             if exitcode == 0:
                 break
             time.sleep(1)

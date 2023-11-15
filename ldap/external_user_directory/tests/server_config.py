@@ -104,7 +104,7 @@ def missing_host(self, tail=30, timeout=300):
             started = time.time()
             command = f'tail -n {tail} /var/log/clickhouse-server/clickhouse-server.err.log | grep "{message}"'
             while time.time() - started < timeout:
-                exitcode = node.command(command, steps=False).exitcode
+                exitcode = node.command(command, steps=False, exitcode=None).exitcode
                 if exitcode == 0:
                     break
                 time.sleep(1)

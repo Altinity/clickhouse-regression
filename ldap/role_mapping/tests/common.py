@@ -172,7 +172,8 @@ def add_group_to_ldap(cn, gidnumber=None, node=None, _gidnumber=[600], exitcode=
     ldif = "\n".join(lines)
 
     r = node.command(
-        f'echo -e "{ldif}" | ldapadd -x -H ldap://localhost -D "cn=admin,dc=company,dc=com" -w admin'
+        f'echo -e "{ldif}" | ldapadd -x -H ldap://localhost -D "cn=admin,dc=company,dc=com" -w admin',
+        exitcode=None,
     )
 
     if exitcode is not None:
@@ -188,7 +189,8 @@ def delete_group_from_ldap(group, node=None, exitcode=0):
 
     with By(f"deleting group {group['dn']}"):
         r = node.command(
-            f"ldapdelete -x -H ldap://localhost -D \"cn=admin,dc=company,dc=com\" -w admin \"{group['dn']}\""
+            f"ldapdelete -x -H ldap://localhost -D \"cn=admin,dc=company,dc=com\" -w admin \"{group['dn']}\"",
+            exitcode=None,
         )
 
     if exitcode is not None:
@@ -210,7 +212,9 @@ def fix_ldap_permissions(node=None, exitcode=0):
         'olcAccess: to * by self write by dn=\\"cn=admin,dc=company,dc=com\\" read by users read by * none'
     )
 
-    r = node.command(f'echo -e "{ldif}" | ldapmodify -Y EXTERNAL -Q -H ldapi:///')
+    r = node.command(
+        f'echo -e "{ldif}" | ldapmodify -Y EXTERNAL -Q -H ldapi:///', exitcode=None
+    )
 
     if exitcode is not None:
         assert r.exitcode == exitcode, error()
@@ -230,7 +234,8 @@ def add_user_to_group_in_ldap(user, group, node=None, exitcode=0):
 
     with By(f"adding user {user['dn']} to group {group['dn']}"):
         r = node.command(
-            f'echo -e "{ldif}" | ldapmodify -x -H ldap://localhost -D "cn=admin,dc=company,dc=com" -w admin'
+            f'echo -e "{ldif}" | ldapmodify -x -H ldap://localhost -D "cn=admin,dc=company,dc=com" -w admin',
+            exitcode=None,
         )
 
     if exitcode is not None:
@@ -251,7 +256,8 @@ def delete_user_from_group_in_ldap(user, group, node=None, exitcode=0):
 
     with By(f"deleting user {user['dn']} from group {group['dn']}"):
         r = node.command(
-            f'echo -e "{ldif}" | ldapmodify -x -H ldap://localhost -D "cn=admin,dc=company,dc=com" -w admin'
+            f'echo -e "{ldif}" | ldapmodify -x -H ldap://localhost -D "cn=admin,dc=company,dc=com" -w admin',
+            exitcode=None,
         )
 
     if exitcode is not None:
