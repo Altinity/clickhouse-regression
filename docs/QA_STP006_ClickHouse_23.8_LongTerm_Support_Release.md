@@ -135,7 +135,8 @@ The following team members SHALL be dedicated to the release:
     ```
 * `SELECT bitCount(toInt128('170141183460469231731687303715884105727'));` now shows correct 127 bits instead of 64.
 * `SELECT modulo(toDecimal256(1,0), toDecimal256(1,0));` no longer results in a `Exception: Illegal types`.
-* When granting roles to a user that is in an active clickhouse-client session, the role is not applied until the clickhouse-client instance is restarted.
+* When granting roles to a user that is in an active clickhouse-client session, the role change can not be observed by a user until the clickhouse-client instance is restarted.  
+  https://github.com/ClickHouse/ClickHouse/issues/56646
 * When using clickhouse keeper-converter, the output directory for the snapshots must exist and will not be created automatically
 * SYSTEM RELOAD SYMBOLS has been removed
 * Access error with skip_access_check=1 now raises on CREATE instead of waiting for INSERT
@@ -156,7 +157,7 @@ Regressions:
 * Column name and table name conflict when allow_experimental_analyzer=1  
   https://github.com/ClickHouse/ClickHouse/issues/56371
 
-* Roles are not being applied to active clickhouse-client connections  
+* Role changes can’t be observed in active clickhouse-client sessions  
   https://github.com/ClickHouse/ClickHouse/issues/56646
 
 * Net Exception: Cannot assign requested address when trying to insert data from the s3 storage  
