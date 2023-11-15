@@ -34,10 +34,10 @@ def scenario(
     snapshot_id=None,
 ):
     """Check covarPop aggregate function."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id, clickhouse_version=">=23.2")
+    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id, clickhouse_version=">=23.2")
 
     if 'Merge' in self.name:
-        return self.context.snapshot_id
+        return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:
         table = self.context.table

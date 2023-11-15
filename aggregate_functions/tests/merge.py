@@ -22,7 +22,7 @@ def array_on_duplicate_keys(ordered_pairs):
 
 
 @TestCheck
-def check(self, func, datatypes, hex_repr, snapshot_name, is_low_cardinality=False):
+def check(self, func, datatypes, hex_repr, snapshot_name, short_name, is_low_cardinality=False):
     if is_low_cardinality:
         self.context.node.query(f"SET allow_suspicious_low_cardinality_types = 1")
 
@@ -42,13 +42,14 @@ def check(self, func, datatypes, hex_repr, snapshot_name, is_low_cardinality=Fal
         self.context.node.query(f"INSERT INTO {self.context.table.name} VALUES {values}")
 
     with Then("I check the result"):
+        correct_form = func.replace(short_name, short_name + "Merge")
         execute_query(
-            f"SELECT {func}Merge(state) FROM {self.context.table.name}", snapshot_name=snapshot_name
+            f"SELECT {correct_form}(state) FROM {self.context.table.name}", snapshot_name=snapshot_name
         )
 
 
 @TestScenario
-def merge(self, func, snapshot_id):
+def merge(self, func, snapshot_id, short_name):
     """Check aggregate function -Merge combinator."""
     snapshot_path = os.path.join(current_dir(), "snapshots", f"steps.py.{snapshot_id}.{current_cpu()}.snapshot")
   
@@ -65,7 +66,6 @@ def merge(self, func, snapshot_id):
             value_dict = json.loads(hex_and_datatype, object_pairs_hook=array_on_duplicate_keys)
             hex_repr = ''
             datatypes = ''
-            note(value_dict)
             for k, val in value_dict.items():
                 if 'hex(' in k and 'toTypeName' not in k:
                     hex_repr = val[0]
@@ -79,7 +79,7 @@ def merge(self, func, snapshot_id):
                 name = name.replace('State', 'Merge') + '_' + str(idx)
                 idx += 1 
                 Check(test=check)(func=func, datatypes=datatypes, hex_repr=hex_repr, snapshot_name=name, 
-                                  is_low_cardinality='LowCardinality' in datatypes)
+                                  is_low_cardinality='LowCardinality' in datatypes, short_name=short_name)
         
 
 @TestFeature
@@ -95,6 +95,7 @@ def feature(self):
                 skip(reason=f"{name}State() test is not implemented")
         else:
             with Scenario(f"{name}Merge", description=f"Get snapshot name to retrieve state of {name} function"):
-                snapshot_id = scenario(func=name).lower().replace("merge", "state")
-                merge(func=name, snapshot_id=snapshot_id)
+                snapshot_id, used_name = scenario()
+                snapshot_id = snapshot_id.lower().replace("merge", "state") # need state from snapshots of -State combinator 
+                merge(func=used_name, snapshot_id=snapshot_id, short_name=name)
 
