@@ -9,10 +9,10 @@ from aggregate_functions.requirements import (
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Any("1.0"))
 def scenario(self, func="any({params})", table=None, snapshot_id=None):
     """Check any aggregate function."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id, lickhouse_version=">=23.2")
+    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id, clickhouse_version=">=23.2")
 
     if 'Merge' in self.name:
-        return self.context.snapshot_id
+        return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:
         table = self.context.table
