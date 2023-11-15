@@ -16,14 +16,14 @@ def delete_any_old_topic_and_consumer_group(
             f"kafka-topics "
             f"--bootstrap-server {bootstrap_server} --delete --topic {topic}"
         )
-        node.command(command)
+        node.command(command, exitcode=None)
 
     with By("deleting consumer group"):
         command = (
             f"kafka-consumer-groups "
             f"--bootstrap-server {bootstrap_server} --delete --group {consumer_group}"
         )
-        node.command(command)
+        node.command(command, exitcode=None)
 
 
 @TestStep(Given)
