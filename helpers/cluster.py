@@ -133,7 +133,6 @@ class Node(object):
 
         def __enter__(self):
             self.command_context.__enter__()
-
             return self
 
         def __exit__(self, exc_type, exc_val, exc_tb):
@@ -141,22 +140,24 @@ class Node(object):
                 self.command_context.app.send("exit")
                 self.command_context.__exit__(exc_type, exc_val, exc_tb)
 
-        def query(self, query_string):
+        def query(self, query_string, match=None):
             self.command_context.app.send(query_string)
-            time.sleep(1)
+
+            if match is not None:
+                self.command_context.app.expect(match)
+
             self.last_result = (
                 self.command_context.app.child.before
                 + self.command_context.app.child.after
             )
-            return self.last_result
 
         @property
         def result(self):
             return self.last_result
 
-    def client(self, name):
+    def client(self, name="clickhouse-client-tty"):
         command_context = self.command(
-            "clickhouse-client-tty", asynchronous=True, no_checks=True, name=name
+            name, asynchronous=True, no_checks=True, name=name
         )
 
         return self.QueryHandler(command_context)
