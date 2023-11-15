@@ -500,8 +500,8 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited = Requirement(
         "\n"
     ),
     link=None,
-    level=4,
-    num="24.4.1.1",
+    level=2,
+    num="24.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_From = Requirement(
@@ -517,7 +517,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_From = Requirement
     ),
     link=None,
     level=3,
-    num="24.5.1",
+    num="24.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_From_TableFunctions = Requirement(
@@ -576,7 +576,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_From_TableFunction
     ),
     link=None,
     level=4,
-    num="24.5.2.1",
+    num="24.2.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Subquery = Requirement(
@@ -592,7 +592,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Subquery = Require
     ),
     link=None,
     level=4,
-    num="24.5.3.1",
+    num="24.2.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Join = Requirement(
@@ -608,7 +608,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Join = Requirement
     ),
     link=None,
     level=4,
-    num="24.5.4.1",
+    num="24.2.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_IncorrectTableEngines = Requirement(
@@ -637,7 +637,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_IncorrectTableEngi
     ),
     link=None,
     level=4,
-    num="24.5.5.1",
+    num="24.2.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_View_Normal = Requirement(
@@ -653,7 +653,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_View_Normal = Requ
     ),
     link=None,
     level=4,
-    num="24.5.6.1",
+    num="24.2.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_View_Materialized = Requirement(
@@ -669,7 +669,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_View_Materialized 
     ),
     link=None,
     level=4,
-    num="24.5.7.1",
+    num="24.2.7.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_OrderAndPartition = Requirement(
@@ -691,7 +691,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_OrderAndPartition 
     ),
     link=None,
     level=3,
-    num="24.6.1",
+    num="24.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent = Requirement(
@@ -1499,62 +1499,62 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
         Heading(name="Prohibited Actions", level=1, num="24"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited",
-            level=4,
-            num="24.4.1.1",
+            level=2,
+            num="24.1",
         ),
         Heading(
-            name="Actions That Can Not Be Used After From Clause", level=2, num="24.5"
+            name="Actions That Can Not Be Used After From Clause", level=2, num="24.2"
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.From",
             level=3,
-            num="24.5.1",
+            num="24.2.1",
         ),
-        Heading(name="Table Functions", level=3, num="24.5.2"),
+        Heading(name="Table Functions", level=3, num="24.2.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.From.TableFunctions",
             level=4,
-            num="24.5.2.1",
+            num="24.2.2.1",
         ),
-        Heading(name="Subquery", level=3, num="24.5.3"),
+        Heading(name="Subquery", level=3, num="24.2.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Subquery",
             level=4,
-            num="24.5.3.1",
+            num="24.2.3.1",
         ),
-        Heading(name="Join Clause", level=3, num="24.5.4"),
+        Heading(name="Join Clause", level=3, num="24.2.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Join",
             level=4,
-            num="24.5.4.1",
+            num="24.2.4.1",
         ),
         Heading(
             name="Replace Partition From Tables That Do Not Have Partitions",
             level=3,
-            num="24.5.5",
+            num="24.2.5",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.IncorrectTableEngines",
             level=4,
-            num="24.5.5.1",
+            num="24.2.5.1",
         ),
-        Heading(name="View", level=3, num="24.5.6"),
+        Heading(name="View", level=3, num="24.2.6"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.View.Normal",
             level=4,
-            num="24.5.6.1",
+            num="24.2.6.1",
         ),
-        Heading(name="Materialized View", level=3, num="24.5.7"),
+        Heading(name="Materialized View", level=3, num="24.2.7"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.View.Materialized",
             level=4,
-            num="24.5.7.1",
+            num="24.2.7.1",
         ),
-        Heading(name="Using Order By and Partition By", level=2, num="24.6"),
+        Heading(name="Using Order By and Partition By", level=2, num="24.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition",
             level=3,
-            num="24.6.1",
+            num="24.3.1",
         ),
         Heading(
             name="Replacing Partitions During Ongoing Merges and Mutations",
@@ -1905,23 +1905,23 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
     * 22.4 [Tables With Different Storage Policy](#tables-with-different-storage-policy)
         * 22.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.StoragePolicy](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentstoragepolicy)
 * 23 [Prohibited Actions](#prohibited-actions)
-            * 23.4.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited](#rqsrs-032clickhousealtertablereplacepartitionprohibited)
-    * 23.5 [Actions That Can Not Be Used After From Clause](#actions-that-can-not-be-used-after-from-clause)
-        * 23.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.From](#rqsrs-032clickhousealtertablereplacepartitionprohibitedfrom)
-        * 23.5.2 [Table Functions](#table-functions)
-            * 23.5.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.From.TableFunctions](#rqsrs-032clickhousealtertablereplacepartitionprohibitedfromtablefunctions)
-        * 23.5.3 [Subquery](#subquery)
-            * 23.5.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Subquery](#rqsrs-032clickhousealtertablereplacepartitionprohibitedsubquery)
-        * 23.5.4 [Join Clause](#join-clause)
-            * 23.5.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Join](#rqsrs-032clickhousealtertablereplacepartitionprohibitedjoin)
-        * 23.5.5 [Replace Partition From Tables That Do Not Have Partitions](#replace-partition-from-tables-that-do-not-have-partitions)
-            * 23.5.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.IncorrectTableEngines](#rqsrs-032clickhousealtertablereplacepartitionprohibitedincorrecttableengines)
-        * 23.5.6 [View](#view)
-            * 23.5.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.View.Normal](#rqsrs-032clickhousealtertablereplacepartitionprohibitedviewnormal)
-        * 23.5.7 [Materialized View](#materialized-view)
-            * 23.5.7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.View.Materialized](#rqsrs-032clickhousealtertablereplacepartitionprohibitedviewmaterialized)
-    * 23.6 [Using Order By and Partition By](#using-order-by-and-partition-by)
-        * 23.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition](#rqsrs-032clickhousealtertablereplacepartitionprohibitedorderandpartition)
+    * 23.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited](#rqsrs-032clickhousealtertablereplacepartitionprohibited)
+    * 23.2 [Actions That Can Not Be Used After From Clause](#actions-that-can-not-be-used-after-from-clause)
+        * 23.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.From](#rqsrs-032clickhousealtertablereplacepartitionprohibitedfrom)
+        * 23.2.2 [Table Functions](#table-functions)
+            * 23.2.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.From.TableFunctions](#rqsrs-032clickhousealtertablereplacepartitionprohibitedfromtablefunctions)
+        * 23.2.3 [Subquery](#subquery)
+            * 23.2.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Subquery](#rqsrs-032clickhousealtertablereplacepartitionprohibitedsubquery)
+        * 23.2.4 [Join Clause](#join-clause)
+            * 23.2.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Join](#rqsrs-032clickhousealtertablereplacepartitionprohibitedjoin)
+        * 23.2.5 [Replace Partition From Tables That Do Not Have Partitions](#replace-partition-from-tables-that-do-not-have-partitions)
+            * 23.2.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.IncorrectTableEngines](#rqsrs-032clickhousealtertablereplacepartitionprohibitedincorrecttableengines)
+        * 23.2.6 [View](#view)
+            * 23.2.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.View.Normal](#rqsrs-032clickhousealtertablereplacepartitionprohibitedviewnormal)
+        * 23.2.7 [Materialized View](#materialized-view)
+            * 23.2.7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.View.Materialized](#rqsrs-032clickhousealtertablereplacepartitionprohibitedviewmaterialized)
+    * 23.3 [Using Order By and Partition By](#using-order-by-and-partition-by)
+        * 23.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition](#rqsrs-032clickhousealtertablereplacepartitionprohibitedorderandpartition)
 * 24 [Replacing Partitions During Ongoing Merges and Mutations](#replacing-partitions-during-ongoing-merges-and-mutations)
     * 24.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent](#rqsrs-032clickhousealtertablereplacepartitionconcurrent)
     * 24.2 [Staring New Merges With Ongoing Replace Partition](#staring-new-merges-with-ongoing-replace-partition)
@@ -2366,7 +2366,7 @@ policy.
 
 ## Prohibited Actions
 
-##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited
+### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited
 version: 1.0
 
 To ensure user adherence to the established SQL query structure in [ClickHouse], an error message SHALL be 
