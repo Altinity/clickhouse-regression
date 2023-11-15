@@ -4,7 +4,12 @@ from helpers.common import getuid
 
 @TestStep
 def clickhouse_local(
-    self, query="select timezone()", node=None, timezone="UTC", message=""
+    self,
+    query="select timezone()",
+    node=None,
+    timezone="UTC",
+    message="",
+    exitcode=0,
 ):
     """Step to enable clickhouse local query"""
     if node is None:
@@ -12,5 +17,7 @@ def clickhouse_local(
 
     with When("I make clickhouse local query"):
         node.command(
-            f'TZ={timezone} clickhouse local -q  "{query}" --multiquery', message=f"{message}"
+            f'TZ={timezone} clickhouse local -q  "{query}" --multiquery',
+            message=f"{message}",
+            exitcode=exitcode,
         )
