@@ -17,9 +17,12 @@ def scenario(self, func="exponentialMovingAverage({params})", table=None):
     """Check exponentialMovingAverage aggregate function by using the same checks as for covarPop."""
     self.context.snapshot_id = get_snapshot_id()
 
+    func = func.replace("({params})", "(0.5)({params})")
+
+    if 'Merge' in self.name:
+        return self.context.snapshot_id, func.replace("({params})", "")
+    
     if table is None:
         table = self.context.table
 
-    func = func.replace("({params})", "(0.5)({params})")
-
-    checks(func=func, table=table, decimal=True)
+    checks(func=func, table=table, decimal=True, snapshot_id=self.context.snapshot_id)
