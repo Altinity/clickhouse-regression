@@ -712,7 +712,9 @@ def run_query(instance, query, stdin=None, settings=None):
         stdin_file.seek(0)
 
         result = instance.command(
-            f'echo -e "{stdin}" | clickhouse client --query="{query}"', steps=False
+            f'echo -e "{stdin}" | clickhouse client --query="{query}"',
+            steps=False,
+            exitcode=None,
         )
     else:
         result = instance.query(
