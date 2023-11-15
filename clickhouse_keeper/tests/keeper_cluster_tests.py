@@ -670,7 +670,9 @@ def standalone_keepers_1(self):
     finally:
         with Finally("I clean up files"):
             clean_coordination_on_all_nodes()
-            self.context.cluster.node("clickhouse1").command(f"rm -rf /share/")
+            for retry in retries(timeout=60, delay=1):
+                with retry:
+                    self.context.cluster.node("clickhouse1").command(f"rm -rf /share/")
 
 
 @TestFeature
