@@ -126,6 +126,41 @@ class Node(object):
     def command(self, *args, **kwargs):
         return self.cluster.command(self.name, *args, **kwargs)
 
+    class QueryHandler:
+        def __init__(self, command_context):
+            self.command_context = command_context
+            self.last_result = None
+
+        def __enter__(self):
+            self.command_context.__enter__()
+
+            return self
+
+        def __exit__(self, exc_type, exc_val, exc_tb):
+            if self.command_context:
+                self.command_context.app.send("exit")
+                self.command_context.__exit__(exc_type, exc_val, exc_tb)
+
+        def query(self, query_string):
+            self.command_context.app.send(query_string)
+            time.sleep(1)
+            self.last_result = (
+                self.command_context.app.child.before
+                + self.command_context.app.child.after
+            )
+            return self.last_result
+
+        @property
+        def result(self):
+            return self.last_result
+
+    def client(self, name):
+        command_context = self.command(
+            "clickhouse-client-tty", asynchronous=True, no_checks=True, name=name
+        )
+
+        return self.QueryHandler(command_context)
+
 
 class ZooKeeperNode(Node):
     """Node with ZooKeeper server."""
