@@ -141,6 +141,101 @@ def drop_column_on_destination_and_source(self):
     drop_column_on_source_table()
 
 
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Drop(
+        "1.0"
+    )
+)
+def drop_partition(self, table_name):
+    """Drop partition on the table."""
+    partition_name = random.randrange(5, 100)
+    alter_table_drop_partition(table_name=table_name, partition_name=partition_name)
+
+
+@TestStep(Given)
+def drop_partition_on_destination(self):
+    """Drop partition on the destination table."""
+    drop_partition(table_name=destination_table)
+
+
+@TestStep(Given)
+def drop_partition_on_source(self):
+    """Drop partition on the source table."""
+    drop_partition(table_name=source_table)
+
+
+@TestStep(Given)
+def drop_partition_on_source_and_destination(self):
+    """Drop partition on the source and destination tables."""
+    drop_partition_on_destination()
+    drop_partition_on_source()
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Unfreeze(
+        "1.0"
+    )
+)
+def unfreeze_partition(self, table_name):
+    """Unfreeze partition on the table."""
+    partition_name = random.randrange(5, 100)
+    alter_table_unfreeze_partition_with_name(
+        table_name=table_name, backup_name=partition_name
+    )
+
+
+@TestStep(Given)
+def unfreeze_destination_partition(self):
+    """Unfreeze partition on the destination table."""
+    unfreeze_partition(table_name=destination_table)
+
+
+@TestStep(Given)
+def unfreeze_source_partition(self):
+    """Unfreeze partition on the source table."""
+    unfreeze_partition(table_name=source_table)
+
+
+@TestStep(Given)
+def unfreeze_destination_and_source_partition(self):
+    """Unfreeze partition on the destination and source tables."""
+    unfreeze_destination_partition()
+    unfreeze_source_partition()
+
+
+@TestStep(Given)
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_DeleteInPartition(
+        "1.0"
+    ),
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Delete("1.0"),
+)
+def delete_in_partition(self, table_name):
+    """Delete rows in partition."""
+    alter_table_delete_rows(table_name=table_name, condition="p < 1")
+
+
+@TestStep(Given)
+def delete_in_destination_partition(self):
+    """Delete rows in the destination partition."""
+    delete_in_partition(table_name=destination_table)
+
+
+@TestStep(Given)
+def delete_in_source_partition(self):
+    """Delete rows in the source partition."""
+    delete_in_partition(table_name=source_table)
+
+
+@TestStep(Given)
+def delete_in_destination_and_source_partition(self):
+    """Delete rows in the destination and source partitions."""
+    delete_in_destination_partition()
+    delete_in_source_partition()
+
+
 @TestStep(When)
 def modify_column(self, table_name):
     """Modify column type of the table."""
@@ -555,7 +650,12 @@ def clear_column_on_destination_and_source(self):
 
 
 @TestStep(When)
-@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Replicas("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Replicas("1.0"),
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Fetch(
+        "1.0"
+    ),
+)
 def fetch_partition(self, table_name, source_table, number_of_partitions=None):
     """Fetch partition from the replicated table."""
     if number_of_partitions is None:
@@ -854,6 +954,9 @@ def replace_partition_along_other_actions(self):
         freeze_destination_and_source_partition_with_name,
         replace_partition_on_source_table,
         replace_partition_on_destination_table,
+        drop_partition_on_source_and_destination,
+        unfreeze_destination_and_source_partition,
+        delete_in_destination_and_source_partition,
     ]
 
     Scenario(test=concurrent_replace)(
@@ -862,7 +965,12 @@ def replace_partition_along_other_actions(self):
 
 
 @TestFeature
-@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent("1.0"))
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent("1.0"),
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions(
+        "1.0"
+    ),
+)
 @Name("concurrent actions")
 def feature(
     self,

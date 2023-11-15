@@ -20,7 +20,9 @@ def io_error_message(exitcode=62, message="Syntax error"):
 
 @TestScenario
 @Requirements(
-    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_TableFunctions("1.0")
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_From_TableFunctions(
+        "1.0"
+    )
 )
 def table_functions(self):
     """Checking that the usage of table functions after FROM clause on replace partition outputs an expected error and does not crash the
