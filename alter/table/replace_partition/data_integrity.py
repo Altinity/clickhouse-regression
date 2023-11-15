@@ -1,5 +1,5 @@
 from testflows.core import *
-
+from testflows.asserts import *
 from alter.table.replace_partition.common import (
     create_two_tables_partitioned_by_column_with_data,
     replace_partition_and_validate_data,
@@ -37,6 +37,7 @@ def keep_data_on_a_source_table(self):
 def non_existent_partition(
     self, destination_partitions, source_partitions, partition_to_replace
 ):
+    """Replace partition that does not exist either on the destination or the source table."""
     source_table = "source" + getuid()
     destination_table = "destination" + getuid()
 
@@ -85,6 +86,45 @@ def non_existent_partition_source(self):
     )
 
 
+@TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_System_Parts("1.0"))
+def partition_changes_in_system(self):
+    """Check that partition changes are reflected inside the system.parts table."""
+    node = self.context.node
+    source_table = "source" + getuid()
+    destination_table = "destination" + getuid()
+
+    with Given("I have two tables with the same structure"):
+        create_two_tables_partitioned_by_column_with_data(
+            destination_table=destination_table, source_table=source_table
+        )
+
+    with Then(
+        "I replace partition on destination table from the source table and validate the data"
+    ):
+        replace_partition_and_validate_data(
+            destination_table=destination_table,
+            source_table=source_table,
+            partition_to_replace=1,
+        )
+
+    with And(
+        "validate that changes inside the partition were reflected in the system.parts table"
+    ):
+        destination_parts = node.query(
+            f"SELECT partition, part_type, name FROM system.parts WHERE table = '{destination_table}'"
+        )
+        source_parts = node.query(
+            f"SELECT partition, part_type, name FROM system.parts WHERE table = '{destination_table}'"
+        )
+
+        for retry in retries(timeout=30):
+            with retry:
+                assert (
+                    destination_parts.output.strip() == source_parts.output.strip()
+                ), error()
+
+
 @TestFeature
 @Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_KeepData("1.0"))
 @Name("data integrity")
@@ -95,3 +135,4 @@ def feature(self, node="clickhouse1"):
     Scenario(run=keep_data_on_a_source_table)
     Scenario(run=non_existent_partition_destination)
     Scenario(run=non_existent_partition_source)
+    Scenario(run=partition_changes_in_system)
