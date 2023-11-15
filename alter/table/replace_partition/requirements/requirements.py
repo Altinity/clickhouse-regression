@@ -16,9 +16,12 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition = Requirement(
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support the usage of the `REPLACE PARTITION`. The `REPLACE PARTITION` copies the data partition from the `source table` to `destination table` and replaces existing partition in the `destination table`.\n"
+        "To facilitate efficient data management in [ClickHouse], the feature `REPLACE PARTITION` SHALL be \n"
+        "supported. This feature allows users to replace an existing partition in the `destination table` \n"
+        "with a partition from the `source table` using the `REPLACE PARTITION` command. This capability \n"
+        "enables seamless data updates and synchronization between tables.\n"
         "\n"
-        "For example,\n"
+        "For instance, the following SQL command exemplifies this feature:\n"
         "\n"
         "```sql\n"
         "ALTER TABLE table2 [ON CLUSTER cluster] REPLACE PARTITION partition_expr FROM table1\n"
@@ -62,9 +65,10 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Supported_Engines = Requireme
     type=None,
     uid=None,
     description=(
-        "[ClickHouse] SHALL support the usage of the `REPLACE PARTITION` only with the engines from the MergeTree family.\n"
+        "[ClickHouse] SHALL limit the use of the `REPLACE PARTITION` feature to table engines belonging to the MergeTree \n"
+        "family. This requirement ensures compatibility and optimal performance for partition replacement operations. \n"
         "\n"
-        "Table engines that SHALL support replacing partition,\n"
+        "The table engines that support `REPLACE PARTITION` include:\n"
         "\n"
         "|       Supported Engines        |\n"
         "|:------------------------------:|\n"
@@ -76,6 +80,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Supported_Engines = Requireme
         "| `VersionedCollapsingMergeTree` |\n"
         "|      `GraphiteMergeTree`       |\n"
         "\n"
+        "These engines are specifically designed to work efficiently with the `REPLACE PARTITION` functionality.\n"
         "\n"
     ),
     link=None,
@@ -1333,7 +1338,7 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
         Heading(name="Flowchart", level=1, num="4"),
         Heading(name="Definitions", level=1, num="5"),
         Heading(name="User Actions", level=1, num="6"),
-        Heading(name="Replace Partition", level=1, num="7"),
+        Heading(name="Replace Partition on the Table", level=1, num="7"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition",
             level=2,
@@ -1345,7 +1350,11 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
             level=3,
             num="7.2.1",
         ),
-        Heading(name="Supported Engines", level=1, num="8"),
+        Heading(
+            name="Table Engines on Which Replace Partition Can Be Performed",
+            level=1,
+            num="8",
+        ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Supported.Engines",
             level=2,
@@ -1863,11 +1872,11 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
 * 3 [Flowchart](#flowchart)
 * 4 [Definitions](#definitions)
 * 5 [User Actions](#user-actions)
-* 6 [Replace Partition](#replace-partition)
+* 6 [Replace Partition on the Table](#replace-partition-on-the-table)
     * 6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition](#rqsrs-032clickhousealtertablereplacepartition)
     * 6.2 [Changes In Table Partitions](#changes-in-table-partitions)
         * 6.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.System.Parts](#rqsrs-032clickhousealtertablereplacepartitionsystemparts)
-* 7 [Supported Engines](#supported-engines)
+* 7 [Table Engines on Which Replace Partition Can Be Performed](#table-engines-on-which-replace-partition-can-be-performed)
     * 7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Supported.Engines](#rqsrs-032clickhousealtertablereplacepartitionsupportedengines)
 * 8 [Keeping Data on the Source Table After Replace Partition](#keeping-data-on-the-source-table-after-replace-partition)
     * 8.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.KeepData](#rqsrs-032clickhousealtertablereplacepartitionkeepdata)
@@ -2085,14 +2094,17 @@ Destination Table - The table in which a specific partition is going to be repla
 | `RENAME COLUMN`                | `RENAME COLUMN [IF EXISTS] name to new_name`                                                                                 |
 | `OPTIMIZE`                     | `OPTIMIZE TABLE [db.]name [ON CLUSTER cluster] [PARTITION partition] [FINAL] [DEDUPLICATE [BY expression]]`                  |
 
-## Replace Partition
+## Replace Partition on the Table
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition
 version: 1.0
 
-[ClickHouse] SHALL support the usage of the `REPLACE PARTITION`. The `REPLACE PARTITION` copies the data partition from the `source table` to `destination table` and replaces existing partition in the `destination table`.
+To facilitate efficient data management in [ClickHouse], the feature `REPLACE PARTITION` SHALL be 
+supported. This feature allows users to replace an existing partition in the `destination table` 
+with a partition from the `source table` using the `REPLACE PARTITION` command. This capability 
+enables seamless data updates and synchronization between tables.
 
-For example,
+For instance, the following SQL command exemplifies this feature:
 
 ```sql
 ALTER TABLE table2 [ON CLUSTER cluster] REPLACE PARTITION partition_expr FROM table1
@@ -2113,14 +2125,15 @@ FROM system.parts
 WHERE table = 'table_1'
 ```
 
-## Supported Engines
+## Table Engines on Which Replace Partition Can Be Performed
 
 ### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Supported.Engines
 version: 1.0
 
-[ClickHouse] SHALL support the usage of the `REPLACE PARTITION` only with the engines from the MergeTree family.
+[ClickHouse] SHALL limit the use of the `REPLACE PARTITION` feature to table engines belonging to the MergeTree 
+family. This requirement ensures compatibility and optimal performance for partition replacement operations. 
 
-Table engines that SHALL support replacing partition,
+The table engines that support `REPLACE PARTITION` include:
 
 |       Supported Engines        |
 |:------------------------------:|
@@ -2132,6 +2145,7 @@ Table engines that SHALL support replacing partition,
 | `VersionedCollapsingMergeTree` |
 |      `GraphiteMergeTree`       |
 
+These engines are specifically designed to work efficiently with the `REPLACE PARTITION` functionality.
 
 ## Keeping Data on the Source Table After Replace Partition
 
