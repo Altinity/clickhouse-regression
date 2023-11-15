@@ -137,7 +137,7 @@ def copy_file_to_host(self, src_node, src_path, host_filename):
             ).output
 
         with And("copying the file from the node to the host"):
-            self.context.cluster.command(None, f"mkdir /tmp/test_files")
+            self.context.cluster.command(None, f"mkdir /tmp/test_files", exitcode=None)
             self.context.cluster.command(
                 None, f"docker cp {x}:{src_path} /tmp/test_files/{host_filename}"
             )
