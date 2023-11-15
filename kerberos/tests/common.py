@@ -212,7 +212,7 @@ def check_wrong_config(
             started = time.time()
             command = f"cat /var/lib/clickhouse/preprocessed_configs/{preprocessed_name} | grep {uid} > /dev/null"
             while time.time() - started < timeout:
-                exitcode = node.command(command, steps=False).exitcode
+                exitcode = node.command(command, steps=False, exitcode=None).exitcode
                 if exitcode == 0:
                     break
                 time.sleep(1)
@@ -254,7 +254,7 @@ def check_wrong_config(
             started = time.time()
             command = f'tail -n {tail} /var/log/clickhouse-server/clickhouse-server.err.log | grep "{log_error}"'
             while time.time() - started < timeout:
-                exitcode = node.command(command, steps=False).exitcode
+                exitcode = node.command(command, steps=False, exitcode=None).exitcode
                 if exitcode == 0:
                     break
                 time.sleep(1)
