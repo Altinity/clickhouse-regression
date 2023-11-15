@@ -58,9 +58,9 @@ def config(self, node=None):
 def daemon(self, node=None):
     """Launch and kill `clickhouse-keeper` cluster with --daemon option."""
     node = self.context.node if node is None else node
+    pidfilepath = f"/tmp/clickhouse-keeper-{getuid()}.pid"
     try:
         with When("I start `clickhouse-keeper` cluster with --daemon option."):
-            pidfilepath = f"/tmp/clickhouse-keeper-{getuid()}.pid"
             with By("starting keeper process"):
                 node.command(
                     "clickhouse keeper --config /etc/clickhouse-keeper/config.xml"
@@ -78,9 +78,11 @@ def daemon(self, node=None):
             with When(f"I stop stop keeper process"):
                 with By("sending kill -TERM to keeper process"):
                     if node.command(f"ls {pidfilepath}", exitcode=0):
-                        pid = node.command(
-                            f"cat {pidfilepath}"
-                        ).output.strip()
+                        pid = int(
+                            node.command(
+                                f"cat {pidfilepath}", exitcode=0
+                            ).output.strip()
+                        )
                         node.command(f"kill -TERM {pid}", exitcode=0)
                 with And("checking pid does not exist"):
                     retry(node.command, timeout=100, delay=1)(
