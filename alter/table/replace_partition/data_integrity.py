@@ -111,15 +111,14 @@ def partition_changes_in_system(self):
     with And(
         "validate that changes inside the partition were reflected in the system.parts table"
     ):
-        destination_parts = node.query(
-            f"SELECT partition, part_type, name FROM system.parts WHERE table = '{destination_table}'"
-        )
-        source_parts = node.query(
-            f"SELECT partition, part_type, name FROM system.parts WHERE table = '{destination_table}'"
-        )
-
         for retry in retries(timeout=30):
             with retry:
+                destination_parts = node.query(
+                    f"SELECT partition, part_type, name FROM system.parts WHERE table = '{destination_table}'"
+                )
+                source_parts = node.query(
+                    f"SELECT partition, part_type, name FROM system.parts WHERE table = '{destination_table}'"
+                )
                 assert (
                     destination_parts.output.strip() == source_parts.output.strip()
                 ), error()
