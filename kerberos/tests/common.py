@@ -54,12 +54,12 @@ def test_select_query(node, krb_auth=True, req="SELECT currentUser()"):
 def kinit_no_keytab(self, node, principal="kerberos_user", lifetime_option="-l 10:00"):
     """Helper for obtaining Kerberos ticket for client"""
     try:
-        node.command("echo pwd | kinit admin/admin")
-        node.command(f'kadmin -w pwd -q "add_principal -pw pwd {principal}"')
-        node.command(f"echo pwd | kinit {lifetime_option} {principal}")
+        node.command("echo pwd | kinit admin/admin", exitcode=None)
+        node.command(f'kadmin -w pwd -q "add_principal -pw pwd {principal}"', exitcode=None)
+        node.command(f"echo pwd | kinit {lifetime_option} {principal}", exitcode=None)
         yield
     finally:
-        node.command("kdestroy")
+        node.command("kdestroy", exitcode=None)
 
 
 @TestStep(Given)
