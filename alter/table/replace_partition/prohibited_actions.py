@@ -455,6 +455,7 @@ def settings(self):
 
 
 @TestSuite
+@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_From("1.0"))
 def from_clause(self):
     """Check that the ClickHouse outputs an error and does not replace partition when prohibited actions are being
     used with from clause."""
