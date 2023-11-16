@@ -675,7 +675,7 @@ def clear_index(self, table_name, number_of_partitions=None):
 
     partition_name = random.randrange(5, number_of_partitions)
     alter_table_clear_index_in_partition(
-        table_name=table_name, index=1, partition_name=partition_name
+        table_name=table_name, index="index_name", partition_name=partition_name
     )
 
 
