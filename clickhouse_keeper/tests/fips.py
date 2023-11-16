@@ -279,93 +279,55 @@ def url_table_function(self):
     server_file_path = "https_" + getuid() + ".py"
     node = self.context.node
 
+    tls_versions_supported = {
+        "TLS": True,
+        "TLSv1": False,
+        "TLSv1.1": False,
+        "TLSv1.2": True,
+    }
+
     with Given("I make a copy of the flask server file"):
         node.command(f"cp /https_app_file.py {server_file_path}")
 
-    with And("I start the flask server"):
-        flask_server(server_path=server_file_path, port=port)
+    for tls_version, should_work in tls_versions_supported.items():
+        with Check(
+            f"Connection with Protocol={tls_version} should be {'accepted' if should_work else 'rejected'}"
+        ):
+            flask_server(
+                server_path=server_file_path,
+                port=port,
+                protocol=tls_version,
+                ciphers=default_ciphers,
+            )
 
-    with Check("connection to PROTOCOL_TLS should work"):
-        options = {
-            "protocol": "ssl.PROTOCOL_TLS",
-            "ciphers": default_ciphers,
-        }
-        configured_https_server_url_function_connection(
-            https_server_options=options,
-            success=True,
-            port=port,
-            server_file_path=server_file_path,
-        )
-
-    with Check("connection to PROTOCOL_TLSv1 should be rejected"):
-        options = {
-            "protocol": "ssl.PROTOCOL_TLSv1",
-            "ciphers": default_ciphers,
-        }
-        configured_https_server_url_function_connection(
-            https_server_options=options,
-            success=False,
-            port=port,
-            server_file_path=server_file_path,
-        )
-
-    with Check("connection to PROTOCOL_TLSv1_1 should be rejected"):
-        options = {
-            "protocol": "ssl.PROTOCOL_TLSv1_1",
-            "ciphers": default_ciphers,
-        }
-        configured_https_server_url_function_connection(
-            https_server_options=options,
-            success=False,
-            port=port,
-            server_file_path=server_file_path,
-        )
-
-    with Check("connection to PROTOCOL_TLSv1_2 should work"):
-        options = {
-            "protocol": "ssl.PROTOCOL_TLSv1_2",
-            "ciphers": default_ciphers,
-        }
-        configured_https_server_url_function_connection(
-            https_server_options=options,
-            success=True,
-            port=port,
-            server_file_path=server_file_path,
-        )
+            test_https_connection_with_url_table_function(
+                port=port, success=should_work
+            )
 
     for cipher in fips_compatible_tlsv1_2_cipher_suites:
-        if (
-            cipher == "ECDHE-ECDSA-AES128-GCM-SHA256"
-            or cipher == "ECDHE-ECDSA-AES256-GCM-SHA384"
-        ):
-            continue
         with Check(f"connection using FIPS compatible cipher {cipher} should work"):
-            options = {
-                "protocol": "ssl.PROTOCOL_TLSv1_2",
-                "ciphers": f'"{cipher}"',
-            }
-            configured_https_server_url_function_connection(
-                https_server_options=options,
-                success=True,
+            flask_server(
+                server_path=server_file_path,
                 port=port,
-                server_file_path=server_file_path,
+                protocol="TLSv1.2",
+                ciphers=default_ciphers,
             )
+
+            test_https_connection_with_url_table_function(port=port, success=True)
 
         for second_cipher in all_ciphers:
             with Check(
                 f"connection with at least one FIPS compatible cipher should work, ciphers: {cipher}, {second_cipher}",
                 description=f"ciphers: {cipher}, {second_cipher}",
             ):
-                options = {
-                    "protocol": "ssl.PROTOCOL_TLSv1_2",
-                    "ciphers": f'"{cipher}:{second_cipher}"',
-                }
-                configured_https_server_url_function_connection(
-                    https_server_options=options,
-                    success=True,
+                flask_server(
+                    server_path=server_file_path,
                     port=port,
-                    server_file_path=server_file_path,
+                    protocol="TLSv1.2",
+                    ciphers=f"{cipher}:{second_cipher}",
                 )
+
+                test_https_connection_with_url_table_function(port=port, success=True)
 
     for cipher in all_ciphers:
         if cipher in fips_compatible_tlsv1_2_cipher_suites:
@@ -373,15 +335,14 @@ def url_table_function(self):
         with Check(
             f"connection using non-FIPS compatible cipher {cipher} should be rejected"
         ):
-            options = {
-                "protocol": "ssl.PROTOCOL_TLSv1_2",
-                "ciphers": f'"{cipher}"',
-            }
-            configured_https_server_url_function_connection(
-                https_server_options=options,
-                success=False,
-                server_file_path=server_file_path,
+            flask_server(
+                server_path=server_file_path,
+                port=port,
+                protocol="TLSv1.2",
+                ciphers=cipher,
             )
+
+            test_https_connection_with_url_table_function(port=port, success=False)
 
     with Finally("I remove the flask server file"):
         node.command(f"rm -f {server_file_path}")
