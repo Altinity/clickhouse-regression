@@ -87,6 +87,10 @@ def merge(self, func, snapshot_id, short_name):
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Combinator_Merge("1.0"))
 def feature(self):
     """Check aggregate functions `-Merge` combinator."""
+    not_implemented = ['mannWhitneyUTest', 'quantileDeterministic', 'stochasticLinearRegression', 'stochasticLogisticRegression', 'sumMap', 'maxMap', 'minMap']
+    for i in not_implemented:
+        if i in aggregate_functions:
+            aggregate_functions.remove(i)
     for name in aggregate_functions:
         try:
             scenario = load(f"aggregate_functions.tests.{name}", "scenario")
