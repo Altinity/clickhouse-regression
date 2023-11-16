@@ -122,11 +122,11 @@ ffails = {
         "test doesn't work from 23.3",
         check_clickhouse_version(">=23.3"),
     ),
-    "fips/:/:/connection with at least one FIPS compatible cipher should work, ciphers: ECDHE-ECDSA-AES256-GCM-SHA384 :": (
+    "fips/:/:/connection with at least one FIPS compatible cipher should work, ciphers: ECDHE-ECDSA-AES256-GCM-SHA384:": (
         XFail,
         "not supported by SSL library",
     ),
-    "fips/:/:/connection with at least one FIPS compatible cipher should work, ciphers: ECDHE-ECDSA-AES128-GCM-SHA256 :": (
+    "fips/:/:/connection with at least one FIPS compatible cipher should work, ciphers: ECDHE-ECDSA-AES128-GCM-SHA256:": (
         XFail,
         "not supported by SSL library",
     ),
