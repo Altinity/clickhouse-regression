@@ -2,6 +2,7 @@
 import sys
 
 from clickhouse_driver import Client
+from clickhouse_driver.errors import Error
 
 
 def clickhouse_client_tty():
@@ -18,8 +19,9 @@ def clickhouse_client_tty():
 
             for row in result:
                 print(row)
-        except Exception as e:
-            print(f"Error executing query: {e}")
+
+        except Error as e:
+            print(f"{e}")
 
 
 if __name__ == "__main__":
