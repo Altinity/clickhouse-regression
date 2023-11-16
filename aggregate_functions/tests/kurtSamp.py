@@ -11,11 +11,14 @@ from aggregate_functions.tests.kurtPop import scenario as checks
 @TestScenario
 @Name("kurtSamp")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_KurtSamp("1.0"))
-def scenario(self, func="kurtSamp({params})", table=None):
+def scenario(self, func="kurtSamp({params})", table=None, snapshot_id=None):
     """Check kurtSamp aggregate function by using the same tests as for kurtPop."""
-    self.context.snapshot_id = get_snapshot_id()
+    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+
+    if 'Merge' in self.name:
+        return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:
         table = self.context.table
 
-    checks(func=func, table=table)
+    checks(func=func, table=table, snapshot_id=self.context.snapshot_id)
