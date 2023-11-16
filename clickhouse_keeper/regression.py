@@ -60,12 +60,6 @@ xfails = {
     "fips/clickhouse client/:/:/: should be rejected": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/45445")
     ],
-    "fips/:/:/connection with at least one FIPS compatible cipher should work, ciphers: ECDHE-ECDSA-AES256-GCM-SHA384 :": [
-        (Fail, "not supported by SSL library")
-    ],
-    "fips/:/:/connection with at least one FIPS compatible cipher should work, ciphers: ECDHE-ECDSA-AES128-GCM-SHA256 :": [
-        (Fail, "not supported by SSL library")
-    ],
     "ports ssl fips/:/:/:cipher ECDHE-ECDSA-AES256-GCM-SHA384 should work": [
         (Fail, "not supported by SSL library")
     ],
@@ -127,6 +121,26 @@ ffails = {
         XFail,
         "test doesn't work from 23.3",
         check_clickhouse_version(">=23.3"),
+    ),
+    "fips/:/:/connection with at least one FIPS compatible cipher should work, ciphers: ECDHE-ECDSA-AES256-GCM-SHA384 :": (
+        XFail,
+        "not supported by SSL library",
+    ),
+    "fips/:/:/connection with at least one FIPS compatible cipher should work, ciphers: ECDHE-ECDSA-AES128-GCM-SHA256 :": (
+        XFail,
+        "not supported by SSL library",
+    ),
+    "fips/:/:/connection using FIPS compatible cipher ECDHE-ECDSA-AES256-GCM-SHA384 should work": (
+        XFail,
+        "not supported by SSL library",
+    ),
+    "fips/:/:/connection using FIPS compatible cipher ECDHE-ECDSA-AES128-GCM-SHA256 should work": (
+        XFail,
+        "not supported by SSL library",
+    ),
+    "fips/:/:/connection using non-FIPS compatible cipher TLS_*": (
+        XFail,
+        "not supported by TLSv1.2",
     ),
 }
 

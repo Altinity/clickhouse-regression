@@ -6,8 +6,7 @@ from testflows.core import *
 from testflows.asserts import error
 from testflows.stash import stashed
 from helpers.common import *
-from clickhouse_keeper.test_files.https_app_file import ciphers
-from clickhouse_keeper.test_files.https_app_file import https_protocol
+from clickhouse_keeper.test_files import https_app_file
 
 
 fips_compatible_tlsv1_2_cipher_suites = [
@@ -1042,10 +1041,11 @@ def create_crt_and_key(
 
 
 @TestStep(Given)
-def flask_server(self, server_path, port):
+def flask_server(self, server_path, port, protocol, ciphers):
     """Run specified flask server"""
-    with self.context.cluster.shell(self.context.node.name) as bash:
-        cmd = f"python3 {server_path}"
+    node = self.context.node
+    with self.context.cluster.shell(node.name) as bash:
+        cmd = f"python3 {server_path} --port={port} --protocol={protocol} --ciphers={ciphers}"
 
         try:
             with Given(
@@ -1059,20 +1059,21 @@ def flask_server(self, server_path, port):
             yield
 
         finally:
-            while True:
-                try:
-                    bash.expect("\n")
-                except Exception:
-                    break
+            with Finally("I terminate the flask server"):
+                with By("Sending ctrl-c"):
+                    bash.send("\x03\r", eol="")
 
-            with Finally("I kill the flask server"):
-                bash.send(
-                    f"ss -ltnup | grep '{port}' | awk -F',' '/pid=/{{print $2}}' | awk -F'=' '{{print $2}}' | xargs kill"
-                )
+                with And(f"Checking that port {port} is free"):
+                    for retry in retries(timeout=5, delay=0.5):
+                        with retry:
+                            r = node.command(
+                                f"ss -ltnup | grep '{port}'", exitcode=None
+                            )
+                            assert r.output == "", error(r.output)
 
 
 @TestStep(Then)
-def https_server_url_function_connection(
+def test_https_connection_with_url_table_function(
     self, success=True, options=None, node=None, port=None
 ):
     """Check reading data from an https server with specified clickhouse-server config."""
@@ -1099,7 +1100,7 @@ def https_server_url_function_connection(
 
 
 @TestStep(Given)
-def https_server_https_dictionary_connection(
+def test_https_connection_with_dictionary(
     self, name=None, node=None, success=True, options=None, port=None
 ):
     """Check reading data from a dictionary sourced from an https server"""
@@ -1140,35 +1141,7 @@ def update_https_server_config(
     self, server_file_path, options=None, node=None, port=None
 ):
     """Change the https server config"""
-    if node is None:
-        node = self.context.node
-
-    if port is None:
-        port = 5001
-
-    try:
-        with When(f"I change the server protocol to {options['protocol']}"):
-            node.command(
-                f"sed -i 's/https_protocol = ssl.PROTOCOL_TLSv1_2/https_protocol = {options['protocol']}/g' {server_file_path}"
-            )
-
-        with And(
-            "I change the server ciphers",
-            description=f"ciphers={options['ciphers']}",
-        ):
-            node.command(
-                'sed -i \'s/ciphers = "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-GCM-SHA384"'
-                f"/ciphers = {options['ciphers']}/g' {server_file_path}"
-            )
-
-        with And(f"I change the port to {port}"):
-            node.command(f"sed -i 's/port=5001/port={port}/g' {server_file_path}")
-            debug(node.command(f"cat {server_file_path}").output)
-        yield
-
-    finally:
-        with Finally("I change the config back to the original"):
-            node.command(f"cat /https_app_file.py > {server_file_path}")
+    raise NotImplementedError("Deprecated")
 
 
 @TestStep(Then)
@@ -1181,7 +1154,7 @@ def configured_https_server_http_dictionary_connection(
         update_https_server_config(options=https_server_options, port=port)
 
     with Then("I check the connection using a dictionary"):
-        https_server_https_dictionary_connection(port=port, success=success)
+        test_https_connection_with_dictionary(port=port, success=success)
 
 
 @TestStep(Then)
@@ -1195,10 +1168,8 @@ def configured_https_server_url_function_connection(
             options=https_server_options, port=port, server_file_path=server_file_path
         )
 
-    for retry in retries(timeout=60, delay=0.5):
-        with retry:
-            with Then("I check the connection using a dictionary"):
-                https_server_url_function_connection(port=port, success=success)
+    with Then("I check the connection using a dictionary"):
+        test_https_connection_with_url_table_function(port=port, success=success)
 
 
 @TestStep(Then)
@@ -1212,7 +1183,5 @@ def configured_https_server_dictionary_connection(
             options=https_server_options, port=port, server_file_path=server_file_path
         )
 
-    for retry in retries(timeout=60, delay=0.5):
-        with retry:
-            with Then("I check the connection using a dictionary"):
-                https_server_https_dictionary_connection(port=port, success=success)
+    with Then("I check the connection using a dictionary"):
+        test_https_connection_with_dictionary(port=port, success=success)
