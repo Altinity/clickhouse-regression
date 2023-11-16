@@ -155,6 +155,10 @@ class Node(object):
             self.command_context.app.expect(self.prompt)
 
             self.query_result = self.command_context.app.child.before
+
+            if "DB::Exception" in self.query_result:
+                raise RuntimeError(f"query was not executed: {query_string}")
+
             self.full_output = (
                 self.command_context.app.child.before
                 + self.command_context.app.child.after
