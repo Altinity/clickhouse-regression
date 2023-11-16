@@ -15,7 +15,6 @@ def clickhouse_client_tty():
 
         try:
             result = client.execute(query)
-            print(query)
 
             for row in result:
                 print(row)
