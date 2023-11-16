@@ -28,7 +28,8 @@ MESSAGES_TO_RETRY = [
     "ConnectionPoolWithFailover: Connection failed at try",
     "DB::Exception: New table appeared in database being dropped or detached. Try again",
     "is already started to be removing by another replica right now",
-    "Shutdown is called for table",  # happens in SYSTEM SYNC REPLICA query if session with ZooKeeper is being reinitialized.
+    "Shutdown is called for table",
+    # happens in SYSTEM SYNC REPLICA query if session with ZooKeeper is being reinitialized.
     "is executing longer than distributed_ddl_task_timeout",  # distributed TTL timeout message
 ]
 
@@ -127,12 +128,15 @@ class Node(object):
         return self.cluster.command(self.name, *args, **kwargs)
 
     class QueryHandler:
-        def __init__(self, command_context):
+        def __init__(self, command_context, prompt="\[clickhouse1\] :\) "):
             self.command_context = command_context
-            self.last_result = None
+            self.prompt = prompt
+            self.full_result = None
+            self.first_result = None
 
         def __enter__(self):
             self.command_context.__enter__()
+            self.command_context.app.expect(self.prompt)
             return self
 
         def __exit__(self, exc_type, exc_val, exc_tb):
@@ -143,21 +147,30 @@ class Node(object):
         def query(self, query_string, match=None):
             self.command_context.app.send(query_string)
 
-            if match is not None:
-                self.command_context.app.expect(match)
+            self.command_context.app.expect(query_string, escape=True)
 
-            self.last_result = (
+            if match is not None:
+                self.command_context.app.expect(match, escape=True)
+
+            self.command_context.app.expect(self.prompt)
+
+            self.last_result = self.command_context.app.child.before
+            self.full_result = (
                 self.command_context.app.child.before
                 + self.command_context.app.child.after
             )
 
         @property
+        def full(self):
+            return self.full_result
+
+        @property
         def result(self):
             return self.last_result
 
-    def client(self, name="clickhouse-client-tty"):
+    def client(self, client="clickhouse-client-tty", name="clickhouse-client-tty"):
         command_context = self.command(
-            name, asynchronous=True, no_checks=True, name=name
+            client, asynchronous=True, no_checks=True, name=name
         )
 
         return self.QueryHandler(command_context)
@@ -940,7 +953,7 @@ class Cluster(object):
         if host_clickhouse_binary_path is None:
             host_clickhouse_binary_path = os.path.join(
                 tempfile.gettempdir(),
-                f"{docker_image.rsplit('/',1)[-1].replace(':','_')}",
+                f"{docker_image.rsplit('/', 1)[-1].replace(':', '_')}",
             )
 
         if host_clickhouse_odbc_bridge_binary_path is None:
