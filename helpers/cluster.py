@@ -5,6 +5,7 @@ import inspect
 import hashlib
 import threading
 import tempfile
+import re
 
 from testflows._core.cli.arg.common import description
 
@@ -144,9 +145,16 @@ class Node(object):
                 self.command_context.app.send("exit")
                 self.command_context.__exit__(exc_type, exc_val, exc_tb)
 
-        def query(self, query_string, match=None):
-            self.command_context.app.send(query_string)
+        @staticmethod
+        def _parse_error_code(message):
+            match = re.search(r"Code:\s*(\d+)", message)
+            if match:
+                return int(match.group(1))
+            else:
+                return 0
 
+        def query(self, query_string, match=None, exitcode=None, steps=True):
+            self.command_context.app.send(query_string)
             self.command_context.app.expect(query_string, escape=True)
 
             if match is not None:
@@ -156,8 +164,16 @@ class Node(object):
 
             self.query_result = self.command_context.app.child.before
 
-            if "DB::Exception" in self.query_result:
-                raise RuntimeError(f"query was not executed: {query_string}")
+            if exitcode is not None:
+                with Then(
+                    f"exitcode should be {exitcode}", format_name=False
+                ) if steps else NullStep():
+                    assert exitcode == self._parse_error_code(
+                        str(self.query_result)
+                    ), error()
+            else:
+                if "DB::Exception" in self.query_result:
+                    raise Exception(self.query_result)
 
             self.full_output = (
                 self.command_context.app.child.before
