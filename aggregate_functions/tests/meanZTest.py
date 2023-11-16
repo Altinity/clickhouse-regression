@@ -17,11 +17,14 @@ def scenario(self, func="meanZTest({params})", table=None, snapshot_id=None):
     clickhouse_version = (
         ">=22.6" if check_clickhouse_version("<23.2")(self) else ">=23.2"
     )
-    snapshot_id = get_snapshot_id(clickhouse_version=clickhouse_version)
+    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id, clickhouse_version=clickhouse_version)
 
     if table is None:
         table = self.context.table
 
     _func = func.replace("({params})", f"(0.7, 0.45, 0.95)({{params}})")
 
-    checks(func=_func, snapshot_id=snapshot_id)
+    if 'Merge' in self.name:
+        return self.context.snapshot_id, _func.replace("({params})", "")
+
+    checks(func=_func, snapshot_id=self.context.snapshot_id)
