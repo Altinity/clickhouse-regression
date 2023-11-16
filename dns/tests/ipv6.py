@@ -38,7 +38,9 @@ def feature(self):
     def setup_dns_server(ip):
         domains_string = "test3.example.com test2.example.com test1.example.com"
         example_file_path = f"regression/dns/tests/lookup/example.com"
-        cluster.command(None, f"echo '{ip} {domains_string}' > {example_file_path}", exitcode=None)
+        cluster.command(
+            None, f"echo '{ip} {domains_string}' > {example_file_path}", exitcode=None
+        )
 
     def setup_ch_server(dns_server_ip):
         cluster.node("clickhouse1").command(
