@@ -108,6 +108,7 @@ def alter_table_drop_partition(self, table_name, partition_name, node=None):
         query = f"ALTER TABLE {table_name} DROP PARTITION {partition_name}"
         node.query(query)
 
+
 @TestStep(Given)
 def alter_table_modify_ttl(self, table_name, ttl_expression, node=None):
     """Modify TTL in the table using alter."""
