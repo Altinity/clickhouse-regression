@@ -131,8 +131,8 @@ class Node(object):
         def __init__(self, command_context, prompt="\[clickhouse1\] :\) "):
             self.command_context = command_context
             self.prompt = prompt
-            self.full_result = None
-            self.first_result = None
+            self.full_output = None
+            self.query_result = None
 
         def __enter__(self):
             self.command_context.__enter__()
@@ -154,19 +154,19 @@ class Node(object):
 
             self.command_context.app.expect(self.prompt)
 
-            self.last_result = self.command_context.app.child.before
-            self.full_result = (
+            self.query_result = self.command_context.app.child.before
+            self.full_output = (
                 self.command_context.app.child.before
                 + self.command_context.app.child.after
             )
 
         @property
         def full(self):
-            return self.full_result
+            return self.full_output
 
         @property
         def result(self):
-            return self.last_result
+            return self.query_result
 
     def client(self, client="clickhouse-client-tty", name="clickhouse-client-tty"):
         command_context = self.command(
