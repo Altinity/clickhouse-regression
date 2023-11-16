@@ -898,26 +898,11 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Modify = Req
     description=(
         "[ClickHouse] SHALL stop background mutations, that are still in progress, for the partition `MODIFY COLUMN` is used on, when `REPLACE PARTITION` is executed on this partition.\n"
         "\n"
-    ),
-    link=None,
-    level=4,
-    num="25.9.3.1",
-)
-
-RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_ModifyRemove = Requirement(
-    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.ModifyRemove",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL stop background mutations, that are still in progress, for the partition `MODIFY COLUMN REMOVE` is used on, when `REPLACE PARTITION` is executed on this partition.\n"
         "\n"
     ),
     link=None,
     level=4,
-    num="25.9.4.1",
+    num="25.9.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Materialize = Requirement(
@@ -933,7 +918,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Materialize 
     ),
     link=None,
     level=4,
-    num="25.9.5.1",
+    num="25.9.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_RenameColumn = Requirement(
@@ -949,7 +934,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_RenameColumn
     ),
     link=None,
     level=4,
-    num="25.9.6.1",
+    num="25.9.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_CommentColumn = Requirement(
@@ -965,7 +950,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_CommentColum
     ),
     link=None,
     level=4,
-    num="25.9.7.1",
+    num="25.9.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_AddConstraint = Requirement(
@@ -981,7 +966,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_AddConstrain
     ),
     link=None,
     level=4,
-    num="25.9.8.1",
+    num="25.9.7.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_DropConstraint = Requirement(
@@ -997,23 +982,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_DropConstrai
     ),
     link=None,
     level=4,
-    num="25.9.9.1",
-)
-
-RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_ModifyTTL = Requirement(
-    name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.ModifyTTL",
-    version="1.0",
-    priority=None,
-    group=None,
-    type=None,
-    uid=None,
-    description=(
-        "[ClickHouse] SHALL stop background mutations, that are still in progress, for the partition `MODIFY TTL` is used on, when `REPLACE PARTITION` is executed on this partition.\n"
-        "\n"
-    ),
-    link=None,
-    level=4,
-    num="25.9.10.1",
+    num="25.9.8.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions = Requirement(
@@ -1645,47 +1614,35 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
             level=4,
             num="25.9.3.1",
         ),
-        Heading(name="Modify Column Remove", level=3, num="25.9.4"),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.ModifyRemove",
-            level=4,
-            num="25.9.4.1",
-        ),
-        Heading(name="Materialize", level=3, num="25.9.5"),
+        Heading(name="Materialize", level=3, num="25.9.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Materialize",
             level=4,
-            num="25.9.5.1",
+            num="25.9.4.1",
         ),
-        Heading(name="Rename Column", level=3, num="25.9.6"),
+        Heading(name="Rename Column", level=3, num="25.9.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.RenameColumn",
             level=4,
-            num="25.9.6.1",
+            num="25.9.5.1",
         ),
-        Heading(name="Comment Column", level=3, num="25.9.7"),
+        Heading(name="Comment Column", level=3, num="25.9.6"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.CommentColumn",
             level=4,
-            num="25.9.7.1",
+            num="25.9.6.1",
         ),
-        Heading(name="Add Constraint", level=3, num="25.9.8"),
+        Heading(name="Add Constraint", level=3, num="25.9.7"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.AddConstraint",
             level=4,
-            num="25.9.8.1",
+            num="25.9.7.1",
         ),
-        Heading(name="Drop Constraint", level=3, num="25.9.9"),
+        Heading(name="Drop Constraint", level=3, num="25.9.8"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.DropConstraint",
             level=4,
-            num="25.9.9.1",
-        ),
-        Heading(name="Modify TTL", level=3, num="25.9.10"),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.ModifyTTL",
-            level=4,
-            num="25.9.10.1",
+            num="25.9.8.1",
         ),
         Heading(name="Manipulating Partitions", level=2, num="25.10"),
         Heading(
@@ -1829,13 +1786,11 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Add,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Drop,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Modify,
-        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_ModifyRemove,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Materialize,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_RenameColumn,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_CommentColumn,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_AddConstraint,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_DropConstraint,
-        RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_ModifyTTL,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Detach,
         RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Drop,
@@ -1955,20 +1910,16 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
             * 24.9.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Drop](#rqsrs-032clickhousealtertablereplacepartitionconcurrentalterdrop)
         * 24.9.3 [Modify Column](#modify-column)
             * 24.9.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Modify](#rqsrs-032clickhousealtertablereplacepartitionconcurrentaltermodify)
-        * 24.9.4 [Modify Column Remove](#modify-column-remove)
-            * 24.9.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.ModifyRemove](#rqsrs-032clickhousealtertablereplacepartitionconcurrentaltermodifyremove)
-        * 24.9.5 [Materialize](#materialize)
-            * 24.9.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Materialize](#rqsrs-032clickhousealtertablereplacepartitionconcurrentaltermaterialize)
-        * 24.9.6 [Rename Column](#rename-column)
-            * 24.9.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.RenameColumn](#rqsrs-032clickhousealtertablereplacepartitionconcurrentalterrenamecolumn)
-        * 24.9.7 [Comment Column](#comment-column)
-            * 24.9.7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.CommentColumn](#rqsrs-032clickhousealtertablereplacepartitionconcurrentaltercommentcolumn)
-        * 24.9.8 [Add Constraint](#add-constraint)
-            * 24.9.8.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.AddConstraint](#rqsrs-032clickhousealtertablereplacepartitionconcurrentalteraddconstraint)
-        * 24.9.9 [Drop Constraint](#drop-constraint)
-            * 24.9.9.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.DropConstraint](#rqsrs-032clickhousealtertablereplacepartitionconcurrentalterdropconstraint)
-        * 24.9.10 [Modify TTL](#modify-ttl)
-            * 24.9.10.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.ModifyTTL](#rqsrs-032clickhousealtertablereplacepartitionconcurrentaltermodifyttl)
+        * 24.9.4 [Materialize](#materialize)
+            * 24.9.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Materialize](#rqsrs-032clickhousealtertablereplacepartitionconcurrentaltermaterialize)
+        * 24.9.5 [Rename Column](#rename-column)
+            * 24.9.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.RenameColumn](#rqsrs-032clickhousealtertablereplacepartitionconcurrentalterrenamecolumn)
+        * 24.9.6 [Comment Column](#comment-column)
+            * 24.9.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.CommentColumn](#rqsrs-032clickhousealtertablereplacepartitionconcurrentaltercommentcolumn)
+        * 24.9.7 [Add Constraint](#add-constraint)
+            * 24.9.7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.AddConstraint](#rqsrs-032clickhousealtertablereplacepartitionconcurrentalteraddconstraint)
+        * 24.9.8 [Drop Constraint](#drop-constraint)
+            * 24.9.8.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.DropConstraint](#rqsrs-032clickhousealtertablereplacepartitionconcurrentalterdropconstraint)
     * 24.10 [Manipulating Partitions](#manipulating-partitions)
         * 24.10.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitions)
         * 24.10.2 [Detach](#detach)
@@ -2064,7 +2015,6 @@ Destination Table - The table in which a specific partition is going to be repla
 | `CLEAR COLUMN IN PARTITION`    | `ALTER TABLE table_name [ON CLUSTER cluster] CLEAR COLUMN column_name IN PARTITION partition_expr`                           |
 | `FREEZE PARTITION`             | `ALTER TABLE table_name [ON CLUSTER cluster] FREEZE [PARTITION partition_expr] [WITH NAME 'backup_name']`                    |
 | `UNFREEZE PARTITION`           | `ALTER TABLE table_name [ON CLUSTER cluster] UNFREEZE [PARTITION 'part_expr'] WITH NAME 'backup_name'`                       |
-| `CLEAR INDEX IN PARTITION`     | `ALTER TABLE table_name [ON CLUSTER cluster] CLEAR INDEX index_name IN PARTITION partition_expr`                             |
 | `FETCH PARTITION/PART`         | `ALTER TABLE table_name [ON CLUSTER cluster] FETCH PARTITION/PART partition_expr FROM 'path-in-zookeeper'`                   |
 | `MOVE PARTITION/PART`          | `ALTER TABLE table_name [ON CLUSTER cluster] MOVE PARTITION/PART partition_expr TO DISK/VOLUME 'disk_name'`                  |
 | `UPDATE IN PARTITION`          | `ALTER TABLE [db.]table [ON CLUSTER cluster] UPDATE column1 = expr1 [, ...] [IN PARTITION partition_expr] WHERE filter_expr` |
@@ -2073,14 +2023,12 @@ Destination Table - The table in which a specific partition is going to be repla
 | `DROP COLUMN`                  | `ALTER TABLE visits DROP COLUMN browser`                                                                                     |
 | `CLEAR COLUMN`                 | `ALTER TABLE visits CLEAR COLUMN browser IN PARTITION tuple()`                                                               |
 | `MODIFY COLUMN`                | `ALTER COLUMN [IF EXISTS] name TYPE [type] [default_expr] [codec] [TTL] [AFTER name_after]`                                  |
-| `MODIFY COLUMN REMOVE`         | `ALTER TABLE table_name MODIFY COLUMN column_name REMOVE property;`                                                          |
 | `MATERIALIZE COLUMN`           | `ALTER TABLE [db.]table [ON CLUSTER cluster] MATERIALIZE COLUMN col [IN PARTITION partition];`                               |
 | `INSERT INTO TABLE`            | `INSERT INTO [TABLE] [db.]table [(c1, c2, c3)] VALUES (v11, v12, v13), (v21, v22, v23), ...`                                 |
 | `DELETE FROM`                  | `DELETE FROM [db.]table [ON CLUSTER cluster] WHERE expr`                                                                     |
 | `ATTACH TABLE`                 | `ATTACH TABLE [IF NOT EXISTS] [db.]name [ON CLUSTER cluster] ...`                                                            |
 | `DETACH TABLE`                 | `DETACH TABLE [IF EXISTS] [db.]name [ON CLUSTER cluster] [PERMANENTLY] [SYNC]`                                               |
 | `DROP TABLE`                   | `DROP [TEMPORARY] TABLE [IF EXISTS] [IF EMPTY] [db.]name [ON CLUSTER cluster] [SYNC]`                                        |
-| `KILL QUERY`                   | `KILL QUERY WHERE user='username' SYNC`                                                                                      |
 | `RENAME COLUMN`                | `RENAME COLUMN [IF EXISTS] name to new_name`                                                                                 |
 | `OPTIMIZE`                     | `OPTIMIZE TABLE [db.]name [ON CLUSTER cluster] [PARTITION partition] [FINAL] [DEDUPLICATE [BY expression]]`                  |
 
@@ -2617,12 +2565,6 @@ version: 1.0
 
 [ClickHouse] SHALL stop background mutations, that are still in progress, for the partition `MODIFY COLUMN` is used on, when `REPLACE PARTITION` is executed on this partition.
 
-#### Modify Column Remove
-
-##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.ModifyRemove
-version: 1.0
-
-[ClickHouse] SHALL stop background mutations, that are still in progress, for the partition `MODIFY COLUMN REMOVE` is used on, when `REPLACE PARTITION` is executed on this partition.
 
 #### Materialize
 
@@ -2658,13 +2600,6 @@ version: 1.0
 version: 1.0
 
 [ClickHouse] SHALL stop background mutations, that are still in progress, for the partition `DROP CONSTRAINT` is used on, when `REPLACE PARTITION` is executed on this partition.
-
-#### Modify TTL
-
-##### RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.ModifyTTL
-version: 1.0
-
-[ClickHouse] SHALL stop background mutations, that are still in progress, for the partition `MODIFY TTL` is used on, when `REPLACE PARTITION` is executed on this partition.
 
 ### Manipulating Partitions
 
