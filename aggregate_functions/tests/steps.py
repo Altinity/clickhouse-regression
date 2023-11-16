@@ -206,6 +206,7 @@ def execute_query(
                             "\n" + r.output.strip() + "\n",
                             id=current().context.snapshot_id + "." + current_cpu(),
                             name=snapshot_name,
+                            encoder=str,
                             mode=snapshot.UPDATE, #snapshot.REWRITE | snapshot.CHECK | snapshot.UPDATE
                         )
                     ), error()

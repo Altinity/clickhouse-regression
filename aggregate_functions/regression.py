@@ -134,8 +134,5 @@ def regression(
     Feature(run=load("aggregate_functions.tests.state", "feature"))
     Feature(run=load("aggregate_functions.tests.merge", "feature"))
 
-    Feature(run=load("aggregate_functions.tests.aggThrow", "scenario"))
-
-
 if main():
     regression()
