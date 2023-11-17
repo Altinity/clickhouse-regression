@@ -6,7 +6,7 @@ from alter.table.replace_partition.common import (
     create_table_partitioned_by_column_with_data,
 )
 from alter.table.replace_partition.requirements.requirements import *
-from helpers.common import getuid
+from helpers.common import getuid, replace_partition
 
 
 @TestScenario
@@ -124,6 +124,34 @@ def partition_changes_in_system(self):
                 ), error()
 
 
+@TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Corrupted("1.0"))
+def corrupted_parts(self):
+    """Replace partition from a table that has corrupted parts."""
+    node = self.context.node
+    source_table = "source" + getuid()
+    destination_table = "destination" + getuid()
+
+    with Given("I have two tables with the same structure"):
+        create_two_tables_partitioned_by_column_with_data(
+            destination_table=destination_table, source_table=source_table
+        )
+
+    with When("I change some bit values of the part on the destination table"):
+        node.command(
+            f"corrupt_file /var/lib/clickhouse/data/default/{source_table}/4_4_4_0/data.bin 1500000"
+        )
+
+    with Then(
+        "I replace partition on destination table from the source table and validate the data"
+    ):
+        node.query(
+            f"SELECT i FROM {source_table} WHERE p = 4 ORDER BY tuple(*)",
+            message="DB::Exception: Unknown codec family code",
+            exitcode=176,
+        )
+
+
 @TestFeature
 @Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_KeepData("1.0"))
 @Name("data integrity")
@@ -135,3 +163,4 @@ def feature(self, node="clickhouse1"):
     Scenario(run=non_existent_partition_destination)
     Scenario(run=non_existent_partition_source)
     Scenario(run=partition_changes_in_system)
+    Scenario(run=corrupted_parts)
