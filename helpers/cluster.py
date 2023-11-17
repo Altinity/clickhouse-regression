@@ -153,7 +153,9 @@ class Node(object):
             else:
                 return 0
 
-        def query(self, query_string, match=None, exitcode=None, steps=True):
+        def query(
+            self, query_string, match=None, exitcode=None, message=None, steps=True
+        ):
             self.command_context.app.send(query_string)
             self.command_context.app.expect(query_string, escape=True)
 
@@ -164,15 +166,17 @@ class Node(object):
 
             self.query_result = self.command_context.app.child.before
 
-            if exitcode is not None:
-                with Then(
-                    f"exitcode should be {exitcode}", format_name=False
-                ) if steps else NullStep():
-                    assert exitcode == self._parse_error_code(
-                        str(self.query_result)
-                    ), error()
-            else:
-                if "DB::Exception" in self.query_result:
+            if "DB::Exception" in self.query_result:
+                if exitcode is not None:
+                    with Then(
+                        f"exitcode should be {exitcode}", format_name=False
+                    ) if steps else NullStep():
+                        assert exitcode == self._parse_error_code(
+                            str(self.query_result)
+                        ), error()
+                if message is not None:
+                    assert message in self.query_result
+                else:
                     raise Exception(self.query_result)
 
             self.full_output = (
