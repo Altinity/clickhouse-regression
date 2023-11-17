@@ -76,6 +76,7 @@ def from_temporary_to_temporary_table(self):
                 client.query(
                     f"CREATE TEMPORARY TABLE {destination_table} (p UInt16,i UInt64,extra UInt8) ENGINE = MergeTree PARTITION BY p ORDER BY tuple();"
                 )
+
                 client.query(
                     f"CREATE TEMPORARY TABLE {source_table} (p UInt16,i UInt64,extra UInt8) ENGINE = MergeTree PARTITION BY p ORDER BY tuple();"
                 )
