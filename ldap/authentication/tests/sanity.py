@@ -15,7 +15,7 @@ def scenario(self, server="openldap1"):
     with When("I search LDAP database"):
         r = self.context.ldap_node.command(
             'ldapsearch -x -H ldap://localhost -b "dc=company,dc=com" -D "cn=admin,dc=company,dc=com" -w admin',
-            exitcode=None,
+            no_checks=True,
         )
         assert r.exitcode == 0, error()
 
@@ -28,7 +28,7 @@ def scenario(self, server="openldap1"):
     with And("I search LDAP database again"):
         r = self.context.ldap_node.command(
             'ldapsearch -x -H ldap://localhost -b "dc=company,dc=com" -D "cn=admin,dc=company,dc=com" -w admin',
-            exitcode=None,
+            no_checks=True,
         )
         assert r.exitcode == 0, error()
 
@@ -41,7 +41,7 @@ def scenario(self, server="openldap1"):
     with And("I search LDAP database again"):
         r = self.context.ldap_node.command(
             'ldapsearch -x -H ldap://localhost -b "dc=company,dc=com" -D "cn=admin,dc=company,dc=com" -w admin',
-            exitcode=None,
+            no_checks=True,
         )
         assert r.exitcode == 0, error()
 

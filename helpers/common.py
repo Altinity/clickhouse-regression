@@ -267,7 +267,7 @@ def add_invalid_config(
             started = time.time()
             command = f"cat /var/lib/clickhouse/preprocessed_configs/{config.preprocessed_name} | grep {config.uid}{' > /dev/null' if not settings.debug else ''}"
             while time.time() - started < timeout:
-                exitcode = node.command(command, steps=False, exitcode=None).exitcode
+                exitcode = node.command(command, steps=False, no_checks=True).exitcode
                 if exitcode == 0:
                     break
                 time.sleep(1)
@@ -326,7 +326,7 @@ def add_invalid_config(
         started = time.time()
         command = f'tail -n {tail} /var/log/clickhouse-server/clickhouse-server.err.log | grep "{message}"'
         while time.time() - started < timeout:
-            exitcode = node.command(command, steps=False, exitcode=None).exitcode
+            exitcode = node.command(command, steps=False, no_checks=True).exitcode
             if exitcode == 0:
                 break
             time.sleep(1)
@@ -360,7 +360,7 @@ def add_config(
         command = f"cat /var/lib/clickhouse/preprocessed_configs/{config.preprocessed_name} | grep {config.uid}{' > /dev/null' if not settings.debug else ''}"
 
         while time.time() - started < timeout:
-            exitcode = node.command(command, steps=False, exitcode=None).exitcode
+            exitcode = node.command(command, steps=False, no_checks=True).exitcode
             if after_removal:
                 if exitcode == 1:
                     break
@@ -559,7 +559,7 @@ def add_group_on_node(self, node=None, groupname="clickhouse"):
         node.command(f"groupadd {groupname}", exitcode=0)
         yield
     finally:
-        node.command(f"delgroup {groupname}", exitcode=None)
+        node.command(f"delgroup {groupname}", no_checks=True)
 
 
 @TestStep(Given)

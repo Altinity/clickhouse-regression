@@ -13,7 +13,7 @@ def ping(self):
 
     for i in range(3):
         with When(f"curl ch_{i} kerberos"):
-            r = ch_nodes[i].command(f"curl kerberos -c 1", exitcode=None)
+            r = ch_nodes[i].command(f"curl kerberos -c 1", no_checks=True)
         with Then(f"return code should be 0"):
             assert r.exitcode == 7, error()
 
