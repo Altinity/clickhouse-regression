@@ -191,7 +191,7 @@ def invalid_ldap_external_user_directory_config(
             started = time.time()
             command = f"cat /var/lib/clickhouse/preprocessed_configs/{config.preprocessed_name} | grep {config.uid}{' > /dev/null' if not settings.debug else ''}"
             while time.time() - started < timeout:
-                exitcode = node.command(command, steps=False, exitcode=None).exitcode
+                exitcode = node.command(command, steps=False, no_checks=True).exitcode
                 if exitcode == 0:
                     break
                 time.sleep(1)
@@ -222,7 +222,7 @@ def invalid_ldap_external_user_directory_config(
         started = time.time()
         command = f'tail -n {tail} /var/log/clickhouse-server/clickhouse-server.err.log | grep "{message}"'
         while time.time() - started < timeout:
-            exitcode = node.command(command, steps=False, exitcode=None).exitcode
+            exitcode = node.command(command, steps=False, no_checks=True).exitcode
             if exitcode == 0:
                 break
             time.sleep(1)

@@ -39,7 +39,7 @@ def feature(self):
         domains_string = "test3.example.com test2.example.com test1.example.com"
         example_file_path = f"regression/dns/tests/lookup/example.com"
         cluster.command(
-            None, f"echo '{ip} {domains_string}' > {example_file_path}", exitcode=None
+            None, f"echo '{ip} {domains_string}' > {example_file_path}", no_checks=True
         )
 
     def setup_ch_server(dns_server_ip):

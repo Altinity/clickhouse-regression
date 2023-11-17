@@ -173,7 +173,7 @@ def add_group_to_ldap(cn, gidnumber=None, node=None, _gidnumber=[600], exitcode=
 
     r = node.command(
         f'echo -e "{ldif}" | ldapadd -x -H ldap://localhost -D "cn=admin,dc=company,dc=com" -w admin',
-        exitcode=None,
+        no_checks=True,
     )
 
     if exitcode is not None:
@@ -190,7 +190,7 @@ def delete_group_from_ldap(group, node=None, exitcode=0):
     with By(f"deleting group {group['dn']}"):
         r = node.command(
             f"ldapdelete -x -H ldap://localhost -D \"cn=admin,dc=company,dc=com\" -w admin \"{group['dn']}\"",
-            exitcode=None,
+            no_checks=True,
         )
 
     if exitcode is not None:
@@ -213,7 +213,7 @@ def fix_ldap_permissions(node=None, exitcode=0):
     )
 
     r = node.command(
-        f'echo -e "{ldif}" | ldapmodify -Y EXTERNAL -Q -H ldapi:///', exitcode=None
+        f'echo -e "{ldif}" | ldapmodify -Y EXTERNAL -Q -H ldapi:///', no_checks=True
     )
 
     if exitcode is not None:
@@ -235,7 +235,7 @@ def add_user_to_group_in_ldap(user, group, node=None, exitcode=0):
     with By(f"adding user {user['dn']} to group {group['dn']}"):
         r = node.command(
             f'echo -e "{ldif}" | ldapmodify -x -H ldap://localhost -D "cn=admin,dc=company,dc=com" -w admin',
-            exitcode=None,
+            no_checks=True,
         )
 
     if exitcode is not None:
@@ -257,7 +257,7 @@ def delete_user_from_group_in_ldap(user, group, node=None, exitcode=0):
     with By(f"deleting user {user['dn']} from group {group['dn']}"):
         r = node.command(
             f'echo -e "{ldif}" | ldapmodify -x -H ldap://localhost -D "cn=admin,dc=company,dc=com" -w admin',
-            exitcode=None,
+            no_checks=True,
         )
 
     if exitcode is not None:

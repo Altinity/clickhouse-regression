@@ -38,7 +38,7 @@ def add_config(
         command = f"cat /var/lib/clickhouse/preprocessed_configs/{config.preprocessed_name} | grep {config.uid}{' > /dev/null' if not settings.debug else ''}"
 
         while time.time() - started < timeout:
-            exitcode = node.command(command, steps=False, exitcode=None).exitcode
+            exitcode = node.command(command, steps=False, no_checks=True).exitcode
             if after_removal:
                 if exitcode == 1:
                     break
@@ -714,7 +714,7 @@ def run_query(instance, query, stdin=None, settings=None):
         result = instance.command(
             f'echo -e "{stdin}" | clickhouse client --query="{query}"',
             steps=False,
-            exitcode=None,
+            no_checks=True,
         )
     else:
         result = instance.query(

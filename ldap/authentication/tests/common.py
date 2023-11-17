@@ -215,7 +215,7 @@ def invalid_server_config(servers, message=None, tail=30, timeout=300):
             started = time.time()
             command = f'tail -n {tail} /var/log/clickhouse-server/clickhouse-server.err.log | grep "{message}"'
             while time.time() - started < timeout:
-                exitcode = node.command(command, steps=False, exitcode=None).exitcode
+                exitcode = node.command(command, steps=False, no_checks=True).exitcode
                 if exitcode == 0:
                     break
                 time.sleep(1)
@@ -247,7 +247,7 @@ def invalid_user_config(servers, config, message=None, tail=30, timeout=300):
                 command = f'tail -n {tail} /var/log/clickhouse-server/clickhouse-server.err.log | grep "{message}"'
                 while time.time() - started < timeout:
                     exitcode = node.command(
-                        command, steps=False, exitcode=None
+                        command, steps=False, no_checks=True
                     ).exitcode
                     if exitcode == 0:
                         break
@@ -312,7 +312,7 @@ def add_user_to_ldap(
 
     r = node.command(
         f'echo -e "{ldif}" | ldapadd -x -H ldap://localhost -D "cn=admin,dc=company,dc=com" -w admin',
-        exitcode=None,
+        no_checks=True,
     )
     assert r.exitcode == 0, error()
 
@@ -325,7 +325,7 @@ def delete_user_from_ldap(user, node=None, exitcode=0):
         node = current().context.ldap_node
     r = node.command(
         f"ldapdelete -x -H ldap://localhost -D \"cn=admin,dc=company,dc=com\" -w admin \"{user['dn']}\"",
-        exitcode=None,
+        no_checks=True,
     )
     if exitcode is not None:
         assert r.exitcode == exitcode, error()
@@ -345,7 +345,7 @@ def change_user_password_in_ldap(user, new_password, node=None, exitcode=0):
 
     r = node.command(
         f'echo -e "{ldif}" | ldapmodify -x -H ldap://localhost -D "cn=admin,dc=company,dc=com" -w admin',
-        exitcode=None,
+        no_checks=True,
     )
 
     if exitcode is not None:
@@ -370,7 +370,7 @@ def change_user_cn_in_ldap(user, new_cn, node=None, exitcode=0):
 
     r = node.command(
         f'echo -e "{ldif}" | ldapmodify -x -H ldap://localhost -D "cn=admin,dc=company,dc=com" -w admin',
-        exitcode=None,
+        no_checks=True,
     )
 
     if exitcode is not None:

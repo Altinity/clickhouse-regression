@@ -342,7 +342,7 @@ class ClickHouseNode(Node):
         """Return ClickHouse server pid if present
         otherwise return None.
         """
-        if self.command("ls /tmp/clickhouse-server.pid", exitcode=None).exitcode == 0:
+        if self.command("ls /tmp/clickhouse-server.pid", no_checks=True).exitcode == 0:
             return self.command("cat /tmp/clickhouse-server.pid").output.strip()
         return None
 
@@ -1298,7 +1298,7 @@ class Cluster(object):
                         cmd = self.command(
                             None,
                             f"set -o pipefail && {self.docker_compose} pull 2>&1 | tee",
-                            exitcode=None,
+                            no_checks=True,
                             timeout=timeout,
                         )
                         if cmd.exitcode != 0:
@@ -1313,7 +1313,7 @@ class Cluster(object):
                         cmd = self.command(
                             None,
                             f"set -o pipefail && {self.docker_compose} down 2>&1 | tee",
-                            exitcode=None,
+                            no_checks=True,
                             timeout=timeout,
                         )
                         if cmd.exitcode != 0:
@@ -1406,7 +1406,8 @@ class Cluster(object):
         :param command: command
         :param message: expected message that should be in the output, default: None
         :param messages: expected messages that should be in the output, default: None
-        :param exitcode: expected exitcode, set to None to ignore, default: 0
+        :param exitcode: expected exitcode, use no_checks or set to None to ignore, default: 0
+        :param no_checks: skip exitcode and message checks, default: False
         :param steps: don't break command into steps, default: True
         """
         with By(
