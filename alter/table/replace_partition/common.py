@@ -169,6 +169,8 @@ def replace_partition_and_validate_data(
     delay_before=None,
     delay_after=None,
     validate=None,
+    exitcode=None,
+    message=None,
 ):
     """
     Replace partition and validate that the data on the destination table is the same data as on the source table.
@@ -220,6 +222,8 @@ def replace_partition_and_validate_data(
             destination_table=destination_table,
             source_table=source_table,
             partition=partition_to_replace,
+            exitcode=exitcode,
+            message=message,
         )
 
         sleep(delay_after)

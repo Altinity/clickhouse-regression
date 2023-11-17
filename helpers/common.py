@@ -600,7 +600,7 @@ def replace_partition(
     destination_table,
     source_table,
     partition=1,
-    exitcode=0,
+    exitcode=None,
     user_name=None,
     message=None,
     node=None,
