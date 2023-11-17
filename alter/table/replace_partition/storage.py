@@ -1,9 +1,11 @@
 from alter.table.replace_partition.common import (
     create_table_partitioned_by_column_with_data,
+    replace_partition_and_validate_data,
 )
 from alter.table.replace_partition.requirements.requirements import *
 from helpers.alter import *
 from helpers.common import getuid, replace_partition
+from helpers.create import partitioned_replicated_merge_tree_table
 
 
 @TestScenario
@@ -65,11 +67,37 @@ def shards(self):
         )
 
 
+@TestScenario
+@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Replicas("1.0"))
+def replicas(self):
+    """Check that it is possible to replace partition on the destination table when both destination and source
+    tables are replicated."""
+    destination_table = "destination_" + getuid()
+    source_table = "source_" + getuid()
+
+    with Given("I have replicas of both destination and source tables created"):
+        partitioned_replicated_merge_tree_table(
+            table_name=destination_table, partition="p"
+        )
+        partitioned_replicated_merge_tree_table(table_name=source_table, partition="p")
+
+    with Then(
+        "I replace partition on the replicated destination table from the replicated source table"
+    ):
+        replace_partition_and_validate_data(
+            destination_table=destination_table,
+            source_table=source_table,
+            partition_to_replace="1",
+        )
+
+
 @TestFeature
 @Name("storage")
 def feature(self, node="clickhouse1"):
-    """Check it is possible to replace partition on a destination table when tables are stored in different storage types."""
+    """Check it is possible to replace partition on a destination table when tables are stored in different storage
+    types."""
     self.context.node = self.context.cluster.node(node)
 
     Scenario(run=different_disks)
     Scenario(run=shards)
+    Scenario(run=replicas)
