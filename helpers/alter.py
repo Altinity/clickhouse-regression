@@ -206,6 +206,7 @@ def alter_table_clear_index_in_partition(
         query = f"ALTER TABLE {table_name} CLEAR INDEX {index} IN PARTITION {partition_name}"
         node.query(query)
 
+
 @TestStep(Given)
 def alter_table_fetch_partition(
     self, table_name, partition_name, path_to_backup, node=None
