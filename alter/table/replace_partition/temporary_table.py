@@ -70,27 +70,31 @@ def from_temporary_to_temporary_table(self):
     destination_table = "temporary_destination_" + getuid()
     source_table = "temporary_source_" + getuid()
 
-    with Given(
-        "I create two temporary tables with the same structure and populate them with data that creates multiple partitions",
-        description=f"""temporary table gets deleted when the clickhouse session ends, to complete all test steps the 
-        actions are preformed with the help of --multiquery."
+    with Given("I open a single clickhouse instance"):
+        with node.client() as client:
+            with And("I create two temporary tables with the same structure"):
+                client.query(
+                    f"CREATE TEMPORARY TABLE {destination_table} (p UInt16,i UInt64,extra UInt8) ENGINE = MergeTree PARTITION BY p ORDER BY tuple();"
+                )
+                client.query(
+                    f"CREATE TEMPORARY TABLE {source_table} (p UInt16,i UInt64,extra UInt8) ENGINE = MergeTree PARTITION BY p ORDER BY tuple();"
+                )
 
-        Actions performed with the temporary table: 
-            1. Create two temporary tables with the same structure.
-            2. Populate them with the data to create multiple partitions.
-            3. Replace the partition on the temporary destination table from the temporary source table. """,
-    ):
-        node.query(
-            f"""
-        CREATE TEMPORARY TABLE {destination_table} (p UInt16,i UInt64,extra UInt8) ENGINE = MergeTree PARTITION BY p ORDER BY tuple();
-        CREATE TEMPORARY TABLE {source_table} (p UInt16,i UInt64,extra UInt8) ENGINE = MergeTree PARTITION BY p ORDER BY tuple();
-        INSERT INTO {source_table} (p, i) SELECT number, rand64() FROM (SELECT arrayJoin([1,2,3,4,5,6,7,8,9,10]) AS number FROM numbers(3)); 
-        INSERT INTO {destination_table} (p, i) SELECT number, rand64() FROM (SELECT arrayJoin([1,2,3,4,5,6,7,8,9,10]) AS number FROM numbers(3)); 
-        ALTER TABLE {destination_table} REPLACE PARTITION 1 FROM {source_table};
-        """,
-            exitcode=60,
-            message=f"DB::Exception: Could not find table: {destination_table}",
-        )
+            with When("I populate them with data that creates multiple partitions"):
+                client.query(
+                    f"INSERT INTO {source_table} (p, i) SELECT number, rand64() FROM (SELECT arrayJoin([1,2,3,4,5,6,7,8,9,10]) AS number FROM numbers(3));"
+                )
+                client.query(
+                    f"INSERT INTO {destination_table} (p, i) SELECT number, rand64() FROM (SELECT arrayJoin([1,2,3,4,5,6,7,8,9,10]) AS number FROM numbers(3));"
+                )
+
+            with Then(
+                "I check if it is possible to replace partition on the temporary destination table from the temporary source table"
+            ):
+                client.query(
+                    f"ALTER TABLE {destination_table} REPLACE PARTITION 1 FROM {source_table};",
+                    exitcode=60,
+                )
 
 
 @TestScenario
@@ -103,27 +107,33 @@ def from_regular_to_temporary(self):
     destination_table = "temporary_destination_" + getuid()
     source_table = "source_" + getuid()
 
-    with Given(
-        "I create two temporary tables with the same structure and populate them with data that creates multiple partitions",
-        description=f"""temporary table gets deleted when the clickhouse session ends, to complete all test steps the 
-        actions are preformed with the help of --multiquery."
+    with Given("I open a single clickhouse instance"):
+        with node.client() as client:
+            with And(
+                "I create one temporary table and one regular table with the same structure"
+            ):
+                client.query(
+                    f"CREATE TEMPORARY TABLE {destination_table} (p UInt16,i UInt64,extra UInt8) ENGINE = MergeTree PARTITION BY p ORDER BY tuple();"
+                )
+                client.query(
+                    f"CREATE TABLE {source_table} (p UInt8,i UInt64) ENGINE = MergeTree PARTITION BY p ORDER BY tuple();"
+                )
 
-        Actions performed with the temporary table: 
-            1. Create one temporary table and one regular table with the same structure.
-            2. Populate them with the data to create multiple partitions.
-            3. Replace the partition on the temporary destination table from the regular source table. """,
-    ):
-        node.query(
-            f"""
-        CREATE TEMPORARY TABLE {destination_table} (p UInt16,i UInt64,extra UInt8) ENGINE = MergeTree PARTITION BY p ORDER BY tuple();
-        CREATE TABLE {source_table} (p UInt8,i UInt64) ENGINE = MergeTree PARTITION BY p ORDER BY tuple();
-        INSERT INTO {source_table} (p, i) SELECT number, rand64() FROM (SELECT arrayJoin([1,2,3,4,5,6,7,8,9,10]) AS number FROM numbers(3)); 
-        INSERT INTO {destination_table} (p, i) SELECT number, rand64() FROM (SELECT arrayJoin([1,2,3,4,5,6,7,8,9,10]) AS number FROM numbers(3)); 
-        ALTER TABLE {destination_table} REPLACE PARTITION 1 FROM {source_table};
-        """,
-            exitcode=60,
-            message=f"DB::Exception: Could not find table: {destination_table}",
-        )
+            with When("I populate them with the data to create multiple partitions"):
+                client.query(
+                    f"INSERT INTO {source_table} (p, i) SELECT number, rand64() FROM (SELECT arrayJoin([1,2,3,4,5,6,7,8,9,10]) AS number FROM numbers(3));"
+                )
+                client.query(
+                    f"INSERT INTO {destination_table} (p, i) SELECT number, rand64() FROM (SELECT arrayJoin([1,2,3,4,5,6,7,8,9,10]) AS number FROM numbers(3));"
+                )
+
+            with Then(
+                "I check if it is possible to replace partition on the regular table from the temporary table"
+            ):
+                client.query(
+                    f"ALTER TABLE {destination_table} REPLACE PARTITION 1 FROM {source_table};",
+                    exitcode=60,
+                )
 
 
 @TestFeature
