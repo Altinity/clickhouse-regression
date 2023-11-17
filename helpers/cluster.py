@@ -175,7 +175,10 @@ class Node(object):
                             str(self.query_result)
                         ), error()
                 if message is not None:
-                    assert message in self.query_result
+                    with Then(
+                        f"message should be {message}", format_name=False
+                    ) if steps else NullStep():
+                        assert message in self.query_result, error()
                 else:
                     raise Exception(self.query_result)
 
