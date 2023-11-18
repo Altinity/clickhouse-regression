@@ -170,11 +170,9 @@ def migrate_from_zookeeper(self, use_standalone_keeper_server):
     finally:
         with Finally("I clean up"):
             with By("Clear Zookeeper meta information", flags=TE):
-                for retry in retries(timeout=60, delay=1):
-                    with retry:
-                        self.context.cluster.node("clickhouse1").command(
-                            f"rm -rf /share/"
-                        )
+                self.context.cluster.node("clickhouse1").command(
+                    f"rm -rf /share/*"
+                )
                 clean_coordination_on_all_nodes()
 
             with By("I restart ZooKeepers back up", flags=TE):
@@ -211,7 +209,7 @@ def migrate_from_zookeeper(self, use_standalone_keeper_server):
                 stop_all_zookeepers()
 
             with By("Clear Zookeeper meta information", flags=TE):
-                self.context.cluster.node("clickhouse1").command(f"rm -rf /share/")
+                self.context.cluster.node("clickhouse1").command(f"rm -rf /share/*")
                 clean_coordination_on_all_nodes()
 
             with By("I restart ZooKeepers back up", flags=TE):

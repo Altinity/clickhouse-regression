@@ -451,7 +451,7 @@ def zookeepers_3(self):
     finally:
         with Finally("I clean up files"):
             clean_coordination_on_all_nodes()
-            self.context.cluster.node("clickhouse1").command(f"rm -rf /share/")
+            self.context.cluster.node("clickhouse1").command(f"rm -rf /share/*")
 
 
 @TestScenario
@@ -528,7 +528,7 @@ def standalone_keepers_3(self):
     finally:
         with Finally("I clean up files"):
             clean_coordination_on_all_nodes()
-            self.context.cluster.node("clickhouse1").command(f"rm -rf /share/")
+            self.context.cluster.node("clickhouse1").command(f"rm -rf /share/*")
 
 
 @TestScenario
@@ -599,7 +599,7 @@ def standalone_keepers_2(self):
     finally:
         with Finally("I clean up files"):
             clean_coordination_on_all_nodes()
-            self.context.cluster.node("clickhouse1").command(f"rm -rf /share/")
+            self.context.cluster.node("clickhouse1").command(f"rm -rf /share/*")
 
 
 @TestScenario
@@ -670,9 +670,7 @@ def standalone_keepers_1(self):
     finally:
         with Finally("I clean up files"):
             clean_coordination_on_all_nodes()
-            for ret in retries(timeout=60, delay=1):
-                with ret:
-                    self.context.cluster.node("clickhouse1").command(f"rm -rf /share/")
+            self.context.cluster.node("clickhouse1").command(f"rm -rf /share/*")
 
 
 @TestFeature
