@@ -132,8 +132,6 @@ class Node(object):
         def __init__(self, command_context, prompt="\[clickhouse1\] :\) "):
             self.command_context = command_context
             self.prompt = prompt
-            self.full_output = None
-            self.query_result = None
 
         def __enter__(self):
             self.command_context.__enter__()
@@ -164,36 +162,25 @@ class Node(object):
 
             self.command_context.app.expect(self.prompt)
 
-            self.query_result = self.command_context.app.child.before
+            query_result = self.command_context.app.child.before
 
-            if "DB::Exception" in self.query_result:
+            if query_result.strip().startswith("Exception:"):
                 if exitcode is not None:
                     with Then(
                         f"exitcode should be {exitcode}", format_name=False
                     ) if steps else NullStep():
                         assert exitcode == self._parse_error_code(
-                            str(self.query_result)
+                            str(query_result)
                         ), error()
                 if message is not None:
                     with Then(
                         f"message should be {message}", format_name=False
                     ) if steps else NullStep():
-                        assert message in self.query_result, error()
+                        assert message in query_result, error()
                 else:
-                    raise Exception(self.query_result)
+                    raise Exception(query_result)
 
-            self.full_output = (
-                self.command_context.app.child.before
-                + self.command_context.app.child.after
-            )
-
-        @property
-        def full(self):
-            return self.full_output
-
-        @property
-        def result(self):
-            return self.query_result
+            return query_result
 
     def client(self, client="clickhouse-client-tty", name="clickhouse-client-tty"):
         command_context = self.command(
