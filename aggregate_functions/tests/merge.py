@@ -90,7 +90,7 @@ def feature(self):
     not_implemented = ['mannWhitneyUTest', 'quantileDeterministic', 'quantilesDeterministic', 
                        'stochasticLinearRegression', 'stochasticLogisticRegression', "sumMap", "maxMap", 
                        "minMap", 
-                       "groupUniqArray", "quantileTDigestWeighted", "uniq"
+                       "groupUniqArray", "quantileTDigestWeighted", "uniq",
     # "anyHeavy",
     # "any",
     # "anyLast", 
@@ -130,8 +130,8 @@ def feature(self):
     # "kurtSamp",
     # "last_value",
     # "max",
-    # "maxIntersections", # rewrite
-    # "maxIntersectionsPosition", #rewrite
+    # "maxIntersections", 
+    # "maxIntersectionsPosition", 
     # "meanZTest",
     # "min",
     # "quantile",
@@ -188,11 +188,14 @@ def feature(self):
     # "varSampStable",
     # "welchTTest"
                                            ]
-    
+
     test_funcs = [i for i in aggregate_functions]
     for i in not_implemented:
         if i in test_funcs:
             test_funcs.remove(i)
+
+    note(test_funcs)
+    pause()
     for name in test_funcs:
         try:
             scenario = load(f"aggregate_functions.tests.{name}", "scenario")

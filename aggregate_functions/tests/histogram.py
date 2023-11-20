@@ -12,7 +12,7 @@ from aggregate_functions.requirements import (
 def scenario(self, func="histogram({params})", table=None, decimal=False, snapshot_id=None):
     """Check histogram aggregate function"""
 
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id, clickhouse_version=">=23.2")
 
     func = func.replace("({params})", f"(5)({{params}})")
 
