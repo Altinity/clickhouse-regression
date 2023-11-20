@@ -1,15 +1,9 @@
-from testflows.core import *
 from testflows.asserts import *
-from alter.table.replace_partition.common import (
-    create_two_tables_partitioned_by_column_with_data,
-    replace_partition_and_validate_data,
-    create_table_partitioned_by_column_with_data,
-    check_partition_was_replaced,
-)
+from testflows.core import *
+
 from alter.table.replace_partition.requirements.requirements import *
 from helpers.common import getuid, replace_partition
 from helpers.tables import create_table_partitioned_by_column
-
 
 one_part = ["1_1_1_0"]
 multiple_parts = ["1_1_1_0", "1_2_2_0"]
