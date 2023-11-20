@@ -15,7 +15,7 @@ from aggregate_functions.tests.quantileBFloat16Weighted import scenario as check
 )
 def scenario(self, func="quantilesBFloat16Weighted({params})", table=None, snapshot_id=None):
     """Check quantilesBFloat16Weighted aggregate function by using the same tests as for quantileBFloat16Weighted."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id, clickhouse_version=">=23.2")
 
     if table is None:
         table = self.context.table
