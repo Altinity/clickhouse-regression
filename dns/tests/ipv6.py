@@ -16,7 +16,7 @@ def feature(self):
 
     def get_instance_docker_id(instance_name):
         if current_cpu() == "aarch64":
-            env = f"dns_env-arm64"
+            env = f"dns_env_arm64"
         else:
             env = f"dns_env"
         return env + "-" + instance_name + "-1"
