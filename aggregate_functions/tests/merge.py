@@ -56,7 +56,7 @@ def merge(self, func, snapshot_id, short_name):
     if not os.path.exists(snapshot_path):
         xfail(reason=f"no snapshot found {snapshot_path}")
 
-    snapshot_module = SourceFileLoader("snapshot", snapshot_path).load_module()
+    snapshot_module = SourceFileLoader(func, snapshot_path).load_module() # add UUID
     snapshot_attrs = {k:v for k,v in vars(snapshot_module).items() if not k.startswith('__')}
 
     for key, value in snapshot_attrs.items():
@@ -87,11 +87,113 @@ def merge(self, func, snapshot_id, short_name):
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Combinator_Merge("1.0"))
 def feature(self):
     """Check aggregate functions `-Merge` combinator."""
-    not_implemented = ['mannWhitneyUTest', 'quantileDeterministic', 'stochasticLinearRegression', 'stochasticLogisticRegression', 'sumMap', 'maxMap', 'minMap']
+    not_implemented = ['mannWhitneyUTest', 'quantileDeterministic', 'quantilesDeterministic', 
+                       'stochasticLinearRegression', 'stochasticLogisticRegression', "sumMap", "maxMap", 
+                       "minMap", 
+                       "groupUniqArray", "quantileTDigestWeighted", "uniq"
+    # "anyHeavy",
+    # "any",
+    # "anyLast", 
+    # "argMax", 
+    # "argMin", 
+    # "avg", 
+    # "avgWeighted", 
+    # "boundingRatio",
+    # "categoricalInformationValue", # rewrite
+    # "contingency",
+    # "corr",
+    # "corrStable",
+    # "count",
+    # "covarPop",
+    # "covarPopStable",
+    # "covarSamp",
+    # "covarSampStable",
+    # "cramersV",
+    # "cramersVBiasCorrected",
+    # "deltaSum",
+    # "deltaSumTimestamp",
+    # "entropy",
+    # "exponentialMovingAverage",
+    # "first_value",
+    # "groupArray",
+    # "groupArrayInsertAt",
+    # "groupArrayMovingAvg",
+    # "groupArrayMovingSum",
+    # "groupArraySample",
+    # "groupBitAnd",
+    # "groupBitOr",
+    # "groupBitXor",
+    # "groupBitmap",
+    # "histogram",  
+    # "intervalLengthSum",
+    # "kurtPop",
+    # "kurtSamp",
+    # "last_value",
+    # "max",
+    # "maxIntersections", # rewrite
+    # "maxIntersectionsPosition", #rewrite
+    # "meanZTest",
+    # "min",
+    # "quantile",
+    # "quantileBFloat16",
+    # "quantileBFloat16Weighted",
+    # "quantileDeterministic",
+    # "quantileExact",
+    # "quantileExactExclusive",
+    # "quantileExactHigh",
+    # "quantileExactInclusive",
+    # "quantileExactLow",
+    # "quantileExactWeighted",
+    # "quantileTDigest",
+    # "quantileTiming",
+    # "quantileTimingWeighted",
+    # "quantiles",
+    # "quantilesBFloat16",
+    # "quantilesBFloat16Weighted",
+    # "quantilesExact",
+    # "quantilesExactExclusive",
+    # "quantilesExactHigh",
+    # "quantilesExactInclusive",
+    # "quantilesExactLow",
+    # "quantilesExactWeighted",
+    # "quantilesTDigest",
+    # "quantilesTDigestWeighted",
+    # "quantilesTiming",
+    # "quantilesTimingWeighted",
+    # "rankCorr", 
+    # "simpleLinearRegression",
+    # "singleValueOrNull",
+    # "skewPop",
+    # "skewSamp",
+    # "sparkbar",
+    # "stddevPop",
+    # "stddevPopStable",
+    # "stddevSamp",
+    # "stddevSampStable",
+    # "studentTTest",
+    # "sum",
+    # "sumCount",
+    # "sumKahan",
+    # "sumWithOverflow",
+    # "topK",
+    # "topKWeighted",
+    # "uniqCombined",
+    # "uniqCombined64",
+    # "uniqExact",
+    # "uniqHLL12"
+    # "uniqTheta",
+    # "varPop",
+    # "varPopStable",
+    # "varSamp",
+    # "varSampStable",
+    # "welchTTest"
+                                           ]
+    
+    test_funcs = [i for i in aggregate_functions]
     for i in not_implemented:
-        if i in aggregate_functions:
-            aggregate_functions.remove(i)
-    for name in aggregate_functions:
+        if i in test_funcs:
+            test_funcs.remove(i)
+    for name in test_funcs:
         try:
             scenario = load(f"aggregate_functions.tests.{name}", "scenario")
         except ModuleNotFoundError as e:
