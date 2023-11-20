@@ -14,7 +14,7 @@ from clickhouse_keeper.tests.steps import *
 
 
 def argparser(parser):
-    """Custom argperser that add --ssl option."""
+    """Custom argparser that adds --ssl option."""
     base_argparser(parser)
 
     parser.add_argument(
