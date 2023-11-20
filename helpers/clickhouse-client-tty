@@ -16,13 +16,12 @@ def clickhouse_client_tty():
 
         try:
             result = client.execute(query)
-
+            print("Output:\n")
             for row in result:
                 print(row)
 
         except Error as e:
-            error = "Exception:\n" + str(e)
-            print(error)
+            print(f"Exception:\n{e}")
 
 
 if __name__ == "__main__":
