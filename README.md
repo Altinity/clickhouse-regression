@@ -61,7 +61,7 @@ curl -SL https://github.com/docker/compose/releases/download/v2.23.1/docker-comp
 
 ### Python modules
 
-To install all necessary Python modules (including [TestFlows] and [Docker Compose]), execute the following command:
+To install all necessary Python modules (including [TestFlows]), execute the following command:
 
 ```bash
 pip3 install -r requirements.txt
