@@ -51,12 +51,13 @@ def from_temporary_to_regular(self):
                 "I check that the data on the destination table's partition was replaced with the data from the "
                 "temporary table"
             ):
-                client.query(f"SELECT * FROM '{source_table}' WHERE p = 1 ORDER BY i")
-                source_data = client.result
-                client.query(
+                source_data = client.query(
+                    f"SELECT * FROM '{source_table}' WHERE p = 1 ORDER BY i"
+                )
+                destination_data = client.query(
                     f"SELECT * FROM '{destination_table}' WHERE p = 1 ORDER BY i"
                 )
-                destination_data = client.result
+
                 assert destination_data.strip() == source_data.strip(), error()
 
 

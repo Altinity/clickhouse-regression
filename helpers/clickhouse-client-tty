@@ -2,7 +2,7 @@
 import sys
 
 from clickhouse_driver import Client
-from clickhouse_driver.errors import Error
+from clickhouse_driver.errors import Error, LogicalError
 
 
 def clickhouse_client_tty():
@@ -21,7 +21,8 @@ def clickhouse_client_tty():
                 print(row)
 
         except Error as e:
-            print(f"{e}")
+            error = "Exception:\n" + str(e)
+            print(error)
 
 
 if __name__ == "__main__":
