@@ -1182,15 +1182,15 @@ class Cluster(object):
                     with Finally("collect service logs"):
                         with Shell() as bash:
                             bash(f"cd {self.docker_compose_project_dir}", timeout=1000)
-                            nodes = bash("docker-compose ps --services").output.split(
-                                "\n"
-                            )
+                            nodes = bash(
+                                f"{self.docker_compose} ps --services"
+                            ).output.split("\n")
                             debug(nodes)
                             for node in nodes:
                                 with By(f"getting log for {node}"):
                                     log_path = f"../_instances"
                                     snode = bash(
-                                        f"docker-compose logs {node} "
+                                        f"{self.docker_compose} logs {node} "
                                         f"> {log_path}/{node}.log",
                                         timeout=1000,
                                     )
@@ -1440,7 +1440,7 @@ def create_cluster(
     collect_service_logs=False,
     configs_dir=None,
     nodes=None,
-    docker_compose="docker-compose",
+    docker_compose="docker-compose --log-level ERROR",
     docker_compose_project_dir=None,
     docker_compose_file="docker-compose.yml",
     environ=None,
