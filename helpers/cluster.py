@@ -1321,6 +1321,9 @@ class Cluster(object):
                         self.command(None, f"{self.docker_compose} ps | tee")
 
                     with And("executing docker-compose up"):
+                        with By("creating a unique builder just in case docker-compose needs to build images"):
+                            self.command(None, f"docker buildx create --use --bootstrap --name builder-{uuid.uuid1()}", exitcode=0)
+
                         for up_attempt in range(max_up_attempts):
                             with By(f"attempt {up_attempt}/{max_up_attempts}"):
                                 cmd = self.command(
