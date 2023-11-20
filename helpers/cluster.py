@@ -809,7 +809,7 @@ class Cluster(object):
         clickhouse_odbc_bridge_binary_path=None,
         configs_dir=None,
         nodes=None,
-        docker_compose="docker-compose",
+        docker_compose="docker-compose --log-level ERROR",
         docker_compose_project_dir=None,
         docker_compose_file="docker-compose.yml",
         environ=None,
