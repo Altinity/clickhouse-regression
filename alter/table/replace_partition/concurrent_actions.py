@@ -1037,10 +1037,7 @@ def one_replace_partition(self):
     ]
 
     for action in actions:
-        Scenario(
-            name=f"{action.__name__}".replace("_", " "),
-            test=concurrent_replace,
-        )(
+        Scenario(name=f"{action.__name__}".replace("_", " "), test=concurrent_replace,)(
             actions=action,
             concurrent_scenario=replace_partition_with_single_concurrent_action,
         )

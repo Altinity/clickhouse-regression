@@ -2,7 +2,7 @@ from helpers.tables import is_numeric
 
 from aggregate_functions.tests.steps import *
 from aggregate_functions.requirements import (
-    RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Histogram
+    RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Histogram,
 )
 
 
@@ -18,19 +18,13 @@ def scenario(self, func="histogram({params})", table=None, decimal=False):
         table = self.context.table
 
     with Check("constant"):
-        execute_query(
-            f"SELECT {func.format(params='5)(1')}"
-        )
+        execute_query(f"SELECT {func.format(params='5)(1')}")
 
     with Check("zero rows"):
-        execute_query(
-            f"SELECT {func.format(params='5)(number')} FROM numbers(0)"
-        )
+        execute_query(f"SELECT {func.format(params='5)(number')} FROM numbers(0)")
 
     with Check("single row"):
-        execute_query(
-            f"SELECT {func.format(params='5)(number')} FROM numbers(1)"
-        )
+        execute_query(f"SELECT {func.format(params='5)(number')} FROM numbers(1)")
 
     with Check("with group by"):
         execute_query(
@@ -66,6 +60,6 @@ def scenario(self, func="histogram({params})", table=None, decimal=False):
             continue
 
         with Check(f"{column_type}"):
-            execute_query(f"SELECT {func.format(params=f'5)({column_name}')} FROM {table.name}")
-    
-
+            execute_query(
+                f"SELECT {func.format(params=f'5)({column_name}')} FROM {table.name}"
+            )
