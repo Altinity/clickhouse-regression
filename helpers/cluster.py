@@ -164,7 +164,7 @@ class Node(object):
 
             query_result = self.command_context.app.child.before
 
-            if query_result.strip().startswith("Exception:"):
+            if not query_result.strip().startswith("Output:"):
                 if exitcode is not None:
                     with Then(
                         f"exitcode should be {exitcode}", format_name=False
