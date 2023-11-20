@@ -21,6 +21,7 @@ on:
           - aes_encryption
           - aggregate_functions
           - atomic_insert
+          - alter
           - base_58
           - benchmark_all
           - benchmark_aws
@@ -871,6 +872,38 @@ jobs:
     env:
       SUITE: lightweight_delete
     if: ${{ inputs.suite == 'all' || inputs.suite == 'lightweight_delete' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Setup
+        run: .github/setup.sh
+
+      - name: Run ${{ env.SUITE }} suite
+        run: python3
+              -u ${{ env.SUITE }}/regression.py
+              --clickhouse-binary-path ${{ env.clickhouse_binary_path }}
+              --clickhouse-version ${{ env.version }}
+              ${{ env.args }}
+
+      - name: Create and upload logs
+        if: always()
+        run: .github/create_and_upload_logs.sh ${{ vars.UPLOAD_LOGS }}
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: ${{ env.SUITE }}-artifacts
+          path: ${{ env.artifact_paths}}
+
+  alter:
+    runs-on: [self-hosted, type-cax41, image-arm-app-docker-ce]
+    timeout-minutes: 300
+    env:
+      SUITE: alter
+    if: ${{ inputs.suite == 'all' || inputs.suite == 'alter' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
