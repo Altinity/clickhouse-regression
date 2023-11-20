@@ -127,7 +127,7 @@ def scenario(self, func="sparkbar({params})", table=None, snapshot_id=None):
 
                         params = f"{col1_name},{col2_name}"
                         self.context.node.query(
-                            f"SELECT {params}, any(toTypeName({col1_name})), any(toTypeName({col2_name})) FROM {table.name} FORMAT CSV"
+                            f"SELECT {params} FROM {table.name} FORMAT CSV"
                         )
                         execute_query(
                             f"SELECT {func.format(params=params)}, any(toTypeName({col1_name})), any(toTypeName({col2_name})) FROM {table.name}"

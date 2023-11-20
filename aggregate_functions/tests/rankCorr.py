@@ -39,7 +39,7 @@ def scenario(self, func="rankCorr({params})", table=None, snapshot_id=None):
     with Check("single row"):
         if "rankCorrState" in func:
             execute_query(
-                f"SELECT {func.format(params='number,number+1')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(1)"
+                f"SELECT {func.format(params='number,number+1')} FROM numbers(1)"
             )
         else:
             execute_query(
