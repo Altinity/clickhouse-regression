@@ -1,97 +1,97 @@
 _aggregate_functions_groupBitAnd_LowCardinality_Nullable_UInt16__ = r"""
-{"groupBitAnd(lowcardinality_nullable_uint16__)":0}
+{"groupBitAnd(lowcardinality_nullable_uint16__)":0,"any(toTypeName(lowcardinality_nullable_uint16__))":"LowCardinality(Nullable(UInt16))"}
 """
 
 _aggregate_functions_groupBitAnd_LowCardinality_Nullable_UInt32__ = r"""
-{"groupBitAnd(lowcardinality_nullable_uint32__)":0}
+{"groupBitAnd(lowcardinality_nullable_uint32__)":0,"any(toTypeName(lowcardinality_nullable_uint32__))":"LowCardinality(Nullable(UInt32))"}
 """
 
 _aggregate_functions_groupBitAnd_LowCardinality_Nullable_UInt64__ = r"""
-{"groupBitAnd(lowcardinality_nullable_uint64__)":"0"}
+{"groupBitAnd(lowcardinality_nullable_uint64__)":"0","any(toTypeName(lowcardinality_nullable_uint64__))":"LowCardinality(Nullable(UInt64))"}
 """
 
 _aggregate_functions_groupBitAnd_LowCardinality_Nullable_UInt8__ = r"""
-{"groupBitAnd(lowcardinality_nullable_uint8__)":0}
+{"groupBitAnd(lowcardinality_nullable_uint8__)":0,"any(toTypeName(lowcardinality_nullable_uint8__))":"LowCardinality(Nullable(UInt8))"}
 """
 
 _aggregate_functions_groupBitAnd_LowCardinality_UInt16_ = r"""
-{"groupBitAnd(lowcardinality_uint16_)":0}
+{"groupBitAnd(lowcardinality_uint16_)":0,"any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_groupBitAnd_LowCardinality_UInt32_ = r"""
-{"groupBitAnd(lowcardinality_uint32_)":0}
+{"groupBitAnd(lowcardinality_uint32_)":0,"any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_groupBitAnd_LowCardinality_UInt64_ = r"""
-{"groupBitAnd(lowcardinality_uint64_)":"0"}
+{"groupBitAnd(lowcardinality_uint64_)":"0","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_groupBitAnd_LowCardinality_UInt8_ = r"""
-{"groupBitAnd(lowcardinality_uint8_)":0}
+{"groupBitAnd(lowcardinality_uint8_)":0,"any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_groupBitAnd_NULL_value_handling = r"""
-{"groupBitAnd(x)":0}
+{"groupBitAnd(x)":0,"any(toTypeName(x))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_groupBitAnd_Nullable_UInt16_ = r"""
-{"groupBitAnd(nullable_uint16_)":0}
+{"groupBitAnd(nullable_uint16_)":0,"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_groupBitAnd_Nullable_UInt32_ = r"""
-{"groupBitAnd(nullable_uint32_)":0}
+{"groupBitAnd(nullable_uint32_)":0,"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_groupBitAnd_Nullable_UInt64_ = r"""
-{"groupBitAnd(nullable_uint64_)":"0"}
+{"groupBitAnd(nullable_uint64_)":"0","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_groupBitAnd_Nullable_UInt8_ = r"""
-{"groupBitAnd(nullable_uint8_)":0}
+{"groupBitAnd(nullable_uint8_)":0,"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_groupBitAnd_UInt16 = r"""
-{"groupBitAnd(uint16)":0}
+{"groupBitAnd(uint16)":0,"any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_groupBitAnd_UInt32 = r"""
-{"groupBitAnd(uint32)":0}
+{"groupBitAnd(uint32)":0,"any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_groupBitAnd_UInt64 = r"""
-{"groupBitAnd(uint64)":"0"}
+{"groupBitAnd(uint64)":"0","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_groupBitAnd_UInt8 = r"""
-{"groupBitAnd(uint8)":0}
+{"groupBitAnd(uint8)":0,"any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_groupBitAnd_constant = r"""
-{"groupBitAnd(1)":1}
+{"groupBitAnd(1)":1,"any(toTypeName(1))":"UInt8"}
 """
 
 _aggregate_functions_groupBitAnd_doc_example = r"""
-{"groupBitAnd(x)":0}
+{"groupBitAnd(x)":0,"any(toTypeName(x))":"UInt8"}
 """
 
 _aggregate_functions_groupBitAnd_return_type = r"""
-{"toTypeName(groupBitAnd(number))":"UInt64"}
+{"toTypeName(groupBitAnd(number))":"UInt64","any(toTypeName(number))":"UInt64"}
 """
 
 _aggregate_functions_groupBitAnd_single_NULL_value = r"""
-{"groupBitAnd(x)":null}
+{"groupBitAnd(x)":null,"any(toTypeName(x))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_groupBitAnd_single_row = r"""
-{"groupBitAnd(number)":"0"}
+{"groupBitAnd(number)":"0","any(toTypeName(number))":"UInt64"}
 """
 
 _aggregate_functions_groupBitAnd_with_group_by = r"""
-{"even":0,"groupBitAnd(number)":"0"}
-{"even":1,"groupBitAnd(number)":"1"}
+{"even":0,"groupBitAnd(number)":"0","any(toTypeName(number))":"UInt64"}
+{"even":1,"groupBitAnd(number)":"1","any(toTypeName(number))":"UInt64"}
 """
 
 _aggregate_functions_groupBitAnd_zero_rows = r"""
-{"groupBitAnd(number)":"18446744073709551615"}
+{"groupBitAnd(number)":"18446744073709551615","any(toTypeName(number))":""}
 """
 

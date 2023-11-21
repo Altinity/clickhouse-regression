@@ -15,7 +15,7 @@ from aggregate_functions.tests.first_value import scenario as checks
 )
 def scenario(self, func="singleValueOrNull({params})", table=None, snapshot_id=None):
     """Check singleValueOrNull aggregate function by using the same tests as for first_value."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id, clickhouse_version=">=23.2")
 
     if 'Merge' in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")

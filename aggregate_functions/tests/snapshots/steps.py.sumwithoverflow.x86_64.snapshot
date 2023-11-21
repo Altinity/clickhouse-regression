@@ -1,229 +1,229 @@
 _aggregate_functions_sumWithOverflow_Decimal128_38_ = r"""
-{"sumWithOverflow(decimal128_38_)":-0.21468242760669401198252549218687803904}
+{"sumWithOverflow(decimal128_38_)":-0.21468242760669401198252549218687803904,"any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
 """
 
 _aggregate_functions_sumWithOverflow_Float32 = r"""
-{"sumWithOverflow(float32)":null}
+{"sumWithOverflow(float32)":null,"any(toTypeName(float32))":"Float32"}
 """
 
 _aggregate_functions_sumWithOverflow_Float64 = r"""
-{"sumWithOverflow(float64)":-1.46719343084824e307}
+{"sumWithOverflow(float64)":-1.46719343084824e307,"any(toTypeName(float64))":"Float64"}
 """
 
 _aggregate_functions_sumWithOverflow_Int128 = r"""
-{"sumWithOverflow(int128)":"-143318159333516415735069832817985812608"}
+{"sumWithOverflow(int128)":"-143318159333516415735069832817985812608","any(toTypeName(int128))":"Int128"}
 """
 
 _aggregate_functions_sumWithOverflow_Int16 = r"""
-{"sumWithOverflow(int16)":-2464}
+{"sumWithOverflow(int16)":-2464,"any(toTypeName(int16))":"Int16"}
 """
 
 _aggregate_functions_sumWithOverflow_Int32 = r"""
-{"sumWithOverflow(int32)":-180045811}
+{"sumWithOverflow(int32)":-180045811,"any(toTypeName(int32))":"Int32"}
 """
 
 _aggregate_functions_sumWithOverflow_Int64 = r"""
-{"sumWithOverflow(int64)":"-8799195370699285409"}
+{"sumWithOverflow(int64)":"-8799195370699285409","any(toTypeName(int64))":"Int64"}
 """
 
 _aggregate_functions_sumWithOverflow_Int8 = r"""
-{"sumWithOverflow(int8)":51}
+{"sumWithOverflow(int8)":51,"any(toTypeName(int8))":"Int8"}
 """
 
 _aggregate_functions_sumWithOverflow_LowCardinality_Float32_ = r"""
-{"sumWithOverflow(lowcardinality_float32_)":null}
+{"sumWithOverflow(lowcardinality_float32_)":null,"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
 """
 
 _aggregate_functions_sumWithOverflow_LowCardinality_Float64_ = r"""
-{"sumWithOverflow(lowcardinality_float64_)":2.3539363430883252e260}
+{"sumWithOverflow(lowcardinality_float64_)":2.3539363430883252e260,"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)"}
 """
 
 _aggregate_functions_sumWithOverflow_LowCardinality_Int128_ = r"""
-{"sumWithOverflow(lowcardinality_int128_)":"65191541690399068780133307877405979904"}
+{"sumWithOverflow(lowcardinality_int128_)":"65191541690399068780133307877405979904","any(toTypeName(lowcardinality_int128_))":"LowCardinality(Int128)"}
 """
 
 _aggregate_functions_sumWithOverflow_LowCardinality_Int16_ = r"""
-{"sumWithOverflow(lowcardinality_int16_)":17437}
+{"sumWithOverflow(lowcardinality_int16_)":17437,"any(toTypeName(lowcardinality_int16_))":"LowCardinality(Int16)"}
 """
 
 _aggregate_functions_sumWithOverflow_LowCardinality_Int32_ = r"""
-{"sumWithOverflow(lowcardinality_int32_)":-1592576550}
+{"sumWithOverflow(lowcardinality_int32_)":-1592576550,"any(toTypeName(lowcardinality_int32_))":"LowCardinality(Int32)"}
 """
 
 _aggregate_functions_sumWithOverflow_LowCardinality_Int64_ = r"""
-{"sumWithOverflow(lowcardinality_int64_)":"-2335589518567405757"}
+{"sumWithOverflow(lowcardinality_int64_)":"-2335589518567405757","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
 """
 
 _aggregate_functions_sumWithOverflow_LowCardinality_Int8_ = r"""
-{"sumWithOverflow(lowcardinality_int8_)":-65}
+{"sumWithOverflow(lowcardinality_int8_)":-65,"any(toTypeName(lowcardinality_int8_))":"LowCardinality(Int8)"}
 """
 
 _aggregate_functions_sumWithOverflow_LowCardinality_Nullable_Float32__ = r"""
-{"sumWithOverflow(lowcardinality_nullable_float32__)":2.3633356e38}
+{"sumWithOverflow(lowcardinality_nullable_float32__)":2.3633356e38,"any(toTypeName(lowcardinality_nullable_float32__))":"LowCardinality(Nullable(Float32))"}
 """
 
 _aggregate_functions_sumWithOverflow_LowCardinality_Nullable_Float64__ = r"""
-{"sumWithOverflow(lowcardinality_nullable_float64__)":4.432329389190783e298}
+{"sumWithOverflow(lowcardinality_nullable_float64__)":4.432329389190783e298,"any(toTypeName(lowcardinality_nullable_float64__))":"LowCardinality(Nullable(Float64))"}
 """
 
 _aggregate_functions_sumWithOverflow_LowCardinality_Nullable_Int128__ = r"""
-{"sumWithOverflow(lowcardinality_nullable_int128__)":"-162835140721258646040745804746734358528"}
+{"sumWithOverflow(lowcardinality_nullable_int128__)":"-162835140721258646040745804746734358528","any(toTypeName(lowcardinality_nullable_int128__))":"LowCardinality(Nullable(Int128))"}
 """
 
 _aggregate_functions_sumWithOverflow_LowCardinality_Nullable_Int16__ = r"""
-{"sumWithOverflow(lowcardinality_nullable_int16__)":29043}
+{"sumWithOverflow(lowcardinality_nullable_int16__)":29043,"any(toTypeName(lowcardinality_nullable_int16__))":"LowCardinality(Nullable(Int16))"}
 """
 
 _aggregate_functions_sumWithOverflow_LowCardinality_Nullable_Int32__ = r"""
-{"sumWithOverflow(lowcardinality_nullable_int32__)":-570614278}
+{"sumWithOverflow(lowcardinality_nullable_int32__)":-570614278,"any(toTypeName(lowcardinality_nullable_int32__))":"LowCardinality(Nullable(Int32))"}
 """
 
 _aggregate_functions_sumWithOverflow_LowCardinality_Nullable_Int64__ = r"""
-{"sumWithOverflow(lowcardinality_nullable_int64__)":"-4055992635541734030"}
+{"sumWithOverflow(lowcardinality_nullable_int64__)":"-4055992635541734030","any(toTypeName(lowcardinality_nullable_int64__))":"LowCardinality(Nullable(Int64))"}
 """
 
 _aggregate_functions_sumWithOverflow_LowCardinality_Nullable_Int8__ = r"""
-{"sumWithOverflow(lowcardinality_nullable_int8__)":96}
+{"sumWithOverflow(lowcardinality_nullable_int8__)":96,"any(toTypeName(lowcardinality_nullable_int8__))":"LowCardinality(Nullable(Int8))"}
 """
 
 _aggregate_functions_sumWithOverflow_LowCardinality_Nullable_UInt128__ = r"""
-{"sumWithOverflow(lowcardinality_nullable_uint128__)":"123936326993767275514316256134489128701"}
+{"sumWithOverflow(lowcardinality_nullable_uint128__)":"123936326993767275514316256134489128701","any(toTypeName(lowcardinality_nullable_uint128__))":"LowCardinality(Nullable(UInt128))"}
 """
 
 _aggregate_functions_sumWithOverflow_LowCardinality_Nullable_UInt16__ = r"""
-{"sumWithOverflow(lowcardinality_nullable_uint16__)":47796}
+{"sumWithOverflow(lowcardinality_nullable_uint16__)":47796,"any(toTypeName(lowcardinality_nullable_uint16__))":"LowCardinality(Nullable(UInt16))"}
 """
 
 _aggregate_functions_sumWithOverflow_LowCardinality_Nullable_UInt32__ = r"""
-{"sumWithOverflow(lowcardinality_nullable_uint32__)":1577861584}
+{"sumWithOverflow(lowcardinality_nullable_uint32__)":1577861584,"any(toTypeName(lowcardinality_nullable_uint32__))":"LowCardinality(Nullable(UInt32))"}
 """
 
 _aggregate_functions_sumWithOverflow_LowCardinality_Nullable_UInt64__ = r"""
-{"sumWithOverflow(lowcardinality_nullable_uint64__)":"4529534376217169885"}
+{"sumWithOverflow(lowcardinality_nullable_uint64__)":"4529534376217169885","any(toTypeName(lowcardinality_nullable_uint64__))":"LowCardinality(Nullable(UInt64))"}
 """
 
 _aggregate_functions_sumWithOverflow_LowCardinality_Nullable_UInt8__ = r"""
-{"sumWithOverflow(lowcardinality_nullable_uint8__)":54}
+{"sumWithOverflow(lowcardinality_nullable_uint8__)":54,"any(toTypeName(lowcardinality_nullable_uint8__))":"LowCardinality(Nullable(UInt8))"}
 """
 
 _aggregate_functions_sumWithOverflow_LowCardinality_UInt128_ = r"""
-{"sumWithOverflow(lowcardinality_uint128_)":"212006083852933915417284501929868235517"}
+{"sumWithOverflow(lowcardinality_uint128_)":"212006083852933915417284501929868235517","any(toTypeName(lowcardinality_uint128_))":"LowCardinality(UInt128)"}
 """
 
 _aggregate_functions_sumWithOverflow_LowCardinality_UInt16_ = r"""
-{"sumWithOverflow(lowcardinality_uint16_)":64928}
+{"sumWithOverflow(lowcardinality_uint16_)":64928,"any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_sumWithOverflow_LowCardinality_UInt32_ = r"""
-{"sumWithOverflow(lowcardinality_uint32_)":4030831310}
+{"sumWithOverflow(lowcardinality_uint32_)":4030831310,"any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_sumWithOverflow_LowCardinality_UInt64_ = r"""
-{"sumWithOverflow(lowcardinality_uint64_)":"16998933095029676984"}
+{"sumWithOverflow(lowcardinality_uint64_)":"16998933095029676984","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_sumWithOverflow_LowCardinality_UInt8_ = r"""
-{"sumWithOverflow(lowcardinality_uint8_)":237}
+{"sumWithOverflow(lowcardinality_uint8_)":237,"any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_sumWithOverflow_Nullable_Decimal128_38__ = r"""
-{"sumWithOverflow(nullable_decimal128_38__)":1.35440455825179711885689928087407595392}
+{"sumWithOverflow(nullable_decimal128_38__)":1.35440455825179711885689928087407595392,"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
 """
 
 _aggregate_functions_sumWithOverflow_Nullable_Float32_ = r"""
-{"sumWithOverflow(nullable_float32_)":null}
+{"sumWithOverflow(nullable_float32_)":null,"any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
 """
 
 _aggregate_functions_sumWithOverflow_Nullable_Float64_ = r"""
-{"sumWithOverflow(nullable_float64_)":-6.104555798918726e300}
+{"sumWithOverflow(nullable_float64_)":-6.104555798918726e300,"any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
 """
 
 _aggregate_functions_sumWithOverflow_Nullable_Int128_ = r"""
-{"sumWithOverflow(nullable_int128_)":"-118457979606383258691787766660598191616"}
+{"sumWithOverflow(nullable_int128_)":"-118457979606383258691787766660598191616","any(toTypeName(nullable_int128_))":"Nullable(Int128)"}
 """
 
 _aggregate_functions_sumWithOverflow_Nullable_Int16_ = r"""
-{"sumWithOverflow(nullable_int16_)":-26631}
+{"sumWithOverflow(nullable_int16_)":-26631,"any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
 """
 
 _aggregate_functions_sumWithOverflow_Nullable_Int32_ = r"""
-{"sumWithOverflow(nullable_int32_)":68637007}
+{"sumWithOverflow(nullable_int32_)":68637007,"any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
 """
 
 _aggregate_functions_sumWithOverflow_Nullable_Int64_ = r"""
-{"sumWithOverflow(nullable_int64_)":"3971456529792613218"}
+{"sumWithOverflow(nullable_int64_)":"3971456529792613218","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
 """
 
 _aggregate_functions_sumWithOverflow_Nullable_Int8_ = r"""
-{"sumWithOverflow(nullable_int8_)":17}
+{"sumWithOverflow(nullable_int8_)":17,"any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
 """
 
 _aggregate_functions_sumWithOverflow_Nullable_UInt128_ = r"""
-{"sumWithOverflow(nullable_uint128_)":"63964592011597478689732996105647311870"}
+{"sumWithOverflow(nullable_uint128_)":"63964592011597478689732996105647311870","any(toTypeName(nullable_uint128_))":"Nullable(UInt128)"}
 """
 
 _aggregate_functions_sumWithOverflow_Nullable_UInt16_ = r"""
-{"sumWithOverflow(nullable_uint16_)":42724}
+{"sumWithOverflow(nullable_uint16_)":42724,"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_sumWithOverflow_Nullable_UInt32_ = r"""
-{"sumWithOverflow(nullable_uint32_)":2094469710}
+{"sumWithOverflow(nullable_uint32_)":2094469710,"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_sumWithOverflow_Nullable_UInt64_ = r"""
-{"sumWithOverflow(nullable_uint64_)":"11096315630564658116"}
+{"sumWithOverflow(nullable_uint64_)":"11096315630564658116","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_sumWithOverflow_Nullable_UInt8_ = r"""
-{"sumWithOverflow(nullable_uint8_)":28}
+{"sumWithOverflow(nullable_uint8_)":28,"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_sumWithOverflow_UInt128 = r"""
-{"sumWithOverflow(uint128)":"21297583348677270895397293902423521533"}
+{"sumWithOverflow(uint128)":"21297583348677270895397293902423521533","any(toTypeName(uint128))":"UInt128"}
 """
 
 _aggregate_functions_sumWithOverflow_UInt16 = r"""
-{"sumWithOverflow(uint16)":56955}
+{"sumWithOverflow(uint16)":56955,"any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_sumWithOverflow_UInt32 = r"""
-{"sumWithOverflow(uint32)":1820801551}
+{"sumWithOverflow(uint32)":1820801551,"any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_sumWithOverflow_UInt64 = r"""
-{"sumWithOverflow(uint64)":"15750476061942512782"}
+{"sumWithOverflow(uint64)":"15750476061942512782","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_sumWithOverflow_UInt8 = r"""
-{"sumWithOverflow(uint8)":13}
+{"sumWithOverflow(uint8)":13,"any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_sumWithOverflow__inf = r"""
-{"sumWithOverflow(x)":null}
+{"sumWithOverflow(x)":null,"any(toTypeName(x))":"Float64"}
 """
 
 _aggregate_functions_sumWithOverflow_constant = r"""
-{"sumWithOverflow(1)":1}
+{"sumWithOverflow(1)":1,"any(toTypeName(1))":"UInt8"}
 """
 
 _aggregate_functions_sumWithOverflow_inf = r"""
-{"sumWithOverflow(x)":null}
+{"sumWithOverflow(x)":null,"any(toTypeName(x))":"Float64"}
 """
 
 _aggregate_functions_sumWithOverflow_inf___inf__nan = r"""
-{"sumWithOverflow(x)":null}
+{"sumWithOverflow(x)":null,"any(toTypeName(x))":"Float64"}
 """
 
 _aggregate_functions_sumWithOverflow_nan = r"""
-{"sumWithOverflow(x)":null}
+{"sumWithOverflow(x)":null,"any(toTypeName(x))":"Float64"}
 """
 
 _aggregate_functions_sumWithOverflow_with_group_by = r"""
-{"even":0,"sumWithOverflow(number)":"20"}
-{"even":1,"sumWithOverflow(number)":"25"}
+{"even":0,"sumWithOverflow(number)":"20","any(toTypeName(number))":"UInt64"}
+{"even":1,"sumWithOverflow(number)":"25","any(toTypeName(number))":"UInt64"}
 """
 
 _aggregate_functions_sumWithOverflow_zero_rows = r"""
-{"sumWithOverflow(number)":"0"}
+{"sumWithOverflow(number)":"0","any(toTypeName(number))":""}
 """
 

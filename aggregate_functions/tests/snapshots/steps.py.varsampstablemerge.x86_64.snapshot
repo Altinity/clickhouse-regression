@@ -1,0 +1,208 @@
+_aggregate_functions_merge_varSampStableMerge_Float32_0 = r"""
+{"varSampStableMerge(state)":4.753148273039948e76}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_Float64_0 = r"""
+{"varSampStableMerge(state)":null}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_Int16_0 = r"""
+{"varSampStableMerge(state)":465950954.26666665}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_Int32_0 = r"""
+{"varSampStableMerge(state)":1956237254597266200}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_Int64_0 = r"""
+{"varSampStableMerge(state)":2.6172275280550316e37}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_Int8_0 = r"""
+{"varSampStableMerge(state)":9785.211111111112}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_LowCardinality_Float32__0 = r"""
+{"varSampStableMerge(state)":4.470553228313205e76}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_LowCardinality_Float64__0 = r"""
+{"varSampStableMerge(state)":null}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_LowCardinality_Int16__0 = r"""
+{"varSampStableMerge(state)":641180272.4555554}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_LowCardinality_Int32__0 = r"""
+{"varSampStableMerge(state)":2341893564270794000}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_LowCardinality_Int64__0 = r"""
+{"varSampStableMerge(state)":4.0244206457785223e37}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_LowCardinality_Int8__0 = r"""
+{"varSampStableMerge(state)":8178.099999999998}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_LowCardinality_Nullable_Float32___0 = r"""
+{"varSampStableMerge(state)":5.7537985878728904e76}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_LowCardinality_Nullable_Float64___0 = r"""
+{"varSampStableMerge(state)":null}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_LowCardinality_Nullable_Int16___0 = r"""
+{"varSampStableMerge(state)":522220427.6944444}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_LowCardinality_Nullable_Int32___0 = r"""
+{"varSampStableMerge(state)":2130699543555116000}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_LowCardinality_Nullable_Int64___0 = r"""
+{"varSampStableMerge(state)":4.873872823051751e37}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_LowCardinality_Nullable_Int8___0 = r"""
+{"varSampStableMerge(state)":10476.25}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_LowCardinality_Nullable_UInt16___0 = r"""
+{"varSampStableMerge(state)":663086882}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_LowCardinality_Nullable_UInt32___0 = r"""
+{"varSampStableMerge(state)":1994242225931413800}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_LowCardinality_Nullable_UInt64___0 = r"""
+{"varSampStableMerge(state)":5.404853286756676e37}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_LowCardinality_Nullable_UInt8___0 = r"""
+{"varSampStableMerge(state)":6076.944444444445}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_LowCardinality_UInt16__0 = r"""
+{"varSampStableMerge(state)":682776247.2888888}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_LowCardinality_UInt32__0 = r"""
+{"varSampStableMerge(state)":2519504346202356700}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_LowCardinality_UInt64__0 = r"""
+{"varSampStableMerge(state)":6.106099984901517e37}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_LowCardinality_UInt8__0 = r"""
+{"varSampStableMerge(state)":10964.233333333332}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_NULL_value_handling_0 = r"""
+{"varSampStableMerge(state)":4.3}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_Nullable_Float32__0 = r"""
+{"varSampStableMerge(state)":5.2070150450176004e76}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_Nullable_Float64__0 = r"""
+{"varSampStableMerge(state)":null}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_Nullable_Int16__0 = r"""
+{"varSampStableMerge(state)":484412203.00000006}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_Nullable_Int32__0 = r"""
+{"varSampStableMerge(state)":2025315198059468300}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_Nullable_Int64__0 = r"""
+{"varSampStableMerge(state)":4.59422111959154e37}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_Nullable_Int8__0 = r"""
+{"varSampStableMerge(state)":8025.11111111111}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_Nullable_UInt16__0 = r"""
+{"varSampStableMerge(state)":526659887.6944444}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_Nullable_UInt32__0 = r"""
+{"varSampStableMerge(state)":2768505643292548000}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_Nullable_UInt64__0 = r"""
+{"varSampStableMerge(state)":5.531330136237475e37}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_Nullable_UInt8__0 = r"""
+{"varSampStableMerge(state)":10356.361111111111}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_UInt16_0 = r"""
+{"varSampStableMerge(state)":482409000.8999999}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_UInt32_0 = r"""
+{"varSampStableMerge(state)":2391595327635974700}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_UInt64_0 = r"""
+{"varSampStableMerge(state)":5.570365530815549e37}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_UInt8_0 = r"""
+{"varSampStableMerge(state)":8772.011111111111}
+"""
+
+_aggregate_functions_merge_varSampStableMerge__inf_0 = r"""
+{"varSampStableMerge(state)":null}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_constant_0 = r"""
+{"varSampStableMerge(state)":null}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_doc_example_0 = r"""
+{"varSampStableMerge(state)":3.5}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_inf_0 = r"""
+{"varSampStableMerge(state)":null}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_inf___inf__nan_0 = r"""
+{"varSampStableMerge(state)":null}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_nan_0 = r"""
+{"varSampStableMerge(state)":null}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_single_NULL_value_0 = r"""
+{"varSampStableMerge(state)":null}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_single_row_0 = r"""
+{"varSampStableMerge(state)":null}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_some_negative_values_0 = r"""
+{"varSampStableMerge(state)":9.166666666666666}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_with_group_by_0 = r"""
+{"varSampStableMerge(state)":10}
+"""
+
+_aggregate_functions_merge_varSampStableMerge_with_group_by_1 = r"""
+{"varSampStableMerge(state)":10}
+"""
+
