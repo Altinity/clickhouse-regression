@@ -1,3 +1,4 @@
+import time
 from helpers.common import getuid
 from clickhouse_keeper.requirements import *
 from clickhouse_keeper.tests.steps import *
@@ -60,13 +61,28 @@ def daemon(self, node=None):
     node = self.context.node if node is None else node
     pidfilepath = f"/tmp/clickhouse-keeper-{getuid()}.pid"
     try:
+        with Given("I create server Keeper config"):
+            create_config_section(
+                check_preprocessed=False,
+                restart=False,
+                modify=True,
+            )
+        with And("I create Keeper server config file"):
+            create_keeper_cluster_configuration(
+                check_preprocessed=False,
+                restart=False,
+                modify=True,
+            )
+
         with When("I start `clickhouse-keeper` cluster with --daemon option."):
             with By("starting keeper process"):
                 node.command(
-                    "clickhouse keeper --config /etc/clickhouse-keeper/config.xml"
+                    "clickhouse keeper --config /etc/clickhouse-server/config.xml"
                     f" --pidfile={pidfilepath} --daemon",
                     exitcode=0,
                 )
+                # avoid race condition in below assertions if the program crashes right away
+                time.sleep(0.05)
                 with And("checking that keeper pid file was created"):
                     node.command(
                         f"ls {pidfilepath}",
