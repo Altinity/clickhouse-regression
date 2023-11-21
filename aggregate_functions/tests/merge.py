@@ -194,8 +194,6 @@ def feature(self):
         if i in test_funcs:
             test_funcs.remove(i)
 
-    note(test_funcs)
-    pause()
     for name in test_funcs:
         try:
             scenario = load(f"aggregate_functions.tests.{name}", "scenario")
