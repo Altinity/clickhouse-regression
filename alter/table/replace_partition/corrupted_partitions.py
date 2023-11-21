@@ -24,31 +24,6 @@ def corrupt_parts_on_table_partition(self, table_name, parts, bits_to_corrupt=15
             )
 
 
-@TestStep(When)
-def corrupt_one_part(self, table_name):
-    """Corrupt a single part of the partition."""
-    corrupt_parts_on_table_partition(table_name=table_name, parts=one_part)
-
-
-@TestStep(When)
-def corrupt_multiple_parts(self, table_name):
-    """Corrupt multiple parts of the partition."""
-    corrupt_parts_on_table_partition(table_name=table_name, parts=multiple_parts)
-
-
-@TestStep(When)
-def corrupt_all_parts(self, table_name):
-    """Corrupt all parts of the partition."""
-    corrupt_parts_on_table_partition(table_name=table_name, parts=all_parts)
-
-
-@TestStep(When)
-def corrupt_no_parts(self, table_name):
-    """Corrupt no parts of the partition."""
-    with By(f"not corrupting a {table_name} table"):
-        note(f"{table_name} is not corrupted")
-
-
 @TestCheck
 def replace_with_corrupted_parts(self, corrupt_destination, corrupt_source):
     """Replace partition when parts on one of the tables are corrupted."""
@@ -109,6 +84,31 @@ def replace_with_corrupted_parts(self, corrupt_destination, corrupt_source):
                     parts_before_replace.output.strip()
                     != parts_after_replace.output.strip()
                 ), error()
+
+
+@TestStep(When)
+def corrupt_one_part(self, table_name):
+    """Corrupt a single part of the partition."""
+    corrupt_parts_on_table_partition(table_name=table_name, parts=one_part)
+
+
+@TestStep(When)
+def corrupt_multiple_parts(self, table_name):
+    """Corrupt multiple parts of the partition."""
+    corrupt_parts_on_table_partition(table_name=table_name, parts=multiple_parts)
+
+
+@TestStep(When)
+def corrupt_all_parts(self, table_name):
+    """Corrupt all parts of the partition."""
+    corrupt_parts_on_table_partition(table_name=table_name, parts=all_parts)
+
+
+@TestStep(When)
+def corrupt_no_parts(self, table_name):
+    """Corrupt no parts of the partition."""
+    with By(f"not corrupting a {table_name} table"):
+        note(f"{table_name} is not corrupted")
 
 
 @TestSketch(Scenario)
