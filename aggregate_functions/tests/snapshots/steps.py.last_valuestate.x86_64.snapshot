@@ -326,6 +326,10 @@ _aggregate_functions_state_last_valueState_DateTime = r"""
 {"hex(last_valueState(datetime))":"01EAFA2A5E","any(toTypeName(datetime))":"DateTime"}
 """
 
+_aggregate_functions_state_last_valueState_DateTime64_3_ = r"""
+{"hex(last_valueState(datetime64_3_))":"01F8F692075C010000","any(toTypeName(datetime64_3_))":"DateTime64(3)"}
+"""
+
 _aggregate_functions_state_last_valueState_DateTime64_3___22_8 = r"""
 {"hex(last_valueState(datetime64_3_))":"01F8F692075C010000","any(toTypeName(datetime64_3_))":"DateTime64(3)"}
 """
@@ -516,6 +520,10 @@ _aggregate_functions_state_last_valueState_Map_Bool_Array_String__ = r"""
 
 _aggregate_functions_state_last_valueState_Map_Bool_Bool_ = r"""
 {"hex(last_valueState(map_bool_bool_))":"01010000","any(toTypeName(map_bool_bool_))":"Map(Bool, Bool)"}
+"""
+
+_aggregate_functions_state_last_valueState_Map_Bool_DateTime64_3__ = r"""
+{"hex(last_valueState(map_bool_datetime64_3__))":"010100A082817846010000","any(toTypeName(map_bool_datetime64_3__))":"Map(Bool, DateTime64(3))"}
 """
 
 _aggregate_functions_state_last_valueState_Map_Bool_DateTime64_3____22_8 = r"""
@@ -718,6 +726,10 @@ _aggregate_functions_state_last_valueState_Map_Bool_Nullable_Bool__ = r"""
 {"hex(last_valueState(map_bool_nullable_bool__))":"0101000000","any(toTypeName(map_bool_nullable_bool__))":"Map(Bool, Nullable(Bool))"}
 """
 
+_aggregate_functions_state_last_valueState_Map_Bool_Nullable_DateTime64_3___ = r"""
+{"hex(last_valueState(map_bool_nullable_datetime64_3___))":"01010100C028477D10010000","any(toTypeName(map_bool_nullable_datetime64_3___))":"Map(Bool, Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_state_last_valueState_Map_Bool_Nullable_DateTime64_3_____22_8 = r"""
 {"hex(last_valueState(map_bool_nullable_datetime64_3___))":"01010100C028477D10010000","any(toTypeName(map_bool_nullable_datetime64_3___))":"Map(Bool, Nullable(DateTime64(3)))"}
 """
@@ -832,6 +844,10 @@ _aggregate_functions_state_last_valueState_Map_DateTime_Array_String__ = r"""
 
 _aggregate_functions_state_last_valueState_Map_DateTime_Bool_ = r"""
 {"hex(last_valueState(map_datetime_bool_))":"010155D9BB4B00","any(toTypeName(map_datetime_bool_))":"Map(DateTime, Bool)"}
+"""
+
+_aggregate_functions_state_last_valueState_Map_DateTime_DateTime64_3__ = r"""
+{"hex(last_valueState(map_datetime_datetime64_3__))":"010162478545E825BC4161010000","any(toTypeName(map_datetime_datetime64_3__))":"Map(DateTime, DateTime64(3))"}
 """
 
 _aggregate_functions_state_last_valueState_Map_DateTime_DateTime64_3____22_8 = r"""
@@ -1034,6 +1050,10 @@ _aggregate_functions_state_last_valueState_Map_DateTime_Nullable_Bool__ = r"""
 {"hex(last_valueState(map_datetime_nullable_bool__))":"0101C67BBF560000","any(toTypeName(map_datetime_nullable_bool__))":"Map(DateTime, Nullable(Bool))"}
 """
 
+_aggregate_functions_state_last_valueState_Map_DateTime_Nullable_DateTime64_3___ = r"""
+{"hex(last_valueState(map_datetime_nullable_datetime64_3___))":"01012588114900404E195269010000","any(toTypeName(map_datetime_nullable_datetime64_3___))":"Map(DateTime, Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_state_last_valueState_Map_DateTime_Nullable_DateTime64_3_____22_8 = r"""
 {"hex(last_valueState(map_datetime_nullable_datetime64_3___))":"01012588114900404E195269010000","any(toTypeName(map_datetime_nullable_datetime64_3___))":"Map(DateTime, Nullable(DateTime64(3)))"}
 """
@@ -1148,6 +1168,10 @@ _aggregate_functions_state_last_valueState_Map_Date_Array_String__ = r"""
 
 _aggregate_functions_state_last_valueState_Map_Date_Bool_ = r"""
 {"hex(last_valueState(map_date_bool_))":"0101D84400","any(toTypeName(map_date_bool_))":"Map(Date, Bool)"}
+"""
+
+_aggregate_functions_state_last_valueState_Map_Date_DateTime64_3__ = r"""
+{"hex(last_valueState(map_date_datetime64_3__))":"01012A44A0448AD550010000","any(toTypeName(map_date_datetime64_3__))":"Map(Date, DateTime64(3))"}
 """
 
 _aggregate_functions_state_last_valueState_Map_Date_DateTime64_3____22_8 = r"""
@@ -1350,6 +1374,10 @@ _aggregate_functions_state_last_valueState_Map_Date_Nullable_Bool__ = r"""
 {"hex(last_valueState(map_date_nullable_bool__))":"0101B4400000","any(toTypeName(map_date_nullable_bool__))":"Map(Date, Nullable(Bool))"}
 """
 
+_aggregate_functions_state_last_valueState_Map_Date_Nullable_DateTime64_3___ = r"""
+{"hex(last_valueState(map_date_nullable_datetime64_3___))":"0101E33200C8F14F054A010000","any(toTypeName(map_date_nullable_datetime64_3___))":"Map(Date, Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_state_last_valueState_Map_Date_Nullable_DateTime64_3_____22_8 = r"""
 {"hex(last_valueState(map_date_nullable_datetime64_3___))":"0101E33200C8F14F054A010000","any(toTypeName(map_date_nullable_datetime64_3___))":"Map(Date, Nullable(DateTime64(3)))"}
 """
@@ -1464,6 +1492,10 @@ _aggregate_functions_state_last_valueState_Map_FixedString_51__Array_String__ = 
 
 _aggregate_functions_state_last_valueState_Map_FixedString_51__Bool_ = r"""
 {"hex(last_valueState(map_fixedstring_51__bool_))":"010176767676767676767676767676000000000000000000000000000000000000000000000000000000000000000000000000000001","any(toTypeName(map_fixedstring_51__bool_))":"Map(FixedString(51), Bool)"}
+"""
+
+_aggregate_functions_state_last_valueState_Map_FixedString_51__DateTime64_3__ = r"""
+{"hex(last_valueState(map_fixedstring_51__datetime64_3__))":"0101757575757575757575757575757575757575757575757575757500000000000000000000000000000000000000000000000000789A53A24B010000","any(toTypeName(map_fixedstring_51__datetime64_3__))":"Map(FixedString(51), DateTime64(3))"}
 """
 
 _aggregate_functions_state_last_valueState_Map_FixedString_51__DateTime64_3____22_8 = r"""
@@ -1666,6 +1698,10 @@ _aggregate_functions_state_last_valueState_Map_FixedString_51__Nullable_Bool__ =
 {"hex(last_valueState(map_fixedstring_51__nullable_bool__))":"01015555555555555555000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001","any(toTypeName(map_fixedstring_51__nullable_bool__))":"Map(FixedString(51), Nullable(Bool))"}
 """
 
+_aggregate_functions_state_last_valueState_Map_FixedString_51__Nullable_DateTime64_3___ = r"""
+{"hex(last_valueState(map_fixedstring_51__nullable_datetime64_3___))":"01016161616161616161616161616161616161616161616161616161616100000000000000000000000000000000000000000000000030BCEC9E45010000","any(toTypeName(map_fixedstring_51__nullable_datetime64_3___))":"Map(FixedString(51), Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_state_last_valueState_Map_FixedString_51__Nullable_DateTime64_3_____22_8 = r"""
 {"hex(last_valueState(map_fixedstring_51__nullable_datetime64_3___))":"01016161616161616161616161616161616161616161616161616161616100000000000000000000000000000000000000000000000030BCEC9E45010000","any(toTypeName(map_fixedstring_51__nullable_datetime64_3___))":"Map(FixedString(51), Nullable(DateTime64(3)))"}
 """
@@ -1780,6 +1816,10 @@ _aggregate_functions_state_last_valueState_Map_Int128_Array_String__ = r"""
 
 _aggregate_functions_state_last_valueState_Map_Int128_Bool_ = r"""
 {"hex(last_valueState(map_int128_bool_))":"0101000CADBB0AFE19C7FFF35244F501E6B800","any(toTypeName(map_int128_bool_))":"Map(Int128, Bool)"}
+"""
+
+_aggregate_functions_state_last_valueState_Map_Int128_DateTime64_3__ = r"""
+{"hex(last_valueState(map_int128_datetime64_3__))":"010100F6C51D647D39FCFF093AE29B82C6E30872790533010000","any(toTypeName(map_int128_datetime64_3__))":"Map(Int128, DateTime64(3))"}
 """
 
 _aggregate_functions_state_last_valueState_Map_Int128_DateTime64_3____22_8 = r"""
@@ -1982,6 +2022,10 @@ _aggregate_functions_state_last_valueState_Map_Int128_Nullable_Bool__ = r"""
 {"hex(last_valueState(map_int128_nullable_bool__))":"01010086E64783E78D08007A19B87C1872370000","any(toTypeName(map_int128_nullable_bool__))":"Map(Int128, Nullable(Bool))"}
 """
 
+_aggregate_functions_state_last_valueState_Map_Int128_Nullable_DateTime64_3___ = r"""
+{"hex(last_valueState(map_int128_nullable_datetime64_3___))":"010100F02C240B66B6090010D3DBF499497600D0E076E848010000","any(toTypeName(map_int128_nullable_datetime64_3___))":"Map(Int128, Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_state_last_valueState_Map_Int128_Nullable_DateTime64_3_____22_8 = r"""
 {"hex(last_valueState(map_int128_nullable_datetime64_3___))":"010100F02C240B66B6090010D3DBF499497600D0E076E848010000","any(toTypeName(map_int128_nullable_datetime64_3___))":"Map(Int128, Nullable(DateTime64(3)))"}
 """
@@ -2096,6 +2140,10 @@ _aggregate_functions_state_last_valueState_Map_Int16_Array_String__ = r"""
 
 _aggregate_functions_state_last_valueState_Map_Int16_Bool_ = r"""
 {"hex(last_valueState(map_int16_bool_))":"010194A800","any(toTypeName(map_int16_bool_))":"Map(Int16, Bool)"}
+"""
+
+_aggregate_functions_state_last_valueState_Map_Int16_DateTime64_3__ = r"""
+{"hex(last_valueState(map_int16_datetime64_3__))":"010167B9F0DB79275A010000","any(toTypeName(map_int16_datetime64_3__))":"Map(Int16, DateTime64(3))"}
 """
 
 _aggregate_functions_state_last_valueState_Map_Int16_DateTime64_3____22_8 = r"""
@@ -2298,6 +2346,10 @@ _aggregate_functions_state_last_valueState_Map_Int16_Nullable_Bool__ = r"""
 {"hex(last_valueState(map_int16_nullable_bool__))":"01016CFC0001","any(toTypeName(map_int16_nullable_bool__))":"Map(Int16, Nullable(Bool))"}
 """
 
+_aggregate_functions_state_last_valueState_Map_Int16_Nullable_DateTime64_3___ = r"""
+{"hex(last_valueState(map_int16_nullable_datetime64_3___))":"01016DB200C0D3F2185F010000","any(toTypeName(map_int16_nullable_datetime64_3___))":"Map(Int16, Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_state_last_valueState_Map_Int16_Nullable_DateTime64_3_____22_8 = r"""
 {"hex(last_valueState(map_int16_nullable_datetime64_3___))":"01016DB200C0D3F2185F010000","any(toTypeName(map_int16_nullable_datetime64_3___))":"Map(Int16, Nullable(DateTime64(3)))"}
 """
@@ -2412,6 +2464,10 @@ _aggregate_functions_state_last_valueState_Map_Int32_Array_String__ = r"""
 
 _aggregate_functions_state_last_valueState_Map_Int32_Bool_ = r"""
 {"hex(last_valueState(map_int32_bool_))":"010171FCF0D301","any(toTypeName(map_int32_bool_))":"Map(Int32, Bool)"}
+"""
+
+_aggregate_functions_state_last_valueState_Map_Int32_DateTime64_3__ = r"""
+{"hex(last_valueState(map_int32_datetime64_3__))":"0101347E968740A2192C68010000","any(toTypeName(map_int32_datetime64_3__))":"Map(Int32, DateTime64(3))"}
 """
 
 _aggregate_functions_state_last_valueState_Map_Int32_DateTime64_3____22_8 = r"""
@@ -2614,6 +2670,10 @@ _aggregate_functions_state_last_valueState_Map_Int32_Nullable_Bool__ = r"""
 {"hex(last_valueState(map_int32_nullable_bool__))":"01012C1448790000","any(toTypeName(map_int32_nullable_bool__))":"Map(Int32, Nullable(Bool))"}
 """
 
+_aggregate_functions_state_last_valueState_Map_Int32_Nullable_DateTime64_3___ = r"""
+{"hex(last_valueState(map_int32_nullable_datetime64_3___))":"0101256437E400E8411DC15F010000","any(toTypeName(map_int32_nullable_datetime64_3___))":"Map(Int32, Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_state_last_valueState_Map_Int32_Nullable_DateTime64_3_____22_8 = r"""
 {"hex(last_valueState(map_int32_nullable_datetime64_3___))":"0101256437E400E8411DC15F010000","any(toTypeName(map_int32_nullable_datetime64_3___))":"Map(Int32, Nullable(DateTime64(3)))"}
 """
@@ -2728,6 +2788,10 @@ _aggregate_functions_state_last_valueState_Map_Int64_Array_String__ = r"""
 
 _aggregate_functions_state_last_valueState_Map_Int64_Bool_ = r"""
 {"hex(last_valueState(map_int64_bool_))":"0101A617B33A4B9D3E3900","any(toTypeName(map_int64_bool_))":"Map(Int64, Bool)"}
+"""
+
+_aggregate_functions_state_last_valueState_Map_Int64_DateTime64_3__ = r"""
+{"hex(last_valueState(map_int64_datetime64_3__))":"01015C02B806522E5CDD70008722FE000000","any(toTypeName(map_int64_datetime64_3__))":"Map(Int64, DateTime64(3))"}
 """
 
 _aggregate_functions_state_last_valueState_Map_Int64_DateTime64_3____22_8 = r"""
@@ -2930,6 +2994,10 @@ _aggregate_functions_state_last_valueState_Map_Int64_Nullable_Bool__ = r"""
 {"hex(last_valueState(map_int64_nullable_bool__))":"0101369B462DB6E58B150001","any(toTypeName(map_int64_nullable_bool__))":"Map(Int64, Nullable(Bool))"}
 """
 
+_aggregate_functions_state_last_valueState_Map_Int64_Nullable_DateTime64_3___ = r"""
+{"hex(last_valueState(map_int64_nullable_datetime64_3___))":"0101918E2684DB08F4450088110C502C010000","any(toTypeName(map_int64_nullable_datetime64_3___))":"Map(Int64, Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_state_last_valueState_Map_Int64_Nullable_DateTime64_3_____22_8 = r"""
 {"hex(last_valueState(map_int64_nullable_datetime64_3___))":"0101918E2684DB08F4450088110C502C010000","any(toTypeName(map_int64_nullable_datetime64_3___))":"Map(Int64, Nullable(DateTime64(3)))"}
 """
@@ -3044,6 +3112,10 @@ _aggregate_functions_state_last_valueState_Map_Int8_Array_String__ = r"""
 
 _aggregate_functions_state_last_valueState_Map_Int8_Bool_ = r"""
 {"hex(last_valueState(map_int8_bool_))":"01018A00","any(toTypeName(map_int8_bool_))":"Map(Int8, Bool)"}
+"""
+
+_aggregate_functions_state_last_valueState_Map_Int8_DateTime64_3__ = r"""
+{"hex(last_valueState(map_int8_datetime64_3__))":"0101F2E898AE2C48010000","any(toTypeName(map_int8_datetime64_3__))":"Map(Int8, DateTime64(3))"}
 """
 
 _aggregate_functions_state_last_valueState_Map_Int8_DateTime64_3____22_8 = r"""
@@ -3244,6 +3316,10 @@ _aggregate_functions_state_last_valueState_Map_Int8_Map_String_LowCardinality_Fl
 
 _aggregate_functions_state_last_valueState_Map_Int8_Nullable_Bool__ = r"""
 {"hex(last_valueState(map_int8_nullable_bool__))":"0101100001","any(toTypeName(map_int8_nullable_bool__))":"Map(Int8, Nullable(Bool))"}
+"""
+
+_aggregate_functions_state_last_valueState_Map_Int8_Nullable_DateTime64_3___ = r"""
+{"hex(last_valueState(map_int8_nullable_datetime64_3___))":"01019A00081DDFDF33010000","any(toTypeName(map_int8_nullable_datetime64_3___))":"Map(Int8, Nullable(DateTime64(3)))"}
 """
 
 _aggregate_functions_state_last_valueState_Map_Int8_Nullable_DateTime64_3_____22_8 = r"""
@@ -3994,6 +4070,10 @@ _aggregate_functions_state_last_valueState_Map_String_Bool_ = r"""
 {"hex(last_valueState(map_string_bool_))":"0101374E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E4E01","any(toTypeName(map_string_bool_))":"Map(String, Bool)"}
 """
 
+_aggregate_functions_state_last_valueState_Map_String_DateTime64_3__ = r"""
+{"hex(last_valueState(map_string_datetime64_3__))":"01013677777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777758F009E83C010000","any(toTypeName(map_string_datetime64_3__))":"Map(String, DateTime64(3))"}
+"""
+
 _aggregate_functions_state_last_valueState_Map_String_DateTime64_3____22_8 = r"""
 {"hex(last_valueState(map_string_datetime64_3__))":"01013677777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777758F009E83C010000","any(toTypeName(map_string_datetime64_3__))":"Map(String, DateTime64(3))"}
 """
@@ -4194,6 +4274,10 @@ _aggregate_functions_state_last_valueState_Map_String_Nullable_Bool__ = r"""
 {"hex(last_valueState(map_string_nullable_bool__))":"0101066969696969690001","any(toTypeName(map_string_nullable_bool__))":"Map(String, Nullable(Bool))"}
 """
 
+_aggregate_functions_state_last_valueState_Map_String_Nullable_DateTime64_3___ = r"""
+{"hex(last_valueState(map_string_nullable_datetime64_3___))":"01015473737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737300C8322C972C010000","any(toTypeName(map_string_nullable_datetime64_3___))":"Map(String, Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_state_last_valueState_Map_String_Nullable_DateTime64_3_____22_8 = r"""
 {"hex(last_valueState(map_string_nullable_datetime64_3___))":"01015473737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737373737300C8322C972C010000","any(toTypeName(map_string_nullable_datetime64_3___))":"Map(String, Nullable(DateTime64(3)))"}
 """
@@ -4308,6 +4392,10 @@ _aggregate_functions_state_last_valueState_Map_UInt128_Array_String__ = r"""
 
 _aggregate_functions_state_last_valueState_Map_UInt128_Bool_ = r"""
 {"hex(last_valueState(map_uint128_bool_))":"0101FF072EF63865552300F8D109C79AAADC00","any(toTypeName(map_uint128_bool_))":"Map(UInt128, Bool)"}
+"""
+
+_aggregate_functions_state_last_valueState_Map_UInt128_DateTime64_3__ = r"""
+{"hex(last_valueState(map_uint128_datetime64_3__))":"0101FF2F3FB4D85E680A00D0C04B27A197F5F081DAA773010000","any(toTypeName(map_uint128_datetime64_3__))":"Map(UInt128, DateTime64(3))"}
 """
 
 _aggregate_functions_state_last_valueState_Map_UInt128_DateTime64_3____22_8 = r"""
@@ -4510,6 +4598,10 @@ _aggregate_functions_state_last_valueState_Map_UInt128_Nullable_Bool__ = r"""
 {"hex(last_valueState(map_uint128_nullable_bool__))":"0101FFFF6DA5139C10420000925AEC63EFBD0001","any(toTypeName(map_uint128_nullable_bool__))":"Map(UInt128, Nullable(Bool))"}
 """
 
+_aggregate_functions_state_last_valueState_Map_UInt128_Nullable_DateTime64_3___ = r"""
+{"hex(last_valueState(map_uint128_nullable_datetime64_3___))":"0101FFA7DF1AF545B673005820E50ABA498C00587AA24625010000","any(toTypeName(map_uint128_nullable_datetime64_3___))":"Map(UInt128, Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_state_last_valueState_Map_UInt128_Nullable_DateTime64_3_____22_8 = r"""
 {"hex(last_valueState(map_uint128_nullable_datetime64_3___))":"0101FFA7DF1AF545B673005820E50ABA498C00587AA24625010000","any(toTypeName(map_uint128_nullable_datetime64_3___))":"Map(UInt128, Nullable(DateTime64(3)))"}
 """
@@ -4624,6 +4716,10 @@ _aggregate_functions_state_last_valueState_Map_UInt16_Array_String__ = r"""
 
 _aggregate_functions_state_last_valueState_Map_UInt16_Bool_ = r"""
 {"hex(last_valueState(map_uint16_bool_))":"01015A1900","any(toTypeName(map_uint16_bool_))":"Map(UInt16, Bool)"}
+"""
+
+_aggregate_functions_state_last_valueState_Map_UInt16_DateTime64_3__ = r"""
+{"hex(last_valueState(map_uint16_datetime64_3__))":"01016FFD78E273FC1F010000","any(toTypeName(map_uint16_datetime64_3__))":"Map(UInt16, DateTime64(3))"}
 """
 
 _aggregate_functions_state_last_valueState_Map_UInt16_DateTime64_3____22_8 = r"""
@@ -4826,6 +4922,10 @@ _aggregate_functions_state_last_valueState_Map_UInt16_Nullable_Bool__ = r"""
 {"hex(last_valueState(map_uint16_nullable_bool__))":"010151870000","any(toTypeName(map_uint16_nullable_bool__))":"Map(UInt16, Nullable(Bool))"}
 """
 
+_aggregate_functions_state_last_valueState_Map_UInt16_Nullable_DateTime64_3___ = r"""
+{"hex(last_valueState(map_uint16_nullable_datetime64_3___))":"010161D6007857EBA471010000","any(toTypeName(map_uint16_nullable_datetime64_3___))":"Map(UInt16, Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_state_last_valueState_Map_UInt16_Nullable_DateTime64_3_____22_8 = r"""
 {"hex(last_valueState(map_uint16_nullable_datetime64_3___))":"010161D6007857EBA471010000","any(toTypeName(map_uint16_nullable_datetime64_3___))":"Map(UInt16, Nullable(DateTime64(3)))"}
 """
@@ -4940,6 +5040,10 @@ _aggregate_functions_state_last_valueState_Map_UInt32_Array_String__ = r"""
 
 _aggregate_functions_state_last_valueState_Map_UInt32_Bool_ = r"""
 {"hex(last_valueState(map_uint32_bool_))":"0101184C6F0F00","any(toTypeName(map_uint32_bool_))":"Map(UInt32, Bool)"}
+"""
+
+_aggregate_functions_state_last_valueState_Map_UInt32_DateTime64_3__ = r"""
+{"hex(last_valueState(map_uint32_datetime64_3__))":"01010C546C7E88D7968000010000","any(toTypeName(map_uint32_datetime64_3__))":"Map(UInt32, DateTime64(3))"}
 """
 
 _aggregate_functions_state_last_valueState_Map_UInt32_DateTime64_3____22_8 = r"""
@@ -5142,6 +5246,10 @@ _aggregate_functions_state_last_valueState_Map_UInt32_Nullable_Bool__ = r"""
 {"hex(last_valueState(map_uint32_nullable_bool__))":"0101597A33D50001","any(toTypeName(map_uint32_nullable_bool__))":"Map(UInt32, Nullable(Bool))"}
 """
 
+_aggregate_functions_state_last_valueState_Map_UInt32_Nullable_DateTime64_3___ = r"""
+{"hex(last_valueState(map_uint32_nullable_datetime64_3___))":"0101A31C30700098C304647B010000","any(toTypeName(map_uint32_nullable_datetime64_3___))":"Map(UInt32, Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_state_last_valueState_Map_UInt32_Nullable_DateTime64_3_____22_8 = r"""
 {"hex(last_valueState(map_uint32_nullable_datetime64_3___))":"0101A31C30700098C304647B010000","any(toTypeName(map_uint32_nullable_datetime64_3___))":"Map(UInt32, Nullable(DateTime64(3)))"}
 """
@@ -5256,6 +5364,10 @@ _aggregate_functions_state_last_valueState_Map_UInt64_Array_String__ = r"""
 
 _aggregate_functions_state_last_valueState_Map_UInt64_Bool_ = r"""
 {"hex(last_valueState(map_uint64_bool_))":"01019144B31842E70C3C00","any(toTypeName(map_uint64_bool_))":"Map(UInt64, Bool)"}
+"""
+
+_aggregate_functions_state_last_valueState_Map_UInt64_DateTime64_3__ = r"""
+{"hex(last_valueState(map_uint64_datetime64_3__))":"01015D93F740B915F319280388281E010000","any(toTypeName(map_uint64_datetime64_3__))":"Map(UInt64, DateTime64(3))"}
 """
 
 _aggregate_functions_state_last_valueState_Map_UInt64_DateTime64_3____22_8 = r"""
@@ -5458,6 +5570,10 @@ _aggregate_functions_state_last_valueState_Map_UInt64_Nullable_Bool__ = r"""
 {"hex(last_valueState(map_uint64_nullable_bool__))":"0101D8139E50505605480000","any(toTypeName(map_uint64_nullable_bool__))":"Map(UInt64, Nullable(Bool))"}
 """
 
+_aggregate_functions_state_last_valueState_Map_UInt64_Nullable_DateTime64_3___ = r"""
+{"hex(last_valueState(map_uint64_nullable_datetime64_3___))":"01017BA0C4C9D43405D300880D082E42010000","any(toTypeName(map_uint64_nullable_datetime64_3___))":"Map(UInt64, Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_state_last_valueState_Map_UInt64_Nullable_DateTime64_3_____22_8 = r"""
 {"hex(last_valueState(map_uint64_nullable_datetime64_3___))":"01017BA0C4C9D43405D300880D082E42010000","any(toTypeName(map_uint64_nullable_datetime64_3___))":"Map(UInt64, Nullable(DateTime64(3)))"}
 """
@@ -5572,6 +5688,10 @@ _aggregate_functions_state_last_valueState_Map_UInt8_Array_String__ = r"""
 
 _aggregate_functions_state_last_valueState_Map_UInt8_Bool_ = r"""
 {"hex(last_valueState(map_uint8_bool_))":"01011F01","any(toTypeName(map_uint8_bool_))":"Map(UInt8, Bool)"}
+"""
+
+_aggregate_functions_state_last_valueState_Map_UInt8_DateTime64_3__ = r"""
+{"hex(last_valueState(map_uint8_datetime64_3__))":"01011F5848B61D80010000","any(toTypeName(map_uint8_datetime64_3__))":"Map(UInt8, DateTime64(3))"}
 """
 
 _aggregate_functions_state_last_valueState_Map_UInt8_DateTime64_3____22_8 = r"""
@@ -5772,6 +5892,10 @@ _aggregate_functions_state_last_valueState_Map_UInt8_Map_String_LowCardinality_F
 
 _aggregate_functions_state_last_valueState_Map_UInt8_Nullable_Bool__ = r"""
 {"hex(last_valueState(map_uint8_nullable_bool__))":"0101380000","any(toTypeName(map_uint8_nullable_bool__))":"Map(UInt8, Nullable(Bool))"}
+"""
+
+_aggregate_functions_state_last_valueState_Map_UInt8_Nullable_DateTime64_3___ = r"""
+{"hex(last_valueState(map_uint8_nullable_datetime64_3___))":"0101E900F80E53FC20010000","any(toTypeName(map_uint8_nullable_datetime64_3___))":"Map(UInt8, Nullable(DateTime64(3)))"}
 """
 
 _aggregate_functions_state_last_valueState_Map_UInt8_Nullable_DateTime64_3_____22_8 = r"""

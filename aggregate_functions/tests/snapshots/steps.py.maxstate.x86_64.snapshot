@@ -326,6 +326,10 @@ _aggregate_functions_state_maxState_DateTime = r"""
 {"hex(maxState(datetime))":"01F0F1FFFF","any(toTypeName(datetime))":"DateTime"}
 """
 
+_aggregate_functions_state_maxState_DateTime64_3_ = r"""
+{"hex(maxState(datetime64_3_))":"017F61FE1402090000","any(toTypeName(datetime64_3_))":"DateTime64(3)"}
+"""
+
 _aggregate_functions_state_maxState_DateTime64_3___22_8 = r"""
 {"hex(maxState(datetime64_3_))":"017F8928A678090000","any(toTypeName(datetime64_3_))":"DateTime64(3)"}
 """
@@ -5572,6 +5576,10 @@ _aggregate_functions_state_maxState_Map_UInt8_Array_String__ = r"""
 
 _aggregate_functions_state_maxState_Map_UInt8_Bool_ = r"""
 {"hex(maxState(map_uint8_bool_))":"0101FF01","any(toTypeName(map_uint8_bool_))":"Map(UInt8, Bool)"}
+"""
+
+_aggregate_functions_state_maxState_Map_UInt8_DateTime64_3__ = r"""
+{"hex(maxState(map_uint8_datetime64_3__))":"0101FF7F61FE1402090000","any(toTypeName(map_uint8_datetime64_3__))":"Map(UInt8, DateTime64(3))"}
 """
 
 _aggregate_functions_state_maxState_Map_UInt8_DateTime64_3____22_8 = r"""
