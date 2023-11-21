@@ -518,7 +518,7 @@ def create_table_partitioned_by_column(
     engine="MergeTree",
     partition_by="p",
     columns=None,
-    query_settings=None,
+    query_settings="storage_policy = 'my_policy'",
     order_by="tuple()",
 ):
     """Create a table that is partitioned by a specific column."""
@@ -537,7 +537,7 @@ def create_table_partitioned_by_column(
             partition_by=partition_by,
             order_by=order_by,
             columns=columns,
-            query_settings="storage_policy = 'my_policy'",
+            query_settings=query_settings,
             if_not_exists=True,
         )
 
