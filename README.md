@@ -49,7 +49,9 @@ that involves several ClickHouse instances, custom configs, ZooKeeper, etc.
 
 [Docker](https://docs.docker.com/engine/install/)
 
-### Docker Compose
+### Standalone `docker-compose`
+
+Standalone `docker-compose` binary.
 
 [Docker Compose](https://docs.docker.com/compose/install/standalone/)
 
