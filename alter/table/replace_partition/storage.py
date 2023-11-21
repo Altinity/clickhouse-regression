@@ -64,7 +64,10 @@ def shards(self):
 
     with Then("I try to replace partition on the destination distributed table"):
         replace_partition(
-            destination_table=destination_table, source_table=source_table
+            destination_table=destination_table_shard,
+            source_table=destination_table_shard,
+            message="DB::Exception: Table engine Distributed doesn't support partitioning.",
+            exitcode=48,
         )
 
 
