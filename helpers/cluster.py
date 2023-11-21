@@ -1330,20 +1330,17 @@ class Cluster(object):
                                 exitcode=0,
                             )
 
-                        for up_attempt, ret in enumerate(
-                            retries(count=max_up_attempts)
-                        ):
-                            with By(f"attempt {up_attempt}/{max_up_attempts}"):
-                                with ret:
-                                    cmd = self.command(
-                                        None,
-                                        f"{self.docker_compose} up --renew-anon-volumes --force-recreate --timeout 600 -d 2>&1 | tee",
-                                        timeout=timeout,
-                                        exitcode=0,
-                                    )
-                                    assert "ERROR:" not in cmd.output, error(cmd.output)
-                                    if "is unhealthy" not in cmd.output:
-                                        break
+                        for attempt in retries(count=max_up_attempts):
+                            with attempt:                               
+                                cmd = self.command(
+                                    None,
+                                    f"{self.docker_compose} up --renew-anon-volumes --force-recreate --timeout 600 -d 2>&1 | tee",
+                                    timeout=timeout,
+                                    exitcode=0,
+                                )
+                                assert "ERROR:" not in cmd.output, error(cmd.output)
+                                if "is unhealthy" not in cmd.output:
+                                    break
 
                     with Then("check there are no unhealthy containers"):
                         ps_cmd = self.command(
