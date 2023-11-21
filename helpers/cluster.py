@@ -1431,8 +1431,12 @@ class Cluster(object):
 
         # Edit permissions on server files for external manipulation
         for node in self.nodes["clickhouse"]:
-            self.command(node=node, command="chmod a+rwX -R /var/lib/clickhouse")
-            self.command(node=node, command="chmod a+rwX -R /var/log/clickhouse-server")
+            self.command(node=node, command="chmod a+rwX -R /var/lib/clickhouse", no_checks=True)
+            self.command(node=node, command="chmod a+rwX -R /var/log/clickhouse-server", no_checks=True)
+            self.command(node=node, command="chmod a+rwX -R /etc/clickhouse-server", no_checks=True)
+            self.command(node=node, command="chmod a+rwX -R /data", no_checks=True)
+            self.command(node=node, command="chmod a+rwX -R /datalog", no_checks=True)
+
 
         try:
             bash = self.bash(None)
