@@ -1,0 +1,216 @@
+_aggregate_functions_merge_avgMerge_Decimal128_38__0 = r"""
+{"avgMerge(state)":-0.0214682427606694}
+"""
+
+_aggregate_functions_merge_avgMerge_Float32_0 = r"""
+{"avgMerge(state)":-1.369583672925591e38}
+"""
+
+_aggregate_functions_merge_avgMerge_Float64_0 = r"""
+{"avgMerge(state)":-1.46719343084824e306}
+"""
+
+_aggregate_functions_merge_avgMerge_Int16_0 = r"""
+{"avgMerge(state)":-246.4}
+"""
+
+_aggregate_functions_merge_avgMerge_Int32_0 = r"""
+{"avgMerge(state)":-18004581.1}
+"""
+
+_aggregate_functions_merge_avgMerge_Int64_0 = r"""
+{"avgMerge(state)":-879919537069928600}
+"""
+
+_aggregate_functions_merge_avgMerge_Int8_0 = r"""
+{"avgMerge(state)":5.1}
+"""
+
+_aggregate_functions_merge_avgMerge_LowCardinality_Float32__0 = r"""
+{"avgMerge(state)":3.159481276742593e37}
+"""
+
+_aggregate_functions_merge_avgMerge_LowCardinality_Float64__0 = r"""
+{"avgMerge(state)":2.3539363430883252e259}
+"""
+
+_aggregate_functions_merge_avgMerge_LowCardinality_Int16__0 = r"""
+{"avgMerge(state)":1743.7}
+"""
+
+_aggregate_functions_merge_avgMerge_LowCardinality_Int32__0 = r"""
+{"avgMerge(state)":-159257655}
+"""
+
+_aggregate_functions_merge_avgMerge_LowCardinality_Int64__0 = r"""
+{"avgMerge(state)":-233558951856740540}
+"""
+
+_aggregate_functions_merge_avgMerge_LowCardinality_Int8__0 = r"""
+{"avgMerge(state)":19.1}
+"""
+
+_aggregate_functions_merge_avgMerge_LowCardinality_Nullable_Float32___0 = r"""
+{"avgMerge(state)":2.6259284152081356e37}
+"""
+
+_aggregate_functions_merge_avgMerge_LowCardinality_Nullable_Float64___0 = r"""
+{"avgMerge(state)":4.9248104324342034e297}
+"""
+
+_aggregate_functions_merge_avgMerge_LowCardinality_Nullable_Int16___0 = r"""
+{"avgMerge(state)":-4054.777777777778}
+"""
+
+_aggregate_functions_merge_avgMerge_LowCardinality_Nullable_Int32___0 = r"""
+{"avgMerge(state)":-63401586.44444445}
+"""
+
+_aggregate_functions_merge_avgMerge_LowCardinality_Nullable_Int64___0 = r"""
+{"avgMerge(state)":-450665848393526000}
+"""
+
+_aggregate_functions_merge_avgMerge_LowCardinality_Nullable_Int8___0 = r"""
+{"avgMerge(state)":10.666666666666666}
+"""
+
+_aggregate_functions_merge_avgMerge_LowCardinality_Nullable_UInt16___0 = r"""
+{"avgMerge(state)":27156}
+"""
+
+_aggregate_functions_merge_avgMerge_LowCardinality_Nullable_UInt32___0 = r"""
+{"avgMerge(state)":2561410896}
+"""
+
+_aggregate_functions_merge_avgMerge_LowCardinality_Nullable_UInt64___0 = r"""
+{"avgMerge(state)":503281597357463300}
+"""
+
+_aggregate_functions_merge_avgMerge_LowCardinality_Nullable_UInt8___0 = r"""
+{"avgMerge(state)":148.22222222222223}
+"""
+
+_aggregate_functions_merge_avgMerge_LowCardinality_UInt16__0 = r"""
+{"avgMerge(state)":32707.2}
+"""
+
+_aggregate_functions_merge_avgMerge_LowCardinality_UInt32__0 = r"""
+{"avgMerge(state)":1691573319.8}
+"""
+
+_aggregate_functions_merge_avgMerge_LowCardinality_UInt64__0 = r"""
+{"avgMerge(state)":1699893309502967600}
+"""
+
+_aggregate_functions_merge_avgMerge_LowCardinality_UInt8__0 = r"""
+{"avgMerge(state)":151.7}
+"""
+
+_aggregate_functions_merge_avgMerge_NULL_value_handling_0 = r"""
+{"avgMerge(state)":2.6}
+"""
+
+_aggregate_functions_merge_avgMerge_Nullable_Decimal128_38___0 = r"""
+{"avgMerge(state)":0.15048939536131078}
+"""
+
+_aggregate_functions_merge_avgMerge_Nullable_Float32__0 = r"""
+{"avgMerge(state)":-1.1276225063554052e38}
+"""
+
+_aggregate_functions_merge_avgMerge_Nullable_Float64__0 = r"""
+{"avgMerge(state)":-6.782839776576363e299}
+"""
+
+_aggregate_functions_merge_avgMerge_Nullable_Int16__0 = r"""
+{"avgMerge(state)":-2959}
+"""
+
+_aggregate_functions_merge_avgMerge_Nullable_Int32__0 = r"""
+{"avgMerge(state)":484844922.5555556}
+"""
+
+_aggregate_functions_merge_avgMerge_Nullable_Int64__0 = r"""
+{"avgMerge(state)":441272947754734850}
+"""
+
+_aggregate_functions_merge_avgMerge_Nullable_Int8__0 = r"""
+{"avgMerge(state)":1.8888888888888888}
+"""
+
+_aggregate_functions_merge_avgMerge_Nullable_UInt16__0 = r"""
+{"avgMerge(state)":33874.22222222222}
+"""
+
+_aggregate_functions_merge_avgMerge_Nullable_UInt32__0 = r"""
+{"avgMerge(state)":2141593210.4444444}
+"""
+
+_aggregate_functions_merge_avgMerge_Nullable_UInt64__0 = r"""
+{"avgMerge(state)":1232923958951628500}
+"""
+
+_aggregate_functions_merge_avgMerge_Nullable_UInt8__0 = r"""
+{"avgMerge(state)":116.88888888888889}
+"""
+
+_aggregate_functions_merge_avgMerge_UInt16_0 = r"""
+{"avgMerge(state)":25356.3}
+"""
+
+_aggregate_functions_merge_avgMerge_UInt32_0 = r"""
+{"avgMerge(state)":2329563803.1}
+"""
+
+_aggregate_functions_merge_avgMerge_UInt64_0 = r"""
+{"avgMerge(state)":1575047606194251300}
+"""
+
+_aggregate_functions_merge_avgMerge_UInt8_0 = r"""
+{"avgMerge(state)":129.3}
+"""
+
+_aggregate_functions_merge_avgMerge__inf_0 = r"""
+{"avgMerge(state)":null}
+"""
+
+_aggregate_functions_merge_avgMerge_constant_0 = r"""
+{"avgMerge(state)":1}
+"""
+
+_aggregate_functions_merge_avgMerge_doc_example_0 = r"""
+{"avgMerge(state)":2.5}
+"""
+
+_aggregate_functions_merge_avgMerge_inf_0 = r"""
+{"avgMerge(state)":null}
+"""
+
+_aggregate_functions_merge_avgMerge_inf___inf__nan_0 = r"""
+{"avgMerge(state)":null}
+"""
+
+_aggregate_functions_merge_avgMerge_nan_0 = r"""
+{"avgMerge(state)":null}
+"""
+
+_aggregate_functions_merge_avgMerge_single_NULL_value_0 = r"""
+{"avgMerge(state)":null}
+"""
+
+_aggregate_functions_merge_avgMerge_single_row_0 = r"""
+{"avgMerge(state)":0}
+"""
+
+_aggregate_functions_merge_avgMerge_some_negative_values_0 = r"""
+{"avgMerge(state)":0.5}
+"""
+
+_aggregate_functions_merge_avgMerge_with_group_by_0 = r"""
+{"avgMerge(state)":4}
+"""
+
+_aggregate_functions_merge_avgMerge_with_group_by_1 = r"""
+{"avgMerge(state)":5}
+"""
+

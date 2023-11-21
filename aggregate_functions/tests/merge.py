@@ -90,7 +90,8 @@ def feature(self):
     not_implemented = ['mannWhitneyUTest', 'quantileDeterministic', 'quantilesDeterministic', 
                        'stochasticLinearRegression', 'stochasticLogisticRegression', "sumMap", "maxMap", 
                        "minMap", 
-                       "groupUniqArray", "quantileTDigestWeighted", "uniq",
+                       "groupUniqArray", "quantileTDigestWeighted", "uniq", 
+                       "uniqHLL12", # problem on 22.8 and 23.8 !!!
     # "anyHeavy",
     # "any",
     # "anyLast", 
@@ -162,7 +163,7 @@ def feature(self):
     # "quantilesTimingWeighted",
     # "rankCorr", 
     # "simpleLinearRegression",
-    # "singleValueOrNull",
+    # "singleValueOrNull", # problem on 22.8
     # "skewPop",
     # "skewSamp",
     # "sparkbar",
@@ -170,7 +171,7 @@ def feature(self):
     # "stddevPopStable",
     # "stddevSamp",
     # "stddevSampStable",
-    # "studentTTest",
+    # "studentTTest",  # problem on 22.8
     # "sum",
     # "sumCount",
     # "sumKahan",
@@ -180,13 +181,12 @@ def feature(self):
     # "uniqCombined",
     # "uniqCombined64",
     # "uniqExact",
-    # "uniqHLL12"
     # "uniqTheta",
     # "varPop",
     # "varPopStable",
     # "varSamp",
     # "varSampStable",
-    # "welchTTest"
+    # "welchTTest" # problem on 22.8
                                            ]
 
     test_funcs = [i for i in aggregate_functions]

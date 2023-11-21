@@ -1,221 +1,221 @@
 _aggregate_functions_avg_Decimal128_38_ = r"""
-{"avg(decimal128_38_)":-0.0214682427606694}
+{"avg(decimal128_38_)":-0.0214682427606694,"any(toTypeName(decimal128_38_))":"Decimal(38, 38)"}
 """
 
 _aggregate_functions_avg_Float32 = r"""
-{"avg(float32)":-1.369583672925591e38}
+{"avg(float32)":-1.369583672925591e38,"any(toTypeName(float32))":"Float32"}
 """
 
 _aggregate_functions_avg_Float64 = r"""
-{"avg(float64)":-1.46719343084824e306}
+{"avg(float64)":-1.46719343084824e306,"any(toTypeName(float64))":"Float64"}
 """
 
 _aggregate_functions_avg_Int16 = r"""
-{"avg(int16)":-246.4}
+{"avg(int16)":-246.4,"any(toTypeName(int16))":"Int16"}
 """
 
 _aggregate_functions_avg_Int32 = r"""
-{"avg(int32)":-18004581.1}
+{"avg(int32)":-18004581.1,"any(toTypeName(int32))":"Int32"}
 """
 
 _aggregate_functions_avg_Int64 = r"""
-{"avg(int64)":-879919537069928600}
+{"avg(int64)":-879919537069928600,"any(toTypeName(int64))":"Int64"}
 """
 
 _aggregate_functions_avg_Int8 = r"""
-{"avg(int8)":5.1}
+{"avg(int8)":5.1,"any(toTypeName(int8))":"Int8"}
 """
 
 _aggregate_functions_avg_LowCardinality_Float32_ = r"""
-{"avg(lowcardinality_float32_)":3.159481276742593e37}
+{"avg(lowcardinality_float32_)":3.159481276742593e37,"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
 """
 
 _aggregate_functions_avg_LowCardinality_Float64_ = r"""
-{"avg(lowcardinality_float64_)":2.3539363430883252e259}
+{"avg(lowcardinality_float64_)":2.3539363430883252e259,"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)"}
 """
 
 _aggregate_functions_avg_LowCardinality_Int16_ = r"""
-{"avg(lowcardinality_int16_)":1743.7}
+{"avg(lowcardinality_int16_)":1743.7,"any(toTypeName(lowcardinality_int16_))":"LowCardinality(Int16)"}
 """
 
 _aggregate_functions_avg_LowCardinality_Int32_ = r"""
-{"avg(lowcardinality_int32_)":-159257655}
+{"avg(lowcardinality_int32_)":-159257655,"any(toTypeName(lowcardinality_int32_))":"LowCardinality(Int32)"}
 """
 
 _aggregate_functions_avg_LowCardinality_Int64_ = r"""
-{"avg(lowcardinality_int64_)":-233558951856740540}
+{"avg(lowcardinality_int64_)":-233558951856740540,"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
 """
 
 _aggregate_functions_avg_LowCardinality_Int8_ = r"""
-{"avg(lowcardinality_int8_)":19.1}
+{"avg(lowcardinality_int8_)":19.1,"any(toTypeName(lowcardinality_int8_))":"LowCardinality(Int8)"}
 """
 
 _aggregate_functions_avg_LowCardinality_Nullable_Float32__ = r"""
-{"avg(lowcardinality_nullable_float32__)":2.6259284152081356e37}
+{"avg(lowcardinality_nullable_float32__)":2.6259284152081356e37,"any(toTypeName(lowcardinality_nullable_float32__))":"LowCardinality(Nullable(Float32))"}
 """
 
 _aggregate_functions_avg_LowCardinality_Nullable_Float64__ = r"""
-{"avg(lowcardinality_nullable_float64__)":4.9248104324342034e297}
+{"avg(lowcardinality_nullable_float64__)":4.9248104324342034e297,"any(toTypeName(lowcardinality_nullable_float64__))":"LowCardinality(Nullable(Float64))"}
 """
 
 _aggregate_functions_avg_LowCardinality_Nullable_Int16__ = r"""
-{"avg(lowcardinality_nullable_int16__)":-4054.777777777778}
+{"avg(lowcardinality_nullable_int16__)":-4054.777777777778,"any(toTypeName(lowcardinality_nullable_int16__))":"LowCardinality(Nullable(Int16))"}
 """
 
 _aggregate_functions_avg_LowCardinality_Nullable_Int32__ = r"""
-{"avg(lowcardinality_nullable_int32__)":-63401586.44444445}
+{"avg(lowcardinality_nullable_int32__)":-63401586.44444445,"any(toTypeName(lowcardinality_nullable_int32__))":"LowCardinality(Nullable(Int32))"}
 """
 
 _aggregate_functions_avg_LowCardinality_Nullable_Int64__ = r"""
-{"avg(lowcardinality_nullable_int64__)":-450665848393526000}
+{"avg(lowcardinality_nullable_int64__)":-450665848393526000,"any(toTypeName(lowcardinality_nullable_int64__))":"LowCardinality(Nullable(Int64))"}
 """
 
 _aggregate_functions_avg_LowCardinality_Nullable_Int8__ = r"""
-{"avg(lowcardinality_nullable_int8__)":10.666666666666666}
+{"avg(lowcardinality_nullable_int8__)":10.666666666666666,"any(toTypeName(lowcardinality_nullable_int8__))":"LowCardinality(Nullable(Int8))"}
 """
 
 _aggregate_functions_avg_LowCardinality_Nullable_UInt16__ = r"""
-{"avg(lowcardinality_nullable_uint16__)":27156}
+{"avg(lowcardinality_nullable_uint16__)":27156,"any(toTypeName(lowcardinality_nullable_uint16__))":"LowCardinality(Nullable(UInt16))"}
 """
 
 _aggregate_functions_avg_LowCardinality_Nullable_UInt32__ = r"""
-{"avg(lowcardinality_nullable_uint32__)":2561410896}
+{"avg(lowcardinality_nullable_uint32__)":2561410896,"any(toTypeName(lowcardinality_nullable_uint32__))":"LowCardinality(Nullable(UInt32))"}
 """
 
 _aggregate_functions_avg_LowCardinality_Nullable_UInt64__ = r"""
-{"avg(lowcardinality_nullable_uint64__)":503281597357463300}
+{"avg(lowcardinality_nullable_uint64__)":503281597357463300,"any(toTypeName(lowcardinality_nullable_uint64__))":"LowCardinality(Nullable(UInt64))"}
 """
 
 _aggregate_functions_avg_LowCardinality_Nullable_UInt8__ = r"""
-{"avg(lowcardinality_nullable_uint8__)":148.22222222222223}
+{"avg(lowcardinality_nullable_uint8__)":148.22222222222223,"any(toTypeName(lowcardinality_nullable_uint8__))":"LowCardinality(Nullable(UInt8))"}
 """
 
 _aggregate_functions_avg_LowCardinality_UInt16_ = r"""
-{"avg(lowcardinality_uint16_)":32707.2}
+{"avg(lowcardinality_uint16_)":32707.2,"any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_avg_LowCardinality_UInt32_ = r"""
-{"avg(lowcardinality_uint32_)":1691573319.8}
+{"avg(lowcardinality_uint32_)":1691573319.8,"any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_avg_LowCardinality_UInt64_ = r"""
-{"avg(lowcardinality_uint64_)":1699893309502967600}
+{"avg(lowcardinality_uint64_)":1699893309502967600,"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_avg_LowCardinality_UInt8_ = r"""
-{"avg(lowcardinality_uint8_)":151.7}
+{"avg(lowcardinality_uint8_)":151.7,"any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_avg_NULL_value_handling = r"""
-{"avg(x)":2.6}
+{"avg(x)":2.6,"any(toTypeName(x))":"Nullable(Int8)"}
 """
 
 _aggregate_functions_avg_Nullable_Decimal128_38__ = r"""
-{"avg(nullable_decimal128_38__)":0.15048939536131078}
+{"avg(nullable_decimal128_38__)":0.15048939536131078,"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))"}
 """
 
 _aggregate_functions_avg_Nullable_Float32_ = r"""
-{"avg(nullable_float32_)":-1.1276225063554052e38}
+{"avg(nullable_float32_)":-1.1276225063554052e38,"any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
 """
 
 _aggregate_functions_avg_Nullable_Float64_ = r"""
-{"avg(nullable_float64_)":-6.782839776576363e299}
+{"avg(nullable_float64_)":-6.782839776576363e299,"any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
 """
 
 _aggregate_functions_avg_Nullable_Int16_ = r"""
-{"avg(nullable_int16_)":-2959}
+{"avg(nullable_int16_)":-2959,"any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
 """
 
 _aggregate_functions_avg_Nullable_Int32_ = r"""
-{"avg(nullable_int32_)":484844922.5555556}
+{"avg(nullable_int32_)":484844922.5555556,"any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
 """
 
 _aggregate_functions_avg_Nullable_Int64_ = r"""
-{"avg(nullable_int64_)":441272947754734850}
+{"avg(nullable_int64_)":441272947754734850,"any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
 """
 
 _aggregate_functions_avg_Nullable_Int8_ = r"""
-{"avg(nullable_int8_)":1.8888888888888888}
+{"avg(nullable_int8_)":1.8888888888888888,"any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
 """
 
 _aggregate_functions_avg_Nullable_UInt16_ = r"""
-{"avg(nullable_uint16_)":33874.22222222222}
+{"avg(nullable_uint16_)":33874.22222222222,"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_avg_Nullable_UInt32_ = r"""
-{"avg(nullable_uint32_)":2141593210.4444444}
+{"avg(nullable_uint32_)":2141593210.4444444,"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_avg_Nullable_UInt64_ = r"""
-{"avg(nullable_uint64_)":1232923958951628500}
+{"avg(nullable_uint64_)":1232923958951628500,"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_avg_Nullable_UInt8_ = r"""
-{"avg(nullable_uint8_)":116.88888888888889}
+{"avg(nullable_uint8_)":116.88888888888889,"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_avg_UInt16 = r"""
-{"avg(uint16)":25356.3}
+{"avg(uint16)":25356.3,"any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_avg_UInt32 = r"""
-{"avg(uint32)":2329563803.1}
+{"avg(uint32)":2329563803.1,"any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_avg_UInt64 = r"""
-{"avg(uint64)":1575047606194251300}
+{"avg(uint64)":1575047606194251300,"any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_avg_UInt8 = r"""
-{"avg(uint8)":129.3}
+{"avg(uint8)":129.3,"any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_avg__inf = r"""
-{"avg(x)":null}
+{"avg(x)":null,"any(toTypeName(x))":"Float64"}
 """
 
 _aggregate_functions_avg_constant = r"""
-{"avg(1)":1}
+{"avg(1)":1,"any(toTypeName(1))":"UInt8"}
 """
 
 _aggregate_functions_avg_doc_example = r"""
-{"avg(x)":2.5}
+{"avg(x)":2.5,"any(toTypeName(x))":"Int8"}
 """
 
 _aggregate_functions_avg_inf = r"""
-{"avg(x)":null}
+{"avg(x)":null,"any(toTypeName(x))":"Float64"}
 """
 
 _aggregate_functions_avg_inf___inf__nan = r"""
-{"avg(x)":null}
+{"avg(x)":null,"any(toTypeName(x))":"Float64"}
 """
 
 _aggregate_functions_avg_nan = r"""
-{"avg(x)":null}
+{"avg(x)":null,"any(toTypeName(x))":"Float64"}
 """
 
 _aggregate_functions_avg_return_type = r"""
-{"toTypeName(avg(number))":"Float64"}
+{"toTypeName(avg(number))":"Float64","any(toTypeName(number))":"UInt64"}
 """
 
 _aggregate_functions_avg_single_NULL_value = r"""
-{"avg(x)":null}
+{"avg(x)":null,"any(toTypeName(x))":"Nullable(Int8)"}
 """
 
 _aggregate_functions_avg_single_row = r"""
-{"avg(number)":0}
+{"avg(number)":0,"any(toTypeName(number))":"UInt64"}
 """
 
 _aggregate_functions_avg_some_negative_values = r"""
-{"minus(avg(number), 5)":0.5}
+{"minus(avg(number), 5)":0.5,"any(toTypeName(number))":"UInt64"}
 """
 
 _aggregate_functions_avg_with_group_by = r"""
-{"even":0,"avg(number)":4}
-{"even":1,"avg(number)":5}
+{"even":0,"avg(number)":4,"any(toTypeName(number))":"UInt64"}
+{"even":1,"avg(number)":5,"any(toTypeName(number))":"UInt64"}
 """
 
 _aggregate_functions_avg_zero_rows = r"""
-{"avg(number)":null}
+{"avg(number)":null,"any(toTypeName(number))":""}
 """
 
