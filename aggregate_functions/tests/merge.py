@@ -20,6 +20,20 @@ def array_on_duplicate_keys(ordered_pairs):
            d[k] = [v]
     return d
 
+@TestCheck
+def check2(self, func, datatypes, hex_repr, snapshot_name, short_name, is_low_cardinality=False):
+    if is_low_cardinality:
+        self.context.node.query(f"SET allow_suspicious_low_cardinality_types = 1")
+
+    with When("I insert data in temporary table"):
+        values = f"(CAST(unhex('{hex_repr}'), 'AggregateFunction({func}, {datatypes})'))"
+
+    with Then("I check the result"):
+        correct_form = func.replace(short_name, short_name + "Merge")
+        execute_query(
+            f"SELECT {correct_form}{values}", snapshot_name=snapshot_name
+        )
+
 
 @TestCheck
 def check(self, func, datatypes, hex_repr, snapshot_name, short_name, is_low_cardinality=False):
@@ -49,8 +63,11 @@ def check(self, func, datatypes, hex_repr, snapshot_name, short_name, is_low_car
 
 
 @TestScenario
-def merge(self, func, snapshot_id, short_name):
+def merge(self, scenario, short_name):
     """Check aggregate function -Merge combinator."""
+
+    snapshot_id, func = scenario()
+    snapshot_id = snapshot_id.lower().replace("merge", "state") # need state from snapshots of -State combinator 
     snapshot_path = os.path.join(current_dir(), "snapshots", f"steps.py.{snapshot_id}.{current_cpu()}.snapshot")
   
     if not os.path.exists(snapshot_path):
@@ -194,15 +211,14 @@ def feature(self):
         if i in test_funcs:
             test_funcs.remove(i)
 
-    for name in test_funcs:
-        try:
-            scenario = load(f"aggregate_functions.tests.{name}", "scenario")
-        except ModuleNotFoundError as e:
-            with Scenario(f"{name}Merge"):
-                skip(reason=f"{name}State() test is not implemented")
-        else:
-            with Scenario(f"{name}Merge", description=f"Get snapshot name to retrieve state of {name} function"):
-                snapshot_id, used_name = scenario()
-                snapshot_id = snapshot_id.lower().replace("merge", "state") # need state from snapshots of -State combinator 
-                merge(func=used_name, snapshot_id=snapshot_id, short_name=name)
-
+    with Pool(15) as executor:
+        for name in test_funcs:
+            try:
+                scenario = load(f"aggregate_functions.tests.{name}", "scenario")
+            except ModuleNotFoundError as e:
+                with Scenario(f"{name}Merge"):
+                    skip(reason=f"{name}State() test is not implemented")
+            else:
+                Scenario(f"{name}Merge", description=f"Get snapshot name to retrieve state of {name} function",
+                         test=merge, parallel=True, executor=executor)(scenario=scenario, short_name=name)  
+        join()

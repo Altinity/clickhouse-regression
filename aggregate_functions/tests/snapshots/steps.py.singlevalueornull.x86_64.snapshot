@@ -10,6 +10,10 @@ _aggregate_functions_singleValueOrNull_DateTime = r"""
 {"singleValueOrNull(datetime)":null,"any(toTypeName(datetime))":"DateTime"}
 """
 
+_aggregate_functions_singleValueOrNull_DateTime64_3_ = r"""
+{"singleValueOrNull(datetime64_3_)":null,"any(toTypeName(datetime64_3_))":"DateTime64(3)"}
+"""
+
 _aggregate_functions_singleValueOrNull_DateTime64_3___22_8 = r"""
 {"singleValueOrNull(datetime64_3_)":null,"any(toTypeName(datetime64_3_))":"DateTime64(3)"}
 """
@@ -200,6 +204,10 @@ _aggregate_functions_singleValueOrNull_NULL_value_handling = r"""
 
 _aggregate_functions_singleValueOrNull_Nullable_Bool_ = r"""
 {"singleValueOrNull(nullable_bool_)":null,"any(toTypeName(nullable_bool_))":"Nullable(Bool)"}
+"""
+
+_aggregate_functions_singleValueOrNull_Nullable_DateTime64_3__ = r"""
+{"singleValueOrNull(nullable_datetime64_3__)":null,"any(toTypeName(nullable_datetime64_3__))":"Nullable(DateTime64(3))"}
 """
 
 _aggregate_functions_singleValueOrNull_Nullable_DateTime64_3____22_8 = r"""

@@ -6,6 +6,10 @@ _aggregate_functions_topK_Array_Bool_ = r"""
 {"topK(3)(array_bool_)":[[true],[false]],"any(toTypeName(array_bool_))":"Array(Bool)"}
 """
 
+_aggregate_functions_topK_Array_DateTime64_3__ = r"""
+{"topK(3)(array_datetime64_3__)":[["1925-01-01 00:00:00.000"],["2283-11-11 23:59:59.999"],["2004-06-20 13:28:46.000"]],"any(toTypeName(array_datetime64_3__))":"Array(DateTime64(3))"}
+"""
+
 _aggregate_functions_topK_Array_DateTime64_3____22_8 = r"""
 {"topK(3)(array_datetime64_3__)":[["1900-01-01 00:00:00.000"],["2299-12-31 23:59:59.999"],["2004-06-20 13:28:46.000"]],"any(toTypeName(array_datetime64_3__))":"Array(DateTime64(3))"}
 """
@@ -206,6 +210,10 @@ _aggregate_functions_topK_Array_Nullable_Bool__ = r"""
 {"topK(3)(array_nullable_bool__)":[[true],[false],[null]],"any(toTypeName(array_nullable_bool__))":"Array(Nullable(Bool))"}
 """
 
+_aggregate_functions_topK_Array_Nullable_DateTime64_3___ = r"""
+{"topK(3)(array_nullable_datetime64_3___)":[["2283-11-11 23:59:59.999"],["1925-01-01 00:00:00.000"],[null]],"any(toTypeName(array_nullable_datetime64_3___))":"Array(Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_topK_Array_Nullable_DateTime64_3_____22_8 = r"""
 {"topK(3)(array_nullable_datetime64_3___)":[["2299-12-31 23:59:59.999"],["1900-01-01 00:00:00.000"],[null]],"any(toTypeName(array_nullable_datetime64_3___))":"Array(Nullable(DateTime64(3)))"}
 """
@@ -324,6 +332,10 @@ _aggregate_functions_topK_Date = r"""
 
 _aggregate_functions_topK_DateTime = r"""
 {"topK(3)(datetime)":["2106-02-07 06:28:15","2106-02-07 06:28:16","1970-01-01 01:00:00"],"any(toTypeName(datetime))":"DateTime"}
+"""
+
+_aggregate_functions_topK_DateTime64_3_ = r"""
+{"topK(3)(datetime64_3_)":["1925-01-01 00:00:00.000","2283-11-11 23:59:59.999","2016-04-03 08:30:07.000"],"any(toTypeName(datetime64_3_))":"DateTime64(3)"}
 """
 
 _aggregate_functions_topK_DateTime64_3___22_8 = r"""
@@ -554,6 +566,10 @@ _aggregate_functions_topK_Map_Bool_Bool_ = r"""
 {"topK(3)(map_bool_bool_)":[{"false":false},{"true":false},{"true":true}],"any(toTypeName(map_bool_bool_))":"Map(Bool, Bool)"}
 """
 
+_aggregate_functions_topK_Map_Bool_DateTime64_3__ = r"""
+{"topK(3)(map_bool_datetime64_3__)":[{"false":"1925-01-01 00:00:00.000"},{"true":"2283-11-11 23:59:59.999"},{"true":"2021-12-03 17:26:34.000"}],"any(toTypeName(map_bool_datetime64_3__))":"Map(Bool, DateTime64(3))"}
+"""
+
 _aggregate_functions_topK_Map_Bool_DateTime64_3____22_8 = r"""
 {"topK(3)(map_bool_datetime64_3__)":[{"false":"1900-01-01 00:00:00.000"},{"true":"2299-12-31 23:59:59.999"},{"true":"2021-12-03 17:26:34.000"}],"any(toTypeName(map_bool_datetime64_3__))":"Map(Bool, DateTime64(3))"}
 """
@@ -754,6 +770,10 @@ _aggregate_functions_topK_Map_Bool_Nullable_Bool__ = r"""
 {"topK(3)(map_bool_nullable_bool__)":[{"true":true},{"false":false},{"false":null}],"any(toTypeName(map_bool_nullable_bool__))":"Map(Bool, Nullable(Bool))"}
 """
 
+_aggregate_functions_topK_Map_Bool_Nullable_DateTime64_3___ = r"""
+{"topK(3)(map_bool_nullable_datetime64_3___)":[{"true":"2283-11-11 23:59:59.999"},{"false":"1925-01-01 00:00:00.000"},{"false":null}],"any(toTypeName(map_bool_nullable_datetime64_3___))":"Map(Bool, Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_topK_Map_Bool_Nullable_DateTime64_3_____22_8 = r"""
 {"topK(3)(map_bool_nullable_datetime64_3___)":[{"true":"2299-12-31 23:59:59.999"},{"false":"1900-01-01 00:00:00.000"},{"false":null}],"any(toTypeName(map_bool_nullable_datetime64_3___))":"Map(Bool, Nullable(DateTime64(3)))"}
 """
@@ -868,6 +888,10 @@ _aggregate_functions_topK_Map_DateTime_Array_String__ = r"""
 
 _aggregate_functions_topK_Map_DateTime_Bool_ = r"""
 {"topK(3)(map_datetime_bool_)":[{"1970-01-01 01:00:00":false},{"2106-02-07 06:28:15":true},{"2019-05-08 11:14:11":false}],"any(toTypeName(map_datetime_bool_))":"Map(DateTime, Bool)"}
+"""
+
+_aggregate_functions_topK_Map_DateTime_DateTime64_3__ = r"""
+{"topK(3)(map_datetime_datetime64_3__)":[{"1970-01-01 01:00:00":"1925-01-01 00:00:00.000"},{"2106-02-07 06:28:15":"2283-11-11 23:59:59.999"},{"2008-11-06 22:11:44":"2019-11-05 13:58:48.000"}],"any(toTypeName(map_datetime_datetime64_3__))":"Map(DateTime, DateTime64(3))"}
 """
 
 _aggregate_functions_topK_Map_DateTime_DateTime64_3____22_8 = r"""
@@ -1070,6 +1094,10 @@ _aggregate_functions_topK_Map_DateTime_Nullable_Bool__ = r"""
 {"topK(3)(map_datetime_nullable_bool__)":[{"2106-02-07 06:28:15":true},{"1970-01-01 01:00:00":false},{"1970-01-01 01:00:00":null}],"any(toTypeName(map_datetime_nullable_bool__))":"Map(DateTime, Nullable(Bool))"}
 """
 
+_aggregate_functions_topK_Map_DateTime_Nullable_DateTime64_3___ = r"""
+{"topK(3)(map_datetime_nullable_datetime64_3___)":[{"2106-02-07 06:28:15":"2283-11-11 23:59:59.999"},{"1970-01-01 01:00:00":"1925-01-01 00:00:00.000"},{"1970-01-01 01:00:00":null}],"any(toTypeName(map_datetime_nullable_datetime64_3___))":"Map(DateTime, Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_topK_Map_DateTime_Nullable_DateTime64_3_____22_8 = r"""
 {"topK(3)(map_datetime_nullable_datetime64_3___)":[{"2106-02-07 06:28:15":"2299-12-31 23:59:59.999"},{"1970-01-01 01:00:00":"1900-01-01 00:00:00.000"},{"1970-01-01 01:00:00":null}],"any(toTypeName(map_datetime_nullable_datetime64_3___))":"Map(DateTime, Nullable(DateTime64(3)))"}
 """
@@ -1184,6 +1212,10 @@ _aggregate_functions_topK_Map_Date_Array_String__ = r"""
 
 _aggregate_functions_topK_Map_Date_Bool_ = r"""
 {"topK(3)(map_date_bool_)":[{"1970-01-01":false},{"2149-06-06":true},{"2005-05-19":false}],"any(toTypeName(map_date_bool_))":"Map(Date, Bool)"}
+"""
+
+_aggregate_functions_topK_Map_Date_DateTime64_3__ = r"""
+{"topK(3)(map_date_datetime64_3__)":[{"1970-01-01":"1925-01-01 00:00:00.000"},{"2149-06-06":"2283-11-11 23:59:59.999"},{"2018-03-30":"2009-11-20 12:23:57.000"}],"any(toTypeName(map_date_datetime64_3__))":"Map(Date, DateTime64(3))"}
 """
 
 _aggregate_functions_topK_Map_Date_DateTime64_3____22_8 = r"""
@@ -1386,6 +1418,10 @@ _aggregate_functions_topK_Map_Date_Nullable_Bool__ = r"""
 {"topK(3)(map_date_nullable_bool__)":[{"2149-06-06":true},{"1970-01-01":false},{"1970-01-01":null}],"any(toTypeName(map_date_nullable_bool__))":"Map(Date, Nullable(Bool))"}
 """
 
+_aggregate_functions_topK_Map_Date_Nullable_DateTime64_3___ = r"""
+{"topK(3)(map_date_nullable_datetime64_3___)":[{"2149-06-06":"2283-11-11 23:59:59.999"},{"1970-01-01":"1925-01-01 00:00:00.000"},{"1970-01-01":null}],"any(toTypeName(map_date_nullable_datetime64_3___))":"Map(Date, Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_topK_Map_Date_Nullable_DateTime64_3_____22_8 = r"""
 {"topK(3)(map_date_nullable_datetime64_3___)":[{"2149-06-06":"2299-12-31 23:59:59.999"},{"1970-01-01":"1900-01-01 00:00:00.000"},{"1970-01-01":null}],"any(toTypeName(map_date_nullable_datetime64_3___))":"Map(Date, Nullable(DateTime64(3)))"}
 """
@@ -1500,6 +1536,10 @@ _aggregate_functions_topK_Map_FixedString_51__Array_String__ = r"""
 
 _aggregate_functions_topK_Map_FixedString_51__Bool_ = r"""
 {"topK(3)(map_fixedstring_51__bool_)":[{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":false},{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":true},{"IIIIIII\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":true}],"any(toTypeName(map_fixedstring_51__bool_))":"Map(FixedString(51), Bool)"}
+"""
+
+_aggregate_functions_topK_Map_FixedString_51__DateTime64_3__ = r"""
+{"topK(3)(map_fixedstring_51__datetime64_3__)":[{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"1925-01-01 00:00:00.000"},{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":"2283-11-11 23:59:59.999"},{"rrrrrrrrrrrrrrrrrrrrrr\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"2008-06-07 14:18:46.000"}],"any(toTypeName(map_fixedstring_51__datetime64_3__))":"Map(FixedString(51), DateTime64(3))"}
 """
 
 _aggregate_functions_topK_Map_FixedString_51__DateTime64_3____22_8 = r"""
@@ -1702,6 +1742,10 @@ _aggregate_functions_topK_Map_FixedString_51__Nullable_Bool__ = r"""
 {"topK(3)(map_fixedstring_51__nullable_bool__)":[{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":true},{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":false},{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":null}],"any(toTypeName(map_fixedstring_51__nullable_bool__))":"Map(FixedString(51), Nullable(Bool))"}
 """
 
+_aggregate_functions_topK_Map_FixedString_51__Nullable_DateTime64_3___ = r"""
+{"topK(3)(map_fixedstring_51__nullable_datetime64_3___)":[{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":"2283-11-11 23:59:59.999"},{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"1925-01-01 00:00:00.000"},{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":null}],"any(toTypeName(map_fixedstring_51__nullable_datetime64_3___))":"Map(FixedString(51), Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_topK_Map_FixedString_51__Nullable_DateTime64_3_____22_8 = r"""
 {"topK(3)(map_fixedstring_51__nullable_datetime64_3___)":[{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":"2299-12-31 23:59:59.999"},{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"1900-01-01 00:00:00.000"},{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":null}],"any(toTypeName(map_fixedstring_51__nullable_datetime64_3___))":"Map(FixedString(51), Nullable(DateTime64(3)))"}
 """
@@ -1816,6 +1860,10 @@ _aggregate_functions_topK_Map_Int128_Array_String__ = r"""
 
 _aggregate_functions_topK_Map_Int128_Bool_ = r"""
 {"topK(3)(map_int128_bool_)":[{"-170141183460469231722463931679029329921":true},{"170141183460469231722463931679029329921":false},{"0":false}],"any(toTypeName(map_int128_bool_))":"Map(Int128, Bool)"}
+"""
+
+_aggregate_functions_topK_Map_Int128_DateTime64_3__ = r"""
+{"topK(3)(map_int128_datetime64_3__)":[{"-170141183460469231722463931679029329921":"2283-11-11 23:59:59.999"},{"170141183460469231722463931679029329921":"1925-01-01 00:00:00.000"},{"0":"1925-01-01 00:00:00.000"}],"any(toTypeName(map_int128_datetime64_3__))":"Map(Int128, DateTime64(3))"}
 """
 
 _aggregate_functions_topK_Map_Int128_DateTime64_3____22_8 = r"""
@@ -2018,6 +2066,10 @@ _aggregate_functions_topK_Map_Int128_Nullable_Bool__ = r"""
 {"topK(3)(map_int128_nullable_bool__)":[{"-170141183460469231722463931679029329921":true},{"170141183460469231722463931679029329921":false},{"0":null}],"any(toTypeName(map_int128_nullable_bool__))":"Map(Int128, Nullable(Bool))"}
 """
 
+_aggregate_functions_topK_Map_Int128_Nullable_DateTime64_3___ = r"""
+{"topK(3)(map_int128_nullable_datetime64_3___)":[{"-170141183460469231722463931679029329921":"2283-11-11 23:59:59.999"},{"170141183460469231722463931679029329921":"1925-01-01 00:00:00.000"},{"0":null}],"any(toTypeName(map_int128_nullable_datetime64_3___))":"Map(Int128, Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_topK_Map_Int128_Nullable_DateTime64_3_____22_8 = r"""
 {"topK(3)(map_int128_nullable_datetime64_3___)":[{"-170141183460469231722463931679029329921":"2299-12-31 23:59:59.999"},{"170141183460469231722463931679029329921":"1900-01-01 00:00:00.000"},{"0":null}],"any(toTypeName(map_int128_nullable_datetime64_3___))":"Map(Int128, Nullable(DateTime64(3)))"}
 """
@@ -2132,6 +2184,10 @@ _aggregate_functions_topK_Map_Int16_Array_String__ = r"""
 
 _aggregate_functions_topK_Map_Int16_Bool_ = r"""
 {"topK(3)(map_int16_bool_)":[{"32767":true},{"-32768":false},{"0":false}],"any(toTypeName(map_int16_bool_))":"Map(Int16, Bool)"}
+"""
+
+_aggregate_functions_topK_Map_Int16_DateTime64_3__ = r"""
+{"topK(3)(map_int16_datetime64_3__)":[{"32767":"2283-11-11 23:59:59.999"},{"-32768":"1925-01-01 00:00:00.000"},{"0":"1925-01-01 00:00:00.000"}],"any(toTypeName(map_int16_datetime64_3__))":"Map(Int16, DateTime64(3))"}
 """
 
 _aggregate_functions_topK_Map_Int16_DateTime64_3____22_8 = r"""
@@ -2334,6 +2390,10 @@ _aggregate_functions_topK_Map_Int16_Nullable_Bool__ = r"""
 {"topK(3)(map_int16_nullable_bool__)":[{"32767":true},{"-32768":false},{"0":null}],"any(toTypeName(map_int16_nullable_bool__))":"Map(Int16, Nullable(Bool))"}
 """
 
+_aggregate_functions_topK_Map_Int16_Nullable_DateTime64_3___ = r"""
+{"topK(3)(map_int16_nullable_datetime64_3___)":[{"32767":"2283-11-11 23:59:59.999"},{"-32768":"1925-01-01 00:00:00.000"},{"0":null}],"any(toTypeName(map_int16_nullable_datetime64_3___))":"Map(Int16, Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_topK_Map_Int16_Nullable_DateTime64_3_____22_8 = r"""
 {"topK(3)(map_int16_nullable_datetime64_3___)":[{"32767":"2299-12-31 23:59:59.999"},{"-32768":"1900-01-01 00:00:00.000"},{"0":null}],"any(toTypeName(map_int16_nullable_datetime64_3___))":"Map(Int16, Nullable(DateTime64(3)))"}
 """
@@ -2448,6 +2508,10 @@ _aggregate_functions_topK_Map_Int32_Array_String__ = r"""
 
 _aggregate_functions_topK_Map_Int32_Bool_ = r"""
 {"topK(3)(map_int32_bool_)":[{"2147483647":true},{"-2147483648":false},{"0":false}],"any(toTypeName(map_int32_bool_))":"Map(Int32, Bool)"}
+"""
+
+_aggregate_functions_topK_Map_Int32_DateTime64_3__ = r"""
+{"topK(3)(map_int32_datetime64_3__)":[{"2147483647":"2283-11-11 23:59:59.999"},{"-2147483648":"1925-01-01 00:00:00.000"},{"0":"1925-01-01 00:00:00.000"}],"any(toTypeName(map_int32_datetime64_3__))":"Map(Int32, DateTime64(3))"}
 """
 
 _aggregate_functions_topK_Map_Int32_DateTime64_3____22_8 = r"""
@@ -2650,6 +2714,10 @@ _aggregate_functions_topK_Map_Int32_Nullable_Bool__ = r"""
 {"topK(3)(map_int32_nullable_bool__)":[{"2147483647":true},{"-2147483648":false},{"0":null}],"any(toTypeName(map_int32_nullable_bool__))":"Map(Int32, Nullable(Bool))"}
 """
 
+_aggregate_functions_topK_Map_Int32_Nullable_DateTime64_3___ = r"""
+{"topK(3)(map_int32_nullable_datetime64_3___)":[{"2147483647":"2283-11-11 23:59:59.999"},{"-2147483648":"1925-01-01 00:00:00.000"},{"0":null}],"any(toTypeName(map_int32_nullable_datetime64_3___))":"Map(Int32, Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_topK_Map_Int32_Nullable_DateTime64_3_____22_8 = r"""
 {"topK(3)(map_int32_nullable_datetime64_3___)":[{"2147483647":"2299-12-31 23:59:59.999"},{"-2147483648":"1900-01-01 00:00:00.000"},{"0":null}],"any(toTypeName(map_int32_nullable_datetime64_3___))":"Map(Int32, Nullable(DateTime64(3)))"}
 """
@@ -2764,6 +2832,10 @@ _aggregate_functions_topK_Map_Int64_Array_String__ = r"""
 
 _aggregate_functions_topK_Map_Int64_Bool_ = r"""
 {"topK(3)(map_int64_bool_)":[{"9223372036854775807":true},{"-9223372036854775808":false},{"0":false}],"any(toTypeName(map_int64_bool_))":"Map(Int64, Bool)"}
+"""
+
+_aggregate_functions_topK_Map_Int64_DateTime64_3__ = r"""
+{"topK(3)(map_int64_datetime64_3__)":[{"9223372036854775807":"2283-11-11 23:59:59.999"},{"-9223372036854775808":"1925-01-01 00:00:00.000"},{"0":"1925-01-01 00:00:00.000"}],"any(toTypeName(map_int64_datetime64_3__))":"Map(Int64, DateTime64(3))"}
 """
 
 _aggregate_functions_topK_Map_Int64_DateTime64_3____22_8 = r"""
@@ -2966,6 +3038,10 @@ _aggregate_functions_topK_Map_Int64_Nullable_Bool__ = r"""
 {"topK(3)(map_int64_nullable_bool__)":[{"9223372036854775807":true},{"-9223372036854775808":false},{"0":null}],"any(toTypeName(map_int64_nullable_bool__))":"Map(Int64, Nullable(Bool))"}
 """
 
+_aggregate_functions_topK_Map_Int64_Nullable_DateTime64_3___ = r"""
+{"topK(3)(map_int64_nullable_datetime64_3___)":[{"9223372036854775807":"2283-11-11 23:59:59.999"},{"-9223372036854775808":"1925-01-01 00:00:00.000"},{"0":null}],"any(toTypeName(map_int64_nullable_datetime64_3___))":"Map(Int64, Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_topK_Map_Int64_Nullable_DateTime64_3_____22_8 = r"""
 {"topK(3)(map_int64_nullable_datetime64_3___)":[{"9223372036854775807":"2299-12-31 23:59:59.999"},{"-9223372036854775808":"1900-01-01 00:00:00.000"},{"0":null}],"any(toTypeName(map_int64_nullable_datetime64_3___))":"Map(Int64, Nullable(DateTime64(3)))"}
 """
@@ -3080,6 +3156,10 @@ _aggregate_functions_topK_Map_Int8_Array_String__ = r"""
 
 _aggregate_functions_topK_Map_Int8_Bool_ = r"""
 {"topK(3)(map_int8_bool_)":[{"127":true},{"-128":false},{"0":false}],"any(toTypeName(map_int8_bool_))":"Map(Int8, Bool)"}
+"""
+
+_aggregate_functions_topK_Map_Int8_DateTime64_3__ = r"""
+{"topK(3)(map_int8_datetime64_3__)":[{"127":"2283-11-11 23:59:59.999"},{"-128":"1925-01-01 00:00:00.000"},{"0":"1925-01-01 00:00:00.000"}],"any(toTypeName(map_int8_datetime64_3__))":"Map(Int8, DateTime64(3))"}
 """
 
 _aggregate_functions_topK_Map_Int8_DateTime64_3____22_8 = r"""
@@ -3282,6 +3362,10 @@ _aggregate_functions_topK_Map_Int8_Nullable_Bool__ = r"""
 {"topK(3)(map_int8_nullable_bool__)":[{"127":true},{"-128":false},{"0":null}],"any(toTypeName(map_int8_nullable_bool__))":"Map(Int8, Nullable(Bool))"}
 """
 
+_aggregate_functions_topK_Map_Int8_Nullable_DateTime64_3___ = r"""
+{"topK(3)(map_int8_nullable_datetime64_3___)":[{"127":"2283-11-11 23:59:59.999"},{"-128":"1925-01-01 00:00:00.000"},{"0":null}],"any(toTypeName(map_int8_nullable_datetime64_3___))":"Map(Int8, Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_topK_Map_Int8_Nullable_DateTime64_3_____22_8 = r"""
 {"topK(3)(map_int8_nullable_datetime64_3___)":[{"127":"2299-12-31 23:59:59.999"},{"-128":"1900-01-01 00:00:00.000"},{"0":null}],"any(toTypeName(map_int8_nullable_datetime64_3___))":"Map(Int8, Nullable(DateTime64(3)))"}
 """
@@ -3396,6 +3480,10 @@ _aggregate_functions_topK_Map_LowCardinality_FixedString_51___Array_String__ = r
 
 _aggregate_functions_topK_Map_LowCardinality_FixedString_51___Bool_ = r"""
 {"topK(3)(map_lowcardinality_fixedstring_51___bool_)":[{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":false},{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":true},{"ddddddddddddddd\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":false}],"any(toTypeName(map_lowcardinality_fixedstring_51___bool_))":"Map(LowCardinality(FixedString(51)), Bool)"}
+"""
+
+_aggregate_functions_topK_Map_LowCardinality_FixedString_51___DateTime64_3__ = r"""
+{"topK(3)(map_lowcardinality_fixedstring_51___datetime64_3__)":[{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"1925-01-01 00:00:00.000"},{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":"2283-11-11 23:59:59.999"},{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"2018-03-18 17:44:40.000"}],"any(toTypeName(map_lowcardinality_fixedstring_51___datetime64_3__))":"Map(LowCardinality(FixedString(51)), DateTime64(3))"}
 """
 
 _aggregate_functions_topK_Map_LowCardinality_FixedString_51___DateTime64_3____22_8 = r"""
@@ -3598,6 +3686,10 @@ _aggregate_functions_topK_Map_LowCardinality_FixedString_51___Nullable_Bool__ = 
 {"topK(3)(map_lowcardinality_fixedstring_51___nullable_bool__)":[{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":true},{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":false},{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":null}],"any(toTypeName(map_lowcardinality_fixedstring_51___nullable_bool__))":"Map(LowCardinality(FixedString(51)), Nullable(Bool))"}
 """
 
+_aggregate_functions_topK_Map_LowCardinality_FixedString_51___Nullable_DateTime64_3___ = r"""
+{"topK(3)(map_lowcardinality_fixedstring_51___nullable_datetime64_3___)":[{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":"2283-11-11 23:59:59.999"},{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"1925-01-01 00:00:00.000"},{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":null}],"any(toTypeName(map_lowcardinality_fixedstring_51___nullable_datetime64_3___))":"Map(LowCardinality(FixedString(51)), Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_topK_Map_LowCardinality_FixedString_51___Nullable_DateTime64_3_____22_8 = r"""
 {"topK(3)(map_lowcardinality_fixedstring_51___nullable_datetime64_3___)":[{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":"2299-12-31 23:59:59.999"},{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"1900-01-01 00:00:00.000"},{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":null}],"any(toTypeName(map_lowcardinality_fixedstring_51___nullable_datetime64_3___))":"Map(LowCardinality(FixedString(51)), Nullable(DateTime64(3)))"}
 """
@@ -3712,6 +3804,10 @@ _aggregate_functions_topK_Map_LowCardinality_String__Array_String__ = r"""
 
 _aggregate_functions_topK_Map_LowCardinality_String__Bool_ = r"""
 {"topK(3)(map_lowcardinality_string__bool_)":[{"":false},{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":true},{"eee":true}],"any(toTypeName(map_lowcardinality_string__bool_))":"Map(LowCardinality(String), Bool)"}
+"""
+
+_aggregate_functions_topK_Map_LowCardinality_String__DateTime64_3__ = r"""
+{"topK(3)(map_lowcardinality_string__datetime64_3__)":[{"":"1925-01-01 00:00:00.000"},{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":"2283-11-11 23:59:59.999"},{"QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ":"2006-12-01 17:36:39.000"}],"any(toTypeName(map_lowcardinality_string__datetime64_3__))":"Map(LowCardinality(String), DateTime64(3))"}
 """
 
 _aggregate_functions_topK_Map_LowCardinality_String__DateTime64_3____22_8 = r"""
@@ -3914,6 +4010,10 @@ _aggregate_functions_topK_Map_LowCardinality_String__Nullable_Bool__ = r"""
 {"topK(3)(map_lowcardinality_string__nullable_bool__)":[{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":true},{"":false},{"":null}],"any(toTypeName(map_lowcardinality_string__nullable_bool__))":"Map(LowCardinality(String), Nullable(Bool))"}
 """
 
+_aggregate_functions_topK_Map_LowCardinality_String__Nullable_DateTime64_3___ = r"""
+{"topK(3)(map_lowcardinality_string__nullable_datetime64_3___)":[{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":"2283-11-11 23:59:59.999"},{"":"1925-01-01 00:00:00.000"},{"":null}],"any(toTypeName(map_lowcardinality_string__nullable_datetime64_3___))":"Map(LowCardinality(String), Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_topK_Map_LowCardinality_String__Nullable_DateTime64_3_____22_8 = r"""
 {"topK(3)(map_lowcardinality_string__nullable_datetime64_3___)":[{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":"2299-12-31 23:59:59.999"},{"":"1900-01-01 00:00:00.000"},{"":null}],"any(toTypeName(map_lowcardinality_string__nullable_datetime64_3___))":"Map(LowCardinality(String), Nullable(DateTime64(3)))"}
 """
@@ -4028,6 +4128,10 @@ _aggregate_functions_topK_Map_String_Array_String__ = r"""
 
 _aggregate_functions_topK_Map_String_Bool_ = r"""
 {"topK(3)(map_string_bool_)":[{"":false},{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":true},{"tttttttttttttt":true}],"any(toTypeName(map_string_bool_))":"Map(String, Bool)"}
+"""
+
+_aggregate_functions_topK_Map_String_DateTime64_3__ = r"""
+{"topK(3)(map_string_datetime64_3__)":[{"":"1925-01-01 00:00:00.000"},{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":"2283-11-11 23:59:59.999"},{"yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy":"2014-02-05 05:43:31.000"}],"any(toTypeName(map_string_datetime64_3__))":"Map(String, DateTime64(3))"}
 """
 
 _aggregate_functions_topK_Map_String_DateTime64_3____22_8 = r"""
@@ -4230,6 +4334,10 @@ _aggregate_functions_topK_Map_String_Nullable_Bool__ = r"""
 {"topK(3)(map_string_nullable_bool__)":[{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":true},{"":false},{"":null}],"any(toTypeName(map_string_nullable_bool__))":"Map(String, Nullable(Bool))"}
 """
 
+_aggregate_functions_topK_Map_String_Nullable_DateTime64_3___ = r"""
+{"topK(3)(map_string_nullable_datetime64_3___)":[{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":"2283-11-11 23:59:59.999"},{"":"1925-01-01 00:00:00.000"},{"":null}],"any(toTypeName(map_string_nullable_datetime64_3___))":"Map(String, Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_topK_Map_String_Nullable_DateTime64_3_____22_8 = r"""
 {"topK(3)(map_string_nullable_datetime64_3___)":[{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":"2299-12-31 23:59:59.999"},{"":"1900-01-01 00:00:00.000"},{"":null}],"any(toTypeName(map_string_nullable_datetime64_3___))":"Map(String, Nullable(DateTime64(3)))"}
 """
@@ -4344,6 +4452,10 @@ _aggregate_functions_topK_Map_UInt128_Array_String__ = r"""
 
 _aggregate_functions_topK_Map_UInt128_Bool_ = r"""
 {"topK(3)(map_uint128_bool_)":[{"0":false},{"340282366920938463426481119284349108225":true},{"204987595641282880263020049013184874495":true}],"any(toTypeName(map_uint128_bool_))":"Map(UInt128, Bool)"}
+"""
+
+_aggregate_functions_topK_Map_UInt128_DateTime64_3__ = r"""
+{"topK(3)(map_uint128_datetime64_3__)":[{"0":"1925-01-01 00:00:00.000"},{"340282366920938463426481119284349108225":"2283-11-11 23:59:59.999"},{"247819748213710485107815752420774240255":"2010-08-18 18:28:22.000"}],"any(toTypeName(map_uint128_datetime64_3__))":"Map(UInt128, DateTime64(3))"}
 """
 
 _aggregate_functions_topK_Map_UInt128_DateTime64_3____22_8 = r"""
@@ -4546,6 +4658,10 @@ _aggregate_functions_topK_Map_UInt128_Nullable_Bool__ = r"""
 {"topK(3)(map_uint128_nullable_bool__)":[{"340282366920938463426481119284349108225":true},{"0":false},{"0":null}],"any(toTypeName(map_uint128_nullable_bool__))":"Map(UInt128, Nullable(Bool))"}
 """
 
+_aggregate_functions_topK_Map_UInt128_Nullable_DateTime64_3___ = r"""
+{"topK(3)(map_uint128_nullable_datetime64_3___)":[{"340282366920938463426481119284349108225":"2283-11-11 23:59:59.999"},{"0":"1925-01-01 00:00:00.000"},{"0":null}],"any(toTypeName(map_uint128_nullable_datetime64_3___))":"Map(UInt128, Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_topK_Map_UInt128_Nullable_DateTime64_3_____22_8 = r"""
 {"topK(3)(map_uint128_nullable_datetime64_3___)":[{"340282366920938463426481119284349108225":"2299-12-31 23:59:59.999"},{"0":"1900-01-01 00:00:00.000"},{"0":null}],"any(toTypeName(map_uint128_nullable_datetime64_3___))":"Map(UInt128, Nullable(DateTime64(3)))"}
 """
@@ -4660,6 +4776,10 @@ _aggregate_functions_topK_Map_UInt16_Array_String__ = r"""
 
 _aggregate_functions_topK_Map_UInt16_Bool_ = r"""
 {"topK(3)(map_uint16_bool_)":[{"0":false},{"65535":true},{"34829":true}],"any(toTypeName(map_uint16_bool_))":"Map(UInt16, Bool)"}
+"""
+
+_aggregate_functions_topK_Map_UInt16_DateTime64_3__ = r"""
+{"topK(3)(map_uint16_datetime64_3__)":[{"0":"1925-01-01 00:00:00.000"},{"65535":"2283-11-11 23:59:59.999"},{"61742":"2011-06-30 04:00:18.000"}],"any(toTypeName(map_uint16_datetime64_3__))":"Map(UInt16, DateTime64(3))"}
 """
 
 _aggregate_functions_topK_Map_UInt16_DateTime64_3____22_8 = r"""
@@ -4862,6 +4982,10 @@ _aggregate_functions_topK_Map_UInt16_Nullable_Bool__ = r"""
 {"topK(3)(map_uint16_nullable_bool__)":[{"65535":true},{"0":false},{"0":null}],"any(toTypeName(map_uint16_nullable_bool__))":"Map(UInt16, Nullable(Bool))"}
 """
 
+_aggregate_functions_topK_Map_UInt16_Nullable_DateTime64_3___ = r"""
+{"topK(3)(map_uint16_nullable_datetime64_3___)":[{"65535":"2283-11-11 23:59:59.999"},{"0":"1925-01-01 00:00:00.000"},{"0":null}],"any(toTypeName(map_uint16_nullable_datetime64_3___))":"Map(UInt16, Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_topK_Map_UInt16_Nullable_DateTime64_3_____22_8 = r"""
 {"topK(3)(map_uint16_nullable_datetime64_3___)":[{"65535":"2299-12-31 23:59:59.999"},{"0":"1900-01-01 00:00:00.000"},{"0":null}],"any(toTypeName(map_uint16_nullable_datetime64_3___))":"Map(UInt16, Nullable(DateTime64(3)))"}
 """
@@ -4976,6 +5100,10 @@ _aggregate_functions_topK_Map_UInt32_Array_String__ = r"""
 
 _aggregate_functions_topK_Map_UInt32_Bool_ = r"""
 {"topK(3)(map_uint32_bool_)":[{"0":false},{"4294967295":true},{"399486676":true}],"any(toTypeName(map_uint32_bool_))":"Map(UInt32, Bool)"}
+"""
+
+_aggregate_functions_topK_Map_UInt32_DateTime64_3__ = r"""
+{"topK(3)(map_uint32_datetime64_3__)":[{"0":"1925-01-01 00:00:00.000"},{"4294967295":"2283-11-11 23:59:59.999"},{"3395228751":"2020-07-31 05:28:24.000"}],"any(toTypeName(map_uint32_datetime64_3__))":"Map(UInt32, DateTime64(3))"}
 """
 
 _aggregate_functions_topK_Map_UInt32_DateTime64_3____22_8 = r"""
@@ -5178,6 +5306,10 @@ _aggregate_functions_topK_Map_UInt32_Nullable_Bool__ = r"""
 {"topK(3)(map_uint32_nullable_bool__)":[{"4294967295":true},{"0":false},{"0":null}],"any(toTypeName(map_uint32_nullable_bool__))":"Map(UInt32, Nullable(Bool))"}
 """
 
+_aggregate_functions_topK_Map_UInt32_Nullable_DateTime64_3___ = r"""
+{"topK(3)(map_uint32_nullable_datetime64_3___)":[{"4294967295":"2283-11-11 23:59:59.999"},{"0":"1925-01-01 00:00:00.000"},{"0":null}],"any(toTypeName(map_uint32_nullable_datetime64_3___))":"Map(UInt32, Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_topK_Map_UInt32_Nullable_DateTime64_3_____22_8 = r"""
 {"topK(3)(map_uint32_nullable_datetime64_3___)":[{"4294967295":"2299-12-31 23:59:59.999"},{"0":"1900-01-01 00:00:00.000"},{"0":null}],"any(toTypeName(map_uint32_nullable_datetime64_3___))":"Map(UInt32, Nullable(DateTime64(3)))"}
 """
@@ -5292,6 +5424,10 @@ _aggregate_functions_topK_Map_UInt64_Array_String__ = r"""
 
 _aggregate_functions_topK_Map_UInt64_Bool_ = r"""
 {"topK(3)(map_uint64_bool_)":[{"0":false},{"18446744073709551615":true},{"10236193416833050955":false}],"any(toTypeName(map_uint64_bool_))":"Map(UInt64, Bool)"}
+"""
+
+_aggregate_functions_topK_Map_UInt64_DateTime64_3__ = r"""
+{"topK(3)(map_uint64_datetime64_3__)":[{"0":"1925-01-01 00:00:00.000"},{"18446744073709551615":"2283-11-11 23:59:59.999"},{"8267603552200017545":"2021-11-02 15:13:03.000"}],"any(toTypeName(map_uint64_datetime64_3__))":"Map(UInt64, DateTime64(3))"}
 """
 
 _aggregate_functions_topK_Map_UInt64_DateTime64_3____22_8 = r"""
@@ -5494,6 +5630,10 @@ _aggregate_functions_topK_Map_UInt64_Nullable_Bool__ = r"""
 {"topK(3)(map_uint64_nullable_bool__)":[{"18446744073709551615":true},{"0":false},{"0":null}],"any(toTypeName(map_uint64_nullable_bool__))":"Map(UInt64, Nullable(Bool))"}
 """
 
+_aggregate_functions_topK_Map_UInt64_Nullable_DateTime64_3___ = r"""
+{"topK(3)(map_uint64_nullable_datetime64_3___)":[{"18446744073709551615":"2283-11-11 23:59:59.999"},{"0":"1925-01-01 00:00:00.000"},{"0":null}],"any(toTypeName(map_uint64_nullable_datetime64_3___))":"Map(UInt64, Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_topK_Map_UInt64_Nullable_DateTime64_3_____22_8 = r"""
 {"topK(3)(map_uint64_nullable_datetime64_3___)":[{"18446744073709551615":"2299-12-31 23:59:59.999"},{"0":"1900-01-01 00:00:00.000"},{"0":null}],"any(toTypeName(map_uint64_nullable_datetime64_3___))":"Map(UInt64, Nullable(DateTime64(3)))"}
 """
@@ -5608,6 +5748,10 @@ _aggregate_functions_topK_Map_UInt8_Array_String__ = r"""
 
 _aggregate_functions_topK_Map_UInt8_Bool_ = r"""
 {"topK(3)(map_uint8_bool_)":[{"0":false},{"143":false},{"255":true}],"any(toTypeName(map_uint8_bool_))":"Map(UInt8, Bool)"}
+"""
+
+_aggregate_functions_topK_Map_UInt8_DateTime64_3__ = r"""
+{"topK(3)(map_uint8_datetime64_3__)":[{"0":"1925-01-01 00:00:00.000"},{"255":"2283-11-11 23:59:59.999"},{"166":"2015-11-26 05:34:16.000"}],"any(toTypeName(map_uint8_datetime64_3__))":"Map(UInt8, DateTime64(3))"}
 """
 
 _aggregate_functions_topK_Map_UInt8_DateTime64_3____22_8 = r"""
@@ -5810,6 +5954,10 @@ _aggregate_functions_topK_Map_UInt8_Nullable_Bool__ = r"""
 {"topK(3)(map_uint8_nullable_bool__)":[{"255":true},{"0":false},{"0":null}],"any(toTypeName(map_uint8_nullable_bool__))":"Map(UInt8, Nullable(Bool))"}
 """
 
+_aggregate_functions_topK_Map_UInt8_Nullable_DateTime64_3___ = r"""
+{"topK(3)(map_uint8_nullable_datetime64_3___)":[{"255":"2283-11-11 23:59:59.999"},{"0":"1925-01-01 00:00:00.000"},{"0":null}],"any(toTypeName(map_uint8_nullable_datetime64_3___))":"Map(UInt8, Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_topK_Map_UInt8_Nullable_DateTime64_3_____22_8 = r"""
 {"topK(3)(map_uint8_nullable_datetime64_3___)":[{"255":"2299-12-31 23:59:59.999"},{"0":"1900-01-01 00:00:00.000"},{"0":null}],"any(toTypeName(map_uint8_nullable_datetime64_3___))":"Map(UInt8, Nullable(DateTime64(3)))"}
 """
@@ -5924,6 +6072,10 @@ _aggregate_functions_topK_Map_UUID_Array_String__ = r"""
 
 _aggregate_functions_topK_Map_UUID_Bool_ = r"""
 {"topK(3)(map_uuid_bool_)":[{"00000000-0000-0000-0000-000000000000":false},{"ffffffff-ffff-ffff-ffff-ffffffffffff":true},{"54eabfb9-5796-94df-ad95-32a9d4040e25":true}],"any(toTypeName(map_uuid_bool_))":"Map(UUID, Bool)"}
+"""
+
+_aggregate_functions_topK_Map_UUID_DateTime64_3__ = r"""
+{"topK(3)(map_uuid_datetime64_3__)":[{"00000000-0000-0000-0000-000000000000":"1925-01-01 00:00:00.000"},{"ffffffff-ffff-ffff-ffff-ffffffffffff":"2283-11-11 23:59:59.999"},{"e2cbbb65-3f50-1cbc-d1a7-d8b13c535f4c":"2007-10-07 19:25:47.000"}],"any(toTypeName(map_uuid_datetime64_3__))":"Map(UUID, DateTime64(3))"}
 """
 
 _aggregate_functions_topK_Map_UUID_DateTime64_3____22_8 = r"""
@@ -6126,6 +6278,10 @@ _aggregate_functions_topK_Map_UUID_Nullable_Bool__ = r"""
 {"topK(3)(map_uuid_nullable_bool__)":[{"ffffffff-ffff-ffff-ffff-ffffffffffff":true},{"00000000-0000-0000-0000-000000000000":false},{"00000000-0000-0000-0000-000000000000":null}],"any(toTypeName(map_uuid_nullable_bool__))":"Map(UUID, Nullable(Bool))"}
 """
 
+_aggregate_functions_topK_Map_UUID_Nullable_DateTime64_3___ = r"""
+{"topK(3)(map_uuid_nullable_datetime64_3___)":[{"ffffffff-ffff-ffff-ffff-ffffffffffff":"2283-11-11 23:59:59.999"},{"00000000-0000-0000-0000-000000000000":"1925-01-01 00:00:00.000"},{"00000000-0000-0000-0000-000000000000":null}],"any(toTypeName(map_uuid_nullable_datetime64_3___))":"Map(UUID, Nullable(DateTime64(3)))"}
+"""
+
 _aggregate_functions_topK_Map_UUID_Nullable_DateTime64_3_____22_8 = r"""
 {"topK(3)(map_uuid_nullable_datetime64_3___)":[{"ffffffff-ffff-ffff-ffff-ffffffffffff":"2299-12-31 23:59:59.999"},{"00000000-0000-0000-0000-000000000000":"1900-01-01 00:00:00.000"},{"00000000-0000-0000-0000-000000000000":null}],"any(toTypeName(map_uuid_nullable_datetime64_3___))":"Map(UUID, Nullable(DateTime64(3)))"}
 """
@@ -6242,6 +6398,10 @@ _aggregate_functions_topK_Nullable_Bool_ = r"""
 {"topK(3)(nullable_bool_)":[true,false],"any(toTypeName(nullable_bool_))":"Nullable(Bool)"}
 """
 
+_aggregate_functions_topK_Nullable_DateTime64_3__ = r"""
+{"topK(3)(nullable_datetime64_3__)":["2283-11-11 23:59:59.999","1925-01-01 00:00:00.000","2005-11-23 12:39:15.000"],"any(toTypeName(nullable_datetime64_3__))":"Nullable(DateTime64(3))"}
+"""
+
 _aggregate_functions_topK_Nullable_DateTime64_3____22_8 = r"""
 {"topK(3)(nullable_datetime64_3__)":["2299-12-31 23:59:59.999","1900-01-01 00:00:00.000","2005-11-23 12:39:15.000"],"any(toTypeName(nullable_datetime64_3__))":"Nullable(DateTime64(3))"}
 """
@@ -6320,6 +6480,10 @@ _aggregate_functions_topK_Nullable_UUID_ = r"""
 
 _aggregate_functions_topK_String = r"""
 {"topK(3)(string)":["","abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP"],"any(toTypeName(string))":"String"}
+"""
+
+_aggregate_functions_topK_Tuple_UInt8_UInt16_UInt32_UInt64_UInt128_Int8_Int16_Int32_Int64_Int128_Float32_Float64_Decimal128_38__Date_DateTime_DateTime64_3__Bool_String_FixedString_51__UUID_Nullable_UInt8__Nullable_UInt16__Nullable_UInt32__Nullable_UInt64__Nullable_UInt128__Nullable_Int8__Nullable_Int16__Nullable_Int32__Nullable_Int64__Nullable_Int128__Nullable_Float32__Nullable_Float64__Nullable_Decimal128_38___Nullable_Date__Nullable_DateTime__Nullable_DateTime64_3___Nullable_Bool__Nullable_String__Nullable_FixedString_51___Nullable_UUID__LowCardinality_UInt8__LowCardinality_UInt16__LowCardinality_UInt32__LowCardinality_UInt64__LowCardinality_UInt128__LowCardinality_Int8__LowCardinality_Int16__LowCardinality_Int32__LowCardinality_Int64__LowCardinality_Int128__LowCardinality_Float32__LowCardinality_Float64__LowCardinality_Date__LowCardinality_DateTime__LowCardinality_Bool__LowCardinality_String__LowCardinality_FixedString_51___LowCardinality_UUID__Array_String__Map_String_LowCardinality_Float64___Tuple_String__ = r"""
+{"topK(3)(tuple_uint8_uint16_uint32_uint64_uint128_int8_int16_int32_int64_int128_float32_float64_decimal128_38__date_datetime_datetime64_3__bool_string_fixedstring_51__uuid_nullable_uint8__nullable_uint16__nullable_uint32__nullable_uint64__nullable_uint128__nullable_int8__nullable_int16__nullable_int32__nullable_int64__nullable_int128__nullable_float32__nullable_float64__nullable_decimal128_38___nullable_date__nullable_datetime__nullable_datetime64_3___nullable_bool__nullable_string__nullable_fixedstring_51___nullable_uuid__lowcardinality_uint8__lowcardinality_uint16__lowcardinality_uint32__lowcardinality_uint64__lowcardinality_uint128__lowcardinality_int8__lowcardinality_int16__lowcardinality_int32__lowcardinality_int64__lowcardinality_int128__lowcardinality_float32__lowcardinality_float64__lowcardinality_date__lowcardinality_datetime__lowcardinality_bool__lowcardinality_string__lowcardinality_fixedstring_51___lowcardinality_uuid__array_string__map_string_lowcardinality_float64___tuple_string__)":[[255,65535,4294967295,"18446744073709551615","340282366920938463426481119284349108225",127,32767,2147483647,"9223372036854775807","-170141183460469231722463931679029329921",3.4028235e38,1.7976909999999999e308,0.99999999999999997752612184630461283328,"2149-06-06","2106-02-07 06:28:15","2283-11-11 23:59:59.999",true,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","ffffffff-ffff-ffff-ffff-ffffffffffff",255,65535,4294967295,"18446744073709551615","340282366920938463426481119284349108225",127,32767,2147483647,"9223372036854775807","-170141183460469231722463931679029329921",3.4028235e38,1.7976909999999999e308,0.99999999999999997752612184630461283328,"2149-06-06","2106-02-07 06:28:15","2283-11-11 23:59:59.999",true,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","ffffffff-ffff-ffff-ffff-ffffffffffff",255,65535,4294967295,"18446744073709551615","340282366920938463426481119284349108225",127,32767,2147483647,"9223372036854775807","-170141183460469231722463931679029329921",-36893490000000000000,1.7976909999999999e308,"2149-06-06","2106-02-07 06:28:15",true,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ","ffffffff-ffff-ffff-ffff-ffffffffffff",["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"],{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ":1.7976909999999999e308},["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"]],[0,0,0,"0","0",-128,-32768,-2147483648,"-9223372036854775808","170141183460469231722463931679029329921",-3.4028235e38,-1.7976909999999999e308,-0.99999999999999997752612184630461283328,"1970-01-01","1970-01-01 01:00:00","1925-01-01 00:00:00.000",false,"","\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","00000000-0000-0000-0000-000000000000",0,0,0,"0","0",-128,-32768,-2147483648,"-9223372036854775808","170141183460469231722463931679029329921",-3.4028235e38,-1.7976909999999999e308,-0.99999999999999997752612184630461283328,"1970-01-01","1970-01-01 01:00:00","1925-01-01 00:00:00.000",false,"","\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","00000000-0000-0000-0000-000000000000",0,0,0,"0","0",-128,-32768,-2147483648,"-9223372036854775808","170141183460469231722463931679029329921",-36893490000000000000,-1.7976909999999999e308,"1970-01-01","1970-01-01 01:00:00",false,"","\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","00000000-0000-0000-0000-000000000000",[""],{"":-1.7976909999999999e308},[""]],[0,0,0,"0","0",0,0,0,"0","0",0,0,0,"1970-01-01","1970-01-01 01:00:00","1925-01-01 00:00:00.000",false,"","\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","00000000-0000-0000-0000-000000000000",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,0,0,0,"0","0",0,0,0,"0","0",0,0,"1970-01-01","1970-01-01 01:00:00",false,"","\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","00000000-0000-0000-0000-000000000000",[""],{"":0},[""]]],"any(toTypeName(tuple_uint8_uint16_uint32_uint64_uint128_int8_int16_int32_int64_int128_float32_float64_decimal128_38__date_datetime_datetime64_3__bool_string_fixedstring_51__uuid_nullable_uint8__nullable_uint16__nullable_uint32__nullable_uint64__nullable_uint128__nullable_int8__nullable_int16__nullable_int32__nullable_int64__nullable_int128__nullable_float32__nullable_float64__nullable_decimal128_38___nullable_date__nullable_datetime__nullable_datetime64_3___nullable_bool__nullable_string__nullable_fixedstring_51___nullable_uuid__lowcardinality_uint8__lowcardinality_uint16__lowcardinality_uint32__lowcardinality_uint64__lowcardinality_uint128__lowcardinality_int8__lowcardinality_int16__lowcardinality_int32__lowcardinality_int64__lowcardinality_int128__lowcardinality_float32__lowcardinality_float64__lowcardinality_date__lowcardinality_datetime__lowcardinality_bool__lowcardinality_string__lowcardinality_fixedstring_51___lowcardinality_uuid__array_string__map_string_lowcardinality_float64___tuple_string__))":"Tuple(UInt8, UInt16, UInt32, UInt64, UInt128, Int8, Int16, Int32, Int64, Int128, Float32, Float64, Decimal(38, 38), Date, DateTime, DateTime64(3), Bool, String, FixedString(51), UUID, Nullable(UInt8), Nullable(UInt16), Nullable(UInt32), Nullable(UInt64), Nullable(UInt128), Nullable(Int8), Nullable(Int16), Nullable(Int32), Nullable(Int64), Nullable(Int128), Nullable(Float32), Nullable(Float64), Nullable(Decimal(38, 38)), Nullable(Date), Nullable(DateTime), Nullable(DateTime64(3)), Nullable(Bool), Nullable(String), Nullable(FixedString(51)), Nullable(UUID), LowCardinality(UInt8), LowCardinality(UInt16), LowCardinality(UInt32), LowCardinality(UInt64), LowCardinality(UInt128), LowCardinality(Int8), LowCardinality(Int16), LowCardinality(Int32), LowCardinality(Int64), LowCardinality(Int128), LowCardinality(Float32), LowCardinality(Float64), LowCardinality(Date), LowCardinality(DateTime), LowCardinality(Bool), LowCardinality(String), LowCardinality(FixedString(51)), LowCardinality(UUID), Array(String), Map(String, LowCardinality(Float64)), Tuple(String))"}
 """
 
 _aggregate_functions_topK_Tuple_UInt8_UInt16_UInt32_UInt64_UInt128_Int8_Int16_Int32_Int64_Int128_Float32_Float64_Decimal128_38__Date_DateTime_DateTime64_3__Bool_String_FixedString_51__UUID_Nullable_UInt8__Nullable_UInt16__Nullable_UInt32__Nullable_UInt64__Nullable_UInt128__Nullable_Int8__Nullable_Int16__Nullable_Int32__Nullable_Int64__Nullable_Int128__Nullable_Float32__Nullable_Float64__Nullable_Decimal128_38___Nullable_Date__Nullable_DateTime__Nullable_DateTime64_3___Nullable_Bool__Nullable_String__Nullable_FixedString_51___Nullable_UUID__LowCardinality_UInt8__LowCardinality_UInt16__LowCardinality_UInt32__LowCardinality_UInt64__LowCardinality_UInt128__LowCardinality_Int8__LowCardinality_Int16__LowCardinality_Int32__LowCardinality_Int64__LowCardinality_Int128__LowCardinality_Float32__LowCardinality_Float64__LowCardinality_Date__LowCardinality_DateTime__LowCardinality_Bool__LowCardinality_String__LowCardinality_FixedString_51___LowCardinality_UUID__LowCardinality_Nullable_UInt8___LowCardinality_Nullable_UInt16___LowCardinality_Nullable_UInt32___LowCardinality_Nullable_UInt64___LowCardinality_Nullable_UInt128___LowCardinality_Nullable_Int8___LowCardinality_Nullable_Int16___LowCardinality_Nullable_Int32___LowCardinality_Nullable_Int64___LowCardinality_Nullable_Int128___LowCardinality_Nullable_Float32___LowCardinality_Nullable_Float64___LowCardinality_Nullable_Date___LowCardinality_Nullable_DateTime___LowCardinality_Nullable_Bool___LowCardinality_Nullable_String___LowCardinality_Nullable_FixedString_51____LowCardinality_Nullable_UUID___Array_String__Map_String_LowCardinality_Float64___Tuple_String____22_8 = r"""
