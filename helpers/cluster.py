@@ -151,9 +151,7 @@ class Node(object):
             else:
                 return 0
 
-        def query(
-            self, query_string, match=None, exitcode=None, message=None, steps=True
-        ):
+        def query(self, query_string, match=None, exitcode=None, message=None):
             self.command_context.app.send(query_string)
             self.command_context.app.expect(query_string, escape=True)
 
@@ -164,21 +162,23 @@ class Node(object):
 
             query_result = self.command_context.app.child.before
 
-            if not query_result.strip().startswith("Output:"):
-                if exitcode is not None:
-                    with Then(
-                        f"exitcode should be {exitcode}", format_name=False
-                    ) if steps else NullStep():
-                        assert exitcode == self._parse_error_code(
-                            str(query_result)
-                        ), error()
-                if message is not None:
-                    with Then(
-                        f"message should be {message}", format_name=False
-                    ) if steps else NullStep():
-                        assert message in query_result, error()
-                else:
-                    raise Exception(query_result)
+            raise_exception = True
+
+            if exitcode is not None:
+                with Then(f"exitcode should be {exitcode}", format_name=False):
+                    assert exitcode == self._parse_error_code(
+                        str(query_result)
+                    ), error()
+
+                raise_exception = False
+            if message is not None:
+                with Then(f"message should be {message}", format_name=False):
+                    assert message in query_result, error()
+
+                raise_exception = False
+
+            elif raise_exception and not query_result.strip().startswith("Output:"):
+                raise Exception(query_result)
 
             return query_result
 
