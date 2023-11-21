@@ -23,8 +23,8 @@ def create_partitions_with_random_uint64(
         node = self.context.node
 
     with By("Inserting random values into a column with uint64 datatype"):
-        for i in range(number_of_partitions):
-            for parts in range(number_of_parts):
+        for i in range(1, number_of_partitions + 1):
+            for parts in range(1, number_of_parts + 1):
                 node.query(
                     f"INSERT INTO {table_name} (p, i) SELECT {i}, rand64() FROM numbers({number_of_values})"
                 )
