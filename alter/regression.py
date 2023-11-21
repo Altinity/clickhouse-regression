@@ -37,12 +37,6 @@ xfails = {
             "Sometimes fails with the reason that the partition already frozen",
         )
     ],
-    "/alter/replace partition/prohibited actions/conditions/storage policy": [
-        (
-            Fail,
-            "it should not be possible to replace partition from a table that has a different storage policy",
-        )
-    ],
 }
 
 xflags = {}
