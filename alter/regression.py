@@ -87,6 +87,10 @@ def regression(
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
     self.context.clickhouse_version = clickhouse_version
+    self.context.storage = "minio"
+    self.context.uri = "http://minio:9001/root/data/alter"
+    self.context.access_key_id = "minio"
+    self.context.secret_access_key = "minio123"
 
     with Cluster(
         local,

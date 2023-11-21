@@ -6,6 +6,7 @@ from alter.table.replace_partition.requirements.requirements import *
 from helpers.alter import *
 from helpers.common import getuid, replace_partition
 from helpers.create import partitioned_replicated_merge_tree_table
+from parquet.tests.common import start_minio
 
 
 @TestScenario
@@ -91,6 +92,61 @@ def replicas(self):
         )
 
 
+@TestCheck
+def check_replace_partition_on_minio_and_default_disks(
+    self, destination_table, source_table
+):
+    """Replace partition on a table that is stored in minio."""
+    destination_table_name = "destination_" + getuid()
+    source_table_name = "source_" + getuid()
+
+    with Given(
+        "I create two MergeTree tables and one of both of them are stored on a minio disk"
+    ):
+        destination_table(table_name=destination_table_name)
+        source_table(table_name=source_table_name)
+
+    with Then(
+        "I replace partition on the destination table and validate that the data was replaced"
+    ):
+        replace_partition_and_validate_data(
+            destination_table=destination_table_name,
+            source_table=source_table_name,
+            partition_to_replace=1,
+        )
+
+
+@TestStep
+def table_stored_on_minio_disk(self, table_name):
+    """Create a MergeTree table partitioned by a colum that is stored on a minio disk."""
+    create_table_partitioned_by_column_with_data(
+        table_name=table_name, query_settings="storage_policy = 's3_policy'"
+    )
+
+
+@TestStep
+def table_not_stored_on_minio_disk(self, table_name):
+    create_table_partitioned_by_column_with_data(table_name=table_name)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+def replace_partition_on_minio_and_default_disks(self):
+    """Run check that validates if it is possible to replace partition on tables that are and are not stored on minio storage."""
+    values = {
+        table_stored_on_minio_disk,
+        table_not_stored_on_minio_disk,
+    }
+
+    with Given("I start a minio client"):
+        start_minio()
+
+    check_replace_partition_on_minio_and_default_disks(
+        destination_table=either(*values),
+        source_table=either(*values),
+    )
+
+
 @TestFeature
 @Name("storage")
 def feature(self, node="clickhouse1"):
@@ -101,3 +157,4 @@ def feature(self, node="clickhouse1"):
     Scenario(run=different_disks)
     Scenario(run=shards)
     Scenario(run=replicas)
+    Scenario(run=replace_partition_on_minio_and_default_disks)
