@@ -36,15 +36,19 @@ def check(self, func, datatypes, hex_repr, snapshot_name, short_name, is_low_car
 
 @TestScenario
 def finalizeAggregation(self, scenario=None, short_name=None):
-    snapshot_id, func = scenario()
+    with Scenario(f"{short_name}Merge"):
+        snapshot_id, func = scenario()
     snapshot_id = snapshot_id.lower().replace("merge", "state") # need state from snapshots of -State combinator 
     snapshot_path = os.path.join(current_dir(), "snapshots", f"steps.py.{snapshot_id}.{current_cpu()}.snapshot")
+
+    note(snapshot_path)
   
     if not os.path.exists(snapshot_path):
         xfail(reason=f"no snapshot found {snapshot_path}")
 
     snapshot_module = SourceFileLoader(func, snapshot_path).load_module() # add UUID
     snapshot_attrs = {k:v for k,v in vars(snapshot_module).items() if not k.startswith('__')}
+
 
     for key, value in snapshot_attrs.items():
         data = value.strip().split('\n')
@@ -190,9 +194,6 @@ def feature(self):
                 with Scenario(f"{name}_finalizeAggregation"):
                     skip(reason=f"{name}State() test is not implemented")
             else:
-                note(scenario)
-                note(name)
-                pause()
                 Scenario(f"{name}_finalizeAggregation", description=f"Get snapshot name to retrieve state of {name} function",
                          test=finalizeAggregation, parallel=True, executor=executor)(scenario=scenario, short_name=name)  
         join()
