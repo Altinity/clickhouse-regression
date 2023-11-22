@@ -1,80 +1,48 @@
-_aggregate_functions_merge_intervalLengthSumMerge_constant_0 = r"""
-{"intervalLengthSumMerge(state)":"0"}
-"""
-
-_aggregate_functions_merge_intervalLengthSumMerge_with_group_by_0 = r"""
-{"intervalLengthSumMerge(state)":"5"}
-"""
-
-_aggregate_functions_merge_intervalLengthSumMerge_with_group_by_1 = r"""
-{"intervalLengthSumMerge(state)":"5"}
-"""
-
-_aggregate_functions_merge_intervalLengthSumMerge_some_negative_values_0 = r"""
-{"intervalLengthSumMerge(state)":"80"}
-"""
-
 _aggregate_functions_merge_intervalLengthSumMerge_NULL_value_handling_0 = r"""
 {"intervalLengthSumMerge(state)":"5"}
 """
 
-_aggregate_functions_merge_intervalLengthSumMerge_single_NULL_value_0 = r"""
+_aggregate_functions_merge_intervalLengthSumMerge_constant_0 = r"""
 {"intervalLengthSumMerge(state)":"0"}
 """
 
-_aggregate_functions_merge_intervalLengthSumMerge_inf___inf__nan_inf_inf_0 = r"""
-{"intervalLengthSumMerge(state)":6.7}
-"""
-
-_aggregate_functions_merge_intervalLengthSumMerge_inf___inf__nan_inf__inf_0 = r"""
-{"intervalLengthSumMerge(state)":null}
-"""
-
-_aggregate_functions_merge_intervalLengthSumMerge_inf___inf__nan_inf_nan_0 = r"""
-{"intervalLengthSumMerge(state)":null}
-"""
-
-_aggregate_functions_merge_intervalLengthSumMerge_inf___inf__nan__inf_inf_0 = r"""
-{"intervalLengthSumMerge(state)":null}
-"""
-
-_aggregate_functions_merge_intervalLengthSumMerge_inf___inf__nan__inf__inf_0 = r"""
-{"intervalLengthSumMerge(state)":6.7}
-"""
-
-_aggregate_functions_merge_intervalLengthSumMerge_inf___inf__nan__inf_nan_0 = r"""
-{"intervalLengthSumMerge(state)":null}
-"""
-
-_aggregate_functions_merge_intervalLengthSumMerge_inf___inf__nan_nan_inf_0 = r"""
-{"intervalLengthSumMerge(state)":null}
-"""
-
-_aggregate_functions_merge_intervalLengthSumMerge_inf___inf__nan_nan__inf_0 = r"""
-{"intervalLengthSumMerge(state)":6.7}
-"""
-
-_aggregate_functions_merge_intervalLengthSumMerge_inf___inf__nan_nan_nan_0 = r"""
-{"intervalLengthSumMerge(state)":6.7}
-"""
-
-_aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_UInt64_UInt64_0 = r"""
+_aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_DateTime_DateTime_0 = r"""
 {"intervalLengthSumMerge(state)":"0"}
 """
 
-_aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_Nullable_UInt64__Nullable_UInt64__0 = r"""
+_aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_Date_Date_0 = r"""
 {"intervalLengthSumMerge(state)":"0"}
 """
 
-_aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_Nullable_Float64__Nullable_Float64__0 = r"""
+_aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_Float32_Float32_0 = r"""
 {"intervalLengthSumMerge(state)":0}
 """
 
-_aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_Nullable_Float32__Nullable_Float32__0 = r"""
+_aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_Float64_Float64_0 = r"""
 {"intervalLengthSumMerge(state)":0}
 """
 
-_aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_Nullable_Int64__Nullable_Int64__0 = r"""
+_aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_Int64_Int64_0 = r"""
+{"intervalLengthSumMerge(state)":"0"}
+"""
+
+_aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_LowCardinality_DateTime__LowCardinality_DateTime__0 = r"""
+{"intervalLengthSumMerge(state)":"0"}
+"""
+
+_aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_LowCardinality_Date__LowCardinality_Date__0 = r"""
+{"intervalLengthSumMerge(state)":"0"}
+"""
+
+_aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_LowCardinality_Float32__LowCardinality_Float32__0 = r"""
+{"intervalLengthSumMerge(state)":0}
+"""
+
+_aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_LowCardinality_Float64__LowCardinality_Float64__0 = r"""
+{"intervalLengthSumMerge(state)":0}
+"""
+
+_aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_LowCardinality_Int64__LowCardinality_Int64__0 = r"""
 {"intervalLengthSumMerge(state)":"0"}
 """
 
@@ -90,43 +58,75 @@ _aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_Nullabl
 {"intervalLengthSumMerge(state)":"0"}
 """
 
-_aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_LowCardinality_Float64__LowCardinality_Float64__0 = r"""
+_aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_Nullable_Float32__Nullable_Float32__0 = r"""
 {"intervalLengthSumMerge(state)":0}
 """
 
-_aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_LowCardinality_Float32__LowCardinality_Float32__0 = r"""
+_aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_Nullable_Float64__Nullable_Float64__0 = r"""
 {"intervalLengthSumMerge(state)":0}
 """
 
-_aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_LowCardinality_Int64__LowCardinality_Int64__0 = r"""
+_aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_Nullable_Int64__Nullable_Int64__0 = r"""
 {"intervalLengthSumMerge(state)":"0"}
 """
 
-_aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_Int64_Int64_0 = r"""
+_aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_Nullable_UInt64__Nullable_UInt64__0 = r"""
 {"intervalLengthSumMerge(state)":"0"}
 """
 
-_aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_LowCardinality_DateTime__LowCardinality_DateTime__0 = r"""
+_aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_UInt64_UInt64_0 = r"""
 {"intervalLengthSumMerge(state)":"0"}
 """
 
-_aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_LowCardinality_Date__LowCardinality_Date__0 = r"""
+_aggregate_functions_merge_intervalLengthSumMerge_inf___inf__nan__inf__inf_0 = r"""
+{"intervalLengthSumMerge(state)":6.7}
+"""
+
+_aggregate_functions_merge_intervalLengthSumMerge_inf___inf__nan__inf_inf_0 = r"""
+{"intervalLengthSumMerge(state)":null}
+"""
+
+_aggregate_functions_merge_intervalLengthSumMerge_inf___inf__nan__inf_nan_0 = r"""
+{"intervalLengthSumMerge(state)":null}
+"""
+
+_aggregate_functions_merge_intervalLengthSumMerge_inf___inf__nan_inf__inf_0 = r"""
+{"intervalLengthSumMerge(state)":null}
+"""
+
+_aggregate_functions_merge_intervalLengthSumMerge_inf___inf__nan_inf_inf_0 = r"""
+{"intervalLengthSumMerge(state)":6.7}
+"""
+
+_aggregate_functions_merge_intervalLengthSumMerge_inf___inf__nan_inf_nan_0 = r"""
+{"intervalLengthSumMerge(state)":null}
+"""
+
+_aggregate_functions_merge_intervalLengthSumMerge_inf___inf__nan_nan__inf_0 = r"""
+{"intervalLengthSumMerge(state)":6.7}
+"""
+
+_aggregate_functions_merge_intervalLengthSumMerge_inf___inf__nan_nan_inf_0 = r"""
+{"intervalLengthSumMerge(state)":null}
+"""
+
+_aggregate_functions_merge_intervalLengthSumMerge_inf___inf__nan_nan_nan_0 = r"""
+{"intervalLengthSumMerge(state)":6.7}
+"""
+
+_aggregate_functions_merge_intervalLengthSumMerge_single_NULL_value_0 = r"""
 {"intervalLengthSumMerge(state)":"0"}
 """
 
-_aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_Float32_Float32_0 = r"""
-{"intervalLengthSumMerge(state)":0}
+_aggregate_functions_merge_intervalLengthSumMerge_some_negative_values_0 = r"""
+{"intervalLengthSumMerge(state)":"80"}
 """
 
-_aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_Float64_Float64_0 = r"""
-{"intervalLengthSumMerge(state)":0}
+_aggregate_functions_merge_intervalLengthSumMerge_with_group_by_0 = r"""
+{"intervalLengthSumMerge(state)":"5"}
 """
 
-_aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_DateTime_DateTime_0 = r"""
-{"intervalLengthSumMerge(state)":"0"}
-"""
-
-_aggregate_functions_merge_intervalLengthSumMerge_datatypes_permutations_Date_Date_0 = r"""
-{"intervalLengthSumMerge(state)":"0"}
+_aggregate_functions_merge_intervalLengthSumMerge_with_group_by_1 = r"""
+{"intervalLengthSumMerge(state)":"5"}
 """
 
