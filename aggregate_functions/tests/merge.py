@@ -74,28 +74,30 @@ def merge(self, scenario, short_name):
     snapshot_module = SourceFileLoader(func, snapshot_path).load_module() # add UUID
     snapshot_attrs = {k:v for k,v in vars(snapshot_module).items() if not k.startswith('__')}
 
-    for key, value in snapshot_attrs.items():
-        data = value.strip().split('\n')
-        idx = 0
-        for hex_and_datatype in data:
-            value_dict = json.loads(hex_and_datatype, object_pairs_hook=array_on_duplicate_keys)
-            hex_repr = ''
-            datatypes = ''
-            for k, val in value_dict.items():
-                if 'hex(' in k and 'toTypeName' not in k:
-                    hex_repr = val[0]
-                elif 'toTypeName' in k:
-                    if len(datatypes) == 0:
-                        datatypes += ' ,'.join(datatype for datatype in val if len(datatype) > 0)
-                    else:
-                        datatypes += ' ,'+ ' ,'.join(datatype for datatype in val if len(datatype) > 0)
-            if hex_repr is not None and len(hex_repr) > 0 and len(datatypes) > 0:
-                name = key.replace('state_', 'merge_')
-                name = name.replace('State', 'Merge') + '_' + str(idx)
-                idx += 1 
-                Check(test=check)(func=func, datatypes=datatypes, hex_repr=hex_repr, snapshot_name=name, 
-                                  is_low_cardinality='LowCardinality' in datatypes, short_name=short_name)
-        
+    with Pool(3) as executor2:
+        for key, value in snapshot_attrs.items():
+            data = value.strip().split('\n')
+            idx = 0
+            for hex_and_datatype in data:
+                value_dict = json.loads(hex_and_datatype, object_pairs_hook=array_on_duplicate_keys)
+                hex_repr = ''
+                datatypes = ''
+                for k, val in value_dict.items():
+                    if 'hex(' in k and 'toTypeName' not in k:
+                        hex_repr = val[0]
+                    elif 'toTypeName' in k:
+                        if len(datatypes) == 0:
+                            datatypes += ' ,'.join(datatype for datatype in val if len(datatype) > 0)
+                        else:
+                            datatypes += ' ,'+ ' ,'.join(datatype for datatype in val if len(datatype) > 0)
+                if hex_repr is not None and len(hex_repr) > 0 and len(datatypes) > 0:
+                    name = key.replace('state_', 'merge_')
+                    name = name.replace('State', 'Merge') + '_' + str(idx)
+                    idx += 1 
+                    Check(test=check, parallel=True, executor=executor2)(func=func, datatypes=datatypes, hex_repr=hex_repr, snapshot_name=name, 
+                                    is_low_cardinality='LowCardinality' in datatypes, short_name=short_name)
+        join()
+                    
 
 @TestFeature
 @Name("merge")
@@ -111,102 +113,7 @@ def feature(self):
                        "topKWeighted", # fails on 23.3
                        "uniqExact", # problem on 23.8 aarch
                        "welchTTest" # problem on 22.8 aarch
-    # "anyHeavy",
-    # "any",
-    # "anyLast", 
-    # "argMax", 
-    # "argMin", 
-    # "avg", 
-    # "avgWeighted", 
-    # "boundingRatio",
-    # "categoricalInformationValue", # rewrite
-    # "contingency",
-    # "corr",
-    # "corrStable",
-    # "count",
-    # "covarPop",
-    # "covarPopStable",
-    # "covarSamp",
-    # "covarSampStable",
-    # "cramersV",
-    # "cramersVBiasCorrected",
-    # "deltaSum",
-    # "deltaSumTimestamp",
-    # "entropy",
-    # "exponentialMovingAverage",
-    # "first_value",
-    # "groupArray",
-    # "groupArrayInsertAt",
-    # "groupArrayMovingAvg",
-    # "groupArrayMovingSum",
-    # "groupArraySample",
-    # "groupBitAnd",
-    # "groupBitOr",
-    # "groupBitXor",
-    # "groupBitmap",
-    # "histogram",  
-    # "intervalLengthSum",
-    # "kurtPop",
-    # "kurtSamp",
-    # "last_value",
-    # "max",
-    # "maxIntersections", 
-    # "maxIntersectionsPosition", 
-    # "meanZTest",
-    # "min",
-    # "quantile",
-    # "quantileBFloat16",
-    # "quantileBFloat16Weighted",
-    # "quantileDeterministic",
-    # "quantileExact",
-    # "quantileExactExclusive",
-    # "quantileExactHigh",
-    # "quantileExactInclusive",
-    # "quantileExactLow",
-    # "quantileExactWeighted",
-    # "quantileTDigest",
-    # "quantileTiming",
-    # "quantileTimingWeighted",
-    # "quantiles",
-    # "quantilesBFloat16",
-    # "quantilesBFloat16Weighted",
-    # "quantilesExact",
-    # "quantilesExactExclusive",
-    # "quantilesExactHigh",
-    # "quantilesExactInclusive",
-    # "quantilesExactLow",
-    # "quantilesExactWeighted",
-    # "quantilesTDigest",
-    # "quantilesTDigestWeighted",
-    # "quantilesTiming",
-    # "quantilesTimingWeighted",
-    # "rankCorr", 
-    # "simpleLinearRegression",
-    # "singleValueOrNull", # problem on 22.8
-    # "skewPop",
-    # "skewSamp",
-    # "sparkbar",
-    # "stddevPop",
-    # "stddevPopStable",
-    # "stddevSamp",
-    # "stddevSampStable",
-    # "studentTTest",  # problem on 22.8
-    # "sum",
-    # "sumCount",
-    # "sumKahan",
-    # "sumWithOverflow",
-    # "topK",
-    #"topKWeighted", # fails on 23.3
-    # "uniqCombined",
-    # "uniqCombined64",
-    # "uniqExact",
-    # "uniqTheta",
-    # "varPop",
-    # "varPopStable",
-    # "varSamp",
-    # "varSampStable",
-    # "welchTTest" # problem on 22.8
-                                           ]
+                       ]
 
     test_funcs = [i for i in aggregate_functions]
     for i in not_implemented:
