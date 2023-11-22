@@ -8,6 +8,7 @@
 import random
 import tempfile
 
+
 from testflows.core import When, And
 from helpers.cluster import QueryRuntimeException
 from s3.tests.common import add_config
@@ -79,8 +80,7 @@ def produce_alter_move(node, name, steps=True, random_seed=None, *args, **kwargs
                     .output.strip()
                     .split("\n")
                 )
-                if parts != [""]:
-                    break
+                break
             except QueryRuntimeException:
                 pass
         else:
