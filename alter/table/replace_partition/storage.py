@@ -137,6 +137,7 @@ def table_not_stored_on_minio_disk(self, table_name):
 
 
 @TestSketch(Scenario)
+@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_S3("1.0"))
 @Flags(TE)
 def replace_partition_on_minio_and_default_disks(self):
     """Run check that validates if it is possible to replace partition on tables that are and are not stored on minio storage."""
@@ -170,6 +171,7 @@ def table_not_stored_on_tiered_storage(self, table_name):
 
 @TestSketch(Scenario)
 @Flags(TE)
+@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_TieredStorage("1.0"))
 def replace_partition_on_tiered_and_default_storages(self):
     """Run check that validates if it is possible to replace partition on tables that are and are not stored on tiered storage."""
     values = {table_stored_on_tiered_storage, table_not_stored_on_tiered_storage}
