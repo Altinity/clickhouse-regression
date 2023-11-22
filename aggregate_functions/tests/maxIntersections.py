@@ -33,7 +33,7 @@ def scenario(
     snapshot_id=None,
 ):
     """Check maxIntersections aggregate function."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id)
+    self.context.snapshot_id = get_snapshot_id(snapshot_id, clickhouse_version=">=23.2")
 
     if 'Merge' in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")

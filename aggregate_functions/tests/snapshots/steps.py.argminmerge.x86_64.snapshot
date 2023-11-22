@@ -11718,6 +11718,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_UInt32_Nullable_Bool
 {"argMinMerge(state)":""}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_UInt32_Nullable_DateTime64_3____0__22_8 = r"""
+{"argMinMerge(state)":""}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_UInt32_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
@@ -11831,6 +11835,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_UInt64_Array_String_
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_UInt64_Bool__0 = r"""
+{"argMinMerge(state)":""}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_UInt64_DateTime64_3___0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
 
@@ -12034,6 +12042,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_UInt64_Nullable_Bool
 {"argMinMerge(state)":""}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_UInt64_Nullable_DateTime64_3____0__22_8 = r"""
+{"argMinMerge(state)":""}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_UInt64_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
@@ -12147,6 +12159,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_UInt8_Array_String__
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_UInt8_Bool__0 = r"""
+{"argMinMerge(state)":""}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_UInt8_DateTime64_3___0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
 
@@ -12350,6 +12366,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_UInt8_Nullable_Bool_
 {"argMinMerge(state)":""}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_UInt8_Nullable_DateTime64_3____0__22_8 = r"""
+{"argMinMerge(state)":""}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_UInt8_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
@@ -12463,6 +12483,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_UUID_Array_String___
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_UUID_Bool__0 = r"""
+{"argMinMerge(state)":""}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_UUID_DateTime64_3___0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
 
@@ -12666,6 +12690,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_UUID_Nullable_Bool__
 {"argMinMerge(state)":""}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_UUID_Nullable_DateTime64_3____0__22_8 = r"""
+{"argMinMerge(state)":""}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_UUID_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
@@ -12778,6 +12806,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Nullable_Bool__0 = r"""
 {"argMinMerge(state)":""}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_String_Nullable_DateTime64_3___0__22_8 = r"""
+{"argMinMerge(state)":""}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_String_Nullable_DateTime64_3____22_8_0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
@@ -12858,6 +12890,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_String_0 = r"""
 {"argMinMerge(state)":""}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_String_Tuple_UInt8_UInt16_UInt32_UInt64_UInt128_Int8_Int16_Int32_Int64_Int128_Float32_Float64_Decimal128_38__Date_DateTime_DateTime64_3__Bool_String_FixedString_51__UUID_Nullable_UInt8__Nullable_UInt16__Nullable_UInt32__Nullable_UInt64__Nullable_UInt128__Nullable_Int8__Nullable_Int16__Nullable_Int32__Nullable_Int64__Nullable_Int128__Nullable_Float32__Nullable_Float64__Nullable_Decimal128_38___Nullable_Date__Nullable_DateTime__Nullable_DateTime64_3___Nullable_Bool__Nullable_String__Nullable_FixedString_51___Nullable_UUID__LowCardinality_UInt8__LowCardinality_UInt16__LowCardinality_UInt32__LowCardinality_UInt64__LowCardinality_UInt128__LowCardinality_Int8__LowCardinality_Int16__LowCardinality_Int32__LowCardinality_Int64__LowCardinality_Int128__LowCardinality_Float32__LowCardinality_Float64__LowCardinality_Date__LowCardinality_DateTime__LowCardinality_Bool__LowCardinality_String__LowCardinality_FixedString_51___LowCardinality_UUID__Array_String__Map_String_LowCardinality_Float64___Tuple_String___0__22_8 = r"""
+{"argMinMerge(state)":""}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_String_Tuple_UInt8_UInt16_UInt32_UInt64_UInt128_Int8_Int16_Int32_Int64_Int128_Float32_Float64_Decimal128_38__Date_DateTime_DateTime64_3__Bool_String_FixedString_51__UUID_Nullable_UInt8__Nullable_UInt16__Nullable_UInt32__Nullable_UInt64__Nullable_UInt128__Nullable_Int8__Nullable_Int16__Nullable_Int32__Nullable_Int64__Nullable_Int128__Nullable_Float32__Nullable_Float64__Nullable_Decimal128_38___Nullable_Date__Nullable_DateTime__Nullable_DateTime64_3___Nullable_Bool__Nullable_String__Nullable_FixedString_51___Nullable_UUID__LowCardinality_UInt8__LowCardinality_UInt16__LowCardinality_UInt32__LowCardinality_UInt64__LowCardinality_UInt128__LowCardinality_Int8__LowCardinality_Int16__LowCardinality_Int32__LowCardinality_Int64__LowCardinality_Int128__LowCardinality_Float32__LowCardinality_Float64__LowCardinality_Date__LowCardinality_DateTime__LowCardinality_Bool__LowCardinality_String__LowCardinality_FixedString_51___LowCardinality_UUID__LowCardinality_Nullable_UInt8___LowCardinality_Nullable_UInt16___LowCardinality_Nullable_UInt32___LowCardinality_Nullable_UInt64___LowCardinality_Nullable_UInt128___LowCardinality_Nullable_Int8___LowCardinality_Nullable_Int16___LowCardinality_Nullable_Int32___LowCardinality_Nullable_Int64___LowCardinality_Nullable_Int128___LowCardinality_Nullable_Float32___LowCardinality_Nullable_Float64___LowCardinality_Nullable_Date___LowCardinality_Nullable_DateTime___LowCardinality_Nullable_Bool___LowCardinality_Nullable_String___LowCardinality_Nullable_FixedString_51____LowCardinality_Nullable_UUID___Array_String__Map_String_LowCardinality_Float64___Tuple_String____22_8_0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
@@ -12884,6 +12920,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_UInt8_0 = r"""
 
 _aggregate_functions_merge_argMinMerge_datatypes_String_UUID_0 = r"""
 {"argMinMerge(state)":""}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_Tuple_UInt8_UInt16_UInt32_UInt64_UInt128_Int8_Int16_Int32_Int64_Int128_Float32_Float64_Decimal128_38__Date_DateTime_DateTime64_3__Bool_String_FixedString_51__UUID_Nullable_UInt8__Nullable_UInt16__Nullable_UInt32__Nullable_UInt64__Nullable_UInt128__Nullable_Int8__Nullable_Int16__Nullable_Int32__Nullable_Int64__Nullable_Int128__Nullable_Float32__Nullable_Float64__Nullable_Decimal128_38___Nullable_Date__Nullable_DateTime__Nullable_DateTime64_3___Nullable_Bool__Nullable_String__Nullable_FixedString_51___Nullable_UUID__LowCardinality_UInt8__LowCardinality_UInt16__LowCardinality_UInt32__LowCardinality_UInt64__LowCardinality_UInt128__LowCardinality_Int8__LowCardinality_Int16__LowCardinality_Int32__LowCardinality_Int64__LowCardinality_Int128__LowCardinality_Float32__LowCardinality_Float64__LowCardinality_Date__LowCardinality_DateTime__LowCardinality_Bool__LowCardinality_String__LowCardinality_FixedString_51___LowCardinality_UUID__Array_String__Map_String_LowCardinality_Float64___Tuple_String___String_0__22_8 = r"""
+{"argMinMerge(state)":[0,0,0,"0","0",-128,-32768,-2147483648,"-9223372036854775808","170141183460469231722463931679029329921",-3.4028235e38,-1.7976909999999999e308,-0.99999999999999997752612184630461283328,"1970-01-01","1970-01-01 01:00:00","1925-01-01 00:00:00.000",false,"","\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","00000000-0000-0000-0000-000000000000",0,0,0,"0","0",-128,-32768,-2147483648,"-9223372036854775808","170141183460469231722463931679029329921",-3.4028235e38,-1.7976909999999999e308,-0.99999999999999997752612184630461283328,"1970-01-01","1970-01-01 01:00:00","1925-01-01 00:00:00.000",false,"","\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","00000000-0000-0000-0000-000000000000",0,0,0,"0","0",-128,-32768,-2147483648,"-9223372036854775808","170141183460469231722463931679029329921",-36893490000000000000,-1.7976909999999999e308,"1970-01-01","1970-01-01 01:00:00",false,"","\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000","00000000-0000-0000-0000-000000000000",[""],{"":-1.7976909999999999e308},[""]]}
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_Tuple_UInt8_UInt16_UInt32_UInt64_UInt128_Int8_Int16_Int32_Int64_Int128_Float32_Float64_Decimal128_38__Date_DateTime_DateTime64_3__Bool_String_FixedString_51__UUID_Nullable_UInt8__Nullable_UInt16__Nullable_UInt32__Nullable_UInt64__Nullable_UInt128__Nullable_Int8__Nullable_Int16__Nullable_Int32__Nullable_Int64__Nullable_Int128__Nullable_Float32__Nullable_Float64__Nullable_Decimal128_38___Nullable_Date__Nullable_DateTime__Nullable_DateTime64_3___Nullable_Bool__Nullable_String__Nullable_FixedString_51___Nullable_UUID__LowCardinality_UInt8__LowCardinality_UInt16__LowCardinality_UInt32__LowCardinality_UInt64__LowCardinality_UInt128__LowCardinality_Int8__LowCardinality_Int16__LowCardinality_Int32__LowCardinality_Int64__LowCardinality_Int128__LowCardinality_Float32__LowCardinality_Float64__LowCardinality_Date__LowCardinality_DateTime__LowCardinality_Bool__LowCardinality_String__LowCardinality_FixedString_51___LowCardinality_UUID__LowCardinality_Nullable_UInt8___LowCardinality_Nullable_UInt16___LowCardinality_Nullable_UInt32___LowCardinality_Nullable_UInt64___LowCardinality_Nullable_UInt128___LowCardinality_Nullable_Int8___LowCardinality_Nullable_Int16___LowCardinality_Nullable_Int32___LowCardinality_Nullable_Int64___LowCardinality_Nullable_Int128___LowCardinality_Nullable_Float32___LowCardinality_Nullable_Float64___LowCardinality_Nullable_Date___LowCardinality_Nullable_DateTime___LowCardinality_Nullable_Bool___LowCardinality_Nullable_String___LowCardinality_Nullable_FixedString_51____LowCardinality_Nullable_UUID___Array_String__Map_String_LowCardinality_Float64___Tuple_String___String__22_8_0__22_8 = r"""
