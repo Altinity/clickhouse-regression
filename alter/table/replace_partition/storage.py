@@ -170,7 +170,7 @@ def table_not_stored_on_tiered_storage(self, table_name):
 
 @TestSketch(Scenario)
 @Flags(TE)
-def replace_partition_on_tiered_and_default_disks(self):
+def replace_partition_on_tiered_and_default_storages(self):
     """Run check that validates if it is possible to replace partition on tables that are and are not stored on tiered storage."""
     values = {table_stored_on_tiered_storage, table_not_stored_on_tiered_storage}
 
@@ -191,4 +191,4 @@ def feature(self, node="clickhouse1"):
     Scenario(run=shards)
     Scenario(run=replicas)
     Scenario(run=replace_partition_on_minio_and_default_disks)
-    Scenario(run=replace_partition_on_tiered_and_default_disks)
+    Scenario(run=replace_partition_on_tiered_and_default_storages)
