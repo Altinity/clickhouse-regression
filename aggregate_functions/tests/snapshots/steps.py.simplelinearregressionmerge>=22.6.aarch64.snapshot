@@ -1,0 +1,708 @@
+_aggregate_functions_merge_simpleLinearRegressionMerge_constant_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_single_row_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_with_group_by_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0,"b":0}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_with_group_by_1 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0,"b":1}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_some_negative_values_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":1,"b":15}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_NULL_value_handling_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.23684210526315788,"b":1.105263157894737}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_single_NULL_value_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_inf___inf__nan_inf_inf_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_inf___inf__nan_inf__inf_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_inf___inf__nan_inf_nan_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_inf___inf__nan__inf_inf_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_inf___inf__nan__inf__inf_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_inf___inf__nan__inf_nan_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_inf___inf__nan_nan_inf_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_inf___inf__nan_nan__inf_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_inf___inf__nan_nan_nan_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_example_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.16165209157644989,"b":2.440996986574596}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_UInt8_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_UInt8_Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_UInt16_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_UInt16_Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_UInt32_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_UInt32_Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_UInt64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_UInt64_Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_Int8_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Int8_Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_Int16_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Int16_Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_Int32_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_Int64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Int32_Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Int64_Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float32_Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_Float32_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_Nullable_UInt8__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Nullable_UInt8__Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_Nullable_UInt32__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Nullable_UInt16__Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_Nullable_UInt16__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Nullable_UInt32__Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_Nullable_UInt64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Nullable_UInt64__Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_Nullable_Int8__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Nullable_Int8__Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_Nullable_Int16__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Nullable_Int16__Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_Nullable_Int32__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Nullable_Int32__Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_Nullable_Int64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_Nullable_Float32__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Nullable_Int64__Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Nullable_Float32__Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Nullable_Float64__Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_LowCardinality_UInt8__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_Nullable_Float64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_LowCardinality_UInt8__Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_LowCardinality_UInt16__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_LowCardinality_UInt16__Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_LowCardinality_UInt32__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_LowCardinality_UInt32__Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_LowCardinality_UInt64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_LowCardinality_UInt64__Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_LowCardinality_Int8__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_LowCardinality_Int16__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_LowCardinality_Int8__Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_LowCardinality_Int16__Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_LowCardinality_Int32__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_LowCardinality_Int32__Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_LowCardinality_Int64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_LowCardinality_Int64__Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_LowCardinality_Float32__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_LowCardinality_Float32__Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_LowCardinality_Float64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_LowCardinality_Float64__Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_LowCardinality_Nullable_UInt8___0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_LowCardinality_Nullable_UInt8___Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_LowCardinality_Nullable_UInt16___0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_LowCardinality_Nullable_UInt32___0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_LowCardinality_Nullable_UInt16___Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_LowCardinality_Nullable_UInt32___Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_LowCardinality_Nullable_UInt64___0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_LowCardinality_Nullable_UInt64___Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_LowCardinality_Nullable_Int16___0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_LowCardinality_Nullable_Int8___0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_LowCardinality_Nullable_Int8___Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_LowCardinality_Nullable_Int16___Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_LowCardinality_Nullable_Int32___0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_LowCardinality_Nullable_Int32___Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_LowCardinality_Nullable_Float32___0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_LowCardinality_Nullable_Int64___Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_LowCardinality_Nullable_Int64___0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_LowCardinality_Nullable_Float32___Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_Float64_LowCardinality_Nullable_Float64___0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_LowCardinality_Nullable_Float64___Float64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":null,"b":null}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_UInt64_UInt64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":1,"b":0}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_UInt64_Nullable_UInt64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.6526891556466252,"b":4488991182161527000}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_UInt64_Nullable_Int64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.1629260912263074,"b":-1061653060105939700}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_UInt64_Nullable_Float32__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":17725841017759180000,"b":-2.6019869013313468e38}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_UInt64_LowCardinality_UInt64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.7670447445202013,"b":2210667712187131100}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_UInt64_LowCardinality_Float32__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":19122734469355364000,"b":-1.396252798807015e38}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_UInt64_Int64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.388339240210847,"b":-2512335751563687000}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_UInt64_LowCardinality_Int64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.46436169859657583,"b":-2546660890926253000}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_UInt64_Float32_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":9997938145200925000,"b":-2.2647735832675595e38}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Nullable_UInt64__UInt64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.5831237671364377,"b":2928325250663457300}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Nullable_UInt64__Nullable_UInt64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":1,"b":0}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Nullable_UInt64__Nullable_Int64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.5245795904413275,"b":-5023337143490941000}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Nullable_UInt64__LowCardinality_UInt64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.8097470689035089,"b":711471560989254300}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Nullable_UInt64__Nullable_Float32__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":13848938739676557000,"b":-2.445871594240146e38}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Nullable_UInt64__LowCardinality_Int64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.19905963873837987,"b":-445768508166495740}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Nullable_UInt64__LowCardinality_Float32__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":15559137194893234000,"b":-1.2917780787891876e38}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Nullable_UInt64__Int64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.5207898590915526,"b":-4416568618489255000}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Nullable_Int64__UInt64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.22213036510223244,"b":8865527126783023000}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Nullable_UInt64__Float32_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":426905931390605000,"b":-1.4136958781844171e38}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Nullable_Int64__Nullable_UInt64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.8005239613835001,"b":10015078988542046000}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Nullable_Int64__Nullable_Int64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":1,"b":0}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Nullable_Int64__Nullable_Float32__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":10169683889736962000,"b":-1.0552487132096874e38}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Nullable_Int64__LowCardinality_UInt64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.39167052451430634,"b":8923040692775823000}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Nullable_Int64__LowCardinality_Float32__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":17342755209812654000,"b":2.47072129251654e37}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Nullable_Int64__LowCardinality_Int64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.3283253568722874,"b":1480722467269521000}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Nullable_Int64__Int64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.5992326502707328,"b":726772228122763300}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Nullable_Int64__Float32_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":5627667526065986000,"b":-1.3919337098694878e38}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Nullable_Float32__UInt64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":2.076271847455639e-20,"b":11060871013730857000}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Nullable_Float32__Nullable_Int64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":8.737104441703721e-21,"b":1283839657775121700}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Nullable_Float32__Nullable_UInt64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":1.815680852971384e-20,"b":12175665934663442000}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Nullable_Float32__Nullable_Float32__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":1,"b":0}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Nullable_Float32__LowCardinality_Float32__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.5905594204347137,"b":9.15283412114408e37}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Nullable_Float32__LowCardinality_Int64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":1.1803596047862236e-20,"b":2809015505868960000}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Nullable_Float32__LowCardinality_UInt64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":2.3793911808193767e-20,"b":11493340481210733000}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Nullable_Float32__Float32_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.705751340316061,"b":-6.533446872177962e37}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_LowCardinality_UInt64__UInt64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.69974609260144,"b":2601036699795228700}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Nullable_Float32__Int64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":1.6144522172958192e-20,"b":2603198260393364500}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_LowCardinality_UInt64__Nullable_Int64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.2620736642654278,"b":-1982113940767916800}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_LowCardinality_UInt64__Nullable_UInt64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.8268273275838797,"b":2826576515601571000}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_LowCardinality_UInt64__Nullable_Float32__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":18531401493753795000,"b":-2.697250392599059e38}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_LowCardinality_UInt64__LowCardinality_UInt64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":1,"b":0}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_LowCardinality_UInt64__LowCardinality_Float32__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":10702101393558575000,"b":-6.556518797225282e37}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_LowCardinality_UInt64__LowCardinality_Int64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.12379592004018489,"b":487222937553859200}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_LowCardinality_UInt64__Int64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.4516150348068981,"b":-3135273292607081000}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_LowCardinality_UInt64__Float32_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":6365803994358606000,"b":-1.9475089775510908e38}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_LowCardinality_Int64__UInt64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.6427420559047792,"b":7918213575500901000}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_LowCardinality_Int64__Nullable_Float32__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":13948172163298738000,"b":-1.2395814132045022e38}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_LowCardinality_Int64__Nullable_UInt64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.30839632357228697,"b":9836141516580168000}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_LowCardinality_Int64__Nullable_Int64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.3333246712615164,"b":-139878876594362580}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_LowCardinality_Int64__LowCardinality_Int64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":1,"b":0}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_LowCardinality_Int64__LowCardinality_UInt64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.18783082883772756,"b":8775973787624279000}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_LowCardinality_Int64__LowCardinality_Float32__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":21320896448969330000,"b":-2.755613026926694e36}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_LowCardinality_Float32__UInt64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":2.3827167579263353e-20,"b":8200930337233164000}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_LowCardinality_Int64__Float32_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":15697612269810266000,"b":-1.6224903303512002e38}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_LowCardinality_Int64__Int64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.30669633343487024,"b":470631667354566340}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_LowCardinality_Float32__Nullable_Float32__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.6282155191032411,"b":-1.2133437727564465e38}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_LowCardinality_Float32__Nullable_Int64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":1.584977957449135e-20,"b":-103625165081764750}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_LowCardinality_Float32__Nullable_UInt64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":2.1699692969248505e-20,"b":9647405863437206000}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_LowCardinality_Float32__LowCardinality_UInt64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":1.4617452878931312e-20,"b":8616755252140281000}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_LowCardinality_Float32__LowCardinality_Int64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":1.9193207523470905e-20,"b":1004709657403800600}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_LowCardinality_Float32__LowCardinality_Float32__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":1,"b":0}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_LowCardinality_Float32__Int64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":1.9889802272573083e-20,"b":336340291517957440}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Int64_UInt64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.8265202374442235,"b":8156355811201396000}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_LowCardinality_Float32__Float32_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.566068356246802,"b":-1.548431910217414e38}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Int64_Nullable_Int64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.9354495962441651,"b":-505333900918426100}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Int64_Nullable_Float32__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":29335267008366910000,"b":-1.2978736728988947e38}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Int64_Nullable_UInt64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":1.2406531664646554,"b":9136077415210074000}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Int64_LowCardinality_Int64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.4715963908484127,"b":1156140540626822000}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Int64_LowCardinality_UInt64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":1.0536365400622965,"b":8062089955434565000}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Int64_LowCardinality_Float32__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":33974279579063517000,"b":-1.1820389214443144e36}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Int64_Int64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":1,"b":0}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Int64_Float32_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":20791735769629954000,"b":-1.570172956383217e38}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Float32_UInt64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":1.1716901477519957e-20,"b":10558472931766979000}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Float32_Nullable_UInt64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":5.59989876108084e-22,"b":10409698899043367000}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Float32_Nullable_Float32__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.7061170183439228,"b":-4.777391622112786e36}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Float32_Nullable_Int64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":4.837416400384894e-21,"b":1059670305090224800}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Float32_LowCardinality_Float32__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":0.5324131653579959,"b":1.0451325061992035e38}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Float32_LowCardinality_Int64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":1.3290937138732878e-20,"b":3431420505823106600}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Float32_LowCardinality_UInt64__0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":8.1777873192622e-21,"b":10198607338298733000}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Float32_Float32_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":1,"b":0}}
+"""
+
+_aggregate_functions_merge_simpleLinearRegressionMerge_datatypes_permutations_Float32_Int64_0 = r"""
+{"simpleLinearRegressionMerge(state)":{"k":1.1448560004108381e-20,"b":2532730956314604500}}
+"""
+

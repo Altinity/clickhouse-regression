@@ -1,0 +1,208 @@
+_aggregate_functions_merge_varPopMerge_constant_0 = r"""
+{"varPopMerge(state)":0}
+"""
+
+_aggregate_functions_merge_varPopMerge_single_row_0 = r"""
+{"varPopMerge(state)":0}
+"""
+
+_aggregate_functions_merge_varPopMerge_with_group_by_0 = r"""
+{"varPopMerge(state)":8}
+"""
+
+_aggregate_functions_merge_varPopMerge_with_group_by_1 = r"""
+{"varPopMerge(state)":8}
+"""
+
+_aggregate_functions_merge_varPopMerge_some_negative_values_0 = r"""
+{"varPopMerge(state)":8.25}
+"""
+
+_aggregate_functions_merge_varPopMerge_NULL_value_handling_0 = r"""
+{"varPopMerge(state)":3.4400000000000004}
+"""
+
+_aggregate_functions_merge_varPopMerge_single_NULL_value_0 = r"""
+{"varPopMerge(state)":null}
+"""
+
+_aggregate_functions_merge_varPopMerge_doc_example_0 = r"""
+{"varPopMerge(state)":2.9166666666666665}
+"""
+
+_aggregate_functions_merge_varPopMerge_inf_0 = r"""
+{"varPopMerge(state)":0}
+"""
+
+_aggregate_functions_merge_varPopMerge__inf_0 = r"""
+{"varPopMerge(state)":0}
+"""
+
+_aggregate_functions_merge_varPopMerge_nan_0 = r"""
+{"varPopMerge(state)":0}
+"""
+
+_aggregate_functions_merge_varPopMerge_inf___inf__nan_0 = r"""
+{"varPopMerge(state)":0}
+"""
+
+_aggregate_functions_merge_varPopMerge_UInt8_0 = r"""
+{"varPopMerge(state)":7894.81}
+"""
+
+_aggregate_functions_merge_varPopMerge_UInt16_0 = r"""
+{"varPopMerge(state)":434168100.81000006}
+"""
+
+_aggregate_functions_merge_varPopMerge_UInt32_0 = r"""
+{"varPopMerge(state)":2152435794872377300}
+"""
+
+_aggregate_functions_merge_varPopMerge_UInt64_0 = r"""
+{"varPopMerge(state)":5.013328977733995e37}
+"""
+
+_aggregate_functions_merge_varPopMerge_Int8_0 = r"""
+{"varPopMerge(state)":8806.689999999999}
+"""
+
+_aggregate_functions_merge_varPopMerge_Int16_0 = r"""
+{"varPopMerge(state)":419355858.84000003}
+"""
+
+_aggregate_functions_merge_varPopMerge_Int32_0 = r"""
+{"varPopMerge(state)":1760613529137539800}
+"""
+
+_aggregate_functions_merge_varPopMerge_Int64_0 = r"""
+{"varPopMerge(state)":2.3555047752495275e37}
+"""
+
+_aggregate_functions_merge_varPopMerge_Float32_0 = r"""
+{"varPopMerge(state)":0}
+"""
+
+_aggregate_functions_merge_varPopMerge_Float64_0 = r"""
+{"varPopMerge(state)":0}
+"""
+
+_aggregate_functions_merge_varPopMerge_Nullable_UInt8__0 = r"""
+{"varPopMerge(state)":9205.654320987655}
+"""
+
+_aggregate_functions_merge_varPopMerge_Nullable_UInt16__0 = r"""
+{"varPopMerge(state)":468142122.39506173}
+"""
+
+_aggregate_functions_merge_varPopMerge_Nullable_UInt32__0 = r"""
+{"varPopMerge(state)":2460893905148930600}
+"""
+
+_aggregate_functions_merge_varPopMerge_Nullable_UInt64__0 = r"""
+{"varPopMerge(state)":4.916737898877755e37}
+"""
+
+_aggregate_functions_merge_varPopMerge_Nullable_Int8__0 = r"""
+{"varPopMerge(state)":7133.432098765432}
+"""
+
+_aggregate_functions_merge_varPopMerge_Nullable_Int16__0 = r"""
+{"varPopMerge(state)":430588624.8888889}
+"""
+
+_aggregate_functions_merge_varPopMerge_Nullable_Int32__0 = r"""
+{"varPopMerge(state)":1800280176052861200}
+"""
+
+_aggregate_functions_merge_varPopMerge_Nullable_Int64__0 = r"""
+{"varPopMerge(state)":4.083752106303591e37}
+"""
+
+_aggregate_functions_merge_varPopMerge_Nullable_Float32__0 = r"""
+{"varPopMerge(state)":0}
+"""
+
+_aggregate_functions_merge_varPopMerge_Nullable_Float64__0 = r"""
+{"varPopMerge(state)":0}
+"""
+
+_aggregate_functions_merge_varPopMerge_LowCardinality_UInt8__0 = r"""
+{"varPopMerge(state)":9867.810000000001}
+"""
+
+_aggregate_functions_merge_varPopMerge_LowCardinality_UInt16__0 = r"""
+{"varPopMerge(state)":614498622.5600001}
+"""
+
+_aggregate_functions_merge_varPopMerge_LowCardinality_UInt32__0 = r"""
+{"varPopMerge(state)":2267553911582121200}
+"""
+
+_aggregate_functions_merge_varPopMerge_LowCardinality_UInt64__0 = r"""
+{"varPopMerge(state)":5.495489986411366e37}
+"""
+
+_aggregate_functions_merge_varPopMerge_LowCardinality_Int8__0 = r"""
+{"varPopMerge(state)":7360.289999999999}
+"""
+
+_aggregate_functions_merge_varPopMerge_LowCardinality_Int16__0 = r"""
+{"varPopMerge(state)":577062245.21}
+"""
+
+_aggregate_functions_merge_varPopMerge_LowCardinality_Int32__0 = r"""
+{"varPopMerge(state)":2107704207843714600}
+"""
+
+_aggregate_functions_merge_varPopMerge_LowCardinality_Int64__0 = r"""
+{"varPopMerge(state)":3.62197858120067e37}
+"""
+
+_aggregate_functions_merge_varPopMerge_LowCardinality_Float32__0 = r"""
+{"varPopMerge(state)":0}
+"""
+
+_aggregate_functions_merge_varPopMerge_LowCardinality_Float64__0 = r"""
+{"varPopMerge(state)":0}
+"""
+
+_aggregate_functions_merge_varPopMerge_LowCardinality_Nullable_UInt8___0 = r"""
+{"varPopMerge(state)":5401.728395061729}
+"""
+
+_aggregate_functions_merge_varPopMerge_LowCardinality_Nullable_UInt16___0 = r"""
+{"varPopMerge(state)":589410561.7777778}
+"""
+
+_aggregate_functions_merge_varPopMerge_LowCardinality_Nullable_UInt32___0 = r"""
+{"varPopMerge(state)":1772659756383478800}
+"""
+
+_aggregate_functions_merge_varPopMerge_LowCardinality_Nullable_UInt64___0 = r"""
+{"varPopMerge(state)":4.804314032672598e37}
+"""
+
+_aggregate_functions_merge_varPopMerge_LowCardinality_Nullable_Int8___0 = r"""
+{"varPopMerge(state)":9312.222222222223}
+"""
+
+_aggregate_functions_merge_varPopMerge_LowCardinality_Nullable_Int16___0 = r"""
+{"varPopMerge(state)":464195935.72839504}
+"""
+
+_aggregate_functions_merge_varPopMerge_LowCardinality_Nullable_Int32___0 = r"""
+{"varPopMerge(state)":1893955149826769400}
+"""
+
+_aggregate_functions_merge_varPopMerge_LowCardinality_Nullable_Int64___0 = r"""
+{"varPopMerge(state)":4.332331398268223e37}
+"""
+
+_aggregate_functions_merge_varPopMerge_LowCardinality_Nullable_Float32___0 = r"""
+{"varPopMerge(state)":0}
+"""
+
+_aggregate_functions_merge_varPopMerge_LowCardinality_Nullable_Float64___0 = r"""
+{"varPopMerge(state)":0}
+"""
+

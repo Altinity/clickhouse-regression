@@ -1,0 +1,92 @@
+_aggregate_functions_merge_groupBitmapMerge_constant_0 = r"""
+{"groupBitmapMerge(state)":1}
+"""
+
+_aggregate_functions_merge_groupBitmapMerge_single_row_0 = r"""
+{"groupBitmapMerge(state)":"1"}
+"""
+
+_aggregate_functions_merge_groupBitmapMerge_with_group_by_0 = r"""
+{"groupBitmapMerge(state)":"5"}
+"""
+
+_aggregate_functions_merge_groupBitmapMerge_with_group_by_1 = r"""
+{"groupBitmapMerge(state)":"5"}
+"""
+
+_aggregate_functions_merge_groupBitmapMerge_NULL_value_handling_0 = r"""
+{"groupBitmapMerge(state)":5}
+"""
+
+_aggregate_functions_merge_groupBitmapMerge_single_NULL_value_0 = r"""
+{"groupBitmapMerge(state)":null}
+"""
+
+_aggregate_functions_merge_groupBitmapMerge_doc_example_0 = r"""
+{"groupBitmapMerge(state)":6}
+"""
+
+_aggregate_functions_merge_groupBitmapMerge_UInt8_0 = r"""
+{"groupBitmapMerge(state)":9}
+"""
+
+_aggregate_functions_merge_groupBitmapMerge_UInt16_0 = r"""
+{"groupBitmapMerge(state)":9}
+"""
+
+_aggregate_functions_merge_groupBitmapMerge_UInt32_0 = r"""
+{"groupBitmapMerge(state)":9}
+"""
+
+_aggregate_functions_merge_groupBitmapMerge_UInt64_0 = r"""
+{"groupBitmapMerge(state)":"9"}
+"""
+
+_aggregate_functions_merge_groupBitmapMerge_Nullable_UInt8__0 = r"""
+{"groupBitmapMerge(state)":9}
+"""
+
+_aggregate_functions_merge_groupBitmapMerge_Nullable_UInt16__0 = r"""
+{"groupBitmapMerge(state)":9}
+"""
+
+_aggregate_functions_merge_groupBitmapMerge_Nullable_UInt32__0 = r"""
+{"groupBitmapMerge(state)":9}
+"""
+
+_aggregate_functions_merge_groupBitmapMerge_Nullable_UInt64__0 = r"""
+{"groupBitmapMerge(state)":"9"}
+"""
+
+_aggregate_functions_merge_groupBitmapMerge_LowCardinality_UInt8__0 = r"""
+{"groupBitmapMerge(state)":9}
+"""
+
+_aggregate_functions_merge_groupBitmapMerge_LowCardinality_UInt16__0 = r"""
+{"groupBitmapMerge(state)":9}
+"""
+
+_aggregate_functions_merge_groupBitmapMerge_LowCardinality_UInt32__0 = r"""
+{"groupBitmapMerge(state)":9}
+"""
+
+_aggregate_functions_merge_groupBitmapMerge_LowCardinality_UInt64__0 = r"""
+{"groupBitmapMerge(state)":"9"}
+"""
+
+_aggregate_functions_merge_groupBitmapMerge_LowCardinality_Nullable_UInt8___0 = r"""
+{"groupBitmapMerge(state)":9}
+"""
+
+_aggregate_functions_merge_groupBitmapMerge_LowCardinality_Nullable_UInt16___0 = r"""
+{"groupBitmapMerge(state)":9}
+"""
+
+_aggregate_functions_merge_groupBitmapMerge_LowCardinality_Nullable_UInt32___0 = r"""
+{"groupBitmapMerge(state)":9}
+"""
+
+_aggregate_functions_merge_groupBitmapMerge_LowCardinality_Nullable_UInt64___0 = r"""
+{"groupBitmapMerge(state)":"9"}
+"""
+

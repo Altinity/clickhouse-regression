@@ -1,0 +1,228 @@
+_aggregate_functions_merge_sumWithOverflowMerge_constant_0 = r"""
+{"sumWithOverflowMerge(state)":1}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_with_group_by_0 = r"""
+{"sumWithOverflowMerge(state)":"20"}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_with_group_by_1 = r"""
+{"sumWithOverflowMerge(state)":"25"}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_inf_0 = r"""
+{"sumWithOverflowMerge(state)":null}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge__inf_0 = r"""
+{"sumWithOverflowMerge(state)":null}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_nan_0 = r"""
+{"sumWithOverflowMerge(state)":null}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_inf___inf__nan_0 = r"""
+{"sumWithOverflowMerge(state)":null}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_UInt8_0 = r"""
+{"sumWithOverflowMerge(state)":13}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_UInt16_0 = r"""
+{"sumWithOverflowMerge(state)":56955}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_UInt32_0 = r"""
+{"sumWithOverflowMerge(state)":1820801551}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_UInt64_0 = r"""
+{"sumWithOverflowMerge(state)":"15750476061942512782"}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_UInt128_0 = r"""
+{"sumWithOverflowMerge(state)":"21297583348677270895397293902423521533"}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_Int8_0 = r"""
+{"sumWithOverflowMerge(state)":51}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_Int16_0 = r"""
+{"sumWithOverflowMerge(state)":-2464}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_Int32_0 = r"""
+{"sumWithOverflowMerge(state)":-180045811}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_Int64_0 = r"""
+{"sumWithOverflowMerge(state)":"-8799195370699285409"}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_Int128_0 = r"""
+{"sumWithOverflowMerge(state)":"-143318159333516415735069832817985812608"}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_Float32_0 = r"""
+{"sumWithOverflowMerge(state)":null}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_Float64_0 = r"""
+{"sumWithOverflowMerge(state)":-1.46719343084824e307}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_Decimal128_38__0 = r"""
+{"sumWithOverflowMerge(state)":-0.21468242760669401198252549218687803904}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_Nullable_UInt8__0 = r"""
+{"sumWithOverflowMerge(state)":28}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_Nullable_UInt16__0 = r"""
+{"sumWithOverflowMerge(state)":42724}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_Nullable_UInt32__0 = r"""
+{"sumWithOverflowMerge(state)":2094469710}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_Nullable_UInt64__0 = r"""
+{"sumWithOverflowMerge(state)":"11096315630564658116"}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_Nullable_UInt128__0 = r"""
+{"sumWithOverflowMerge(state)":"63964592011597478689732996105647311870"}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_Nullable_Int8__0 = r"""
+{"sumWithOverflowMerge(state)":17}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_Nullable_Int16__0 = r"""
+{"sumWithOverflowMerge(state)":-26631}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_Nullable_Int32__0 = r"""
+{"sumWithOverflowMerge(state)":68637007}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_Nullable_Int64__0 = r"""
+{"sumWithOverflowMerge(state)":"3971456529792613218"}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_Nullable_Int128__0 = r"""
+{"sumWithOverflowMerge(state)":"-118457979606383258691787766660598191616"}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_Nullable_Float32__0 = r"""
+{"sumWithOverflowMerge(state)":null}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_Nullable_Float64__0 = r"""
+{"sumWithOverflowMerge(state)":-6.104555798918726e300}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_Nullable_Decimal128_38___0 = r"""
+{"sumWithOverflowMerge(state)":1.35440455825179711885689928087407595392}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_LowCardinality_UInt8__0 = r"""
+{"sumWithOverflowMerge(state)":237}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_LowCardinality_UInt16__0 = r"""
+{"sumWithOverflowMerge(state)":64928}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_LowCardinality_UInt32__0 = r"""
+{"sumWithOverflowMerge(state)":4030831310}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_LowCardinality_UInt64__0 = r"""
+{"sumWithOverflowMerge(state)":"16998933095029676984"}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_LowCardinality_UInt128__0 = r"""
+{"sumWithOverflowMerge(state)":"212006083852933915417284501929868235517"}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_LowCardinality_Int8__0 = r"""
+{"sumWithOverflowMerge(state)":-65}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_LowCardinality_Int16__0 = r"""
+{"sumWithOverflowMerge(state)":17437}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_LowCardinality_Int32__0 = r"""
+{"sumWithOverflowMerge(state)":-1592576550}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_LowCardinality_Int64__0 = r"""
+{"sumWithOverflowMerge(state)":"-2335589518567405757"}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_LowCardinality_Int128__0 = r"""
+{"sumWithOverflowMerge(state)":"65191541690399068780133307877405979904"}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_LowCardinality_Float32__0 = r"""
+{"sumWithOverflowMerge(state)":null}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_LowCardinality_Float64__0 = r"""
+{"sumWithOverflowMerge(state)":2.3539363430883252e260}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_LowCardinality_Nullable_UInt8___0 = r"""
+{"sumWithOverflowMerge(state)":54}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_LowCardinality_Nullable_UInt16___0 = r"""
+{"sumWithOverflowMerge(state)":47796}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_LowCardinality_Nullable_UInt32___0 = r"""
+{"sumWithOverflowMerge(state)":1577861584}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_LowCardinality_Nullable_UInt64___0 = r"""
+{"sumWithOverflowMerge(state)":"4529534376217169885"}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_LowCardinality_Nullable_UInt128___0 = r"""
+{"sumWithOverflowMerge(state)":"123936326993767275514316256134489128701"}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_LowCardinality_Nullable_Int8___0 = r"""
+{"sumWithOverflowMerge(state)":96}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_LowCardinality_Nullable_Int16___0 = r"""
+{"sumWithOverflowMerge(state)":29043}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_LowCardinality_Nullable_Int32___0 = r"""
+{"sumWithOverflowMerge(state)":-570614278}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_LowCardinality_Nullable_Int64___0 = r"""
+{"sumWithOverflowMerge(state)":"-4055992635541734030"}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_LowCardinality_Nullable_Int128___0 = r"""
+{"sumWithOverflowMerge(state)":"-162835140721258646040745804746734358528"}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_LowCardinality_Nullable_Float32___0 = r"""
+{"sumWithOverflowMerge(state)":2.3633356e38}
+"""
+
+_aggregate_functions_merge_sumWithOverflowMerge_LowCardinality_Nullable_Float64___0 = r"""
+{"sumWithOverflowMerge(state)":4.432329389190783e298}
+"""
+

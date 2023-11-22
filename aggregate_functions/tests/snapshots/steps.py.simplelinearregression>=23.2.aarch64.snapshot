@@ -1,0 +1,713 @@
+_aggregate_functions_simpleLinearRegression_constant = r"""
+{"simpleLinearRegression(1, 1)":{"k":null,"b":null},"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_simpleLinearRegression_zero_rows = r"""
+{"simpleLinearRegression(number, number)":{"k":null,"b":null},"any(toTypeName(number))":"","any(toTypeName(number))":""}
+"""
+
+_aggregate_functions_simpleLinearRegression_single_row = r"""
+{"simpleLinearRegression(number, plus(number, 1))":{"k":null,"b":null},"any(toTypeName(number))":"UInt64","any(toTypeName(number))":"UInt64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_with_group_by = r"""
+{"even":0,"simpleLinearRegression(number, modulo(number, 2))":{"k":0,"b":0},"any(toTypeName(number))":"UInt64","toTypeName(modulo(number, 2))":"UInt8"}
+{"even":1,"simpleLinearRegression(number, modulo(number, 2))":{"k":0,"b":1},"any(toTypeName(number))":"UInt64","toTypeName(modulo(number, 2))":"UInt8"}
+"""
+
+_aggregate_functions_simpleLinearRegression_some_negative_values = r"""
+{"simpleLinearRegression(minus(number, 5), plus(number, 10))":{"k":1,"b":15},"any(toTypeName(number))":"UInt64","any(toTypeName(number))":"UInt64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_NULL_value_handling = r"""
+{"simpleLinearRegression(x, y)":{"k":0.21428571428571427,"b":1.357142857142857},"any(toTypeName(x))":"Nullable(Int8)","any(toTypeName(y))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_single_NULL_value = r"""
+{"simpleLinearRegression(x, y)":{"k":null,"b":null},"any(toTypeName(x))":"Nullable(Int8)","any(toTypeName(y))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_inf___inf__nan_inf_inf = r"""
+{"simpleLinearRegression(x, y)":{"k":null,"b":null},"any(toTypeName(x))":"Float64","any(toTypeName(y))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_inf___inf__nan_inf__inf = r"""
+{"simpleLinearRegression(x, y)":{"k":null,"b":null},"any(toTypeName(x))":"Float64","any(toTypeName(y))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_inf___inf__nan_inf_nan = r"""
+{"simpleLinearRegression(x, y)":{"k":null,"b":null},"any(toTypeName(x))":"Float64","any(toTypeName(y))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_inf___inf__nan__inf_inf = r"""
+{"simpleLinearRegression(x, y)":{"k":null,"b":null},"any(toTypeName(x))":"Float64","any(toTypeName(y))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_inf___inf__nan__inf__inf = r"""
+{"simpleLinearRegression(x, y)":{"k":null,"b":null},"any(toTypeName(x))":"Float64","any(toTypeName(y))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_inf___inf__nan__inf_nan = r"""
+{"simpleLinearRegression(x, y)":{"k":null,"b":null},"any(toTypeName(x))":"Float64","any(toTypeName(y))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_inf___inf__nan_nan_inf = r"""
+{"simpleLinearRegression(x, y)":{"k":null,"b":null},"any(toTypeName(x))":"Float64","any(toTypeName(y))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_inf___inf__nan_nan__inf = r"""
+{"simpleLinearRegression(x, y)":{"k":null,"b":null},"any(toTypeName(x))":"Float64","any(toTypeName(y))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_inf___inf__nan_nan_nan = r"""
+{"simpleLinearRegression(x, y)":{"k":null,"b":null},"any(toTypeName(x))":"Float64","any(toTypeName(y))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_return_type = r"""
+{"toTypeName(simpleLinearRegression(number, plus(number, 1)))":"Tuple(k Float64, b Float64)","any(toTypeName(number))":"UInt64","any(toTypeName(number))":"UInt64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_example = r"""
+{"simpleLinearRegression(y, x)":{"k":0.16165209157644989,"b":2.440996986574596},"any(toTypeName(y))":"Float64","any(toTypeName(x))":"Int8"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_UInt8 = r"""
+{"simpleLinearRegression(float64, uint8)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_UInt8_Float64 = r"""
+{"simpleLinearRegression(uint8, float64)":{"k":null,"b":null},"any(toTypeName(uint8))":"UInt8","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_UInt16_Float64 = r"""
+{"simpleLinearRegression(uint16, float64)":{"k":null,"b":null},"any(toTypeName(uint16))":"UInt16","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_UInt16 = r"""
+{"simpleLinearRegression(float64, uint16)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_UInt32 = r"""
+{"simpleLinearRegression(float64, uint32)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_UInt32_Float64 = r"""
+{"simpleLinearRegression(uint32, float64)":{"k":null,"b":null},"any(toTypeName(uint32))":"UInt32","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_UInt64 = r"""
+{"simpleLinearRegression(float64, uint64)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_UInt64_Float64 = r"""
+{"simpleLinearRegression(uint64, float64)":{"k":null,"b":null},"any(toTypeName(uint64))":"UInt64","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Int8_Float64 = r"""
+{"simpleLinearRegression(int8, float64)":{"k":null,"b":null},"any(toTypeName(int8))":"Int8","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_Int16 = r"""
+{"simpleLinearRegression(float64, int16)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_Int8 = r"""
+{"simpleLinearRegression(float64, int8)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Int16_Float64 = r"""
+{"simpleLinearRegression(int16, float64)":{"k":null,"b":null},"any(toTypeName(int16))":"Int16","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_Int32 = r"""
+{"simpleLinearRegression(float64, int32)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Int32_Float64 = r"""
+{"simpleLinearRegression(int32, float64)":{"k":null,"b":null},"any(toTypeName(int32))":"Int32","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_Int64 = r"""
+{"simpleLinearRegression(float64, int64)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Int64_Float64 = r"""
+{"simpleLinearRegression(int64, float64)":{"k":null,"b":null},"any(toTypeName(int64))":"Int64","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_Float32 = r"""
+{"simpleLinearRegression(float64, float32)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float32_Float64 = r"""
+{"simpleLinearRegression(float32, float64)":{"k":null,"b":null},"any(toTypeName(float32))":"Float32","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_Float64 = r"""
+{"simpleLinearRegression(float64, float64)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_Nullable_UInt8_ = r"""
+{"simpleLinearRegression(float64, nullable_uint8_)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Nullable_UInt8__Float64 = r"""
+{"simpleLinearRegression(nullable_uint8_, float64)":{"k":null,"b":null},"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_Nullable_UInt16_ = r"""
+{"simpleLinearRegression(float64, nullable_uint16_)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Nullable_UInt16__Float64 = r"""
+{"simpleLinearRegression(nullable_uint16_, float64)":{"k":null,"b":null},"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_Nullable_UInt32_ = r"""
+{"simpleLinearRegression(float64, nullable_uint32_)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Nullable_UInt32__Float64 = r"""
+{"simpleLinearRegression(nullable_uint32_, float64)":{"k":null,"b":null},"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_Nullable_UInt64_ = r"""
+{"simpleLinearRegression(float64, nullable_uint64_)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Nullable_UInt64__Float64 = r"""
+{"simpleLinearRegression(nullable_uint64_, float64)":{"k":null,"b":null},"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_Nullable_Int8_ = r"""
+{"simpleLinearRegression(float64, nullable_int8_)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_Nullable_Int16_ = r"""
+{"simpleLinearRegression(float64, nullable_int16_)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Nullable_Int8__Float64 = r"""
+{"simpleLinearRegression(nullable_int8_, float64)":{"k":null,"b":null},"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Nullable_Int16__Float64 = r"""
+{"simpleLinearRegression(nullable_int16_, float64)":{"k":null,"b":null},"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_Nullable_Int32_ = r"""
+{"simpleLinearRegression(float64, nullable_int32_)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Nullable_Int32__Float64 = r"""
+{"simpleLinearRegression(nullable_int32_, float64)":{"k":null,"b":null},"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_Nullable_Int64_ = r"""
+{"simpleLinearRegression(float64, nullable_int64_)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Nullable_Int64__Float64 = r"""
+{"simpleLinearRegression(nullable_int64_, float64)":{"k":null,"b":null},"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_Nullable_Float32_ = r"""
+{"simpleLinearRegression(float64, nullable_float32_)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Nullable_Float32__Float64 = r"""
+{"simpleLinearRegression(nullable_float32_, float64)":{"k":null,"b":null},"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_Nullable_Float64_ = r"""
+{"simpleLinearRegression(float64, nullable_float64_)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Nullable_Float64__Float64 = r"""
+{"simpleLinearRegression(nullable_float64_, float64)":{"k":null,"b":null},"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_LowCardinality_UInt8_ = r"""
+{"simpleLinearRegression(float64, lowcardinality_uint8_)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_LowCardinality_UInt8__Float64 = r"""
+{"simpleLinearRegression(lowcardinality_uint8_, float64)":{"k":null,"b":null},"any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_LowCardinality_UInt16__Float64 = r"""
+{"simpleLinearRegression(lowcardinality_uint16_, float64)":{"k":null,"b":null},"any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_LowCardinality_UInt16_ = r"""
+{"simpleLinearRegression(float64, lowcardinality_uint16_)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_LowCardinality_UInt32_ = r"""
+{"simpleLinearRegression(float64, lowcardinality_uint32_)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_LowCardinality_UInt32__Float64 = r"""
+{"simpleLinearRegression(lowcardinality_uint32_, float64)":{"k":null,"b":null},"any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_LowCardinality_UInt64_ = r"""
+{"simpleLinearRegression(float64, lowcardinality_uint64_)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_LowCardinality_UInt64__Float64 = r"""
+{"simpleLinearRegression(lowcardinality_uint64_, float64)":{"k":null,"b":null},"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_LowCardinality_Int16_ = r"""
+{"simpleLinearRegression(float64, lowcardinality_int16_)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_int16_))":"LowCardinality(Int16)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_LowCardinality_Int8_ = r"""
+{"simpleLinearRegression(float64, lowcardinality_int8_)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_int8_))":"LowCardinality(Int8)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_LowCardinality_Int8__Float64 = r"""
+{"simpleLinearRegression(lowcardinality_int8_, float64)":{"k":null,"b":null},"any(toTypeName(lowcardinality_int8_))":"LowCardinality(Int8)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_LowCardinality_Int32_ = r"""
+{"simpleLinearRegression(float64, lowcardinality_int32_)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_int32_))":"LowCardinality(Int32)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_LowCardinality_Int32__Float64 = r"""
+{"simpleLinearRegression(lowcardinality_int32_, float64)":{"k":null,"b":null},"any(toTypeName(lowcardinality_int32_))":"LowCardinality(Int32)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_LowCardinality_Int16__Float64 = r"""
+{"simpleLinearRegression(lowcardinality_int16_, float64)":{"k":null,"b":null},"any(toTypeName(lowcardinality_int16_))":"LowCardinality(Int16)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_LowCardinality_Int64_ = r"""
+{"simpleLinearRegression(float64, lowcardinality_int64_)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_LowCardinality_Int64__Float64 = r"""
+{"simpleLinearRegression(lowcardinality_int64_, float64)":{"k":null,"b":null},"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_LowCardinality_Float32_ = r"""
+{"simpleLinearRegression(float64, lowcardinality_float32_)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_LowCardinality_Float32__Float64 = r"""
+{"simpleLinearRegression(lowcardinality_float32_, float64)":{"k":null,"b":null},"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_LowCardinality_Float64_ = r"""
+{"simpleLinearRegression(float64, lowcardinality_float64_)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_LowCardinality_Float64__Float64 = r"""
+{"simpleLinearRegression(lowcardinality_float64_, float64)":{"k":null,"b":null},"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_LowCardinality_Nullable_UInt8__ = r"""
+{"simpleLinearRegression(float64, lowcardinality_nullable_uint8__)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_nullable_uint8__))":"LowCardinality(Nullable(UInt8))"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_LowCardinality_Nullable_UInt8___Float64 = r"""
+{"simpleLinearRegression(lowcardinality_nullable_uint8__, float64)":{"k":null,"b":null},"any(toTypeName(lowcardinality_nullable_uint8__))":"LowCardinality(Nullable(UInt8))","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_LowCardinality_Nullable_UInt16__ = r"""
+{"simpleLinearRegression(float64, lowcardinality_nullable_uint16__)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_nullable_uint16__))":"LowCardinality(Nullable(UInt16))"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_LowCardinality_Nullable_UInt32__ = r"""
+{"simpleLinearRegression(float64, lowcardinality_nullable_uint32__)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_nullable_uint32__))":"LowCardinality(Nullable(UInt32))"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_LowCardinality_Nullable_UInt16___Float64 = r"""
+{"simpleLinearRegression(lowcardinality_nullable_uint16__, float64)":{"k":null,"b":null},"any(toTypeName(lowcardinality_nullable_uint16__))":"LowCardinality(Nullable(UInt16))","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_LowCardinality_Nullable_UInt32___Float64 = r"""
+{"simpleLinearRegression(lowcardinality_nullable_uint32__, float64)":{"k":null,"b":null},"any(toTypeName(lowcardinality_nullable_uint32__))":"LowCardinality(Nullable(UInt32))","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_LowCardinality_Nullable_UInt64__ = r"""
+{"simpleLinearRegression(float64, lowcardinality_nullable_uint64__)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_nullable_uint64__))":"LowCardinality(Nullable(UInt64))"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_LowCardinality_Nullable_Int8__ = r"""
+{"simpleLinearRegression(float64, lowcardinality_nullable_int8__)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_nullable_int8__))":"LowCardinality(Nullable(Int8))"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_LowCardinality_Nullable_UInt64___Float64 = r"""
+{"simpleLinearRegression(lowcardinality_nullable_uint64__, float64)":{"k":null,"b":null},"any(toTypeName(lowcardinality_nullable_uint64__))":"LowCardinality(Nullable(UInt64))","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_LowCardinality_Nullable_Int8___Float64 = r"""
+{"simpleLinearRegression(lowcardinality_nullable_int8__, float64)":{"k":null,"b":null},"any(toTypeName(lowcardinality_nullable_int8__))":"LowCardinality(Nullable(Int8))","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_LowCardinality_Nullable_Int16__ = r"""
+{"simpleLinearRegression(float64, lowcardinality_nullable_int16__)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_nullable_int16__))":"LowCardinality(Nullable(Int16))"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_LowCardinality_Nullable_Int16___Float64 = r"""
+{"simpleLinearRegression(lowcardinality_nullable_int16__, float64)":{"k":null,"b":null},"any(toTypeName(lowcardinality_nullable_int16__))":"LowCardinality(Nullable(Int16))","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_LowCardinality_Nullable_Int32__ = r"""
+{"simpleLinearRegression(float64, lowcardinality_nullable_int32__)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_nullable_int32__))":"LowCardinality(Nullable(Int32))"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_LowCardinality_Nullable_Int32___Float64 = r"""
+{"simpleLinearRegression(lowcardinality_nullable_int32__, float64)":{"k":null,"b":null},"any(toTypeName(lowcardinality_nullable_int32__))":"LowCardinality(Nullable(Int32))","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_LowCardinality_Nullable_Int64__ = r"""
+{"simpleLinearRegression(float64, lowcardinality_nullable_int64__)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_nullable_int64__))":"LowCardinality(Nullable(Int64))"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_LowCardinality_Nullable_Int64___Float64 = r"""
+{"simpleLinearRegression(lowcardinality_nullable_int64__, float64)":{"k":null,"b":null},"any(toTypeName(lowcardinality_nullable_int64__))":"LowCardinality(Nullable(Int64))","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_LowCardinality_Nullable_Float32__ = r"""
+{"simpleLinearRegression(float64, lowcardinality_nullable_float32__)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_nullable_float32__))":"LowCardinality(Nullable(Float32))"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_LowCardinality_Nullable_Float32___Float64 = r"""
+{"simpleLinearRegression(lowcardinality_nullable_float32__, float64)":{"k":null,"b":null},"any(toTypeName(lowcardinality_nullable_float32__))":"LowCardinality(Nullable(Float32))","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_Float64_LowCardinality_Nullable_Float64__ = r"""
+{"simpleLinearRegression(float64, lowcardinality_nullable_float64__)":{"k":null,"b":null},"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_nullable_float64__))":"LowCardinality(Nullable(Float64))"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_LowCardinality_Nullable_Float64___Float64 = r"""
+{"simpleLinearRegression(lowcardinality_nullable_float64__, float64)":{"k":null,"b":null},"any(toTypeName(lowcardinality_nullable_float64__))":"LowCardinality(Nullable(Float64))","any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_UInt64_UInt64 = r"""
+{"simpleLinearRegression(uint64, uint64)":{"k":1,"b":0},"any(toTypeName(uint64))":"UInt64","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_UInt64_Nullable_UInt64_ = r"""
+{"simpleLinearRegression(uint64, nullable_uint64_)":{"k":0.5443602401051123,"b":6065489659530579000},"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_UInt64_LowCardinality_UInt64_ = r"""
+{"simpleLinearRegression(uint64, lowcardinality_uint64_)":{"k":0.7670447445202013,"b":2210667712187131100},"any(toTypeName(uint64))":"UInt64","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_UInt64_Nullable_Int64_ = r"""
+{"simpleLinearRegression(uint64, nullable_int64_)":{"k":0.18854604012253734,"b":-1434497283859860200},"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_UInt64_Nullable_Float32_ = r"""
+{"simpleLinearRegression(uint64, nullable_float32_)":{"k":24004989446353800000,"b":-3.5157842828864354e38},"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_UInt64_Int64 = r"""
+{"simpleLinearRegression(uint64, int64)":{"k":0.388339240210847,"b":-2512335751563687000},"any(toTypeName(uint64))":"UInt64","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_UInt64_LowCardinality_Float32_ = r"""
+{"simpleLinearRegression(uint64, lowcardinality_float32_)":{"k":19122734469355364000,"b":-1.396252798807015e38},"any(toTypeName(uint64))":"UInt64","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_UInt64_LowCardinality_Int64_ = r"""
+{"simpleLinearRegression(uint64, lowcardinality_int64_)":{"k":0.46436169859657583,"b":-2546660890926253000},"any(toTypeName(uint64))":"UInt64","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_UInt64__UInt64 = r"""
+{"simpleLinearRegression(nullable_uint64_, uint64)":{"k":0.5071464740232188,"b":4125998771015399400},"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_UInt64__Nullable_UInt64_ = r"""
+{"simpleLinearRegression(nullable_uint64_, nullable_uint64_)":{"k":1,"b":0},"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_UInt64_Float32 = r"""
+{"simpleLinearRegression(uint64, float32)":{"k":9997938145200925000,"b":-2.2647735832675595e38},"any(toTypeName(uint64))":"UInt64","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_UInt64__Nullable_Int64_ = r"""
+{"simpleLinearRegression(nullable_uint64_, nullable_int64_)":{"k":0.6549133224852869,"b":-7077862295434489000},"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_UInt64__Nullable_Float32_ = r"""
+{"simpleLinearRegression(nullable_uint64_, nullable_float32_)":{"k":20194910826990862000,"b":-3.4462234649685505e38},"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_UInt64__LowCardinality_UInt64_ = r"""
+{"simpleLinearRegression(nullable_uint64_, lowcardinality_uint64_)":{"k":0.7912874789659659,"b":1002460633629746600},"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_UInt64__LowCardinality_Float32_ = r"""
+{"simpleLinearRegression(nullable_uint64_, lowcardinality_float32_)":{"k":18910738992103444000,"b":-1.8201102368328983e38},"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_UInt64__LowCardinality_Int64_ = r"""
+{"simpleLinearRegression(nullable_uint64_, lowcardinality_int64_)":{"k":0.21062539107341668,"b":-628086076311236700},"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_UInt64__Int64 = r"""
+{"simpleLinearRegression(nullable_uint64_, int64)":{"k":0.6353805892044649,"b":-6222927828069372000},"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_UInt64__Float32 = r"""
+{"simpleLinearRegression(nullable_uint64_, float32)":{"k":4094831346623485400,"b":-1.9918919370916555e38},"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_Int64__Nullable_UInt64_ = r"""
+{"simpleLinearRegression(nullable_int64_, nullable_uint64_)":{"k":0.7884996614199425,"b":11133171541114102000},"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_Int64__UInt64 = r"""
+{"simpleLinearRegression(nullable_int64_, uint64)":{"k":0.21148623961610724,"b":9855282661055115000},"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_Int64__Nullable_Int64_ = r"""
+{"simpleLinearRegression(nullable_int64_, nullable_int64_)":{"k":1,"b":0},"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_Int64__Nullable_Float32_ = r"""
+{"simpleLinearRegression(nullable_int64_, nullable_float32_)":{"k":10296379116787175000,"b":-1.1730576419960548e38},"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_Int64__LowCardinality_UInt64_ = r"""
+{"simpleLinearRegression(nullable_int64_, lowcardinality_uint64_)":{"k":0.38095734711453555,"b":9919217094010820000},"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_Int64__LowCardinality_Int64_ = r"""
+{"simpleLinearRegression(nullable_int64_, lowcardinality_int64_)":{"k":0.32654757248041216,"b":1646031674014098400},"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_Int64__LowCardinality_Float32_ = r"""
+{"simpleLinearRegression(nullable_int64_, lowcardinality_float32_)":{"k":17313091246121945000,"b":2.746554871043922e37},"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_Int64__Int64 = r"""
+{"simpleLinearRegression(nullable_int64_, int64)":{"k":0.5983600733009325,"b":807909742525788000},"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_Int64__Float32 = r"""
+{"simpleLinearRegression(nullable_int64_, float32)":{"k":5794785813160943000,"b":-1.5473304587577987e38},"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_Float32__UInt64 = r"""
+{"simpleLinearRegression(nullable_float32_, uint64)":{"k":2.3756873231923456e-20,"b":12627484311114998000},"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_Float32__Nullable_UInt64_ = r"""
+{"simpleLinearRegression(nullable_float32_, nullable_uint64_)":{"k":2.1452735951444796e-20,"b":13900173899187380000},"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_Float32__Nullable_Int64_ = r"""
+{"simpleLinearRegression(nullable_float32_, nullable_int64_)":{"k":9.084637164420763e-21,"b":1465677080622095000},"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_Float32__LowCardinality_UInt64_ = r"""
+{"simpleLinearRegression(nullable_float32_, lowcardinality_uint64_)":{"k":2.6905135150111123e-20,"b":13121206858720797000},"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_Float32__Nullable_Float32_ = r"""
+{"simpleLinearRegression(nullable_float32_, nullable_float32_)":{"k":1,"b":0},"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_Float32__LowCardinality_Float32_ = r"""
+{"simpleLinearRegression(nullable_float32_, lowcardinality_float32_)":{"k":0.6153359518608508,"b":1.044920143481543e38},"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_Float32__LowCardinality_Int64_ = r"""
+{"simpleLinearRegression(nullable_float32_, lowcardinality_int64_)":{"k":1.2563990697612202e-20,"b":3206872151931430000},"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_Float32__Int64 = r"""
+{"simpleLinearRegression(nullable_float32_, int64)":{"k":1.6849202522819482e-20,"b":2971903853777181700},"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Nullable_Float32__Float32 = r"""
+{"simpleLinearRegression(nullable_float32_, float32)":{"k":0.6880654356435879,"b":-7.458815655070438e37},"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_UInt64__UInt64 = r"""
+{"simpleLinearRegression(lowcardinality_uint64_, uint64)":{"k":0.69974609260144,"b":2601036699795228700},"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_UInt64__Nullable_UInt64_ = r"""
+{"simpleLinearRegression(lowcardinality_uint64_, nullable_uint64_)":{"k":0.7645687270009912,"b":3768663203030422000},"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_UInt64__Nullable_Int64_ = r"""
+{"simpleLinearRegression(lowcardinality_uint64_, nullable_int64_)":{"k":0.3057320048293243,"b":-2642744617580563000},"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_UInt64__Nullable_Float32_ = r"""
+{"simpleLinearRegression(lowcardinality_uint64_, nullable_float32_)":{"k":24472405883267910000,"b":-3.596233198655883e38},"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_UInt64__LowCardinality_UInt64_ = r"""
+{"simpleLinearRegression(lowcardinality_uint64_, lowcardinality_uint64_)":{"k":1,"b":0},"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_UInt64__LowCardinality_Int64_ = r"""
+{"simpleLinearRegression(lowcardinality_uint64_, lowcardinality_int64_)":{"k":0.12379592004018489,"b":487222937553859200},"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_UInt64__Int64 = r"""
+{"simpleLinearRegression(lowcardinality_uint64_, int64)":{"k":0.4516150348068981,"b":-3135273292607081000},"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_UInt64__LowCardinality_Float32_ = r"""
+{"simpleLinearRegression(lowcardinality_uint64_, lowcardinality_float32_)":{"k":10702101393558575000,"b":-6.556518797225282e37},"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_Int64__UInt64 = r"""
+{"simpleLinearRegression(lowcardinality_int64_, uint64)":{"k":0.6427420559047792,"b":7918213575500901000},"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_Int64__Nullable_UInt64_ = r"""
+{"simpleLinearRegression(lowcardinality_int64_, nullable_uint64_)":{"k":0.2593919231023717,"b":11016770292850506000},"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_UInt64__Float32 = r"""
+{"simpleLinearRegression(lowcardinality_uint64_, float32)":{"k":6365803994358606000,"b":-1.9475089775510908e38},"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_Int64__Nullable_Int64_ = r"""
+{"simpleLinearRegression(lowcardinality_int64_, nullable_int64_)":{"k":0.3340215583970214,"b":-156668491365693060},"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_Int64__Nullable_Float32_ = r"""
+{"simpleLinearRegression(lowcardinality_int64_, nullable_float32_)":{"k":14565740992349673000,"b":-1.3883679556197555e38},"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_Int64__LowCardinality_UInt64_ = r"""
+{"simpleLinearRegression(lowcardinality_int64_, lowcardinality_uint64_)":{"k":0.18783082883772756,"b":8775973787624279000},"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_Int64__LowCardinality_Int64_ = r"""
+{"simpleLinearRegression(lowcardinality_int64_, lowcardinality_int64_)":{"k":1,"b":0},"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_Int64__Int64 = r"""
+{"simpleLinearRegression(lowcardinality_int64_, int64)":{"k":0.30669633343487024,"b":470631667354566340},"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_Int64__LowCardinality_Float32_ = r"""
+{"simpleLinearRegression(lowcardinality_int64_, lowcardinality_float32_)":{"k":21320896448969330000,"b":-2.755613026926694e36},"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_Int64__Float32 = r"""
+{"simpleLinearRegression(lowcardinality_int64_, float32)":{"k":15697612269810266000,"b":-1.6224903303512002e38},"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_Float32__UInt64 = r"""
+{"simpleLinearRegression(lowcardinality_float32_, uint64)":{"k":2.3827167579263353e-20,"b":8200930337233164000},"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_Float32__Nullable_UInt64_ = r"""
+{"simpleLinearRegression(lowcardinality_float32_, nullable_uint64_)":{"k":2.085562210842598e-20,"b":10748971249163704000},"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_Float32__Nullable_Int64_ = r"""
+{"simpleLinearRegression(lowcardinality_float32_, nullable_int64_)":{"k":1.5858845947724897e-20,"b":-115457350496175920},"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_Float32__Nullable_Float32_ = r"""
+{"simpleLinearRegression(lowcardinality_float32_, nullable_float32_)":{"k":0.6388313067796527,"b":-1.3518864566628848e38},"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_Float32__LowCardinality_UInt64_ = r"""
+{"simpleLinearRegression(lowcardinality_float32_, lowcardinality_uint64_)":{"k":1.4617452878931312e-20,"b":8616755252140281000},"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_Float32__LowCardinality_Int64_ = r"""
+{"simpleLinearRegression(lowcardinality_float32_, lowcardinality_int64_)":{"k":1.9193207523470905e-20,"b":1004709657403800600},"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_Float32__LowCardinality_Float32_ = r"""
+{"simpleLinearRegression(lowcardinality_float32_, lowcardinality_float32_)":{"k":1,"b":0},"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_Float32__Int64 = r"""
+{"simpleLinearRegression(lowcardinality_float32_, int64)":{"k":1.9889802272573083e-20,"b":336340291517957440},"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_LowCardinality_Float32__Float32 = r"""
+{"simpleLinearRegression(lowcardinality_float32_, float32)":{"k":0.566068356246802,"b":-1.548431910217414e38},"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Int64_UInt64 = r"""
+{"simpleLinearRegression(int64, uint64)":{"k":0.8265202374442235,"b":8156355811201396000},"any(toTypeName(int64))":"Int64","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Int64_Nullable_UInt64_ = r"""
+{"simpleLinearRegression(int64, nullable_uint64_)":{"k":1.1988930990146518,"b":10195961826296183000},"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Int64_Nullable_Int64_ = r"""
+{"simpleLinearRegression(int64, nullable_int64_)":{"k":0.9377594253784929,"b":-563958133139257800},"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Int64_Nullable_Float32_ = r"""
+{"simpleLinearRegression(int64, nullable_float32_)":{"k":29928511676276675000,"b":-1.4484411441392837e38},"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Int64_LowCardinality_Int64_ = r"""
+{"simpleLinearRegression(int64, lowcardinality_int64_)":{"k":0.4715963908484127,"b":1156140540626822000},"any(toTypeName(int64))":"Int64","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Int64_LowCardinality_UInt64_ = r"""
+{"simpleLinearRegression(int64, lowcardinality_uint64_)":{"k":1.0536365400622965,"b":8062089955434565000},"any(toTypeName(int64))":"Int64","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Int64_LowCardinality_Float32_ = r"""
+{"simpleLinearRegression(int64, lowcardinality_float32_)":{"k":33974279579063517000,"b":-1.1820389214443144e36},"any(toTypeName(int64))":"Int64","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Int64_Float32 = r"""
+{"simpleLinearRegression(int64, float32)":{"k":20791735769629954000,"b":-1.570172956383217e38},"any(toTypeName(int64))":"Int64","any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Int64_Int64 = r"""
+{"simpleLinearRegression(int64, int64)":{"k":1,"b":0},"any(toTypeName(int64))":"Int64","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Float32_UInt64 = r"""
+{"simpleLinearRegression(float32, uint64)":{"k":1.1716901477519957e-20,"b":10558472931766979000},"any(toTypeName(float32))":"Float32","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Float32_Nullable_UInt64_ = r"""
+{"simpleLinearRegression(float32, nullable_uint64_)":{"k":4.452700934071098e-21,"b":12158709166537415000},"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Float32_Nullable_Int64_ = r"""
+{"simpleLinearRegression(float32, nullable_int64_)":{"k":5.233680533903572e-21,"b":1237713326481715000},"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Float32_Nullable_Float32_ = r"""
+{"simpleLinearRegression(float32, nullable_float32_)":{"k":0.7043305108401057,"b":-5.580076414434987e36},"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Float32_LowCardinality_Int64_ = r"""
+{"simpleLinearRegression(float32, lowcardinality_int64_)":{"k":1.3290937138732878e-20,"b":3431420505823106600},"any(toTypeName(float32))":"Float32","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Float32_LowCardinality_UInt64_ = r"""
+{"simpleLinearRegression(float32, lowcardinality_uint64_)":{"k":8.1777873192622e-21,"b":10198607338298733000},"any(toTypeName(float32))":"Float32","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Float32_LowCardinality_Float32_ = r"""
+{"simpleLinearRegression(float32, lowcardinality_float32_)":{"k":0.5324131653579959,"b":1.0451325061992035e38},"any(toTypeName(float32))":"Float32","any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Float32_Int64 = r"""
+{"simpleLinearRegression(float32, int64)":{"k":1.1448560004108381e-20,"b":2532730956314604500},"any(toTypeName(float32))":"Float32","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_simpleLinearRegression_datatypes_permutations_Float32_Float32 = r"""
+{"simpleLinearRegression(float32, float32)":{"k":1,"b":0},"any(toTypeName(float32))":"Float32","any(toTypeName(float32))":"Float32"}
+"""
+

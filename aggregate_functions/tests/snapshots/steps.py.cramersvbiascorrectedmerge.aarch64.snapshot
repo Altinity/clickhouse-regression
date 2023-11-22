@@ -1,0 +1,712 @@
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_constant_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_single_row_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_with_group_by_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_with_group_by_1 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_some_negative_values_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_NULL_value_handling_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_single_NULL_value_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_inf___inf__nan_inf_inf_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_inf___inf__nan_inf__inf_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_inf___inf__nan_inf_nan_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_inf___inf__nan__inf_inf_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_inf___inf__nan__inf__inf_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_inf___inf__nan__inf_nan_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_inf___inf__nan_nan_inf_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_inf___inf__nan_nan__inf_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_inf___inf__nan_nan_nan_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_example_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_UInt8_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_UInt8_Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_UInt16_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_UInt16_Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_UInt32_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_UInt32_Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_UInt64_Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_UInt64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_Int8_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_Int16_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Int8_Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Int16_Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_Int32_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Int32_Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_Int64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_Float32_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Int64_Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float32_Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_Nullable_UInt8__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_Nullable_UInt16__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Nullable_UInt8__Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Nullable_UInt16__Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_Nullable_UInt32__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_Nullable_UInt64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Nullable_UInt32__Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Nullable_UInt64__Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_Nullable_Int8__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Nullable_Int8__Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_Nullable_Int16__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Nullable_Int16__Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_Nullable_Int32__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Nullable_Int32__Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_Nullable_Int64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Nullable_Int64__Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_Nullable_Float64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_Nullable_Float32__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Nullable_Float32__Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Nullable_Float64__Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_LowCardinality_UInt8__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_LowCardinality_UInt8__Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_LowCardinality_UInt16__Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_LowCardinality_UInt16__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_LowCardinality_UInt32__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_LowCardinality_UInt32__Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_LowCardinality_UInt64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_LowCardinality_UInt64__Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_LowCardinality_Int8__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_LowCardinality_Int8__Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_LowCardinality_Int16__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_LowCardinality_Int32__Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_LowCardinality_Int32__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_LowCardinality_Int16__Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_LowCardinality_Int64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_LowCardinality_Int64__Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_LowCardinality_Float32__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_LowCardinality_Float32__Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_LowCardinality_Float64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_LowCardinality_Float64__Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_LowCardinality_Nullable_UInt8___0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_LowCardinality_Nullable_UInt8___Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_LowCardinality_Nullable_UInt16___0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_LowCardinality_Nullable_UInt16___Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_LowCardinality_Nullable_UInt32___Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_LowCardinality_Nullable_UInt32___0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_LowCardinality_Nullable_UInt64___0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_LowCardinality_Nullable_UInt64___Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_LowCardinality_Nullable_Int8___0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_LowCardinality_Nullable_Int16___0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_LowCardinality_Nullable_Int8___Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_LowCardinality_Nullable_Int16___Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_LowCardinality_Nullable_Int32___0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_LowCardinality_Nullable_Int32___Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_LowCardinality_Nullable_Int64___0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_LowCardinality_Nullable_Int64___Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_LowCardinality_Nullable_Float32___0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_LowCardinality_Nullable_Float32___Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_Float64_LowCardinality_Nullable_Float64___0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_LowCardinality_Nullable_Float64___Float64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_UInt64_UInt64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":0.1000000000000028}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_UInt64_Nullable_UInt64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_UInt64_Nullable_Int64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_UInt64_Nullable_Float32__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_UInt64_LowCardinality_UInt64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":0.1000000000000028}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_UInt64_LowCardinality_Float32__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_UInt64_Int64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_UInt64_LowCardinality_Int64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_UInt64_Float32_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Nullable_UInt64__UInt64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Nullable_UInt64__Nullable_UInt64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Nullable_UInt64__Nullable_Int64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Nullable_UInt64__Nullable_Float32__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Nullable_UInt64__LowCardinality_UInt64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Nullable_UInt64__LowCardinality_Float32__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Nullable_UInt64__Int64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Nullable_UInt64__LowCardinality_Int64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Nullable_UInt64__Float32_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Nullable_Int64__UInt64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Nullable_Int64__Nullable_UInt64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Nullable_Int64__Nullable_Float32__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Nullable_Int64__LowCardinality_UInt64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Nullable_Int64__Nullable_Int64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Nullable_Int64__LowCardinality_Int64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Nullable_Int64__LowCardinality_Float32__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Nullable_Int64__Int64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Nullable_Int64__Float32_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Nullable_Float32__Nullable_UInt64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Nullable_Float32__UInt64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Nullable_Float32__Nullable_Int64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Nullable_Float32__Nullable_Float32__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Nullable_Float32__LowCardinality_UInt64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Nullable_Float32__LowCardinality_Int64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Nullable_Float32__LowCardinality_Float32__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Nullable_Float32__Int64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Nullable_Float32__Float32_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_LowCardinality_UInt64__UInt64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":0.1000000000000028}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_LowCardinality_UInt64__Nullable_Int64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_LowCardinality_UInt64__Nullable_UInt64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_LowCardinality_UInt64__LowCardinality_Int64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_LowCardinality_UInt64__LowCardinality_UInt64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":0.1000000000000028}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_LowCardinality_UInt64__Nullable_Float32__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_LowCardinality_UInt64__Float32_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_LowCardinality_UInt64__Int64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_LowCardinality_UInt64__LowCardinality_Float32__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_LowCardinality_Int64__UInt64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_LowCardinality_Int64__Nullable_Int64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_LowCardinality_Int64__Nullable_UInt64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_LowCardinality_Int64__Nullable_Float32__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_LowCardinality_Int64__LowCardinality_UInt64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_LowCardinality_Int64__LowCardinality_Int64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_LowCardinality_Int64__LowCardinality_Float32__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_LowCardinality_Float32__UInt64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_LowCardinality_Int64__Float32_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_LowCardinality_Int64__Int64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_LowCardinality_Float32__Nullable_Int64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_LowCardinality_Float32__Nullable_UInt64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_LowCardinality_Float32__Nullable_Float32__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_LowCardinality_Float32__LowCardinality_Int64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_LowCardinality_Float32__LowCardinality_Float32__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_LowCardinality_Float32__LowCardinality_UInt64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_LowCardinality_Float32__Int64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_LowCardinality_Float32__Float32_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Int64_UInt64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Int64_Nullable_Int64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Int64_Nullable_UInt64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Int64_Nullable_Float32__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Int64_LowCardinality_UInt64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Int64_LowCardinality_Int64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Int64_LowCardinality_Float32__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Int64_Int64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Int64_Float32_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Float32_UInt64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Float32_Nullable_UInt64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Float32_Nullable_Int64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Float32_Nullable_Float32__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Float32_LowCardinality_UInt64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Float32_LowCardinality_Int64__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Float32_LowCardinality_Float32__0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Float32_Int64_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_datatypes_permutations_Float32_Float32_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":null}
+"""
+
+_aggregate_functions_merge_cramersVBiasCorrectedMerge_example_2_0 = r"""
+{"cramersVBiasCorrectedMerge(state)":0.33369281784141364}
+"""
+
