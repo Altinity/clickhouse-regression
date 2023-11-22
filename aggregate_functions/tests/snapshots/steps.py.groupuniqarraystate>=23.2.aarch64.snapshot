@@ -6323,7 +6323,7 @@ _aggregate_functions_state_groupUniqArrayState_constant = r"""
 """
 
 _aggregate_functions_state_groupUniqArrayState_duplicates = r"""
-{"hex(groupUniqArrayState(modulo(number, 2)))":"020001","any(toTypeName(number))":"UInt64"}
+{"hex(groupUniqArrayState(modulo(number, 2)))":"020001"}
 """
 
 _aggregate_functions_state_groupUniqArrayState_first_non_NULL_value = r"""
