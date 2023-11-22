@@ -28,6 +28,7 @@ def scenario(self, cluster, node="clickhouse1"):
     and optimize table concurrently does not result
     in data loss.
     """
+    random.seed(200)
     with Given("cluster node"):
         node = cluster.node(node)
 
@@ -70,6 +71,7 @@ def scenario(self, cluster, node="clickhouse1"):
                                 steps=False,
                                 timeout=360,
                                 raise_on_exception=True,
+                                random_seed=321*i,
                             )
 
                 def alter_update(num):

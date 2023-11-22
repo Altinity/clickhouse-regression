@@ -62,8 +62,9 @@ def get_paths_for_partition_from_part_log(node, table, partition_id, step=When):
     return paths.strip().split("\n")
 
 
-def produce_alter_move(node, name, steps=True, *args, **kwargs):
-    move_type = random.choice(["PART", "PARTITION"])
+def produce_alter_move(node, name, steps=True, random_seed=None, *args, **kwargs):
+    myrandom = random.Random(random_seed)
+    move_type = myrandom.choice(["PART", "PARTITION"])
 
     if move_type == "PART":
         for _ in range(10):
@@ -78,21 +79,22 @@ def produce_alter_move(node, name, steps=True, *args, **kwargs):
                     .output.strip()
                     .split("\n")
                 )
+                assert "" not in parts, str(parts)
                 break
             except QueryRuntimeException:
                 pass
         else:
             raise Exception("Cannot select from system.parts")
 
-        move_part = random.choice(["'" + part + "'" for part in parts])
+        move_part = myrandom.choice(["'" + part + "'" for part in parts])
     else:
-        move_part = random.choice([201903, 201904])
+        move_part = myrandom.choice([201903, 201904])
 
     move_disk = random.choice(["DISK", "VOLUME"])
     if move_disk == "DISK":
-        move_volume = random.choice(["'external'", "'jbod1'", "'jbod2'"])
+        move_volume = myrandom.choice(["'external'", "'jbod1'", "'jbod2'"])
     else:
-        move_volume = random.choice(["'main'", "'external'"])
+        move_volume = myrandom.choice(["'main'", "'external'"])
     try:
         node.query(
             f"ALTER TABLE {name} MOVE {move_type} {move_part} TO {move_disk} {move_volume}",
