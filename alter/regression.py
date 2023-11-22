@@ -37,6 +37,18 @@ xfails = {
             "Sometimes fails with the reason that the partition already frozen",
         )
     ],
+    "/alter/replace partition/storage/replace partition on minio and default disks/pattern #1": [
+        (
+            Fail,
+            "Replacing partition when two tables have different structures is expected to fail",
+        )
+    ],
+    "/alter/replace partition/storage/replace partition on minio and default disks/pattern #2": [
+        (
+            Fail,
+            "Replacing partition when two tables have different structures is expected to fail",
+        )
+    ],
 }
 
 xflags = {}

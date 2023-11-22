@@ -26,7 +26,7 @@ def corrupt_parts_on_table_partition(self, table_name, parts, bits_to_corrupt=15
 
 @TestCheck
 def replace_with_corrupted_parts(self, corrupt_destination, corrupt_source):
-    """Replace partition when parts on one of the tables are corrupted."""
+    """Replace partition when parts on one or both of the tables are corrupted."""
     node = self.context.node
     source_table = "source" + getuid()
     destination_table = "destination" + getuid()
