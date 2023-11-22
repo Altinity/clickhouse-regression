@@ -29,6 +29,7 @@ def scenario(self, cluster, node="clickhouse1"):
     concurrently does not result in data loss and there should
     not be any duplicate parts on the disks.
     """
+    random.seed(203)
     with Given("cluster node"):
         node = cluster.node(node)
 
@@ -94,6 +95,7 @@ def scenario(self, cluster, node="clickhouse1"):
                                 steps=False,
                                 timeout=2400,
                                 raise_on_exception=True,
+                                random_seed=371 * i,
                             )
 
                 with When("I first prepare table"):
@@ -189,16 +191,20 @@ def scenario(self, cluster, node="clickhouse1"):
                     else:
                         external_entries = set()
 
-                    with Then("there should be no duplicate parts"):
-                        len_union = len(
-                            jbod1_entries.union(jbod2_entries).union(external_entries)
-                        )
-                        len_entries = (
-                            len(jbod1_entries)
-                            + len(jbod2_entries)
-                            + len(external_entries)
-                        )
-                        assert len_union == len_entries, error()
+                    for retry in retries(timeout=60, delay=10):
+                        with retry:
+                            with Then("there should be no duplicate parts"):
+                                len_union = len(
+                                    jbod1_entries.union(jbod2_entries).union(
+                                        external_entries
+                                    )
+                                )
+                                len_entries = (
+                                    len(jbod1_entries)
+                                    + len(jbod2_entries)
+                                    + len(external_entries)
+                                )
+                                assert len_union == len_entries, error()
 
             finally:
                 with Finally("I drop the table"):
