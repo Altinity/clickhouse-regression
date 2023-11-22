@@ -25,4 +25,4 @@ def scenario(self, func="groupUniqArray({params})", table=None, snapshot_id=None
     checks(func=func, table=table, snapshot_id=self.context.snapshot_id)
 
     with Check("duplicates"):
-        execute_query(f"SELECT {func.format(params='number % 2')}, any(toTypeName(number)) FROM numbers(8)")
+        execute_query(f"SELECT {func.format(params='number % 2')} FROM numbers(8)")

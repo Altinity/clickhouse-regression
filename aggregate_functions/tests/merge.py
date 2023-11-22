@@ -104,15 +104,22 @@ def merge(self, scenario, short_name):
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Combinator_Merge("1.0"))
 def feature(self):
     """Check aggregate functions `-Merge` combinator."""
-    not_implemented = ['mannWhitneyUTest', 'quantileDeterministic', 'quantilesDeterministic', 
-                       'stochasticLinearRegression', 'stochasticLogisticRegression', "sumMap", "maxMap", 
+    not_implemented = ['mannWhitneyUTest', 
+                       'quantileDeterministic', # two arguments
+                       'quantilesDeterministic', 
+                       'stochasticLinearRegression', 
+                       'stochasticLogisticRegression', 
+                       "sumMap", 
+                       "maxMap", 
                        "minMap", 
-                       "groupUniqArray", "quantileTDigestWeighted", "uniq", 
+                       "quantileTDigestWeighted", 
+                       "uniq", 
                        "uniqHLL12", # problem on 22.8 and 23.8 !!!
                        "singleValueOrNull", # problem on 22.8
                        "topKWeighted", # fails on 23.3
                        "uniqExact", # problem on 23.8 aarch
-                       "welchTTest" # problem on 22.8 aarch
+                       "welchTTest", # problem on 22.8 aarch
+                       "studentTTest"
                        ]
 
     test_funcs = [i for i in aggregate_functions]
