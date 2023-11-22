@@ -995,6 +995,7 @@ def concurrent_replace(
             destination_table=destination_table,
             source_table=source_table,
             number_of_partitions=number_of_partitions,
+            query_settings="storage_policy = 'my_policy'",
         )
 
     with When("I execute multiple replace partitions along with other actions"):

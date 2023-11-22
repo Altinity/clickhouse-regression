@@ -12,7 +12,7 @@ from parquet.tests.common import start_minio
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Disks("1.0"))
 def different_disks(self):
-    """Check that it is possible to replace partition on a destination table from a source tale that is stored on a
+    """Check that it is not possible to replace partition on a destination table from a source tale that is stored on a
     different disk."""
     destination_table = "destination_" + getuid()
     source_table = "source_" + getuid()
@@ -29,14 +29,17 @@ def different_disks(self):
 
     with Then("I try to replace partition on the destination table"):
         replace_partition(
-            destination_table=destination_table, source_table=source_table
+            destination_table=destination_table,
+            source_table=source_table,
+            message="DB::Exception: Could not clone and load part",
+            exitcode=36,
         )
 
 
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Shards("1.0"))
 def shards(self):
-    """Check that it is possible to replace partition on a destination table from a source tale that is stored on a
+    """Check that it is not possible to replace partition on a destination table from a source tale that is stored on a
     different shard."""
     node = self.context.node
     destination_table = "destination_" + getuid()
