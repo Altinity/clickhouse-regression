@@ -79,12 +79,14 @@ def produce_alter_move(node, name, steps=True, random_seed=None, *args, **kwargs
                     .output.strip()
                     .split("\n")
                 )
-                assert "" not in parts, str(parts)
-                break
+                if parts != [""]:
+                    break
             except QueryRuntimeException:
                 pass
         else:
             raise Exception("Cannot select from system.parts")
+
+        assert "" not in parts, str(parts)
 
         move_part = myrandom.choice(["'" + part + "'" for part in parts])
     else:

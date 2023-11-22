@@ -31,6 +31,7 @@ def scenario(self, cluster, node="clickhouse1"):
     concurrently does not result in data loss and there should
     not be any duplicate parts on the disks.
     """
+    random.seed(204)
     with Given("cluster node"):
         node = cluster.node(node)
 
@@ -91,6 +92,7 @@ def scenario(self, cluster, node="clickhouse1"):
                                 steps=False,
                                 timeout=600,
                                 raise_on_exception=True,
+                                random_seed=327 * i,
                             )
 
                 with When("in parallel I perform alter move, and select count"):
