@@ -456,6 +456,61 @@ def settings(self):
         )
 
 
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_From_RemoteTable(
+        "1.0"
+    )
+)
+def remote(self):
+    """Checking that the usage of remote does output an errors and does not crash the ClickHouse."""
+    destination_table = "table_" + getuid()
+    source_table = "table_" + getuid()
+    exitcode, message = io_error_message()
+
+    with Given(
+        "I have two tables with a MergeTree engine, with the same structure partitioned by the same column"
+    ):
+        create_two_tables_partitioned_by_column_with_data(
+            destination_table=destination_table, source_table=source_table
+        )
+
+    with Check("I check that using remote as a source table outputs an error"):
+        replace_partition(
+            destination_table=destination_table,
+            source_table="remote('127.0.0.1', db.remote_engine_table)",
+            exitcode=exitcode,
+            message=message,
+        )
+
+
+@TestScenario
+@Requirements(
+    RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_From_RemoteTable(
+        "1.0"
+    )
+)
+def remote_secure(self):
+    """Checking that the usage of remoteSecure does output an errors and does not crash the ClickHouse."""
+    destination_table = "table_" + getuid()
+    source_table = "table_" + getuid()
+    exitcode, message = io_error_message()
+    with Given(
+        "I have two tables with a MergeTree engine, with the same structure partitioned by the same column"
+    ):
+        create_two_tables_partitioned_by_column_with_data(
+            destination_table=destination_table, source_table=source_table
+        )
+
+    with Check("I check that using remoteSecure as a source table outputs an error"):
+        replace_partition(
+            destination_table=destination_table,
+            source_table="remoteSecure('remote.clickhouse.cloud:9440', 'imdb.actors', 'USER', 'PASSWORD')",
+            exitcode=exitcode,
+            message=message,
+        )
+
+
 @TestSuite
 @Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_From("1.0"))
 def from_clause(self):
@@ -467,6 +522,8 @@ def from_clause(self):
     Scenario(run=non_mergetree_table)
     Scenario(run=view)
     Scenario(run=materialized_view)
+    Scenario(run=remote)
+    Scenario(run=remote_secure)
 
 
 @TestSuite
