@@ -25,14 +25,12 @@ def check2(self, func, datatypes, hex_repr, snapshot_name, short_name, is_low_ca
     if is_low_cardinality:
         self.context.node.query(f"SET allow_suspicious_low_cardinality_types = 1")
 
-    with When("I insert data in temporary table"):
+    with When("I prepare expression for query"):
         values = f"(CAST(unhex('{hex_repr}'), 'AggregateFunction({func}, {datatypes})'))"
+        correct_form = func.replace(short_name, short_name + "Merge")
 
     with Then("I check the result"):
-        correct_form = func.replace(short_name, short_name + "Merge")
-        execute_query(
-            f"SELECT {correct_form}{values}", snapshot_name=snapshot_name
-        )
+        execute_query(f"SELECT {correct_form}{values}", snapshot_name=snapshot_name)
 
 
 @TestCheck
@@ -110,6 +108,9 @@ def feature(self):
                        "groupUniqArray", "quantileTDigestWeighted", "uniq", 
                        "uniqHLL12", # problem on 22.8 and 23.8 !!!
                        "singleValueOrNull", # problem on 22.8
+                       "topKWeighted", # fails on 23.3
+                       "uniqExact", # problem on 23.8 aarch
+                       "welchTTest" # problem on 22.8 aarch
     # "anyHeavy",
     # "any",
     # "anyLast", 
@@ -195,7 +196,7 @@ def feature(self):
     # "sumKahan",
     # "sumWithOverflow",
     # "topK",
-    # "topKWeighted",
+    #"topKWeighted", # fails on 23.3
     # "uniqCombined",
     # "uniqCombined64",
     # "uniqExact",

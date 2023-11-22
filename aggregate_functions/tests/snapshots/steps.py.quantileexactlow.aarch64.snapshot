@@ -1,0 +1,245 @@
+_aggregate_functions_quantileExactLow_constant = r"""
+{"quantileExactLow(1)":1,"any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_quantileExactLow_zero_rows = r"""
+{"quantileExactLow(number)":"0","any(toTypeName(number))":""}
+"""
+
+_aggregate_functions_quantileExactLow_single_row = r"""
+{"quantileExactLow(number)":"0","any(toTypeName(number))":"UInt64"}
+"""
+
+_aggregate_functions_quantileExactLow_with_group_by = r"""
+{"even":0,"quantileExactLow(number)":"4","any(toTypeName(number))":"UInt64"}
+{"even":1,"quantileExactLow(number)":"5","any(toTypeName(number))":"UInt64"}
+"""
+
+_aggregate_functions_quantileExactLow_some_negative_values = r"""
+{"quantileExactLow(minus(number, 5))":"0","any(toTypeName(number))":"UInt64"}
+"""
+
+_aggregate_functions_quantileExactLow_NULL_value_handling = r"""
+{"quantileExactLow(x)":3,"any(toTypeName(x))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_quantileExactLow_single_NULL_value = r"""
+{"quantileExactLow(x)":null,"any(toTypeName(x))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_quantileExactLow_return_type = r"""
+{"toTypeName(quantileExactLow(number))":"UInt64","any(toTypeName(number))":"UInt64"}
+"""
+
+_aggregate_functions_quantileExactLow_doc_example = r"""
+{"quantileExactLow(x)":2,"any(toTypeName(x))":"Int8"}
+"""
+
+_aggregate_functions_quantileExactLow_inf = r"""
+{"quantileExactLow(x)":4,"any(toTypeName(x))":"Float64"}
+"""
+
+_aggregate_functions_quantileExactLow__inf = r"""
+{"quantileExactLow(x)":2.3,"any(toTypeName(x))":"Float64"}
+"""
+
+_aggregate_functions_quantileExactLow_nan = r"""
+{"quantileExactLow(x)":4,"any(toTypeName(x))":"Float64"}
+"""
+
+_aggregate_functions_quantileExactLow_inf___inf__nan = r"""
+{"quantileExactLow(x)":5,"any(toTypeName(x))":"Float64"}
+"""
+
+_aggregate_functions_quantileExactLow_UInt8 = r"""
+{"quantileExactLow(uint8)":126,"any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_quantileExactLow_UInt16 = r"""
+{"quantileExactLow(uint16)":18446,"any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_quantileExactLow_UInt32 = r"""
+{"quantileExactLow(uint32)":2579416427,"any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_quantileExactLow_UInt64 = r"""
+{"quantileExactLow(uint64)":"5140383948038881323","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_quantileExactLow_Int8 = r"""
+{"quantileExactLow(int8)":-44,"any(toTypeName(int8))":"Int8"}
+"""
+
+_aggregate_functions_quantileExactLow_Int16 = r"""
+{"quantileExactLow(int16)":0,"any(toTypeName(int16))":"Int16"}
+"""
+
+_aggregate_functions_quantileExactLow_Int32 = r"""
+{"quantileExactLow(int32)":-484753348,"any(toTypeName(int32))":"Int32"}
+"""
+
+_aggregate_functions_quantileExactLow_Int64 = r"""
+{"quantileExactLow(int64)":"9618164129723932","any(toTypeName(int64))":"Int64"}
+"""
+
+_aggregate_functions_quantileExactLow_Float32 = r"""
+{"quantileExactLow(float32)":-2.2393902e38,"any(toTypeName(float32))":"Float32"}
+"""
+
+_aggregate_functions_quantileExactLow_Float64 = r"""
+{"quantileExactLow(float64)":-1.022441982597651e98,"any(toTypeName(float64))":"Float64"}
+"""
+
+_aggregate_functions_quantileExactLow_Date = r"""
+{"quantileExactLow(date)":"2005-06-07","any(toTypeName(date))":"Date"}
+"""
+
+_aggregate_functions_quantileExactLow_DateTime = r"""
+{"quantileExactLow(datetime)":"2015-06-29 09:43:07","any(toTypeName(datetime))":"DateTime"}
+"""
+
+_aggregate_functions_quantileExactLow_Nullable_UInt8_ = r"""
+{"quantileExactLow(nullable_uint8_)":65,"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_quantileExactLow_Nullable_UInt16_ = r"""
+{"quantileExactLow(nullable_uint16_)":31453,"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_quantileExactLow_Nullable_UInt32_ = r"""
+{"quantileExactLow(nullable_uint32_)":1575536824,"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_quantileExactLow_Nullable_UInt64_ = r"""
+{"quantileExactLow(nullable_uint64_)":"15756926212117227055","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_quantileExactLow_Nullable_Int8_ = r"""
+{"quantileExactLow(nullable_int8_)":4,"any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
+"""
+
+_aggregate_functions_quantileExactLow_Nullable_Int16_ = r"""
+{"quantileExactLow(nullable_int16_)":3728,"any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
+"""
+
+_aggregate_functions_quantileExactLow_Nullable_Int32_ = r"""
+{"quantileExactLow(nullable_int32_)":194268523,"any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
+"""
+
+_aggregate_functions_quantileExactLow_Nullable_Int64_ = r"""
+{"quantileExactLow(nullable_int64_)":"1193865884214575979","any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
+"""
+
+_aggregate_functions_quantileExactLow_Nullable_Float32_ = r"""
+{"quantileExactLow(nullable_float32_)":-1.9946482e38,"any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
+"""
+
+_aggregate_functions_quantileExactLow_Nullable_Float64_ = r"""
+{"quantileExactLow(nullable_float64_)":-1.361161047663063e43,"any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
+"""
+
+_aggregate_functions_quantileExactLow_Nullable_Date_ = r"""
+{"quantileExactLow(nullable_date_)":"2012-02-07","any(toTypeName(nullable_date_))":"Nullable(Date)"}
+"""
+
+_aggregate_functions_quantileExactLow_Nullable_DateTime_ = r"""
+{"quantileExactLow(nullable_datetime_)":"2014-04-10 09:39:46","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)"}
+"""
+
+_aggregate_functions_quantileExactLow_LowCardinality_UInt8_ = r"""
+{"quantileExactLow(lowcardinality_uint8_)":172,"any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
+"""
+
+_aggregate_functions_quantileExactLow_LowCardinality_UInt16_ = r"""
+{"quantileExactLow(lowcardinality_uint16_)":23501,"any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
+"""
+
+_aggregate_functions_quantileExactLow_LowCardinality_UInt32_ = r"""
+{"quantileExactLow(lowcardinality_uint32_)":1391804658,"any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
+"""
+
+_aggregate_functions_quantileExactLow_LowCardinality_UInt64_ = r"""
+{"quantileExactLow(lowcardinality_uint64_)":"5162688910625066629","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_quantileExactLow_LowCardinality_Int8_ = r"""
+{"quantileExactLow(lowcardinality_int8_)":0,"any(toTypeName(lowcardinality_int8_))":"LowCardinality(Int8)"}
+"""
+
+_aggregate_functions_quantileExactLow_LowCardinality_Int16_ = r"""
+{"quantileExactLow(lowcardinality_int16_)":0,"any(toTypeName(lowcardinality_int16_))":"LowCardinality(Int16)"}
+"""
+
+_aggregate_functions_quantileExactLow_LowCardinality_Int32_ = r"""
+{"quantileExactLow(lowcardinality_int32_)":-1007598218,"any(toTypeName(lowcardinality_int32_))":"LowCardinality(Int32)"}
+"""
+
+_aggregate_functions_quantileExactLow_LowCardinality_Int64_ = r"""
+{"quantileExactLow(lowcardinality_int64_)":"2718870071498905287","any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
+"""
+
+_aggregate_functions_quantileExactLow_LowCardinality_Float32_ = r"""
+{"quantileExactLow(lowcardinality_float32_)":2.2767175e37,"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
+"""
+
+_aggregate_functions_quantileExactLow_LowCardinality_Float64_ = r"""
+{"quantileExactLow(lowcardinality_float64_)":1.6971691734467532e100,"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)"}
+"""
+
+_aggregate_functions_quantileExactLow_LowCardinality_Date_ = r"""
+{"quantileExactLow(lowcardinality_date_)":"2008-06-29","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
+"""
+
+_aggregate_functions_quantileExactLow_LowCardinality_DateTime_ = r"""
+{"quantileExactLow(lowcardinality_datetime_)":"2013-09-04 14:10:20","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
+"""
+
+_aggregate_functions_quantileExactLow_LowCardinality_Nullable_UInt8__ = r"""
+{"quantileExactLow(lowcardinality_nullable_uint8__)":165,"any(toTypeName(lowcardinality_nullable_uint8__))":"LowCardinality(Nullable(UInt8))"}
+"""
+
+_aggregate_functions_quantileExactLow_LowCardinality_Nullable_UInt16__ = r"""
+{"quantileExactLow(lowcardinality_nullable_uint16__)":15607,"any(toTypeName(lowcardinality_nullable_uint16__))":"LowCardinality(Nullable(UInt16))"}
+"""
+
+_aggregate_functions_quantileExactLow_LowCardinality_Nullable_UInt32__ = r"""
+{"quantileExactLow(lowcardinality_nullable_uint32__)":2488434006,"any(toTypeName(lowcardinality_nullable_uint32__))":"LowCardinality(Nullable(UInt32))"}
+"""
+
+_aggregate_functions_quantileExactLow_LowCardinality_Nullable_UInt64__ = r"""
+{"quantileExactLow(lowcardinality_nullable_uint64__)":"7718272410435569592","any(toTypeName(lowcardinality_nullable_uint64__))":"LowCardinality(Nullable(UInt64))"}
+"""
+
+_aggregate_functions_quantileExactLow_LowCardinality_Nullable_Int8__ = r"""
+{"quantileExactLow(lowcardinality_nullable_int8__)":9,"any(toTypeName(lowcardinality_nullable_int8__))":"LowCardinality(Nullable(Int8))"}
+"""
+
+_aggregate_functions_quantileExactLow_LowCardinality_Nullable_Int16__ = r"""
+{"quantileExactLow(lowcardinality_nullable_int16__)":-6294,"any(toTypeName(lowcardinality_nullable_int16__))":"LowCardinality(Nullable(Int16))"}
+"""
+
+_aggregate_functions_quantileExactLow_LowCardinality_Nullable_Int32__ = r"""
+{"quantileExactLow(lowcardinality_nullable_int32__)":-242357356,"any(toTypeName(lowcardinality_nullable_int32__))":"LowCardinality(Nullable(Int32))"}
+"""
+
+_aggregate_functions_quantileExactLow_LowCardinality_Nullable_Int64__ = r"""
+{"quantileExactLow(lowcardinality_nullable_int64__)":"1732198740987194200","any(toTypeName(lowcardinality_nullable_int64__))":"LowCardinality(Nullable(Int64))"}
+"""
+
+_aggregate_functions_quantileExactLow_LowCardinality_Nullable_Float32__ = r"""
+{"quantileExactLow(lowcardinality_nullable_float32__)":-4.4835215e37,"any(toTypeName(lowcardinality_nullable_float32__))":"LowCardinality(Nullable(Float32))"}
+"""
+
+_aggregate_functions_quantileExactLow_LowCardinality_Nullable_Float64__ = r"""
+{"quantileExactLow(lowcardinality_nullable_float64__)":1.7674632094597634e89,"any(toTypeName(lowcardinality_nullable_float64__))":"LowCardinality(Nullable(Float64))"}
+"""
+
+_aggregate_functions_quantileExactLow_LowCardinality_Nullable_Date__ = r"""
+{"quantileExactLow(lowcardinality_nullable_date__)":"2013-09-28","any(toTypeName(lowcardinality_nullable_date__))":"LowCardinality(Nullable(Date))"}
+"""
+
+_aggregate_functions_quantileExactLow_LowCardinality_Nullable_DateTime__ = r"""
+{"quantileExactLow(lowcardinality_nullable_datetime__)":"2013-08-28 12:39:09","any(toTypeName(lowcardinality_nullable_datetime__))":"LowCardinality(Nullable(DateTime))"}
+"""
+

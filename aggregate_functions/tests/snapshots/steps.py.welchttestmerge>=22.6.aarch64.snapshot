@@ -1,0 +1,832 @@
+_aggregate_functions_merge_welchTTestMerge_single_value_in_0_population_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":null,"p_value":null}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_single_value_in_1_population_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":null,"p_value":null}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_constant_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":null,"p_value":null}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_single_row_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":null,"p_value":null}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_single_row_with_zero_weight_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":null,"p_value":null}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_with_group_by_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":null,"p_value":null}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_with_group_by_1 = r"""
+{"welchTTestMerge(state)":{"t_statistic":null,"p_value":null}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_some_negative_values_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":null,"p_value":null}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_NULL_value_handling_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":null,"p_value":null}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_weight_NULL_value_handling_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":0.31108550841912763,"p_value":0.7727446399940227}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_single_NULL_value_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":null,"p_value":null}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_doc_example_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":null,"p_value":null}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_inf_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":null,"p_value":null}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge__inf_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":null,"p_value":null}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_nan_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":null,"p_value":null}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_inf___inf__nan_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":null,"p_value":null}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint8_uint8_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-6.274977645189032,"p_value":0.00041403251601300614}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint8_uint64_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-6.274977645189032,"p_value":0.00041403251601300614}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint8_uint32_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-6.274977645189032,"p_value":0.00041403251601300614}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint8_uint16_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-6.274977645189032,"p_value":0.00041403251601300614}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint8_nullable_uint8__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-6.274977645189032,"p_value":0.00041403251601300614}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint8_nullable_uint64__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-6.274977645189032,"p_value":0.00041403251601300614}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint8_nullable_uint32__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-6.274977645189032,"p_value":0.00041403251601300614}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint8_nullable_uint16__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-6.274977645189032,"p_value":0.00041403251601300614}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint8_lowcardinality_uint8__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-6.274977645189032,"p_value":0.00041403251601300614}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint8_lowcardinality_uint64__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-6.274977645189032,"p_value":0.00041403251601300614}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint8_lowcardinality_uint32__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-6.274977645189032,"p_value":0.00041403251601300614}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint8_lowcardinality_uint16__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-6.274977645189032,"p_value":0.00041403251601300614}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint8_lowcardinality_nullable_uint8___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-6.274977645189032,"p_value":0.00041403251601300614}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint8_lowcardinality_nullable_uint64___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-6.274977645189032,"p_value":0.00041403251601300614}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint8_lowcardinality_nullable_uint32___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-6.274977645189032,"p_value":0.00041403251601300614}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint8_lowcardinality_nullable_uint16___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-6.274977645189032,"p_value":0.00041403251601300614}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint64_uint8_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.828265698322,"p_value":0.0019032617434498224}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint64_uint64_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.828265698322,"p_value":0.0019032617434498224}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint64_uint32_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.828265698322,"p_value":0.0019032617434498224}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint64_uint16_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.828265698322,"p_value":0.0019032617434498224}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint64_nullable_uint8__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.828265698322,"p_value":0.0019032617434498224}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint64_nullable_uint64__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.828265698322,"p_value":0.0019032617434498224}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint64_nullable_uint32__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.828265698322,"p_value":0.0019032617434498224}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint64_nullable_uint16__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.828265698322,"p_value":0.0019032617434498224}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint64_lowcardinality_uint8__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.828265698322,"p_value":0.0019032617434498224}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint64_lowcardinality_uint64__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.828265698322,"p_value":0.0019032617434498224}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint64_lowcardinality_uint32__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.828265698322,"p_value":0.0019032617434498224}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint64_lowcardinality_uint16__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.828265698322,"p_value":0.0019032617434498224}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint64_lowcardinality_nullable_uint8___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.828265698322,"p_value":0.0019032617434498224}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint64_lowcardinality_nullable_uint64___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.828265698322,"p_value":0.0019032617434498224}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint64_lowcardinality_nullable_uint32___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.828265698322,"p_value":0.0019032617434498224}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint64_lowcardinality_nullable_uint16___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.828265698322,"p_value":0.0019032617434498224}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint32_uint8_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-7.725005454609251,"p_value":0.00011388106297909594}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint32_uint64_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-7.725005454609251,"p_value":0.00011388106297909594}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint32_uint32_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-7.725005454609251,"p_value":0.00011388106297909594}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint32_uint16_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-7.725005454609251,"p_value":0.00011388106297909594}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint32_nullable_uint8__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-7.725005454609251,"p_value":0.00011388106297909594}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint32_nullable_uint64__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-7.725005454609251,"p_value":0.00011388106297909594}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint32_nullable_uint32__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-7.725005454609251,"p_value":0.00011388106297909594}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint32_nullable_uint16__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-7.725005454609251,"p_value":0.00011388106297909594}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint32_lowcardinality_uint8__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-7.725005454609251,"p_value":0.00011388106297909594}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint32_lowcardinality_uint64__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-7.725005454609251,"p_value":0.00011388106297909594}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint32_lowcardinality_uint32__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-7.725005454609251,"p_value":0.00011388106297909594}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint32_lowcardinality_uint16__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-7.725005454609251,"p_value":0.00011388106297909594}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint32_lowcardinality_nullable_uint8___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-7.725005454609251,"p_value":0.00011388106297909594}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint32_lowcardinality_nullable_uint64___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-7.725005454609251,"p_value":0.00011388106297909594}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint32_lowcardinality_nullable_uint32___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-7.725005454609251,"p_value":0.00011388106297909594}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint32_lowcardinality_nullable_uint16___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-7.725005454609251,"p_value":0.00011388106297909594}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint16_uint8_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.53591336755593,"p_value":0.0026807280910518478}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint16_uint64_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.53591336755593,"p_value":0.0026807280910518478}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint16_uint32_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.53591336755593,"p_value":0.0026807280910518478}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint16_uint16_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.53591336755593,"p_value":0.0026807280910518478}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint16_nullable_uint8__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.53591336755593,"p_value":0.0026807280910518478}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint16_nullable_uint64__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.53591336755593,"p_value":0.0026807280910518478}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint16_nullable_uint32__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.53591336755593,"p_value":0.0026807280910518478}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint16_nullable_uint16__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.53591336755593,"p_value":0.0026807280910518478}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint16_lowcardinality_uint8__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.53591336755593,"p_value":0.0026807280910518478}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint16_lowcardinality_uint64__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.53591336755593,"p_value":0.0026807280910518478}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint16_lowcardinality_uint32__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.53591336755593,"p_value":0.0026807280910518478}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint16_lowcardinality_uint16__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.53591336755593,"p_value":0.0026807280910518478}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint16_lowcardinality_nullable_uint8___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.53591336755593,"p_value":0.0026807280910518478}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint16_lowcardinality_nullable_uint64___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.53591336755593,"p_value":0.0026807280910518478}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint16_lowcardinality_nullable_uint32___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.53591336755593,"p_value":0.0026807280910518478}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_uint16_lowcardinality_nullable_uint16___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.53591336755593,"p_value":0.0026807280910518478}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint8__uint8_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-3.7881941525955787,"p_value":0.00681894675483142}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint8__uint64_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-3.7881941525955787,"p_value":0.00681894675483142}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint8__uint32_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-3.7881941525955787,"p_value":0.00681894675483142}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint8__uint16_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-3.7881941525955787,"p_value":0.00681894675483142}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint8__nullable_uint8__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-3.7881941525955787,"p_value":0.00681894675483142}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint8__nullable_uint64__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-3.7881941525955787,"p_value":0.00681894675483142}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint8__nullable_uint32__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-3.7881941525955787,"p_value":0.00681894675483142}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint8__nullable_uint16__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-3.7881941525955787,"p_value":0.00681894675483142}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint8__lowcardinality_uint8__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-3.7881941525955787,"p_value":0.00681894675483142}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint8__lowcardinality_uint64__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-3.7881941525955787,"p_value":0.00681894675483142}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint8__lowcardinality_uint32__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-3.7881941525955787,"p_value":0.00681894675483142}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint8__lowcardinality_uint16__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-3.7881941525955787,"p_value":0.00681894675483142}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint8__lowcardinality_nullable_uint8___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-3.7881941525955787,"p_value":0.00681894675483142}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint8__lowcardinality_nullable_uint64___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-3.7881941525955787,"p_value":0.00681894675483142}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint8__lowcardinality_nullable_uint32___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-3.7881941525955787,"p_value":0.00681894675483142}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint8__lowcardinality_nullable_uint16___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-3.7881941525955787,"p_value":0.00681894675483142}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint64__uint8_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.635070816146179,"p_value":0.0007866112968207847}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint64__uint64_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.635070816146179,"p_value":0.0007866112968207847}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint64__uint32_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.635070816146179,"p_value":0.0007866112968207847}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint64__uint16_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.635070816146179,"p_value":0.0007866112968207847}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint64__nullable_uint8__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.635070816146179,"p_value":0.0007866112968207847}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint64__nullable_uint64__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.635070816146179,"p_value":0.0007866112968207847}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint64__nullable_uint32__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.635070816146179,"p_value":0.0007866112968207847}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint64__nullable_uint16__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.635070816146179,"p_value":0.0007866112968207847}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint64__lowcardinality_uint8__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.635070816146179,"p_value":0.0007866112968207847}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint64__lowcardinality_uint64__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.635070816146179,"p_value":0.0007866112968207847}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint64__lowcardinality_uint32__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.635070816146179,"p_value":0.0007866112968207847}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint64__lowcardinality_uint16__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.635070816146179,"p_value":0.0007866112968207847}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint64__lowcardinality_nullable_uint8___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.635070816146179,"p_value":0.0007866112968207847}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint64__lowcardinality_nullable_uint64___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.635070816146179,"p_value":0.0007866112968207847}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint64__lowcardinality_nullable_uint32___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.635070816146179,"p_value":0.0007866112968207847}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint64__lowcardinality_nullable_uint16___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.635070816146179,"p_value":0.0007866112968207847}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint32__uint8_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.374297215542649,"p_value":0.0032569804968386267}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint32__uint64_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.374297215542649,"p_value":0.0032569804968386267}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint32__uint32_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.374297215542649,"p_value":0.0032569804968386267}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint32__uint16_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.374297215542649,"p_value":0.0032569804968386267}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint32__nullable_uint8__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.374297215542649,"p_value":0.0032569804968386267}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint32__nullable_uint64__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.374297215542649,"p_value":0.0032569804968386267}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint32__nullable_uint32__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.374297215542649,"p_value":0.0032569804968386267}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint32__nullable_uint16__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.374297215542649,"p_value":0.0032569804968386267}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint32__lowcardinality_uint8__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.374297215542649,"p_value":0.0032569804968386267}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint32__lowcardinality_uint64__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.374297215542649,"p_value":0.0032569804968386267}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint32__lowcardinality_uint32__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.374297215542649,"p_value":0.0032569804968386267}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint32__lowcardinality_uint16__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.374297215542649,"p_value":0.0032569804968386267}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint32__lowcardinality_nullable_uint8___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.374297215542649,"p_value":0.0032569804968386267}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint32__lowcardinality_nullable_uint64___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.374297215542649,"p_value":0.0032569804968386267}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint32__lowcardinality_nullable_uint32___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.374297215542649,"p_value":0.0032569804968386267}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint32__lowcardinality_nullable_uint16___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-4.374297215542649,"p_value":0.0032569804968386267}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint16__uint8_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.275301417851105,"p_value":0.00115393950292678}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint16__uint64_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.275301417851105,"p_value":0.00115393950292678}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint16__uint32_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.275301417851105,"p_value":0.00115393950292678}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint16__uint16_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.275301417851105,"p_value":0.00115393950292678}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint16__nullable_uint8__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.275301417851105,"p_value":0.00115393950292678}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint16__nullable_uint64__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.275301417851105,"p_value":0.00115393950292678}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint16__nullable_uint32__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.275301417851105,"p_value":0.00115393950292678}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint16__nullable_uint16__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.275301417851105,"p_value":0.00115393950292678}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint16__lowcardinality_uint8__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.275301417851105,"p_value":0.00115393950292678}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint16__lowcardinality_uint64__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.275301417851105,"p_value":0.00115393950292678}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint16__lowcardinality_uint32__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.275301417851105,"p_value":0.00115393950292678}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint16__lowcardinality_uint16__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.275301417851105,"p_value":0.00115393950292678}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint16__lowcardinality_nullable_uint8___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.275301417851105,"p_value":0.00115393950292678}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint16__lowcardinality_nullable_uint64___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.275301417851105,"p_value":0.00115393950292678}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint16__lowcardinality_nullable_uint32___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.275301417851105,"p_value":0.00115393950292678}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_uint16__lowcardinality_nullable_uint16___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-5.275301417851105,"p_value":0.00115393950292678}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int8__uint8_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.1727936363940923,"p_value":0.4004417050494431}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int8__uint64_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.1727936363940923,"p_value":0.4004417050494431}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int8__uint32_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.1727936363940923,"p_value":0.4004417050494431}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int8__uint16_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.1727936363940923,"p_value":0.4004417050494431}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int8__nullable_uint8__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.1727936363940923,"p_value":0.4004417050494431}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int8__nullable_uint64__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.1727936363940923,"p_value":0.4004417050494431}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int8__nullable_uint32__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.1727936363940923,"p_value":0.4004417050494431}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int8__nullable_uint16__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.1727936363940923,"p_value":0.4004417050494431}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int8__lowcardinality_uint8__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.1727936363940923,"p_value":0.4004417050494431}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int8__lowcardinality_uint64__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.1727936363940923,"p_value":0.4004417050494431}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int8__lowcardinality_uint32__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.1727936363940923,"p_value":0.4004417050494431}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int8__lowcardinality_uint16__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.1727936363940923,"p_value":0.4004417050494431}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int8__lowcardinality_nullable_uint8___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.1727936363940923,"p_value":0.4004417050494431}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int8__lowcardinality_nullable_uint64___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.1727936363940923,"p_value":0.4004417050494431}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int8__lowcardinality_nullable_uint32___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.1727936363940923,"p_value":0.4004417050494431}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int8__lowcardinality_nullable_uint16___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.1727936363940923,"p_value":0.4004417050494431}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int64__uint8_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.2289696874081457,"p_value":0.3793706406846149}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int64__uint64_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.2289696874081457,"p_value":0.3793706406846149}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int64__uint32_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.2289696874081457,"p_value":0.3793706406846149}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int64__uint16_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.2289696874081457,"p_value":0.3793706406846149}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int64__nullable_uint8__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.2289696874081457,"p_value":0.3793706406846149}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int64__nullable_uint64__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.2289696874081457,"p_value":0.3793706406846149}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int64__nullable_uint32__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.2289696874081457,"p_value":0.3793706406846149}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int64__nullable_uint16__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.2289696874081457,"p_value":0.3793706406846149}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int64__lowcardinality_uint8__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.2289696874081457,"p_value":0.3793706406846149}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int64__lowcardinality_uint64__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.2289696874081457,"p_value":0.3793706406846149}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int64__lowcardinality_uint32__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.2289696874081457,"p_value":0.3793706406846149}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int64__lowcardinality_uint16__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.2289696874081457,"p_value":0.3793706406846149}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int64__lowcardinality_nullable_uint8___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.2289696874081457,"p_value":0.3793706406846149}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int64__lowcardinality_nullable_uint64___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.2289696874081457,"p_value":0.3793706406846149}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int64__lowcardinality_nullable_uint32___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.2289696874081457,"p_value":0.3793706406846149}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int64__lowcardinality_nullable_uint16___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.2289696874081457,"p_value":0.3793706406846149}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int32__uint8_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.6536201111967224,"p_value":0.30446514221615567}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int32__uint64_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.6536201111967224,"p_value":0.30446514221615567}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int32__uint32_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.6536201111967224,"p_value":0.30446514221615567}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int32__uint16_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.6536201111967224,"p_value":0.30446514221615567}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int32__nullable_uint8__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.6536201111967224,"p_value":0.30446514221615567}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int32__nullable_uint64__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.6536201111967224,"p_value":0.30446514221615567}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int32__nullable_uint32__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.6536201111967224,"p_value":0.30446514221615567}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int32__nullable_uint16__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.6536201111967224,"p_value":0.30446514221615567}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int32__lowcardinality_uint8__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.6536201111967224,"p_value":0.30446514221615567}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int32__lowcardinality_uint64__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.6536201111967224,"p_value":0.30446514221615567}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int32__lowcardinality_uint32__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.6536201111967224,"p_value":0.30446514221615567}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int32__lowcardinality_uint16__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.6536201111967224,"p_value":0.30446514221615567}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int32__lowcardinality_nullable_uint8___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.6536201111967224,"p_value":0.30446514221615567}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int32__lowcardinality_nullable_uint64___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.6536201111967224,"p_value":0.30446514221615567}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int32__lowcardinality_nullable_uint32___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.6536201111967224,"p_value":0.30446514221615567}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int32__lowcardinality_nullable_uint16___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-1.6536201111967224,"p_value":0.30446514221615567}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int16__uint8_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-0.9590972881378176,"p_value":0.4725823357937698}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int16__uint64_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-0.9590972881378176,"p_value":0.4725823357937698}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int16__uint32_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-0.9590972881378176,"p_value":0.4725823357937698}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int16__uint16_0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-0.9590972881378176,"p_value":0.4725823357937698}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int16__nullable_uint8__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-0.9590972881378176,"p_value":0.4725823357937698}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int16__nullable_uint64__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-0.9590972881378176,"p_value":0.4725823357937698}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int16__nullable_uint32__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-0.9590972881378176,"p_value":0.4725823357937698}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int16__nullable_uint16__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-0.9590972881378176,"p_value":0.4725823357937698}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int16__lowcardinality_uint8__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-0.9590972881378176,"p_value":0.4725823357937698}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int16__lowcardinality_uint64__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-0.9590972881378176,"p_value":0.4725823357937698}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int16__lowcardinality_uint32__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-0.9590972881378176,"p_value":0.4725823357937698}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int16__lowcardinality_uint16__0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-0.9590972881378176,"p_value":0.4725823357937698}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int16__lowcardinality_nullable_uint8___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-0.9590972881378176,"p_value":0.4725823357937698}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int16__lowcardinality_nullable_uint64___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-0.9590972881378176,"p_value":0.4725823357937698}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int16__lowcardinality_nullable_uint32___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-0.9590972881378176,"p_value":0.4725823357937698}}
+"""
+
+_aggregate_functions_merge_welchTTestMerge_datatypes_permutations_nullable_int16__lowcardinality_nullable_uint16___0 = r"""
+{"welchTTestMerge(state)":{"t_statistic":-0.9590972881378176,"p_value":0.4725823357937698}}
+"""
+
