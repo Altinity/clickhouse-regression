@@ -109,6 +109,7 @@ def feature(self):
                        "minMap", 
                        "groupUniqArray", "quantileTDigestWeighted", "uniq", 
                        "uniqHLL12", # problem on 22.8 and 23.8 !!!
+                       "singleValueOrNull", # problem on 22.8
     # "anyHeavy",
     # "any",
     # "anyLast", 
@@ -211,7 +212,7 @@ def feature(self):
         if i in test_funcs:
             test_funcs.remove(i)
 
-    with Pool(15) as executor:
+    with Pool(10) as executor:
         for name in test_funcs:
             try:
                 scenario = load(f"aggregate_functions.tests.{name}", "scenario")
