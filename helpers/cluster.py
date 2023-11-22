@@ -1331,7 +1331,7 @@ class Cluster(object):
                             )
 
                         for attempt in retries(count=max_up_attempts):
-                            with attempt:                               
+                            with attempt:
                                 cmd = self.command(
                                     None,
                                     f"{self.docker_compose} up --renew-anon-volumes --force-recreate --timeout 600 -d 2>&1 | tee",
