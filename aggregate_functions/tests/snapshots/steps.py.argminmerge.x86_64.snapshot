@@ -14,6 +14,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Array_Bool__String_0 = r"""
 {"argMinMerge(state)":[false]}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_Array_DateTime64_3___String_0__22_8 = r"""
+{"argMinMerge(state)":["1925-01-01 00:00:00.000"]}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_Array_DateTime64_3___String__22_8_0__22_8 = r"""
 {"argMinMerge(state)":["1900-01-01 00:00:00.000"]}
 """
@@ -214,6 +218,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Array_Nullable_Bool___String_0 
 {"argMinMerge(state)":[false]}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_Array_Nullable_DateTime64_3____String_0__22_8 = r"""
+{"argMinMerge(state)":["1925-01-01 00:00:00.000"]}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_Array_Nullable_DateTime64_3____String__22_8_0__22_8 = r"""
 {"argMinMerge(state)":["1900-01-01 00:00:00.000"]}
 """
@@ -324,6 +332,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Array_UUID__String_0 = r"""
 
 _aggregate_functions_merge_argMinMerge_datatypes_Bool_String_0 = r"""
 {"argMinMerge(state)":false}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_DateTime64_3__String_0__22_8 = r"""
+{"argMinMerge(state)":"1925-01-01 00:00:00.000"}
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_DateTime64_3__String__22_8_0__22_8 = r"""
@@ -526,6 +538,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_Bool_Bool__String_0 = r"""
 {"argMinMerge(state)":{"false":false}}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_Map_Bool_DateTime64_3___String_0__22_8 = r"""
+{"argMinMerge(state)":{"false":"1925-01-01 00:00:00.000"}}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_Map_Bool_DateTime64_3___String__22_8_0__22_8 = r"""
 {"argMinMerge(state)":{"false":"1900-01-01 00:00:00.000"}}
 """
@@ -726,6 +742,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_Bool_Nullable_Bool___String
 {"argMinMerge(state)":{"false":false}}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_Map_Bool_Nullable_DateTime64_3____String_0__22_8 = r"""
+{"argMinMerge(state)":{"false":"1925-01-01 00:00:00.000"}}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_Map_Bool_Nullable_DateTime64_3____String__22_8_0__22_8 = r"""
 {"argMinMerge(state)":{"false":"1900-01-01 00:00:00.000"}}
 """
@@ -840,6 +860,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_DateTime_Array_String___Str
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_DateTime_Bool__String_0 = r"""
 {"argMinMerge(state)":{"1970-01-01 01:00:00":false}}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_Map_DateTime_DateTime64_3___String_0__22_8 = r"""
+{"argMinMerge(state)":{"1970-01-01 01:00:00":"1925-01-01 00:00:00.000"}}
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_DateTime_DateTime64_3___String__22_8_0__22_8 = r"""
@@ -1042,6 +1066,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_DateTime_Nullable_Bool___St
 {"argMinMerge(state)":{"1970-01-01 01:00:00":false}}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_Map_DateTime_Nullable_DateTime64_3____String_0__22_8 = r"""
+{"argMinMerge(state)":{"1970-01-01 01:00:00":"1925-01-01 00:00:00.000"}}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_Map_DateTime_Nullable_DateTime64_3____String__22_8_0__22_8 = r"""
 {"argMinMerge(state)":{"1970-01-01 01:00:00":"1900-01-01 00:00:00.000"}}
 """
@@ -1156,6 +1184,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_Date_Array_String___String_
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_Date_Bool__String_0 = r"""
 {"argMinMerge(state)":{"1970-01-01":false}}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_Map_Date_DateTime64_3___String_0__22_8 = r"""
+{"argMinMerge(state)":{"1970-01-01":"1925-01-01 00:00:00.000"}}
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_Date_DateTime64_3___String__22_8_0__22_8 = r"""
@@ -1358,6 +1390,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_Date_Nullable_Bool___String
 {"argMinMerge(state)":{"1970-01-01":false}}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_Map_Date_Nullable_DateTime64_3____String_0__22_8 = r"""
+{"argMinMerge(state)":{"1970-01-01":"1925-01-01 00:00:00.000"}}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_Map_Date_Nullable_DateTime64_3____String__22_8_0__22_8 = r"""
 {"argMinMerge(state)":{"1970-01-01":"1900-01-01 00:00:00.000"}}
 """
@@ -1472,6 +1508,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_FixedString_51__Array_Strin
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_FixedString_51__Bool__String_0 = r"""
 {"argMinMerge(state)":{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":false}}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_Map_FixedString_51__DateTime64_3___String_0__22_8 = r"""
+{"argMinMerge(state)":{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"1925-01-01 00:00:00.000"}}
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_FixedString_51__DateTime64_3___String__22_8_0__22_8 = r"""
@@ -1674,6 +1714,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_FixedString_51__Nullable_Bo
 {"argMinMerge(state)":{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":false}}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_Map_FixedString_51__Nullable_DateTime64_3____String_0__22_8 = r"""
+{"argMinMerge(state)":{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"1925-01-01 00:00:00.000"}}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_Map_FixedString_51__Nullable_DateTime64_3____String__22_8_0__22_8 = r"""
 {"argMinMerge(state)":{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"1900-01-01 00:00:00.000"}}
 """
@@ -1788,6 +1832,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_Int128_Array_String___Strin
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_Int128_Bool__String_0 = r"""
 {"argMinMerge(state)":{"170141183460469231722463931679029329921":false}}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_Map_Int128_DateTime64_3___String_0__22_8 = r"""
+{"argMinMerge(state)":{"170141183460469231722463931679029329921":"1925-01-01 00:00:00.000"}}
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_Int128_DateTime64_3___String__22_8_0__22_8 = r"""
@@ -1990,6 +2038,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_Int128_Nullable_Bool___Stri
 {"argMinMerge(state)":{"170141183460469231722463931679029329921":false}}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_Map_Int128_Nullable_DateTime64_3____String_0__22_8 = r"""
+{"argMinMerge(state)":{"170141183460469231722463931679029329921":"1925-01-01 00:00:00.000"}}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_Map_Int128_Nullable_DateTime64_3____String__22_8_0__22_8 = r"""
 {"argMinMerge(state)":{"170141183460469231722463931679029329921":"1900-01-01 00:00:00.000"}}
 """
@@ -2104,6 +2156,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_Int16_Array_String___String
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_Int16_Bool__String_0 = r"""
 {"argMinMerge(state)":{"-32768":false}}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_Map_Int16_DateTime64_3___String_0__22_8 = r"""
+{"argMinMerge(state)":{"-32768":"1925-01-01 00:00:00.000"}}
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_Int16_DateTime64_3___String__22_8_0__22_8 = r"""
@@ -2306,6 +2362,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_Int16_Nullable_Bool___Strin
 {"argMinMerge(state)":{"-32768":false}}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_Map_Int16_Nullable_DateTime64_3____String_0__22_8 = r"""
+{"argMinMerge(state)":{"-32768":"1925-01-01 00:00:00.000"}}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_Map_Int16_Nullable_DateTime64_3____String__22_8_0__22_8 = r"""
 {"argMinMerge(state)":{"-32768":"1900-01-01 00:00:00.000"}}
 """
@@ -2420,6 +2480,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_Int32_Array_String___String
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_Int32_Bool__String_0 = r"""
 {"argMinMerge(state)":{"-2147483648":false}}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_Map_Int32_DateTime64_3___String_0__22_8 = r"""
+{"argMinMerge(state)":{"-2147483648":"1925-01-01 00:00:00.000"}}
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_Int32_DateTime64_3___String__22_8_0__22_8 = r"""
@@ -2622,6 +2686,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_Int32_Nullable_Bool___Strin
 {"argMinMerge(state)":{"-2147483648":false}}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_Map_Int32_Nullable_DateTime64_3____String_0__22_8 = r"""
+{"argMinMerge(state)":{"-2147483648":"1925-01-01 00:00:00.000"}}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_Map_Int32_Nullable_DateTime64_3____String__22_8_0__22_8 = r"""
 {"argMinMerge(state)":{"-2147483648":"1900-01-01 00:00:00.000"}}
 """
@@ -2736,6 +2804,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_Int64_Array_String___String
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_Int64_Bool__String_0 = r"""
 {"argMinMerge(state)":{"-9223372036854775808":false}}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_Map_Int64_DateTime64_3___String_0__22_8 = r"""
+{"argMinMerge(state)":{"-9223372036854775808":"1925-01-01 00:00:00.000"}}
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_Int64_DateTime64_3___String__22_8_0__22_8 = r"""
@@ -2938,6 +3010,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_Int64_Nullable_Bool___Strin
 {"argMinMerge(state)":{"-9223372036854775808":false}}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_Map_Int64_Nullable_DateTime64_3____String_0__22_8 = r"""
+{"argMinMerge(state)":{"-9223372036854775808":"1925-01-01 00:00:00.000"}}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_Map_Int64_Nullable_DateTime64_3____String__22_8_0__22_8 = r"""
 {"argMinMerge(state)":{"-9223372036854775808":"1900-01-01 00:00:00.000"}}
 """
@@ -3052,6 +3128,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_Int8_Array_String___String_
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_Int8_Bool__String_0 = r"""
 {"argMinMerge(state)":{"-128":false}}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_Map_Int8_DateTime64_3___String_0__22_8 = r"""
+{"argMinMerge(state)":{"-128":"1925-01-01 00:00:00.000"}}
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_Int8_DateTime64_3___String__22_8_0__22_8 = r"""
@@ -3254,6 +3334,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_Int8_Nullable_Bool___String
 {"argMinMerge(state)":{"-128":false}}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_Map_Int8_Nullable_DateTime64_3____String_0__22_8 = r"""
+{"argMinMerge(state)":{"-128":"1925-01-01 00:00:00.000"}}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_Map_Int8_Nullable_DateTime64_3____String__22_8_0__22_8 = r"""
 {"argMinMerge(state)":{"-128":"1900-01-01 00:00:00.000"}}
 """
@@ -3368,6 +3452,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_LowCardinality_FixedString_
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_LowCardinality_FixedString_51___Bool__String_0 = r"""
 {"argMinMerge(state)":{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":false}}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_Map_LowCardinality_FixedString_51___DateTime64_3___String_0__22_8 = r"""
+{"argMinMerge(state)":{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"1925-01-01 00:00:00.000"}}
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_LowCardinality_FixedString_51___DateTime64_3___String__22_8_0__22_8 = r"""
@@ -3570,6 +3658,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_LowCardinality_FixedString_
 {"argMinMerge(state)":{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":false}}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_Map_LowCardinality_FixedString_51___Nullable_DateTime64_3____String_0__22_8 = r"""
+{"argMinMerge(state)":{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"1925-01-01 00:00:00.000"}}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_Map_LowCardinality_FixedString_51___Nullable_DateTime64_3____String__22_8_0__22_8 = r"""
 {"argMinMerge(state)":{"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000":"1900-01-01 00:00:00.000"}}
 """
@@ -3684,6 +3776,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_LowCardinality_String__Arra
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_LowCardinality_String__Bool__String_0 = r"""
 {"argMinMerge(state)":{"":false}}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_Map_LowCardinality_String__DateTime64_3___String_0__22_8 = r"""
+{"argMinMerge(state)":{"":"1925-01-01 00:00:00.000"}}
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_LowCardinality_String__DateTime64_3___String__22_8_0__22_8 = r"""
@@ -3886,6 +3982,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_LowCardinality_String__Null
 {"argMinMerge(state)":{"":false}}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_Map_LowCardinality_String__Nullable_DateTime64_3____String_0__22_8 = r"""
+{"argMinMerge(state)":{"":"1925-01-01 00:00:00.000"}}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_Map_LowCardinality_String__Nullable_DateTime64_3____String__22_8_0__22_8 = r"""
 {"argMinMerge(state)":{"":"1900-01-01 00:00:00.000"}}
 """
@@ -4000,6 +4100,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_String_Array_String___Strin
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_String_Bool__String_0 = r"""
 {"argMinMerge(state)":{"":false}}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_Map_String_DateTime64_3___String_0__22_8 = r"""
+{"argMinMerge(state)":{"":"1925-01-01 00:00:00.000"}}
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_String_DateTime64_3___String__22_8_0__22_8 = r"""
@@ -4202,6 +4306,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_String_Nullable_Bool___Stri
 {"argMinMerge(state)":{"":false}}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_Map_String_Nullable_DateTime64_3____String_0__22_8 = r"""
+{"argMinMerge(state)":{"":"1925-01-01 00:00:00.000"}}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_Map_String_Nullable_DateTime64_3____String__22_8_0__22_8 = r"""
 {"argMinMerge(state)":{"":"1900-01-01 00:00:00.000"}}
 """
@@ -4316,6 +4424,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_UInt128_Array_String___Stri
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_UInt128_Bool__String_0 = r"""
 {"argMinMerge(state)":{"0":false}}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_Map_UInt128_DateTime64_3___String_0__22_8 = r"""
+{"argMinMerge(state)":{"0":"1925-01-01 00:00:00.000"}}
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_UInt128_DateTime64_3___String__22_8_0__22_8 = r"""
@@ -4518,6 +4630,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_UInt128_Nullable_Bool___Str
 {"argMinMerge(state)":{"0":false}}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_Map_UInt128_Nullable_DateTime64_3____String_0__22_8 = r"""
+{"argMinMerge(state)":{"0":"1925-01-01 00:00:00.000"}}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_Map_UInt128_Nullable_DateTime64_3____String__22_8_0__22_8 = r"""
 {"argMinMerge(state)":{"0":"1900-01-01 00:00:00.000"}}
 """
@@ -4632,6 +4748,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_UInt16_Array_String___Strin
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_UInt16_Bool__String_0 = r"""
 {"argMinMerge(state)":{"0":false}}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_Map_UInt16_DateTime64_3___String_0__22_8 = r"""
+{"argMinMerge(state)":{"0":"1925-01-01 00:00:00.000"}}
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_UInt16_DateTime64_3___String__22_8_0__22_8 = r"""
@@ -4834,6 +4954,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_UInt16_Nullable_Bool___Stri
 {"argMinMerge(state)":{"0":false}}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_Map_UInt16_Nullable_DateTime64_3____String_0__22_8 = r"""
+{"argMinMerge(state)":{"0":"1925-01-01 00:00:00.000"}}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_Map_UInt16_Nullable_DateTime64_3____String__22_8_0__22_8 = r"""
 {"argMinMerge(state)":{"0":"1900-01-01 00:00:00.000"}}
 """
@@ -4948,6 +5072,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_UInt32_Array_String___Strin
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_UInt32_Bool__String_0 = r"""
 {"argMinMerge(state)":{"0":false}}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_Map_UInt32_DateTime64_3___String_0__22_8 = r"""
+{"argMinMerge(state)":{"0":"1925-01-01 00:00:00.000"}}
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_UInt32_DateTime64_3___String__22_8_0__22_8 = r"""
@@ -5150,6 +5278,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_UInt32_Nullable_Bool___Stri
 {"argMinMerge(state)":{"0":false}}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_Map_UInt32_Nullable_DateTime64_3____String_0__22_8 = r"""
+{"argMinMerge(state)":{"0":"1925-01-01 00:00:00.000"}}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_Map_UInt32_Nullable_DateTime64_3____String__22_8_0__22_8 = r"""
 {"argMinMerge(state)":{"0":"1900-01-01 00:00:00.000"}}
 """
@@ -5264,6 +5396,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_UInt64_Array_String___Strin
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_UInt64_Bool__String_0 = r"""
 {"argMinMerge(state)":{"0":false}}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_Map_UInt64_DateTime64_3___String_0__22_8 = r"""
+{"argMinMerge(state)":{"0":"1925-01-01 00:00:00.000"}}
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_UInt64_DateTime64_3___String__22_8_0__22_8 = r"""
@@ -5466,6 +5602,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_UInt64_Nullable_Bool___Stri
 {"argMinMerge(state)":{"0":false}}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_Map_UInt64_Nullable_DateTime64_3____String_0__22_8 = r"""
+{"argMinMerge(state)":{"0":"1925-01-01 00:00:00.000"}}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_Map_UInt64_Nullable_DateTime64_3____String__22_8_0__22_8 = r"""
 {"argMinMerge(state)":{"0":"1900-01-01 00:00:00.000"}}
 """
@@ -5580,6 +5720,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_UInt8_Array_String___String
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_UInt8_Bool__String_0 = r"""
 {"argMinMerge(state)":{"0":false}}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_Map_UInt8_DateTime64_3___String_0__22_8 = r"""
+{"argMinMerge(state)":{"0":"1925-01-01 00:00:00.000"}}
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_UInt8_DateTime64_3___String__22_8_0__22_8 = r"""
@@ -5782,6 +5926,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_UInt8_Nullable_Bool___Strin
 {"argMinMerge(state)":{"0":false}}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_Map_UInt8_Nullable_DateTime64_3____String_0__22_8 = r"""
+{"argMinMerge(state)":{"0":"1925-01-01 00:00:00.000"}}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_Map_UInt8_Nullable_DateTime64_3____String__22_8_0__22_8 = r"""
 {"argMinMerge(state)":{"0":"1900-01-01 00:00:00.000"}}
 """
@@ -5896,6 +6044,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_UUID_Array_String___String_
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_UUID_Bool__String_0 = r"""
 {"argMinMerge(state)":{"00000000-0000-0000-0000-000000000000":false}}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_Map_UUID_DateTime64_3___String_0__22_8 = r"""
+{"argMinMerge(state)":{"00000000-0000-0000-0000-000000000000":"1925-01-01 00:00:00.000"}}
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_Map_UUID_DateTime64_3___String__22_8_0__22_8 = r"""
@@ -6098,6 +6250,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Map_UUID_Nullable_Bool___String
 {"argMinMerge(state)":{"00000000-0000-0000-0000-000000000000":false}}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_Map_UUID_Nullable_DateTime64_3____String_0__22_8 = r"""
+{"argMinMerge(state)":{"00000000-0000-0000-0000-000000000000":"1925-01-01 00:00:00.000"}}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_Map_UUID_Nullable_DateTime64_3____String__22_8_0__22_8 = r"""
 {"argMinMerge(state)":{"00000000-0000-0000-0000-000000000000":"1900-01-01 00:00:00.000"}}
 """
@@ -6210,6 +6366,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_Nullable_Bool__String_0 = r"""
 {"argMinMerge(state)":false}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_Nullable_DateTime64_3___String_0__22_8 = r"""
+{"argMinMerge(state)":"1925-01-01 00:00:00.000"}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_Nullable_DateTime64_3___String__22_8_0__22_8 = r"""
 {"argMinMerge(state)":"1900-01-01 00:00:00.000"}
 """
@@ -6291,6 +6451,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Array_Array_String___0 =
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_String_Array_Bool__0 = r"""
+{"argMinMerge(state)":""}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_String_Array_DateTime64_3___0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
 
@@ -6494,6 +6658,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Array_Nullable_Bool___0 
 {"argMinMerge(state)":""}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_String_Array_Nullable_DateTime64_3____0__22_8 = r"""
+{"argMinMerge(state)":""}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_String_Array_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
@@ -6603,6 +6771,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Array_UUID__0 = r"""
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_String_Bool_0 = r"""
+{"argMinMerge(state)":""}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_String_DateTime64_3__0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
 
@@ -6806,6 +6978,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_Bool_Bool__0 = r"""
 {"argMinMerge(state)":""}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_Bool_DateTime64_3___0__22_8 = r"""
+{"argMinMerge(state)":""}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_Bool_DateTime64_3____22_8_0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
@@ -7006,6 +7182,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_Bool_Nullable_Bool__
 {"argMinMerge(state)":""}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_Bool_Nullable_DateTime64_3____0__22_8 = r"""
+{"argMinMerge(state)":""}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_Bool_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
@@ -7119,6 +7299,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_DateTime_Array_Strin
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_DateTime_Bool__0 = r"""
+{"argMinMerge(state)":""}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_DateTime_DateTime64_3___0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
 
@@ -7322,6 +7506,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_DateTime_Nullable_Bo
 {"argMinMerge(state)":""}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_DateTime_Nullable_DateTime64_3____0__22_8 = r"""
+{"argMinMerge(state)":""}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_DateTime_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
@@ -7435,6 +7623,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_Date_Array_String___
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_Date_Bool__0 = r"""
+{"argMinMerge(state)":""}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_Date_DateTime64_3___0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
 
@@ -7638,6 +7830,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_Date_Nullable_Bool__
 {"argMinMerge(state)":""}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_Date_Nullable_DateTime64_3____0__22_8 = r"""
+{"argMinMerge(state)":""}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_Date_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
@@ -7751,6 +7947,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_FixedString_51__Arra
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_FixedString_51__Bool__0 = r"""
+{"argMinMerge(state)":""}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_FixedString_51__DateTime64_3___0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
 
@@ -7954,6 +8154,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_FixedString_51__Null
 {"argMinMerge(state)":""}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_FixedString_51__Nullable_DateTime64_3____0__22_8 = r"""
+{"argMinMerge(state)":""}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_FixedString_51__Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
@@ -8067,6 +8271,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_Int128_Array_String_
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_Int128_Bool__0 = r"""
+{"argMinMerge(state)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_Int128_DateTime64_3___0__22_8 = r"""
 {"argMinMerge(state)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
 """
 
@@ -8270,6 +8478,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_Int128_Nullable_Bool
 {"argMinMerge(state)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_Int128_Nullable_DateTime64_3____0__22_8 = r"""
+{"argMinMerge(state)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_Int128_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"argMinMerge(state)":"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRTUVWXYZ"}
 """
@@ -8383,6 +8595,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_Int16_Array_String__
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_Int16_Bool__0 = r"""
+{"argMinMerge(state)":""}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_Int16_DateTime64_3___0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
 
@@ -8586,6 +8802,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_Int16_Nullable_Bool_
 {"argMinMerge(state)":""}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_Int16_Nullable_DateTime64_3____0__22_8 = r"""
+{"argMinMerge(state)":""}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_Int16_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
@@ -8699,6 +8919,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_Int32_Array_String__
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_Int32_Bool__0 = r"""
+{"argMinMerge(state)":""}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_Int32_DateTime64_3___0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
 
@@ -8902,6 +9126,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_Int32_Nullable_Bool_
 {"argMinMerge(state)":""}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_Int32_Nullable_DateTime64_3____0__22_8 = r"""
+{"argMinMerge(state)":""}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_Int32_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
@@ -9015,6 +9243,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_Int64_Array_String__
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_Int64_Bool__0 = r"""
+{"argMinMerge(state)":""}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_Int64_DateTime64_3___0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
 
@@ -9218,6 +9450,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_Int64_Nullable_Bool_
 {"argMinMerge(state)":""}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_Int64_Nullable_DateTime64_3____0__22_8 = r"""
+{"argMinMerge(state)":""}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_Int64_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
@@ -9331,6 +9567,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_Int8_Array_String___
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_Int8_Bool__0 = r"""
+{"argMinMerge(state)":""}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_Int8_DateTime64_3___0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
 
@@ -9534,6 +9774,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_Int8_Nullable_Bool__
 {"argMinMerge(state)":""}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_Int8_Nullable_DateTime64_3____0__22_8 = r"""
+{"argMinMerge(state)":""}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_Int8_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
@@ -9647,6 +9891,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_LowCardinality_Fixed
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_LowCardinality_FixedString_51___Bool__0 = r"""
+{"argMinMerge(state)":""}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_LowCardinality_FixedString_51___DateTime64_3___0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
 
@@ -9850,6 +10098,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_LowCardinality_Fixed
 {"argMinMerge(state)":""}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_LowCardinality_FixedString_51___Nullable_DateTime64_3____0__22_8 = r"""
+{"argMinMerge(state)":""}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_LowCardinality_FixedString_51___Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
@@ -9963,6 +10215,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_LowCardinality_Strin
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_LowCardinality_String__Bool__0 = r"""
+{"argMinMerge(state)":""}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_LowCardinality_String__DateTime64_3___0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
 
@@ -10166,6 +10422,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_LowCardinality_Strin
 {"argMinMerge(state)":""}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_LowCardinality_String__Nullable_DateTime64_3____0__22_8 = r"""
+{"argMinMerge(state)":""}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_LowCardinality_String__Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
@@ -10279,6 +10539,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_String_Array_String_
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_String_Bool__0 = r"""
+{"argMinMerge(state)":""}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_String_DateTime64_3___0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
 
@@ -10482,6 +10746,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_String_Nullable_Bool
 {"argMinMerge(state)":""}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_String_Nullable_DateTime64_3____0__22_8 = r"""
+{"argMinMerge(state)":""}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_String_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
@@ -10595,6 +10863,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_UInt128_Array_String
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_UInt128_Bool__0 = r"""
+{"argMinMerge(state)":""}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_UInt128_DateTime64_3___0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
 
@@ -10798,6 +11070,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_UInt128_Nullable_Boo
 {"argMinMerge(state)":""}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_UInt128_Nullable_DateTime64_3____0__22_8 = r"""
+{"argMinMerge(state)":""}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_UInt128_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
@@ -10911,6 +11187,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_UInt16_Array_String_
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_UInt16_Bool__0 = r"""
+{"argMinMerge(state)":""}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_UInt16_DateTime64_3___0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
 
@@ -11114,6 +11394,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_UInt16_Nullable_Bool
 {"argMinMerge(state)":""}
 """
 
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_UInt16_Nullable_DateTime64_3____0__22_8 = r"""
+{"argMinMerge(state)":""}
+"""
+
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_UInt16_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
@@ -11227,6 +11511,10 @@ _aggregate_functions_merge_argMinMerge_datatypes_String_Map_UInt32_Array_String_
 """
 
 _aggregate_functions_merge_argMinMerge_datatypes_String_Map_UInt32_Bool__0 = r"""
+{"argMinMerge(state)":""}
+"""
+
+_aggregate_functions_merge_argMinMerge_datatypes_String_Map_UInt32_DateTime64_3___0__22_8 = r"""
 {"argMinMerge(state)":""}
 """
 

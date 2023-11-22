@@ -318,6 +318,10 @@ _aggregate_functions_merge_maxMerge_Bool_0 = r"""
 {"maxMerge(state)":true}
 """
 
+_aggregate_functions_merge_maxMerge_DateTime64_3__0__22_8 = r"""
+{"maxMerge(state)":"2283-11-11 23:59:59.999"}
+"""
+
 _aggregate_functions_merge_maxMerge_DateTime64_3___22_8_0__22_8 = r"""
 {"maxMerge(state)":"2299-12-31 23:59:59.999"}
 """
@@ -5572,6 +5576,10 @@ _aggregate_functions_merge_maxMerge_Map_UInt8_Array_String___0 = r"""
 
 _aggregate_functions_merge_maxMerge_Map_UInt8_Bool__0 = r"""
 {"maxMerge(state)":{"255":true}}
+"""
+
+_aggregate_functions_merge_maxMerge_Map_UInt8_DateTime64_3___0__22_8 = r"""
+{"maxMerge(state)":{"255":"2283-11-11 23:59:59.999"}}
 """
 
 _aggregate_functions_merge_maxMerge_Map_UInt8_DateTime64_3____22_8_0__22_8 = r"""

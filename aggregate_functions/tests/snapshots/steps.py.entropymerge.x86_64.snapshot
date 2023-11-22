@@ -6,6 +6,10 @@ _aggregate_functions_merge_entropyMerge_Array_Bool__0 = r"""
 {"entropyMerge(state)":0.9709505944546686}
 """
 
+_aggregate_functions_merge_entropyMerge_Array_DateTime64_3___0__22_8 = r"""
+{"entropyMerge(state)":3.121928094887362}
+"""
+
 _aggregate_functions_merge_entropyMerge_Array_DateTime64_3____22_8_0__22_8 = r"""
 {"entropyMerge(state)":3.1219280948873624}
 """
@@ -206,6 +210,10 @@ _aggregate_functions_merge_entropyMerge_Array_Nullable_Bool___0 = r"""
 {"entropyMerge(state)":1.295461844238322}
 """
 
+_aggregate_functions_merge_entropyMerge_Array_Nullable_DateTime64_3____0__22_8 = r"""
+{"entropyMerge(state)":3.321928094887362}
+"""
+
 _aggregate_functions_merge_entropyMerge_Array_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
@@ -316,6 +324,10 @@ _aggregate_functions_merge_entropyMerge_Array_UUID__0 = r"""
 
 _aggregate_functions_merge_entropyMerge_Bool_0 = r"""
 {"entropyMerge(state)":0.8812908992306927}
+"""
+
+_aggregate_functions_merge_entropyMerge_DateTime64_3__0__22_8 = r"""
+{"entropyMerge(state)":3.121928094887362}
 """
 
 _aggregate_functions_merge_entropyMerge_DateTime64_3___22_8_0__22_8 = r"""
@@ -518,6 +530,10 @@ _aggregate_functions_merge_entropyMerge_Map_Bool_Bool__0 = r"""
 {"entropyMerge(state)":1.7609640474436812}
 """
 
+_aggregate_functions_merge_entropyMerge_Map_Bool_DateTime64_3___0__22_8 = r"""
+{"entropyMerge(state)":3.121928094887362}
+"""
+
 _aggregate_functions_merge_entropyMerge_Map_Bool_DateTime64_3____22_8_0__22_8 = r"""
 {"entropyMerge(state)":3.1219280948873624}
 """
@@ -718,6 +734,10 @@ _aggregate_functions_merge_entropyMerge_Map_Bool_Nullable_Bool___0 = r"""
 {"entropyMerge(state)":1.721928094887362}
 """
 
+_aggregate_functions_merge_entropyMerge_Map_Bool_Nullable_DateTime64_3____0__22_8 = r"""
+{"entropyMerge(state)":3.321928094887362}
+"""
+
 _aggregate_functions_merge_entropyMerge_Map_Bool_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
@@ -832,6 +852,10 @@ _aggregate_functions_merge_entropyMerge_Map_DateTime_Array_String___0 = r"""
 
 _aggregate_functions_merge_entropyMerge_Map_DateTime_Bool__0 = r"""
 {"entropyMerge(state)":3.1219280948873624}
+"""
+
+_aggregate_functions_merge_entropyMerge_Map_DateTime_DateTime64_3___0__22_8 = r"""
+{"entropyMerge(state)":3.121928094887362}
 """
 
 _aggregate_functions_merge_entropyMerge_Map_DateTime_DateTime64_3____22_8_0__22_8 = r"""
@@ -1034,6 +1058,10 @@ _aggregate_functions_merge_entropyMerge_Map_DateTime_Nullable_Bool___0 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
 
+_aggregate_functions_merge_entropyMerge_Map_DateTime_Nullable_DateTime64_3____0__22_8 = r"""
+{"entropyMerge(state)":3.321928094887362}
+"""
+
 _aggregate_functions_merge_entropyMerge_Map_DateTime_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
@@ -1147,6 +1175,10 @@ _aggregate_functions_merge_entropyMerge_Map_Date_Array_String___0 = r"""
 """
 
 _aggregate_functions_merge_entropyMerge_Map_Date_Bool__0 = r"""
+{"entropyMerge(state)":3.121928094887362}
+"""
+
+_aggregate_functions_merge_entropyMerge_Map_Date_DateTime64_3___0__22_8 = r"""
 {"entropyMerge(state)":3.121928094887362}
 """
 
@@ -1350,6 +1382,10 @@ _aggregate_functions_merge_entropyMerge_Map_Date_Nullable_Bool___0 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
 
+_aggregate_functions_merge_entropyMerge_Map_Date_Nullable_DateTime64_3____0__22_8 = r"""
+{"entropyMerge(state)":3.321928094887362}
+"""
+
 _aggregate_functions_merge_entropyMerge_Map_Date_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
@@ -1463,6 +1499,10 @@ _aggregate_functions_merge_entropyMerge_Map_FixedString_51__Array_String___0 = r
 """
 
 _aggregate_functions_merge_entropyMerge_Map_FixedString_51__Bool__0 = r"""
+{"entropyMerge(state)":3.121928094887362}
+"""
+
+_aggregate_functions_merge_entropyMerge_Map_FixedString_51__DateTime64_3___0__22_8 = r"""
 {"entropyMerge(state)":3.121928094887362}
 """
 
@@ -1666,6 +1706,10 @@ _aggregate_functions_merge_entropyMerge_Map_FixedString_51__Nullable_Bool___0 = 
 {"entropyMerge(state)":3.321928094887362}
 """
 
+_aggregate_functions_merge_entropyMerge_Map_FixedString_51__Nullable_DateTime64_3____0__22_8 = r"""
+{"entropyMerge(state)":3.321928094887362}
+"""
+
 _aggregate_functions_merge_entropyMerge_Map_FixedString_51__Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
@@ -1779,6 +1823,10 @@ _aggregate_functions_merge_entropyMerge_Map_Int128_Array_String___0 = r"""
 """
 
 _aggregate_functions_merge_entropyMerge_Map_Int128_Bool__0 = r"""
+{"entropyMerge(state)":3.321928094887362}
+"""
+
+_aggregate_functions_merge_entropyMerge_Map_Int128_DateTime64_3___0__22_8 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
 
@@ -1982,6 +2030,10 @@ _aggregate_functions_merge_entropyMerge_Map_Int128_Nullable_Bool___0 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
 
+_aggregate_functions_merge_entropyMerge_Map_Int128_Nullable_DateTime64_3____0__22_8 = r"""
+{"entropyMerge(state)":3.321928094887362}
+"""
+
 _aggregate_functions_merge_entropyMerge_Map_Int128_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
@@ -2095,6 +2147,10 @@ _aggregate_functions_merge_entropyMerge_Map_Int16_Array_String___0 = r"""
 """
 
 _aggregate_functions_merge_entropyMerge_Map_Int16_Bool__0 = r"""
+{"entropyMerge(state)":3.321928094887362}
+"""
+
+_aggregate_functions_merge_entropyMerge_Map_Int16_DateTime64_3___0__22_8 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
 
@@ -2298,6 +2354,10 @@ _aggregate_functions_merge_entropyMerge_Map_Int16_Nullable_Bool___0 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
 
+_aggregate_functions_merge_entropyMerge_Map_Int16_Nullable_DateTime64_3____0__22_8 = r"""
+{"entropyMerge(state)":3.321928094887362}
+"""
+
 _aggregate_functions_merge_entropyMerge_Map_Int16_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
@@ -2411,6 +2471,10 @@ _aggregate_functions_merge_entropyMerge_Map_Int32_Array_String___0 = r"""
 """
 
 _aggregate_functions_merge_entropyMerge_Map_Int32_Bool__0 = r"""
+{"entropyMerge(state)":3.321928094887362}
+"""
+
+_aggregate_functions_merge_entropyMerge_Map_Int32_DateTime64_3___0__22_8 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
 
@@ -2614,6 +2678,10 @@ _aggregate_functions_merge_entropyMerge_Map_Int32_Nullable_Bool___0 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
 
+_aggregate_functions_merge_entropyMerge_Map_Int32_Nullable_DateTime64_3____0__22_8 = r"""
+{"entropyMerge(state)":3.321928094887362}
+"""
+
 _aggregate_functions_merge_entropyMerge_Map_Int32_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
@@ -2727,6 +2795,10 @@ _aggregate_functions_merge_entropyMerge_Map_Int64_Array_String___0 = r"""
 """
 
 _aggregate_functions_merge_entropyMerge_Map_Int64_Bool__0 = r"""
+{"entropyMerge(state)":3.321928094887362}
+"""
+
+_aggregate_functions_merge_entropyMerge_Map_Int64_DateTime64_3___0__22_8 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
 
@@ -2930,6 +3002,10 @@ _aggregate_functions_merge_entropyMerge_Map_Int64_Nullable_Bool___0 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
 
+_aggregate_functions_merge_entropyMerge_Map_Int64_Nullable_DateTime64_3____0__22_8 = r"""
+{"entropyMerge(state)":3.321928094887362}
+"""
+
 _aggregate_functions_merge_entropyMerge_Map_Int64_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
@@ -3043,6 +3119,10 @@ _aggregate_functions_merge_entropyMerge_Map_Int8_Array_String___0 = r"""
 """
 
 _aggregate_functions_merge_entropyMerge_Map_Int8_Bool__0 = r"""
+{"entropyMerge(state)":3.321928094887362}
+"""
+
+_aggregate_functions_merge_entropyMerge_Map_Int8_DateTime64_3___0__22_8 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
 
@@ -3246,6 +3326,10 @@ _aggregate_functions_merge_entropyMerge_Map_Int8_Nullable_Bool___0 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
 
+_aggregate_functions_merge_entropyMerge_Map_Int8_Nullable_DateTime64_3____0__22_8 = r"""
+{"entropyMerge(state)":3.321928094887362}
+"""
+
 _aggregate_functions_merge_entropyMerge_Map_Int8_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
@@ -3359,6 +3443,10 @@ _aggregate_functions_merge_entropyMerge_Map_LowCardinality_FixedString_51___Arra
 """
 
 _aggregate_functions_merge_entropyMerge_Map_LowCardinality_FixedString_51___Bool__0 = r"""
+{"entropyMerge(state)":3.121928094887362}
+"""
+
+_aggregate_functions_merge_entropyMerge_Map_LowCardinality_FixedString_51___DateTime64_3___0__22_8 = r"""
 {"entropyMerge(state)":3.121928094887362}
 """
 
@@ -3562,6 +3650,10 @@ _aggregate_functions_merge_entropyMerge_Map_LowCardinality_FixedString_51___Null
 {"entropyMerge(state)":3.321928094887362}
 """
 
+_aggregate_functions_merge_entropyMerge_Map_LowCardinality_FixedString_51___Nullable_DateTime64_3____0__22_8 = r"""
+{"entropyMerge(state)":3.321928094887362}
+"""
+
 _aggregate_functions_merge_entropyMerge_Map_LowCardinality_FixedString_51___Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
@@ -3676,6 +3768,10 @@ _aggregate_functions_merge_entropyMerge_Map_LowCardinality_String__Array_String_
 
 _aggregate_functions_merge_entropyMerge_Map_LowCardinality_String__Bool__0 = r"""
 {"entropyMerge(state)":3.121928094887362}
+"""
+
+_aggregate_functions_merge_entropyMerge_Map_LowCardinality_String__DateTime64_3___0__22_8 = r"""
+{"entropyMerge(state)":3.1219280948873624}
 """
 
 _aggregate_functions_merge_entropyMerge_Map_LowCardinality_String__DateTime64_3____22_8_0__22_8 = r"""
@@ -3878,6 +3974,10 @@ _aggregate_functions_merge_entropyMerge_Map_LowCardinality_String__Nullable_Bool
 {"entropyMerge(state)":3.321928094887362}
 """
 
+_aggregate_functions_merge_entropyMerge_Map_LowCardinality_String__Nullable_DateTime64_3____0__22_8 = r"""
+{"entropyMerge(state)":3.321928094887362}
+"""
+
 _aggregate_functions_merge_entropyMerge_Map_LowCardinality_String__Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
@@ -3992,6 +4092,10 @@ _aggregate_functions_merge_entropyMerge_Map_String_Array_String___0 = r"""
 
 _aggregate_functions_merge_entropyMerge_Map_String_Bool__0 = r"""
 {"entropyMerge(state)":3.121928094887362}
+"""
+
+_aggregate_functions_merge_entropyMerge_Map_String_DateTime64_3___0__22_8 = r"""
+{"entropyMerge(state)":3.1219280948873624}
 """
 
 _aggregate_functions_merge_entropyMerge_Map_String_DateTime64_3____22_8_0__22_8 = r"""
@@ -4194,6 +4298,10 @@ _aggregate_functions_merge_entropyMerge_Map_String_Nullable_Bool___0 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
 
+_aggregate_functions_merge_entropyMerge_Map_String_Nullable_DateTime64_3____0__22_8 = r"""
+{"entropyMerge(state)":3.321928094887362}
+"""
+
 _aggregate_functions_merge_entropyMerge_Map_String_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
@@ -4308,6 +4416,10 @@ _aggregate_functions_merge_entropyMerge_Map_UInt128_Array_String___0 = r"""
 
 _aggregate_functions_merge_entropyMerge_Map_UInt128_Bool__0 = r"""
 {"entropyMerge(state)":3.1219280948873624}
+"""
+
+_aggregate_functions_merge_entropyMerge_Map_UInt128_DateTime64_3___0__22_8 = r"""
+{"entropyMerge(state)":3.121928094887362}
 """
 
 _aggregate_functions_merge_entropyMerge_Map_UInt128_DateTime64_3____22_8_0__22_8 = r"""
@@ -4510,6 +4622,10 @@ _aggregate_functions_merge_entropyMerge_Map_UInt128_Nullable_Bool___0 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
 
+_aggregate_functions_merge_entropyMerge_Map_UInt128_Nullable_DateTime64_3____0__22_8 = r"""
+{"entropyMerge(state)":3.321928094887362}
+"""
+
 _aggregate_functions_merge_entropyMerge_Map_UInt128_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
@@ -4623,6 +4739,10 @@ _aggregate_functions_merge_entropyMerge_Map_UInt16_Array_String___0 = r"""
 """
 
 _aggregate_functions_merge_entropyMerge_Map_UInt16_Bool__0 = r"""
+{"entropyMerge(state)":3.121928094887362}
+"""
+
+_aggregate_functions_merge_entropyMerge_Map_UInt16_DateTime64_3___0__22_8 = r"""
 {"entropyMerge(state)":3.121928094887362}
 """
 
@@ -4826,6 +4946,10 @@ _aggregate_functions_merge_entropyMerge_Map_UInt16_Nullable_Bool___0 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
 
+_aggregate_functions_merge_entropyMerge_Map_UInt16_Nullable_DateTime64_3____0__22_8 = r"""
+{"entropyMerge(state)":3.321928094887362}
+"""
+
 _aggregate_functions_merge_entropyMerge_Map_UInt16_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
@@ -4940,6 +5064,10 @@ _aggregate_functions_merge_entropyMerge_Map_UInt32_Array_String___0 = r"""
 
 _aggregate_functions_merge_entropyMerge_Map_UInt32_Bool__0 = r"""
 {"entropyMerge(state)":3.1219280948873624}
+"""
+
+_aggregate_functions_merge_entropyMerge_Map_UInt32_DateTime64_3___0__22_8 = r"""
+{"entropyMerge(state)":3.121928094887362}
 """
 
 _aggregate_functions_merge_entropyMerge_Map_UInt32_DateTime64_3____22_8_0__22_8 = r"""
@@ -5142,6 +5270,10 @@ _aggregate_functions_merge_entropyMerge_Map_UInt32_Nullable_Bool___0 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
 
+_aggregate_functions_merge_entropyMerge_Map_UInt32_Nullable_DateTime64_3____0__22_8 = r"""
+{"entropyMerge(state)":3.321928094887362}
+"""
+
 _aggregate_functions_merge_entropyMerge_Map_UInt32_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
@@ -5255,6 +5387,10 @@ _aggregate_functions_merge_entropyMerge_Map_UInt64_Array_String___0 = r"""
 """
 
 _aggregate_functions_merge_entropyMerge_Map_UInt64_Bool__0 = r"""
+{"entropyMerge(state)":3.121928094887362}
+"""
+
+_aggregate_functions_merge_entropyMerge_Map_UInt64_DateTime64_3___0__22_8 = r"""
 {"entropyMerge(state)":3.121928094887362}
 """
 
@@ -5458,6 +5594,10 @@ _aggregate_functions_merge_entropyMerge_Map_UInt64_Nullable_Bool___0 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
 
+_aggregate_functions_merge_entropyMerge_Map_UInt64_Nullable_DateTime64_3____0__22_8 = r"""
+{"entropyMerge(state)":3.321928094887362}
+"""
+
 _aggregate_functions_merge_entropyMerge_Map_UInt64_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
@@ -5572,6 +5712,10 @@ _aggregate_functions_merge_entropyMerge_Map_UInt8_Array_String___0 = r"""
 
 _aggregate_functions_merge_entropyMerge_Map_UInt8_Bool__0 = r"""
 {"entropyMerge(state)":2.9219280948873623}
+"""
+
+_aggregate_functions_merge_entropyMerge_Map_UInt8_DateTime64_3___0__22_8 = r"""
+{"entropyMerge(state)":3.121928094887362}
 """
 
 _aggregate_functions_merge_entropyMerge_Map_UInt8_DateTime64_3____22_8_0__22_8 = r"""
@@ -5774,6 +5918,10 @@ _aggregate_functions_merge_entropyMerge_Map_UInt8_Nullable_Bool___0 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
 
+_aggregate_functions_merge_entropyMerge_Map_UInt8_Nullable_DateTime64_3____0__22_8 = r"""
+{"entropyMerge(state)":3.321928094887362}
+"""
+
 _aggregate_functions_merge_entropyMerge_Map_UInt8_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
@@ -5888,6 +6036,10 @@ _aggregate_functions_merge_entropyMerge_Map_UUID_Array_String___0 = r"""
 
 _aggregate_functions_merge_entropyMerge_Map_UUID_Bool__0 = r"""
 {"entropyMerge(state)":3.1219280948873624}
+"""
+
+_aggregate_functions_merge_entropyMerge_Map_UUID_DateTime64_3___0__22_8 = r"""
+{"entropyMerge(state)":3.121928094887362}
 """
 
 _aggregate_functions_merge_entropyMerge_Map_UUID_DateTime64_3____22_8_0__22_8 = r"""
@@ -6090,6 +6242,10 @@ _aggregate_functions_merge_entropyMerge_Map_UUID_Nullable_Bool___0 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
 
+_aggregate_functions_merge_entropyMerge_Map_UUID_Nullable_DateTime64_3____0__22_8 = r"""
+{"entropyMerge(state)":3.321928094887362}
+"""
+
 _aggregate_functions_merge_entropyMerge_Map_UUID_Nullable_DateTime64_3_____22_8_0__22_8 = r"""
 {"entropyMerge(state)":3.321928094887362}
 """
@@ -6202,6 +6358,10 @@ _aggregate_functions_merge_entropyMerge_Nullable_Bool__0 = r"""
 {"entropyMerge(state)":0.9910760598382222}
 """
 
+_aggregate_functions_merge_entropyMerge_Nullable_DateTime64_3___0__22_8 = r"""
+{"entropyMerge(state)":3.169925001442312}
+"""
+
 _aggregate_functions_merge_entropyMerge_Nullable_DateTime64_3____22_8_0__22_8 = r"""
 {"entropyMerge(state)":3.169925001442312}
 """
@@ -6280,6 +6440,10 @@ _aggregate_functions_merge_entropyMerge_Nullable_UUID__0 = r"""
 
 _aggregate_functions_merge_entropyMerge_String_0 = r"""
 {"entropyMerge(state)":3.1219280948873624}
+"""
+
+_aggregate_functions_merge_entropyMerge_Tuple_UInt8_UInt16_UInt32_UInt64_UInt128_Int8_Int16_Int32_Int64_Int128_Float32_Float64_Decimal128_38__Date_DateTime_DateTime64_3__Bool_String_FixedString_51__UUID_Nullable_UInt8__Nullable_UInt16__Nullable_UInt32__Nullable_UInt64__Nullable_UInt128__Nullable_Int8__Nullable_Int16__Nullable_Int32__Nullable_Int64__Nullable_Int128__Nullable_Float32__Nullable_Float64__Nullable_Decimal128_38___Nullable_Date__Nullable_DateTime__Nullable_DateTime64_3___Nullable_Bool__Nullable_String__Nullable_FixedString_51___Nullable_UUID__LowCardinality_UInt8__LowCardinality_UInt16__LowCardinality_UInt32__LowCardinality_UInt64__LowCardinality_UInt128__LowCardinality_Int8__LowCardinality_Int16__LowCardinality_Int32__LowCardinality_Int64__LowCardinality_Int128__LowCardinality_Float32__LowCardinality_Float64__LowCardinality_Date__LowCardinality_DateTime__LowCardinality_Bool__LowCardinality_String__LowCardinality_FixedString_51___LowCardinality_UUID__Array_String__Map_String_LowCardinality_Float64___Tuple_String___0__22_8 = r"""
+{"entropyMerge(state)":3.321928094887362}
 """
 
 _aggregate_functions_merge_entropyMerge_Tuple_UInt8_UInt16_UInt32_UInt64_UInt128_Int8_Int16_Int32_Int64_Int128_Float32_Float64_Decimal128_38__Date_DateTime_DateTime64_3__Bool_String_FixedString_51__UUID_Nullable_UInt8__Nullable_UInt16__Nullable_UInt32__Nullable_UInt64__Nullable_UInt128__Nullable_Int8__Nullable_Int16__Nullable_Int32__Nullable_Int64__Nullable_Int128__Nullable_Float32__Nullable_Float64__Nullable_Decimal128_38___Nullable_Date__Nullable_DateTime__Nullable_DateTime64_3___Nullable_Bool__Nullable_String__Nullable_FixedString_51___Nullable_UUID__LowCardinality_UInt8__LowCardinality_UInt16__LowCardinality_UInt32__LowCardinality_UInt64__LowCardinality_UInt128__LowCardinality_Int8__LowCardinality_Int16__LowCardinality_Int32__LowCardinality_Int64__LowCardinality_Int128__LowCardinality_Float32__LowCardinality_Float64__LowCardinality_Date__LowCardinality_DateTime__LowCardinality_Bool__LowCardinality_String__LowCardinality_FixedString_51___LowCardinality_UUID__LowCardinality_Nullable_UInt8___LowCardinality_Nullable_UInt16___LowCardinality_Nullable_UInt32___LowCardinality_Nullable_UInt64___LowCardinality_Nullable_UInt128___LowCardinality_Nullable_Int8___LowCardinality_Nullable_Int16___LowCardinality_Nullable_Int32___LowCardinality_Nullable_Int64___LowCardinality_Nullable_Int128___LowCardinality_Nullable_Float32___LowCardinality_Nullable_Float64___LowCardinality_Nullable_Date___LowCardinality_Nullable_DateTime___LowCardinality_Nullable_Bool___LowCardinality_Nullable_String___LowCardinality_Nullable_FixedString_51____LowCardinality_Nullable_UUID___Array_String__Map_String_LowCardinality_Float64___Tuple_String____22_8_0__22_8 = r"""
