@@ -77,7 +77,11 @@ def replace_with_corrupted_parts(self, corrupt_destination, corrupt_source):
             f"SELECT partition, part_type, name FROM system.parts WHERE table = '{destination_table}' ORDER BY tuple(*)"
         )
 
-    with And("I check what data was replaced on the destination table"):
+    with And(
+        "I check that data was replaced on the destination table",
+        description="this allows us to validate that the partitions were replaced by validating that the inside the "
+        "system.parts table the data for destination table was updated.",
+    ):
         for retry in retries(timeout=10):
             with retry:
                 assert (
