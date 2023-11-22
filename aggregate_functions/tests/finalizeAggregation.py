@@ -40,15 +40,12 @@ def finalizeAggregation(self, scenario=None, short_name=None):
         snapshot_id, func = scenario()
     snapshot_id = snapshot_id.lower().replace("merge", "state") # need state from snapshots of -State combinator 
     snapshot_path = os.path.join(current_dir(), "snapshots", f"steps.py.{snapshot_id}.{current_cpu()}.snapshot")
-
-    note(snapshot_path)
   
     if not os.path.exists(snapshot_path):
         xfail(reason=f"no snapshot found {snapshot_path}")
 
     snapshot_module = SourceFileLoader(func, snapshot_path).load_module() # add UUID
     snapshot_attrs = {k:v for k,v in vars(snapshot_module).items() if not k.startswith('__')}
-
 
     for key, value in snapshot_attrs.items():
         data = value.strip().split('\n')
