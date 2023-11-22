@@ -135,6 +135,9 @@ def regression(
 
     Feature(run=load("aggregate_functions.tests.aggThrow", "scenario"))
 
+    Feature(run=load("aggregate_functions.tests.finalizeAggregation", "feature"))
+
+
 
 if main():
     regression()
