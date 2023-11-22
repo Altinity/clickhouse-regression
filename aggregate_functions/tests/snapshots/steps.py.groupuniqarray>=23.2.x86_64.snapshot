@@ -6323,7 +6323,7 @@ _aggregate_functions_groupUniqArray_constant = r"""
 """
 
 _aggregate_functions_groupUniqArray_duplicates = r"""
-{"groupUniqArray(modulo(number, 2))":[0,1],"any(toTypeName(number))":"UInt64"}
+{"groupUniqArray(modulo(number, 2))":[0,1]}
 """
 
 _aggregate_functions_groupUniqArray_first_non_NULL_value = r"""
