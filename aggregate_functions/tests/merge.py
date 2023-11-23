@@ -23,23 +23,6 @@ def array_on_duplicate_keys(ordered_pairs):
 
 
 @TestCheck
-def check2(
-    self, func, datatypes, hex_repr, snapshot_name, short_name, is_low_cardinality=False
-):
-    if is_low_cardinality:
-        self.context.node.query(f"SET allow_suspicious_low_cardinality_types = 1")
-
-    with When("I prepare expression for query"):
-        values = (
-            f"(CAST(unhex('{hex_repr}'), 'AggregateFunction({func}, {datatypes})'))"
-        )
-        correct_form = func.replace(short_name, short_name + "Merge")
-
-    with Then("I check the result"):
-        execute_query(f"SELECT {correct_form}{values}", snapshot_name=snapshot_name)
-
-
-@TestCheck
 def check(
     self, func, datatypes, hex_repr, snapshot_name, short_name, is_low_cardinality=False
 ):
@@ -75,8 +58,6 @@ def check(
 
 @TestScenario
 def merge(self, scenario, short_name):
-    """Check aggregate function -Merge combinator."""
-
     snapshot_id, func = scenario()
     snapshot_id = snapshot_id.lower().replace(
         "merge", "state"
@@ -93,40 +74,55 @@ def merge(self, scenario, short_name):
         k: v for k, v in vars(snapshot_module).items() if not k.startswith("__")
     }
 
-    with Pool(3) as executor2:
+    with Pool(3) as executor:
         for key, value in snapshot_attrs.items():
-            data = value.strip().split("\n")
+            with By("I break single snapshot value into lines"):
+                data = value.strip().split("\n")
+
             idx = 0
             for hex_and_datatype in data:
-                value_dict = json.loads(
-                    hex_and_datatype, object_pairs_hook=array_on_duplicate_keys
-                )
-                hex_repr = ""
-                datatypes = ""
-                for k, val in value_dict.items():
-                    if "hex(" in k and "toTypeName" not in k:
-                        hex_repr = val[0]
-                    elif "toTypeName" in k:
-                        if len(datatypes) == 0:
-                            datatypes += " ,".join(
-                                datatype for datatype in val if len(datatype) > 0
-                            )
-                        else:
-                            datatypes += " ," + " ,".join(
-                                datatype for datatype in val if len(datatype) > 0
-                            )
-                if hex_repr is not None and len(hex_repr) > 0 and len(datatypes) > 0:
-                    name = key.replace("state_", "merge_")
-                    name = name.replace("State", "Merge") + "_" + str(idx)
-                    idx += 1
-                    Check(test=check, parallel=True, executor=executor2)(
-                        func=func,
-                        datatypes=datatypes,
-                        hex_repr=hex_repr,
-                        snapshot_name=name,
-                        is_low_cardinality="LowCardinality" in datatypes,
-                        short_name=short_name,
+                with By("I convert entry into JSON"):
+                    value_dict = json.loads(
+                        hex_and_datatype, object_pairs_hook=array_on_duplicate_keys
                     )
+
+                with By(
+                    "I get hex representation of the state and aggregate function data types"
+                ):
+                    hex_repr = ""
+                    datatypes = ""
+                    for k, val in value_dict.items():
+                        if "hex(" in k and "toTypeName" not in k:
+                            hex_repr = val[0]
+                        elif "toTypeName" in k:
+                            if len(datatypes) == 0:
+                                datatypes += " ,".join(
+                                    datatype for datatype in val if len(datatype) > 0
+                                )
+                            else:
+                                datatypes += " ," + " ,".join(
+                                    datatype for datatype in val if len(datatype) > 0
+                                )
+
+                with By("I create snapshot name for the -Merge combinator"):
+                    if (
+                        hex_repr is not None
+                        and len(hex_repr) > 0
+                        and len(datatypes) > 0
+                    ):
+                        name = (
+                            key.replace("state_", "merge_").replace("State", "Merge")
+                            + f"_{idx}"
+                        )
+                        idx += 1
+                        Check(f"name", test=check, parallel=True, executor=executor)(
+                            func=func,
+                            datatypes=datatypes,
+                            hex_repr=hex_repr,
+                            snapshot_name=name,
+                            is_low_cardinality="LowCardinality" in datatypes,
+                            short_name=short_name,
+                        )
         join()
 
 
@@ -146,7 +142,7 @@ def feature(self):
         "minMap",
         "quantileTDigestWeighted",
         "uniq",
-        "uniqHLL12",  # problem on 22.8 and 23.8 !!!
+        "uniqHLL12",  # problem on 22.8 and 23.8
         "singleValueOrNull",  # problem on 22.8
         "topKWeighted",  # fails on 23.3
         "uniqExact",  # problem on 23.8 aarch
