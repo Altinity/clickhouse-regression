@@ -1,3 +1,4 @@
+import time
 from helpers.common import getuid
 from clickhouse_keeper.requirements import *
 from clickhouse_keeper.tests.steps import *
@@ -60,34 +61,42 @@ def daemon(self, node=None):
     node = self.context.node if node is None else node
     pidfilepath = f"/tmp/clickhouse-keeper-{getuid()}.pid"
     try:
+        with Given("I have created keeper server config file"):
+            create_keeper_cluster_configuration(
+                check_preprocessed=False,
+                restart=False,
+                modify=False,
+            )
+
         with When("I start `clickhouse-keeper` cluster with --daemon option."):
             with By("starting keeper process"):
+                # pause()
                 node.command(
-                    "clickhouse keeper --config /etc/clickhouse-keeper/config.xml"
+                    "clickhouse keeper --config /etc/clickhouse-server/config.xml"
                     f" --pidfile={pidfilepath} --daemon",
                     exitcode=0,
                 )
+                # avoid race condition in below assertions if the program crashes right away
+                time.sleep(0.05)
                 with And("checking that keeper pid file was created"):
                     node.command(
                         f"ls {pidfilepath}",
                         exitcode=0,
                         message=pidfilepath,
                     )
+
     finally:
         with Finally("I stop keeper"):
-            with When(f"I stop stop keeper process"):
-                with By("sending kill -TERM to keeper process"):
-                    if node.command(f"ls {pidfilepath}", exitcode=0):
-                        pid = int(
-                            node.command(
-                                f"cat {pidfilepath}", exitcode=0
-                            ).output.strip()
-                        )
-                        node.command(f"kill -TERM {pid}", exitcode=0)
-                with And("checking pid does not exist"):
-                    retry(node.command, timeout=100, delay=1)(
-                        f"ps {pid}", exitcode=1, steps=False
+            with By("sending kill -TERM to keeper process"):
+                if node.command(f"ls {pidfilepath}", exitcode=0):
+                    pid = int(
+                        node.command(f"cat {pidfilepath}", exitcode=0).output.strip()
                     )
+                    node.command(f"kill -TERM {pid}", exitcode=0)
+            with And("checking pid does not exist"):
+                retry(node.command, timeout=100, delay=2)(
+                    f"ps {pid}", exitcode=1, steps=False
+                )
 
 
 @TestFeature

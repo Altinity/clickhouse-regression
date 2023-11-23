@@ -11,50 +11,23 @@ from helpers.tables import create_table_partitioned_by_column, create_table, Col
 
 @TestStep(Given)
 def create_partitions_with_random_uint64(
-    self, table_name, number_of_values=3, number_of_partitions=5, node=None
+    self,
+    table_name,
+    number_of_values=3,
+    number_of_partitions=5,
+    number_of_parts=1,
+    node=None,
 ):
     """Insert random UInt64 values into a column and create multiple partitions based on the value of number_of_partitions."""
     if node is None:
         node = self.context.node
 
     with By("Inserting random values into a column with uint64 datatype"):
-        for i in range(1, number_of_partitions):
-            node.query(
-                f"INSERT INTO {table_name} (p, i) SELECT {i}, rand64() FROM numbers({number_of_values})"
-            )
-
-
-@TestStep(Given)
-def create_two_tables_partitioned_by_column_with_data(
-    self,
-    destination_table,
-    source_table,
-    number_of_partitions=5,
-    number_of_values=10,
-    columns=None,
-    query_settings=None,
-):
-    """Creating two tables that are partitioned by the same column and are filled with random data."""
-
-    with By("creating two tables with the same structure"):
-        create_table_partitioned_by_column(
-            table_name=source_table, columns=columns, query_settings=query_settings
-        )
-        create_table_partitioned_by_column(
-            table_name=destination_table, columns=columns, query_settings=query_settings
-        )
-
-    with And("inserting data into both tables"):
-        create_partitions_with_random_uint64(
-            table_name=destination_table,
-            number_of_values=number_of_values,
-            number_of_partitions=number_of_partitions,
-        )
-        create_partitions_with_random_uint64(
-            table_name=source_table,
-            number_of_values=number_of_values,
-            number_of_partitions=number_of_partitions,
-        )
+        for i in range(1, number_of_partitions + 1):
+            for parts in range(1, number_of_parts + 1):
+                node.query(
+                    f"INSERT INTO {table_name} (p, i) SELECT {i}, rand64() FROM numbers({number_of_values})"
+                )
 
 
 @TestStep(Given)
@@ -63,6 +36,7 @@ def create_table_partitioned_by_column_with_data(
     table_name,
     number_of_partitions=5,
     number_of_values=10,
+    number_of_parts=1,
     query_settings=None,
     columns=None,
     partition_by="p",
@@ -82,6 +56,38 @@ def create_table_partitioned_by_column_with_data(
             table_name=table_name,
             number_of_values=number_of_values,
             number_of_partitions=number_of_partitions,
+            number_of_parts=number_of_parts,
+        )
+
+
+@TestStep(Given)
+def create_two_tables_partitioned_by_column_with_data(
+    self,
+    destination_table,
+    source_table,
+    number_of_partitions=5,
+    number_of_values=10,
+    number_of_parts=1,
+    columns=None,
+    query_settings=None,
+):
+    """Creating two tables that are partitioned by the same column and are filled with random data."""
+
+    with By("creating two tables with the same structure"):
+        create_table_partitioned_by_column_with_data(
+            table_name=source_table,
+            columns=columns,
+            query_settings=query_settings,
+            number_of_partitions=number_of_partitions,
+            number_of_values=number_of_values,
+            number_of_parts=number_of_parts,
+        )
+        create_table_partitioned_by_column_with_data(
+            table_name=destination_table,
+            columns=columns,
+            query_settings=query_settings,
+            number_of_partitions=number_of_partitions,
+            number_of_parts=number_of_parts,
         )
 
 
@@ -169,6 +175,8 @@ def replace_partition_and_validate_data(
     delay_before=None,
     delay_after=None,
     validate=None,
+    exitcode=None,
+    message=None,
 ):
     """
     Replace partition and validate that the data on the destination table is the same data as on the source table.
@@ -220,6 +228,8 @@ def replace_partition_and_validate_data(
             destination_table=destination_table,
             source_table=source_table,
             partition=partition_to_replace,
+            exitcode=exitcode,
+            message=message,
         )
 
         sleep(delay_after)

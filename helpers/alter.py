@@ -195,6 +195,19 @@ def alter_table_clear_column_in_partition(
 
 
 @TestStep(Given)
+def alter_table_clear_index_in_partition(
+    self, table_name, partition_name, index, node=None
+):
+    """Clear index in partition using alter."""
+    if node is None:
+        node = self.context.node
+
+    with By("clearing column in partition"):
+        query = f"ALTER TABLE {table_name} CLEAR INDEX {index} IN PARTITION {partition_name}"
+        node.query(query)
+
+
+@TestStep(Given)
 def alter_table_fetch_partition(
     self, table_name, partition_name, path_to_backup, node=None
 ):

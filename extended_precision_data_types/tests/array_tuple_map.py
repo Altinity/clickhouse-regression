@@ -120,16 +120,12 @@ def array_func(self, data_type, node=None):
         f"hasAny([{to_data_type(data_type,2)}, {to_data_type(data_type,1)}], ",
         f"hasSubstr([{to_data_type(data_type,2)}, {to_data_type(data_type,1)}], ",
     ]:
-        if (
-            func
-            in [
-                "arrayMin(",
-                "arrayMax(",
-                "arraySum(",
-                "arrayAvg(",
-            ]
-            and data_type in ["Decimal256(0)"]
-        ):
+        if func in [
+            "arrayMin(",
+            "arrayMax(",
+            "arraySum(",
+            "arrayAvg(",
+        ] and data_type in ["Decimal256(0)"]:
             exitcode = 44
             message = "Exception:"
             if check_clickhouse_version(">=23.2")(self):

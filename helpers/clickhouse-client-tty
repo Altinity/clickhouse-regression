@@ -2,6 +2,7 @@
 import sys
 
 from clickhouse_driver import Client
+from clickhouse_driver.errors import Error, LogicalError
 
 
 def clickhouse_client_tty():
@@ -15,11 +16,12 @@ def clickhouse_client_tty():
 
         try:
             result = client.execute(query)
-
+            print("Output:\n")
             for row in result:
                 print(row)
-        except Exception as e:
-            print(f"Error executing query: {e}")
+
+        except Error as e:
+            print(f"Exception:\n{e}")
 
 
 if __name__ == "__main__":

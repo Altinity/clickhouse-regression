@@ -12,6 +12,7 @@ services:
       - "8123"
     volumes:
       - "${CLICKHOUSE_TESTS_DIR}/../helpers/clickhouse-client-tty:/usr/bin/clickhouse-client-tty"
+      - "${CLICKHOUSE_TESTS_DIR}/../helpers/corrupt_file:/usr/bin/corrupt_file"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/logs.xml:/etc/clickhouse-server/config.d/logs.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/ports.xml:/etc/clickhouse-server/config.d/ports.xml"
       - "${CLICKHOUSE_TESTS_DIR}/configs/clickhouse/config.d/remote.xml:/etc/clickhouse-server/config.d/remote.xml"

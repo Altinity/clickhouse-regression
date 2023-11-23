@@ -5,6 +5,7 @@ import inspect
 import hashlib
 import threading
 import tempfile
+import re
 
 from testflows._core.cli.arg.common import description
 
@@ -131,8 +132,6 @@ class Node(object):
         def __init__(self, command_context, prompt="\[clickhouse1\] :\) "):
             self.command_context = command_context
             self.prompt = prompt
-            self.full_output = None
-            self.query_result = None
 
         def __enter__(self):
             self.command_context.__enter__()
@@ -144,9 +143,16 @@ class Node(object):
                 self.command_context.app.send("exit")
                 self.command_context.__exit__(exc_type, exc_val, exc_tb)
 
-        def query(self, query_string, match=None):
-            self.command_context.app.send(query_string)
+        @staticmethod
+        def _parse_error_code(message):
+            match = re.search(r"Code:\s*(\d+)", message)
+            if match:
+                return int(match.group(1))
+            else:
+                return 0
 
+        def query(self, query_string, match=None, exitcode=None, message=None):
+            self.command_context.app.send(query_string)
             self.command_context.app.expect(query_string, escape=True)
 
             if match is not None:
@@ -154,23 +160,27 @@ class Node(object):
 
             self.command_context.app.expect(self.prompt)
 
-            self.query_result = self.command_context.app.child.before
+            query_result = self.command_context.app.child.before
 
-            if "DB::Exception" in self.query_result:
-                raise RuntimeError(f"query was not executed: {query_string}")
+            raise_exception = True
 
-            self.full_output = (
-                self.command_context.app.child.before
-                + self.command_context.app.child.after
-            )
+            if exitcode is not None:
+                with Then(f"exitcode should be {exitcode}", format_name=False):
+                    assert exitcode == self._parse_error_code(
+                        str(query_result)
+                    ), error()
 
-        @property
-        def full(self):
-            return self.full_output
+                raise_exception = False
+            if message is not None:
+                with Then(f"message should be {message}", format_name=False):
+                    assert message in query_result, error()
 
-        @property
-        def result(self):
-            return self.query_result
+                raise_exception = False
+
+            elif raise_exception and not query_result.strip().startswith("Output:"):
+                raise Exception(query_result)
+
+            return query_result
 
     def client(self, client="clickhouse-client-tty", name="clickhouse-client-tty"):
         command_context = self.command(
@@ -799,7 +809,7 @@ class Cluster(object):
         clickhouse_odbc_bridge_binary_path=None,
         configs_dir=None,
         nodes=None,
-        docker_compose="docker-compose",
+        docker_compose="docker-compose --log-level ERROR",
         docker_compose_project_dir=None,
         docker_compose_file="docker-compose.yml",
         environ=None,
@@ -972,7 +982,7 @@ class Cluster(object):
             with Shell() as bash:
                 bash.timeout = 300
                 bash(
-                    f'docker run -d --name "{docker_container_name}" {docker_image} | tee'
+                    f'set -o pipefail && docker run -d --name "{docker_container_name}" {docker_image} | tee'
                 )
                 bash(
                     f'docker cp "{docker_container_name}:{container_clickhouse_binary_path}" "{host_clickhouse_binary_path}"'
@@ -1172,15 +1182,15 @@ class Cluster(object):
                     with Finally("collect service logs"):
                         with Shell() as bash:
                             bash(f"cd {self.docker_compose_project_dir}", timeout=1000)
-                            nodes = bash("docker-compose ps --services").output.split(
-                                "\n"
-                            )
+                            nodes = bash(
+                                f"{self.docker_compose} ps --services"
+                            ).output.split("\n")
                             debug(nodes)
                             for node in nodes:
                                 with By(f"getting log for {node}"):
                                     log_path = f"../_instances"
                                     snode = bash(
-                                        f"docker-compose logs {node} "
+                                        f"{self.docker_compose} logs {node} "
                                         f"> {log_path}/{node}.log",
                                         timeout=1000,
                                     )
@@ -1280,14 +1290,14 @@ class Cluster(object):
 
         with Given("docker-compose"):
             max_attempts = 5
-            max_up_attempts = 1
+            max_up_attempts = 3
 
             for attempt in range(max_attempts):
                 with When(f"attempt {attempt}/{max_attempts}"):
                     with By("pulling images for all the services"):
                         cmd = self.command(
                             None,
-                            f"{self.docker_compose} pull 2>&1 | tee",
+                            f"set -o pipefail && {self.docker_compose} pull 2>&1 | tee",
                             exitcode=None,
                             timeout=timeout,
                         )
@@ -1295,12 +1305,14 @@ class Cluster(object):
                             continue
 
                     with And("checking if any containers are already running"):
-                        self.command(None, f"{self.docker_compose} ps | tee")
+                        self.command(
+                            None, f"set -o pipefail && {self.docker_compose} ps | tee"
+                        )
 
                     with And("executing docker-compose down just in case it is up"):
                         cmd = self.command(
                             None,
-                            f"{self.docker_compose} down 2>&1 | tee",
+                            f"set -o pipefail && {self.docker_compose} down 2>&1 | tee",
                             exitcode=None,
                             timeout=timeout,
                         )
@@ -1308,25 +1320,42 @@ class Cluster(object):
                             continue
 
                     with And("checking if any containers are still left running"):
-                        self.command(None, f"{self.docker_compose} ps | tee")
+                        self.command(
+                            None, f"set -o pipefail && {self.docker_compose} ps | tee"
+                        )
 
                     with And("executing docker-compose up"):
-                        for up_attempt in range(max_up_attempts):
-                            with By(f"attempt {up_attempt}/{max_up_attempts}"):
+                        with By(
+                            "creating a unique builder just in case docker-compose needs to build images"
+                        ):
+                            self.command(
+                                None,
+                                f"docker buildx create --use --bootstrap --name clickhouse-regression-builder",
+                                exitcode=0,
+                            )
+
+                        for attempt in retries(count=max_up_attempts):
+                            with attempt:
                                 cmd = self.command(
                                     None,
-                                    f"{self.docker_compose} up --renew-anon-volumes --force-recreate --timeout 600 -d 2>&1 | tee",
+                                    f"set -o pipefail && {self.docker_compose} up --renew-anon-volumes --force-recreate --timeout 600 -d 2>&1 | tee",
                                     timeout=timeout,
+                                    exitcode=0,
                                 )
+                                assert "ERROR:" not in cmd.output, error(cmd.output)
                                 if "is unhealthy" not in cmd.output:
                                     break
 
                     with Then("check there are no unhealthy containers"):
                         ps_cmd = self.command(
-                            None, f'{self.docker_compose} ps | tee | grep -v "Exit 0"'
+                            None,
+                            f'set -o pipefail && {self.docker_compose} ps | tee | grep -v "Exit 0"',
                         )
                         if "is unhealthy" in cmd.output or "Exit" in ps_cmd.output:
-                            self.command(None, f"{self.docker_compose} logs | tee")
+                            self.command(
+                                None,
+                                f"set -o pipefail && {self.docker_compose} logs | tee",
+                            )
                             continue
 
                     if (
@@ -1430,7 +1459,7 @@ def create_cluster(
     collect_service_logs=False,
     configs_dir=None,
     nodes=None,
-    docker_compose="docker-compose",
+    docker_compose="docker-compose --log-level ERROR",
     docker_compose_project_dir=None,
     docker_compose_file="docker-compose.yml",
     environ=None,
