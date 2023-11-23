@@ -60,6 +60,7 @@ def scenario(self, cluster, node="clickhouse1"):
                                 f"INSERT INTO {name} VALUES(toDate('2019-{month}-{day}'), {value})",
                                 steps=False,
                                 timeout=60,
+                                raise_on_exception=True,
                             )
 
                 def alter_move(num):
@@ -71,7 +72,7 @@ def scenario(self, cluster, node="clickhouse1"):
                                 steps=False,
                                 timeout=360,
                                 raise_on_exception=True,
-                                random_seed=321 * i,
+                                random_seed=321 * (i + 1),
                             )
 
                 def alter_update(num):
@@ -81,13 +82,17 @@ def scenario(self, cluster, node="clickhouse1"):
                                 f"ALTER TABLE {name} UPDATE number = number + 1 WHERE 1",
                                 steps=False,
                                 timeout=60,
+                                raise_on_exception=True,
                             )
 
                 def optimize_table(num):
                     with When(f"I optimize table {num} times"):
                         for i in range(num):
                             node.query(
-                                f"OPTIMIZE TABLE {name} FINAL", steps=False, timeout=100
+                                f"OPTIMIZE TABLE {name} FINAL",
+                                steps=False,
+                                timeout=100,
+                                raise_on_exception=True,
                             )
 
                 with When(
@@ -109,7 +114,7 @@ def scenario(self, cluster, node="clickhouse1"):
                     with Then("it should return the result of 1"):
                         assert r == "1", error()
 
-                for retry in retries(timeout=60, delay=10):
+                for retry in retries(timeout=30, delay=5):
                     with retry:
                         with When("I ensure all rows are in the table"):
                             r = node.query(f"SELECT COUNT() FROM {name}").output.strip()
