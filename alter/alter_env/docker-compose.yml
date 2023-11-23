@@ -120,9 +120,5 @@ services:
         condition: service_healthy
       mysql1:
         condition: service_healthy
-      aws:
-        condition: service_healthy
-      minio-client:
-        condition: service_healthy
       postgres1:
         condition: service_healthy
