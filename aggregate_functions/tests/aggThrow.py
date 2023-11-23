@@ -17,6 +17,9 @@ def scenario(
     """Check aggThrow aggregate function."""
     self.context.snapshot_id = get_snapshot_id()
 
+    if "Merge" in self.name:
+        return self.context.snapshot_id, func.replace("({params})", "")
+
     if table is None:
         table = self.context.table
 

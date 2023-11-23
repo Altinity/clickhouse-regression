@@ -133,7 +133,7 @@ def feature(self):
     """Check aggregate functions `-Merge` combinator."""
     not_implemented = [
         "mannWhitneyUTest",
-        "quantileDeterministic",  
+        "quantileDeterministic",
         "quantilesDeterministic",
         "stochasticLinearRegression",
         "stochasticLogisticRegression",
