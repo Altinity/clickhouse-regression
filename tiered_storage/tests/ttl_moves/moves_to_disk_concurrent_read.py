@@ -109,9 +109,11 @@ def scenario(self, cluster, node="clickhouse1"):
                                     task.result(timeout=60)
 
                         with And("I then again get used disks for the table"):
-                            used_disks = get_used_disks_for_table(node, name)
-                            with Then(f"parts should have been moved"):
-                                assert set(used_disks) == {"external"}, error()
+                            for attempt in retries(timeout=60, delay=1):
+                                with attempt:
+                                    used_disks = get_used_disks_for_table(node, name)
+                                    with Then(f"parts should have been moved"):
+                                        assert set(used_disks) == {"external"}, error()
 
                         with Then("number of rows should match"):
                             r = node.query(f"SELECT count() FROM {name}").output.strip()
