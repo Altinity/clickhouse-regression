@@ -1,0 +1,216 @@
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_Decimal128_38__0 = r"""
+{"finalizeAggregation(CAST(unhex('0310008416B7C3239EE3FF7BE9483CDC61DC10000650BC18F7DE0B00FAAF43E708213410000000000000000000000000000000000A00000000000000293633363431333632323338343637393330303520302037383330313832323837323830333531393531'), 'AggregateFunction(groupArraySample(3, 2), Decimal(38, 38))'))":[-0.47344088146611352926710300493623163904,0.69291382159077882980103638986399942144,0]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_Float32_0 = r"""
+{"finalizeAggregation(CAST(unhex('03772282FE13F574FF000000000A00000000000000293633363431333632323338343637393330303520302037383330313832323837323830333531393531'), 'AggregateFunction(groupArraySample(3, 2), Float32)'))":[-8.64893e37,-3.2560413e38,0]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('034F2916E7A954C3E5FF4BF30BC3C6665100000000000000000A00000000000000293633363431333632323338343637393330303520302037383330313832323837323830333531393531'), 'AggregateFunction(groupArraySample(3, 2), Float64)'))":[-1.6042622652400174e182,1.382719697660965e84,0]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_Int16_0 = r"""
+{"finalizeAggregation(CAST(unhex('0375E2782500000A00000000000000293633363431333632323338343637393330303520302037383330313832323837323830333531393531'), 'AggregateFunction(groupArraySample(3, 2), Int16)'))":[-7563,9592,0]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_Int32_0 = r"""
+{"finalizeAggregation(CAST(unhex('03B4D50BBB289F503E000000000A00000000000000293633363431333632323338343637393330303520302037383330313832323837323830333531393531'), 'AggregateFunction(groupArraySample(3, 2), Int32)'))":[-1156852300,1045471016,0]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_Int64_0 = r"""
+{"finalizeAggregation(CAST(unhex('03DF11B4A0419FD0377DB66B9BC223B42500000000000000000A00000000000000293633363431333632323338343637393330303520302037383330313832323837323830333531393531'), 'AggregateFunction(groupArraySample(3, 2), Int64)'))":["4021889571459699167","2716835793949406845","0"]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_Int8_0 = r"""
+{"finalizeAggregation(CAST(unhex('037C53000A00000000000000293633363431333632323338343637393330303520302037383330313832323837323830333531393531'), 'AggregateFunction(groupArraySample(3, 2), Int8)'))":[124,83,0]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_LowCardinality_Float32__0 = r"""
+{"finalizeAggregation(CAST(unhex('0348E81F7F4126017F000000000A00000000000000293633363431333632323338343637393330303520302037383330313832323837323830333531393531'), 'AggregateFunction(groupArraySample(3, 2), LowCardinality(Float32))'))":[2.1255332e38,1.7166904e38,0]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_LowCardinality_Float64__0 = r"""
+{"finalizeAggregation(CAST(unhex('033E7209801D456266904B88E2F0846B4D00000000000000000A00000000000000293633363431333632323338343637393330303520302037383330313832323837323830333531393531'), 'AggregateFunction(groupArraySample(3, 2), LowCardinality(Float64))'))":[1.5526209987860707e185,9.056626914188144e64,0]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_LowCardinality_Int16__0 = r"""
+{"finalizeAggregation(CAST(unhex('03CE5EB19300000A00000000000000293633363431333632323338343637393330303520302037383330313832323837323830333531393531'), 'AggregateFunction(groupArraySample(3, 2), LowCardinality(Int16))'))":[24270,-27727,0]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_LowCardinality_Int32__0 = r"""
+{"finalizeAggregation(CAST(unhex('037645F1C3D1852BA7000000000A00000000000000293633363431333632323338343637393330303520302037383330313832323837323830333531393531'), 'AggregateFunction(groupArraySample(3, 2), LowCardinality(Int32))'))":[-1007598218,-1490319919,0]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_LowCardinality_Int64__0 = r"""
+{"finalizeAggregation(CAST(unhex('03612F026F670FD00CB49F4375B0C3EF5500000000000000000A00000000000000293633363431333632323338343637393330303520302037383330313832323837323830333531393531'), 'AggregateFunction(groupArraySample(3, 2), LowCardinality(Int64))'))":["923254860529413985","6192383175306747828","0"]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_LowCardinality_Int8__0 = r"""
+{"finalizeAggregation(CAST(unhex('035FFF000A00000000000000293633363431333632323338343637393330303520302037383330313832323837323830333531393531'), 'AggregateFunction(groupArraySample(3, 2), LowCardinality(Int8))'))":[95,-1,0]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_LowCardinality_Nullable_Float32___0 = r"""
+{"finalizeAggregation(CAST(unhex('03222E23FED0C0317F9A50337F09000000000000002A363336343133363232333834363739333030352030203135313037303532333430373234353236393535'), 'AggregateFunction(groupArraySample(3, 2), LowCardinality(Nullable(Float32)))'))":[-5.4225925e37,2.362745e38,2.3835032e38]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_LowCardinality_Nullable_Float64___0 = r"""
+{"finalizeAggregation(CAST(unhex('03C73542D2F3DB7FF958E43AFC523676527EA255CA77F1F07D09000000000000002A363336343133363232333834363739333030352030203135313037303532333430373234353236393535'), 'AggregateFunction(groupArraySample(3, 2), LowCardinality(Nullable(Float64)))'))":[-1.764861977972332e277,1.7674632094597634e89,4.432329389190481e298]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_LowCardinality_Nullable_Int16___0 = r"""
+{"finalizeAggregation(CAST(unhex('03E3186AE7E60F09000000000000002A363336343133363232333834363739333030352030203135313037303532333430373234353236393535'), 'AggregateFunction(groupArraySample(3, 2), LowCardinality(Nullable(Int16)))'))":[6371,-6294,4070]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_LowCardinality_Nullable_Int32___0 = r"""
+{"finalizeAggregation(CAST(unhex('03BE071A65B26A172594EB8DF109000000000000002A363336343133363232333834363739333030352030203135313037303532333430373234353236393535'), 'AggregateFunction(groupArraySample(3, 2), LowCardinality(Nullable(Int32)))'))":[1696204734,622291634,-242357356]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_LowCardinality_Nullable_Int64___0 = r"""
+{"finalizeAggregation(CAST(unhex('038D1C845E68D745F7CB0B95559E19098B58ABEBCC93010A1809000000000000002A363336343133363232333834363739333030352030203135313037303532333430373234353236393535'), 'AggregateFunction(groupArraySample(3, 2), LowCardinality(Nullable(Int64)))'))":["-628859729686029171","-8428177059815814197","1732198740987194200"]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_LowCardinality_Nullable_Int8___0 = r"""
+{"finalizeAggregation(CAST(unhex('03DF9B7509000000000000002A363336343133363232333834363739333030352030203135313037303532333430373234353236393535'), 'AggregateFunction(groupArraySample(3, 2), LowCardinality(Nullable(Int8)))'))":[-33,-101,117]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_LowCardinality_Nullable_UInt16___0 = r"""
+{"finalizeAggregation(CAST(unhex('03E13FF73C932A09000000000000002A363336343133363232333834363739333030352030203135313037303532333430373234353236393535'), 'AggregateFunction(groupArraySample(3, 2), LowCardinality(Nullable(UInt16)))'))":[16353,15607,10899]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_LowCardinality_Nullable_UInt32___0 = r"""
+{"finalizeAggregation(CAST(unhex('03567D52940763CD5BE1281A5509000000000000002A363336343133363232333834363739333030352030203135313037303532333430373234353236393535'), 'AggregateFunction(groupArraySample(3, 2), LowCardinality(Nullable(UInt32)))'))":[2488434006,1540186887,1427777761]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_LowCardinality_Nullable_UInt64___0 = r"""
+{"finalizeAggregation(CAST(unhex('038CFF93B99C78AD0AB8C7B537DDCF1C6B77343891619FC7E609000000000000002A363336343133363232333834363739333030352030203135313037303532333430373234353236393535'), 'AggregateFunction(groupArraySample(3, 2), LowCardinality(Nullable(UInt64)))'))":["769403725873938316","7718272410435569592","16629435390485869687"]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_LowCardinality_Nullable_UInt8___0 = r"""
+{"finalizeAggregation(CAST(unhex('0370CC8109000000000000002A363336343133363232333834363739333030352030203135313037303532333430373234353236393535'), 'AggregateFunction(groupArraySample(3, 2), LowCardinality(Nullable(UInt8)))'))":[112,204,129]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_LowCardinality_UInt16__0 = r"""
+{"finalizeAggregation(CAST(unhex('0382B2E12F00000A00000000000000293633363431333632323338343637393330303520302037383330313832323837323830333531393531'), 'AggregateFunction(groupArraySample(3, 2), LowCardinality(UInt16))'))":[45698,12257,0]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_LowCardinality_UInt32__0 = r"""
+{"finalizeAggregation(CAST(unhex('03F9DDCF0ED3A7CB0A000000000A00000000000000293633363431333632323338343637393330303520302037383330313832323837323830333531393531'), 'AggregateFunction(groupArraySample(3, 2), LowCardinality(UInt32))'))":[248503801,181118931,0]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_LowCardinality_UInt64__0 = r"""
+{"finalizeAggregation(CAST(unhex('030A4F21CDE9F717F491BE7253DDDB5D1800000000000000000A00000000000000293633363431333632323338343637393330303520302037383330313832323837323830333531393531'), 'AggregateFunction(groupArraySample(3, 2), LowCardinality(UInt64))'))":["17588799453259714314","1755801173378645649","0"]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_LowCardinality_UInt8__0 = r"""
+{"finalizeAggregation(CAST(unhex('03ACEF000A00000000000000293633363431333632323338343637393330303520302037383330313832323837323830333531393531'), 'AggregateFunction(groupArraySample(3, 2), LowCardinality(UInt8))'))":[172,239,0]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_NULL_value_handling_0 = r"""
+{"finalizeAggregation(CAST(unhex('030501030500000000000000293633363431333632323338343637393330303520302034313135393439303939323231343533323433'), 'AggregateFunction(groupArraySample(3, 2), Nullable(Int8))'))":[5,1,3]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_Nullable_Decimal128_38___0 = r"""
+{"finalizeAggregation(CAST(unhex('031000C0BB7914DB58FBFF3F4486EB24A7F410008C0A431A4D65040074F5BCE5B29A1B1000CEC68499A47E1D0032397B665B812209000000000000002A363336343133363232333834363739333030352030203135313037303532333430373234353236393535'), 'AggregateFunction(groupArraySample(3, 2), Nullable(Decimal(38, 38)))'))":[-0.15082873547126251445712834893466320896,0.36692398073045674254112472665458117632,0.45865411970120442299973825669148102144]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_Nullable_Float32__0 = r"""
+{"finalizeAggregation(CAST(unhex('03370CF27E5B8E43FF870F16FF09000000000000002A363336343133363232333834363739333030352030203135313037303532333430373234353236393535'), 'AggregateFunction(groupArraySample(3, 2), Nullable(Float32))'))":[1.608683e38,-2.5993861e38,-1.9946482e38]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_Nullable_Float64__0 = r"""
+{"finalizeAggregation(CAST(unhex('03846886D97BB7C47DAC0F30FDA8D9C27566576262AAFFDDDF09000000000000002A363336343133363232333834363739333030352030203135313037303532333430373234353236393535'), 'AggregateFunction(groupArraySample(3, 2), Nullable(Float64))'))":[6.774340303930748e297,1.811436225548946e259,-6.284636282018519e153]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_Nullable_Int16__0 = r"""
+{"finalizeAggregation(CAST(unhex('03C1339AD46F9009000000000000002A363336343133363232333834363739333030352030203135313037303532333430373234353236393535'), 'AggregateFunction(groupArraySample(3, 2), Nullable(Int16))'))":[13249,-11110,-28561]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_Nullable_Int32__0 = r"""
+{"finalizeAggregation(CAST(unhex('03755124774F5EEB5AE9BEDB5509000000000000002A363336343133363232333834363739333030352030203135313037303532333430373234353236393535'), 'AggregateFunction(groupArraySample(3, 2), Nullable(Int32))'))":[1998868853,1525374543,1440464617]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_Nullable_Int64__0 = r"""
+{"finalizeAggregation(CAST(unhex('03A898A50CA7CD7CB66B431142B276911088EC86E07A4F0E6109000000000000002A363336343133363232333834363739333030352030203135313037303532333430373234353236393535'), 'AggregateFunction(groupArraySample(3, 2), Nullable(Int64))'))":["-5297132944339134296","1193865884214575979","6993614660524502152"]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_Nullable_Int8__0 = r"""
+{"finalizeAggregation(CAST(unhex('035DB3C609000000000000002A363336343133363232333834363739333030352030203135313037303532333430373234353236393535'), 'AggregateFunction(groupArraySample(3, 2), Nullable(Int8))'))":[93,-77,-58]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_Nullable_UInt16__0 = r"""
+{"finalizeAggregation(CAST(unhex('03145E80C2326509000000000000002A363336343133363232333834363739333030352030203135313037303532333430373234353236393535'), 'AggregateFunction(groupArraySample(3, 2), Nullable(UInt16))'))":[24084,49792,25906]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_Nullable_UInt32__0 = r"""
+{"finalizeAggregation(CAST(unhex('03351975C3E3EED64D64DC7BF109000000000000002A363336343133363232333834363739333030352030203135313037303532333430373234353236393535'), 'AggregateFunction(groupArraySample(3, 2), Nullable(UInt32))'))":[3279231285,1305931491,4051426404]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_Nullable_UInt64__0 = r"""
+{"finalizeAggregation(CAST(unhex('034556F059038C81F13BDFE22E3BCBAE6C9B3C40A043221CEA09000000000000002A363336343133363232333834363739333030352030203135313037303532333430373234353236393535'), 'AggregateFunction(groupArraySample(3, 2), Nullable(UInt64))'))":["17402344381158020677","7831420257094000443","16869395978069752987"]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_Nullable_UInt8__0 = r"""
+{"finalizeAggregation(CAST(unhex('030FC3EA09000000000000002A363336343133363232333834363739333030352030203135313037303532333430373234353236393535'), 'AggregateFunction(groupArraySample(3, 2), Nullable(UInt8))'))":[15,195,234]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_UInt16_0 = r"""
+{"finalizeAggregation(CAST(unhex('03941D0B4200000A00000000000000293633363431333632323338343637393330303520302037383330313832323837323830333531393531'), 'AggregateFunction(groupArraySample(3, 2), UInt16)'))":[7572,16907,0]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_UInt32_0 = r"""
+{"finalizeAggregation(CAST(unhex('03545EC38A7C9EBBB7000000000A00000000000000293633363431333632323338343637393330303520302037383330313832323837323830333531393531'), 'AggregateFunction(groupArraySample(3, 2), UInt32)'))":[2328059476,3082526332,0]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_UInt64_0 = r"""
+{"finalizeAggregation(CAST(unhex('032E194EEC2B33C3EE4D82B78BAA648E2A00000000000000000A00000000000000293633363431333632323338343637393330303520302037383330313832323837323830333531393531'), 'AggregateFunction(groupArraySample(3, 2), UInt64)'))":["17204651265226578222","3066499079937163853","0"]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_UInt8_0 = r"""
+{"finalizeAggregation(CAST(unhex('037E77000A00000000000000293633363431333632323338343637393330303520302037383330313832323837323830333531393531'), 'AggregateFunction(groupArraySample(3, 2), UInt8)'))":[126,119,0]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation__inf_0 = r"""
+{"finalizeAggregation(CAST(unhex('0300000000000010400000000000001440000000000000F0FF0600000000000000293633363431333632323338343637393330303520302032333831363236313831373430383836373531'), 'AggregateFunction(groupArraySample(3, 2), Float64)'))":[4,5,null]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_constant_0 = r"""
+{"finalizeAggregation(CAST(unhex('01010100000000000000173633363431333632323338343637393330303520302033'), 'AggregateFunction(groupArraySample(3, 2), UInt8)'))":[1]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_doc_example_0 = r"""
+{"finalizeAggregation(CAST(unhex('030405020600000000000000293633363431333632323338343637393330303520302032333831363236313831373430383836373531'), 'AggregateFunction(groupArraySample(3, 2), Int8)'))":[4,5,2]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_inf_0 = r"""
+{"finalizeAggregation(CAST(unhex('0300000000000010400000000000001440000000000000F07F0600000000000000293633363431333632323338343637393330303520302032333831363236313831373430383836373531'), 'AggregateFunction(groupArraySample(3, 2), Float64)'))":[4,5,null]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_inf___inf__nan_0 = r"""
+{"finalizeAggregation(CAST(unhex('03000000000000F0FF0000000000001440000000000000F07F0600000000000000293633363431333632323338343637393330303520302032333831363236313831373430383836373531'), 'AggregateFunction(groupArraySample(3, 2), Float64)'))":[null,5,null]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_nan_0 = r"""
+{"finalizeAggregation(CAST(unhex('0300000000000010400000000000001440000000000000F87F0600000000000000293633363431333632323338343637393330303520302032333831363236313831373430383836373531'), 'AggregateFunction(groupArraySample(3, 2), Float64)'))":[4,5,null]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_single_NULL_value_0 = r"""
+{"finalizeAggregation(CAST(unhex('000000000000000000173633363431333632323338343637393330303520302033'), 'AggregateFunction(groupArraySample(3, 2), Nullable(Int8))'))":[]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_single_row_0 = r"""
+{"finalizeAggregation(CAST(unhex('0100000000000000000100000000000000173633363431333632323338343637393330303520302033'), 'AggregateFunction(groupArraySample(3, 2), UInt64)'))":["0"]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_some_negative_values_0 = r"""
+{"finalizeAggregation(CAST(unhex('0305000000000000000300000000000000FEFFFFFFFFFFFFFF0A00000000000000293633363431333632323338343637393330303520302037383330313832323837323830333531393531'), 'AggregateFunction(groupArraySample(3, 2), UInt64)'))":["5","3","18446744073709551614"]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_with_group_by_0 = r"""
+{"finalizeAggregation(CAST(unhex('030800000000000000020000000000000004000000000000000500000000000000293633363431333632323338343637393330303520302034313135393439303939323231343533323433'), 'AggregateFunction(groupArraySample(3, 2), UInt64)'))":["8","2","4"]}
+"""
+
+_aggregate_functions_finalizeAggregation_groupArraySamplefinalizeAggregation_with_group_by_1 = r"""
+{"finalizeAggregation(CAST(unhex('030900000000000000030000000000000005000000000000000500000000000000293633363431333632323338343637393330303520302034313135393439303939323231343533323433'), 'AggregateFunction(groupArraySample(3, 2), UInt64)'))":["9","3","5"]}
+"""
+

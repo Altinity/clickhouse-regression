@@ -1,9 +1,9 @@
-_aggregate_functions_finalizeAggregation_quantilesfinalizeAggregation_Date_0 = r"""
-{"finalizeAggregation(CAST(unhex('00200000000000000A000000000000001C36333634313336323233383436373933303035203020313233343539FFFF000000009C3092344D408D32603FCF498630'), 'AggregateFunction(quantiles(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), Date)'))":["2004-01-10","2006-02-20","2014-11-27","2034-07-02","2091-12-18","2137-12-08","2148-04-12"]}
-"""
-
 _aggregate_functions_finalizeAggregation_quantilesfinalizeAggregation_DateTime_0 = r"""
 {"finalizeAggregation(CAST(unhex('00200000000000000A000000000000001C36333634313336323233383436373933303035203020313233343539EFF1FFFFF0F1FFFF0000000079446A450BF79055960E854EDE9BC35CB5C69E5807BF344AEAFA2A5E'), 'AggregateFunction(quantiles(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), DateTime)'))":["2010-01-09 20:03:06","2016-04-20 21:56:16","2019-11-17 11:38:31","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15","2106-02-07 06:28:15"]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesfinalizeAggregation_Date_0 = r"""
+{"finalizeAggregation(CAST(unhex('00200000000000000A000000000000001C36333634313336323233383436373933303035203020313233343539FFFF000000009C3092344D408D32603FCF498630'), 'AggregateFunction(quantiles(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), Date)'))":["2004-01-10","2006-02-20","2014-11-27","2034-07-02","2091-12-18","2137-12-08","2148-04-12"]}
 """
 
 _aggregate_functions_finalizeAggregation_quantilesfinalizeAggregation_Decimal128_38__0 = r"""

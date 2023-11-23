@@ -326,20 +326,20 @@ _aggregate_functions_finalizeAggregation_anyLastfinalizeAggregation_Bool_0 = r""
 {"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(anyLast, Bool)'))":false}
 """
 
-_aggregate_functions_finalizeAggregation_anyLastfinalizeAggregation_Date_0 = r"""
-{"finalizeAggregation(CAST(unhex('018630'), 'AggregateFunction(anyLast, Date)'))":"2004-01-05"}
-"""
-
-_aggregate_functions_finalizeAggregation_anyLastfinalizeAggregation_DateTime_0 = r"""
-{"finalizeAggregation(CAST(unhex('01EAFA2A5E'), 'AggregateFunction(anyLast, DateTime)'))":"2020-01-24 15:10:50"}
-"""
-
 _aggregate_functions_finalizeAggregation_anyLastfinalizeAggregation_DateTime64_3__0__22_8 = r"""
 {"finalizeAggregation(CAST(unhex('01F8F692075C010000'), 'AggregateFunction(anyLast, DateTime64(3))'))":"2017-05-14 17:28:11.000"}
 """
 
 _aggregate_functions_finalizeAggregation_anyLastfinalizeAggregation_DateTime64_3___22_8_0__22_8 = r"""
 {"finalizeAggregation(CAST(unhex('01F8F692075C010000'), 'AggregateFunction(anyLast, DateTime64(3))'))":"2017-05-14 17:28:11.000"}
+"""
+
+_aggregate_functions_finalizeAggregation_anyLastfinalizeAggregation_DateTime_0 = r"""
+{"finalizeAggregation(CAST(unhex('01EAFA2A5E'), 'AggregateFunction(anyLast, DateTime)'))":"2020-01-24 15:10:50"}
+"""
+
+_aggregate_functions_finalizeAggregation_anyLastfinalizeAggregation_Date_0 = r"""
+{"finalizeAggregation(CAST(unhex('018630'), 'AggregateFunction(anyLast, Date)'))":"2004-01-05"}
 """
 
 _aggregate_functions_finalizeAggregation_anyLastfinalizeAggregation_Decimal128_38__0 = r"""

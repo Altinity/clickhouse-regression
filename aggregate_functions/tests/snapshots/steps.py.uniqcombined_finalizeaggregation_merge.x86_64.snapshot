@@ -326,20 +326,20 @@ _aggregate_functions_finalizeAggregation_uniqCombinedfinalizeAggregation_Bool_0 
 {"finalizeAggregation(CAST(unhex('01022CCBC23400000000'), 'AggregateFunction(uniqCombined, Bool)'))":"2"}
 """
 
-_aggregate_functions_finalizeAggregation_uniqCombinedfinalizeAggregation_Date_0 = r"""
-{"finalizeAggregation(CAST(unhex('01096025890B000000000C9E140427F04FE56DF95F770E3EB3E66DCB6EDB22167BEE67E385C6'), 'AggregateFunction(uniqCombined, Date)'))":"9"}
-"""
-
-_aggregate_functions_finalizeAggregation_uniqCombinedfinalizeAggregation_DateTime_0 = r"""
-{"finalizeAggregation(CAST(unhex('010A90E5FD0ABB106E9000000000F1681DEEB3294A90AB369247FDE7B9FC6A75E0EC785CB23E3B125181'), 'AggregateFunction(uniqCombined, DateTime)'))":"10"}
-"""
-
 _aggregate_functions_finalizeAggregation_uniqCombinedfinalizeAggregation_DateTime64_3__0__22_8 = r"""
 {"finalizeAggregation(CAST(unhex('010990292047066A0BA09827F0D77B0CDCD35B0FB8EA90E0083B909A1006366DD6E63091F0DD'), 'AggregateFunction(uniqCombined, DateTime64(3))'))":"9"}
 """
 
 _aggregate_functions_finalizeAggregation_uniqCombinedfinalizeAggregation_DateTime64_3___22_8_0__22_8 = r"""
 {"finalizeAggregation(CAST(unhex('0109BF1E56A42660D4599827F0D77B0CDCD35B0FB8EA90E0083B909A1006366DD6E63091F0DD'), 'AggregateFunction(uniqCombined, DateTime64(3))'))":"9"}
+"""
+
+_aggregate_functions_finalizeAggregation_uniqCombinedfinalizeAggregation_DateTime_0 = r"""
+{"finalizeAggregation(CAST(unhex('010A90E5FD0ABB106E9000000000F1681DEEB3294A90AB369247FDE7B9FC6A75E0EC785CB23E3B125181'), 'AggregateFunction(uniqCombined, DateTime)'))":"10"}
+"""
+
+_aggregate_functions_finalizeAggregation_uniqCombinedfinalizeAggregation_Date_0 = r"""
+{"finalizeAggregation(CAST(unhex('01096025890B000000000C9E140427F04FE56DF95F770E3EB3E66DCB6EDB22167BEE67E385C6'), 'AggregateFunction(uniqCombined, Date)'))":"9"}
 """
 
 _aggregate_functions_finalizeAggregation_uniqCombinedfinalizeAggregation_Decimal128_38__0 = r"""
