@@ -1,213 +1,213 @@
 _aggregate_functions_stddevPopStable_Float32 = r"""
-{"stddevPopStable(float32)":2.068292398510412e38}
+{"stddevPopStable(float32)":2.068292398510412e38,"any(toTypeName(float32))":"Float32"}
 """
 
 _aggregate_functions_stddevPopStable_Float64 = r"""
-{"stddevPopStable(float64)":null}
+{"stddevPopStable(float64)":null,"any(toTypeName(float64))":"Float64"}
 """
 
 _aggregate_functions_stddevPopStable_Int16 = r"""
-{"stddevPopStable(int16)":20478.180066597717}
+{"stddevPopStable(int16)":20478.180066597717,"any(toTypeName(int16))":"Int16"}
 """
 
 _aggregate_functions_stddevPopStable_Int32 = r"""
-{"stddevPopStable(int32)":1326881128.4879816}
+{"stddevPopStable(int32)":1326881128.4879816,"any(toTypeName(int32))":"Int32"}
 """
 
 _aggregate_functions_stddevPopStable_Int64 = r"""
-{"stddevPopStable(int64)":4853354278485683000}
+{"stddevPopStable(int64)":4853354278485683000,"any(toTypeName(int64))":"Int64"}
 """
 
 _aggregate_functions_stddevPopStable_Int8 = r"""
-{"stddevPopStable(int8)":93.84396624184211}
+{"stddevPopStable(int8)":93.84396624184211,"any(toTypeName(int8))":"Int8"}
 """
 
 _aggregate_functions_stddevPopStable_LowCardinality_Float32_ = r"""
-{"stddevPopStable(lowcardinality_float32_)":2.0058658742502913e38}
+{"stddevPopStable(lowcardinality_float32_)":2.0058658742502913e38,"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
 """
 
 _aggregate_functions_stddevPopStable_LowCardinality_Float64_ = r"""
-{"stddevPopStable(lowcardinality_float64_)":null}
+{"stddevPopStable(lowcardinality_float64_)":null,"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)"}
 """
 
 _aggregate_functions_stddevPopStable_LowCardinality_Int16_ = r"""
-{"stddevPopStable(lowcardinality_int16_)":24022.119914986684}
+{"stddevPopStable(lowcardinality_int16_)":24022.119914986684,"any(toTypeName(lowcardinality_int16_))":"LowCardinality(Int16)"}
 """
 
 _aggregate_functions_stddevPopStable_LowCardinality_Int32_ = r"""
-{"stddevPopStable(lowcardinality_int32_)":1451793445.3095298}
+{"stddevPopStable(lowcardinality_int32_)":1451793445.3095298,"any(toTypeName(lowcardinality_int32_))":"LowCardinality(Int32)"}
 """
 
 _aggregate_functions_stddevPopStable_LowCardinality_Int64_ = r"""
-{"stddevPopStable(lowcardinality_int64_)":6018287614596589000}
+{"stddevPopStable(lowcardinality_int64_)":6018287614596589000,"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
 """
 
 _aggregate_functions_stddevPopStable_LowCardinality_Int8_ = r"""
-{"stddevPopStable(lowcardinality_int8_)":85.79213250642508}
+{"stddevPopStable(lowcardinality_int8_)":85.79213250642508,"any(toTypeName(lowcardinality_int8_))":"LowCardinality(Int8)"}
 """
 
 _aggregate_functions_stddevPopStable_LowCardinality_Nullable_Float32__ = r"""
-{"stddevPopStable(lowcardinality_nullable_float32__)":2.2615232993857903e38}
+{"stddevPopStable(lowcardinality_nullable_float32__)":2.2615232993857903e38,"any(toTypeName(lowcardinality_nullable_float32__))":"LowCardinality(Nullable(Float32))"}
 """
 
 _aggregate_functions_stddevPopStable_LowCardinality_Nullable_Float64__ = r"""
-{"stddevPopStable(lowcardinality_nullable_float64__)":null}
+{"stddevPopStable(lowcardinality_nullable_float64__)":null,"any(toTypeName(lowcardinality_nullable_float64__))":"LowCardinality(Nullable(Float64))"}
 """
 
 _aggregate_functions_stddevPopStable_LowCardinality_Nullable_Int16__ = r"""
-{"stddevPopStable(lowcardinality_nullable_int16__)":21545.2067924259}
+{"stddevPopStable(lowcardinality_nullable_int16__)":21545.2067924259,"any(toTypeName(lowcardinality_nullable_int16__))":"LowCardinality(Nullable(Int16))"}
 """
 
 _aggregate_functions_stddevPopStable_LowCardinality_Nullable_Int32__ = r"""
-{"stddevPopStable(lowcardinality_nullable_int32__)":1376210430.7942045}
+{"stddevPopStable(lowcardinality_nullable_int32__)":1376210430.7942045,"any(toTypeName(lowcardinality_nullable_int32__))":"LowCardinality(Nullable(Int32))"}
 """
 
 _aggregate_functions_stddevPopStable_LowCardinality_Nullable_Int64__ = r"""
-{"stddevPopStable(lowcardinality_nullable_int64__)":6582044817735764000}
+{"stddevPopStable(lowcardinality_nullable_int64__)":6582044817735764000,"any(toTypeName(lowcardinality_nullable_int64__))":"LowCardinality(Nullable(Int64))"}
 """
 
 _aggregate_functions_stddevPopStable_LowCardinality_Nullable_Int8__ = r"""
-{"stddevPopStable(lowcardinality_nullable_int8__)":96.49985607358295}
+{"stddevPopStable(lowcardinality_nullable_int8__)":96.49985607358295,"any(toTypeName(lowcardinality_nullable_int8__))":"LowCardinality(Nullable(Int8))"}
 """
 
 _aggregate_functions_stddevPopStable_LowCardinality_Nullable_UInt16__ = r"""
-{"stddevPopStable(lowcardinality_nullable_uint16__)":24277.77917721837}
+{"stddevPopStable(lowcardinality_nullable_uint16__)":24277.77917721837,"any(toTypeName(lowcardinality_nullable_uint16__))":"LowCardinality(Nullable(UInt16))"}
 """
 
 _aggregate_functions_stddevPopStable_LowCardinality_Nullable_UInt32__ = r"""
-{"stddevPopStable(lowcardinality_nullable_uint32__)":1331412691.986778}
+{"stddevPopStable(lowcardinality_nullable_uint32__)":1331412691.986778,"any(toTypeName(lowcardinality_nullable_uint32__))":"LowCardinality(Nullable(UInt32))"}
 """
 
 _aggregate_functions_stddevPopStable_LowCardinality_Nullable_UInt64__ = r"""
-{"stddevPopStable(lowcardinality_nullable_uint64__)":6931315915951747000}
+{"stddevPopStable(lowcardinality_nullable_uint64__)":6931315915951747000,"any(toTypeName(lowcardinality_nullable_uint64__))":"LowCardinality(Nullable(UInt64))"}
 """
 
 _aggregate_functions_stddevPopStable_LowCardinality_Nullable_UInt8__ = r"""
-{"stddevPopStable(lowcardinality_nullable_uint8__)":73.49645158143167}
+{"stddevPopStable(lowcardinality_nullable_uint8__)":73.49645158143167,"any(toTypeName(lowcardinality_nullable_uint8__))":"LowCardinality(Nullable(UInt8))"}
 """
 
 _aggregate_functions_stddevPopStable_LowCardinality_UInt16_ = r"""
-{"stddevPopStable(lowcardinality_uint16_)":24789.082729298396}
+{"stddevPopStable(lowcardinality_uint16_)":24789.082729298396,"any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_stddevPopStable_LowCardinality_UInt32_ = r"""
-{"stddevPopStable(lowcardinality_uint32_)":1505839935.578188}
+{"stddevPopStable(lowcardinality_uint32_)":1505839935.578188,"any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_stddevPopStable_LowCardinality_UInt64_ = r"""
-{"stddevPopStable(lowcardinality_uint64_)":7413157212963559000}
+{"stddevPopStable(lowcardinality_uint64_)":7413157212963559000,"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_stddevPopStable_LowCardinality_UInt8_ = r"""
-{"stddevPopStable(lowcardinality_uint8_)":99.33685116813398}
+{"stddevPopStable(lowcardinality_uint8_)":99.33685116813398,"any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_stddevPopStable_NULL_value_handling = r"""
-{"stddevPopStable(x)":1.8547236990991407}
+{"stddevPopStable(x)":1.8547236990991407,"any(toTypeName(x))":"Nullable(Int8)"}
 """
 
 _aggregate_functions_stddevPopStable_Nullable_Float32_ = r"""
-{"stddevPopStable(nullable_float32_)":2.151385092863066e38}
+{"stddevPopStable(nullable_float32_)":2.151385092863066e38,"any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
 """
 
 _aggregate_functions_stddevPopStable_Nullable_Float64_ = r"""
-{"stddevPopStable(nullable_float64_)":null}
+{"stddevPopStable(nullable_float64_)":null,"any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
 """
 
 _aggregate_functions_stddevPopStable_Nullable_Int16_ = r"""
-{"stddevPopStable(nullable_int16_)":20750.629505846056}
+{"stddevPopStable(nullable_int16_)":20750.629505846056,"any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
 """
 
 _aggregate_functions_stddevPopStable_Nullable_Int32_ = r"""
-{"stddevPopStable(nullable_int32_)":1341745197.8870134}
+{"stddevPopStable(nullable_int32_)":1341745197.8870134,"any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
 """
 
 _aggregate_functions_stddevPopStable_Nullable_Int64_ = r"""
-{"stddevPopStable(nullable_int64_)":6390424169257931000}
+{"stddevPopStable(nullable_int64_)":6390424169257931000,"any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
 """
 
 _aggregate_functions_stddevPopStable_Nullable_Int8_ = r"""
-{"stddevPopStable(nullable_int8_)":84.45964775421119}
+{"stddevPopStable(nullable_int8_)":84.45964775421119,"any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
 """
 
 _aggregate_functions_stddevPopStable_Nullable_UInt16_ = r"""
-{"stddevPopStable(nullable_uint16_)":21636.59220845699}
+{"stddevPopStable(nullable_uint16_)":21636.59220845699,"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_stddevPopStable_Nullable_UInt32_ = r"""
-{"stddevPopStable(nullable_uint32_)":1568723654.8063307}
+{"stddevPopStable(nullable_uint32_)":1568723654.8063307,"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_stddevPopStable_Nullable_UInt64_ = r"""
-{"stddevPopStable(nullable_uint64_)":7011945449643598000}
+{"stddevPopStable(nullable_uint64_)":7011945449643598000,"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_stddevPopStable_Nullable_UInt8_ = r"""
-{"stddevPopStable(nullable_uint8_)":95.94610112447329}
+{"stddevPopStable(nullable_uint8_)":95.94610112447329,"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_stddevPopStable_UInt16 = r"""
-{"stddevPopStable(uint16)":20836.70081394845}
+{"stddevPopStable(uint16)":20836.70081394845,"any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_stddevPopStable_UInt32 = r"""
-{"stddevPopStable(uint32)":1467118193.899993}
+{"stddevPopStable(uint32)":1467118193.899993,"any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_stddevPopStable_UInt64 = r"""
-{"stddevPopStable(uint64)":7080486549478075000}
+{"stddevPopStable(uint64)":7080486549478075000,"any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_stddevPopStable_UInt8 = r"""
-{"stddevPopStable(uint8)":88.85274334538018}
+{"stddevPopStable(uint8)":88.85274334538018,"any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_stddevPopStable__inf = r"""
-{"stddevPopStable(x)":null}
+{"stddevPopStable(x)":null,"any(toTypeName(x))":"Float64"}
 """
 
 _aggregate_functions_stddevPopStable_constant = r"""
-{"stddevPopStable(1)":0}
+{"stddevPopStable(1)":0,"any(toTypeName(1))":"UInt8"}
 """
 
 _aggregate_functions_stddevPopStable_doc_example = r"""
-{"stddevPopStable(x)":1.707825127659933}
+{"stddevPopStable(x)":1.707825127659933,"any(toTypeName(x))":"Int8"}
 """
 
 _aggregate_functions_stddevPopStable_inf = r"""
-{"stddevPopStable(x)":null}
+{"stddevPopStable(x)":null,"any(toTypeName(x))":"Float64"}
 """
 
 _aggregate_functions_stddevPopStable_inf___inf__nan = r"""
-{"stddevPopStable(x)":null}
+{"stddevPopStable(x)":null,"any(toTypeName(x))":"Float64"}
 """
 
 _aggregate_functions_stddevPopStable_nan = r"""
-{"stddevPopStable(x)":null}
+{"stddevPopStable(x)":null,"any(toTypeName(x))":"Float64"}
 """
 
 _aggregate_functions_stddevPopStable_return_type = r"""
-{"toTypeName(stddevPopStable(number))":"Float64"}
+{"toTypeName(stddevPopStable(number))":"Float64","any(toTypeName(number))":"UInt64"}
 """
 
 _aggregate_functions_stddevPopStable_single_NULL_value = r"""
-{"stddevPopStable(x)":null}
+{"stddevPopStable(x)":null,"any(toTypeName(x))":"Nullable(Int8)"}
 """
 
 _aggregate_functions_stddevPopStable_single_row = r"""
-{"stddevPopStable(number)":0}
+{"stddevPopStable(number)":0,"any(toTypeName(number))":"UInt64"}
 """
 
 _aggregate_functions_stddevPopStable_some_negative_values = r"""
-{"stddevPopStable(minus(number, 5))":2.8722813232690143}
+{"stddevPopStable(minus(number, 5))":2.8722813232690143,"any(toTypeName(number))":"UInt64"}
 """
 
 _aggregate_functions_stddevPopStable_with_group_by = r"""
-{"even":0,"stddevPopStable(number)":2.8284271247461903}
-{"even":1,"stddevPopStable(number)":2.8284271247461903}
+{"even":0,"stddevPopStable(number)":2.8284271247461903,"any(toTypeName(number))":"UInt64"}
+{"even":1,"stddevPopStable(number)":2.8284271247461903,"any(toTypeName(number))":"UInt64"}
 """
 
 _aggregate_functions_stddevPopStable_zero_rows = r"""
-{"stddevPopStable(number)":null}
+{"stddevPopStable(number)":null,"any(toTypeName(number))":""}
 """
 

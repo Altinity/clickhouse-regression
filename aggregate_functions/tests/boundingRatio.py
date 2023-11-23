@@ -12,7 +12,7 @@ def datatype(self, func, table, col1_name, col2_name):
     """Check different column types."""
     params = f"{col1_name},{col2_name}"
     execute_query(
-        f"SELECT {func.format(params=params)} FROM {table.name} FORMAT JSONEachRow"
+        f"SELECT {func.format(params=params)}, any(toTypeName({col1_name})), any(toTypeName({col2_name})) FROM {table.name} FORMAT JSONEachRow"
     )
 
 
@@ -29,32 +29,40 @@ def scenario(
     date=True,
     datetime=True,
     extended_precision=True,
+    snapshot_id=None,
 ):
     """Check BoundingRatio aggregate function."""
-    self.context.snapshot_id = get_snapshot_id()
+    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+
+    if "Merge" in self.name:
+        return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:
         table = self.context.table
 
     with Check("zero rows"):
-        execute_query(f"SELECT {func.format(params='number, number')} FROM numbers(0)")
+        execute_query(
+            f"SELECT {func.format(params='number, number')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(0)"
+        )
 
     with Check("single row"):
-        execute_query(f"SELECT {func.format(params='number,number+1')} FROM numbers(1)")
+        execute_query(
+            f"SELECT {func.format(params='number,number+1')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(1)"
+        )
 
     with Check("some negative values"):
         execute_query(
-            f"SELECT {func.format(params='number-5,number+10')} FROM numbers(1, 10)"
+            f"SELECT {func.format(params='number-5,number+10')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(1, 10)"
         )
 
     with Check("NULL value handling"):
         execute_query(
-            f"SELECT {func.format(params='x,y')}  FROM values( 'x Nullable(Int8), y Nullable(Int8)', (1, NULL), (NULL,NULL), (NULL,3), (4,4), (5, 1))"
+            f"SELECT {func.format(params='x,y')}, any(toTypeName(x)), any(toTypeName(y))  FROM values( 'x Nullable(Int8), y Nullable(Int8)', (1, NULL), (NULL,NULL), (NULL,3), (4,4), (5, 1))"
         )
 
     with Check("single NULL value"):
         execute_query(
-            f"SELECT {func.format(params='x,y')}  FROM values('x Nullable(Int8), y Nullable(Int8)', (NULL, NULL))"
+            f"SELECT {func.format(params='x,y')}, any(toTypeName(x)), any(toTypeName(y))  FROM values('x Nullable(Int8), y Nullable(Int8)', (NULL, NULL))"
         )
 
     with Check("inf, -inf, nan, 0"):
@@ -62,17 +70,17 @@ def scenario(
             x, y = permutation
             with Check(f"{x},{y}"):
                 execute_query(
-                    f"SELECT {func.format(params='x,y')}  FROM values('x Float64, y Float64', (1, 2.3), ({x},{y}), (6.7,3), (4,4), (5, 1))"
+                    f"SELECT {func.format(params='x,y')}, any(toTypeName(x)), any(toTypeName(y))  FROM values('x Float64, y Float64', (1, 2.3), ({x},{y}), (6.7,3), (4,4), (5, 1))"
                 )
 
     with Check("return type"):
         execute_query(
-            f"SELECT toTypeName({func.format(params='number, number+1')}) FROM numbers(1, 10)"
+            f"SELECT toTypeName({func.format(params='number, number+1')}), any(toTypeName(number)), any(toTypeName(number)) FROM numbers(1, 10)"
         )
 
     with Check("example"):
         execute_query(
-            f"SELECT {func.format(params='y,x')} FROM values('x Float64, y Float64', (0,0.1), (1,0.34), (2,.88), (-3.9999,-1.23), (-4,-3.3), (5,5.4))"
+            f"SELECT {func.format(params='y,x')}, any(toTypeName(y)), any(toTypeName(x)) FROM values('x Float64, y Float64', (0,0.1), (1,0.34), (2,.88), (-3.9999,-1.23), (-4,-3.3), (5,5.4))"
         )
 
     with Check("datatypes"):

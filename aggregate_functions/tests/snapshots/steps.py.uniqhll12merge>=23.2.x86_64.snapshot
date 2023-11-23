@@ -1,0 +1,20 @@
+_aggregate_functions_merge_uniqHLL12Merge_constant_0 = r"""
+{"uniqHLL12Merge(state)":"1"}
+"""
+
+_aggregate_functions_merge_uniqHLL12Merge_first_non_NULL_value_0 = r"""
+{"uniqHLL12Merge(state)":"3"}
+"""
+
+_aggregate_functions_merge_uniqHLL12Merge_some_negative_values_0 = r"""
+{"uniqHLL12Merge(state)":"10"}
+"""
+
+_aggregate_functions_merge_uniqHLL12Merge_with_group_by_0 = r"""
+{"uniqHLL12Merge(state)":"5"}
+"""
+
+_aggregate_functions_merge_uniqHLL12Merge_with_group_by_1 = r"""
+{"uniqHLL12Merge(state)":"5"}
+"""
+

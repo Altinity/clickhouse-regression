@@ -1,0 +1,228 @@
+_aggregate_functions_merge_sumMerge_Decimal128_38__0 = r"""
+{"sumMerge(state)":-0.21468242760669401198252549218687803904}
+"""
+
+_aggregate_functions_merge_sumMerge_Float32_0 = r"""
+{"sumMerge(state)":-1.3695836729255912e39}
+"""
+
+_aggregate_functions_merge_sumMerge_Float64_0 = r"""
+{"sumMerge(state)":-1.46719343084824e307}
+"""
+
+_aggregate_functions_merge_sumMerge_Int128_0 = r"""
+{"sumMerge(state)":"-143318159333516415735069832817985812608"}
+"""
+
+_aggregate_functions_merge_sumMerge_Int16_0 = r"""
+{"sumMerge(state)":"-2464"}
+"""
+
+_aggregate_functions_merge_sumMerge_Int32_0 = r"""
+{"sumMerge(state)":"-180045811"}
+"""
+
+_aggregate_functions_merge_sumMerge_Int64_0 = r"""
+{"sumMerge(state)":"-8799195370699285409"}
+"""
+
+_aggregate_functions_merge_sumMerge_Int8_0 = r"""
+{"sumMerge(state)":"51"}
+"""
+
+_aggregate_functions_merge_sumMerge_LowCardinality_Float32__0 = r"""
+{"sumMerge(state)":3.159481276742593e38}
+"""
+
+_aggregate_functions_merge_sumMerge_LowCardinality_Float64__0 = r"""
+{"sumMerge(state)":2.3539363430883252e260}
+"""
+
+_aggregate_functions_merge_sumMerge_LowCardinality_Int128__0 = r"""
+{"sumMerge(state)":"65191541690399068780133307877405979904"}
+"""
+
+_aggregate_functions_merge_sumMerge_LowCardinality_Int16__0 = r"""
+{"sumMerge(state)":"17437"}
+"""
+
+_aggregate_functions_merge_sumMerge_LowCardinality_Int32__0 = r"""
+{"sumMerge(state)":"-1592576550"}
+"""
+
+_aggregate_functions_merge_sumMerge_LowCardinality_Int64__0 = r"""
+{"sumMerge(state)":"-2335589518567405757"}
+"""
+
+_aggregate_functions_merge_sumMerge_LowCardinality_Int8__0 = r"""
+{"sumMerge(state)":"191"}
+"""
+
+_aggregate_functions_merge_sumMerge_LowCardinality_Nullable_Float32___0 = r"""
+{"sumMerge(state)":2.363335573687322e38}
+"""
+
+_aggregate_functions_merge_sumMerge_LowCardinality_Nullable_Float64___0 = r"""
+{"sumMerge(state)":4.432329389190783e298}
+"""
+
+_aggregate_functions_merge_sumMerge_LowCardinality_Nullable_Int128___0 = r"""
+{"sumMerge(state)":"-162835140721258646040745804746734358528"}
+"""
+
+_aggregate_functions_merge_sumMerge_LowCardinality_Nullable_Int16___0 = r"""
+{"sumMerge(state)":"-36493"}
+"""
+
+_aggregate_functions_merge_sumMerge_LowCardinality_Nullable_Int32___0 = r"""
+{"sumMerge(state)":"-570614278"}
+"""
+
+_aggregate_functions_merge_sumMerge_LowCardinality_Nullable_Int64___0 = r"""
+{"sumMerge(state)":"-4055992635541734030"}
+"""
+
+_aggregate_functions_merge_sumMerge_LowCardinality_Nullable_Int8___0 = r"""
+{"sumMerge(state)":"96"}
+"""
+
+_aggregate_functions_merge_sumMerge_LowCardinality_Nullable_UInt128___0 = r"""
+{"sumMerge(state)":"123936326993767275514316256134489128701"}
+"""
+
+_aggregate_functions_merge_sumMerge_LowCardinality_Nullable_UInt16___0 = r"""
+{"sumMerge(state)":"244404"}
+"""
+
+_aggregate_functions_merge_sumMerge_LowCardinality_Nullable_UInt32___0 = r"""
+{"sumMerge(state)":"23052698064"}
+"""
+
+_aggregate_functions_merge_sumMerge_LowCardinality_Nullable_UInt64___0 = r"""
+{"sumMerge(state)":"4529534376217169885"}
+"""
+
+_aggregate_functions_merge_sumMerge_LowCardinality_Nullable_UInt8___0 = r"""
+{"sumMerge(state)":"1334"}
+"""
+
+_aggregate_functions_merge_sumMerge_LowCardinality_UInt128__0 = r"""
+{"sumMerge(state)":"212006083852933915417284501929868235517"}
+"""
+
+_aggregate_functions_merge_sumMerge_LowCardinality_UInt16__0 = r"""
+{"sumMerge(state)":"327072"}
+"""
+
+_aggregate_functions_merge_sumMerge_LowCardinality_UInt32__0 = r"""
+{"sumMerge(state)":"16915733198"}
+"""
+
+_aggregate_functions_merge_sumMerge_LowCardinality_UInt64__0 = r"""
+{"sumMerge(state)":"16998933095029676984"}
+"""
+
+_aggregate_functions_merge_sumMerge_LowCardinality_UInt8__0 = r"""
+{"sumMerge(state)":"1517"}
+"""
+
+_aggregate_functions_merge_sumMerge_Nullable_Decimal128_38___0 = r"""
+{"sumMerge(state)":1.35440455825179711885689928087407595392}
+"""
+
+_aggregate_functions_merge_sumMerge_Nullable_Float32__0 = r"""
+{"sumMerge(state)":-1.0148602557198647e39}
+"""
+
+_aggregate_functions_merge_sumMerge_Nullable_Float64__0 = r"""
+{"sumMerge(state)":-6.104555798918726e300}
+"""
+
+_aggregate_functions_merge_sumMerge_Nullable_Int128__0 = r"""
+{"sumMerge(state)":"-118457979606383258691787766660598191616"}
+"""
+
+_aggregate_functions_merge_sumMerge_Nullable_Int16__0 = r"""
+{"sumMerge(state)":"-26631"}
+"""
+
+_aggregate_functions_merge_sumMerge_Nullable_Int32__0 = r"""
+{"sumMerge(state)":"4363604303"}
+"""
+
+_aggregate_functions_merge_sumMerge_Nullable_Int64__0 = r"""
+{"sumMerge(state)":"3971456529792613218"}
+"""
+
+_aggregate_functions_merge_sumMerge_Nullable_Int8__0 = r"""
+{"sumMerge(state)":"17"}
+"""
+
+_aggregate_functions_merge_sumMerge_Nullable_UInt128__0 = r"""
+{"sumMerge(state)":"63964592011597478689732996105647311870"}
+"""
+
+_aggregate_functions_merge_sumMerge_Nullable_UInt16__0 = r"""
+{"sumMerge(state)":"304868"}
+"""
+
+_aggregate_functions_merge_sumMerge_Nullable_UInt32__0 = r"""
+{"sumMerge(state)":"19274338894"}
+"""
+
+_aggregate_functions_merge_sumMerge_Nullable_UInt64__0 = r"""
+{"sumMerge(state)":"11096315630564658116"}
+"""
+
+_aggregate_functions_merge_sumMerge_Nullable_UInt8__0 = r"""
+{"sumMerge(state)":"1052"}
+"""
+
+_aggregate_functions_merge_sumMerge_UInt128_0 = r"""
+{"sumMerge(state)":"21297583348677270895397293902423521533"}
+"""
+
+_aggregate_functions_merge_sumMerge_UInt16_0 = r"""
+{"sumMerge(state)":"253563"}
+"""
+
+_aggregate_functions_merge_sumMerge_UInt32_0 = r"""
+{"sumMerge(state)":"23295638031"}
+"""
+
+_aggregate_functions_merge_sumMerge_UInt64_0 = r"""
+{"sumMerge(state)":"15750476061942512782"}
+"""
+
+_aggregate_functions_merge_sumMerge_UInt8_0 = r"""
+{"sumMerge(state)":"1293"}
+"""
+
+_aggregate_functions_merge_sumMerge__inf_0 = r"""
+{"sumMerge(state)":null}
+"""
+
+_aggregate_functions_merge_sumMerge_constant_0 = r"""
+{"sumMerge(state)":"1"}
+"""
+
+_aggregate_functions_merge_sumMerge_inf_0 = r"""
+{"sumMerge(state)":null}
+"""
+
+_aggregate_functions_merge_sumMerge_inf___inf__nan_0 = r"""
+{"sumMerge(state)":null}
+"""
+
+_aggregate_functions_merge_sumMerge_nan_0 = r"""
+{"sumMerge(state)":null}
+"""
+
+_aggregate_functions_merge_sumMerge_with_group_by_0 = r"""
+{"sumMerge(state)":"20"}
+"""
+
+_aggregate_functions_merge_sumMerge_with_group_by_1 = r"""
+{"sumMerge(state)":"25"}
+"""
+

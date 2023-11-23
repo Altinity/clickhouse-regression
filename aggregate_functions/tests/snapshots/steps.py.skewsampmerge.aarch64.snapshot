@@ -1,0 +1,208 @@
+_aggregate_functions_merge_skewSampMerge_Float32_0 = r"""
+{"skewSampMerge(state)":null}
+"""
+
+_aggregate_functions_merge_skewSampMerge_Float64_0 = r"""
+{"skewSampMerge(state)":null}
+"""
+
+_aggregate_functions_merge_skewSampMerge_Int16_0 = r"""
+{"skewSampMerge(state)":0.13823118383793673}
+"""
+
+_aggregate_functions_merge_skewSampMerge_Int32_0 = r"""
+{"skewSampMerge(state)":0.17751278609733326}
+"""
+
+_aggregate_functions_merge_skewSampMerge_Int64_0 = r"""
+{"skewSampMerge(state)":-0.4130888141495595}
+"""
+
+_aggregate_functions_merge_skewSampMerge_Int8_0 = r"""
+{"skewSampMerge(state)":0.0962274730313897}
+"""
+
+_aggregate_functions_merge_skewSampMerge_LowCardinality_Float32__0 = r"""
+{"skewSampMerge(state)":null}
+"""
+
+_aggregate_functions_merge_skewSampMerge_LowCardinality_Float64__0 = r"""
+{"skewSampMerge(state)":null}
+"""
+
+_aggregate_functions_merge_skewSampMerge_LowCardinality_Int16__0 = r"""
+{"skewSampMerge(state)":-0.17296818047491105}
+"""
+
+_aggregate_functions_merge_skewSampMerge_LowCardinality_Int32__0 = r"""
+{"skewSampMerge(state)":0.22376369050401645}
+"""
+
+_aggregate_functions_merge_skewSampMerge_LowCardinality_Int64__0 = r"""
+{"skewSampMerge(state)":-0.6643445808594943}
+"""
+
+_aggregate_functions_merge_skewSampMerge_LowCardinality_Int8__0 = r"""
+{"skewSampMerge(state)":-0.4104169314427933}
+"""
+
+_aggregate_functions_merge_skewSampMerge_LowCardinality_Nullable_Float32___0 = r"""
+{"skewSampMerge(state)":null}
+"""
+
+_aggregate_functions_merge_skewSampMerge_LowCardinality_Nullable_Float64___0 = r"""
+{"skewSampMerge(state)":null}
+"""
+
+_aggregate_functions_merge_skewSampMerge_LowCardinality_Nullable_Int16___0 = r"""
+{"skewSampMerge(state)":0.14427264089922362}
+"""
+
+_aggregate_functions_merge_skewSampMerge_LowCardinality_Nullable_Int32___0 = r"""
+{"skewSampMerge(state)":0.11171856483860634}
+"""
+
+_aggregate_functions_merge_skewSampMerge_LowCardinality_Nullable_Int64___0 = r"""
+{"skewSampMerge(state)":-0.40107146197287447}
+"""
+
+_aggregate_functions_merge_skewSampMerge_LowCardinality_Nullable_Int8___0 = r"""
+{"skewSampMerge(state)":-0.06571416123507326}
+"""
+
+_aggregate_functions_merge_skewSampMerge_LowCardinality_Nullable_UInt16___0 = r"""
+{"skewSampMerge(state)":0.518438332574785}
+"""
+
+_aggregate_functions_merge_skewSampMerge_LowCardinality_Nullable_UInt32___0 = r"""
+{"skewSampMerge(state)":-0.37282783816991455}
+"""
+
+_aggregate_functions_merge_skewSampMerge_LowCardinality_Nullable_UInt64___0 = r"""
+{"skewSampMerge(state)":0.15524565520731806}
+"""
+
+_aggregate_functions_merge_skewSampMerge_LowCardinality_Nullable_UInt8___0 = r"""
+{"skewSampMerge(state)":-0.4851635381975134}
+"""
+
+_aggregate_functions_merge_skewSampMerge_LowCardinality_UInt16__0 = r"""
+{"skewSampMerge(state)":0.07640257380426478}
+"""
+
+_aggregate_functions_merge_skewSampMerge_LowCardinality_UInt32__0 = r"""
+{"skewSampMerge(state)":0.2456994058768599}
+"""
+
+_aggregate_functions_merge_skewSampMerge_LowCardinality_UInt64__0 = r"""
+{"skewSampMerge(state)":0.08854292317021215}
+"""
+
+_aggregate_functions_merge_skewSampMerge_LowCardinality_UInt8__0 = r"""
+{"skewSampMerge(state)":-0.5747180133248334}
+"""
+
+_aggregate_functions_merge_skewSampMerge_NULL_value_handling_0 = r"""
+{"skewSampMerge(state)":-0.11304668947622726}
+"""
+
+_aggregate_functions_merge_skewSampMerge_Nullable_Float32__0 = r"""
+{"skewSampMerge(state)":null}
+"""
+
+_aggregate_functions_merge_skewSampMerge_Nullable_Float64__0 = r"""
+{"skewSampMerge(state)":null}
+"""
+
+_aggregate_functions_merge_skewSampMerge_Nullable_Int16__0 = r"""
+{"skewSampMerge(state)":0.03181916202358676}
+"""
+
+_aggregate_functions_merge_skewSampMerge_Nullable_Int32__0 = r"""
+{"skewSampMerge(state)":-0.40777455915135974}
+"""
+
+_aggregate_functions_merge_skewSampMerge_Nullable_Int64__0 = r"""
+{"skewSampMerge(state)":0.04378339185097403}
+"""
+
+_aggregate_functions_merge_skewSampMerge_Nullable_Int8__0 = r"""
+{"skewSampMerge(state)":-0.013977064526138125}
+"""
+
+_aggregate_functions_merge_skewSampMerge_Nullable_UInt16__0 = r"""
+{"skewSampMerge(state)":-0.1023801227210758}
+"""
+
+_aggregate_functions_merge_skewSampMerge_Nullable_UInt32__0 = r"""
+{"skewSampMerge(state)":0.012715075977852024}
+"""
+
+_aggregate_functions_merge_skewSampMerge_Nullable_UInt64__0 = r"""
+{"skewSampMerge(state)":-0.41178586156284347}
+"""
+
+_aggregate_functions_merge_skewSampMerge_Nullable_UInt8__0 = r"""
+{"skewSampMerge(state)":0.16636099263534002}
+"""
+
+_aggregate_functions_merge_skewSampMerge_UInt16_0 = r"""
+{"skewSampMerge(state)":0.4979678119093681}
+"""
+
+_aggregate_functions_merge_skewSampMerge_UInt32_0 = r"""
+{"skewSampMerge(state)":-0.3712600080141741}
+"""
+
+_aggregate_functions_merge_skewSampMerge_UInt64_0 = r"""
+{"skewSampMerge(state)":0.09994237787940086}
+"""
+
+_aggregate_functions_merge_skewSampMerge_UInt8_0 = r"""
+{"skewSampMerge(state)":-0.24130621196984198}
+"""
+
+_aggregate_functions_merge_skewSampMerge__inf_0 = r"""
+{"skewSampMerge(state)":null}
+"""
+
+_aggregate_functions_merge_skewSampMerge_constant_0 = r"""
+{"skewSampMerge(state)":null}
+"""
+
+_aggregate_functions_merge_skewSampMerge_doc_example_0 = r"""
+{"skewSampMerge(state)":0}
+"""
+
+_aggregate_functions_merge_skewSampMerge_inf_0 = r"""
+{"skewSampMerge(state)":null}
+"""
+
+_aggregate_functions_merge_skewSampMerge_inf___inf__nan_0 = r"""
+{"skewSampMerge(state)":null}
+"""
+
+_aggregate_functions_merge_skewSampMerge_nan_0 = r"""
+{"skewSampMerge(state)":null}
+"""
+
+_aggregate_functions_merge_skewSampMerge_single_NULL_value_0 = r"""
+{"skewSampMerge(state)":null}
+"""
+
+_aggregate_functions_merge_skewSampMerge_single_row_0 = r"""
+{"skewSampMerge(state)":null}
+"""
+
+_aggregate_functions_merge_skewSampMerge_some_negative_values_0 = r"""
+{"skewSampMerge(state)":0}
+"""
+
+_aggregate_functions_merge_skewSampMerge_with_group_by_0 = r"""
+{"skewSampMerge(state)":0}
+"""
+
+_aggregate_functions_merge_skewSampMerge_with_group_by_1 = r"""
+{"skewSampMerge(state)":0}
+"""
+

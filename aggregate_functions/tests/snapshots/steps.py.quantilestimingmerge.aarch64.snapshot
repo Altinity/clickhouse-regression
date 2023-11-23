@@ -1,0 +1,208 @@
+_aggregate_functions_merge_quantilesTimingMerge_Float32_0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[0,0,0,0,0,0,0]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_Float64_0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[0,0,0,0,0,0,0]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_Int16_0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[395,9592,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_Int32_0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_Int64_0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_Int8_0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[83,115,124,127,127,127,127]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_LowCardinality_Float32__0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[0,0,0,0,0,0,0]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_LowCardinality_Float64__0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[0,0,0,0,0,0,0]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_LowCardinality_Int16__0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[20641,22678,24270,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_LowCardinality_Int32__0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_LowCardinality_Int64__0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_LowCardinality_Int8__0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[45,95,119,127,127,127,127]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_LowCardinality_Nullable_Float32___0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_LowCardinality_Nullable_Float64___0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[15435,15435,15435,15435,15435,15435,15435]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_LowCardinality_Nullable_Int16___0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[6371,21542,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_LowCardinality_Nullable_Int32___0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_LowCardinality_Nullable_Int64___0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_LowCardinality_Nullable_Int8___0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[67,117,124,127,127,127,127]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_LowCardinality_Nullable_UInt16___0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[10899,15607,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_LowCardinality_Nullable_UInt32___0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_LowCardinality_Nullable_UInt64___0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_LowCardinality_Nullable_UInt8___0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[112,165,202,255,255,255,255]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_LowCardinality_UInt16__0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[12257,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_LowCardinality_UInt32__0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_LowCardinality_UInt64__0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[0,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_LowCardinality_UInt8__0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[16,216,228,255,255,255,255]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_NULL_value_handling_0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[1,3,4,5,5,5,5]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_Nullable_Float32__0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_Nullable_Float64__0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_Nullable_Int16__0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[6907,11484,13249,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_Nullable_Int32__0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_Nullable_Int64__0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_Nullable_Int8__0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[57,72,93,127,127,127,127]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_Nullable_UInt16__0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[24084,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_Nullable_UInt32__0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_Nullable_UInt64__0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_Nullable_UInt8__0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[28,65,197,255,255,255,255]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_UInt16_0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[7572,26244,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_UInt32_0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_UInt64_0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[0,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_UInt8_0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[24,163,201,255,255,255,255]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge__inf_0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[2,4,5,6,6,6,6]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_constant_0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[1,1,1,1,1,1,1]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_doc_example_0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[1,3,4,5,5,5,5]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_inf_0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[2,4,5,6,6,6,6]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_inf___inf__nan_0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[2,5,6,6,6,6,6]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_nan_0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[2,4,5,6,6,6,6]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_single_NULL_value_0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_single_row_0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[0,0,0,0,0,0,0]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_some_negative_values_0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[1,3,4,5,5,5,5]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_with_group_by_0 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[2,4,6,8,8,8,8]}
+"""
+
+_aggregate_functions_merge_quantilesTimingMerge_with_group_by_1 = r"""
+{"quantilesTimingMerge(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)(state)":[3,5,7,9,9,9,9]}
+"""
+

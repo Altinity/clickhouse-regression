@@ -13,7 +13,7 @@ from aggregate_functions.requirements import (
 def datatype(self, func, table, col1_name, col2_name):
     """Check different column types."""
     execute_query(
-        f"SELECT {func.format(params=col1_name+','+col2_name)} FROM {table.name} FORMAT JSONEachRow"
+        f"SELECT {func.format(params=col1_name+','+col2_name)}, any(toTypeName({col1_name})), any(toTypeName({col2_name})) FROM {table.name} FORMAT JSONEachRow"
     )
 
 
@@ -33,40 +33,49 @@ def scenario(
     snapshot_id=None,
 ):
     """Check maxIntersections aggregate function."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id)
+    self.context.snapshot_id = get_snapshot_id(snapshot_id, clickhouse_version=">=23.2")
+
+    if "Merge" in self.name:
+        return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:
         table = self.context.table
 
     with Check("constant"):
-        execute_query(f"SELECT {func.format(params='1,1')}")
+        execute_query(
+            f"SELECT {func.format(params='1,1')}, any(toTypeName(1)), any(toTypeName(1))"
+        )
 
     with Check("zero rows"):
-        execute_query(f"SELECT {func.format(params='number,number')} FROM numbers(0)")
+        execute_query(
+            f"SELECT {func.format(params='number,number')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(0)"
+        )
 
     with Check("single row"):
-        execute_query(f"SELECT {func.format(params='number,number+1')} FROM numbers(1)")
+        execute_query(
+            f"SELECT {func.format(params='number,number+1')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(1)"
+        )
 
     with Check("with group by"):
         execute_query(
-            f"SELECT number % 2 AS even, {func.format(params='number,even')} FROM numbers(10) GROUP BY even",
+            f"SELECT number % 2 AS even, {func.format(params='number,even')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(10) GROUP BY even",
             message=f"DB::Exception:",
             exitcode=43,
         )
 
     with Check("some negative values"):
         execute_query(
-            f"SELECT {func.format(params='number-5,number-10')} FROM numbers(1, 10)"
+            f"SELECT {func.format(params='number-5,number-10')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(1, 10)"
         )
 
     with Check("NULL value handling"):
         execute_query(
-            f"SELECT {func.format(params='x,y')}  FROM values('x Nullable(Int8), y Nullable(Int8)', (0, 1), (1, NULL), (NULL,NULL), (NULL,3), (4,4), (5, 1))"
+            f"SELECT {func.format(params='x,y')}, any(toTypeName(x)), any(toTypeName(y)) FROM values('x Nullable(Int8), y Nullable(Int8)', (0, 1), (1, NULL), (NULL,NULL), (NULL,3), (4,4), (5, 1))"
         )
 
     with Check("single NULL value"):
         execute_query(
-            f"SELECT {func.format(params='x,y')}  FROM values('x Nullable(Int8), y Nullable(Int8)', (NULL, NULL))"
+            f"SELECT {func.format(params='x,y')}, any(toTypeName(x)), any(toTypeName(y)) FROM values('x Nullable(Int8), y Nullable(Int8)', (NULL, NULL))"
         )
 
     with Check("inf, -inf, nan"):
@@ -74,22 +83,22 @@ def scenario(
             x, y = permutation
             with Check(f"{x},{y}"):
                 execute_query(
-                    f"SELECT {func.format(params='x,y')}  FROM values('x Float64, y Float64', (0, 1), (1, 2.3), ({x},{y}), (6.7,3), (4,4), (5, 1))"
+                    f"SELECT {func.format(params='x,y')}, any(toTypeName(x)), any(toTypeName(y)) FROM values('x Float64, y Float64', (0, 1), (1, 2.3), ({x},{y}), (6.7,3), (4,4), (5, 1))"
                 )
 
     with Check("return type"):
         execute_query(
-            f"SELECT toTypeName({func.format(params='number, number+1')}) FROM numbers(1, 10)"
+            f"SELECT toTypeName({func.format(params='number, number+1')}), any(toTypeName(number)), any(toTypeName(number)) FROM numbers(1, 10)"
         )
 
     with Check("example_1"):
         execute_query(
-            f"SELECT {func.format(params='y,x')} FROM values('x Float64, y Float64', (0,0.1), (1,0.34), (2,.88), (3,-1.23), (4,-3.3), (5,5.4))"
+            f"SELECT {func.format(params='y,x')}, any(toTypeName(y)), any(toTypeName(x)) FROM values('x Float64, y Float64', (0,0.1), (1,0.34), (2,.88), (3,-1.23), (4,-3.3), (5,5.4))"
         )
 
     with Check("example_2"):
         execute_query(
-            f"SELECT {func.format(params='x,y')} FROM values('x UInt32, y UInt32', (1,3), (1,6), (2,5), (3,7))"
+            f"SELECT {func.format(params='x,y')}, any(toTypeName(x)), any(toTypeName(y)) FROM values('x UInt32, y UInt32', (1,3), (1,6), (2,5), (3,7))"
         )
 
     with Check("datatypes"):
