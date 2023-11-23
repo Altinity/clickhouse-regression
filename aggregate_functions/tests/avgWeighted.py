@@ -19,9 +19,10 @@ def scenario(
     decimal=True,
     date=False,
     datetime=False,
+    snapshot_id=None,
 ):
     """Check avgWeighted aggregate function by using the same checks as for covarPop."""
-    self.context.snapshot_id = get_snapshot_id()
+    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
 
     if table is None:
         table = self.context.table
@@ -32,4 +33,14 @@ def scenario(
             "https://github.com/ClickHouse/ClickHouse/issues/31768",
         )
 
-    checks(func=func, table=table, decimal=decimal, date=date, datetime=datetime)
+    if "Merge" in self.name:
+        return self.context.snapshot_id, func.replace("({params})", "")
+
+    checks(
+        func=func,
+        table=table,
+        decimal=decimal,
+        date=date,
+        datetime=datetime,
+        snapshot_id=self.context.snapshot_id,
+    )

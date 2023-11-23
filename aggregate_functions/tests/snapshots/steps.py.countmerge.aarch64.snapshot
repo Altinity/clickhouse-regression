@@ -1,0 +1,52 @@
+_aggregate_functions_merge_countMerge_distinct_expr_NULL_for_all_rows_0 = r"""
+{"countMerge(state)":"0"}
+"""
+
+_aggregate_functions_merge_countMerge_distinct_expr_NULL_for_some_rows_0 = r"""
+{"countMerge(state)":"1"}
+"""
+
+_aggregate_functions_merge_countMerge_distinct_expr_Nullable_type_0 = r"""
+{"countMerge(state)":"1"}
+"""
+
+_aggregate_functions_merge_countMerge_distinct_expr_constant_0 = r"""
+{"countMerge(state)":"1"}
+"""
+
+_aggregate_functions_merge_countMerge_distinct_expr_default_function_0 = r"""
+{"countMerge(state)":"1"}
+"""
+
+_aggregate_functions_merge_countMerge_expr_NULL_for_all_rows_0 = r"""
+{"countMerge(state)":"0"}
+"""
+
+_aggregate_functions_merge_countMerge_expr_NULL_for_some_rows_0 = r"""
+{"countMerge(state)":"5"}
+"""
+
+_aggregate_functions_merge_countMerge_expr_Nullable_type_0 = r"""
+{"countMerge(state)":"1"}
+"""
+
+_aggregate_functions_merge_countMerge_expr_constant_0 = r"""
+{"countMerge(state)":"1"}
+"""
+
+_aggregate_functions_merge_countMerge_zero_parameters_hex_countMerge_____more_than_one_row_0 = r"""
+{"countMerge(state)":"10"}
+"""
+
+_aggregate_functions_merge_countMerge_zero_parameters_hex_countMerge_____rows_with_Nullable_0 = r"""
+{"countMerge(state)":"10"}
+"""
+
+_aggregate_functions_merge_countMerge_zero_parameters_hex_countMerge____more_than_one_row_0 = r"""
+{"countMerge(state)":"10"}
+"""
+
+_aggregate_functions_merge_countMerge_zero_parameters_hex_countMerge____rows_with_Nullable_0 = r"""
+{"countMerge(state)":"10"}
+"""
+

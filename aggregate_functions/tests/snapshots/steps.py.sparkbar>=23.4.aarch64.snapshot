@@ -1,229 +1,229 @@
-_aggregate_functions_sparkbar_constant = r"""
-{"sparkbar(9)(1, 2)":"█"}
-"""
-
-_aggregate_functions_sparkbar_zero_rows = r"""
-{"sparkbar(9)(toUInt64(number), toUInt64(plus(number, 1)))":""}
-"""
-
-_aggregate_functions_sparkbar_single_row = r"""
-{"sparkbar(9)(toUInt64(number), toUInt64(number))":""}
-"""
-
-_aggregate_functions_sparkbar_single_row_with_zero_weight = r"""
-{"sparkbar(9)(toUInt64(number), toUInt64(minus(number, 1)))":"█"}
-"""
-
-_aggregate_functions_sparkbar_with_group_by = r"""
-{"even":0,"sparkbar(9)(toUInt64(number), toUInt64(number))":"  ▂ ▄ ▆ █"}
-{"even":1,"sparkbar(9)(toUInt64(number), toUInt64(number))":"▁ ▃ ▄ ▆ █"}
-"""
-
 _aggregate_functions_sparkbar_NULL_value_handling = r"""
-{"sparkbar(9)(x, 1)":"██  █ ██ "}
+{"sparkbar(9)(x, 1)":"██  █ ██ ","any(toTypeName(x))":"Nullable(UInt8)","any(toTypeName(1))":"UInt8"}
 """
 
-_aggregate_functions_sparkbar_weight_NULL_value_handling = r"""
-{"sparkbar(9)(x, w)":"▅ █   ▄  "}
-"""
-
-_aggregate_functions_sparkbar_single_NULL_value = r"""
-{"sparkbar(9)(x, w)":null}
-"""
-
-_aggregate_functions_sparkbar_return_type = r"""
-{"toTypeName(sparkbar(9)(toUInt8(number), toUInt64(number)))":"String"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_uint8_uint8 = r"""
-{"sparkbar(9)(uint8, uint8)":"▁   ▄▅▅▆█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_uint8_uint64 = r"""
-{"sparkbar(9)(uint8, uint64)":"▇   █▂▇▄█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_uint8_uint32 = r"""
-{"sparkbar(9)(uint8, uint32)":"▅   █▂▆▅█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_uint8_uint16 = r"""
-{"sparkbar(9)(uint8, uint16)":"▃   ▂▄▂▃█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_uint8_nullable_uint8_ = r"""
-{"sparkbar(9)(uint8, nullable_uint8_)":"▆   ▃▇▂▂█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_uint8_nullable_uint64_ = r"""
-{"sparkbar(9)(uint8, nullable_uint64_)":"▃   █▇▇▃█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_uint8_nullable_uint32_ = r"""
-{"sparkbar(9)(uint8, nullable_uint32_)":"▃   █▇▁▃█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_uint8_nullable_uint16_ = r"""
-{"sparkbar(9)(uint8, nullable_uint16_)":"▆   ▂▃▇▅█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_uint8_lowcardinality_uint8_ = r"""
-{"sparkbar(9)(uint8, lowcardinality_uint8_)":"▁   █▅▇▇█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_uint8_lowcardinality_uint64_ = r"""
-{"sparkbar(9)(uint8, lowcardinality_uint64_)":"▂   █▇▇▄█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_uint8_lowcardinality_uint32_ = r"""
-{"sparkbar(9)(uint8, lowcardinality_uint32_)":"▆   ▁▃▃▆█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_uint8_lowcardinality_uint16_ = r"""
-{"sparkbar(9)(uint8, lowcardinality_uint16_)":"▃   ▄▄▇▇█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_uint8_lowcardinality_nullable_uint8__ = r"""
-{"sparkbar(9)(uint8, lowcardinality_nullable_uint8__)":"▆   ▃▄▅▆█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_uint8_lowcardinality_nullable_uint64__ = r"""
-{"sparkbar(9)(uint8, lowcardinality_nullable_uint64__)":"▃   ▄▇▅▂█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_uint8_lowcardinality_nullable_uint32__ = r"""
-{"sparkbar(9)(uint8, lowcardinality_nullable_uint32__)":"▃   █▃▄▇█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_uint8_lowcardinality_nullable_uint16__ = r"""
-{"sparkbar(9)(uint8, lowcardinality_nullable_uint16__)":"▂   ▂▂▁▇█"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_datetime_uint8 = r"""
-{"sparkbar(9)(datetime, uint8)":"  ▄▄    █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_datetime_uint64 = r"""
-{"sparkbar(9)(datetime, uint64)":"  ██    █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_datetime_uint32 = r"""
-{"sparkbar(9)(datetime, uint32)":"  ██    █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_datetime_uint16 = r"""
-{"sparkbar(9)(datetime, uint16)":"  ▄▃    █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_datetime_nullable_uint8_ = r"""
-{"sparkbar(9)(datetime, nullable_uint8_)":"█▁      █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_datetime_nullable_uint64_ = r"""
-{"sparkbar(9)(datetime, nullable_uint64_)":"██      █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_datetime_nullable_uint32_ = r"""
-{"sparkbar(9)(datetime, nullable_uint32_)":"██      █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_datetime_nullable_uint16_ = r"""
-{"sparkbar(9)(datetime, nullable_uint16_)":"▄▃      █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_datetime_lowcardinality_uint8_ = r"""
-{"sparkbar(9)(datetime, lowcardinality_uint8_)":"  ▄█    █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_datetime_lowcardinality_uint64_ = r"""
-{"sparkbar(9)(datetime, lowcardinality_uint64_)":"  ██    █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_datetime_lowcardinality_uint32_ = r"""
-{"sparkbar(9)(datetime, lowcardinality_uint32_)":"  █▃    █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_datetime_lowcardinality_uint16_ = r"""
-{"sparkbar(9)(datetime, lowcardinality_uint16_)":"  █▄    █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_datetime_lowcardinality_nullable_uint8__ = r"""
-{"sparkbar(9)(datetime, lowcardinality_nullable_uint8__)":"██      █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_datetime_lowcardinality_nullable_uint64__ = r"""
-{"sparkbar(9)(datetime, lowcardinality_nullable_uint64__)":"█▁      █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_datetime_lowcardinality_nullable_uint32__ = r"""
-{"sparkbar(9)(datetime, lowcardinality_nullable_uint32__)":"██      █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_datetime_lowcardinality_nullable_uint16__ = r"""
-{"sparkbar(9)(datetime, lowcardinality_nullable_uint16__)":"▃█      █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_date_uint8 = r"""
-{"sparkbar(9)(date, uint8)":" █▄     █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_date_uint64 = r"""
-{"sparkbar(9)(date, uint64)":" ▃█     █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_date_uint32 = r"""
-{"sparkbar(9)(date, uint32)":" ██     █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_date_uint16 = r"""
-{"sparkbar(9)(date, uint16)":" █▃     █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_date_nullable_uint8_ = r"""
-{"sparkbar(9)(date, nullable_uint8_)":" ██     █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_date_nullable_uint64_ = r"""
-{"sparkbar(9)(date, nullable_uint64_)":" ▄█     █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_date_nullable_uint32_ = r"""
-{"sparkbar(9)(date, nullable_uint32_)":" █▄     █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_date_nullable_uint16_ = r"""
-{"sparkbar(9)(date, nullable_uint16_)":" ▄█     █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_date_lowcardinality_uint8_ = r"""
-{"sparkbar(9)(date, lowcardinality_uint8_)":" █▄     █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_date_lowcardinality_uint64_ = r"""
-{"sparkbar(9)(date, lowcardinality_uint64_)":" ██     █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_date_lowcardinality_uint32_ = r"""
-{"sparkbar(9)(date, lowcardinality_uint32_)":" ██     █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_date_lowcardinality_uint16_ = r"""
-{"sparkbar(9)(date, lowcardinality_uint16_)":" ▄█     █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_date_lowcardinality_nullable_uint8__ = r"""
-{"sparkbar(9)(date, lowcardinality_nullable_uint8__)":" ██     █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_date_lowcardinality_nullable_uint64__ = r"""
-{"sparkbar(9)(date, lowcardinality_nullable_uint64__)":" ██     █"}
-"""
-
-_aggregate_functions_sparkbar_datatypes_permutations_date_lowcardinality_nullable_uint32__ = r"""
-{"sparkbar(9)(date, lowcardinality_nullable_uint32__)":" █▄     █"}
+_aggregate_functions_sparkbar_constant = r"""
+{"sparkbar(9)(1, 2)":"█","any(toTypeName(1))":"UInt8","any(toTypeName(2))":"UInt8"}
 """
 
 _aggregate_functions_sparkbar_datatypes_permutations_date_lowcardinality_nullable_uint16__ = r"""
-{"sparkbar(9)(date, lowcardinality_nullable_uint16__)":" █▂     █"}
+{"sparkbar(9)(date, lowcardinality_nullable_uint16__)":" █▂     █","any(toTypeName(date))":"Date","any(toTypeName(lowcardinality_nullable_uint16__))":"LowCardinality(Nullable(UInt16))"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_date_lowcardinality_nullable_uint32__ = r"""
+{"sparkbar(9)(date, lowcardinality_nullable_uint32__)":" █▄     █","any(toTypeName(date))":"Date","any(toTypeName(lowcardinality_nullable_uint32__))":"LowCardinality(Nullable(UInt32))"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_date_lowcardinality_nullable_uint64__ = r"""
+{"sparkbar(9)(date, lowcardinality_nullable_uint64__)":" ██     █","any(toTypeName(date))":"Date","any(toTypeName(lowcardinality_nullable_uint64__))":"LowCardinality(Nullable(UInt64))"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_date_lowcardinality_nullable_uint8__ = r"""
+{"sparkbar(9)(date, lowcardinality_nullable_uint8__)":" ██     █","any(toTypeName(date))":"Date","any(toTypeName(lowcardinality_nullable_uint8__))":"LowCardinality(Nullable(UInt8))"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_date_lowcardinality_uint16_ = r"""
+{"sparkbar(9)(date, lowcardinality_uint16_)":" ▄█     █","any(toTypeName(date))":"Date","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_date_lowcardinality_uint32_ = r"""
+{"sparkbar(9)(date, lowcardinality_uint32_)":" ██     █","any(toTypeName(date))":"Date","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_date_lowcardinality_uint64_ = r"""
+{"sparkbar(9)(date, lowcardinality_uint64_)":" ██     █","any(toTypeName(date))":"Date","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_date_lowcardinality_uint8_ = r"""
+{"sparkbar(9)(date, lowcardinality_uint8_)":" █▄     █","any(toTypeName(date))":"Date","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_date_nullable_uint16_ = r"""
+{"sparkbar(9)(date, nullable_uint16_)":" ▄█     █","any(toTypeName(date))":"Date","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_date_nullable_uint32_ = r"""
+{"sparkbar(9)(date, nullable_uint32_)":" █▄     █","any(toTypeName(date))":"Date","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_date_nullable_uint64_ = r"""
+{"sparkbar(9)(date, nullable_uint64_)":" ▄█     █","any(toTypeName(date))":"Date","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_date_nullable_uint8_ = r"""
+{"sparkbar(9)(date, nullable_uint8_)":" ██     █","any(toTypeName(date))":"Date","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_date_uint16 = r"""
+{"sparkbar(9)(date, uint16)":" █▃     █","any(toTypeName(date))":"Date","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_date_uint32 = r"""
+{"sparkbar(9)(date, uint32)":" ██     █","any(toTypeName(date))":"Date","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_date_uint64 = r"""
+{"sparkbar(9)(date, uint64)":" ▃█     █","any(toTypeName(date))":"Date","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_date_uint8 = r"""
+{"sparkbar(9)(date, uint8)":" █▄     █","any(toTypeName(date))":"Date","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_datetime_lowcardinality_nullable_uint16__ = r"""
+{"sparkbar(9)(datetime, lowcardinality_nullable_uint16__)":"▃█      █","any(toTypeName(datetime))":"DateTime","any(toTypeName(lowcardinality_nullable_uint16__))":"LowCardinality(Nullable(UInt16))"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_datetime_lowcardinality_nullable_uint32__ = r"""
+{"sparkbar(9)(datetime, lowcardinality_nullable_uint32__)":"██      █","any(toTypeName(datetime))":"DateTime","any(toTypeName(lowcardinality_nullable_uint32__))":"LowCardinality(Nullable(UInt32))"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_datetime_lowcardinality_nullable_uint64__ = r"""
+{"sparkbar(9)(datetime, lowcardinality_nullable_uint64__)":"█▁      █","any(toTypeName(datetime))":"DateTime","any(toTypeName(lowcardinality_nullable_uint64__))":"LowCardinality(Nullable(UInt64))"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_datetime_lowcardinality_nullable_uint8__ = r"""
+{"sparkbar(9)(datetime, lowcardinality_nullable_uint8__)":"██      █","any(toTypeName(datetime))":"DateTime","any(toTypeName(lowcardinality_nullable_uint8__))":"LowCardinality(Nullable(UInt8))"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_datetime_lowcardinality_uint16_ = r"""
+{"sparkbar(9)(datetime, lowcardinality_uint16_)":"  █▄    █","any(toTypeName(datetime))":"DateTime","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_datetime_lowcardinality_uint32_ = r"""
+{"sparkbar(9)(datetime, lowcardinality_uint32_)":"  █▃    █","any(toTypeName(datetime))":"DateTime","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_datetime_lowcardinality_uint64_ = r"""
+{"sparkbar(9)(datetime, lowcardinality_uint64_)":"  ██    █","any(toTypeName(datetime))":"DateTime","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_datetime_lowcardinality_uint8_ = r"""
+{"sparkbar(9)(datetime, lowcardinality_uint8_)":"  ▄█    █","any(toTypeName(datetime))":"DateTime","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_datetime_nullable_uint16_ = r"""
+{"sparkbar(9)(datetime, nullable_uint16_)":"▄▃      █","any(toTypeName(datetime))":"DateTime","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_datetime_nullable_uint32_ = r"""
+{"sparkbar(9)(datetime, nullable_uint32_)":"██      █","any(toTypeName(datetime))":"DateTime","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_datetime_nullable_uint64_ = r"""
+{"sparkbar(9)(datetime, nullable_uint64_)":"██      █","any(toTypeName(datetime))":"DateTime","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_datetime_nullable_uint8_ = r"""
+{"sparkbar(9)(datetime, nullable_uint8_)":"█▁      █","any(toTypeName(datetime))":"DateTime","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_datetime_uint16 = r"""
+{"sparkbar(9)(datetime, uint16)":"  ▄▃    █","any(toTypeName(datetime))":"DateTime","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_datetime_uint32 = r"""
+{"sparkbar(9)(datetime, uint32)":"  ██    █","any(toTypeName(datetime))":"DateTime","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_datetime_uint64 = r"""
+{"sparkbar(9)(datetime, uint64)":"  ██    █","any(toTypeName(datetime))":"DateTime","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_datetime_uint8 = r"""
+{"sparkbar(9)(datetime, uint8)":"  ▄▄    █","any(toTypeName(datetime))":"DateTime","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_uint8_lowcardinality_nullable_uint16__ = r"""
+{"sparkbar(9)(uint8, lowcardinality_nullable_uint16__)":"▂   ▂▂▁▇█","any(toTypeName(uint8))":"UInt8","any(toTypeName(lowcardinality_nullable_uint16__))":"LowCardinality(Nullable(UInt16))"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_uint8_lowcardinality_nullable_uint32__ = r"""
+{"sparkbar(9)(uint8, lowcardinality_nullable_uint32__)":"▃   █▃▄▇█","any(toTypeName(uint8))":"UInt8","any(toTypeName(lowcardinality_nullable_uint32__))":"LowCardinality(Nullable(UInt32))"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_uint8_lowcardinality_nullable_uint64__ = r"""
+{"sparkbar(9)(uint8, lowcardinality_nullable_uint64__)":"▃   ▄▇▅▂█","any(toTypeName(uint8))":"UInt8","any(toTypeName(lowcardinality_nullable_uint64__))":"LowCardinality(Nullable(UInt64))"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_uint8_lowcardinality_nullable_uint8__ = r"""
+{"sparkbar(9)(uint8, lowcardinality_nullable_uint8__)":"▆   ▃▄▅▆█","any(toTypeName(uint8))":"UInt8","any(toTypeName(lowcardinality_nullable_uint8__))":"LowCardinality(Nullable(UInt8))"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_uint8_lowcardinality_uint16_ = r"""
+{"sparkbar(9)(uint8, lowcardinality_uint16_)":"▃   ▄▄▇▇█","any(toTypeName(uint8))":"UInt8","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_uint8_lowcardinality_uint32_ = r"""
+{"sparkbar(9)(uint8, lowcardinality_uint32_)":"▆   ▁▃▃▆█","any(toTypeName(uint8))":"UInt8","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_uint8_lowcardinality_uint64_ = r"""
+{"sparkbar(9)(uint8, lowcardinality_uint64_)":"▂   █▇▇▄█","any(toTypeName(uint8))":"UInt8","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_uint8_lowcardinality_uint8_ = r"""
+{"sparkbar(9)(uint8, lowcardinality_uint8_)":"▁   █▅▇▇█","any(toTypeName(uint8))":"UInt8","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_uint8_nullable_uint16_ = r"""
+{"sparkbar(9)(uint8, nullable_uint16_)":"▆   ▂▃▇▅█","any(toTypeName(uint8))":"UInt8","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_uint8_nullable_uint32_ = r"""
+{"sparkbar(9)(uint8, nullable_uint32_)":"▃   █▇▁▃█","any(toTypeName(uint8))":"UInt8","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_uint8_nullable_uint64_ = r"""
+{"sparkbar(9)(uint8, nullable_uint64_)":"▃   █▇▇▃█","any(toTypeName(uint8))":"UInt8","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_uint8_nullable_uint8_ = r"""
+{"sparkbar(9)(uint8, nullable_uint8_)":"▆   ▃▇▂▂█","any(toTypeName(uint8))":"UInt8","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_uint8_uint16 = r"""
+{"sparkbar(9)(uint8, uint16)":"▃   ▂▄▂▃█","any(toTypeName(uint8))":"UInt8","any(toTypeName(uint16))":"UInt16"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_uint8_uint32 = r"""
+{"sparkbar(9)(uint8, uint32)":"▅   █▂▆▅█","any(toTypeName(uint8))":"UInt8","any(toTypeName(uint32))":"UInt32"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_uint8_uint64 = r"""
+{"sparkbar(9)(uint8, uint64)":"▇   █▂▇▄█","any(toTypeName(uint8))":"UInt8","any(toTypeName(uint64))":"UInt64"}
+"""
+
+_aggregate_functions_sparkbar_datatypes_permutations_uint8_uint8 = r"""
+{"sparkbar(9)(uint8, uint8)":"▁   ▄▅▅▆█","any(toTypeName(uint8))":"UInt8","any(toTypeName(uint8))":"UInt8"}
+"""
+
+_aggregate_functions_sparkbar_return_type = r"""
+{"toTypeName(sparkbar(9)(toUInt8(number), toUInt64(number)))":"String","any(toTypeName(number))":"UInt64","any(toTypeName(number))":"UInt64"}
+"""
+
+_aggregate_functions_sparkbar_single_NULL_value = r"""
+{"sparkbar(9)(x, w)":null,"any(toTypeName(x))":"Nullable(UInt8)","any(toTypeName(w))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_sparkbar_single_row = r"""
+{"sparkbar(9)(toUInt64(number), toUInt64(number))":"","any(toTypeName(number))":"UInt64","any(toTypeName(number))":"UInt64"}
+"""
+
+_aggregate_functions_sparkbar_single_row_with_zero_weight = r"""
+{"sparkbar(9)(toUInt64(number), toUInt64(minus(number, 1)))":"█","any(toTypeName(number))":"UInt64","any(toTypeName(number))":"UInt64"}
+"""
+
+_aggregate_functions_sparkbar_weight_NULL_value_handling = r"""
+{"sparkbar(9)(x, w)":"▅ █   ▄  ","any(toTypeName(x))":"UInt8","any(toTypeName(w))":"Nullable(UInt8)"}
+"""
+
+_aggregate_functions_sparkbar_with_group_by = r"""
+{"even":0,"sparkbar(9)(toUInt64(number), toUInt64(number))":"  ▂ ▄ ▆ █","any(toTypeName(number))":"UInt64","any(toTypeName(number))":"UInt64"}
+{"even":1,"sparkbar(9)(toUInt64(number), toUInt64(number))":"▁ ▃ ▄ ▆ █","any(toTypeName(number))":"UInt64","any(toTypeName(number))":"UInt64"}
+"""
+
+_aggregate_functions_sparkbar_zero_rows = r"""
+{"sparkbar(9)(toUInt64(number), toUInt64(plus(number, 1)))":"","any(toTypeName(number))":"","any(toTypeName(number))":""}
 """
 

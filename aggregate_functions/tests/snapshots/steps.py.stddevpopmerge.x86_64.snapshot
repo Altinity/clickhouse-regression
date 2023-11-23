@@ -1,0 +1,208 @@
+_aggregate_functions_merge_stddevPopMerge_Float32_0 = r"""
+{"stddevPopMerge(state)":0}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_Float64_0 = r"""
+{"stddevPopMerge(state)":0}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_Int16_0 = r"""
+{"stddevPopMerge(state)":20478.180066597717}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_Int32_0 = r"""
+{"stddevPopMerge(state)":1326881128.4879818}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_Int64_0 = r"""
+{"stddevPopMerge(state)":4853354278485682000}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_Int8_0 = r"""
+{"stddevPopMerge(state)":93.8439662418421}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_LowCardinality_Float32__0 = r"""
+{"stddevPopMerge(state)":0}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_LowCardinality_Float64__0 = r"""
+{"stddevPopMerge(state)":0}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_LowCardinality_Int16__0 = r"""
+{"stddevPopMerge(state)":24022.119914986688}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_LowCardinality_Int32__0 = r"""
+{"stddevPopMerge(state)":1451793445.3095298}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_LowCardinality_Int64__0 = r"""
+{"stddevPopMerge(state)":6018287614596589000}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_LowCardinality_Int8__0 = r"""
+{"stddevPopMerge(state)":85.79213250642508}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_LowCardinality_Nullable_Float32___0 = r"""
+{"stddevPopMerge(state)":0}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_LowCardinality_Nullable_Float64___0 = r"""
+{"stddevPopMerge(state)":0}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_LowCardinality_Nullable_Int16___0 = r"""
+{"stddevPopMerge(state)":21545.2067924259}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_LowCardinality_Nullable_Int32___0 = r"""
+{"stddevPopMerge(state)":1376210430.7942042}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_LowCardinality_Nullable_Int64___0 = r"""
+{"stddevPopMerge(state)":6582044817735763000}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_LowCardinality_Nullable_Int8___0 = r"""
+{"stddevPopMerge(state)":96.49985607358295}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_LowCardinality_Nullable_UInt16___0 = r"""
+{"stddevPopMerge(state)":24277.77917721837}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_LowCardinality_Nullable_UInt32___0 = r"""
+{"stddevPopMerge(state)":1331412691.986778}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_LowCardinality_Nullable_UInt64___0 = r"""
+{"stddevPopMerge(state)":6931315915951747000}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_LowCardinality_Nullable_UInt8___0 = r"""
+{"stddevPopMerge(state)":73.49645158143167}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_LowCardinality_UInt16__0 = r"""
+{"stddevPopMerge(state)":24789.082729298396}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_LowCardinality_UInt32__0 = r"""
+{"stddevPopMerge(state)":1505839935.578188}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_LowCardinality_UInt64__0 = r"""
+{"stddevPopMerge(state)":7413157212963560000}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_LowCardinality_UInt8__0 = r"""
+{"stddevPopMerge(state)":99.33685116813398}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_NULL_value_handling_0 = r"""
+{"stddevPopMerge(state)":1.854723699099141}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_Nullable_Float32__0 = r"""
+{"stddevPopMerge(state)":0}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_Nullable_Float64__0 = r"""
+{"stddevPopMerge(state)":0}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_Nullable_Int16__0 = r"""
+{"stddevPopMerge(state)":20750.629505846056}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_Nullable_Int32__0 = r"""
+{"stddevPopMerge(state)":1341745197.8870134}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_Nullable_Int64__0 = r"""
+{"stddevPopMerge(state)":6390424169257931000}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_Nullable_Int8__0 = r"""
+{"stddevPopMerge(state)":84.45964775421119}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_Nullable_UInt16__0 = r"""
+{"stddevPopMerge(state)":21636.59220845699}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_Nullable_UInt32__0 = r"""
+{"stddevPopMerge(state)":1568723654.8063302}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_Nullable_UInt64__0 = r"""
+{"stddevPopMerge(state)":7011945449643597000}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_Nullable_UInt8__0 = r"""
+{"stddevPopMerge(state)":95.94610112447329}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_UInt16_0 = r"""
+{"stddevPopMerge(state)":20836.700813948453}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_UInt32_0 = r"""
+{"stddevPopMerge(state)":1467118193.899993}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_UInt64_0 = r"""
+{"stddevPopMerge(state)":7080486549478076000}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_UInt8_0 = r"""
+{"stddevPopMerge(state)":88.85274334538018}
+"""
+
+_aggregate_functions_merge_stddevPopMerge__inf_0 = r"""
+{"stddevPopMerge(state)":0}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_constant_0 = r"""
+{"stddevPopMerge(state)":0}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_doc_example_0 = r"""
+{"stddevPopMerge(state)":1.707825127659933}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_inf_0 = r"""
+{"stddevPopMerge(state)":0}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_inf___inf__nan_0 = r"""
+{"stddevPopMerge(state)":0}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_nan_0 = r"""
+{"stddevPopMerge(state)":0}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_single_NULL_value_0 = r"""
+{"stddevPopMerge(state)":null}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_single_row_0 = r"""
+{"stddevPopMerge(state)":0}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_some_negative_values_0 = r"""
+{"stddevPopMerge(state)":2.8722813232690143}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_with_group_by_0 = r"""
+{"stddevPopMerge(state)":2.8284271247461903}
+"""
+
+_aggregate_functions_merge_stddevPopMerge_with_group_by_1 = r"""
+{"stddevPopMerge(state)":2.8284271247461903}
+"""
+

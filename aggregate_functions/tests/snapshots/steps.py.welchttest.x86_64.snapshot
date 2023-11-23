@@ -1,1605 +1,1605 @@
 _aggregate_functions_welchTTest_NULL_value_handling = r"""
-{"welchTTest(x, 1)":[null,null]}
+{"welchTTest(x, 1)":[null,null],"any(toTypeName(x))":"Nullable(Int8)","any(toTypeName(1))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest__inf = r"""
-{"welchTTest(x, 1)":[null,null]}
+{"welchTTest(x, 1)":[null,null],"any(toTypeName(x))":"Float64","any(toTypeName(1))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_constant = r"""
-{"welchTTest(1, 2)":[null,null]}
+{"welchTTest(1, 2)":[null,null],"any(toTypeName(1))":"UInt8","any(toTypeName(2))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_decimal128_38__lowcardinality_uint16_ = r"""
-{"welchTTest(decimal128_38_, lowcardinality_uint16_)":[-1.0923303297691282,1]}
+{"welchTTest(decimal128_38_, lowcardinality_uint16_)":[-1.0923303297691282,1],"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_decimal128_38__lowcardinality_uint32_ = r"""
-{"welchTTest(decimal128_38_, lowcardinality_uint32_)":[-1.0923303297691282,1]}
+{"welchTTest(decimal128_38_, lowcardinality_uint32_)":[-1.0923303297691282,1],"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_decimal128_38__lowcardinality_uint64_ = r"""
-{"welchTTest(decimal128_38_, lowcardinality_uint64_)":[-1.0923303297691282,1]}
+{"welchTTest(decimal128_38_, lowcardinality_uint64_)":[-1.0923303297691282,1],"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_decimal128_38__lowcardinality_uint8_ = r"""
-{"welchTTest(decimal128_38_, lowcardinality_uint8_)":[-1.0923303297691282,1]}
+{"welchTTest(decimal128_38_, lowcardinality_uint8_)":[-1.0923303297691282,1],"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_decimal128_38__nullable_uint16_ = r"""
-{"welchTTest(decimal128_38_, nullable_uint16_)":[-1.0923303297691282,1]}
+{"welchTTest(decimal128_38_, nullable_uint16_)":[-1.0923303297691282,1],"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_decimal128_38__nullable_uint32_ = r"""
-{"welchTTest(decimal128_38_, nullable_uint32_)":[-1.0923303297691282,1]}
+{"welchTTest(decimal128_38_, nullable_uint32_)":[-1.0923303297691282,1],"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_decimal128_38__nullable_uint64_ = r"""
-{"welchTTest(decimal128_38_, nullable_uint64_)":[-1.0923303297691282,1]}
+{"welchTTest(decimal128_38_, nullable_uint64_)":[-1.0923303297691282,1],"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_decimal128_38__nullable_uint8_ = r"""
-{"welchTTest(decimal128_38_, nullable_uint8_)":[-1.0923303297691282,1]}
+{"welchTTest(decimal128_38_, nullable_uint8_)":[-1.0923303297691282,1],"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_decimal128_38__uint16 = r"""
-{"welchTTest(decimal128_38_, uint16)":[-1.0923303297691282,1]}
+{"welchTTest(decimal128_38_, uint16)":[-1.0923303297691282,1],"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_decimal128_38__uint32 = r"""
-{"welchTTest(decimal128_38_, uint32)":[-1.0923303297691282,1]}
+{"welchTTest(decimal128_38_, uint32)":[-1.0923303297691282,1],"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_decimal128_38__uint64 = r"""
-{"welchTTest(decimal128_38_, uint64)":[-1.0923303297691282,1]}
+{"welchTTest(decimal128_38_, uint64)":[-1.0923303297691282,1],"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_decimal128_38__uint8 = r"""
-{"welchTTest(decimal128_38_, uint8)":[-1.0923303297691282,1]}
+{"welchTTest(decimal128_38_, uint8)":[-1.0923303297691282,1],"any(toTypeName(decimal128_38_))":"Decimal(38, 38)","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_float32_lowcardinality_uint16_ = r"""
-{"welchTTest(float32, lowcardinality_uint16_)":[-0.22013267993706614,1]}
+{"welchTTest(float32, lowcardinality_uint16_)":[-0.22013267993706614,1],"any(toTypeName(float32))":"Float32","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_float32_lowcardinality_uint32_ = r"""
-{"welchTTest(float32, lowcardinality_uint32_)":[-0.22013267993706614,1]}
+{"welchTTest(float32, lowcardinality_uint32_)":[-0.22013267993706614,1],"any(toTypeName(float32))":"Float32","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_float32_lowcardinality_uint64_ = r"""
-{"welchTTest(float32, lowcardinality_uint64_)":[-0.22013267993706614,1]}
+{"welchTTest(float32, lowcardinality_uint64_)":[-0.22013267993706614,1],"any(toTypeName(float32))":"Float32","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_float32_lowcardinality_uint8_ = r"""
-{"welchTTest(float32, lowcardinality_uint8_)":[-0.22013267993706614,1]}
+{"welchTTest(float32, lowcardinality_uint8_)":[-0.22013267993706614,1],"any(toTypeName(float32))":"Float32","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_float32_nullable_uint16_ = r"""
-{"welchTTest(float32, nullable_uint16_)":[-0.22013267993706614,1]}
+{"welchTTest(float32, nullable_uint16_)":[-0.22013267993706614,1],"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_float32_nullable_uint32_ = r"""
-{"welchTTest(float32, nullable_uint32_)":[-0.22013267993706614,1]}
+{"welchTTest(float32, nullable_uint32_)":[-0.22013267993706614,1],"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_float32_nullable_uint64_ = r"""
-{"welchTTest(float32, nullable_uint64_)":[-0.22013267993706614,1]}
+{"welchTTest(float32, nullable_uint64_)":[-0.22013267993706614,1],"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_float32_nullable_uint8_ = r"""
-{"welchTTest(float32, nullable_uint8_)":[-0.22013267993706614,1]}
+{"welchTTest(float32, nullable_uint8_)":[-0.22013267993706614,1],"any(toTypeName(float32))":"Float32","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_float32_uint16 = r"""
-{"welchTTest(float32, uint16)":[-0.22013267993706614,1]}
+{"welchTTest(float32, uint16)":[-0.22013267993706614,1],"any(toTypeName(float32))":"Float32","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_float32_uint32 = r"""
-{"welchTTest(float32, uint32)":[-0.22013267993706614,1]}
+{"welchTTest(float32, uint32)":[-0.22013267993706614,1],"any(toTypeName(float32))":"Float32","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_float32_uint64 = r"""
-{"welchTTest(float32, uint64)":[-0.22013267993706614,1]}
+{"welchTTest(float32, uint64)":[-0.22013267993706614,1],"any(toTypeName(float32))":"Float32","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_float32_uint8 = r"""
-{"welchTTest(float32, uint8)":[-0.22013267993706614,1]}
+{"welchTTest(float32, uint8)":[-0.22013267993706614,1],"any(toTypeName(float32))":"Float32","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_float64_lowcardinality_uint16_ = r"""
-{"welchTTest(float64, lowcardinality_uint16_)":[null,0]}
+{"welchTTest(float64, lowcardinality_uint16_)":[null,0],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_float64_lowcardinality_uint32_ = r"""
-{"welchTTest(float64, lowcardinality_uint32_)":[null,0]}
+{"welchTTest(float64, lowcardinality_uint32_)":[null,0],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_float64_lowcardinality_uint64_ = r"""
-{"welchTTest(float64, lowcardinality_uint64_)":[null,0]}
+{"welchTTest(float64, lowcardinality_uint64_)":[null,0],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_float64_lowcardinality_uint8_ = r"""
-{"welchTTest(float64, lowcardinality_uint8_)":[null,0]}
+{"welchTTest(float64, lowcardinality_uint8_)":[null,0],"any(toTypeName(float64))":"Float64","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_float64_nullable_uint16_ = r"""
-{"welchTTest(float64, nullable_uint16_)":[null,0]}
+{"welchTTest(float64, nullable_uint16_)":[null,0],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_float64_nullable_uint32_ = r"""
-{"welchTTest(float64, nullable_uint32_)":[null,0]}
+{"welchTTest(float64, nullable_uint32_)":[null,0],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_float64_nullable_uint64_ = r"""
-{"welchTTest(float64, nullable_uint64_)":[null,0]}
+{"welchTTest(float64, nullable_uint64_)":[null,0],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_float64_nullable_uint8_ = r"""
-{"welchTTest(float64, nullable_uint8_)":[null,0]}
+{"welchTTest(float64, nullable_uint8_)":[null,0],"any(toTypeName(float64))":"Float64","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_float64_uint16 = r"""
-{"welchTTest(float64, uint16)":[null,0]}
+{"welchTTest(float64, uint16)":[null,0],"any(toTypeName(float64))":"Float64","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_float64_uint32 = r"""
-{"welchTTest(float64, uint32)":[null,0]}
+{"welchTTest(float64, uint32)":[null,0],"any(toTypeName(float64))":"Float64","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_float64_uint64 = r"""
-{"welchTTest(float64, uint64)":[null,0]}
+{"welchTTest(float64, uint64)":[null,0],"any(toTypeName(float64))":"Float64","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_float64_uint8 = r"""
-{"welchTTest(float64, uint8)":[null,0]}
+{"welchTTest(float64, uint8)":[null,0],"any(toTypeName(float64))":"Float64","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int16_lowcardinality_uint16_ = r"""
-{"welchTTest(int16, lowcardinality_uint16_)":[-1.1239540756279673,1]}
+{"welchTTest(int16, lowcardinality_uint16_)":[-1.1239540756279673,1],"any(toTypeName(int16))":"Int16","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int16_lowcardinality_uint32_ = r"""
-{"welchTTest(int16, lowcardinality_uint32_)":[-1.1239540756279673,1]}
+{"welchTTest(int16, lowcardinality_uint32_)":[-1.1239540756279673,1],"any(toTypeName(int16))":"Int16","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int16_lowcardinality_uint64_ = r"""
-{"welchTTest(int16, lowcardinality_uint64_)":[-1.1239540756279673,1]}
+{"welchTTest(int16, lowcardinality_uint64_)":[-1.1239540756279673,1],"any(toTypeName(int16))":"Int16","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int16_lowcardinality_uint8_ = r"""
-{"welchTTest(int16, lowcardinality_uint8_)":[-1.1239540756279673,1]}
+{"welchTTest(int16, lowcardinality_uint8_)":[-1.1239540756279673,1],"any(toTypeName(int16))":"Int16","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int16_nullable_uint16_ = r"""
-{"welchTTest(int16, nullable_uint16_)":[-1.1239540756279673,1]}
+{"welchTTest(int16, nullable_uint16_)":[-1.1239540756279673,1],"any(toTypeName(int16))":"Int16","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int16_nullable_uint32_ = r"""
-{"welchTTest(int16, nullable_uint32_)":[-1.1239540756279673,1]}
+{"welchTTest(int16, nullable_uint32_)":[-1.1239540756279673,1],"any(toTypeName(int16))":"Int16","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int16_nullable_uint64_ = r"""
-{"welchTTest(int16, nullable_uint64_)":[-1.1239540756279673,1]}
+{"welchTTest(int16, nullable_uint64_)":[-1.1239540756279673,1],"any(toTypeName(int16))":"Int16","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int16_nullable_uint8_ = r"""
-{"welchTTest(int16, nullable_uint8_)":[-1.1239540756279673,1]}
+{"welchTTest(int16, nullable_uint8_)":[-1.1239540756279673,1],"any(toTypeName(int16))":"Int16","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int16_uint16 = r"""
-{"welchTTest(int16, uint16)":[-1.1239540756279673,1]}
+{"welchTTest(int16, uint16)":[-1.1239540756279673,1],"any(toTypeName(int16))":"Int16","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int16_uint32 = r"""
-{"welchTTest(int16, uint32)":[-1.1239540756279673,1]}
+{"welchTTest(int16, uint32)":[-1.1239540756279673,1],"any(toTypeName(int16))":"Int16","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int16_uint64 = r"""
-{"welchTTest(int16, uint64)":[-1.1239540756279673,1]}
+{"welchTTest(int16, uint64)":[-1.1239540756279673,1],"any(toTypeName(int16))":"Int16","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int16_uint8 = r"""
-{"welchTTest(int16, uint8)":[-1.1239540756279673,1]}
+{"welchTTest(int16, uint8)":[-1.1239540756279673,1],"any(toTypeName(int16))":"Int16","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int32_lowcardinality_uint16_ = r"""
-{"welchTTest(int32, lowcardinality_uint16_)":[-1.1248541563526464,1]}
+{"welchTTest(int32, lowcardinality_uint16_)":[-1.1248541563526464,1],"any(toTypeName(int32))":"Int32","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int32_lowcardinality_uint32_ = r"""
-{"welchTTest(int32, lowcardinality_uint32_)":[-1.1248541563526464,1]}
+{"welchTTest(int32, lowcardinality_uint32_)":[-1.1248541563526464,1],"any(toTypeName(int32))":"Int32","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int32_lowcardinality_uint64_ = r"""
-{"welchTTest(int32, lowcardinality_uint64_)":[-1.1248541563526464,1]}
+{"welchTTest(int32, lowcardinality_uint64_)":[-1.1248541563526464,1],"any(toTypeName(int32))":"Int32","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int32_lowcardinality_uint8_ = r"""
-{"welchTTest(int32, lowcardinality_uint8_)":[-1.1248541563526464,1]}
+{"welchTTest(int32, lowcardinality_uint8_)":[-1.1248541563526464,1],"any(toTypeName(int32))":"Int32","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int32_nullable_uint16_ = r"""
-{"welchTTest(int32, nullable_uint16_)":[-1.1248541563526464,1]}
+{"welchTTest(int32, nullable_uint16_)":[-1.1248541563526464,1],"any(toTypeName(int32))":"Int32","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int32_nullable_uint32_ = r"""
-{"welchTTest(int32, nullable_uint32_)":[-1.1248541563526464,1]}
+{"welchTTest(int32, nullable_uint32_)":[-1.1248541563526464,1],"any(toTypeName(int32))":"Int32","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int32_nullable_uint64_ = r"""
-{"welchTTest(int32, nullable_uint64_)":[-1.1248541563526464,1]}
+{"welchTTest(int32, nullable_uint64_)":[-1.1248541563526464,1],"any(toTypeName(int32))":"Int32","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int32_nullable_uint8_ = r"""
-{"welchTTest(int32, nullable_uint8_)":[-1.1248541563526464,1]}
+{"welchTTest(int32, nullable_uint8_)":[-1.1248541563526464,1],"any(toTypeName(int32))":"Int32","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int32_uint16 = r"""
-{"welchTTest(int32, uint16)":[-1.1248541563526464,1]}
+{"welchTTest(int32, uint16)":[-1.1248541563526464,1],"any(toTypeName(int32))":"Int32","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int32_uint32 = r"""
-{"welchTTest(int32, uint32)":[-1.1248541563526464,1]}
+{"welchTTest(int32, uint32)":[-1.1248541563526464,1],"any(toTypeName(int32))":"Int32","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int32_uint64 = r"""
-{"welchTTest(int32, uint64)":[-1.1248541563526464,1]}
+{"welchTTest(int32, uint64)":[-1.1248541563526464,1],"any(toTypeName(int32))":"Int32","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int32_uint8 = r"""
-{"welchTTest(int32, uint8)":[-1.1248541563526464,1]}
+{"welchTTest(int32, uint8)":[-1.1248541563526464,1],"any(toTypeName(int32))":"Int32","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int64_lowcardinality_uint16_ = r"""
-{"welchTTest(int64, lowcardinality_uint16_)":[-1.4432648250753515,1]}
+{"welchTTest(int64, lowcardinality_uint16_)":[-1.4432648250753515,1],"any(toTypeName(int64))":"Int64","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int64_lowcardinality_uint32_ = r"""
-{"welchTTest(int64, lowcardinality_uint32_)":[-1.4432648250753515,1]}
+{"welchTTest(int64, lowcardinality_uint32_)":[-1.4432648250753515,1],"any(toTypeName(int64))":"Int64","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int64_lowcardinality_uint64_ = r"""
-{"welchTTest(int64, lowcardinality_uint64_)":[-1.4432648250753515,1]}
+{"welchTTest(int64, lowcardinality_uint64_)":[-1.4432648250753515,1],"any(toTypeName(int64))":"Int64","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int64_lowcardinality_uint8_ = r"""
-{"welchTTest(int64, lowcardinality_uint8_)":[-1.4432648250753515,1]}
+{"welchTTest(int64, lowcardinality_uint8_)":[-1.4432648250753515,1],"any(toTypeName(int64))":"Int64","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int64_nullable_uint16_ = r"""
-{"welchTTest(int64, nullable_uint16_)":[-1.4432648250753515,1]}
+{"welchTTest(int64, nullable_uint16_)":[-1.4432648250753515,1],"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int64_nullable_uint32_ = r"""
-{"welchTTest(int64, nullable_uint32_)":[-1.4432648250753515,1]}
+{"welchTTest(int64, nullable_uint32_)":[-1.4432648250753515,1],"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int64_nullable_uint64_ = r"""
-{"welchTTest(int64, nullable_uint64_)":[-1.4432648250753515,1]}
+{"welchTTest(int64, nullable_uint64_)":[-1.4432648250753515,1],"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int64_nullable_uint8_ = r"""
-{"welchTTest(int64, nullable_uint8_)":[-1.4432648250753515,1]}
+{"welchTTest(int64, nullable_uint8_)":[-1.4432648250753515,1],"any(toTypeName(int64))":"Int64","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int64_uint16 = r"""
-{"welchTTest(int64, uint16)":[-1.4432648250753515,1]}
+{"welchTTest(int64, uint16)":[-1.4432648250753515,1],"any(toTypeName(int64))":"Int64","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int64_uint32 = r"""
-{"welchTTest(int64, uint32)":[-1.4432648250753515,1]}
+{"welchTTest(int64, uint32)":[-1.4432648250753515,1],"any(toTypeName(int64))":"Int64","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int64_uint64 = r"""
-{"welchTTest(int64, uint64)":[-1.4432648250753515,1]}
+{"welchTTest(int64, uint64)":[-1.4432648250753515,1],"any(toTypeName(int64))":"Int64","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int64_uint8 = r"""
-{"welchTTest(int64, uint8)":[-1.4432648250753515,1]}
+{"welchTTest(int64, uint8)":[-1.4432648250753515,1],"any(toTypeName(int64))":"Int64","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int8_lowcardinality_uint16_ = r"""
-{"welchTTest(int8, lowcardinality_uint16_)":[-1.1854261005668882,1]}
+{"welchTTest(int8, lowcardinality_uint16_)":[-1.1854261005668882,1],"any(toTypeName(int8))":"Int8","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int8_lowcardinality_uint32_ = r"""
-{"welchTTest(int8, lowcardinality_uint32_)":[-1.1854261005668882,1]}
+{"welchTTest(int8, lowcardinality_uint32_)":[-1.1854261005668882,1],"any(toTypeName(int8))":"Int8","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int8_lowcardinality_uint64_ = r"""
-{"welchTTest(int8, lowcardinality_uint64_)":[-1.1854261005668882,1]}
+{"welchTTest(int8, lowcardinality_uint64_)":[-1.1854261005668882,1],"any(toTypeName(int8))":"Int8","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int8_lowcardinality_uint8_ = r"""
-{"welchTTest(int8, lowcardinality_uint8_)":[-1.1854261005668882,1]}
+{"welchTTest(int8, lowcardinality_uint8_)":[-1.1854261005668882,1],"any(toTypeName(int8))":"Int8","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int8_nullable_uint16_ = r"""
-{"welchTTest(int8, nullable_uint16_)":[-1.1854261005668882,1]}
+{"welchTTest(int8, nullable_uint16_)":[-1.1854261005668882,1],"any(toTypeName(int8))":"Int8","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int8_nullable_uint32_ = r"""
-{"welchTTest(int8, nullable_uint32_)":[-1.1854261005668882,1]}
+{"welchTTest(int8, nullable_uint32_)":[-1.1854261005668882,1],"any(toTypeName(int8))":"Int8","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int8_nullable_uint64_ = r"""
-{"welchTTest(int8, nullable_uint64_)":[-1.1854261005668882,1]}
+{"welchTTest(int8, nullable_uint64_)":[-1.1854261005668882,1],"any(toTypeName(int8))":"Int8","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int8_nullable_uint8_ = r"""
-{"welchTTest(int8, nullable_uint8_)":[-1.1854261005668882,1]}
+{"welchTTest(int8, nullable_uint8_)":[-1.1854261005668882,1],"any(toTypeName(int8))":"Int8","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int8_uint16 = r"""
-{"welchTTest(int8, uint16)":[-1.1854261005668882,1]}
+{"welchTTest(int8, uint16)":[-1.1854261005668882,1],"any(toTypeName(int8))":"Int8","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int8_uint32 = r"""
-{"welchTTest(int8, uint32)":[-1.1854261005668882,1]}
+{"welchTTest(int8, uint32)":[-1.1854261005668882,1],"any(toTypeName(int8))":"Int8","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int8_uint64 = r"""
-{"welchTTest(int8, uint64)":[-1.1854261005668882,1]}
+{"welchTTest(int8, uint64)":[-1.1854261005668882,1],"any(toTypeName(int8))":"Int8","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_int8_uint8 = r"""
-{"welchTTest(int8, uint8)":[-1.1854261005668882,1]}
+{"welchTTest(int8, uint8)":[-1.1854261005668882,1],"any(toTypeName(int8))":"Int8","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_float32__lowcardinality_uint16_ = r"""
-{"welchTTest(lowcardinality_float32_, lowcardinality_uint16_)":[-1.3822539229149242,1]}
+{"welchTTest(lowcardinality_float32_, lowcardinality_uint16_)":[-1.3822539229149242,1],"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_float32__lowcardinality_uint32_ = r"""
-{"welchTTest(lowcardinality_float32_, lowcardinality_uint32_)":[-1.3822539229149242,1]}
+{"welchTTest(lowcardinality_float32_, lowcardinality_uint32_)":[-1.3822539229149242,1],"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_float32__lowcardinality_uint64_ = r"""
-{"welchTTest(lowcardinality_float32_, lowcardinality_uint64_)":[-1.3822539229149242,1]}
+{"welchTTest(lowcardinality_float32_, lowcardinality_uint64_)":[-1.3822539229149242,1],"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_float32__lowcardinality_uint8_ = r"""
-{"welchTTest(lowcardinality_float32_, lowcardinality_uint8_)":[-1.3822539229149242,1]}
+{"welchTTest(lowcardinality_float32_, lowcardinality_uint8_)":[-1.3822539229149242,1],"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_float32__nullable_uint16_ = r"""
-{"welchTTest(lowcardinality_float32_, nullable_uint16_)":[-1.3822539229149242,1]}
+{"welchTTest(lowcardinality_float32_, nullable_uint16_)":[-1.3822539229149242,1],"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_float32__nullable_uint32_ = r"""
-{"welchTTest(lowcardinality_float32_, nullable_uint32_)":[-1.3822539229149242,1]}
+{"welchTTest(lowcardinality_float32_, nullable_uint32_)":[-1.3822539229149242,1],"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_float32__nullable_uint64_ = r"""
-{"welchTTest(lowcardinality_float32_, nullable_uint64_)":[-1.3822539229149242,1]}
+{"welchTTest(lowcardinality_float32_, nullable_uint64_)":[-1.3822539229149242,1],"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_float32__nullable_uint8_ = r"""
-{"welchTTest(lowcardinality_float32_, nullable_uint8_)":[-1.3822539229149242,1]}
+{"welchTTest(lowcardinality_float32_, nullable_uint8_)":[-1.3822539229149242,1],"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_float32__uint16 = r"""
-{"welchTTest(lowcardinality_float32_, uint16)":[-1.3822539229149242,1]}
+{"welchTTest(lowcardinality_float32_, uint16)":[-1.3822539229149242,1],"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_float32__uint32 = r"""
-{"welchTTest(lowcardinality_float32_, uint32)":[-1.3822539229149242,1]}
+{"welchTTest(lowcardinality_float32_, uint32)":[-1.3822539229149242,1],"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_float32__uint64 = r"""
-{"welchTTest(lowcardinality_float32_, uint64)":[-1.3822539229149242,1]}
+{"welchTTest(lowcardinality_float32_, uint64)":[-1.3822539229149242,1],"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_float32__uint8 = r"""
-{"welchTTest(lowcardinality_float32_, uint8)":[-1.3822539229149242,1]}
+{"welchTTest(lowcardinality_float32_, uint8)":[-1.3822539229149242,1],"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_float64__lowcardinality_uint16_ = r"""
-{"welchTTest(lowcardinality_float64_, lowcardinality_uint16_)":[null,0]}
+{"welchTTest(lowcardinality_float64_, lowcardinality_uint16_)":[null,0],"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_float64__lowcardinality_uint32_ = r"""
-{"welchTTest(lowcardinality_float64_, lowcardinality_uint32_)":[null,0]}
+{"welchTTest(lowcardinality_float64_, lowcardinality_uint32_)":[null,0],"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_float64__lowcardinality_uint64_ = r"""
-{"welchTTest(lowcardinality_float64_, lowcardinality_uint64_)":[null,0]}
+{"welchTTest(lowcardinality_float64_, lowcardinality_uint64_)":[null,0],"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_float64__lowcardinality_uint8_ = r"""
-{"welchTTest(lowcardinality_float64_, lowcardinality_uint8_)":[null,0]}
+{"welchTTest(lowcardinality_float64_, lowcardinality_uint8_)":[null,0],"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_float64__nullable_uint16_ = r"""
-{"welchTTest(lowcardinality_float64_, nullable_uint16_)":[null,0]}
+{"welchTTest(lowcardinality_float64_, nullable_uint16_)":[null,0],"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_float64__nullable_uint32_ = r"""
-{"welchTTest(lowcardinality_float64_, nullable_uint32_)":[null,0]}
+{"welchTTest(lowcardinality_float64_, nullable_uint32_)":[null,0],"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_float64__nullable_uint64_ = r"""
-{"welchTTest(lowcardinality_float64_, nullable_uint64_)":[null,0]}
+{"welchTTest(lowcardinality_float64_, nullable_uint64_)":[null,0],"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_float64__nullable_uint8_ = r"""
-{"welchTTest(lowcardinality_float64_, nullable_uint8_)":[null,0]}
+{"welchTTest(lowcardinality_float64_, nullable_uint8_)":[null,0],"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_float64__uint16 = r"""
-{"welchTTest(lowcardinality_float64_, uint16)":[null,0]}
+{"welchTTest(lowcardinality_float64_, uint16)":[null,0],"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_float64__uint32 = r"""
-{"welchTTest(lowcardinality_float64_, uint32)":[null,0]}
+{"welchTTest(lowcardinality_float64_, uint32)":[null,0],"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_float64__uint64 = r"""
-{"welchTTest(lowcardinality_float64_, uint64)":[null,0]}
+{"welchTTest(lowcardinality_float64_, uint64)":[null,0],"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_float64__uint8 = r"""
-{"welchTTest(lowcardinality_float64_, uint8)":[null,0]}
+{"welchTTest(lowcardinality_float64_, uint8)":[null,0],"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int16__lowcardinality_uint16_ = r"""
-{"welchTTest(lowcardinality_int16_, lowcardinality_uint16_)":[-1.2160381166935998,1]}
+{"welchTTest(lowcardinality_int16_, lowcardinality_uint16_)":[-1.2160381166935998,1],"any(toTypeName(lowcardinality_int16_))":"LowCardinality(Int16)","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int16__lowcardinality_uint32_ = r"""
-{"welchTTest(lowcardinality_int16_, lowcardinality_uint32_)":[-1.2160381166935998,1]}
+{"welchTTest(lowcardinality_int16_, lowcardinality_uint32_)":[-1.2160381166935998,1],"any(toTypeName(lowcardinality_int16_))":"LowCardinality(Int16)","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int16__lowcardinality_uint64_ = r"""
-{"welchTTest(lowcardinality_int16_, lowcardinality_uint64_)":[-1.2160381166935998,1]}
+{"welchTTest(lowcardinality_int16_, lowcardinality_uint64_)":[-1.2160381166935998,1],"any(toTypeName(lowcardinality_int16_))":"LowCardinality(Int16)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int16__lowcardinality_uint8_ = r"""
-{"welchTTest(lowcardinality_int16_, lowcardinality_uint8_)":[-1.2160381166935998,1]}
+{"welchTTest(lowcardinality_int16_, lowcardinality_uint8_)":[-1.2160381166935998,1],"any(toTypeName(lowcardinality_int16_))":"LowCardinality(Int16)","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int16__nullable_uint16_ = r"""
-{"welchTTest(lowcardinality_int16_, nullable_uint16_)":[-1.2160381166935998,1]}
+{"welchTTest(lowcardinality_int16_, nullable_uint16_)":[-1.2160381166935998,1],"any(toTypeName(lowcardinality_int16_))":"LowCardinality(Int16)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int16__nullable_uint32_ = r"""
-{"welchTTest(lowcardinality_int16_, nullable_uint32_)":[-1.2160381166935998,1]}
+{"welchTTest(lowcardinality_int16_, nullable_uint32_)":[-1.2160381166935998,1],"any(toTypeName(lowcardinality_int16_))":"LowCardinality(Int16)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int16__nullable_uint64_ = r"""
-{"welchTTest(lowcardinality_int16_, nullable_uint64_)":[-1.2160381166935998,1]}
+{"welchTTest(lowcardinality_int16_, nullable_uint64_)":[-1.2160381166935998,1],"any(toTypeName(lowcardinality_int16_))":"LowCardinality(Int16)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int16__nullable_uint8_ = r"""
-{"welchTTest(lowcardinality_int16_, nullable_uint8_)":[-1.2160381166935998,1]}
+{"welchTTest(lowcardinality_int16_, nullable_uint8_)":[-1.2160381166935998,1],"any(toTypeName(lowcardinality_int16_))":"LowCardinality(Int16)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int16__uint16 = r"""
-{"welchTTest(lowcardinality_int16_, uint16)":[-1.2160381166935998,1]}
+{"welchTTest(lowcardinality_int16_, uint16)":[-1.2160381166935998,1],"any(toTypeName(lowcardinality_int16_))":"LowCardinality(Int16)","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int16__uint32 = r"""
-{"welchTTest(lowcardinality_int16_, uint32)":[-1.2160381166935998,1]}
+{"welchTTest(lowcardinality_int16_, uint32)":[-1.2160381166935998,1],"any(toTypeName(lowcardinality_int16_))":"LowCardinality(Int16)","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int16__uint64 = r"""
-{"welchTTest(lowcardinality_int16_, uint64)":[-1.2160381166935998,1]}
+{"welchTTest(lowcardinality_int16_, uint64)":[-1.2160381166935998,1],"any(toTypeName(lowcardinality_int16_))":"LowCardinality(Int16)","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int16__uint8 = r"""
-{"welchTTest(lowcardinality_int16_, uint8)":[-1.2160381166935998,1]}
+{"welchTTest(lowcardinality_int16_, uint8)":[-1.2160381166935998,1],"any(toTypeName(lowcardinality_int16_))":"LowCardinality(Int16)","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int32__lowcardinality_uint16_ = r"""
-{"welchTTest(lowcardinality_int32_, lowcardinality_uint16_)":[-0.9490395290580745,1]}
+{"welchTTest(lowcardinality_int32_, lowcardinality_uint16_)":[-0.9490395290580745,1],"any(toTypeName(lowcardinality_int32_))":"LowCardinality(Int32)","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int32__lowcardinality_uint32_ = r"""
-{"welchTTest(lowcardinality_int32_, lowcardinality_uint32_)":[-0.9490395290580745,1]}
+{"welchTTest(lowcardinality_int32_, lowcardinality_uint32_)":[-0.9490395290580745,1],"any(toTypeName(lowcardinality_int32_))":"LowCardinality(Int32)","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int32__lowcardinality_uint64_ = r"""
-{"welchTTest(lowcardinality_int32_, lowcardinality_uint64_)":[-0.9490395290580745,1]}
+{"welchTTest(lowcardinality_int32_, lowcardinality_uint64_)":[-0.9490395290580745,1],"any(toTypeName(lowcardinality_int32_))":"LowCardinality(Int32)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int32__lowcardinality_uint8_ = r"""
-{"welchTTest(lowcardinality_int32_, lowcardinality_uint8_)":[-0.9490395290580745,1]}
+{"welchTTest(lowcardinality_int32_, lowcardinality_uint8_)":[-0.9490395290580745,1],"any(toTypeName(lowcardinality_int32_))":"LowCardinality(Int32)","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int32__nullable_uint16_ = r"""
-{"welchTTest(lowcardinality_int32_, nullable_uint16_)":[-0.9490395290580745,1]}
+{"welchTTest(lowcardinality_int32_, nullable_uint16_)":[-0.9490395290580745,1],"any(toTypeName(lowcardinality_int32_))":"LowCardinality(Int32)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int32__nullable_uint32_ = r"""
-{"welchTTest(lowcardinality_int32_, nullable_uint32_)":[-0.9490395290580745,1]}
+{"welchTTest(lowcardinality_int32_, nullable_uint32_)":[-0.9490395290580745,1],"any(toTypeName(lowcardinality_int32_))":"LowCardinality(Int32)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int32__nullable_uint64_ = r"""
-{"welchTTest(lowcardinality_int32_, nullable_uint64_)":[-0.9490395290580745,1]}
+{"welchTTest(lowcardinality_int32_, nullable_uint64_)":[-0.9490395290580745,1],"any(toTypeName(lowcardinality_int32_))":"LowCardinality(Int32)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int32__nullable_uint8_ = r"""
-{"welchTTest(lowcardinality_int32_, nullable_uint8_)":[-0.9490395290580745,1]}
+{"welchTTest(lowcardinality_int32_, nullable_uint8_)":[-0.9490395290580745,1],"any(toTypeName(lowcardinality_int32_))":"LowCardinality(Int32)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int32__uint16 = r"""
-{"welchTTest(lowcardinality_int32_, uint16)":[-0.9490395290580745,1]}
+{"welchTTest(lowcardinality_int32_, uint16)":[-0.9490395290580745,1],"any(toTypeName(lowcardinality_int32_))":"LowCardinality(Int32)","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int32__uint32 = r"""
-{"welchTTest(lowcardinality_int32_, uint32)":[-0.9490395290580745,1]}
+{"welchTTest(lowcardinality_int32_, uint32)":[-0.9490395290580745,1],"any(toTypeName(lowcardinality_int32_))":"LowCardinality(Int32)","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int32__uint64 = r"""
-{"welchTTest(lowcardinality_int32_, uint64)":[-0.9490395290580745,1]}
+{"welchTTest(lowcardinality_int32_, uint64)":[-0.9490395290580745,1],"any(toTypeName(lowcardinality_int32_))":"LowCardinality(Int32)","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int32__uint8 = r"""
-{"welchTTest(lowcardinality_int32_, uint8)":[-0.9490395290580745,1]}
+{"welchTTest(lowcardinality_int32_, uint8)":[-0.9490395290580745,1],"any(toTypeName(lowcardinality_int32_))":"LowCardinality(Int32)","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int64__lowcardinality_uint16_ = r"""
-{"welchTTest(lowcardinality_int64_, lowcardinality_uint16_)":[-1.5480658323603087,1]}
+{"welchTTest(lowcardinality_int64_, lowcardinality_uint16_)":[-1.5480658323603087,1],"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int64__lowcardinality_uint32_ = r"""
-{"welchTTest(lowcardinality_int64_, lowcardinality_uint32_)":[-1.5480658323603087,1]}
+{"welchTTest(lowcardinality_int64_, lowcardinality_uint32_)":[-1.5480658323603087,1],"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int64__lowcardinality_uint64_ = r"""
-{"welchTTest(lowcardinality_int64_, lowcardinality_uint64_)":[-1.5480658323603087,1]}
+{"welchTTest(lowcardinality_int64_, lowcardinality_uint64_)":[-1.5480658323603087,1],"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int64__lowcardinality_uint8_ = r"""
-{"welchTTest(lowcardinality_int64_, lowcardinality_uint8_)":[-1.5480658323603087,1]}
+{"welchTTest(lowcardinality_int64_, lowcardinality_uint8_)":[-1.5480658323603087,1],"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int64__nullable_uint16_ = r"""
-{"welchTTest(lowcardinality_int64_, nullable_uint16_)":[-1.5480658323603087,1]}
+{"welchTTest(lowcardinality_int64_, nullable_uint16_)":[-1.5480658323603087,1],"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int64__nullable_uint32_ = r"""
-{"welchTTest(lowcardinality_int64_, nullable_uint32_)":[-1.5480658323603087,1]}
+{"welchTTest(lowcardinality_int64_, nullable_uint32_)":[-1.5480658323603087,1],"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int64__nullable_uint64_ = r"""
-{"welchTTest(lowcardinality_int64_, nullable_uint64_)":[-1.5480658323603087,1]}
+{"welchTTest(lowcardinality_int64_, nullable_uint64_)":[-1.5480658323603087,1],"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int64__nullable_uint8_ = r"""
-{"welchTTest(lowcardinality_int64_, nullable_uint8_)":[-1.5480658323603087,1]}
+{"welchTTest(lowcardinality_int64_, nullable_uint8_)":[-1.5480658323603087,1],"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int64__uint16 = r"""
-{"welchTTest(lowcardinality_int64_, uint16)":[-1.5480658323603087,1]}
+{"welchTTest(lowcardinality_int64_, uint16)":[-1.5480658323603087,1],"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int64__uint32 = r"""
-{"welchTTest(lowcardinality_int64_, uint32)":[-1.5480658323603087,1]}
+{"welchTTest(lowcardinality_int64_, uint32)":[-1.5480658323603087,1],"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int64__uint64 = r"""
-{"welchTTest(lowcardinality_int64_, uint64)":[-1.5480658323603087,1]}
+{"welchTTest(lowcardinality_int64_, uint64)":[-1.5480658323603087,1],"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int64__uint8 = r"""
-{"welchTTest(lowcardinality_int64_, uint8)":[-1.5480658323603087,1]}
+{"welchTTest(lowcardinality_int64_, uint8)":[-1.5480658323603087,1],"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int8__lowcardinality_uint16_ = r"""
-{"welchTTest(lowcardinality_int8_, lowcardinality_uint16_)":[-1.4755558672361146,1]}
+{"welchTTest(lowcardinality_int8_, lowcardinality_uint16_)":[-1.4755558672361146,1],"any(toTypeName(lowcardinality_int8_))":"LowCardinality(Int8)","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int8__lowcardinality_uint32_ = r"""
-{"welchTTest(lowcardinality_int8_, lowcardinality_uint32_)":[-1.4755558672361146,1]}
+{"welchTTest(lowcardinality_int8_, lowcardinality_uint32_)":[-1.4755558672361146,1],"any(toTypeName(lowcardinality_int8_))":"LowCardinality(Int8)","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int8__lowcardinality_uint64_ = r"""
-{"welchTTest(lowcardinality_int8_, lowcardinality_uint64_)":[-1.4755558672361146,1]}
+{"welchTTest(lowcardinality_int8_, lowcardinality_uint64_)":[-1.4755558672361146,1],"any(toTypeName(lowcardinality_int8_))":"LowCardinality(Int8)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int8__lowcardinality_uint8_ = r"""
-{"welchTTest(lowcardinality_int8_, lowcardinality_uint8_)":[-1.4755558672361146,1]}
+{"welchTTest(lowcardinality_int8_, lowcardinality_uint8_)":[-1.4755558672361146,1],"any(toTypeName(lowcardinality_int8_))":"LowCardinality(Int8)","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int8__nullable_uint16_ = r"""
-{"welchTTest(lowcardinality_int8_, nullable_uint16_)":[-1.4755558672361146,1]}
+{"welchTTest(lowcardinality_int8_, nullable_uint16_)":[-1.4755558672361146,1],"any(toTypeName(lowcardinality_int8_))":"LowCardinality(Int8)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int8__nullable_uint32_ = r"""
-{"welchTTest(lowcardinality_int8_, nullable_uint32_)":[-1.4755558672361146,1]}
+{"welchTTest(lowcardinality_int8_, nullable_uint32_)":[-1.4755558672361146,1],"any(toTypeName(lowcardinality_int8_))":"LowCardinality(Int8)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int8__nullable_uint64_ = r"""
-{"welchTTest(lowcardinality_int8_, nullable_uint64_)":[-1.4755558672361146,1]}
+{"welchTTest(lowcardinality_int8_, nullable_uint64_)":[-1.4755558672361146,1],"any(toTypeName(lowcardinality_int8_))":"LowCardinality(Int8)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int8__nullable_uint8_ = r"""
-{"welchTTest(lowcardinality_int8_, nullable_uint8_)":[-1.4755558672361146,1]}
+{"welchTTest(lowcardinality_int8_, nullable_uint8_)":[-1.4755558672361146,1],"any(toTypeName(lowcardinality_int8_))":"LowCardinality(Int8)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int8__uint16 = r"""
-{"welchTTest(lowcardinality_int8_, uint16)":[-1.4755558672361146,1]}
+{"welchTTest(lowcardinality_int8_, uint16)":[-1.4755558672361146,1],"any(toTypeName(lowcardinality_int8_))":"LowCardinality(Int8)","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int8__uint32 = r"""
-{"welchTTest(lowcardinality_int8_, uint32)":[-1.4755558672361146,1]}
+{"welchTTest(lowcardinality_int8_, uint32)":[-1.4755558672361146,1],"any(toTypeName(lowcardinality_int8_))":"LowCardinality(Int8)","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int8__uint64 = r"""
-{"welchTTest(lowcardinality_int8_, uint64)":[-1.4755558672361146,1]}
+{"welchTTest(lowcardinality_int8_, uint64)":[-1.4755558672361146,1],"any(toTypeName(lowcardinality_int8_))":"LowCardinality(Int8)","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_int8__uint8 = r"""
-{"welchTTest(lowcardinality_int8_, uint8)":[-1.4755558672361146,1]}
+{"welchTTest(lowcardinality_int8_, uint8)":[-1.4755558672361146,1],"any(toTypeName(lowcardinality_int8_))":"LowCardinality(Int8)","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint16__lowcardinality_uint16_ = r"""
-{"welchTTest(lowcardinality_uint16_, lowcardinality_uint16_)":[-5.193332387092636,0.0012622282932882886]}
+{"welchTTest(lowcardinality_uint16_, lowcardinality_uint16_)":[-5.193332387092636,0.0012622282932882886],"any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint16__lowcardinality_uint32_ = r"""
-{"welchTTest(lowcardinality_uint16_, lowcardinality_uint32_)":[-5.193332387092636,0.0012622282932882886]}
+{"welchTTest(lowcardinality_uint16_, lowcardinality_uint32_)":[-5.193332387092636,0.0012622282932882886],"any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint16__lowcardinality_uint64_ = r"""
-{"welchTTest(lowcardinality_uint16_, lowcardinality_uint64_)":[-5.193332387092636,0.0012622282932882886]}
+{"welchTTest(lowcardinality_uint16_, lowcardinality_uint64_)":[-5.193332387092636,0.0012622282932882886],"any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint16__lowcardinality_uint8_ = r"""
-{"welchTTest(lowcardinality_uint16_, lowcardinality_uint8_)":[-5.193332387092636,0.0012622282932882886]}
+{"welchTTest(lowcardinality_uint16_, lowcardinality_uint8_)":[-5.193332387092636,0.0012622282932882886],"any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint16__nullable_uint16_ = r"""
-{"welchTTest(lowcardinality_uint16_, nullable_uint16_)":[-5.193332387092636,0.0012622282932882886]}
+{"welchTTest(lowcardinality_uint16_, nullable_uint16_)":[-5.193332387092636,0.0012622282932882886],"any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint16__nullable_uint32_ = r"""
-{"welchTTest(lowcardinality_uint16_, nullable_uint32_)":[-5.193332387092636,0.0012622282932882886]}
+{"welchTTest(lowcardinality_uint16_, nullable_uint32_)":[-5.193332387092636,0.0012622282932882886],"any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint16__nullable_uint64_ = r"""
-{"welchTTest(lowcardinality_uint16_, nullable_uint64_)":[-5.193332387092636,0.0012622282932882886]}
+{"welchTTest(lowcardinality_uint16_, nullable_uint64_)":[-5.193332387092636,0.0012622282932882886],"any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint16__nullable_uint8_ = r"""
-{"welchTTest(lowcardinality_uint16_, nullable_uint8_)":[-5.193332387092636,0.0012622282932882886]}
+{"welchTTest(lowcardinality_uint16_, nullable_uint8_)":[-5.193332387092636,0.0012622282932882886],"any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint16__uint16 = r"""
-{"welchTTest(lowcardinality_uint16_, uint16)":[-5.193332387092636,0.0012622282932882886]}
+{"welchTTest(lowcardinality_uint16_, uint16)":[-5.193332387092636,0.0012622282932882886],"any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint16__uint32 = r"""
-{"welchTTest(lowcardinality_uint16_, uint32)":[-5.193332387092636,0.0012622282932882886]}
+{"welchTTest(lowcardinality_uint16_, uint32)":[-5.193332387092636,0.0012622282932882886],"any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint16__uint64 = r"""
-{"welchTTest(lowcardinality_uint16_, uint64)":[-5.193332387092636,0.0012622282932882886]}
+{"welchTTest(lowcardinality_uint16_, uint64)":[-5.193332387092636,0.0012622282932882886],"any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint16__uint8 = r"""
-{"welchTTest(lowcardinality_uint16_, uint8)":[-5.193332387092636,0.0012622282932882886]}
+{"welchTTest(lowcardinality_uint16_, uint8)":[-5.193332387092636,0.0012622282932882886],"any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint32__lowcardinality_uint16_ = r"""
-{"welchTTest(lowcardinality_uint32_, lowcardinality_uint16_)":[-4.016254047596418,0.005083737772258622]}
+{"welchTTest(lowcardinality_uint32_, lowcardinality_uint16_)":[-4.016254047596418,0.005083737772258622],"any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint32__lowcardinality_uint32_ = r"""
-{"welchTTest(lowcardinality_uint32_, lowcardinality_uint32_)":[-4.016254047596418,0.005083737772258622]}
+{"welchTTest(lowcardinality_uint32_, lowcardinality_uint32_)":[-4.016254047596418,0.005083737772258622],"any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint32__lowcardinality_uint64_ = r"""
-{"welchTTest(lowcardinality_uint32_, lowcardinality_uint64_)":[-4.016254047596418,0.005083737772258622]}
+{"welchTTest(lowcardinality_uint32_, lowcardinality_uint64_)":[-4.016254047596418,0.005083737772258622],"any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint32__lowcardinality_uint8_ = r"""
-{"welchTTest(lowcardinality_uint32_, lowcardinality_uint8_)":[-4.016254047596418,0.005083737772258622]}
+{"welchTTest(lowcardinality_uint32_, lowcardinality_uint8_)":[-4.016254047596418,0.005083737772258622],"any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint32__nullable_uint16_ = r"""
-{"welchTTest(lowcardinality_uint32_, nullable_uint16_)":[-4.016254047596418,0.005083737772258622]}
+{"welchTTest(lowcardinality_uint32_, nullable_uint16_)":[-4.016254047596418,0.005083737772258622],"any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint32__nullable_uint32_ = r"""
-{"welchTTest(lowcardinality_uint32_, nullable_uint32_)":[-4.016254047596418,0.005083737772258622]}
+{"welchTTest(lowcardinality_uint32_, nullable_uint32_)":[-4.016254047596418,0.005083737772258622],"any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint32__nullable_uint64_ = r"""
-{"welchTTest(lowcardinality_uint32_, nullable_uint64_)":[-4.016254047596418,0.005083737772258622]}
+{"welchTTest(lowcardinality_uint32_, nullable_uint64_)":[-4.016254047596418,0.005083737772258622],"any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint32__nullable_uint8_ = r"""
-{"welchTTest(lowcardinality_uint32_, nullable_uint8_)":[-4.016254047596418,0.005083737772258622]}
+{"welchTTest(lowcardinality_uint32_, nullable_uint8_)":[-4.016254047596418,0.005083737772258622],"any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint32__uint16 = r"""
-{"welchTTest(lowcardinality_uint32_, uint16)":[-4.016254047596418,0.005083737772258622]}
+{"welchTTest(lowcardinality_uint32_, uint16)":[-4.016254047596418,0.005083737772258622],"any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint32__uint32 = r"""
-{"welchTTest(lowcardinality_uint32_, uint32)":[-4.016254047596418,0.005083737772258622]}
+{"welchTTest(lowcardinality_uint32_, uint32)":[-4.016254047596418,0.005083737772258622],"any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint32__uint64 = r"""
-{"welchTTest(lowcardinality_uint32_, uint64)":[-4.016254047596418,0.005083737772258622]}
+{"welchTTest(lowcardinality_uint32_, uint64)":[-4.016254047596418,0.005083737772258622],"any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint32__uint8 = r"""
-{"welchTTest(lowcardinality_uint32_, uint8)":[-4.016254047596418,0.005083737772258622]}
+{"welchTTest(lowcardinality_uint32_, uint8)":[-4.016254047596418,0.005083737772258622],"any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint64__lowcardinality_uint16_ = r"""
-{"welchTTest(lowcardinality_uint64_, lowcardinality_uint16_)":[-4.582062646302635,0.0025375397185557823]}
+{"welchTTest(lowcardinality_uint64_, lowcardinality_uint16_)":[-4.582062646302635,0.0025375397185557823],"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint64__lowcardinality_uint32_ = r"""
-{"welchTTest(lowcardinality_uint64_, lowcardinality_uint32_)":[-4.582062646302635,0.0025375397185557823]}
+{"welchTTest(lowcardinality_uint64_, lowcardinality_uint32_)":[-4.582062646302635,0.0025375397185557823],"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint64__lowcardinality_uint64_ = r"""
-{"welchTTest(lowcardinality_uint64_, lowcardinality_uint64_)":[-4.582062646302635,0.0025375397185557823]}
+{"welchTTest(lowcardinality_uint64_, lowcardinality_uint64_)":[-4.582062646302635,0.0025375397185557823],"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint64__lowcardinality_uint8_ = r"""
-{"welchTTest(lowcardinality_uint64_, lowcardinality_uint8_)":[-4.582062646302635,0.0025375397185557823]}
+{"welchTTest(lowcardinality_uint64_, lowcardinality_uint8_)":[-4.582062646302635,0.0025375397185557823],"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint64__nullable_uint16_ = r"""
-{"welchTTest(lowcardinality_uint64_, nullable_uint16_)":[-4.582062646302635,0.0025375397185557823]}
+{"welchTTest(lowcardinality_uint64_, nullable_uint16_)":[-4.582062646302635,0.0025375397185557823],"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint64__nullable_uint32_ = r"""
-{"welchTTest(lowcardinality_uint64_, nullable_uint32_)":[-4.582062646302635,0.0025375397185557823]}
+{"welchTTest(lowcardinality_uint64_, nullable_uint32_)":[-4.582062646302635,0.0025375397185557823],"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint64__nullable_uint64_ = r"""
-{"welchTTest(lowcardinality_uint64_, nullable_uint64_)":[-4.582062646302635,0.0025375397185557823]}
+{"welchTTest(lowcardinality_uint64_, nullable_uint64_)":[-4.582062646302635,0.0025375397185557823],"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint64__nullable_uint8_ = r"""
-{"welchTTest(lowcardinality_uint64_, nullable_uint8_)":[-4.582062646302635,0.0025375397185557823]}
+{"welchTTest(lowcardinality_uint64_, nullable_uint8_)":[-4.582062646302635,0.0025375397185557823],"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint64__uint16 = r"""
-{"welchTTest(lowcardinality_uint64_, uint16)":[-4.582062646302635,0.0025375397185557823]}
+{"welchTTest(lowcardinality_uint64_, uint16)":[-4.582062646302635,0.0025375397185557823],"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint64__uint32 = r"""
-{"welchTTest(lowcardinality_uint64_, uint32)":[-4.582062646302635,0.0025375397185557823]}
+{"welchTTest(lowcardinality_uint64_, uint32)":[-4.582062646302635,0.0025375397185557823],"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint64__uint64 = r"""
-{"welchTTest(lowcardinality_uint64_, uint64)":[-4.582062646302635,0.0025375397185557823]}
+{"welchTTest(lowcardinality_uint64_, uint64)":[-4.582062646302635,0.0025375397185557823],"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint64__uint8 = r"""
-{"welchTTest(lowcardinality_uint64_, uint8)":[-4.582062646302635,0.0025375397185557823]}
+{"welchTTest(lowcardinality_uint64_, uint8)":[-4.582062646302635,0.0025375397185557823],"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint8__lowcardinality_uint16_ = r"""
-{"welchTTest(lowcardinality_uint8_, lowcardinality_uint16_)":[-6.995623953043825,0.0002123792820629502]}
+{"welchTTest(lowcardinality_uint8_, lowcardinality_uint16_)":[-6.995623953043825,0.0002123792820629502],"any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint8__lowcardinality_uint32_ = r"""
-{"welchTTest(lowcardinality_uint8_, lowcardinality_uint32_)":[-6.995623953043825,0.0002123792820629502]}
+{"welchTTest(lowcardinality_uint8_, lowcardinality_uint32_)":[-6.995623953043825,0.0002123792820629502],"any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint8__lowcardinality_uint64_ = r"""
-{"welchTTest(lowcardinality_uint8_, lowcardinality_uint64_)":[-6.995623953043825,0.0002123792820629502]}
+{"welchTTest(lowcardinality_uint8_, lowcardinality_uint64_)":[-6.995623953043825,0.0002123792820629502],"any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint8__lowcardinality_uint8_ = r"""
-{"welchTTest(lowcardinality_uint8_, lowcardinality_uint8_)":[-6.995623953043825,0.0002123792820629502]}
+{"welchTTest(lowcardinality_uint8_, lowcardinality_uint8_)":[-6.995623953043825,0.0002123792820629502],"any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint8__nullable_uint16_ = r"""
-{"welchTTest(lowcardinality_uint8_, nullable_uint16_)":[-6.995623953043825,0.0002123792820629502]}
+{"welchTTest(lowcardinality_uint8_, nullable_uint16_)":[-6.995623953043825,0.0002123792820629502],"any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint8__nullable_uint32_ = r"""
-{"welchTTest(lowcardinality_uint8_, nullable_uint32_)":[-6.995623953043825,0.0002123792820629502]}
+{"welchTTest(lowcardinality_uint8_, nullable_uint32_)":[-6.995623953043825,0.0002123792820629502],"any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint8__nullable_uint64_ = r"""
-{"welchTTest(lowcardinality_uint8_, nullable_uint64_)":[-6.995623953043825,0.0002123792820629502]}
+{"welchTTest(lowcardinality_uint8_, nullable_uint64_)":[-6.995623953043825,0.0002123792820629502],"any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint8__nullable_uint8_ = r"""
-{"welchTTest(lowcardinality_uint8_, nullable_uint8_)":[-6.995623953043825,0.0002123792820629502]}
+{"welchTTest(lowcardinality_uint8_, nullable_uint8_)":[-6.995623953043825,0.0002123792820629502],"any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint8__uint16 = r"""
-{"welchTTest(lowcardinality_uint8_, uint16)":[-6.995623953043825,0.0002123792820629502]}
+{"welchTTest(lowcardinality_uint8_, uint16)":[-6.995623953043825,0.0002123792820629502],"any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint8__uint32 = r"""
-{"welchTTest(lowcardinality_uint8_, uint32)":[-6.995623953043825,0.0002123792820629502]}
+{"welchTTest(lowcardinality_uint8_, uint32)":[-6.995623953043825,0.0002123792820629502],"any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint8__uint64 = r"""
-{"welchTTest(lowcardinality_uint8_, uint64)":[-6.995623953043825,0.0002123792820629502]}
+{"welchTTest(lowcardinality_uint8_, uint64)":[-6.995623953043825,0.0002123792820629502],"any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_lowcardinality_uint8__uint8 = r"""
-{"welchTTest(lowcardinality_uint8_, uint8)":[-6.995623953043825,0.0002123792820629502]}
+{"welchTTest(lowcardinality_uint8_, uint8)":[-6.995623953043825,0.0002123792820629502],"any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_decimal128_38___lowcardinality_uint16_ = r"""
-{"welchTTest(nullable_decimal128_38__, lowcardinality_uint16_)":[-1.4545260698761773,1]}
+{"welchTTest(nullable_decimal128_38__, lowcardinality_uint16_)":[-1.4545260698761773,1],"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_decimal128_38___lowcardinality_uint32_ = r"""
-{"welchTTest(nullable_decimal128_38__, lowcardinality_uint32_)":[-1.4545260698761773,1]}
+{"welchTTest(nullable_decimal128_38__, lowcardinality_uint32_)":[-1.4545260698761773,1],"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_decimal128_38___lowcardinality_uint64_ = r"""
-{"welchTTest(nullable_decimal128_38__, lowcardinality_uint64_)":[-1.4545260698761773,1]}
+{"welchTTest(nullable_decimal128_38__, lowcardinality_uint64_)":[-1.4545260698761773,1],"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_decimal128_38___lowcardinality_uint8_ = r"""
-{"welchTTest(nullable_decimal128_38__, lowcardinality_uint8_)":[-1.4545260698761773,1]}
+{"welchTTest(nullable_decimal128_38__, lowcardinality_uint8_)":[-1.4545260698761773,1],"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_decimal128_38___nullable_uint16_ = r"""
-{"welchTTest(nullable_decimal128_38__, nullable_uint16_)":[-1.4545260698761773,1]}
+{"welchTTest(nullable_decimal128_38__, nullable_uint16_)":[-1.4545260698761773,1],"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_decimal128_38___nullable_uint32_ = r"""
-{"welchTTest(nullable_decimal128_38__, nullable_uint32_)":[-1.4545260698761773,1]}
+{"welchTTest(nullable_decimal128_38__, nullable_uint32_)":[-1.4545260698761773,1],"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_decimal128_38___nullable_uint64_ = r"""
-{"welchTTest(nullable_decimal128_38__, nullable_uint64_)":[-1.4545260698761773,1]}
+{"welchTTest(nullable_decimal128_38__, nullable_uint64_)":[-1.4545260698761773,1],"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_decimal128_38___nullable_uint8_ = r"""
-{"welchTTest(nullable_decimal128_38__, nullable_uint8_)":[-1.4545260698761773,1]}
+{"welchTTest(nullable_decimal128_38__, nullable_uint8_)":[-1.4545260698761773,1],"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_decimal128_38___uint16 = r"""
-{"welchTTest(nullable_decimal128_38__, uint16)":[-1.4545260698761773,1]}
+{"welchTTest(nullable_decimal128_38__, uint16)":[-1.4545260698761773,1],"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_decimal128_38___uint32 = r"""
-{"welchTTest(nullable_decimal128_38__, uint32)":[-1.4545260698761773,1]}
+{"welchTTest(nullable_decimal128_38__, uint32)":[-1.4545260698761773,1],"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_decimal128_38___uint64 = r"""
-{"welchTTest(nullable_decimal128_38__, uint64)":[-1.4545260698761773,1]}
+{"welchTTest(nullable_decimal128_38__, uint64)":[-1.4545260698761773,1],"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_decimal128_38___uint8 = r"""
-{"welchTTest(nullable_decimal128_38__, uint8)":[-1.4545260698761773,1]}
+{"welchTTest(nullable_decimal128_38__, uint8)":[-1.4545260698761773,1],"any(toTypeName(nullable_decimal128_38__))":"Nullable(Decimal(38, 38))","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_float32__lowcardinality_uint16_ = r"""
-{"welchTTest(nullable_float32_, lowcardinality_uint16_)":[-0.4564663765715693,1]}
+{"welchTTest(nullable_float32_, lowcardinality_uint16_)":[-0.4564663765715693,1],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_float32__lowcardinality_uint32_ = r"""
-{"welchTTest(nullable_float32_, lowcardinality_uint32_)":[-0.4564663765715693,1]}
+{"welchTTest(nullable_float32_, lowcardinality_uint32_)":[-0.4564663765715693,1],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_float32__lowcardinality_uint64_ = r"""
-{"welchTTest(nullable_float32_, lowcardinality_uint64_)":[-0.4564663765715693,1]}
+{"welchTTest(nullable_float32_, lowcardinality_uint64_)":[-0.4564663765715693,1],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_float32__lowcardinality_uint8_ = r"""
-{"welchTTest(nullable_float32_, lowcardinality_uint8_)":[-0.4564663765715693,1]}
+{"welchTTest(nullable_float32_, lowcardinality_uint8_)":[-0.4564663765715693,1],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_float32__nullable_uint16_ = r"""
-{"welchTTest(nullable_float32_, nullable_uint16_)":[-0.4564663765715693,1]}
+{"welchTTest(nullable_float32_, nullable_uint16_)":[-0.4564663765715693,1],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_float32__nullable_uint32_ = r"""
-{"welchTTest(nullable_float32_, nullable_uint32_)":[-0.4564663765715693,1]}
+{"welchTTest(nullable_float32_, nullable_uint32_)":[-0.4564663765715693,1],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_float32__nullable_uint64_ = r"""
-{"welchTTest(nullable_float32_, nullable_uint64_)":[-0.4564663765715693,1]}
+{"welchTTest(nullable_float32_, nullable_uint64_)":[-0.4564663765715693,1],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_float32__nullable_uint8_ = r"""
-{"welchTTest(nullable_float32_, nullable_uint8_)":[-0.4564663765715693,1]}
+{"welchTTest(nullable_float32_, nullable_uint8_)":[-0.4564663765715693,1],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_float32__uint16 = r"""
-{"welchTTest(nullable_float32_, uint16)":[-0.4564663765715693,1]}
+{"welchTTest(nullable_float32_, uint16)":[-0.4564663765715693,1],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_float32__uint32 = r"""
-{"welchTTest(nullable_float32_, uint32)":[-0.4564663765715693,1]}
+{"welchTTest(nullable_float32_, uint32)":[-0.4564663765715693,1],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_float32__uint64 = r"""
-{"welchTTest(nullable_float32_, uint64)":[-0.4564663765715693,1]}
+{"welchTTest(nullable_float32_, uint64)":[-0.4564663765715693,1],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_float32__uint8 = r"""
-{"welchTTest(nullable_float32_, uint8)":[-0.4564663765715693,1]}
+{"welchTTest(nullable_float32_, uint8)":[-0.4564663765715693,1],"any(toTypeName(nullable_float32_))":"Nullable(Float32)","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_float64__lowcardinality_uint16_ = r"""
-{"welchTTest(nullable_float64_, lowcardinality_uint16_)":[null,0]}
+{"welchTTest(nullable_float64_, lowcardinality_uint16_)":[null,0],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_float64__lowcardinality_uint32_ = r"""
-{"welchTTest(nullable_float64_, lowcardinality_uint32_)":[null,0]}
+{"welchTTest(nullable_float64_, lowcardinality_uint32_)":[null,0],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_float64__lowcardinality_uint64_ = r"""
-{"welchTTest(nullable_float64_, lowcardinality_uint64_)":[null,0]}
+{"welchTTest(nullable_float64_, lowcardinality_uint64_)":[null,0],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_float64__lowcardinality_uint8_ = r"""
-{"welchTTest(nullable_float64_, lowcardinality_uint8_)":[null,0]}
+{"welchTTest(nullable_float64_, lowcardinality_uint8_)":[null,0],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_float64__nullable_uint16_ = r"""
-{"welchTTest(nullable_float64_, nullable_uint16_)":[null,0]}
+{"welchTTest(nullable_float64_, nullable_uint16_)":[null,0],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_float64__nullable_uint32_ = r"""
-{"welchTTest(nullable_float64_, nullable_uint32_)":[null,0]}
+{"welchTTest(nullable_float64_, nullable_uint32_)":[null,0],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_float64__nullable_uint64_ = r"""
-{"welchTTest(nullable_float64_, nullable_uint64_)":[null,0]}
+{"welchTTest(nullable_float64_, nullable_uint64_)":[null,0],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_float64__nullable_uint8_ = r"""
-{"welchTTest(nullable_float64_, nullable_uint8_)":[null,0]}
+{"welchTTest(nullable_float64_, nullable_uint8_)":[null,0],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_float64__uint16 = r"""
-{"welchTTest(nullable_float64_, uint16)":[null,0]}
+{"welchTTest(nullable_float64_, uint16)":[null,0],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_float64__uint32 = r"""
-{"welchTTest(nullable_float64_, uint32)":[null,0]}
+{"welchTTest(nullable_float64_, uint32)":[null,0],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_float64__uint64 = r"""
-{"welchTTest(nullable_float64_, uint64)":[null,0]}
+{"welchTTest(nullable_float64_, uint64)":[null,0],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_float64__uint8 = r"""
-{"welchTTest(nullable_float64_, uint8)":[null,0]}
+{"welchTTest(nullable_float64_, uint8)":[null,0],"any(toTypeName(nullable_float64_))":"Nullable(Float64)","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int16__lowcardinality_uint16_ = r"""
-{"welchTTest(nullable_int16_, lowcardinality_uint16_)":[-0.9590972881378176,1]}
+{"welchTTest(nullable_int16_, lowcardinality_uint16_)":[-0.9590972881378176,1],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int16__lowcardinality_uint32_ = r"""
-{"welchTTest(nullable_int16_, lowcardinality_uint32_)":[-0.9590972881378176,1]}
+{"welchTTest(nullable_int16_, lowcardinality_uint32_)":[-0.9590972881378176,1],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int16__lowcardinality_uint64_ = r"""
-{"welchTTest(nullable_int16_, lowcardinality_uint64_)":[-0.9590972881378176,1]}
+{"welchTTest(nullable_int16_, lowcardinality_uint64_)":[-0.9590972881378176,1],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int16__lowcardinality_uint8_ = r"""
-{"welchTTest(nullable_int16_, lowcardinality_uint8_)":[-0.9590972881378176,1]}
+{"welchTTest(nullable_int16_, lowcardinality_uint8_)":[-0.9590972881378176,1],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int16__nullable_uint16_ = r"""
-{"welchTTest(nullable_int16_, nullable_uint16_)":[-0.9590972881378176,1]}
+{"welchTTest(nullable_int16_, nullable_uint16_)":[-0.9590972881378176,1],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int16__nullable_uint32_ = r"""
-{"welchTTest(nullable_int16_, nullable_uint32_)":[-0.9590972881378176,1]}
+{"welchTTest(nullable_int16_, nullable_uint32_)":[-0.9590972881378176,1],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int16__nullable_uint64_ = r"""
-{"welchTTest(nullable_int16_, nullable_uint64_)":[-0.9590972881378176,1]}
+{"welchTTest(nullable_int16_, nullable_uint64_)":[-0.9590972881378176,1],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int16__nullable_uint8_ = r"""
-{"welchTTest(nullable_int16_, nullable_uint8_)":[-0.9590972881378176,1]}
+{"welchTTest(nullable_int16_, nullable_uint8_)":[-0.9590972881378176,1],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int16__uint16 = r"""
-{"welchTTest(nullable_int16_, uint16)":[-0.9590972881378176,1]}
+{"welchTTest(nullable_int16_, uint16)":[-0.9590972881378176,1],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int16__uint32 = r"""
-{"welchTTest(nullable_int16_, uint32)":[-0.9590972881378176,1]}
+{"welchTTest(nullable_int16_, uint32)":[-0.9590972881378176,1],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int16__uint64 = r"""
-{"welchTTest(nullable_int16_, uint64)":[-0.9590972881378176,1]}
+{"welchTTest(nullable_int16_, uint64)":[-0.9590972881378176,1],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int16__uint8 = r"""
-{"welchTTest(nullable_int16_, uint8)":[-0.9590972881378176,1]}
+{"welchTTest(nullable_int16_, uint8)":[-0.9590972881378176,1],"any(toTypeName(nullable_int16_))":"Nullable(Int16)","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int32__lowcardinality_uint16_ = r"""
-{"welchTTest(nullable_int32_, lowcardinality_uint16_)":[-1.6536201111967224,1]}
+{"welchTTest(nullable_int32_, lowcardinality_uint16_)":[-1.6536201111967224,1],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int32__lowcardinality_uint32_ = r"""
-{"welchTTest(nullable_int32_, lowcardinality_uint32_)":[-1.6536201111967224,1]}
+{"welchTTest(nullable_int32_, lowcardinality_uint32_)":[-1.6536201111967224,1],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int32__lowcardinality_uint64_ = r"""
-{"welchTTest(nullable_int32_, lowcardinality_uint64_)":[-1.6536201111967224,1]}
+{"welchTTest(nullable_int32_, lowcardinality_uint64_)":[-1.6536201111967224,1],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int32__lowcardinality_uint8_ = r"""
-{"welchTTest(nullable_int32_, lowcardinality_uint8_)":[-1.6536201111967224,1]}
+{"welchTTest(nullable_int32_, lowcardinality_uint8_)":[-1.6536201111967224,1],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int32__nullable_uint16_ = r"""
-{"welchTTest(nullable_int32_, nullable_uint16_)":[-1.6536201111967224,1]}
+{"welchTTest(nullable_int32_, nullable_uint16_)":[-1.6536201111967224,1],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int32__nullable_uint32_ = r"""
-{"welchTTest(nullable_int32_, nullable_uint32_)":[-1.6536201111967224,1]}
+{"welchTTest(nullable_int32_, nullable_uint32_)":[-1.6536201111967224,1],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int32__nullable_uint64_ = r"""
-{"welchTTest(nullable_int32_, nullable_uint64_)":[-1.6536201111967224,1]}
+{"welchTTest(nullable_int32_, nullable_uint64_)":[-1.6536201111967224,1],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int32__nullable_uint8_ = r"""
-{"welchTTest(nullable_int32_, nullable_uint8_)":[-1.6536201111967224,1]}
+{"welchTTest(nullable_int32_, nullable_uint8_)":[-1.6536201111967224,1],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int32__uint16 = r"""
-{"welchTTest(nullable_int32_, uint16)":[-1.6536201111967224,1]}
+{"welchTTest(nullable_int32_, uint16)":[-1.6536201111967224,1],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int32__uint32 = r"""
-{"welchTTest(nullable_int32_, uint32)":[-1.6536201111967224,1]}
+{"welchTTest(nullable_int32_, uint32)":[-1.6536201111967224,1],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int32__uint64 = r"""
-{"welchTTest(nullable_int32_, uint64)":[-1.6536201111967224,1]}
+{"welchTTest(nullable_int32_, uint64)":[-1.6536201111967224,1],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int32__uint8 = r"""
-{"welchTTest(nullable_int32_, uint8)":[-1.6536201111967224,1]}
+{"welchTTest(nullable_int32_, uint8)":[-1.6536201111967224,1],"any(toTypeName(nullable_int32_))":"Nullable(Int32)","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int64__lowcardinality_uint16_ = r"""
-{"welchTTest(nullable_int64_, lowcardinality_uint16_)":[-1.2289696874081457,1]}
+{"welchTTest(nullable_int64_, lowcardinality_uint16_)":[-1.2289696874081457,1],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int64__lowcardinality_uint32_ = r"""
-{"welchTTest(nullable_int64_, lowcardinality_uint32_)":[-1.2289696874081457,1]}
+{"welchTTest(nullable_int64_, lowcardinality_uint32_)":[-1.2289696874081457,1],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int64__lowcardinality_uint64_ = r"""
-{"welchTTest(nullable_int64_, lowcardinality_uint64_)":[-1.2289696874081457,1]}
+{"welchTTest(nullable_int64_, lowcardinality_uint64_)":[-1.2289696874081457,1],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int64__lowcardinality_uint8_ = r"""
-{"welchTTest(nullable_int64_, lowcardinality_uint8_)":[-1.2289696874081457,1]}
+{"welchTTest(nullable_int64_, lowcardinality_uint8_)":[-1.2289696874081457,1],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int64__nullable_uint16_ = r"""
-{"welchTTest(nullable_int64_, nullable_uint16_)":[-1.2289696874081457,1]}
+{"welchTTest(nullable_int64_, nullable_uint16_)":[-1.2289696874081457,1],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int64__nullable_uint32_ = r"""
-{"welchTTest(nullable_int64_, nullable_uint32_)":[-1.2289696874081457,1]}
+{"welchTTest(nullable_int64_, nullable_uint32_)":[-1.2289696874081457,1],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int64__nullable_uint64_ = r"""
-{"welchTTest(nullable_int64_, nullable_uint64_)":[-1.2289696874081457,1]}
+{"welchTTest(nullable_int64_, nullable_uint64_)":[-1.2289696874081457,1],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int64__nullable_uint8_ = r"""
-{"welchTTest(nullable_int64_, nullable_uint8_)":[-1.2289696874081457,1]}
+{"welchTTest(nullable_int64_, nullable_uint8_)":[-1.2289696874081457,1],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int64__uint16 = r"""
-{"welchTTest(nullable_int64_, uint16)":[-1.2289696874081457,1]}
+{"welchTTest(nullable_int64_, uint16)":[-1.2289696874081457,1],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int64__uint32 = r"""
-{"welchTTest(nullable_int64_, uint32)":[-1.2289696874081457,1]}
+{"welchTTest(nullable_int64_, uint32)":[-1.2289696874081457,1],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int64__uint64 = r"""
-{"welchTTest(nullable_int64_, uint64)":[-1.2289696874081457,1]}
+{"welchTTest(nullable_int64_, uint64)":[-1.2289696874081457,1],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int64__uint8 = r"""
-{"welchTTest(nullable_int64_, uint8)":[-1.2289696874081457,1]}
+{"welchTTest(nullable_int64_, uint8)":[-1.2289696874081457,1],"any(toTypeName(nullable_int64_))":"Nullable(Int64)","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int8__lowcardinality_uint16_ = r"""
-{"welchTTest(nullable_int8_, lowcardinality_uint16_)":[-1.1727936363940923,1]}
+{"welchTTest(nullable_int8_, lowcardinality_uint16_)":[-1.1727936363940923,1],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int8__lowcardinality_uint32_ = r"""
-{"welchTTest(nullable_int8_, lowcardinality_uint32_)":[-1.1727936363940923,1]}
+{"welchTTest(nullable_int8_, lowcardinality_uint32_)":[-1.1727936363940923,1],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int8__lowcardinality_uint64_ = r"""
-{"welchTTest(nullable_int8_, lowcardinality_uint64_)":[-1.1727936363940923,1]}
+{"welchTTest(nullable_int8_, lowcardinality_uint64_)":[-1.1727936363940923,1],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int8__lowcardinality_uint8_ = r"""
-{"welchTTest(nullable_int8_, lowcardinality_uint8_)":[-1.1727936363940923,1]}
+{"welchTTest(nullable_int8_, lowcardinality_uint8_)":[-1.1727936363940923,1],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int8__nullable_uint16_ = r"""
-{"welchTTest(nullable_int8_, nullable_uint16_)":[-1.1727936363940923,1]}
+{"welchTTest(nullable_int8_, nullable_uint16_)":[-1.1727936363940923,1],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int8__nullable_uint32_ = r"""
-{"welchTTest(nullable_int8_, nullable_uint32_)":[-1.1727936363940923,1]}
+{"welchTTest(nullable_int8_, nullable_uint32_)":[-1.1727936363940923,1],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int8__nullable_uint64_ = r"""
-{"welchTTest(nullable_int8_, nullable_uint64_)":[-1.1727936363940923,1]}
+{"welchTTest(nullable_int8_, nullable_uint64_)":[-1.1727936363940923,1],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int8__nullable_uint8_ = r"""
-{"welchTTest(nullable_int8_, nullable_uint8_)":[-1.1727936363940923,1]}
+{"welchTTest(nullable_int8_, nullable_uint8_)":[-1.1727936363940923,1],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int8__uint16 = r"""
-{"welchTTest(nullable_int8_, uint16)":[-1.1727936363940923,1]}
+{"welchTTest(nullable_int8_, uint16)":[-1.1727936363940923,1],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int8__uint32 = r"""
-{"welchTTest(nullable_int8_, uint32)":[-1.1727936363940923,1]}
+{"welchTTest(nullable_int8_, uint32)":[-1.1727936363940923,1],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int8__uint64 = r"""
-{"welchTTest(nullable_int8_, uint64)":[-1.1727936363940923,1]}
+{"welchTTest(nullable_int8_, uint64)":[-1.1727936363940923,1],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_int8__uint8 = r"""
-{"welchTTest(nullable_int8_, uint8)":[-1.1727936363940923,1]}
+{"welchTTest(nullable_int8_, uint8)":[-1.1727936363940923,1],"any(toTypeName(nullable_int8_))":"Nullable(Int8)","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint16__lowcardinality_uint16_ = r"""
-{"welchTTest(nullable_uint16_, lowcardinality_uint16_)":[-5.275301417851105,0.0011539395029267884]}
+{"welchTTest(nullable_uint16_, lowcardinality_uint16_)":[-5.275301417851105,0.0011539395029267884],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint16__lowcardinality_uint32_ = r"""
-{"welchTTest(nullable_uint16_, lowcardinality_uint32_)":[-5.275301417851105,0.0011539395029267884]}
+{"welchTTest(nullable_uint16_, lowcardinality_uint32_)":[-5.275301417851105,0.0011539395029267884],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint16__lowcardinality_uint64_ = r"""
-{"welchTTest(nullable_uint16_, lowcardinality_uint64_)":[-5.275301417851105,0.0011539395029267884]}
+{"welchTTest(nullable_uint16_, lowcardinality_uint64_)":[-5.275301417851105,0.0011539395029267884],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint16__lowcardinality_uint8_ = r"""
-{"welchTTest(nullable_uint16_, lowcardinality_uint8_)":[-5.275301417851105,0.0011539395029267884]}
+{"welchTTest(nullable_uint16_, lowcardinality_uint8_)":[-5.275301417851105,0.0011539395029267884],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint16__nullable_uint16_ = r"""
-{"welchTTest(nullable_uint16_, nullable_uint16_)":[-5.275301417851105,0.0011539395029267884]}
+{"welchTTest(nullable_uint16_, nullable_uint16_)":[-5.275301417851105,0.0011539395029267884],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint16__nullable_uint32_ = r"""
-{"welchTTest(nullable_uint16_, nullable_uint32_)":[-5.275301417851105,0.0011539395029267884]}
+{"welchTTest(nullable_uint16_, nullable_uint32_)":[-5.275301417851105,0.0011539395029267884],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint16__nullable_uint64_ = r"""
-{"welchTTest(nullable_uint16_, nullable_uint64_)":[-5.275301417851105,0.0011539395029267884]}
+{"welchTTest(nullable_uint16_, nullable_uint64_)":[-5.275301417851105,0.0011539395029267884],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint16__nullable_uint8_ = r"""
-{"welchTTest(nullable_uint16_, nullable_uint8_)":[-5.275301417851105,0.0011539395029267884]}
+{"welchTTest(nullable_uint16_, nullable_uint8_)":[-5.275301417851105,0.0011539395029267884],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint16__uint16 = r"""
-{"welchTTest(nullable_uint16_, uint16)":[-5.275301417851105,0.0011539395029267884]}
+{"welchTTest(nullable_uint16_, uint16)":[-5.275301417851105,0.0011539395029267884],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint16__uint32 = r"""
-{"welchTTest(nullable_uint16_, uint32)":[-5.275301417851105,0.0011539395029267884]}
+{"welchTTest(nullable_uint16_, uint32)":[-5.275301417851105,0.0011539395029267884],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint16__uint64 = r"""
-{"welchTTest(nullable_uint16_, uint64)":[-5.275301417851105,0.0011539395029267884]}
+{"welchTTest(nullable_uint16_, uint64)":[-5.275301417851105,0.0011539395029267884],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint16__uint8 = r"""
-{"welchTTest(nullable_uint16_, uint8)":[-5.275301417851105,0.0011539395029267884]}
+{"welchTTest(nullable_uint16_, uint8)":[-5.275301417851105,0.0011539395029267884],"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint32__lowcardinality_uint16_ = r"""
-{"welchTTest(nullable_uint32_, lowcardinality_uint16_)":[-4.374297215542649,0.0032569804968386245]}
+{"welchTTest(nullable_uint32_, lowcardinality_uint16_)":[-4.374297215542649,0.0032569804968386245],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint32__lowcardinality_uint32_ = r"""
-{"welchTTest(nullable_uint32_, lowcardinality_uint32_)":[-4.374297215542649,0.0032569804968386245]}
+{"welchTTest(nullable_uint32_, lowcardinality_uint32_)":[-4.374297215542649,0.0032569804968386245],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint32__lowcardinality_uint64_ = r"""
-{"welchTTest(nullable_uint32_, lowcardinality_uint64_)":[-4.374297215542649,0.0032569804968386245]}
+{"welchTTest(nullable_uint32_, lowcardinality_uint64_)":[-4.374297215542649,0.0032569804968386245],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint32__lowcardinality_uint8_ = r"""
-{"welchTTest(nullable_uint32_, lowcardinality_uint8_)":[-4.374297215542649,0.0032569804968386245]}
+{"welchTTest(nullable_uint32_, lowcardinality_uint8_)":[-4.374297215542649,0.0032569804968386245],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint32__nullable_uint16_ = r"""
-{"welchTTest(nullable_uint32_, nullable_uint16_)":[-4.374297215542649,0.0032569804968386245]}
+{"welchTTest(nullable_uint32_, nullable_uint16_)":[-4.374297215542649,0.0032569804968386245],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint32__nullable_uint32_ = r"""
-{"welchTTest(nullable_uint32_, nullable_uint32_)":[-4.374297215542649,0.0032569804968386245]}
+{"welchTTest(nullable_uint32_, nullable_uint32_)":[-4.374297215542649,0.0032569804968386245],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint32__nullable_uint64_ = r"""
-{"welchTTest(nullable_uint32_, nullable_uint64_)":[-4.374297215542649,0.0032569804968386245]}
+{"welchTTest(nullable_uint32_, nullable_uint64_)":[-4.374297215542649,0.0032569804968386245],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint32__nullable_uint8_ = r"""
-{"welchTTest(nullable_uint32_, nullable_uint8_)":[-4.374297215542649,0.0032569804968386245]}
+{"welchTTest(nullable_uint32_, nullable_uint8_)":[-4.374297215542649,0.0032569804968386245],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint32__uint16 = r"""
-{"welchTTest(nullable_uint32_, uint16)":[-4.374297215542649,0.0032569804968386245]}
+{"welchTTest(nullable_uint32_, uint16)":[-4.374297215542649,0.0032569804968386245],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint32__uint32 = r"""
-{"welchTTest(nullable_uint32_, uint32)":[-4.374297215542649,0.0032569804968386245]}
+{"welchTTest(nullable_uint32_, uint32)":[-4.374297215542649,0.0032569804968386245],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint32__uint64 = r"""
-{"welchTTest(nullable_uint32_, uint64)":[-4.374297215542649,0.0032569804968386245]}
+{"welchTTest(nullable_uint32_, uint64)":[-4.374297215542649,0.0032569804968386245],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint32__uint8 = r"""
-{"welchTTest(nullable_uint32_, uint8)":[-4.374297215542649,0.0032569804968386245]}
+{"welchTTest(nullable_uint32_, uint8)":[-4.374297215542649,0.0032569804968386245],"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint64__lowcardinality_uint16_ = r"""
-{"welchTTest(nullable_uint64_, lowcardinality_uint16_)":[-5.63507081614618,0.0007866112968207843]}
+{"welchTTest(nullable_uint64_, lowcardinality_uint16_)":[-5.63507081614618,0.0007866112968207843],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint64__lowcardinality_uint32_ = r"""
-{"welchTTest(nullable_uint64_, lowcardinality_uint32_)":[-5.63507081614618,0.0007866112968207843]}
+{"welchTTest(nullable_uint64_, lowcardinality_uint32_)":[-5.63507081614618,0.0007866112968207843],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint64__lowcardinality_uint64_ = r"""
-{"welchTTest(nullable_uint64_, lowcardinality_uint64_)":[-5.63507081614618,0.0007866112968207843]}
+{"welchTTest(nullable_uint64_, lowcardinality_uint64_)":[-5.63507081614618,0.0007866112968207843],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint64__lowcardinality_uint8_ = r"""
-{"welchTTest(nullable_uint64_, lowcardinality_uint8_)":[-5.63507081614618,0.0007866112968207843]}
+{"welchTTest(nullable_uint64_, lowcardinality_uint8_)":[-5.63507081614618,0.0007866112968207843],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint64__nullable_uint16_ = r"""
-{"welchTTest(nullable_uint64_, nullable_uint16_)":[-5.63507081614618,0.0007866112968207843]}
+{"welchTTest(nullable_uint64_, nullable_uint16_)":[-5.63507081614618,0.0007866112968207843],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint64__nullable_uint32_ = r"""
-{"welchTTest(nullable_uint64_, nullable_uint32_)":[-5.63507081614618,0.0007866112968207843]}
+{"welchTTest(nullable_uint64_, nullable_uint32_)":[-5.63507081614618,0.0007866112968207843],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint64__nullable_uint64_ = r"""
-{"welchTTest(nullable_uint64_, nullable_uint64_)":[-5.63507081614618,0.0007866112968207843]}
+{"welchTTest(nullable_uint64_, nullable_uint64_)":[-5.63507081614618,0.0007866112968207843],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint64__nullable_uint8_ = r"""
-{"welchTTest(nullable_uint64_, nullable_uint8_)":[-5.63507081614618,0.0007866112968207843]}
+{"welchTTest(nullable_uint64_, nullable_uint8_)":[-5.63507081614618,0.0007866112968207843],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint64__uint16 = r"""
-{"welchTTest(nullable_uint64_, uint16)":[-5.63507081614618,0.0007866112968207843]}
+{"welchTTest(nullable_uint64_, uint16)":[-5.63507081614618,0.0007866112968207843],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint64__uint32 = r"""
-{"welchTTest(nullable_uint64_, uint32)":[-5.63507081614618,0.0007866112968207843]}
+{"welchTTest(nullable_uint64_, uint32)":[-5.63507081614618,0.0007866112968207843],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint64__uint64 = r"""
-{"welchTTest(nullable_uint64_, uint64)":[-5.63507081614618,0.0007866112968207843]}
+{"welchTTest(nullable_uint64_, uint64)":[-5.63507081614618,0.0007866112968207843],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint64__uint8 = r"""
-{"welchTTest(nullable_uint64_, uint8)":[-5.63507081614618,0.0007866112968207843]}
+{"welchTTest(nullable_uint64_, uint8)":[-5.63507081614618,0.0007866112968207843],"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint8__lowcardinality_uint16_ = r"""
-{"welchTTest(nullable_uint8_, lowcardinality_uint16_)":[-3.7881941525955787,0.006818946754831488]}
+{"welchTTest(nullable_uint8_, lowcardinality_uint16_)":[-3.7881941525955787,0.006818946754831488],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint8__lowcardinality_uint32_ = r"""
-{"welchTTest(nullable_uint8_, lowcardinality_uint32_)":[-3.7881941525955787,0.006818946754831488]}
+{"welchTTest(nullable_uint8_, lowcardinality_uint32_)":[-3.7881941525955787,0.006818946754831488],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint8__lowcardinality_uint64_ = r"""
-{"welchTTest(nullable_uint8_, lowcardinality_uint64_)":[-3.7881941525955787,0.006818946754831488]}
+{"welchTTest(nullable_uint8_, lowcardinality_uint64_)":[-3.7881941525955787,0.006818946754831488],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint8__lowcardinality_uint8_ = r"""
-{"welchTTest(nullable_uint8_, lowcardinality_uint8_)":[-3.7881941525955787,0.006818946754831488]}
+{"welchTTest(nullable_uint8_, lowcardinality_uint8_)":[-3.7881941525955787,0.006818946754831488],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint8__nullable_uint16_ = r"""
-{"welchTTest(nullable_uint8_, nullable_uint16_)":[-3.7881941525955787,0.006818946754831488]}
+{"welchTTest(nullable_uint8_, nullable_uint16_)":[-3.7881941525955787,0.006818946754831488],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint8__nullable_uint32_ = r"""
-{"welchTTest(nullable_uint8_, nullable_uint32_)":[-3.7881941525955787,0.006818946754831488]}
+{"welchTTest(nullable_uint8_, nullable_uint32_)":[-3.7881941525955787,0.006818946754831488],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint8__nullable_uint64_ = r"""
-{"welchTTest(nullable_uint8_, nullable_uint64_)":[-3.7881941525955787,0.006818946754831488]}
+{"welchTTest(nullable_uint8_, nullable_uint64_)":[-3.7881941525955787,0.006818946754831488],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint8__nullable_uint8_ = r"""
-{"welchTTest(nullable_uint8_, nullable_uint8_)":[-3.7881941525955787,0.006818946754831488]}
+{"welchTTest(nullable_uint8_, nullable_uint8_)":[-3.7881941525955787,0.006818946754831488],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint8__uint16 = r"""
-{"welchTTest(nullable_uint8_, uint16)":[-3.7881941525955787,0.006818946754831488]}
+{"welchTTest(nullable_uint8_, uint16)":[-3.7881941525955787,0.006818946754831488],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint8__uint32 = r"""
-{"welchTTest(nullable_uint8_, uint32)":[-3.7881941525955787,0.006818946754831488]}
+{"welchTTest(nullable_uint8_, uint32)":[-3.7881941525955787,0.006818946754831488],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint8__uint64 = r"""
-{"welchTTest(nullable_uint8_, uint64)":[-3.7881941525955787,0.006818946754831488]}
+{"welchTTest(nullable_uint8_, uint64)":[-3.7881941525955787,0.006818946754831488],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_nullable_uint8__uint8 = r"""
-{"welchTTest(nullable_uint8_, uint8)":[-3.7881941525955787,0.006818946754831488]}
+{"welchTTest(nullable_uint8_, uint8)":[-3.7881941525955787,0.006818946754831488],"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint16_lowcardinality_uint16_ = r"""
-{"welchTTest(uint16, lowcardinality_uint16_)":[-4.53591336755593,0.002680728091051828]}
+{"welchTTest(uint16, lowcardinality_uint16_)":[-4.53591336755593,0.002680728091051828],"any(toTypeName(uint16))":"UInt16","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint16_lowcardinality_uint32_ = r"""
-{"welchTTest(uint16, lowcardinality_uint32_)":[-4.53591336755593,0.002680728091051828]}
+{"welchTTest(uint16, lowcardinality_uint32_)":[-4.53591336755593,0.002680728091051828],"any(toTypeName(uint16))":"UInt16","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint16_lowcardinality_uint64_ = r"""
-{"welchTTest(uint16, lowcardinality_uint64_)":[-4.53591336755593,0.002680728091051828]}
+{"welchTTest(uint16, lowcardinality_uint64_)":[-4.53591336755593,0.002680728091051828],"any(toTypeName(uint16))":"UInt16","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint16_lowcardinality_uint8_ = r"""
-{"welchTTest(uint16, lowcardinality_uint8_)":[-4.53591336755593,0.002680728091051828]}
+{"welchTTest(uint16, lowcardinality_uint8_)":[-4.53591336755593,0.002680728091051828],"any(toTypeName(uint16))":"UInt16","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint16_nullable_uint16_ = r"""
-{"welchTTest(uint16, nullable_uint16_)":[-4.53591336755593,0.002680728091051828]}
+{"welchTTest(uint16, nullable_uint16_)":[-4.53591336755593,0.002680728091051828],"any(toTypeName(uint16))":"UInt16","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint16_nullable_uint32_ = r"""
-{"welchTTest(uint16, nullable_uint32_)":[-4.53591336755593,0.002680728091051828]}
+{"welchTTest(uint16, nullable_uint32_)":[-4.53591336755593,0.002680728091051828],"any(toTypeName(uint16))":"UInt16","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint16_nullable_uint64_ = r"""
-{"welchTTest(uint16, nullable_uint64_)":[-4.53591336755593,0.002680728091051828]}
+{"welchTTest(uint16, nullable_uint64_)":[-4.53591336755593,0.002680728091051828],"any(toTypeName(uint16))":"UInt16","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint16_nullable_uint8_ = r"""
-{"welchTTest(uint16, nullable_uint8_)":[-4.53591336755593,0.002680728091051828]}
+{"welchTTest(uint16, nullable_uint8_)":[-4.53591336755593,0.002680728091051828],"any(toTypeName(uint16))":"UInt16","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint16_uint16 = r"""
-{"welchTTest(uint16, uint16)":[-4.53591336755593,0.002680728091051828]}
+{"welchTTest(uint16, uint16)":[-4.53591336755593,0.002680728091051828],"any(toTypeName(uint16))":"UInt16","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint16_uint32 = r"""
-{"welchTTest(uint16, uint32)":[-4.53591336755593,0.002680728091051828]}
+{"welchTTest(uint16, uint32)":[-4.53591336755593,0.002680728091051828],"any(toTypeName(uint16))":"UInt16","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint16_uint64 = r"""
-{"welchTTest(uint16, uint64)":[-4.53591336755593,0.002680728091051828]}
+{"welchTTest(uint16, uint64)":[-4.53591336755593,0.002680728091051828],"any(toTypeName(uint16))":"UInt16","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint16_uint8 = r"""
-{"welchTTest(uint16, uint8)":[-4.53591336755593,0.002680728091051828]}
+{"welchTTest(uint16, uint8)":[-4.53591336755593,0.002680728091051828],"any(toTypeName(uint16))":"UInt16","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint32_lowcardinality_uint16_ = r"""
-{"welchTTest(uint32, lowcardinality_uint16_)":[-7.725005454609252,0.00011388106297909578]}
+{"welchTTest(uint32, lowcardinality_uint16_)":[-7.725005454609252,0.00011388106297909578],"any(toTypeName(uint32))":"UInt32","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint32_lowcardinality_uint32_ = r"""
-{"welchTTest(uint32, lowcardinality_uint32_)":[-7.725005454609252,0.00011388106297909578]}
+{"welchTTest(uint32, lowcardinality_uint32_)":[-7.725005454609252,0.00011388106297909578],"any(toTypeName(uint32))":"UInt32","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint32_lowcardinality_uint64_ = r"""
-{"welchTTest(uint32, lowcardinality_uint64_)":[-7.725005454609252,0.00011388106297909578]}
+{"welchTTest(uint32, lowcardinality_uint64_)":[-7.725005454609252,0.00011388106297909578],"any(toTypeName(uint32))":"UInt32","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint32_lowcardinality_uint8_ = r"""
-{"welchTTest(uint32, lowcardinality_uint8_)":[-7.725005454609252,0.00011388106297909578]}
+{"welchTTest(uint32, lowcardinality_uint8_)":[-7.725005454609252,0.00011388106297909578],"any(toTypeName(uint32))":"UInt32","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint32_nullable_uint16_ = r"""
-{"welchTTest(uint32, nullable_uint16_)":[-7.725005454609252,0.00011388106297909578]}
+{"welchTTest(uint32, nullable_uint16_)":[-7.725005454609252,0.00011388106297909578],"any(toTypeName(uint32))":"UInt32","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint32_nullable_uint32_ = r"""
-{"welchTTest(uint32, nullable_uint32_)":[-7.725005454609252,0.00011388106297909578]}
+{"welchTTest(uint32, nullable_uint32_)":[-7.725005454609252,0.00011388106297909578],"any(toTypeName(uint32))":"UInt32","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint32_nullable_uint64_ = r"""
-{"welchTTest(uint32, nullable_uint64_)":[-7.725005454609252,0.00011388106297909578]}
+{"welchTTest(uint32, nullable_uint64_)":[-7.725005454609252,0.00011388106297909578],"any(toTypeName(uint32))":"UInt32","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint32_nullable_uint8_ = r"""
-{"welchTTest(uint32, nullable_uint8_)":[-7.725005454609252,0.00011388106297909578]}
+{"welchTTest(uint32, nullable_uint8_)":[-7.725005454609252,0.00011388106297909578],"any(toTypeName(uint32))":"UInt32","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint32_uint16 = r"""
-{"welchTTest(uint32, uint16)":[-7.725005454609252,0.00011388106297909578]}
+{"welchTTest(uint32, uint16)":[-7.725005454609252,0.00011388106297909578],"any(toTypeName(uint32))":"UInt32","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint32_uint32 = r"""
-{"welchTTest(uint32, uint32)":[-7.725005454609252,0.00011388106297909578]}
+{"welchTTest(uint32, uint32)":[-7.725005454609252,0.00011388106297909578],"any(toTypeName(uint32))":"UInt32","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint32_uint64 = r"""
-{"welchTTest(uint32, uint64)":[-7.725005454609252,0.00011388106297909578]}
+{"welchTTest(uint32, uint64)":[-7.725005454609252,0.00011388106297909578],"any(toTypeName(uint32))":"UInt32","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint32_uint8 = r"""
-{"welchTTest(uint32, uint8)":[-7.725005454609252,0.00011388106297909578]}
+{"welchTTest(uint32, uint8)":[-7.725005454609252,0.00011388106297909578],"any(toTypeName(uint32))":"UInt32","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint64_lowcardinality_uint16_ = r"""
-{"welchTTest(uint64, lowcardinality_uint16_)":[-4.828265698322,0.0019032617434498241]}
+{"welchTTest(uint64, lowcardinality_uint16_)":[-4.828265698322,0.0019032617434498241],"any(toTypeName(uint64))":"UInt64","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint64_lowcardinality_uint32_ = r"""
-{"welchTTest(uint64, lowcardinality_uint32_)":[-4.828265698322,0.0019032617434498241]}
+{"welchTTest(uint64, lowcardinality_uint32_)":[-4.828265698322,0.0019032617434498241],"any(toTypeName(uint64))":"UInt64","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint64_lowcardinality_uint64_ = r"""
-{"welchTTest(uint64, lowcardinality_uint64_)":[-4.828265698322,0.0019032617434498241]}
+{"welchTTest(uint64, lowcardinality_uint64_)":[-4.828265698322,0.0019032617434498241],"any(toTypeName(uint64))":"UInt64","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint64_lowcardinality_uint8_ = r"""
-{"welchTTest(uint64, lowcardinality_uint8_)":[-4.828265698322,0.0019032617434498241]}
+{"welchTTest(uint64, lowcardinality_uint8_)":[-4.828265698322,0.0019032617434498241],"any(toTypeName(uint64))":"UInt64","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint64_nullable_uint16_ = r"""
-{"welchTTest(uint64, nullable_uint16_)":[-4.828265698322,0.0019032617434498241]}
+{"welchTTest(uint64, nullable_uint16_)":[-4.828265698322,0.0019032617434498241],"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint64_nullable_uint32_ = r"""
-{"welchTTest(uint64, nullable_uint32_)":[-4.828265698322,0.0019032617434498241]}
+{"welchTTest(uint64, nullable_uint32_)":[-4.828265698322,0.0019032617434498241],"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint64_nullable_uint64_ = r"""
-{"welchTTest(uint64, nullable_uint64_)":[-4.828265698322,0.0019032617434498241]}
+{"welchTTest(uint64, nullable_uint64_)":[-4.828265698322,0.0019032617434498241],"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint64_nullable_uint8_ = r"""
-{"welchTTest(uint64, nullable_uint8_)":[-4.828265698322,0.0019032617434498241]}
+{"welchTTest(uint64, nullable_uint8_)":[-4.828265698322,0.0019032617434498241],"any(toTypeName(uint64))":"UInt64","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint64_uint16 = r"""
-{"welchTTest(uint64, uint16)":[-4.828265698322,0.0019032617434498241]}
+{"welchTTest(uint64, uint16)":[-4.828265698322,0.0019032617434498241],"any(toTypeName(uint64))":"UInt64","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint64_uint32 = r"""
-{"welchTTest(uint64, uint32)":[-4.828265698322,0.0019032617434498241]}
+{"welchTTest(uint64, uint32)":[-4.828265698322,0.0019032617434498241],"any(toTypeName(uint64))":"UInt64","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint64_uint64 = r"""
-{"welchTTest(uint64, uint64)":[-4.828265698322,0.0019032617434498241]}
+{"welchTTest(uint64, uint64)":[-4.828265698322,0.0019032617434498241],"any(toTypeName(uint64))":"UInt64","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint64_uint8 = r"""
-{"welchTTest(uint64, uint8)":[-4.828265698322,0.0019032617434498241]}
+{"welchTTest(uint64, uint8)":[-4.828265698322,0.0019032617434498241],"any(toTypeName(uint64))":"UInt64","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint8_lowcardinality_uint16_ = r"""
-{"welchTTest(uint8, lowcardinality_uint16_)":[-6.274977645189032,0.0004140325160130091]}
+{"welchTTest(uint8, lowcardinality_uint16_)":[-6.274977645189032,0.0004140325160130091],"any(toTypeName(uint8))":"UInt8","any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint8_lowcardinality_uint32_ = r"""
-{"welchTTest(uint8, lowcardinality_uint32_)":[-6.274977645189032,0.0004140325160130091]}
+{"welchTTest(uint8, lowcardinality_uint32_)":[-6.274977645189032,0.0004140325160130091],"any(toTypeName(uint8))":"UInt8","any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint8_lowcardinality_uint64_ = r"""
-{"welchTTest(uint8, lowcardinality_uint64_)":[-6.274977645189032,0.0004140325160130091]}
+{"welchTTest(uint8, lowcardinality_uint64_)":[-6.274977645189032,0.0004140325160130091],"any(toTypeName(uint8))":"UInt8","any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint8_lowcardinality_uint8_ = r"""
-{"welchTTest(uint8, lowcardinality_uint8_)":[-6.274977645189032,0.0004140325160130091]}
+{"welchTTest(uint8, lowcardinality_uint8_)":[-6.274977645189032,0.0004140325160130091],"any(toTypeName(uint8))":"UInt8","any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint8_nullable_uint16_ = r"""
-{"welchTTest(uint8, nullable_uint16_)":[-6.274977645189032,0.0004140325160130091]}
+{"welchTTest(uint8, nullable_uint16_)":[-6.274977645189032,0.0004140325160130091],"any(toTypeName(uint8))":"UInt8","any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint8_nullable_uint32_ = r"""
-{"welchTTest(uint8, nullable_uint32_)":[-6.274977645189032,0.0004140325160130091]}
+{"welchTTest(uint8, nullable_uint32_)":[-6.274977645189032,0.0004140325160130091],"any(toTypeName(uint8))":"UInt8","any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint8_nullable_uint64_ = r"""
-{"welchTTest(uint8, nullable_uint64_)":[-6.274977645189032,0.0004140325160130091]}
+{"welchTTest(uint8, nullable_uint64_)":[-6.274977645189032,0.0004140325160130091],"any(toTypeName(uint8))":"UInt8","any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint8_nullable_uint8_ = r"""
-{"welchTTest(uint8, nullable_uint8_)":[-6.274977645189032,0.0004140325160130091]}
+{"welchTTest(uint8, nullable_uint8_)":[-6.274977645189032,0.0004140325160130091],"any(toTypeName(uint8))":"UInt8","any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint8_uint16 = r"""
-{"welchTTest(uint8, uint16)":[-6.274977645189032,0.0004140325160130091]}
+{"welchTTest(uint8, uint16)":[-6.274977645189032,0.0004140325160130091],"any(toTypeName(uint8))":"UInt8","any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint8_uint32 = r"""
-{"welchTTest(uint8, uint32)":[-6.274977645189032,0.0004140325160130091]}
+{"welchTTest(uint8, uint32)":[-6.274977645189032,0.0004140325160130091],"any(toTypeName(uint8))":"UInt8","any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint8_uint64 = r"""
-{"welchTTest(uint8, uint64)":[-6.274977645189032,0.0004140325160130091]}
+{"welchTTest(uint8, uint64)":[-6.274977645189032,0.0004140325160130091],"any(toTypeName(uint8))":"UInt8","any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_datatypes_permutations_uint8_uint8 = r"""
-{"welchTTest(uint8, uint8)":[-6.274977645189032,0.0004140325160130091]}
+{"welchTTest(uint8, uint8)":[-6.274977645189032,0.0004140325160130091],"any(toTypeName(uint8))":"UInt8","any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_doc_example = r"""
-{"welchTTest(x, 1)":[null,null]}
+{"welchTTest(x, 1)":[null,null],"any(toTypeName(x))":"Int8","any(toTypeName(1))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_inf = r"""
-{"welchTTest(x, 1)":[null,null]}
+{"welchTTest(x, 1)":[null,null],"any(toTypeName(x))":"Float64","any(toTypeName(1))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_inf___inf__nan = r"""
-{"welchTTest(x, 1)":[null,null]}
+{"welchTTest(x, 1)":[null,null],"any(toTypeName(x))":"Float64","any(toTypeName(1))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_nan = r"""
-{"welchTTest(x, 1)":[null,null]}
+{"welchTTest(x, 1)":[null,null],"any(toTypeName(x))":"Float64","any(toTypeName(1))":"UInt8"}
 """
 
 _aggregate_functions_welchTTest_return_type = r"""
-{"toTypeName(welchTTest(number, toUInt64(number)))":"Tuple(t_statistic Float64, p_value Float64)"}
+{"toTypeName(welchTTest(number, toUInt64(number)))":"Tuple(t_statistic Float64, p_value Float64)","any(toTypeName(number))":"UInt64","any(toTypeName(number))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_single_NULL_value = r"""
-{"welchTTest(x, w)":[null,null]}
+{"welchTTest(x, w)":[null,null],"any(toTypeName(x))":"Nullable(Int8)","any(toTypeName(w))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_single_row = r"""
-{"welchTTest(number, toUInt64(number))":[null,null]}
+{"welchTTest(number, toUInt64(number))":[null,null],"any(toTypeName(number))":"UInt64","any(toTypeName(number))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_single_row_with_zero_weight = r"""
-{"welchTTest(number, toUInt64(minus(number, 1)))":[null,null]}
+{"welchTTest(number, toUInt64(minus(number, 1)))":[null,null],"any(toTypeName(number))":"UInt64","any(toTypeName(number))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_single_value_in_0_population = r"""
-{"welchTTest(sample_data, sample_index)":[null,null]}
+{"welchTTest(sample_data, sample_index)":[null,null],"any(toTypeName(sample_data))":"Int8","any(toTypeName(sample_index))":"Int8"}
 """
 
 _aggregate_functions_welchTTest_single_value_in_1_population = r"""
-{"welchTTest(sample_data, sample_index)":[null,null]}
+{"welchTTest(sample_data, sample_index)":[null,null],"any(toTypeName(sample_data))":"Int8","any(toTypeName(sample_index))":"Int8"}
 """
 
 _aggregate_functions_welchTTest_some_negative_values = r"""
-{"welchTTest(minus(number, 5), toUInt64(number))":[null,null]}
+{"welchTTest(minus(number, 5), toUInt64(number))":[null,null],"any(toTypeName(number))":"UInt64","any(toTypeName(number))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_weight_NULL_value_handling = r"""
-{"welchTTest(x, w)":[0.31108550841912763,0.7727446399938677]}
+{"welchTTest(x, w)":[0.31108550841912763,0.7727446399938677],"any(toTypeName(x))":"Int8","any(toTypeName(w))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_welchTTest_with_group_by = r"""
-{"even":0,"welchTTest(number, toUInt64(number))":[null,null]}
-{"even":1,"welchTTest(number, toUInt64(number))":[null,null]}
+{"even":0,"welchTTest(number, toUInt64(number))":[null,null],"any(toTypeName(number))":"UInt64","any(toTypeName(number))":"UInt64"}
+{"even":1,"welchTTest(number, toUInt64(number))":[null,null],"any(toTypeName(number))":"UInt64","any(toTypeName(number))":"UInt64"}
 """
 
 _aggregate_functions_welchTTest_zero_rows = r"""
-{"welchTTest(number, toUInt64(plus(number, 1)))":[null,null]}
+{"welchTTest(number, toUInt64(plus(number, 1)))":[null,null],"any(toTypeName(number))":"","any(toTypeName(number))":""}
 """
 

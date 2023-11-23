@@ -1,0 +1,208 @@
+_aggregate_functions_merge_quantileTimingMerge_Float32_0 = r"""
+{"quantileTimingMerge(state)":0}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_Float64_0 = r"""
+{"quantileTimingMerge(state)":0}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_Int16_0 = r"""
+{"quantileTimingMerge(state)":9592}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_Int32_0 = r"""
+{"quantileTimingMerge(state)":30000}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_Int64_0 = r"""
+{"quantileTimingMerge(state)":30000}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_Int8_0 = r"""
+{"quantileTimingMerge(state)":115}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_LowCardinality_Float32__0 = r"""
+{"quantileTimingMerge(state)":0}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_LowCardinality_Float64__0 = r"""
+{"quantileTimingMerge(state)":0}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_LowCardinality_Int16__0 = r"""
+{"quantileTimingMerge(state)":22678}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_LowCardinality_Int32__0 = r"""
+{"quantileTimingMerge(state)":30000}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_LowCardinality_Int64__0 = r"""
+{"quantileTimingMerge(state)":30000}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_LowCardinality_Int8__0 = r"""
+{"quantileTimingMerge(state)":95}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_LowCardinality_Nullable_Float32___0 = r"""
+{"quantileTimingMerge(state)":null}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_LowCardinality_Nullable_Float64___0 = r"""
+{"quantileTimingMerge(state)":15435}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_LowCardinality_Nullable_Int16___0 = r"""
+{"quantileTimingMerge(state)":21542}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_LowCardinality_Nullable_Int32___0 = r"""
+{"quantileTimingMerge(state)":30000}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_LowCardinality_Nullable_Int64___0 = r"""
+{"quantileTimingMerge(state)":30000}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_LowCardinality_Nullable_Int8___0 = r"""
+{"quantileTimingMerge(state)":117}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_LowCardinality_Nullable_UInt16___0 = r"""
+{"quantileTimingMerge(state)":15607}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_LowCardinality_Nullable_UInt32___0 = r"""
+{"quantileTimingMerge(state)":30000}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_LowCardinality_Nullable_UInt64___0 = r"""
+{"quantileTimingMerge(state)":30000}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_LowCardinality_Nullable_UInt8___0 = r"""
+{"quantileTimingMerge(state)":165}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_LowCardinality_UInt16__0 = r"""
+{"quantileTimingMerge(state)":30000}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_LowCardinality_UInt32__0 = r"""
+{"quantileTimingMerge(state)":30000}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_LowCardinality_UInt64__0 = r"""
+{"quantileTimingMerge(state)":30000}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_LowCardinality_UInt8__0 = r"""
+{"quantileTimingMerge(state)":216}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_NULL_value_handling_0 = r"""
+{"quantileTimingMerge(state)":3}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_Nullable_Float32__0 = r"""
+{"quantileTimingMerge(state)":null}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_Nullable_Float64__0 = r"""
+{"quantileTimingMerge(state)":null}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_Nullable_Int16__0 = r"""
+{"quantileTimingMerge(state)":11484}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_Nullable_Int32__0 = r"""
+{"quantileTimingMerge(state)":30000}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_Nullable_Int64__0 = r"""
+{"quantileTimingMerge(state)":30000}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_Nullable_Int8__0 = r"""
+{"quantileTimingMerge(state)":72}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_Nullable_UInt16__0 = r"""
+{"quantileTimingMerge(state)":30000}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_Nullable_UInt32__0 = r"""
+{"quantileTimingMerge(state)":30000}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_Nullable_UInt64__0 = r"""
+{"quantileTimingMerge(state)":30000}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_Nullable_UInt8__0 = r"""
+{"quantileTimingMerge(state)":65}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_UInt16_0 = r"""
+{"quantileTimingMerge(state)":26244}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_UInt32_0 = r"""
+{"quantileTimingMerge(state)":30000}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_UInt64_0 = r"""
+{"quantileTimingMerge(state)":30000}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_UInt8_0 = r"""
+{"quantileTimingMerge(state)":163}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge__inf_0 = r"""
+{"quantileTimingMerge(state)":4}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_constant_0 = r"""
+{"quantileTimingMerge(state)":1}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_doc_example_0 = r"""
+{"quantileTimingMerge(state)":3}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_inf_0 = r"""
+{"quantileTimingMerge(state)":4}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_inf___inf__nan_0 = r"""
+{"quantileTimingMerge(state)":5}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_nan_0 = r"""
+{"quantileTimingMerge(state)":4}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_single_NULL_value_0 = r"""
+{"quantileTimingMerge(state)":null}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_single_row_0 = r"""
+{"quantileTimingMerge(state)":0}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_some_negative_values_0 = r"""
+{"quantileTimingMerge(state)":3}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_with_group_by_0 = r"""
+{"quantileTimingMerge(state)":4}
+"""
+
+_aggregate_functions_merge_quantileTimingMerge_with_group_by_1 = r"""
+{"quantileTimingMerge(state)":5}
+"""
+

@@ -16,41 +16,48 @@ def execute_multi_query(self, query):
 def datatype(self, func, table, col1_name, col2_name):
     """Check different column types."""
     execute_query(
-        f"SELECT {func.format(params=col1_name+','+col2_name)} FROM {table.name} FORMAT JSONEachRow"
+        f"SELECT {func.format(params=col1_name+','+col2_name)}, any(toTypeName({col1_name})), any(toTypeName({col2_name})) FROM {table.name} FORMAT JSONEachRow"
     )
 
 
 @TestScenario
 @Name("argMin")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_ArgMin("1.0"))
-def scenario(self, func="argMin({params})", table=None):
+def scenario(self, func="argMin({params})", table=None, snapshot_id=None):
     """Check argMin or argMax or one of their combinator aggregate functions. By default: argMin."""
-    self.context.snapshot_id = get_snapshot_id(clickhouse_version=">=23.2")
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, clickhouse_version=">=23.2"
+    )
+
+    if "Merge" in self.name:
+        return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:
         table = self.context.table
 
     with Check("constant"):
-        execute_query(f"SELECT {func.format(params='1,2')}")
+        execute_query(
+            f"SELECT {func.format(params='1,2')}, any(toTypeName(1)), any(toTypeName(2))"
+        )
 
     with Check("zero rows"):
         execute_query(
-            f"SELECT {func.format(params='number, number+1')} FROM numbers(0)"
+            f"SELECT {func.format(params='number, number+1')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(0)"
         )
 
     with Check("with group by"):
         execute_query(
-            f"SELECT number % 2 AS even, {func.format(params='number, even')} FROM numbers(10) GROUP BY even"
+            f"SELECT number % 2 AS even, {func.format(params='number, even')}, any(toTypeName(number)), any(toTypeName(even)) FROM numbers(10) GROUP BY even"
         )
 
     with Check("NULL value handling"):
         execute_query(
-            f"SELECT {func.format(params='x, y')} FROM values('x Nullable(Int8), y Nullable(String)', (1, NULL), (NULL, 'hello'), (3, 'there'), (NULL, NULL), (5, 'you'))"
+            f"SELECT {func.format(params='x, y')}, any(toTypeName(x)), any(toTypeName(y)) FROM values('x Nullable(Int8), y Nullable(String)', (1, NULL), (NULL, 'hello'), (3, 'there'), (NULL, NULL), (5, 'you'))"
         )
 
     with Check("doc example"):
         execute_query(
-            f"SELECT {func.format(params='user, salary')} FROM values('user String, salary Float64',('director',5000),('manager',3000),('worker', 1000))"
+            f"SELECT {func.format(params='user, salary')}, any(toTypeName(user)), any(toTypeName(salary)) FROM values('user String, salary Float64',('director',5000),('manager',3000),('worker', 1000))"
         )
 
     with Check("inf, -inf, nan"):
@@ -58,12 +65,12 @@ def scenario(self, func="argMin({params})", table=None):
             x, y = permutation
             with Check(f"{x},{y}"):
                 execute_query(
-                    f"SELECT {func.format(params='x,y')}  FROM values('x Float64, y Float64', (0, 1), (1, 2.3), ({x},{y}), (6.7,3), (4,4), (5, 1))"
+                    f"SELECT {func.format(params='x,y')}, any(toTypeName(x)), any(toTypeName(y))  FROM values('x Float64, y Float64', (0, 1), (1, 2.3), ({x},{y}), (6.7,3), (4,4), (5, 1))"
                 )
 
     with Check("string that ends with \\0"):
         execute_query(
-            f"SELECT {func.format(params='x, y')} FROM values('x String, y String', ('1', 'hello\0\0'), ('hello\0\0', 'hello'), ('3', 'there'), ('hello\0\0', 'there\0\0'), ('5', 'you'))"
+            f"SELECT {func.format(params='x, y')}, any(toTypeName(x)), any(toTypeName(y)) FROM values('x String, y String', ('1', 'hello\0\0'), ('hello\0\0', 'hello'), ('3', 'there'), ('hello\0\0', 'there\0\0'), ('5', 'you'))"
         )
 
     with Feature("datatypes"):

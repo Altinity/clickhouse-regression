@@ -1,213 +1,213 @@
 _aggregate_functions_stddevSamp_Float32 = r"""
-{"stddevSamp(float32)":0}
+{"stddevSamp(float32)":0,"any(toTypeName(float32))":"Float32"}
 """
 
 _aggregate_functions_stddevSamp_Float64 = r"""
-{"stddevSamp(float64)":0}
+{"stddevSamp(float64)":0,"any(toTypeName(float64))":"Float64"}
 """
 
 _aggregate_functions_stddevSamp_Int16 = r"""
-{"stddevSamp(int16)":21585.897115169122}
+{"stddevSamp(int16)":21585.897115169122,"any(toTypeName(int16))":"Int16"}
 """
 
 _aggregate_functions_stddevSamp_Int32 = r"""
-{"stddevSamp(int32)":1398655516.7721844}
+{"stddevSamp(int32)":1398655516.7721844,"any(toTypeName(int32))":"Int32"}
 """
 
 _aggregate_functions_stddevSamp_Int64 = r"""
-{"stddevSamp(int64)":5115884603912632000}
+{"stddevSamp(int64)":5115884603912632000,"any(toTypeName(int64))":"Int64"}
 """
 
 _aggregate_functions_stddevSamp_Int8 = r"""
-{"stddevSamp(int8)":98.9202259960576}
+{"stddevSamp(int8)":98.9202259960576,"any(toTypeName(int8))":"Int8"}
 """
 
 _aggregate_functions_stddevSamp_LowCardinality_Float32_ = r"""
-{"stddevSamp(lowcardinality_float32_)":0}
+{"stddevSamp(lowcardinality_float32_)":0,"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
 """
 
 _aggregate_functions_stddevSamp_LowCardinality_Float64_ = r"""
-{"stddevSamp(lowcardinality_float64_)":0}
+{"stddevSamp(lowcardinality_float64_)":0,"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)"}
 """
 
 _aggregate_functions_stddevSamp_LowCardinality_Int16_ = r"""
-{"stddevSamp(lowcardinality_int16_)":25321.53771901611}
+{"stddevSamp(lowcardinality_int16_)":25321.53771901611,"any(toTypeName(lowcardinality_int16_))":"LowCardinality(Int16)"}
 """
 
 _aggregate_functions_stddevSamp_LowCardinality_Int32_ = r"""
-{"stddevSamp(lowcardinality_int32_)":1530324659.7604034}
+{"stddevSamp(lowcardinality_int32_)":1530324659.7604034,"any(toTypeName(lowcardinality_int32_))":"LowCardinality(Int32)"}
 """
 
 _aggregate_functions_stddevSamp_LowCardinality_Int64_ = r"""
-{"stddevSamp(lowcardinality_int64_)":6343832158702280000}
+{"stddevSamp(lowcardinality_int64_)":6343832158702280000,"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
 """
 
 _aggregate_functions_stddevSamp_LowCardinality_Int8_ = r"""
-{"stddevSamp(lowcardinality_int8_)":90.4328480144245}
+{"stddevSamp(lowcardinality_int8_)":90.4328480144245,"any(toTypeName(lowcardinality_int8_))":"LowCardinality(Int8)"}
 """
 
 _aggregate_functions_stddevSamp_LowCardinality_Nullable_Float32__ = r"""
-{"stddevSamp(lowcardinality_nullable_float32__)":0}
+{"stddevSamp(lowcardinality_nullable_float32__)":0,"any(toTypeName(lowcardinality_nullable_float32__))":"LowCardinality(Nullable(Float32))"}
 """
 
 _aggregate_functions_stddevSamp_LowCardinality_Nullable_Float64__ = r"""
-{"stddevSamp(lowcardinality_nullable_float64__)":0}
+{"stddevSamp(lowcardinality_nullable_float64__)":0,"any(toTypeName(lowcardinality_nullable_float64__))":"LowCardinality(Nullable(Float64))"}
 """
 
 _aggregate_functions_stddevSamp_LowCardinality_Nullable_Int16__ = r"""
-{"stddevSamp(lowcardinality_nullable_int16__)":22852.142737486225}
+{"stddevSamp(lowcardinality_nullable_int16__)":22852.142737486225,"any(toTypeName(lowcardinality_nullable_int16__))":"LowCardinality(Nullable(Int16))"}
 """
 
 _aggregate_functions_stddevSamp_LowCardinality_Nullable_Int32__ = r"""
-{"stddevSamp(lowcardinality_nullable_int32__)":1459691591.9313626}
+{"stddevSamp(lowcardinality_nullable_int32__)":1459691591.9313626,"any(toTypeName(lowcardinality_nullable_int32__))":"LowCardinality(Nullable(Int32))"}
 """
 
 _aggregate_functions_stddevSamp_LowCardinality_Nullable_Int64__ = r"""
-{"stddevSamp(lowcardinality_nullable_int64__)":6981312787042097000}
+{"stddevSamp(lowcardinality_nullable_int64__)":6981312787042097000,"any(toTypeName(lowcardinality_nullable_int64__))":"LowCardinality(Nullable(Int64))"}
 """
 
 _aggregate_functions_stddevSamp_LowCardinality_Nullable_Int8__ = r"""
-{"stddevSamp(lowcardinality_nullable_int8__)":102.35355391973451}
+{"stddevSamp(lowcardinality_nullable_int8__)":102.35355391973451,"any(toTypeName(lowcardinality_nullable_int8__))":"LowCardinality(Nullable(Int8))"}
 """
 
 _aggregate_functions_stddevSamp_LowCardinality_Nullable_UInt16__ = r"""
-{"stddevSamp(lowcardinality_nullable_uint16__)":25750.473432541003}
+{"stddevSamp(lowcardinality_nullable_uint16__)":25750.473432541003,"any(toTypeName(lowcardinality_nullable_uint16__))":"LowCardinality(Nullable(UInt16))"}
 """
 
 _aggregate_functions_stddevSamp_LowCardinality_Nullable_UInt32__ = r"""
-{"stddevSamp(lowcardinality_nullable_uint32__)":1412176414.59253}
+{"stddevSamp(lowcardinality_nullable_uint32__)":1412176414.59253,"any(toTypeName(lowcardinality_nullable_uint32__))":"LowCardinality(Nullable(UInt32))"}
 """
 
 _aggregate_functions_stddevSamp_LowCardinality_Nullable_UInt64__ = r"""
-{"stddevSamp(lowcardinality_nullable_uint64__)":7351770730073589000}
+{"stddevSamp(lowcardinality_nullable_uint64__)":7351770730073589000,"any(toTypeName(lowcardinality_nullable_uint64__))":"LowCardinality(Nullable(UInt64))"}
 """
 
 _aggregate_functions_stddevSamp_LowCardinality_Nullable_UInt8__ = r"""
-{"stddevSamp(lowcardinality_nullable_uint8__)":77.95475895956862}
+{"stddevSamp(lowcardinality_nullable_uint8__)":77.95475895956862,"any(toTypeName(lowcardinality_nullable_uint8__))":"LowCardinality(Nullable(UInt8))"}
 """
 
 _aggregate_functions_stddevSamp_LowCardinality_UInt16_ = r"""
-{"stddevSamp(lowcardinality_uint16_)":26129.987510308707}
+{"stddevSamp(lowcardinality_uint16_)":26129.987510308707,"any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_stddevSamp_LowCardinality_UInt32_ = r"""
-{"stddevSamp(lowcardinality_uint32_)":1587294662.6894317}
+{"stddevSamp(lowcardinality_uint32_)":1587294662.6894317,"any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_stddevSamp_LowCardinality_UInt64_ = r"""
-{"stddevSamp(lowcardinality_uint64_)":7814153815290251000}
+{"stddevSamp(lowcardinality_uint64_)":7814153815290251000,"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_stddevSamp_LowCardinality_UInt8_ = r"""
-{"stddevSamp(lowcardinality_uint8_)":104.71023509348709}
+{"stddevSamp(lowcardinality_uint8_)":104.71023509348709,"any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_stddevSamp_NULL_value_handling = r"""
-{"stddevSamp(x)":2.0736441353327724}
+{"stddevSamp(x)":2.0736441353327724,"any(toTypeName(x))":"Nullable(Int8)"}
 """
 
 _aggregate_functions_stddevSamp_Nullable_Float32_ = r"""
-{"stddevSamp(nullable_float32_)":0}
+{"stddevSamp(nullable_float32_)":0,"any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
 """
 
 _aggregate_functions_stddevSamp_Nullable_Float64_ = r"""
-{"stddevSamp(nullable_float64_)":0}
+{"stddevSamp(nullable_float64_)":0,"any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
 """
 
 _aggregate_functions_stddevSamp_Nullable_Int16_ = r"""
-{"stddevSamp(nullable_int16_)":22009.366256210105}
+{"stddevSamp(nullable_int16_)":22009.366256210105,"any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
 """
 
 _aggregate_functions_stddevSamp_Nullable_Int32_ = r"""
-{"stddevSamp(nullable_int32_)":1423135692.07559}
+{"stddevSamp(nullable_int32_)":1423135692.07559,"any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
 """
 
 _aggregate_functions_stddevSamp_Nullable_Int64_ = r"""
-{"stddevSamp(nullable_int64_)":6778068397111039000}
+{"stddevSamp(nullable_int64_)":6778068397111039000,"any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
 """
 
 _aggregate_functions_stddevSamp_Nullable_Int8_ = r"""
-{"stddevSamp(nullable_int8_)":89.58298449544485}
+{"stddevSamp(nullable_int8_)":89.58298449544485,"any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
 """
 
 _aggregate_functions_stddevSamp_Nullable_UInt16_ = r"""
-{"stddevSamp(nullable_uint16_)":22949.071608551934}
+{"stddevSamp(nullable_uint16_)":22949.071608551934,"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_stddevSamp_Nullable_UInt32_ = r"""
-{"stddevSamp(nullable_uint32_)":1663882701.1819515}
+{"stddevSamp(nullable_uint32_)":1663882701.1819515,"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_stddevSamp_Nullable_UInt64_ = r"""
-{"stddevSamp(nullable_uint64_)":7437291265129714000}
+{"stddevSamp(nullable_uint64_)":7437291265129714000,"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_stddevSamp_Nullable_UInt8_ = r"""
-{"stddevSamp(nullable_uint8_)":101.76620810028794}
+{"stddevSamp(nullable_uint8_)":101.76620810028794,"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_stddevSamp_UInt16 = r"""
-{"stddevSamp(uint16)":21963.81116518716}
+{"stddevSamp(uint16)":21963.81116518716,"any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_stddevSamp_UInt32 = r"""
-{"stddevSamp(uint32)":1546478363.1321762}
+{"stddevSamp(uint32)":1546478363.1321762,"any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_stddevSamp_UInt64 = r"""
-{"stddevSamp(uint64)":7463488146179071000}
+{"stddevSamp(uint64)":7463488146179071000,"any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_stddevSamp_UInt8 = r"""
-{"stddevSamp(uint8)":93.65901510859011}
+{"stddevSamp(uint8)":93.65901510859011,"any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_stddevSamp__inf = r"""
-{"stddevSamp(x)":0}
+{"stddevSamp(x)":0,"any(toTypeName(x))":"Float64"}
 """
 
 _aggregate_functions_stddevSamp_constant = r"""
-{"stddevSamp(1)":null}
+{"stddevSamp(1)":null,"any(toTypeName(1))":"UInt8"}
 """
 
 _aggregate_functions_stddevSamp_doc_example = r"""
-{"stddevSamp(x)":1.8708286933869707}
+{"stddevSamp(x)":1.8708286933869707,"any(toTypeName(x))":"Int8"}
 """
 
 _aggregate_functions_stddevSamp_inf = r"""
-{"stddevSamp(x)":0}
+{"stddevSamp(x)":0,"any(toTypeName(x))":"Float64"}
 """
 
 _aggregate_functions_stddevSamp_inf___inf__nan = r"""
-{"stddevSamp(x)":0}
+{"stddevSamp(x)":0,"any(toTypeName(x))":"Float64"}
 """
 
 _aggregate_functions_stddevSamp_nan = r"""
-{"stddevSamp(x)":0}
+{"stddevSamp(x)":0,"any(toTypeName(x))":"Float64"}
 """
 
 _aggregate_functions_stddevSamp_return_type = r"""
-{"toTypeName(stddevSamp(number))":"Float64"}
+{"toTypeName(stddevSamp(number))":"Float64","any(toTypeName(number))":"UInt64"}
 """
 
 _aggregate_functions_stddevSamp_single_NULL_value = r"""
-{"stddevSamp(x)":null}
+{"stddevSamp(x)":null,"any(toTypeName(x))":"Nullable(Int8)"}
 """
 
 _aggregate_functions_stddevSamp_single_row = r"""
-{"stddevSamp(number)":null}
+{"stddevSamp(number)":null,"any(toTypeName(number))":"UInt64"}
 """
 
 _aggregate_functions_stddevSamp_some_negative_values = r"""
-{"stddevSamp(minus(number, 5))":3.0276503540974917}
+{"stddevSamp(minus(number, 5))":3.0276503540974917,"any(toTypeName(number))":"UInt64"}
 """
 
 _aggregate_functions_stddevSamp_with_group_by = r"""
-{"even":0,"stddevSamp(number)":3.1622776601683795}
-{"even":1,"stddevSamp(number)":3.1622776601683795}
+{"even":0,"stddevSamp(number)":3.1622776601683795,"any(toTypeName(number))":"UInt64"}
+{"even":1,"stddevSamp(number)":3.1622776601683795,"any(toTypeName(number))":"UInt64"}
 """
 
 _aggregate_functions_stddevSamp_zero_rows = r"""
-{"stddevSamp(number)":null}
+{"stddevSamp(number)":null,"any(toTypeName(number))":""}
 """
 

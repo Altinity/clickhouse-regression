@@ -1,245 +1,245 @@
 _aggregate_functions_quantileDeterministic_Date = r"""
-{"quantileDeterministic(date, 1)":"2006-02-20"}
+{"quantileDeterministic(date, 1)":"2006-02-20","any(toTypeName(date))":"Date"}
 """
 
 _aggregate_functions_quantileDeterministic_DateTime = r"""
-{"quantileDeterministic(datetime, 1)":"2016-04-20 21:56:16"}
+{"quantileDeterministic(datetime, 1)":"2016-04-20 21:56:16","any(toTypeName(datetime))":"DateTime"}
 """
 
 _aggregate_functions_quantileDeterministic_Float32 = r"""
-{"quantileDeterministic(float32, 1)":-2.1173005138745614e38}
+{"quantileDeterministic(float32, 1)":-2.1173005138745614e38,"any(toTypeName(float32))":"Float32"}
 """
 
 _aggregate_functions_quantileDeterministic_Float64 = r"""
-{"quantileDeterministic(float64, 1)":-5.112209912988255e97}
+{"quantileDeterministic(float64, 1)":-5.112209912988255e97,"any(toTypeName(float64))":"Float64"}
 """
 
 _aggregate_functions_quantileDeterministic_Int16 = r"""
-{"quantileDeterministic(int16, 1)":197.5}
+{"quantileDeterministic(int16, 1)":197.5,"any(toTypeName(int16))":"Int16"}
 """
 
 _aggregate_functions_quantileDeterministic_Int32 = r"""
-{"quantileDeterministic(int32, 1)":-242376674}
+{"quantileDeterministic(int32, 1)":-242376674,"any(toTypeName(int32))":"Int32"}
 """
 
 _aggregate_functions_quantileDeterministic_Int64 = r"""
-{"quantileDeterministic(int64, 1)":1363226979039565300}
+{"quantileDeterministic(int64, 1)":1363226979039565300,"any(toTypeName(int64))":"Int64"}
 """
 
 _aggregate_functions_quantileDeterministic_Int8 = r"""
-{"quantileDeterministic(int8, 1)":-22}
+{"quantileDeterministic(int8, 1)":-22,"any(toTypeName(int8))":"Int8"}
 """
 
 _aggregate_functions_quantileDeterministic_LowCardinality_DateTime_ = r"""
-{"quantileDeterministic(lowcardinality_datetime_, 1)":"2015-04-17 13:43:28"}
+{"quantileDeterministic(lowcardinality_datetime_, 1)":"2015-04-17 13:43:28","any(toTypeName(lowcardinality_datetime_))":"LowCardinality(DateTime)"}
 """
 
 _aggregate_functions_quantileDeterministic_LowCardinality_Date_ = r"""
-{"quantileDeterministic(lowcardinality_date_, 1)":"2009-03-09"}
+{"quantileDeterministic(lowcardinality_date_, 1)":"2009-03-09","any(toTypeName(lowcardinality_date_))":"LowCardinality(Date)"}
 """
 
 _aggregate_functions_quantileDeterministic_LowCardinality_Float32_ = r"""
-{"quantileDeterministic(lowcardinality_float32_, 1)":6.094998330095891e37}
+{"quantileDeterministic(lowcardinality_float32_, 1)":6.094998330095891e37,"any(toTypeName(lowcardinality_float32_))":"LowCardinality(Float32)"}
 """
 
 _aggregate_functions_quantileDeterministic_LowCardinality_Float64_ = r"""
-{"quantileDeterministic(lowcardinality_float64_, 1)":8.313355866648283e134}
+{"quantileDeterministic(lowcardinality_float64_, 1)":8.313355866648283e134,"any(toTypeName(lowcardinality_float64_))":"LowCardinality(Float64)"}
 """
 
 _aggregate_functions_quantileDeterministic_LowCardinality_Int16_ = r"""
-{"quantileDeterministic(lowcardinality_int16_, 1)":10320.5}
+{"quantileDeterministic(lowcardinality_int16_, 1)":10320.5,"any(toTypeName(lowcardinality_int16_))":"LowCardinality(Int16)"}
 """
 
 _aggregate_functions_quantileDeterministic_LowCardinality_Int32_ = r"""
-{"quantileDeterministic(lowcardinality_int32_, 1)":-503799109}
+{"quantileDeterministic(lowcardinality_int32_, 1)":-503799109,"any(toTypeName(lowcardinality_int32_))":"LowCardinality(Int32)"}
 """
 
 _aggregate_functions_quantileDeterministic_LowCardinality_Int64_ = r"""
-{"quantileDeterministic(lowcardinality_int64_, 1)":2751900708479672000}
+{"quantileDeterministic(lowcardinality_int64_, 1)":2751900708479672000,"any(toTypeName(lowcardinality_int64_))":"LowCardinality(Int64)"}
 """
 
 _aggregate_functions_quantileDeterministic_LowCardinality_Int8_ = r"""
-{"quantileDeterministic(lowcardinality_int8_, 1)":22.5}
+{"quantileDeterministic(lowcardinality_int8_, 1)":22.5,"any(toTypeName(lowcardinality_int8_))":"LowCardinality(Int8)"}
 """
 
 _aggregate_functions_quantileDeterministic_LowCardinality_Nullable_DateTime__ = r"""
-{"quantileDeterministic(lowcardinality_nullable_datetime__, 1)":"2013-08-28 12:39:09"}
+{"quantileDeterministic(lowcardinality_nullable_datetime__, 1)":"2013-08-28 12:39:09","any(toTypeName(lowcardinality_nullable_datetime__))":"LowCardinality(Nullable(DateTime))"}
 """
 
 _aggregate_functions_quantileDeterministic_LowCardinality_Nullable_Date__ = r"""
-{"quantileDeterministic(lowcardinality_nullable_date__, 1)":"2013-09-28"}
+{"quantileDeterministic(lowcardinality_nullable_date__, 1)":"2013-09-28","any(toTypeName(lowcardinality_nullable_date__))":"LowCardinality(Nullable(Date))"}
 """
 
 _aggregate_functions_quantileDeterministic_LowCardinality_Nullable_Float32__ = r"""
-{"quantileDeterministic(lowcardinality_nullable_float32__, 1)":-4.483521463152099e37}
+{"quantileDeterministic(lowcardinality_nullable_float32__, 1)":-4.483521463152099e37,"any(toTypeName(lowcardinality_nullable_float32__))":"LowCardinality(Nullable(Float32))"}
 """
 
 _aggregate_functions_quantileDeterministic_LowCardinality_Nullable_Float64__ = r"""
-{"quantileDeterministic(lowcardinality_nullable_float64__, 1)":1.7674632094597634e89}
+{"quantileDeterministic(lowcardinality_nullable_float64__, 1)":1.7674632094597634e89,"any(toTypeName(lowcardinality_nullable_float64__))":"LowCardinality(Nullable(Float64))"}
 """
 
 _aggregate_functions_quantileDeterministic_LowCardinality_Nullable_Int16__ = r"""
-{"quantileDeterministic(lowcardinality_nullable_int16__, 1)":-6294}
+{"quantileDeterministic(lowcardinality_nullable_int16__, 1)":-6294,"any(toTypeName(lowcardinality_nullable_int16__))":"LowCardinality(Nullable(Int16))"}
 """
 
 _aggregate_functions_quantileDeterministic_LowCardinality_Nullable_Int32__ = r"""
-{"quantileDeterministic(lowcardinality_nullable_int32__, 1)":-242357356}
+{"quantileDeterministic(lowcardinality_nullable_int32__, 1)":-242357356,"any(toTypeName(lowcardinality_nullable_int32__))":"LowCardinality(Nullable(Int32))"}
 """
 
 _aggregate_functions_quantileDeterministic_LowCardinality_Nullable_Int64__ = r"""
-{"quantileDeterministic(lowcardinality_nullable_int64__, 1)":1732198740987194000}
+{"quantileDeterministic(lowcardinality_nullable_int64__, 1)":1732198740987194000,"any(toTypeName(lowcardinality_nullable_int64__))":"LowCardinality(Nullable(Int64))"}
 """
 
 _aggregate_functions_quantileDeterministic_LowCardinality_Nullable_Int8__ = r"""
-{"quantileDeterministic(lowcardinality_nullable_int8__, 1)":9}
+{"quantileDeterministic(lowcardinality_nullable_int8__, 1)":9,"any(toTypeName(lowcardinality_nullable_int8__))":"LowCardinality(Nullable(Int8))"}
 """
 
 _aggregate_functions_quantileDeterministic_LowCardinality_Nullable_UInt16__ = r"""
-{"quantileDeterministic(lowcardinality_nullable_uint16__, 1)":15607}
+{"quantileDeterministic(lowcardinality_nullable_uint16__, 1)":15607,"any(toTypeName(lowcardinality_nullable_uint16__))":"LowCardinality(Nullable(UInt16))"}
 """
 
 _aggregate_functions_quantileDeterministic_LowCardinality_Nullable_UInt32__ = r"""
-{"quantileDeterministic(lowcardinality_nullable_uint32__, 1)":2488434006}
+{"quantileDeterministic(lowcardinality_nullable_uint32__, 1)":2488434006,"any(toTypeName(lowcardinality_nullable_uint32__))":"LowCardinality(Nullable(UInt32))"}
 """
 
 _aggregate_functions_quantileDeterministic_LowCardinality_Nullable_UInt64__ = r"""
-{"quantileDeterministic(lowcardinality_nullable_uint64__, 1)":7718272410435570000}
+{"quantileDeterministic(lowcardinality_nullable_uint64__, 1)":7718272410435570000,"any(toTypeName(lowcardinality_nullable_uint64__))":"LowCardinality(Nullable(UInt64))"}
 """
 
 _aggregate_functions_quantileDeterministic_LowCardinality_Nullable_UInt8__ = r"""
-{"quantileDeterministic(lowcardinality_nullable_uint8__, 1)":165}
+{"quantileDeterministic(lowcardinality_nullable_uint8__, 1)":165,"any(toTypeName(lowcardinality_nullable_uint8__))":"LowCardinality(Nullable(UInt8))"}
 """
 
 _aggregate_functions_quantileDeterministic_LowCardinality_UInt16_ = r"""
-{"quantileDeterministic(lowcardinality_uint16_, 1)":30305.5}
+{"quantileDeterministic(lowcardinality_uint16_, 1)":30305.5,"any(toTypeName(lowcardinality_uint16_))":"LowCardinality(UInt16)"}
 """
 
 _aggregate_functions_quantileDeterministic_LowCardinality_UInt32_ = r"""
-{"quantileDeterministic(lowcardinality_uint32_, 1)":1527688179}
+{"quantileDeterministic(lowcardinality_uint32_, 1)":1527688179,"any(toTypeName(lowcardinality_uint32_))":"LowCardinality(UInt32)"}
 """
 
 _aggregate_functions_quantileDeterministic_LowCardinality_UInt64_ = r"""
-{"quantileDeterministic(lowcardinality_uint64_, 1)":7492998412178026000}
+{"quantileDeterministic(lowcardinality_uint64_, 1)":7492998412178026000,"any(toTypeName(lowcardinality_uint64_))":"LowCardinality(UInt64)"}
 """
 
 _aggregate_functions_quantileDeterministic_LowCardinality_UInt8_ = r"""
-{"quantileDeterministic(lowcardinality_uint8_, 1)":194}
+{"quantileDeterministic(lowcardinality_uint8_, 1)":194,"any(toTypeName(lowcardinality_uint8_))":"LowCardinality(UInt8)"}
 """
 
 _aggregate_functions_quantileDeterministic_NULL_value_handling = r"""
-{"quantileDeterministic(x, 1)":3}
+{"quantileDeterministic(x, 1)":3,"any(toTypeName(x))":"Nullable(Int8)"}
 """
 
 _aggregate_functions_quantileDeterministic_Nullable_DateTime_ = r"""
-{"quantileDeterministic(nullable_datetime_, 1)":"2014-04-10 09:39:46"}
+{"quantileDeterministic(nullable_datetime_, 1)":"2014-04-10 09:39:46","any(toTypeName(nullable_datetime_))":"Nullable(DateTime)"}
 """
 
 _aggregate_functions_quantileDeterministic_Nullable_Date_ = r"""
-{"quantileDeterministic(nullable_date_, 1)":"2012-02-07"}
+{"quantileDeterministic(nullable_date_, 1)":"2012-02-07","any(toTypeName(nullable_date_))":"Nullable(Date)"}
 """
 
 _aggregate_functions_quantileDeterministic_Nullable_Float32_ = r"""
-{"quantileDeterministic(nullable_float32_, 1)":-1.994648219459119e38}
+{"quantileDeterministic(nullable_float32_, 1)":-1.994648219459119e38,"any(toTypeName(nullable_float32_))":"Nullable(Float32)"}
 """
 
 _aggregate_functions_quantileDeterministic_Nullable_Float64_ = r"""
-{"quantileDeterministic(nullable_float64_, 1)":-1.361161047663063e43}
+{"quantileDeterministic(nullable_float64_, 1)":-1.361161047663063e43,"any(toTypeName(nullable_float64_))":"Nullable(Float64)"}
 """
 
 _aggregate_functions_quantileDeterministic_Nullable_Int16_ = r"""
-{"quantileDeterministic(nullable_int16_, 1)":3728}
+{"quantileDeterministic(nullable_int16_, 1)":3728,"any(toTypeName(nullable_int16_))":"Nullable(Int16)"}
 """
 
 _aggregate_functions_quantileDeterministic_Nullable_Int32_ = r"""
-{"quantileDeterministic(nullable_int32_, 1)":194268523}
+{"quantileDeterministic(nullable_int32_, 1)":194268523,"any(toTypeName(nullable_int32_))":"Nullable(Int32)"}
 """
 
 _aggregate_functions_quantileDeterministic_Nullable_Int64_ = r"""
-{"quantileDeterministic(nullable_int64_, 1)":1193865884214575900}
+{"quantileDeterministic(nullable_int64_, 1)":1193865884214575900,"any(toTypeName(nullable_int64_))":"Nullable(Int64)"}
 """
 
 _aggregate_functions_quantileDeterministic_Nullable_Int8_ = r"""
-{"quantileDeterministic(nullable_int8_, 1)":4}
+{"quantileDeterministic(nullable_int8_, 1)":4,"any(toTypeName(nullable_int8_))":"Nullable(Int8)"}
 """
 
 _aggregate_functions_quantileDeterministic_Nullable_UInt16_ = r"""
-{"quantileDeterministic(nullable_uint16_, 1)":31453}
+{"quantileDeterministic(nullable_uint16_, 1)":31453,"any(toTypeName(nullable_uint16_))":"Nullable(UInt16)"}
 """
 
 _aggregate_functions_quantileDeterministic_Nullable_UInt32_ = r"""
-{"quantileDeterministic(nullable_uint32_, 1)":1575536824}
+{"quantileDeterministic(nullable_uint32_, 1)":1575536824,"any(toTypeName(nullable_uint32_))":"Nullable(UInt32)"}
 """
 
 _aggregate_functions_quantileDeterministic_Nullable_UInt64_ = r"""
-{"quantileDeterministic(nullable_uint64_, 1)":15756926212117228000}
+{"quantileDeterministic(nullable_uint64_, 1)":15756926212117228000,"any(toTypeName(nullable_uint64_))":"Nullable(UInt64)"}
 """
 
 _aggregate_functions_quantileDeterministic_Nullable_UInt8_ = r"""
-{"quantileDeterministic(nullable_uint8_, 1)":65}
+{"quantileDeterministic(nullable_uint8_, 1)":65,"any(toTypeName(nullable_uint8_))":"Nullable(UInt8)"}
 """
 
 _aggregate_functions_quantileDeterministic_UInt16 = r"""
-{"quantileDeterministic(uint16, 1)":22345}
+{"quantileDeterministic(uint16, 1)":22345,"any(toTypeName(uint16))":"UInt16"}
 """
 
 _aggregate_functions_quantileDeterministic_UInt32 = r"""
-{"quantileDeterministic(uint32, 1)":2674966134.5}
+{"quantileDeterministic(uint32, 1)":2674966134.5,"any(toTypeName(uint32))":"UInt32"}
 """
 
 _aggregate_functions_quantileDeterministic_UInt64 = r"""
-{"quantileDeterministic(uint64, 1)":7050062518676030000}
+{"quantileDeterministic(uint64, 1)":7050062518676030000,"any(toTypeName(uint64))":"UInt64"}
 """
 
 _aggregate_functions_quantileDeterministic_UInt8 = r"""
-{"quantileDeterministic(uint8, 1)":144.5}
+{"quantileDeterministic(uint8, 1)":144.5,"any(toTypeName(uint8))":"UInt8"}
 """
 
 _aggregate_functions_quantileDeterministic__inf = r"""
-{"quantileDeterministic(x, 1)":3.15}
+{"quantileDeterministic(x, 1)":3.15,"any(toTypeName(x))":"Float64"}
 """
 
 _aggregate_functions_quantileDeterministic_constant = r"""
-{"quantileDeterministic(1, 1)":1}
+{"quantileDeterministic(1, 1)":1,"any(toTypeName(1))":"UInt8"}
 """
 
 _aggregate_functions_quantileDeterministic_doc_example = r"""
-{"quantileDeterministic(x, 1)":2.5}
+{"quantileDeterministic(x, 1)":2.5,"any(toTypeName(x))":"Int8"}
 """
 
 _aggregate_functions_quantileDeterministic_inf = r"""
-{"quantileDeterministic(x, 1)":4.5}
+{"quantileDeterministic(x, 1)":4.5,"any(toTypeName(x))":"Float64"}
 """
 
 _aggregate_functions_quantileDeterministic_inf___inf__nan = r"""
-{"quantileDeterministic(x, 1)":5}
+{"quantileDeterministic(x, 1)":5,"any(toTypeName(x))":"Float64"}
 """
 
 _aggregate_functions_quantileDeterministic_nan = r"""
-{"quantileDeterministic(x, 1)":4}
+{"quantileDeterministic(x, 1)":4,"any(toTypeName(x))":"Float64"}
 """
 
 _aggregate_functions_quantileDeterministic_return_type = r"""
-{"toTypeName(quantileDeterministic(number, 1))":"Float64"}
+{"toTypeName(quantileDeterministic(number, 1))":"Float64","any(toTypeName(number))":"UInt64"}
 """
 
 _aggregate_functions_quantileDeterministic_single_NULL_value = r"""
-{"quantileDeterministic(x, 1)":null}
+{"quantileDeterministic(x, 1)":null,"any(toTypeName(x))":"Nullable(Int8)"}
 """
 
 _aggregate_functions_quantileDeterministic_single_row = r"""
-{"quantileDeterministic(number, 1)":0}
+{"quantileDeterministic(number, 1)":0,"any(toTypeName(number))":"UInt64"}
 """
 
 _aggregate_functions_quantileDeterministic_some_negative_values = r"""
-{"quantileDeterministic(minus(number, 5), 1)":0.5}
+{"quantileDeterministic(minus(number, 5), 1)":0.5,"any(toTypeName(number))":"UInt64"}
 """
 
 _aggregate_functions_quantileDeterministic_with_group_by = r"""
-{"even":0,"quantileDeterministic(number, 1)":4}
-{"even":1,"quantileDeterministic(number, 1)":5}
+{"even":0,"quantileDeterministic(number, 1)":4,"any(toTypeName(number))":"UInt64"}
+{"even":1,"quantileDeterministic(number, 1)":5,"any(toTypeName(number))":"UInt64"}
 """
 
 _aggregate_functions_quantileDeterministic_zero_rows = r"""
-{"quantileDeterministic(number, 1)":null}
+{"quantileDeterministic(number, 1)":null,"any(toTypeName(number))":""}
 """
 

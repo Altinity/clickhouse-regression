@@ -9,9 +9,12 @@ from aggregate_functions.requirements import (
 @TestScenario
 @Name("sumMap")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_SumMap("1.0"))
-def scenario(self, func="sumMap({params})", table=None):
+def scenario(self, func="sumMap({params})", table=None, snapshot_id=None):
     """Check sumMap aggregate function."""
-    self.context.snapshot_id = get_snapshot_id()
+    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+
+    if "Merge" in self.name:
+        return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:
         table = self.context.table
