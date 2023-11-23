@@ -38,6 +38,7 @@ def check(self, func, datatypes, hex_repr, snapshot_name, short_name, is_low_car
 def finalizeAggregation(self, scenario=None, short_name=None):
     with Scenario(f"{short_name}Merge"):
         snapshot_id, func = scenario()
+        self.context.snapshot_id = snapshot_id.replace("Merge", "_finalizeAggregation")
     snapshot_id = snapshot_id.lower().replace("merge", "state") # need state from snapshots of -State combinator 
     snapshot_path = os.path.join(current_dir(), "snapshots", f"steps.py.{snapshot_id}.{current_cpu()}.snapshot")
   
