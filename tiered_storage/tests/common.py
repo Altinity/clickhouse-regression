@@ -63,7 +63,9 @@ def get_paths_for_partition_from_part_log(node, table, partition_id, step=When):
     return paths.strip().split("\n")
 
 
-def produce_alter_move(node, name, steps=True, random_seed=None, *args, **kwargs):
+def produce_alter_move(
+    node, name, steps=True, random_seed=None, raise_on_exception=False, *args, **kwargs
+):
     myrandom = random.Random(random_seed)
     move_type = myrandom.choice(["PART", "PARTITION"])
 
@@ -74,6 +76,7 @@ def produce_alter_move(node, name, steps=True, random_seed=None, *args, **kwargs
                     node.query(
                         f"SELECT name from system.parts where table = '{name}' and active = 1",
                         steps=steps,
+                        raise_on_exception=raise_on_exception,
                         *args,
                         **kwargs,
                     )
@@ -101,6 +104,7 @@ def produce_alter_move(node, name, steps=True, random_seed=None, *args, **kwargs
         node.query(
             f"ALTER TABLE {name} MOVE {move_type} {move_part} TO {move_disk} {move_volume}",
             steps=steps,
+            raise_on_exception=raise_on_exception,
             *args,
             **kwargs,
         )
