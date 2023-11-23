@@ -13,9 +13,11 @@ from aggregate_functions.tests.any import scenario as checks
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_Uniq("1.0"))
 def scenario(self, func="uniq({params})", table=None, snapshot_id=None):
     """Check uniq aggregate function by using the same tests as for any."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id, clickhouse_version=">=23.2")
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, clickhouse_version=">=23.2"
+    )
 
-    if 'Merge' in self.name:
+    if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:

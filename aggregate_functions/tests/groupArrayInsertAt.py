@@ -24,9 +24,11 @@ def datatype(self, func, table, col1_name, col2_name):
 )
 def scenario(self, func="groupArrayInsertAt({params})", table=None, snapshot_id=None):
     """Check topKWeighted aggregate function."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id, clickhouse_version=">=23.2")
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, clickhouse_version=">=23.2"
+    )
 
-    if 'Merge' in self.name:
+    if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:
@@ -37,10 +39,14 @@ def scenario(self, func="groupArrayInsertAt({params})", table=None, snapshot_id=
     _func = func.replace(params, f"{params}")
 
     with Check("constant"):
-        execute_query(f"SELECT {_func.format(params='1,1')}, any(toTypeName(1)), any(toTypeName(1))")
+        execute_query(
+            f"SELECT {_func.format(params='1,1')}, any(toTypeName(1)), any(toTypeName(1))"
+        )
 
     with Check("zero rows"):
-        execute_query(f"SELECT {_func.format(params='number,number')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(0)")
+        execute_query(
+            f"SELECT {_func.format(params='number,number')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(0)"
+        )
 
     with Check("single row"):
         execute_query(

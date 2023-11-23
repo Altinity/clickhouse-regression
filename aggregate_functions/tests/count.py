@@ -28,7 +28,9 @@ def expr(self, func="count({params})"):
         )
 
     with Check("return type"):
-        execute_query(f"SELECT toTypeName({func.format(params='1')}), any(toTypeName(1))")
+        execute_query(
+            f"SELECT toTypeName({func.format(params='1')}), any(toTypeName(1))"
+        )
 
 
 @TestCheck
@@ -55,7 +57,9 @@ def distinct_expr(self, func="count({params})"):
         )
 
     with Check("returned type is UInt64"):
-        execute_query(f"SELECT toTypeName({func.format(params='distinct 1')}), any(toTypeName(1))")
+        execute_query(
+            f"SELECT toTypeName({func.format(params='distinct 1')}), any(toTypeName(1))"
+        )
 
     with Check("default function"):
         execute_query(
@@ -90,7 +94,7 @@ def scenario(self, func="count({params})", table=None, snapshot_id=None):
     """Check count aggregate function."""
     self.context.snapshot_id = get_snapshot_id(snapshot_id, clickhouse_version=">=23.2")
 
-    if 'Merge' in self.name:
+    if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
 
     for check in loads(current_module(), Check):

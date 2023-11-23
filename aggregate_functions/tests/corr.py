@@ -15,10 +15,16 @@ def scenario(self, func="corr({params})", table=None, snapshot_id=None):
     """Check corr aggregate function by using the same checks as for covarPop."""
     self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
 
-    if 'Merge' in self.name:
+    if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:
         table = self.context.table
 
-    checks(func=func, table=table, decimal=False, extended_precision=False, snapshot_id=self.context.snapshot_id)
+    checks(
+        func=func,
+        table=table,
+        decimal=False,
+        extended_precision=False,
+        snapshot_id=self.context.snapshot_id,
+    )

@@ -10,11 +10,17 @@ from aggregate_functions.requirements import (
 @TestScenario
 @Name("groupBitAnd")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_GroupBitAnd("1.0"))
-def scenario(self, func="groupBitAnd({params})", table=None, extended_precision=False, snapshot_id=None):
+def scenario(
+    self,
+    func="groupBitAnd({params})",
+    table=None,
+    extended_precision=False,
+    snapshot_id=None,
+):
     """Check groupBitAnd aggregate function."""
     self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
 
-    if 'Merge' in self.name:
+    if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:
@@ -24,10 +30,14 @@ def scenario(self, func="groupBitAnd({params})", table=None, extended_precision=
         execute_query(f"SELECT {func.format(params='1')}, any(toTypeName(1))")
 
     with Check("zero rows"):
-        execute_query(f"SELECT {func.format(params='number')}, any(toTypeName(number)) FROM numbers(0)")
+        execute_query(
+            f"SELECT {func.format(params='number')}, any(toTypeName(number)) FROM numbers(0)"
+        )
 
     with Check("single row"):
-        execute_query(f"SELECT {func.format(params='number')}, any(toTypeName(number)) FROM numbers(1)")
+        execute_query(
+            f"SELECT {func.format(params='number')}, any(toTypeName(number)) FROM numbers(1)"
+        )
 
     with Check("with group by"):
         execute_query(
@@ -63,4 +73,6 @@ def scenario(self, func="groupBitAnd({params})", table=None, extended_precision=
             continue
 
         with Check(f"{column_type}"):
-            execute_query(f"SELECT {func.format(params=column_name)}, any(toTypeName({column_name})) FROM {table.name}")
+            execute_query(
+                f"SELECT {func.format(params=column_name)}, any(toTypeName({column_name})) FROM {table.name}"
+            )

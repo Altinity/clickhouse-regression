@@ -15,7 +15,7 @@ def scenario(self, func="kurtSamp({params})", table=None, snapshot_id=None):
     """Check kurtSamp aggregate function by using the same tests as for kurtPop."""
     self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
 
-    if 'Merge' in self.name:
+    if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:

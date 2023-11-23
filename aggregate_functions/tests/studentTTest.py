@@ -17,9 +17,11 @@ def scenario(self, func="studentTTest({params})", table=None, snapshot_id=None):
     clickhouse_version = (
         ">=22.6" if check_clickhouse_version("<23.2")(self) else ">=23.2"
     )
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id, clickhouse_version=clickhouse_version)
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, clickhouse_version=clickhouse_version
+    )
 
-    if 'Merge' in self.name:
+    if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:

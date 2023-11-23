@@ -19,12 +19,12 @@ def scenario(
     date=True,
     datetime=True,
     extended_precision=False,
-    snapshot_id=None
+    snapshot_id=None,
 ):
     """Check quantile aggregate function by using the same tests as for avg."""
     self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
 
-    if 'Merge' in self.name:
+    if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:
@@ -37,5 +37,5 @@ def scenario(
         date=date,
         datetime=datetime,
         extended_precision=extended_precision,
-        snapshot_id=self.context.snapshot_id
+        snapshot_id=self.context.snapshot_id,
     )

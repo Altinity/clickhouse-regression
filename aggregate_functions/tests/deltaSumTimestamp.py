@@ -31,17 +31,21 @@ def scenario(
     """Check deltaSumTimestamp aggregate function."""
     self.context.snapshot_id = get_snapshot_id(snapshot_id)
 
-    if 'Merge' in self.name:
+    if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:
         table = self.context.table
 
     with Check("constant"):
-        execute_query(f"SELECT {func.format(params='1,1')}, any(toTypeName(1)), any(toTypeName(1))")
+        execute_query(
+            f"SELECT {func.format(params='1,1')}, any(toTypeName(1)), any(toTypeName(1))"
+        )
 
     with Check("zero rows"):
-        execute_query(f"SELECT {func.format(params='number,number+1')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(0)")
+        execute_query(
+            f"SELECT {func.format(params='number,number+1')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(0)"
+        )
 
     with Check("with group by"):
         execute_query(

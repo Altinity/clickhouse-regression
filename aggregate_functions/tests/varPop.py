@@ -15,7 +15,7 @@ def scenario(self, func="varPop({params})", table=None, snapshot_id=None):
     """Check varPop aggregate function by using the same checks as for avg."""
     self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
 
-    if 'Merge' in self.name:
+    if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:

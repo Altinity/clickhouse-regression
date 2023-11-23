@@ -9,9 +9,11 @@ from aggregate_functions.requirements import (
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Miscellaneous_FirstValue("1.0"))
 def scenario(self, func="first_value({params})", table=None, snapshot_id=None):
     """Check first_value aggregate function."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id, clickhouse_version=">=23.2")
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, clickhouse_version=">=23.2"
+    )
 
-    if 'Merge' in self.name:
+    if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:
@@ -21,10 +23,14 @@ def scenario(self, func="first_value({params})", table=None, snapshot_id=None):
         execute_query(f"SELECT {func.format(params='1')}")
 
     with Check("zero rows"):
-        execute_query(f"SELECT {func.format(params='number')}, any(toTypeName(number)) FROM numbers(0)")
+        execute_query(
+            f"SELECT {func.format(params='number')}, any(toTypeName(number)) FROM numbers(0)"
+        )
 
     with Check("single row"):
-        execute_query(f"SELECT {func.format(params='number')}, any(toTypeName(number)) FROM numbers(1)")
+        execute_query(
+            f"SELECT {func.format(params='number')}, any(toTypeName(number)) FROM numbers(1)"
+        )
 
     with Check("with group by"):
         execute_query(

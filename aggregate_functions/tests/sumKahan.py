@@ -15,7 +15,7 @@ def scenario(self, func="sumKahan({params})", table=None, snapshot_id=None):
     """Check sumKahan aggregate function by using the same tests as for sum."""
     self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
 
-    if 'Merge' in self.name:
+    if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:

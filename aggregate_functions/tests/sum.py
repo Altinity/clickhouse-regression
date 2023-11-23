@@ -13,7 +13,7 @@ def scenario(self, func="sum({params})", table=None, decimal=True, snapshot_id=N
     """Check sum aggregate function."""
     self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
 
-    if 'Merge' in self.name:
+    if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:
@@ -23,7 +23,9 @@ def scenario(self, func="sum({params})", table=None, decimal=True, snapshot_id=N
         execute_query(f"SELECT {func.format(params='1')}, any(toTypeName(1))")
 
     with Check("zero rows"):
-        execute_query(f"SELECT {func.format(params='number')}, any(toTypeName(number)) FROM numbers(0)")
+        execute_query(
+            f"SELECT {func.format(params='number')}, any(toTypeName(number)) FROM numbers(0)"
+        )
 
     with Check("with group by"):
         execute_query(
@@ -48,4 +50,6 @@ def scenario(self, func="sum({params})", table=None, decimal=True, snapshot_id=N
             continue
 
         with Check(f"{column_type}"):
-            execute_query(f"SELECT {func.format(params=column_name)}, any(toTypeName({column_name})) FROM {table.name}")
+            execute_query(
+                f"SELECT {func.format(params=column_name)}, any(toTypeName({column_name})) FROM {table.name}"
+            )

@@ -13,11 +13,13 @@ from aggregate_functions.tests.quantileWeighted import scenario as checks
 @Requirements(
     RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_QuantileTDigestWeighted("1.0")
 )
-def scenario(self, func="quantileTDigestWeighted({params})", table=None, snapshot_id=None):
+def scenario(
+    self, func="quantileTDigestWeighted({params})", table=None, snapshot_id=None
+):
     """Check quantileTDigestWeighted aggregate function by using the same tests as for quantileWeighted."""
     self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
 
-    if 'Merge' in self.name:
+    if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:

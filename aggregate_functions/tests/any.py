@@ -9,9 +9,11 @@ from aggregate_functions.requirements import (
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Any("1.0"))
 def scenario(self, func="any({params})", table=None, snapshot_id=None):
     """Check any aggregate function."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id, clickhouse_version=">=23.2")
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, clickhouse_version=">=23.2"
+    )
 
-    if 'Merge' in self.name:
+    if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:
@@ -21,7 +23,9 @@ def scenario(self, func="any({params})", table=None, snapshot_id=None):
         execute_query(f"SELECT {func.format(params='1')}, any(toTypeName(1))")
 
     with Check("zero rows"):
-        execute_query(f"SELECT {func.format(params='number')}, any(toTypeName(number)) FROM numbers(0)")
+        execute_query(
+            f"SELECT {func.format(params='number')}, any(toTypeName(number)) FROM numbers(0)"
+        )
 
     with Check("with group by"):
         execute_query(
@@ -29,7 +33,9 @@ def scenario(self, func="any({params})", table=None, snapshot_id=None):
         )
 
     with Check("some negative values"):
-        execute_query(f"SELECT {func.format(params='number-5')}, any(toTypeName(number)) FROM numbers(1, 10)")
+        execute_query(
+            f"SELECT {func.format(params='number-5')}, any(toTypeName(number)) FROM numbers(1, 10)"
+        )
 
     with Check("first non-NULL value"):
         execute_query(
@@ -69,4 +75,6 @@ def scenario(self, func="any({params})", table=None, snapshot_id=None):
 
     for column in table.columns:
         with Check(f"{column.datatype.name}"):
-            execute_query(f"SELECT {func.format(params=column.name)}, any(toTypeName({column.name})) FROM {table.name}")
+            execute_query(
+                f"SELECT {func.format(params=column.name)}, any(toTypeName({column.name})) FROM {table.name}"
+            )

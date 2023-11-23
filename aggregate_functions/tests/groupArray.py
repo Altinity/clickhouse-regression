@@ -13,9 +13,11 @@ from aggregate_functions.tests.any import scenario as checks
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_GroupArray("1.0"))
 def scenario(self, func="groupArray({params})", table=None, snapshot_id=None):
     """Check groupArray aggregate function by using the same tests as for any."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id, clickhouse_version=">=23.2")
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, clickhouse_version=">=23.2"
+    )
 
-    if 'Merge' in self.name:
+    if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:
@@ -28,4 +30,6 @@ def scenario(self, func="groupArray({params})", table=None, snapshot_id=None):
         for size in range(1, 10):
             with When(f"{size}"):
                 _func = func.replace(params, f"({size}){params}")
-                execute_query(f"SELECT {_func.format(params='number')}, any(toTypeName(number)) FROM numbers(8)")
+                execute_query(
+                    f"SELECT {_func.format(params='number')}, any(toTypeName(number)) FROM numbers(8)"
+                )

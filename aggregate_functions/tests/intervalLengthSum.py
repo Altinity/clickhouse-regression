@@ -19,9 +19,11 @@ def scenario(self, func="intervalLengthSum({params})", table=None, snapshot_id=N
     clickhouse_version = (
         "<22.4" if check_clickhouse_version("<23.2")(self) else ">=23.2"
     )
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id, clickhouse_version=clickhouse_version)
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, clickhouse_version=clickhouse_version
+    )
 
-    if 'Merge' in self.name:
+    if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:
