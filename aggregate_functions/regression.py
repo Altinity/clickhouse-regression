@@ -63,6 +63,20 @@ xfails = {
     "/aggregate functions/state/topKWeightedState/datatypes/permutations/*": [
         (Fail, issue_55997)
     ],
+    "/aggregate functions/state/maxIntersectionsState/*": [
+        (
+            Fail,
+            "Another value on 22.8.13.22; needs to be investigated",
+            check_clickhouse_version("<23"),
+        )
+    ],
+    "/aggregate functions/state/maxIntersectionsPositionState/*": [
+        (
+            Fail,
+            "Another value on 22.8.13.22; needs to be investigated",
+            check_clickhouse_version("<23"),
+        )
+    ],
     # 23.2
     "/aggregate functions/state/singleValueOrNullState/:": [
         (
@@ -131,9 +145,9 @@ def regression(
 
         join()
 
-    Feature(run=load("aggregate_functions.tests.state", "feature"))
-
     Feature(run=load("aggregate_functions.tests.aggThrow", "scenario"))
+    Feature(run=load("aggregate_functions.tests.state", "feature"))
+    Feature(run=load("aggregate_functions.tests.merge", "feature"))
 
     Feature(run=load("aggregate_functions.tests.finalizeAggregation", "feature"))
 

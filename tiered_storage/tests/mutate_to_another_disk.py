@@ -65,7 +65,8 @@ def scenario(self, cluster, node="clickhouse1"):
 
                 with When("I do an update"):
                     node.query(
-                        f"ALTER TABLE {name} UPDATE s1 = concat(s1, 'x') WHERE 1"
+                        f"ALTER TABLE {name} UPDATE s1 = concat(s1, 'x') WHERE 1",
+                        exitcode=0,
                     )
 
                 def wait_mutation_completes(retry, sleep):
@@ -100,7 +101,8 @@ def scenario(self, cluster, node="clickhouse1"):
                             with And("I try it on another disk"):
                                 node.query(f"OPTIMIZE TABLE {name} FINAL")
                                 node.query(
-                                    f"ALTER TABLE {name} UPDATE s1 = concat(s1, 'x') WHERE 1"
+                                    f"ALTER TABLE {name} UPDATE s1 = concat(s1, 'x') WHERE 1",
+                                    exitcode=0,
                                 )
                             with And("I wait until mutation completes"):
                                 wait_mutation_completes(retry=20, sleep=1)

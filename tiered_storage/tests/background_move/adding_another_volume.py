@@ -141,7 +141,9 @@ def scenario(self, cluster, node="clickhouse1"):
                     with And(
                         "that the first two (oldest) parts were moved to 'external'"
                     ):
-                        assert used_disks[0] == "external", error()
+                        for attempt in retries(timeout=60, delay=1):
+                            with attempt:
+                                assert used_disks[0] == "external", error()
 
                     with When("I restart again"):
                         node.restart()

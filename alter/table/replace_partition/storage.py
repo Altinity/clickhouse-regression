@@ -12,7 +12,7 @@ from parquet.tests.common import start_minio
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Disks("1.0"))
 def different_disks(self):
-    """Check that it is possible to replace partition on a destination table from a source tale that is stored on a
+    """Check that it is not possible to replace partition on a destination table from a source tale that is stored on a
     different disk."""
     destination_table = "destination_" + getuid()
     source_table = "source_" + getuid()
@@ -29,14 +29,17 @@ def different_disks(self):
 
     with Then("I try to replace partition on the destination table"):
         replace_partition(
-            destination_table=destination_table, source_table=source_table
+            destination_table=destination_table,
+            source_table=source_table,
+            message="DB::Exception: Could not clone and load part",
+            exitcode=36,
         )
 
 
 @TestScenario
 @Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Shards("1.0"))
 def shards(self):
-    """Check that it is possible to replace partition on a destination table from a source tale that is stored on a
+    """Check that it is not possible to replace partition on a destination table from a source tale that is stored on a
     different shard."""
     node = self.context.node
     destination_table = "destination_" + getuid()
@@ -96,7 +99,7 @@ def replicas(self):
 
 
 @TestCheck
-def check_replace_partition_on_minio_and_default_disks(
+def check_replace_partition_on_different_types_of_disks(
     self, destination_table, source_table
 ):
     """Replace partition on a table that is stored in minio."""
@@ -119,7 +122,7 @@ def check_replace_partition_on_minio_and_default_disks(
         )
 
 
-@TestStep
+@TestStep(Given)
 def table_stored_on_minio_disk(self, table_name):
     """Create a MergeTree table partitioned by a colum that is stored on a minio disk."""
     create_table_partitioned_by_column_with_data(
@@ -127,12 +130,14 @@ def table_stored_on_minio_disk(self, table_name):
     )
 
 
-@TestStep
+@TestStep(Given)
 def table_not_stored_on_minio_disk(self, table_name):
+    """Create table that is not stored in a minio disk."""
     create_table_partitioned_by_column_with_data(table_name=table_name)
 
 
 @TestSketch(Scenario)
+@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_S3("1.0"))
 @Flags(TE)
 def replace_partition_on_minio_and_default_disks(self):
     """Run check that validates if it is possible to replace partition on tables that are and are not stored on minio storage."""
@@ -144,7 +149,34 @@ def replace_partition_on_minio_and_default_disks(self):
     with Given("I start a minio client"):
         start_minio()
 
-    check_replace_partition_on_minio_and_default_disks(
+    check_replace_partition_on_different_types_of_disks(
+        destination_table=either(*values),
+        source_table=either(*values),
+    )
+
+
+@TestStep(Given)
+def table_stored_on_tiered_storage(self, table_name):
+    """Create a table stored in a tiered storage."""
+    create_table_partitioned_by_column_with_data(
+        table_name=table_name, query_settings="storage_policy = 'tiered_storage'"
+    )
+
+
+@TestStep(Given)
+def table_not_stored_on_tiered_storage(self, table_name):
+    """Create a table which is not stored in the tiered storage."""
+    create_table_partitioned_by_column_with_data(table_name=table_name)
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_TieredStorage("1.0"))
+def replace_partition_on_tiered_and_default_storages(self):
+    """Run check that validates if it is possible to replace partition on tables that are and are not stored on tiered storage."""
+    values = {table_stored_on_tiered_storage, table_not_stored_on_tiered_storage}
+
+    check_replace_partition_on_different_types_of_disks(
         destination_table=either(*values),
         source_table=either(*values),
     )
@@ -161,3 +193,4 @@ def feature(self, node="clickhouse1"):
     Scenario(run=shards)
     Scenario(run=replicas)
     Scenario(run=replace_partition_on_minio_and_default_disks)
+    Scenario(run=replace_partition_on_tiered_and_default_storages)

@@ -12,7 +12,7 @@ on:
         description: "Expected version. Example: 23.3.1.64"
         required: true
         type: string
-        default: 23.3.8.22.altinitystable
+        default: 23.8.5.17.altinitytest
       suite:
         description: "Test suite to run (default: all)"
         type: choice

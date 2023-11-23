@@ -1,0 +1,208 @@
+_aggregate_functions_merge_stddevSampMerge_Float32_0 = r"""
+{"stddevSampMerge(state)":0}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_Float64_0 = r"""
+{"stddevSampMerge(state)":0}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_Int16_0 = r"""
+{"stddevSampMerge(state)":21585.897115169122}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_Int32_0 = r"""
+{"stddevSampMerge(state)":1398655516.7721844}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_Int64_0 = r"""
+{"stddevSampMerge(state)":5115884603912632000}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_Int8_0 = r"""
+{"stddevSampMerge(state)":98.9202259960576}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_LowCardinality_Float32__0 = r"""
+{"stddevSampMerge(state)":0}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_LowCardinality_Float64__0 = r"""
+{"stddevSampMerge(state)":0}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_LowCardinality_Int16__0 = r"""
+{"stddevSampMerge(state)":25321.53771901611}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_LowCardinality_Int32__0 = r"""
+{"stddevSampMerge(state)":1530324659.7604034}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_LowCardinality_Int64__0 = r"""
+{"stddevSampMerge(state)":6343832158702280000}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_LowCardinality_Int8__0 = r"""
+{"stddevSampMerge(state)":90.4328480144245}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_LowCardinality_Nullable_Float32___0 = r"""
+{"stddevSampMerge(state)":0}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_LowCardinality_Nullable_Float64___0 = r"""
+{"stddevSampMerge(state)":0}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_LowCardinality_Nullable_Int16___0 = r"""
+{"stddevSampMerge(state)":22852.142737486225}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_LowCardinality_Nullable_Int32___0 = r"""
+{"stddevSampMerge(state)":1459691591.9313626}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_LowCardinality_Nullable_Int64___0 = r"""
+{"stddevSampMerge(state)":6981312787042098000}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_LowCardinality_Nullable_Int8___0 = r"""
+{"stddevSampMerge(state)":102.35355391973451}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_LowCardinality_Nullable_UInt16___0 = r"""
+{"stddevSampMerge(state)":25750.473432541003}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_LowCardinality_Nullable_UInt32___0 = r"""
+{"stddevSampMerge(state)":1412176414.59253}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_LowCardinality_Nullable_UInt64___0 = r"""
+{"stddevSampMerge(state)":7351770730073588000}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_LowCardinality_Nullable_UInt8___0 = r"""
+{"stddevSampMerge(state)":77.95475895956862}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_LowCardinality_UInt16__0 = r"""
+{"stddevSampMerge(state)":26129.987510308707}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_LowCardinality_UInt32__0 = r"""
+{"stddevSampMerge(state)":1587294662.6894317}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_LowCardinality_UInt64__0 = r"""
+{"stddevSampMerge(state)":7814153815290251000}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_LowCardinality_UInt8__0 = r"""
+{"stddevSampMerge(state)":104.71023509348709}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_NULL_value_handling_0 = r"""
+{"stddevSampMerge(state)":2.0736441353327724}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_Nullable_Float32__0 = r"""
+{"stddevSampMerge(state)":0}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_Nullable_Float64__0 = r"""
+{"stddevSampMerge(state)":0}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_Nullable_Int16__0 = r"""
+{"stddevSampMerge(state)":22009.366256210105}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_Nullable_Int32__0 = r"""
+{"stddevSampMerge(state)":1423135692.0755901}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_Nullable_Int64__0 = r"""
+{"stddevSampMerge(state)":6778068397111038000}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_Nullable_Int8__0 = r"""
+{"stddevSampMerge(state)":89.58298449544485}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_Nullable_UInt16__0 = r"""
+{"stddevSampMerge(state)":22949.071608551934}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_Nullable_UInt32__0 = r"""
+{"stddevSampMerge(state)":1663882701.1819515}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_Nullable_UInt64__0 = r"""
+{"stddevSampMerge(state)":7437291265129714000}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_Nullable_UInt8__0 = r"""
+{"stddevSampMerge(state)":101.76620810028794}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_UInt16_0 = r"""
+{"stddevSampMerge(state)":21963.81116518716}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_UInt32_0 = r"""
+{"stddevSampMerge(state)":1546478363.1321762}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_UInt64_0 = r"""
+{"stddevSampMerge(state)":7463488146179071000}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_UInt8_0 = r"""
+{"stddevSampMerge(state)":93.65901510859011}
+"""
+
+_aggregate_functions_merge_stddevSampMerge__inf_0 = r"""
+{"stddevSampMerge(state)":0}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_constant_0 = r"""
+{"stddevSampMerge(state)":null}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_doc_example_0 = r"""
+{"stddevSampMerge(state)":1.8708286933869707}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_inf_0 = r"""
+{"stddevSampMerge(state)":0}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_inf___inf__nan_0 = r"""
+{"stddevSampMerge(state)":0}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_nan_0 = r"""
+{"stddevSampMerge(state)":0}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_single_NULL_value_0 = r"""
+{"stddevSampMerge(state)":null}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_single_row_0 = r"""
+{"stddevSampMerge(state)":null}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_some_negative_values_0 = r"""
+{"stddevSampMerge(state)":3.0276503540974917}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_with_group_by_0 = r"""
+{"stddevSampMerge(state)":3.1622776601683795}
+"""
+
+_aggregate_functions_merge_stddevSampMerge_with_group_by_1 = r"""
+{"stddevSampMerge(state)":3.1622776601683795}
+"""
+

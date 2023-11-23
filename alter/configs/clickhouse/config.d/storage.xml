@@ -62,6 +62,18 @@
                 </volume2>
             </volumes>
         </policy2>
+        <tiered_storage>
+            <volumes>
+                <hot>
+                    <disk>disk1</disk>
+                </hot>
+                <cold>
+                    <disk>s3_disk</disk>
+                </cold>
+            </volumes>
+            <move_factor>0.2</move_factor>
+        </tiered_storage>
+
     </policies>
 </storage_configuration>
 

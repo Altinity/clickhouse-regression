@@ -982,7 +982,7 @@ class Cluster(object):
             with Shell() as bash:
                 bash.timeout = 300
                 bash(
-                    f'docker run -d --name "{docker_container_name}" {docker_image} | tee'
+                    f'set -o pipefail && docker run -d --name "{docker_container_name}" {docker_image} | tee'
                 )
                 bash(
                     f'docker cp "{docker_container_name}:{container_clickhouse_binary_path}" "{host_clickhouse_binary_path}"'
@@ -1297,7 +1297,7 @@ class Cluster(object):
                     with By("pulling images for all the services"):
                         cmd = self.command(
                             None,
-                            f"{self.docker_compose} pull 2>&1 | tee",
+                            f"set -o pipefail && {self.docker_compose} pull 2>&1 | tee",
                             exitcode=None,
                             timeout=timeout,
                         )
@@ -1305,12 +1305,14 @@ class Cluster(object):
                             continue
 
                     with And("checking if any containers are already running"):
-                        self.command(None, f"{self.docker_compose} ps | tee")
+                        self.command(
+                            None, f"set -o pipefail && {self.docker_compose} ps | tee"
+                        )
 
                     with And("executing docker-compose down just in case it is up"):
                         cmd = self.command(
                             None,
-                            f"{self.docker_compose} down 2>&1 | tee",
+                            f"set -o pipefail && {self.docker_compose} down 2>&1 | tee",
                             exitcode=None,
                             timeout=timeout,
                         )
@@ -1318,7 +1320,9 @@ class Cluster(object):
                             continue
 
                     with And("checking if any containers are still left running"):
-                        self.command(None, f"{self.docker_compose} ps | tee")
+                        self.command(
+                            None, f"set -o pipefail && {self.docker_compose} ps | tee"
+                        )
 
                     with And("executing docker-compose up"):
                         with By(
@@ -1326,15 +1330,15 @@ class Cluster(object):
                         ):
                             self.command(
                                 None,
-                                f"docker buildx create --use --bootstrap --name builder-{uuid.uuid1()}",
+                                f"docker buildx create --use --bootstrap --name clickhouse-regression-builder",
                                 exitcode=0,
                             )
 
                         for attempt in retries(count=max_up_attempts):
-                            with attempt:                               
+                            with attempt:
                                 cmd = self.command(
                                     None,
-                                    f"{self.docker_compose} up --renew-anon-volumes --force-recreate --timeout 600 -d 2>&1 | tee",
+                                    f"set -o pipefail && {self.docker_compose} up --renew-anon-volumes --force-recreate --timeout 600 -d 2>&1 | tee",
                                     timeout=timeout,
                                     exitcode=0,
                                 )
@@ -1344,10 +1348,14 @@ class Cluster(object):
 
                     with Then("check there are no unhealthy containers"):
                         ps_cmd = self.command(
-                            None, f'{self.docker_compose} ps | tee | grep -v "Exit 0"'
+                            None,
+                            f'set -o pipefail && {self.docker_compose} ps | tee | grep -v "Exit 0"',
                         )
                         if "is unhealthy" in cmd.output or "Exit" in ps_cmd.output:
-                            self.command(None, f"{self.docker_compose} logs | tee")
+                            self.command(
+                                None,
+                                f"set -o pipefail && {self.docker_compose} logs | tee",
+                            )
                             continue
 
                     if (

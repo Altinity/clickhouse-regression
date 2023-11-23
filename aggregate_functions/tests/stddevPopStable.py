@@ -11,11 +11,14 @@ from aggregate_functions.tests.stddevPop import scenario as checks
 @TestScenario
 @Name("stddevPopStable")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_StddevPop("1.0"))
-def scenario(self, func="stddevPopStable({params})", table=None):
+def scenario(self, func="stddevPopStable({params})", table=None, snapshot_id=None):
     """Check stddevPopStable aggregate function by using the same checks as for stddevPop."""
-    self.context.snapshot_id = get_snapshot_id()
+    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+
+    if "Merge" in self.name:
+        return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:
         table = self.context.table
 
-    checks(func=func, table=table)
+    checks(func=func, table=table, snapshot_id=self.context.snapshot_id)
