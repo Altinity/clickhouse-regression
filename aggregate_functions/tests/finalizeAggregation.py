@@ -23,35 +23,16 @@ def array_on_duplicate_keys(ordered_pairs):
 
 
 @TestCheck
-def check(
-    self, func, datatypes, hex_repr, snapshot_name, short_name, is_low_cardinality=False
-):
+def check(self, func, datatypes, hex_repr, snapshot_name, is_low_cardinality=False):
     if is_low_cardinality:
         self.context.node.query(f"SET allow_suspicious_low_cardinality_types = 1")
 
-    with Given("I create temporary table"):
-        datatype_name = f"AggregateFunction({func}, {datatypes})"
-        self.context.table = create_table(
-            engine="MergeTree",
-            columns=[Column(name="state", datatype=DataType(name=datatype_name))],
-            order_by="tuple()",
-        )
-
     with When("I insert data in temporary table"):
-        if is_low_cardinality:
-            values = (
-                f"(CAST(unhex('{hex_repr}'), 'AggregateFunction({func}, {datatypes})'))"
-            )
-        else:
-            values = f"(unhex('{hex_repr}'))"
-        self.context.node.query(
-            f"INSERT INTO {self.context.table.name} VALUES {values}"
-        )
+        values = f"(CAST(unhex('{hex_repr}'), 'AggregateFunction({func}, {datatypes})'))"
 
     with Then("I check the result"):
         execute_query(
-            f"SELECT finalizeAggregation(state) FROM {self.context.table.name}",
-            snapshot_name=snapshot_name,
+            f"SELECT finalizeAggregation{values}", snapshot_name=snapshot_name
         )
 
 
@@ -120,8 +101,7 @@ def finalizeAggregation(self, scenario, short_name):
                             datatypes=datatypes,
                             hex_repr=hex_repr,
                             snapshot_name=name,
-                            is_low_cardinality="LowCardinality" in datatypes,
-                            short_name=short_name,
+                            is_low_cardinality="LowCardinality" in datatypes
                         )
         join()
 
