@@ -1297,7 +1297,7 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
         Heading(name="Definitions", level=1, num="5"),
         Heading(name="User Actions", level=1, num="6"),
         Heading(
-            name="What Is the Difference Between Attach Partition and Replace Partition",
+            name="What Is the Difference Between Fetch Partition and Replace Partition",
             level=1,
             num="7",
         ),
@@ -1824,7 +1824,7 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
 * 3 [Flowchart](#flowchart)
 * 4 [Definitions](#definitions)
 * 5 [User Actions](#user-actions)
-* 6 [What Is the Difference Between Attach Partition and Replace Partition](#what-is-the-difference-between-attach-partition-and-replace-partition)
+* 6 [What Is the Difference Between Fetch Partition and Replace Partition](#what-is-the-difference-between-fetch-partition-and-replace-partition)
 * 7 [Replace Partition on the Table From Another Table](#replace-partition-on-the-table-from-another-table)
     * 7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition](#rqsrs-032clickhousealtertablereplacepartition)
     * 7.2 [Reflect Changes in Table Partitions Inside the System Table](#reflect-changes-in-table-partitions-inside-the-system-table)
@@ -2036,9 +2036,12 @@ Destination Table - The table in which a specific partition is going to be repla
 | `RENAME COLUMN`                | `RENAME COLUMN [IF EXISTS] name to new_name`                                                                                 |
 | `OPTIMIZE`                     | `OPTIMIZE TABLE [db.]name [ON CLUSTER cluster] [PARTITION partition] [FINAL] [DEDUPLICATE [BY expression]]`                  |
 
-## What Is the Difference Between Attach Partition and Replace Partition
+## What Is the Difference Between Fetch Partition and Replace Partition
 
-Unlike `ATTACH PARTITION`, `REPLACE PARTITION FROM` is a hardlink-based operation, meaning that replacing partitions does not work across different storages.
+`REPLACE PARTITION`: This command is used to copy a data partition from one table (source) to another (destination), replacing the existing partition in destination table with the one from the source table.
+`FETCH PARTITION`: This command is used to download a partition or a part from another server, specifically for replicated tables. It places the downloaded data into the detached directory of the specified table. After fetching, the `ATTACH PARTITION|PART` query is used to add the data to the table.
+
+Unlike `FETCH PARTITION`, `REPLACE PARTITION` is a hardlink-based operation, meaning that replacing partitions does not work across different storages.
 
 ## Replace Partition on the Table From Another Table
 
