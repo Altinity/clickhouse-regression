@@ -224,6 +224,7 @@ Destination Table - The table in which a specific partition is going to be repla
 ## What Is the Difference Between Fetch Partition and Replace Partition
 
 `REPLACE PARTITION`: This command is used to copy a data partition from one table (source) to another (destination), replacing the existing partition in destination table with the one from the source table.
+
 `FETCH PARTITION`: This command is used to download a partition or a part from another server, specifically for replicated tables. It places the downloaded data into the detached directory of the specified table. After fetching, the `ATTACH PARTITION|PART` query is used to add the data to the table.
 
 Unlike `FETCH PARTITION`, `REPLACE PARTITION` is a hardlink-based operation, meaning that replacing partitions does not work across different storages.
