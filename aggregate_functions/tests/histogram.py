@@ -76,5 +76,4 @@ def scenario(
         with Check(f"{column_type}"):
             execute_query(
                 f"SELECT {func.format(params=f'{column_name}')}, any(toTypeName({column_name})) FROM {table.name}"
-
             )
