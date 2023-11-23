@@ -30,7 +30,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition = Requirement(
     ),
     link=None,
     level=2,
-    num="7.1",
+    num="8.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_System_Parts = Requirement(
@@ -54,7 +54,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_System_Parts = Requirement(
     ),
     link=None,
     level=3,
-    num="7.2.1",
+    num="8.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Supported_Engines = Requirement(
@@ -85,7 +85,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Supported_Engines = Requireme
     ),
     link=None,
     level=2,
-    num="8.1",
+    num="9.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_KeepData = Requirement(
@@ -101,7 +101,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_KeepData = Requirement(
     ),
     link=None,
     level=2,
-    num="9.1",
+    num="10.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_NonExistentPartition = Requirement(
@@ -127,7 +127,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_NonExistentPartition = Requir
     ),
     link=None,
     level=2,
-    num="10.1",
+    num="11.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_TemporaryTable = Requirement(
@@ -142,7 +142,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_TemporaryTable = Requirement(
     ),
     link=None,
     level=2,
-    num="11.1",
+    num="12.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_FromTemporaryTable = Requirement(
@@ -181,7 +181,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_FromTemporaryTable = Requirem
     ),
     link=None,
     level=3,
-    num="11.2.1",
+    num="12.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ToTemporaryTable = Requirement(
@@ -197,7 +197,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_ToTemporaryTable = Requiremen
     ),
     link=None,
     level=3,
-    num="11.3.1",
+    num="12.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_FromRegularTable = Requirement(
@@ -213,7 +213,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_FromRegularTable = Requiremen
     ),
     link=None,
     level=3,
-    num="11.4.1",
+    num="12.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_IntoOutfile = Requirement(
@@ -229,7 +229,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_IntoOutfile = Requirement(
     ),
     link=None,
     level=2,
-    num="12.1",
+    num="13.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Format = Requirement(
@@ -245,7 +245,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Format = Requirement(
     ),
     link=None,
     level=2,
-    num="13.1",
+    num="14.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Settings = Requirement(
@@ -261,7 +261,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Settings = Requirement(
     ),
     link=None,
     level=2,
-    num="14.1",
+    num="15.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Disks = Requirement(
@@ -277,7 +277,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Disks = Requirement(
     ),
     link=None,
     level=2,
-    num="15.1",
+    num="16.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_S3 = Requirement(
@@ -293,7 +293,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_S3 = Requirement(
     ),
     link=None,
     level=2,
-    num="16.1",
+    num="17.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_TieredStorage = Requirement(
@@ -309,7 +309,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_TieredStorage = Requirement(
     ),
     link=None,
     level=2,
-    num="17.1",
+    num="18.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Replicas = Requirement(
@@ -325,7 +325,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Replicas = Requirement(
     ),
     link=None,
     level=2,
-    num="18.1",
+    num="19.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Shards = Requirement(
@@ -341,7 +341,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Shards = Requirement(
     ),
     link=None,
     level=2,
-    num="19.1",
+    num="20.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Versions = Requirement(
@@ -360,7 +360,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Versions = Requirement(
     ),
     link=None,
     level=2,
-    num="20.1",
+    num="21.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Encryption = Requirement(
@@ -376,7 +376,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Encryption = Requirement(
     ),
     link=None,
     level=2,
-    num="21.1",
+    num="22.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_PartitionTypes = Requirement(
@@ -402,7 +402,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_PartitionTypes = Requirement(
     ),
     link=None,
     level=2,
-    num="22.1",
+    num="23.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Corrupted = Requirement(
@@ -426,7 +426,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Corrupted = Requirement(
     ),
     link=None,
     level=2,
-    num="23.1",
+    num="24.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions = Requirement(
@@ -446,7 +446,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions = Requirement(
     ),
     link=None,
     level=3,
-    num="24.1.1",
+    num="25.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions_Different_Structure = Requirement(
@@ -462,7 +462,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions_Different_Structur
     ),
     link=None,
     level=3,
-    num="24.2.1",
+    num="25.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions_Different_Key = Requirement(
@@ -479,7 +479,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions_Different_Key = Re
     ),
     link=None,
     level=3,
-    num="24.3.1",
+    num="25.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions_Different_StoragePolicy = Requirement(
@@ -496,7 +496,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Conditions_Different_StorageP
     ),
     link=None,
     level=3,
-    num="24.4.1",
+    num="25.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited = Requirement(
@@ -517,7 +517,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited = Requirement(
     ),
     link=None,
     level=2,
-    num="25.1",
+    num="26.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_From = Requirement(
@@ -534,7 +534,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_From = Requirement
     ),
     link=None,
     level=3,
-    num="25.2.1",
+    num="26.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_From_RemoteTable = Requirement(
@@ -550,7 +550,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_From_RemoteTable =
     ),
     link=None,
     level=3,
-    num="25.2.2",
+    num="26.2.2",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_From_TableFunctions = Requirement(
@@ -609,7 +609,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_From_TableFunction
     ),
     link=None,
     level=4,
-    num="25.2.3.1",
+    num="26.2.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Subquery = Requirement(
@@ -625,7 +625,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Subquery = Require
     ),
     link=None,
     level=4,
-    num="25.2.4.1",
+    num="26.2.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Join = Requirement(
@@ -641,7 +641,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_Join = Requirement
     ),
     link=None,
     level=4,
-    num="25.2.5.1",
+    num="26.2.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_IncorrectTableEngines = Requirement(
@@ -670,7 +670,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_IncorrectTableEngi
     ),
     link=None,
     level=4,
-    num="25.2.6.1",
+    num="26.2.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_View_Normal = Requirement(
@@ -686,7 +686,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_View_Normal = Requ
     ),
     link=None,
     level=4,
-    num="25.2.7.1",
+    num="26.2.7.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_View_Materialized = Requirement(
@@ -702,7 +702,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_View_Materialized 
     ),
     link=None,
     level=4,
-    num="25.2.8.1",
+    num="26.2.8.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_OrderAndPartition = Requirement(
@@ -724,7 +724,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Prohibited_OrderAndPartition 
     ),
     link=None,
     level=3,
-    num="25.3.1",
+    num="26.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent = Requirement(
@@ -774,7 +774,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent = Requirement(
     ),
     link=None,
     level=2,
-    num="26.1",
+    num="27.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Merges = Requirement(
@@ -790,7 +790,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Merges = Requireme
     ),
     link=None,
     level=3,
-    num="26.2.1",
+    num="27.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Mutations = Requirement(
@@ -806,7 +806,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Mutations = Requir
     ),
     link=None,
     level=3,
-    num="26.3.1",
+    num="27.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Insert = Requirement(
@@ -822,7 +822,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Insert = Requireme
     ),
     link=None,
     level=3,
-    num="26.4.1",
+    num="27.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Delete = Requirement(
@@ -838,7 +838,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Delete = Requireme
     ),
     link=None,
     level=3,
-    num="26.5.1",
+    num="27.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Attach = Requirement(
@@ -854,7 +854,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Attach = Requireme
     ),
     link=None,
     level=3,
-    num="26.6.1",
+    num="27.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Detach = Requirement(
@@ -870,7 +870,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Detach = Requireme
     ),
     link=None,
     level=3,
-    num="26.7.1",
+    num="27.7.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Optimize = Requirement(
@@ -886,7 +886,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Optimize = Require
     ),
     link=None,
     level=3,
-    num="26.8.1",
+    num="27.8.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Add = Requirement(
@@ -902,7 +902,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Add = Requir
     ),
     link=None,
     level=4,
-    num="26.9.1.1",
+    num="27.9.1.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Drop = Requirement(
@@ -918,7 +918,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Drop = Requi
     ),
     link=None,
     level=4,
-    num="26.9.2.1",
+    num="27.9.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Modify = Requirement(
@@ -934,7 +934,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_Modify = Req
     ),
     link=None,
     level=4,
-    num="26.9.3.1",
+    num="27.9.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_RenameColumn = Requirement(
@@ -950,7 +950,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_RenameColumn
     ),
     link=None,
     level=4,
-    num="26.9.4.1",
+    num="27.9.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_CommentColumn = Requirement(
@@ -966,7 +966,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_CommentColum
     ),
     link=None,
     level=4,
-    num="26.9.5.1",
+    num="27.9.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_AddConstraint = Requirement(
@@ -982,7 +982,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Alter_AddConstrain
     ),
     link=None,
     level=4,
-    num="26.9.6.1",
+    num="27.9.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions = Requirement(
@@ -998,7 +998,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     ),
     link=None,
     level=3,
-    num="26.10.1",
+    num="27.10.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Detach = Requirement(
@@ -1014,7 +1014,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     ),
     link=None,
     level=4,
-    num="26.10.2.1",
+    num="27.10.2.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Drop = Requirement(
@@ -1030,7 +1030,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     ),
     link=None,
     level=4,
-    num="26.10.3.1",
+    num="27.10.3.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Attach = Requirement(
@@ -1046,7 +1046,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     ),
     link=None,
     level=4,
-    num="26.10.4.1",
+    num="27.10.4.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_AttachFrom = Requirement(
@@ -1062,7 +1062,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     ),
     link=None,
     level=4,
-    num="26.10.5.1",
+    num="27.10.5.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Replace = Requirement(
@@ -1083,7 +1083,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     ),
     link=None,
     level=4,
-    num="26.10.6.1",
+    num="27.10.6.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_MoveToTable = Requirement(
@@ -1099,7 +1099,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     ),
     link=None,
     level=4,
-    num="26.10.7.1",
+    num="27.10.7.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_ClearColumnInPartition = Requirement(
@@ -1115,7 +1115,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     ),
     link=None,
     level=4,
-    num="26.10.8.1",
+    num="27.10.8.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Freeze = Requirement(
@@ -1131,7 +1131,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     ),
     link=None,
     level=4,
-    num="26.10.9.1",
+    num="27.10.9.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Unfreeze = Requirement(
@@ -1147,7 +1147,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     ),
     link=None,
     level=4,
-    num="26.10.10.1",
+    num="27.10.10.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_ClearIndex = Requirement(
@@ -1163,7 +1163,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     ),
     link=None,
     level=4,
-    num="26.10.11.1",
+    num="27.10.11.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Fetch = Requirement(
@@ -1179,7 +1179,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     ),
     link=None,
     level=4,
-    num="26.10.12.1",
+    num="27.10.12.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_Move = Requirement(
@@ -1195,7 +1195,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     ),
     link=None,
     level=4,
-    num="26.10.13.1",
+    num="27.10.13.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_UpdateInPartition = Requirement(
@@ -1211,7 +1211,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     ),
     link=None,
     level=4,
-    num="26.10.14.1",
+    num="27.10.14.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Partitions_DeleteInPartition = Requirement(
@@ -1228,7 +1228,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_Concurrent_Manipulating_Parti
     ),
     link=None,
     level=4,
-    num="26.10.15.1",
+    num="27.10.15.1",
 )
 
 RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_RBAC = Requirement(
@@ -1269,7 +1269,7 @@ RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_RBAC = Requirement(
     ),
     link=None,
     level=2,
-    num="27.1",
+    num="28.1",
 )
 
 SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
@@ -1297,447 +1297,452 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
         Heading(name="Definitions", level=1, num="5"),
         Heading(name="User Actions", level=1, num="6"),
         Heading(
-            name="Replace Partition on the Table From Another Table", level=1, num="7"
+            name="What Is the Difference Between Attach Partition and Replace Partition",
+            level=1,
+            num="7",
+        ),
+        Heading(
+            name="Replace Partition on the Table From Another Table", level=1, num="8"
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition",
             level=2,
-            num="7.1",
+            num="8.1",
         ),
         Heading(
             name="Reflect Changes in Table Partitions Inside the System Table",
             level=2,
-            num="7.2",
+            num="8.2",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.System.Parts",
             level=3,
-            num="7.2.1",
+            num="8.2.1",
         ),
         Heading(
             name="Table Engines on Which Replace Partition Can Be Performed",
             level=1,
-            num="8",
+            num="9",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Supported.Engines",
             level=2,
-            num="8.1",
+            num="9.1",
         ),
         Heading(
             name="Keeping Data on the Source Table After Replace Partition",
             level=1,
-            num="9",
+            num="10",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.KeepData",
             level=2,
-            num="9.1",
+            num="10.1",
         ),
-        Heading(name="Table With Non-Existent Partition", level=1, num="10"),
+        Heading(name="Table With Non-Existent Partition", level=1, num="11"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.NonExistentPartition",
             level=2,
-            num="10.1",
+            num="11.1",
         ),
-        Heading(name="Temporary Tables", level=1, num="11"),
+        Heading(name="Temporary Tables", level=1, num="12"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TemporaryTable",
             level=2,
-            num="11.1",
+            num="12.1",
         ),
-        Heading(name="From Temporary Table", level=2, num="11.2"),
+        Heading(name="From Temporary Table", level=2, num="12.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.FromTemporaryTable",
             level=3,
-            num="11.2.1",
+            num="12.2.1",
         ),
-        Heading(name="From Temporary Table To Temporary Table", level=2, num="11.3"),
+        Heading(name="From Temporary Table To Temporary Table", level=2, num="12.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ToTemporaryTable",
             level=3,
-            num="11.3.1",
+            num="12.3.1",
         ),
-        Heading(name="From Regular Table To Temporary Table", level=2, num="11.4"),
+        Heading(name="From Regular Table To Temporary Table", level=2, num="12.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.FromRegularTable",
             level=3,
-            num="11.4.1",
+            num="12.4.1",
         ),
         Heading(
             name="Using Into Outfile Clause With Replace Partition Clause",
             level=1,
-            num="12",
+            num="13",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.IntoOutfile",
             level=2,
-            num="12.1",
+            num="13.1",
         ),
         Heading(
             name="Using The Format Clause With Replace Partition Clause",
             level=1,
-            num="13",
+            num="14",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Format",
             level=2,
-            num="13.1",
+            num="14.1",
         ),
-        Heading(name="Using Settings With Replace Partition Clause", level=1, num="14"),
+        Heading(name="Using Settings With Replace Partition Clause", level=1, num="15"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Settings",
             level=2,
-            num="14.1",
+            num="15.1",
         ),
-        Heading(name="Table Is on a Separate Disk", level=1, num="15"),
+        Heading(name="Table Is on a Separate Disk", level=1, num="16"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Disks",
             level=2,
-            num="15.1",
+            num="16.1",
         ),
-        Heading(name="Table That Is Stored on S3", level=1, num="16"),
+        Heading(name="Table That Is Stored on S3", level=1, num="17"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.S3",
             level=2,
-            num="16.1",
-        ),
-        Heading(name="Table That Is Stored on Tiered Storage", level=1, num="17"),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TieredStorage",
-            level=2,
             num="17.1",
         ),
+        Heading(name="Table That Is Stored on Tiered Storage", level=1, num="18"),
         Heading(
-            name="Destination Table That Is on a Different Replica", level=1, num="18"
-        ),
-        Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Replicas",
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TieredStorage",
             level=2,
             num="18.1",
         ),
         Heading(
-            name="Destination Table That Is on a Different Shard", level=1, num="19"
+            name="Destination Table That Is on a Different Replica", level=1, num="19"
         ),
         Heading(
-            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Shards",
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Replicas",
             level=2,
             num="19.1",
         ),
         Heading(
+            name="Destination Table That Is on a Different Shard", level=1, num="20"
+        ),
+        Heading(
+            name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Shards",
+            level=2,
+            num="20.1",
+        ),
+        Heading(
             name="Table That Is Stored on a Server With Different ClickHouse Version",
             level=1,
-            num="20",
+            num="21",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Versions",
             level=2,
-            num="20.1",
+            num="21.1",
         ),
-        Heading(name="Encrypted Tables And Unencrypted Tables", level=1, num="21"),
+        Heading(name="Encrypted Tables And Unencrypted Tables", level=1, num="22"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Encryption",
             level=2,
-            num="21.1",
+            num="22.1",
         ),
-        Heading(name="Tables With Different Partition Types", level=1, num="22"),
+        Heading(name="Tables With Different Partition Types", level=1, num="23"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.PartitionTypes",
             level=2,
-            num="22.1",
+            num="23.1",
         ),
-        Heading(name="Corrupted Parts on a Specific Partition", level=1, num="23"),
+        Heading(name="Corrupted Parts on a Specific Partition", level=1, num="24"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Corrupted",
             level=2,
-            num="23.1",
+            num="24.1",
         ),
-        Heading(name="Conditions", level=1, num="24"),
-        Heading(name="Rules for Replacing Partitions on Tables", level=2, num="24.1"),
+        Heading(name="Conditions", level=1, num="25"),
+        Heading(name="Rules for Replacing Partitions on Tables", level=2, num="25.1"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions",
             level=3,
-            num="24.1.1",
+            num="25.1.1",
         ),
-        Heading(name="Tables With Different Structure", level=2, num="24.2"),
+        Heading(name="Tables With Different Structure", level=2, num="25.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.Structure",
             level=3,
-            num="24.2.1",
+            num="25.2.1",
         ),
-        Heading(name="Tables With Different Partition Key", level=2, num="24.3"),
+        Heading(name="Tables With Different Partition Key", level=2, num="25.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.Key",
             level=3,
-            num="24.3.1",
+            num="25.3.1",
         ),
-        Heading(name="Tables With Different Storage Policy", level=2, num="24.4"),
+        Heading(name="Tables With Different Storage Policy", level=2, num="25.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.StoragePolicy",
             level=3,
-            num="24.4.1",
+            num="25.4.1",
         ),
         Heading(
             name="Actions That Can Not Be Used Along Replace Partition Operation",
             level=1,
-            num="25",
+            num="26",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited",
             level=2,
-            num="25.1",
+            num="26.1",
         ),
         Heading(
-            name="Actions That Can Not Be Used After From Clause", level=2, num="25.2"
+            name="Actions That Can Not Be Used After From Clause", level=2, num="26.2"
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.From",
             level=3,
-            num="25.2.1",
+            num="26.2.1",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.From.RemoteTable",
             level=3,
-            num="25.2.2",
+            num="26.2.2",
         ),
-        Heading(name="Table Functions", level=3, num="25.2.3"),
+        Heading(name="Table Functions", level=3, num="26.2.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.From.TableFunctions",
             level=4,
-            num="25.2.3.1",
+            num="26.2.3.1",
         ),
-        Heading(name="Subquery", level=3, num="25.2.4"),
+        Heading(name="Subquery", level=3, num="26.2.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Subquery",
             level=4,
-            num="25.2.4.1",
+            num="26.2.4.1",
         ),
-        Heading(name="Join Clause", level=3, num="25.2.5"),
+        Heading(name="Join Clause", level=3, num="26.2.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Join",
             level=4,
-            num="25.2.5.1",
+            num="26.2.5.1",
         ),
         Heading(
             name="Replace Partition From Tables That Do Not Have Partitions",
             level=3,
-            num="25.2.6",
+            num="26.2.6",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.IncorrectTableEngines",
             level=4,
-            num="25.2.6.1",
+            num="26.2.6.1",
         ),
-        Heading(name="View", level=3, num="25.2.7"),
+        Heading(name="View", level=3, num="26.2.7"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.View.Normal",
             level=4,
-            num="25.2.7.1",
+            num="26.2.7.1",
         ),
-        Heading(name="Materialized View", level=3, num="25.2.8"),
+        Heading(name="Materialized View", level=3, num="26.2.8"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.View.Materialized",
             level=4,
-            num="25.2.8.1",
+            num="26.2.8.1",
         ),
-        Heading(name="Using Order By and Partition By", level=2, num="25.3"),
+        Heading(name="Using Order By and Partition By", level=2, num="26.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition",
             level=3,
-            num="25.3.1",
+            num="26.3.1",
         ),
         Heading(
             name="Replacing Partitions During Ongoing Merges and Mutations",
             level=1,
-            num="26",
+            num="27",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent",
             level=2,
-            num="26.1",
+            num="27.1",
         ),
         Heading(
             name="Staring New Merges With Ongoing Replace Partition",
             level=2,
-            num="26.2",
+            num="27.2",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Merges",
             level=3,
-            num="26.2.1",
+            num="27.2.1",
         ),
         Heading(
             name="Staring New Mutations With Ongoing Replace Partition",
             level=2,
-            num="26.3",
+            num="27.3",
         ),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Mutations",
             level=3,
-            num="26.3.1",
+            num="27.3.1",
         ),
-        Heading(name="Insert Into Table", level=2, num="26.4"),
+        Heading(name="Insert Into Table", level=2, num="27.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Insert",
             level=3,
-            num="26.4.1",
+            num="27.4.1",
         ),
-        Heading(name="Delete Table", level=2, num="26.5"),
+        Heading(name="Delete Table", level=2, num="27.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Delete",
             level=3,
-            num="26.5.1",
+            num="27.5.1",
         ),
-        Heading(name="Attach Table", level=2, num="26.6"),
+        Heading(name="Attach Table", level=2, num="27.6"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Attach",
             level=3,
-            num="26.6.1",
+            num="27.6.1",
         ),
-        Heading(name="Detach Table", level=2, num="26.7"),
+        Heading(name="Detach Table", level=2, num="27.7"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Detach",
             level=3,
-            num="26.7.1",
+            num="27.7.1",
         ),
-        Heading(name="Optimize Table", level=2, num="26.8"),
+        Heading(name="Optimize Table", level=2, num="27.8"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Optimize",
             level=3,
-            num="26.8.1",
+            num="27.8.1",
         ),
-        Heading(name="Alter", level=2, num="26.9"),
-        Heading(name="Add Column", level=3, num="26.9.1"),
+        Heading(name="Alter", level=2, num="27.9"),
+        Heading(name="Add Column", level=3, num="27.9.1"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Add",
             level=4,
-            num="26.9.1.1",
+            num="27.9.1.1",
         ),
-        Heading(name="Drop Column", level=3, num="26.9.2"),
+        Heading(name="Drop Column", level=3, num="27.9.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Drop",
             level=4,
-            num="26.9.2.1",
+            num="27.9.2.1",
         ),
-        Heading(name="Modify Column", level=3, num="26.9.3"),
+        Heading(name="Modify Column", level=3, num="27.9.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Modify",
             level=4,
-            num="26.9.3.1",
+            num="27.9.3.1",
         ),
-        Heading(name="Rename Column", level=3, num="26.9.4"),
+        Heading(name="Rename Column", level=3, num="27.9.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.RenameColumn",
             level=4,
-            num="26.9.4.1",
+            num="27.9.4.1",
         ),
-        Heading(name="Comment Column", level=3, num="26.9.5"),
+        Heading(name="Comment Column", level=3, num="27.9.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.CommentColumn",
             level=4,
-            num="26.9.5.1",
+            num="27.9.5.1",
         ),
-        Heading(name="Add Constraint", level=3, num="26.9.6"),
+        Heading(name="Add Constraint", level=3, num="27.9.6"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.AddConstraint",
             level=4,
-            num="26.9.6.1",
+            num="27.9.6.1",
         ),
-        Heading(name="Manipulating Partitions", level=2, num="26.10"),
+        Heading(name="Manipulating Partitions", level=2, num="27.10"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions",
             level=3,
-            num="26.10.1",
+            num="27.10.1",
         ),
-        Heading(name="Detach", level=3, num="26.10.2"),
+        Heading(name="Detach", level=3, num="27.10.2"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Detach",
             level=4,
-            num="26.10.2.1",
+            num="27.10.2.1",
         ),
-        Heading(name="Drop", level=3, num="26.10.3"),
+        Heading(name="Drop", level=3, num="27.10.3"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Drop",
             level=4,
-            num="26.10.3.1",
+            num="27.10.3.1",
         ),
-        Heading(name="Attach", level=3, num="26.10.4"),
+        Heading(name="Attach", level=3, num="27.10.4"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Attach",
             level=4,
-            num="26.10.4.1",
+            num="27.10.4.1",
         ),
-        Heading(name="Attach From", level=3, num="26.10.5"),
+        Heading(name="Attach From", level=3, num="27.10.5"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.AttachFrom",
             level=4,
-            num="26.10.5.1",
+            num="27.10.5.1",
         ),
-        Heading(name="Replace", level=3, num="26.10.6"),
+        Heading(name="Replace", level=3, num="27.10.6"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Replace",
             level=4,
-            num="26.10.6.1",
+            num="27.10.6.1",
         ),
-        Heading(name="Move To Table", level=3, num="26.10.7"),
+        Heading(name="Move To Table", level=3, num="27.10.7"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.MoveToTable",
             level=4,
-            num="26.10.7.1",
+            num="27.10.7.1",
         ),
-        Heading(name="Clear Column In Partition", level=3, num="26.10.8"),
+        Heading(name="Clear Column In Partition", level=3, num="27.10.8"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.ClearColumnInPartition",
             level=4,
-            num="26.10.8.1",
+            num="27.10.8.1",
         ),
-        Heading(name="Freeze", level=3, num="26.10.9"),
+        Heading(name="Freeze", level=3, num="27.10.9"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Freeze",
             level=4,
-            num="26.10.9.1",
+            num="27.10.9.1",
         ),
-        Heading(name="Unfreeze", level=3, num="26.10.10"),
+        Heading(name="Unfreeze", level=3, num="27.10.10"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Unfreeze",
             level=4,
-            num="26.10.10.1",
+            num="27.10.10.1",
         ),
-        Heading(name="Clear Index", level=3, num="26.10.11"),
+        Heading(name="Clear Index", level=3, num="27.10.11"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.ClearIndex",
             level=4,
-            num="26.10.11.1",
+            num="27.10.11.1",
         ),
-        Heading(name="Fetch", level=3, num="26.10.12"),
+        Heading(name="Fetch", level=3, num="27.10.12"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Fetch",
             level=4,
-            num="26.10.12.1",
+            num="27.10.12.1",
         ),
-        Heading(name="Move", level=3, num="26.10.13"),
+        Heading(name="Move", level=3, num="27.10.13"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Move",
             level=4,
-            num="26.10.13.1",
+            num="27.10.13.1",
         ),
-        Heading(name="Update In", level=3, num="26.10.14"),
+        Heading(name="Update In", level=3, num="27.10.14"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.UpdateInPartition",
             level=4,
-            num="26.10.14.1",
+            num="27.10.14.1",
         ),
-        Heading(name="Delete In", level=3, num="26.10.15"),
+        Heading(name="Delete In", level=3, num="27.10.15"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.DeleteInPartition",
             level=4,
-            num="26.10.15.1",
+            num="27.10.15.1",
         ),
-        Heading(name="Role Based Access Control", level=1, num="27"),
+        Heading(name="Role Based Access Control", level=1, num="28"),
         Heading(
             name="RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC",
             level=2,
-            num="27.1",
+            num="28.1",
         ),
     ),
     requirements=(
@@ -1819,137 +1824,138 @@ SRS032_ClickHouse_Alter_Table_Replace_Partition = Specification(
 * 3 [Flowchart](#flowchart)
 * 4 [Definitions](#definitions)
 * 5 [User Actions](#user-actions)
-* 6 [Replace Partition on the Table From Another Table](#replace-partition-on-the-table-from-another-table)
-    * 6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition](#rqsrs-032clickhousealtertablereplacepartition)
-    * 6.2 [Reflect Changes in Table Partitions Inside the System Table](#reflect-changes-in-table-partitions-inside-the-system-table)
-        * 6.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.System.Parts](#rqsrs-032clickhousealtertablereplacepartitionsystemparts)
-* 7 [Table Engines on Which Replace Partition Can Be Performed](#table-engines-on-which-replace-partition-can-be-performed)
-    * 7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Supported.Engines](#rqsrs-032clickhousealtertablereplacepartitionsupportedengines)
-* 8 [Keeping Data on the Source Table After Replace Partition](#keeping-data-on-the-source-table-after-replace-partition)
-    * 8.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.KeepData](#rqsrs-032clickhousealtertablereplacepartitionkeepdata)
-* 9 [Table With Non-Existent Partition](#table-with-non-existent-partition)
-    * 9.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.NonExistentPartition](#rqsrs-032clickhousealtertablereplacepartitionnonexistentpartition)
-* 10 [Temporary Tables](#temporary-tables)
-    * 10.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TemporaryTable](#rqsrs-032clickhousealtertablereplacepartitiontemporarytable)
-    * 10.2 [From Temporary Table](#from-temporary-table)
-        * 10.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.FromTemporaryTable](#rqsrs-032clickhousealtertablereplacepartitionfromtemporarytable)
-    * 10.3 [From Temporary Table To Temporary Table](#from-temporary-table-to-temporary-table)
-        * 10.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ToTemporaryTable](#rqsrs-032clickhousealtertablereplacepartitiontotemporarytable)
-    * 10.4 [From Regular Table To Temporary Table](#from-regular-table-to-temporary-table)
-        * 10.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.FromRegularTable](#rqsrs-032clickhousealtertablereplacepartitionfromregulartable)
-* 11 [Using Into Outfile Clause With Replace Partition Clause](#using-into-outfile-clause-with-replace-partition-clause)
-    * 11.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.IntoOutfile](#rqsrs-032clickhousealtertablereplacepartitionintooutfile)
-* 12 [Using The Format Clause With Replace Partition Clause](#using-the-format-clause-with-replace-partition-clause)
-    * 12.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Format](#rqsrs-032clickhousealtertablereplacepartitionformat)
-* 13 [Using Settings With Replace Partition Clause](#using-settings-with-replace-partition-clause)
-    * 13.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Settings](#rqsrs-032clickhousealtertablereplacepartitionsettings)
-* 14 [Table Is on a Separate Disk](#table-is-on-a-separate-disk)
-    * 14.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Disks](#rqsrs-032clickhousealtertablereplacepartitiondisks)
-* 15 [Table That Is Stored on S3](#table-that-is-stored-on-s3)
-    * 15.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.S3](#rqsrs-032clickhousealtertablereplacepartitions3)
-* 16 [Table That Is Stored on Tiered Storage](#table-that-is-stored-on-tiered-storage)
-    * 16.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TieredStorage](#rqsrs-032clickhousealtertablereplacepartitiontieredstorage)
-* 17 [Destination Table That Is on a Different Replica](#destination-table-that-is-on-a-different-replica)
-    * 17.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Replicas](#rqsrs-032clickhousealtertablereplacepartitionreplicas)
-* 18 [Destination Table That Is on a Different Shard](#destination-table-that-is-on-a-different-shard)
-    * 18.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Shards](#rqsrs-032clickhousealtertablereplacepartitionshards)
-* 19 [Table That Is Stored on a Server With Different ClickHouse Version](#table-that-is-stored-on-a-server-with-different-clickhouse-version)
-    * 19.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Versions](#rqsrs-032clickhousealtertablereplacepartitionversions)
-* 20 [Encrypted Tables And Unencrypted Tables](#encrypted-tables-and-unencrypted-tables)
-    * 20.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Encryption](#rqsrs-032clickhousealtertablereplacepartitionencryption)
-* 21 [Tables With Different Partition Types](#tables-with-different-partition-types)
-    * 21.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.PartitionTypes](#rqsrs-032clickhousealtertablereplacepartitionpartitiontypes)
-* 22 [Corrupted Parts on a Specific Partition](#corrupted-parts-on-a-specific-partition)
-    * 22.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Corrupted](#rqsrs-032clickhousealtertablereplacepartitioncorrupted)
-* 23 [Conditions](#conditions)
-    * 23.1 [Rules for Replacing Partitions on Tables](#rules-for-replacing-partitions-on-tables)
-        * 23.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions](#rqsrs-032clickhousealtertablereplacepartitionconditions)
-    * 23.2 [Tables With Different Structure](#tables-with-different-structure)
-        * 23.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.Structure](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentstructure)
-    * 23.3 [Tables With Different Partition Key](#tables-with-different-partition-key)
-        * 23.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.Key](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentkey)
-    * 23.4 [Tables With Different Storage Policy](#tables-with-different-storage-policy)
-        * 23.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.StoragePolicy](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentstoragepolicy)
-* 24 [Actions That Can Not Be Used Along Replace Partition Operation](#actions-that-can-not-be-used-along-replace-partition-operation)
-    * 24.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited](#rqsrs-032clickhousealtertablereplacepartitionprohibited)
-    * 24.2 [Actions That Can Not Be Used After From Clause](#actions-that-can-not-be-used-after-from-clause)
-        * 24.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.From](#rqsrs-032clickhousealtertablereplacepartitionprohibitedfrom)
-        * 24.2.2 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.From.RemoteTable](#rqsrs-032clickhousealtertablereplacepartitionprohibitedfromremotetable)
-        * 24.2.3 [Table Functions](#table-functions)
-            * 24.2.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.From.TableFunctions](#rqsrs-032clickhousealtertablereplacepartitionprohibitedfromtablefunctions)
-        * 24.2.4 [Subquery](#subquery)
-            * 24.2.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Subquery](#rqsrs-032clickhousealtertablereplacepartitionprohibitedsubquery)
-        * 24.2.5 [Join Clause](#join-clause)
-            * 24.2.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Join](#rqsrs-032clickhousealtertablereplacepartitionprohibitedjoin)
-        * 24.2.6 [Replace Partition From Tables That Do Not Have Partitions](#replace-partition-from-tables-that-do-not-have-partitions)
-            * 24.2.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.IncorrectTableEngines](#rqsrs-032clickhousealtertablereplacepartitionprohibitedincorrecttableengines)
-        * 24.2.7 [View](#view)
-            * 24.2.7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.View.Normal](#rqsrs-032clickhousealtertablereplacepartitionprohibitedviewnormal)
-        * 24.2.8 [Materialized View](#materialized-view)
-            * 24.2.8.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.View.Materialized](#rqsrs-032clickhousealtertablereplacepartitionprohibitedviewmaterialized)
-    * 24.3 [Using Order By and Partition By](#using-order-by-and-partition-by)
-        * 24.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition](#rqsrs-032clickhousealtertablereplacepartitionprohibitedorderandpartition)
-* 25 [Replacing Partitions During Ongoing Merges and Mutations](#replacing-partitions-during-ongoing-merges-and-mutations)
-    * 25.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent](#rqsrs-032clickhousealtertablereplacepartitionconcurrent)
-    * 25.2 [Staring New Merges With Ongoing Replace Partition](#staring-new-merges-with-ongoing-replace-partition)
-        * 25.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Merges](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmerges)
-    * 25.3 [Staring New Mutations With Ongoing Replace Partition](#staring-new-mutations-with-ongoing-replace-partition)
-        * 25.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Mutations](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmutations)
-    * 25.4 [Insert Into Table](#insert-into-table)
-        * 25.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Insert](#rqsrs-032clickhousealtertablereplacepartitionconcurrentinsert)
-    * 25.5 [Delete Table](#delete-table)
-        * 25.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Delete](#rqsrs-032clickhousealtertablereplacepartitionconcurrentdelete)
-    * 25.6 [Attach Table](#attach-table)
-        * 25.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Attach](#rqsrs-032clickhousealtertablereplacepartitionconcurrentattach)
-    * 25.7 [Detach Table](#detach-table)
-        * 25.7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Detach](#rqsrs-032clickhousealtertablereplacepartitionconcurrentdetach)
-    * 25.8 [Optimize Table](#optimize-table)
-        * 25.8.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Optimize](#rqsrs-032clickhousealtertablereplacepartitionconcurrentoptimize)
-    * 25.9 [Alter](#alter)
-        * 25.9.1 [Add Column](#add-column)
-            * 25.9.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Add](#rqsrs-032clickhousealtertablereplacepartitionconcurrentalteradd)
-        * 25.9.2 [Drop Column](#drop-column)
-            * 25.9.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Drop](#rqsrs-032clickhousealtertablereplacepartitionconcurrentalterdrop)
-        * 25.9.3 [Modify Column](#modify-column)
-            * 25.9.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Modify](#rqsrs-032clickhousealtertablereplacepartitionconcurrentaltermodify)
-        * 25.9.4 [Rename Column](#rename-column)
-            * 25.9.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.RenameColumn](#rqsrs-032clickhousealtertablereplacepartitionconcurrentalterrenamecolumn)
-        * 25.9.5 [Comment Column](#comment-column)
-            * 25.9.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.CommentColumn](#rqsrs-032clickhousealtertablereplacepartitionconcurrentaltercommentcolumn)
-        * 25.9.6 [Add Constraint](#add-constraint)
-            * 25.9.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.AddConstraint](#rqsrs-032clickhousealtertablereplacepartitionconcurrentalteraddconstraint)
-    * 25.10 [Manipulating Partitions](#manipulating-partitions)
-        * 25.10.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitions)
-        * 25.10.2 [Detach](#detach)
-            * 25.10.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Detach](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsdetach)
-        * 25.10.3 [Drop](#drop)
-            * 25.10.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Drop](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsdrop)
-        * 25.10.4 [Attach](#attach)
-            * 25.10.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Attach](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsattach)
-        * 25.10.5 [Attach From](#attach-from)
-            * 25.10.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.AttachFrom](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsattachfrom)
-        * 25.10.6 [Replace](#replace)
-            * 25.10.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Replace](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsreplace)
-        * 25.10.7 [Move To Table](#move-to-table)
-            * 25.10.7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.MoveToTable](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsmovetotable)
-        * 25.10.8 [Clear Column In Partition](#clear-column-in-partition)
-            * 25.10.8.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.ClearColumnInPartition](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsclearcolumninpartition)
-        * 25.10.9 [Freeze](#freeze)
-            * 25.10.9.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Freeze](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsfreeze)
-        * 25.10.10 [Unfreeze](#unfreeze)
-            * 25.10.10.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Unfreeze](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsunfreeze)
-        * 25.10.11 [Clear Index](#clear-index)
-            * 25.10.11.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.ClearIndex](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsclearindex)
-        * 25.10.12 [Fetch](#fetch)
-            * 25.10.12.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Fetch](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsfetch)
-        * 25.10.13 [Move](#move)
-            * 25.10.13.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Move](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsmove)
-        * 25.10.14 [Update In](#update-in)
-            * 25.10.14.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.UpdateInPartition](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsupdateinpartition)
-        * 25.10.15 [Delete In](#delete-in)
-            * 25.10.15.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.DeleteInPartition](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsdeleteinpartition)
-* 26 [Role Based Access Control](#role-based-access-control)
-    * 26.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC](#rqsrs-032clickhousealtertablereplacepartitionrbac)
+* 6 [What Is the Difference Between Attach Partition and Replace Partition](#what-is-the-difference-between-attach-partition-and-replace-partition)
+* 7 [Replace Partition on the Table From Another Table](#replace-partition-on-the-table-from-another-table)
+    * 7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition](#rqsrs-032clickhousealtertablereplacepartition)
+    * 7.2 [Reflect Changes in Table Partitions Inside the System Table](#reflect-changes-in-table-partitions-inside-the-system-table)
+        * 7.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.System.Parts](#rqsrs-032clickhousealtertablereplacepartitionsystemparts)
+* 8 [Table Engines on Which Replace Partition Can Be Performed](#table-engines-on-which-replace-partition-can-be-performed)
+    * 8.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Supported.Engines](#rqsrs-032clickhousealtertablereplacepartitionsupportedengines)
+* 9 [Keeping Data on the Source Table After Replace Partition](#keeping-data-on-the-source-table-after-replace-partition)
+    * 9.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.KeepData](#rqsrs-032clickhousealtertablereplacepartitionkeepdata)
+* 10 [Table With Non-Existent Partition](#table-with-non-existent-partition)
+    * 10.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.NonExistentPartition](#rqsrs-032clickhousealtertablereplacepartitionnonexistentpartition)
+* 11 [Temporary Tables](#temporary-tables)
+    * 11.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TemporaryTable](#rqsrs-032clickhousealtertablereplacepartitiontemporarytable)
+    * 11.2 [From Temporary Table](#from-temporary-table)
+        * 11.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.FromTemporaryTable](#rqsrs-032clickhousealtertablereplacepartitionfromtemporarytable)
+    * 11.3 [From Temporary Table To Temporary Table](#from-temporary-table-to-temporary-table)
+        * 11.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.ToTemporaryTable](#rqsrs-032clickhousealtertablereplacepartitiontotemporarytable)
+    * 11.4 [From Regular Table To Temporary Table](#from-regular-table-to-temporary-table)
+        * 11.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.FromRegularTable](#rqsrs-032clickhousealtertablereplacepartitionfromregulartable)
+* 12 [Using Into Outfile Clause With Replace Partition Clause](#using-into-outfile-clause-with-replace-partition-clause)
+    * 12.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.IntoOutfile](#rqsrs-032clickhousealtertablereplacepartitionintooutfile)
+* 13 [Using The Format Clause With Replace Partition Clause](#using-the-format-clause-with-replace-partition-clause)
+    * 13.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Format](#rqsrs-032clickhousealtertablereplacepartitionformat)
+* 14 [Using Settings With Replace Partition Clause](#using-settings-with-replace-partition-clause)
+    * 14.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Settings](#rqsrs-032clickhousealtertablereplacepartitionsettings)
+* 15 [Table Is on a Separate Disk](#table-is-on-a-separate-disk)
+    * 15.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Disks](#rqsrs-032clickhousealtertablereplacepartitiondisks)
+* 16 [Table That Is Stored on S3](#table-that-is-stored-on-s3)
+    * 16.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.S3](#rqsrs-032clickhousealtertablereplacepartitions3)
+* 17 [Table That Is Stored on Tiered Storage](#table-that-is-stored-on-tiered-storage)
+    * 17.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.TieredStorage](#rqsrs-032clickhousealtertablereplacepartitiontieredstorage)
+* 18 [Destination Table That Is on a Different Replica](#destination-table-that-is-on-a-different-replica)
+    * 18.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Replicas](#rqsrs-032clickhousealtertablereplacepartitionreplicas)
+* 19 [Destination Table That Is on a Different Shard](#destination-table-that-is-on-a-different-shard)
+    * 19.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Shards](#rqsrs-032clickhousealtertablereplacepartitionshards)
+* 20 [Table That Is Stored on a Server With Different ClickHouse Version](#table-that-is-stored-on-a-server-with-different-clickhouse-version)
+    * 20.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Versions](#rqsrs-032clickhousealtertablereplacepartitionversions)
+* 21 [Encrypted Tables And Unencrypted Tables](#encrypted-tables-and-unencrypted-tables)
+    * 21.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Encryption](#rqsrs-032clickhousealtertablereplacepartitionencryption)
+* 22 [Tables With Different Partition Types](#tables-with-different-partition-types)
+    * 22.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.PartitionTypes](#rqsrs-032clickhousealtertablereplacepartitionpartitiontypes)
+* 23 [Corrupted Parts on a Specific Partition](#corrupted-parts-on-a-specific-partition)
+    * 23.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Corrupted](#rqsrs-032clickhousealtertablereplacepartitioncorrupted)
+* 24 [Conditions](#conditions)
+    * 24.1 [Rules for Replacing Partitions on Tables](#rules-for-replacing-partitions-on-tables)
+        * 24.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions](#rqsrs-032clickhousealtertablereplacepartitionconditions)
+    * 24.2 [Tables With Different Structure](#tables-with-different-structure)
+        * 24.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.Structure](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentstructure)
+    * 24.3 [Tables With Different Partition Key](#tables-with-different-partition-key)
+        * 24.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.Key](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentkey)
+    * 24.4 [Tables With Different Storage Policy](#tables-with-different-storage-policy)
+        * 24.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Conditions.Different.StoragePolicy](#rqsrs-032clickhousealtertablereplacepartitionconditionsdifferentstoragepolicy)
+* 25 [Actions That Can Not Be Used Along Replace Partition Operation](#actions-that-can-not-be-used-along-replace-partition-operation)
+    * 25.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited](#rqsrs-032clickhousealtertablereplacepartitionprohibited)
+    * 25.2 [Actions That Can Not Be Used After From Clause](#actions-that-can-not-be-used-after-from-clause)
+        * 25.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.From](#rqsrs-032clickhousealtertablereplacepartitionprohibitedfrom)
+        * 25.2.2 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.From.RemoteTable](#rqsrs-032clickhousealtertablereplacepartitionprohibitedfromremotetable)
+        * 25.2.3 [Table Functions](#table-functions)
+            * 25.2.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.From.TableFunctions](#rqsrs-032clickhousealtertablereplacepartitionprohibitedfromtablefunctions)
+        * 25.2.4 [Subquery](#subquery)
+            * 25.2.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Subquery](#rqsrs-032clickhousealtertablereplacepartitionprohibitedsubquery)
+        * 25.2.5 [Join Clause](#join-clause)
+            * 25.2.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.Join](#rqsrs-032clickhousealtertablereplacepartitionprohibitedjoin)
+        * 25.2.6 [Replace Partition From Tables That Do Not Have Partitions](#replace-partition-from-tables-that-do-not-have-partitions)
+            * 25.2.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.IncorrectTableEngines](#rqsrs-032clickhousealtertablereplacepartitionprohibitedincorrecttableengines)
+        * 25.2.7 [View](#view)
+            * 25.2.7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.View.Normal](#rqsrs-032clickhousealtertablereplacepartitionprohibitedviewnormal)
+        * 25.2.8 [Materialized View](#materialized-view)
+            * 25.2.8.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.View.Materialized](#rqsrs-032clickhousealtertablereplacepartitionprohibitedviewmaterialized)
+    * 25.3 [Using Order By and Partition By](#using-order-by-and-partition-by)
+        * 25.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Prohibited.OrderAndPartition](#rqsrs-032clickhousealtertablereplacepartitionprohibitedorderandpartition)
+* 26 [Replacing Partitions During Ongoing Merges and Mutations](#replacing-partitions-during-ongoing-merges-and-mutations)
+    * 26.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent](#rqsrs-032clickhousealtertablereplacepartitionconcurrent)
+    * 26.2 [Staring New Merges With Ongoing Replace Partition](#staring-new-merges-with-ongoing-replace-partition)
+        * 26.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Merges](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmerges)
+    * 26.3 [Staring New Mutations With Ongoing Replace Partition](#staring-new-mutations-with-ongoing-replace-partition)
+        * 26.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Mutations](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmutations)
+    * 26.4 [Insert Into Table](#insert-into-table)
+        * 26.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Insert](#rqsrs-032clickhousealtertablereplacepartitionconcurrentinsert)
+    * 26.5 [Delete Table](#delete-table)
+        * 26.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Delete](#rqsrs-032clickhousealtertablereplacepartitionconcurrentdelete)
+    * 26.6 [Attach Table](#attach-table)
+        * 26.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Attach](#rqsrs-032clickhousealtertablereplacepartitionconcurrentattach)
+    * 26.7 [Detach Table](#detach-table)
+        * 26.7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Detach](#rqsrs-032clickhousealtertablereplacepartitionconcurrentdetach)
+    * 26.8 [Optimize Table](#optimize-table)
+        * 26.8.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Optimize](#rqsrs-032clickhousealtertablereplacepartitionconcurrentoptimize)
+    * 26.9 [Alter](#alter)
+        * 26.9.1 [Add Column](#add-column)
+            * 26.9.1.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Add](#rqsrs-032clickhousealtertablereplacepartitionconcurrentalteradd)
+        * 26.9.2 [Drop Column](#drop-column)
+            * 26.9.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Drop](#rqsrs-032clickhousealtertablereplacepartitionconcurrentalterdrop)
+        * 26.9.3 [Modify Column](#modify-column)
+            * 26.9.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.Modify](#rqsrs-032clickhousealtertablereplacepartitionconcurrentaltermodify)
+        * 26.9.4 [Rename Column](#rename-column)
+            * 26.9.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.RenameColumn](#rqsrs-032clickhousealtertablereplacepartitionconcurrentalterrenamecolumn)
+        * 26.9.5 [Comment Column](#comment-column)
+            * 26.9.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.CommentColumn](#rqsrs-032clickhousealtertablereplacepartitionconcurrentaltercommentcolumn)
+        * 26.9.6 [Add Constraint](#add-constraint)
+            * 26.9.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Alter.AddConstraint](#rqsrs-032clickhousealtertablereplacepartitionconcurrentalteraddconstraint)
+    * 26.10 [Manipulating Partitions](#manipulating-partitions)
+        * 26.10.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitions)
+        * 26.10.2 [Detach](#detach)
+            * 26.10.2.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Detach](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsdetach)
+        * 26.10.3 [Drop](#drop)
+            * 26.10.3.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Drop](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsdrop)
+        * 26.10.4 [Attach](#attach)
+            * 26.10.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Attach](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsattach)
+        * 26.10.5 [Attach From](#attach-from)
+            * 26.10.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.AttachFrom](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsattachfrom)
+        * 26.10.6 [Replace](#replace)
+            * 26.10.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Replace](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsreplace)
+        * 26.10.7 [Move To Table](#move-to-table)
+            * 26.10.7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.MoveToTable](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsmovetotable)
+        * 26.10.8 [Clear Column In Partition](#clear-column-in-partition)
+            * 26.10.8.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.ClearColumnInPartition](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsclearcolumninpartition)
+        * 26.10.9 [Freeze](#freeze)
+            * 26.10.9.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Freeze](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsfreeze)
+        * 26.10.10 [Unfreeze](#unfreeze)
+            * 26.10.10.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Unfreeze](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsunfreeze)
+        * 26.10.11 [Clear Index](#clear-index)
+            * 26.10.11.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.ClearIndex](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsclearindex)
+        * 26.10.12 [Fetch](#fetch)
+            * 26.10.12.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Fetch](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsfetch)
+        * 26.10.13 [Move](#move)
+            * 26.10.13.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.Move](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsmove)
+        * 26.10.14 [Update In](#update-in)
+            * 26.10.14.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.UpdateInPartition](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsupdateinpartition)
+        * 26.10.15 [Delete In](#delete-in)
+            * 26.10.15.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.Concurrent.Manipulating.Partitions.DeleteInPartition](#rqsrs-032clickhousealtertablereplacepartitionconcurrentmanipulatingpartitionsdeleteinpartition)
+* 27 [Role Based Access Control](#role-based-access-control)
+    * 27.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition.RBAC](#rqsrs-032clickhousealtertablereplacepartitionrbac)
 
 ## Revision History
 
@@ -1996,7 +2002,7 @@ end
 ## Definitions
 
 Source Table - The table from which a partition is taken.
-Destination Table - The table in which a specific partition is going to be replaced..
+Destination Table - The table in which a specific partition is going to be replaced.
 
 
 ## User Actions
@@ -2029,6 +2035,10 @@ Destination Table - The table in which a specific partition is going to be repla
 | `DROP TABLE`                   | `DROP [TEMPORARY] TABLE [IF EXISTS] [IF EMPTY] [db.]name [ON CLUSTER cluster] [SYNC]`                                        |
 | `RENAME COLUMN`                | `RENAME COLUMN [IF EXISTS] name to new_name`                                                                                 |
 | `OPTIMIZE`                     | `OPTIMIZE TABLE [db.]name [ON CLUSTER cluster] [PARTITION partition] [FINAL] [DEDUPLICATE [BY expression]]`                  |
+
+## What Is the Difference Between Attach Partition and Replace Partition
+
+Unlike `ATTACH PARTITION`, `REPLACE PARTITION FROM` is a hardlink-based operation, meaning that replacing partitions does not work across different storages.
 
 ## Replace Partition on the Table From Another Table
 
