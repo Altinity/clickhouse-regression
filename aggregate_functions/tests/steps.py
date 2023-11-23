@@ -12,6 +12,7 @@ from helpers.common import (
 
 # exhaustive list of all aggregate functions
 aggregate_functions = [
+    "aggThrow"
     "any",
     "anyHeavy",
     "anyLast",
@@ -207,6 +208,7 @@ def execute_query(
                             id=current().context.snapshot_id + "." + current_cpu(),
                             name=snapshot_name,
                             encoder=str,
-                            mode= snapshot.CHECK, #snapshot.REWRITE | snapshot.CHECK | snapshot.UPDATE
+                            mode=snapshot.CHECK
+                            | snapshot.UPDATE,  # snapshot.REWRITE | snapshot.CHECK | snapshot.UPDATE
                         )
                     ), error()
