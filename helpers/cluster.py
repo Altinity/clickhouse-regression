@@ -6,6 +6,7 @@ import hashlib
 import threading
 import tempfile
 import re
+import json
 
 from testflows._core.cli.arg.common import description
 
@@ -1431,12 +1432,21 @@ class Cluster(object):
 
         # Edit permissions on server files for external manipulation
         for node in self.nodes["clickhouse"]:
-            self.command(node=node, command="chmod a+rwX -R /var/lib/clickhouse", no_checks=True)
-            self.command(node=node, command="chmod a+rwX -R /var/log/clickhouse-server", no_checks=True)
-            self.command(node=node, command="chmod a+rwX -R /etc/clickhouse-server", no_checks=True)
-            self.command(node=node, command="chmod a+rwX -R /data", no_checks=True)
-            self.command(node=node, command="chmod a+rwX -R /datalog", no_checks=True)
+            with self.lock:
+                container_id = self.node_container_id(node)
 
+            r = self.command(
+                node=None, command=f"docker inspect {container_id}", exitcode=0
+            )
+            mounts = json.loads(r.output)[0]["Mounts"]
+            docker_exposed_dirs = [
+                m["Destination"] for m in mounts if "_instances" in m["Source"]
+            ]
+
+            for exposed_dir in docker_exposed_dirs:
+                self.command(
+                    node=node, command=f"chmod a+rwX -R {exposed_dir}", no_checks=True
+                )
 
         try:
             bash = self.bash(None)
