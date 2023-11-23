@@ -1,0 +1,112 @@
+_aggregate_functions_merge_maxIntersectionsPositionMerge_NULL_value_handling_0 = r"""
+{"maxIntersectionsPositionMerge(state)":0}
+"""
+
+_aggregate_functions_merge_maxIntersectionsPositionMerge_constant_0 = r"""
+{"maxIntersectionsPositionMerge(state)":0}
+"""
+
+_aggregate_functions_merge_maxIntersectionsPositionMerge_datatypes_permutations_Float32_Float32_0 = r"""
+{"maxIntersectionsPositionMerge(state)":0}
+"""
+
+_aggregate_functions_merge_maxIntersectionsPositionMerge_datatypes_permutations_Float64_Float64_0 = r"""
+{"maxIntersectionsPositionMerge(state)":0}
+"""
+
+_aggregate_functions_merge_maxIntersectionsPositionMerge_datatypes_permutations_Int64_Int64_0 = r"""
+{"maxIntersectionsPositionMerge(state)":"0"}
+"""
+
+_aggregate_functions_merge_maxIntersectionsPositionMerge_datatypes_permutations_LowCardinality_Float32__LowCardinality_Float32__0 = r"""
+{"maxIntersectionsPositionMerge(state)":0}
+"""
+
+_aggregate_functions_merge_maxIntersectionsPositionMerge_datatypes_permutations_LowCardinality_Float64__LowCardinality_Float64__0 = r"""
+{"maxIntersectionsPositionMerge(state)":0}
+"""
+
+_aggregate_functions_merge_maxIntersectionsPositionMerge_datatypes_permutations_LowCardinality_Int64__LowCardinality_Int64__0 = r"""
+{"maxIntersectionsPositionMerge(state)":"0"}
+"""
+
+_aggregate_functions_merge_maxIntersectionsPositionMerge_datatypes_permutations_LowCardinality_UInt64__LowCardinality_UInt64__0 = r"""
+{"maxIntersectionsPositionMerge(state)":"0"}
+"""
+
+_aggregate_functions_merge_maxIntersectionsPositionMerge_datatypes_permutations_Nullable_Float32__Nullable_Float32__0 = r"""
+{"maxIntersectionsPositionMerge(state)":0}
+"""
+
+_aggregate_functions_merge_maxIntersectionsPositionMerge_datatypes_permutations_Nullable_Float64__Nullable_Float64__0 = r"""
+{"maxIntersectionsPositionMerge(state)":0}
+"""
+
+_aggregate_functions_merge_maxIntersectionsPositionMerge_datatypes_permutations_Nullable_Int64__Nullable_Int64__0 = r"""
+{"maxIntersectionsPositionMerge(state)":"0"}
+"""
+
+_aggregate_functions_merge_maxIntersectionsPositionMerge_datatypes_permutations_Nullable_UInt64__Nullable_UInt64__0 = r"""
+{"maxIntersectionsPositionMerge(state)":"0"}
+"""
+
+_aggregate_functions_merge_maxIntersectionsPositionMerge_datatypes_permutations_UInt64_UInt64_0 = r"""
+{"maxIntersectionsPositionMerge(state)":"0"}
+"""
+
+_aggregate_functions_merge_maxIntersectionsPositionMerge_example_1_0 = r"""
+{"maxIntersectionsPositionMerge(state)":0.88}
+"""
+
+_aggregate_functions_merge_maxIntersectionsPositionMerge_example_2_0 = r"""
+{"maxIntersectionsPositionMerge(state)":2}
+"""
+
+_aggregate_functions_merge_maxIntersectionsPositionMerge_inf___inf__nan__inf__inf_0 = r"""
+{"maxIntersectionsPositionMerge(state)":0}
+"""
+
+_aggregate_functions_merge_maxIntersectionsPositionMerge_inf___inf__nan__inf_inf_0 = r"""
+{"maxIntersectionsPositionMerge(state)":0}
+"""
+
+_aggregate_functions_merge_maxIntersectionsPositionMerge_inf___inf__nan__inf_nan_0 = r"""
+{"maxIntersectionsPositionMerge(state)":0}
+"""
+
+_aggregate_functions_merge_maxIntersectionsPositionMerge_inf___inf__nan_inf__inf_0 = r"""
+{"maxIntersectionsPositionMerge(state)":0}
+"""
+
+_aggregate_functions_merge_maxIntersectionsPositionMerge_inf___inf__nan_inf_inf_0 = r"""
+{"maxIntersectionsPositionMerge(state)":0}
+"""
+
+_aggregate_functions_merge_maxIntersectionsPositionMerge_inf___inf__nan_inf_nan_0 = r"""
+{"maxIntersectionsPositionMerge(state)":0}
+"""
+
+_aggregate_functions_merge_maxIntersectionsPositionMerge_inf___inf__nan_nan__inf_0 = r"""
+{"maxIntersectionsPositionMerge(state)":0}
+"""
+
+_aggregate_functions_merge_maxIntersectionsPositionMerge_inf___inf__nan_nan_inf_0 = r"""
+{"maxIntersectionsPositionMerge(state)":0}
+"""
+
+_aggregate_functions_merge_maxIntersectionsPositionMerge_inf___inf__nan_nan_nan_0 = r"""
+{"maxIntersectionsPositionMerge(state)":0}
+"""
+
+_aggregate_functions_merge_maxIntersectionsPositionMerge_single_NULL_value_0 = r"""
+{"maxIntersectionsPositionMerge(state)":null}
+"""
+
+_aggregate_functions_merge_maxIntersectionsPositionMerge_single_row_0 = r"""
+{"maxIntersectionsPositionMerge(state)":"0"}
+"""
+
+_aggregate_functions_merge_maxIntersectionsPositionMerge_some_negative_values_0 = r"""
+{"maxIntersectionsPositionMerge(state)":"5"}
+"""
+
