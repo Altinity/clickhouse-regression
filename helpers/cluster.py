@@ -1330,7 +1330,7 @@ class Cluster(object):
                         ):
                             self.command(
                                 None,
-                                f"docker buildx create --use --bootstrap --name clickhouse-regression-builder",
+                                f"docker buildx create --use --bootstrap --node clickhouse-regression-builder",
                                 exitcode=0,
                             )
 
