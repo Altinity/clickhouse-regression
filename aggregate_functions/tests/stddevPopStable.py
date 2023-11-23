@@ -15,7 +15,7 @@ def scenario(self, func="stddevPopStable({params})", table=None, snapshot_id=Non
     """Check stddevPopStable aggregate function by using the same checks as for stddevPop."""
     self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
 
-    if 'Merge' in self.name:
+    if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:

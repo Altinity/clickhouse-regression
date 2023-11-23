@@ -2,30 +2,32 @@ from helpers.tables import is_numeric
 
 from aggregate_functions.tests.steps import *
 from aggregate_functions.requirements import (
-    RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Histogram
+    RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Histogram,
 )
 
 
 @TestScenario
 @Name("histogram")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Parametric_Histogram("1.0"))
-def scenario(self, func="histogram({params})", table=None, decimal=False, snapshot_id=None):
+def scenario(
+    self, func="histogram({params})", table=None, decimal=False, snapshot_id=None
+):
     """Check histogram aggregate function"""
 
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id, clickhouse_version=">=23.2")
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, clickhouse_version=">=23.2"
+    )
 
     func = func.replace("({params})", f"(5)({{params}})")
 
-    if 'Merge' in self.name:
+    if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:
         table = self.context.table
 
     with Check("constant"):
-        execute_query(
-            f"SELECT {func.format(params='1')}, any(toTypeName(1))"
-        )
+        execute_query(f"SELECT {func.format(params='1')}, any(toTypeName(1))")
 
     with Check("zero rows"):
         execute_query(
@@ -72,6 +74,6 @@ def scenario(self, func="histogram({params})", table=None, decimal=False, snapsh
             continue
 
         with Check(f"{column_type}"):
-            execute_query(f"SELECT {func.format(params=f'{column_name}')}, any(toTypeName({column_name})) FROM {table.name}")
-    
-
+            execute_query(
+                f"SELECT {func.format(params=f'{column_name}')}, any(toTypeName({column_name})) FROM {table.name}"
+            )

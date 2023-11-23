@@ -25,16 +25,20 @@ def datatype(self, func, table, col1_name, col2_name):
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_ArgMin("1.0"))
 def scenario(self, func="argMin({params})", table=None, snapshot_id=None):
     """Check argMin or argMax or one of their combinator aggregate functions. By default: argMin."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id, clickhouse_version=">=23.2")
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, clickhouse_version=">=23.2"
+    )
 
-    if 'Merge' in self.name:
+    if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:
         table = self.context.table
 
     with Check("constant"):
-        execute_query(f"SELECT {func.format(params='1,2')}, any(toTypeName(1)), any(toTypeName(2))")
+        execute_query(
+            f"SELECT {func.format(params='1,2')}, any(toTypeName(1)), any(toTypeName(2))"
+        )
 
     with Check("zero rows"):
         execute_query(

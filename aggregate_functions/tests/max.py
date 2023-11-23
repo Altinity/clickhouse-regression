@@ -9,9 +9,11 @@ from aggregate_functions.requirements import (
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Standard_Max("1.0"))
 def scenario(self, func="max({params})", table=None, snapshot_id=None):
     """Check max aggregate function."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id, clickhouse_version=">=23.2")
+    self.context.snapshot_id = get_snapshot_id(
+        snapshot_id=snapshot_id, clickhouse_version=">=23.2"
+    )
 
-    if 'Merge' in self.name:
+    if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:
@@ -21,7 +23,9 @@ def scenario(self, func="max({params})", table=None, snapshot_id=None):
         execute_query(f"SELECT {func.format(params='1')}, any(toTypeName(1))")
 
     with Check("zero rows"):
-        execute_query(f"SELECT {func.format(params='number')}, any(toTypeName(number)) FROM numbers(0)")
+        execute_query(
+            f"SELECT {func.format(params='number')}, any(toTypeName(number)) FROM numbers(0)"
+        )
 
     with Check("with group by"):
         execute_query(
@@ -47,4 +51,6 @@ def scenario(self, func="max({params})", table=None, snapshot_id=None):
         column_name, column_type = column.name, column.datatype.name
 
         with Check(f"{column_type}"):
-            execute_query(f"SELECT {func.format(params=column_name)}, any(toTypeName({column_name})) FROM {table.name}")
+            execute_query(
+                f"SELECT {func.format(params=column_name)}, any(toTypeName({column_name})) FROM {table.name}"
+            )

@@ -29,7 +29,7 @@ def scenario(
         snapshot_id=snapshot_id, clickhouse_version=clickhouse_version
     )
 
-    if 'Merge' in self.name:
+    if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:

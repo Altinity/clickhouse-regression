@@ -22,7 +22,7 @@ def scenario(self, func="quantilesTiming({params})", table=None, snapshot_id=Non
         "({params})", f"(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999)({{params}})"
     )
 
-    if 'Merge' in self.name:
+    if "Merge" in self.name:
         return self.context.snapshot_id, _func.replace("({params})", "")
 
     checks(func=_func, snapshot_id=self.context.snapshot_id)

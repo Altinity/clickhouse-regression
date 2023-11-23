@@ -22,7 +22,7 @@ def scenario(self, func="groupArraySample({params})", table=None, snapshot_id=No
 
     func_ = func.replace(params, f"(3, 2){params}")
 
-    if 'Merge' in self.name:
+    if "Merge" in self.name:
         return self.context.snapshot_id, func_.replace("({params})", "")
 
     checks(func=func_, table=table, snapshot_id=self.context.snapshot_id)

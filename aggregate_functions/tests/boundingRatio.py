@@ -29,22 +29,26 @@ def scenario(
     date=True,
     datetime=True,
     extended_precision=True,
-    snapshot_id=None
+    snapshot_id=None,
 ):
     """Check BoundingRatio aggregate function."""
     self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
 
-    if 'Merge' in self.name:
+    if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:
         table = self.context.table
 
     with Check("zero rows"):
-        execute_query(f"SELECT {func.format(params='number, number')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(0)")
+        execute_query(
+            f"SELECT {func.format(params='number, number')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(0)"
+        )
 
     with Check("single row"):
-        execute_query(f"SELECT {func.format(params='number,number+1')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(1)")
+        execute_query(
+            f"SELECT {func.format(params='number,number+1')}, any(toTypeName(number)), any(toTypeName(number)) FROM numbers(1)"
+        )
 
     with Check("some negative values"):
         execute_query(

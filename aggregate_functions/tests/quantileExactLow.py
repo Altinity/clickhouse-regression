@@ -15,7 +15,7 @@ def scenario(self, func="quantileExactLow({params})", table=None, snapshot_id=No
     """Check quantileExactLow aggregate function by using the same tests as for quantile."""
     self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
 
-    if 'Merge' in self.name:
+    if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:

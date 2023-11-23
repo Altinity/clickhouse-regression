@@ -13,7 +13,7 @@ def scenario(self, func="sumMap({params})", table=None, snapshot_id=None):
     """Check sumMap aggregate function."""
     self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
 
-    if 'Merge' in self.name:
+    if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
 
     if table is None:
