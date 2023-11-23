@@ -37,10 +37,28 @@ xfails = {
             "Sometimes fails with the reason that the partition already frozen",
         )
     ],
-    "/alter/replace partition/prohibited actions/conditions/storage policy": [
+    "/alter/replace partition/storage/replace partition on minio and default disks/pattern #1": [
         (
             Fail,
-            "it should not be possible to replace partition from a table that has a different storage policy",
+            "Replacing partition when two tables have different structures is expected to fail",
+        )
+    ],
+    "/alter/replace partition/storage/replace partition on minio and default disks/pattern #2": [
+        (
+            Fail,
+            "Replacing partition when two tables have different structures is expected to fail",
+        )
+    ],
+    "/alter/replace partition/storage/replace partition on tiered and default disks/pattern #1": [
+        (
+            Fail,
+            "Replacing partition when two tables have different structures is expected to fail",
+        )
+    ],
+    "/alter/replace partition/storage/replace partition on tiered and default disks/pattern #2": [
+        (
+            Fail,
+            "Replacing partition when two tables have different structures is expected to fail",
         )
     ],
 }
@@ -87,6 +105,10 @@ def regression(
     nodes = {"clickhouse": ("clickhouse1", "clickhouse2", "clickhouse3")}
 
     self.context.clickhouse_version = clickhouse_version
+    self.context.storage = "minio"
+    self.context.uri = "http://minio:9001/root/data/alter"
+    self.context.access_key_id = "minio"
+    self.context.secret_access_key = "minio123"
 
     with Cluster(
         local,

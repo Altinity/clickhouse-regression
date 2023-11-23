@@ -1,5 +1,6 @@
-from testflows.core import *
 from testflows.asserts import *
+from testflows.core import *
+
 from alter.table.replace_partition.common import (
     create_two_tables_partitioned_by_column_with_data,
     replace_partition_and_validate_data,

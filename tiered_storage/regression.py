@@ -120,9 +120,6 @@ xfails = {
     ":/alter move/concurrent/concurrent alter move insert and select": [
         (Fail, "unstable test")
     ],
-    ":/alter move/concurrent/concurrent alter move and select": [
-        (Fail, "unstable test")
-    ],
     ":/query parser": [
         (
             Fail,

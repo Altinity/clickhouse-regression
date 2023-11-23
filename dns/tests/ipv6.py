@@ -19,7 +19,7 @@ def feature(self):
             env = f"dns_env_arm64"
         else:
             env = f"dns_env"
-        return env + "_" + instance_name + "_1"
+        return env + "-" + instance_name + "-1"
 
     def get_instance_ip(instance_name):
         docker_id = get_instance_docker_id(instance_name)

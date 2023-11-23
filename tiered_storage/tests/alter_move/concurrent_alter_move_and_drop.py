@@ -27,6 +27,7 @@ def scenario(self, cluster, node="clickhouse1"):
     """Check that doing insert, alter move, alter drop or detach partition
     concurrently does not cause server to crash.
     """
+    random.seed(202)
     with Given("cluster node"):
         node = cluster.node(node)
 
@@ -69,6 +70,7 @@ def scenario(self, cluster, node="clickhouse1"):
                                 steps=False,
                                 raise_on_exception=True,
                                 timeout=240,
+                                random_seed=721 * i,
                             )
 
                 def alter_drop(num):

@@ -63,4 +63,10 @@ def feature(self):
                 "feature",
             )
         )
+        Feature(
+            run=load(
+                "alter.table.replace_partition.corrupted_partitions",
+                "feature",
+            )
+        )
         join()

@@ -5,7 +5,7 @@ import time
 
 from testflows.core import *
 
-append_path(sys.path, "..")
+append_path(sys.path, "..", pos=0)
 
 from helpers.cluster import Cluster
 from helpers.common import *

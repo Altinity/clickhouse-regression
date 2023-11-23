@@ -27,6 +27,7 @@ def scenario(self, cluster, node="clickhouse1"):
     """Check concurrent alter move and alter modify
     does not crash the server or cause data loss.
     """
+    random.seed(201)
     with Given("cluster node"):
         node = cluster.node(node)
 
@@ -69,6 +70,7 @@ def scenario(self, cluster, node="clickhouse1"):
                                 steps=False,
                                 raise_on_exception=True,
                                 timeout=240,
+                                random_seed=231 * i,
                             )
 
                 def alter_modify(num):
