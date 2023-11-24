@@ -326,20 +326,20 @@ _aggregate_functions_finalizeAggregation_uniqCombined64finalizeAggregation_Bool_
 {"finalizeAggregation(CAST(unhex('01022CCBC234FCBC56B40000000000000000'), 'AggregateFunction(uniqCombined64, Bool)'))":"2"}
 """
 
-_aggregate_functions_finalizeAggregation_uniqCombined64finalizeAggregation_Date_0 = r"""
-{"finalizeAggregation(CAST(unhex('01096025890BAF4B6F5900000000000000000C9E14043CC5515D27F04FE544423CD76DF95F77A6083F7F0E3EB3E6F366951B6DCB6EDB3BF2691722167BEE0427EF7467E385C6A0555DA5'), 'AggregateFunction(uniqCombined64, Date)'))":"9"}
-"""
-
-_aggregate_functions_finalizeAggregation_uniqCombined64finalizeAggregation_DateTime_0 = r"""
-{"finalizeAggregation(CAST(unhex('010A90E5FD0AD5978709BB106E9040D74F6C0000000000000000F1681DEE5419D536B3294A90289E7E57AB369247BA397BA1FDE7B9FC3422431F6A75E0ECB09E4790785CB23ED9CAF5BA3B125181DB47F94C'), 'AggregateFunction(uniqCombined64, DateTime)'))":"10"}
-"""
-
 _aggregate_functions_finalizeAggregation_uniqCombined64finalizeAggregation_DateTime64_3__0__22_8 = r"""
 {"finalizeAggregation(CAST(unhex('010990292047B065AABD066A0BA00B3A02979827F0D7268273F77B0CDCD3B56E6F9D5B0FB8EAECE576D190E0083B7BBB30E7909A100696203FD6366DD6E698996BC93091F0DDC3503BB3'), 'AggregateFunction(uniqCombined64, DateTime64(3))'))":"9"}
 """
 
 _aggregate_functions_finalizeAggregation_uniqCombined64finalizeAggregation_DateTime64_3___22_8_0__22_8 = r"""
 {"finalizeAggregation(CAST(unhex('0109BF1E56A4D4DCF9232660D45934739B399827F0D7268273F77B0CDCD3B56E6F9D5B0FB8EAECE576D190E0083B7BBB30E7909A100696203FD6366DD6E698996BC93091F0DDC3503BB3'), 'AggregateFunction(uniqCombined64, DateTime64(3))'))":"9"}
+"""
+
+_aggregate_functions_finalizeAggregation_uniqCombined64finalizeAggregation_DateTime_0 = r"""
+{"finalizeAggregation(CAST(unhex('010A90E5FD0AD5978709BB106E9040D74F6C0000000000000000F1681DEE5419D536B3294A90289E7E57AB369247BA397BA1FDE7B9FC3422431F6A75E0ECB09E4790785CB23ED9CAF5BA3B125181DB47F94C'), 'AggregateFunction(uniqCombined64, DateTime)'))":"10"}
+"""
+
+_aggregate_functions_finalizeAggregation_uniqCombined64finalizeAggregation_Date_0 = r"""
+{"finalizeAggregation(CAST(unhex('01096025890BAF4B6F5900000000000000000C9E14043CC5515D27F04FE544423CD76DF95F77A6083F7F0E3EB3E6F366951B6DCB6EDB3BF2691722167BEE0427EF7467E385C6A0555DA5'), 'AggregateFunction(uniqCombined64, Date)'))":"9"}
 """
 
 _aggregate_functions_finalizeAggregation_uniqCombined64finalizeAggregation_Decimal128_38__0 = r"""
