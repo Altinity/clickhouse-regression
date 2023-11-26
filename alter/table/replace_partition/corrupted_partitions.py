@@ -9,6 +9,8 @@ one_part = ["1_1_1_0"]
 multiple_parts = ["1_1_1_0", "1_2_2_0"]
 all_parts = ["1_1_1_0", "1_2_2_0", "1_3_3_0"]
 
+after_replace = {"1_1_1_0": "1_5_5_0", "1_2_2_0": "1_6_6_0", "1_3_3_0": "1_7_7_0"}
+
 
 @TestStep(When)
 def corrupt_parts_on_table_partition(self, table_name, parts, bits_to_corrupt=1500000):
@@ -32,7 +34,13 @@ def replace_with_corrupted_parts(self, corrupt_destination, corrupt_source):
     destination_table = "destination" + getuid()
     partition = 1
 
-    with Given("I have two tables with the same structure"):
+    with Given(
+        "I have two tables with the same structure",
+        description=f"""
+         destination_table with: {corrupt_destination.__name__}
+         source_table with: {corrupt_source.__name__}       
+        """,
+    ):
         create_table_partitioned_by_column(
             table_name=destination_table,
         )
@@ -78,6 +86,21 @@ def replace_with_corrupted_parts(self, corrupt_destination, corrupt_source):
         )
 
     with And(
+        "I try to read data from the destination table partition to validate that the partition was corrupted after replace partition"
+    ):
+        source_name = corrupt_source.__name__
+
+        if source_name == "corrupt_no_parts":
+            message = None
+        else:
+            message = "Exception:"
+
+        node.query(
+            f"SELECT * FROM {destination_table}",
+            message=message,
+        )
+
+    with And(
         "I check that data was replaced on the destination table",
         description="this allows us to validate that the partitions were replaced by validating that the inside the "
         "system.parts table the data for destination table was updated.",
@@ -88,29 +111,55 @@ def replace_with_corrupted_parts(self, corrupt_destination, corrupt_source):
                     parts_before_replace.output.strip()
                     != parts_after_replace.output.strip()
                 ), error()
+    with And(
+        "I detach all the corrupted parts and check that it is possible to read data from the destination table without any errors",
+        description="""after replacing partition on the destination table, part names are changed:
+        1_1_1_0 -> 1_5_5_0 
+        1_2_2_0 -> 1_6_6_0 
+        1_3_3_0 -> 1_7_7_0
+        """,
+    ):
+        if source_name != "corrupt_no_parts":
+            for part in self.context.parts:
+                node.query(
+                    f"ALTER TABLE {destination_table} DETACH PART '{after_replace[part]}';"
+                )
+
+        for retry in retries(timeout=10):
+            with retry:
+                node.query(
+                    f"SELECT * FROM {destination_table}",
+                )
 
 
 @TestStep(When)
 def corrupt_one_part(self, table_name):
     """Corrupt a single part of the partition."""
+    self.context.parts = one_part
     corrupt_parts_on_table_partition(table_name=table_name, parts=one_part)
 
 
 @TestStep(When)
 def corrupt_multiple_parts(self, table_name):
     """Corrupt multiple parts of the partition."""
+    self.context.parts = multiple_parts
+
     corrupt_parts_on_table_partition(table_name=table_name, parts=multiple_parts)
 
 
 @TestStep(When)
 def corrupt_all_parts(self, table_name):
     """Corrupt all parts of the partition."""
+    self.context.parts = all_parts
+
     corrupt_parts_on_table_partition(table_name=table_name, parts=all_parts)
 
 
 @TestStep(When)
 def corrupt_no_parts(self, table_name):
     """Corrupt no parts of the partition."""
+    self.context.parts = []
+
     with By(f"not corrupting a {table_name} table"):
         note(f"{table_name} is not corrupted")
 
