@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 import os
 import sys
+
 from testflows.core import *
+
+append_path(sys.path, "..")
+
 from helpers.cluster import Cluster
 from helpers.common import check_clickhouse_version
 from clickhouse_keeper.tests.steps import *
