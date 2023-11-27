@@ -115,7 +115,7 @@ def merge(self, scenario, short_name):
                             + f"_{idx}"
                         )
                         idx += 1
-                        Check(f"name", test=check, parallel=True, executor=executor)(
+                        Check(f"{name}", test=check, parallel=True, executor=executor)(
                             func=func,
                             datatypes=datatypes,
                             hex_repr=hex_repr,
