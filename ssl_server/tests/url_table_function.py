@@ -14,7 +14,12 @@ def http_server_url_function_checks(self):
     node = self.context.node
 
     with Given("I launch the http flask server"):
-        flask_server(server_path="/http_app_file.py", port=5000, protocol="TLSv1.2", ciphers=default_ciphers)
+        flask_server(
+            server_path="/http_app_file.py",
+            port=5000,
+            protocol="TLSv1.2",
+            ciphers=default_ciphers,
+        )
 
     with Check("I read data from the http server using `url` table function"):
         output = node.query(
@@ -28,7 +33,12 @@ def https_server_url_function_checks(self):
     """Check the connection from clickhouse-server when it is acting as a client to https server with different configs using `url` table function."""
 
     with Given("I launch the https flask server"):
-        flask_server(server_path="https_app_file.py", port=5001, protocol="TLSv1.2", ciphers=default_ciphers)
+        flask_server(
+            server_path="https_app_file.py",
+            port=5001,
+            protocol="TLSv1.2",
+            ciphers=default_ciphers,
+        )
 
     with Check("Connection with no protocols should be rejected"):
         https_server_url_function_connection(
