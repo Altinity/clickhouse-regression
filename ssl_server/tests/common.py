@@ -6,9 +6,6 @@ from testflows.core import *
 from testflows.asserts import error
 from testflows.stash import stashed
 from helpers.common import *
-from ssl_server.test_files.https_app_file import ciphers
-from ssl_server.test_files.https_app_file import https_protocol
-
 
 fips_compatible_tlsv1_2_cipher_suites = [
     "ECDHE-RSA-AES128-GCM-SHA256",
@@ -1140,6 +1137,7 @@ def update_https_server_config(
     self, server_file_path, options=None, node=None, port=None
 ):
     """Change the https server config"""
+    raise NotImplementedError("Deprecated")
     if node is None:
         node = self.context.node
 
@@ -1176,7 +1174,7 @@ def configured_https_server_http_dictionary_connection(
     self, https_server_options, success=True, port=None
 ):
     """Check connection from clickhouse server to configured HTTPS server using dictionary with HTTP source."""
-
+    raise NotImplementedError("Deprecated")
     with When("I change the HTTPS server"):
         update_https_server_config(options=https_server_options, port=port)
 
@@ -1189,7 +1187,7 @@ def configured_https_server_url_function_connection(
     self, https_server_options, server_file_path, success=True, port=None
 ):
     """Check connection from clickhouse server to configured HTTPS server using url table function."""
-
+    raise NotImplementedError("Deprecated")
     with When("I change the HTTPS server"):
         update_https_server_config(
             options=https_server_options, port=port, server_file_path=server_file_path
@@ -1206,7 +1204,7 @@ def configured_https_server_dictionary_connection(
     self, https_server_options, server_file_path, success=True, port=None
 ):
     """Check connection from clickhouse server to configured HTTPS server using a dictionary."""
-
+    raise NotImplementedError("Deprecated")
     with When("I change the HTTPS server"):
         update_https_server_config(
             options=https_server_options, port=port, server_file_path=server_file_path
