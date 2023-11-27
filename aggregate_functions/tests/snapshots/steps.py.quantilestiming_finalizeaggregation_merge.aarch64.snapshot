@@ -1,0 +1,208 @@
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_Float32_0 = r"""
+{"finalizeAggregation(CAST(unhex('0101000000'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), Float32)'))":[0,0,0,0,0,0,0]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0101000000'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), Float64)'))":[0,0,0,0,0,0,0]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_Int16_0 = r"""
+{"finalizeAggregation(CAST(unhex('01060030750000EF058B0130757825'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), Int16)'))":[395,9592,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_Int32_0 = r"""
+{"finalizeAggregation(CAST(unhex('01050030750000307530753075'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), Int32)'))":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_Int64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0107003075000030753075307530753075'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), Int64)'))":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_Int8_0 = r"""
+{"finalizeAggregation(CAST(unhex('0105007F000000730053007C00'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), Int8)'))":[83,115,124,127,127,127,127]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_LowCardinality_Float32__0 = r"""
+{"finalizeAggregation(CAST(unhex('0101000000'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), LowCardinality(Float32))'))":[0,0,0,0,0,0,0]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_LowCardinality_Float64__0 = r"""
+{"finalizeAggregation(CAST(unhex('0101000000'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), LowCardinality(Float64))'))":[0,0,0,0,0,0,0]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_LowCardinality_Int16__0 = r"""
+{"finalizeAggregation(CAST(unhex('010600307500009658A750A150CE5E'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), LowCardinality(Int16))'))":[20641,22678,24270,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_LowCardinality_Int32__0 = r"""
+{"finalizeAggregation(CAST(unhex('01050030750000307530753075'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), LowCardinality(Int32))'))":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_LowCardinality_Int64__0 = r"""
+{"finalizeAggregation(CAST(unhex('01080030750000307530753075307530753075'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), LowCardinality(Int64))'))":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_LowCardinality_Int8__0 = r"""
+{"finalizeAggregation(CAST(unhex('0106007F000000470077002D005F00'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), LowCardinality(Int8))'))":[45,95,119,127,127,127,127]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_LowCardinality_Nullable_Float32___0 = r"""
+{"finalizeAggregation(CAST(unhex('01010000'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), LowCardinality(Nullable(Float32)))'))":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_LowCardinality_Nullable_Float64___0 = r"""
+{"finalizeAggregation(CAST(unhex('010101004B3C'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), LowCardinality(Nullable(Float64)))'))":[15435,15435,15435,15435,15435,15435,15435]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_LowCardinality_Nullable_Int16___0 = r"""
+{"finalizeAggregation(CAST(unhex('010104003075E60F2654E318'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), LowCardinality(Nullable(Int16)))'))":[6371,21542,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_LowCardinality_Nullable_Int32___0 = r"""
+{"finalizeAggregation(CAST(unhex('010104003075307530753075'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), LowCardinality(Nullable(Int32)))'))":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_LowCardinality_Nullable_Int64___0 = r"""
+{"finalizeAggregation(CAST(unhex('0101050030753075307530753075'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), LowCardinality(Nullable(Int64)))'))":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_LowCardinality_Nullable_Int8___0 = r"""
+{"finalizeAggregation(CAST(unhex('010105007F007500430009007C00'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), LowCardinality(Nullable(Int8)))'))":[67,117,124,127,127,127,127]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_LowCardinality_Nullable_UInt16___0 = r"""
+{"finalizeAggregation(CAST(unhex('0101090030750000932A30754C1A3075A031F73CE13F'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), LowCardinality(Nullable(UInt16)))'))":[10899,15607,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_LowCardinality_Nullable_UInt32___0 = r"""
+{"finalizeAggregation(CAST(unhex('01010900307500003075307530753075307530753075'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), LowCardinality(Nullable(UInt32)))'))":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_LowCardinality_Nullable_UInt64___0 = r"""
+{"finalizeAggregation(CAST(unhex('0101050000003075307530753075'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), LowCardinality(Nullable(UInt64)))'))":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_LowCardinality_Nullable_UInt8___0 = r"""
+{"finalizeAggregation(CAST(unhex('01010900FF0000008100C000A500CA004B00CC007000'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), LowCardinality(Nullable(UInt8)))'))":[112,165,202,255,255,255,255]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_LowCardinality_UInt16__0 = r"""
+{"finalizeAggregation(CAST(unhex('010A003075000000003075307530751E3CE12FCD5B3075'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), LowCardinality(UInt16))'))":[12257,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_LowCardinality_UInt32__0 = r"""
+{"finalizeAggregation(CAST(unhex('010A003075000000003075307530753075307530753075'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), LowCardinality(UInt32))'))":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_LowCardinality_UInt64__0 = r"""
+{"finalizeAggregation(CAST(unhex('01050000000000307530753075'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), LowCardinality(UInt64))'))":[0,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_LowCardinality_UInt8__0 = r"""
+{"finalizeAggregation(CAST(unhex('010A00FF0000000000A600E400D800E100EF001000AC00'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), LowCardinality(UInt8))'))":[16,216,228,255,255,255,255]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_NULL_value_handling_0 = r"""
+{"finalizeAggregation(CAST(unhex('0101050000000100030004000500'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), Nullable(Int8))'))":[1,3,4,5,5,5,5]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_Nullable_Float32__0 = r"""
+{"finalizeAggregation(CAST(unhex('01010000'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), Nullable(Float32))'))":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_Nullable_Float64__0 = r"""
+{"finalizeAggregation(CAST(unhex('01010000'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), Nullable(Float64))'))":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_Nullable_Int16__0 = r"""
+{"finalizeAggregation(CAST(unhex('010105003075FB1A900EDC2CC133'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), Nullable(Int16))'))":[6907,11484,13249,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_Nullable_Int32__0 = r"""
+{"finalizeAggregation(CAST(unhex('01010600307530753075307530753075'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), Nullable(Int32))'))":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_Nullable_Int64__0 = r"""
+{"finalizeAggregation(CAST(unhex('0101050030753075307530753075'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), Nullable(Int64))'))":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_Nullable_Int8__0 = r"""
+{"finalizeAggregation(CAST(unhex('010105007F003900040048005D00'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), Nullable(Int8))'))":[57,72,93,127,127,127,127]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_Nullable_UInt16__0 = r"""
+{"finalizeAggregation(CAST(unhex('010109003075000032653075307530756E113075145E'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), Nullable(UInt16))'))":[24084,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_Nullable_UInt32__0 = r"""
+{"finalizeAggregation(CAST(unhex('01010900307500003075307530753075307530753075'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), Nullable(UInt32))'))":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_Nullable_UInt64__0 = r"""
+{"finalizeAggregation(CAST(unhex('010104000000307530753075'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), Nullable(UInt64))'))":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_Nullable_UInt8__0 = r"""
+{"finalizeAggregation(CAST(unhex('01010900FF000000EA003F0041001C00C500C3000F00'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), Nullable(UInt8))'))":[28,65,197,255,255,255,255]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_UInt16_0 = r"""
+{"finalizeAggregation(CAST(unhex('010A00307500000000307584660E4830750B428769941D'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), UInt16)'))":[7572,26244,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_UInt32_0 = r"""
+{"finalizeAggregation(CAST(unhex('010A003075000000003075307530753075307530753075'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), UInt32)'))":[30000,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_UInt64_0 = r"""
+{"finalizeAggregation(CAST(unhex('010600000000003075307530753075'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), UInt64)'))":[0,30000,30000,30000,30000,30000,30000]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_UInt8_0 = r"""
+{"finalizeAggregation(CAST(unhex('010A00FF0000000000A300C900AF00E600770018007E00'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), UInt8)'))":[24,163,201,255,255,255,255]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation__inf_0 = r"""
+{"finalizeAggregation(CAST(unhex('01050000000200060004000500'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), Float64)'))":[2,4,5,6,6,6,6]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_constant_0 = r"""
+{"finalizeAggregation(CAST(unhex('0101000100'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), UInt8)'))":[1,1,1,1,1,1,1]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_doc_example_0 = r"""
+{"finalizeAggregation(CAST(unhex('010600000001000200030004000500'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), Int8)'))":[1,3,4,5,5,5,5]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_inf_0 = r"""
+{"finalizeAggregation(CAST(unhex('01050000000200060004000500'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), Float64)'))":[2,4,5,6,6,6,6]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_inf___inf__nan_0 = r"""
+{"finalizeAggregation(CAST(unhex('010300020006000500'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), Float64)'))":[2,5,6,6,6,6,6]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_nan_0 = r"""
+{"finalizeAggregation(CAST(unhex('01050000000200060004000500'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), Float64)'))":[2,4,5,6,6,6,6]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_single_NULL_value_0 = r"""
+{"finalizeAggregation(CAST(unhex('01010000'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), Nullable(Int8))'))":[null,null,null,null,null,null,null]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_single_row_0 = r"""
+{"finalizeAggregation(CAST(unhex('0101000000'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), UInt64)'))":[0,0,0,0,0,0,0]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_some_negative_values_0 = r"""
+{"finalizeAggregation(CAST(unhex('010600000001000200030004000500'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), UInt64)'))":[1,3,4,5,5,5,5]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_with_group_by_0 = r"""
+{"finalizeAggregation(CAST(unhex('01050000000200040006000800'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), UInt64)'))":[2,4,6,8,8,8,8]}
+"""
+
+_aggregate_functions_finalizeAggregation_quantilesTimingfinalizeAggregation_with_group_by_1 = r"""
+{"finalizeAggregation(CAST(unhex('01050001000300050007000900'), 'AggregateFunction(quantilesTiming(0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 0.999), UInt64)'))":[3,5,7,9,9,9,9]}
+"""
+

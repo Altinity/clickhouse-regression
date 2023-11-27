@@ -1,0 +1,228 @@
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_Decimal128_38__0 = r"""
+{"finalizeAggregation(CAST(unhex('009ED7AE16A226D0FF612851E95DD9EF'), 'AggregateFunction(sumKahan, Decimal(38, 38))'))":-0.21468242760669401198252549218687803904}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_Float32_0 = r"""
+{"finalizeAggregation(CAST(unhex('000000E2701910C80000000000000000'), 'AggregateFunction(sumKahan, Float32)'))":-1.3695836729255912e39}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_Float64_0 = r"""
+{"finalizeAggregation(CAST(unhex('21D01440BEE4B4FF4F2916E7A954C365'), 'AggregateFunction(sumKahan, Float64)'))":-1.4671934308482406e307}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_Int128_0 = r"""
+{"finalizeAggregation(CAST(unhex('A433A0B384F4DAC70000000000000000'), 'AggregateFunction(sumKahan, Int128)'))":-1.4331815933351646e38}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_Int16_0 = r"""
+{"finalizeAggregation(CAST(unhex('000000000040A3C00000000000000000'), 'AggregateFunction(sumKahan, Int16)'))":-2464}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_Int32_0 = r"""
+{"finalizeAggregation(CAST(unhex('000000E68F76A5C10000000000000000'), 'AggregateFunction(sumKahan, Int32)'))":-180045811}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_Int64_0 = r"""
+{"finalizeAggregation(CAST(unhex('A486C64D5FBCE0430000000000009040'), 'AggregateFunction(sumKahan, Int64)'))":9647548703010267000}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_Int8_0 = r"""
+{"finalizeAggregation(CAST(unhex('00000000008049400000000000000000'), 'AggregateFunction(sumKahan, Int8)'))":51}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_LowCardinality_Float32__0 = r"""
+{"finalizeAggregation(CAST(unhex('000000AC2CB6ED470000000000000000'), 'AggregateFunction(sumKahan, LowCardinality(Float32))'))":3.159481276742593e38}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_LowCardinality_Float64__0 = r"""
+{"finalizeAggregation(CAST(unhex('69558A29999EFE753E7209801D4562E6'), 'AggregateFunction(sumKahan, LowCardinality(Float64))'))":2.3539363430883252e260}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_LowCardinality_Int128__0 = r"""
+{"finalizeAggregation(CAST(unhex('6E97D11A92DEE9C70000000000009044'), 'AggregateFunction(sumKahan, LowCardinality(Int128))'))":-2.7509082523053937e38}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_LowCardinality_Int16__0 = r"""
+{"finalizeAggregation(CAST(unhex('000000004007D1400000000000000000'), 'AggregateFunction(sumKahan, LowCardinality(Int16))'))":17437}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_LowCardinality_Int32__0 = r"""
+{"finalizeAggregation(CAST(unhex('0000808932BBD7C10000000000000000'), 'AggregateFunction(sumKahan, LowCardinality(Int32))'))":-1592576550}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_LowCardinality_Int64__0 = r"""
+{"finalizeAggregation(CAST(unhex('4395A236CAF2EB430000000000008CC0'), 'AggregateFunction(sumKahan, LowCardinality(Int64))'))":16111154555142150000}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_LowCardinality_Int8__0 = r"""
+{"finalizeAggregation(CAST(unhex('0000000000E067400000000000000000'), 'AggregateFunction(sumKahan, LowCardinality(Int8))'))":191}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_LowCardinality_Nullable_Float32___0 = r"""
+{"finalizeAggregation(CAST(unhex('01000000008639E6470000000000000000'), 'AggregateFunction(sumKahan, LowCardinality(Nullable(Float32)))'))":2.363335573687322e38}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_LowCardinality_Nullable_Float64___0 = r"""
+{"finalizeAggregation(CAST(unhex('01C3A355CA77F1F07D6FF37BDC27D995FA'), 'AggregateFunction(sumKahan, LowCardinality(Nullable(Float64)))'))":4.432329389190783e298}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_LowCardinality_Nullable_Int128___0 = r"""
+{"finalizeAggregation(CAST(unhex('014C6E0B123AA0DEC70000000000008044'), 'AggregateFunction(sumKahan, LowCardinality(Nullable(Int128)))'))":-1.6283514072125865e38}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_LowCardinality_Nullable_Int16___0 = r"""
+{"finalizeAggregation(CAST(unhex('0100000000A0D1E1C00000000000000000'), 'AggregateFunction(sumKahan, LowCardinality(Nullable(Int16)))'))":-36493}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_LowCardinality_Nullable_Int32___0 = r"""
+{"finalizeAggregation(CAST(unhex('01000000037101C1C10000000000000000'), 'AggregateFunction(sumKahan, LowCardinality(Nullable(Int32)))'))":-570614278}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_LowCardinality_Nullable_Int64___0 = r"""
+{"finalizeAggregation(CAST(unhex('01EA5D0006C7F6E8430000000000008C40'), 'AggregateFunction(sumKahan, LowCardinality(Nullable(Int64)))'))":14390751438167822000}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_LowCardinality_Nullable_Int8___0 = r"""
+{"finalizeAggregation(CAST(unhex('0100000000000058400000000000000000'), 'AggregateFunction(sumKahan, LowCardinality(Nullable(Int8)))'))":96}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_LowCardinality_Nullable_UInt128___0 = r"""
+{"finalizeAggregation(CAST(unhex('015388C612F5741148000000000000B0C4'), 'AggregateFunction(sumKahan, LowCardinality(Nullable(UInt128)))'))":1.485065794677521e39}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_LowCardinality_Nullable_UInt16___0 = r"""
+{"finalizeAggregation(CAST(unhex('0100000000A0D50D410000000000000000'), 'AggregateFunction(sumKahan, LowCardinality(Nullable(UInt16)))'))":244404}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_LowCardinality_Nullable_UInt32___0 = r"""
+{"finalizeAggregation(CAST(unhex('0100004007317815420000000000000000'), 'AggregateFunction(sumKahan, LowCardinality(Nullable(UInt32)))'))":23052698064}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_LowCardinality_Nullable_UInt64___0 = r"""
+{"finalizeAggregation(CAST(unhex('016111118E70FB1044000000000000AFC0'), 'AggregateFunction(sumKahan, LowCardinality(Nullable(UInt64)))'))":78316510671055370000}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_LowCardinality_Nullable_UInt8___0 = r"""
+{"finalizeAggregation(CAST(unhex('010000000000D894400000000000000000'), 'AggregateFunction(sumKahan, LowCardinality(Nullable(UInt8)))'))":1334}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_LowCardinality_UInt128__0 = r"""
+{"finalizeAggregation(CAST(unhex('1A1ECE8BFB7D1248000000000000A044'), 'AggregateFunction(sumKahan, LowCardinality(UInt128))'))":1.573135551536688e39}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_LowCardinality_UInt16__0 = r"""
+{"finalizeAggregation(CAST(unhex('0000000080F613410000000000000000'), 'AggregateFunction(sumKahan, LowCardinality(UInt16))'))":327072}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_LowCardinality_UInt32__0 = r"""
+{"finalizeAggregation(CAST(unhex('000070D60C820F420000000000000000'), 'AggregateFunction(sumKahan, LowCardinality(UInt32))'))":16915733198}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_LowCardinality_UInt64__0 = r"""
+{"finalizeAggregation(CAST(unhex('80C7575EA1AF1344000000000000C0C0'), 'AggregateFunction(sumKahan, LowCardinality(UInt64))'))":90785909389867880000}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_LowCardinality_UInt8__0 = r"""
+{"finalizeAggregation(CAST(unhex('0000000000B497400000000000000000'), 'AggregateFunction(sumKahan, LowCardinality(UInt8))'))":1517}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_Nullable_Decimal128_38___0 = r"""
+{"finalizeAggregation(CAST(unhex('01808F92A0F61D1B3280706D5F09E2E465'), 'AggregateFunction(sumKahan, Nullable(Decimal(38, 38)))'))":1.35440455825179711885689928087407595392}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_Nullable_Float32__0 = r"""
+{"finalizeAggregation(CAST(unhex('01000000CEF7DB07C80000000000000000'), 'AggregateFunction(sumKahan, Nullable(Float32))'))":-1.0148602557198647e39}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_Nullable_Float64__0 = r"""
+{"finalizeAggregation(CAST(unhex('010F419A031D3B62FE000000000080F0FA'), 'AggregateFunction(sumKahan, Nullable(Float64))'))":-6.104555798918726e300}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_Nullable_Int128__0 = r"""
+{"finalizeAggregation(CAST(unhex('01BA40F4553ADCE44700000000000090C4'), 'AggregateFunction(sumKahan, Nullable(Int128))'))":2.2182438731455518e38}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_Nullable_Int16__0 = r"""
+{"finalizeAggregation(CAST(unhex('0100000000C001DAC00000000000000000'), 'AggregateFunction(sumKahan, Nullable(Int16))'))":-26631}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_Nullable_Int32__0 = r"""
+{"finalizeAggregation(CAST(unhex('010000F0147541F0410000000000000000'), 'AggregateFunction(sumKahan, Nullable(Int32))'))":4363604303}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_Nullable_Int64__0 = r"""
+{"finalizeAggregation(CAST(unhex('01E2980956B98ECB430000000000000000'), 'AggregateFunction(sumKahan, Nullable(Int64))'))":3971456529792615400}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_Nullable_Int8__0 = r"""
+{"finalizeAggregation(CAST(unhex('0100000000000031400000000000000000'), 'AggregateFunction(sumKahan, Nullable(Int8))'))":17}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_Nullable_UInt128__0 = r"""
+{"finalizeAggregation(CAST(unhex('0106357D877CC01048000000000000BAC4'), 'AggregateFunction(sumKahan, Nullable(UInt128))'))":1.425094059695351e39}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_Nullable_UInt16__0 = r"""
+{"finalizeAggregation(CAST(unhex('0100000000909B12410000000000000000'), 'AggregateFunction(sumKahan, Nullable(UInt16))'))":304868}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_Nullable_UInt32__0 = r"""
+{"finalizeAggregation(CAST(unhex('01000038495CF311420000000000000000'), 'AggregateFunction(sumKahan, Nullable(UInt32))'))":19274338894}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_Nullable_UInt64__0 = r"""
+{"finalizeAggregation(CAST(unhex('01AFCD1921F8671644000000000000A040'), 'AggregateFunction(sumKahan, Nullable(UInt64))'))":103330035999112410000}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_Nullable_UInt8__0 = r"""
+{"finalizeAggregation(CAST(unhex('0100000000007090400000000000000000'), 'AggregateFunction(sumKahan, Nullable(UInt8))'))":1052}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_UInt128_0 = r"""
+{"finalizeAggregation(CAST(unhex('0849B80F17401448000000000000B844'), 'AggregateFunction(sumKahan, UInt128)'))":1.7227094179533696e39}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_UInt16_0 = r"""
+{"finalizeAggregation(CAST(unhex('00000000D8F30E410000000000000000'), 'AggregateFunction(sumKahan, UInt16)'))":253563}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_UInt32_0 = r"""
+{"finalizeAggregation(CAST(unhex('00003CE81CB215420000000000000000'), 'AggregateFunction(sumKahan, UInt32)'))":23295638031}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_UInt64_0 = r"""
+{"finalizeAggregation(CAST(unhex('816D1DBA536A1344000000000000B0C0'), 'AggregateFunction(sumKahan, UInt64)'))":89537452356780700000}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_UInt8_0 = r"""
+{"finalizeAggregation(CAST(unhex('00000000003494400000000000000000'), 'AggregateFunction(sumKahan, UInt8)'))":1293}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation__inf_0 = r"""
+{"finalizeAggregation(CAST(unhex('000000000000F8FF000000000000F8FF'), 'AggregateFunction(sumKahan, Float64)'))":null}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_constant_0 = r"""
+{"finalizeAggregation(CAST(unhex('000000000000F03F0000000000000000'), 'AggregateFunction(sumKahan, UInt8)'))":1}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_inf_0 = r"""
+{"finalizeAggregation(CAST(unhex('000000000000F8FF000000000000F8FF'), 'AggregateFunction(sumKahan, Float64)'))":null}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_inf___inf__nan_0 = r"""
+{"finalizeAggregation(CAST(unhex('000000000000F87F000000000000F87F'), 'AggregateFunction(sumKahan, Float64)'))":null}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_nan_0 = r"""
+{"finalizeAggregation(CAST(unhex('000000000000F87F000000000000F87F'), 'AggregateFunction(sumKahan, Float64)'))":null}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_with_group_by_0 = r"""
+{"finalizeAggregation(CAST(unhex('00000000000034400000000000000000'), 'AggregateFunction(sumKahan, UInt64)'))":20}
+"""
+
+_aggregate_functions_finalizeAggregation_sumKahanfinalizeAggregation_with_group_by_1 = r"""
+{"finalizeAggregation(CAST(unhex('00000000000039400000000000000000'), 'AggregateFunction(sumKahan, UInt64)'))":25}
+"""
+
