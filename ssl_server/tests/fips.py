@@ -9,6 +9,7 @@ from clickhouse_keeper.tests.common import (
     test_https_connection_with_dictionary,
 )
 
+
 @TestOutline
 def server_connection_openssl_client(self, port, tls1_2_enabled=True):
     """Check that server accepts only FIPS compatible secure connections on a given port
@@ -665,7 +666,6 @@ def server_as_client(self):
         add_ssl_client_configuration_file(
             entries=entries, config_file="ssl_cipher_list.xml", restart=True
         )
-
     with And("I generate private key and certificate for https server"):
         create_crt_and_key(name="https_server", common_name="127.0.0.1")
 

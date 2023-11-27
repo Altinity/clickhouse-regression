@@ -69,9 +69,6 @@ xfails = {
     "fips/clickhouse client/:/:/: should be rejected": [
         (Fail, "https://github.com/ClickHouse/ClickHouse/issues/45445")
     ],
-    "fips/:/:/: should be rejected": [
-        (Fail, "https://github.com/ClickHouse/ClickHouse/issues/45445")
-    ],
     "fips/:/:/connection with at least one FIPS compatible cipher should work, ciphers: ECDHE-ECDSA-AES256-GCM-SHA384 :": [
         (Fail, "not supported by SSL library")
     ],
