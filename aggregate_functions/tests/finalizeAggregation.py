@@ -28,7 +28,9 @@ def check(self, func, datatypes, hex_repr, snapshot_name, is_low_cardinality=Fal
         self.context.node.query(f"SET allow_suspicious_low_cardinality_types = 1")
 
     with When("I insert data in temporary table"):
-        values = f"(CAST(unhex('{hex_repr}'), 'AggregateFunction({func}, {datatypes})'))"
+        values = (
+            f"(CAST(unhex('{hex_repr}'), 'AggregateFunction({func}, {datatypes})'))"
+        )
 
     with Then("I check the result"):
         execute_query(
@@ -92,7 +94,9 @@ def finalizeAggregation(self, scenario, short_name):
                         and len(datatypes) > 0
                     ):
                         name = (
-                            key.replace("state_", "finalizeAggregation_").replace("State", "finalizeAggregation")
+                            key.replace("state_", "finalizeAggregation_").replace(
+                                "State", "finalizeAggregation"
+                            )
                             + f"_{idx}"
                         )
                         idx += 1
@@ -101,14 +105,18 @@ def finalizeAggregation(self, scenario, short_name):
                             datatypes=datatypes,
                             hex_repr=hex_repr,
                             snapshot_name=name,
-                            is_low_cardinality="LowCardinality" in datatypes
+                            is_low_cardinality="LowCardinality" in datatypes,
                         )
         join()
 
 
 @TestFeature
 @Name("finalizeAggregation")
-@Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Combinator_State_With_FinalizeAggregationFunction("1.0"))
+@Requirements(
+    RQ_SRS_031_ClickHouse_AggregateFunctions_Combinator_State_With_FinalizeAggregationFunction(
+        "1.0"
+    )
+)
 def feature(self):
     """Check aggregate function finalizeAggregation."""
     not_implemented = [
