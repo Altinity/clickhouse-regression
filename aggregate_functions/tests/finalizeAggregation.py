@@ -27,7 +27,7 @@ def check(self, func, datatypes, hex_repr, snapshot_name, is_low_cardinality=Fal
     if is_low_cardinality:
         self.context.node.query(f"SET allow_suspicious_low_cardinality_types = 1")
 
-    with When("I insert data in temporary table"):
+    with When("I cast the data"):
         values = (
             f"(CAST(unhex('{hex_repr}'), 'AggregateFunction({func}, {datatypes})'))"
         )
