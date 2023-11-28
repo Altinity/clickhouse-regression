@@ -54,12 +54,11 @@ def create_csv_file(
                         ) in configurations_sorted_by_min_insert_time:
                             if setup in second_configuration[0] or setup == setups[0]:
                                 buffer_list.append(
-                                    int(
+                                    float(
                                         (
                                             min(first_configuration[1])
                                             - min(second_configuration[1])
                                         )
-                                        * 100
                                         / min(first_configuration[1])
                                     )
                                 )

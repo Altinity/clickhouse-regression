@@ -52,7 +52,7 @@ Available configurations options for `--only`:
 * `--inserts` Size of insert into table on one repetition (default: 200)
 * `--repeats` Number of repeats of inserting into the table (default: 4)
 * `--one-node` Only run cluster tests which use 1-node configuration
-* `--three-nodes` Only run cluster tests which use 3-node configuration
+* `--three-node` Only run cluster tests which use 3-node configuration
 * `--results-file-name` Manually set results file name (default: performance_{uid}.csv)
 * `--clickhouse-binary-list` Specify ClickHouse version to test, can be applied several times
 * `--test-to-end` Force the test program to continue running if any of the tests fail
