@@ -42,7 +42,7 @@ def create_table_partitioned_by_column_with_data(
     partition_by="p",
     order_by="tuple()",
 ):
-    with By("creating two tables with the same structure"):
+    with By(f"creating a {table_name} table partitioned by a column"):
         create_table_partitioned_by_column(
             table_name=table_name,
             query_settings=query_settings,
@@ -51,7 +51,7 @@ def create_table_partitioned_by_column_with_data(
             order_by=order_by,
         )
 
-    with And("inserting data into both tables"):
+    with And(f"inserting data into {table_name} table to create partitions"):
         create_partitions_with_random_uint64(
             table_name=table_name,
             number_of_values=number_of_values,
