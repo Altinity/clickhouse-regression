@@ -219,7 +219,7 @@ def s3_endpoints(
 
 
 def invalid_s3_storage_config(
-    disks, policies, message=None, tail=30, timeout=60, config=None
+    disks, policies, message=None, tail=30, timeout=30, config=None
 ):
     """Check that ClickHouse errors when trying to load invalid S3 storage configuration file."""
     cluster = current().context.cluster
@@ -238,7 +238,7 @@ def invalid_s3_storage_config(
                 % ("-\\n" * tail)
             )
 
-        with By("getting current log size"):
+        with Then("Get the current log size"):
             cmd = node.command(
                 f"stat --format=%s /var/log/clickhouse-server/clickhouse-server.err.log"
             )
@@ -254,15 +254,26 @@ def invalid_s3_storage_config(
         ):
             started = time.time()
             command = f"cat /var/lib/clickhouse/preprocessed_configs/{config.preprocessed_name} | grep {config.uid}{' > /dev/null' if not settings.debug else ''}"
-            while time.time() - started < timeout:
-                exitcode = node.command(command, steps=False).exitcode
-                if exitcode == 0:
-                    break
-                time.sleep(1)
-            assert exitcode == 0, error()
+            for attempt in retries(timeout=timeout, delay=1):
+                with attempt:
+                    cmd = node.command(command, steps=False, exitcode=0)
 
         with When("I restart ClickHouse to apply the config changes"):
             node.restart_clickhouse(safe=False, wait_healthy=False)
+
+        with And("Get the current log size at the end of the test"):
+            cmd = node.command(
+                f"stat --format=%s /var/log/clickhouse-server/clickhouse-server.err.log"
+            )
+            end_logsize = cmd.output.split(" ")[0].strip()
+
+        with Then("the error log should contain the expected error message"):
+            command = f"tail -c +{start_logsize} /var/log/clickhouse-server/clickhouse-server.err.log | head -c {int(end_logsize) - int(start_logsize)}"
+            for attempt in retries(timeout=timeout, delay=1):
+                with attempt:
+                    cmd = node.command(
+                        command, steps=False, message=message, exitcode=0
+                    )
 
     finally:
         with When(f"I remove {config.name}"):
@@ -271,22 +282,6 @@ def invalid_s3_storage_config(
 
             with And("restarting the node"):
                 node.restart_clickhouse(safe=False)
-
-        with By("getting current log size at the end of the test"):
-            cmd = node.command(
-                f"stat --format=%s /var/log/clickhouse-server/clickhouse-server.err.log"
-            )
-            end_logsize = cmd.output.split(" ")[0].strip()
-
-        with Finally("error log should contain the expected error message"):
-            started = time.time()
-            command = f'tail -c +{start_logsize} /var/log/clickhouse-server/clickhouse-server.err.log | head -c {int(end_logsize) - int(start_logsize)} | grep "{message}"'
-            while time.time() - started < timeout:
-                exitcode = node.command(command, steps=False).exitcode
-                if exitcode == 0:
-                    break
-                time.sleep(1)
-            assert exitcode == 0, error()
 
 
 def create_s3_credentials_config_content(
