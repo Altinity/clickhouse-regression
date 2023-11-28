@@ -20,6 +20,6 @@ def scenario(
     self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
 
     if "Merge" in self.name:
-        return self.context.snapshot_id, func.replace("({params})", "")
+        skip(reason=f"Does not support -Merge combinator")
 
     checks(func=func, snapshot_id=self.context.snapshot_id)
