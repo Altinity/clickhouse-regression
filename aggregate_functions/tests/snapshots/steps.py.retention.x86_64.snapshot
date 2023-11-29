@@ -1,0 +1,225 @@
+_aggregate_functions_retention_constant = r"""
+{"retention(1, 1)":[1,1],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_zero_rows = r"""
+{"retention(equals(number, 1), equals(number, 1))":[0,0],"any(toTypeName(1))":"","any(toTypeName(1))":""}
+"""
+
+_aggregate_functions_retention_single_row = r"""
+{"retention(equals(number, 1), equals(number, 1))":[0,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_with_group_by = r"""
+{"even":0,"retention(equals(number, 1), equals(number, 1))":[0,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+{"even":1,"retention(equals(number, 1), equals(number, 1))":[1,1],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_NULL_value_handling = r"""
+{"retention(equals(x, 1), equals(x, NULL))":null,"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_single_NULL_value = r"""
+{"retention(equals(x, 1), equals(x, NULL))":null,"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_return_type = r"""
+{"toTypeName(retention(equals(number, 1), equals(number, 2)))":"Array(UInt8)","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_example = r"""
+{"retention(equals(a, 1), equals(a, 2), equals(a, 4), equals(a, 1))":[1,1,0,1],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_UInt8 = r"""
+{"retention(equals(uint8, 0), equals(uint8, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_UInt16 = r"""
+{"retention(equals(uint16, 0), equals(uint16, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_UInt32 = r"""
+{"retention(equals(uint32, 0), equals(uint32, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_UInt64 = r"""
+{"retention(equals(uint64, 0), equals(uint64, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_UInt128 = r"""
+{"retention(equals(uint128, 0), equals(uint128, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_Int8 = r"""
+{"retention(equals(int8, 0), equals(int8, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_Int16 = r"""
+{"retention(equals(int16, 0), equals(int16, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_Int32 = r"""
+{"retention(equals(int32, 0), equals(int32, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_Int64 = r"""
+{"retention(equals(int64, 0), equals(int64, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_Int128 = r"""
+{"retention(equals(int128, 0), equals(int128, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_Float32 = r"""
+{"retention(equals(float32, 0), equals(float32, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_Float64 = r"""
+{"retention(equals(float64, 0), equals(float64, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_Nullable_UInt8_ = r"""
+{"retention(equals(nullable_uint8_, 0), equals(nullable_uint8_, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_Nullable_UInt16_ = r"""
+{"retention(equals(nullable_uint16_, 0), equals(nullable_uint16_, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_Nullable_UInt32_ = r"""
+{"retention(equals(nullable_uint32_, 0), equals(nullable_uint32_, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_Nullable_UInt64_ = r"""
+{"retention(equals(nullable_uint64_, 0), equals(nullable_uint64_, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_Nullable_UInt128_ = r"""
+{"retention(equals(nullable_uint128_, 0), equals(nullable_uint128_, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_Nullable_Int8_ = r"""
+{"retention(equals(nullable_int8_, 0), equals(nullable_int8_, 1))":[0,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_Nullable_Int16_ = r"""
+{"retention(equals(nullable_int16_, 0), equals(nullable_int16_, 1))":[0,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_Nullable_Int32_ = r"""
+{"retention(equals(nullable_int32_, 0), equals(nullable_int32_, 1))":[0,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_Nullable_Int64_ = r"""
+{"retention(equals(nullable_int64_, 0), equals(nullable_int64_, 1))":[0,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_Nullable_Int128_ = r"""
+{"retention(equals(nullable_int128_, 0), equals(nullable_int128_, 1))":[0,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_Nullable_Float32_ = r"""
+{"retention(equals(nullable_float32_, 0), equals(nullable_float32_, 1))":[0,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_Nullable_Float64_ = r"""
+{"retention(equals(nullable_float64_, 0), equals(nullable_float64_, 1))":[0,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_LowCardinality_UInt8_ = r"""
+{"retention(equals(lowcardinality_uint8_, 0), equals(lowcardinality_uint8_, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_LowCardinality_UInt16_ = r"""
+{"retention(equals(lowcardinality_uint16_, 0), equals(lowcardinality_uint16_, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_LowCardinality_UInt32_ = r"""
+{"retention(equals(lowcardinality_uint32_, 0), equals(lowcardinality_uint32_, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_LowCardinality_UInt64_ = r"""
+{"retention(equals(lowcardinality_uint64_, 0), equals(lowcardinality_uint64_, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_LowCardinality_UInt128_ = r"""
+{"retention(equals(lowcardinality_uint128_, 0), equals(lowcardinality_uint128_, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_LowCardinality_Int8_ = r"""
+{"retention(equals(lowcardinality_int8_, 0), equals(lowcardinality_int8_, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_LowCardinality_Int16_ = r"""
+{"retention(equals(lowcardinality_int16_, 0), equals(lowcardinality_int16_, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_LowCardinality_Int32_ = r"""
+{"retention(equals(lowcardinality_int32_, 0), equals(lowcardinality_int32_, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_LowCardinality_Int64_ = r"""
+{"retention(equals(lowcardinality_int64_, 0), equals(lowcardinality_int64_, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_LowCardinality_Int128_ = r"""
+{"retention(equals(lowcardinality_int128_, 0), equals(lowcardinality_int128_, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_LowCardinality_Float32_ = r"""
+{"retention(equals(lowcardinality_float32_, 0), equals(lowcardinality_float32_, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_LowCardinality_Float64_ = r"""
+{"retention(equals(lowcardinality_float64_, 0), equals(lowcardinality_float64_, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_LowCardinality_Nullable_UInt8__ = r"""
+{"retention(equals(lowcardinality_nullable_uint8__, 0), equals(lowcardinality_nullable_uint8__, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_LowCardinality_Nullable_UInt16__ = r"""
+{"retention(equals(lowcardinality_nullable_uint16__, 0), equals(lowcardinality_nullable_uint16__, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_LowCardinality_Nullable_UInt32__ = r"""
+{"retention(equals(lowcardinality_nullable_uint32__, 0), equals(lowcardinality_nullable_uint32__, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_LowCardinality_Nullable_UInt64__ = r"""
+{"retention(equals(lowcardinality_nullable_uint64__, 0), equals(lowcardinality_nullable_uint64__, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_LowCardinality_Nullable_UInt128__ = r"""
+{"retention(equals(lowcardinality_nullable_uint128__, 0), equals(lowcardinality_nullable_uint128__, 1))":[1,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_LowCardinality_Nullable_Int8__ = r"""
+{"retention(equals(lowcardinality_nullable_int8__, 0), equals(lowcardinality_nullable_int8__, 1))":[0,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_LowCardinality_Nullable_Int16__ = r"""
+{"retention(equals(lowcardinality_nullable_int16__, 0), equals(lowcardinality_nullable_int16__, 1))":[0,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_LowCardinality_Nullable_Int32__ = r"""
+{"retention(equals(lowcardinality_nullable_int32__, 0), equals(lowcardinality_nullable_int32__, 1))":[0,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_LowCardinality_Nullable_Int64__ = r"""
+{"retention(equals(lowcardinality_nullable_int64__, 0), equals(lowcardinality_nullable_int64__, 1))":[0,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_LowCardinality_Nullable_Int128__ = r"""
+{"retention(equals(lowcardinality_nullable_int128__, 0), equals(lowcardinality_nullable_int128__, 1))":[0,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_LowCardinality_Nullable_Float32__ = r"""
+{"retention(equals(lowcardinality_nullable_float32__, 0), equals(lowcardinality_nullable_float32__, 1))":[0,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_retention_LowCardinality_Nullable_Float64__ = r"""
+{"retention(equals(lowcardinality_nullable_float64__, 0), equals(lowcardinality_nullable_float64__, 1))":[0,0],"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+

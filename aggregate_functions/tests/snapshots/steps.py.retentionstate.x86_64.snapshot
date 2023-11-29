@@ -1,0 +1,225 @@
+_aggregate_functions_state_retentionState_constant = r"""
+{"hex(retentionState(1, 1))":"03000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_zero_rows = r"""
+{"hex(retentionState(equals(number, 1), equals(number, 1)))":"00000000","any(toTypeName(1))":"","any(toTypeName(1))":""}
+"""
+
+_aggregate_functions_state_retentionState_single_row = r"""
+{"hex(retentionState(equals(number, 1), equals(number, 1)))":"00000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_with_group_by = r"""
+{"even":0,"hex(retentionState(equals(number, 1), equals(number, 1)))":"00000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+{"even":1,"hex(retentionState(equals(number, 1), equals(number, 1)))":"03000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_NULL_value_handling = r"""
+{"hex(retentionState(equals(x, 1), equals(x, NULL)))":null,"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_single_NULL_value = r"""
+{"hex(retentionState(equals(x, 1), equals(x, NULL)))":null,"any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_return_type = r"""
+{"toTypeName(hex(retentionState(equals(number, 1), equals(number, 2))))":"String","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_example = r"""
+{"hex(retentionState(equals(a, 1), equals(a, 2), equals(a, 4), equals(a, 1)))":"0B000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_UInt8 = r"""
+{"hex(retentionState(equals(uint8, 0), equals(uint8, 1)))":"01000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_UInt16 = r"""
+{"hex(retentionState(equals(uint16, 0), equals(uint16, 1)))":"01000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_UInt32 = r"""
+{"hex(retentionState(equals(uint32, 0), equals(uint32, 1)))":"01000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_UInt64 = r"""
+{"hex(retentionState(equals(uint64, 0), equals(uint64, 1)))":"01000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_UInt128 = r"""
+{"hex(retentionState(equals(uint128, 0), equals(uint128, 1)))":"01000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_Int8 = r"""
+{"hex(retentionState(equals(int8, 0), equals(int8, 1)))":"01000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_Int16 = r"""
+{"hex(retentionState(equals(int16, 0), equals(int16, 1)))":"01000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_Int32 = r"""
+{"hex(retentionState(equals(int32, 0), equals(int32, 1)))":"01000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_Int64 = r"""
+{"hex(retentionState(equals(int64, 0), equals(int64, 1)))":"01000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_Int128 = r"""
+{"hex(retentionState(equals(int128, 0), equals(int128, 1)))":"01000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_Float32 = r"""
+{"hex(retentionState(equals(float32, 0), equals(float32, 1)))":"01000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_Float64 = r"""
+{"hex(retentionState(equals(float64, 0), equals(float64, 1)))":"01000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_Nullable_UInt8_ = r"""
+{"hex(retentionState(equals(nullable_uint8_, 0), equals(nullable_uint8_, 1)))":"0101000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_Nullable_UInt16_ = r"""
+{"hex(retentionState(equals(nullable_uint16_, 0), equals(nullable_uint16_, 1)))":"0101000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_Nullable_UInt32_ = r"""
+{"hex(retentionState(equals(nullable_uint32_, 0), equals(nullable_uint32_, 1)))":"0101000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_Nullable_UInt64_ = r"""
+{"hex(retentionState(equals(nullable_uint64_, 0), equals(nullable_uint64_, 1)))":"0101000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_Nullable_UInt128_ = r"""
+{"hex(retentionState(equals(nullable_uint128_, 0), equals(nullable_uint128_, 1)))":"0101000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_Nullable_Int8_ = r"""
+{"hex(retentionState(equals(nullable_int8_, 0), equals(nullable_int8_, 1)))":"0100000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_Nullable_Int16_ = r"""
+{"hex(retentionState(equals(nullable_int16_, 0), equals(nullable_int16_, 1)))":"0100000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_Nullable_Int32_ = r"""
+{"hex(retentionState(equals(nullable_int32_, 0), equals(nullable_int32_, 1)))":"0100000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_Nullable_Int64_ = r"""
+{"hex(retentionState(equals(nullable_int64_, 0), equals(nullable_int64_, 1)))":"0100000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_Nullable_Int128_ = r"""
+{"hex(retentionState(equals(nullable_int128_, 0), equals(nullable_int128_, 1)))":"0100000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_Nullable_Float32_ = r"""
+{"hex(retentionState(equals(nullable_float32_, 0), equals(nullable_float32_, 1)))":"0100000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_Nullable_Float64_ = r"""
+{"hex(retentionState(equals(nullable_float64_, 0), equals(nullable_float64_, 1)))":"0100000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_LowCardinality_UInt8_ = r"""
+{"hex(retentionState(equals(lowcardinality_uint8_, 0), equals(lowcardinality_uint8_, 1)))":"01000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_LowCardinality_UInt16_ = r"""
+{"hex(retentionState(equals(lowcardinality_uint16_, 0), equals(lowcardinality_uint16_, 1)))":"01000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_LowCardinality_UInt32_ = r"""
+{"hex(retentionState(equals(lowcardinality_uint32_, 0), equals(lowcardinality_uint32_, 1)))":"01000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_LowCardinality_UInt64_ = r"""
+{"hex(retentionState(equals(lowcardinality_uint64_, 0), equals(lowcardinality_uint64_, 1)))":"01000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_LowCardinality_UInt128_ = r"""
+{"hex(retentionState(equals(lowcardinality_uint128_, 0), equals(lowcardinality_uint128_, 1)))":"01000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_LowCardinality_Int8_ = r"""
+{"hex(retentionState(equals(lowcardinality_int8_, 0), equals(lowcardinality_int8_, 1)))":"01000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_LowCardinality_Int16_ = r"""
+{"hex(retentionState(equals(lowcardinality_int16_, 0), equals(lowcardinality_int16_, 1)))":"01000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_LowCardinality_Int32_ = r"""
+{"hex(retentionState(equals(lowcardinality_int32_, 0), equals(lowcardinality_int32_, 1)))":"01000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_LowCardinality_Int64_ = r"""
+{"hex(retentionState(equals(lowcardinality_int64_, 0), equals(lowcardinality_int64_, 1)))":"01000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_LowCardinality_Int128_ = r"""
+{"hex(retentionState(equals(lowcardinality_int128_, 0), equals(lowcardinality_int128_, 1)))":"01000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_LowCardinality_Float32_ = r"""
+{"hex(retentionState(equals(lowcardinality_float32_, 0), equals(lowcardinality_float32_, 1)))":"01000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_LowCardinality_Float64_ = r"""
+{"hex(retentionState(equals(lowcardinality_float64_, 0), equals(lowcardinality_float64_, 1)))":"01000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_LowCardinality_Nullable_UInt8__ = r"""
+{"hex(retentionState(equals(lowcardinality_nullable_uint8__, 0), equals(lowcardinality_nullable_uint8__, 1)))":"0101000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_LowCardinality_Nullable_UInt16__ = r"""
+{"hex(retentionState(equals(lowcardinality_nullable_uint16__, 0), equals(lowcardinality_nullable_uint16__, 1)))":"0101000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_LowCardinality_Nullable_UInt32__ = r"""
+{"hex(retentionState(equals(lowcardinality_nullable_uint32__, 0), equals(lowcardinality_nullable_uint32__, 1)))":"0101000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_LowCardinality_Nullable_UInt64__ = r"""
+{"hex(retentionState(equals(lowcardinality_nullable_uint64__, 0), equals(lowcardinality_nullable_uint64__, 1)))":"0101000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_LowCardinality_Nullable_UInt128__ = r"""
+{"hex(retentionState(equals(lowcardinality_nullable_uint128__, 0), equals(lowcardinality_nullable_uint128__, 1)))":"0101000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_LowCardinality_Nullable_Int8__ = r"""
+{"hex(retentionState(equals(lowcardinality_nullable_int8__, 0), equals(lowcardinality_nullable_int8__, 1)))":"0100000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_LowCardinality_Nullable_Int16__ = r"""
+{"hex(retentionState(equals(lowcardinality_nullable_int16__, 0), equals(lowcardinality_nullable_int16__, 1)))":"0100000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_LowCardinality_Nullable_Int32__ = r"""
+{"hex(retentionState(equals(lowcardinality_nullable_int32__, 0), equals(lowcardinality_nullable_int32__, 1)))":"0100000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_LowCardinality_Nullable_Int64__ = r"""
+{"hex(retentionState(equals(lowcardinality_nullable_int64__, 0), equals(lowcardinality_nullable_int64__, 1)))":"0100000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_LowCardinality_Nullable_Int128__ = r"""
+{"hex(retentionState(equals(lowcardinality_nullable_int128__, 0), equals(lowcardinality_nullable_int128__, 1)))":"0100000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_LowCardinality_Nullable_Float32__ = r"""
+{"hex(retentionState(equals(lowcardinality_nullable_float32__, 0), equals(lowcardinality_nullable_float32__, 1)))":"0100000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
+_aggregate_functions_state_retentionState_LowCardinality_Nullable_Float64__ = r"""
+{"hex(retentionState(equals(lowcardinality_nullable_float64__, 0), equals(lowcardinality_nullable_float64__, 1)))":"0100000000","any(toTypeName(1))":"UInt8","any(toTypeName(1))":"UInt8"}
+"""
+
