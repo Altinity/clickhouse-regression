@@ -174,6 +174,7 @@ For example,
 SELECT partition, part_type
 FROM system.parts
 WHERE table = 'table_1'
+```
 
 ### Table Engines on Which Attach Partition From Can Be Performed
 
