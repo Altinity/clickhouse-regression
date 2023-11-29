@@ -239,11 +239,11 @@ Regressions:
 | Part Moves Between Shards | [](#part-moves-between-shards) |   |
 | Lightweight Delete | [](#lightweight-delete) |    |
 | Aggregate Functions | [](#aggregate-functions) |  |
-| Python `clickhouse_driver` | [](#python-clickhouse_driver)  |   |
-| ODBC `clickhouse-odbc` | [](#odbc-clickhouse-odbc)  |  |
-| SQLAlchemy | [](#sqlalchemy) |    |
-| Java `clickhouse-jdbc` | [](#java-clickhouse-jdbc)  |   |
-| Java `clickhouse-jdbc` (DBeaver) | [](#java-clickhouse-jdbc)  |   |
+| Python `clickhouse_driver` | [Pass*](#python-clickhouse_driver)  |   |
+| ODBC `clickhouse-odbc` | [Pass](#odbc-clickhouse-odbc)  |  |
+| SQLAlchemy | [Pass](#sqlalchemy) |    |
+| Java `clickhouse-jdbc` | [Pass](#java-clickhouse-jdbc)  |   |
+| Java `clickhouse-jdbc` (DBeaver) | [Pass](#java-clickhouse-jdbc)  |   |
 | Backup `clickhouse-backup` | [](#backup-clickhouse-backup)  |   |
 | Kubernetes `clickhouse-operator` | [](#kubernetes-clickhouse-operator) |   |
 | Altinity.Cloud | [](#altinitycloud)  |   |
@@ -461,30 +461,35 @@ The following client drivers SHALL be tested for compatibility:
 
 #### Python `clickhouse_driver`
 
-Results:
+Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/23.8-lts/clickhouse-driver/
 
 The [clickhouse-driver](https://github.com/mymarilyn/clickhouse-driver) driver.
 
+```
+Test: tests/test_blocks.py
+Reason: clickhouse expected message text is changed.
+Status: [Fail](https://github.com/mymarilyn/clickhouse-driver/issues/403)
+```
 
 #### ODBC `clickhouse-odbc`
 
-Results:
+Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/23.8-lts/clickhouse-odbc/
 
 The operation of [clickhouse-odbc](https://github.com/ClickHouse/clickhouse-odbc) driver.
 
 
 #### SQLAlchemy
 
-Results: /
+Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/23.8-lts/clickhouse-sqlalchemy/
 
 The [clickhouse-sqlalchemy](https://github.com/xzkostyan/clickhouse-sqlalchemy) ClickHouse dialect for SQLAlchemy.
 
 
 #### Java `clickhouse-jdbc`
 
-Results: 6/
+Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/23.8-lts/clickhouse-jdbc/
 
-Results (DBeaver):
+Results (DBeaver): https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/23.8-lts/clickhouse-jdbc/DBeaver/
 
 The (https://github.com/ClickHouse/clickhouse-jdbc) driver.
 
