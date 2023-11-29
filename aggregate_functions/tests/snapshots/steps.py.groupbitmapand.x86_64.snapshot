@@ -1,0 +1,160 @@
+_aggregate_functions_groupBitmapAnd_empty_array_of_type_UInt16_array_output_UInt16 = r"""
+{"arraySort(bitmapToArray(groupBitmapAndState(z)))":[]}
+"""
+
+_aggregate_functions_groupBitmapAnd_empty_array_of_type_UInt16_result_length_UInt16 = r"""
+{"groupBitmapAnd(z)":0,"any(toTypeName(z))":"AggregateFunction(groupBitmap, UInt16)"}
+"""
+
+_aggregate_functions_groupBitmapAnd_empty_array_of_type_UInt32_array_output_UInt32 = r"""
+{"arraySort(bitmapToArray(groupBitmapAndState(z)))":[]}
+"""
+
+_aggregate_functions_groupBitmapAnd_empty_array_of_type_UInt32_result_length_UInt32 = r"""
+{"groupBitmapAnd(z)":0,"any(toTypeName(z))":"AggregateFunction(groupBitmap, UInt32)"}
+"""
+
+_aggregate_functions_groupBitmapAnd_empty_array_of_type_UInt64_array_output_UInt64 = r"""
+{"arraySort(bitmapToArray(groupBitmapAndState(z)))":[]}
+"""
+
+_aggregate_functions_groupBitmapAnd_empty_array_of_type_UInt64_result_length_UInt64 = r"""
+{"groupBitmapAnd(z)":"0","any(toTypeName(z))":"AggregateFunction(groupBitmap, UInt64)"}
+"""
+
+_aggregate_functions_groupBitmapAnd_empty_array_of_type_UInt8_array_output_UInt8 = r"""
+{"arraySort(bitmapToArray(groupBitmapAndState(z)))":[]}
+"""
+
+_aggregate_functions_groupBitmapAnd_empty_array_of_type_UInt8_result_length_UInt8 = r"""
+{"groupBitmapAnd(z)":0,"any(toTypeName(z))":"AggregateFunction(groupBitmap, UInt8)"}
+"""
+
+_aggregate_functions_groupBitmapAnd_example_UInt16_array_output_UInt16 = r"""
+{"arraySort(bitmapToArray(groupBitmapAndState(z)))":[65227,65283,65320,65326]}
+"""
+
+_aggregate_functions_groupBitmapAnd_example_UInt16_result_length_UInt16 = r"""
+{"groupBitmapAnd(z)":4,"any(toTypeName(z))":"AggregateFunction(groupBitmap, UInt16)"}
+"""
+
+_aggregate_functions_groupBitmapAnd_example_UInt32_array_output_UInt32 = r"""
+{"arraySort(bitmapToArray(groupBitmapAndState(z)))":[4294966987,4294967043,4294967080,4294967086]}
+"""
+
+_aggregate_functions_groupBitmapAnd_example_UInt32_result_length_UInt32 = r"""
+{"groupBitmapAnd(z)":4,"any(toTypeName(z))":"AggregateFunction(groupBitmap, UInt32)"}
+"""
+
+_aggregate_functions_groupBitmapAnd_example_UInt64_array_output_UInt64 = r"""
+{"arraySort(bitmapToArray(groupBitmapAndState(z)))":["18446744073709551307","18446744073709551363","18446744073709551400","18446744073709551406"]}
+"""
+
+_aggregate_functions_groupBitmapAnd_example_UInt64_result_length_UInt64 = r"""
+{"groupBitmapAnd(z)":"4","any(toTypeName(z))":"AggregateFunction(groupBitmap, UInt64)"}
+"""
+
+_aggregate_functions_groupBitmapAnd_example_UInt8_array_output_UInt8 = r"""
+{"arraySort(bitmapToArray(groupBitmapAndState(z)))":[3,40,46,69,75,96,141,144,170,181,197,203,205,206,226,241,242]}
+"""
+
+_aggregate_functions_groupBitmapAnd_example_UInt8_result_length_UInt8 = r"""
+{"groupBitmapAnd(z)":17,"any(toTypeName(z))":"AggregateFunction(groupBitmap, UInt8)"}
+"""
+
+_aggregate_functions_groupBitmapAnd_same_array_in_all_rows_of_type_UInt16_array_output_UInt16 = r"""
+{"arraySort(bitmapToArray(groupBitmapAndState(z)))":[65447,65448,65450,65453,65455,65461,65465,65467,65469,65473,65475,65477,65478,65481,65482,65486,65488,65492,65494,65495,65501,65502,65508,65516,65519,65520,65529,65530,65531,65532]}
+"""
+
+_aggregate_functions_groupBitmapAnd_same_array_in_all_rows_of_type_UInt16_result_length_UInt16 = r"""
+{"groupBitmapAnd(z)":30,"any(toTypeName(z))":"AggregateFunction(groupBitmap, UInt16)"}
+"""
+
+_aggregate_functions_groupBitmapAnd_same_array_in_all_rows_of_type_UInt32_array_output_UInt32 = r"""
+{"arraySort(bitmapToArray(groupBitmapAndState(z)))":[4294967207,4294967208,4294967210,4294967213,4294967215,4294967221,4294967225,4294967227,4294967229,4294967233,4294967235,4294967237,4294967238,4294967241,4294967242,4294967246,4294967248,4294967252,4294967254,4294967255,4294967261,4294967262,4294967268,4294967276,4294967279,4294967280,4294967289,4294967290,4294967291,4294967292]}
+"""
+
+_aggregate_functions_groupBitmapAnd_same_array_in_all_rows_of_type_UInt32_result_length_UInt32 = r"""
+{"groupBitmapAnd(z)":30,"any(toTypeName(z))":"AggregateFunction(groupBitmap, UInt32)"}
+"""
+
+_aggregate_functions_groupBitmapAnd_same_array_in_all_rows_of_type_UInt64_array_output_UInt64 = r"""
+{"arraySort(bitmapToArray(groupBitmapAndState(z)))":["18446744073709551527","18446744073709551528","18446744073709551530","18446744073709551533","18446744073709551535","18446744073709551541","18446744073709551545","18446744073709551547","18446744073709551549","18446744073709551553","18446744073709551555","18446744073709551557","18446744073709551558","18446744073709551561","18446744073709551562","18446744073709551566","18446744073709551568","18446744073709551572","18446744073709551574","18446744073709551575","18446744073709551581","18446744073709551582","18446744073709551588","18446744073709551596","18446744073709551599","18446744073709551600","18446744073709551609","18446744073709551610","18446744073709551611","18446744073709551612"]}
+"""
+
+_aggregate_functions_groupBitmapAnd_same_array_in_all_rows_of_type_UInt64_result_length_UInt64 = r"""
+{"groupBitmapAnd(z)":"30","any(toTypeName(z))":"AggregateFunction(groupBitmap, UInt64)"}
+"""
+
+_aggregate_functions_groupBitmapAnd_same_array_in_all_rows_of_type_UInt8_array_output_UInt8 = r"""
+{"arraySort(bitmapToArray(groupBitmapAndState(z)))":[167,168,170,173,175,181,185,187,189,193,195,197,198,201,202,206,208,212,214,215,221,222,228,236,239,240,249,250,251,252]}
+"""
+
+_aggregate_functions_groupBitmapAnd_same_array_in_all_rows_of_type_UInt8_result_length_UInt8 = r"""
+{"groupBitmapAnd(z)":30,"any(toTypeName(z))":"AggregateFunction(groupBitmap, UInt8)"}
+"""
+
+_aggregate_functions_groupBitmapAnd_same_arrays_with_same_numbers_array_output_UInt16 = r"""
+{"arraySort(bitmapToArray(groupBitmapAndState(z)))":[65494]}
+"""
+
+_aggregate_functions_groupBitmapAnd_same_arrays_with_same_numbers_array_output_UInt32 = r"""
+{"arraySort(bitmapToArray(groupBitmapAndState(z)))":[4294967254]}
+"""
+
+_aggregate_functions_groupBitmapAnd_same_arrays_with_same_numbers_array_output_UInt64 = r"""
+{"arraySort(bitmapToArray(groupBitmapAndState(z)))":["18446744073709551574"]}
+"""
+
+_aggregate_functions_groupBitmapAnd_same_arrays_with_same_numbers_array_output_UInt8 = r"""
+{"arraySort(bitmapToArray(groupBitmapAndState(z)))":[214]}
+"""
+
+_aggregate_functions_groupBitmapAnd_same_arrays_with_same_numbers_result_length_UInt16 = r"""
+{"groupBitmapAnd(z)":1,"any(toTypeName(z))":"AggregateFunction(groupBitmap, UInt16)"}
+"""
+
+_aggregate_functions_groupBitmapAnd_same_arrays_with_same_numbers_result_length_UInt32 = r"""
+{"groupBitmapAnd(z)":1,"any(toTypeName(z))":"AggregateFunction(groupBitmap, UInt32)"}
+"""
+
+_aggregate_functions_groupBitmapAnd_same_arrays_with_same_numbers_result_length_UInt64 = r"""
+{"groupBitmapAnd(z)":"1","any(toTypeName(z))":"AggregateFunction(groupBitmap, UInt64)"}
+"""
+
+_aggregate_functions_groupBitmapAnd_same_arrays_with_same_numbers_result_length_UInt8 = r"""
+{"groupBitmapAnd(z)":1,"any(toTypeName(z))":"AggregateFunction(groupBitmap, UInt8)"}
+"""
+
+_aggregate_functions_groupBitmapAnd_single_array_of_type_UInt16_array_output_UInt16 = r"""
+{"arraySort(bitmapToArray(groupBitmapAndState(z)))":[65447,65448,65450,65453,65455,65461,65465,65467,65469,65473,65475,65477,65478,65481,65482,65486,65488,65492,65494,65495,65501,65502,65508,65516,65519,65520,65529,65530,65531,65532]}
+"""
+
+_aggregate_functions_groupBitmapAnd_single_array_of_type_UInt16_result_length_UInt16 = r"""
+{"groupBitmapAnd(z)":30,"any(toTypeName(z))":"AggregateFunction(groupBitmap, UInt16)"}
+"""
+
+_aggregate_functions_groupBitmapAnd_single_array_of_type_UInt32_array_output_UInt32 = r"""
+{"arraySort(bitmapToArray(groupBitmapAndState(z)))":[4294967207,4294967208,4294967210,4294967213,4294967215,4294967221,4294967225,4294967227,4294967229,4294967233,4294967235,4294967237,4294967238,4294967241,4294967242,4294967246,4294967248,4294967252,4294967254,4294967255,4294967261,4294967262,4294967268,4294967276,4294967279,4294967280,4294967289,4294967290,4294967291,4294967292]}
+"""
+
+_aggregate_functions_groupBitmapAnd_single_array_of_type_UInt32_result_length_UInt32 = r"""
+{"groupBitmapAnd(z)":30,"any(toTypeName(z))":"AggregateFunction(groupBitmap, UInt32)"}
+"""
+
+_aggregate_functions_groupBitmapAnd_single_array_of_type_UInt64_array_output_UInt64 = r"""
+{"arraySort(bitmapToArray(groupBitmapAndState(z)))":["18446744073709551527","18446744073709551528","18446744073709551530","18446744073709551533","18446744073709551535","18446744073709551541","18446744073709551545","18446744073709551547","18446744073709551549","18446744073709551553","18446744073709551555","18446744073709551557","18446744073709551558","18446744073709551561","18446744073709551562","18446744073709551566","18446744073709551568","18446744073709551572","18446744073709551574","18446744073709551575","18446744073709551581","18446744073709551582","18446744073709551588","18446744073709551596","18446744073709551599","18446744073709551600","18446744073709551609","18446744073709551610","18446744073709551611","18446744073709551612"]}
+"""
+
+_aggregate_functions_groupBitmapAnd_single_array_of_type_UInt64_result_length_UInt64 = r"""
+{"groupBitmapAnd(z)":"30","any(toTypeName(z))":"AggregateFunction(groupBitmap, UInt64)"}
+"""
+
+_aggregate_functions_groupBitmapAnd_single_array_of_type_UInt8_array_output_UInt8 = r"""
+{"arraySort(bitmapToArray(groupBitmapAndState(z)))":[167,168,170,173,175,181,185,187,189,193,195,197,198,201,202,206,208,212,214,215,221,222,228,236,239,240,249,250,251,252]}
+"""
+
+_aggregate_functions_groupBitmapAnd_single_array_of_type_UInt8_result_length_UInt8 = r"""
+{"groupBitmapAnd(z)":30,"any(toTypeName(z))":"AggregateFunction(groupBitmap, UInt8)"}
+"""
+
