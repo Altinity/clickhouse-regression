@@ -3,8 +3,8 @@
 ## ClickHouse Keeper and Zookeeper Performance Test Program
 
 Performance tests can be launched with `./perfomance.py` command.
-It will start performance tests of all available coordination cluster configurations for local ClickHouse binary. Path 
-to default ClickHouse binary is `/usr/bin/clickhouse`. 
+It will start performance tests of all available coordination cluster configurations for local ClickHouse binary. 
+Path to default ClickHouse binary is `/usr/bin/clickhouse`.
 
 *WARNING*:: `chown clickhouse:clickhouse /usr/bin/clickhouse`should be applied to work correctly with the default value.
 Also, for clear runs `rm -rf _instances` should be used to delete all docker-compose volumes information.
@@ -14,10 +14,10 @@ Also, for clear runs `rm -rf _instances` should be used to delete all docker-com
 * ClickHouse Keeper (SSl and non-SSL)
   * mixed one node
   * mixed three node
-  * standalone one node 
+  * standalone one node
   * standalone three node
 * ZooKeeper (non-SSL)
-  * one node 
+  * one node
   * three node
 
 *Example* to test Clickhouse Keeper only for `mixed one node` coordination cluster configuration for vanilla `22.8` ClickHouse version:
@@ -49,14 +49,14 @@ Available configurations options for `--only`:
 
 ### Program Settings
 
-* `--inserts` size of insert into table on one repetition (default: 200)
-* `--repeats` number of repeats of inserting into the table (default: 4)
-* `--one-node` disable all configuration cluster tests which is using 3-node configuration
-* `--three-nodes` disable all configuration cluster tests which is using 1-node configuration
-* `--results-file-name` allow to provide results file name manually (default: performance_{uid}.csv)
-* `--clickhouse-binary-list` to test some special ClickHouse versions, can be applied several times
-* `--test-to-end` to force the test program to continue running if any of the tests fail
-* `-o classic` to hide additional logs information
+* `--inserts` Size of insert into table on one repetition (default: 200)
+* `--repeats` Number of repeats of inserting into the table (default: 4)
+* `--one-node` Only run cluster tests which use 1-node configuration
+* `--three-node` Only run cluster tests which use 3-node configuration
+* `--results-file-name` Manually set results file name (default: performance_{uid}.csv)
+* `--clickhouse-binary-list` Specify ClickHouse version to test, can be applied several times
+* `--test-to-end` Force the test program to continue running if any of the tests fail
+* `-o classic` Hide additional logs information
 
 *WARNING*: Mostly default values for `repeats` and `inserts` were tested. Some other combinations can put the
 table in read only-mode which will lead the program to fail.
@@ -66,6 +66,7 @@ table in read only-mode which will lead the program to fail.
 1) The `--clickhouse-binary-list` setting can be applied to test some special ClickHouse versions, as in the example below.
 
 *Example* to test all available coordination cluster with `23.3.5.10.altinitytest` ClickHouse version:
+
 ```commandline
 ./perfomance.py --clickhouse-binary-list=docker://altinity/clickhouse-server:23.3.5.10.altinitytest --test-to-end -o classic
 ```
@@ -94,7 +95,7 @@ To test more than one version of ClickHouse just add new `--clickhouse-binary-li
 
 The performance test scenario is based on inserting into a `bad` table (every row generates coordination cluster
 transaction). It collects insert times and returns the minimum value. After that, it provides a `performance_reports/
-perfomance_*.csv` file which contains a table with percentage increase values of all minimum values for all pairs of 
+perfomance_*.csv` file which contains a table with percentage increase values of all minimum values for all pairs of
 coordination cluster configurations. Also, it generates additional tables with comparison data:
 
 * SSL vs non-SSL
@@ -135,8 +136,9 @@ FROM
 
 ### Results Processing
 
-As output, `performance_reports/perfomance_*.csv` file with a unique name will be created. This result file can be 
-imported to `Google Sheets`, where `Format-->Conditional formatting-->Color scale` can be applied 
+As output, `performance_reports/perfomance_*.csv` file with a unique name will be created. 
+This result file can be imported to `Google Sheets`,
+where `Format-->Conditional formatting-->Color scale` can be applied
 to all numeric cells to receive more readable output.
 
 Color scale setting example:
@@ -146,4 +148,3 @@ Color scale setting example:
 Final output example:
 
 <img src="readme_data/final_output.png" alt="final output img">
-

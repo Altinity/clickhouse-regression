@@ -156,17 +156,55 @@ def replace_partition_on_minio_and_default_disks(self):
 
 
 @TestStep(Given)
+def create_table_and_move_partition_to_disk(self, table_name):
+    """Create a partitioned table and move one of the partitions to another disk."""
+    node = self.context.node
+    with By(f"creating a partitioned {table_name} table"):
+        create_table_partitioned_by_column_with_data(
+            table_name=table_name, query_settings="storage_policy = 'fast_med_and_slow'"
+        )
+    with And(f"moving {table_name} to another disk"):
+        node.query(f"ALTER TABLE {table_name} MOVE PARTITION 1 TO DISK 'jbod2'")
+
+
+@TestStep(Given)
+def create_table_and_dont_move_partition_to_disk(self, table_name):
+    """Create a partitioned table and leave it on the same disk."""
+    create_table_partitioned_by_column_with_data(
+        table_name=table_name, query_settings="storage_policy = 'fast_med_and_slow'"
+    )
+
+
+@TestSketch(Scenario)
+@Flags(TE)
+@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition_TieredStorage("1.0"))
+def partition_moved_to_another_disk(self):
+    """Run check that validates if it is possible to replace partition on tables that have partitions on different disks."""
+    values = {
+        create_table_and_move_partition_to_disk,
+        create_table_and_dont_move_partition_to_disk,
+    }
+
+    check_replace_partition_on_different_types_of_disks(
+        destination_table=either(*values),
+        source_table=either(*values),
+    )
+
+
+@TestStep(Given)
 def table_stored_on_tiered_storage(self, table_name):
     """Create a table stored in a tiered storage."""
     create_table_partitioned_by_column_with_data(
-        table_name=table_name, query_settings="storage_policy = 'tiered_storage'"
+        table_name=table_name, query_settings="storage_policy = 'fast_med_and_slow'"
     )
 
 
 @TestStep(Given)
 def table_not_stored_on_tiered_storage(self, table_name):
     """Create a table which is not stored in the tiered storage."""
-    create_table_partitioned_by_column_with_data(table_name=table_name)
+    create_table_partitioned_by_column_with_data(
+        table_name=table_name, query_settings="storage_policy = 'default'"
+    )
 
 
 @TestSketch(Scenario)
@@ -194,3 +232,4 @@ def feature(self, node="clickhouse1"):
     Scenario(run=replicas)
     Scenario(run=replace_partition_on_minio_and_default_disks)
     Scenario(run=replace_partition_on_tiered_and_default_storages)
+    Scenario(run=partition_moved_to_another_disk)

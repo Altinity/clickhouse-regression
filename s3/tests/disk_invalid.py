@@ -111,7 +111,9 @@ def invalid_endpoint(self):
             "external": {"volumes": {"external": {"disk": "external"}}},
         }
 
-    invalid_s3_storage_config(disks, policies, message="DB::Exception:", tail=300)
+    invalid_s3_storage_config(
+        disks, policies, message="Cannot resolve host (unknown-website)", tail=300
+    )
 
 
 @TestScenario

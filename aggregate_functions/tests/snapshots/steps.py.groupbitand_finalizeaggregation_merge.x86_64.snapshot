@@ -1,0 +1,92 @@
+_aggregate_functions_finalizeAggregation_groupBitAndfinalizeAggregation_LowCardinality_Nullable_UInt16___0 = r"""
+{"finalizeAggregation(CAST(unhex('010000'), 'AggregateFunction(groupBitAnd, LowCardinality(Nullable(UInt16)))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_groupBitAndfinalizeAggregation_LowCardinality_Nullable_UInt32___0 = r"""
+{"finalizeAggregation(CAST(unhex('0100000000'), 'AggregateFunction(groupBitAnd, LowCardinality(Nullable(UInt32)))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_groupBitAndfinalizeAggregation_LowCardinality_Nullable_UInt64___0 = r"""
+{"finalizeAggregation(CAST(unhex('010000000000000000'), 'AggregateFunction(groupBitAnd, LowCardinality(Nullable(UInt64)))'))":"0"}
+"""
+
+_aggregate_functions_finalizeAggregation_groupBitAndfinalizeAggregation_LowCardinality_Nullable_UInt8___0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(groupBitAnd, LowCardinality(Nullable(UInt8)))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_groupBitAndfinalizeAggregation_LowCardinality_UInt16__0 = r"""
+{"finalizeAggregation(CAST(unhex('0000'), 'AggregateFunction(groupBitAnd, LowCardinality(UInt16))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_groupBitAndfinalizeAggregation_LowCardinality_UInt32__0 = r"""
+{"finalizeAggregation(CAST(unhex('00000000'), 'AggregateFunction(groupBitAnd, LowCardinality(UInt32))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_groupBitAndfinalizeAggregation_LowCardinality_UInt64__0 = r"""
+{"finalizeAggregation(CAST(unhex('0000000000000000'), 'AggregateFunction(groupBitAnd, LowCardinality(UInt64))'))":"0"}
+"""
+
+_aggregate_functions_finalizeAggregation_groupBitAndfinalizeAggregation_LowCardinality_UInt8__0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(groupBitAnd, LowCardinality(UInt8))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_groupBitAndfinalizeAggregation_NULL_value_handling_0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(groupBitAnd, Nullable(UInt8))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_groupBitAndfinalizeAggregation_Nullable_UInt16__0 = r"""
+{"finalizeAggregation(CAST(unhex('010000'), 'AggregateFunction(groupBitAnd, Nullable(UInt16))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_groupBitAndfinalizeAggregation_Nullable_UInt32__0 = r"""
+{"finalizeAggregation(CAST(unhex('0100000000'), 'AggregateFunction(groupBitAnd, Nullable(UInt32))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_groupBitAndfinalizeAggregation_Nullable_UInt64__0 = r"""
+{"finalizeAggregation(CAST(unhex('010000000000000000'), 'AggregateFunction(groupBitAnd, Nullable(UInt64))'))":"0"}
+"""
+
+_aggregate_functions_finalizeAggregation_groupBitAndfinalizeAggregation_Nullable_UInt8__0 = r"""
+{"finalizeAggregation(CAST(unhex('0100'), 'AggregateFunction(groupBitAnd, Nullable(UInt8))'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_groupBitAndfinalizeAggregation_UInt16_0 = r"""
+{"finalizeAggregation(CAST(unhex('0000'), 'AggregateFunction(groupBitAnd, UInt16)'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_groupBitAndfinalizeAggregation_UInt32_0 = r"""
+{"finalizeAggregation(CAST(unhex('00000000'), 'AggregateFunction(groupBitAnd, UInt32)'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_groupBitAndfinalizeAggregation_UInt64_0 = r"""
+{"finalizeAggregation(CAST(unhex('0000000000000000'), 'AggregateFunction(groupBitAnd, UInt64)'))":"0"}
+"""
+
+_aggregate_functions_finalizeAggregation_groupBitAndfinalizeAggregation_UInt8_0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(groupBitAnd, UInt8)'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_groupBitAndfinalizeAggregation_constant_0 = r"""
+{"finalizeAggregation(CAST(unhex('01'), 'AggregateFunction(groupBitAnd, UInt8)'))":1}
+"""
+
+_aggregate_functions_finalizeAggregation_groupBitAndfinalizeAggregation_doc_example_0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(groupBitAnd, UInt8)'))":0}
+"""
+
+_aggregate_functions_finalizeAggregation_groupBitAndfinalizeAggregation_single_NULL_value_0 = r"""
+{"finalizeAggregation(CAST(unhex('00'), 'AggregateFunction(groupBitAnd, Nullable(UInt8))'))":null}
+"""
+
+_aggregate_functions_finalizeAggregation_groupBitAndfinalizeAggregation_single_row_0 = r"""
+{"finalizeAggregation(CAST(unhex('0000000000000000'), 'AggregateFunction(groupBitAnd, UInt64)'))":"0"}
+"""
+
+_aggregate_functions_finalizeAggregation_groupBitAndfinalizeAggregation_with_group_by_0 = r"""
+{"finalizeAggregation(CAST(unhex('0000000000000000'), 'AggregateFunction(groupBitAnd, UInt64)'))":"0"}
+"""
+
+_aggregate_functions_finalizeAggregation_groupBitAndfinalizeAggregation_with_group_by_1 = r"""
+{"finalizeAggregation(CAST(unhex('0100000000000000'), 'AggregateFunction(groupBitAnd, UInt64)'))":"1"}
+"""
+
