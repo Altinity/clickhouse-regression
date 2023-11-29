@@ -7,6 +7,7 @@ import threading
 import tempfile
 import re
 import json
+import shutil
 
 from testflows._core.cli.arg.common import description
 
@@ -818,6 +819,7 @@ class Cluster(object):
         collect_service_logs=False,
         use_zookeeper_nodes=False,
         frame=None,
+        rm_instances_files=True,
     ):
         self._bash = {}
         self._control_shell = None
@@ -872,6 +874,9 @@ class Cluster(object):
             raise TypeError(
                 f"docker compose file '{docker_compose_file_path}' does not exist"
             )
+
+        if rm_instances_files:
+            shutil.rmtree(os.path.join(docker_compose_project_dir,"..","_instances"), ignore_errors=True)
 
         if self.clickhouse_binary_path:
             if self.clickhouse_binary_path.startswith(("http://", "https://")):
