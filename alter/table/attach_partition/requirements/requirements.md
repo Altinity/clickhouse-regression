@@ -276,5 +276,7 @@ The `ATTACH PARTITION` SHALL only work when the user has the following privilege
 | CREATE               |
 
 
+## References
+
 [ClickHouse]: https://clickhouse.com
 [GitHub]: https://github.com
