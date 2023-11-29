@@ -89,10 +89,10 @@ def create_node_server_certificate_with_chain_and_dh_params(
     if trusted_cas is not None:
         with And("I add trusted CA certificates to the node"):
             for trusted_ca in trusted_cas:
-                name = "_".join(trusted_ca.split(os.path.sep)[-2:])
-                with By(f"adding {name}"):
+                ca_name = "_".join(trusted_ca.split(os.path.sep)[-2:])
+                with By(f"adding {ca_name}"):
                     add_trusted_ca_certificate(
-                        node=node, certificate=trusted_ca, name=name
+                        node=node, certificate=trusted_ca, name=ca_name
                     )
 
     with And("I set correct permission on server key file"):
