@@ -101,7 +101,7 @@ version: 1.0
 
 [ClickHouse] SHALL support using `ATTACH PARTITION|PART` to attach partitions on tables that are stored inside the tiered storage.
 
-#### RQ.SRS-032.ClickHouse.Alter.Table.AttachPartitionPart.PartitionTypes
+#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionPart.PartitionTypes
 version: 1.0
 
 | Partition Types                               |
@@ -116,7 +116,7 @@ The `ATTACH PARTITION` SHALL work for any partition type.
 
 ### Corrupted Parts on a Specific Partition
 
-#### RQ.SRS-032.ClickHouse.Alter.Table.AttachPartitionPart.Corrupted
+#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionPart.Corrupted
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to `ATTACH PARTITION` when parts of a specific partition are corrupted.
@@ -133,7 +133,7 @@ Possible partition types that can be corrupted are,
 
 ### Role Based Access Control
 
-#### RQ.SRS-032.ClickHouse.Alter.Table.AttachPartition.RBAC
+#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.RBAC
 version: 1.0
 
 The `ATTACH PARTITION` SHALL only work when the user has the following privileges for table:
@@ -163,7 +163,7 @@ ALTER TABLE table2 [ON CLUSTER cluster] ATTACH PARTITION partition_expr FROM tab
 
 ### Reflect Changes in Table Partitions Inside the System Table
 
-#### RQ.SRS-032.ClickHouse.Alter.Table.AttachPartitionFrom.System.Parts
+#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.System.Parts
 version: 1.0
 
 [ClickHouse] SHALL reflect the changes in `system.parts` table, when the `ATTACH PARTITION FROM` is executed on the `destination table`. 
@@ -232,7 +232,7 @@ version: 1.0
 
 ### Tables With Different Partition Types
 
-#### RQ.SRS-032.ClickHouse.Alter.Table.AttachPartitionFrom.PartitionTypes
+#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.PartitionTypes
 version: 1.0
 
 | Partition Types                               |
@@ -249,7 +249,7 @@ The `ATTACH PARTITION` SHALL work for any partition type.
 
 ### Corrupted Parts on a Specific Partition
 
-#### RQ.SRS-032.ClickHouse.Alter.Table.AttachPartitionPart.Corrupted
+#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionPart.Corrupted
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to `ATTACH PARTITION` when parts of a specific partition are corrupted.
@@ -266,7 +266,7 @@ Possible partition types that can be corrupted are,
 
 ### Role Based Access Control
 
-#### RQ.SRS-032.ClickHouse.Alter.Table.AttachPartition.RBAC
+#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.RBAC
 version: 1.0
 
 The `ATTACH PARTITION` SHALL only work when the user has the following privileges for table:
