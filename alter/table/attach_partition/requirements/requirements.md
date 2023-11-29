@@ -19,7 +19,6 @@ The documentation used:
 - https://clickhouse.com/docs/en/sql-reference/statements/alter/partition#attach-partitionpart
 - https://clickhouse.com/docs/en/sql-reference/statements/alter/partition#attach-partition-from
 
-
 ## Attach Partition|Part
 
 ### Flowchart
@@ -143,8 +142,6 @@ The `ATTACH PARTITION` SHALL only work when the user has the following privilege
 |----------------------|
 | CREATE               |
 
-
-
 ## Attach Partition From
 
 ### Definitions
@@ -196,7 +193,6 @@ The table engines that support `ATTACH PARTITION FROM` include:
 |      `GraphiteMergeTree`       |
 |      `SummingMergeTree`        |
 
-
 ### Keeping Data on the Source Table After Attach Partition From
 
 #### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.KeepData
@@ -246,8 +242,6 @@ version: 1.0
 | Partition with empty parts                    |
 
 The `ATTACH PARTITION` SHALL work for any partition type.
-
-
 
 ### Corrupted Parts on a Specific Partition
 
