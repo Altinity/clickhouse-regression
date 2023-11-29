@@ -31,9 +31,11 @@ subgraph Replace Partition Flow
   C -->|No| E[Show error message]
   D -->|Yes| F[Check data integrity]
   D -->|No| G[Show error message]
-  G --> N
-  F --> N
+  E --> H
+  G --> H
+  F --> H
 end
+
 
 
 ```
