@@ -71,11 +71,11 @@ def create_server_principal(self, node):
         node.command("echo pwd | kinit admin/admin", no_checks=True)
         node.command(
             f'kadmin -w pwd -q "add_principal -randkey HTTP/{self.context.env}-{node.name}-1.krbnet"',
-            no_checks=True
+            no_checks=True,
         )
         node.command(
             f'kadmin -w pwd -q "ktadd -k /etc/krb5.keytab HTTP/{self.context.env}-{node.name}-1.krbnet"',
-            no_checks=True
+            no_checks=True,
         )
         yield
     finally:
