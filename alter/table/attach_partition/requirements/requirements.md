@@ -23,15 +23,15 @@ The documentation used:
 
 ```mermaid
 graph TD;
-subgraph ATTACH PARTITION|PART Flow
+subgraph Replace Partition Flow
   A[Start]
-  A -->|1. User Initiates| B(Execute ALTER TABLE ATTACH PARTITION|PART)
-  B -->|2. Specify Table and partition expression| C{Are table name and partition expression valid?}
-  C -->|Yes| D[Replica-initiator checks whether there is data in the detached directory]
+  A -->|1. User Initiates| B(Execute ALTER TABLE REPLACE PARTITION)
+  B -->|2. Specify Tables| C{Are table names valid?}
+  C -->|Yes| D[Retrieve table schema]
   C -->|No| E[Show error message]
-  D -->|3. Validate existance| F{Is data exists?}
+  D -->|3. Validate Structure| F{Same structure in both tables?}
   F -->|No| G[Show error message]
-  F -->|Yes| H[Check integrity]
+  F -->|Yes| H[Validate Keys]
   H -->|4. Validate Keys| I{Same partition, order by, and primary keys?}
   I -->|No| J[Show error message]
   I -->|Yes| K[Retrieve partition data]
