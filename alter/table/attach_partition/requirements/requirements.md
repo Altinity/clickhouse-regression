@@ -68,7 +68,7 @@ FROM system.parts
 WHERE table = 'table_1'
 ```
 
-### Table Engines on Which Attach Partition Can Be Performed
+### Table Engines on Which Attach Partition|Part Can Be Performed
 
 #### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionPart.Supported.Engines
 version: 1.0
@@ -130,6 +130,7 @@ Possible partition types that can be corrupted are,
 | Partition with compact and wide parts (mixed) |
 
 ### Conditions
+ToDO
 
 ### Role Based Access Control
 
@@ -250,10 +251,10 @@ The `ATTACH PARTITION` SHALL work for any partition type.
 
 ### Corrupted Parts on a Specific Partition
 
-#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionPart.Corrupted
+#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Corrupted
 version: 1.0
 
-[ClickHouse] SHALL output an error when trying to `ATTACH PARTITION` when parts of a specific partition are corrupted.
+[ClickHouse] SHALL output an error when trying to `ATTACH PARTITION FROM` when parts of a specific partition are corrupted.
 
 Possible partition types that can be corrupted are,
 
@@ -264,6 +265,7 @@ Possible partition types that can be corrupted are,
 | Partition with compact and wide parts (mixed) |
 
 ### Conditions
+ToDO
 
 ### Role Based Access Control
 
