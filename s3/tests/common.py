@@ -643,11 +643,14 @@ def get_random_string(cluster, length, steps=True, *args, **kwargs):
             None,
             f"cat /dev/urandom | tr -dc 'A-Za-z0-9#$&()*+,-./:;<=>?@[\]^_~' | head -c {length} > {fd.name}",
             steps=steps,
+            no_checks=True,
             *args,
             **kwargs,
         )
         fd.seek(0)
-        return fd.read()
+        random_string = fd.read()
+        assert len(random_string) == length
+        return random_string
 
 
 @TestStep(When)
