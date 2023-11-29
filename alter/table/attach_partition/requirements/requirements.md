@@ -130,7 +130,7 @@ Possible partition types that can be corrupted are,
 | Partition with compact and wide parts (mixed) |
 
 ### Conditions
-ToDO
+ToDo
 
 ### Role Based Access Control
 
@@ -265,7 +265,7 @@ Possible partition types that can be corrupted are,
 | Partition with compact and wide parts (mixed) |
 
 ### Conditions
-ToDO
+ToDo
 
 ### Role Based Access Control
 
