@@ -280,3 +280,4 @@ The `ATTACH PARTITION` SHALL only work when the user has the following privilege
 
 [ClickHouse]: (https://clickhouse.com)
 [GitHub]: (https://github.com)
+[sparkbar]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/sparkbar
