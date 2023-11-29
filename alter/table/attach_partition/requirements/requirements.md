@@ -25,23 +25,12 @@ The documentation used:
 graph TD;
 subgraph Replace Partition Flow
   A[Start]
-  A -->|1. User Initiates| B(Execute ALTER TABLE REPLACE PARTITION)
-  B -->|2. Specify Tables| C{Are table names valid?}
-  C -->|Yes| D[Retrieve table schema]
+  A -->|1. User Initiates| B(Execute ALTER TABLE ATTACH PARTITION|PART)
+  B -->|2. Specify table and partition expression| C{Is table name valid?}
+  C -->|Yes| D[Is data in the detached directory?]
   C -->|No| E[Show error message]
-  D -->|3. Validate Structure| F{Same structure in both tables?}
-  F -->|No| G[Show error message]
-  F -->|Yes| H[Validate Keys]
-  H -->|4. Validate Keys| I{Same partition, order by, and primary keys?}
-  I -->|No| J[Show error message]
-  I -->|Yes| K[Retrieve partition data]
-  K -->|5. Replace Partition| L[Update table2 with data from table1]
-  L -->|6. Update Metadata| M[Update partition metadata in table2]
-  M -->|7. Complete| N[REPLACE PARTITION completed successfully]
-  E -->|Error| Z[Handle Error]
-  G -->|Error| Z[Handle Error]
-  J -->|Error| Z[Handle Error]
-  Z --> N
+  D -->|Yes| F[Check data integrity]
+  D -->|No| G[Show error message]
 end
 
 
