@@ -62,10 +62,6 @@ The documentation used:
 - https://clickhouse.com/docs/en/sql-reference/statements/alter/partition#attach-partitionpart
 - https://clickhouse.com/docs/en/sql-reference/statements/alter/partition#attach-partition-from
 
-## Test Analysis
-
-...
-
 ## Attaching Partitions or Parts
 
 ### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition
