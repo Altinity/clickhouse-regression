@@ -4,6 +4,51 @@
 
 ## Table of Contents
 
+* 1 [Revision History](#revision-history)
+* 2 [Introduction](#introduction)
+* 3 [Attach Partition|Part](#attach-partitionpart)
+    * 3.1 [Flowchart](#flowchart)
+    * 3.2 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionPart](#rqsrs-034clickhousealtertableattachpartitionpart)
+    * 3.3 [Reflect Changes in Table Partitions Inside the System Table  ](#reflect-changes-in-table-partitions-inside-the-system-table-)
+        * 3.3.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionPart.System.Parts](#rqsrs-034clickhousealtertableattachpartitionpartsystemparts)
+    * 3.4 [Table Engines on Which Attach Partition|Part Can Be Performed](#table-engines-on-which-attach-partitionpart-can-be-performed)
+        * 3.4.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionPart.Supported.Engines](#rqsrs-034clickhousealtertableattachpartitionpartsupportedengines)
+    * 3.5 [Table That Is Stored on S3  ](#table-that-is-stored-on-s3-)
+        * 3.5.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionPart.S3  ](#rqsrs-034clickhousealtertableattachpartitionparts3-)
+    * 3.6 [Table That Is Stored on Tiered Storage  ](#table-that-is-stored-on-tiered-storage-)
+        * 3.6.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionPart.TieredStorage](#rqsrs-034clickhousealtertableattachpartitionparttieredstorage)
+        * 3.6.2 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionPart.PartitionTypes](#rqsrs-034clickhousealtertableattachpartitionpartpartitiontypes)
+    * 3.7 [Corrupted Parts on a Specific Partition  ](#corrupted-parts-on-a-specific-partition-)
+        * 3.7.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionPart.Corrupted](#rqsrs-034clickhousealtertableattachpartitionpartcorrupted)
+    * 3.8 [Conditions  ](#conditions-)
+    * 3.9 [Role Based Access Control  ](#role-based-access-control-)
+        * 3.9.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.RBAC  ](#rqsrs-034clickhousealtertableattachpartitionrbac-)
+* 4 [Attach Partition From](#attach-partition-from)
+    * 4.1 [Definitions](#definitions)
+    * 4.2 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom](#rqsrs-034clickhousealtertableattachpartitionfrom)
+    * 4.3 [Reflect Changes in Table Partitions Inside the System Table](#reflect-changes-in-table-partitions-inside-the-system-table)
+        * 4.3.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.System.Parts](#rqsrs-034clickhousealtertableattachpartitionfromsystemparts)
+    * 4.4 [Table Engines on Which Attach Partition From Can Be Performed](#table-engines-on-which-attach-partition-from-can-be-performed)
+        * 4.4.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Supported.Engines](#rqsrs-034clickhousealtertableattachpartitionfromsupportedengines)
+    * 4.5 [Keeping Data on the Source Table After Attach Partition From](#keeping-data-on-the-source-table-after-attach-partition-from)
+        * 4.5.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.KeepData](#rqsrs-034clickhousealtertableattachpartitionfromkeepdata)
+    * 4.6 [Table That Is Stored on S3](#table-that-is-stored-on-s3)
+        * 4.6.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.S3](#rqsrs-034clickhousealtertableattachpartitionfroms3)
+    * 4.7 [Table That Is Stored on Tiered Storage](#table-that-is-stored-on-tiered-storage)
+        * 4.7.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.TieredStorage](#rqsrs-034clickhousealtertableattachpartitionfromtieredstorage)
+* 5 [Destination Table That Is on a Different Replica](#destination-table-that-is-on-a-different-replica)
+    * 5.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Replicas](#rqsrs-034clickhousealtertableattachpartitionfromreplicas)
+    * 5.2 [Destination Table That Is on a Different Shard](#destination-table-that-is-on-a-different-shard)
+    * 5.3 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Shards](#rqsrs-034clickhousealtertableattachpartitionfromshards)
+    * 5.4 [Tables With Different Partition Types](#tables-with-different-partition-types)
+        * 5.4.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.PartitionTypes](#rqsrs-034clickhousealtertableattachpartitionfrompartitiontypes)
+    * 5.5 [Corrupted Parts on a Specific Partition](#corrupted-parts-on-a-specific-partition)
+        * 5.5.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Corrupted](#rqsrs-034clickhousealtertableattachpartitionfromcorrupted)
+    * 5.6 [Conditions](#conditions)
+    * 5.7 [Role Based Access Control](#role-based-access-control)
+        * 5.7.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.RBAC](#rqsrs-034clickhousealtertableattachpartitionrbac)
+* 6 [References](#references)
+
 ## Revision History
 
 This document is stored in an electronic form using [Git] source control management software
@@ -52,7 +97,7 @@ The following SQL command exemplifies this feature:
 ALTER TABLE table_name [ON CLUSTER cluster] ATTACH PARTITION|PART partition_expr
 ```
 
-### Reflect Changes in Table Partitions Inside the System Table
+### Reflect Changes in Table Partitions Inside the System Table  
 
 #### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionPart.System.Parts
 version: 1.0
@@ -86,14 +131,14 @@ The table engines that support `ATTACH PARTITION|PART` include:
 |      `GraphiteMergeTree`       |
 |      `SummingMergeTree`        |
 
-### Table That Is Stored on S3
+### Table That Is Stored on S3  
 
-#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionPart.S3
+#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionPart.S3  
 version: 1.0
 
 [ClickHouse] SHALL support using `ATTACH PARTITION|PART` to attach partitions on tables that are stored inside the S3 storage.
 
-### Table That Is Stored on Tiered Storage
+### Table That Is Stored on Tiered Storage  
 
 #### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionPart.TieredStorage
 version: 1.0
@@ -113,7 +158,7 @@ version: 1.0
 
 The `ATTACH PARTITION` SHALL work for any partition type.
 
-### Corrupted Parts on a Specific Partition
+### Corrupted Parts on a Specific Partition  
 
 #### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionPart.Corrupted
 version: 1.0
@@ -128,12 +173,12 @@ Possible partition types that can be corrupted are,
 | Partition with wide parts                     |
 | Partition with compact and wide parts (mixed) |
 
-### Conditions
+### Conditions  
 ToDo
 
-### Role Based Access Control
+### Role Based Access Control  
 
-#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.RBAC
+#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.RBAC  
 version: 1.0
 
 The `ATTACH PARTITION` SHALL only work when the user has the following privileges for table:
