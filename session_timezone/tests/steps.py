@@ -11,7 +11,6 @@ def clickhouse_local(
         node = self.context.cluster.node("clickhouse1")
 
     with When("I make clickhouse local query"):
-        # options = "--multiquery" if check_clickhouse_version("<23.9") else ""
         node.command(
             f'TZ={timezone} clickhouse local -q  "{query}" --multiquery', message=f"{message}"
         )
