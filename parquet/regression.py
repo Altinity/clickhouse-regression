@@ -180,7 +180,7 @@ ffails = {
     "/parquet/encrypted/": (
         Skip,
         "Different error message on 23.8",
-        check_clickhouse_version("<=23.9"),
+        check_clickhouse_version("<=23.12"),
     ),
     "/parquet/compression/*": (
         Skip,
@@ -295,7 +295,7 @@ ffails = {
     "/parquet/datatypes/string int list inconsistent offset multiple batches": (
         Skip,
         "The fix not implemented yet",
-        check_clickhouse_version("<23.10.1"),
+        check_clickhouse_version("<23.12"),
     ),
     "/parquet/aws s3/s3/compression type/=NONE /engine/insert into engine": (
         Skip,
