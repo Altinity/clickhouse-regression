@@ -311,12 +311,24 @@ Possible partition types that can be corrupted are,
 | Partition with compact and wide parts (mixed) |
 
 ### Conditions
-For the query to run successfully, the following conditions must be met:
 
-Both tables must have the same structure.
-Both tables must have the same partition key, the same order by key and the same primary key.
-Both tables must have the same indices and projections.
-Both tables must have the same storage policy.
+#### Rules for Attach Partition From
+
+##### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions
+version: 1.0
+
+[ClickHouse] SHALL support the usage of `ATTACH PARTITION FROM` only when,
+
+* Both tables have the same structure.
+* Both tables have the same `ORDER BY` key, and the same primary key.
+* Both tables have the same storage policy.
+
+#### Tables With Different Structure
+
+##### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Different.Structure
+version: 1.0
+
+[ClickHouse] SHALL not support the usage of `REPLACE PARTITION` when tables have different structure.
 
 ### Role Based Access Control
 
