@@ -9,7 +9,7 @@
 * 3 [Flowchart](#flowchart)
 * 4 [Definitions](#definitions)
 * 5 [User Actions](#user-actions)
-* 6 [What Is the Difference Between Fetch Partition and Replace Partition](#what-is-the-difference-between-fetch-partition-and-replace-partition)
+* 6 [Difference Between Fetch Partition and Replace Partition](#difference-between-fetch-partition-and-replace-partition)
 * 7 [Replace Partition on the Table From Another Table](#replace-partition-on-the-table-from-another-table)
     * 7.1 [RQ.SRS-032.ClickHouse.Alter.Table.ReplacePartition](#rqsrs-032clickhousealtertablereplacepartition)
     * 7.2 [Reflect Changes in Table Partitions Inside the System Table](#reflect-changes-in-table-partitions-inside-the-system-table)
@@ -221,7 +221,7 @@ Destination Table - The table in which a specific partition is going to be repla
 | `RENAME COLUMN`                | `RENAME COLUMN [IF EXISTS] name to new_name`                                                                                 |
 | `OPTIMIZE`                     | `OPTIMIZE TABLE [db.]name [ON CLUSTER cluster] [PARTITION partition] [FINAL] [DEDUPLICATE [BY expression]]`                  |
 
-## What Is the Difference Between Fetch Partition and Replace Partition
+## Difference Between Fetch Partition and Replace Partition
 
 `REPLACE PARTITION`: This command is used to copy a data partition from one table (source) to another (destination), replacing the existing partition in destination table with the one from the source table.
 
@@ -935,7 +935,7 @@ The `REPLACE PARTITION` SHALL only work when the user has the following privileg
 | SELECT | ALTER, INSERT        |
 
 [ClickHouse]: https://clickhouse.com
-[GitHub Repository]: https://github.com/Altinity/clickhouse-regression/blob/main/alter/requirements/requirements.md
-[Revision History]: https://github.com/Altinity/clickhouse-regression/commits/main/alter/requirements/requirements.md
+[GitHub Repository]: https://github.com/Altinity/clickhouse-regression/blob/main/alter/table/replace_partition/requirements/requirements.md
+[Revision History]: https://github.com/Altinity/clickhouse-regression/commits/main/alter/table/replace_partition/requirements/requirements.md
 [Git]: https://git-scm.com/
 [GitHub]: https://github.com
