@@ -1,5 +1,4 @@
-# SRS034 ClickHouse Alter Table Attach Partition|Part, Alter Table Attach Partition From
-
+# SRS034 ClickHouse Alter Table Attach Partition
 # Software Requirements Specification
 
 ## Table of Contents
@@ -52,59 +51,75 @@
 ## Revision History
 
 This document is stored in an electronic form using [Git] source control management software
-hosted in a [GitHub Repository].
-All the updates are tracked using the [Revision History].
+hosted in a [GitHub Repository]. All the updates are tracked using the [Revision History].
 
 ## Introduction
 
-This software requirements specification covers requirements for `ALTER TABLE ATTACH PARTITION|PART` and `ALTER TABLE ATTACH PARTITION FROM` in [ClickHouse].
+This software requirements specification covers requirements for `ALTER TABLE ATTACH PARTITION|PART` and `ALTER TABLE ATTACH PARTITION FROM` statement in [ClickHouse].
 
 The documentation used:
 
 - https://clickhouse.com/docs/en/sql-reference/statements/alter/partition#attach-partitionpart
 - https://clickhouse.com/docs/en/sql-reference/statements/alter/partition#attach-partition-from
 
-## Attach Partition or Part
+## Test Analysis
 
-### Flowchart
+...
 
-```mermaid
-graph TD;
-subgraph Attach Partition Flow
-  A[Start]
-  A -->|1. User Initiates| B(Execute ALTER TABLE ATTACH PARTITION or PART)
-  B -->|2. Specify table and partition expression| C{Is table name valid?}
-  C -->|Yes| D[Check data existance]
-  C -->|No| E[Show error message]
-  D -->|3. check | F{Is data in the detached directory?}
-  F -->|Yes| G[Check data integrity]
-  F -->|No| H[Show error message]
-  G -->|4. Validate checksums| I{Are checksums correct?}
-  I -->|Yes|K[Retrieve partition data]
-  I -->|No| L[Show error message]
-  K -->|Attach partition|M[Add data to the table]
-end
+## Attaching Partitions or Parts
+
+### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition
+
+[ClickHouse] SHALL support the following queries for attaching partition or part to the table
+either from the `detached` directory or from another table.
+
+```sql
+ALTER TABLE table_name [ON CLUSTER cluster] ATTACH PARTITION|PART partition_expr
+ALTER TABLE table2 [ON CLUSTER cluster] ATTACH PARTITION partition_expr FROM table1
 ```
 
-### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionPart
+## Supported Table Engines
+
+#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.SupportedTableEngines
 version: 1.0
 
-To facilitate efficient data management in [ClickHouse], the feature `ATTACH PARTITION|PART` SHALL be supported.  This feature allows users to add data to the table from the `detached` directory using the `ATTACH PARTITION|PART` command. 
+[ClickHouse] SHALL support the following table engines for the `ATTACH PARTITION|PART` queries:
 
-The following SQL command exemplifies this feature:
+|       Supported Engines        |
+|:------------------------------:|
+|          `MergeTree`           | 
+|      `ReplacingMergeTree`      |
+|     `AggregatingMergeTree`     |
+|     `CollapsingMergeTree`      |
+| `VersionedCollapsingMergeTree` |
+|      `GraphiteMergeTree`       |
+|      `SummingMergeTree`        |
+
+and their `Replicated` versions.
+
+## Storage Policies
+
+### Tiered Storage
+
+### Object Storage
+....
+
+## Attach Partition or Part From the Detached Folder
+
+### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionOrPart
+version: 1.0
+
+[ClickHouse] SHALL support `ATTACH PARTITION|PART` ALTER query.
+
+This query SHALL allow the user to add data, either a full PARTITITION or a single PART to the table from the `detached` directory. 
 
 ```sql
 ALTER TABLE table_name [ON CLUSTER cluster] ATTACH PARTITION|PART partition_expr
 ```
 
-### Reflect Changes in Table Partitions Inside the System Table  
+After the query is executed the data SHALL be immediately available for querying.
 
-#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionPart.System.Parts
-version: 1.0
-
-[ClickHouse] SHALL reflect the changes in `system.parts` table, when the `ATTACH PARTITION|PART` is executed on the table. 
-
-For example,
+After the query is executed the changes to the table SHALL be present in the `system.parts` table. 
 
 ```sql
 SELECT partition, part_type
@@ -112,24 +127,25 @@ FROM system.parts
 WHERE table = 'table_1'
 ```
 
-### Table Engines on Which Attach Partition or Part Can Be Performed
+## Partition Types
 
-#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionPart.Supported.Engines
+#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartitionTypes
 version: 1.0
 
-[ClickHouse] SHALL limit the use of the `ATTACH PARTITION|PART` feature to table engines belonging to the MergeTree family. This requirement ensures compatibility and optimal performance. 
+| Partition Types                               |
+|-----------------------------------------------|
+| Partition with only compact parts             |
+| Partition with only wide parts                |
+| Partition with compact and wide parts (mixed) |
+| Partition with no parts                       |
+| Partition with empty parts                    |
 
-The table engines that support `ATTACH PARTITION|PART` include:
+The `ATTACH PARTITION` SHALL work for any partition type.
 
-|       Supported Engines        |
-|:------------------------------:|
-|          `MergeTree`           |   |
-|      `ReplacingMergeTree`      |
-|     `AggregatingMergeTree`     |
-|     `CollapsingMergeTree`      |
-| `VersionedCollapsingMergeTree` |
-|      `GraphiteMergeTree`       |
-|      `SummingMergeTree`        |
+## Corrupted Parts
+
+
+----------------------------------------------
 
 ### Table That Is Stored on S3  
 
@@ -145,18 +161,7 @@ version: 1.0
 
 [ClickHouse] SHALL support using `ATTACH PARTITION|PART` to attach partitions on tables that are stored inside the tiered storage.
 
-#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionPart.PartitionTypes
-version: 1.0
 
-| Partition Types                               |
-|-----------------------------------------------|
-| Partition with only compact parts             |
-| Partition with only wide parts                |
-| Partition with compact and wide parts (mixed) |
-| Partition with no parts                       |
-| Partition with empty parts                    |
-
-The `ATTACH PARTITION` SHALL work for any partition type.
 
 ### Corrupted Parts on a Specific Partition  
 
