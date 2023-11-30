@@ -328,7 +328,7 @@ version: 1.0
 ##### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Different.Structure
 version: 1.0
 
-[ClickHouse] SHALL not support the usage of `REPLACE PARTITION` when tables have different structure.
+[ClickHouse] SHALL not support the usage of `ATTACH PARTITION FROM` when tables have different structure.
 
 ### Role Based Access Control
 
