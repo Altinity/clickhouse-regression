@@ -6,7 +6,7 @@ volumes:
   clickhouse1_jbod1:
     driver: local
     driver_opts:
-      o: "size=40m"
+      o: "size=60m"
       device: tmpfs
       type: tmpfs
 
