@@ -64,7 +64,7 @@ The documentation used:
 - https://clickhouse.com/docs/en/sql-reference/statements/alter/partition#attach-partitionpart
 - https://clickhouse.com/docs/en/sql-reference/statements/alter/partition#attach-partition-from
 
-## Attach Partition|Part
+## Attach Partition or Part
 
 ### Flowchart
 
@@ -112,7 +112,7 @@ FROM system.parts
 WHERE table = 'table_1'
 ```
 
-### Table Engines on Which Attach Partition|Part Can Be Performed
+### Table Engines on Which Attach Partition or Part Can Be Performed
 
 #### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionPart.Supported.Engines
 version: 1.0
@@ -245,6 +245,13 @@ version: 1.0
 
 [ClickHouse] SHALL keep the data of the table from which the partition is copied from.
 
+### Temporary Tables
+
+#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.FromTemporaryTable
+version: 1.0
+
+[ClickHouse] SHALL support copying the data partition from the temporary table.
+
 ### Table That Is Stored on S3
 
 #### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.S3
@@ -304,7 +311,12 @@ Possible partition types that can be corrupted are,
 | Partition with compact and wide parts (mixed) |
 
 ### Conditions
-ToDo
+For the query to run successfully, the following conditions must be met:
+
+Both tables must have the same structure.
+Both tables must have the same partition key, the same order by key and the same primary key.
+Both tables must have the same indices and projections.
+Both tables must have the same storage policy.
 
 ### Role Based Access Control
 
@@ -322,3 +334,6 @@ The `ATTACH PARTITION` SHALL only work when the user has the following privilege
 * [ClickHouse]
 
 [ClickHouse]: https://clickhouse.com
+[GitHub Repository]: https://github.com/Altinity/clickhouse-regression/blob/attach_partition/alter/table/attach_partition/requirements/requirements.md
+[Revision History]: https://github.com/Altinity/clickhouse-regression/blob/attach_partition/alter/table/attach_partition/requirements/requirements.md
+[GitHub]: https://github.com
