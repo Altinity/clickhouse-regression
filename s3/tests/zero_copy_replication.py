@@ -2228,6 +2228,8 @@ def outline(self):
     else:
         self.context.zero_copy_replication_setting = "allow_s3_zero_copy_replication"
 
+    self.context.zero_copy_replication_setting = "allow_object_storage_vfs"
+
     with Given("I have two S3 disks configured"):
         uri_tiered = self.context.uri + "tiered/"
         # /zero-copy-replication/
