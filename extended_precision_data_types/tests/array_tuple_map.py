@@ -156,6 +156,9 @@ def array_func(self, data_type, node=None):
 
         else:
             with Scenario(f"Inline - {data_type} - {func})"):
+                if check_clickhouse_version(">=23.11")(self):
+                    self.context.snapshot_id = "tests.post23.11"
+
                 execute_query(
                     f"SELECT {func}array({to_data_type(data_type,3)}, {to_data_type(data_type,2)}, {to_data_type(data_type,1)}))"
                 )
