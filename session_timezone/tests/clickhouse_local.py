@@ -113,7 +113,7 @@ def date_datetime_column_types(self):
     node = self.context.cluster.node("clickhouse1")
     table_name = f"test_tz{getuid()}"
     with Check(
-        "I create table with DateTime('UTC') datatype and heck the way session_timezone setting affects "
+        "I create table with DateTime('UTC') datatype and check the way session_timezone setting affects "
         "parsing of Date or DateTime types"
     ):
         clickhouse_local(
