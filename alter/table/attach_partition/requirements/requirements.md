@@ -207,7 +207,7 @@ The `ALTER TABLE ATTACH PARTITION|PART` SHALL only work when the user has the fo
 ### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom
 version: 1.0
 
-[ClickHouse] SHALL support `ALTER TABLE ATTACH PARTITION FROM` statement. This feature SHALL allow the user to copy data partition from `source table` to `destination table`.
+[ClickHouse] SHALL support `ALTER TABLE ATTACH PARTITION FROM` statement. This feature SHALL allow the user to copy data partition from [source table] to [destination table].
 
 ```sql
 ALTER TABLE dest_table [ON CLUSTER cluster] ATTACH PARTITION partition_expr FROM src_table
@@ -224,7 +224,7 @@ ALTER TABLE dest_table [ON CLUSTER cluster] ATTACH PARTITION partition_expr FROM
 #### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.System.Parts
 version: 1.0
 
-[ClickHouse] SHALL reflect the changes in `system.parts` table, when the `ALTER TABLE ATTACH PARTITION FROM` is executed on the `destination table`. 
+[ClickHouse] SHALL reflect the changes in `system.parts` table, when the `ALTER TABLE ATTACH PARTITION FROM` is executed on the [destination table]. 
 
 For example,
 
@@ -239,7 +239,7 @@ WHERE table = 'table_1'
 #### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.KeepData
 version: 1.0
 
-[ClickHouse] SHALL keep the data of the `source table` from which the partition is copied from.
+[ClickHouse] SHALL keep the data of the [source table] from which the partition is copied from.
 
 ### Temporary Tables
 
@@ -254,7 +254,7 @@ version: 1.0
 #### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Replicas
 version: 1.0
 
-[ClickHouse] SHALL support using `ALTER TABLE ATTACH PARTITION FROM` to attach partitions on a destination table that is on a different replica than the source table.
+[ClickHouse] SHALL support using `ALTER TABLE ATTACH PARTITION FROM` to attach partitions on a [destination table] that is on a different replica than the [source table].
 
 ### Destination Table That Is on a Different Shard
 
@@ -272,7 +272,7 @@ version: 1.0
 * Both tables have the same primary key.
 * Both tables have the same storage policy.
 * Both tables have the same indices and projections.
-* Both tabels have the same partition key or the source table has more granular partitioning
+* Both tabels have the same partition key or the [source table] has more granular partitioning
 
 #### Tables With Different Structure
 
@@ -315,7 +315,7 @@ version: 1.0
 ##### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Different.Key.PartitionKey
 version: 1.0
 
-[ClickHouse] SHALL not support the usage of `ALTER TABLE ATTACH PARTITION FROM` when the target table has more granular partitioning than the source table. 
+[ClickHouse] SHALL not support the usage of `ALTER TABLE ATTACH PARTITION FROM` when the target table has more granular partitioning than the [source table]. 
 Is is allowed to attach partition from the table with different partition expression when destination partition expression does not re-partition.
 
 ### Role Based Access Control
@@ -333,6 +333,8 @@ The `ATTACH PARTITION` SHALL only work when the user has the following privilege
 ## References
 * [ClickHouse]
 
+[source table]: #source-table
+[destination table]: #destination-table
 [ClickHouse]: https://clickhouse.com
 [GitHub Repository]: https://github.com/Altinity/clickhouse-regression/blob/attach_partition/alter/table/attach_partition/requirements/requirements.md
 [Revision History]: https://github.com/Altinity/clickhouse-regression/blob/attach_partition/alter/table/attach_partition/requirements/requirements.md
