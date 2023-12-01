@@ -66,7 +66,7 @@ The documentation used:
 
 ### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition
 
-[ClickHouse] SHALL support the following queries for attaching partition or part to the table
+[ClickHouse] SHALL support the following statements for attaching partition or part to the table
 either from the `detached` directory or from another table.
 
 ```sql
@@ -79,7 +79,7 @@ ALTER TABLE table2 [ON CLUSTER cluster] ATTACH PARTITION partition_expr FROM tab
 #### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.SupportedTableEngines
 version: 1.0
 
-[ClickHouse] SHALL support the following table engines for the `ATTACH PARTITION|PART` queries:
+[ClickHouse] SHALL support the following table engines for the `ALTER TABLE ATTACH PARTITION|PART` and `ALTER TABLE ATTACH PARTITION FROM` statements:
 
 |       Supported Engines        |
 |:------------------------------:|
@@ -95,33 +95,19 @@ and their `Replicated` versions.
 
 ## Storage Policies
 
-### Tiered Storage
+### Table That Is Stored on S3  
 
-### Object Storage
-....
-
-## Attach Partition or Part From the Detached Folder
-
-### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionOrPart
+#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.S3  
 version: 1.0
 
-[ClickHouse] SHALL support `ATTACH PARTITION|PART` ALTER query.
+[ClickHouse] SHALL support using `ALTER TABLE ATTACH PARTITION|PART` and `ALTER TABLE ATTACH PARTITION FROM` statements with tables that are stored inside the S3 storage.
 
-This query SHALL allow the user to add data, either a full PARTITITION or a single PART to the table from the `detached` directory. 
+### Table That Is Stored on Tiered Storage  
 
-```sql
-ALTER TABLE table_name [ON CLUSTER cluster] ATTACH PARTITION|PART partition_expr
-```
+#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.TieredStorage
+version: 1.0
 
-After the query is executed the data SHALL be immediately available for querying.
-
-After the query is executed the changes to the table SHALL be present in the `system.parts` table. 
-
-```sql
-SELECT partition, part_type
-FROM system.parts
-WHERE table = 'table_1'
-```
+[ClickHouse] SHALL support using `ALTER TABLE ATTACH PARTITION|PART` and `ALTER TABLE ATTACH PARTITION FROM` statements with tables that are stored inside the tiered storage.
 
 ## Partition Types
 
@@ -136,32 +122,11 @@ version: 1.0
 | Partition with no parts                       |
 | Partition with empty parts                    |
 
-The `ATTACH PARTITION` SHALL work for any partition type.
+The `ALTER TABLE ATTACH PARTITION|PART` and `ALTER TABLE ATTACH PARTITION FROM` statements SHALL work for any partition type.
 
-## Corrupted Parts
+## Corrupted Parts on a Specific Partition  
 
-
-----------------------------------------------
-
-### Table That Is Stored on S3  
-
-#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionPart.S3  
-version: 1.0
-
-[ClickHouse] SHALL support using `ATTACH PARTITION|PART` to attach partitions on tables that are stored inside the S3 storage.
-
-### Table That Is Stored on Tiered Storage  
-
-#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionPart.TieredStorage
-version: 1.0
-
-[ClickHouse] SHALL support using `ATTACH PARTITION|PART` to attach partitions on tables that are stored inside the tiered storage.
-
-
-
-### Corrupted Parts on a Specific Partition  
-
-#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionPart.Corrupted
+#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.Corrupted
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to `ATTACH PARTITION` when parts of a specific partition are corrupted.
@@ -174,21 +139,53 @@ Possible partition types that can be corrupted are,
 | Partition with wide parts                     |
 | Partition with compact and wide parts (mixed) |
 
-### Conditions  
-ToDo
+## Attach Partition or Part From the Detached Folder
+
+### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionOrPart
+version: 1.0
+
+[ClickHouse] SHALL support `ALTER TABLE ATTACH PARTITION|PART` statement.
+
+This statement SHALL allow the user to add data, either a full `PARTITITION` or a single `PART` to the table from the `detached` directory. 
+
+```sql
+ALTER TABLE table_name [ON CLUSTER cluster] ATTACH PARTITION|PART [partition_expr]
+```
+
+After the query is executed the data SHALL be immediately available for querying on the specified table.
+
+### Reflect Changes in Table Partitions Inside the System Table
+
+#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionOrPart.System.Parts
+
+version: 1.0
+
+[ClickHouse] SHALL reflect the changes in `system.parts` table, when the `ALTER TABLE ATTACH PARTITION|PART` is executed. 
+
+For example,
+
+```sql
+SELECT partition, part_types
+FROM system.parts
+WHERE table = 'table_1'
+```
+
+### Conditions for Attaching Partition or Part from the Detached Folder
+
+...
 
 ### Role Based Access Control  
 
-#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.RBAC  
+#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionorPart.RBAC  
 version: 1.0
 
-The `ATTACH PARTITION` SHALL only work when the user has the following privileges for table:
+The `ALTER TABLE ATTACH PARTITION|PART` SHALL only work when the user has the following privileges for table:
 
 | Table priviliges     |
 |----------------------|
 | CREATE               |
 
-## Attach Partition From
+## Attach Partition From Another Table
 
 ### Definitions
 
@@ -198,11 +195,10 @@ Destination Table - The table in which a specific partition is going to be attac
 ### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom
 version: 1.0
 
-To facilitate efficient data management in [ClickHouse], the features `ATTACH PARTITION FROM`  SHALL be supported. This feature allows user to copy data partition from one table to another using the `ATTACH PARTITION FROM` command.
+[ClickHouse] SHALL support `ALTER TABLE ATTACH PARTITION FROM` statement. This feature SHALL allow the user to copy data partition from `source table` to `destination table`.
 
-The following SQL command exemplifies this feature:
 ```sql
-ALTER TABLE table2 [ON CLUSTER cluster] ATTACH PARTITION partition_expr FROM table1
+ALTER TABLE dest_table [ON CLUSTER cluster] ATTACH PARTITION partition_expr FROM src_table
 ```
 
 ### Reflect Changes in Table Partitions Inside the System Table
@@ -210,7 +206,7 @@ ALTER TABLE table2 [ON CLUSTER cluster] ATTACH PARTITION partition_expr FROM tab
 #### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.System.Parts
 version: 1.0
 
-[ClickHouse] SHALL reflect the changes in `system.parts` table, when the `ATTACH PARTITION FROM` is executed on the `destination table`. 
+[ClickHouse] SHALL reflect the changes in `system.parts` table, when the `ALTER TABLE ATTACH PARTITION FROM` is executed on the `destination table`. 
 
 For example,
 
@@ -220,31 +216,12 @@ FROM system.parts
 WHERE table = 'table_1'
 ```
 
-### Table Engines on Which Attach Partition From Can Be Performed
-
-#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Supported.Engines
-version: 1.0
-
-[ClickHouse] SHALL limit the use of the `ATTACH PARTITION FROM` feature to table engines belonging to the MergeTree family. This requirement ensures compatibility and optimal performance. 
-
-The table engines that support `ATTACH PARTITION FROM` include:
-
-|       Supported Engines        |
-|:------------------------------:|
-|          `MergeTree`           |   |
-|      `ReplacingMergeTree`      |
-|     `AggregatingMergeTree`     |
-|     `CollapsingMergeTree`      |
-| `VersionedCollapsingMergeTree` |
-|      `GraphiteMergeTree`       |
-|      `SummingMergeTree`        |
-
-### Keeping Data on the Source Table After Attach Partition From
+### Keeping Data on the Source Table 
 
 #### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.KeepData
 version: 1.0
 
-[ClickHouse] SHALL keep the data of the table from which the partition is copied from.
+[ClickHouse] SHALL keep the data of the `source table` from which the partition is copied from.
 
 ### Temporary Tables
 
@@ -253,83 +230,75 @@ version: 1.0
 
 [ClickHouse] SHALL support copying the data partition from the temporary table.
 
-### Table That Is Stored on S3
 
-#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.S3
+### Destination Table That Is on a Different Replica
+
+#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Replicas
 version: 1.0
 
-[ClickHouse] SHALL support using `ATTACH PARTITION FROM` to attach partitions on tables that are stored inside the S3 storage.
-
-### Table That Is Stored on Tiered Storage
-
-#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.TieredStorage
-version: 1.0
-
-[ClickHouse] SHALL support using `ATTACH PARTITION FROM` to attach partitions on tables that are stored inside the tiered storage.
-
-## Destination Table That Is on a Different Replica
-
-### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Replicas
-version: 1.0
-
-[ClickHouse] SHALL support using `ATTACH PARTITION FROM` to attach partitions on a destination table that is on a different replica than the source table.
+[ClickHouse] SHALL support using `ALTER TABLE ATTACH PARTITION FROM` to attach partitions on a destination table that is on a different replica than the source table.
 
 ### Destination Table That Is on a Different Shard
 
-### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Shards
+#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Shards
 version: 1.0
 
-[ClickHouse] SHALL support using `ATTACH PARTITION FROM` to attach partitions on tables that are on different shards.
-
-### Tables With Different Partition Types
-
-#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.PartitionTypes
-version: 1.0
-
-| Partition Types                               |
-|-----------------------------------------------|
-| Partition with only compact parts             |
-| Partition with only wide parts                |
-| Partition with compact and wide parts (mixed) |
-| Partition with no parts                       |
-| Partition with empty parts                    |
-
-The `ATTACH PARTITION` SHALL work for any partition type.
-
-### Corrupted Parts on a Specific Partition
-
-#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Corrupted
-version: 1.0
-
-[ClickHouse] SHALL output an error when trying to `ATTACH PARTITION FROM` when parts of a specific partition are corrupted.
-
-Possible partition types that can be corrupted are,
-
-| Partition Types                               |
-|-----------------------------------------------|
-| Partition with compact parts                  |
-| Partition with wide parts                     |
-| Partition with compact and wide parts (mixed) |
+[ClickHouse] SHALL support using `ALTER TABLE ATTACH PARTITION FROM` to attach partitions on tables that are on different shards.
 
 ### Conditions
 
-#### Rules for Attach Partition From
-
-##### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions
-version: 1.0
-
-[ClickHouse] SHALL support the usage of `ATTACH PARTITION FROM` only when,
+[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` only when,
 
 * Both tables have the same structure.
-* Both tables have the same `ORDER BY` key, and the same primary key.
+* Both tables have the same `ORDER BY` key.
+* Both tables have the same primary key.
 * Both tables have the same storage policy.
+* Both tables have the same indices and projections.
+* Both tabels have the same partition key or the source table has more granular partitioning
 
 #### Tables With Different Structure
 
 ##### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Different.Structure
 version: 1.0
 
-[ClickHouse] SHALL not support the usage of `ATTACH PARTITION FROM` when tables have different structure.
+[ClickHouse] SHALL not support the usage of `ALTER TABLE ATTACH PARTITION FROM` when tables have different structure.
+
+#### Tables With Different `ORDER BY` Key
+
+##### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Different.Key.OrderByKey
+version: 1.0
+
+[ClickHouse] SHALL not support the usage of `ALTER TABLE ATTACH PARTITION FROM` when tables have different `ORDER BY` key.
+
+#### Tables With Different Primary Key
+
+##### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Different.Key.PrimaryKey
+version: 1.0
+
+[ClickHouse] SHALL not support the usage of `ALTER TABLE ATTACH PARTITION FROM` when tables have different primary key.
+
+#### Tables With Different Storage Policy
+
+##### RQ.SRS-032.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Different.StoragePolicy
+version: 1.0
+
+[ClickHouse] SHALL not support the usage of `ALTER TABLE ATTACH PARTITION FROM` when tables have different storage
+policy.
+
+#### Tables With Different Indices and Projections
+
+##### RQ.SRS-032.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Different.IndicesAndProjections
+version: 1.0
+
+[ClickHouse] SHALL not support the usage of `ALTER TABLE ATTACH PARTITION FROM` when tables have different indices and projections.
+
+#### Tables With Different Partition Key
+
+##### RQ.SRS-032.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Different.Key.PartitionKey
+version: 1.0
+
+[ClickHouse] SHALL not support the usage of `ALTER TABLE ATTACH PARTITION FROM` when the target table has more granular partitioning than the source table. 
+Is is allowed to attach partition from the table with different partition expression when destination partition expression does not re-partition.
 
 ### Role Based Access Control
 
@@ -350,3 +319,4 @@ The `ATTACH PARTITION` SHALL only work when the user has the following privilege
 [GitHub Repository]: https://github.com/Altinity/clickhouse-regression/blob/attach_partition/alter/table/attach_partition/requirements/requirements.md
 [Revision History]: https://github.com/Altinity/clickhouse-regression/blob/attach_partition/alter/table/attach_partition/requirements/requirements.md
 [GitHub]: https://github.com
+[partition_expr]: https://clickhouse.com/docs/en/sql-reference/statements/alter/partition#how-to-set-partition-expression
