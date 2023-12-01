@@ -126,8 +126,8 @@ def feature(self):
         "stochasticLinearRegression",
         "stochasticLogisticRegression",
         "sumMap",
-        "maxMap",
-        "minMap",
+        "maxMap", 'maxMappedArrays',
+        "minMap", 'minMappedArrays',
         "quantileTDigestWeighted",
         "uniq",
         "uniqHLL12",  # problem on 22.8 and 23.8
