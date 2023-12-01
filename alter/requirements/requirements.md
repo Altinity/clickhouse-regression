@@ -36,7 +36,6 @@ version: 1.0
 The list of `ALTER` statements that are currently covered by the `ALTER` regression module:
 
 * [REPLACE PARTITION](https://github.com/Altinity/clickhouse-regression/blob/main/alter/table/replace_partition/requirements/requirements.md)
-* ATTACH PARTITION
 
 
 
