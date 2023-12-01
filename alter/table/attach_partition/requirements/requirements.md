@@ -8,16 +8,16 @@
 * 3 [Attaching Partitions or Parts](#attaching-partitions-or-parts)
     * 3.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition](#rqsrs-034clickhousealtertableattachpartition)
 * 4 [Supported Table Engines](#supported-table-engines)
-        * 4.1.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.SupportedTableEngines](#rqsrs-034clickhousealtertableattachpartitionsupportedtableengines)
+    * 4.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.SupportedTableEngines](#rqsrs-034clickhousealtertableattachpartitionsupportedtableengines)
 * 5 [Storage Policies](#storage-policies)
     * 5.1 [Table That Is Stored on S3  ](#table-that-is-stored-on-s3-)
         * 5.1.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.S3  ](#rqsrs-034clickhousealtertableattachpartitions3-)
     * 5.2 [Table That Is Stored on Tiered Storage  ](#table-that-is-stored-on-tiered-storage-)
         * 5.2.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.TieredStorage](#rqsrs-034clickhousealtertableattachpartitiontieredstorage)
 * 6 [Partition Types](#partition-types)
-        * 6.2.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartitionTypes](#rqsrs-034clickhousealtertableattachpartitionpartitiontypes)
+    * 6.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartitionTypes](#rqsrs-034clickhousealtertableattachpartitionpartitiontypes)
 * 7 [Corrupted Parts on a Specific Partition  ](#corrupted-parts-on-a-specific-partition-)
-        * 7.2.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.Corrupted](#rqsrs-034clickhousealtertableattachpartitioncorrupted)
+    * 7.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.Corrupted](#rqsrs-034clickhousealtertableattachpartitioncorrupted)
 * 8 [Attach Partition or Part From the Detached Folder](#attach-partition-or-part-from-the-detached-folder)
     * 8.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionOrPart](#rqsrs-034clickhousealtertableattachpartitionorpart)
     * 8.2 [Reflect Changes in Table Partitions Inside the System Table  ](#reflect-changes-in-table-partitions-inside-the-system-table-)
@@ -83,7 +83,7 @@ ALTER TABLE table2 [ON CLUSTER cluster] ATTACH PARTITION partition_expr FROM tab
 
 ## Supported Table Engines
 
-#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.SupportedTableEngines
+### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.SupportedTableEngines
 version: 1.0
 
 [ClickHouse] SHALL support the following table engines for the `ALTER TABLE ATTACH PARTITION|PART` and `ALTER TABLE ATTACH PARTITION FROM` statements:
@@ -118,7 +118,7 @@ version: 1.0
 
 ## Partition Types
 
-#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartitionTypes
+### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartitionTypes
 version: 1.0
 
 | Partition Types                               |
@@ -133,7 +133,7 @@ The `ALTER TABLE ATTACH PARTITION|PART` and `ALTER TABLE ATTACH PARTITION FROM` 
 
 ## Corrupted Parts on a Specific Partition  
 
-#### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.Corrupted
+### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.Corrupted
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to `ATTACH PARTITION` when parts of a specific partition are corrupted.
