@@ -46,11 +46,11 @@
         * 9.8.3 [Tables With Different Primary Key](#tables-with-different-primary-key)
             * 9.8.3.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Different.Key.PrimaryKey](#rqsrs-034clickhousealtertableattachpartitionfromconditionsdifferentkeyprimarykey)
         * 9.8.4 [Tables With Different Storage Policy](#tables-with-different-storage-policy)
-            * 9.8.4.1 [RQ.SRS-032.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Different.StoragePolicy](#rqsrs-032clickhousealtertableattachpartitionfromconditionsdifferentstoragepolicy)
+            * 9.8.4.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Different.StoragePolicy](#rqsrs-034clickhousealtertableattachpartitionfromconditionsdifferentstoragepolicy)
         * 9.8.5 [Tables With Different Indices and Projections](#tables-with-different-indices-and-projections)
-            * 9.8.5.1 [RQ.SRS-032.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Different.IndicesAndProjections](#rqsrs-032clickhousealtertableattachpartitionfromconditionsdifferentindicesandprojections)
+            * 9.8.5.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Different.IndicesAndProjections](#rqsrs-034clickhousealtertableattachpartitionfromconditionsdifferentindicesandprojections)
         * 9.8.6 [Tables With Different Partition Key](#tables-with-different-partition-key)
-            * 9.8.6.1 [RQ.SRS-032.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Different.Key.PartitionKey](#rqsrs-032clickhousealtertableattachpartitionfromconditionsdifferentkeypartitionkey)
+            * 9.8.6.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Different.Key.PartitionKey](#rqsrs-034clickhousealtertableattachpartitionfromconditionsdifferentkeypartitionkey)
     * 9.9 [Role Based Access Control](#role-based-access-control)
         * 9.9.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.RBAC](#rqsrs-034clickhousealtertableattachpartitionrbac)
 * 10 [References](#references)
@@ -286,7 +286,7 @@ version: 1.0
 
 #### Tables With Different Storage Policy
 
-##### RQ.SRS-032.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Different.StoragePolicy
+##### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Different.StoragePolicy
 version: 1.0
 
 [ClickHouse] SHALL not support the usage of `ALTER TABLE ATTACH PARTITION FROM` when tables have different storage
@@ -294,14 +294,14 @@ policy.
 
 #### Tables With Different Indices and Projections
 
-##### RQ.SRS-032.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Different.IndicesAndProjections
+##### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Different.IndicesAndProjections
 version: 1.0
 
 [ClickHouse] SHALL not support the usage of `ALTER TABLE ATTACH PARTITION FROM` when tables have different indices and projections.
 
 #### Tables With Different Partition Key
 
-##### RQ.SRS-032.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Different.Key.PartitionKey
+##### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Different.Key.PartitionKey
 version: 1.0
 
 [ClickHouse] SHALL not support the usage of `ALTER TABLE ATTACH PARTITION FROM` when the target table has more granular partitioning than the source table. 
