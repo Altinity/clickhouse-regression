@@ -69,6 +69,16 @@ The documentation used:
 - https://clickhouse.com/docs/en/sql-reference/statements/alter/partition#attach-partitionpart
 - https://clickhouse.com/docs/en/sql-reference/statements/alter/partition#attach-partition-from
 
+## Definitions
+
+### Source Table
+
+The table from which a partition or part is taken.
+
+### Destination Table
+
+The table to which a partition or part is going to be attached.
+
 ## Attaching Partitions or Parts
 
 ### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition
@@ -193,11 +203,6 @@ The `ALTER TABLE ATTACH PARTITION|PART` SHALL only work when the user has the fo
 | CREATE               |
 
 ## Attach Partition From Another Table
-
-### Definitions
-
-Source Table - The table from which a partition is taken.
-Destination Table - The table in which a specific partition is going to be attached.
 
 ### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom
 version: 1.0
