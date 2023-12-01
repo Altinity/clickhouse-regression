@@ -5,8 +5,13 @@ from testflows.core import *
 
 append_path(sys.path, "../../..")
 
+from alter.table.replace_partition.requirements.requirements import (
+    SRS032_ClickHouse_Alter_Table_Replace_Partition,
+)
+
 
 @TestFeature
+@Specifications(SRS032_ClickHouse_Alter_Table_Replace_Partition)
 @Name("replace partition")
 def feature(self):
     """Run features from the replace partition suite."""
