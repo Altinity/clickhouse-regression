@@ -207,6 +207,12 @@ version: 1.0
 ```sql
 ALTER TABLE dest_table [ON CLUSTER cluster] ATTACH PARTITION partition_expr FROM src_table
 ```
+### Validation of Partition Expression
+
+- Valid or not
+- partition exists or not
+- partition exists but no right to access files
+
 
 ### Reflect Changes in Table Partitions Inside the System Table
 
