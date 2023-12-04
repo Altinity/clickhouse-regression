@@ -374,13 +374,14 @@ def add_replica(self):
                 """The size of the s3 bucket should be 1 byte more
                       than previously because of the additional replica"""
             ):
-                assert size_after + 1 == get_bucket_size(
+                size = get_bucket_size(
                     name=bucket_name,
                     prefix=bucket_path,
                     minio_enabled=minio_enabled,
                     access_key=self.context.secret_access_key,
                     key_id=self.context.access_key_id,
-                ), error()
+                )
+                assert size_after + 1 == size, error()
 
             with And("I check simple queries on the first node"):
                 check_query_node(
