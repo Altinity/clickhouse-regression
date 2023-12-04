@@ -186,7 +186,7 @@ def replace_partition_with_corrupted_parts(self):
 @Name("corrupted partitions")
 def feature(self, node="clickhouse1"):
     """
-    Check how clickhouse behaves when replacing partition on tables with corrupted partitions.
+    Check how clickhouse behaves when replacing partition on tables with corrupted parts inside partitions.
 
     Combinations:
     * None of the parts are corrupted
