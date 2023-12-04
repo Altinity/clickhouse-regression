@@ -9,7 +9,7 @@ append_path(sys.path, "..")
 
 from helpers.cluster import Cluster
 from s3.regression import argparser
-from alter.table.replace_partition.requirements.requirements import *
+from alter.requirements.requirements import *
 from helpers.datatypes import *
 
 xfails = {
@@ -79,7 +79,7 @@ ffails = {
 @XFails(xfails)
 @XFlags(xflags)
 @FFails(ffails)
-@Requirements(RQ_SRS_032_ClickHouse_Alter_Table_ReplacePartition("1.0"))
+@Specifications(SRS032_ClickHouse_Alter)
 @Name("alter")
 def regression(
     self,
