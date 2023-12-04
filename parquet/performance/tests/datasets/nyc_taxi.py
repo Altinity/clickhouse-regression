@@ -67,9 +67,9 @@ SELECT
     pickup_ntaname,
     dropoff_ntaname
 FROM s3(
-    'https://datasets-documentation.s3.eu-west-3.amazonaws.com/nyc-taxi/trips_*.gz',
-    'TabSeparatedWithNames'
-);
+    'https://altinity-clickhouse-data.s3.amazonaws.com/nyc_taxi_rides/data/tripdata_native/data-*.bin.gz',
+    'Native'
+) SETTINGS max_threads={threads}, max_insert_threads={threads}, input_format_parallel_parsing=0, max_memory_usage={max_memory_usage};
             """,
             progress=True,
             timeout=3600,
