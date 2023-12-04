@@ -46,30 +46,7 @@ PRIMARY KEY (pickup_datetime, dropoff_datetime);
         )
 
         clickhouse_node.query(
-            f"""
-            INSERT INTO {table_name}
-SELECT
-    trip_id,
-    pickup_datetime,
-    dropoff_datetime,
-    pickup_longitude,
-    pickup_latitude,
-    dropoff_longitude,
-    dropoff_latitude,
-    passenger_count,
-    trip_distance,
-    fare_amount,
-    extra,
-    tip_amount,
-    tolls_amount,
-    total_amount,
-    payment_type,
-    pickup_ntaname,
-    dropoff_ntaname
-FROM s3(
-    'https://altinity-clickhouse-data.s3.amazonaws.com/nyc_taxi_rides/data/tripdata_native/data-*.bin.gz',
-    'Native'
-) SETTINGS max_threads={threads}, max_insert_threads={threads}, input_format_parallel_parsing=0, max_memory_usage={max_memory_usage};
+            f"""INSERT INTO {table_name} SELECT * FROM s3('https://altinity-clickhouse-data.s3.amazonaws.com/nyc_taxi_rides/data/tripdata_native/data-*.bin.gz','CSVWithNames') SETTINGS max_threads={threads}, max_insert_threads={threads}, input_format_parallel_parsing=0, max_memory_usage={max_memory_usage};
             """,
             progress=True,
             timeout=3600,
