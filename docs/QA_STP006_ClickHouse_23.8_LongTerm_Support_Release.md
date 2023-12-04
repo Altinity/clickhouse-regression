@@ -461,6 +461,8 @@ The following client drivers SHALL be tested for compatibility:
 
 #### Python `clickhouse_driver`
 
+clickhouse-driver version: 0.2.6
+
 Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/23.8-lts/clickhouse-driver/
 
 The [clickhouse-driver](https://github.com/mymarilyn/clickhouse-driver) driver.
@@ -473,12 +475,16 @@ Status: [Fail](https://github.com/mymarilyn/clickhouse-driver/issues/403)
 
 #### ODBC `clickhouse-odbc`
 
+clickhouse-odbc version: v1.2.1.20220905
+
 Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/23.8-lts/clickhouse-odbc/
 
 The operation of [clickhouse-odbc](https://github.com/ClickHouse/clickhouse-odbc) driver.
 
 
 #### SQLAlchemy
+
+clickhouse-sqlalchemy version: 0.3.0
 
 Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/23.8-lts/clickhouse-sqlalchemy/
 
@@ -487,7 +493,11 @@ The [clickhouse-sqlalchemy](https://github.com/xzkostyan/clickhouse-sqlalchemy) 
 
 #### Java `clickhouse-jdbc`
 
+clickhouse-jdbc version: v0.5.0
+
 Results: https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/23.8-lts/clickhouse-jdbc/
+
+DBeaver version: 23.2.5
 
 Results (DBeaver): https://altinity-internal-test-reports.s3.amazonaws.com/index.html#reports/23.8-lts/clickhouse-jdbc/DBeaver/
 

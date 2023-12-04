@@ -1,0 +1,1360 @@
+Inline___Int128___empty__ = r"""
+empty(array(toInt128(\'3\'), toInt128(\'2\'), toInt128(\'1\')))
+0
+"""
+
+Table___Int128___empty__ = r"""
+a
+0
+"""
+
+Inline___Int128___notEmpty__ = r"""
+notEmpty(array(toInt128(\'3\'), toInt128(\'2\'), toInt128(\'1\')))
+1
+"""
+
+Table___Int128___notEmpty__ = r"""
+a
+1
+"""
+
+Inline___Int128___length__ = r"""
+length(array(toInt128(\'3\'), toInt128(\'2\'), toInt128(\'1\')))
+3
+"""
+
+Table___Int128___length__ = r"""
+a
+3
+"""
+
+Inline___Int128___arrayCount_x____x____1___ = r"""
+arrayCount(lambda(tuple(x), equals(x, 1)), array(toInt128(\'3\'), toInt128(\'2\'), toInt128(\'1\')))
+1
+"""
+
+Table___Int128___arrayCount_x____x____1___ = r"""
+a
+1
+"""
+
+Inline___Int128___arrayUniq__ = r"""
+arrayUniq(array(toInt128(\'3\'), toInt128(\'2\'), toInt128(\'1\')))
+3
+"""
+
+Table___Int128___arrayUniq__ = r"""
+a
+3
+"""
+
+Inline___Int128___arrayJoin__ = r"""
+arrayJoin(array(toInt128(\'3\'), toInt128(\'2\'), toInt128(\'1\')))
+3
+2
+1
+"""
+
+Table___Int128___arrayJoin__ = r"""
+a
+1
+2
+3
+"""
+
+Inline___Int128___arrayExists_x____x__1__ = r"""
+arrayExists(lambda(tuple(x), equals(x, 1)), array(toInt128(\'3\'), toInt128(\'2\'), toInt128(\'1\')))
+1
+"""
+
+Table___Int128___arrayExists_x____x__1__ = r"""
+a
+1
+"""
+
+Inline___Int128___arrayAll_x____x__1__ = r"""
+arrayAll(lambda(tuple(x), equals(x, 1)), array(toInt128(\'3\'), toInt128(\'2\'), toInt128(\'1\')))
+0
+"""
+
+Table___Int128___arrayAll_x____x__1__ = r"""
+a
+0
+"""
+
+Inline___Int128___arrayMin__ = r"""
+arrayMin(array(toInt128(\'3\'), toInt128(\'2\'), toInt128(\'1\')))
+1
+"""
+
+Table___Int128___arrayMin__ = r"""
+a
+1
+"""
+
+Inline___Int128___arrayMax__ = r"""
+arrayMax(array(toInt128(\'3\'), toInt128(\'2\'), toInt128(\'1\')))
+3
+"""
+
+Table___Int128___arrayMax__ = r"""
+a
+3
+"""
+
+Inline___Int128___arraySum__ = r"""
+arraySum(array(toInt128(\'3\'), toInt128(\'2\'), toInt128(\'1\')))
+6
+"""
+
+Table___Int128___arraySum__ = r"""
+a
+6
+"""
+
+Inline___Int128___arrayAvg__ = r"""
+arrayAvg(array(toInt128(\'3\'), toInt128(\'2\'), toInt128(\'1\')))
+2
+"""
+
+Table___Int128___arrayAvg__ = r"""
+a
+2
+"""
+
+Inline___Int128___arrayReduce__max____ = r"""
+arrayReduce(\'max\', array(toInt128(\'3\'), toInt128(\'2\'), toInt128(\'1\')))
+3
+"""
+
+Table___Int128___arrayReduce__max____ = r"""
+a
+3
+"""
+
+Inline___Int128___arrayFirst_x____x__3__ = r"""
+arrayFirst(lambda(tuple(x), equals(x, 3)), array(toInt128(\'3\'), toInt128(\'2\'), toInt128(\'1\')))
+3
+"""
+
+Table___Int128___arrayFirst_x____x__3__ = r"""
+a
+3
+"""
+
+Inline___Int128___arrayFirstIndex_x____x__3__ = r"""
+arrayFirstIndex(lambda(tuple(x), equals(x, 3)), array(toInt128(\'3\'), toInt128(\'2\'), toInt128(\'1\')))
+1
+"""
+
+Table___Int128___arrayFirstIndex_x____x__3__ = r"""
+a
+1
+"""
+
+Inline___Int128___hasAll__toInt128__3____toInt128__2____toInt128__1______ = r"""
+hasAll(array(toInt128(\'3\'), toInt128(\'2\'), toInt128(\'1\')), array(toInt128(\'3\'), toInt128(\'2\'), toInt128(\'1\')))
+1
+"""
+
+Table___Int128___hasAll__toInt128__3____toInt128__2____toInt128__1______ = r"""
+a
+1
+"""
+
+Inline___Int128___hasAny__toInt128__2____toInt128__1______ = r"""
+hasAny(array(toInt128(\'2\'), toInt128(\'1\')), array(toInt128(\'3\'), toInt128(\'2\'), toInt128(\'1\')))
+1
+"""
+
+Table___Int128___hasAny__toInt128__2____toInt128__1______ = r"""
+a
+1
+"""
+
+Inline___Int128___hasSubstr__toInt128__2____toInt128__1______ = r"""
+hasSubstr(array(toInt128(\'2\'), toInt128(\'1\')), array(toInt128(\'3\'), toInt128(\'2\'), toInt128(\'1\')))
+0
+"""
+
+Table___Int128___hasSubstr__toInt128__2____toInt128__1______ = r"""
+a
+0
+"""
+
+Table___Int128___arrayDifference__ = r"""
+a
+"""
+
+Table___Int128___arrayCumSum__ = r"""
+a
+"""
+
+Table___Int128___arrayCumSumNonNegative__ = r"""
+a
+"""
+
+Inline___Int128___arrayElement = r"""
+arrayElement(array(toInt128(\'3\'), toInt128(\'2\'), toInt128(\'1\')), 1)
+3
+"""
+
+Table___Int128___arrayElement = r"""
+a
+3
+"""
+
+Inline___Int128___arrayPushBack = r"""
+arrayPushBack(array(toInt128(\'3\'), toInt128(\'2\'), toInt128(\'1\')), toInt128(\'1\'))
+[3,2,1,1]
+"""
+
+Table___Int128___arrayPushBack = r"""
+a
+[3,2,1,1]
+"""
+
+Inline___Int128___arrayPushFront = r"""
+arrayPushFront(array(toInt128(\'3\'), toInt128(\'2\'), toInt128(\'1\')), toInt128(\'1\'))
+[1,3,2,1]
+"""
+
+Table___Int128___arrayPushFront = r"""
+a
+[1,3,2,1]
+"""
+
+Inline___Int128___arrayResize = r"""
+arrayResize(array(toInt128(\'3\'), toInt128(\'2\'), toInt128(\'1\')), 1)
+[3]
+"""
+
+Table___Int128___arrayResize = r"""
+a
+[3]
+"""
+
+Inline___Int128___arraySlice = r"""
+arraySlice(array(toInt128(\'3\'), toInt128(\'2\'), toInt128(\'1\')), 1)
+[3,2,1]
+"""
+
+Table___Int128___arraySlice = r"""
+a
+[3,2,1]
+"""
+
+Inline___Int128___has = r"""
+has(array(toInt128(\'3\'), toInt128(\'2\'), toInt128(\'1\')), NULL)
+0
+"""
+
+Table___Int128___has = r"""
+a
+0
+"""
+
+Inline___Int128___indexOf = r"""
+indexOf(array(toInt128(\'3\'), toInt128(\'2\'), toInt128(\'1\')), NULL)
+0
+"""
+
+Table___Int128___indexOf = r"""
+a
+0
+"""
+
+Inline___Int128___countEqual = r"""
+countEqual(array(toInt128(\'3\'), toInt128(\'2\'), toInt128(\'1\')), NULL)
+0
+"""
+
+Table___Int128___countEqual = r"""
+a
+0
+"""
+
+Inline___Int256___empty__ = r"""
+empty(array(toInt256(\'3\'), toInt256(\'2\'), toInt256(\'1\')))
+0
+"""
+
+Table___Int256___empty__ = r"""
+a
+0
+"""
+
+Inline___Int256___notEmpty__ = r"""
+notEmpty(array(toInt256(\'3\'), toInt256(\'2\'), toInt256(\'1\')))
+1
+"""
+
+Table___Int256___notEmpty__ = r"""
+a
+1
+"""
+
+Inline___Int256___length__ = r"""
+length(array(toInt256(\'3\'), toInt256(\'2\'), toInt256(\'1\')))
+3
+"""
+
+Table___Int256___length__ = r"""
+a
+3
+"""
+
+Inline___Int256___arrayCount_x____x____1___ = r"""
+arrayCount(lambda(tuple(x), equals(x, 1)), array(toInt256(\'3\'), toInt256(\'2\'), toInt256(\'1\')))
+1
+"""
+
+Table___Int256___arrayCount_x____x____1___ = r"""
+a
+1
+"""
+
+Inline___Int256___arrayUniq__ = r"""
+arrayUniq(array(toInt256(\'3\'), toInt256(\'2\'), toInt256(\'1\')))
+3
+"""
+
+Table___Int256___arrayUniq__ = r"""
+a
+3
+"""
+
+Inline___Int256___arrayJoin__ = r"""
+arrayJoin(array(toInt256(\'3\'), toInt256(\'2\'), toInt256(\'1\')))
+3
+2
+1
+"""
+
+Table___Int256___arrayJoin__ = r"""
+a
+1
+2
+3
+"""
+
+Inline___Int256___arrayExists_x____x__1__ = r"""
+arrayExists(lambda(tuple(x), equals(x, 1)), array(toInt256(\'3\'), toInt256(\'2\'), toInt256(\'1\')))
+1
+"""
+
+Table___Int256___arrayExists_x____x__1__ = r"""
+a
+1
+"""
+
+Inline___Int256___arrayAll_x____x__1__ = r"""
+arrayAll(lambda(tuple(x), equals(x, 1)), array(toInt256(\'3\'), toInt256(\'2\'), toInt256(\'1\')))
+0
+"""
+
+Table___Int256___arrayAll_x____x__1__ = r"""
+a
+0
+"""
+
+Inline___Int256___arrayMin__ = r"""
+arrayMin(array(toInt256(\'3\'), toInt256(\'2\'), toInt256(\'1\')))
+1
+"""
+
+Table___Int256___arrayMin__ = r"""
+a
+1
+"""
+
+Inline___Int256___arrayMax__ = r"""
+arrayMax(array(toInt256(\'3\'), toInt256(\'2\'), toInt256(\'1\')))
+3
+"""
+
+Table___Int256___arrayMax__ = r"""
+a
+3
+"""
+
+Inline___Int256___arraySum__ = r"""
+arraySum(array(toInt256(\'3\'), toInt256(\'2\'), toInt256(\'1\')))
+6
+"""
+
+Table___Int256___arraySum__ = r"""
+a
+6
+"""
+
+Inline___Int256___arrayAvg__ = r"""
+arrayAvg(array(toInt256(\'3\'), toInt256(\'2\'), toInt256(\'1\')))
+2
+"""
+
+Table___Int256___arrayAvg__ = r"""
+a
+2
+"""
+
+Inline___Int256___arrayReduce__max____ = r"""
+arrayReduce(\'max\', array(toInt256(\'3\'), toInt256(\'2\'), toInt256(\'1\')))
+3
+"""
+
+Table___Int256___arrayReduce__max____ = r"""
+a
+3
+"""
+
+Inline___Int256___arrayFirst_x____x__3__ = r"""
+arrayFirst(lambda(tuple(x), equals(x, 3)), array(toInt256(\'3\'), toInt256(\'2\'), toInt256(\'1\')))
+3
+"""
+
+Table___Int256___arrayFirst_x____x__3__ = r"""
+a
+3
+"""
+
+Inline___Int256___arrayFirstIndex_x____x__3__ = r"""
+arrayFirstIndex(lambda(tuple(x), equals(x, 3)), array(toInt256(\'3\'), toInt256(\'2\'), toInt256(\'1\')))
+1
+"""
+
+Table___Int256___arrayFirstIndex_x____x__3__ = r"""
+a
+1
+"""
+
+Inline___Int256___hasAll__toInt256__3____toInt256__2____toInt256__1______ = r"""
+hasAll(array(toInt256(\'3\'), toInt256(\'2\'), toInt256(\'1\')), array(toInt256(\'3\'), toInt256(\'2\'), toInt256(\'1\')))
+1
+"""
+
+Table___Int256___hasAll__toInt256__3____toInt256__2____toInt256__1______ = r"""
+a
+1
+"""
+
+Inline___Int256___hasAny__toInt256__2____toInt256__1______ = r"""
+hasAny(array(toInt256(\'2\'), toInt256(\'1\')), array(toInt256(\'3\'), toInt256(\'2\'), toInt256(\'1\')))
+1
+"""
+
+Table___Int256___hasAny__toInt256__2____toInt256__1______ = r"""
+a
+1
+"""
+
+Inline___Int256___hasSubstr__toInt256__2____toInt256__1______ = r"""
+hasSubstr(array(toInt256(\'2\'), toInt256(\'1\')), array(toInt256(\'3\'), toInt256(\'2\'), toInt256(\'1\')))
+0
+"""
+
+Table___Int256___hasSubstr__toInt256__2____toInt256__1______ = r"""
+a
+0
+"""
+
+Table___Int256___arrayDifference__ = r"""
+a
+"""
+
+Table___Int256___arrayCumSum__ = r"""
+a
+"""
+
+Table___Int256___arrayCumSumNonNegative__ = r"""
+a
+"""
+
+Inline___Int256___arrayElement = r"""
+arrayElement(array(toInt256(\'3\'), toInt256(\'2\'), toInt256(\'1\')), 1)
+3
+"""
+
+Table___Int256___arrayElement = r"""
+a
+3
+"""
+
+Inline___Int256___arrayPushBack = r"""
+arrayPushBack(array(toInt256(\'3\'), toInt256(\'2\'), toInt256(\'1\')), toInt256(\'1\'))
+[3,2,1,1]
+"""
+
+Table___Int256___arrayPushBack = r"""
+a
+[3,2,1,1]
+"""
+
+Inline___Int256___arrayPushFront = r"""
+arrayPushFront(array(toInt256(\'3\'), toInt256(\'2\'), toInt256(\'1\')), toInt256(\'1\'))
+[1,3,2,1]
+"""
+
+Table___Int256___arrayPushFront = r"""
+a
+[1,3,2,1]
+"""
+
+Inline___Int256___arrayResize = r"""
+arrayResize(array(toInt256(\'3\'), toInt256(\'2\'), toInt256(\'1\')), 1)
+[3]
+"""
+
+Table___Int256___arrayResize = r"""
+a
+[3]
+"""
+
+Inline___Int256___arraySlice = r"""
+arraySlice(array(toInt256(\'3\'), toInt256(\'2\'), toInt256(\'1\')), 1)
+[3,2,1]
+"""
+
+Table___Int256___arraySlice = r"""
+a
+[3,2,1]
+"""
+
+Inline___Int256___has = r"""
+has(array(toInt256(\'3\'), toInt256(\'2\'), toInt256(\'1\')), NULL)
+0
+"""
+
+Table___Int256___has = r"""
+a
+0
+"""
+
+Inline___Int256___indexOf = r"""
+indexOf(array(toInt256(\'3\'), toInt256(\'2\'), toInt256(\'1\')), NULL)
+0
+"""
+
+Table___Int256___indexOf = r"""
+a
+0
+"""
+
+Inline___Int256___countEqual = r"""
+countEqual(array(toInt256(\'3\'), toInt256(\'2\'), toInt256(\'1\')), NULL)
+0
+"""
+
+Table___Int256___countEqual = r"""
+a
+0
+"""
+
+Inline___UInt128___empty__ = r"""
+empty(array(toUInt128(\'3\'), toUInt128(\'2\'), toUInt128(\'1\')))
+0
+"""
+
+Table___UInt128___empty__ = r"""
+a
+0
+"""
+
+Inline___UInt128___notEmpty__ = r"""
+notEmpty(array(toUInt128(\'3\'), toUInt128(\'2\'), toUInt128(\'1\')))
+1
+"""
+
+Table___UInt128___notEmpty__ = r"""
+a
+1
+"""
+
+Inline___UInt128___length__ = r"""
+length(array(toUInt128(\'3\'), toUInt128(\'2\'), toUInt128(\'1\')))
+3
+"""
+
+Table___UInt128___length__ = r"""
+a
+3
+"""
+
+Inline___UInt128___arrayCount_x____x____1___ = r"""
+arrayCount(lambda(tuple(x), equals(x, 1)), array(toUInt128(\'3\'), toUInt128(\'2\'), toUInt128(\'1\')))
+1
+"""
+
+Table___UInt128___arrayCount_x____x____1___ = r"""
+a
+1
+"""
+
+Inline___UInt128___arrayUniq__ = r"""
+arrayUniq(array(toUInt128(\'3\'), toUInt128(\'2\'), toUInt128(\'1\')))
+3
+"""
+
+Table___UInt128___arrayUniq__ = r"""
+a
+3
+"""
+
+Inline___UInt128___arrayJoin__ = r"""
+arrayJoin(array(toUInt128(\'3\'), toUInt128(\'2\'), toUInt128(\'1\')))
+3
+2
+1
+"""
+
+Table___UInt128___arrayJoin__ = r"""
+a
+1
+2
+3
+"""
+
+Inline___UInt128___arrayExists_x____x__1__ = r"""
+arrayExists(lambda(tuple(x), equals(x, 1)), array(toUInt128(\'3\'), toUInt128(\'2\'), toUInt128(\'1\')))
+1
+"""
+
+Table___UInt128___arrayExists_x____x__1__ = r"""
+a
+1
+"""
+
+Inline___UInt128___arrayAll_x____x__1__ = r"""
+arrayAll(lambda(tuple(x), equals(x, 1)), array(toUInt128(\'3\'), toUInt128(\'2\'), toUInt128(\'1\')))
+0
+"""
+
+Table___UInt128___arrayAll_x____x__1__ = r"""
+a
+0
+"""
+
+Inline___UInt128___arrayMin__ = r"""
+arrayMin(array(toUInt128(\'3\'), toUInt128(\'2\'), toUInt128(\'1\')))
+1
+"""
+
+Table___UInt128___arrayMin__ = r"""
+a
+1
+"""
+
+Inline___UInt128___arrayMax__ = r"""
+arrayMax(array(toUInt128(\'3\'), toUInt128(\'2\'), toUInt128(\'1\')))
+3
+"""
+
+Table___UInt128___arrayMax__ = r"""
+a
+3
+"""
+
+Inline___UInt128___arraySum__ = r"""
+arraySum(array(toUInt128(\'3\'), toUInt128(\'2\'), toUInt128(\'1\')))
+6
+"""
+
+Table___UInt128___arraySum__ = r"""
+a
+6
+"""
+
+Inline___UInt128___arrayAvg__ = r"""
+arrayAvg(array(toUInt128(\'3\'), toUInt128(\'2\'), toUInt128(\'1\')))
+2
+"""
+
+Table___UInt128___arrayAvg__ = r"""
+a
+2
+"""
+
+Inline___UInt128___arrayReduce__max____ = r"""
+arrayReduce(\'max\', array(toUInt128(\'3\'), toUInt128(\'2\'), toUInt128(\'1\')))
+3
+"""
+
+Table___UInt128___arrayReduce__max____ = r"""
+a
+3
+"""
+
+Inline___UInt128___arrayFirst_x____x__3__ = r"""
+arrayFirst(lambda(tuple(x), equals(x, 3)), array(toUInt128(\'3\'), toUInt128(\'2\'), toUInt128(\'1\')))
+3
+"""
+
+Table___UInt128___arrayFirst_x____x__3__ = r"""
+a
+3
+"""
+
+Inline___UInt128___arrayFirstIndex_x____x__3__ = r"""
+arrayFirstIndex(lambda(tuple(x), equals(x, 3)), array(toUInt128(\'3\'), toUInt128(\'2\'), toUInt128(\'1\')))
+1
+"""
+
+Table___UInt128___arrayFirstIndex_x____x__3__ = r"""
+a
+1
+"""
+
+Inline___UInt128___hasAll__toUInt128__3____toUInt128__2____toUInt128__1______ = r"""
+hasAll(array(toUInt128(\'3\'), toUInt128(\'2\'), toUInt128(\'1\')), array(toUInt128(\'3\'), toUInt128(\'2\'), toUInt128(\'1\')))
+1
+"""
+
+Table___UInt128___hasAll__toUInt128__3____toUInt128__2____toUInt128__1______ = r"""
+a
+1
+"""
+
+Inline___UInt128___hasAny__toUInt128__2____toUInt128__1______ = r"""
+hasAny(array(toUInt128(\'2\'), toUInt128(\'1\')), array(toUInt128(\'3\'), toUInt128(\'2\'), toUInt128(\'1\')))
+1
+"""
+
+Table___UInt128___hasAny__toUInt128__2____toUInt128__1______ = r"""
+a
+1
+"""
+
+Inline___UInt128___hasSubstr__toUInt128__2____toUInt128__1______ = r"""
+hasSubstr(array(toUInt128(\'2\'), toUInt128(\'1\')), array(toUInt128(\'3\'), toUInt128(\'2\'), toUInt128(\'1\')))
+0
+"""
+
+Table___UInt128___hasSubstr__toUInt128__2____toUInt128__1______ = r"""
+a
+0
+"""
+
+Table___UInt128___arrayDifference__ = r"""
+a
+"""
+
+Table___UInt128___arrayCumSum__ = r"""
+a
+"""
+
+Table___UInt128___arrayCumSumNonNegative__ = r"""
+a
+"""
+
+Inline___UInt128___arrayElement = r"""
+arrayElement(array(toUInt128(\'3\'), toUInt128(\'2\'), toUInt128(\'1\')), 1)
+3
+"""
+
+Table___UInt128___arrayElement = r"""
+a
+3
+"""
+
+Inline___UInt128___arrayPushBack = r"""
+arrayPushBack(array(toUInt128(\'3\'), toUInt128(\'2\'), toUInt128(\'1\')), toUInt128(\'1\'))
+[3,2,1,1]
+"""
+
+Table___UInt128___arrayPushBack = r"""
+a
+[3,2,1,1]
+"""
+
+Inline___UInt128___arrayPushFront = r"""
+arrayPushFront(array(toUInt128(\'3\'), toUInt128(\'2\'), toUInt128(\'1\')), toUInt128(\'1\'))
+[1,3,2,1]
+"""
+
+Table___UInt128___arrayPushFront = r"""
+a
+[1,3,2,1]
+"""
+
+Inline___UInt128___arrayResize = r"""
+arrayResize(array(toUInt128(\'3\'), toUInt128(\'2\'), toUInt128(\'1\')), 1)
+[3]
+"""
+
+Table___UInt128___arrayResize = r"""
+a
+[3]
+"""
+
+Inline___UInt128___arraySlice = r"""
+arraySlice(array(toUInt128(\'3\'), toUInt128(\'2\'), toUInt128(\'1\')), 1)
+[3,2,1]
+"""
+
+Table___UInt128___arraySlice = r"""
+a
+[3,2,1]
+"""
+
+Inline___UInt128___has = r"""
+has(array(toUInt128(\'3\'), toUInt128(\'2\'), toUInt128(\'1\')), NULL)
+0
+"""
+
+Table___UInt128___has = r"""
+a
+0
+"""
+
+Inline___UInt128___indexOf = r"""
+indexOf(array(toUInt128(\'3\'), toUInt128(\'2\'), toUInt128(\'1\')), NULL)
+0
+"""
+
+Table___UInt128___indexOf = r"""
+a
+0
+"""
+
+Inline___UInt128___countEqual = r"""
+countEqual(array(toUInt128(\'3\'), toUInt128(\'2\'), toUInt128(\'1\')), NULL)
+0
+"""
+
+Table___UInt128___countEqual = r"""
+a
+0
+"""
+
+Inline___UInt256___empty__ = r"""
+empty(array(toUInt256(\'3\'), toUInt256(\'2\'), toUInt256(\'1\')))
+0
+"""
+
+Table___UInt256___empty__ = r"""
+a
+0
+"""
+
+Inline___UInt256___notEmpty__ = r"""
+notEmpty(array(toUInt256(\'3\'), toUInt256(\'2\'), toUInt256(\'1\')))
+1
+"""
+
+Table___UInt256___notEmpty__ = r"""
+a
+1
+"""
+
+Inline___UInt256___length__ = r"""
+length(array(toUInt256(\'3\'), toUInt256(\'2\'), toUInt256(\'1\')))
+3
+"""
+
+Table___UInt256___length__ = r"""
+a
+3
+"""
+
+Inline___UInt256___arrayCount_x____x____1___ = r"""
+arrayCount(lambda(tuple(x), equals(x, 1)), array(toUInt256(\'3\'), toUInt256(\'2\'), toUInt256(\'1\')))
+1
+"""
+
+Table___UInt256___arrayCount_x____x____1___ = r"""
+a
+1
+"""
+
+Inline___UInt256___arrayUniq__ = r"""
+arrayUniq(array(toUInt256(\'3\'), toUInt256(\'2\'), toUInt256(\'1\')))
+3
+"""
+
+Table___UInt256___arrayUniq__ = r"""
+a
+3
+"""
+
+Inline___UInt256___arrayJoin__ = r"""
+arrayJoin(array(toUInt256(\'3\'), toUInt256(\'2\'), toUInt256(\'1\')))
+3
+2
+1
+"""
+
+Table___UInt256___arrayJoin__ = r"""
+a
+1
+2
+3
+"""
+
+Inline___UInt256___arrayExists_x____x__1__ = r"""
+arrayExists(lambda(tuple(x), equals(x, 1)), array(toUInt256(\'3\'), toUInt256(\'2\'), toUInt256(\'1\')))
+1
+"""
+
+Table___UInt256___arrayExists_x____x__1__ = r"""
+a
+1
+"""
+
+Inline___UInt256___arrayAll_x____x__1__ = r"""
+arrayAll(lambda(tuple(x), equals(x, 1)), array(toUInt256(\'3\'), toUInt256(\'2\'), toUInt256(\'1\')))
+0
+"""
+
+Table___UInt256___arrayAll_x____x__1__ = r"""
+a
+0
+"""
+
+Inline___UInt256___arrayMin__ = r"""
+arrayMin(array(toUInt256(\'3\'), toUInt256(\'2\'), toUInt256(\'1\')))
+1
+"""
+
+Table___UInt256___arrayMin__ = r"""
+a
+1
+"""
+
+Inline___UInt256___arrayMax__ = r"""
+arrayMax(array(toUInt256(\'3\'), toUInt256(\'2\'), toUInt256(\'1\')))
+3
+"""
+
+Table___UInt256___arrayMax__ = r"""
+a
+3
+"""
+
+Inline___UInt256___arraySum__ = r"""
+arraySum(array(toUInt256(\'3\'), toUInt256(\'2\'), toUInt256(\'1\')))
+6
+"""
+
+Table___UInt256___arraySum__ = r"""
+a
+6
+"""
+
+Inline___UInt256___arrayAvg__ = r"""
+arrayAvg(array(toUInt256(\'3\'), toUInt256(\'2\'), toUInt256(\'1\')))
+2
+"""
+
+Table___UInt256___arrayAvg__ = r"""
+a
+2
+"""
+
+Inline___UInt256___arrayReduce__max____ = r"""
+arrayReduce(\'max\', array(toUInt256(\'3\'), toUInt256(\'2\'), toUInt256(\'1\')))
+3
+"""
+
+Table___UInt256___arrayReduce__max____ = r"""
+a
+3
+"""
+
+Inline___UInt256___arrayFirst_x____x__3__ = r"""
+arrayFirst(lambda(tuple(x), equals(x, 3)), array(toUInt256(\'3\'), toUInt256(\'2\'), toUInt256(\'1\')))
+3
+"""
+
+Table___UInt256___arrayFirst_x____x__3__ = r"""
+a
+3
+"""
+
+Inline___UInt256___arrayFirstIndex_x____x__3__ = r"""
+arrayFirstIndex(lambda(tuple(x), equals(x, 3)), array(toUInt256(\'3\'), toUInt256(\'2\'), toUInt256(\'1\')))
+1
+"""
+
+Table___UInt256___arrayFirstIndex_x____x__3__ = r"""
+a
+1
+"""
+
+Inline___UInt256___hasAll__toUInt256__3____toUInt256__2____toUInt256__1______ = r"""
+hasAll(array(toUInt256(\'3\'), toUInt256(\'2\'), toUInt256(\'1\')), array(toUInt256(\'3\'), toUInt256(\'2\'), toUInt256(\'1\')))
+1
+"""
+
+Table___UInt256___hasAll__toUInt256__3____toUInt256__2____toUInt256__1______ = r"""
+a
+1
+"""
+
+Inline___UInt256___hasAny__toUInt256__2____toUInt256__1______ = r"""
+hasAny(array(toUInt256(\'2\'), toUInt256(\'1\')), array(toUInt256(\'3\'), toUInt256(\'2\'), toUInt256(\'1\')))
+1
+"""
+
+Table___UInt256___hasAny__toUInt256__2____toUInt256__1______ = r"""
+a
+1
+"""
+
+Inline___UInt256___hasSubstr__toUInt256__2____toUInt256__1______ = r"""
+hasSubstr(array(toUInt256(\'2\'), toUInt256(\'1\')), array(toUInt256(\'3\'), toUInt256(\'2\'), toUInt256(\'1\')))
+0
+"""
+
+Table___UInt256___hasSubstr__toUInt256__2____toUInt256__1______ = r"""
+a
+0
+"""
+
+Table___UInt256___arrayDifference__ = r"""
+a
+"""
+
+Table___UInt256___arrayCumSum__ = r"""
+a
+"""
+
+Table___UInt256___arrayCumSumNonNegative__ = r"""
+a
+"""
+
+Inline___UInt256___arrayElement = r"""
+arrayElement(array(toUInt256(\'3\'), toUInt256(\'2\'), toUInt256(\'1\')), 1)
+3
+"""
+
+Table___UInt256___arrayElement = r"""
+a
+3
+"""
+
+Inline___UInt256___arrayPushBack = r"""
+arrayPushBack(array(toUInt256(\'3\'), toUInt256(\'2\'), toUInt256(\'1\')), toUInt256(\'1\'))
+[3,2,1,1]
+"""
+
+Table___UInt256___arrayPushBack = r"""
+a
+[3,2,1,1]
+"""
+
+Inline___UInt256___arrayPushFront = r"""
+arrayPushFront(array(toUInt256(\'3\'), toUInt256(\'2\'), toUInt256(\'1\')), toUInt256(\'1\'))
+[1,3,2,1]
+"""
+
+Table___UInt256___arrayPushFront = r"""
+a
+[1,3,2,1]
+"""
+
+Inline___UInt256___arrayResize = r"""
+arrayResize(array(toUInt256(\'3\'), toUInt256(\'2\'), toUInt256(\'1\')), 1)
+[3]
+"""
+
+Table___UInt256___arrayResize = r"""
+a
+[3]
+"""
+
+Inline___UInt256___arraySlice = r"""
+arraySlice(array(toUInt256(\'3\'), toUInt256(\'2\'), toUInt256(\'1\')), 1)
+[3,2,1]
+"""
+
+Table___UInt256___arraySlice = r"""
+a
+[3,2,1]
+"""
+
+Inline___UInt256___has = r"""
+has(array(toUInt256(\'3\'), toUInt256(\'2\'), toUInt256(\'1\')), NULL)
+0
+"""
+
+Table___UInt256___has = r"""
+a
+0
+"""
+
+Inline___UInt256___indexOf = r"""
+indexOf(array(toUInt256(\'3\'), toUInt256(\'2\'), toUInt256(\'1\')), NULL)
+0
+"""
+
+Table___UInt256___indexOf = r"""
+a
+0
+"""
+
+Inline___UInt256___countEqual = r"""
+countEqual(array(toUInt256(\'3\'), toUInt256(\'2\'), toUInt256(\'1\')), NULL)
+0
+"""
+
+Table___UInt256___countEqual = r"""
+a
+0
+"""
+
+Inline___Decimal256_0____empty__ = r"""
+empty(array(toDecimal256(\'3\', 0), toDecimal256(\'2\', 0), toDecimal256(\'1\', 0)))
+0
+"""
+
+Table___Decimal256_0____empty__ = r"""
+a
+0
+"""
+
+Inline___Decimal256_0____notEmpty__ = r"""
+notEmpty(array(toDecimal256(\'3\', 0), toDecimal256(\'2\', 0), toDecimal256(\'1\', 0)))
+1
+"""
+
+Table___Decimal256_0____notEmpty__ = r"""
+a
+1
+"""
+
+Inline___Decimal256_0____length__ = r"""
+length(array(toDecimal256(\'3\', 0), toDecimal256(\'2\', 0), toDecimal256(\'1\', 0)))
+3
+"""
+
+Table___Decimal256_0____length__ = r"""
+a
+3
+"""
+
+Inline___Decimal256_0____arrayCount_x____x____1___ = r"""
+arrayCount(lambda(tuple(x), equals(x, 1)), array(toDecimal256(\'3\', 0), toDecimal256(\'2\', 0), toDecimal256(\'1\', 0)))
+1
+"""
+
+Table___Decimal256_0____arrayCount_x____x____1___ = r"""
+a
+1
+"""
+
+Inline___Decimal256_0____arrayUniq__ = r"""
+arrayUniq(array(toDecimal256(\'3\', 0), toDecimal256(\'2\', 0), toDecimal256(\'1\', 0)))
+3
+"""
+
+Table___Decimal256_0____arrayUniq__ = r"""
+a
+3
+"""
+
+Inline___Decimal256_0____arrayJoin__ = r"""
+arrayJoin(array(toDecimal256(\'3\', 0), toDecimal256(\'2\', 0), toDecimal256(\'1\', 0)))
+3
+2
+1
+"""
+
+Table___Decimal256_0____arrayJoin__ = r"""
+a
+1
+2
+3
+"""
+
+Inline___Decimal256_0____arrayExists_x____x__1__ = r"""
+arrayExists(lambda(tuple(x), equals(x, 1)), array(toDecimal256(\'3\', 0), toDecimal256(\'2\', 0), toDecimal256(\'1\', 0)))
+1
+"""
+
+Table___Decimal256_0____arrayExists_x____x__1__ = r"""
+a
+1
+"""
+
+Inline___Decimal256_0____arrayAll_x____x__1__ = r"""
+arrayAll(lambda(tuple(x), equals(x, 1)), array(toDecimal256(\'3\', 0), toDecimal256(\'2\', 0), toDecimal256(\'1\', 0)))
+0
+"""
+
+Table___Decimal256_0____arrayAll_x____x__1__ = r"""
+a
+0
+"""
+
+Table___Decimal256_0____arrayMin__ = r"""
+a
+1
+"""
+
+Table___Decimal256_0____arrayMax__ = r"""
+a
+3
+"""
+
+Table___Decimal256_0____arraySum__ = r"""
+a
+6
+"""
+
+Table___Decimal256_0____arrayAvg__ = r"""
+a
+2
+"""
+
+Inline___Decimal256_0____arrayReduce__max____ = r"""
+arrayReduce(\'max\', array(toDecimal256(\'3\', 0), toDecimal256(\'2\', 0), toDecimal256(\'1\', 0)))
+3
+"""
+
+Table___Decimal256_0____arrayReduce__max____ = r"""
+a
+3
+"""
+
+Inline___Decimal256_0____arrayFirst_x____x__3__ = r"""
+arrayFirst(lambda(tuple(x), equals(x, 3)), array(toDecimal256(\'3\', 0), toDecimal256(\'2\', 0), toDecimal256(\'1\', 0)))
+3
+"""
+
+Table___Decimal256_0____arrayFirst_x____x__3__ = r"""
+a
+3
+"""
+
+Inline___Decimal256_0____arrayFirstIndex_x____x__3__ = r"""
+arrayFirstIndex(lambda(tuple(x), equals(x, 3)), array(toDecimal256(\'3\', 0), toDecimal256(\'2\', 0), toDecimal256(\'1\', 0)))
+1
+"""
+
+Table___Decimal256_0____arrayFirstIndex_x____x__3__ = r"""
+a
+1
+"""
+
+Inline___Decimal256_0____hasAll__toDecimal256__3__0___toDecimal256__2__0___toDecimal256__1__0_____ = r"""
+hasAll(array(toDecimal256(\'3\', 0), toDecimal256(\'2\', 0), toDecimal256(\'1\', 0)), array(toDecimal256(\'3\', 0), toDecimal256(\'2\', 0), toDecimal256(\'1\', 0)))
+1
+"""
+
+Table___Decimal256_0____hasAll__toDecimal256__3__0___toDecimal256__2__0___toDecimal256__1__0_____ = r"""
+a
+1
+"""
+
+Inline___Decimal256_0____hasAny__toDecimal256__2__0___toDecimal256__1__0_____ = r"""
+hasAny(array(toDecimal256(\'2\', 0), toDecimal256(\'1\', 0)), array(toDecimal256(\'3\', 0), toDecimal256(\'2\', 0), toDecimal256(\'1\', 0)))
+1
+"""
+
+Table___Decimal256_0____hasAny__toDecimal256__2__0___toDecimal256__1__0_____ = r"""
+a
+1
+"""
+
+Inline___Decimal256_0____hasSubstr__toDecimal256__2__0___toDecimal256__1__0_____ = r"""
+hasSubstr(array(toDecimal256(\'2\', 0), toDecimal256(\'1\', 0)), array(toDecimal256(\'3\', 0), toDecimal256(\'2\', 0), toDecimal256(\'1\', 0)))
+0
+"""
+
+Table___Decimal256_0____hasSubstr__toDecimal256__2__0___toDecimal256__1__0_____ = r"""
+a
+0
+"""
+
+Table___Decimal256_0____arrayDifference__ = r"""
+a
+"""
+
+Table___Decimal256_0____arrayCumSum__ = r"""
+a
+"""
+
+Table___Decimal256_0____arrayCumSumNonNegative__ = r"""
+a
+"""
+
+Inline___Decimal256_0____arrayElement = r"""
+arrayElement(array(toDecimal256(\'3\', 0), toDecimal256(\'2\', 0), toDecimal256(\'1\', 0)), 1)
+3
+"""
+
+Table___Decimal256_0____arrayElement = r"""
+a
+3
+"""
+
+Inline___Decimal256_0____arrayPushBack = r"""
+arrayPushBack(array(toDecimal256(\'3\', 0), toDecimal256(\'2\', 0), toDecimal256(\'1\', 0)), toDecimal256(\'1\', 0))
+[3,2,1,1]
+"""
+
+Table___Decimal256_0____arrayPushBack = r"""
+a
+[3,2,1,1]
+"""
+
+Inline___Decimal256_0____arrayPushFront = r"""
+arrayPushFront(array(toDecimal256(\'3\', 0), toDecimal256(\'2\', 0), toDecimal256(\'1\', 0)), toDecimal256(\'1\', 0))
+[1,3,2,1]
+"""
+
+Table___Decimal256_0____arrayPushFront = r"""
+a
+[1,3,2,1]
+"""
+
+Inline___Decimal256_0____arrayResize = r"""
+arrayResize(array(toDecimal256(\'3\', 0), toDecimal256(\'2\', 0), toDecimal256(\'1\', 0)), 1)
+[3]
+"""
+
+Table___Decimal256_0____arrayResize = r"""
+a
+[3]
+"""
+
+Inline___Decimal256_0____arraySlice = r"""
+arraySlice(array(toDecimal256(\'3\', 0), toDecimal256(\'2\', 0), toDecimal256(\'1\', 0)), 1)
+[3,2,1]
+"""
+
+Table___Decimal256_0____arraySlice = r"""
+a
+[3,2,1]
+"""
+
+Inline___Decimal256_0____has = r"""
+has(array(toDecimal256(\'3\', 0), toDecimal256(\'2\', 0), toDecimal256(\'1\', 0)), NULL)
+0
+"""
+
+Table___Decimal256_0____has = r"""
+a
+0
+"""
+
+Inline___Decimal256_0____indexOf = r"""
+indexOf(array(toDecimal256(\'3\', 0), toDecimal256(\'2\', 0), toDecimal256(\'1\', 0)), NULL)
+0
+"""
+
+Table___Decimal256_0____indexOf = r"""
+a
+0
+"""
+
+Inline___Decimal256_0____countEqual = r"""
+countEqual(array(toDecimal256(\'3\', 0), toDecimal256(\'2\', 0), toDecimal256(\'1\', 0)), NULL)
+0
+"""
+
+Table___Decimal256_0____countEqual = r"""
+a
+0
+"""
+
