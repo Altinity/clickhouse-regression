@@ -19,40 +19,43 @@
         * 6.2.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.TieredStorage](#rqsrs-034clickhousealtertableattachpartitiontieredstorage)
 * 7 [Partition Types](#partition-types)
     * 7.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.PartitionTypes](#rqsrs-034clickhousealtertableattachpartitionpartitiontypes)
-* 8 [Corrupted Parts on a Specific Partition  ](#corrupted-parts-on-a-specific-partition-)
-    * 8.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.Corrupted](#rqsrs-034clickhousealtertableattachpartitioncorrupted)
-* 9 [Attach Partition or Part From the Detached Folder](#attach-partition-or-part-from-the-detached-folder)
-    * 9.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionOrPart](#rqsrs-034clickhousealtertableattachpartitionorpart)
-    * 9.2 [Conditions for Attaching Partition or Part from the Detached Folder](#conditions-for-attaching-partition-or-part-from-the-detached-folder)
-    * 9.3 [Role Based Access Control When Attach Partition or Part From the Detached Folder](#role-based-access-control-when-attach-partition-or-part-from-the-detached-folder)
-        * 9.3.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionOrPart.RBAC  ](#rqsrs-034clickhousealtertableattachpartitionorpartrbac-)
-* 10 [Attach Partition From Another Table](#attach-partition-from-another-table)
-    * 10.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom](#rqsrs-034clickhousealtertableattachpartitionfrom)
-    * 10.2 [Validation of Partition Expression](#validation-of-partition-expression)
-    * 10.3 [Keeping Data on the Source Table ](#keeping-data-on-the-source-table-)
-        * 10.3.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.KeepData](#rqsrs-034clickhousealtertableattachpartitionfromkeepdata)
-    * 10.4 [Temporary Tables](#temporary-tables)
-        * 10.4.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.FromTemporaryTable](#rqsrs-034clickhousealtertableattachpartitionfromfromtemporarytable)
-    * 10.5 [Destination Table That Is on a Different Replica](#destination-table-that-is-on-a-different-replica)
-        * 10.5.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Replicas](#rqsrs-034clickhousealtertableattachpartitionfromreplicas)
-    * 10.6 [Destination Table That Is on a Different Shard](#destination-table-that-is-on-a-different-shard)
-        * 10.6.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Shards](#rqsrs-034clickhousealtertableattachpartitionfromshards)
-    * 10.7 [Conditions when Attach Partition From Another Table](#conditions-when-attach-partition-from-another-table)
-        * 10.7.1 [Tables With Same Structure](#tables-with-same-structure)
-            * 10.7.1.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Structure](#rqsrs-034clickhousealtertableattachpartitionfromconditionssamestructure)
-        * 10.7.2 [Tables With Same `ORDER BY` Key](#tables-with-same-order-by-key)
-            * 10.7.2.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Key.OrderByKey](#rqsrs-034clickhousealtertableattachpartitionfromconditionssamekeyorderbykey)
-        * 10.7.3 [Tables With Same Primary Key](#tables-with-same-primary-key)
-            * 10.7.3.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Key.PrimaryKey](#rqsrs-034clickhousealtertableattachpartitionfromconditionssamekeyprimarykey)
-        * 10.7.4 [Tables With Same Storage Policy](#tables-with-same-storage-policy)
-            * 10.7.4.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.StoragePolicy](#rqsrs-034clickhousealtertableattachpartitionfromconditionssamestoragepolicy)
-        * 10.7.5 [Tables With Same Indices and Projections](#tables-with-same-indices-and-projections)
-            * 10.7.5.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.IndicesAndProjections](#rqsrs-034clickhousealtertableattachpartitionfromconditionssameindicesandprojections)
-        * 10.7.6 [Tables With Same Partition Key](#tables-with-same-partition-key)
-            * 10.7.6.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Key.PartitionKey](#rqsrs-034clickhousealtertableattachpartitionfromconditionssamekeypartitionkey)
-    * 10.8 [Role Based Access Control when Attach Partition From Another Table](#role-based-access-control-when-attach-partition-from-another-table)
-        * 10.8.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.RBAC](#rqsrs-034clickhousealtertableattachpartitionfromrbac)
-* 11 [References](#references)
+* 8 [Corrupted Parts ](#corrupted-parts-)
+    * 8.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.CorruptedParts](#rqsrs-034clickhousealtertableattachpartitioncorruptedparts)
+* 9 [Table names](#table-names)
+    * 9.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.TableName](#rqsrs-034clickhousealtertableattachpartitiontablename)
+* 10 [Attach Partition or Part From the Detached Folder](#attach-partition-or-part-from-the-detached-folder)
+    * 10.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionOrPart](#rqsrs-034clickhousealtertableattachpartitionorpart)
+    * 10.2 [Conditions for Attaching Partition or Part from the Detached Folder](#conditions-for-attaching-partition-or-part-from-the-detached-folder)
+    * 10.3 [Role-Based Access Control When Attach Partition or Part From the Detached Folder](#role-based-access-control-when-attach-partition-or-part-from-the-detached-folder)
+        * 10.3.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionOrPart.RBAC  ](#rqsrs-034clickhousealtertableattachpartitionorpartrbac-)
+* 11 [Attach Partition From Another Table](#attach-partition-from-another-table)
+    * 11.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom](#rqsrs-034clickhousealtertableattachpartitionfrom)
+    * 11.2 [Validation of Partition Expression](#validation-of-partition-expression)
+    * 11.3 [Keeping Data on the Source Table ](#keeping-data-on-the-source-table-)
+        * 11.3.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.KeepData](#rqsrs-034clickhousealtertableattachpartitionfromkeepdata)
+    * 11.4 [Temporary Tables](#temporary-tables)
+        * 11.4.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.FromTemporaryTable](#rqsrs-034clickhousealtertableattachpartitionfromfromtemporarytable)
+    * 11.5 [Destination Table That Is on a Different Replica](#destination-table-that-is-on-a-different-replica)
+        * 11.5.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Replicas](#rqsrs-034clickhousealtertableattachpartitionfromreplicas)
+    * 11.6 [Destination Table That Is on a Different Shard](#destination-table-that-is-on-a-different-shard)
+        * 11.6.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Shards](#rqsrs-034clickhousealtertableattachpartitionfromshards)
+    * 11.7 [Conditions when Attach Partition From Another Table](#conditions-when-attach-partition-from-another-table)
+        * 11.7.1 [Tables With The Same Structure](#tables-with-the-same-structure)
+            * 11.7.1.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Structure](#rqsrs-034clickhousealtertableattachpartitionfromconditionssamestructure)
+        * 11.7.2 [Tables With The Same `ORDER BY` Key](#tables-with-the-same-order-by-key)
+            * 11.7.2.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Key.OrderByKey](#rqsrs-034clickhousealtertableattachpartitionfromconditionssamekeyorderbykey)
+        * 11.7.3 [Tables With The Same Primary Key](#tables-with-the-same-primary-key)
+            * 11.7.3.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Key.PrimaryKey](#rqsrs-034clickhousealtertableattachpartitionfromconditionssamekeyprimarykey)
+        * 11.7.4 [Tables With The Same Storage Policy](#tables-with-the-same-storage-policy)
+            * 11.7.4.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.StoragePolicy](#rqsrs-034clickhousealtertableattachpartitionfromconditionssamestoragepolicy)
+        * 11.7.5 [Tables With The Same Indices and Projections](#tables-with-the-same-indices-and-projections)
+            * 11.7.5.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.IndicesAndProjections](#rqsrs-034clickhousealtertableattachpartitionfromconditionssameindicesandprojections)
+        * 11.7.6 [Tables With The Same Partition Key](#tables-with-the-same-partition-key)
+            * 11.7.6.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Key.PartitionKey](#rqsrs-034clickhousealtertableattachpartitionfromconditionssamekeypartitionkey)
+    * 11.8 [Role-Based Access Control when Attach Partition From Another Table](#role-based-access-control-when-attach-partition-from-another-table)
+        * 11.8.1 [RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.RBAC](#rqsrs-034clickhousealtertableattachpartitionfromrbac)
+* 12 [References](#references)
+
 
 
 ## Revision History
@@ -62,7 +65,7 @@ hosted in a [GitHub Repository]. All the updates are tracked using the [Revision
 
 ## Introduction
 
-This software requirements specification covers requirements for `ALTER TABLE ATTACH PARTITION|PART` and `ALTER TABLE ATTACH PARTITION FROM` statement in [ClickHouse].
+This software requirements specification covers requirements for the `ALTER TABLE ATTACH PARTITION|PART` and `ALTER TABLE ATTACH PARTITION FROM` statements in [ClickHouse].
 
 The documentation used:
 
@@ -141,12 +144,14 @@ version: 1.0
 
 The `ALTER TABLE ATTACH PARTITION|PART` and `ALTER TABLE ATTACH PARTITION FROM` statements SHALL work for any partition type.
 
-## Corrupted Parts on a Specific Partition  
+## Corrupted Parts 
 
-### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.Corrupted
+### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.CorruptedParts
 version: 1.0
 
 [ClickHouse] SHALL output an error when trying to `ATTACH PARTITION` when parts of a specific partition are corrupted.
+
+[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION|PART` and `ALTER TABLE ATTACH PARTITION FROM` when parts have correct checksums.
 
 Possible partition types that can be corrupted are,
 
@@ -156,12 +161,19 @@ Possible partition types that can be corrupted are,
 | Partition with wide parts                     |
 | Partition with compact and wide parts (mixed) |
 
+## Table names
+
+### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartition.TableName
+version: 1.0
+
+The `ALTER TABLE ATTACH PARTITION|PART` and `ALTER TABLE ATTACH PARTITION FROM` statements SHALL only work when the table names are valid.
+
 ## Attach Partition or Part From the Detached Folder
 
 ### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionOrPart
 version: 1.0
 
-[ClickHouse] SHALL support `ALTER TABLE ATTACH PARTITION|PART` statement.
+[ClickHouse] SHALL support the `ALTER TABLE ATTACH PARTITION|PART` statement.
 
 This statement SHALL allow the user to add data, either a full `PARTITITION` or a single `PART` to the table from the `detached` directory. 
 
@@ -171,18 +183,18 @@ ALTER TABLE table_name [ON CLUSTER cluster] ATTACH PARTITION|PART [partition_exp
 
 After the query is executed the data SHALL be immediately available for querying on the specified table.
 
-[ClickHouse] SHALL reflect the changes in `system.parts` table, when the `ALTER TABLE ATTACH PARTITION|PART` is executed. 
+[ClickHouse] SHALL reflect the changes in the `system.parts` table, when the `ALTER TABLE ATTACH PARTITION|PART` is executed. 
 
 ### Conditions for Attaching Partition or Part from the Detached Folder
 
 ...
 
-### Role Based Access Control When Attach Partition or Part From the Detached Folder
+### Role-Based Access Control When Attach Partition or Part From the Detached Folder
 
 #### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionOrPart.RBAC  
 version: 1.0
 
-The `ALTER TABLE ATTACH PARTITION|PART` SHALL only work when the user has the following privileges for table:
+The `ALTER TABLE ATTACH PARTITION|PART` SHALL only work when the user has the following privileges for the table:
 
 | Table priviliges     |
 |----------------------|
@@ -193,13 +205,13 @@ The `ALTER TABLE ATTACH PARTITION|PART` SHALL only work when the user has the fo
 ### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom
 version: 1.0
 
-[ClickHouse] SHALL support `ALTER TABLE ATTACH PARTITION FROM` statement. This feature SHALL allow the user to copy data partition from [source table] to [destination table].
+[ClickHouse] SHALL support the`ALTER TABLE ATTACH PARTITION FROM` statement. This feature SHALL allow the user to copy data partition from [source table] to [destination table].
 
 ```sql
 ALTER TABLE dest_table [ON CLUSTER cluster] ATTACH PARTITION partition_expr FROM src_table
 ```
 
-[ClickHouse] SHALL reflect the changes in `system.parts` table, when the `ALTER TABLE ATTACH PARTITION FROM` is executed on the [destination table]. 
+[ClickHouse] SHALL reflect the changes in the `system.parts` table, when the `ALTER TABLE ATTACH PARTITION FROM` is executed on the [destination table]. 
 
 ### Validation of Partition Expression
 
@@ -212,7 +224,7 @@ ALTER TABLE dest_table [ON CLUSTER cluster] ATTACH PARTITION partition_expr FROM
 #### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.KeepData
 version: 1.0
 
-[ClickHouse] SHALL keep the data of the [source table] from which the partition is copied from.
+[ClickHouse] SHALL keep the data of the [source table] from which the partition is copied.
 
 ### Temporary Tables
 
@@ -245,59 +257,59 @@ version: 1.0
 * Both tables have the same primary key.
 * Both tables have the same storage policy.
 * Both tables have the same indices and projections.
-* Both tabels have the same partition key or the [source table] has more granular partitioning
+* Both tables have the same partition key or the [source table] has more granular partitioning
 
-#### Tables With Same Structure
+#### Tables With The Same Structure
 
 ##### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Structure
 version: 1.0
 
-[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when tables have same structure.
+[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when tables have the same structure.
 
-#### Tables With Same `ORDER BY` Key
+#### Tables With The Same `ORDER BY` Key
 
 ##### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Key.OrderByKey
 version: 1.0
 
-[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when tables have same `ORDER BY` key.
+[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when tables have the same `ORDER BY` key.
 
-#### Tables With Same Primary Key
+#### Tables With The Same Primary Key
 
 ##### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Key.PrimaryKey
 version: 1.0
 
-[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when tables have same primary key.
+[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when tables have the same primary key.
 
-#### Tables With Same Storage Policy
+#### Tables With The Same Storage Policy
 
 ##### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.StoragePolicy
 version: 1.0
 
-[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when tables have same storage
+[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when tables have the same storage
 policy.
 
-#### Tables With Same Indices and Projections
+#### Tables With The Same Indices and Projections
 
 ##### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.IndicesAndProjections
 version: 1.0
 
-[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when tables have same indices and projections.
+[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when tables have the same indices and projections.
 
-#### Tables With Same Partition Key
+#### Tables With The Same Partition Key
 
 ##### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.Conditions.Same.Key.PartitionKey
 version: 1.0
 
 [ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when the [source table] has more granular partitioning than the [desctination table]. 
-Is is allowed to attach partition from the table with different partition expression when destination partition expression does not re-partition.
-[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when attaching from partitioned table to unpartitioned table.  
+It is allowed to attach a partition from the table with different partition expression when the destination partition expression does not re-partition.
+[ClickHouse] SHALL support the usage of `ALTER TABLE ATTACH PARTITION FROM` when attaching from a partitioned table to an unpartitioned table.  
 
-### Role Based Access Control when Attach Partition From Another Table
+### Role-Based Access Control when Attach Partition From Another Table
 
 #### RQ.SRS-034.ClickHouse.Alter.Table.AttachPartitionFrom.RBAC
 version: 1.0
 
-The `ATTACH PARTITION` SHALL only work when the user has the following privileges for table:
+The `ATTACH PARTITION` SHALL only work when the user has the following privileges for the table:
 
 | Table priviliges     |
 |----------------------|
