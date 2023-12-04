@@ -18,9 +18,7 @@ def create_parquet_file_hits(
     clickhouse_node = self.context.clickhouse_node
     table_name = "hits_" + getuid()
     parquet_file = "hits_parquet_" + getuid() + ".parquet"
-    with Given(
-        "I create a hits table in clickhouse and populate it with the ontime airlines dataset"
-    ):
+    with Given("I create a table populated with hits data clickhouse"):
         clickhouse_node.query(
             f"""
             CREATE TABLE {table_name}

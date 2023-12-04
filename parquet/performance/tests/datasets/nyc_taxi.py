@@ -10,44 +10,17 @@ def create_parquet_file_nyc_taxi(
     compression: str = None,
 ):
     """Prepare data in Parquet format using the hits dataset from
-    https://datasets.clickhouse.com/hits_compatible/athena_partitioned/hits_%7B0..99%7D.parquet.
+    https://altinity-clickhouse-data.s3.amazonaws.com/nyc_taxi_rides/data/tripdata_native/data-*.bin.gz
     """
 
     clickhouse_node = self.context.clickhouse_node
     table_name = "nyc_taxi_" + getuid()
     parquet_file = "nyc_taxi_parquet_" + getuid() + ".parquet"
-    with Given(
-        "I create a hits table in clickhouse and populate it with the ontime airlines dataset"
-    ):
+    with Given("I create the table populated with data from nyc taxi in clickhouse"):
         clickhouse_node.query(
-            f"""
-CREATE TABLE {table_name} (
-    trip_id             UInt32,
-    pickup_datetime     DateTime,
-    dropoff_datetime    DateTime,
-    pickup_longitude    Nullable(Float64),
-    pickup_latitude     Nullable(Float64),
-    dropoff_longitude   Nullable(Float64),
-    dropoff_latitude    Nullable(Float64),
-    passenger_count     UInt8,
-    trip_distance       Float32,
-    fare_amount         Float32,
-    extra               Float32,
-    tip_amount          Float32,
-    tolls_amount        Float32,
-    total_amount        Float32,
-    payment_type        Enum('CSH' = 1, 'CRE' = 2, 'NOC' = 3, 'DIS' = 4, 'UNK' = 5),
-    pickup_ntaname      LowCardinality(String),
-    dropoff_ntaname     LowCardinality(String)
-)
-ENGINE = MergeTree
-PRIMARY KEY (pickup_datetime, dropoff_datetime);
-"""
-        )
-
-        clickhouse_node.query(
-            f"""INSERT INTO {table_name} SELECT * FROM s3('https://altinity-clickhouse-data.s3.amazonaws.com/nyc_taxi_rides/data/tripdata_native/data-*.bin.gz','CSVWithNames') SETTINGS max_threads={threads}, max_insert_threads={threads}, input_format_parallel_parsing=0, max_memory_usage={max_memory_usage};
-            """,
+            f"CREATE TABLE {table_name} ENGINE = MergeTree ORDER BY tuple() AS SELECT * FROM s3("
+            f"'https://altinity-clickhouse-data.s3.amazonaws.com/nyc_taxi_rides/data"
+            f"/tripdata_native/data-*.bin.gz', 'Native') SETTINGS max_threads={threads}, max_insert_threads={threads}, input_format_parallel_parsing=0, max_memory_usage={max_memory_usage}",
             progress=True,
             timeout=3600,
         )
