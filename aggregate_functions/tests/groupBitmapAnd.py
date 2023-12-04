@@ -76,7 +76,7 @@ def scenario(
     snapshot_id=None,
 ):
     """Check groupBitmapAnd aggregate function."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id, clickhouse_version=">=23.10")
 
     if "Merge" in self.name:
         skip(reason=f"Does not support -Merge combinator")
