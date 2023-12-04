@@ -50,7 +50,7 @@ def scenario(self):
                 f"{cluster.docker_compose} exec -T kafka1 kafka-console-producer "
                 f"--broker-list kafka1:9092,kafka2:9092,kafka3:9092 --topic {topic} > /dev/null"
             )
-            cluster.command(None, command, exitcode=None)
+            cluster.command(None, command, no_checks=True)
 
         with And("I create destination tables pipeline"):
             sql = f"""

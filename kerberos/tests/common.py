@@ -54,29 +54,33 @@ def test_select_query(node, krb_auth=True, req="SELECT currentUser()"):
 def kinit_no_keytab(self, node, principal="kerberos_user", lifetime_option="-l 10:00"):
     """Helper for obtaining Kerberos ticket for client"""
     try:
-        node.command("echo pwd | kinit admin/admin")
-        node.command(f'kadmin -w pwd -q "add_principal -pw pwd {principal}"')
-        node.command(f"echo pwd | kinit {lifetime_option} {principal}")
+        node.command("echo pwd | kinit admin/admin", no_checks=True)
+        node.command(
+            f'kadmin -w pwd -q "add_principal -pw pwd {principal}"', no_checks=True
+        )
+        node.command(f"echo pwd | kinit {lifetime_option} {principal}", no_checks=True)
         yield
     finally:
-        node.command("kdestroy")
+        node.command("kdestroy", no_checks=True)
 
 
 @TestStep(Given)
 def create_server_principal(self, node):
     """Helper for obtaining Kerberos ticket for server"""
     try:
-        node.command("echo pwd | kinit admin/admin")
+        node.command("echo pwd | kinit admin/admin", no_checks=True)
         node.command(
-            f'kadmin -w pwd -q "add_principal -randkey HTTP/{self.context.env}-{node.name}-1.krbnet"'
+            f'kadmin -w pwd -q "add_principal -randkey HTTP/{self.context.env}-{node.name}-1.krbnet"',
+            no_checks=True,
         )
         node.command(
-            f'kadmin -w pwd -q "ktadd -k /etc/krb5.keytab HTTP/{self.context.env}-{node.name}-1.krbnet"'
+            f'kadmin -w pwd -q "ktadd -k /etc/krb5.keytab HTTP/{self.context.env}-{node.name}-1.krbnet"',
+            no_checks=True,
         )
         yield
     finally:
-        node.command("kdestroy")
-        node.command("rm /etc/krb5.keytab")
+        node.command("kdestroy", no_checks=True)
+        node.command("rm /etc/krb5.keytab", no_checks=True)
 
 
 @TestStep(Given)
@@ -210,7 +214,7 @@ def check_wrong_config(
             started = time.time()
             command = f"cat /var/lib/clickhouse/preprocessed_configs/{preprocessed_name} | grep {uid} > /dev/null"
             while time.time() - started < timeout:
-                exitcode = node.command(command, steps=False).exitcode
+                exitcode = node.command(command, steps=False, no_checks=True).exitcode
                 if exitcode == 0:
                     break
                 time.sleep(1)
@@ -252,7 +256,7 @@ def check_wrong_config(
             started = time.time()
             command = f'tail -n {tail} /var/log/clickhouse-server/clickhouse-server.err.log | grep "{log_error}"'
             while time.time() - started < timeout:
-                exitcode = node.command(command, steps=False).exitcode
+                exitcode = node.command(command, steps=False, no_checks=True).exitcode
                 if exitcode == 0:
                     break
                 time.sleep(1)

@@ -42,7 +42,8 @@ def scenario(self, cluster):
 
                 def check_log(cmd, exitcode=0):
                     cmd = node.command(
-                        f"cat /var/log/clickhouse-server/clickhouse-server.log | {cmd}"
+                        f"cat /var/log/clickhouse-server/clickhouse-server.log | {cmd}",
+                        no_checks=True,
                     )
                     with Then(f"check exitcode is {exitcode}"):
                         assert cmd.exitcode == exitcode, error()

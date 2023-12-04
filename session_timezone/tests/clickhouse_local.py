@@ -13,6 +13,7 @@ def bad_arguments(self):
         clickhouse_local(
             query="select timezoneOf(now()) SETTINGS session_timezone = 'fasdf' format TSV;",
             message="Exception: Invalid time zone",
+            exitcode=36,
         )
 
 
