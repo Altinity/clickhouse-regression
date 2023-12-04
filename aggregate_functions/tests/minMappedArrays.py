@@ -5,15 +5,15 @@ from aggregate_functions.requirements import (
 )
 
 from aggregate_functions.tests.steps import get_snapshot_id
-from aggregate_functions.tests.sumMap import scenario as checks
+from aggregate_functions.tests.maxMappedArrays import scenario as checks
 
 
 @TestScenario
 @Name("minMappedArrays")
 @Requirements(RQ_SRS_031_ClickHouse_AggregateFunctions_Specific_MinMap("1.0"))
 def scenario(self, func="minMappedArrays({params})", table=None, snapshot_id=None):
-    """Check minMap(minMappedArrays) aggregate function by using the same tests as for sumMap."""
-    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id)
+    """Check minMap(minMappedArrays) aggregate function by using the same tests as for maxMap(maxMappedArrays)."""
+    self.context.snapshot_id = get_snapshot_id(snapshot_id=snapshot_id, clickhouse_version=">=23.11")
 
     if "Merge" in self.name:
         return self.context.snapshot_id, func.replace("({params})", "")
