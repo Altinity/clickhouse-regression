@@ -752,6 +752,27 @@ def get_bucket_size(
     return total_bytes
 
 
+@TestStep
+def check_bucket_size(
+    self, name, prefix, expected_size, tolerance=None, minio_enabled=False
+):
+    current_size = get_bucket_size(
+        name=name,
+        prefix=prefix,
+        minio_enabled=minio_enabled,
+        access_key=self.context.secret_access_key,
+        key_id=self.context.access_key_id,
+    )
+    if tolerance is None or tolerance == 0:
+        assert expected_size == current_size, error()
+    else:
+        msg = f"{current_size} is not within {expected_size}±{tolerance}"
+        lower_bound = expected_size - tolerance
+        upper_bound = expected_size + tolerance
+        assert current_size >= lower_bound, error(msg)
+        assert current_size <= upper_bound, error(msg)
+
+
 @TestStep(Given)
 def start_minio(
     self,

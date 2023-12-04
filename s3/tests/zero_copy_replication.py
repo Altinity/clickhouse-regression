@@ -116,15 +116,13 @@ def global_setting(self):
             """The size of the s3 bucket should be very close to the size
                   before adding any data"""
         ):
-            size = get_bucket_size(
+            check_bucket_size(
                 name=bucket_name,
                 prefix=bucket_path,
+                expected_size=size_before,
+                tolerance=5,
                 minio_enabled=minio_enabled,
-                access_key=self.context.secret_access_key,
-                key_id=self.context.access_key_id,
             )
-            assert size_before >= size - 5, error()
-            assert size_before <= size + 5, error()
 
 
 @TestScenario
@@ -282,16 +280,13 @@ def drop_replica(self):
             """The size of the s3 bucket should be very close to the size
                   before adding any data"""
         ):
-            size = get_bucket_size(
+            check_bucket_size(
                 name=bucket_name,
                 prefix=bucket_path,
+                expected_size=size_before,
+                tolerance=5,
                 minio_enabled=minio_enabled,
-                access_key=self.context.secret_access_key,
-                key_id=self.context.access_key_id,
             )
-            assert size_before >= size - 5, error()
-            assert size_before <= size + 5, error()
-
 
 @TestScenario
 @Requirements(RQ_SRS_015_S3_Disk_MergeTree_AllowS3ZeroCopyReplication_AddReplica("1.0"))
@@ -379,13 +374,14 @@ def add_replica(self):
                 """The size of the s3 bucket should be 1 byte more
                       than previously because of the additional replica"""
             ):
-                assert size_after + 1 == get_bucket_size(
+                size = get_bucket_size(
                     name=bucket_name,
                     prefix=bucket_path,
                     minio_enabled=minio_enabled,
                     access_key=self.context.secret_access_key,
                     key_id=self.context.access_key_id,
-                ), error()
+                )
+                assert size_after + 1 == size, error()
 
             with And("I check simple queries on the first node"):
                 check_query_node(
@@ -472,15 +468,13 @@ def add_replica(self):
             """The size of the s3 bucket should be very close to the size
                   before adding any data"""
         ):
-            size = get_bucket_size(
+            check_bucket_size(
                 name=bucket_name,
                 prefix=bucket_path,
+                expected_size=size_before,
+                tolerance=5,
                 minio_enabled=minio_enabled,
-                access_key=self.context.secret_access_key,
-                key_id=self.context.access_key_id,
             )
-            assert size_before >= size - 5, error()
-            assert size_before <= size + 5, error()
 
 
 @TestScenario
@@ -598,15 +592,13 @@ def drop_alter_replica(self):
             """The size of the s3 bucket should be very close to the size
                   before adding any data"""
         ):
-            size = get_bucket_size(
+            check_bucket_size(
                 name=bucket_name,
                 prefix=bucket_path,
+                expected_size=size_before,
+                tolerance=5,
                 minio_enabled=minio_enabled,
-                access_key=self.context.secret_access_key,
-                key_id=self.context.access_key_id,
             )
-            assert size_before >= size - 5, error()
-            assert size_before <= size + 5, error()
 
 
 @TestScenario
@@ -874,15 +866,13 @@ def alter(self):
             """The size of the s3 bucket should be very close to the size
                   before adding any data"""
         ):
-            size = get_bucket_size(
+            check_bucket_size(
                 name=bucket_name,
                 prefix=bucket_path,
+                expected_size=size_before,
+                tolerance=5,
                 minio_enabled=minio_enabled,
-                access_key=self.context.secret_access_key,
-                key_id=self.context.access_key_id,
             )
-            assert size_before >= size - 5, error()
-            assert size_before <= size + 5, error()
 
 
 @TestScenario
@@ -1041,15 +1031,13 @@ def alter_repeat(self):
             """The size of the s3 bucket should be very close to the size
                   before adding any data"""
         ):
-            size = get_bucket_size(
+            check_bucket_size(
                 name=bucket_name,
                 prefix=bucket_path,
+                expected_size=size_before,
+                tolerance=5,
                 minio_enabled=minio_enabled,
-                access_key=self.context.secret_access_key,
-                key_id=self.context.access_key_id,
             )
-            assert size_before >= size - 5, error()
-            assert size_before <= size + 5, error()
 
 
 @TestScenario
@@ -1210,15 +1198,13 @@ def insert_multiple_replicas(self):
             """The size of the s3 bucket should be very close to the size
                   before adding any data"""
         ):
-            current_size = get_bucket_size(
+            check_bucket_size(
                 name=bucket_name,
                 prefix=bucket_path,
+                expected_size=size_before,
+                tolerance=5,
                 minio_enabled=minio_enabled,
-                access_key=self.context.secret_access_key,
-                key_id=self.context.access_key_id,
             )
-            assert size_before >= current_size - 5, error()
-            assert size_before <= current_size + 5, error()
 
 
 @TestScenario
@@ -1295,13 +1281,13 @@ def delete(self):
                 nodes[0].query("DROP TABLE IF EXISTS zero_copy_replication")
 
             with Then("The size of the s3 bucket should be the same"):
-                assert size_after == get_bucket_size(
+                check_bucket_size(
                     name=bucket_name,
                     prefix=bucket_path,
+                    expected_size=size_after,
+                    tolerance=None,
                     minio_enabled=minio_enabled,
-                    access_key=self.context.secret_access_key,
-                    key_id=self.context.access_key_id,
-                ), error()
+                )
 
             with When("I drop the table on the other node"):
                 nodes[1].query("DROP TABLE IF EXISTS zero_copy_replication SYNC")
@@ -1310,15 +1296,13 @@ def delete(self):
                 """The size of the s3 bucket should be very close to the size
                       before adding any data"""
             ):
-                size = get_bucket_size(
+                check_bucket_size(
                     name=bucket_name,
                     prefix=bucket_path,
+                    expected_size=size_before,
+                    tolerance=5,
                     minio_enabled=minio_enabled,
-                    access_key=self.context.secret_access_key,
-                    key_id=self.context.access_key_id,
                 )
-                assert size_before >= size - 5, error()
-                assert size_before <= size + 5, error()
 
         finally:
             with Finally("I drop the table on each node"):
@@ -1405,13 +1389,13 @@ def delete_all(self):
                     node.query("DROP TABLE IF EXISTS zero_copy_replication SYNC")
 
         with Then("All data should be removed from S3"):
-            assert size_before == get_bucket_size(
+            check_bucket_size(
                 name=bucket_name,
                 prefix=bucket_path,
+                expected_size=size_before,
+                tolerance=None,
                 minio_enabled=minio_enabled,
-                access_key=self.context.secret_access_key,
-                key_id=self.context.access_key_id,
-            ), error()
+            )
 
 
 @TestScenario
@@ -1560,29 +1544,24 @@ def ttl_move(self):
             """The size of the s3 bucket should be very close to the size
                   before adding any data"""
         ):
-            size = get_bucket_size(
+            check_bucket_size(
                 name=bucket_name,
                 prefix=bucket_path,
+                expected_size=size_before_base,
+                tolerance=5,
                 minio_enabled=minio_enabled,
-                access_key=self.context.secret_access_key,
-                key_id=self.context.access_key_id,
             )
-            assert size_before_base >= size - 5, error()
-            assert size_before_base <= size + 5, error()
-
         with And(
             """The size of the other s3 bucket should be very close to the size
                   before adding any data"""
         ):
-            size = get_bucket_size(
+            check_bucket_size(
                 name=bucket_name,
                 prefix=bucket_path + "/tiered",
+                expected_size=size_before_tier,
+                tolerance=5,
                 minio_enabled=minio_enabled,
-                access_key=self.context.secret_access_key,
-                key_id=self.context.access_key_id,
             )
-            assert size_before_tier >= size - 5, error()
-            assert size_before_tier <= size + 5, error()
 
 
 @TestScenario
@@ -1719,15 +1698,13 @@ def ttl_delete(self):
             """The size of the s3 bucket should be very close to the size
                   before adding any data"""
         ):
-            size = get_bucket_size(
+            check_bucket_size(
                 name=bucket_name,
                 prefix=bucket_path,
+                expected_size=size_before,
+                tolerance=5,
                 minio_enabled=minio_enabled,
-                access_key=self.context.secret_access_key,
-                key_id=self.context.access_key_id,
             )
-            assert size_before >= size - 5, error()
-            assert size_before <= size + 5, error()
 
 
 @TestScenario
