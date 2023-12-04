@@ -1067,7 +1067,7 @@ def flask_server(self, server_path, port, protocol, ciphers):
                     for retry in retries(timeout=5, delay=0.5):
                         with retry:
                             r = node.command(
-                                f"ss -ltnup | grep '{port}'", exitcode=None
+                                f"ss -ltnup | grep '{port}'", no_checks=True
                             )
                             assert r.output == "", error(r.output)
 

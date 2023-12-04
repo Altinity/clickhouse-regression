@@ -38,7 +38,7 @@ def add_config(
         command = f"cat /var/lib/clickhouse/preprocessed_configs/{config.preprocessed_name} | grep {config.uid}{' > /dev/null' if not settings.debug else ''}"
 
         while time.time() - started < timeout:
-            exitcode = node.command(command, steps=False).exitcode
+            exitcode = node.command(command, steps=False, no_checks=True).exitcode
             if after_removal:
                 if exitcode == 1:
                     break
@@ -643,11 +643,14 @@ def get_random_string(cluster, length, steps=True, *args, **kwargs):
             None,
             f"cat /dev/urandom | tr -dc 'A-Za-z0-9#$&()*+,-./:;<=>?@[\]^_~' | head -c {length} > {fd.name}",
             steps=steps,
+            no_checks=True,
             *args,
             **kwargs,
         )
         fd.seek(0)
-        return fd.read()
+        random_string = fd.read()
+        assert len(random_string) == length
+        return random_string
 
 
 @TestStep(When)
@@ -712,7 +715,9 @@ def run_query(instance, query, stdin=None, settings=None):
         stdin_file.seek(0)
 
         result = instance.command(
-            f'echo -e "{stdin}" | clickhouse client --query="{query}"', steps=False
+            f'echo -e "{stdin}" | clickhouse client --query="{query}"',
+            steps=False,
+            no_checks=True,
         )
     else:
         result = instance.query(

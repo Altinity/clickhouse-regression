@@ -1260,7 +1260,7 @@ class Cluster(object):
                         cmd = self.command(
                             None,
                             f"{self.docker_compose} pull 2>&1 | tee",
-                            exitcode=None,
+                            no_checks=True,
                             timeout=timeout,
                         )
                         if cmd.exitcode != 0:
@@ -1273,7 +1273,7 @@ class Cluster(object):
                         cmd = self.command(
                             None,
                             f"{self.docker_compose} down 2>&1 | tee",
-                            exitcode=None,
+                            no_checks=True,
                             timeout=timeout,
                         )
                         if cmd.exitcode != 0:
